@@ -7,7 +7,9 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "android-clean": "cd android && ./gradlew clean && cd ..",
+    "dep-clean": "rm -rf node_modules && npm install && npx jetify"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
@@ -16,11 +18,13 @@
     "axios": "^0.19.2",
     "react": "16.11.0",
     "react-native": "0.62.2",
-    "react-native-elements": "^2.0.0",
+    "react-native-elements": "^2.0.1",
     "react-native-gesture-handler": "^1.6.1",
+    "react-native-password-strength-meter": "0.0.3",
     "react-native-reanimated": "^1.9.0",
     "react-native-safe-area-context": "^2.0.3",
     "react-native-screens": "^2.8.0",
+    "react-native-vector-icons": "^6.6.0",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"
