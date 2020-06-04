@@ -1,12 +1,6 @@
 import {combineReducers} from 'redux';
-
-const dummyReducer = (state = {test: 0}, {type, payload}) => {
-  switch (type) {
-    default:
-      return state;
-  }
-};
+import authReducer from './authReducer';
 
 export default combineReducers({
-  dummy: dummyReducer,
+  auth: authReducer,
 });

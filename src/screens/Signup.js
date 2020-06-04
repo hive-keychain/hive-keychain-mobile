@@ -3,10 +3,12 @@ import {StyleSheet, Button} from 'react-native';
 import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {BoxPasswordStrengthDisplay} from 'react-native-password-strength-meter';
+
 import PasswordInput from '../components/PasswordInput';
 import Separator from '../components/Separator';
+import {signUp} from '../actions';
 
-const Signup = () => {
+const Signup = ({signUp}) => {
   const [pwd, setPwd] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState('');
@@ -16,7 +18,7 @@ const Signup = () => {
     } else if (confirm !== pwd) {
       setError('Passwords mismatch');
     } else {
-      //signUp(pwd);
+      signUp(pwd);
     }
   };
   return (
@@ -51,4 +53,4 @@ const styles = StyleSheet.create({
   error: {color: 'red'},
 });
 
-export default connect()(Signup);
+export default connect(null, {signUp})(Signup);
