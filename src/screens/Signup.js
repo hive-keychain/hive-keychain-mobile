@@ -9,8 +9,8 @@ import Separator from '../components/Separator';
 import {signUp} from '../actions';
 
 const Signup = ({signUp}) => {
-  const [pwd, setPwd] = useState('');
-  const [confirm, setConfirm] = useState('');
+  const [pwd, setPwd] = useState('testtest');
+  const [confirm, setConfirm] = useState('testtest');
   const [error, setError] = useState('');
   const onSubmitSignup = () => {
     if (pwd.length < 6) {

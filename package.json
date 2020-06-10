@@ -12,11 +12,14 @@
     "dep-clean": "rm -rf node_modules && npm install && npx jetify"
   },
   "dependencies": {
+    "@hivechain/dhive": "^0.13.4",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/compat": "^5.1.26",
     "@react-navigation/native": "^5.5.1",
     "@react-navigation/stack": "^5.5.1",
+    "assert": "^2.0.0",
     "axios": "^0.19.2",
+    "events": "^3.1.0",
     "react": "16.11.0",
     "react-native": "0.62.2",
     "react-native-elements": "^2.0.1",
