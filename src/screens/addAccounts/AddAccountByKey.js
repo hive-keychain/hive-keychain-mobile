@@ -7,6 +7,7 @@ import {addAccount} from '../../actions';
 import PasswordInput from '../../components/PasswordInput';
 import AccountInput from '../../components/AccountInput';
 import validateNewAccount from '../../utils/validateNewAccount';
+import {encryptJson, decryptToJson} from '../../utils/encrypt';
 
 const AddAccountByKey = ({navigation}) => {
   const [account, setAccount] = useState('');
@@ -14,8 +15,12 @@ const AddAccountByKey = ({navigation}) => {
 
   const onImportKeys = async () => {
     const keys = await validateNewAccount(account, key);
-    console.log(keys);
+    const encKeys = await encryptJson({list: keys}, 'h');
+    console.log(encKeys);
+    const dec = await decryptToJson(encKeys, 'a');
+    console.log(dec);
   };
+
   return (
     <>
       <Separator />
