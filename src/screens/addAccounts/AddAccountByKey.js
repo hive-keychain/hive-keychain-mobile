@@ -7,11 +7,11 @@ import {addAccount} from '../../actions';
 import PasswordInput from '../../components/PasswordInput';
 import AccountInput from '../../components/AccountInput';
 import validateNewAccount from '../../utils/validateNewAccount';
+import {ACCOUNT, KEY} from '../../../.env.json';
 
-const AddAccountByKey = (props) => {
-  const {addAccount} = props;
-  const [account, setAccount] = useState('');
-  const [key, setKey] = useState('');
+const AddAccountByKey = ({addAccount}) => {
+  const [account, setAccount] = useState(ACCOUNT || '');
+  const [key, setKey] = useState(KEY || '');
 
   const onImportKeys = async () => {
     const keys = await validateNewAccount(account, key);

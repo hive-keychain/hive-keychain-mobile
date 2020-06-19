@@ -8,8 +8,8 @@ import {EncryptTransform} from './transform';
 const persistConfig = {
   key: 'config',
   storage: AsyncStorage,
-  whitelist: ['accounts'],
-  blacklist: ['auth'],
+  whitelist: ['accountsEncrypted'],
+  blacklist: ['auth', 'accounts'],
   transforms: [EncryptTransform],
 };
 
