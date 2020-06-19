@@ -7,18 +7,19 @@ import {addAccount} from '../../actions';
 import PasswordInput from '../../components/PasswordInput';
 import AccountInput from '../../components/AccountInput';
 import validateNewAccount from '../../utils/validateNewAccount';
-import {encryptJson, decryptToJson} from '../../utils/encrypt';
 
-const AddAccountByKey = ({navigation}) => {
+const AddAccountByKey = (props) => {
+  const {addAccount} = props;
   const [account, setAccount] = useState('');
   const [key, setKey] = useState('');
 
   const onImportKeys = async () => {
     const keys = await validateNewAccount(account, key);
-    const encKeys = await encryptJson({list: keys}, 'h');
-    console.log(encKeys);
-    const dec = await decryptToJson(encKeys, 'a');
-    console.log(dec);
+    if (keys) {
+      addAccount(account, keys);
+    } else {
+      //TODO: show error popup
+    }
   };
 
   return (
@@ -48,4 +49,8 @@ const AddAccountByKey = ({navigation}) => {
 
 const styles = StyleSheet.create({});
 
-export default connect(null, {addAccount})(AddAccountByKey);
+const mapStateToProps = (state) => {
+  console.log(state);
+  return state;
+};
+export default connect(mapStateToProps, {addAccount})(AddAccountByKey);

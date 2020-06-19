@@ -7,14 +7,14 @@ const keySize = 256;
 const iterations = 100;
 
 // We add an md5 hash to check if decryption is successful later on.
-export const encryptJson = async (json, pwd) => {
+export const encryptJson = (json, pwd) => {
   json.hash = md5(json.list);
-  var msg = await encrypt(JSON.stringify(json), pwd);
+  var msg = encrypt(JSON.stringify(json), pwd);
   return msg;
 };
 
 // Decrypt and check the hash to confirm the decryption
-export const decryptToJson = async (msg, pwd) => {
+export const decryptToJson = (msg, pwd) => {
   try {
     let decrypted = decrypt(msg, pwd).toString(CryptoJS.enc.Utf8);
 
@@ -32,7 +32,7 @@ export const decryptToJson = async (msg, pwd) => {
 };
 
 // AES encryption with master password
-const encrypt = async (msg, pass) => {
+const encrypt = (msg, pass) => {
   var salt = CryptoJS.lib.WordArray.random(128 / 8);
   var key = CryptoJS.PBKDF2(pass, salt, {
     keySize: keySize / 32,
