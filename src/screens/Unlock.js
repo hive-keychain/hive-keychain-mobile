@@ -7,10 +7,10 @@ import PasswordInput from '../components/PasswordInput';
 import Separator from '../components/Separator';
 import {unlock, forgetAccounts} from '../actions';
 
-const Unlock = ({unlock, forgetAccounts}) => {
+const Unlock = ({unlockConnect, forgetAccountsConnect}) => {
   const [pwd, setPwd] = useState('testtest');
   const onSubmitUnlock = () => {
-    unlock(pwd);
+    unlockConnect(pwd);
   };
   return (
     <>
@@ -27,7 +27,7 @@ const Unlock = ({unlock, forgetAccounts}) => {
 
       <Separator height={80} />
       <Button title="Submit" onPress={onSubmitUnlock} />
-      <Button title="Forget" onPress={forgetAccounts} />
+      <Button title="Forget" onPress={forgetAccountsConnect} />
     </>
   );
 };
@@ -36,4 +36,7 @@ const styles = StyleSheet.create({
   textCentered: {textAlign: 'center'},
 });
 
-export default connect(null, {unlock, forgetAccounts})(Unlock);
+export default connect(null, {
+  unlockConnect: unlock,
+  forgetAccountsConnect: forgetAccounts,
+})(Unlock);

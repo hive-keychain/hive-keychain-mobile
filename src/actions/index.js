@@ -1,5 +1,12 @@
-import {SIGN_UP, ADD_ACCOUNT, UPDATE_ACCOUNT_ENC} from './types';
-import {encryptJson} from '../utils/encrypt';
+import {
+  SIGN_UP,
+  ADD_ACCOUNT,
+  UPDATE_ACCOUNT_ENC,
+  LOCK,
+  UNLOCK,
+  INIT_ACCOUNTS,
+} from './types';
+import {encryptJson, decryptToJson} from '../utils/encrypt';
 import {navigate} from '../navigationRef';
 
 export const signUp = (pwd) => {
@@ -19,6 +26,22 @@ export const addAccount = (name, keys) => (dispatch, getState) => {
   dispatch({type: UPDATE_ACCOUNT_ENC, payload: encrypted});
 };
 
-export const unlock = () => {};
+export const unlock = (mk) => (dispatch, getState) => {
+  try {
+    const accountsEncrypted = getState().accountsEncrypted;
+    const accounts = decryptToJson(accountsEncrypted, mk);
+    if (accounts && accounts.list) {
+      dispatch({type: UNLOCK, payload: mk});
+      dispatch({type: INIT_ACCOUNTS, payload: accounts.list});
+    }
+    console.log(INIT_ACCOUNTS);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const lock = () => {
+  return {type: LOCK};
+};
 
 export const forgetAccounts = () => ({type: UPDATE_ACCOUNT_ENC, payload: null});
