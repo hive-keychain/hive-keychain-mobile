@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useState} from 'react';
 import {AppRegistry} from 'react-native';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
@@ -8,12 +8,25 @@ import Loading from './src/screens/Loading';
 import {name as appName} from './app.json';
 import {store, persistor} from './src/store';
 
-const Root = () => (
-  <Provider store={store}>
-    <PersistGate loading={<Loading />} persistor={persistor}>
-      <App />
-    </PersistGate>
-  </Provider>
-);
+const Root = () => {
+  const [gateLifted, setGateLifted] = useState(false);
+
+  const onBeforeLift = () => {
+    // Take an action before the gate lifts
+    setTimeout(() => {
+      setGateLifted(true);
+    }, 3000);
+  };
+  return (
+    <Provider store={store}>
+      <PersistGate
+        loading={<Loading />}
+        persistor={persistor}
+        onBeforeLift={onBeforeLift}>
+        {gateLifted ? <App /> : <Loading />}
+      </PersistGate>
+    </Provider>
+  );
+};
 
 AppRegistry.registerComponent(appName, () => Root);

@@ -1,12 +1,13 @@
 import {
   SIGN_UP,
   ADD_ACCOUNT,
-  UPDATE_ACCOUNT_ENC,
+  FORGET_ACCOUNTS,
   LOCK,
   UNLOCK,
   INIT_ACCOUNTS,
 } from './types';
 import {encryptJson, decryptToJson} from '../utils/encrypt';
+import * as Keychain from 'react-native-keychain';
 import {navigate} from '../navigationRef';
 
 export const signUp = (pwd) => {
@@ -15,7 +16,7 @@ export const signUp = (pwd) => {
   return {type: SIGN_UP, payload: pwd};
 };
 
-export const addAccount = (name, keys) => (dispatch, getState) => {
+export const addAccount = (name, keys) => async (dispatch, getState) => {
   const mk = getState().auth.mk;
   const previousAccounts = getState().accounts;
   console.log(mk.previousAccounts);
@@ -23,18 +24,36 @@ export const addAccount = (name, keys) => (dispatch, getState) => {
   const accounts = [...previousAccounts, {name, keys}];
   console.log(accounts, mk);
   const encrypted = encryptJson({list: accounts}, mk);
-  dispatch({type: UPDATE_ACCOUNT_ENC, payload: encrypted});
+  console.log(await Keychain.getSupportedBiometryType());
+  console.log(Keychain.ACCESS_CONTROL);
+  await Keychain.setGenericPassword('accounts2', 'encrypted', {
+    accessControl: 'Fingerprint',
+    service: 'accountss',
+  });
 };
 
-export const unlock = (mk) => (dispatch, getState) => {
+export const unlock = (mk) => async (dispatch, getState) => {
   try {
-    const accountsEncrypted = getState().accountsEncrypted;
-    const accounts = decryptToJson(accountsEncrypted, mk);
-    if (accounts && accounts.list) {
-      dispatch({type: UNLOCK, payload: mk});
-      dispatch({type: INIT_ACCOUNTS, payload: accounts.list});
-    }
-    console.log(INIT_ACCOUNTS);
+    Keychain.getSupportedBiometryType().then((data) => {
+      console.log('Supported biometry: ' + data);
+
+      if (data) {
+        // Try auto login
+        Keychain.getGenericPassword({
+          service: 'accountss',
+          authenticationPrompt: {title: 'prompt'},
+        }).then((credentials) => {
+          const accountsEncrypted = credentials.password;
+          console.log(accountsEncrypted);
+          const accounts = decryptToJson(accountsEncrypted, mk);
+          if (accounts && accounts.list) {
+            dispatch({type: UNLOCK, payload: mk});
+            dispatch({type: INIT_ACCOUNTS, payload: accounts.list});
+          }
+          console.log(INIT_ACCOUNTS);
+        });
+      }
+    });
   } catch (e) {
     console.log(e);
   }
@@ -44,4 +63,6 @@ export const lock = () => {
   return {type: LOCK};
 };
 
-export const forgetAccounts = () => ({type: UPDATE_ACCOUNT_ENC, payload: null});
+export const forgetAccounts = () => ({
+  type: FORGET_ACCOUNTS,
+});

@@ -7,6 +7,7 @@ import {BoxPasswordStrengthDisplay} from 'react-native-password-strength-meter';
 import PasswordInput from '../components/PasswordInput';
 import Separator from '../components/Separator';
 import {signUp} from '../actions';
+import Background from '../components/Background';
 
 const Signup = ({signUp}) => {
   const [pwd, setPwd] = useState('testtest');
@@ -22,7 +23,7 @@ const Signup = ({signUp}) => {
     }
   };
   return (
-    <>
+    <Background>
       <Text h3 style={styles.textCentered}>
         Welcome to Keychain
       </Text>
@@ -44,7 +45,7 @@ const Signup = ({signUp}) => {
       <Text style={styles.error}>{error}</Text>
       <Separator height={80} />
       <Button title="Submit" onPress={onSubmitSignup} />
-    </>
+    </Background>
   );
 };
 

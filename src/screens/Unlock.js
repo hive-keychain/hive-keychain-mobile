@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import PasswordInput from '../components/PasswordInput';
 import Separator from '../components/Separator';
 import {unlock, forgetAccounts} from '../actions';
+import Background from '../components/Background';
 
 const Unlock = ({unlockConnect, forgetAccountsConnect}) => {
   const [pwd, setPwd] = useState('testtest');
@@ -13,7 +14,7 @@ const Unlock = ({unlockConnect, forgetAccountsConnect}) => {
     unlockConnect(pwd);
   };
   return (
-    <>
+    <Background>
       <Text h3 style={styles.textCentered}>
         Welcome to Keychain
       </Text>
@@ -28,7 +29,7 @@ const Unlock = ({unlockConnect, forgetAccountsConnect}) => {
       <Separator height={80} />
       <Button title="Submit" onPress={onSubmitUnlock} />
       <Button title="Forget" onPress={forgetAccountsConnect} />
-    </>
+    </Background>
   );
 };
 

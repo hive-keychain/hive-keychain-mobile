@@ -1,6 +1,6 @@
 import {SIGN_UP, LOCK, UNLOCK} from '../actions/types';
 
-export default (state = {mk: null}, {type, payload}) => {
+const authReducer = (state = {mk: null}, {type, payload}) => {
   switch (type) {
     case SIGN_UP:
       return {mk: payload};
@@ -12,3 +12,5 @@ export default (state = {mk: null}, {type, payload}) => {
       return state;
   }
 };
+
+export default authReducer;

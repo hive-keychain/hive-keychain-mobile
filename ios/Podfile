@@ -79,6 +79,12 @@ target 'mobileKeychain' do
 
   pod 'react-native-simple-crypto', :path => '../node_modules/react-native-simple-crypto'
 
+  pod 'RNKeychain', :path => '../node_modules/react-native-keychain'
+
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
   target 'mobileKeychainTests' do
     inherit! :complete
     # Pods for testing

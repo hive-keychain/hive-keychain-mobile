@@ -3,14 +3,11 @@ import thunk from 'redux-thunk';
 import {persistStore, persistReducer} from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
 import reducers from '../reducers';
-import {EncryptTransform} from './transform';
 
 const persistConfig = {
-  key: 'config',
+  key: 'root',
   storage: AsyncStorage,
-  whitelist: ['accountsEncrypted'],
-  blacklist: ['auth', 'accounts'],
-  transforms: [EncryptTransform],
+  whitelist: ['hasAccounts'],
 };
 
 const persistedReducers = persistReducer(persistConfig, reducers);
