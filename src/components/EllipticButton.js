@@ -11,7 +11,7 @@ export default (props) => {
       containerViewStyle={styles.container}
       buttonStyle={{...style, ...styles.button}}
       rounded
-      underlayColor={'red'}
+      underlayColor={'rgba(0,0,0,0)'}
       activeOpacity={0}
     />
   );

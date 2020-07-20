@@ -1,57 +1,42 @@
-import React, {useState} from 'react';
-import {StyleSheet, Button} from 'react-native';
-import {Text} from 'react-native-elements';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
-import {BoxPasswordStrengthDisplay} from 'react-native-password-strength-meter';
-
-import PasswordInput from '../components/PasswordInput';
-import Separator from '../components/Separator';
 import {signUp} from '../actions';
 import Background from '../components/Background';
+import Pincode from '../components/PinCode';
+import KeychainLogo from '../assets/keychain.svg';
 
 const Signup = ({signUp}) => {
-  const [pwd, setPwd] = useState('testtest');
-  const [confirm, setConfirm] = useState('testtest');
-  const [error, setError] = useState('');
-  const onSubmitSignup = () => {
-    if (pwd.length < 6) {
-      setError('Please enter a password.');
-    } else if (confirm !== pwd) {
-      setError('Passwords mismatch');
-    } else {
-      signUp(pwd);
-    }
+  const onSubmitSignup = (pwd) => {
+    signUp(pwd);
   };
+
   return (
     <Background>
-      <Text h3 style={styles.textCentered}>
-        Welcome to Keychain
-      </Text>
-
-      <Separator height={50} />
-      <PasswordInput
-        label="Master Password"
-        value={pwd}
-        onChangeText={setPwd}
-        style={styles.confirmPwd}
-      />
-      <BoxPasswordStrengthDisplay labelVisible={false} password={pwd} />
-      <Separator height={20} />
-      <PasswordInput
-        label="Confirm Password"
-        value={confirm}
-        onChangeText={setConfirm}
-      />
-      <Text style={styles.error}>{error}</Text>
-      <Separator height={80} />
-      <Button title="Submit" onPress={onSubmitSignup} />
+      <Pincode
+        signup
+        title="Chose your PIN"
+        confirm="Confirm your PIN"
+        submit={onSubmitSignup}>
+        <View style={styles.blackCircle}>
+          <KeychainLogo {...styles.image} />
+        </View>
+      </Pincode>
     </Background>
   );
 };
 
 const styles = StyleSheet.create({
-  textCentered: {textAlign: 'center'},
-  error: {color: 'red'},
+  blackCircle: {
+    width: 100,
+    height: 100,
+    backgroundColor: 'black',
+    borderRadius: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {width: 49, height: 41},
 });
 
 export default connect(null, {signUp})(Signup);
