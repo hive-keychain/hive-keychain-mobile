@@ -5,7 +5,6 @@ import PinElement from './PinElement';
 import PinCompletionIndicator from './PinCompletionIndicator';
 import Separator from '../Separator';
 import Toast from 'react-native-simple-toast';
-import {useFocusEffect} from '@react-navigation/native';
 
 const PinCode = ({
   height,
@@ -49,11 +48,15 @@ const PinCode = ({
   }, [navigation]);
 
   useEffect(() => {
+    console.log(code);
     if (code.length === 6) {
       if (signup) {
         setStep(1);
       } else {
-        submit(code.join(''));
+        console.log(code.join(''));
+        submit(code.join(''), () => {
+          setCode([]);
+        });
       }
     }
     if (confirmCode.length === 6) {

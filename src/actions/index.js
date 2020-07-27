@@ -9,6 +9,7 @@ import {
 import {encryptJson, decryptToJson} from '../utils/encrypt';
 import * as Keychain from 'react-native-keychain';
 import {navigate} from '../navigationRef';
+import Toast from 'react-native-simple-toast';
 
 export const signUp = (pwd) => {
   console.log('navigate out');
@@ -24,39 +25,33 @@ export const addAccount = (name, keys) => async (dispatch, getState) => {
   const accounts = [...previousAccounts, {name, keys}];
   console.log(accounts, mk);
   const encrypted = encryptJson({list: accounts}, mk);
-  console.log(await Keychain.getSupportedBiometryType());
-  console.log(Keychain.ACCESS_CONTROL);
-  await Keychain.setGenericPassword('accounts2', 'encrypted', {
+  const a = await Keychain.setGenericPassword('accounts2', encrypted, {
     accessControl: 'Fingerprint',
-    service: 'accountss',
+    service: 'accounts2',
   });
+  console.log(a);
 };
 
-export const unlock = (mk) => async (dispatch, getState) => {
-  try {
-    Keychain.getSupportedBiometryType().then((data) => {
-      console.log('Supported biometry: ' + data);
-
-      if (data) {
-        // Try auto login
-        Keychain.getGenericPassword({
-          service: 'accountss',
-          authenticationPrompt: {title: 'prompt'},
-        }).then((credentials) => {
-          const accountsEncrypted = credentials.password;
-          console.log(accountsEncrypted);
-          const accounts = decryptToJson(accountsEncrypted, mk);
-          if (accounts && accounts.list) {
-            dispatch({type: UNLOCK, payload: mk});
-            dispatch({type: INIT_ACCOUNTS, payload: accounts.list});
-          }
-          console.log(INIT_ACCOUNTS);
-        });
+export const unlock = (mk, errorCallback) => async (dispatch, getState) => {
+  Keychain.getGenericPassword({
+    service: 'accounts2',
+    authenticationPrompt: {title: 'prompt'},
+  })
+    .then((credentials) => {
+      const accountsEncrypted = credentials.password;
+      console.log(credentials, accountsEncrypted);
+      const accounts = decryptToJson(accountsEncrypted, mk);
+      if (accounts && accounts.list) {
+        dispatch({type: UNLOCK, payload: mk});
+        dispatch({type: INIT_ACCOUNTS, payload: accounts.list});
       }
+      console.log(INIT_ACCOUNTS);
+    })
+    .catch((e) => {
+      Toast.show('Wrong PIN code');
+      errorCallback();
+      console.log(e);
     });
-  } catch (e) {
-    console.log(e);
-  }
 };
 
 export const lock = () => {

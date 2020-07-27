@@ -1,5 +1,4 @@
 import React from 'react';
-import {Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Introduction from './screens/Introduction';
@@ -9,13 +8,21 @@ import CreateAccount from './screens/CreateAccount';
 import Main from './screens/Main';
 import AddAccountByKey from './screens/addAccounts/AddAccountByKey';
 import MoreInformation from './components/MoreInformation';
+import ForgotPIN from './components/ForgotPIN';
 import {setNavigator} from './navigationRef';
 import {connect} from 'react-redux';
 
 const Stack = createStackNavigator();
 
 const App = ({hasAccounts, auth}) => {
-  console.log('app');
+  const headerTransparent = {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    zIndex: 100,
+    top: 0,
+    left: 0,
+    right: 0,
+  };
   const renderNavigator = () => {
     if (!hasAccounts) {
       return (
@@ -43,14 +50,6 @@ const App = ({hasAccounts, auth}) => {
                 return <MoreInformation />;
               },
               headerTintColor: 'white',
-              headerTransparent: {
-                position: 'absolute',
-                backgroundColor: 'transparent',
-                zIndex: 100,
-                top: 0,
-                left: 0,
-                right: 0,
-              },
             }}
             component={AddAccountByKey}
           />
@@ -59,7 +58,18 @@ const App = ({hasAccounts, auth}) => {
     } else if (!auth.mk) {
       return (
         <Stack.Navigator>
-          <Stack.Screen name="UnlockScreen" component={Unlock} />
+          <Stack.Screen
+            name="UnlockScreen"
+            component={Unlock}
+            options={{
+              title: '',
+              headerRight: () => {
+                return <ForgotPIN />;
+              },
+              headerTintColor: 'white',
+              headerTransparent,
+            }}
+          />
         </Stack.Navigator>
       );
     } else {

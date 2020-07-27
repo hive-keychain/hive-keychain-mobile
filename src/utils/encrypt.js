@@ -27,7 +27,7 @@ export const decryptToJson = (msg, pwd) => {
     }
   } catch (e) {
     console.log(e);
-    return null;
+    throw new Error('Unable to decrypt');
   }
 };
 

@@ -6,9 +6,9 @@ import Background from '../components/Background';
 import Pincode from '../components/PinCode';
 import KeychainLogo from '../assets/keychain.svg';
 
-const Signup = ({signUp, navigation}) => {
+const Signup = ({signUpConnect, navigation}) => {
   const onSubmitSignup = (pwd) => {
-    signUp(pwd);
+    signUpConnect(pwd);
   };
 
   return (
@@ -40,4 +40,4 @@ const styles = StyleSheet.create({
   image: {width: 49, height: 41},
 });
 
-export default connect(null, {signUp})(Signup);
+export default connect(null, {signUpConnect: signUp})(Signup);
