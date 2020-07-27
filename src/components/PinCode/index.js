@@ -5,8 +5,17 @@ import PinElement from './PinElement';
 import PinCompletionIndicator from './PinCompletionIndicator';
 import Separator from '../Separator';
 import Toast from 'react-native-simple-toast';
+import {useFocusEffect} from '@react-navigation/native';
 
-const PinCode = ({height, children, signup, title, confirm, submit}) => {
+const PinCode = ({
+  height,
+  children,
+  signup,
+  title,
+  confirm,
+  submit,
+  navigation,
+}) => {
   const config = [
     [
       {refNumber: 1, number: 1},
@@ -28,6 +37,16 @@ const PinCode = ({height, children, signup, title, confirm, submit}) => {
   const [code, setCode] = useState([]);
   const [confirmCode, setConfirmCode] = useState([]);
   const [step, setStep] = useState(0);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setStep(0);
+      setCode([]);
+      setConfirmCode([]);
+    });
+
+    // Return the function to unsubscribe from the event so it gets removed on unmount
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     if (code.length === 6) {

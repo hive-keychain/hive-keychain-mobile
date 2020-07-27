@@ -12,7 +12,7 @@ import {navigate} from '../navigationRef';
 
 export const signUp = (pwd) => {
   console.log('navigate out');
-  navigate('AddAccountScreen');
+  navigate('AddAccountByKeyScreen');
   return {type: SIGN_UP, payload: pwd};
 };
 

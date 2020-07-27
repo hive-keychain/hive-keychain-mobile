@@ -1,4 +1,5 @@
 import React from 'react';
+import {Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import Introduction from './screens/Introduction';
@@ -6,8 +7,8 @@ import Signup from './screens/Signup';
 import Unlock from './screens/Unlock';
 import CreateAccount from './screens/CreateAccount';
 import Main from './screens/Main';
-import AddAccount from './screens/addAccounts/AddAccount';
 import AddAccountByKey from './screens/addAccounts/AddAccountByKey';
+import MoreInformation from './components/MoreInformation';
 import {setNavigator} from './navigationRef';
 import {connect} from 'react-redux';
 
@@ -34,9 +35,23 @@ const App = ({hasAccounts, auth}) => {
             options={{headerShown: false}}
             component={CreateAccount}
           />
-          <Stack.Screen name="AddAccountScreen" component={AddAccount} />
           <Stack.Screen
             name="AddAccountByKeyScreen"
+            options={{
+              title: 'ADD ACCOUNT',
+              headerRight: () => {
+                return <MoreInformation />;
+              },
+              headerTintColor: 'white',
+              headerTransparent: {
+                position: 'absolute',
+                backgroundColor: 'transparent',
+                zIndex: 100,
+                top: 0,
+                left: 0,
+                right: 0,
+              },
+            }}
             component={AddAccountByKey}
           />
         </Stack.Navigator>

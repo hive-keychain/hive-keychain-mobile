@@ -6,7 +6,7 @@ import Background from '../components/Background';
 import Pincode from '../components/PinCode';
 import KeychainLogo from '../assets/keychain.svg';
 
-const Signup = ({signUp}) => {
+const Signup = ({signUp, navigation}) => {
   const onSubmitSignup = (pwd) => {
     signUp(pwd);
   };
@@ -15,6 +15,7 @@ const Signup = ({signUp}) => {
     <Background>
       <Pincode
         signup
+        navigation={navigation}
         title="Chose your PIN"
         confirm="Confirm your PIN"
         submit={onSubmitSignup}>
