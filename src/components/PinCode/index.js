@@ -5,6 +5,9 @@ import PinElement from './PinElement';
 import PinCompletionIndicator from './PinCompletionIndicator';
 import Separator from '../Separator';
 import Toast from 'react-native-simple-toast';
+import IntentLauncher from 'react-native-intent-launcher';
+import CustomModal from '../CustomModal';
+import EllipticButton from '../EllipticButton';
 
 const PinCode = ({
   height,
@@ -36,6 +39,8 @@ const PinCode = ({
   const [code, setCode] = useState([]);
   const [confirmCode, setConfirmCode] = useState([]);
   const [step, setStep] = useState(0);
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       setStep(0);
@@ -54,7 +59,10 @@ const PinCode = ({
         setStep(1);
       } else {
         console.log(code.join(''));
-        submit(code.join(''), () => {
+        submit(code.join(''), (unsafeBiometrics) => {
+          if (unsafeBiometrics) {
+            setVisible(true);
+          }
           setCode([]);
         });
       }
@@ -120,11 +128,39 @@ const PinCode = ({
           </View>
         ))}
       </View>
+      <CustomModal
+        animation="slide"
+        visible={visible}
+        mode="overFullScreen"
+        transparentContainer={true}
+        bottomHalf={true}
+        outsideClick={() => {
+          setVisible(false);
+        }}>
+        <Text style={styles.h4}>Unsupported biometrics</Text>
+        <Separator />
+        <Text>
+          Your preferred biometrics is considered as unsafe on this device.
+        </Text>
+        <Separator />
+        <Text>Please change it to Fingerprints.</Text>
+        <Separator height={50} />
+        <EllipticButton
+          title="Go to Settings"
+          onPress={() => {
+            IntentLauncher.startActivity({
+              action: 'android.settings.SECURITY_SETTINGS',
+            });
+            setVisible(false);
+          }}
+        />
+      </CustomModal>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  h4: {fontWeight: 'bold', fontSize: 18},
   bgd: {
     display: 'flex',
     justifyContent: 'center',

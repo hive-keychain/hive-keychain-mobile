@@ -12,7 +12,6 @@ import {navigate} from '../navigationRef';
 import Toast from 'react-native-simple-toast';
 
 export const signUp = (pwd) => {
-  console.log('navigate out');
   navigate('AddAccountByKeyScreen');
   return {type: SIGN_UP, payload: pwd};
 };
@@ -26,7 +25,7 @@ export const addAccount = (name, keys) => async (dispatch, getState) => {
   console.log(accounts, mk);
   const encrypted = encryptJson({list: accounts}, mk);
   const a = await Keychain.setGenericPassword('accounts2', encrypted, {
-    accessControl: 'Fingerprint',
+    accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY_OR_DEVICE_PASSCODE,
     service: 'accounts2',
   });
   console.log(a);
@@ -35,7 +34,7 @@ export const addAccount = (name, keys) => async (dispatch, getState) => {
 export const unlock = (mk, errorCallback) => async (dispatch, getState) => {
   Keychain.getGenericPassword({
     service: 'accounts2',
-    authenticationPrompt: {title: 'prompt'},
+    authenticationPrompt: {title: 'Authenticate'},
   })
     .then((credentials) => {
       const accountsEncrypted = credentials.password;
@@ -48,9 +47,13 @@ export const unlock = (mk, errorCallback) => async (dispatch, getState) => {
       console.log(INIT_ACCOUNTS);
     })
     .catch((e) => {
-      Toast.show('Wrong PIN code');
-      errorCallback();
-      console.log(e);
+      console.log(e.message);
+      if (e.message === 'Wrapped error: User not authenticated') {
+        errorCallback(true);
+      } else {
+        Toast.show('Authentication failed');
+        errorCallback();
+      }
     });
 };
 

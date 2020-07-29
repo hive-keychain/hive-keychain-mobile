@@ -73,6 +73,42 @@ const getPublicKeyFromPrivateKeyString = (pwd) => {
   }
 };
 
+export const validateFromObject = async ({
+  name,
+  keys: {memo, posting, active},
+}) => {
+  const account = (await client.database.getAccounts([name]))[0];
+  console.log(account);
+  let keys = {};
+  if (
+    memo &&
+    isMemoWif(getPublicKeyFromPrivateKeyString(memo), account.memo_key)
+  ) {
+    keys = {memo, memoPubkey: account.memo_key};
+  }
+  if (
+    posting &&
+    getPubkeyWeight(getPublicKeyFromPrivateKeyString(posting), account.posting)
+  ) {
+    keys = {
+      ...keys,
+      posting,
+      postingPubkey: getPublicKeyFromPrivateKeyString(posting),
+    };
+  }
+  if (
+    active &&
+    getPubkeyWeight(getPublicKeyFromPrivateKeyString(active), account.active)
+  ) {
+    keys = {
+      ...keys,
+      active,
+      activePubkey: getPublicKeyFromPrivateKeyString(active),
+    };
+  }
+  return Object.keys(keys).length ? keys : null;
+};
+
 export default async (username, pwd) => {
   const account = (await client.database.getAccounts([username]))[0];
   const publicKey = getPublicKeyFromPrivateKeyString(pwd);

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Text} from 'react-native-elements';
 import Separator from '../../components/Separator';
 import {connect} from 'react-redux';
@@ -14,13 +14,13 @@ import KeyLogo from '../../assets/addAccount/icon_key.svg';
 import QRLogo from '../../assets/addAccount/icon_scan-qr.svg';
 import Button from '../../components/EllipticButton';
 
-const AddAccountByKey = ({addAccount}) => {
+const AddAccountByKey = ({addAccountConnect, navigation}) => {
   const [account, setAccount] = useState(ACCOUNT || '');
   const [key, setKey] = useState(KEY || '');
   const onImportKeys = async () => {
     const keys = await validateNewAccount(account, key);
     if (keys) {
-      addAccount(account, keys);
+      addAccountConnect(account, keys);
     } else {
       //TODO: show error popup
     }
@@ -45,7 +45,14 @@ const AddAccountByKey = ({addAccount}) => {
         <CustomInput
           placeholder="PRIVATE KEY"
           leftIcon={<KeyLogo />}
-          rightIcon={<QRLogo />}
+          rightIcon={
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ScanQRScreen');
+              }}>
+              <QRLogo />
+            </TouchableOpacity>
+          }
           value={key}
           onChangeText={setKey}
         />
@@ -65,4 +72,6 @@ const mapStateToProps = (state) => {
   console.log(state);
   return state;
 };
-export default connect(mapStateToProps, {addAccount})(AddAccountByKey);
+export default connect(mapStateToProps, {addAccountConnect: addAccount})(
+  AddAccountByKey,
+);
