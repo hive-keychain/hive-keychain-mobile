@@ -6,14 +6,15 @@ import {unlock, forgetAccounts} from '../actions';
 import Background from '../components/Background';
 import Pincode from '../components/PinCode';
 import KeychainLogo from '../assets/keychain.svg';
+import {translate} from '../utils/localize';
 
 const Unlock = ({unlockConnect, forgetAccountsConnect, navigation}) => {
+  console.log('show unlock');
   return (
     <Background>
       <Pincode
         navigation={navigation}
-        title="Enter your PIN"
-        confirm="Confirm your PIN"
+        title={translate('enterPIN')}
         submit={unlockConnect}>
         <View style={styles.blackCircle}>
           <KeychainLogo {...styles.image} />

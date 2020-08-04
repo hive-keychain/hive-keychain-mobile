@@ -25,6 +25,7 @@ const App = ({hasAccounts, auth}) => {
     left: 0,
     right: 0,
   };
+
   const renderNavigator = () => {
     if (!hasAccounts) {
       return (
