@@ -14,7 +14,7 @@ const Unlock = ({unlockConnect, forgetAccountsConnect, navigation}) => {
     <Background>
       <Pincode
         navigation={navigation}
-        title={translate('enterPIN')}
+        title={translate('unlock.enterPIN')}
         submit={unlockConnect}>
         <View style={styles.blackCircle}>
           <KeychainLogo {...styles.image} />

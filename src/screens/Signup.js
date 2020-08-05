@@ -5,6 +5,7 @@ import {signUp} from '../actions';
 import Background from '../components/Background';
 import Pincode from '../components/PinCode';
 import KeychainLogo from '../assets/keychain.svg';
+import {translate} from '../utils/localize';
 
 const Signup = ({signUpConnect, navigation}) => {
   const onSubmitSignup = (pwd) => {
@@ -16,8 +17,8 @@ const Signup = ({signUpConnect, navigation}) => {
       <Pincode
         signup
         navigation={navigation}
-        title="Chose your PIN"
-        confirm="Confirm your PIN"
+        title={translate('signup.choose')}
+        confirm={translate('signup.confirm')}
         submit={onSubmitSignup}>
         <View style={styles.blackCircle}>
           <KeychainLogo {...styles.image} />

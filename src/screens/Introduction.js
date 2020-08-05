@@ -5,6 +5,7 @@ import GradientEllipse from '../components/GradientEllipse';
 import KeychainLogo from '../assets/kc_hive.svg';
 import Separator from '../components/Separator';
 import EllipticButton from '../components/EllipticButton';
+import {translate} from '../utils/localize';
 
 const Introduction = ({navigation}) => {
   return (
@@ -13,26 +14,21 @@ const Introduction = ({navigation}) => {
       <KeychainLogo {...styles.image} />
       <Separator height={30} />
       <GradientEllipse style={styles.gradient} dotColor="red">
-        <Text style={styles.text}>
-          HIVE powers a growing ecosystem of Web 3.0 websites and applications.
-        </Text>
+        <Text style={styles.text}>{translate('intro.text')}</Text>
       </GradientEllipse>
       <GradientEllipse style={styles.gradient} dotColor="white">
-        <Text style={styles.text}>
-          Safely manage your funds and connect to HIVE based services with
-          KEYCHAIN.
-        </Text>
+        <Text style={styles.text}>{translate('intro.text')}</Text>
       </GradientEllipse>
       <Separator height={100} />
       <EllipticButton
-        title="Existing Account"
+        title={translate('intro.existingAccount')}
         onPress={() => {
           navigation.navigate('SignupScreen');
         }}
       />
       <Separator height={30} />
       <EllipticButton
-        title="New Account"
+        title={translate('intro.createAccount')}
         onPress={() => {
           navigation.navigate('CreateAccountScreen');
         }}

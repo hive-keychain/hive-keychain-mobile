@@ -10,6 +10,7 @@ import {encryptJson, decryptToJson} from '../utils/encrypt';
 import * as Keychain from 'react-native-keychain';
 import {navigate} from '../navigationRef';
 import Toast from 'react-native-simple-toast';
+import {translate} from '../utils/localize';
 
 export const signUp = (pwd) => {
   navigate('AddAccountByKeyScreen');
@@ -51,7 +52,7 @@ export const unlock = (mk, errorCallback) => async (dispatch, getState) => {
       if (e.message === 'Wrapped error: User not authenticated') {
         errorCallback(true);
       } else {
-        Toast.show('Authentication failed');
+        Toast.show(translate('toast.authFailed'));
         errorCallback();
       }
     });

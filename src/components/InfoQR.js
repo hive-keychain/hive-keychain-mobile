@@ -3,22 +3,25 @@ import {StyleSheet, Text} from 'react-native';
 import Information from '../assets/addAccount/icon_info.svg';
 import Separator from './Separator';
 import IconSlider from './IconSlider';
+import {translate} from '../utils/localize';
 
 export default () => {
   return (
     <IconSlider icon={<Information style={styles.info} />}>
-      <Text style={styles.h4}>Import via QR Code</Text>
+      <Text style={styles.h4}>{translate('components.infoQR.title')}</Text>
       <Separator />
-      <Text>
-        You can import an account instantly by scanning its corresponding QR
-        Code.
-      </Text>
+      <Text>{translate('components.infoQR.text1')}</Text>
       <Separator height={10} />
       <Text>
-        <Text>To import from Hive Keychain browser extension, navigate to</Text>
-        <Text style={styles.bold}> Settings</Text> then click on{' '}
-        <Text style={styles.bold}> Manage Accounts</Text> and{' '}
-        <Text style={styles.bold}> Show QR Code</Text>.
+        <Text>{translate('components.infoQR.text2')}</Text>
+        <Text style={styles.bold}> {translate('components.infoQR.text3')}</Text>
+        {translate('components.infoQR.text4')}
+        <Text style={styles.bold}>
+          {' '}
+          {translate('components.infoQR.text5')}
+        </Text>{' '}
+        {translate('components.infoQR.text6')}{' '}
+        <Text style={styles.bold}>{translate('components.infoQR.text7')}</Text>.
       </Text>
     </IconSlider>
   );

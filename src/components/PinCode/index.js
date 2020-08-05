@@ -8,6 +8,7 @@ import Toast from 'react-native-simple-toast';
 import IntentLauncher from 'react-native-intent-launcher';
 import CustomModal from '../CustomModal';
 import EllipticButton from '../EllipticButton';
+import {translate} from '../../utils/localize';
 
 const PinCode = ({
   height,
@@ -74,7 +75,7 @@ const PinCode = ({
           confirmCode.every((value, index) => value === code[index])
         )
       ) {
-        Toast.show('PIN codes do not match');
+        Toast.show(translate('toast.noMatch'));
         setStep(0);
         setCode([]);
         setConfirmCode([]);
@@ -137,16 +138,20 @@ const PinCode = ({
         outsideClick={() => {
           setVisible(false);
         }}>
-        <Text style={styles.h4}>Unsupported biometrics</Text>
-        <Separator />
-        <Text>
-          Your preferred biometrics is considered as unsafe on this device.
+        <Text style={styles.h4}>
+          {translate('components.pinCode.unsupportedBiometrics.title')}
         </Text>
         <Separator />
-        <Text>Please change it to Fingerprints.</Text>
+        <Text>
+          {translate('components.pinCode.unsupportedBiometrics.text1')}
+        </Text>
+        <Separator />
+        <Text>
+          {translate('components.pinCode.unsupportedBiometrics.text2')}
+        </Text>
         <Separator height={50} />
         <EllipticButton
-          title="Go to Settings"
+          title={translate('components.pinCode.unsupportedBiometrics.button')}
           onPress={() => {
             IntentLauncher.startActivity({
               action: 'android.settings.SECURITY_SETTINGS',

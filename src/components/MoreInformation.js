@@ -3,32 +3,26 @@ import {StyleSheet, Text} from 'react-native';
 import Information from '../assets/addAccount/icon_info.svg';
 import Separator from './Separator';
 import IconSlider from './IconSlider';
+import {translate} from '../utils/localize';
 
 export default () => {
   return (
     <IconSlider icon={<Information style={styles.info} />}>
-      <Text style={styles.h4}>KEYS (HIVE PASSWORDS)</Text>
-      <Separator />
-      <Text>
-        Different actions require the use of different KEYS. These KEYS are
-        generated when a new HIVE account is created.
+      <Text style={styles.h4}>
+        {translate('components.moreInformation.title')}
       </Text>
+      <Separator />
+      <Text>{translate('components.moreInformation.text1')}</Text>
       <Separator height={10} />
       <Text>
-        <Text>
-          You may use your Posting, Active, or Master Key to import your
-          account.
-        </Text>
+        <Text>{translate('components.moreInformation.text2')}</Text>
         <Text style={styles.bold}>
           {' '}
-          (Use your Master Key to unlock all app features).
+          {translate('components.moreInformation.text3')}
         </Text>
       </Text>
       <Separator height={10} />
-      <Text>
-        If you use a Master Key, it will NOT be saved and will only be used to
-        generate your other Keys. You may add/edit Accounts or Keys at any time.
-      </Text>
+      <Text>{translate('components.moreInformation.text4')}</Text>
     </IconSlider>
   );
 };

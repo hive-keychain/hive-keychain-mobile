@@ -1,1 +1,52 @@
-{"enterPIN": "Enter your PIN"}
+{
+  "unlock": {"enterPIN": "Enter your PIN"},
+  "signup": {"confirm": "Confirm your PIN", "choose": "Choose your PIN"},
+  "intro": {
+    "text": "HIVE powers a growing ecosystem of Web 3.0 websites and applications.",
+    "manage": "Safely manage your funds and connect to HIVE based services with KEYCHAIN.",
+    "existingAccount": "Existing Account",
+    "createAccount": "New Account"
+  },
+  "addAccountByKey": {"text": "Add your existing HIVE account to Keychain"},
+  "common": {
+    "import": "Import",
+    "username": "username",
+    "privateKey": "Private Key"
+  },
+  "components": {
+    "moreInformation": {
+      "title": "KEYS (HIVE PASSWORDS)",
+      "text1": "Different actions require the use of different KEYS. These KEYS are generated when a new HIVE account is created.",
+      "text2": "You may use your Posting, Active, or Master Key to import your account.",
+      "text3": "(Use your Master Key to unlock all app features).",
+      "text4": "If you use a Master Key, it will NOT be saved and will only be used to generate your other Keys. You may add/edit Accounts or Keys at any time."
+    },
+    "infoQR": {
+      "title": "Import via QR Code",
+      "text1": "You can import an account instantly by scanning its corresponding QR Code.",
+      "text2": "To import from Hive Keychain browser extension, navigate to",
+      "text3": "Settings",
+      "text4": " then click on",
+      "text5": "Manage Accounts",
+      "text6": "and",
+      "text7": "Show QR Code"
+    },
+    "forgotPIN": {
+      "title": "Forgot PIN?",
+      "text": "If you forgot your PIN, you can reset Keychain and clear your data but will have to enter all your keys again.",
+      "button": "Reset Keychain"
+    },
+    "pinCode": {
+      "unsupportedBiometrics": {
+        "title": "Unsupported biometrics",
+        "text1": "Your preferred biometrics is considered as unsafe on this device.",
+        "text2": "Please change it to Fingerprints.",
+        "button": "Go to Settings"
+      }
+    }
+  },
+  "toast": {
+    "noMatch": "PIN codes do not match",
+    "authFailed": "Authentication failed"
+  }
+}

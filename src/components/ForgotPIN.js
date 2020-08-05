@@ -5,18 +5,19 @@ import {forgetAccounts} from '../actions';
 import Separator from './Separator';
 import IconSlider from './IconSlider';
 import EllipticButton from './EllipticButton';
+import {translate} from '../utils/localize';
 
 const ForgotPIN = ({forgetAccountsConnect}) => {
   return (
     <IconSlider icon={<Text style={styles.header}>Forgot PIN?</Text>}>
-      <Text style={styles.h4}>Forgot PIN?</Text>
+      <Text style={styles.h4}>{translate('components.forgotPIN.title')}</Text>
       <Separator />
-      <Text>
-        If you forgot your PIN, you can reset Keychain and clear your data but
-        will have to enter all your keys again.
-      </Text>
+      <Text>{translate('components.forgotPIN.text')}</Text>
       <Separator height={50} />
-      <EllipticButton title="Reset Keychain" onPress={forgetAccountsConnect} />
+      <EllipticButton
+        title={translate('components.forgotPIN.button')}
+        onPress={forgetAccountsConnect}
+      />
     </IconSlider>
   );
 };

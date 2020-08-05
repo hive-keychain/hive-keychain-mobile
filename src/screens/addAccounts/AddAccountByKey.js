@@ -13,6 +13,7 @@ import UserLogo from '../../assets/addAccount/icon_username.svg';
 import KeyLogo from '../../assets/addAccount/icon_key.svg';
 import QRLogo from '../../assets/addAccount/icon_scan-qr.svg';
 import Button from '../../components/EllipticButton';
+import {translate} from '../../utils/localize';
 
 const AddAccountByKey = ({addAccountConnect, navigation}) => {
   const [account, setAccount] = useState(ACCOUNT || '');
@@ -32,10 +33,10 @@ const AddAccountByKey = ({addAccountConnect, navigation}) => {
         <Separator height={100} />
         <TitleLogo />
         <Separator height={50} />
-        <Text style={styles.text}>Log in with your existing HIVE account</Text>
+        <Text style={styles.text}>{translate('addAccountByKey.text')}</Text>
         <Separator height={50} />
         <CustomInput
-          placeholder="USERNAME"
+          placeholder={translate('common.username').toUpperCase()}
           leftIcon={<UserLogo />}
           value={account}
           onChangeText={setAccount}
@@ -43,7 +44,7 @@ const AddAccountByKey = ({addAccountConnect, navigation}) => {
         <Separator height={50} />
 
         <CustomInput
-          placeholder="PRIVATE KEY"
+          placeholder={translate('common.privateKey').toUpperCase()}
           leftIcon={<KeyLogo />}
           rightIcon={
             <TouchableOpacity
@@ -58,7 +59,10 @@ const AddAccountByKey = ({addAccountConnect, navigation}) => {
         />
         <Separator height={100} />
       </View>
-      <Button title="IMPORT" onPress={onImportKeys} />
+      <Button
+        title={translate('common.import').toUpperCase()}
+        onPress={onImportKeys}
+      />
     </Background>
   );
 };
