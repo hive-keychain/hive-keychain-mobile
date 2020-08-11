@@ -5,12 +5,15 @@ import {
   LOCK,
   UNLOCK,
   INIT_ACCOUNTS,
+  ACTIVE_ACCOUNT,
+  GLOBAL_PROPS,
 } from './types';
 import {encryptJson, decryptToJson} from '../utils/encrypt';
 import * as Keychain from 'react-native-keychain';
 import {navigate} from '../navigationRef';
 import Toast from 'react-native-simple-toast';
 import {translate} from '../utils/localize';
+import {client} from '../utils/dhive';
 
 export const signUp = (pwd) => {
   navigate('AddAccountByKeyScreen');
@@ -65,3 +68,21 @@ export const lock = () => {
 export const forgetAccounts = () => ({
   type: FORGET_ACCOUNTS,
 });
+
+export const loadAccount = (username) => async (dispatch, getState) => {
+  const account = (await client.database.getAccounts([username]))[0];
+  const keys = getState().accounts.find((e) => e.name === username).keys;
+  console.log(ACTIVE_ACCOUNT);
+  dispatch({
+    type: ACTIVE_ACCOUNT,
+    payload: {
+      account,
+      keys,
+    },
+  });
+};
+
+export const loadProperties = () => async (dispatch) => {
+  const props = await client.database.getDynamicGlobalProperties();
+  dispatch({type: GLOBAL_PROPS, payload: props});
+};

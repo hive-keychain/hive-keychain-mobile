@@ -61,6 +61,7 @@ const App = ({hasAccounts, auth}) => {
             name="ScanQRScreen"
             options={{
               headerTransparent,
+              headerTintColor: 'white',
               title: '',
               headerRight: () => {
                 return <InfoQR />;
