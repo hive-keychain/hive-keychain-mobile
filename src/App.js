@@ -5,6 +5,7 @@ import Introduction from './screens/Introduction';
 import Signup from './screens/Signup';
 import Unlock from './screens/Unlock';
 import CreateAccount from './screens/CreateAccount';
+import Transfer from './screens/activeAccount/Transfer';
 import Main from './screens/Main';
 import AddAccountByKey from './screens/addAccounts/AddAccountByKey';
 import ScanQR from './screens/addAccounts/ScanQR';
@@ -92,6 +93,15 @@ const App = ({hasAccounts, auth}) => {
       return (
         <Stack.Navigator>
           <Stack.Screen name="MainScreen" component={Main} />
+          <Stack.Screen
+            name="TransferScreen"
+            component={Transfer}
+            options={{
+              headerTintColor: 'white',
+              headerTransparent,
+              title: 'TRANSFER FUNDS',
+            }}
+          />
         </Stack.Navigator>
       );
     }

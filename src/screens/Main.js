@@ -4,6 +4,7 @@ import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {lock, loadAccount, loadProperties} from '../actions';
 import {withCommas, toHP} from '../utils/format';
+import Background from '../components/Background';
 
 const Main = ({
   lockConnect,
@@ -11,6 +12,7 @@ const Main = ({
   loadPropertiesConnect,
   user,
   globalProperties,
+  navigation,
 }) => {
   useEffect(() => {
     loadAccountConnect('keychain');
@@ -20,7 +22,7 @@ const Main = ({
     return null;
   }
   return (
-    <>
+    <Background>
       <Text h3 style={styles.textCentered}>
         Main
       </Text>
@@ -32,8 +34,17 @@ const Main = ({
             toHP(user.account.vesting_shares, globalProperties),
           )} HP`}
       </Text>
+      <Button
+        title="Transfer"
+        onPress={() => {
+          navigation.navigate('TransferScreen', {initialCurrency: 'HBD'});
+        }}
+      />
+      <Button title="Delegations" onPress={lockConnect} />
+      <Button title="Witness" onPress={lockConnect} />
+      <Button title="History" onPress={lockConnect} />
       <Button title="Lock" onPress={lockConnect} />
-    </>
+    </Background>
   );
 };
 

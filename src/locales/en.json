@@ -11,7 +11,9 @@
   "common": {
     "import": "Import",
     "username": "username",
-    "privateKey": "Private Key"
+    "privateKey": "Private Key",
+    "amount": "amount",
+    "memo": "memo"
   },
   "components": {
     "moreInformation": {

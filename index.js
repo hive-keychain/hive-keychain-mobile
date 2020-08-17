@@ -7,6 +7,7 @@ import App from './src/App';
 import Loading from './src/screens/Loading';
 import {name as appName} from './app.json';
 import {store, persistor} from './src/store';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 const Root = () => {
   const [gateLifted, setGateLifted] = useState(false);
@@ -19,12 +20,14 @@ const Root = () => {
   };
   return (
     <Provider store={store}>
-      <PersistGate
-        loading={<Loading />}
-        persistor={persistor}
-        onBeforeLift={onBeforeLift}>
-        {gateLifted ? <App /> : <Loading />}
-      </PersistGate>
+      <SafeAreaProvider>
+        <PersistGate
+          loading={<Loading />}
+          persistor={persistor}
+          onBeforeLift={onBeforeLift}>
+          {gateLifted ? <App /> : <Loading />}
+        </PersistGate>
+      </SafeAreaProvider>
     </Provider>
   );
 };
