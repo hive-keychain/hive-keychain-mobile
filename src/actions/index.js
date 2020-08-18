@@ -14,6 +14,7 @@ import {navigate} from '../navigationRef';
 import Toast from 'react-native-simple-toast';
 import {translate} from '../utils/localize';
 import {client} from '../utils/dhive';
+import {chunkArray} from '../utils/format';
 
 export const signUp = (pwd) => {
   navigate('AddAccountByKeyScreen');
@@ -23,51 +24,68 @@ export const signUp = (pwd) => {
 export const addAccount = (name, keys) => async (dispatch, getState) => {
   const mk = getState().auth.mk;
   const previousAccounts = getState().accounts;
-  console.log(mk.previousAccounts);
   dispatch({type: ADD_ACCOUNT, payload: {name, keys}});
   const accounts = [...previousAccounts, {name, keys}];
-  console.log(accounts, mk);
   const encrypted = encryptJson({list: accounts}, mk);
-  const a = await Keychain.setGenericPassword('accounts2', encrypted, {
-    accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_ANY_OR_DEVICE_PASSCODE,
-    service: 'accounts2',
-  });
-  console.log(a);
+  const chunks = chunkArray(encrypted.split(''), 300).map((e) => e.join(''));
+  for (const [i, chunk] of chunks.entries()) {
+    await Keychain.setGenericPassword(`accounts_${chunks.length}`, chunk, {
+      accessControl:
+        i === 0
+          ? Keychain.ACCESS_CONTROL.BIOMETRY_ANY_OR_DEVICE_PASSCODE
+          : null,
+      service: `accounts_${i}`,
+      storage: Keychain.STORAGE_TYPE.RSA,
+    });
+  }
 };
 
 export const unlock = (mk, errorCallback) => async (dispatch, getState) => {
-  Keychain.getGenericPassword({
-    service: 'accounts2',
-    authenticationPrompt: {title: 'Authenticate'},
-  })
-    .then((credentials) => {
-      const accountsEncrypted = credentials.password;
-      console.log(credentials, accountsEncrypted);
-      const accounts = decryptToJson(accountsEncrypted, mk);
-      if (accounts && accounts.list) {
-        dispatch({type: UNLOCK, payload: mk});
-        dispatch({type: INIT_ACCOUNTS, payload: accounts.list});
+  try {
+    let accountsEncrypted = '';
+    let i = 0;
+    let length = 10;
+    while (i < length) {
+      const cred = await Keychain.getGenericPassword({
+        service: `accounts_${i}`,
+        authenticationPrompt: {title: 'Authenticate'},
+      });
+      if (i === 0) {
+        length = cred.username.replace('accounts_', '');
       }
-      console.log(INIT_ACCOUNTS);
-    })
-    .catch((e) => {
-      console.log(e.message);
-      if (e.message === 'Wrapped error: User not authenticated') {
-        errorCallback(true);
-      } else {
-        Toast.show(translate('toast.authFailed'));
-        errorCallback();
-      }
-    });
+      accountsEncrypted += cred.password;
+      i++;
+    }
+    const accounts = decryptToJson(accountsEncrypted, mk);
+    if (accounts && accounts.list) {
+      dispatch({type: UNLOCK, payload: mk});
+      dispatch({type: INIT_ACCOUNTS, payload: accounts.list});
+    }
+    console.log(INIT_ACCOUNTS);
+  } catch (e) {
+    console.log(e, e.message);
+    if (e.message === 'Wrapped error: User not authenticated') {
+      errorCallback(true);
+    } else {
+      Toast.show(translate('toast.authFailed'));
+      errorCallback();
+    }
+  }
 };
 
 export const lock = () => {
   return {type: LOCK};
 };
 
-export const forgetAccounts = () => ({
-  type: FORGET_ACCOUNTS,
-});
+export const forgetAccounts = () => (dispatch) => {
+  Keychain.resetGenericPassword({
+    service: 'accounts',
+  }).then(() =>
+    dispatch({
+      type: FORGET_ACCOUNTS,
+    }),
+  );
+};
 
 export const loadAccount = (username) => async (dispatch, getState) => {
   const account = (await client.database.getAccounts([username]))[0];

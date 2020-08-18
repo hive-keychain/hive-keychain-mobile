@@ -7,3 +7,16 @@ export const withCommas = (nb, decimals = 3) =>
 export const toHP = (vests, props) =>
   (parseFloat(vests) * parseFloat(props.total_vesting_fund_steem)) /
   parseFloat(props.total_vesting_shares);
+
+export const chunkArray = (myArray, chunk_size) => {
+  const arrayLength = myArray.length;
+  let tempArray = [];
+
+  for (let index = 0; index < arrayLength; index += chunk_size) {
+    const myChunk = myArray.slice(index, index + chunk_size);
+    // Do something if you want with the group
+    tempArray.push(myChunk);
+  }
+
+  return tempArray;
+};

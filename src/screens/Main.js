@@ -13,11 +13,15 @@ const Main = ({
   user,
   globalProperties,
   navigation,
+  accounts,
 }) => {
   useEffect(() => {
-    loadAccountConnect('keychain');
+    if (accounts) {
+      console.log(accounts);
+      //loadAccountConnect(accounts[0].name);
+    }
     loadPropertiesConnect();
-  }, [loadAccountConnect, loadPropertiesConnect]);
+  }, [loadAccountConnect, loadPropertiesConnect, accounts]);
   if (!user) {
     return null;
   }
@@ -58,6 +62,7 @@ export default connect(
     return {
       user: state.activeAccount,
       globalProperties: state.globalProperties,
+      accounts: state.accounts,
     };
   },
   {
