@@ -78,13 +78,9 @@ export const lock = () => {
 };
 
 export const forgetAccounts = () => (dispatch) => {
-  Keychain.resetGenericPassword({
-    service: 'accounts',
-  }).then(() =>
-    dispatch({
-      type: FORGET_ACCOUNTS,
-    }),
-  );
+  dispatch({
+    type: FORGET_ACCOUNTS,
+  });
 };
 
 export const loadAccount = (username) => async (dispatch, getState) => {
