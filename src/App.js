@@ -1,19 +1,20 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Introduction from './screens/Introduction';
-import Signup from './screens/Signup';
-import Unlock from './screens/Unlock';
-import CreateAccount from './screens/CreateAccount';
-import Transfer from './screens/activeAccount/Transfer';
-import Main from './screens/Main';
-import AddAccountByKey from './screens/addAccounts/AddAccountByKey';
-import ScanQR from './screens/addAccounts/ScanQR';
-import MoreInformation from './components/MoreInformation';
-import InfoQR from './components/InfoQR';
-import ForgotPIN from './components/ForgotPIN';
-import {setNavigator} from './navigationRef';
 import {connect} from 'react-redux';
+
+import Introduction from 'screens/Introduction';
+import Signup from 'screens/Signup';
+import Unlock from 'screens/Unlock';
+import CreateAccount from 'screens/CreateAccount';
+import Transfer from 'screens/wallet/Transfer';
+import Wallet from 'screens/wallet/Main';
+import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
+import ScanQR from 'screens/addAccounts/ScanQR';
+import MoreInformation from 'components/MoreInformation';
+import InfoQR from 'components/InfoQR';
+import ForgotPIN from 'components/ForgotPIN';
+import {setNavigator} from './navigationRef';
 
 const Stack = createStackNavigator();
 
@@ -92,7 +93,7 @@ const App = ({hasAccounts, auth}) => {
     } else {
       return (
         <Stack.Navigator>
-          <Stack.Screen name="MainScreen" component={Main} />
+          <Stack.Screen name="WalletScreen" component={Wallet} />
           <Stack.Screen
             name="TransferScreen"
             component={Transfer}

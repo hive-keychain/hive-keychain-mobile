@@ -2,9 +2,9 @@ import React, {useEffect} from 'react';
 import {StyleSheet, Button} from 'react-native';
 import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
-import {lock, loadAccount, loadProperties} from '../actions';
-import {withCommas, toHP} from '../utils/format';
-import Background from '../components/Background';
+import {lock, loadAccount, loadProperties} from '../../actions';
+import {withCommas, toHP} from '../../utils/format';
+import Background from '../../components/Background';
 
 const Main = ({
   lockConnect,
@@ -16,9 +16,9 @@ const Main = ({
   accounts,
 }) => {
   useEffect(() => {
-    if (accounts) {
+    if (accounts[0]) {
       console.log(accounts);
-      //loadAccountConnect(accounts[0].name);
+      loadAccountConnect(accounts[0].name);
     }
     loadPropertiesConnect();
   }, [loadAccountConnect, loadPropertiesConnect, accounts]);
@@ -30,9 +30,13 @@ const Main = ({
       <Text h3 style={styles.textCentered}>
         Main
       </Text>
-      <Text>{`${withCommas(user.account.balance)} HIVE`}</Text>
-      <Text>{`${withCommas(user.account.sbd_balance)} HBD`}</Text>
-      <Text>
+      <Text style={styles.white}>{`${withCommas(
+        user.account.balance,
+      )} HIVE`}</Text>
+      <Text style={styles.white}>{`${withCommas(
+        user.account.sbd_balance,
+      )} HBD`}</Text>
+      <Text style={styles.white}>
         {globalProperties &&
           `${withCommas(
             toHP(user.account.vesting_shares, globalProperties),
@@ -54,6 +58,7 @@ const Main = ({
 
 const styles = StyleSheet.create({
   textCentered: {textAlign: 'center'},
+  white: {color: 'white'},
 });
 
 export default connect(

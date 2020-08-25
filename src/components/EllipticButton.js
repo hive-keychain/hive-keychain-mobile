@@ -4,7 +4,6 @@ import {Button} from 'react-native-elements';
 
 export default (props) => {
   const {style} = props;
-  console.log({...props, style: {...style, ...styles.button}});
   return (
     <Button
       {...props}

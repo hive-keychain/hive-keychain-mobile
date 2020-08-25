@@ -9,14 +9,32 @@ import CustomInput from '../../components/CustomInput';
 import EllipticButton from '../../components/EllipticButton';
 import UserLogo from '../../assets/addAccount/icon_username.svg';
 import {translate} from '../../utils/localize';
+import hive, {client} from '../../utils/dhive';
 
 const Transfer = ({user, route}) => {
   const initialCurrency = route.params
     ? route.params.initialCurrency || 'HIVE'
     : 'HIVE';
   const [currency, setCurrency] = useState(initialCurrency);
-  const [receiver, setReceiver] = useState('');
-  const [selectedValue, setSelectedValue] = useState(initialCurrency);
+  const [to, setTo] = useState('');
+  const [amount, setAmount] = useState('');
+  const [memo, setMemo] = useState('');
+  const onTransfer = async () => {
+    console.log(
+      {amount, memo, to, from: user.account.name},
+      hive.PrivateKey.fromString(user.keys.active),
+    );
+    const res = await client.broadcast.transfer(
+      {
+        amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
+        memo,
+        to: to.toLowerCase(),
+        from: user.account.name,
+      },
+      hive.PrivateKey.fromString(user.keys.active),
+    );
+    console.log('transfer', res);
+  };
   return (
     <Background>
       <Separator height={50} />
@@ -31,31 +49,26 @@ const Transfer = ({user, route}) => {
       <CustomInput
         placeholder={translate('common.username').toUpperCase()}
         leftIcon={<UserLogo />}
-        value={receiver}
-        onChangeText={setReceiver}
+        value={to}
+        onChangeText={setTo}
       />
       <CustomInput
         placeholder={translate('common.amount').toUpperCase()}
         leftIcon={<UserLogo />}
-        value={receiver}
-        onChangeText={setReceiver}
+        value={amount}
+        onChangeText={setAmount}
       />
       <CustomInput
         placeholder={translate('common.memo').toUpperCase()}
         leftIcon={<UserLogo />}
-        value={receiver}
-        onChangeText={setReceiver}
+        value={memo}
+        onChangeText={setMemo}
       />
-      <Picker
-        selectedValue={selectedValue}
-        onValueChange={(itemValue) => {
-          setSelectedValue(itemValue);
-          setCurrency(itemValue);
-        }}>
+      <Picker selectedValue={currency} onValueChange={setCurrency}>
         <Picker.Item label="HIVE" value="HIVE" />
         <Picker.Item label="HBD" value="HBD" />
       </Picker>
-      <EllipticButton title="Send" onPress={() => {}} />
+      <EllipticButton title="Send" onPress={onTransfer} />
     </Background>
   );
 };
