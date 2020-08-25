@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import Background from '../components/Background';
-import KeychainLogo from '../assets/keychain.svg';
+import Background from 'components/Background';
+import KeychainLogo from 'assets/keychain.svg';
 
 const Loading = () => {
   console.log('show loading');

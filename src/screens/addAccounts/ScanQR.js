@@ -1,10 +1,11 @@
 import React from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {RNCamera} from 'react-native-camera';
-import {validateFromObject} from '../../utils/validateNewAccount';
-import {addAccount} from '../../actions';
 import {connect} from 'react-redux';
+import {RNCamera} from 'react-native-camera';
+
+import {validateFromObject} from 'utils/validateNewAccount';
+import {addAccount} from 'actions';
 
 const ScanQR = ({addAccountConnect}) => {
   const onSuccess = async ({data}) => {

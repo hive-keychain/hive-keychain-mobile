@@ -1,4 +1,4 @@
-import {ACTIVE_ACCOUNT} from '../actions/types';
+import {ACTIVE_ACCOUNT} from 'actions/types';
 
 const activeAccountReducer = (
   state = {account: {}, keys: {}},

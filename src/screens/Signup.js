@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
-import {signUp} from '../actions';
-import Background from '../components/Background';
-import Pincode from '../components/PinCode';
-import KeychainLogo from '../assets/keychain.svg';
-import {translate} from '../utils/localize';
+import {signUp} from 'actions';
+import Background from 'components/Background';
+import Pincode from 'components/PinCode';
+import KeychainLogo from 'assets/keychain.svg';
+import {translate} from 'utils/localize';
 
 const Signup = ({signUpConnect, navigation}) => {
   const onSubmitSignup = (pwd) => {

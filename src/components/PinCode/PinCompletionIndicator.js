@@ -6,7 +6,9 @@ export default ({code}) => {
     <View style={styles.container}>
       {Array.from(Array(6)).map((e, i) => {
         const fill = i >= code.length ? 'transparent' : 'white';
-        return <View style={{...styles.indicator, backgroundColor: fill}} />;
+        return (
+          <View key={i} style={{...styles.indicator, backgroundColor: fill}} />
+        );
       })}
     </View>
   );

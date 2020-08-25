@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, Text} from 'react-native';
-import Background from '../components/Background';
-import GradientEllipse from '../components/GradientEllipse';
-import KeychainLogo from '../assets/kc_hive.svg';
-import Separator from '../components/Separator';
-import EllipticButton from '../components/EllipticButton';
-import {translate} from '../utils/localize';
+import Background from 'components/Background';
+import GradientEllipse from 'components/GradientEllipse';
+import KeychainLogo from 'assets/kc_hive.svg';
+import Separator from 'components/Separator';
+import EllipticButton from 'components/EllipticButton';
+import {translate} from 'utils/localize';
 
 const Introduction = ({navigation}) => {
   return (

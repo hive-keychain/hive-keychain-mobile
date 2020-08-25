@@ -1,19 +1,20 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Text} from 'react-native-elements';
-import Separator from '../../components/Separator';
 import {connect} from 'react-redux';
-import {addAccount} from '../../actions';
-import CustomInput from '../../components/CustomInput';
-import validateNewAccount from '../../utils/validateNewAccount';
-import {ACCOUNT, KEY} from '../../../.env.json';
-import Background from '../../components/Background';
-import TitleLogo from '../../assets/addAccount/img_import.svg';
-import UserLogo from '../../assets/addAccount/icon_username.svg';
-import KeyLogo from '../../assets/addAccount/icon_key.svg';
-import QRLogo from '../../assets/addAccount/icon_scan-qr.svg';
-import Button from '../../components/EllipticButton';
-import {translate} from '../../utils/localize';
+
+import Separator from 'components/Separator';
+import {addAccount} from 'actions';
+import CustomInput from 'components/CustomInput';
+import validateNewAccount from 'utils/validateNewAccount';
+import {ACCOUNT, KEY} from 'root/.env.json';
+import Background from 'components/Background';
+import TitleLogo from 'assets/addAccount/img_import.svg';
+import UserLogo from 'assets/addAccount/icon_username.svg';
+import KeyLogo from 'assets/addAccount/icon_key.svg';
+import QRLogo from 'assets/addAccount/icon_scan-qr.svg';
+import Button from 'components/EllipticButton';
+import {translate} from 'utils/localize';
 
 const AddAccountByKey = ({addAccountConnect, navigation}) => {
   const [account, setAccount] = useState(ACCOUNT || '');

@@ -1,9 +1,9 @@
 import React from 'react';
 import {StyleSheet, Text} from 'react-native';
-import Information from '../assets/addAccount/icon_info.svg';
+import Information from 'assets/addAccount/icon_info.svg';
 import Separator from './Separator';
 import IconSlider from './IconSlider';
-import {translate} from '../utils/localize';
+import {translate} from 'utils/localize';
 
 export default () => {
   return (

@@ -2,9 +2,10 @@ import React, {useEffect} from 'react';
 import {StyleSheet, Button} from 'react-native';
 import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
-import {lock, loadAccount, loadProperties} from '../../actions';
-import {withCommas, toHP} from '../../utils/format';
-import Background from '../../components/Background';
+
+import {lock, loadAccount, loadProperties} from 'actions';
+import {withCommas, toHP} from 'utils/format';
+import Background from 'components/Background';
 
 const Main = ({
   lockConnect,

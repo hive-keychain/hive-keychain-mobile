@@ -1,4 +1,4 @@
-import {GLOBAL_PROPS} from '../actions/types';
+import {GLOBAL_PROPS} from 'actions/types';
 
 const globalPropertiesReducer = (state = {}, {type, payload}) => {
   switch (type) {

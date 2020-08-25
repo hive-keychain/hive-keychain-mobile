@@ -2,14 +2,15 @@ import React, {useState} from 'react';
 import {StyleSheet, Picker} from 'react-native';
 import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
-import Background from '../../components/Background';
-import Separator from '../../components/Separator';
-import {withCommas} from '../../utils/format';
-import CustomInput from '../../components/CustomInput';
-import EllipticButton from '../../components/EllipticButton';
-import UserLogo from '../../assets/addAccount/icon_username.svg';
-import {translate} from '../../utils/localize';
-import hive, {client} from '../../utils/dhive';
+
+import Background from 'components/Background';
+import Separator from 'components/Separator';
+import {withCommas} from 'utils/format';
+import CustomInput from 'components/CustomInput';
+import EllipticButton from 'components/EllipticButton';
+import UserLogo from 'assets/addAccount/icon_username.svg';
+import {translate} from 'utils/localize';
+import hive, {client} from 'utils/dhive';
 
 const Transfer = ({user, route}) => {
   const initialCurrency = route.params

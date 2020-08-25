@@ -1,14 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Text} from 'react-native-elements';
-import PinElement from './PinElement';
-import PinCompletionIndicator from './PinCompletionIndicator';
-import Separator from '../Separator';
 import Toast from 'react-native-simple-toast';
 import IntentLauncher from 'react-native-intent-launcher';
-import CustomModal from '../CustomModal';
-import EllipticButton from '../EllipticButton';
-import {translate} from '../../utils/localize';
+
+import PinElement from './PinElement';
+import PinCompletionIndicator from './PinCompletionIndicator';
+import Separator from 'components/Separator';
+import CustomModal from 'components/CustomModal';
+import EllipticButton from 'components/EllipticButton';
+import {translate} from 'utils/localize';
 
 const PinCode = ({
   height,
@@ -54,7 +55,6 @@ const PinCode = ({
   }, [navigation]);
 
   useEffect(() => {
-    console.log(code);
     if (code.length === 6) {
       if (signup) {
         setStep(1);
@@ -102,7 +102,6 @@ const PinCode = ({
       }
     }
   };
-  console.log(code);
   let h4;
   if (!signup || step === 0) {
     h4 = title;
@@ -121,10 +120,10 @@ const PinCode = ({
       <PinCompletionIndicator code={step === 0 ? code : confirmCode} />
       <Separator height={50} />
       <View style={styles.container}>
-        {config.map((row) => (
-          <View style={styles.row}>
-            {row.map((elt) => (
-              <PinElement onPressElement={onPressElement} {...elt} />
+        {config.map((row, i) => (
+          <View key={i} style={styles.row}>
+            {row.map((elt, j) => (
+              <PinElement key={j} onPressElement={onPressElement} {...elt} />
             ))}
           </View>
         ))}

@@ -1,4 +1,4 @@
-import {SIGN_UP, LOCK, UNLOCK} from '../actions/types';
+import {SIGN_UP, LOCK, UNLOCK} from 'actions/types';
 
 const authReducer = (state = {mk: null}, {type, payload}) => {
   switch (type) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Text} from 'react-native-elements';
-import Background from '../components/Background';
+import Background from 'components/Background';
 
 const CreateAccount = () => {
   return (

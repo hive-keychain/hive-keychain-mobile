@@ -1,9 +1,4 @@
-import {
-  ADD_ACCOUNT,
-  INIT_ACCOUNTS,
-  LOCK,
-  FORGET_ACCOUNTS,
-} from '../actions/types';
+import {ADD_ACCOUNT, INIT_ACCOUNTS, LOCK, FORGET_ACCOUNTS} from 'actions/types';
 
 export default (state = [], {type, payload}) => {
   //console.log('a', state, type, payload);

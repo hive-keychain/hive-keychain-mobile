@@ -1,3 +1,6 @@
+import * as Keychain from 'react-native-keychain';
+import Toast from 'react-native-simple-toast';
+
 import {
   SIGN_UP,
   ADD_ACCOUNT,
@@ -8,13 +11,11 @@ import {
   ACTIVE_ACCOUNT,
   GLOBAL_PROPS,
 } from './types';
-import {encryptJson, decryptToJson} from '../utils/encrypt';
-import * as Keychain from 'react-native-keychain';
+import {encryptJson, decryptToJson} from 'utils/encrypt';
 import {navigate} from '../navigationRef';
-import Toast from 'react-native-simple-toast';
-import {translate} from '../utils/localize';
-import {client} from '../utils/dhive';
-import {chunkArray} from '../utils/format';
+import {translate} from 'utils/localize';
+import {client} from 'utils/dhive';
+import {chunkArray} from 'utils/format';
 
 export const signUp = (pwd) => {
   navigate('AddAccountByKeyScreen');

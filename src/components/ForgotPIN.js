@@ -1,11 +1,12 @@
 import React from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {connect} from 'react-redux';
-import {forgetAccounts} from '../actions';
+
+import {forgetAccounts} from 'actions';
 import Separator from './Separator';
 import IconSlider from './IconSlider';
 import EllipticButton from './EllipticButton';
-import {translate} from '../utils/localize';
+import {translate} from 'utils/localize';
 
 const ForgotPIN = ({forgetAccountsConnect}) => {
   return (
