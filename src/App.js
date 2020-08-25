@@ -2,6 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {connect} from 'react-redux';
+import {useWindowDimensions, StyleSheet} from 'react-native';
 
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
@@ -16,9 +17,13 @@ import InfoQR from 'components/InfoQR';
 import ForgotPIN from 'components/ForgotPIN';
 import {setNavigator} from './navigationRef';
 
+import Hive from 'assets/wallet/hive.svg';
+import Search from 'assets/wallet/search.svg';
+
 const Stack = createStackNavigator();
 
 const App = ({hasAccounts, auth}) => {
+  const {height, width} = useWindowDimensions();
   const headerTransparent = {
     position: 'absolute',
     backgroundColor: 'transparent',
@@ -93,7 +98,25 @@ const App = ({hasAccounts, auth}) => {
     } else {
       return (
         <Stack.Navigator>
-          <Stack.Screen name="WalletScreen" component={Wallet} />
+          <Stack.Screen
+            name="WalletScreen"
+            component={Wallet}
+            options={{
+              headerStyle: {
+                backgroundColor: '#A3112A',
+                paddingHorizontal: '25',
+              },
+              headerTitleAlign: 'center',
+              title: 'WALLET',
+              headerTintColor: 'white',
+              headerRight: () => {
+                return <Search style={styles(width, height).right} />;
+              },
+              headerLeft: () => {
+                return <Hive style={styles(width, height).left} />;
+              },
+            }}
+          />
           <Stack.Screen
             name="TransferScreen"
             component={Transfer}
@@ -119,5 +142,11 @@ const mapStateToProps = (state) => {
   console.log(state);
   return {hasAccounts: state.hasAccounts.has, auth: state.auth};
 };
+
+const styles = (width, height) =>
+  StyleSheet.create({
+    left: {marginHorizontal: 0.05 * width},
+    right: {marginHorizontal: 0.05 * width, marginBottom: -4},
+  });
 
 export default connect(mapStateToProps)(App);

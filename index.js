@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, {useState} from 'react';
-import {AppRegistry} from 'react-native';
+import {AppRegistry, StatusBar} from 'react-native';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import App from './src/App';
@@ -21,6 +21,8 @@ const Root = () => {
   return (
     <Provider store={store}>
       <SafeAreaProvider>
+        <StatusBar backgroundColor="black" />
+
         <PersistGate
           loading={<Loading />}
           persistor={persistor}

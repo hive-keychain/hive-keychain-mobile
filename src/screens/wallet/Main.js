@@ -1,11 +1,12 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, Button} from 'react-native';
+
 import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
 
 import {lock, loadAccount, loadProperties} from 'actions';
 import {withCommas, toHP} from 'utils/format';
-import Background from 'components/Background';
+import WalletPage from 'components/WalletPage';
 
 const Main = ({
   lockConnect,
@@ -27,7 +28,7 @@ const Main = ({
     return null;
   }
   return (
-    <Background>
+    <WalletPage>
       <Text h3 style={styles.textCentered}>
         Main
       </Text>
@@ -53,7 +54,7 @@ const Main = ({
       <Button title="Witness" onPress={lockConnect} />
       <Button title="History" onPress={lockConnect} />
       <Button title="Lock" onPress={lockConnect} />
-    </Background>
+    </WalletPage>
   );
 };
 
