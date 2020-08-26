@@ -1,5 +1,10 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
 import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
 
@@ -27,22 +32,23 @@ const AddAccountByKey = ({addAccountConnect, navigation}) => {
       //TODO: show error popup
     }
   };
+  const {height} = useWindowDimensions();
 
   return (
     <Background>
       <View style={styles.container}>
-        <Separator height={100} />
+        <Separator height={height / 7.5} />
         <TitleLogo />
-        <Separator height={50} />
+        <Separator height={height / 15} />
         <Text style={styles.text}>{translate('addAccountByKey.text')}</Text>
-        <Separator height={50} />
+        <Separator height={height / 15} />
         <CustomInput
           placeholder={translate('common.username').toUpperCase()}
           leftIcon={<UserLogo />}
           value={account}
           onChangeText={setAccount}
         />
-        <Separator height={50} />
+        <Separator height={height / 15} />
 
         <CustomInput
           placeholder={translate('common.privateKey').toUpperCase()}
@@ -58,7 +64,7 @@ const AddAccountByKey = ({addAccountConnect, navigation}) => {
           value={key}
           onChangeText={setKey}
         />
-        <Separator height={100} />
+        <Separator height={height / 7.5} />
       </View>
       <Button
         title={translate('common.import').toUpperCase()}

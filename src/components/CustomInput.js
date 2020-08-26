@@ -1,8 +1,9 @@
 import React from 'react';
 import {Input} from 'react-native-elements';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 
 export default (props) => {
+  const styles = getDimensionedStyles(useWindowDimensions());
   return (
     <Input
       placeholderTextColor="#B9C9D6"
@@ -16,19 +17,20 @@ export default (props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'black',
-    display: 'flex',
-    width: '90%',
-    borderRadius: 30,
-    alignItems: 'baseline',
-    height: 60,
-  },
-  leftIcon: {height: 50, marginRight: 20},
-  rightIcon: {height: 50, marginLeft: 20},
-  input: {color: 'white'},
-  inputContainer: {
-    borderBottomWidth: 0,
-  },
-});
+const getDimensionedStyles = ({width, height}) =>
+  StyleSheet.create({
+    container: {
+      backgroundColor: 'black',
+      display: 'flex',
+      width: '90%',
+      borderRadius: height / 24,
+      alignItems: 'baseline',
+      height: height / 12,
+    },
+    leftIcon: {height: height / 15, marginRight: width / 20},
+    rightIcon: {height: height / 15, marginLeft: width / 20},
+    input: {color: 'white'},
+    inputContainer: {
+      borderBottomWidth: 0,
+    },
+  });

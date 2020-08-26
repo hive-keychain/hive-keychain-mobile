@@ -1,10 +1,11 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import Background from 'components/Background';
 import KeychainLogo from 'assets/keychain.svg';
 
 const Loading = () => {
   console.log('show loading');
+  const styles = getDimensionedStyles(useWindowDimensions());
   return (
     <Background style={styles.bgd}>
       <View style={styles.blackCircle}>
@@ -14,22 +15,23 @@ const Loading = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  bgd: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  blackCircle: {
-    width: 200,
-    height: 200,
-    backgroundColor: 'black',
-    borderRadius: 100,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {width: 98, height: 83},
-});
+const getDimensionedStyles = ({width, height}) =>
+  StyleSheet.create({
+    bgd: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    blackCircle: {
+      width: width * 0.5,
+      height: width * 0.5,
+      backgroundColor: 'black',
+      borderRadius: width * 0.25,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    image: {width: width * 0.25, height: ((width * 0.25) / 49) * 41},
+  });
 
 export default Loading;

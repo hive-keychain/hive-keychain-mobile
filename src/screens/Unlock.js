@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {connect} from 'react-redux';
 
 import {unlock, forgetAccounts} from 'actions';
@@ -10,6 +10,7 @@ import {translate} from 'utils/localize';
 
 const Unlock = ({unlockConnect, forgetAccountsConnect, navigation}) => {
   console.log('show unlock');
+  const styles = getDimensionedStyles(useWindowDimensions());
   return (
     <Background>
       <Pincode
@@ -24,19 +25,19 @@ const Unlock = ({unlockConnect, forgetAccountsConnect, navigation}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  blackCircle: {
-    width: 100,
-    height: 100,
-    backgroundColor: 'black',
-    borderRadius: 50,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {width: 49, height: 41},
-  textCentered: {textAlign: 'center'},
-});
+const getDimensionedStyles = (width, height) =>
+  StyleSheet.create({
+    blackCircle: {
+      width: width * 0.25,
+      height: width * 0.25,
+      backgroundColor: 'black',
+      borderRadius: width * 0.125,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    image: {width: width * 0.125, height: ((width * 0.125) / 49) * 41},
+  });
 
 export default connect(null, {
   unlockConnect: unlock,

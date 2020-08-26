@@ -1,9 +1,10 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import {Button} from 'react-native-elements';
 
 export default (props) => {
   const {style} = props;
+  const styles = getDimensionedStyles(useWindowDimensions());
   return (
     <Button
       {...props}
@@ -16,14 +17,15 @@ export default (props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  button: {
-    marginLeft: '10%',
-    color: 'black',
-    backgroundColor: 'black',
-    marginRight: '10%',
-    width: '80%',
-    height: 50,
-    borderRadius: 25,
-  },
-});
+const getDimensionedStyles = ({width, height}) =>
+  StyleSheet.create({
+    button: {
+      marginLeft: width * 0.1,
+      color: 'black',
+      backgroundColor: 'black',
+      marginRight: width * 0.1,
+      width: width * 0.8,
+      height: 50,
+      borderRadius: 25,
+    },
+  });

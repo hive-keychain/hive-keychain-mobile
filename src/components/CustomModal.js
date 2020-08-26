@@ -11,10 +11,10 @@ import LinearGradient from 'react-native-linear-gradient';
 export default class CustomModal extends Component {
   constructor(props) {
     super(props);
-    const {height} = Dimensions.get('window');
+    const {height, width} = Dimensions.get('window');
     this.height = height;
+    this.width = width;
   }
-
   render() {
     const modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
     const styles = StyleSheetFactory.getSheet({
@@ -22,6 +22,8 @@ export default class CustomModal extends Component {
       fullscreen: this.props.fullscreen,
       modalHeight: modalHeight,
       bottomHalf: this.props.bottomHalf,
+      height: this.height,
+      width: this.width,
     });
     return (
       <Modal
@@ -50,7 +52,14 @@ export default class CustomModal extends Component {
 }
 
 class StyleSheetFactory {
-  static getSheet({boxBgColor, fullscreen, bottomHalf, modalHeight}) {
+  static getSheet({
+    boxBgColor,
+    fullscreen,
+    bottomHalf,
+    modalHeight,
+    width,
+    height,
+  }) {
     const styles = StyleSheet.create({
       mainContainer: {flex: 1},
       modalWrapper: {
@@ -78,8 +87,8 @@ class StyleSheetFactory {
         margin: 0,
         borderRadius: 10,
         padding: 0,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
+        paddingHorizontal: width * 0.05,
+        paddingVertical: width * 0.05,
       },
     });
 

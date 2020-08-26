@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, useWindowDimensions} from 'react-native';
 import Background from 'components/Background';
 import GradientEllipse from 'components/GradientEllipse';
 import KeychainLogo from 'assets/kc_hive.svg';
@@ -8,25 +8,27 @@ import EllipticButton from 'components/EllipticButton';
 import {translate} from 'utils/localize';
 
 const Introduction = ({navigation}) => {
+  const {height, width} = useWindowDimensions();
+  const styles = getDimensionedStyles({height, width});
   return (
     <Background>
-      <Separator height={50} />
+      <Separator height={height / 15} />
       <KeychainLogo {...styles.image} />
-      <Separator height={30} />
+      <Separator height={height / 20} />
       <GradientEllipse style={styles.gradient} dotColor="red">
         <Text style={styles.text}>{translate('intro.text')}</Text>
       </GradientEllipse>
       <GradientEllipse style={styles.gradient} dotColor="white">
-        <Text style={styles.text}>{translate('intro.text')}</Text>
+        <Text style={styles.text}>{translate('intro.manage')}</Text>
       </GradientEllipse>
-      <Separator height={100} />
+      <Separator height={height / 7.5} />
       <EllipticButton
         title={translate('intro.existingAccount')}
         onPress={() => {
           navigation.navigate('SignupScreen');
         }}
       />
-      <Separator height={30} />
+      <Separator height={height / 20} />
       <EllipticButton
         title={translate('intro.createAccount')}
         onPress={() => {
@@ -37,10 +39,16 @@ const Introduction = ({navigation}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  image: {width: '90%'},
-  gradient: {height: 100, marginTop: 30},
-  text: {color: 'white', marginLeft: 25, fontSize: 16},
-});
+const getDimensionedStyles = ({width, height}) =>
+  StyleSheet.create({
+    image: {width: '90%', paddingHorizontal: width * 0.05},
+    gradient: {height: height / 10, marginTop: height / 20},
+    text: {
+      color: 'white',
+      marginHorizontal: width * 0.05,
+      fontSize: 15,
+      textAlign: 'justify',
+    },
+  });
 
 export default Introduction;

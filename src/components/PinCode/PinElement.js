@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, Dimensions, TouchableOpacity} from 'react-native';
-import Backspace from '../../assets/backspace.svg';
+import Backspace from 'assets/backspace.svg';
 
 export default ({number, refNumber, helper, back, onPressElement}) => {
   const style = {};

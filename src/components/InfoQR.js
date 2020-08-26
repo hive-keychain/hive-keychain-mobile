@@ -1,11 +1,13 @@
 import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, useWindowDimensions} from 'react-native';
 import Information from 'assets/addAccount/icon_info.svg';
 import Separator from './Separator';
 import IconSlider from './IconSlider';
 import {translate} from 'utils/localize';
 
 export default () => {
+  const styles = getDimensionedStyles(useWindowDimensions());
+
   return (
     <IconSlider icon={<Information style={styles.info} />}>
       <Text style={styles.h4}>{translate('components.infoQR.title')}</Text>
@@ -27,9 +29,10 @@ export default () => {
   );
 };
 
-const styles = StyleSheet.create({
-  h4: {fontWeight: 'bold', fontSize: 18},
-  bold: {fontWeight: 'bold'},
-  modal: {height: 300, marginTop: 300},
-  info: {marginRight: 20},
-});
+const getDimensionedStyles = ({width, height}) =>
+  StyleSheet.create({
+    h4: {fontWeight: 'bold', fontSize: 18},
+    bold: {fontWeight: 'bold'},
+    modal: {height: height * 0.45, marginTop: height * 0.45},
+    info: {marginRight: width * 0.05},
+  });
