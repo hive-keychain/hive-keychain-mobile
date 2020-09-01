@@ -25,7 +25,7 @@ const Unlock = ({unlockConnect, forgetAccountsConnect, navigation}) => {
   );
 };
 
-const getDimensionedStyles = (width, height) =>
+const getDimensionedStyles = ({width, height}) =>
   StyleSheet.create({
     blackCircle: {
       width: width * 0.25,

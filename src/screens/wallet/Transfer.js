@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {StyleSheet, Picker} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
+import {Picker} from '@react-native-community/picker';
 
 import Background from 'components/Background';
 import Separator from 'components/Separator';

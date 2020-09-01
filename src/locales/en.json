@@ -15,6 +15,7 @@
     "amount": "amount",
     "memo": "memo"
   },
+  "wallet": {"rc": "Resources:", "vp": "Voting:"},
   "components": {
     "moreInformation": {
       "title": "KEYS (HIVE PASSWORDS)",
@@ -45,6 +46,9 @@
         "text2": "Please change it to Fingerprints.",
         "button": "Go to Settings"
       }
+    },
+    "picker": {
+      "prompt": "Select an account"
     }
   },
   "toast": {

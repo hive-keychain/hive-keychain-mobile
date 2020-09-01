@@ -91,6 +91,8 @@ target 'mobileKeychain' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'RNCPicker', :path => '../node_modules/@react-native-community/picker'
+
   target 'mobileKeychainTests' do
     inherit! :complete
     # Pods for testing

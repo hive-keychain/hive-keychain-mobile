@@ -12,5 +12,5 @@ export default (props) => {
 };
 
 const styles = StyleSheet.create({
-  imageBgd: {width: '100%', height: '100%'},
+  imageBgd: {width: '100%', height: '100%', backgroundColor: 'white'},
 });
