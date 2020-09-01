@@ -13,7 +13,6 @@ const Signup = ({signUpConnect, navigation}) => {
   const onSubmitSignup = (pwd) => {
     signUpConnect(pwd);
   };
-
   return (
     <Background>
       <Pincode
@@ -30,7 +29,7 @@ const Signup = ({signUpConnect, navigation}) => {
   );
 };
 
-const getDimensionedStyles = (width, height) =>
+const getDimensionedStyles = ({width, height}) =>
   StyleSheet.create({
     blackCircle: {
       width: width * 0.25,

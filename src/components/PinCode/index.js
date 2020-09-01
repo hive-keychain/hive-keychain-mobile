@@ -179,4 +179,5 @@ const styles = StyleSheet.create({
   },
   row: {display: 'flex', flexDirection: 'row'},
 });
+
 export default PinCode;
