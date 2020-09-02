@@ -98,6 +98,12 @@ export const loadAccount = (username) => async (dispatch, getState) => {
 };
 
 export const loadProperties = () => async (dispatch) => {
-  const props = await client.database.getDynamicGlobalProperties();
+  const [globals, price, rewardFund] = await Promise.all([
+    client.database.getDynamicGlobalProperties(),
+    client.database.getCurrentMedianHistoryPrice(),
+    client.database.call('get_reward_fund', ['post']),
+  ]);
+  const props = {globals, price, rewardFund};
+  console.log('a', props);
   dispatch({type: GLOBAL_PROPS, payload: props});
 };

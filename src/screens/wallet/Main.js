@@ -10,13 +10,14 @@ import WalletPage from 'components/WalletPage';
 import UserPicker from 'components/UserPicker';
 import PercentageDisplay from 'components/PercentageDisplay';
 import {translate} from 'utils/localize';
+import {getVP, getRC, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 
 const Main = ({
   lockConnect,
   loadAccountConnect,
   loadPropertiesConnect,
   user,
-  globalProperties,
+  properties,
   navigation,
   accounts,
 }) => {
@@ -44,28 +45,20 @@ const Main = ({
       <View style={styles.resourcesWrapper}>
         <PercentageDisplay
           name={translate('wallet.rc')}
-          percent={53}
+          percent={'getRC(user.account)'}
           color="#E59D15"
         />
         <PercentageDisplay
           name={translate('wallet.vp')}
-          percent={87}
+          percent={getVP(user.account) || 100}
           color="#3BB26E"
-          secondary="$127.54"
+          secondary={`$${
+            getVotingDollarsPerAccount(100, properties, user.account, false) ||
+            '0'
+          }`}
         />
       </View>
-      <Text style={styles.white}>{`${withCommas(
-        user.account.balance,
-      )} HIVE`}</Text>
-      <Text style={styles.white}>{`${withCommas(
-        user.account.sbd_balance,
-      )} HBD`}</Text>
-      <Text style={styles.white}>
-        {globalProperties &&
-          `${withCommas(
-            toHP(user.account.vesting_shares, globalProperties),
-          )} HP`}
-      </Text>
+
       <Button
         title="Transfer"
         onPress={() => {
@@ -98,7 +91,7 @@ export default connect(
     console.log(state);
     return {
       user: state.activeAccount,
-      globalProperties: state.globalProperties,
+      properties: state.properties,
       accounts: state.accounts,
     };
   },

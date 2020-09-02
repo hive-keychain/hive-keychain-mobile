@@ -54,7 +54,7 @@ const getDimensionedStyles = ({width, height, color, percent}) =>
     },
     filler: {
       height: 2,
-      width: (width * 0.4 * percent) / 100,
+      width: (width * 0.42 * percent) / 100,
       backgroundColor: color,
     },
   });

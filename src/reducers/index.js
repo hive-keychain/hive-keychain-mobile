@@ -10,5 +10,5 @@ export default combineReducers({
   accounts: accountsReducer,
   hasAccounts: hasAccountsReducer,
   activeAccount: activeAccountReducer,
-  globalProperties: globalPropertiesReducer,
+  properties: globalPropertiesReducer,
 });
