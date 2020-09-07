@@ -1,16 +1,14 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, Button, View, useWindowDimensions} from 'react-native';
 
-import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
-
 import {lock, loadAccount, loadProperties} from 'actions';
 import {withCommas, toHP} from 'utils/format';
 import WalletPage from 'components/WalletPage';
 import UserPicker from 'components/UserPicker';
 import PercentageDisplay from 'components/PercentageDisplay';
 import {translate} from 'utils/localize';
-import {getVP, getRC, getVotingDollarsPerAccount} from 'utils/hiveUtils';
+import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 
 const Main = ({
   lockConnect,
@@ -40,6 +38,9 @@ const Main = ({
       <UserPicker
         accounts={accounts.map((account) => account.name)}
         activeAccount={user.account}
+        addAccount={() => {
+          navigation.navigate('AddAccountByKeyScreen', {wallet: true});
+        }}
         onAccountSelected={loadAccountConnect}
       />
       <View style={styles.resourcesWrapper}>

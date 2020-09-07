@@ -48,11 +48,13 @@
       }
     },
     "picker": {
-      "prompt": "Select an account"
+      "prompt": "Select an account",
+      "add_account": "+ ADD NEW ACCOUNT"
     }
   },
   "toast": {
     "noMatch": "PIN codes do not match",
-    "authFailed": "Authentication failed"
+    "authFailed": "Authentication failed",
+    "account_already": "You already registered this account"
   }
 }

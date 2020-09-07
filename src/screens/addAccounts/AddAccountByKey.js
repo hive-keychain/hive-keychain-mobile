@@ -21,13 +21,15 @@ import QRLogo from 'assets/addAccount/icon_scan-qr.svg';
 import Button from 'components/EllipticButton';
 import {translate} from 'utils/localize';
 
-const AddAccountByKey = ({addAccountConnect, navigation}) => {
+const AddAccountByKey = ({addAccountConnect, navigation, route}) => {
   const [account, setAccount] = useState(ACCOUNT || '');
   const [key, setKey] = useState(KEY || '');
+
   const onImportKeys = async () => {
     const keys = await validateNewAccount(account, key);
     if (keys) {
-      addAccountConnect(account, keys);
+      const wallet = route.params ? route.params.wallet : false;
+      addAccountConnect(account, keys, wallet);
     } else {
       //TODO: show error popup
     }
@@ -56,7 +58,7 @@ const AddAccountByKey = ({addAccountConnect, navigation}) => {
           rightIcon={
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('ScanQRScreen');
+                navigation.navigate('ScanQRScreen', {wallet: true});
               }}>
               <QRLogo />
             </TouchableOpacity>

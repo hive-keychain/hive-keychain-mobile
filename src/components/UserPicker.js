@@ -3,33 +3,51 @@ import {View, Image, StyleSheet, useWindowDimensions} from 'react-native';
 import {Picker} from '@react-native-community/picker';
 import {translate} from 'utils/localize';
 
-const UserPicker = ({activeAccount, accounts, onAccountSelected}) => {
+const UserPicker = ({
+  activeAccount,
+  accounts,
+  onAccountSelected,
+  addAccount,
+}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
 
   if (!activeAccount.json_metadata) {
     return null;
   }
   const activeAccountName = activeAccount.name;
-  const activeAccountPhoto = JSON.parse(
-    activeAccount.json_metadata,
-  ).profile.profile_image.split('?')[0];
 
   const accountsList = [
     activeAccountName,
     ...accounts.filter((e) => e !== activeAccountName),
   ];
 
+  const onPickerValueChanged = (value) => {
+    if (value === 'add_new_account') {
+      addAccount();
+    } else {
+      onAccountSelected(value);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={{uri: activeAccountPhoto}} />
+      <Image
+        style={styles.image}
+        source={{uri: `https://images.hive.blog/u/${activeAccountName}/avatar`}}
+      />
       <Picker
         style={styles.picker}
         selectedValue={activeAccountName}
         prompt={translate('components.picker.prompt')}
-        onValueChange={onAccountSelected}>
+        onValueChange={onPickerValueChanged}>
         {accountsList.map((account) => (
           <Picker.Item key={account} label={`@${account}`} value={account} />
         ))}
+        <Picker.Item
+          key="add_new_account"
+          label={translate('components.picker.add_account')}
+          value="add_new_account"
+        />
       </Picker>
     </View>
   );

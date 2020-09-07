@@ -7,11 +7,12 @@ import {RNCamera} from 'react-native-camera';
 import {validateFromObject} from 'utils/validateNewAccount';
 import {addAccount} from 'actions';
 
-const ScanQR = ({addAccountConnect}) => {
+const ScanQR = ({addAccountConnect, route}) => {
   const onSuccess = async ({data}) => {
     const obj = JSON.parse(data.replace('keychain://add_account=', ''));
     const keys = await validateFromObject(obj);
-    addAccountConnect(obj.name, keys);
+    const wallet = route.params ? route.params.wallet : false;
+    addAccountConnect(obj.name, keys, wallet);
   };
   return (
     <QRCodeScanner

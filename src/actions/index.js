@@ -23,9 +23,20 @@ export const signUp = (pwd) => {
   return {type: SIGN_UP, payload: pwd};
 };
 
-export const addAccount = (name, keys) => async (dispatch, getState) => {
+export const addAccount = (name, keys, wallet) => async (
+  dispatch,
+  getState,
+) => {
   const mk = getState().auth.mk;
   const previousAccounts = getState().accounts;
+  if (previousAccounts.find((e) => e.name === name)) {
+    Toast.show(translate('toast.account_already'));
+    if (wallet) {
+      navigate('WalletScreen');
+    }
+
+    return;
+  }
   dispatch({type: ADD_ACCOUNT, payload: {name, keys}});
   const accounts = [...previousAccounts, {name, keys}];
   const encrypted = encryptJson({list: accounts}, mk);
@@ -39,6 +50,9 @@ export const addAccount = (name, keys) => async (dispatch, getState) => {
       service: `accounts_${i}`,
       storage: Keychain.STORAGE_TYPE.RSA,
     });
+  }
+  if (wallet) {
+    navigate('WalletScreen');
   }
 };
 

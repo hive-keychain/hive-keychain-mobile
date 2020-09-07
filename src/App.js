@@ -126,6 +126,30 @@ const App = ({hasAccounts, auth}) => {
               title: 'TRANSFER FUNDS',
             }}
           />
+          <Stack.Screen
+            name="AddAccountByKeyScreen"
+            options={{
+              title: 'ADD ACCOUNT',
+              headerRight: () => {
+                return <MoreInformation />;
+              },
+              headerTintColor: 'white',
+              headerTransparent,
+            }}
+            component={AddAccountByKey}
+          />
+          <Stack.Screen
+            name="ScanQRScreen"
+            options={{
+              headerTransparent,
+              headerTintColor: 'white',
+              title: '',
+              headerRight: () => {
+                return <InfoQR />;
+              },
+            }}
+            component={ScanQR}
+          />
         </Stack.Navigator>
       );
     }
