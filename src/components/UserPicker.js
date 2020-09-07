@@ -13,7 +13,6 @@ const UserPicker = ({activeAccount, accounts, onAccountSelected}) => {
   const activeAccountPhoto = JSON.parse(
     activeAccount.json_metadata,
   ).profile.profile_image.split('?')[0];
-  console.log(activeAccountPhoto);
 
   const accountsList = [
     activeAccountName,

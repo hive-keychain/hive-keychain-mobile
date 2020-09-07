@@ -1,12 +1,14 @@
-import {ACTIVE_ACCOUNT} from 'actions/types';
+import {ACTIVE_ACCOUNT, ACTIVE_ACCOUNT_RC} from 'actions/types';
 
 const activeAccountReducer = (
-  state = {account: {}, keys: {}},
+  state = {account: {}, keys: {}, rc: {}},
   {type, payload},
 ) => {
   switch (type) {
     case ACTIVE_ACCOUNT:
-      return payload;
+      return {...state, ...payload};
+    case ACTIVE_ACCOUNT_RC:
+      return {...state, rc: payload};
     default:
       return state;
   }

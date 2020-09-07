@@ -10,6 +10,7 @@ import {
   INIT_ACCOUNTS,
   ACTIVE_ACCOUNT,
   GLOBAL_PROPS,
+  ACTIVE_ACCOUNT_RC,
 } from './types';
 import {encryptJson, decryptToJson} from 'utils/encrypt';
 import {navigate} from '../navigationRef';
@@ -85,15 +86,23 @@ export const forgetAccounts = () => (dispatch) => {
 };
 
 export const loadAccount = (username) => async (dispatch, getState) => {
+  dispatch(getAccountRC(username));
   const account = (await client.database.getAccounts([username]))[0];
   const keys = getState().accounts.find((e) => e.name === username).keys;
-  console.log(ACTIVE_ACCOUNT);
   dispatch({
     type: ACTIVE_ACCOUNT,
     payload: {
       account,
       keys,
     },
+  });
+};
+
+const getAccountRC = (username) => async (dispatch) => {
+  const rc = await client.rc.getRCMana(username);
+  dispatch({
+    type: ACTIVE_ACCOUNT_RC,
+    payload: rc,
   });
 };
 

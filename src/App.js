@@ -139,7 +139,6 @@ const App = ({hasAccounts, auth}) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log('his why t', state);
   return {hasAccounts: state.hasAccounts.has, auth: state.auth};
 };
 

@@ -43,14 +43,7 @@ export const getVotingDollarsPerAccount = (
   const recentClaims = getRecentClaims(properties);
   const hivePrice = getHivePrice(properties);
   const votePowerReserveRate = getVotePowerReserveRate(properties);
-  console.log(
-    'aaaa',
-    vp,
-    rewardBalance,
-    recentClaims,
-    hivePrice,
-    votePowerReserveRate,
-  );
+
   if (rewardBalance && recentClaims && hivePrice && votePowerReserveRate) {
     const effective_vesting_shares = Math.round(
       getEffectiveVestingSharesPerAccount(account) * 1000000,

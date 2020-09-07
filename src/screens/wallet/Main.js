@@ -45,7 +45,7 @@ const Main = ({
       <View style={styles.resourcesWrapper}>
         <PercentageDisplay
           name={translate('wallet.rc')}
-          percent={'getRC(user.account)'}
+          percent={user.rc.percentage / 100 || 100}
           color="#E59D15"
         />
         <PercentageDisplay

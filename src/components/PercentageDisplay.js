@@ -12,7 +12,7 @@ const PercentageDisplay = ({color, percent, name, secondary}) => {
     <View style={styles.container}>
       <View style={styles.textWrapper}>
         <Text style={styles.name}>{name.toUpperCase()}</Text>
-        <Text style={styles.percent}>{` ${percent}%`}</Text>
+        <Text style={styles.percent}>{` ${parseInt(percent, 10)}%`}</Text>
         <Text style={styles.secondary}>{secondary}</Text>
       </View>
       <View style={styles.greyBar}>

@@ -6,3 +6,4 @@ export const LOCK = 'LOCK';
 export const INIT_ACCOUNTS = 'INIT_ACCOUNTS';
 export const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';
 export const GLOBAL_PROPS = 'GLOBAL_PROPS';
+export const ACTIVE_ACCOUNT_RC = 'ACTIVE_ACCOUNT_RC';
