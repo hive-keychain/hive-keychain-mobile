@@ -23,6 +23,7 @@ import Search from 'assets/wallet/search.svg';
 const Stack = createStackNavigator();
 
 const App = ({hasAccounts, auth}) => {
+  console.log(hasAccounts);
   const {height, width} = useWindowDimensions();
   const headerTransparent = {
     position: 'absolute',
@@ -96,6 +97,7 @@ const App = ({hasAccounts, auth}) => {
         </Stack.Navigator>
       );
     } else {
+      console.log('in wallet');
       return (
         <Stack.Navigator>
           <Stack.Screen
@@ -104,7 +106,6 @@ const App = ({hasAccounts, auth}) => {
             options={{
               headerStyle: {
                 backgroundColor: '#A3112A',
-                paddingHorizontal: '25',
               },
               headerTitleAlign: 'center',
               title: 'WALLET',
@@ -127,7 +128,7 @@ const App = ({hasAccounts, auth}) => {
             }}
           />
           <Stack.Screen
-            name="AddAccountByKeyScreen"
+            name="AddAccountFromWalletScreen"
             options={{
               title: 'ADD ACCOUNT',
               headerRight: () => {

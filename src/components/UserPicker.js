@@ -70,7 +70,12 @@ const getDimensionedStyles = ({width, height}) =>
       textAlign: 'center',
       marginLeft: width * 0.15,
     },
-    image: {width: height / 15, height: height / 15, borderRadius: height / 30},
+    image: {
+      margin: 2,
+      width: height / 15 - 4,
+      height: height / 15 - 4,
+      borderRadius: height / 30,
+    },
   });
 
 export default UserPicker;

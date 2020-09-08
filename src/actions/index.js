@@ -1,4 +1,3 @@
-import * as Keychain from 'react-native-keychain';
 import Toast from 'react-native-simple-toast';
 
 import {
@@ -16,7 +15,7 @@ import {encryptJson, decryptToJson} from 'utils/encrypt';
 import {navigate} from '../navigationRef';
 import {translate} from 'utils/localize';
 import {client} from 'utils/dhive';
-import {chunkArray} from 'utils/format';
+import {saveOnKeychain, getFromKeychain} from 'utils/keychainStorage';
 
 export const signUp = (pwd) => {
   navigate('AddAccountByKeyScreen');
@@ -34,23 +33,13 @@ export const addAccount = (name, keys, wallet) => async (
     if (wallet) {
       navigate('WalletScreen');
     }
-
     return;
   }
+  console.log({type: ADD_ACCOUNT, payload: {name, keys}});
   dispatch({type: ADD_ACCOUNT, payload: {name, keys}});
   const accounts = [...previousAccounts, {name, keys}];
   const encrypted = encryptJson({list: accounts}, mk);
-  const chunks = chunkArray(encrypted.split(''), 300).map((e) => e.join(''));
-  for (const [i, chunk] of chunks.entries()) {
-    await Keychain.setGenericPassword(`accounts_${chunks.length}`, chunk, {
-      accessControl:
-        i === 0
-          ? Keychain.ACCESS_CONTROL.BIOMETRY_ANY_OR_DEVICE_PASSCODE
-          : null,
-      service: `accounts_${i}`,
-      storage: Keychain.STORAGE_TYPE.RSA,
-    });
-  }
+  await saveOnKeychain('accounts', encrypted);
   if (wallet) {
     navigate('WalletScreen');
   }
@@ -58,20 +47,7 @@ export const addAccount = (name, keys, wallet) => async (
 
 export const unlock = (mk, errorCallback) => async (dispatch, getState) => {
   try {
-    let accountsEncrypted = '';
-    let i = 0;
-    let length = 10;
-    while (i < length) {
-      const cred = await Keychain.getGenericPassword({
-        service: `accounts_${i}`,
-        authenticationPrompt: {title: 'Authenticate'},
-      });
-      if (i === 0) {
-        length = cred.username.replace('accounts_', '');
-      }
-      accountsEncrypted += cred.password;
-      i++;
-    }
+    const accountsEncrypted = await getFromKeychain('accounts');
     const accounts = decryptToJson(accountsEncrypted, mk);
     if (accounts && accounts.list) {
       dispatch({type: UNLOCK, payload: mk});
@@ -93,7 +69,8 @@ export const lock = () => {
   return {type: LOCK};
 };
 
-export const forgetAccounts = () => (dispatch) => {
+export const forgetAccounts = () => (dispatch, getState) => {
+  //clearKeychain(getState());
   dispatch({
     type: FORGET_ACCOUNTS,
   });

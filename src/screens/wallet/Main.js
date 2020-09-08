@@ -39,7 +39,7 @@ const Main = ({
         accounts={accounts.map((account) => account.name)}
         activeAccount={user.account}
         addAccount={() => {
-          navigation.navigate('AddAccountByKeyScreen', {wallet: true});
+          navigation.navigate('AddAccountFromWalletScreen', {wallet: true});
         }}
         onAccountSelected={loadAccountConnect}
       />
@@ -66,9 +66,6 @@ const Main = ({
           navigation.navigate('TransferScreen', {initialCurrency: 'HBD'});
         }}
       />
-      <Button title="Delegations" onPress={lockConnect} />
-      <Button title="Witness" onPress={lockConnect} />
-      <Button title="History" onPress={lockConnect} />
       <Button title="Lock" onPress={lockConnect} />
     </WalletPage>
   );
