@@ -4,6 +4,7 @@ import accountsReducer from './accountsReducer';
 import hasAccountsReducer from './hasAccountsReducer';
 import activeAccountReducer from './activeAccountReducer';
 import globalPropertiesReducer from './globalPropertiesReducer';
+import bittrexReducer from './bittrexReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
   hasAccounts: hasAccountsReducer,
   activeAccount: activeAccountReducer,
   properties: globalPropertiesReducer,
+  bittrex: bittrexReducer,
 });

@@ -10,12 +10,14 @@ import {
   ACTIVE_ACCOUNT,
   GLOBAL_PROPS,
   ACTIVE_ACCOUNT_RC,
+  GET_BITTREX_PRICE,
 } from './types';
 import {encryptJson, decryptToJson} from 'utils/encrypt';
 import {navigate} from '../navigationRef';
 import {translate} from 'utils/localize';
 import {client} from 'utils/dhive';
 import {saveOnKeychain, getFromKeychain} from 'utils/keychainStorage';
+import {getBittrexPrices} from 'utils/price';
 
 export const signUp = (pwd) => {
   navigate('AddAccountByKeyScreen');
@@ -104,6 +106,14 @@ export const loadProperties = () => async (dispatch) => {
     client.database.call('get_reward_fund', ['post']),
   ]);
   const props = {globals, price, rewardFund};
-  console.log('a', props);
   dispatch({type: GLOBAL_PROPS, payload: props});
+};
+
+export const loadBittrex = () => async (dispatch) => {
+  const prices = await getBittrexPrices();
+  console.log(prices);
+  dispatch({
+    type: GET_BITTREX_PRICE,
+    payload: prices,
+  });
 };

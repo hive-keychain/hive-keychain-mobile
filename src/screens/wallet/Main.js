@@ -2,18 +2,21 @@ import React, {useEffect} from 'react';
 import {StyleSheet, Button, View, useWindowDimensions} from 'react-native';
 
 import {connect} from 'react-redux';
-import {lock, loadAccount, loadProperties} from 'actions';
-import {withCommas, toHP} from 'utils/format';
+import {lock, loadAccount, loadProperties, loadBittrex} from 'actions';
 import WalletPage from 'components/WalletPage';
 import UserPicker from 'components/UserPicker';
 import PercentageDisplay from 'components/PercentageDisplay';
 import {translate} from 'utils/localize';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
+import ScreenToggle from 'components/ScreenToggle';
+import Primary from 'screens/wallet/Primary';
+import Tokens from 'screens/wallet/Tokens';
 
 const Main = ({
   lockConnect,
   loadAccountConnect,
   loadPropertiesConnect,
+  loadBittrexConnect,
   user,
   properties,
   navigation,
@@ -27,7 +30,8 @@ const Main = ({
       loadAccountConnect(accounts[0].name);
     }
     loadPropertiesConnect();
-  }, [loadAccountConnect, loadPropertiesConnect, accounts]);
+    loadBittrexConnect();
+  }, [loadAccountConnect, loadPropertiesConnect, loadBittrexConnect, accounts]);
 
   if (!user) {
     return null;
@@ -59,6 +63,12 @@ const Main = ({
           }`}
         />
       </View>
+      <ScreenToggle
+        style={styles.resourcesWrapper}
+        menu={['Primary', 'Tokens']}
+        toUpperCase
+        components={[<Primary />, <Tokens />]}
+      />
 
       <Button
         title="Transfer"
@@ -97,5 +107,6 @@ export default connect(
     lockConnect: lock,
     loadAccountConnect: loadAccount,
     loadPropertiesConnect: loadProperties,
+    loadBittrexConnect: loadBittrex,
   },
 )(Main);
