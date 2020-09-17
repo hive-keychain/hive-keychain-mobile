@@ -28,4 +28,8 @@ export const objectMap = (object, mapFn) => {
   }, {});
 };
 
-export const signedNumber = (nb) => (nb > 0 ? `+${nb}` : `${nb}`);
+export const signedNumber = (nb) =>
+  nb > 0 ? `+ ${nb}` : `${nb.replace('-', '- ')}`;
+
+export const formatBalance = (balance) =>
+  balance > 1000 ? withCommas(balance, 0) : withCommas(balance);

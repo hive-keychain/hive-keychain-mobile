@@ -1,11 +1,14 @@
 import React from 'react';
-import {Text, View, StyleSheet, useWindowDimensions} from 'react-native';
+import {View, StyleSheet, useWindowDimensions} from 'react-native';
 import {connect} from 'react-redux';
+
+import {toHP} from 'utils/format';
 
 import AccountValue from 'components/AccountValue';
 import TokenDisplay from 'components/TokenDisplay';
 import Separator from 'components/Separator';
 import RoundButton from 'components/RoundButton';
+
 import Hive from 'assets/wallet/icon_hive.svg';
 import Hbd from 'assets/wallet/icon_hbd.svg';
 import Hp from 'assets/wallet/icon_hp.svg';
@@ -30,7 +33,7 @@ const Primary = ({user, bittrex, properties}) => {
         value={parseFloat(user.account.balance)}
         logo={<Hive width={width / 15} />}
         price={bittrex.hive}
-        buttons={[<PowerUp />, <Send />]}
+        buttons={[<Send />, <PowerUp />]}
       />
       <Separator height={20} />
       <TokenDisplay
@@ -39,6 +42,16 @@ const Primary = ({user, bittrex, properties}) => {
         currency="HBD"
         value={parseFloat(user.account.sbd_balance)}
         logo={<Hbd width={width / 15} />}
+        price={bittrex.hbd}
+        buttons={[<Send />]}
+      />
+      <Separator height={20} />
+      <TokenDisplay
+        color="#AC4F00"
+        name="HIVE POWER"
+        currency="HP"
+        value={toHP(user.account.vesting_shares, properties.globals)}
+        logo={<Hp width={width / 15} />}
         price={bittrex.hbd}
         buttons={[<Send />]}
       />
