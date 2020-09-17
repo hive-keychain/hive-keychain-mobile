@@ -1,14 +1,78 @@
-import React, {useState} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import React from 'react';
+import {Text, View, StyleSheet, useWindowDimensions} from 'react-native';
+import {connect} from 'react-redux';
+
 import AccountValue from 'components/AccountValue';
-const Primary = ({account}) => {
+import TokenDisplay from 'components/TokenDisplay';
+import Separator from 'components/Separator';
+import RoundButton from 'components/RoundButton';
+import Hive from 'assets/wallet/icon_hive.svg';
+import Hbd from 'assets/wallet/icon_hbd.svg';
+import Hp from 'assets/wallet/icon_hp.svg';
+import Power from 'assets/wallet/icon_power.svg';
+import SendArrow from 'assets/wallet/icon_send.svg';
+
+const Primary = ({user, bittrex, properties}) => {
+  const {width, height} = useWindowDimensions();
   return (
     <View>
-      <AccountValue account={account} />
+      <AccountValue
+        account={user.account}
+        bittrex={bittrex}
+        properties={properties}
+        style={styles.accountValue}
+      />
+      <Separator height={20} />
+      <TokenDisplay
+        color="#A3112A"
+        name="HIVE"
+        currency="HIVE"
+        value={parseFloat(user.account.balance)}
+        logo={<Hive width={width / 15} />}
+        price={bittrex.hive}
+        buttons={[<PowerUp />, <Send />]}
+      />
+      <Separator height={20} />
+      <TokenDisplay
+        color="#005C09"
+        name="HIVE DOLLARS"
+        currency="HBD"
+        value={parseFloat(user.account.sbd_balance)}
+        logo={<Hbd width={width / 15} />}
+        price={bittrex.hbd}
+        buttons={[<Send />]}
+      />
     </View>
   );
 };
 
-const styles = StyleSheet.create({});
+const PowerUp = () => {
+  return (
+    <RoundButton size={36} backgroundColor="#E59D15" content={<Power />} />
+  );
+};
 
-export default Primary;
+const Send = () => {
+  return (
+    <RoundButton size={36} backgroundColor="#77B9D1" content={<SendArrow />} />
+  );
+};
+
+const styles = StyleSheet.create({
+  accountValue: {
+    color: '#626F79',
+    fontSize: 28,
+    textAlign: 'center',
+    width: '100%',
+  },
+});
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.activeAccount,
+    bittrex: state.bittrex,
+    properties: state.properties,
+  };
+};
+
+export default connect(mapStateToProps)(Primary);

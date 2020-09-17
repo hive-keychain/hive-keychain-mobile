@@ -27,3 +27,5 @@ export const objectMap = (object, mapFn) => {
     return result;
   }, {});
 };
+
+export const signedNumber = (nb) => (nb > 0 ? `+${nb}` : `${nb}`);
