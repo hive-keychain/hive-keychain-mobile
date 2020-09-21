@@ -5,8 +5,8 @@ const ScreenToggle = ({components, menu, toUpperCase, style}) => {
   const [active, setActive] = useState(0);
 
   return (
-    <View style={[style, styles.wrapper]}>
-      <View style={styles.header}>
+    <View style={[styles.wrapper]}>
+      <View style={[style, styles.header]}>
         {menu.map((menuItem, i) => (
           <Text
             onPress={() => {
@@ -22,7 +22,7 @@ const ScreenToggle = ({components, menu, toUpperCase, style}) => {
           </Text>
         ))}
       </View>
-      <View style={styles.pane}>{components[active]}</View>
+      <View style={[style, styles.pane]}>{components[active]}</View>
     </View>
   );
 };
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
-    marginVertical: 20,
+    marginTop: 20,
   },
   headerElt: {
     width: '50%',
@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   pane: {
     width: '100%',
     height: '100%',
+    backgroundColor: '#E5EEF7',
   },
 });
 

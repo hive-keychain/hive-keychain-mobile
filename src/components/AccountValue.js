@@ -6,9 +6,9 @@ import {withCommas} from 'utils/format';
 const AccountValue = ({style, bittrex, account, properties}) => {
   let accountValue = 0;
   if (bittrex.btc && account && properties.globals) {
-    console.log('go');
     accountValue = withCommas(
       getAccountValue(account, bittrex, properties.globals),
+      2,
     );
   }
   return <Text style={style}>{`$ ${accountValue}`}</Text>;

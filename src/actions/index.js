@@ -11,6 +11,8 @@ import {
   GLOBAL_PROPS,
   ACTIVE_ACCOUNT_RC,
   GET_BITTREX_PRICE,
+  INIT_TRANSACTIONS,
+  ADD_TRANSACTIONS,
 } from './types';
 import {encryptJson, decryptToJson} from 'utils/encrypt';
 import {navigate} from '../navigationRef';
@@ -110,10 +112,39 @@ export const loadProperties = () => async (dispatch) => {
 };
 
 export const loadBittrex = () => async (dispatch) => {
-  const prices = await getBittrexPrices();
-  console.log(prices);
+  try {
+    const prices = await getBittrexPrices();
+    console.log(prices);
+    dispatch({
+      type: GET_BITTREX_PRICE,
+      payload: prices,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const initAccountTransactions = (accountName) => async (dispatch) => {
+  const transactions = await client.call(
+    'condenser_api',
+    'get_account_history',
+    [accountName, -1, 500],
+  );
+  console.log(transactions);
+  const transfers = transactions
+    .filter((e) => e[1].op[0] === 'transfer')
+    .map((e) => {
+      return {
+        ...e[1].op[1],
+        type: 'transfer',
+        timestamp: e[1].timestamp,
+        key: accountName + e[1].trx_id + Math.floor(Math.random() * 100000),
+      };
+    })
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  console.log(transfers);
   dispatch({
-    type: GET_BITTREX_PRICE,
-    payload: prices,
+    type: INIT_TRANSACTIONS,
+    payload: transfers,
   });
 };

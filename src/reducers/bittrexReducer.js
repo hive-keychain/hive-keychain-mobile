@@ -1,6 +1,9 @@
 import {GET_BITTREX_PRICE} from 'actions/types';
 
-const bittrexReducer = (state = {}, {type, payload}) => {
+const bittrexReducer = (
+  state = {btc: {}, hive: {}, hbd: {}},
+  {type, payload},
+) => {
   switch (type) {
     case GET_BITTREX_PRICE:
       return payload;

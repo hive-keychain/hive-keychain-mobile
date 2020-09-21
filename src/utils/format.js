@@ -5,8 +5,10 @@ export const withCommas = (nb, decimals = 3) =>
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 export const toHP = (vests, props) =>
-  (parseFloat(vests) * parseFloat(props.total_vesting_fund_steem)) /
-  parseFloat(props.total_vesting_shares);
+  props
+    ? (parseFloat(vests) * parseFloat(props.total_vesting_fund_steem)) /
+      parseFloat(props.total_vesting_shares)
+    : 0;
 
 export const chunkArray = (myArray, chunk_size) => {
   const arrayLength = myArray.length;

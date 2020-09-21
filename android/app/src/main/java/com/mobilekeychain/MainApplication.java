@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.masteratul.exceptionhandler.ReactNativeExceptionHandlerPackage;
 import com.reactnativecommunity.picker.RNCPickerPackage;
 import com.poberwong.launcher.IntentLauncherPackage;
 import com.oblador.vectoricons.VectorIconsPackage;

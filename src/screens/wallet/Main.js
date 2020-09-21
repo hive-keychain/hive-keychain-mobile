@@ -89,8 +89,8 @@ const getDimensionedStyles = ({width, height}) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginLeft: width * 0.05,
-      marginRight: width * 0.05,
+      paddingLeft: width * 0.05,
+      paddingRight: width * 0.05,
     },
   });
 

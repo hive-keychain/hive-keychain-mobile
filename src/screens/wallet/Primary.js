@@ -8,6 +8,7 @@ import AccountValue from 'components/AccountValue';
 import TokenDisplay from 'components/TokenDisplay';
 import Separator from 'components/Separator';
 import RoundButton from 'components/RoundButton';
+import Transactions from 'components/Transactions';
 
 import Hive from 'assets/wallet/icon_hive.svg';
 import Hbd from 'assets/wallet/icon_hbd.svg';
@@ -18,7 +19,8 @@ import SendArrow from 'assets/wallet/icon_send.svg';
 const Primary = ({user, bittrex, properties}) => {
   const {width, height} = useWindowDimensions();
   return (
-    <View>
+    <View style={styles.container}>
+      <Separator height={20} />
       <AccountValue
         account={user.account}
         bittrex={bittrex}
@@ -55,6 +57,8 @@ const Primary = ({user, bittrex, properties}) => {
         price={bittrex.hbd}
         buttons={[<Send />]}
       />
+      <Separator height={20} />
+      <Transactions user={user} />
     </View>
   );
 };
@@ -78,6 +82,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '100%',
   },
+  container: {width: '100%'},
 });
 
 const mapStateToProps = (state) => {

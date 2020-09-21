@@ -57,6 +57,7 @@ const getDimensionedStyles = ({width, height, color, change}) =>
       borderColor: color,
       borderRadius: 10,
       width: '100%',
+      backgroundColor: 'white',
       paddingHorizontal: width * 0.05,
       paddingVertical: width * 0.03,
     },
