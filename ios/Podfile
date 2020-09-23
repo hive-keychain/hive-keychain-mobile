@@ -77,7 +77,6 @@ target 'mobileKeychain' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'react-native-simple-crypto', :path => '../node_modules/react-native-simple-crypto'
 
   pod 'RNKeychain', :path => '../node_modules/react-native-keychain'
 
