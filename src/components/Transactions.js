@@ -44,6 +44,7 @@ const Transaction = ({transaction, user}) => {
     month: '2-digit',
     day: '2-digit',
   });
+  console.log(date);
 
   const styles = getDimensionedStyles({
     ...useWindowDimensions(),
@@ -78,7 +79,8 @@ const renderToggle = (user, memo) => {
   try {
     if (memo[0] === '#') {
       if (user.keys.memo) {
-        decryptedMemo = hive.decodeMemo(user.keys.memo, memo);
+        //decryptedMemo = hive.decodeMemo(user.keys.memo, memo);
+        decryptedMemo = 'Decrypting memos is not supported yet';
       } else {
         decryptedMemo = 'Please add your memo key to decrypt this message.';
       }
