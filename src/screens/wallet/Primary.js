@@ -35,7 +35,7 @@ const Primary = ({user, bittrex, properties}) => {
         value={parseFloat(user.account.balance)}
         logo={<Hive width={width / 15} />}
         price={bittrex.hive}
-        buttons={[<Send />, <PowerUp />]}
+        buttons={[<Send key="send_hive" />, <PowerUp key="pu" />]}
       />
       <Separator height={20} />
       <TokenDisplay
@@ -45,7 +45,7 @@ const Primary = ({user, bittrex, properties}) => {
         value={parseFloat(user.account.sbd_balance)}
         logo={<Hbd width={width / 15} />}
         price={bittrex.hbd}
-        buttons={[<Send />]}
+        buttons={[<Send key="send_hbd" />]}
       />
       <Separator height={20} />
       <TokenDisplay
@@ -55,7 +55,7 @@ const Primary = ({user, bittrex, properties}) => {
         value={toHP(user.account.vesting_shares, properties.globals)}
         logo={<Hp width={width / 15} />}
         price={bittrex.hbd}
-        buttons={[<Send />]}
+        buttons={[<Send key="hp" />]}
       />
       <Separator height={20} />
       <Transactions user={user} />

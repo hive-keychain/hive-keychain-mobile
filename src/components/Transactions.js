@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {
   View,
-  ScrollView,
   TouchableOpacity,
   Text,
   StyleSheet,
+  FlatList,
   useWindowDimensions,
 } from 'react-native';
 import {initAccountTransactions} from 'actions';
@@ -18,22 +18,26 @@ const Transactions = ({transactions, initAccountTransactionsConnect, user}) => {
     }
   }, [user.account.name, initAccountTransactionsConnect]);
   console.log(transactions.length);
+
   return (
-    <ScrollView>
-      {transactions.map((transaction) => {
-        return (
-          <Transaction
-            transaction={transaction}
-            key={transaction.key}
-            user={user}
-          />
-        );
-      })}
-    </ScrollView>
+    <View>
+      <FlatList
+        style={{height: 200}}
+        data={transactions}
+        onEndReached={() => {
+          console.log('end reached');
+        }}
+        renderItem={(transaction) => {
+          return <Transaction transaction={transaction.item} user={user} />;
+        }}
+        keyExtractor={(transaction) => transaction.key}
+      />
+    </View>
   );
 };
 
 const Transaction = ({transaction, user}) => {
+  console.log(transaction, user);
   const [toggle, setToggle] = useState(false);
   const username = user.account.name;
   const {timestamp, from, to, amount, memo} = transaction;
