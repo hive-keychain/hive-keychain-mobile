@@ -39,7 +39,6 @@ export const addAccount = (name, keys, wallet) => async (
     }
     return;
   }
-  console.log({type: ADD_ACCOUNT, payload: {name, keys}});
   dispatch({type: ADD_ACCOUNT, payload: {name, keys}});
   const accounts = [...previousAccounts, {name, keys}];
   const encrypted = encryptJson({list: accounts}, mk);
@@ -57,9 +56,7 @@ export const unlock = (mk, errorCallback) => async (dispatch, getState) => {
       dispatch({type: UNLOCK, payload: mk});
       dispatch({type: INIT_ACCOUNTS, payload: accounts.list});
     }
-    console.log(INIT_ACCOUNTS);
   } catch (e) {
-    console.log(e, e.message);
     if (e.message === 'Wrapped error: User not authenticated') {
       errorCallback(true);
     } else {
@@ -114,7 +111,6 @@ export const loadProperties = () => async (dispatch) => {
 export const loadBittrex = () => async (dispatch) => {
   try {
     const prices = await getBittrexPrices();
-    console.log(prices);
     dispatch({
       type: GET_BITTREX_PRICE,
       payload: prices,
@@ -130,7 +126,6 @@ export const initAccountTransactions = (accountName) => async (dispatch) => {
     'get_account_history',
     [accountName, -1, 500],
   );
-  console.log(transactions);
   const transfers = transactions
     .filter((e) => e[1].op[0] === 'transfer')
     .map((e) => {
@@ -138,11 +133,11 @@ export const initAccountTransactions = (accountName) => async (dispatch) => {
         ...e[1].op[1],
         type: 'transfer',
         timestamp: e[1].timestamp,
-        key: accountName + e[1].trx_id + Math.floor(Math.random() * 100000),
+        key: `${accountName}!${e[0]}`,
       };
     })
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  console.log(transfers);
+  console.log('aaaa', transfers);
   dispatch({
     type: INIT_TRANSACTIONS,
     payload: transfers,

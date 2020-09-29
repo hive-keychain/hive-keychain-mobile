@@ -10,13 +10,14 @@ import {
 import {initAccountTransactions} from 'actions';
 import {connect} from 'react-redux';
 import {withCommas} from 'utils/format';
-import hive from 'utils/dhive';
 
 const Transactions = ({transactions, initAccountTransactionsConnect, user}) => {
   useEffect(() => {
-    initAccountTransactionsConnect(user.account.name);
+    if (user.account.name) {
+      initAccountTransactionsConnect(user.account.name);
+    }
   }, [user.account.name, initAccountTransactionsConnect]);
-
+  console.log(transactions.length);
   return (
     <ScrollView>
       {transactions.map((transaction) => {
@@ -44,7 +45,6 @@ const Transaction = ({transaction, user}) => {
     month: '2-digit',
     day: '2-digit',
   });
-  console.log(date);
 
   const styles = getDimensionedStyles({
     ...useWindowDimensions(),

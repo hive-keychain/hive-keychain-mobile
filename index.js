@@ -19,18 +19,17 @@ const Root = () => {
     }, 3000);
   };
   return (
-    <Provider store={store}>
-      <SafeAreaProvider>
+    <SafeAreaProvider>
+      <Provider store={store}>
         <StatusBar backgroundColor="black" />
-
         <PersistGate
           loading={<Loading />}
           persistor={persistor}
           onBeforeLift={onBeforeLift}>
           {gateLifted ? <App /> : <Loading />}
         </PersistGate>
-      </SafeAreaProvider>
-    </Provider>
+      </Provider>
+    </SafeAreaProvider>
   );
 };
 

@@ -9,10 +9,19 @@ const UserPicker = ({
   onAccountSelected,
   addAccount,
 }) => {
-  const styles = getDimensionedStyles(useWindowDimensions());
+  const {width, height} = useWindowDimensions();
+  const styles = getDimensionedStyles({width, height});
 
   if (!activeAccount.json_metadata) {
-    return null;
+    return (
+      <View style={styles.container}>
+        <Image
+          style={styles.image}
+          source={{uri: 'https://images.hive.blog/u/null/avatar'}}
+        />
+        <View style={styles.picker} />
+      </View>
+    );
   }
   const activeAccountName = activeAccount.name;
 
