@@ -121,10 +121,28 @@ export const loadBittrex = () => async (dispatch) => {
 };
 
 export const initAccountTransactions = (accountName) => async (dispatch) => {
+  const transfers = await getAccountTransactions(accountName);
+  dispatch({
+    type: INIT_TRANSACTIONS,
+    payload: transfers,
+  });
+};
+
+export const fetchAccountTransactions = (accountName, start) => async (
+  dispatch,
+) => {
+  const transfers = await getAccountTransactions(accountName, start);
+  dispatch({
+    type: ADD_TRANSACTIONS,
+    payload: transfers,
+  });
+};
+
+const getAccountTransactions = async (accountName, start) => {
   const transactions = await client.call(
     'condenser_api',
     'get_account_history',
-    [accountName, -1, 500],
+    [accountName, start || -1, start ? Math.min(500, start) : 500],
   );
   const transfers = transactions
     .filter((e) => e[1].op[0] === 'transfer')
@@ -137,9 +155,8 @@ export const initAccountTransactions = (accountName) => async (dispatch) => {
       };
     })
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  console.log('aaaa', transfers);
-  dispatch({
-    type: INIT_TRANSACTIONS,
-    payload: transfers,
-  });
+  if (start && Math.min(500, start) !== 500) {
+    transfers[transfers.length - 1].last = true;
+  }
+  return transfers;
 };

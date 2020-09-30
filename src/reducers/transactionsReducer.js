@@ -5,7 +5,7 @@ export default (state = [], {type, payload}) => {
     case INIT_TRANSACTIONS:
       return payload;
     case ADD_TRANSACTIONS:
-      return {...state, ...payload};
+      return [...state, ...payload];
     default:
       return state;
   }

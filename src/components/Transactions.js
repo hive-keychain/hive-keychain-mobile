@@ -7,24 +7,34 @@ import {
   FlatList,
   useWindowDimensions,
 } from 'react-native';
-import {initAccountTransactions} from 'actions';
+import {initAccountTransactions, fetchAccountTransactions} from 'actions';
 import {connect} from 'react-redux';
 import {withCommas} from 'utils/format';
 
-const Transactions = ({transactions, initAccountTransactionsConnect, user}) => {
+const Transactions = ({
+  transactions,
+  initAccountTransactionsConnect,
+  fetchAccountTransactionsConnect,
+  user,
+}) => {
   useEffect(() => {
     if (user.account.name) {
       initAccountTransactionsConnect(user.account.name);
     }
   }, [user.account.name, initAccountTransactionsConnect]);
   console.log(transactions.length);
-
+  const [end, setEnd] = useState(0);
   return (
     <View style={{display: 'flex', marginBottom: 550}}>
       <FlatList
         data={transactions}
         onEndReached={() => {
-          console.log('end reached');
+          const newEnd =
+            transactions[transactions.length - 1].key.split('!')[1] - 1;
+          if (newEnd !== end && !transactions[transactions.length - 1].last) {
+            fetchAccountTransactionsConnect(user.account.name, newEnd);
+            setEnd(newEnd);
+          }
         }}
         renderItem={(transaction) => {
           return <Transaction transaction={transaction.item} user={user} />;
@@ -36,7 +46,6 @@ const Transactions = ({transactions, initAccountTransactionsConnect, user}) => {
 };
 
 const Transaction = ({transaction, user}) => {
-  console.log(transaction, user);
   const [toggle, setToggle] = useState(false);
   const username = user.account.name;
   const {timestamp, from, to, amount, memo} = transaction;
@@ -118,4 +127,5 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   initAccountTransactionsConnect: initAccountTransactions,
+  fetchAccountTransactionsConnect: fetchAccountTransactions,
 })(Transactions);
