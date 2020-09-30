@@ -8,7 +8,17 @@ import {
 } from 'react-native';
 import {signedNumber, formatBalance} from 'utils/format';
 
-const TokenDisplay = ({name, logo, currency, value, buttons, color, price}) => {
+const TokenDisplay = ({
+  name,
+  logo,
+  currency,
+  value,
+  buttons,
+  color,
+  price,
+  incoming,
+  outgoing,
+}) => {
   const styles = getDimensionedStyles({
     color,
     ...useWindowDimensions(),
@@ -33,12 +43,7 @@ const TokenDisplay = ({name, logo, currency, value, buttons, color, price}) => {
       </View>
       {toggle && (
         <View style={[styles.row, styles.toggle]}>
-          <View style={[styles.row, styles.halfLine]}>
-            <Text style={styles.price}>{`$ ${price.Usd}`}</Text>
-            <Text style={styles.change}>{`${signedNumber(
-              price.DailyUsd,
-            )}%`}</Text>
-          </View>
+          {renderLeftBottom(styles, price, currency, incoming, outgoing)}
           <View style={[styles.row, styles.halfLine, styles.rowReverse]}>
             {buttons}
           </View>
@@ -46,6 +51,29 @@ const TokenDisplay = ({name, logo, currency, value, buttons, color, price}) => {
       )}
     </TouchableOpacity>
   );
+};
+
+const renderLeftBottom = (styles, price, currency, incoming, outgoing) => {
+  console.log(currency);
+  if (currency !== 'HP') {
+    return (
+      <View style={[styles.row, styles.halfLine]}>
+        <Text style={styles.price}>{`$ ${price.Usd}`}</Text>
+        <Text style={styles.change}>{`${signedNumber(price.DailyUsd)}%`}</Text>
+      </View>
+    );
+  } else {
+    return (
+      <View style={styles.halfLine}>
+        <View style={styles.row}>
+          <Text style={styles.green}>{`+ ${formatBalance(incoming)} HP`}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.red}>{`- ${formatBalance(outgoing)} HP`}</Text>
+        </View>
+      </View>
+    );
+  }
 };
 
 const getDimensionedStyles = ({width, height, color, change}) =>
@@ -87,6 +115,8 @@ const getDimensionedStyles = ({width, height, color, change}) =>
     },
     price: {fontSize: 15, color: '#7E8C9A', fontWeight: 'bold'},
     change: {color: change > 0 ? '#3BB26E' : '#B9122F'},
+    green: {color: '#3BB26E'},
+    red: {color: '#B9122F'},
     halfLine: {width: '35%'},
     rowReverse: {flexDirection: 'row-reverse'},
   });

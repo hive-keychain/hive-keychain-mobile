@@ -15,6 +15,7 @@ import Hbd from 'assets/wallet/icon_hbd.svg';
 import Hp from 'assets/wallet/icon_hp.svg';
 import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
+import Delegation from 'assets/wallet/icon_delegate.svg';
 
 const Primary = ({user, bittrex, properties}) => {
   const {width, height} = useWindowDimensions();
@@ -53,9 +54,17 @@ const Primary = ({user, bittrex, properties}) => {
         name="HIVE POWER"
         currency="HP"
         value={toHP(user.account.vesting_shares, properties.globals)}
+        incoming={toHP(
+          user.account.received_vesting_shares,
+          properties.globals,
+        )}
+        outgoing={toHP(
+          user.account.delegated_vesting_shares,
+          properties.globals,
+        )}
         logo={<Hp width={width / 15} />}
         price={bittrex.hbd}
-        buttons={[<Send key="hp" />]}
+        buttons={[<Delegate key="del" />, <PowerDown key="pd" />]}
       />
       <Separator height={20} />
       <Transactions user={user} />
@@ -66,6 +75,18 @@ const Primary = ({user, bittrex, properties}) => {
 const PowerUp = () => {
   return (
     <RoundButton size={36} backgroundColor="#E59D15" content={<Power />} />
+  );
+};
+
+const PowerDown = () => {
+  return (
+    <RoundButton size={36} backgroundColor="#000000" content={<Power />} />
+  );
+};
+
+const Delegate = () => {
+  return (
+    <RoundButton size={36} backgroundColor="#B084C4" content={<Delegation />} />
   );
 };
 
