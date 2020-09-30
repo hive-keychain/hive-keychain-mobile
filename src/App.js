@@ -97,7 +97,6 @@ const App = ({hasAccounts, auth}) => {
         </Stack.Navigator>
       );
     } else {
-      console.log('in wallet');
       return (
         <Stack.Navigator>
           <Stack.Screen

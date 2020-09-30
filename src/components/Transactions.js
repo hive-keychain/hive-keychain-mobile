@@ -20,9 +20,8 @@ const Transactions = ({transactions, initAccountTransactionsConnect, user}) => {
   console.log(transactions.length);
 
   return (
-    <View>
+    <View style={{display: 'flex', marginBottom: 550}}>
       <FlatList
-        style={{height: 200}}
         data={transactions}
         onEndReached={() => {
           console.log('end reached');

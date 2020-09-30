@@ -64,7 +64,7 @@ const Main = ({
         />
       </View>
       <ScreenToggle
-        style={styles.resourcesWrapper}
+        style={styles.toggle}
         menu={['Primary', 'Tokens']}
         toUpperCase
         components={[<Primary />, <Tokens />]}
@@ -89,6 +89,12 @@ const getDimensionedStyles = ({width, height}) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      paddingLeft: width * 0.05,
+      paddingRight: width * 0.05,
+    },
+    toggle: {
+      display: 'flex',
+      flexDirection: 'row',
       paddingLeft: width * 0.05,
       paddingRight: width * 0.05,
     },
