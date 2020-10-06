@@ -62,6 +62,7 @@
   "toast": {
     "noMatch": "PIN codes do not match",
     "authFailed": "Authentication failed",
-    "account_already": "You already registered this account"
+    "account_already": "You already registered this account",
+    "transfer_success": "Your transfer was successful!"
   }
 }

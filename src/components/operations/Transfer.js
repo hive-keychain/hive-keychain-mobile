@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
 import hive, {client} from 'utils/dhive';
 
@@ -14,15 +14,18 @@ import SendArrow from 'assets/wallet/icon_send.svg';
 import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'navigationRef';
+import {loadAccount} from 'actions';
+import Toast from 'react-native-simple-toast';
 
-const Transfer = ({currency, user}) => {
+const Transfer = ({currency, user, loadAccountConnect}) => {
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
 
   const onTransfer = async () => {
+    Keyboard.dismiss();
     try {
-      const res = await client.broadcast.transfer(
+      await client.broadcast.transfer(
         {
           amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
           memo,
@@ -31,10 +34,11 @@ const Transfer = ({currency, user}) => {
         },
         hive.PrivateKey.fromString(user.keys.active),
       );
+      loadAccountConnect(user.account.name);
       goBack();
+      Toast.show(translate('toast.transfer_success'), Toast.LONG);
     } catch (e) {
-      goBack();
-      console.log('transfer', e);
+      Toast.show(`Error : ${e.message}`, Toast.LONG);
     }
   };
   const {color} = getCurrencyProperties(currency);
@@ -91,8 +95,11 @@ const getDimensionedStyles = (color) =>
     currency: {fontWeight: 'bold', fontSize: 18, color},
   });
 
-export default connect((state) => {
-  return {
-    user: state.activeAccount,
-  };
-})(Transfer);
+export default connect(
+  (state) => {
+    return {
+      user: state.activeAccount,
+    };
+  },
+  {loadAccountConnect: loadAccount},
+)(Transfer);

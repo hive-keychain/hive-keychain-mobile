@@ -67,7 +67,7 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         value={parseFloat(user.account.sbd_balance)}
         logo={<Hbd width={width / 15} />}
         price={bittrex.hbd}
-        buttons={[<Send key="send_hbd" />]}
+        buttons={[<Send key="send_hbd" currency="HBD" />]}
       />
       <Separator height={20} />
       <TokenDisplay

@@ -5,7 +5,7 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 
 const TokenDisplay = ({currency, account}) => {
   let {color, value, logo} = getCurrencyProperties(currency, account);
-
+  console.log(value, account);
   const styles = getDimensionedStyles({
     color,
     ...useWindowDimensions(),
