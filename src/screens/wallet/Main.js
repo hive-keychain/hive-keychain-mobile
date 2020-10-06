@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, Button, View, useWindowDimensions} from 'react-native';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
 
 import {connect} from 'react-redux';
 import {lock, loadAccount, loadProperties, loadBittrex} from 'actions';
@@ -36,7 +36,6 @@ const Main = ({
   if (!user) {
     return null;
   }
-
   return (
     <WalletPage>
       <UserPicker
@@ -67,16 +66,8 @@ const Main = ({
         style={styles.toggle}
         menu={['Primary', 'Tokens']}
         toUpperCase
-        components={[<Primary />, <Tokens />]}
+        components={[<Primary navigation={navigation} />, <Tokens />]}
       />
-
-      <Button
-        title="Transfer"
-        onPress={() => {
-          navigation.navigate('TransferScreen', {initialCurrency: 'HBD'});
-        }}
-      />
-      <Button title="Lock" onPress={lockConnect} />
     </WalletPage>
   );
 };

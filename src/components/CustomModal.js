@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import Blur from './Blur';
 
 export default class CustomModal extends Component {
   constructor(props) {
@@ -16,6 +17,7 @@ export default class CustomModal extends Component {
     this.width = width;
   }
   render() {
+    console.log('show now');
     let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
     const styles = StyleSheetFactory.getSheet({
       boxBgColor: this.props.boxBackgroundColor,
@@ -24,32 +26,36 @@ export default class CustomModal extends Component {
       bottomHalf: this.props.bottomHalf,
       height: this.height,
       width: this.width,
+      transparent: this.props.transparentContainer,
     });
     return (
-      <Modal
-        animationType={this.props.animation}
-        transparent={this.props.transparentContainer}
-        visible={this.props.visible}
-        presentationStyle={this.props.mode}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            this.props.outsideClick();
-          }}>
-          <View style={styles.mainContainer}>
-            <View style={styles.modalWrapper}>
-              <View style={styles.modalContainer}>
-                <LinearGradient
-                  start={{x: 0, y: 0}}
-                  end={{x: 0, y: 1}}
-                  colors={['white', '#B9C9D6']}
-                  style={styles.gradient}>
-                  {this.props.children}
-                </LinearGradient>
-              </View>
+      <Blur show={this.props.visible}>
+        <Modal
+          transparent={true}
+          visible={this.props.visible}
+          presentationStyle={this.props.mode}>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              this.props.outsideClick();
+            }}>
+            <View style={styles.mainContainer}>
+              <TouchableWithoutFeedback>
+                <View style={styles.modalWrapper}>
+                  <View style={styles.modalContainer}>
+                    <LinearGradient
+                      start={{x: 0, y: 0}}
+                      end={{x: 0, y: 1}}
+                      colors={['white', '#B9C9D6']}
+                      style={styles.gradient}>
+                      {this.props.children}
+                    </LinearGradient>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
             </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+          </TouchableWithoutFeedback>
+        </Modal>
+      </Blur>
     );
   }
 }
@@ -62,9 +68,13 @@ class StyleSheetFactory {
     modalHeight,
     width,
     height,
+    transparent,
   }) {
     const styles = StyleSheet.create({
-      mainContainer: {flex: 1, backgroundColor: boxBgColor},
+      mainContainer: {
+        flex: 1,
+        backgroundColor: 'transparent',
+      },
       modalWrapper: {
         justifyContent: 'center',
         alignItems: 'center',

@@ -9,15 +9,32 @@ import TokenDisplay from 'components/TokenDisplay';
 import Separator from 'components/Separator';
 import RoundButton from 'components/operations/RoundButton';
 import Transactions from 'components/Transactions';
+
 import Transfer from 'components/operations/Transfer';
 
 import Hive from 'assets/wallet/icon_hive.svg';
 import Hbd from 'assets/wallet/icon_hbd.svg';
 import Hp from 'assets/wallet/icon_hp.svg';
 import Power from 'assets/wallet/icon_power.svg';
+import SendArrow from 'assets/wallet/icon_send.svg';
 import Delegation from 'assets/wallet/icon_delegate.svg';
-const Primary = ({user, bittrex, properties}) => {
+
+const Primary = ({user, bittrex, properties, navigation}) => {
   const {width} = useWindowDimensions();
+
+  const Send = () => {
+    return (
+      <RoundButton
+        onPress={() => {
+          navigation.navigate('ModalScreen', {modalContent: <Transfer />});
+        }}
+        size={36}
+        backgroundColor="#77B9D1"
+        content={<SendArrow />}
+      />
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Separator height={20} />
@@ -35,7 +52,7 @@ const Primary = ({user, bittrex, properties}) => {
         value={parseFloat(user.account.balance)}
         logo={<Hive width={width / 15} />}
         price={bittrex.hive}
-        buttons={[<Transfer key="send_hive" />, <PowerUp key="pu" />]}
+        buttons={[<Send key="send_hive" />, <PowerUp key="pu" />]}
       />
       <Separator height={20} />
       <TokenDisplay
@@ -45,7 +62,7 @@ const Primary = ({user, bittrex, properties}) => {
         value={parseFloat(user.account.sbd_balance)}
         logo={<Hbd width={width / 15} />}
         price={bittrex.hbd}
-        buttons={[<Transfer key="send_hbd" />]}
+        buttons={[<Send key="send_hbd" />]}
       />
       <Separator height={20} />
       <TokenDisplay

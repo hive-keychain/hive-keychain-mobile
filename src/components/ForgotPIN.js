@@ -1,27 +1,30 @@
 import React from 'react';
-import {StyleSheet, Text, useWindowDimensions} from 'react-native';
+import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect} from 'react-redux';
 
 import {forgetAccounts} from 'actions';
 import Separator from './Separator';
-import IconSlider from './IconSlider';
 import EllipticButton from './EllipticButton';
 import {translate} from 'utils/localize';
+import {goBack} from 'navigationRef';
 
 const ForgotPIN = ({forgetAccountsConnect}) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height});
   return (
-    <IconSlider icon={<Text style={styles.header}>Forgot PIN?</Text>}>
+    <View>
       <Text style={styles.h4}>{translate('components.forgotPIN.title')}</Text>
       <Separator />
       <Text>{translate('components.forgotPIN.text')}</Text>
       <Separator height={height / 15} />
       <EllipticButton
         title={translate('components.forgotPIN.button')}
-        onPress={forgetAccountsConnect}
+        onPress={() => {
+          goBack();
+          forgetAccountsConnect();
+        }}
       />
-    </IconSlider>
+    </View>
   );
 };
 const getDimensionedStyles = ({width}) =>

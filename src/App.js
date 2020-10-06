@@ -7,20 +7,20 @@ import {useWindowDimensions, StyleSheet} from 'react-native';
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
 import Unlock from 'screens/Unlock';
+import Modal from 'screens/Modal';
 import CreateAccount from 'screens/CreateAccount';
 import Transfer from 'screens/wallet/Transfer';
 import Wallet from 'screens/wallet/Main';
 import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';
-import MoreInformation from 'components/MoreInformation';
-import InfoQR from 'components/InfoQR';
-import ForgotPIN from 'components/ForgotPIN';
+import MoreInformation from 'components/infoButtons/MoreInfo';
+import InfoPIN from 'components/infoButtons/ForgotPin';
 import {setNavigator} from './navigationRef';
-
 import Hive from 'assets/wallet/hive.svg';
 import Search from 'assets/wallet/search.svg';
 
 const Stack = createStackNavigator();
+const Root = createStackNavigator();
 
 const App = ({hasAccounts, auth}) => {
   console.log(hasAccounts);
@@ -57,9 +57,7 @@ const App = ({hasAccounts, auth}) => {
             name="AddAccountByKeyScreen"
             options={{
               title: 'ADD ACCOUNT',
-              headerRight: () => {
-                return <MoreInformation />;
-              },
+              headerRight: () => <MoreInformation type="moreInfo" />,
               headerTintColor: 'white',
               headerTransparent,
             }}
@@ -72,7 +70,7 @@ const App = ({hasAccounts, auth}) => {
               headerTintColor: 'white',
               title: '',
               headerRight: () => {
-                return <InfoQR />;
+                return <MoreInformation type="qr" />;
               },
             }}
             component={ScanQR}
@@ -87,9 +85,7 @@ const App = ({hasAccounts, auth}) => {
             component={Unlock}
             options={{
               title: '',
-              headerRight: () => {
-                return <ForgotPIN />;
-              },
+              headerRight: () => <InfoPIN />,
               headerTintColor: 'white',
               headerTransparent,
             }}
@@ -131,7 +127,7 @@ const App = ({hasAccounts, auth}) => {
             options={{
               title: 'ADD ACCOUNT',
               headerRight: () => {
-                return <MoreInformation />;
+                return <MoreInformation type="moreInfo" />;
               },
               headerTintColor: 'white',
               headerTransparent,
@@ -145,7 +141,7 @@ const App = ({hasAccounts, auth}) => {
               headerTintColor: 'white',
               title: '',
               headerRight: () => {
-                return <InfoQR />;
+                return <MoreInformation type="qr" />;
               },
             }}
             component={ScanQR}
@@ -155,9 +151,52 @@ const App = ({hasAccounts, auth}) => {
     }
   };
 
+  const renderRootNavigator = () => {
+    return (
+      <Root.Navigator>
+        <Root.Screen
+          name="Main"
+          component={renderNavigator}
+          options={{headerShown: false}}
+        />
+        <Root.Screen
+          name="ModalScreen"
+          mode="modal"
+          component={Modal}
+          navigationOptions={{
+            headerMode: 'none',
+            cardStyle: {
+              backgroundColor: 'transparent',
+            },
+          }}
+          options={{
+            headerShown: false,
+            cardStyle: {backgroundColor: 'transparent'},
+            cardOverlayEnabled: true,
+            cardStyleInterpolator: ({current: {progress}}) => ({
+              cardStyle: {
+                opacity: progress.interpolate({
+                  inputRange: [0, 0.5, 0.9, 1],
+                  outputRange: [0, 0.1, 0.3, 0.7],
+                }),
+              },
+              overlayStyle: {
+                opacity: progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 0.6],
+                  extrapolate: 'clamp',
+                }),
+              },
+            }),
+          }}
+        />
+      </Root.Navigator>
+    );
+  };
+
   return (
     <NavigationContainer ref={(navigator) => setNavigator(navigator)}>
-      {renderNavigator()}
+      {renderRootNavigator()}
     </NavigationContainer>
   );
 };

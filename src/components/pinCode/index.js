@@ -128,37 +128,39 @@ const PinCode = ({
           </View>
         ))}
       </View>
-      <CustomModal
-        animation="slide"
-        visible={visible}
-        mode="overFullScreen"
-        transparentContainer={true}
-        bottomHalf={true}
-        outsideClick={() => {
-          setVisible(false);
-        }}>
-        <Text style={styles.h4}>
-          {translate('components.pinCode.unsupportedBiometrics.title')}
-        </Text>
-        <Separator />
-        <Text>
-          {translate('components.pinCode.unsupportedBiometrics.text1')}
-        </Text>
-        <Separator />
-        <Text>
-          {translate('components.pinCode.unsupportedBiometrics.text2')}
-        </Text>
-        <Separator height={50} />
-        <EllipticButton
-          title={translate('components.pinCode.unsupportedBiometrics.button')}
-          onPress={() => {
-            IntentLauncher.startActivity({
-              action: 'android.settings.SECURITY_SETTINGS',
-            });
+      {false && (
+        <CustomModal
+          animation="slide"
+          visible={visible}
+          mode="overFullScreen"
+          transparentContainer={true}
+          bottomHalf={true}
+          outsideClick={() => {
             setVisible(false);
-          }}
-        />
-      </CustomModal>
+          }}>
+          <Text style={styles.h4}>
+            {translate('components.pinCode.unsupportedBiometrics.title')}
+          </Text>
+          <Separator />
+          <Text>
+            {translate('components.pinCode.unsupportedBiometrics.text1')}
+          </Text>
+          <Separator />
+          <Text>
+            {translate('components.pinCode.unsupportedBiometrics.text2')}
+          </Text>
+          <Separator height={50} />
+          <EllipticButton
+            title={translate('components.pinCode.unsupportedBiometrics.button')}
+            onPress={() => {
+              IntentLauncher.startActivity({
+                action: 'android.settings.SECURITY_SETTINGS',
+              });
+              setVisible(false);
+            }}
+          />
+        </CustomModal>
+      )}
     </View>
   );
 };

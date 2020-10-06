@@ -1,50 +1,24 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import RoundButton from './RoundButton';
-import CustomModal from '../CustomModal';
 import Close from 'assets/wallet/icon_close.svg';
+import {goBack} from 'navigationRef';
 
-export default ({
-  icon,
-  children,
-  logoButton,
-  logo,
-  buttonBackgroundColor,
-  title,
-}) => {
-  const [visible, setVisible] = useState(false);
+export default ({icon, children, logo, title}) => {
   return (
     <>
-      <RoundButton
-        size={36}
-        content={logoButton}
-        backgroundColor={buttonBackgroundColor}
-        onPress={() => {
-          setVisible(true);
-        }}
-      />
-      <CustomModal
-        animation="slide"
-        visible={visible}
-        mode="overFullScreen"
-        boxBackgroundColor="black"
-        transparentContainer={false}
-        bottomHalf={true}
-        outsideClick={() => null}>
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            {logo}
-            <Text style={styles.title}>{title.toUpperCase()}</Text>
-          </View>
-          <TouchableOpacity
-            onPress={() => {
-              setVisible(false);
-            }}>
-            <Close style={styles.close} />
-          </TouchableOpacity>
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
+          {logo}
+          <Text style={styles.title}>{title.toUpperCase()}</Text>
         </View>
-        {children}
-      </CustomModal>
+        <TouchableOpacity
+          onPress={() => {
+            goBack();
+          }}>
+          <Close style={styles.close} />
+        </TouchableOpacity>
+      </View>
+      {children}
     </>
   );
 };
