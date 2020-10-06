@@ -1,4 +1,4 @@
-import hive, {client} from './dhive';
+import {client} from './dhive';
 
 const HIVE_VOTING_MANA_REGENERATION_SECONDS = 432000;
 const HIVE_100_PERCENT = 10000;

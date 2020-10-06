@@ -9,7 +9,7 @@ export default (props) => {
     <Button
       {...props}
       containerViewStyle={styles.container}
-      buttonStyle={{...style, ...styles.button}}
+      buttonStyle={{...styles.button, ...style}}
       rounded
       underlayColor={'rgba(0,0,0,0)'}
       activeOpacity={0}
@@ -20,11 +20,9 @@ export default (props) => {
 const getDimensionedStyles = ({width, height}) =>
   StyleSheet.create({
     button: {
-      marginLeft: width * 0.1,
+      marginHorizontal: width * 0.1,
       color: 'black',
       backgroundColor: 'black',
-      marginRight: width * 0.1,
-      width: width * 0.8,
       height: 50,
       borderRadius: 25,
     },

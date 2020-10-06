@@ -22,11 +22,13 @@ import Delegation from 'assets/wallet/icon_delegate.svg';
 const Primary = ({user, bittrex, properties, navigation}) => {
   const {width} = useWindowDimensions();
 
-  const Send = () => {
+  const Send = ({currency}) => {
     return (
       <RoundButton
         onPress={() => {
-          navigation.navigate('ModalScreen', {modalContent: <Transfer />});
+          navigation.navigate('ModalScreen', {
+            modalContent: <Transfer currency={currency} />,
+          });
         }}
         size={36}
         backgroundColor="#77B9D1"
@@ -52,7 +54,10 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         value={parseFloat(user.account.balance)}
         logo={<Hive width={width / 15} />}
         price={bittrex.hive}
-        buttons={[<Send key="send_hive" />, <PowerUp key="pu" />]}
+        buttons={[
+          <Send key="send_hive" currency="HIVE" />,
+          <PowerUp key="pu" />,
+        ]}
       />
       <Separator height={20} />
       <TokenDisplay

@@ -61,29 +61,28 @@ export default class CustomModal extends Component {
 }
 
 class StyleSheetFactory {
-  static getSheet({
-    boxBgColor,
-    fullscreen,
-    bottomHalf,
-    modalHeight,
-    width,
-    height,
-    transparent,
-  }) {
+  static getSheet({modalHeight, width, transparent}) {
     const styles = StyleSheet.create({
       mainContainer: {
         flex: 1,
         backgroundColor: 'transparent',
+        justifyContent: 'flex-end',
       },
       modalWrapper: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'transparent',
-        height: modalHeight,
+        minHeight: modalHeight,
+        flex: 1,
+        height: 'auto',
       },
       modalContainer: {
         backgroundColor: 'white',
         width: '100%',
+        height: '100%',
         borderWidth: 1,
         borderColor: 'white',
         borderStyle: 'solid',
@@ -97,6 +96,7 @@ class StyleSheetFactory {
       gradient: {
         width: '100%',
         height: '100%',
+        flex: 0,
         margin: 0,
         borderRadius: 10,
         padding: 0,
@@ -104,38 +104,6 @@ class StyleSheetFactory {
         paddingVertical: width * 0.05,
       },
     });
-
-    if (fullscreen) {
-      styles.modalWrapper = {
-        ...styles.modalWrapper,
-        flex: 1,
-      };
-
-      styles.modalContainer = {
-        ...styles.modalContainer,
-        flex: 1,
-      };
-    } else if (bottomHalf) {
-      styles.modalWrapper = {
-        ...styles.modalWrapper,
-        marginTop: modalHeight,
-      };
-
-      styles.modalContainer = {
-        ...styles.modalContainer,
-        flex: 1,
-      };
-    } else {
-      styles.modalWrapper = {
-        ...styles.modalWrapper,
-        flex: 1,
-      };
-
-      styles.modalContainer = {
-        ...styles.modalContainer,
-        marginHorizontal: 10,
-      };
-    }
 
     return styles;
   }
