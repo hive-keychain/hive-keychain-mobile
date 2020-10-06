@@ -16,7 +16,7 @@ export default class CustomModal extends Component {
     this.width = width;
   }
   render() {
-    const modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
+    let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
     const styles = StyleSheetFactory.getSheet({
       boxBgColor: this.props.boxBackgroundColor,
       fullscreen: this.props.fullscreen,
@@ -31,7 +31,10 @@ export default class CustomModal extends Component {
         transparent={this.props.transparentContainer}
         visible={this.props.visible}
         presentationStyle={this.props.mode}>
-        <TouchableWithoutFeedback onPress={() => this.props.outsideClick()}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            this.props.outsideClick();
+          }}>
           <View style={styles.mainContainer}>
             <View style={styles.modalWrapper}>
               <View style={styles.modalContainer}>
@@ -61,7 +64,7 @@ class StyleSheetFactory {
     height,
   }) {
     const styles = StyleSheet.create({
-      mainContainer: {flex: 1},
+      mainContainer: {flex: 1, backgroundColor: boxBgColor},
       modalWrapper: {
         justifyContent: 'center',
         alignItems: 'center',

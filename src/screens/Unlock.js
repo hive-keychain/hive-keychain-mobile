@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 
 import {unlock, forgetAccounts} from 'actions';
 import Background from 'components/Background';
-import Pincode from 'components/PinCode';
+import Pincode from 'components/pinCode';
 import KeychainLogo from 'assets/keychain.svg';
 import {translate} from 'utils/localize';
 

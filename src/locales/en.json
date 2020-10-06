@@ -15,7 +15,14 @@
     "amount": "amount",
     "memo": "memo"
   },
-  "wallet": {"rc": "Resources:", "vp": "Voting:"},
+  "wallet": {
+    "rc": "Resources:",
+    "vp": "Voting:",
+    "balance": "balance",
+    "operations": {
+      "transfer": {"title": "Transfer funds", "memo": "MEMO (optional)"}
+    }
+  },
   "components": {
     "moreInformation": {
       "title": "KEYS (HIVE PASSWORDS)",

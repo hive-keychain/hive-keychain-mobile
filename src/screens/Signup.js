@@ -3,7 +3,7 @@ import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {connect} from 'react-redux';
 import {signUp} from 'actions';
 import Background from 'components/Background';
-import Pincode from 'components/PinCode';
+import Pincode from 'components/pinCode';
 import KeychainLogo from 'assets/keychain.svg';
 import {translate} from 'utils/localize';
 
