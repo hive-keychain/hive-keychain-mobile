@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '100%',
   },
-  container: {width: '100%'},
+  container: {width: '100%', flex: 1},
 });
 
 const mapStateToProps = (state) => {

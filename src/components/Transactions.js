@@ -24,8 +24,9 @@ const Transactions = ({
   }, [user.account.name, initAccountTransactionsConnect]);
   console.log(transactions.length);
   const [end, setEnd] = useState(0);
+  //style={{display: 'flex', marginBottom: 550}}
   return (
-    <View style={{display: 'flex', marginBottom: 550}}>
+    <View style={basicStyles.flex}>
       <FlatList
         data={transactions}
         onEndReached={() => {
@@ -40,6 +41,7 @@ const Transactions = ({
           return <Transaction transaction={transaction.item} user={user} />;
         }}
         keyExtractor={(transaction) => transaction.key}
+        style={basicStyles.flex}
       />
     </View>
   );
@@ -103,7 +105,7 @@ const renderToggle = (user, memo) => {
     return null;
   }
 };
-
+const basicStyles = StyleSheet.create({flex: {flex: 1}});
 const getDimensionedStyles = ({width, height, color}) =>
   StyleSheet.create({
     container: {

@@ -28,7 +28,11 @@ const ScreenToggle = ({components, menu, toUpperCase, style}) => {
 };
 
 const styles = StyleSheet.create({
-  wrapper: {display: 'flex', flexDirection: 'column'},
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+  },
   header: {
     width: '100%',
     display: 'flex',
@@ -44,8 +48,8 @@ const styles = StyleSheet.create({
   headerActiveElt: {borderColor: '#E31337', borderBottomWidth: 3},
   pane: {
     width: '100%',
-    height: '100%',
     backgroundColor: '#E5EEF7',
+    flex: 1,
   },
 });
 
