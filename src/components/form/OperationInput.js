@@ -1,20 +1,13 @@
-import React, {useState} from 'react';
-import {Input, Icon} from 'react-native-elements';
+import React from 'react';
+import CustomInput from './CustomInput';
 
 export default (props) => {
-  const [secure, setSecure] = useState(true);
   return (
-    <Input
+    <CustomInput
       {...props}
-      leftIcon={{type: 'font-awesome-5', name: 'key'}}
-      rightIcon={
-        <Icon
-          type="font-awesome-5"
-          name={secure ? 'eye-slash' : 'eye'}
-          onPress={() => setSecure(!secure)}
-        />
-      }
-      secureTextEntry={secure}
+      placeholderTextColor="#7E8C9A"
+      backgroundColor="#ffffff"
+      inputColor="#68A0B4"
     />
   );
 };

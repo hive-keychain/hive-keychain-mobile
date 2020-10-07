@@ -6,7 +6,7 @@ import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
 import {translate} from 'utils/localize';
-import CustomInput from 'components/form/CustomInput';
+import OperationInput from 'components/form/OperationInput';
 import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
 import Balance from './Balance';
@@ -54,33 +54,24 @@ const Transfer = ({currency, user, loadAccountConnect}) => {
       <Balance currency={currency} account={user.account} />
 
       <Separator />
-      <CustomInput
+      <OperationInput
         placeholder={translate('common.username').toUpperCase()}
         leftIcon={<AccountLogoDark />}
         value={to}
-        placeholderTextColor="#7E8C9A"
-        backgroundColor="#ffffff"
-        inputColor="#68A0B4"
         onChangeText={setTo}
       />
       <Separator />
-      <CustomInput
+      <OperationInput
         placeholder={'0.000'}
         rightIcon={<Text style={styles.currency}>{currency}</Text>}
-        placeholderTextColor="#7E8C9A"
-        backgroundColor="#ffffff"
-        inputColor="#68A0B4"
         textAlign="right"
         value={amount}
         onChangeText={setAmount}
       />
       <Separator />
-      <CustomInput
+      <OperationInput
         placeholder={translate('wallet.operations.transfer.memo')}
         value={memo}
-        placeholderTextColor="#7E8C9A"
-        backgroundColor="#ffffff"
-        inputColor="#68A0B4"
         onChangeText={setMemo}
       />
 
