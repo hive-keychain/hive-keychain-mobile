@@ -13,14 +13,16 @@
     "username": "username",
     "privateKey": "Private Key",
     "amount": "amount",
-    "memo": "memo"
+    "memo": "memo",
+    "send": "Send"
   },
   "wallet": {
     "rc": "Resources:",
     "vp": "Voting:",
     "balance": "balance",
     "operations": {
-      "transfer": {"title": "Transfer funds", "memo": "MEMO (optional)"}
+      "transfer": {"title": "Transfer funds", "memo": "MEMO (optional)"},
+      "powerup": {"title": "Power up!"}
     }
   },
   "components": {
@@ -63,6 +65,7 @@
     "noMatch": "PIN codes do not match",
     "authFailed": "Authentication failed",
     "account_already": "You already registered this account",
-    "transfer_success": "Your transfer was successful!"
+    "transfer_success": "Your transfer was successful!",
+    "powerup_success": "Your Power up was successful!"
   }
 }

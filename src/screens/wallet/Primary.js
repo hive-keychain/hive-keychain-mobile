@@ -11,6 +11,7 @@ import RoundButton from 'components/operations/RoundButton';
 import Transactions from 'components/hive/Transactions';
 
 import Transfer from 'components/operations/Transfer';
+import PowerUp from 'components/operations/PowerUp';
 
 import Hive from 'assets/wallet/icon_hive.svg';
 import Hbd from 'assets/wallet/icon_hbd.svg';
@@ -37,6 +38,21 @@ const Primary = ({user, bittrex, properties, navigation}) => {
     );
   };
 
+  const SendPowerUp = () => {
+    return (
+      <RoundButton
+        onPress={() => {
+          navigation.navigate('ModalScreen', {
+            modalContent: <PowerUp />,
+          });
+        }}
+        size={36}
+        backgroundColor="#E59D15"
+        content={<Power />}
+      />
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Separator height={20} />
@@ -56,7 +72,7 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         price={bittrex.hive}
         buttons={[
           <Send key="send_hive" currency="HIVE" />,
-          <PowerUp key="pu" />,
+          <SendPowerUp key="pu" />,
         ]}
       />
       <Separator height={20} />
@@ -90,12 +106,6 @@ const Primary = ({user, bittrex, properties, navigation}) => {
       <Separator height={20} />
       <Transactions user={user} />
     </View>
-  );
-};
-
-const PowerUp = () => {
-  return (
-    <RoundButton size={36} backgroundColor="#E59D15" content={<Power />} />
   );
 };
 

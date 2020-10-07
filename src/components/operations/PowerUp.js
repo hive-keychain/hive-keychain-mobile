@@ -12,31 +12,35 @@ import Separator from 'components/ui/Separator';
 import Balance from './Balance';
 
 import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
-import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
+import Hp from 'assets/wallet/icon_hp.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'navigationRef';
 import {loadAccount} from 'actions';
 
-const Transfer = ({currency, user, loadAccountConnect}) => {
-  const [to, setTo] = useState('');
+const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
+  const [to, setTo] = useState(user.account.name);
   const [amount, setAmount] = useState('');
-  const [memo, setMemo] = useState('');
 
-  const onTransfer = async () => {
+  const onPowerUp = async () => {
     Keyboard.dismiss();
+
     try {
-      await client.broadcast.transfer(
-        {
-          amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
-          memo,
-          to: to.toLowerCase(),
-          from: user.account.name,
-        },
+      await client.broadcast.sendOperations(
+        [
+          [
+            'transfer_to_vesting',
+            {
+              amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
+              to: to.toLowerCase(),
+              from: user.account.name,
+            },
+          ],
+        ],
         hive.PrivateKey.fromString(user.keys.active),
       );
       loadAccountConnect(user.account.name);
       goBack();
-      Toast.show(translate('toast.transfer_success'), Toast.LONG);
+      Toast.show(translate('toast.powerup_success'), Toast.LONG);
     } catch (e) {
       Toast.show(`Error : ${e.message}`, Toast.LONG);
     }
@@ -45,8 +49,8 @@ const Transfer = ({currency, user, loadAccountConnect}) => {
   const styles = getDimensionedStyles(color);
   return (
     <Operation
-      logo={<SendArrowBlue />}
-      title={translate('wallet.operations.transfer.title')}>
+      logo={<Hp />}
+      title={translate('wallet.operations.powerup.title')}>
       <Separator />
       <Balance currency={currency} account={user.account} />
 
@@ -66,17 +70,11 @@ const Transfer = ({currency, user, loadAccountConnect}) => {
         value={amount}
         onChangeText={setAmount}
       />
-      <Separator />
-      <OperationInput
-        placeholder={translate('wallet.operations.transfer.memo')}
-        value={memo}
-        onChangeText={setMemo}
-      />
 
       <Separator height={40} />
       <EllipticButton
         title={translate('common.send')}
-        onPress={onTransfer}
+        onPress={onPowerUp}
         style={styles.button}
       />
     </Operation>
@@ -96,4 +94,4 @@ export default connect(
     };
   },
   {loadAccountConnect: loadAccount},
-)(Transfer);
+)(PowerUp);

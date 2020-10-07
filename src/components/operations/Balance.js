@@ -10,6 +10,7 @@ const TokenDisplay = ({currency, account}) => {
     color,
     ...useWindowDimensions(),
   });
+  console.log(currency, account);
   return (
     <View style={styles.container}>
       <View style={styles.main}>
