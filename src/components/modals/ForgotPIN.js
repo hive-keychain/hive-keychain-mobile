@@ -3,8 +3,8 @@ import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect} from 'react-redux';
 
 import {forgetAccounts} from 'actions';
-import Separator from './Separator';
-import EllipticButton from './EllipticButton';
+import Separator from 'components/ui/Separator';
+import EllipticButton from 'components/form/EllipticButton';
 import {translate} from 'utils/localize';
 import {goBack} from 'navigationRef';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
-import Separator from './Separator';
+import Separator from 'components/ui/Separator';
 import {translate} from 'utils/localize';
 
 export default () => {

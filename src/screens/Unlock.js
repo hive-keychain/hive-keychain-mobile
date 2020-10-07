@@ -3,7 +3,7 @@ import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {connect} from 'react-redux';
 
 import {unlock, forgetAccounts} from 'actions';
-import Background from 'components/Background';
+import Background from 'components/ui/Background';
 import Pincode from 'components/pinCode';
 import KeychainLogo from 'assets/keychain.svg';
 import {translate} from 'utils/localize';

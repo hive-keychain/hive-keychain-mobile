@@ -1,10 +1,10 @@
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
-import Background from 'components/Background';
-import GradientEllipse from 'components/GradientEllipse';
+import Background from 'components/ui/Background';
+import GradientEllipse from 'components/ui/GradientEllipse';
 import KeychainLogo from 'assets/kc_hive.svg';
-import Separator from 'components/Separator';
-import EllipticButton from 'components/EllipticButton';
+import Separator from 'components/ui/Separator';
+import EllipticButton from 'components/form/EllipticButton';
 import {translate} from 'utils/localize';
 
 const Introduction = ({navigation}) => {

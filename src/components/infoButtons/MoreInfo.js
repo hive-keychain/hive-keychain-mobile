@@ -1,8 +1,10 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, useWindowDimensions} from 'react-native';
 import {navigate} from 'navigationRef';
-import MoreInformation from 'components/MoreInformation';
-import InfoQR from 'components/InfoQR';
+
+import MoreInformation from 'components/modals/MoreInformation';
+import InfoQR from 'components/modals/InfoQR';
+
 import Information from 'assets/addAccount/icon_info.svg';
 
 export default ({type}) => {

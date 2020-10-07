@@ -4,11 +4,11 @@ import {connect} from 'react-redux';
 
 import {toHP} from 'utils/format';
 
-import AccountValue from 'components/AccountValue';
-import TokenDisplay from 'components/TokenDisplay';
-import Separator from 'components/Separator';
+import AccountValue from 'components/hive/AccountValue';
+import TokenDisplay from 'components/hive/TokenDisplay';
+import Separator from 'components/ui/Separator';
 import RoundButton from 'components/operations/RoundButton';
-import Transactions from 'components/Transactions';
+import Transactions from 'components/hive/Transactions';
 
 import Transfer from 'components/operations/Transfer';
 

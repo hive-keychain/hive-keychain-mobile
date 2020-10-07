@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
-import Background from 'components/Background';
+import Background from 'components/ui/Background';
 import KeychainLogo from 'assets/keychain.svg';
 
 const Loading = () => {

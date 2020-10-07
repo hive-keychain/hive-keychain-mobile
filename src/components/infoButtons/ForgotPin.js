@@ -6,7 +6,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {navigate} from 'navigationRef';
-import ForgotPIN from 'components/ForgotPIN';
+import ForgotPIN from 'components/modals/ForgotPIN';
 
 export default () => {
   const {height, width} = useWindowDimensions();

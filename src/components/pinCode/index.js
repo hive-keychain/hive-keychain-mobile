@@ -6,9 +6,9 @@ import IntentLauncher from 'react-native-intent-launcher';
 
 import PinElement from './PinElement';
 import PinCompletionIndicator from './PinCompletionIndicator';
-import Separator from 'components/Separator';
-import CustomModal from 'components/CustomModal';
-import EllipticButton from 'components/EllipticButton';
+import Separator from 'components/ui/Separator';
+import CustomModal from 'components/modals/CustomModal';
+import EllipticButton from 'components/form/EllipticButton';
 import {translate} from 'utils/localize';
 
 const PinCode = ({

@@ -3,12 +3,12 @@ import {StyleSheet, View, useWindowDimensions} from 'react-native';
 
 import {connect} from 'react-redux';
 import {lock, loadAccount, loadProperties, loadBittrex} from 'actions';
-import WalletPage from 'components/WalletPage';
-import UserPicker from 'components/UserPicker';
-import PercentageDisplay from 'components/PercentageDisplay';
+import WalletPage from 'components/ui/WalletPage';
+import UserPicker from 'components/form/UserPicker';
+import PercentageDisplay from 'components/hive/PercentageDisplay';
 import {translate} from 'utils/localize';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
-import ScreenToggle from 'components/ScreenToggle';
+import ScreenToggle from 'components/ui/ScreenToggle';
 import Primary from 'screens/wallet/Primary';
 import Tokens from 'screens/wallet/Tokens';
 

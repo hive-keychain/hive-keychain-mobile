@@ -8,17 +8,17 @@ import {
 import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
 
-import Separator from 'components/Separator';
+import Separator from 'components/ui/Separator';
 import {addAccount} from 'actions';
-import CustomInput from 'components/CustomInput';
+import CustomInput from 'components/form/CustomInput';
 import validateNewAccount from 'utils/validateNewAccount';
 import {ACCOUNT, KEY} from 'root/.env.json';
-import Background from 'components/Background';
+import Background from 'components/ui/Background';
 import TitleLogo from 'assets/addAccount/img_import.svg';
 import UserLogo from 'assets/addAccount/icon_username.svg';
 import KeyLogo from 'assets/addAccount/icon_key.svg';
 import QRLogo from 'assets/addAccount/icon_scan-qr.svg';
-import Button from 'components/EllipticButton';
+import Button from 'components/form/EllipticButton';
 import {translate} from 'utils/localize';
 
 const AddAccountByKey = ({addAccountConnect, navigation, route}) => {

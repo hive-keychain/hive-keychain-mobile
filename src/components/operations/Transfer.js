@@ -2,20 +2,21 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
 import hive, {client} from 'utils/dhive';
+import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
 import {translate} from 'utils/localize';
-import CustomInput from 'components/CustomInput';
-import EllipticButton from 'components/EllipticButton';
-import Separator from 'components/Separator';
+import CustomInput from 'components/form/CustomInput';
+import EllipticButton from 'components/form/EllipticButton';
+import Separator from 'components/ui/Separator';
 import Balance from './Balance';
+
 import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
 import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'navigationRef';
 import {loadAccount} from 'actions';
-import Toast from 'react-native-simple-toast';
 
 const Transfer = ({currency, user, loadAccountConnect}) => {
   const [to, setTo] = useState('');

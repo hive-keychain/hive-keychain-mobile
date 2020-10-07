@@ -4,11 +4,11 @@ import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {Picker} from '@react-native-community/picker';
 
-import Background from 'components/Background';
-import Separator from 'components/Separator';
+import Background from 'components/ui/Background';
+import Separator from 'components/ui/Separator';
 import {withCommas} from 'utils/format';
-import CustomInput from 'components/CustomInput';
-import EllipticButton from 'components/EllipticButton';
+import CustomInput from 'components/form/CustomInput';
+import EllipticButton from 'components/form/EllipticButton';
 import UserLogo from 'assets/addAccount/icon_username.svg';
 import {translate} from 'utils/localize';
 import hive, {client} from 'utils/dhive';
