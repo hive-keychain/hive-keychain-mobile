@@ -70,6 +70,7 @@
     "account_already": "You already registered this account",
     "transfer_success": "Your transfer was successful!",
     "powerup_success": "Your Power up was successful!",
-    "powerdown_success": "Your Power down was successful!"
+    "powerdown_success": "Your Power down was successful!",
+    "stop_powerdown_success": "You successfully stopped your Power down!"
   }
 }

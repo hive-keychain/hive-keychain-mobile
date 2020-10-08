@@ -3,18 +3,15 @@ export const withCommas = (nb, decimals = 3) =>
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-export const toHP = (vests, props) => {
-  console.log(
-    vests,
-    props,
-    (parseFloat(vests) * parseFloat(props.total_vesting_fund_steem)) /
-      parseFloat(props.total_vesting_shares),
-  );
-  return props
+export const toHP = (vests, props) =>
+  props
     ? (parseFloat(vests) * parseFloat(props.total_vesting_fund_steem)) /
-        parseFloat(props.total_vesting_shares)
+      parseFloat(props.total_vesting_shares)
     : 0;
-};
+
+export const fromHP = (hp, props) =>
+  (parseFloat(hp) / parseFloat(props.total_vesting_fund_steem)) *
+  parseFloat(props.total_vesting_shares);
 
 export const chunkArray = (myArray, chunk_size) => {
   const arrayLength = myArray.length;

@@ -15,7 +15,7 @@ import Hp from 'assets/wallet/icon_hp_dark.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'navigationRef';
 import {loadAccount} from 'actions';
-import {toHP, withCommas} from 'utils/format';
+import {toHP, fromHP, withCommas} from 'utils/format';
 
 const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
   const [amount, setAmount] = useState('');
@@ -44,10 +44,12 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
       await client.broadcast.sendOperations(
         [
           [
-            'transfer_to_vesting',
+            'withdraw_vesting',
             {
-              amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
-              from: user.account.name,
+              vesting_shares: `${fromHP(amount, properties.globals).toFixed(
+                6,
+              )} VESTS`,
+              account: user.account.name,
             },
           ],
         ],
@@ -55,7 +57,11 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
       );
       loadAccountConnect(user.account.name);
       goBack();
-      Toast.show(translate('toast.powerup_success'), Toast.LONG);
+      if (parseFloat(amount) !== 0) {
+        Toast.show(translate('toast.powerdown_success'), Toast.LONG);
+      } else {
+        Toast.show(translate('toast.stop_powerdown_success'), Toast.LONG);
+      }
     } catch (e) {
       Toast.show(`Error : ${e.message}`, Toast.LONG);
     }
