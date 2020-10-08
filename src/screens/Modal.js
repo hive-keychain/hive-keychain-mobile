@@ -5,9 +5,6 @@ export default ({navigation, route}) => {
   console.log('show modal screen');
   return (
     <CustomModal
-      visible={true}
-      mode="overFullScreen"
-      transparentContainer={true}
       outsideClick={() => {
         navigation.goBack();
       }}

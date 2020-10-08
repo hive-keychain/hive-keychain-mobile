@@ -7,8 +7,9 @@ import {translate} from 'utils/localize';
 const TokenDisplay = ({currency, account, pd, globalProperties}) => {
   let {color, value, logo} = getCurrencyProperties(currency, account);
   if (pd) {
-    value =
-      parseFloat(value) - (5 + parseFloat(account.delegated_vesting_shares));
+    console.log(value);
+    value = parseFloat(value) - parseFloat(account.delegated_vesting_shares);
+    console.log(value);
     value = toHP(value, globalProperties);
   }
   const styles = getDimensionedStyles({

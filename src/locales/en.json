@@ -25,7 +25,8 @@
     "operations": {
       "transfer": {"title": "Transfer funds", "memo": "MEMO (optional)"},
       "powerup": {"title": "Power up!"},
-      "powerdown": {"title": "Power down"}
+      "powerdown": {"title": "Power down"},
+      "delegation": {"title": "Delegate Hive Power"}
     }
   },
   "components": {
@@ -71,6 +72,8 @@
     "transfer_success": "Your transfer was successful!",
     "powerup_success": "Your Power up was successful!",
     "powerdown_success": "Your Power down was successful!",
-    "stop_powerdown_success": "You successfully stopped your Power down!"
+    "stop_powerdown_success": "You successfully stopped your Power down!",
+    "delegation_success": "Your delegation was successful!",
+    "stop_delegation_success": "You successfully stopped your delegation!"
   }
 }

@@ -29,33 +29,28 @@ export default class CustomModal extends Component {
       transparent: this.props.transparentContainer,
     });
     return (
-      <Blur show={this.props.visible}>
-        <Modal
-          transparent={true}
-          visible={this.props.visible}
-          presentationStyle={this.props.mode}>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              this.props.outsideClick();
-            }}>
-            <View style={styles.mainContainer}>
-              <TouchableWithoutFeedback>
-                <View style={styles.modalWrapper}>
-                  <View style={styles.modalContainer}>
-                    <LinearGradient
-                      start={{x: 0, y: 0}}
-                      end={{x: 0, y: 1}}
-                      colors={['white', '#B9C9D6']}
-                      style={styles.gradient}>
-                      {this.props.children}
-                    </LinearGradient>
-                  </View>
+      <View style={{height: '100%'}}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            this.props.outsideClick();
+          }}>
+          <View style={styles.mainContainer}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalWrapper}>
+                <View style={styles.modalContainer}>
+                  <LinearGradient
+                    start={{x: 0, y: 0}}
+                    end={{x: 0, y: 1}}
+                    colors={['white', '#B9C9D6']}
+                    style={styles.gradient}>
+                    {this.props.children}
+                  </LinearGradient>
                 </View>
-              </TouchableWithoutFeedback>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-      </Blur>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
     );
   }
 }
@@ -87,11 +82,6 @@ class StyleSheetFactory {
         borderColor: 'white',
         borderStyle: 'solid',
         borderRadius: 10,
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 1,
       },
       gradient: {
         width: '100%',

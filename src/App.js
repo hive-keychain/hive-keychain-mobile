@@ -2,7 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {connect} from 'react-redux';
-import {useWindowDimensions, StyleSheet} from 'react-native';
+import {useWindowDimensions, StyleSheet, Animated, Easing} from 'react-native';
 
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
@@ -173,17 +173,22 @@ const App = ({hasAccounts, auth}) => {
             headerShown: false,
             cardStyle: {backgroundColor: 'transparent'},
             cardOverlayEnabled: true,
-            cardStyleInterpolator: ({current: {progress}}) => ({
+            cardStyleInterpolator: ({
+              current: {progress},
+              next,
+              inverted,
+              layouts: {screen},
+            }) => ({
               cardStyle: {
                 opacity: progress.interpolate({
                   inputRange: [0, 0.5, 0.9, 1],
-                  outputRange: [0, 0.1, 0.3, 0.7],
+                  outputRange: [0, 0.1, 0.3, 1],
                 }),
               },
               overlayStyle: {
                 opacity: progress.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [0, 0.6],
+                  outputRange: [0, 0.7],
                   extrapolate: 'clamp',
                 }),
               },

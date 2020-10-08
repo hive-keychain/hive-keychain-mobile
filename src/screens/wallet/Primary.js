@@ -13,13 +13,14 @@ import Transactions from 'components/hive/Transactions';
 import Transfer from 'components/operations/Transfer';
 import PowerUp from 'components/operations/PowerUp';
 import PowerDown from 'components/operations/PowerDown';
+import Delegation from 'components/operations/Delegation';
 
 import Hive from 'assets/wallet/icon_hive.svg';
 import Hbd from 'assets/wallet/icon_hbd.svg';
 import Hp from 'assets/wallet/icon_hp.svg';
 import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
-import Delegation from 'assets/wallet/icon_delegate.svg';
+import Delegate from 'assets/wallet/icon_delegate.svg';
 
 const Primary = ({user, bittrex, properties, navigation}) => {
   const {width} = useWindowDimensions();
@@ -65,6 +66,21 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         size={36}
         backgroundColor="#000000"
         content={<Power />}
+      />
+    );
+  };
+
+  const SendDelegation = () => {
+    return (
+      <RoundButton
+        onPress={() => {
+          navigation.navigate('ModalScreen', {
+            modalContent: <Delegation />,
+          });
+        }}
+        size={36}
+        backgroundColor="#B084C4"
+        content={<Delegate />}
       />
     );
   };
@@ -117,17 +133,11 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         )}
         logo={<Hp width={width / 15} />}
         price={bittrex.hbd}
-        buttons={[<Delegate key="del" />, <SendPowerDown key="pd" />]}
+        buttons={[<SendDelegation key="del" />, <SendPowerDown key="pd" />]}
       />
       <Separator height={20} />
       <Transactions user={user} />
     </View>
-  );
-};
-
-const Delegate = () => {
-  return (
-    <RoundButton size={36} backgroundColor="#B084C4" content={<Delegation />} />
   );
 };
 
