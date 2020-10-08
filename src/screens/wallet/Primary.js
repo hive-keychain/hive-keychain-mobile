@@ -12,6 +12,7 @@ import Transactions from 'components/hive/Transactions';
 
 import Transfer from 'components/operations/Transfer';
 import PowerUp from 'components/operations/PowerUp';
+import PowerDown from 'components/operations/PowerDown';
 
 import Hive from 'assets/wallet/icon_hive.svg';
 import Hbd from 'assets/wallet/icon_hbd.svg';
@@ -48,6 +49,21 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         }}
         size={36}
         backgroundColor="#E59D15"
+        content={<Power />}
+      />
+    );
+  };
+
+  const SendPowerDown = () => {
+    return (
+      <RoundButton
+        onPress={() => {
+          navigation.navigate('ModalScreen', {
+            modalContent: <PowerDown />,
+          });
+        }}
+        size={36}
+        backgroundColor="#000000"
         content={<Power />}
       />
     );
@@ -101,17 +117,11 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         )}
         logo={<Hp width={width / 15} />}
         price={bittrex.hbd}
-        buttons={[<Delegate key="del" />, <PowerDown key="pd" />]}
+        buttons={[<Delegate key="del" />, <SendPowerDown key="pd" />]}
       />
       <Separator height={20} />
       <Transactions user={user} />
     </View>
-  );
-};
-
-const PowerDown = () => {
-  return (
-    <RoundButton size={36} backgroundColor="#000000" content={<Power />} />
   );
 };
 

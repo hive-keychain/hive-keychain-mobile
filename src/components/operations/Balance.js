@@ -1,11 +1,16 @@
 import React from 'react';
 import {View, Text, StyleSheet, useWindowDimensions} from 'react-native';
-import {formatBalance} from 'utils/format';
+import {formatBalance, toHP} from 'utils/format';
 import {getCurrencyProperties} from 'utils/hiveReact';
+import {translate} from 'utils/localize';
 
-const TokenDisplay = ({currency, account}) => {
+const TokenDisplay = ({currency, account, pd, globalProperties}) => {
   let {color, value, logo} = getCurrencyProperties(currency, account);
-  console.log(value, account);
+  if (pd) {
+    value =
+      parseFloat(value) - (5 + parseFloat(account.delegated_vesting_shares));
+    value = toHP(value, globalProperties);
+  }
   const styles = getDimensionedStyles({
     color,
     ...useWindowDimensions(),
@@ -16,7 +21,12 @@ const TokenDisplay = ({currency, account}) => {
       <View style={styles.main}>
         <View style={styles.left}>
           <View style={styles.logo}>{logo}</View>
-          <Text style={styles.name}>BALANCE</Text>
+          <Text style={styles.name}>
+            {(pd
+              ? translate('common.available')
+              : translate('common.balance')
+            ).toUpperCase()}
+          </Text>
         </View>
         <Text style={styles.amount}>
           {formatBalance(value)}

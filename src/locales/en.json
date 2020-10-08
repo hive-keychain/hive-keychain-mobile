@@ -14,7 +14,9 @@
     "privateKey": "Private Key",
     "amount": "amount",
     "memo": "memo",
-    "send": "Send"
+    "send": "Send",
+    "balance": "Balance",
+    "available": "Available"
   },
   "wallet": {
     "rc": "Resources:",
@@ -22,7 +24,8 @@
     "balance": "balance",
     "operations": {
       "transfer": {"title": "Transfer funds", "memo": "MEMO (optional)"},
-      "powerup": {"title": "Power up!"}
+      "powerup": {"title": "Power up!"},
+      "powerdown": {"title": "Power down"}
     }
   },
   "components": {
@@ -66,6 +69,7 @@
     "authFailed": "Authentication failed",
     "account_already": "You already registered this account",
     "transfer_success": "Your transfer was successful!",
-    "powerup_success": "Your Power up was successful!"
+    "powerup_success": "Your Power up was successful!",
+    "powerdown_success": "Your Power down was successful!"
   }
 }
