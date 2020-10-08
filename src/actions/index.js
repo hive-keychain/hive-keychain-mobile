@@ -15,7 +15,7 @@ import {
   ADD_TRANSACTIONS,
 } from './types';
 import {encryptJson, decryptToJson} from 'utils/encrypt';
-import {navigate} from '../navigationRef';
+import {navigate} from 'utils/navigation';
 import {translate} from 'utils/localize';
 import {client} from 'utils/dhive';
 import {saveOnKeychain, getFromKeychain} from 'utils/keychainStorage';

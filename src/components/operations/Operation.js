@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Close from 'assets/wallet/icon_close.svg';
-import {goBack} from 'navigationRef';
+import {goBack} from 'utils/navigation';
 
 export default ({icon, children, logo, title}) => {
   return (

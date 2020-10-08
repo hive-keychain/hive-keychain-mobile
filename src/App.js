@@ -2,7 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {connect} from 'react-redux';
-import {useWindowDimensions, StyleSheet, Animated, Easing} from 'react-native';
+import {useWindowDimensions, StyleSheet} from 'react-native';
 
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
@@ -15,7 +15,12 @@ import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';
 import MoreInformation from 'components/infoButtons/MoreInfo';
 import InfoPIN from 'components/infoButtons/ForgotPin';
-import {setNavigator} from './navigationRef';
+import {
+  setNavigator,
+  headerTransparent,
+  noHeader,
+  modalOptions,
+} from 'utils/navigation';
 import Hive from 'assets/wallet/hive.svg';
 import Search from 'assets/wallet/search.svg';
 
@@ -25,14 +30,6 @@ const Root = createStackNavigator();
 const App = ({hasAccounts, auth}) => {
   console.log(hasAccounts);
   const {height, width} = useWindowDimensions();
-  const headerTransparent = {
-    position: 'absolute',
-    backgroundColor: 'transparent',
-    zIndex: 100,
-    top: 0,
-    left: 0,
-    right: 0,
-  };
 
   const renderNavigator = () => {
     if (!hasAccounts) {
@@ -40,17 +37,17 @@ const App = ({hasAccounts, auth}) => {
         <Stack.Navigator>
           <Stack.Screen
             name="IntroductionScreen"
-            options={{headerShown: false}}
+            options={noHeader}
             component={Introduction}
           />
           <Stack.Screen
             name="SignupScreen"
-            options={{headerShown: false}}
+            options={noHeader}
             component={Signup}
           />
           <Stack.Screen
             name="CreateAccountScreen"
-            options={{headerShown: false}}
+            options={noHeader}
             component={CreateAccount}
           />
           <Stack.Screen
@@ -157,43 +154,13 @@ const App = ({hasAccounts, auth}) => {
         <Root.Screen
           name="Main"
           component={renderNavigator}
-          options={{headerShown: false}}
+          options={noHeader}
         />
         <Root.Screen
           name="ModalScreen"
           mode="modal"
           component={Modal}
-          navigationOptions={{
-            headerMode: 'none',
-            cardStyle: {
-              backgroundColor: 'transparent',
-            },
-          }}
-          options={{
-            headerShown: false,
-            cardStyle: {backgroundColor: 'transparent'},
-            cardOverlayEnabled: true,
-            cardStyleInterpolator: ({
-              current: {progress},
-              next,
-              inverted,
-              layouts: {screen},
-            }) => ({
-              cardStyle: {
-                opacity: progress.interpolate({
-                  inputRange: [0, 0.5, 0.9, 1],
-                  outputRange: [0, 0.1, 0.3, 1],
-                }),
-              },
-              overlayStyle: {
-                opacity: progress.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0, 0.7],
-                  extrapolate: 'clamp',
-                }),
-              },
-            }),
-          }}
+          {...modalOptions}
         />
       </Root.Navigator>
     );

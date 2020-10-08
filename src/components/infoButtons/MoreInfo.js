@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, useWindowDimensions} from 'react-native';
-import {navigate} from 'navigationRef';
+import {navigate} from 'utils/navigation';
 
 import MoreInformation from 'components/modals/MoreInformation';
 import InfoQR from 'components/modals/InfoQR';

@@ -14,7 +14,7 @@ import Balance from './Balance';
 import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
 import Hp from 'assets/wallet/icon_hp.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
-import {goBack} from 'navigationRef';
+import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
 
 const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {

@@ -6,7 +6,7 @@ import {forgetAccounts} from 'actions';
 import Separator from 'components/ui/Separator';
 import EllipticButton from 'components/form/EllipticButton';
 import {translate} from 'utils/localize';
-import {goBack} from 'navigationRef';
+import {goBack} from 'utils/navigation';
 
 const ForgotPIN = ({forgetAccountsConnect}) => {
   const {width, height} = useWindowDimensions();

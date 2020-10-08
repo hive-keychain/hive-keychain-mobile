@@ -14,7 +14,7 @@ import Balance from './Balance';
 import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
 import Delegate from 'assets/wallet/icon_delegate_dark.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
-import {goBack} from 'navigationRef';
+import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
 import {fromHP} from 'utils/format';
 

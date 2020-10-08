@@ -13,7 +13,7 @@ import Balance from './Balance';
 
 import Hp from 'assets/wallet/icon_hp_dark.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
-import {goBack} from 'navigationRef';
+import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
 import {toHP, fromHP, withCommas} from 'utils/format';
 

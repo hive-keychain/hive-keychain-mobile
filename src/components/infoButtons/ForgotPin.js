@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import {navigate} from 'navigationRef';
+import {navigate} from 'utils/navigation';
 import ForgotPIN from 'components/modals/ForgotPIN';
 
 export default () => {
