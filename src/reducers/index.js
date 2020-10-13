@@ -6,6 +6,7 @@ import activeAccountReducer from './activeAccountReducer';
 import globalPropertiesReducer from './globalPropertiesReducer';
 import bittrexReducer from './bittrexReducer';
 import transactionsReducer from './transactionsReducer';
+import delegationsReducer from './delegationsReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -15,4 +16,5 @@ export default combineReducers({
   properties: globalPropertiesReducer,
   bittrex: bittrexReducer,
   transactions: transactionsReducer,
+  delegations: delegationsReducer,
 });

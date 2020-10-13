@@ -7,6 +7,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {signedNumber, formatBalance} from 'utils/format';
+import {navigate} from 'utils/navigation';
+import DelegationsList from 'components/operations/DelegationsList';
 
 const TokenDisplay = ({
   name,
@@ -66,10 +68,26 @@ const renderLeftBottom = (styles, price, currency, incoming, outgoing) => {
     return (
       <View style={styles.halfLine}>
         <View style={styles.row}>
-          <Text style={styles.green}>{`+ ${formatBalance(incoming)} HP`}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigate('ModalScreen', {
+                modalContent: <DelegationsList type="incoming" />,
+              });
+            }}>
+            <Text style={styles.green}>{`+ ${formatBalance(
+              incoming,
+            )} HP`}</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.row}>
-          <Text style={styles.red}>{`- ${formatBalance(outgoing)} HP`}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigate('ModalScreen', {
+                modalContent: <DelegationsList type="outgoing" />,
+              });
+            }}>
+            <Text style={styles.red}>{`- ${formatBalance(outgoing)} HP`}</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );

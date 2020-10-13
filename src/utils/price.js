@@ -1,5 +1,5 @@
 import api from 'api/keychain';
-import {toHP, objectMap} from 'utils/format';
+import {toHP} from 'utils/format';
 
 export const getBittrexPrices = async () => {
   return (await api.get('/hive/v2/bittrex')).data;

@@ -26,7 +26,11 @@
       "transfer": {"title": "Transfer funds", "memo": "MEMO (optional)"},
       "powerup": {"title": "Power up!"},
       "powerdown": {"title": "Power down"},
-      "delegation": {"title": "Delegate Hive Power"}
+      "delegation": {
+        "title": "Delegate Hive Power",
+        "incoming": "Incoming Delegations",
+        "outgoing": "Outgoing Delegations"
+      }
     }
   },
   "components": {

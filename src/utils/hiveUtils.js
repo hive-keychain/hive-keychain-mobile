@@ -1,4 +1,5 @@
 import {client} from './dhive';
+import api from 'api/keychain';
 
 const HIVE_VOTING_MANA_REGENERATION_SECONDS = 432000;
 const HIVE_100_PERCENT = 10000;
@@ -85,4 +86,18 @@ const getHivePrice = (properties) => {
 
 const getVotePowerReserveRate = (properties) => {
   return properties.globals.vote_power_reserve_rate;
+};
+
+export const getDelegators = async (name) => {
+  return (await api.get(`/hive/delegators/${name}`)).data
+    .filter((e) => e.vesting_shares !== 0)
+    .sort((a, b) => b.vesting_shares - a.vesting_shares);
+};
+
+export const getDelegatees = async (name) => {
+  return (await client.database.getVestingDelegations(name, '', 1000))
+    .filter((e) => parseFloat(e.vesting_shares) !== 0)
+    .sort(
+      (a, b) => parseFloat(b.vesting_shares) - parseFloat(a.vesting_shares),
+    );
 };

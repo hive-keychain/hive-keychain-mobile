@@ -13,6 +13,8 @@ import {
   GET_BITTREX_PRICE,
   INIT_TRANSACTIONS,
   ADD_TRANSACTIONS,
+  FETCH_DELEGATORS,
+  FETCH_DELEGATEES,
 } from './types';
 import {encryptJson, decryptToJson} from 'utils/encrypt';
 import {navigate} from 'utils/navigation';
@@ -20,6 +22,7 @@ import {translate} from 'utils/localize';
 import {client} from 'utils/dhive';
 import {saveOnKeychain, getFromKeychain} from 'utils/keychainStorage';
 import {getBittrexPrices} from 'utils/price';
+import {getDelegatees, getDelegators} from 'utils/hiveUtils';
 
 export const signUp = (pwd) => {
   navigate('AddAccountByKeyScreen');
@@ -165,4 +168,18 @@ const getAccountTransactions = async (accountName, start) => {
     transfers[transfers.length - 1].last = true;
   }
   return transfers;
+};
+
+export const loadDelegators = (username) => async (dispatch) => {
+  dispatch({
+    type: FETCH_DELEGATORS,
+    payload: await getDelegators(username),
+  });
+};
+
+export const loadDelegatees = (username) => async (dispatch) => {
+  dispatch({
+    type: FETCH_DELEGATEES,
+    payload: await getDelegatees(username),
+  });
 };
