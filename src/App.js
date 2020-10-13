@@ -24,10 +24,12 @@ import {
 import Hive from 'assets/wallet/hive.svg';
 import Search from 'assets/wallet/search.svg';
 
+import {lock} from 'actions';
+
 const Stack = createStackNavigator();
 const Root = createStackNavigator();
 
-const App = ({hasAccounts, auth}) => {
+const App = ({hasAccounts, auth, lockConnect}) => {
   console.log(hasAccounts);
   const {height, width} = useWindowDimensions();
 
@@ -103,7 +105,14 @@ const App = ({hasAccounts, auth}) => {
               title: 'WALLET',
               headerTintColor: 'white',
               headerRight: () => {
-                return <Search style={styles(width, height).right} />;
+                return (
+                  <Search
+                    style={styles(width, height).right}
+                    onPress={() => {
+                      lockConnect();
+                    }}
+                  />
+                );
               },
               headerLeft: () => {
                 return <Hive style={styles(width, height).left} />;
@@ -183,4 +192,4 @@ const styles = (width, height) =>
     right: {marginHorizontal: 0.05 * width, marginBottom: -4},
   });
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, {lockConnect: lock})(App);

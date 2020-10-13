@@ -77,10 +77,16 @@ export const forgetAccounts = () => (dispatch, getState) => {
   });
 };
 
-export const loadAccount = (username) => async (dispatch, getState) => {
-  dispatch(getAccountRC(username));
-  const account = (await client.database.getAccounts([username]))[0];
-  const keys = getState().accounts.find((e) => e.name === username).keys;
+export const loadAccount = (name) => async (dispatch, getState) => {
+  dispatch({
+    type: ACTIVE_ACCOUNT,
+    payload: {
+      name,
+    },
+  });
+  dispatch(getAccountRC(name));
+  const account = (await client.database.getAccounts([name]))[0];
+  const keys = getState().accounts.find((e) => e.name === name).keys;
   dispatch({
     type: ACTIVE_ACCOUNT,
     payload: {

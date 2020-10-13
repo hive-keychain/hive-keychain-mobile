@@ -40,7 +40,7 @@ const Main = ({
     <WalletPage>
       <UserPicker
         accounts={accounts.map((account) => account.name)}
-        activeAccount={user.account}
+        username={user.name}
         addAccount={() => {
           navigation.navigate('AddAccountFromWalletScreen', {wallet: true});
         }}

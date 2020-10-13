@@ -3,33 +3,16 @@ import {View, Image, StyleSheet, useWindowDimensions} from 'react-native';
 import {Picker} from '@react-native-community/picker';
 import {translate} from 'utils/localize';
 
-const UserPicker = ({
-  activeAccount,
-  accounts,
-  onAccountSelected,
-  addAccount,
-}) => {
+const UserPicker = ({username, accounts, onAccountSelected, addAccount}) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height});
 
-  if (!activeAccount.json_metadata) {
-    return (
-      <View style={styles.container}>
-        <Image
-          style={styles.image}
-          source={{uri: 'https://images.hive.blog/u/null/avatar'}}
-        />
-        <View style={styles.picker} />
-      </View>
-    );
+  if (!username) {
+    return null;
   }
-  const activeAccountName = activeAccount.name;
 
-  const accountsList = [
-    activeAccountName,
-    ...accounts.filter((e) => e !== activeAccountName),
-  ];
-
+  const accountsList = [username, ...accounts.filter((e) => e !== username)];
+  console.log('hop', accountsList);
   const onPickerValueChanged = (value) => {
     if (value === 'add_new_account') {
       addAccount();
@@ -42,11 +25,11 @@ const UserPicker = ({
     <View style={styles.container}>
       <Image
         style={styles.image}
-        source={{uri: `https://images.hive.blog/u/${activeAccountName}/avatar`}}
+        source={{uri: `https://images.hive.blog/u/${username}/avatar`}}
       />
       <Picker
         style={styles.picker}
-        selectedValue={activeAccountName}
+        selectedValue={username}
         prompt={translate('components.picker.prompt')}
         onValueChange={onPickerValueChanged}>
         {accountsList.map((account) => (
