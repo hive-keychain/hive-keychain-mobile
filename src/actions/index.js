@@ -81,6 +81,7 @@ export const forgetAccounts = () => (dispatch, getState) => {
 };
 
 export const loadAccount = (name) => async (dispatch, getState) => {
+  console.log('plop');
   dispatch({
     type: ACTIVE_ACCOUNT,
     payload: {

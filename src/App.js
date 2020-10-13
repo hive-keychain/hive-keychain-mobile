@@ -183,7 +183,8 @@ const App = ({hasAccounts, auth, lockConnect}) => {
 };
 
 const mapStateToProps = (state) => {
-  return {hasAccounts: state.hasAccounts.has, auth: state.auth};
+  console.log(state);
+  return {hasAccounts: state.lastAccount.has, auth: state.auth};
 };
 
 const styles = (width, height) =>

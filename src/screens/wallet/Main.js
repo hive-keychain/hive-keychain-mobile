@@ -21,17 +21,22 @@ const Main = ({
   properties,
   navigation,
   accounts,
+  lastAccount,
 }) => {
   const styles = getDimensionedStyles(useWindowDimensions());
 
   useEffect(() => {
-    if (accounts[0]) {
-      console.log(accounts);
-      loadAccountConnect(accounts[0].name);
+    if (lastAccount) {
+      loadAccountConnect(lastAccount);
     }
     loadPropertiesConnect();
     loadBittrexConnect();
-  }, [loadAccountConnect, loadPropertiesConnect, loadBittrexConnect, accounts]);
+  }, [
+    loadAccountConnect,
+    loadPropertiesConnect,
+    loadBittrexConnect,
+    lastAccount,
+  ]);
 
   if (!user) {
     return null;
@@ -98,6 +103,7 @@ export default connect(
       user: state.activeAccount,
       properties: state.properties,
       accounts: state.accounts,
+      lastAccount: state.lastAccount.name,
     };
   },
   {
