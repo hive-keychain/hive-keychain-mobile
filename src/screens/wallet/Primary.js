@@ -7,83 +7,20 @@ import {toHP} from 'utils/format';
 import AccountValue from 'components/hive/AccountValue';
 import TokenDisplay from 'components/hive/TokenDisplay';
 import Separator from 'components/ui/Separator';
-import RoundButton from 'components/operations/RoundButton';
+import {
+  Send,
+  SendDelegation,
+  SendPowerUp,
+  SendPowerDown,
+} from 'components/operations/OperationsButtons';
 import Transactions from 'components/hive/Transactions';
-
-import Transfer from 'components/operations/Transfer';
-import PowerUp from 'components/operations/PowerUp';
-import PowerDown from 'components/operations/PowerDown';
-import Delegation from 'components/operations/Delegation';
 
 import Hive from 'assets/wallet/icon_hive.svg';
 import Hbd from 'assets/wallet/icon_hbd.svg';
 import Hp from 'assets/wallet/icon_hp.svg';
-import Power from 'assets/wallet/icon_power.svg';
-import SendArrow from 'assets/wallet/icon_send.svg';
-import Delegate from 'assets/wallet/icon_delegate.svg';
 
 const Primary = ({user, bittrex, properties, navigation}) => {
   const {width} = useWindowDimensions();
-
-  const Send = ({currency}) => {
-    return (
-      <RoundButton
-        onPress={() => {
-          navigation.navigate('ModalScreen', {
-            modalContent: <Transfer currency={currency} />,
-          });
-        }}
-        size={36}
-        backgroundColor="#77B9D1"
-        content={<SendArrow />}
-      />
-    );
-  };
-
-  const SendPowerUp = () => {
-    return (
-      <RoundButton
-        onPress={() => {
-          navigation.navigate('ModalScreen', {
-            modalContent: <PowerUp />,
-          });
-        }}
-        size={36}
-        backgroundColor="#E59D15"
-        content={<Power />}
-      />
-    );
-  };
-
-  const SendPowerDown = () => {
-    return (
-      <RoundButton
-        onPress={() => {
-          navigation.navigate('ModalScreen', {
-            modalContent: <PowerDown />,
-          });
-        }}
-        size={36}
-        backgroundColor="#000000"
-        content={<Power />}
-      />
-    );
-  };
-
-  const SendDelegation = () => {
-    return (
-      <RoundButton
-        onPress={() => {
-          navigation.navigate('ModalScreen', {
-            modalContent: <Delegation />,
-          });
-        }}
-        size={36}
-        backgroundColor="#B084C4"
-        content={<Delegate />}
-      />
-    );
-  };
 
   return (
     <View style={styles.container}>
