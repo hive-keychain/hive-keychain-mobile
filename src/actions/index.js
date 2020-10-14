@@ -17,6 +17,7 @@ import {
   FETCH_DELEGATEES,
   LOAD_TOKENS,
   LOAD_USER_TOKENS,
+  LOAD_TOKENS_MARKET,
 } from './types';
 import {encryptJson, decryptToJson} from 'utils/encrypt';
 import {navigate} from 'utils/navigation';
@@ -194,8 +195,18 @@ export const loadTokens = () => async (dispatch) => {
     payload: await hsc.find('tokens', 'tokens', {}, 1000, 0, []),
   });
 };
+
+export const loadTokensMarket = () => async (dispatch) => {
+  dispatch({
+    type: LOAD_TOKENS_MARKET,
+    payload: await hsc.find('market', 'metrics', {}, 1000, 0, []),
+  });
+};
+
 export const loadUserTokens = (account) => async (dispatch) => {
-  const tokensBalance = await hsc.find('tokens', 'balances', {account});
+  const tokensBalance = (await hsc.find('tokens', 'balances', {account})).sort(
+    (a, b) => parseFloat(b.balance) - parseFloat(a.balance),
+  );
   console.log(tokensBalance);
   dispatch({
     type: LOAD_USER_TOKENS,
