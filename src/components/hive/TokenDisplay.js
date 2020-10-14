@@ -113,7 +113,11 @@ const getDimensionedStyles = ({width, height, color, change}) =>
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-    left: {display: 'flex', flexDirection: 'row'},
+    left: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
     logo: {justifyContent: 'center', alignItems: 'center'},
     name: {
       marginLeft: width * 0.03,

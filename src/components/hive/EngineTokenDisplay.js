@@ -15,6 +15,14 @@ const EngineTokenDisplay = ({token, tokensList, market}) => {
   }
   const metadata = JSON.parse(tokenInfo.metadata);
   console.log(market);
+  const logo = (
+    <Image
+      style={styles.icon}
+      source={{
+        uri: metadata.icon || Image.resolveAssetSource(HiveEngine).uri,
+      }}
+    />
+  );
   return (
     <TokenDisplay
       name={tokenInfo.name}
@@ -31,27 +39,14 @@ const EngineTokenDisplay = ({token, tokensList, market}) => {
           currency={token.symbol}
           engine
           tokenBalance={parseFloat(token.balance)}
-          tokenLogo={
-            <Image
-              style={styles.icon}
-              source={{
-                uri: metadata.icon || Image.resolveAssetSource(HiveEngine).uri,
-              }}
-            />
-          }
+          tokenLogo={logo}
         />,
       ]}
-      logo={
-        <Image
-          style={styles.icon}
-          source={{
-            uri: metadata.icon || Image.resolveAssetSource(HiveEngine).uri,
-          }}
-        />
-      }
+      logo={logo}
     />
   );
 };
 const getDimensionedStyles = ({height, width}) =>
   StyleSheet.create({icon: {width: width / 15, height: width / 15}});
+
 export default EngineTokenDisplay;
