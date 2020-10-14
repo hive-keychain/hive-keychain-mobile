@@ -20,12 +20,19 @@ const RoundButton = ({size, content, backgroundColor, onPress}) => {
   );
 };
 
-export const Send = ({currency}) => {
+export const Send = ({currency, tokenBalance, engine, tokenLogo}) => {
   return (
     <RoundButton
       onPress={() => {
         navigate('ModalScreen', {
-          modalContent: <Transfer currency={currency} />,
+          modalContent: (
+            <Transfer
+              currency={currency}
+              tokenBalance={tokenBalance}
+              engine={engine}
+              tokenLogo={tokenLogo}
+            />
+          ),
         });
       }}
       size={36}

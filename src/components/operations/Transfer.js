@@ -17,7 +17,16 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
 
-const Transfer = ({currency, user, loadAccountConnect}) => {
+const Transfer = ({
+  currency,
+  user,
+  loadAccountConnect,
+  engine,
+  tokenBalance,
+  tokenLogo,
+}) => {
+  console.log(tokenBalance, engine, tokenLogo);
+
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
@@ -48,7 +57,13 @@ const Transfer = ({currency, user, loadAccountConnect}) => {
       logo={<SendArrowBlue />}
       title={translate('wallet.operations.transfer.title')}>
       <Separator />
-      <Balance currency={currency} account={user.account} />
+      <Balance
+        currency={currency}
+        account={user.account}
+        tokenBalance={tokenBalance}
+        tokenLogo={tokenLogo}
+        engine={engine}
+      />
 
       <Separator />
       <OperationInput

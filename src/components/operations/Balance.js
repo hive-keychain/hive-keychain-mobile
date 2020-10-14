@@ -4,13 +4,25 @@ import {formatBalance, toHP} from 'utils/format';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 
-const TokenDisplay = ({currency, account, pd, globalProperties}) => {
+const TokenDisplay = ({
+  currency,
+  account,
+  pd,
+  globalProperties,
+  engine,
+  tokenBalance,
+  tokenLogo,
+}) => {
   let {color, value, logo} = getCurrencyProperties(currency, account);
   if (pd) {
     console.log(value);
     value = parseFloat(value) - parseFloat(account.delegated_vesting_shares);
     console.log(value);
     value = toHP(value, globalProperties);
+  }
+  if (engine) {
+    value = tokenBalance;
+    logo = tokenLogo;
   }
   const styles = getDimensionedStyles({
     color,
