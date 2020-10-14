@@ -15,6 +15,8 @@ import {
   ADD_TRANSACTIONS,
   FETCH_DELEGATORS,
   FETCH_DELEGATEES,
+  LOAD_TOKENS,
+  LOAD_USER_TOKENS,
 } from './types';
 import {encryptJson, decryptToJson} from 'utils/encrypt';
 import {navigate} from 'utils/navigation';
@@ -23,6 +25,7 @@ import {client} from 'utils/dhive';
 import {saveOnKeychain, getFromKeychain} from 'utils/keychainStorage';
 import {getBittrexPrices} from 'utils/price';
 import {getDelegatees, getDelegators} from 'utils/hiveUtils';
+import hsc from 'api/hiveEngine';
 
 export const signUp = (pwd) => {
   navigate('AddAccountByKeyScreen');
@@ -182,5 +185,20 @@ export const loadDelegatees = (username) => async (dispatch) => {
   dispatch({
     type: FETCH_DELEGATEES,
     payload: await getDelegatees(username),
+  });
+};
+
+export const loadTokens = () => async (dispatch) => {
+  dispatch({
+    type: LOAD_TOKENS,
+    payload: await hsc.find('tokens', 'tokens', {}, 1000, 0, []),
+  });
+};
+export const loadUserTokens = (account) => async (dispatch) => {
+  const tokensBalance = await hsc.find('tokens', 'balances', {account});
+  console.log(tokensBalance);
+  dispatch({
+    type: LOAD_USER_TOKENS,
+    payload: tokensBalance,
   });
 };

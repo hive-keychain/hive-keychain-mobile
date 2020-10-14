@@ -7,6 +7,8 @@ import globalPropertiesReducer from './globalPropertiesReducer';
 import bittrexReducer from './bittrexReducer';
 import transactionsReducer from './transactionsReducer';
 import delegationsReducer from './delegationsReducer';
+import tokensReducer from './tokensReducer';
+import userTokensReducer from './userTokensReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -17,4 +19,6 @@ export default combineReducers({
   bittrex: bittrexReducer,
   transactions: transactionsReducer,
   delegations: delegationsReducer,
+  tokens: tokensReducer,
+  userTokens: userTokensReducer,
 });
