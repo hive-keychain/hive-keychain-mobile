@@ -1,4 +1,4 @@
-var hive = require('@hivechain/dhive');
+var hive = require('@hiveio/dhive');
 // import 'utils/decode.min.js';
 // hive.decodeMemo = window.decodeMemo;
 // hive.encodeMemo = window.encodeMemo;

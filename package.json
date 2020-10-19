@@ -13,11 +13,11 @@
     "clean": "npm run dep-clean && npm run android-clean && npm run start"
   },
   "dependencies": {
-    "@hivechain/dhive": "^0.13.4",
+    "@hiveio/dhive": "^0.14.8",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/blur": "^3.6.0",
     "@react-native-community/masked-view": "^0.1.10",
-    "@react-native-community/picker": "^1.7.1",
+    "@react-native-community/picker": "^1.8.1",
     "@react-navigation/compat": "^5.2.8",
     "@react-navigation/native": "^5.7.6",
     "@react-navigation/stack": "^5.9.3",
@@ -25,7 +25,7 @@
     "axios": "^0.19.2",
     "crypto-js": "^3.3.0",
     "events": "^3.2.0",
-    "i18n-js": "^3.7.1",
+    "i18n-js": "^3.8.0",
     "lodash.memoize": "^4.1.2",
     "md5": "^2.3.0",
     "node-libs-browser": "^2.2.1",
@@ -58,13 +58,13 @@
     "sscjs": "0.0.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.6",
-    "@babel/runtime": "^7.11.2",
+    "@babel/core": "^7.12.3",
+    "@babel/runtime": "^7.12.1",
     "@react-native-community/eslint-config": "^1.1.0",
     "babel-jest": "^26.5.2",
     "babel-plugin-module-resolver": "^4.0.0",
     "eslint": "^6.0.0",
-    "jest": "^26.5.2",
+    "jest": "^26.5.3",
     "metro-react-native-babel-preset": "^0.59.0",
     "prettier": "2.0.2",
     "react-test-renderer": "16.11.0"

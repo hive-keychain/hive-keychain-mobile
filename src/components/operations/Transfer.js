@@ -16,7 +16,7 @@ import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
-
+import {hiveEngine} from 'utils/config';
 const Transfer = ({
   currency,
   user,
@@ -25,24 +25,53 @@ const Transfer = ({
   tokenBalance,
   tokenLogo,
 }) => {
-  console.log(tokenBalance, engine, tokenLogo);
-
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
 
-  const onTransfer = async () => {
+  const transfer = async () => {
+    await client.broadcast.transfer(
+      {
+        amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
+        memo,
+        to: to.toLowerCase(),
+        from: user.account.name,
+      },
+      hive.PrivateKey.fromString(user.keys.active),
+    );
+  };
+
+  const transferToken = async () => {
+    const id = hiveEngine.CHAIN_ID;
+    const json = JSON.stringify({
+      contractName: 'tokens',
+      contractAction: 'transfer',
+      contractPayload: {
+        symbol: currency,
+        to: to.toLowerCase(),
+        quantity: amount,
+        memo: memo,
+      },
+    });
+    await client.broadcast.json(
+      {
+        id,
+        json,
+        required_auths: [user.name],
+        required_posting_auths: [],
+      },
+      hive.PrivateKey.fromString(user.keys.active),
+    );
+  };
+
+  const onSend = async () => {
     Keyboard.dismiss();
     try {
-      await client.broadcast.transfer(
-        {
-          amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
-          memo,
-          to: to.toLowerCase(),
-          from: user.account.name,
-        },
-        hive.PrivateKey.fromString(user.keys.active),
-      );
+      if (!engine) {
+        transfer();
+      } else {
+        transferToken();
+      }
       loadAccountConnect(user.account.name);
       goBack();
       Toast.show(translate('toast.transfer_success'), Toast.LONG);
@@ -91,7 +120,7 @@ const Transfer = ({
       <Separator height={40} />
       <EllipticButton
         title={translate('common.send')}
-        onPress={onTransfer}
+        onPress={onSend}
         style={styles.button}
       />
     </Operation>
