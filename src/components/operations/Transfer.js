@@ -74,7 +74,12 @@ const Transfer = ({
       }
       loadAccountConnect(user.account.name);
       goBack();
-      Toast.show(translate('toast.transfer_success'), Toast.LONG);
+      Toast.show(
+        engine
+          ? translate('toast.transfer_token_success')
+          : translate('toast.transfer_success'),
+        Toast.LONG,
+      );
     } catch (e) {
       Toast.show(`Error : ${e.message}`, Toast.LONG);
     }

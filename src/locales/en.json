@@ -74,6 +74,7 @@
     "authFailed": "Authentication failed",
     "account_already": "You already registered this account",
     "transfer_success": "Your transfer was successful!",
+    "transfer_token_success": "Your transfer was successfully broadcasted to Hive. Your balance might take a little while to update.",
     "powerup_success": "Your Power up was successful!",
     "powerdown_success": "Your Power down was successful!",
     "stop_powerdown_success": "You successfully stopped your Power down!",
