@@ -10,6 +10,7 @@ import {
 import {initAccountTransactions, fetchAccountTransactions} from 'actions';
 import {connect} from 'react-redux';
 import {withCommas} from 'utils/format';
+import {translate} from 'utils/localize';
 
 const Transactions = ({
   transactions,
@@ -27,22 +28,28 @@ const Transactions = ({
   //style={{display: 'flex', marginBottom: 550}}
   return (
     <View style={basicStyles.flex}>
-      <FlatList
-        data={transactions}
-        onEndReached={() => {
-          const newEnd =
-            transactions[transactions.length - 1].key.split('!')[1] - 1;
-          if (newEnd !== end && !transactions[transactions.length - 1].last) {
-            fetchAccountTransactionsConnect(user.account.name, newEnd);
-            setEnd(newEnd);
-          }
-        }}
-        renderItem={(transaction) => {
-          return <Transaction transaction={transaction.item} user={user} />;
-        }}
-        keyExtractor={(transaction) => transaction.key}
-        style={basicStyles.flex}
-      />
+      {transactions.length ? (
+        <FlatList
+          data={transactions}
+          onEndReached={() => {
+            const newEnd =
+              transactions[transactions.length - 1].key.split('!')[1] - 1;
+            if (newEnd !== end && !transactions[transactions.length - 1].last) {
+              fetchAccountTransactionsConnect(user.account.name, newEnd);
+              setEnd(newEnd);
+            }
+          }}
+          renderItem={(transaction) => {
+            return <Transaction transaction={transaction.item} user={user} />;
+          }}
+          keyExtractor={(transaction) => transaction.key}
+          style={basicStyles.flex}
+        />
+      ) : (
+        <Text style={basicStyles.no_tokens}>
+          {translate('wallet.no_transaction')}
+        </Text>
+      )}
     </View>
   );
 };
@@ -105,7 +112,15 @@ const renderToggle = (user, memo) => {
     return null;
   }
 };
-const basicStyles = StyleSheet.create({flex: {flex: 1}});
+const basicStyles = StyleSheet.create({
+  flex: {flex: 1},
+  no_tokens: {
+    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 16,
+    marginVertical: 20,
+  },
+});
 const getDimensionedStyles = ({width, height, color}) =>
   StyleSheet.create({
     container: {

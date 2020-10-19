@@ -23,6 +23,7 @@
     "vp": "Voting:",
     "balance": "balance",
     "no_tokens": "No Hive Engine token found.",
+    "no_transaction": "No recent transaction.",
     "operations": {
       "transfer": {"title": "Transfer funds", "memo": "MEMO (optional)"},
       "powerup": {"title": "Power up!"},
