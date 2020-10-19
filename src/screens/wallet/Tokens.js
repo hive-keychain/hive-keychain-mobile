@@ -4,6 +4,7 @@ import {loadTokens, loadUserTokens, loadTokensMarket} from 'actions';
 import {connect} from 'react-redux';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import Separator from 'components/ui/Separator';
+import {translate} from 'utils/localize';
 
 const Tokens = ({
   user,
@@ -25,19 +26,23 @@ const Tokens = ({
   return (
     <View style={styles.container}>
       <Separator />
-      <FlatList
-        style={[styles.half]}
-        data={userTokens}
-        keyExtractor={(item) => item._id}
-        ItemSeparatorComponent={() => <Separator height={10} />}
-        renderItem={({item}) => (
-          <EngineTokenDisplay
-            token={item}
-            tokensList={tokens}
-            market={tokensMarket}
-          />
-        )}
-      />
+      {userTokens.length ? (
+        <FlatList
+          style={[styles.half]}
+          data={userTokens}
+          keyExtractor={(item) => item._id}
+          ItemSeparatorComponent={() => <Separator height={10} />}
+          renderItem={({item}) => (
+            <EngineTokenDisplay
+              token={item}
+              tokensList={tokens}
+              market={tokensMarket}
+            />
+          )}
+        />
+      ) : (
+        <Text style={styles.no_tokens}>{translate('wallet.no_tokens')}</Text>
+      )}
       <View style={[styles.half]}>
         <Text>Tokens</Text>
       </View>
@@ -45,7 +50,16 @@ const Tokens = ({
   );
 };
 
-const styles = StyleSheet.create({container: {flex: 1}, half: {flex: 0.5}});
+const styles = StyleSheet.create({
+  container: {flex: 1},
+  half: {flex: 0.5},
+  no_tokens: {
+    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 16,
+    marginVertical: 20,
+  },
+});
 
 const mapStateToProps = (state) => {
   return {
