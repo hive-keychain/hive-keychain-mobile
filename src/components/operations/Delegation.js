@@ -75,6 +75,7 @@ const Delegation = ({
       <OperationInput
         placeholder={translate('common.username').toUpperCase()}
         leftIcon={<AccountLogoDark />}
+        autoCapitalize="none"
         value={to}
         onChangeText={setTo}
       />
