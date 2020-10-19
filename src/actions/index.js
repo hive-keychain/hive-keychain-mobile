@@ -204,9 +204,9 @@ export const loadTokensMarket = () => async (dispatch) => {
 };
 
 export const loadUserTokens = (account) => async (dispatch) => {
-  const tokensBalance = (await hsc.find('tokens', 'balances', {account})).sort(
-    (a, b) => parseFloat(b.balance) - parseFloat(a.balance),
-  );
+  const tokensBalance = (await hsc.find('tokens', 'balances', {account}))
+    .filter((t) => parseFloat(t.balance) !== 0)
+    .sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
   console.log(tokensBalance);
   dispatch({
     type: LOAD_USER_TOKENS,
