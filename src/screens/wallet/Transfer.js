@@ -46,7 +46,7 @@ const Transfer = ({user, route}) => {
       <Text h3 style={styles.textCentered}>
         {currency === 'HIVE'
           ? withCommas(user.account.balance)
-          : withCommas(user.account.sbd_balance)}
+          : withCommas(user.account.hbd_balance)}
       </Text>
       <CustomInput
         placeholder={translate('common.username').toUpperCase()}

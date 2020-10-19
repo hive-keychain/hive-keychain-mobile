@@ -13,7 +13,7 @@ export const getCurrencyProperties = (currency, account) => {
       break;
     case 'HBD':
       color = '#005C09';
-      value = account ? account.sbd_balance : null;
+      value = account ? account.hbd_balance : null;
       logo = <Hbd />;
       break;
     case 'HP':

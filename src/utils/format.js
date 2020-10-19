@@ -5,12 +5,12 @@ export const withCommas = (nb, decimals = 3) =>
 
 export const toHP = (vests, props) =>
   props
-    ? (parseFloat(vests) * parseFloat(props.total_vesting_fund_steem)) /
+    ? (parseFloat(vests) * parseFloat(props.total_vesting_fund_hive)) /
       parseFloat(props.total_vesting_shares)
     : 0;
 
 export const fromHP = (hp, props) =>
-  (parseFloat(hp) / parseFloat(props.total_vesting_fund_steem)) *
+  (parseFloat(hp) / parseFloat(props.total_vesting_fund_hive)) *
   parseFloat(props.total_vesting_shares);
 
 export const chunkArray = (myArray, chunk_size) => {

@@ -49,7 +49,7 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         color="#005C09"
         name="HIVE DOLLARS"
         currency="HBD"
-        value={parseFloat(user.account.sbd_balance)}
+        value={parseFloat(user.account.hbd_balance)}
         logo={<Hbd width={width / 15} />}
         price={bittrex.hbd}
         buttons={[<Send key="send_hbd" currency="HBD" />]}
