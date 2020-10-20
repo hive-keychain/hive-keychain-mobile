@@ -25,6 +25,7 @@
     "no_tokens": "No Hive Engine token found.",
     "no_transaction": "No recent transaction.",
     "operations": {
+      "history": "History",
       "transfer": {"title": "Transfer funds", "memo": "MEMO (optional)"},
       "powerup": {"title": "Power up!"},
       "powerdown": {"title": "Power down"},

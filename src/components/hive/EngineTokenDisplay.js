@@ -3,7 +3,7 @@ import {Image, StyleSheet, useWindowDimensions} from 'react-native';
 import TokenDisplay from './TokenDisplay';
 import {withCommas} from 'utils/format';
 import HiveEngine from 'assets/wallet/hive_engine.png';
-import {Send} from 'components/operations/OperationsButtons';
+import {Send, ShowHistory} from 'components/operations/OperationsButtons';
 
 const EngineTokenDisplay = ({token, tokensList, market}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
@@ -38,6 +38,12 @@ const EngineTokenDisplay = ({token, tokensList, market}) => {
           key="send_token"
           currency={token.symbol}
           engine
+          tokenBalance={parseFloat(token.balance)}
+          tokenLogo={logo}
+        />,
+        <ShowHistory
+          key="history_token"
+          currency={token.symbol}
           tokenBalance={parseFloat(token.balance)}
           tokenLogo={logo}
         />,

@@ -6,10 +6,12 @@ import Transfer from 'components/operations/Transfer';
 import PowerUp from 'components/operations/PowerUp';
 import PowerDown from 'components/operations/PowerDown';
 import Delegation from 'components/operations/Delegation';
+import History from 'components/operations/History';
 
 import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
 import Delegate from 'assets/wallet/icon_delegate.svg';
+import HistoryIcon from 'assets/wallet/icon_history.svg';
 
 const RoundButton = ({size, content, backgroundColor, onPress}) => {
   const styles = getStyleSheet(size, backgroundColor);
@@ -83,6 +85,21 @@ export const SendDelegation = () => {
       size={36}
       backgroundColor="#B084C4"
       content={<Delegate />}
+    />
+  );
+};
+
+export const ShowHistory = (props) => {
+  return (
+    <RoundButton
+      onPress={() => {
+        navigate('ModalScreen', {
+          modalContent: <History {...props} />,
+        });
+      }}
+      size={36}
+      backgroundColor="#69C1B3"
+      content={<HistoryIcon />}
     />
   );
 };

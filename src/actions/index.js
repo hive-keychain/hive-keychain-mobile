@@ -213,3 +213,5 @@ export const loadUserTokens = (account) => async (dispatch) => {
     payload: tokensBalance,
   });
 };
+
+export const loadTokenHistory = (user, currency) => async (dispatch) => {};

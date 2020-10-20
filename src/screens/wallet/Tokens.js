@@ -43,16 +43,12 @@ const Tokens = ({
       ) : (
         <Text style={styles.no_tokens}>{translate('wallet.no_tokens')}</Text>
       )}
-      <View style={[styles.half]}>
-        <Text>Tokens</Text>
-      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {flex: 1},
-  half: {flex: 0.5},
   no_tokens: {
     fontWeight: 'bold',
     color: 'black',
