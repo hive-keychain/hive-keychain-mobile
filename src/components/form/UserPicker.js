@@ -12,7 +12,6 @@ const UserPicker = ({username, accounts, onAccountSelected, addAccount}) => {
   }
 
   const accountsList = [username, ...accounts.filter((e) => e !== username)];
-  console.log('hop', accountsList);
   const onPickerValueChanged = (value) => {
     if (value === 'add_new_account') {
       addAccount();

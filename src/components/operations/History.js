@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, FlatList} from 'react-native';
+import {FlatList} from 'react-native';
 import {connect} from 'react-redux';
 
 import Operation from './Operation';
@@ -24,8 +24,6 @@ const History = ({
     }
   }, [loadTokenHistoryConnect, user.name, currency]);
 
-  const styles = getDimensionedStyles();
-
   return (
     <Operation
       logo={<HistoryIcon />}
@@ -48,25 +46,6 @@ const History = ({
     </Operation>
   );
 };
-
-const getDimensionedStyles = () =>
-  StyleSheet.create({
-    container: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      flex: 1,
-    },
-    text: {fontSize: 16},
-    rightContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      flex: 1,
-      justifyContent: 'flex-end',
-    },
-    logo: {marginLeft: 20, height: 16, width: 16},
-    separator: {marginVertical: 5, borderBottomWidth: 1},
-  });
 
 export default connect(
   (state) => {

@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {
   View,
-  Modal,
   StyleSheet,
   Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Blur from './Blur';
 
 export default class CustomModal extends Component {
   constructor(props) {
@@ -17,7 +15,6 @@ export default class CustomModal extends Component {
     this.width = width;
   }
   render() {
-    console.log('show now');
     let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
     const styles = StyleSheetFactory.getSheet({
       boxBgColor: this.props.boxBackgroundColor,
@@ -29,7 +26,7 @@ export default class CustomModal extends Component {
       transparent: this.props.transparentContainer,
     });
     return (
-      <View style={{height: '100%'}}>
+      <View style={styles.fullHeight}>
         <TouchableWithoutFeedback
           onPress={() => {
             this.props.outsideClick();
@@ -58,6 +55,7 @@ export default class CustomModal extends Component {
 class StyleSheetFactory {
   static getSheet({modalHeight, width, transparent}) {
     const styles = StyleSheet.create({
+      fullHeight: {height: '100%'},
       mainContainer: {
         flex: 1,
         backgroundColor: 'transparent',

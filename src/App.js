@@ -30,7 +30,6 @@ const Stack = createStackNavigator();
 const Root = createStackNavigator();
 
 const App = ({hasAccounts, auth, lockConnect}) => {
-  console.log(hasAccounts);
   const {height, width} = useWindowDimensions();
 
   const renderNavigator = () => {

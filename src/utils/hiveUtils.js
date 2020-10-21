@@ -68,8 +68,7 @@ export const getVotingDollarsPerAccount = (
 };
 export const getRC = async (account) => {
   const rc = await client.rc.calculateRCMana(account.name);
-  console.log(rc);
-  return 54;
+  return rc;
 };
 
 const getRewardBalance = (properties) => {

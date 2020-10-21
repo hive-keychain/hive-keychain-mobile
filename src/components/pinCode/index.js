@@ -59,7 +59,6 @@ const PinCode = ({
       if (signup) {
         setStep(1);
       } else {
-        console.log(code.join(''));
         submit(code.join(''), (unsafeBiometrics) => {
           if (unsafeBiometrics) {
             setVisible(true);

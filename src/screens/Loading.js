@@ -4,7 +4,6 @@ import Background from 'components/ui/Background';
 import KeychainLogo from 'assets/keychain.svg';
 
 const Loading = () => {
-  console.log('show loading');
   const styles = getDimensionedStyles(useWindowDimensions());
   return (
     <Background style={styles.bgd}>

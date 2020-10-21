@@ -56,7 +56,6 @@ const TokenDisplay = ({
 };
 
 const renderLeftBottom = (styles, price, currency, incoming, outgoing) => {
-  console.log(currency);
   if (currency !== 'HP') {
     return (
       <View style={[styles.row, styles.halfLine]}>

@@ -9,12 +9,10 @@ const EngineTokenDisplay = ({token, tokensList, market}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
   const tokenInfo = tokensList.find((t) => t.symbol === token.symbol);
   const tokenMarket = market.find((t) => t.symbol === token.symbol);
-  console.log(tokenInfo);
   if (!tokenInfo) {
     return null;
   }
   const metadata = JSON.parse(tokenInfo.metadata);
-  console.log(market);
   const logo = (
     <Image
       style={styles.icon}

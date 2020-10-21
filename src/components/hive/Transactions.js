@@ -16,7 +16,6 @@ const Transactions = ({
       initAccountTransactionsConnect(user.account.name);
     }
   }, [user.account.name, initAccountTransactionsConnect]);
-  console.log(transactions.length);
   const [end, setEnd] = useState(0);
   //style={{display: 'flex', marginBottom: 550}}
   return (

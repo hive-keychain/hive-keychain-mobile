@@ -44,7 +44,6 @@ export const getFromKeychain = async (radix) => {
       service: radix,
     })
   ).password;
-  console.log({length});
   while (i < length) {
     const options = {
       service: `${radix}_${i}`,
@@ -92,7 +91,6 @@ export const clearKeychain = async (length) => {
     i++;
   }
   for (const s of services) {
-    const result = await Keychain.resetGenericPassword(s);
-    console.log('cleared:', result);
+    await Keychain.resetGenericPassword(s);
   }
 };

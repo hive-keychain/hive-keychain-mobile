@@ -3,7 +3,6 @@ import {ADD_ACCOUNT, FORGET_ACCOUNTS, ACTIVE_ACCOUNT} from '../actions/types';
 import {persistConfig} from './configs';
 
 const lastAccountReducer = (state = {has: true}, {type, payload}) => {
-  console.log(type, state);
   switch (type) {
     case ADD_ACCOUNT:
       return {...state, has: true};

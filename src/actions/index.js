@@ -86,7 +86,6 @@ export const forgetAccounts = () => (dispatch, getState) => {
 };
 
 export const loadAccount = (name) => async (dispatch, getState) => {
-  console.log('plop');
   dispatch({
     type: ACTIVE_ACCOUNT,
     payload: {
@@ -208,7 +207,6 @@ export const loadUserTokens = (account) => async (dispatch) => {
   const tokensBalance = (await hsc.find('tokens', 'balances', {account}))
     .filter((t) => parseFloat(t.balance) !== 0)
     .sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
-  console.log(tokensBalance);
   dispatch({
     type: LOAD_USER_TOKENS,
     payload: tokensBalance,

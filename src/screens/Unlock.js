@@ -9,7 +9,6 @@ import KeychainLogo from 'assets/keychain.svg';
 import {translate} from 'utils/localize';
 
 const Unlock = ({unlockConnect, forgetAccountsConnect, navigation}) => {
-  console.log('show unlock');
   const styles = getDimensionedStyles(useWindowDimensions());
   return (
     <Background>

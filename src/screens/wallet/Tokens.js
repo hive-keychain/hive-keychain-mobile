@@ -22,7 +22,6 @@ const Tokens = ({
   useEffect(() => {
     loadUserTokensConnect(user.name);
   }, [loadUserTokensConnect, user.name]);
-  console.log(userTokens);
   return (
     <View style={styles.container}>
       <Separator />

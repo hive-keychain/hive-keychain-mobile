@@ -21,12 +21,9 @@ const Transfer = ({user, route}) => {
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
+
   const onTransfer = async () => {
-    console.log(
-      {amount, memo, to, from: user.account.name},
-      hive.PrivateKey.fromString(user.keys.active),
-    );
-    const res = await client.broadcast.transfer(
+    await client.broadcast.transfer(
       {
         amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
         memo,
@@ -35,7 +32,6 @@ const Transfer = ({user, route}) => {
       },
       hive.PrivateKey.fromString(user.keys.active),
     );
-    console.log('transfer', res);
   };
   return (
     <Background>

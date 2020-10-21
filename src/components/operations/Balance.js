@@ -15,9 +15,7 @@ const TokenDisplay = ({
 }) => {
   let {color, value, logo} = getCurrencyProperties(currency, account);
   if (pd) {
-    console.log(value);
     value = parseFloat(value) - parseFloat(account.delegated_vesting_shares);
-    console.log(value);
     value = toHP(value, globalProperties);
   }
   if (engine) {
@@ -28,7 +26,6 @@ const TokenDisplay = ({
     color,
     ...useWindowDimensions(),
   });
-  console.log(currency, account);
   return (
     <View style={styles.container}>
       <View style={styles.main}>

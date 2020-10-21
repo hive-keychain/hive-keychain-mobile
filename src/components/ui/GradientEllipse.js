@@ -5,7 +5,6 @@ import LinearGradient from 'react-native-linear-gradient';
 export default (props) => {
   const {style, dotColor} = props;
   const {height} = style;
-  console.log(height);
   return (
     <LinearGradient
       start={{x: 0, y: 0}}

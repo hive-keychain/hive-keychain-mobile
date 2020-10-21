@@ -39,7 +39,6 @@ const derivateFromMasterPassword = (username, account, pwd) => {
     activePubkey: active.createPublic().toString(),
     memoPubkey: memo.createPublic().toString(),
   };
-  console.log(keys);
   const has_active = getPubkeyWeight(keys.activePubkey, account.active);
   const has_posting = getPubkeyWeight(keys.postingPubkey, account.posting);
 
@@ -78,7 +77,6 @@ export const validateFromObject = async ({
   keys: {memo, posting, active},
 }) => {
   const account = (await client.database.getAccounts([name]))[0];
-  console.log(account);
   let keys = {};
   if (
     memo &&
