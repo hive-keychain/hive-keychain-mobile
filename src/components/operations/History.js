@@ -1,15 +1,14 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, FlatList, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, FlatList} from 'react-native';
 import {connect} from 'react-redux';
 
 import Operation from './Operation';
 import {translate} from 'utils/localize';
 import Separator from 'components/ui/Separator';
 import {loadTokenHistory} from 'actions';
-import {withCommas} from 'utils/format';
 import HistoryIcon from 'assets/wallet/icon_history_green.svg';
-import {navigate} from 'utils/navigation';
 import Balance from './Balance';
+import Transfer from 'components/hive/Transfer';
 
 const History = ({
   user,
@@ -43,7 +42,7 @@ const History = ({
         data={history}
         keyExtractor={(item) => item._id}
         renderItem={({item}) => {
-          return <Text>{item.to}</Text>;
+          return <Transfer transaction={item} user={user} />;
         }}
       />
     </Operation>

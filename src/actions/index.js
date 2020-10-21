@@ -216,8 +216,13 @@ export const loadUserTokens = (account) => async (dispatch) => {
 };
 
 export const loadTokenHistory = (account, currency) => async (dispatch) => {
-  const tokenHistory = await hiveEngineAPI.get('accountHistory', {
-    params: {account, symbol: currency, type: 'user'},
+  const tokenHistory = (
+    await hiveEngineAPI.get('accountHistory', {
+      params: {account, symbol: currency, type: 'user'},
+    })
+  ).data.map((e) => {
+    e.amount = `${e.quantity} ${e.symbol}`;
+    return e;
   });
-  dispatch({type: LOAD_TOKEN_HISTORY, payload: tokenHistory.data});
+  dispatch({type: LOAD_TOKEN_HISTORY, payload: tokenHistory});
 };
