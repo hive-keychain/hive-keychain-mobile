@@ -18,6 +18,7 @@ import {
   LOAD_TOKENS,
   LOAD_USER_TOKENS,
   LOAD_TOKENS_MARKET,
+  LOAD_TOKEN_HISTORY,
 } from './types';
 import {encryptJson, decryptToJson} from 'utils/encrypt';
 import {navigate} from 'utils/navigation';
@@ -26,7 +27,7 @@ import {client} from 'utils/dhive';
 import {saveOnKeychain, getFromKeychain} from 'utils/keychainStorage';
 import {getBittrexPrices} from 'utils/price';
 import {getDelegatees, getDelegators} from 'utils/hiveUtils';
-import hsc from 'api/hiveEngine';
+import hsc, {hiveEngineAPI} from 'api/hiveEngine';
 
 export const signUp = (pwd) => {
   navigate('AddAccountByKeyScreen');
@@ -214,4 +215,9 @@ export const loadUserTokens = (account) => async (dispatch) => {
   });
 };
 
-export const loadTokenHistory = (user, currency) => async (dispatch) => {};
+export const loadTokenHistory = (account, currency) => async (dispatch) => {
+  const tokenHistory = await hiveEngineAPI.get('accountHistory', {
+    params: {account, symbol: currency, type: 'user'},
+  });
+  dispatch({type: LOAD_TOKEN_HISTORY, payload: tokenHistory.data});
+};

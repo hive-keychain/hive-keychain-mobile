@@ -10,6 +10,7 @@ import delegationsReducer from './delegationsReducer';
 import tokensReducer from './tokensReducer';
 import userTokensReducer from './userTokensReducer';
 import tokensMarketReducer from './tokensMarketReducer';
+import tokenHistoryReducer from './tokenHistoryReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -23,4 +24,5 @@ export default combineReducers({
   tokens: tokensReducer,
   userTokens: userTokensReducer,
   tokensMarket: tokensMarketReducer,
+  tokenHistory: tokenHistoryReducer,
 });

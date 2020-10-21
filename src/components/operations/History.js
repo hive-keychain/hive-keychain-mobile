@@ -16,6 +16,7 @@ const History = ({
   tokenBalance,
   tokenLogo,
   currency,
+  history,
   loadTokenHistoryConnect,
 }) => {
   useEffect(() => {
@@ -36,6 +37,14 @@ const History = ({
         tokenBalance={tokenBalance}
         tokenLogo={tokenLogo}
         engine
+      />
+      <Separator />
+      <FlatList
+        data={history}
+        keyExtractor={(item) => item._id}
+        renderItem={({item}) => {
+          return <Text>{item.to}</Text>;
+        }}
       />
     </Operation>
   );
