@@ -7,7 +7,7 @@ const lastAccountReducer = (state = {has: true}, {type, payload}) => {
     case ADD_ACCOUNT:
       return {...state, has: true};
     case FORGET_ACCOUNTS:
-      return {...state, has: false};
+      return {has: false};
     case ACTIVE_ACCOUNT:
       if (payload.name) {
         return {has: true, name: payload.name};

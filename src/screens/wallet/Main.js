@@ -26,13 +26,12 @@ const Main = ({
   const styles = getDimensionedStyles(useWindowDimensions());
 
   useEffect(() => {
-    if (lastAccount) {
-      loadAccountConnect(lastAccount);
-    }
+    loadAccountConnect(lastAccount || accounts[0].name);
     loadPropertiesConnect();
     loadBittrexConnect();
   }, [
     loadAccountConnect,
+    accounts,
     loadPropertiesConnect,
     loadBittrexConnect,
     lastAccount,
