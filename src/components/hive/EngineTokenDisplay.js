@@ -25,7 +25,7 @@ const EngineTokenDisplay = ({token, tokensList, market}) => {
     <TokenDisplay
       name={tokenInfo.name}
       currency={token.symbol}
-      color="grey"
+      color="black"
       value={parseFloat(token.balance)}
       price={{
         Usd: withCommas(tokenMarket.lastPrice),
