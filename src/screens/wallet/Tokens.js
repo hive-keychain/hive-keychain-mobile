@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import Separator from 'components/ui/Separator';
 import {translate} from 'utils/localize';
-
+import HiveEngineAccountValue from 'components/hive/HiveEngineAccountValue';
 const Tokens = ({
   user,
   loadTokensConnect,
@@ -13,6 +13,7 @@ const Tokens = ({
   loadTokensMarketConnect,
   tokens,
   userTokens,
+  bittrex,
   tokensMarket,
 }) => {
   useEffect(() => {
@@ -25,6 +26,13 @@ const Tokens = ({
   return (
     <View style={styles.container}>
       <Separator />
+      <HiveEngineAccountValue
+        bittrex={bittrex}
+        tokens={userTokens}
+        tokensMarket={tokensMarket}
+      />
+      <Separator />
+
       {userTokens.length ? (
         <FlatList
           style={[styles.half]}
@@ -62,6 +70,7 @@ const mapStateToProps = (state) => {
     tokens: state.tokens,
     userTokens: state.userTokens,
     tokensMarket: state.tokensMarket,
+    bittrex: state.bittrex,
   };
 };
 

@@ -1,9 +1,9 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {Text, StyleSheet} from 'react-native';
 import {getAccountValue} from 'utils/price';
 import {withCommas} from 'utils/format';
 
-const AccountValue = ({style, bittrex, account, properties}) => {
+const AccountValue = ({bittrex, account, properties}) => {
   let accountValue = 0;
   if (bittrex.btc && account && properties.globals) {
     accountValue = withCommas(
@@ -11,7 +11,16 @@ const AccountValue = ({style, bittrex, account, properties}) => {
       2,
     );
   }
-  return <Text style={style}>{`$ ${accountValue}`}</Text>;
+  return <Text style={styles.accountValue}>{`$ ${accountValue}`}</Text>;
 };
+
+const styles = StyleSheet.create({
+  accountValue: {
+    color: '#626F79',
+    fontSize: 28,
+    textAlign: 'center',
+    width: '100%',
+  },
+});
 
 export default AccountValue;

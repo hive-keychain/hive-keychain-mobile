@@ -29,7 +29,6 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         account={user.account}
         bittrex={bittrex}
         properties={properties}
-        style={styles.accountValue}
       />
       <Separator height={20} />
       <TokenDisplay
@@ -79,12 +78,6 @@ const Primary = ({user, bittrex, properties, navigation}) => {
 };
 
 const styles = StyleSheet.create({
-  accountValue: {
-    color: '#626F79',
-    fontSize: 28,
-    textAlign: 'center',
-    width: '100%',
-  },
   container: {width: '100%', flex: 1},
 });
 
