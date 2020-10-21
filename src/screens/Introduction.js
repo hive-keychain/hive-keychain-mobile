@@ -1,11 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, useWindowDimensions} from 'react-native';
+import {StyleSheet, Text, useWindowDimensions, Linking} from 'react-native';
 import Background from 'components/ui/Background';
 import GradientEllipse from 'components/ui/GradientEllipse';
 import KeychainLogo from 'assets/kc_hive.svg';
 import Separator from 'components/ui/Separator';
 import EllipticButton from 'components/form/EllipticButton';
 import {translate} from 'utils/localize';
+import {hiveConfig} from 'utils/config';
 
 const Introduction = ({navigation}) => {
   const {height, width} = useWindowDimensions();
@@ -32,7 +33,13 @@ const Introduction = ({navigation}) => {
       <EllipticButton
         title={translate('intro.createAccount')}
         onPress={() => {
-          navigation.navigate('CreateAccountScreen');
+          Linking.canOpenURL(hiveConfig.CREATE_ACCOUNT_URL).then(
+            (supported) => {
+              if (supported) {
+                Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
+              }
+            },
+          );
         }}
       />
     </Background>
