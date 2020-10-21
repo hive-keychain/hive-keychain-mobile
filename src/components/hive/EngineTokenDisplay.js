@@ -26,6 +26,7 @@ const EngineTokenDisplay = ({token, tokensList, market}) => {
       name={tokenInfo.name}
       currency={token.symbol}
       color="black"
+      amountStyle={styles.amount}
       value={parseFloat(token.balance)}
       price={{
         Usd: withCommas(tokenMarket.lastPrice),
@@ -51,6 +52,9 @@ const EngineTokenDisplay = ({token, tokensList, market}) => {
   );
 };
 const getDimensionedStyles = ({height, width}) =>
-  StyleSheet.create({icon: {width: width / 15, height: width / 15}});
+  StyleSheet.create({
+    icon: {width: width / 15, height: width / 15},
+    amount: {fontWeight: 'bold', fontSize: 15},
+  });
 
 export default EngineTokenDisplay;

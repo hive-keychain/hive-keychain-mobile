@@ -20,6 +20,7 @@ const TokenDisplay = ({
   price,
   incoming,
   outgoing,
+  amountStyle,
 }) => {
   const styles = getDimensionedStyles({
     color,
@@ -38,7 +39,7 @@ const TokenDisplay = ({
           <View style={styles.logo}>{logo}</View>
           <Text style={styles.name}>{name}</Text>
         </View>
-        <Text style={styles.amount}>
+        <Text style={amountStyle || styles.amount}>
           {formatBalance(value)}
           <Text style={styles.currency}>{` ${currency}`}</Text>
         </Text>
