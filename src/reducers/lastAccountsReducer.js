@@ -1,5 +1,10 @@
 import {persistReducer} from 'redux-persist';
-import {ADD_ACCOUNT, FORGET_ACCOUNTS, ACTIVE_ACCOUNT} from '../actions/types';
+import {
+  ADD_ACCOUNT,
+  FORGET_ACCOUNTS,
+  FORGET_ACCOUNT,
+  ACTIVE_ACCOUNT,
+} from '../actions/types';
 import {persistConfig} from './configs';
 
 const lastAccountReducer = (state = {has: true}, {type, payload}) => {
@@ -8,6 +13,8 @@ const lastAccountReducer = (state = {has: true}, {type, payload}) => {
       return {...state, has: true};
     case FORGET_ACCOUNTS:
       return {has: false};
+    case FORGET_ACCOUNT:
+      return {has: state.has};
     case ACTIVE_ACCOUNT:
       if (payload.name) {
         return {has: true, name: payload.name};

@@ -1,6 +1,12 @@
 import Toast from 'react-native-simple-toast';
 
-import {ADD_ACCOUNT, FORGET_ACCOUNTS} from './types';
+import {
+  ADD_ACCOUNT,
+  FORGET_ACCOUNTS,
+  FORGET_ACCOUNT,
+  ADD_KEY,
+  FORGET_KEY,
+} from './types';
 import {encryptJson} from 'utils/encrypt';
 import {navigate} from 'utils/navigation';
 import {translate} from 'utils/localize';
@@ -34,7 +40,19 @@ export const forgetAccounts = () => (dispatch) => {
   });
 };
 
-export const forgetAccount = (username) => async (dispatch) => {};
+export const forgetAccount = (username) => async (dispatch, getState) => {
+  const mk = getState().auth.mk;
+  const previousAccounts = getState().accounts;
+  const accounts = previousAccounts.filter((e) => e.name !== username);
+  if (accounts.length) {
+    const encrypted = encryptJson({list: accounts}, mk);
+    await saveOnKeychain('accounts', encrypted);
+    dispatch({type: FORGET_ACCOUNT, payload: username});
+    navigate('WalletScreen');
+  } else {
+    dispatch(forgetAccounts());
+  }
+};
 
 export const forgetKey = (username, key) => async (dispatch) => {};
 
