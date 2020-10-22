@@ -4,7 +4,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 export default (props) => {
   return (
-    <SafeAreaView style={styles.imageBgd}>
+    <SafeAreaView style={styles.bgd}>
       <StatusBar backgroundColor="#A3112A" />
       {props.children}
     </SafeAreaView>
@@ -12,5 +12,5 @@ export default (props) => {
 };
 
 const styles = StyleSheet.create({
-  imageBgd: {width: '100%', height: '100%', backgroundColor: 'white'},
+  bgd: {width: '100%', height: '100%', backgroundColor: 'white'},
 });

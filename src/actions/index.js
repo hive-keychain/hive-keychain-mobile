@@ -224,3 +224,9 @@ export const loadTokenHistory = (account, currency) => async (dispatch) => {
   });
   dispatch({type: LOAD_TOKEN_HISTORY, payload: tokenHistory});
 };
+
+export const forgetAccount = (username) => async (dispatch) => {};
+
+export const forgetKey = (username, key) => async (dispatch) => {};
+
+export const addKey = (username, keys) => async (dispatch) => {};

@@ -9,7 +9,7 @@ import Signup from 'screens/Signup';
 import Unlock from 'screens/Unlock';
 import Modal from 'screens/Modal';
 import CreateAccount from 'screens/CreateAccount';
-import Transfer from 'screens/wallet/Transfer';
+import AccountManagement from 'screens/settings/AccountManagement';
 import Wallet from 'screens/wallet/Main';
 import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';
@@ -23,8 +23,9 @@ import {
 } from 'utils/navigation';
 import Hive from 'assets/wallet/hive.svg';
 import Search from 'assets/wallet/search.svg';
-
+import Key from 'assets/addAccount/icon_key.svg';
 import {lock} from 'actions';
+import {navigate} from 'utils/navigation';
 
 const Stack = createStackNavigator();
 const Root = createStackNavigator();
@@ -105,12 +106,20 @@ const App = ({hasAccounts, auth, lockConnect}) => {
               headerTintColor: 'white',
               headerRight: () => {
                 return (
-                  <Search
-                    style={styles(width, height).right}
-                    onPress={() => {
-                      lockConnect();
-                    }}
-                  />
+                  <>
+                    <Search
+                      style={styles(width, height).right}
+                      onPress={() => {
+                        lockConnect();
+                      }}
+                    />
+                    <Key
+                      style={styles(width, height).right}
+                      onPress={() => {
+                        navigate('AccountManagementScreen');
+                      }}
+                    />
+                  </>
                 );
               },
               headerLeft: () => {
@@ -119,12 +128,12 @@ const App = ({hasAccounts, auth, lockConnect}) => {
             }}
           />
           <Stack.Screen
-            name="TransferScreen"
-            component={Transfer}
+            name="AccountManagementScreen"
+            component={AccountManagement}
             options={{
               headerTintColor: 'white',
               headerTransparent,
-              title: 'TRANSFER FUNDS',
+              title: 'MANAGE KEYS',
             }}
           />
           <Stack.Screen
