@@ -10,6 +10,7 @@ import {encryptJson} from 'utils/encrypt';
 import {navigate} from 'utils/navigation';
 import {translate} from 'utils/localize';
 import {saveOnKeychain} from 'utils/keychainStorage';
+import validateKeys from 'utils/keyValidation';
 
 export const addAccount = (name, keys, wallet) => async (
   dispatch,
@@ -69,10 +70,28 @@ export const forgetKey = (username, key) => async (dispatch, getState) => {
   });
   const encrypted = encryptJson({list: accounts}, mk);
   await saveOnKeychain('accounts', encrypted);
-  console.log('has saved, dispatch');
   dispatch({type: UPDATE_ACCOUNTS, payload: accounts});
 };
 
 export const addKey = (username, type, key) => async (dispatch, getState) => {
   console.log(username, type, key);
+  const keys = await validateKeys(username, key);
+  if (!keys) {
+    Toast.show(translate('toast.keys.not_a_key'));
+  } else if (!keys[type]) {
+    Toast.show(translate('toast.keys.not_wanted_key', {type}));
+  } else {
+    const mk = getState().auth.mk;
+    const previousAccounts = getState().accounts;
+    const accounts = previousAccounts.map((account) => {
+      if (account.name === username) {
+        return {...account, keys: {...account.keys, ...keys}};
+      } else {
+        return account;
+      }
+    });
+    const encrypted = encryptJson({list: accounts}, mk);
+    await saveOnKeychain('accounts', encrypted);
+    dispatch({type: UPDATE_ACCOUNTS, payload: accounts});
+  }
 };
