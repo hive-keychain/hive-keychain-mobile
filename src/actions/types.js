@@ -8,8 +8,7 @@ export const INIT_ACCOUNTS = 'INIT_ACCOUNTS';
 export const ADD_ACCOUNT = 'ADD_ACCOUNT';
 export const FORGET_ACCOUNTS = 'FORGET_ACCOUNTS';
 export const FORGET_ACCOUNT = 'FORGET_ACCOUNT';
-export const ADD_KEY = 'ADD_KEY';
-export const FORGET_KEY = 'FORGET_KEY';
+export const UPDATE_ACCOUNTS = 'UPDATE_ACCOUNTS';
 
 // hive
 export const ACTIVE_ACCOUNT = 'ACTIVE_ACCOUNT';

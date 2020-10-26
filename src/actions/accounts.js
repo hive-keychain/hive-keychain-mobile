@@ -4,8 +4,7 @@ import {
   ADD_ACCOUNT,
   FORGET_ACCOUNTS,
   FORGET_ACCOUNT,
-  ADD_KEY,
-  FORGET_KEY,
+  UPDATE_ACCOUNTS,
 } from './types';
 import {encryptJson} from 'utils/encrypt';
 import {navigate} from 'utils/navigation';
@@ -54,6 +53,24 @@ export const forgetAccount = (username) => async (dispatch, getState) => {
   }
 };
 
-export const forgetKey = (username, key) => async (dispatch) => {};
+export const forgetKey = (username, key) => async (dispatch, getState) => {
+  console.log(username, key);
+  const mk = getState().auth.mk;
+  const previousAccounts = getState().accounts;
+  const accounts = previousAccounts.map((account) => {
+    if (account.name === username) {
+      const keys = {...account.keys};
+      delete keys[key];
+      delete keys[`${key}Pubkey`];
+      return {...account, keys};
+    } else {
+      return account;
+    }
+  });
+  const encrypted = encryptJson({list: accounts}, mk);
+  await saveOnKeychain('accounts', encrypted);
+  console.log('has saved, dispatch');
+  dispatch({type: UPDATE_ACCOUNTS, payload: accounts});
+};
 
 export const addKey = (username, keys) => async (dispatch) => {};

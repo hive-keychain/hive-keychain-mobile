@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, Button} from 'react-native';
 import {connect} from 'react-redux';
 import Background from 'components/ui/Background';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -30,16 +30,34 @@ const AccountManagement = ({
         <View
           style={{color: 'white', display: 'flex', flexDirection: 'column'}}>
           <Text style={styles.keyAuthority}>Posting Key</Text>
+          <Button
+            title="X"
+            onPress={() => {
+              forgetKeyConnect(account.name, 'posting');
+            }}
+          />
           <Text style={styles.keyType}>Private:</Text>
           <Text style={styles.privateKey}>{posting}</Text>
           <Text style={styles.keyType}>Public:</Text>
           <Text style={styles.publicKey}>{postingPubkey}</Text>
           <Text style={styles.keyAuthority}>Active Key</Text>
+          <Button
+            title="X"
+            onPress={() => {
+              forgetKeyConnect(account.name, 'active');
+            }}
+          />
           <Text style={styles.keyType}>Private:</Text>
           <Text style={styles.privateKey}>{active}</Text>
           <Text style={styles.keyType}>Public:</Text>
           <Text style={styles.publicKey}>{activePubkey}</Text>
           <Text style={styles.keyAuthority}>Memo Key</Text>
+          <Button
+            title="X"
+            onPress={() => {
+              forgetKeyConnect(account.name, 'memo');
+            }}
+          />
           <Text style={styles.keyType}>Private:</Text>
           <Text style={styles.privateKey}>{memo}</Text>
           <Text style={styles.keyType}>Public:</Text>
