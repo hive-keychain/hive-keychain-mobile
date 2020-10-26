@@ -1,5 +1,5 @@
-import React from 'react';
-import {Text, View, StyleSheet, Button} from 'react-native';
+import React, {useState} from 'react';
+import {Text, View, StyleSheet, Button, TextInput} from 'react-native';
 import {connect} from 'react-redux';
 import Background from 'components/ui/Background';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -14,14 +14,6 @@ const AccountManagement = ({
   forgetAccountConnect,
   addKeyConnect,
 }) => {
-  const {
-    posting,
-    postingPubkey,
-    active,
-    activePubkey,
-    memo,
-    memoPubkey,
-  } = account.keys;
   return (
     <SafeAreaView>
       <Background>
@@ -29,39 +21,24 @@ const AccountManagement = ({
         <UserPicker username={account.name} accounts={[account]} />
         <View
           style={{color: 'white', display: 'flex', flexDirection: 'column'}}>
-          <Text style={styles.keyAuthority}>Posting Key</Text>
-          <Button
-            title="X"
-            onPress={() => {
-              forgetKeyConnect(account.name, 'posting');
-            }}
+          <Key
+            type="posting"
+            account={account}
+            forgetKeyConnect={forgetKeyConnect}
+            addKeyConnect={addKeyConnect}
           />
-          <Text style={styles.keyType}>Private:</Text>
-          <Text style={styles.privateKey}>{posting}</Text>
-          <Text style={styles.keyType}>Public:</Text>
-          <Text style={styles.publicKey}>{postingPubkey}</Text>
-          <Text style={styles.keyAuthority}>Active Key</Text>
-          <Button
-            title="X"
-            onPress={() => {
-              forgetKeyConnect(account.name, 'active');
-            }}
+          <Key
+            type="active"
+            account={account}
+            forgetKeyConnect={forgetKeyConnect}
+            addKeyConnect={addKeyConnect}
           />
-          <Text style={styles.keyType}>Private:</Text>
-          <Text style={styles.privateKey}>{active}</Text>
-          <Text style={styles.keyType}>Public:</Text>
-          <Text style={styles.publicKey}>{activePubkey}</Text>
-          <Text style={styles.keyAuthority}>Memo Key</Text>
-          <Button
-            title="X"
-            onPress={() => {
-              forgetKeyConnect(account.name, 'memo');
-            }}
+          <Key
+            type="memo"
+            account={account}
+            forgetKeyConnect={forgetKeyConnect}
+            addKeyConnect={addKeyConnect}
           />
-          <Text style={styles.keyType}>Private:</Text>
-          <Text style={styles.privateKey}>{memo}</Text>
-          <Text style={styles.keyType}>Public:</Text>
-          <Text style={styles.publicKey}>{memoPubkey}</Text>
         </View>
         <Separator height={50} />
         <EllipticButton
@@ -72,6 +49,41 @@ const AccountManagement = ({
         />
       </Background>
     </SafeAreaView>
+  );
+};
+
+const Key = ({type, account, forgetKeyConnect, addKeyConnect}) => {
+  const privateKey = account.keys[type];
+  const publicKey = account.keys[`${type}Pubkey`];
+  const [key, setKey] = useState('');
+  return (
+    <>
+      <Text style={styles.keyAuthority}>{type} Key</Text>
+      {privateKey ? (
+        <>
+          <Button
+            title="X"
+            onPress={() => {
+              forgetKeyConnect(account.name, type);
+            }}
+          />
+          <Text style={styles.keyType}>Private:</Text>
+          <Text style={styles.privateKey}>{privateKey}</Text>
+          <Text style={styles.keyType}>Public:</Text>
+          <Text style={styles.publicKey}>{publicKey}</Text>
+        </>
+      ) : (
+        <>
+          <TextInput value={key} onChangeText={setKey} />
+          <Button
+            title="V"
+            onPress={() => {
+              addKeyConnect(account.name, type, key);
+            }}
+          />
+        </>
+      )}
+    </>
   );
 };
 
