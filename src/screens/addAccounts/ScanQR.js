@@ -4,7 +4,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import {connect} from 'react-redux';
 import {RNCamera} from 'react-native-camera';
 
-import {validateFromObject} from 'utils/validateNewAccount';
+import {validateFromObject} from 'utils/keyValidation';
 import {addAccount} from 'actions';
 
 const ScanQR = ({addAccountConnect, route}) => {

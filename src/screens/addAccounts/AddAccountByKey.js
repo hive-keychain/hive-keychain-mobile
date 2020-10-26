@@ -11,7 +11,7 @@ import {connect} from 'react-redux';
 import Separator from 'components/ui/Separator';
 import {addAccount} from 'actions';
 import CustomInput from 'components/form/CustomInput';
-import validateNewAccount from 'utils/validateNewAccount';
+import validateNewAccount from 'utils/keyValidation';
 import {ACCOUNT, KEY} from 'root/.env.json';
 import Background from 'components/ui/Background';
 import TitleLogo from 'assets/addAccount/img_import.svg';

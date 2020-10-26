@@ -73,4 +73,6 @@ export const forgetKey = (username, key) => async (dispatch, getState) => {
   dispatch({type: UPDATE_ACCOUNTS, payload: accounts});
 };
 
-export const addKey = (username, type, key) => async (dispatch, getState) => {};
+export const addKey = (username, type, key) => async (dispatch, getState) => {
+  console.log(username, type, key);
+};
