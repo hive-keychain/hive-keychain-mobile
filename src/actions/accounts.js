@@ -55,43 +55,44 @@ export const forgetAccount = (username) => async (dispatch, getState) => {
 };
 
 export const forgetKey = (username, key) => async (dispatch, getState) => {
-  console.log(username, key);
-  const mk = getState().auth.mk;
-  const previousAccounts = getState().accounts;
-  const accounts = previousAccounts.map((account) => {
-    if (account.name === username) {
-      const keys = {...account.keys};
-      delete keys[key];
-      delete keys[`${key}Pubkey`];
-      return {...account, keys};
-    } else {
-      return account;
-    }
-  });
-  const encrypted = encryptJson({list: accounts}, mk);
-  await saveOnKeychain('accounts', encrypted);
-  dispatch({type: UPDATE_ACCOUNTS, payload: accounts});
+  dispatch(
+    updateAccounts((account) => {
+      if (account.name === username) {
+        const keys = {...account.keys};
+        delete keys[key];
+        delete keys[`${key}Pubkey`];
+        return {...account, keys};
+      } else {
+        return account;
+      }
+    }),
+  );
 };
 
 export const addKey = (username, type, key) => async (dispatch, getState) => {
-  console.log(username, type, key);
   const keys = await validateKeys(username, key);
   if (!keys) {
     Toast.show(translate('toast.keys.not_a_key'));
   } else if (!keys[type]) {
     Toast.show(translate('toast.keys.not_wanted_key', {type}));
   } else {
-    const mk = getState().auth.mk;
-    const previousAccounts = getState().accounts;
-    const accounts = previousAccounts.map((account) => {
-      if (account.name === username) {
-        return {...account, keys: {...account.keys, ...keys}};
-      } else {
-        return account;
-      }
-    });
-    const encrypted = encryptJson({list: accounts}, mk);
-    await saveOnKeychain('accounts', encrypted);
-    dispatch({type: UPDATE_ACCOUNTS, payload: accounts});
+    dispatch(
+      updateAccounts((account) => {
+        if (account.name === username) {
+          return {...account, keys: {...account.keys, ...keys}};
+        } else {
+          return account;
+        }
+      }),
+    );
   }
+};
+
+const updateAccounts = (mapper) => async (dispatch, getState) => {
+  const mk = getState().auth.mk;
+  const previousAccounts = getState().accounts;
+  const accounts = previousAccounts.map(mapper);
+  const encrypted = encryptJson({list: accounts}, mk);
+  await saveOnKeychain('accounts', encrypted);
+  dispatch({type: UPDATE_ACCOUNTS, payload: accounts});
 };
