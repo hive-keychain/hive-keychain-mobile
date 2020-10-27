@@ -1,5 +1,13 @@
 import React, {useState} from 'react';
-import {Text, View, StyleSheet, Button, TextInput} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
+import Clipboard from '@react-native-community/clipboard';
 import {connect} from 'react-redux';
 import Background from 'components/ui/Background';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -7,6 +15,8 @@ import Separator from 'components/ui/Separator';
 import UserPicker from 'components/form/UserPicker';
 import EllipticButton from 'components/form/EllipticButton';
 import {forgetKey, addKey, forgetAccount} from 'actions';
+import Toast from 'react-native-simple-toast';
+import {translate} from 'utils/localize';
 
 const AccountManagement = ({
   account,
@@ -68,9 +78,21 @@ const Key = ({type, account, forgetKeyConnect, addKeyConnect}) => {
             }}
           />
           <Text style={styles.keyType}>Private:</Text>
-          <Text style={styles.privateKey}>{privateKey}</Text>
+          <TouchableOpacity
+            onLongPress={() => {
+              Clipboard.setString(privateKey);
+              Toast.show(translate('toast.keys.copied'));
+            }}>
+            <Text style={styles.privateKey}>{privateKey}</Text>
+          </TouchableOpacity>
           <Text style={styles.keyType}>Public:</Text>
-          <Text style={styles.publicKey}>{publicKey}</Text>
+          <TouchableOpacity
+            onLongPress={() => {
+              Clipboard.setString(publicKey);
+              Toast.show(translate('toast.keys.copied'));
+            }}>
+            <Text style={styles.publicKey}>{publicKey}</Text>
+          </TouchableOpacity>
         </>
       ) : (
         <>
