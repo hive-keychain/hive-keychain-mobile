@@ -8,7 +8,7 @@ import {
   FETCH_DELEGATORS,
   FETCH_DELEGATEES,
 } from './types';
-import {client} from 'utils/dhive';
+import dhive, {client} from 'utils/dhive';
 import {getBittrexPrices} from 'utils/price';
 import {getDelegatees, getDelegators} from 'utils/hiveUtils';
 
@@ -80,11 +80,18 @@ export const fetchAccountTransactions = (accountName, start) => async (
 };
 
 const getAccountTransactions = async (accountName, start) => {
-  const transactions = await client.call(
-    'condenser_api',
-    'get_account_history',
-    [accountName, start || -1, start ? Math.min(500, start) : 500],
+  const op = dhive.utils.operationOrders;
+  console.log(op);
+  const operationsBitmask = dhive.utils.makeBitMaskFilter([op.transfer]);
+  console.log(operationsBitmask);
+
+  const transactions = await client.database.getAccountHistory(
+    accountName,
+    start || -1,
+    start ? Math.min(1000, start) : 1000,
+    operationsBitmask,
   );
+  console.log(transactions);
   const transfers = transactions
     .filter((e) => e[1].op[0] === 'transfer')
     .map((e) => {
@@ -96,7 +103,7 @@ const getAccountTransactions = async (accountName, start) => {
       };
     })
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  if (start && Math.min(500, start) !== 500) {
+  if (start && Math.min(1000, start) !== 1000) {
     transfers[transfers.length - 1].last = true;
   }
   return transfers;

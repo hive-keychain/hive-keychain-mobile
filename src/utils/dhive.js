@@ -3,4 +3,4 @@ var hive = require('@hiveio/dhive');
 // hive.decodeMemo = window.decodeMemo;
 // hive.encodeMemo = window.encodeMemo;
 export default hive;
-export const client = new hive.Client('https://anyx.io');
+export const client = new hive.Client('https://api.hive.blog');

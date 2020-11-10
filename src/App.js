@@ -24,6 +24,7 @@ import {
 import Hive from 'assets/wallet/hive.svg';
 import Search from 'assets/wallet/search.svg';
 import Key from 'assets/addAccount/icon_key.svg';
+import Menu from 'assets/wallet/menu.svg';
 import {lock} from 'actions';
 import {navigate} from 'utils/navigation';
 
@@ -107,18 +108,21 @@ const App = ({hasAccounts, auth, lockConnect}) => {
               headerRight: () => {
                 return (
                   <>
-                    <Search
-                      style={styles(width, height).right}
-                      onPress={() => {
-                        lockConnect();
-                      }}
-                    />
-                    <Key
-                      style={styles(width, height).right}
-                      onPress={() => {
-                        navigate('AccountManagementScreen');
-                      }}
-                    />
+                    <Menu width={25} height={25} style={{marginRight: 10}} />
+                    {
+                      // <Search
+                      //   style={styles(width, height).right}
+                      //   onPress={() => {
+                      //     lockConnect();
+                      //   }}
+                      // />
+                      // <Key
+                      //   style={styles(width, height).right}
+                      //   onPress={() => {
+                      //     navigate('AccountManagementScreen');
+                      //   }}
+                      // />
+                    }
                   </>
                 );
               },
