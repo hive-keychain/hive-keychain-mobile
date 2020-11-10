@@ -1,7 +1,13 @@
-import {INIT_TRANSACTIONS, ADD_TRANSACTIONS} from '../actions/types';
+import {
+  INIT_TRANSACTIONS,
+  ADD_TRANSACTIONS,
+  ACTIVE_ACCOUNT,
+} from '../actions/types';
 
 export default (state = [], {type, payload}) => {
   switch (type) {
+    case ACTIVE_ACCOUNT:
+      return [];
     case INIT_TRANSACTIONS:
       return payload;
     case ADD_TRANSACTIONS:

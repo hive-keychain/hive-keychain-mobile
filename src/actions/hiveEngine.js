@@ -3,6 +3,7 @@ import {
   LOAD_USER_TOKENS,
   LOAD_TOKENS_MARKET,
   LOAD_TOKEN_HISTORY,
+  CLEAR_USER_TOKENS,
 } from './types';
 import hsc, {hiveEngineAPI} from 'api/hiveEngine';
 
@@ -21,6 +22,9 @@ export const loadTokensMarket = () => async (dispatch) => {
 };
 
 export const loadUserTokens = (account) => async (dispatch) => {
+  dispatch({
+    type: CLEAR_USER_TOKENS,
+  });
   const tokensBalance = (await hsc.find('tokens', 'balances', {account}))
     .filter((t) => parseFloat(t.balance) !== 0)
     .sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));

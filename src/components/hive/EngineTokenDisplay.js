@@ -29,8 +29,8 @@ const EngineTokenDisplay = ({token, tokensList, market}) => {
       amountStyle={styles.amount}
       value={parseFloat(token.balance)}
       price={{
-        Usd: withCommas(tokenMarket.lastPrice),
-        DailyUsd: parseFloat(tokenMarket.priceChangePercent),
+        Usd: withCommas(tokenMarket ? tokenMarket.lastPrice : 0),
+        DailyUsd: parseFloat(tokenMarket ? tokenMarket.priceChangePercent : 0),
       }}
       buttons={[
         <Send

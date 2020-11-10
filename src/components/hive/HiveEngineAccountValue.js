@@ -4,10 +4,14 @@ import {withCommas} from 'utils/format';
 
 const HiveEngineAccountValue = ({tokens, tokensMarket, bittrex}) => {
   let accountValue = 0;
-  for (const token of tokens) {
-    accountValue +=
-      parseFloat(token.balance) *
-      parseFloat(tokensMarket.find((e) => e.symbol === token.symbol).lastPrice);
+  if (tokensMarket.length) {
+    for (const token of tokens) {
+      const {balance, symbol} = token;
+      const market = tokensMarket.find((e) => e.symbol === symbol);
+      if (market) {
+        accountValue += parseFloat(balance) * parseFloat(market.lastPrice);
+      }
+    }
   }
   return (
     <Text style={styles.accountValue}>{`$ ${withCommas(
