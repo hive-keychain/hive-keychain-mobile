@@ -94,6 +94,8 @@ target 'mobileKeychain' do
 
 
 
+  pod 'react-native-version-info', :path => '../node_modules/react-native-version-info'
+
   target 'mobileKeychainTests' do
     inherit! :complete
     # Pods for testing

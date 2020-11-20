@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import {connect} from 'react-redux';
-import {useWindowDimensions, StyleSheet, Text} from 'react-native';
+import {useWindowDimensions, StyleSheet} from 'react-native';
 
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
@@ -15,6 +15,8 @@ import AccountManagement from 'screens/settings/AccountManagement';
 import Wallet from 'screens/wallet/Main';
 import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';
+import About from 'screens/settings/About';
+
 import MoreInformation from 'components/infoButtons/MoreInfo';
 import InfoPIN from 'components/infoButtons/ForgotPin';
 import DrawerContent from 'components/drawer/Content';
@@ -25,7 +27,7 @@ import {
   modalOptions,
 } from 'utils/navigation';
 import Hive from 'assets/wallet/hive.svg';
-import Menu from 'assets/wallet/menu.svg';
+//import Menu from 'assets/wallet/menu.svg';
 import {lock} from 'actions';
 
 const Stack = createStackNavigator();
@@ -102,6 +104,7 @@ const App = ({hasAccounts, auth, lockConnect}) => {
             activeTintColor: '#FFFFFF',
             inactiveTintColor: '#FFFFFF',
             activeBackgroundColor: '#A3112A',
+            itemStyle: {marginHorizontal: 0, borderRadius: 0, paddingLeft: 10},
           }}
           drawerContent={(props) => <DrawerContent {...props} />}>
           <Drawer.Screen name="WALLET" component={renderWalletNavigator} />
@@ -117,6 +120,7 @@ const App = ({hasAccounts, auth, lockConnect}) => {
               title: 'MANAGE KEYS',
             }}
           />
+          <Drawer.Screen name="ABOUT" component={About} />
         </Drawer.Navigator>
       );
     }

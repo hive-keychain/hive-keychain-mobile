@@ -16,7 +16,7 @@ export default ({username}) => {
 const getDimensionedStyles = ({width, height}) =>
   StyleSheet.create({
     container: {
-      marginTop: 40,
+      marginVertical: 40,
       paddingBottom: 40,
       borderBottomColor: 'white',
       borderBottomWidth: 1,
