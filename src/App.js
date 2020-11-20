@@ -97,6 +97,7 @@ const App = ({hasAccounts, auth, lockConnect}) => {
       return (
         <Drawer.Navigator
           drawerStyle={styles().drawer}
+          hideStatusBar
           drawerContentOptions={{
             activeTintColor: '#FFFFFF',
             inactiveTintColor: '#FFFFFF',
@@ -104,6 +105,9 @@ const App = ({hasAccounts, auth, lockConnect}) => {
           drawerContent={(props) => <DrawerContent {...props} />}>
           <Drawer.Screen name="WALLET" component={renderWalletNavigator} />
           <Drawer.Screen
+            headerShown
+            headerTitle="MANAGE KEYS"
+            headerTintColor="white"
             name="AccountManagementScreen"
             component={AccountManagement}
             options={{
