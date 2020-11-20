@@ -2,6 +2,7 @@ import * as Keychain from 'react-native-keychain';
 import {chunkArray} from 'utils/format';
 
 export const saveOnKeychain = async (radix, string) => {
+  const biometrics = await Keychain.getSupportedBiometryType();
   const chunks = chunkArray(string.split(''), 300).map((e) => e.join(''));
   await Keychain.setGenericPassword(radix, chunks.length.toString(), {
     service: radix,
@@ -11,7 +12,7 @@ export const saveOnKeychain = async (radix, string) => {
       service: `${radix}_${i}`,
       storage: Keychain.STORAGE_TYPE.FB,
     };
-    if (i === 0) {
+    if (i === 0 && biometrics) {
       options.accessControl =
         Keychain.ACCESS_CONTROL.BIOMETRY_ANY_OR_DEVICE_PASSCODE;
       options.storage = Keychain.STORAGE_TYPE.RSA;
@@ -39,11 +40,10 @@ export const saveOnKeychain = async (radix, string) => {
 export const getFromKeychain = async (radix) => {
   let string = '';
   let i = 0;
-  const length = (
-    await Keychain.getGenericPassword({
-      service: radix,
-    })
-  ).password;
+  const password = await Keychain.getGenericPassword({
+    service: radix,
+  });
+  const length = password.password;
   while (i < length) {
     const options = {
       service: `${radix}_${i}`,
@@ -51,9 +51,13 @@ export const getFromKeychain = async (radix) => {
     if (i === 0) {
       options.authenticationPrompt = {title: 'Authenticate'};
     }
-    const cred = await Keychain.getGenericPassword(options);
-    string += cred.password;
-    i++;
+    try {
+      const cred = await Keychain.getGenericPassword(options);
+      string += cred.password;
+      i++;
+    } catch (e) {
+      console.log(e);
+    }
   }
   return string;
 };

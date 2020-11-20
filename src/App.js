@@ -108,7 +108,14 @@ const App = ({hasAccounts, auth, lockConnect}) => {
               headerRight: () => {
                 return (
                   <>
-                    <Menu width={25} height={25} style={{marginRight: 10}} />
+                    <Menu
+                      width={25}
+                      height={25}
+                      style={{marginRight: 10}}
+                      onPress={() => {
+                        lockConnect();
+                      }}
+                    />
                     {
                       // <Search
                       //   style={styles(width, height).right}
