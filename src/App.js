@@ -100,10 +100,9 @@ const App = ({hasAccounts, auth, lockConnect}) => {
           drawerContentOptions={{
             activeTintColor: '#FFFFFF',
             inactiveTintColor: '#FFFFFF',
-            //activeBackgroundColor: '#B9122F',
           }}
           drawerContent={(props) => <DrawerContent {...props} />}>
-          <Drawer.Screen name="Wallet" component={renderWalletNavigator} />
+          <Drawer.Screen name="WALLET" component={renderWalletNavigator} />
           <Drawer.Screen
             name="AccountManagementScreen"
             component={AccountManagement}
@@ -130,34 +129,34 @@ const App = ({hasAccounts, auth, lockConnect}) => {
           headerTitleAlign: 'center',
           title: 'WALLET',
           headerTintColor: 'white',
-          headerRight: () => {
-            return (
-              <>
-                <Menu
-                  width={25}
-                  height={25}
-                  style={{marginRight: 10}}
-                  onPress={() => {
-                    lockConnect();
-                  }}
-                />
-                {
-                  // <Search
-                  //   style={styles(width, height).right}
-                  //   onPress={() => {
-                  //     lockConnect();
-                  //   }}
-                  // />
-                  // <Key
-                  //   style={styles(width, height).right}
-                  //   onPress={() => {
-                  //     navigate('AccountManagementScreen');
-                  //   }}
-                  // />
-                }
-              </>
-            );
-          },
+          // {headerRight: () => {
+          //   return (
+          //     <>
+          //       <Menu
+          //         width={25}
+          //         height={25}
+          //         style={{marginRight: 10}}
+          //         onPress={() => {
+          //           lockConnect();
+          //         }}
+          //       />
+          //       {
+          //         // <Search
+          //         //   style={styles(width, height).right}
+          //         //   onPress={() => {
+          //         //     lockConnect();
+          //         //   }}
+          //         // />
+          //         // <Key
+          //         //   style={styles(width, height).right}
+          //         //   onPress={() => {
+          //         //     navigate('AccountManagementScreen');
+          //         //   }}
+          //         // />
+          //       }
+          //     </>
+          //   );
+          // },}
           headerLeft: () => {
             return <Hive style={styles(width, height).left} />;
           },
