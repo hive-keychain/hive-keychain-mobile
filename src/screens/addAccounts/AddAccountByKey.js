@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   useWindowDimensions,
+  StatusBar,
 } from 'react-native';
 import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
@@ -38,6 +39,7 @@ const AddAccountByKey = ({addAccountConnect, navigation, route}) => {
 
   return (
     <Background>
+      <StatusBar backgroundColor="black" />
       <View style={styles.container}>
         <Separator height={height / 7.5} />
         <TitleLogo />

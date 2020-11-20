@@ -101,6 +101,7 @@ const App = ({hasAccounts, auth, lockConnect}) => {
           drawerContentOptions={{
             activeTintColor: '#FFFFFF',
             inactiveTintColor: '#FFFFFF',
+            activeBackgroundColor: '#A3112A',
           }}
           drawerContent={(props) => <DrawerContent {...props} />}>
           <Drawer.Screen name="WALLET" component={renderWalletNavigator} />
