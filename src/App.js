@@ -1,8 +1,10 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+
 import {connect} from 'react-redux';
-import {useWindowDimensions, StyleSheet} from 'react-native';
+import {useWindowDimensions, StyleSheet, Text} from 'react-native';
 
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
@@ -15,6 +17,7 @@ import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';
 import MoreInformation from 'components/infoButtons/MoreInfo';
 import InfoPIN from 'components/infoButtons/ForgotPin';
+import DrawerContent from 'components/drawer/Content';
 import {
   setNavigator,
   headerTransparent,
@@ -22,14 +25,12 @@ import {
   modalOptions,
 } from 'utils/navigation';
 import Hive from 'assets/wallet/hive.svg';
-import Search from 'assets/wallet/search.svg';
-import Key from 'assets/addAccount/icon_key.svg';
 import Menu from 'assets/wallet/menu.svg';
 import {lock} from 'actions';
-import {navigate} from 'utils/navigation';
 
 const Stack = createStackNavigator();
 const Root = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const App = ({hasAccounts, auth, lockConnect}) => {
   const {height, width} = useWindowDimensions();
@@ -94,51 +95,16 @@ const App = ({hasAccounts, auth, lockConnect}) => {
       );
     } else {
       return (
-        <Stack.Navigator>
-          <Stack.Screen
-            name="WalletScreen"
-            component={Wallet}
-            options={{
-              headerStyle: {
-                backgroundColor: '#A3112A',
-              },
-              headerTitleAlign: 'center',
-              title: 'WALLET',
-              headerTintColor: 'white',
-              headerRight: () => {
-                return (
-                  <>
-                    <Menu
-                      width={25}
-                      height={25}
-                      style={{marginRight: 10}}
-                      onPress={() => {
-                        lockConnect();
-                      }}
-                    />
-                    {
-                      // <Search
-                      //   style={styles(width, height).right}
-                      //   onPress={() => {
-                      //     lockConnect();
-                      //   }}
-                      // />
-                      // <Key
-                      //   style={styles(width, height).right}
-                      //   onPress={() => {
-                      //     navigate('AccountManagementScreen');
-                      //   }}
-                      // />
-                    }
-                  </>
-                );
-              },
-              headerLeft: () => {
-                return <Hive style={styles(width, height).left} />;
-              },
-            }}
-          />
-          <Stack.Screen
+        <Drawer.Navigator
+          drawerStyle={styles().drawer}
+          drawerContentOptions={{
+            activeTintColor: '#FFFFFF',
+            inactiveTintColor: '#FFFFFF',
+            //activeBackgroundColor: '#B9122F',
+          }}
+          drawerContent={(props) => <DrawerContent {...props} />}>
+          <Drawer.Screen name="Wallet" component={renderWalletNavigator} />
+          <Drawer.Screen
             name="AccountManagementScreen"
             component={AccountManagement}
             options={{
@@ -147,34 +113,83 @@ const App = ({hasAccounts, auth, lockConnect}) => {
               title: 'MANAGE KEYS',
             }}
           />
-          <Stack.Screen
-            name="AddAccountFromWalletScreen"
-            options={{
-              title: 'ADD ACCOUNT',
-              headerRight: () => {
-                return <MoreInformation type="moreInfo" />;
-              },
-              headerTintColor: 'white',
-              headerTransparent,
-            }}
-            component={AddAccountByKey}
-          />
-          <Stack.Screen
-            name="ScanQRScreen"
-            options={{
-              headerTransparent,
-              headerTintColor: 'white',
-              title: '',
-              headerRight: () => {
-                return <MoreInformation type="qr" />;
-              },
-            }}
-            component={ScanQR}
-          />
-        </Stack.Navigator>
+        </Drawer.Navigator>
       );
     }
   };
+
+  const renderWalletNavigator = () => (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="WalletScreen"
+        component={Wallet}
+        options={{
+          headerStyle: {
+            backgroundColor: '#A3112A',
+          },
+          headerTitleAlign: 'center',
+          title: 'WALLET',
+          headerTintColor: 'white',
+          headerRight: () => {
+            return (
+              <>
+                <Menu
+                  width={25}
+                  height={25}
+                  style={{marginRight: 10}}
+                  onPress={() => {
+                    lockConnect();
+                  }}
+                />
+                {
+                  // <Search
+                  //   style={styles(width, height).right}
+                  //   onPress={() => {
+                  //     lockConnect();
+                  //   }}
+                  // />
+                  // <Key
+                  //   style={styles(width, height).right}
+                  //   onPress={() => {
+                  //     navigate('AccountManagementScreen');
+                  //   }}
+                  // />
+                }
+              </>
+            );
+          },
+          headerLeft: () => {
+            return <Hive style={styles(width, height).left} />;
+          },
+        }}
+      />
+
+      <Stack.Screen
+        name="AddAccountFromWalletScreen"
+        options={{
+          title: 'ADD ACCOUNT',
+          headerRight: () => {
+            return <MoreInformation type="moreInfo" />;
+          },
+          headerTintColor: 'white',
+          headerTransparent,
+        }}
+        component={AddAccountByKey}
+      />
+      <Stack.Screen
+        name="ScanQRScreen"
+        options={{
+          headerTransparent,
+          headerTintColor: 'white',
+          title: '',
+          headerRight: () => {
+            return <MoreInformation type="qr" />;
+          },
+        }}
+        component={ScanQR}
+      />
+    </Stack.Navigator>
+  );
 
   const renderRootNavigator = () => {
     return (
@@ -203,13 +218,19 @@ const App = ({hasAccounts, auth, lockConnect}) => {
 
 const mapStateToProps = (state) => {
   console.log(state);
-  return {hasAccounts: state.lastAccount.has, auth: state.auth};
+  return {
+    hasAccounts: state.lastAccount.has,
+    auth: state.auth,
+  };
 };
 
 const styles = (width, height) =>
   StyleSheet.create({
     left: {marginHorizontal: 0.05 * width},
     right: {marginHorizontal: 0.05 * width, marginBottom: -4},
+    drawer: {
+      backgroundColor: '#000000',
+    },
   });
 
 export default connect(mapStateToProps, {lockConnect: lock})(App);

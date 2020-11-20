@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Image, StyleSheet, useWindowDimensions} from 'react-native';
+import {View, StyleSheet, useWindowDimensions} from 'react-native';
 import {Picker} from '@react-native-community/picker';
 import {translate} from 'utils/localize';
+import UserProfilePicture from 'components/ui/UserProfilePicture';
 
 const UserPicker = ({username, accounts, onAccountSelected, addAccount}) => {
   const {width, height} = useWindowDimensions();
@@ -22,10 +23,7 @@ const UserPicker = ({username, accounts, onAccountSelected, addAccount}) => {
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={{uri: `https://images.hive.blog/u/${username}/avatar`}}
-      />
+      <UserProfilePicture style={styles.image} username={username} />
       <Picker
         style={styles.picker}
         selectedValue={username}

@@ -20,6 +20,7 @@
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/picker": "^1.8.1",
     "@react-navigation/compat": "^5.3.8",
+    "@react-navigation/drawer": "^5.11.3",
     "@react-navigation/native": "^5.8.8",
     "@react-navigation/stack": "^5.12.5",
     "assert": "^2.0.0",
