@@ -7,7 +7,7 @@ import {
 } from '../actions/types';
 import {persistConfig} from './configs';
 
-const lastAccountReducer = (state = {has: true}, {type, payload}) => {
+const lastAccountReducer = (state = {has: false}, {type, payload}) => {
   switch (type) {
     case ADD_ACCOUNT:
       return {...state, has: true};
