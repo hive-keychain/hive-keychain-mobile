@@ -27,7 +27,7 @@ import {
   modalOptions,
 } from 'utils/navigation';
 import Hive from 'assets/wallet/hive.svg';
-//import Menu from 'assets/wallet/menu.svg';
+import Menu from 'assets/wallet/menu.svg';
 import {lock} from 'actions';
 
 const Stack = createStackNavigator();
@@ -100,6 +100,7 @@ const App = ({hasAccounts, auth, lockConnect}) => {
         <Drawer.Navigator
           drawerStyle={styles().drawer}
           hideStatusBar
+          drawerPosition="right"
           drawerContentOptions={{
             activeTintColor: '#FFFFFF',
             inactiveTintColor: '#FFFFFF',
@@ -131,45 +132,32 @@ const App = ({hasAccounts, auth, lockConnect}) => {
       <Stack.Screen
         name="WalletScreen"
         component={Wallet}
-        options={{
+        options={({navigation}) => ({
           headerStyle: {
             backgroundColor: '#A3112A',
           },
           headerTitleAlign: 'center',
           title: 'WALLET',
           headerTintColor: 'white',
-          // {headerRight: () => {
-          //   return (
-          //     <>
-          //       <Menu
-          //         width={25}
-          //         height={25}
-          //         style={{marginRight: 10}}
-          //         onPress={() => {
-          //           lockConnect();
-          //         }}
-          //       />
-          //       {
-          //         // <Search
-          //         //   style={styles(width, height).right}
-          //         //   onPress={() => {
-          //         //     lockConnect();
-          //         //   }}
-          //         // />
-          //         // <Key
-          //         //   style={styles(width, height).right}
-          //         //   onPress={() => {
-          //         //     navigate('AccountManagementScreen');
-          //         //   }}
-          //         // />
-          //       }
-          //     </>
-          //   );
-          // },}
+          headerRight: () => {
+            return (
+              <>
+                <Menu
+                  width={25}
+                  height={25}
+                  style={{marginRight: 10}}
+                  onPress={() => {
+                    navigation.openDrawer();
+                  }}
+                />
+              </>
+            );
+          },
+
           headerLeft: () => {
             return <Hive style={styles(width, height).left} />;
           },
-        }}
+        })}
       />
 
       <Stack.Screen
