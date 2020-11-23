@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "android-bundle": "cd android && ./gradlew bundleRelease",
+    "android-release": "react-native run-android --variant=release",
+    "android-clean": "cd android && ./gradlew clean && cd ..",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "android-clean": "cd android && ./gradlew clean && cd ..",
     "dep-clean": "rm -rf node_modules && npm install && npx jetify",
     "clean": "npm run dep-clean && npm run android-clean && npm run start"
   },
