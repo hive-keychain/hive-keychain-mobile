@@ -1,5 +1,6 @@
 import React from 'react';
-import {Image, StyleSheet, useWindowDimensions} from 'react-native';
+import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
+import Image from 'react-native-fast-image';
 import TokenDisplay from './TokenDisplay';
 import {withCommas} from 'utils/format';
 import HiveEngine from 'assets/wallet/hive_engine.png';
@@ -17,7 +18,7 @@ const EngineTokenDisplay = ({token, tokensList, market}) => {
     <Image
       style={styles.icon}
       source={{
-        uri: metadata.icon || Image.resolveAssetSource(HiveEngine).uri,
+        uri: metadata.icon || Img.resolveAssetSource(HiveEngine).uri,
       }}
     />
   );
