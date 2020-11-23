@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import {lock} from 'actions';
 
 const HeaderContent = (props) => {
-  const {user, lockConnect} = props;
+  const {user, lockConnect, navigation} = props;
   return (
     <DrawerContentScrollView {...props}>
       <DrawerHeader username={user} />
@@ -19,6 +19,7 @@ const HeaderContent = (props) => {
         label="LOG OUT"
         onPress={() => {
           lockConnect();
+          navigation.closeDrawer();
         }}
       />
     </DrawerContentScrollView>
