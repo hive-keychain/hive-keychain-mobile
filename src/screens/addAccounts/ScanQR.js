@@ -9,10 +9,14 @@ import {addAccount} from 'actions';
 
 const ScanQR = ({addAccountConnect, route}) => {
   const onSuccess = async ({data}) => {
-    const obj = JSON.parse(data.replace('keychain://add_account=', ''));
-    const keys = await validateFromObject(obj);
-    const wallet = route.params ? route.params.wallet : false;
-    addAccountConnect(obj.name, keys, wallet);
+    try {
+      const obj = JSON.parse(data.replace('keychain://add_account=', ''));
+      const keys = await validateFromObject(obj);
+      const wallet = route.params ? route.params.wallet : false;
+      addAccountConnect(obj.name, keys, wallet);
+    } catch (e) {
+      console.log(e, data);
+    }
   };
   return (
     <QRCodeScanner
