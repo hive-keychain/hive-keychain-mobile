@@ -10,6 +10,9 @@ import ViewIcon from 'assets/settings/view.svg';
 import Copy from 'assets/settings/copy.svg';
 
 export default ({type, account, forgetKey, addKey, containerStyle}) => {
+  if (!account) {
+    return null;
+  }
   const privateKey = account.keys[type];
   const publicKey = account.keys[`${type}Pubkey`];
   const [key, setKey] = useState('');

@@ -32,11 +32,13 @@ const UserPicker = ({username, accounts, onAccountSelected, addAccount}) => {
         {accountsList.map((account) => (
           <Picker.Item key={account} label={`@${account}`} value={account} />
         ))}
-        <Picker.Item
-          key="add_new_account"
-          label={translate('components.picker.add_account')}
-          value="add_new_account"
-        />
+        {addAccount && (
+          <Picker.Item
+            key="add_new_account"
+            label={translate('components.picker.add_account')}
+            value="add_new_account"
+          />
+        )}
       </Picker>
     </View>
   );

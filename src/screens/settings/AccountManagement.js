@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, StatusBar, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -15,7 +15,9 @@ const AccountManagement = ({
   forgetAccountConnect,
   addKeyConnect,
   navigation,
+  accounts,
 }) => {
+  const [username, setUsername] = useState(account.name);
   return (
     <SafeAreaView backgroundColor="white">
       <StatusBar backgroundColor="black" />
@@ -31,7 +33,13 @@ const AccountManagement = ({
       </View>
 
       <ScrollView style={styles.scrollview}>
-        <UserPicker username={account.name} accounts={[account]} />
+        <UserPicker
+          username={username}
+          accounts={accounts.map((acc) => acc.name)}
+          onAccountSelected={(name) => {
+            setUsername(name);
+          }}
+        />
         <Text style={styles.disclaimer}>
           To receive funds, simply share your account name (displayed above)
           with the sender.
@@ -52,21 +60,21 @@ const AccountManagement = ({
         <Key
           type="posting"
           containerStyle={styles.keyOdd}
-          account={account}
+          account={accounts.find((e) => e.name === username)}
           forgetKey={forgetKeyConnect}
           addKey={addKeyConnect}
         />
         <Key
           type="active"
           containerStyle={styles.keyEven}
-          account={account}
+          account={accounts.find((e) => e.name === username)}
           forgetKey={forgetKeyConnect}
           addKey={addKeyConnect}
         />
         <Key
           type="memo"
           containerStyle={styles.keyOdd}
-          account={account}
+          account={accounts.find((e) => e.name === username)}
           forgetKey={forgetKeyConnect}
           addKey={addKeyConnect}
         />
@@ -101,7 +109,10 @@ const styles = StyleSheet.create({
   scrollview: {},
 });
 
-const mapStateToProps = (state) => ({account: state.activeAccount});
+const mapStateToProps = (state) => ({
+  account: state.activeAccount,
+  accounts: state.accounts,
+});
 
 export default connect(mapStateToProps, {
   forgetAccountConnect: forgetAccount,
