@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, StatusBar, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -18,6 +18,12 @@ const AccountManagement = ({
   accounts,
 }) => {
   const [username, setUsername] = useState(account.name);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setUsername(account.name);
+    });
+    return unsubscribe;
+  }, [navigation, account.name]);
   return (
     <SafeAreaView backgroundColor="white">
       <StatusBar backgroundColor="black" />
@@ -63,6 +69,7 @@ const AccountManagement = ({
           account={accounts.find((e) => e.name === username)}
           forgetKey={forgetKeyConnect}
           addKey={addKeyConnect}
+          navigation={navigation}
         />
         <Key
           type="active"
@@ -70,6 +77,7 @@ const AccountManagement = ({
           account={accounts.find((e) => e.name === username)}
           forgetKey={forgetKeyConnect}
           addKey={addKeyConnect}
+          navigation={navigation}
         />
         <Key
           type="memo"
@@ -77,6 +85,7 @@ const AccountManagement = ({
           account={accounts.find((e) => e.name === username)}
           forgetKey={forgetKeyConnect}
           addKey={addKeyConnect}
+          navigation={navigation}
         />
         <Separator height={20} />
         <EllipticButton

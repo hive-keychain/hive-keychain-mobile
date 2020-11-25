@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, Button, StyleSheet, View, TextInput} from 'react-native';
 import Separator from 'components/ui/Separator';
 import Clipboard from '@react-native-community/clipboard';
@@ -9,7 +9,14 @@ import Remove from 'assets/settings/remove.svg';
 import ViewIcon from 'assets/settings/view.svg';
 import Copy from 'assets/settings/copy.svg';
 
-export default ({type, account, forgetKey, addKey, containerStyle}) => {
+export default ({
+  type,
+  account,
+  forgetKey,
+  addKey,
+  containerStyle,
+  navigation,
+}) => {
   if (!account) {
     return null;
   }
@@ -17,6 +24,14 @@ export default ({type, account, forgetKey, addKey, containerStyle}) => {
   const publicKey = account.keys[`${type}Pubkey`];
   const [key, setKey] = useState('');
   const [isPKShown, showPK] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      showPK(false);
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <View style={containerStyle}>
       <View style={styles.row}>
