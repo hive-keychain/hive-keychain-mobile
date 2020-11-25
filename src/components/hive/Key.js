@@ -1,12 +1,5 @@
 import React, {useState} from 'react';
-import {
-  Text,
-  Button,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  TextInput,
-} from 'react-native';
+import {Text, Button, StyleSheet, View, TextInput} from 'react-native';
 import Separator from 'components/ui/Separator';
 import Clipboard from '@react-native-community/clipboard';
 import Toast from 'react-native-simple-toast';
@@ -39,7 +32,7 @@ export default ({type, account, forgetKey, addKey, containerStyle}) => {
             <Text style={styles.keyType}>
               {translate('common.public').toUpperCase()}
             </Text>
-            <CopyKey key={publicKey} />
+            <CopyKey wif={publicKey} />
           </View>
           <Separator height={5} />
 
@@ -56,7 +49,7 @@ export default ({type, account, forgetKey, addKey, containerStyle}) => {
                   showPK(!isPKShown);
                 }}
               />
-              <CopyKey key={privateKey} />
+              <CopyKey wif={privateKey} />
             </View>
           </View>
           <Separator height={5} />
@@ -90,11 +83,11 @@ const RemoveKey = ({forgetKey}) => {
   );
 };
 
-const CopyKey = ({key}) => {
+const CopyKey = ({wif}) => {
   return (
     <RoundButton
       onPress={() => {
-        Clipboard.setString(key);
+        Clipboard.setString(wif);
         Toast.show(translate('toast.keys.copied'));
       }}
       size={30}
@@ -117,7 +110,7 @@ const ViewKey = ({toggle, isPKShown}) => {
 
 const hidePrivateKey = (privateKey) => {
   let hiddenKey = '';
-  for (const c of privateKey) {
+  for (let i = 0; i < privateKey.length; i++) {
     hiddenKey += '\u25cf ';
   }
   return hiddenKey;
