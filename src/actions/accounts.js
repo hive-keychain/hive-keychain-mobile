@@ -11,6 +11,7 @@ import {navigate} from 'utils/navigation';
 import {translate} from 'utils/localize';
 import {saveOnKeychain} from 'utils/keychainStorage';
 import validateKeys from 'utils/keyValidation';
+import {loadAccount} from 'actions/hive';
 
 export const addAccount = (name, keys, wallet) => async (
   dispatch,
@@ -30,6 +31,7 @@ export const addAccount = (name, keys, wallet) => async (
   const encrypted = encryptJson({list: accounts}, mk);
   await saveOnKeychain('accounts', encrypted);
   if (wallet) {
+    dispatch(loadAccount(name));
     navigate('WalletScreen');
   }
 };
