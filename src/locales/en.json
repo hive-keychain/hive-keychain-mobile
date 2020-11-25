@@ -12,6 +12,8 @@
     "import": "Import",
     "username": "username",
     "privateKey": "Private Key",
+    "private": "Private",
+    "public": "Public",
     "amount": "amount",
     "memo": "memo",
     "send": "Send",

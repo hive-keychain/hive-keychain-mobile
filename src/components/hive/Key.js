@@ -7,41 +7,62 @@ import {
   View,
   TextInput,
 } from 'react-native';
+import Separator from 'components/ui/Separator';
 import Clipboard from '@react-native-community/clipboard';
 import Toast from 'react-native-simple-toast';
 import {translate} from 'utils/localize';
+import RoundButton from 'components/operations/OperationsButtons';
+import Remove from 'assets/settings/remove.svg';
+import ViewIcon from 'assets/settings/view.svg';
+import Copy from 'assets/settings/copy.svg';
 
 export default ({type, account, forgetKey, addKey, containerStyle}) => {
   const privateKey = account.keys[type];
   const publicKey = account.keys[`${type}Pubkey`];
   const [key, setKey] = useState('');
+  const [isPKShown, showPK] = useState(false);
   return (
     <View style={containerStyle}>
-      <Text style={styles.keyAuthority}>{type.toUpperCase()} KEY</Text>
+      <View style={styles.row}>
+        <Text style={styles.keyAuthority}>{type.toUpperCase()} KEY</Text>
+        <RemoveKey
+          forgetKey={() => {
+            forgetKey(account.name, type);
+          }}
+          show={!!privateKey}
+        />
+      </View>
+      <Separator height={20} />
       {privateKey ? (
         <>
-          <Button
-            title="X"
-            onPress={() => {
-              forgetKey(account.name, type);
-            }}
-          />
-          <Text style={styles.keyType}>Private:</Text>
-          <TouchableOpacity
-            onLongPress={() => {
-              Clipboard.setString(privateKey);
-              Toast.show(translate('toast.keys.copied'));
-            }}>
-            <Text style={styles.key}>{privateKey}</Text>
-          </TouchableOpacity>
-          <Text style={styles.keyType}>Public:</Text>
-          <TouchableOpacity
-            onLongPress={() => {
-              Clipboard.setString(publicKey);
-              Toast.show(translate('toast.keys.copied'));
-            }}>
-            <Text style={styles.key}>{publicKey}</Text>
-          </TouchableOpacity>
+          <View style={styles.row}>
+            <Text style={styles.keyType}>
+              {translate('common.public').toUpperCase()}
+            </Text>
+            <CopyKey key={publicKey} />
+          </View>
+          <Separator height={5} />
+
+          <Text style={styles.key}>{publicKey}</Text>
+          <Separator height={20} />
+          <View style={styles.row}>
+            <Text style={styles.keyType}>
+              {translate('common.private').toUpperCase()}
+            </Text>
+            <View style={[styles.row, styles.privateActions]}>
+              <ViewKey
+                isPKShown={isPKShown}
+                toggle={() => {
+                  showPK(!isPKShown);
+                }}
+              />
+              <CopyKey key={privateKey} />
+            </View>
+          </View>
+          <Separator height={5} />
+          <Text style={isPKShown ? styles.key : styles.keyHidden}>
+            {isPKShown ? privateKey : hidePrivateKey(privateKey)}
+          </Text>
         </>
       ) : (
         <>
@@ -58,8 +79,58 @@ export default ({type, account, forgetKey, addKey, containerStyle}) => {
   );
 };
 
+const RemoveKey = ({forgetKey}) => {
+  return (
+    <RoundButton
+      onPress={forgetKey}
+      size={30}
+      backgroundColor="#000000"
+      content={<Remove />}
+    />
+  );
+};
+
+const CopyKey = ({key}) => {
+  return (
+    <RoundButton
+      onPress={() => {
+        Clipboard.setString(key);
+        Toast.show(translate('toast.keys.copied'));
+      }}
+      size={30}
+      backgroundColor="#7E8C9A"
+      content={<Copy />}
+    />
+  );
+};
+
+const ViewKey = ({toggle, isPKShown}) => {
+  return (
+    <RoundButton
+      onPress={toggle}
+      size={30}
+      backgroundColor={isPKShown ? '#B9122F' : '#7E8C9A'}
+      content={<ViewIcon />}
+    />
+  );
+};
+
+const hidePrivateKey = (privateKey) => {
+  let hiddenKey = '';
+  for (const c of privateKey) {
+    hiddenKey += '\u25cf ';
+  }
+  return hiddenKey;
+};
+
 const styles = StyleSheet.create({
   keyAuthority: {color: '#7E8C9A', fontSize: 20},
-  keyType: {color: '#404950'},
-  key: {color: '#404950', fontSize: 10},
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  keyType: {color: '#404950', fontSize: 14},
+  key: {color: '#404950', fontSize: 10, lineHeight: 12},
+  keyHidden: {color: '#404950', fontSize: 5, lineHeight: 12},
+  privateActions: {width: '20%'},
 });
