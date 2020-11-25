@@ -1,119 +1,104 @@
-import React, {useState} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Button,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
-import Clipboard from '@react-native-community/clipboard';
+import React from 'react';
+import {View, StyleSheet, StatusBar, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
-import Background from 'components/ui/Background';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Separator from 'components/ui/Separator';
 import UserPicker from 'components/form/UserPicker';
 import EllipticButton from 'components/form/EllipticButton';
 import {forgetKey, addKey, forgetAccount} from 'actions';
-import Toast from 'react-native-simple-toast';
-import {translate} from 'utils/localize';
+import Key from 'components/hive/Key';
+import Menu from 'assets/wallet/menu.svg';
 
 const AccountManagement = ({
   account,
   forgetKeyConnect,
   forgetAccountConnect,
   addKeyConnect,
+  navigation,
 }) => {
   return (
-    <SafeAreaView>
-      <Background>
-        <Separator height={50} />
+    <SafeAreaView backgroundColor="white">
+      <StatusBar backgroundColor="black" />
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerTitle}>WALLET KEYS</Text>
+        <Menu
+          width={25}
+          height={25}
+          onPress={() => {
+            navigation.openDrawer();
+          }}
+        />
+      </View>
+
+      <ScrollView style={styles.scrollview}>
         <UserPicker username={account.name} accounts={[account]} />
-        <View
-          style={{color: 'white', display: 'flex', flexDirection: 'column'}}>
-          <Key
-            type="posting"
-            account={account}
-            forgetKeyConnect={forgetKeyConnect}
-            addKeyConnect={addKeyConnect}
-          />
-          <Key
-            type="active"
-            account={account}
-            forgetKeyConnect={forgetKeyConnect}
-            addKeyConnect={addKeyConnect}
-          />
-          <Key
-            type="memo"
-            account={account}
-            forgetKeyConnect={forgetKeyConnect}
-            addKeyConnect={addKeyConnect}
-          />
-        </View>
-        <Separator height={50} />
+        <Text style={styles.disclaimer}>
+          To receive funds, simply share your account name (displayed above)
+          with the sender.
+        </Text>
+        <Text style={styles.disclaimer}>
+          However, many applications will require a PRIVATE KEY to prove
+          ownership or to conduct transactions on your behalf.{' '}
+          <Text style={styles.important}>
+            ONLY SHARE PRIVATE KEYS WITH PARTIES THAT YOU TRUST!
+          </Text>
+        </Text>
+        <Text style={styles.disclaimer}>
+          In the future, Hive Keychain for mobile will enable App to App
+          transactions, removing the need to use your private keys directly in
+          third-party Apps.
+        </Text>
+        <Separator height={20} />
+        <Key
+          type="posting"
+          containerStyle={styles.keyOdd}
+          account={account}
+          forgetKey={forgetKeyConnect}
+          addKey={addKeyConnect}
+        />
+        <Key
+          type="active"
+          containerStyle={styles.keyEven}
+          account={account}
+          forgetKey={forgetKeyConnect}
+          addKey={addKeyConnect}
+        />
+        <Key
+          type="memo"
+          containerStyle={styles.keyOdd}
+          account={account}
+          forgetKey={forgetKeyConnect}
+          addKey={addKeyConnect}
+        />
+        <Separator height={20} />
         <EllipticButton
+          style={styles.button}
           title="FORGET ACCOUNT"
           onPress={() => {
             forgetAccountConnect(account.name);
           }}
         />
-      </Background>
+        <Separator height={50} />
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
-const Key = ({type, account, forgetKeyConnect, addKeyConnect}) => {
-  const privateKey = account.keys[type];
-  const publicKey = account.keys[`${type}Pubkey`];
-  const [key, setKey] = useState('');
-  return (
-    <>
-      <Text style={styles.keyAuthority}>{type} Key</Text>
-      {privateKey ? (
-        <>
-          <Button
-            title="X"
-            onPress={() => {
-              forgetKeyConnect(account.name, type);
-            }}
-          />
-          <Text style={styles.keyType}>Private:</Text>
-          <TouchableOpacity
-            onLongPress={() => {
-              Clipboard.setString(privateKey);
-              Toast.show(translate('toast.keys.copied'));
-            }}>
-            <Text style={styles.privateKey}>{privateKey}</Text>
-          </TouchableOpacity>
-          <Text style={styles.keyType}>Public:</Text>
-          <TouchableOpacity
-            onLongPress={() => {
-              Clipboard.setString(publicKey);
-              Toast.show(translate('toast.keys.copied'));
-            }}>
-            <Text style={styles.publicKey}>{publicKey}</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          <TextInput value={key} onChangeText={setKey} />
-          <Button
-            title="V"
-            onPress={() => {
-              addKeyConnect(account.name, type, key);
-            }}
-          />
-        </>
-      )}
-    </>
-  );
-};
-
 const styles = StyleSheet.create({
-  keyAuthority: {color: 'white'},
-  keyType: {color: 'white'},
-  privateKey: {color: 'white'},
-  publicKey: {color: 'white'},
+  headerContainer: {
+    backgroundColor: 'black',
+    padding: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  headerTitle: {color: '#B9C9D6', fontSize: 18},
+  disclaimer: {color: '#404950', marginVertical: 2, paddingHorizontal: 20},
+  important: {color: '#A3112A', fontWeight: 'bold'},
+  button: {backgroundColor: '#B9122F'},
+  keyOdd: {backgroundColor: '#E5EEF7', padding: 20},
+  keyEven: {backgroundColor: '#FFFFFF', padding: 20},
+  scrollview: {},
 });
 
 const mapStateToProps = (state) => ({account: state.activeAccount});
