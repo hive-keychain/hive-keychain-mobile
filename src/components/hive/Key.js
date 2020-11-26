@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Text, Button, StyleSheet, View, TextInput} from 'react-native';
+import {Text, StyleSheet, View} from 'react-native';
 import Separator from 'components/ui/Separator';
 import Clipboard from '@react-native-community/clipboard';
 import Toast from 'react-native-simple-toast';
@@ -8,6 +8,8 @@ import RoundButton from 'components/operations/OperationsButtons';
 import Remove from 'assets/settings/remove.svg';
 import ViewIcon from 'assets/settings/view.svg';
 import Copy from 'assets/settings/copy.svg';
+import EllipticButton from 'components/form/EllipticButton';
+import AddKey from 'components/modals/AddKey';
 
 export default ({
   type,
@@ -22,7 +24,6 @@ export default ({
   }
   const privateKey = account.keys[type];
   const publicKey = account.keys[`${type}Pubkey`];
-  const [key, setKey] = useState('');
   const [isPKShown, showPK] = useState(false);
 
   useEffect(() => {
@@ -36,12 +37,14 @@ export default ({
     <View style={containerStyle}>
       <View style={styles.row}>
         <Text style={styles.keyAuthority}>{type.toUpperCase()} KEY</Text>
-        <RemoveKey
-          forgetKey={() => {
-            forgetKey(account.name, type);
-          }}
-          show={!!privateKey}
-        />
+        {privateKey && (
+          <RemoveKey
+            forgetKey={() => {
+              forgetKey(account.name, type);
+            }}
+            show={!!privateKey}
+          />
+        )}
       </View>
       <Separator height={20} />
       {privateKey ? (
@@ -76,15 +79,18 @@ export default ({
           </Text>
         </>
       ) : (
-        <>
-          <TextInput value={key} onChangeText={setKey} />
-          <Button
-            title="V"
+        <View>
+          <EllipticButton
+            title="ADD KEY"
+            style={styles.addKey}
             onPress={() => {
-              addKey(account.name, type, key);
+              //addKey(account.name, type, key);
+              navigation.navigate('ModalScreen', {
+                modalContent: <AddKey type={type} name={account.name} />,
+              });
             }}
           />
-        </>
+        </View>
       )}
     </View>
   );
@@ -144,4 +150,9 @@ const styles = StyleSheet.create({
   key: {color: '#404950', fontSize: 10, lineHeight: 12},
   keyHidden: {color: '#404950', fontSize: 5, lineHeight: 12},
   privateActions: {width: '20%'},
+  addKey: {
+    backgroundColor: '#7E8C9A',
+    marginTop: 20,
+    marginBottom: 30,
+  },
 });
