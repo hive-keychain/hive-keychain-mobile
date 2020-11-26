@@ -38,6 +38,7 @@
       }
     }
   },
+  "settings": {"keys": {"add": "ADD KEY"}},
   "components": {
     "moreInformation": {
       "title": "KEYS (HIVE PASSWORDS)",

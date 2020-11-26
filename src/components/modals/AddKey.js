@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Keyboard} from 'react-native';
+import {StyleSheet, Keyboard, View} from 'react-native';
 import {connect} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 
@@ -9,7 +9,8 @@ import OperationInput from 'components/form/OperationInput';
 import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
 
-import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
+import KeyIcon from 'assets/addAccount/icon_key.svg';
+import Keychain from 'assets/keychain.svg';
 import {goBack} from 'utils/navigation';
 import {addKey} from 'actions';
 
@@ -17,11 +18,26 @@ const Transfer = ({addKeyConnect, name, type}) => {
   console.log(name, type);
   const {key, setKey} = useState('');
   return (
-    <Operation title={translate('setting.keys.add')}>
+    <Operation
+      title={translate('settings.keys.add')}
+      logo={
+        <View
+          style={{
+            backgroundColor: 'black',
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Keychain height={25} />
+        </View>
+      }>
       <Separator />
       <OperationInput
-        placeholder={translate('common.key').toUpperCase()}
-        leftIcon={<AccountLogoDark />}
+        placeholder={translate('common.privateKey').toUpperCase()}
+        leftIcon={<KeyIcon />}
         autoCapitalize="none"
         value={key}
         onChangeText={setKey}

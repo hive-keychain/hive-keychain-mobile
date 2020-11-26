@@ -81,7 +81,7 @@ export default ({
       ) : (
         <View>
           <EllipticButton
-            title="ADD KEY"
+            title={translate('settings.keys.add')}
             style={styles.addKey}
             onPress={() => {
               //addKey(account.name, type, key);
