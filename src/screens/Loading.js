@@ -1,36 +1,23 @@
 import React from 'react';
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import Background from 'components/ui/Background';
-import KeychainLogo from 'assets/keychain.svg';
+import KeychainLogo from 'components/ui/KeychainLogo';
 
 const Loading = () => {
-  const styles = getDimensionedStyles(useWindowDimensions());
+  const {width} = useWindowDimensions();
   return (
     <Background style={styles.bgd}>
-      <View style={styles.blackCircle}>
-        <KeychainLogo {...styles.image} />
-      </View>
+      <KeychainLogo width={width / 2} />
     </Background>
   );
 };
 
-const getDimensionedStyles = ({width, height}) =>
-  StyleSheet.create({
-    bgd: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    blackCircle: {
-      width: width * 0.5,
-      height: width * 0.5,
-      backgroundColor: 'black',
-      borderRadius: width * 0.25,
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    image: {width: width * 0.25, height: ((width * 0.25) / 49) * 41},
-  });
+const styles = StyleSheet.create({
+  bgd: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default Loading;

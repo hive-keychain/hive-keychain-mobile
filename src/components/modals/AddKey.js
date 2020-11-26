@@ -10,7 +10,7 @@ import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
 
 import KeyIcon from 'assets/addAccount/icon_key.svg';
-import Keychain from 'assets/keychain.svg';
+import KeychainLogo from 'components/ui/KeychainLogo';
 import {goBack} from 'utils/navigation';
 import {addKey} from 'actions';
 
@@ -20,20 +20,7 @@ const Transfer = ({addKeyConnect, name, type}) => {
   return (
     <Operation
       title={translate('settings.keys.add')}
-      logo={
-        <View
-          style={{
-            backgroundColor: 'black',
-            width: 40,
-            height: 40,
-            borderRadius: 20,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Keychain height={25} />
-        </View>
-      }>
+      logo={<KeychainLogo width={40} />}>
       <Separator />
       <OperationInput
         placeholder={translate('common.privateKey').toUpperCase()}
