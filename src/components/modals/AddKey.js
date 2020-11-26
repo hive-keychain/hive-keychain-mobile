@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {StyleSheet, Keyboard, View} from 'react-native';
+import {StyleSheet, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
-import Toast from 'react-native-simple-toast';
 
 import Operation from 'components/operations/Operation';
 import {translate} from 'utils/localize';
@@ -14,9 +13,9 @@ import KeychainLogo from 'components/ui/KeychainLogo';
 import {goBack} from 'utils/navigation';
 import {addKey} from 'actions';
 
-const Transfer = ({addKeyConnect, name, type}) => {
+const AddKey = ({addKeyConnect, name, type}) => {
   console.log(name, type);
-  const {key, setKey} = useState('');
+  const [key, setKey] = useState('');
   return (
     <Operation
       title={translate('settings.keys.add')}
@@ -34,7 +33,10 @@ const Transfer = ({addKeyConnect, name, type}) => {
       <EllipticButton
         title={translate('common.send')}
         onPress={() => {
+          console.log('key', key);
           addKeyConnect(name, type, key);
+          Keyboard.dismiss();
+          goBack();
         }}
         style={styles.button}
       />
@@ -47,4 +49,4 @@ const styles = StyleSheet.create({
   currency: {fontWeight: 'bold', fontSize: 18},
 });
 
-export default connect(null, {addKeyConnect: addKey})(Transfer);
+export default connect(null, {addKeyConnect: addKey})(AddKey);
