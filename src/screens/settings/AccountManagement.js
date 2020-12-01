@@ -83,7 +83,7 @@ const AccountManagement = ({
           style={styles.button}
           title="FORGET ACCOUNT"
           onPress={() => {
-            forgetAccountConnect(account.name);
+            forgetAccountConnect(username);
           }}
         />
         <Separator height={50} />
