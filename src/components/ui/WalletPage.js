@@ -1,11 +1,12 @@
 import React from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 
 export default (props) => {
   return (
     <SafeAreaView style={styles.bgd}>
-      <StatusBar backgroundColor="#A3112A" />
+      <FocusAwareStatusBar backgroundColor="#A3112A" />
       {props.children}
     </SafeAreaView>
   );
