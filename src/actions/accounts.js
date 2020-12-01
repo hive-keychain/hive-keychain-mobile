@@ -7,7 +7,7 @@ import {
   UPDATE_ACCOUNTS,
 } from './types';
 import {encryptJson} from 'utils/encrypt';
-import {navigate} from 'utils/navigation';
+import {navigate, resetStackAndNavigate} from 'utils/navigation';
 import {translate} from 'utils/localize';
 import {saveOnKeychain} from 'utils/keychainStorage';
 import validateKeys from 'utils/keyValidation';
@@ -22,7 +22,7 @@ export const addAccount = (name, keys, wallet) => async (
   if (previousAccounts.find((e) => e.name === name)) {
     Toast.show(translate('toast.account_already'));
     if (wallet) {
-      navigate('WalletScreen');
+      resetStackAndNavigate('WALLET');
     }
     return;
   }
@@ -32,7 +32,7 @@ export const addAccount = (name, keys, wallet) => async (
   await saveOnKeychain('accounts', encrypted);
   if (wallet) {
     dispatch(loadAccount(name));
-    navigate('WalletScreen');
+    resetStackAndNavigate('WALLET');
   }
 };
 

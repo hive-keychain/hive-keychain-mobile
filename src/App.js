@@ -123,7 +123,8 @@ const App = ({hasAccounts, auth, lockConnect}) => {
             }}
           />
           <Drawer.Screen
-            name="ADD ACCOUNT"
+            name="AddAccountStack"
+            options={{title: 'ADD ACCOUNT'}}
             component={renderAddAccountFromWalletNavigator}
           />
           <Drawer.Screen name="ABOUT" component={About} />
@@ -160,6 +161,7 @@ const App = ({hasAccounts, auth, lockConnect}) => {
       />
     </AccountStack.Navigator>
   );
+
   const renderWalletNavigator = () => (
     <Stack.Navigator>
       <Stack.Screen

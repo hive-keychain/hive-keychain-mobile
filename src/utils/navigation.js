@@ -1,4 +1,5 @@
 import {NavigationActions} from '@react-navigation/compat';
+import {CommonActions} from '@react-navigation/native';
 
 // Navigation References
 let navigator;
@@ -13,6 +14,15 @@ export const navigate = (routeName, params) => {
 
 export const goBack = () => {
   navigator.dispatch(NavigationActions.back());
+};
+
+export const resetStackAndNavigate = (name) => {
+  navigator.dispatch({
+    ...CommonActions.reset({
+      index: 0,
+      routes: [{name}],
+    }),
+  });
 };
 
 // Navigation Options
