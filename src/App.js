@@ -32,6 +32,7 @@ import {lock} from 'actions';
 
 const Stack = createStackNavigator();
 const Root = createStackNavigator();
+const AccountStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const App = ({hasAccounts, auth, lockConnect}) => {
@@ -122,16 +123,8 @@ const App = ({hasAccounts, auth, lockConnect}) => {
             }}
           />
           <Drawer.Screen
-            name="AddAccountFromWalletScreen"
-            options={{
-              title: 'ADD ACCOUNT',
-              headerRight: () => {
-                return <MoreInformation type="moreInfo" />;
-              },
-              headerTintColor: 'white',
-              headerTransparent,
-            }}
-            component={AddAccountByKey}
+            name="ADD ACCOUNT"
+            component={renderAddAccountFromWalletNavigator}
           />
           <Drawer.Screen name="ABOUT" component={About} />
         </Drawer.Navigator>
@@ -139,6 +132,34 @@ const App = ({hasAccounts, auth, lockConnect}) => {
     }
   };
 
+  const renderAddAccountFromWalletNavigator = () => (
+    <AccountStack.Navigator>
+      <AccountStack.Screen
+        name="AddAccountFromWalletScreen"
+        options={{
+          title: 'ADD ACCOUNT',
+          headerRight: () => {
+            return <MoreInformation type="moreInfo" />;
+          },
+          headerTintColor: 'white',
+          headerTransparent,
+        }}
+        component={AddAccountByKey}
+      />
+      <AccountStack.Screen
+        name="ScanQRScreen"
+        options={{
+          headerTransparent,
+          headerTintColor: 'white',
+          title: '',
+          headerRight: () => {
+            return <MoreInformation type="qr" />;
+          },
+        }}
+        component={ScanQR}
+      />
+    </AccountStack.Navigator>
+  );
   const renderWalletNavigator = () => (
     <Stack.Navigator>
       <Stack.Screen
@@ -170,19 +191,6 @@ const App = ({hasAccounts, auth, lockConnect}) => {
             return <Hive style={styles(width, height).left} />;
           },
         })}
-      />
-
-      <Stack.Screen
-        name="ScanQRScreen"
-        options={{
-          headerTransparent,
-          headerTintColor: 'white',
-          title: '',
-          headerRight: () => {
-            return <MoreInformation type="qr" />;
-          },
-        }}
-        component={ScanQR}
       />
     </Stack.Navigator>
   );
