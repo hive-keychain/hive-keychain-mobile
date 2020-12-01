@@ -4,7 +4,7 @@ import {Picker} from '@react-native-community/picker';
 import {translate} from 'utils/localize';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 
-const UserPicker = ({username, accounts, onAccountSelected, addAccount}) => {
+const UserPicker = ({username, accounts, onAccountSelected}) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height});
 
@@ -14,11 +14,12 @@ const UserPicker = ({username, accounts, onAccountSelected, addAccount}) => {
 
   const accountsList = [username, ...accounts.filter((e) => e !== username)];
   const onPickerValueChanged = (value) => {
-    if (value === 'add_new_account') {
-      addAccount();
-    } else {
-      onAccountSelected(value);
-    }
+    // if (value === 'add_new_account') {
+    //   addAccount();
+    // } else {
+    //   onAccountSelected(value);
+    // }
+    onAccountSelected(value);
   };
 
   return (
@@ -33,13 +34,6 @@ const UserPicker = ({username, accounts, onAccountSelected, addAccount}) => {
           {accountsList.map((account) => (
             <Picker.Item key={account} label={`@${account}`} value={account} />
           ))}
-          {addAccount && (
-            <Picker.Item
-              key="add_new_account"
-              label={translate('components.picker.add_account')}
-              value="add_new_account"
-            />
-          )}
         </Picker>
       </View>
     </View>

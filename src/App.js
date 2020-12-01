@@ -121,6 +121,18 @@ const App = ({hasAccounts, auth, lockConnect}) => {
               title: 'MANAGE KEYS',
             }}
           />
+          <Drawer.Screen
+            name="AddAccountFromWalletScreen"
+            options={{
+              title: 'ADD ACCOUNT',
+              headerRight: () => {
+                return <MoreInformation type="moreInfo" />;
+              },
+              headerTintColor: 'white',
+              headerTransparent,
+            }}
+            component={AddAccountByKey}
+          />
           <Drawer.Screen name="ABOUT" component={About} />
         </Drawer.Navigator>
       );
@@ -160,18 +172,6 @@ const App = ({hasAccounts, auth, lockConnect}) => {
         })}
       />
 
-      <Stack.Screen
-        name="AddAccountFromWalletScreen"
-        options={{
-          title: 'ADD ACCOUNT',
-          headerRight: () => {
-            return <MoreInformation type="moreInfo" />;
-          },
-          headerTintColor: 'white',
-          headerTransparent,
-        }}
-        component={AddAccountByKey}
-      />
       <Stack.Screen
         name="ScanQRScreen"
         options={{
