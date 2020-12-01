@@ -24,22 +24,24 @@ const UserPicker = ({username, accounts, onAccountSelected, addAccount}) => {
   return (
     <View style={styles.container}>
       <UserProfilePicture style={styles.image} username={username} />
-      <Picker
-        style={styles.picker}
-        selectedValue={username}
-        prompt={translate('components.picker.prompt')}
-        onValueChange={onPickerValueChanged}>
-        {accountsList.map((account) => (
-          <Picker.Item key={account} label={`@${account}`} value={account} />
-        ))}
-        {addAccount && (
-          <Picker.Item
-            key="add_new_account"
-            label={translate('components.picker.add_account')}
-            value="add_new_account"
-          />
-        )}
-      </Picker>
+      <View style={styles.subContainer}>
+        <Picker
+          style={styles.picker}
+          selectedValue={username}
+          prompt={translate('components.picker.prompt')}
+          onValueChange={onPickerValueChanged}>
+          {accountsList.map((account) => (
+            <Picker.Item key={account} label={`@${account}`} value={account} />
+          ))}
+          {addAccount && (
+            <Picker.Item
+              key="add_new_account"
+              label={translate('components.picker.add_account')}
+              value="add_new_account"
+            />
+          )}
+        </Picker>
+      </View>
     </View>
   );
 };
@@ -55,11 +57,8 @@ const getDimensionedStyles = ({width, height}) =>
       borderRadius: height / 30,
       marginVertical: height / 30,
     },
-    picker: {
-      width: '50%',
-      backgroundColor: '#E5EEF7',
-      textAlign: 'center',
-      marginLeft: width * 0.15,
+    subContainer: {
+      width: '80%',
     },
     image: {
       margin: 2,
