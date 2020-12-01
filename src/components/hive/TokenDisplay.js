@@ -40,7 +40,7 @@ const TokenDisplay = ({
           <Text style={styles.name}>{name}</Text>
         </View>
         <Text style={amountStyle || styles.amount}>
-          {formatBalance(value)}
+          {value ? formatBalance(value) : 0}
           <Text style={styles.currency}>{` ${currency}`}</Text>
         </Text>
       </View>
