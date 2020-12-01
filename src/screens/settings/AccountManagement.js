@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, StatusBar, Text, ScrollView} from 'react-native';
+import {StyleSheet, StatusBar, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Separator from 'components/ui/Separator';
@@ -7,7 +7,7 @@ import UserPicker from 'components/form/UserPicker';
 import EllipticButton from 'components/form/EllipticButton';
 import {forgetKey, addKey, forgetAccount} from 'actions';
 import Key from 'components/hive/Key';
-import Menu from 'assets/wallet/menu.svg';
+import HeaderDrawer from 'components/ui/HeaderDrawerScreens';
 
 const AccountManagement = ({
   account,
@@ -27,16 +27,7 @@ const AccountManagement = ({
   return (
     <SafeAreaView backgroundColor="white">
       <StatusBar backgroundColor="black" />
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerTitle}>WALLET KEYS</Text>
-        <Menu
-          width={25}
-          height={25}
-          onPress={() => {
-            navigation.openDrawer();
-          }}
-        />
-      </View>
+      <HeaderDrawer title="WALLET KEYS" navigation={navigation} />
 
       <ScrollView style={styles.scrollview}>
         <UserPicker
@@ -102,14 +93,6 @@ const AccountManagement = ({
 };
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    backgroundColor: 'black',
-    padding: 20,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  headerTitle: {color: '#B9C9D6', fontSize: 18},
   disclaimer: {color: '#404950', marginVertical: 2, paddingHorizontal: 20},
   important: {color: '#A3112A', fontWeight: 'bold'},
   button: {backgroundColor: '#B9122F'},
