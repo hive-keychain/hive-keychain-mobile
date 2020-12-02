@@ -53,7 +53,7 @@ export default class CustomModal extends Component {
 }
 
 class StyleSheetFactory {
-  static getSheet({modalHeight, width, transparent}) {
+  static getSheet({modalHeight, width, height, transparent}) {
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
       mainContainer: {
@@ -69,6 +69,7 @@ class StyleSheetFactory {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: modalHeight,
+        maxHeight: 0.7 * height,
         flex: 1,
         height: 'auto',
       },
