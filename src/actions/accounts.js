@@ -9,7 +9,7 @@ import {
 import {encryptJson} from 'utils/encrypt';
 import {navigate, resetStackAndNavigate} from 'utils/navigation';
 import {translate} from 'utils/localize';
-import {saveOnKeychain} from 'utils/keychainStorage';
+import {saveOnKeychain, clearKeychain} from 'utils/keychainStorage';
 import validateKeys from 'utils/keyValidation';
 import {loadAccount} from 'actions/hive';
 
@@ -37,6 +37,7 @@ export const addAccount = (name, keys, wallet) => async (
 };
 
 export const forgetAccounts = () => (dispatch) => {
+  clearKeychain('accounts');
   dispatch({
     type: FORGET_ACCOUNTS,
   });
