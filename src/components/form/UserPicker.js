@@ -53,6 +53,7 @@ const getDimensionedStyles = ({width, height}) =>
     },
     subContainer: {
       width: '80%',
+      marginLeft: width * 0.04,
     },
     image: {
       margin: 2,
