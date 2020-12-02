@@ -180,7 +180,7 @@ const App = ({hasAccounts, auth, lockConnect}) => {
                 <Menu
                   width={25}
                   height={25}
-                  style={{marginRight: 10}}
+                  style={styles.menu}
                   onPress={() => {
                     navigation.openDrawer();
                   }}
@@ -237,6 +237,7 @@ const styles = (width, height) =>
     drawer: {
       backgroundColor: '#000000',
     },
+    menu: {marginRight: 10},
   });
 
 export default connect(mapStateToProps, {lockConnect: lock})(App);
