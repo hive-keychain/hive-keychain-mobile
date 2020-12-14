@@ -1,5 +1,13 @@
 import React from 'react';
-import {View, StyleSheet, useWindowDimensions} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  useWindowDimensions,
+  Platform,
+  TouchableOpacity,
+  ActionSheetIOS,
+  Text,
+} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {translate} from 'utils/localize';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
@@ -14,28 +22,53 @@ const UserPicker = ({username, accounts, onAccountSelected}) => {
 
   const accountsList = [username, ...accounts.filter((e) => e !== username)];
   const onPickerValueChanged = (value) => {
-    // if (value === 'add_new_account') {
-    //   addAccount();
-    // } else {
-    //   onAccountSelected(value);
-    // }
     onAccountSelected(value);
+  };
+  const renderPicker = () => {
+    switch (Platform.OS) {
+      case 'ios':
+        return (
+          <TouchableOpacity
+            style={styles.iosContainer}
+            onPress={() => {
+              ActionSheetIOS.showActionSheetWithOptions(
+                {
+                  options: accountsList,
+                },
+                (index) => {
+                  onPickerValueChanged(accountsList[index]);
+                },
+              );
+            }}>
+            <Text style={styles.iosLabel}>@{username}</Text>
+            <Text>{'\u25BC'}</Text>
+          </TouchableOpacity>
+        );
+      case 'android':
+        return (
+          <Picker
+            style={styles.picker}
+            selectedValue={username}
+            prompt={translate('components.picker.prompt')}
+            onValueChange={onPickerValueChanged}>
+            {accountsList.map((account) => (
+              <Picker.Item
+                key={account}
+                label={`@${account}`}
+                value={account}
+              />
+            ))}
+          </Picker>
+        );
+      default:
+        break;
+    }
   };
 
   return (
     <View style={styles.container}>
       <UserProfilePicture style={styles.image} username={username} />
-      <View style={styles.subContainer}>
-        <Picker
-          style={styles.picker}
-          selectedValue={username}
-          prompt={translate('components.picker.prompt')}
-          onValueChange={onPickerValueChanged}>
-          {accountsList.map((account) => (
-            <Picker.Item key={account} label={`@${account}`} value={account} />
-          ))}
-        </Picker>
-      </View>
+      <View style={styles.subContainer}>{renderPicker()}</View>
     </View>
   );
 };
@@ -61,6 +94,14 @@ const getDimensionedStyles = ({width, height}) =>
       height: height / 15 - 4,
       borderRadius: height / 30,
     },
+    iosContainer: {
+      flex: 1,
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginRight: 20,
+    },
+    iosLabel: {fontSize: 18},
   });
 
 export default UserPicker;
