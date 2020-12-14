@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, useWindowDimensions} from 'react-native';
-import {Picker} from '@react-native-community/picker';
+import {Picker} from '@react-native-picker/picker';
 import {translate} from 'utils/localize';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 
