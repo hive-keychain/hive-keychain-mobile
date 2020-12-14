@@ -49,6 +49,7 @@ const AddAccountByKey = ({addAccountConnect, navigation, route}) => {
         <CustomInput
           placeholder={translate('common.username').toUpperCase()}
           leftIcon={<UserLogo />}
+          autoCapitalize="none"
           value={account}
           onChangeText={setAccount}
         />
@@ -56,6 +57,7 @@ const AddAccountByKey = ({addAccountConnect, navigation, route}) => {
 
         <CustomInput
           placeholder={translate('common.privateKey').toUpperCase()}
+          autoCapitalize="characters"
           leftIcon={<KeyLogo />}
           rightIcon={
             <TouchableOpacity
