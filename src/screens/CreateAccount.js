@@ -5,7 +5,7 @@ import Background from 'components/ui/Background';
 
 const CreateAccount = () => {
   return (
-    <Background style={styles.container}>
+    <Background containerStyle={styles.container}>
       <Text h1 style={styles.text}>
         Coming Soon ...
       </Text>

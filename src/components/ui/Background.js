@@ -9,21 +9,15 @@ export default (props) => {
     <ImageBackground
       {...props}
       source={imageBgd}
-      style={{...styles.imageBgd, ...props.style}}>
-      <SafeAreaView style={styles.safearea}>{props.children}</SafeAreaView>
+      style={[styles.imageBgd, props.style]}>
+      <SafeAreaView style={[styles.container, props.containerStyle]}>
+        {props.children}
+      </SafeAreaView>
     </ImageBackground>
   );
 };
-// <SafeAreaView style={{backgroundColor:'blue'}}>
-//   <ImageBackground
-//     {...props}
-//     source={imageBgd}
-//     style={{...styles.imageBgd, ...props.style}}>
-//     {props.children}
-//   </ImageBackground>
-// </SafeAreaView>
 
 const styles = StyleSheet.create({
   imageBgd: {width: '100%', height: '100%'},
-  safearea: {flex: 1},
+  container: {flex: 1},
 });

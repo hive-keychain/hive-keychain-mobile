@@ -6,7 +6,7 @@ import KeychainLogo from 'components/ui/KeychainLogo';
 const Loading = () => {
   const {width} = useWindowDimensions();
   return (
-    <Background style={styles.bgd}>
+    <Background containerStyle={styles.bgd}>
       <KeychainLogo width={width / 2} />
     </Background>
   );
