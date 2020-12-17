@@ -1,5 +1,5 @@
 import axios from 'axios';
 
 export default axios.create({
-  baseURL: 'https://api.steemkeychain.com/',
+  baseURL: 'https://api.hive-keychain.com/',
 });
