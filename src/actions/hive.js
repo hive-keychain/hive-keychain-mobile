@@ -81,9 +81,7 @@ export const fetchAccountTransactions = (accountName, start) => async (
 
 const getAccountTransactions = async (accountName, start) => {
   const op = dhive.utils.operationOrders;
-  console.log(op);
   const operationsBitmask = dhive.utils.makeBitMaskFilter([op.transfer]);
-  console.log(operationsBitmask);
 
   const transactions = await client.database.getAccountHistory(
     accountName,
@@ -91,7 +89,6 @@ const getAccountTransactions = async (accountName, start) => {
     start ? Math.min(1000, start) : 1000,
     operationsBitmask,
   );
-  console.log(transactions);
   const transfers = transactions
     .filter((e) => e[1].op[0] === 'transfer')
     .map((e) => {

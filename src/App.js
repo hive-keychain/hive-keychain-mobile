@@ -223,7 +223,6 @@ const App = ({hasAccounts, auth, lockConnect}) => {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
