@@ -28,3 +28,7 @@ Test Production Release : `npm run android-release`
 ## iOS:
 
 Coming soon
+
+## Troubleshooting
+
+- SHA1 error : `watchman watch-del-all && npm run clean`

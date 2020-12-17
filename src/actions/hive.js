@@ -57,7 +57,7 @@ export const loadBittrex = () => async (dispatch) => {
       payload: prices,
     });
   } catch (e) {
-    console.log(e);
+    console.log('bittrex error', e);
   }
 };
 

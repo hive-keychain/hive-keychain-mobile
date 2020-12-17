@@ -11,7 +11,11 @@ const AccountValue = ({bittrex, account, properties}) => {
       2,
     );
   }
-  return <Text style={styles.accountValue}>{`$ ${accountValue}`}</Text>;
+  return (
+    <Text style={styles.accountValue}>
+      {isNaN(accountValue) ? '...' : `$ ${accountValue}`}
+    </Text>
+  );
 };
 
 const styles = StyleSheet.create({
