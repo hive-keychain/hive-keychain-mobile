@@ -8,18 +8,21 @@ import {
 } from 'react-native';
 import {withCommas} from 'utils/format';
 
-const Transfer = ({transaction, user}) => {
+const Transfer = ({transaction, user, token}) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
   const {timestamp, from, to, amount, memo} = transaction;
   const other = from === username ? to : from;
   const direction = from === username ? '-' : '+';
   const color = direction === '+' ? '#3BB26E' : '#B9122F';
-  const date = new Date(timestamp).toLocaleString([], {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-  });
+  const date = new Date(token ? timestamp * 1000 : timestamp).toLocaleString(
+    [],
+    {
+      year: '2-digit',
+      month: '2-digit',
+      day: '2-digit',
+    },
+  );
 
   const styles = getDimensionedStyles({
     ...useWindowDimensions(),

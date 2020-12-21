@@ -40,7 +40,7 @@ const History = ({
         data={history}
         keyExtractor={(item) => item._id}
         renderItem={({item}) => {
-          return <Transfer transaction={item} user={user} />;
+          return <Transfer transaction={item} user={user} token />;
         }}
       />
     </Operation>
