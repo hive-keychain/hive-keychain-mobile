@@ -31,7 +31,7 @@ const AddKey = ({addKeyConnect, name, type}) => {
 
       <Separator height={40} />
       <EllipticButton
-        title={translate('common.send')}
+        title={translate('common.save')}
         onPress={() => {
           console.log('key', key);
           addKeyConnect(name, type, key);

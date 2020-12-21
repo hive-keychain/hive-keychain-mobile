@@ -17,6 +17,7 @@
     "amount": "amount",
     "memo": "memo",
     "send": "Send",
+    "save": "Save",
     "balance": "Balance",
     "available": "Available"
   },
