@@ -9,6 +9,7 @@ const ScreenToggle = ({components, menu, toUpperCase, style}) => {
       <View style={[style, styles.header]}>
         {menu.map((menuItem, i) => (
           <View
+            key={menuItem}
             style={
               i === active
                 ? [styles.headerElt, styles.headerActiveElt]
@@ -18,8 +19,7 @@ const ScreenToggle = ({components, menu, toUpperCase, style}) => {
               style={styles.headerText}
               onPress={() => {
                 setActive(i);
-              }}
-              key={menuItem}>
+              }}>
               {toUpperCase ? menuItem.toUpperCase() : menuItem}
             </Text>
           </View>

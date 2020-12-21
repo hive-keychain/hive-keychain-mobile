@@ -3,7 +3,6 @@ import {chunkArray} from 'utils/format';
 
 export const saveOnKeychain = async (radix, string) => {
   const biometrics = await Keychain.getSupportedBiometryType();
-  console.log('biooooooooo', biometrics);
   const chunks = chunkArray(string.split(''), 300).map((e) => e.join(''));
   await Keychain.setGenericPassword(radix, chunks.length.toString(), {
     service: radix,

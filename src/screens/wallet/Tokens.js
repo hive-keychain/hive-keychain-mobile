@@ -37,7 +37,7 @@ const Tokens = ({
         <FlatList
           style={[styles.half]}
           data={userTokens}
-          keyExtractor={(item) => item._id}
+          keyExtractor={(item) => item._id.toString()}
           ItemSeparatorComponent={() => <Separator height={10} />}
           renderItem={({item}) => (
             <EngineTokenDisplay

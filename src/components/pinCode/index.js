@@ -120,9 +120,13 @@ const PinCode = ({
       <Separator height={50} />
       <View style={styles.container}>
         {config.map((row, i) => (
-          <View key={i} style={styles.row}>
+          <View key={i.toString()} style={styles.row}>
             {row.map((elt, j) => (
-              <PinElement key={j} onPressElement={onPressElement} {...elt} />
+              <PinElement
+                key={j.toString()}
+                onPressElement={onPressElement}
+                {...elt}
+              />
             ))}
           </View>
         ))}
