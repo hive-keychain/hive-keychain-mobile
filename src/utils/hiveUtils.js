@@ -61,7 +61,7 @@ export const getVotingDollarsPerAccount = (
       (effective_vesting_shares * used_power) / HIVE_100_PERCENT,
     );
     const voteValue = ((rshares * rewardBalance) / recentClaims) * hivePrice;
-    return voteValue.toFixed(2);
+    return isNaN(voteValue) ? '0' : voteValue.toFixed(2);
   } else {
     return;
   }

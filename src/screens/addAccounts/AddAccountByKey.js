@@ -14,7 +14,6 @@ import Separator from 'components/ui/Separator';
 import {addAccount} from 'actions';
 import CustomInput from 'components/form/CustomInput';
 import validateNewAccount from 'utils/keyValidation';
-import {ACCOUNT, KEY} from 'root/.env.json';
 import Background from 'components/ui/Background';
 import TitleLogo from 'assets/addAccount/img_import.svg';
 import UserLogo from 'assets/addAccount/icon_username.svg';
@@ -24,8 +23,8 @@ import Button from 'components/form/EllipticButton';
 import {translate} from 'utils/localize';
 
 const AddAccountByKey = ({addAccountConnect, navigation, route}) => {
-  const [account, setAccount] = useState(ACCOUNT || '');
-  const [key, setKey] = useState(KEY || '');
+  const [account, setAccount] = useState('');
+  const [key, setKey] = useState('');
 
   const onImportKeys = async () => {
     const keys = await validateNewAccount(account, key);

@@ -5,7 +5,6 @@ React Native wallet for the Hive Blockchain
 # Install
 
 - `npm i`
-- Create `.env.json` at root containing `{}`. You can optionally add `ACCOUNT` and `KEY` parameters to save some time when testing adding a new account.
 - `mv android/gradle.properties.example android/gradle.properties`
 
 # Run in dev environment

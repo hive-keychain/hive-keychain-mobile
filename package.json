@@ -3,6 +3,7 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
+    "watchman": "watchman watch-del-all && npm run clean",
     "android": "react-native run-android",
     "android-bundle": "cd android && ./gradlew bundleRelease && cd ..",
     "android-release": "react-native run-android --variant=release",
