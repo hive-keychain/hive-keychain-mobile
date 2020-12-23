@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import {Text} from 'react-native-elements';
 import {connect} from 'react-redux';
+import Toast from 'react-native-simple-toast';
 
 import Separator from 'components/ui/Separator';
 import {addAccount} from 'actions';
@@ -32,7 +33,9 @@ const AddAccountByKey = ({addAccountConnect, navigation, route}) => {
       const wallet = route.params ? route.params.wallet : false;
       addAccountConnect(account, keys, wallet);
     } else {
-      //TODO: show error popup
+      Toast.show(
+        'Something went wrong! Please verify your keys and your connection.',
+      );
     }
   };
   const {height} = useWindowDimensions();

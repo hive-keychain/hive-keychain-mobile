@@ -108,10 +108,14 @@ export const validateFromObject = async ({
 };
 
 export default async (username, pwd) => {
-  const account = (await client.database.getAccounts([username]))[0];
-  const publicKey = getPublicKeyFromPrivateKeyString(pwd);
-  if (publicKey) {
-    return validatePrivateKey(account, pwd, publicKey);
+  try {
+    const account = (await client.database.getAccounts([username]))[0];
+    const publicKey = getPublicKeyFromPrivateKeyString(pwd);
+    if (publicKey) {
+      return validatePrivateKey(account, pwd, publicKey);
+    }
+    return derivateFromMasterPassword(username, account, pwd);
+  } catch (e) {
+    console.log(e);
   }
-  return derivateFromMasterPassword(username, account, pwd);
 };
