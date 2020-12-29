@@ -13,7 +13,7 @@ const ScanQR = ({addAccountConnect, route}) => {
       const obj = JSON.parse(data.replace('keychain://add_account=', ''));
       const keys = await validateFromObject(obj);
       const wallet = route.params ? route.params.wallet : false;
-      addAccountConnect(obj.name, keys, wallet);
+      addAccountConnect(obj.name, keys, wallet, true);
     } catch (e) {
       console.log(e, data);
     }

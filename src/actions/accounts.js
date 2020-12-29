@@ -13,7 +13,7 @@ import {saveOnKeychain, clearKeychain} from 'utils/keychainStorage';
 import validateKeys from 'utils/keyValidation';
 import {loadAccount} from 'actions/hive';
 
-export const addAccount = (name, keys, wallet) => async (
+export const addAccount = (name, keys, wallet, qr) => async (
   dispatch,
   getState,
 ) => {
@@ -22,7 +22,7 @@ export const addAccount = (name, keys, wallet) => async (
   if (previousAccounts.find((e) => e.name === name)) {
     Toast.show(translate('toast.account_already'));
     if (wallet) {
-      resetStackAndNavigate('WALLET');
+      qr ? resetStackAndNavigate('WALLET') : navigate('WALLET');
     }
     return;
   }
@@ -32,7 +32,7 @@ export const addAccount = (name, keys, wallet) => async (
   await saveOnKeychain('accounts', encrypted);
   if (wallet) {
     dispatch(loadAccount(name));
-    resetStackAndNavigate('WALLET');
+    qr ? resetStackAndNavigate('WALLET') : navigate('WALLET');
   }
 };
 
