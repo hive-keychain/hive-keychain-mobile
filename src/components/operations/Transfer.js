@@ -17,6 +17,8 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
 import {hiveEngine} from 'utils/config';
+import {tryConfirmTransaction} from 'utils/hiveEngine';
+
 const Transfer = ({
   currency,
   user,
@@ -53,7 +55,7 @@ const Transfer = ({
         memo: memo,
       },
     });
-    await client.broadcast.json(
+    return await client.broadcast.json(
       {
         id,
         json,
@@ -69,17 +71,19 @@ const Transfer = ({
     try {
       if (!engine) {
         transfer();
+        Toast.show(translate('toast.transfer_success'), Toast.LONG);
       } else {
-        transferToken();
+        const {id} = await transferToken();
+        const {confirmed} = await tryConfirmTransaction(id);
+        Toast.show(
+          confirmed
+            ? translate('toast.transfer_token_confirmed')
+            : translate('toast.transfer_token_unconfirmed'),
+          Toast.LONG,
+        );
       }
       loadAccountConnect(user.account.name);
       goBack();
-      Toast.show(
-        engine
-          ? translate('toast.transfer_token_success')
-          : translate('toast.transfer_success'),
-        Toast.LONG,
-      );
     } catch (e) {
       Toast.show(`Error : ${e.message}`, Toast.LONG);
     }
