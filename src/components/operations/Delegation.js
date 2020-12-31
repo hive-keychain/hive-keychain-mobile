@@ -27,8 +27,11 @@ const Delegation = ({
 }) => {
   const [to, setTo] = useState(delegatee || '');
   const [amount, setAmount] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const onDelegate = async () => {
+    setLoading(true);
+
     Keyboard.dismiss();
     try {
       await client.broadcast.sendOperations(
@@ -55,6 +58,8 @@ const Delegation = ({
       }
     } catch (e) {
       Toast.show(`Error : ${e.message}`, Toast.LONG);
+    } finally {
+      setLoading(false);
     }
   };
   const {color} = getCurrencyProperties(currency);
@@ -94,6 +99,7 @@ const Delegation = ({
         title={translate('common.send')}
         onPress={onDelegate}
         style={styles.button}
+        isLoading={loading}
       />
     </Operation>
   );

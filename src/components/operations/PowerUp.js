@@ -20,9 +20,11 @@ import {loadAccount} from 'actions';
 const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
   const [to, setTo] = useState(user.account.name);
   const [amount, setAmount] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const onPowerUp = async () => {
     Keyboard.dismiss();
+    setLoading(true);
 
     try {
       await client.broadcast.sendOperations(
@@ -43,6 +45,8 @@ const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
       Toast.show(translate('toast.powerup_success'), Toast.LONG);
     } catch (e) {
       Toast.show(`Error : ${e.message}`, Toast.LONG);
+    } finally {
+      setLoading(false);
     }
   };
   const {color} = getCurrencyProperties(currency);
@@ -77,6 +81,7 @@ const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
         title={translate('common.send')}
         onPress={onPowerUp}
         style={styles.button}
+        isLoading={loading}
       />
     </Operation>
   );

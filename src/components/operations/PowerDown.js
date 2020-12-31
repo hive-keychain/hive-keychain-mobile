@@ -19,6 +19,8 @@ import {toHP, fromHP, withCommas} from 'utils/format';
 
 const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
   const [amount, setAmount] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const renderPDIndicator = () => {
     if (parseFloat(user.account.to_withdraw) !== 0) {
       return (
@@ -38,6 +40,7 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
     }
   };
   const onPowerDown = async () => {
+    setLoading(true);
     Keyboard.dismiss();
 
     try {
@@ -64,6 +67,8 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
       }
     } catch (e) {
       Toast.show(`Error : ${e.message}`, Toast.LONG);
+    } finally {
+      setLoading(false);
     }
   };
   const {color} = getCurrencyProperties(currency);
@@ -98,6 +103,7 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
         title={translate('common.send')}
         onPress={onPowerDown}
         style={styles.button}
+        isLoading={loading}
       />
     </Operation>
   );

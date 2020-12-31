@@ -10,7 +10,6 @@ import OperationInput from 'components/form/OperationInput';
 import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
 import Balance from './Balance';
-import Loader from 'components/ui/Loader';
 import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
 import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
@@ -74,7 +73,7 @@ const Transfer = ({
     Keyboard.dismiss();
     try {
       if (!engine) {
-        transfer();
+        await transfer();
         Toast.show(translate('toast.transfer_success'), Toast.LONG);
       } else {
         const {id} = await transferToken();
@@ -90,6 +89,7 @@ const Transfer = ({
       goBack();
     } catch (e) {
       Toast.show(`Error : ${e.message}`, Toast.LONG);
+      setLoading(false);
     }
   };
   const {color} = getCurrencyProperties(currency);
@@ -132,14 +132,13 @@ const Transfer = ({
       />
 
       <Separator height={40} />
-      <Loader animating={loading} />
-      {!loading && (
-        <EllipticButton
-          title={translate('common.send')}
-          onPress={onSend}
-          style={styles.button}
-        />
-      )}
+
+      <EllipticButton
+        title={translate('common.send')}
+        onPress={onSend}
+        style={styles.button}
+        isLoading={loading}
+      />
     </Operation>
   );
 };
