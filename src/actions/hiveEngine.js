@@ -22,16 +22,20 @@ export const loadTokensMarket = () => async (dispatch) => {
 };
 
 export const loadUserTokens = (account) => async (dispatch) => {
-  dispatch({
-    type: CLEAR_USER_TOKENS,
-  });
-  const tokensBalance = (await hsc.find('tokens', 'balances', {account}))
-    .filter((t) => parseFloat(t.balance) !== 0)
-    .sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
-  dispatch({
-    type: LOAD_USER_TOKENS,
-    payload: tokensBalance,
-  });
+  try {
+    dispatch({
+      type: CLEAR_USER_TOKENS,
+    });
+    const tokensBalance = (await hsc.find('tokens', 'balances', {account}))
+      .filter((t) => parseFloat(t.balance) !== 0)
+      .sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
+    dispatch({
+      type: LOAD_USER_TOKENS,
+      payload: tokensBalance,
+    });
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const loadTokenHistory = (account, currency) => async (dispatch) => {

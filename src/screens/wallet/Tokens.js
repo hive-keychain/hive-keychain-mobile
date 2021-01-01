@@ -6,6 +6,8 @@ import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import Separator from 'components/ui/Separator';
 import {translate} from 'utils/localize';
 import HiveEngineAccountValue from 'components/hive/HiveEngineAccountValue';
+import Loader from 'components/ui/Loader';
+
 const Tokens = ({
   user,
   loadTokensConnect,
@@ -28,15 +30,15 @@ const Tokens = ({
       <Separator />
       <HiveEngineAccountValue
         bittrex={bittrex}
-        tokens={userTokens}
+        tokens={userTokens.list}
         tokensMarket={tokensMarket}
       />
       <Separator />
-
-      {userTokens.length ? (
+      <Loader animating={userTokens.loading} />
+      {userTokens.list.length ? (
         <FlatList
           style={[styles.half]}
-          data={userTokens}
+          data={userTokens.list}
           keyExtractor={(item) => item._id.toString()}
           ItemSeparatorComponent={() => <Separator height={10} />}
           renderItem={({item}) => (
