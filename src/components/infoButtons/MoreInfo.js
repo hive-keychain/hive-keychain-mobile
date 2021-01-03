@@ -1,10 +1,8 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, useWindowDimensions} from 'react-native';
 import {navigate} from 'utils/navigation';
-
 import MoreInformation from 'components/modals/MoreInformation';
 import InfoQR from 'components/modals/InfoQR';
-
 import Information from 'assets/addAccount/icon_info.svg';
 
 export default ({type}) => {
@@ -23,7 +21,7 @@ export default ({type}) => {
       onPress={() => {
         navigate('ModalScreen', {modalContent: content});
       }}>
-      <Information style={styles.info} />
+      <Information style={styles.info} fill="#d9e3ed" />
     </TouchableOpacity>
   );
 };
