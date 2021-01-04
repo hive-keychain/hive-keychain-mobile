@@ -7,7 +7,7 @@ import Toast from 'react-native-simple-toast';
 import Operation from './Operation';
 import {translate} from 'utils/localize';
 import OperationInput from 'components/form/OperationInput';
-import EllipticButton from 'components/form/EllipticButton';
+import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import Separator from 'components/ui/Separator';
 import Balance from './Balance';
 
@@ -95,7 +95,7 @@ const Delegation = ({
       />
 
       <Separator height={40} />
-      <EllipticButton
+      <ActiveOperationButton
         title={translate('common.send')}
         onPress={onDelegate}
         style={styles.button}

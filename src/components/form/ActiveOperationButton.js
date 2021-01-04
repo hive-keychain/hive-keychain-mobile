@@ -23,7 +23,6 @@ const ActiveOperationButton = (props) => {
 const styles = StyleSheet.create({
   text: {
     color: '#A3112A',
-    marginBottom: -25,
     textAlign: 'center',
     fontSize: 13,
   },
@@ -32,6 +31,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
+    marginBottom: -20,
   },
 });
 
