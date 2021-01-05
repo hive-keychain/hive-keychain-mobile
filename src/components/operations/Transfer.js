@@ -30,6 +30,7 @@ const Transfer = ({
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
   const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState(1);
 
   const transfer = async () => {
     setLoading(true);
@@ -94,53 +95,87 @@ const Transfer = ({
   };
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color);
-  return (
-    <Operation
-      logo={<SendArrowBlue />}
-      title={translate('wallet.operations.transfer.title')}>
-      <Separator />
-      <Balance
-        currency={currency}
-        account={user.account}
-        tokenBalance={tokenBalance}
-        tokenLogo={tokenLogo}
-        engine={engine}
-      />
+  if (step === 1) {
+    return (
+      <Operation
+        logo={<SendArrowBlue />}
+        title={translate('wallet.operations.transfer.title')}>
+        <Separator />
+        <Balance
+          currency={currency}
+          account={user.account}
+          tokenBalance={tokenBalance}
+          tokenLogo={tokenLogo}
+          engine={engine}
+        />
 
-      <Separator />
-      <OperationInput
-        placeholder={translate('common.username').toUpperCase()}
-        leftIcon={<AccountLogoDark />}
-        autoCapitalize="none"
-        value={to}
-        onChangeText={setTo}
-      />
-      <Separator />
-      <OperationInput
-        placeholder={'0.000'}
-        keyboardType="numeric"
-        rightIcon={<Text style={styles.currency}>{currency}</Text>}
-        textAlign="right"
-        value={amount}
-        onChangeText={setAmount}
-      />
-      <Separator />
-      <OperationInput
-        placeholder={translate('wallet.operations.transfer.memo')}
-        value={memo}
-        onChangeText={setMemo}
-      />
+        <Separator />
+        <OperationInput
+          placeholder={translate('common.username').toUpperCase()}
+          leftIcon={<AccountLogoDark />}
+          autoCapitalize="none"
+          value={to}
+          onChangeText={setTo}
+        />
+        <Separator />
+        <OperationInput
+          placeholder={'0.000'}
+          keyboardType="numeric"
+          rightIcon={<Text style={styles.currency}>{currency}</Text>}
+          textAlign="right"
+          value={amount}
+          onChangeText={setAmount}
+        />
+        <Separator />
+        <OperationInput
+          placeholder={translate('wallet.operations.transfer.memo')}
+          value={memo}
+          onChangeText={setMemo}
+        />
 
-      <Separator height={40} />
+        <Separator height={40} />
 
-      <ActiveOperationButton
-        title={translate('common.send')}
-        onPress={onSend}
-        style={styles.button}
-        isLoading={loading}
-      />
-    </Operation>
-  );
+        <ActiveOperationButton
+          title={translate('common.send')}
+          onPress={() => {
+            setStep(2);
+          }}
+          style={styles.button}
+          isLoading={loading}
+        />
+      </Operation>
+    );
+  } else {
+    return (
+      <Operation
+        logo={<SendArrowBlue />}
+        title={translate('wallet.operations.transfer.title')}>
+        <Separator height={50} />
+        <Text style={styles.title}>From</Text>
+        <Text style={styles.field}>{`@${user.account.name}`}</Text>
+        <Separator />
+        <Text style={styles.title}>To</Text>
+        <Text style={styles.field}>{`@${to}`}</Text>
+        <Separator />
+        <Text style={styles.title}>Amount</Text>
+        <Text style={styles.field}>{`${amount} ${currency}`}</Text>
+        <Separator />
+        {memo.length ? (
+          <>
+            <Text style={styles.title}>Memo</Text>
+            <Text style={styles.field}>{memo}</Text>
+          </>
+        ) : null}
+        <Separator height={40} />
+        <ActiveOperationButton
+          title={translate('common.send')}
+          onPress={onSend}
+          style={styles.button}
+          isLoading={loading}
+        />
+      </Operation>
+    );
+  }
 };
 
 const getDimensionedStyles = (color) =>
