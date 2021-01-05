@@ -11,6 +11,7 @@
   "common": {
     "import": "Import",
     "username": "username",
+    "confirm": "Confirm",
     "privateKey": "Private Key",
     "private": "Private",
     "public": "Public",
@@ -29,7 +30,16 @@
     "no_transaction": "No recent transaction.",
     "operations": {
       "history": "History",
-      "transfer": {"title": "Transfer funds", "memo": "MEMO (optional)"},
+      "transfer": {
+        "title": "Transfer funds",
+        "memo": "MEMO (optional)",
+        "confirm": {
+          "from": "From",
+          "to": "To",
+          "amount": "Amount",
+          "memo": "Memo"
+        }
+      },
       "powerup": {"title": "Power up!"},
       "powerdown": {"title": "Power down"},
       "delegation": {

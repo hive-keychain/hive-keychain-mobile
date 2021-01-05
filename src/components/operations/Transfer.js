@@ -151,24 +151,32 @@ const Transfer = ({
         logo={<SendArrowBlue />}
         title={translate('wallet.operations.transfer.title')}>
         <Separator height={50} />
-        <Text style={styles.title}>From</Text>
+        <Text style={styles.title}>
+          {translate('wallet.operations.transfer.confirm.from')}
+        </Text>
         <Text style={styles.field}>{`@${user.account.name}`}</Text>
         <Separator />
-        <Text style={styles.title}>To</Text>
+        <Text style={styles.title}>
+          {translate('wallet.operations.transfer.confirm.to')}
+        </Text>
         <Text style={styles.field}>{`@${to}`}</Text>
         <Separator />
-        <Text style={styles.title}>Amount</Text>
+        <Text style={styles.title}>
+          {translate('wallet.operations.transfer.confirm.amount')}
+        </Text>
         <Text style={styles.field}>{`${amount} ${currency}`}</Text>
         <Separator />
         {memo.length ? (
           <>
-            <Text style={styles.title}>Memo</Text>
+            <Text style={styles.title}>
+              {translate('wallet.operations.transfer.confirm.memo')}
+            </Text>
             <Text style={styles.field}>{memo}</Text>
           </>
         ) : null}
         <Separator height={40} />
         <ActiveOperationButton
-          title={translate('common.send')}
+          title={translate('common.confirm')}
           onPress={onSend}
           style={styles.button}
           isLoading={loading}
@@ -182,6 +190,7 @@ const getDimensionedStyles = (color) =>
   StyleSheet.create({
     button: {backgroundColor: '#68A0B4'},
     currency: {fontWeight: 'bold', fontSize: 18, color},
+    title: {fontWeight: 'bold', fontSize: 16},
   });
 
 export default connect(
