@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, Keyboard} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  Keyboard,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {connect} from 'react-redux';
 import hive, {client} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
@@ -8,6 +14,7 @@ import Operation from './Operation';
 import {translate} from 'utils/localize';
 import OperationInput from 'components/form/OperationInput';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
 import Balance from './Balance';
 import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
@@ -94,7 +101,9 @@ const Transfer = ({
     }
   };
   const {color} = getCurrencyProperties(currency);
-  const styles = getDimensionedStyles(color);
+  const {height, width} = useWindowDimensions();
+
+  const styles = getDimensionedStyles(color, height, width);
   if (step === 1) {
     return (
       <Operation
@@ -140,7 +149,7 @@ const Transfer = ({
           onPress={() => {
             setStep(2);
           }}
-          style={styles.button}
+          style={styles.send}
           isLoading={loading}
         />
       </Operation>
@@ -175,22 +184,38 @@ const Transfer = ({
           </>
         ) : null}
         <Separator height={40} />
-        <ActiveOperationButton
-          title={translate('common.confirm')}
-          onPress={onSend}
-          style={styles.button}
-          isLoading={loading}
-        />
+        <View style={styles.buttonsContainer}>
+          <EllipticButton
+            title={translate('common.back')}
+            style={styles.back}
+            onPress={() => {
+              setStep(1);
+            }}
+          />
+          <ActiveOperationButton
+            title={translate('common.confirm')}
+            onPress={onSend}
+            style={styles.confirm}
+            isLoading={loading}
+          />
+        </View>
       </Operation>
     );
   }
 };
 
-const getDimensionedStyles = (color) =>
+const getDimensionedStyles = (color, height, width) =>
   StyleSheet.create({
-    button: {backgroundColor: '#68A0B4'},
+    send: {backgroundColor: '#68A0B4'},
+    confirm: {
+      backgroundColor: '#68A0B4',
+      width: width / 3,
+      marginHorizontal: 0,
+    },
+    back: {backgroundColor: '#7E8C9A', width: width / 3, marginHorizontal: 0},
     currency: {fontWeight: 'bold', fontSize: 18, color},
     title: {fontWeight: 'bold', fontSize: 16},
+    buttonsContainer: {display: 'flex', flexDirection: 'row'},
   });
 
 export default connect(

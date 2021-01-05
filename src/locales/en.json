@@ -20,7 +20,8 @@
     "send": "Send",
     "save": "Save",
     "balance": "Balance",
-    "available": "Available"
+    "available": "Available",
+    "back": "Back"
   },
   "wallet": {
     "rc": "Resources:",
