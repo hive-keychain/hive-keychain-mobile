@@ -1,4 +1,5 @@
 import {translate} from 'utils/localize';
+import api from 'api/keychain';
 
 const getExchangeValidationWarning = (account, currency, hasMemo) => {
   const exchanges = [
@@ -39,4 +40,8 @@ export const validate = (phishingAccounts, account, currency, hasMemo) => {
     warning = getExchangeValidationWarning(account, currency, hasMemo);
   }
   return warning;
+};
+
+export const getPhishingAccounts = async () => {
+  return (await api.get('/hive/phishingAccounts')).data;
 };

@@ -7,9 +7,11 @@ import {
   ADD_TRANSACTIONS,
   FETCH_DELEGATORS,
   FETCH_DELEGATEES,
+  FETCH_PHISHING_ACCOUNTS,
 } from './types';
 import dhive, {client} from 'utils/dhive';
 import {getBittrexPrices} from 'utils/price';
+import {getPhishingAccounts} from 'utils/transferValidator';
 import {getDelegatees, getDelegators} from 'utils/hiveUtils';
 
 export const loadAccount = (name) => async (dispatch, getState) => {
@@ -117,5 +119,12 @@ export const loadDelegatees = (username) => async (dispatch) => {
   dispatch({
     type: FETCH_DELEGATEES,
     payload: await getDelegatees(username),
+  });
+};
+
+export const fetchPhishingAccounts = () => async (dispatch) => {
+  dispatch({
+    type: FETCH_PHISHING_ACCOUNTS,
+    payload: await getPhishingAccounts(),
   });
 };

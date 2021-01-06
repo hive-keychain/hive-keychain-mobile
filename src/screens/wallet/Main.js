@@ -2,7 +2,13 @@ import React, {useEffect} from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 
 import {connect} from 'react-redux';
-import {lock, loadAccount, loadProperties, loadBittrex} from 'actions';
+import {
+  lock,
+  loadAccount,
+  loadProperties,
+  loadBittrex,
+  fetchPhishingAccounts,
+} from 'actions';
 import WalletPage from 'components/ui/WalletPage';
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
@@ -17,6 +23,7 @@ const Main = ({
   loadAccountConnect,
   loadPropertiesConnect,
   loadBittrexConnect,
+  fetchPhishingAccountsConnect,
   user,
   properties,
   navigation,
@@ -29,11 +36,13 @@ const Main = ({
     loadAccountConnect(lastAccount || accounts[0].name);
     loadPropertiesConnect();
     loadBittrexConnect();
+    fetchPhishingAccountsConnect();
   }, [
     loadAccountConnect,
     accounts,
     loadPropertiesConnect,
     loadBittrexConnect,
+    fetchPhishingAccountsConnect,
     lastAccount,
   ]);
 
@@ -97,6 +106,7 @@ const getDimensionedStyles = ({width, height}) =>
 
 export default connect(
   (state) => {
+    console.log(state);
     return {
       user: state.activeAccount,
       properties: state.properties,
@@ -109,5 +119,6 @@ export default connect(
     loadAccountConnect: loadAccount,
     loadPropertiesConnect: loadProperties,
     loadBittrexConnect: loadBittrex,
+    fetchPhishingAccountsConnect: fetchPhishingAccounts,
   },
 )(Main);
