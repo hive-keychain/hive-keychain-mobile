@@ -1,22 +1,23 @@
 import {translate} from 'utils/localize';
 import api from 'api/keychain';
 
-const getExchangeValidationWarning = (account, currency, hasMemo) => {
-  const exchanges = [
-    {account: 'bittrex', tokens: ['HIVE', 'HBD']},
-    {account: 'deepcrypto8', tokens: ['HIVE']},
-    {account: 'binance-hot', tokens: []},
-    {account: 'ionomy', tokens: ['HIVE', 'HBD']},
-    {account: 'huobi-pro', tokens: ['HIVE']},
-    {account: 'huobi-withdrawal', tokens: []},
-    {account: 'blocktrades', tokens: ['HIVE', 'HBD']},
-    {account: 'mxchive', tokens: ['HIVE']},
-    {account: 'hot.dunamu', tokens: []},
-    {account: 'probithive', tokens: ['HIVE']},
-    {account: 'probitred', tokens: []},
-    {account: 'upbitsteem', tokens: []},
-  ];
+const getExchanges = () => [
+  {account: 'bittrex', tokens: ['HIVE', 'HBD']},
+  {account: 'deepcrypto8', tokens: ['HIVE']},
+  {account: 'binance-hot', tokens: []},
+  {account: 'ionomy', tokens: ['HIVE', 'HBD']},
+  {account: 'huobi-pro', tokens: ['HIVE']},
+  {account: 'huobi-withdrawal', tokens: []},
+  {account: 'blocktrades', tokens: ['HIVE', 'HBD']},
+  {account: 'mxchive', tokens: ['HIVE']},
+  {account: 'hot.dunamu', tokens: []},
+  {account: 'probithive', tokens: ['HIVE']},
+  {account: 'probitred', tokens: []},
+  {account: 'upbitsteem', tokens: []},
+];
 
+const getExchangeValidationWarning = (account, currency, hasMemo) => {
+  const exchanges = getExchanges();
   const exchange = exchanges.find((e) => e.account === account);
   if (!exchange) {
     return null;
@@ -32,14 +33,23 @@ const getExchangeValidationWarning = (account, currency, hasMemo) => {
   return null;
 };
 
-export const validate = (phishingAccounts, account, currency, hasMemo) => {
+export const getTransferWarning = (
+  phishingAccounts,
+  account,
+  currency,
+  hasMemo,
+) => {
   let warning = null;
-  if (phishingAccounts.find(account)) {
+  if (phishingAccounts.find((e) => e === account)) {
     warning = translate('wallet.operations.transfer.warning.phishing');
   } else {
     warning = getExchangeValidationWarning(account, currency, hasMemo);
   }
-  return warning;
+
+  return {
+    warning,
+    exchange: !warning && !!getExchanges().find((e) => e.account === account),
+  };
 };
 
 export const getPhishingAccounts = async () => {

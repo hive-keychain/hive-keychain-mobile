@@ -24,6 +24,7 @@ import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
 import {hiveEngine} from 'utils/config';
 import {tryConfirmTransaction} from 'utils/hiveEngine';
+import {getTransferWarning} from 'utils/transferValidator';
 
 const Transfer = ({
   currency,
@@ -32,6 +33,7 @@ const Transfer = ({
   engine,
   tokenBalance,
   tokenLogo,
+  phishingAccounts,
 }) => {
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
@@ -147,7 +149,13 @@ const Transfer = ({
         <ActiveOperationButton
           title={translate('common.send')}
           onPress={() => {
-            setStep(2);
+            if (!amount.length || !to.length) {
+              Toast.show(
+                translate('wallet.operations.transfer.warning.missing_info'),
+              );
+            } else {
+              setStep(2);
+            }
           }}
           style={styles.send}
           isLoading={loading}
@@ -159,7 +167,11 @@ const Transfer = ({
       <Operation
         logo={<SendArrowBlue />}
         title={translate('wallet.operations.transfer.title')}>
-        <Separator height={50} />
+        <Separator height={30} />
+        <Text style={styles.warning}>
+          {getTransferWarning(phishingAccounts, to, currency, !!memo).warning}
+        </Text>
+        <Separator />
         <Text style={styles.title}>
           {translate('wallet.operations.transfer.confirm.from')}
         </Text>
@@ -168,7 +180,11 @@ const Transfer = ({
         <Text style={styles.title}>
           {translate('wallet.operations.transfer.confirm.to')}
         </Text>
-        <Text style={styles.field}>{`@${to}`}</Text>
+        <Text style={styles.field}>{`@${to} ${
+          getTransferWarning(phishingAccounts, to, currency, !!memo).exchange
+            ? '(exchange)'
+            : ''
+        }`}</Text>
         <Separator />
         <Text style={styles.title}>
           {translate('wallet.operations.transfer.confirm.amount')}
@@ -212,6 +228,7 @@ const getDimensionedStyles = (color, height, width) =>
       width: width / 3,
       marginHorizontal: 0,
     },
+    warning: {color: 'red', fontWeight: 'bold'},
     back: {backgroundColor: '#7E8C9A', width: width / 3, marginHorizontal: 0},
     currency: {fontWeight: 'bold', fontSize: 18, color},
     title: {fontWeight: 'bold', fontSize: 16},
@@ -222,6 +239,7 @@ export default connect(
   (state) => {
     return {
       user: state.activeAccount,
+      phishingAccounts: state.phishingAccounts,
     };
   },
   {loadAccountConnect: loadAccount},
