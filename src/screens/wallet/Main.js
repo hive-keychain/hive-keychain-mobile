@@ -106,7 +106,6 @@ const getDimensionedStyles = ({width, height}) =>
 
 export default connect(
   (state) => {
-    console.log(state);
     return {
       user: state.activeAccount,
       properties: state.properties,

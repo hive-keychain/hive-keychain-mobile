@@ -22,9 +22,11 @@ const Tokens = ({
     loadTokensConnect();
     loadTokensMarketConnect();
   }, [loadTokensConnect, loadTokensMarketConnect]);
+
   useEffect(() => {
     loadUserTokensConnect(user.name);
   }, [loadUserTokensConnect, user.name]);
+
   return (
     <View style={styles.container}>
       <Separator />
@@ -34,8 +36,8 @@ const Tokens = ({
         tokensMarket={tokensMarket}
       />
       <Separator />
-      <Loader animating={userTokens.loading} />
-      {userTokens.list.length ? (
+      {userTokens.loading && <Loader animating />}
+      {!userTokens.loading && userTokens.list.length ? (
         <FlatList
           style={[styles.half]}
           data={userTokens.list}
