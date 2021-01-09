@@ -100,3 +100,7 @@ export const getDelegatees = async (name) => {
       (a, b) => parseFloat(b.vesting_shares) - parseFloat(a.vesting_shares),
     );
 };
+
+export const getConversionRequests = async (name) => {
+  return await client.database.call('get_conversion_requests', [name]);
+};

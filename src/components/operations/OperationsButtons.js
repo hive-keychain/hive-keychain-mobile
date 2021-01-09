@@ -7,6 +7,7 @@ import PowerUp from 'components/operations/PowerUp';
 import PowerDown from 'components/operations/PowerDown';
 import Delegation from 'components/operations/Delegation';
 import History from 'components/operations/History';
+import Convert from 'components/operations/Convert';
 
 import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
@@ -80,6 +81,21 @@ export const SendDelegation = () => {
       onPress={() => {
         navigate('ModalScreen', {
           modalContent: <Delegation />,
+        });
+      }}
+      size={36}
+      backgroundColor="#B084C4"
+      content={<Delegate />}
+    />
+  );
+};
+
+export const SendConversion = () => {
+  return (
+    <RoundButton
+      onPress={() => {
+        navigate('ModalScreen', {
+          modalContent: <Convert />,
         });
       }}
       size={36}
