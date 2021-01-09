@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
 import hive, {client} from 'utils/dhive';
@@ -14,22 +14,39 @@ import Balance from './Balance';
 import Hive from 'assets/wallet/icon_hive.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
-import {loadAccount} from 'actions';
+import {loadAccount, fetchConversionRequests} from 'actions';
 
-const Convert = ({user, loadAccountConnect}) => {
+const Convert = ({
+  user,
+  loadAccountConnect,
+  fetchConversionRequestsConnect,
+  conversions,
+}) => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchConversionRequestsConnect(user.name);
+  }, [user.name, fetchConversionRequestsConnect]);
 
   const onConvert = async () => {
     Keyboard.dismiss();
     setLoading(true);
-
+    console.log(
+      conversions,
+      Math.max(...conversions.map((e) => e.requestid), 0) + 1,
+    );
     try {
       await client.broadcast.sendOperations(
         [
           [
             'convert',
-            {owner: user.account.name, amount: `${amount} HBD`, requestid: 1},
+            {
+              owner: user.account.name,
+              amount: `${amount} HBD`,
+              requestid:
+                Math.max(...conversions.map((e) => e.requestid), 0) + 1,
+            },
           ],
         ],
         hive.PrivateKey.fromString(user.keys.active),
@@ -82,7 +99,11 @@ export default connect(
   (state) => {
     return {
       user: state.activeAccount,
+      conversions: state.conversions,
     };
   },
-  {loadAccountConnect: loadAccount},
+  {
+    loadAccountConnect: loadAccount,
+    fetchConversionRequestsConnect: fetchConversionRequests,
+  },
 )(Convert);
