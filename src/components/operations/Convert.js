@@ -11,7 +11,7 @@ import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import Separator from 'components/ui/Separator';
 import Balance from './Balance';
 
-import Hbd from 'assets/wallet/icon_hbd.svg';
+import Hive from 'assets/wallet/icon_hive.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
@@ -26,12 +26,17 @@ const Convert = ({user, loadAccountConnect}) => {
 
     try {
       await client.broadcast.sendOperations(
-        [['convert', {owner: user.account.name, amount, requestid: 1}]],
+        [
+          [
+            'convert',
+            {owner: user.account.name, amount: `${amount} HBD`, requestid: 1},
+          ],
+        ],
         hive.PrivateKey.fromString(user.keys.active),
       );
       loadAccountConnect(user.account.name);
       goBack();
-      Toast.show(translate('toast.powerup_success'), Toast.LONG);
+      Toast.show(translate('toast.convert_success'), Toast.LONG);
     } catch (e) {
       Toast.show(`Error : ${e.message}`, Toast.LONG);
     } finally {
@@ -42,11 +47,10 @@ const Convert = ({user, loadAccountConnect}) => {
   const styles = getDimensionedStyles(color);
   return (
     <Operation
-      logo={<Hbd />}
-      title={translate('wallet.operations.powerup.title')}>
+      logo={<Hive />}
+      title={translate('wallet.operations.convert.title')}>
       <Separator />
       <Balance currency="HBD" account={user.account} />
-
       <Separator />
       <OperationInput
         placeholder={'0.000'}
@@ -59,7 +63,7 @@ const Convert = ({user, loadAccountConnect}) => {
 
       <Separator height={40} />
       <ActiveOperationButton
-        title={translate('common.send')}
+        title={translate('wallet.operations.convert.button')}
         onPress={onConvert}
         style={styles.button}
         isLoading={loading}

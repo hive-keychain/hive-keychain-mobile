@@ -12,6 +12,7 @@ import Convert from 'components/operations/Convert';
 import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
 import Delegate from 'assets/wallet/icon_delegate.svg';
+import Conversion from 'assets/wallet/icon_convert.svg';
 import HistoryIcon from 'assets/wallet/icon_history.svg';
 
 const RoundButton = ({size, content, backgroundColor, onPress}) => {
@@ -99,8 +100,8 @@ export const SendConversion = () => {
         });
       }}
       size={36}
-      backgroundColor="#B084C4"
-      content={<Delegate />}
+      backgroundColor="#A3112A"
+      content={<Conversion />}
     />
   );
 };

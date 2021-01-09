@@ -12,6 +12,7 @@ import {
   SendDelegation,
   SendPowerUp,
   SendPowerDown,
+  SendConversion,
 } from 'components/operations/OperationsButtons';
 import Transactions from 'components/hive/Transactions';
 
@@ -51,7 +52,10 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         value={parseFloat(user.account.hbd_balance)}
         logo={<Hbd width={width / 15} />}
         price={bittrex.hbd}
-        buttons={[<Send key="send_hbd" currency="HBD" />]}
+        buttons={[
+          <Send key="send_hbd" currency="HBD" />,
+          <SendConversion key="conversion" />,
+        ]}
       />
       <Separator height={20} />
       <TokenDisplay
