@@ -51,7 +51,7 @@ export const forgetAccount = (username) => async (dispatch, getState) => {
     const encrypted = encryptJson({list: accounts}, mk);
     await saveOnKeychain('accounts', encrypted);
     dispatch({type: FORGET_ACCOUNT, payload: username});
-    navigate('WalletScreen');
+    navigate('WALLET');
   } else {
     dispatch(forgetAccounts());
   }

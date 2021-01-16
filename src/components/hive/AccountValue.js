@@ -11,7 +11,6 @@ const AccountValue = ({bittrex, account, properties}) => {
       ? '...'
       : `$ ${withCommas(accountValue, 2)}`;
   }
-  console.log(bittrex, account, properties, accountValue);
   return <Text style={styles.accountValue}>{accountValue}</Text>;
 };
 

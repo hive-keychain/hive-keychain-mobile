@@ -145,6 +145,7 @@ const App = ({hasAccounts, auth, lockConnect}) => {
           headerTintColor: 'white',
           headerTransparent,
         }}
+        initialParams={{wallet: true}}
         component={AddAccountByKey}
       />
       <AccountStack.Screen
