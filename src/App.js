@@ -12,6 +12,7 @@ import Unlock from 'screens/Unlock';
 import Modal from 'screens/Modal';
 import CreateAccount from 'screens/CreateAccount';
 import AccountManagement from 'screens/settings/AccountManagement';
+import Settings from 'screens/settings/Settings';
 import Wallet from 'screens/wallet/Main';
 import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';
@@ -126,6 +127,18 @@ const App = ({hasAccounts, auth, lockConnect}) => {
             name="AddAccountStack"
             options={{title: 'ADD ACCOUNT'}}
             component={renderAddAccountFromWalletNavigator}
+          />
+          <Drawer.Screen
+            headerShown
+            headerTitle="SETTINGS"
+            headerTintColor="white"
+            name="SettingsScreen"
+            component={Settings}
+            options={{
+              headerTintColor: 'white',
+              headerTransparent,
+              title: 'SETTINGS',
+            }}
           />
           <Drawer.Screen name="ABOUT" component={About} />
         </Drawer.Navigator>
