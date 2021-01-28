@@ -13,6 +13,7 @@ import tokensMarketReducer from './tokensMarketReducer';
 import tokenHistoryReducer from './tokenHistoryReducer';
 import phishingReducer from './phishingReducer';
 import conversionsReducer from './conversionsReducer';
+import settingsReducer from './settingsReducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -29,4 +30,5 @@ export default combineReducers({
   tokenHistory: tokenHistoryReducer,
   phishingAccounts: phishingReducer,
   conversions: conversionsReducer,
+  settings: settingsReducer,
 });
