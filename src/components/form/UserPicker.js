@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, useWindowDimensions} from 'react-native';
 import CustomPicker from './CustomPicker';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
+import {translate} from 'utils/localize';
 
 const UserPicker = ({username, accounts, onAccountSelected}) => {
   const {width, height} = useWindowDimensions();
@@ -21,6 +22,7 @@ const UserPicker = ({username, accounts, onAccountSelected}) => {
         onSelected={onAccountSelected}
         selectedValue={username}
         prefix="@"
+        prompt={translate('components.picker.prompt_user')}
       />
     </View>
   );

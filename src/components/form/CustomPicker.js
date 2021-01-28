@@ -8,9 +8,8 @@ import {
   Text,
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
-import {translate} from 'utils/localize';
 
-const CustomPicker = ({list, selectedValue, onSelected, prefix}) => {
+const CustomPicker = ({list, selectedValue, onSelected, prefix, prompt}) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height});
   switch (Platform.OS) {
@@ -35,13 +34,11 @@ const CustomPicker = ({list, selectedValue, onSelected, prefix}) => {
         </TouchableOpacity>
       );
     case 'android':
-      console.log(list, selectedValue, onSelected);
-
       return (
         <Picker
           style={styles.picker}
           selectedValue={selectedValue}
-          prompt={translate('components.picker.prompt')}
+          prompt={prompt}
           onValueChange={onSelected}>
           {list.map((item) => {
             console.log(item);

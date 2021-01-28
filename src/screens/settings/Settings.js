@@ -6,9 +6,11 @@ import Separator from 'components/ui/Separator';
 import {updateRPC} from 'actions';
 import HeaderDrawer from 'components/ui/HeaderDrawerScreens';
 import CustomPicker from 'components/form/CustomPicker';
-import rpcList from 'utils/hiveUtils';
+import {rpcList} from 'utils/hiveUtils';
+import {translate} from 'utils/localize';
 
 const AccountManagement = ({navigation, updateRPCConnect, settings}) => {
+  console.log(rpcList, settings);
   return (
     <SafeAreaView backgroundColor="white">
       <StatusBar backgroundColor="black" />
@@ -27,6 +29,7 @@ const AccountManagement = ({navigation, updateRPCConnect, settings}) => {
           onSelected={updateRPCConnect}
           selectedValue={settings.rpc}
           list={rpcList}
+          prompt={translate('components.picker.prompt_rpc')}
         />
       </View>
     </SafeAreaView>

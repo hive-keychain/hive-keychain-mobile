@@ -90,7 +90,8 @@
       }
     },
     "picker": {
-      "prompt": "Select an account",
+      "prompt_user": "Select an account",
+      "prompt_rpc": "Select an RPC node",
       "add_account": "+ ADD NEW ACCOUNT"
     }
   },
