@@ -3,19 +3,20 @@ import {StyleSheet, StatusBar, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Separator from 'components/ui/Separator';
-import {updateRPC} from 'actions';
+import {setRpc} from 'actions';
 import HeaderDrawer from 'components/ui/HeaderDrawerScreens';
 import CustomPicker from 'components/form/CustomPicker';
 import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 
-const AccountManagement = ({navigation, updateRPCConnect, settings}) => {
+const AccountManagement = ({navigation, setRpcConnect, settings}) => {
   console.log(rpcList, settings);
   return (
     <SafeAreaView backgroundColor="white">
       <StatusBar backgroundColor="black" />
       <HeaderDrawer title="SETTINGS" navigation={navigation} />
       <View style={styles.view}>
+        <Text style={styles.title}>RPC Nodes</Text>
         <Text style={styles.disclaimer}>
           You can chose which RPC node is used to read information and broadcast
           transactions from/to the Hive Blockchain.
@@ -26,7 +27,7 @@ const AccountManagement = ({navigation, updateRPCConnect, settings}) => {
         </Text>
         <Separator height={20} />
         <CustomPicker
-          onSelected={updateRPCConnect}
+          onSelected={setRpcConnect}
           selectedValue={settings.rpc}
           list={rpcList}
           prompt={translate('components.picker.prompt_rpc')}
@@ -37,11 +38,16 @@ const AccountManagement = ({navigation, updateRPCConnect, settings}) => {
 };
 
 const styles = StyleSheet.create({
-  disclaimer: {color: '#404950', marginVertical: 2, paddingHorizontal: 20},
-  important: {color: '#A3112A', fontWeight: 'bold'},
+  view: {paddingHorizontal: 20},
+  title: {
+    color: '#404950',
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginVertical: 15,
+    textTransform: 'uppercase',
+  },
+  disclaimer: {color: '#404950', marginVertical: 2},
   button: {backgroundColor: '#B9122F'},
-  keyOdd: {backgroundColor: '#E5EEF7', padding: 20},
-  keyEven: {backgroundColor: '#FFFFFF', padding: 20},
 });
 
 const mapStateToProps = (state) => ({
@@ -49,5 +55,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  updateRPCConnect: updateRPC,
+  setRpcConnect: setRpc,
 })(AccountManagement);

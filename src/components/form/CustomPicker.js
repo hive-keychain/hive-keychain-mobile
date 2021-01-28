@@ -9,14 +9,21 @@ import {
 } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 
-const CustomPicker = ({list, selectedValue, onSelected, prefix, prompt}) => {
+const CustomPicker = ({
+  list,
+  selectedValue,
+  onSelected,
+  prefix,
+  prompt,
+  style,
+}) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height});
   switch (Platform.OS) {
     case 'ios':
       return (
         <TouchableOpacity
-          style={styles.iosContainer}
+          style={[styles.iosContainer, style]}
           onPress={() => {
             ActionSheetIOS.showActionSheetWithOptions(
               {
@@ -34,14 +41,14 @@ const CustomPicker = ({list, selectedValue, onSelected, prefix, prompt}) => {
         </TouchableOpacity>
       );
     case 'android':
+      console.log({...styles.picker, ...style});
       return (
         <Picker
-          style={styles.picker}
+          style={{...styles.picker, ...style}}
           selectedValue={selectedValue}
           prompt={prompt}
           onValueChange={onSelected}>
           {list.map((item) => {
-            console.log(item);
             return (
               <Picker.Item
                 key={item}
