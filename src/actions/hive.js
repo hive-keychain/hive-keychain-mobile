@@ -24,6 +24,7 @@ export const loadAccount = (name) => async (dispatch, getState) => {
     },
   });
   dispatch(getAccountRC(name));
+  console.log(getClient());
   const account = (await getClient().database.getAccounts([name]))[0];
   const keys = getState().accounts.find((e) => e.name === name).keys;
   dispatch({
