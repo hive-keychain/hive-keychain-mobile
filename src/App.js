@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -27,6 +27,7 @@ import {
   noHeader,
   modalOptions,
 } from 'utils/navigation';
+import {setRpc} from 'utils/dhive';
 import Hive from 'assets/wallet/hive.svg';
 import Menu from 'assets/wallet/menu.svg';
 import {lock} from 'actions';
@@ -36,9 +37,11 @@ const Root = createStackNavigator();
 const AccountStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const App = ({hasAccounts, auth, lockConnect}) => {
+const App = ({hasAccounts, auth, lockConnect, rpc}) => {
   const {height, width} = useWindowDimensions();
-
+  useEffect(() => {
+    setRpc(rpc);
+  }, [rpc]);
   const renderNavigator = () => {
     if (!hasAccounts) {
       return (
@@ -240,6 +243,7 @@ const mapStateToProps = (state) => {
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
+    rpc: state.settings.rpc,
   };
 };
 
