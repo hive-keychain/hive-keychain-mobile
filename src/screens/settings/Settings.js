@@ -3,15 +3,16 @@ import {StyleSheet, StatusBar, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Separator from 'components/ui/Separator';
-import EllipticButton from 'components/form/EllipticButton';
-import {updateSettings} from 'actions';
+import {updateRPC} from 'actions';
 import HeaderDrawer from 'components/ui/HeaderDrawerScreens';
+import CustomPicker from 'components/form/CustomPicker';
+import rpcList from 'utils/hiveUtils';
 
-const AccountManagement = ({navigation, updateSettingsConnect}) => {
+const AccountManagement = ({navigation, updateRPCConnect, settings}) => {
   return (
     <SafeAreaView backgroundColor="white">
       <StatusBar backgroundColor="black" />
-      <HeaderDrawer title="WALLET KEYS" navigation={navigation} />
+      <HeaderDrawer title="SETTINGS" navigation={navigation} />
       <View style={styles.view}>
         <Text style={styles.disclaimer}>
           You can chose which RPC node is used to read information and broadcast
@@ -22,6 +23,11 @@ const AccountManagement = ({navigation, updateSettingsConnect}) => {
           given time.
         </Text>
         <Separator height={20} />
+        <CustomPicker
+          onSelected={updateRPCConnect}
+          selectedValue={settings.rpc}
+          list={rpcList}
+        />
       </View>
     </SafeAreaView>
   );
@@ -40,5 +46,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  updateSettingsConnect: updateSettings,
+  updateRPCConnect: updateRPC,
 })(AccountManagement);

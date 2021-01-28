@@ -10,7 +10,7 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import {translate} from 'utils/localize';
 
-const CustomPicker = ({list, selectedValue, onSelected}) => {
+const CustomPicker = ({list, selectedValue, onSelected, prefix}) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height});
   switch (Platform.OS) {
@@ -28,7 +28,9 @@ const CustomPicker = ({list, selectedValue, onSelected}) => {
               },
             );
           }}>
-          <Text style={styles.iosLabel}>@{selectedValue}</Text>
+          <Text style={styles.iosLabel}>{`${
+            prefix ? prefix : ''
+          }{selectedValue}`}</Text>
           <Text>{'\u25BC'}</Text>
         </TouchableOpacity>
       );
@@ -38,12 +40,18 @@ const CustomPicker = ({list, selectedValue, onSelected}) => {
       return (
         <Picker
           style={styles.picker}
-          selectedValue={'selectedValue'}
+          selectedValue={selectedValue}
           prompt={translate('components.picker.prompt')}
           onValueChange={onSelected}>
           {list.map((item) => {
             console.log(item);
-            return <Picker.Item key={item} label={`@${item}`} value={item} />;
+            return (
+              <Picker.Item
+                key={item}
+                label={`${prefix ? prefix : ''}${item}`}
+                value={item}
+              />
+            );
           })}
         </Picker>
       );

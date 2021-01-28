@@ -20,6 +20,7 @@ const UserPicker = ({username, accounts, onAccountSelected}) => {
         list={accountsList}
         onSelected={onAccountSelected}
         selectedValue={username}
+        prefix="@"
       />
     </View>
   );

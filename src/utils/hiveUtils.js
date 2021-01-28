@@ -104,3 +104,20 @@ export const getDelegatees = async (name) => {
 export const getConversionRequests = async (name) => {
   return await client.database.call('get_conversion_requests', [name]);
 };
+
+export const rpcList = [
+  'DEFAULT',
+  'https://api.hive.blog/',
+  'https://api.openhive.network/',
+  'https://api.hivekings.com/',
+  'https://anyx.io/',
+  'https://api.pharesim.me/',
+  'https://hived.hive-engine.com/',
+  'https://hived.privex.io/',
+  'https://hive.roelandp.nl',
+  'https://rpc.ausbit.dev',
+  'https://rpc.ecency.com',
+  'https://techcoderx.com',
+  'https://hive-api.arcange.eu/',
+  'TESTNET',
+];
