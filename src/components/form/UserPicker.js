@@ -17,13 +17,15 @@ const UserPicker = ({username, accounts, onAccountSelected}) => {
   return (
     <View style={styles.container}>
       <UserProfilePicture style={styles.image} username={username} />
-      <CustomPicker
-        list={accountsList}
-        onSelected={onAccountSelected}
-        selectedValue={username}
-        prefix="@"
-        prompt={translate('components.picker.prompt_user')}
-      />
+      <View style={styles.subContainer}>
+        <CustomPicker
+          list={accountsList}
+          onSelected={onAccountSelected}
+          selectedValue={username}
+          prefix="@"
+          prompt={translate('components.picker.prompt_user')}
+        />
+      </View>
     </View>
   );
 };
