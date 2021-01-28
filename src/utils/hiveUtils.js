@@ -1,4 +1,4 @@
-import {client} from './dhive';
+import {getClient} from './dhive';
 import api from 'api/keychain';
 
 const HIVE_VOTING_MANA_REGENERATION_SECONDS = 432000;
@@ -67,7 +67,7 @@ export const getVotingDollarsPerAccount = (
   }
 };
 export const getRC = async (account) => {
-  const rc = await client.rc.calculateRCMana(account.name);
+  const rc = await getClient().rc.calculateRCMana(account.name);
   return rc;
 };
 
@@ -94,7 +94,7 @@ export const getDelegators = async (name) => {
 };
 
 export const getDelegatees = async (name) => {
-  return (await client.database.getVestingDelegations(name, '', 1000))
+  return (await getClient().database.getVestingDelegations(name, '', 1000))
     .filter((e) => parseFloat(e.vesting_shares) !== 0)
     .sort(
       (a, b) => parseFloat(b.vesting_shares) - parseFloat(a.vesting_shares),
@@ -102,7 +102,7 @@ export const getDelegatees = async (name) => {
 };
 
 export const getConversionRequests = async (name) => {
-  return await client.database.call('get_conversion_requests', [name]);
+  return await getClient().database.call('get_conversion_requests', [name]);
 };
 
 export const rpcList = [

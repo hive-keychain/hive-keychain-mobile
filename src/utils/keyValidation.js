@@ -1,4 +1,4 @@
-import hive, {client} from './dhive';
+import hive, {getClient} from './dhive';
 
 const isMemoWif = (publicKey, memo) => {
   return publicKey === memo;
@@ -76,7 +76,7 @@ export const validateFromObject = async ({
   name,
   keys: {memo, posting, active},
 }) => {
-  const account = (await client.database.getAccounts([name]))[0];
+  const account = (await getClient().database.getAccounts([name]))[0];
   let keys = {};
   if (
     memo &&
@@ -109,7 +109,7 @@ export const validateFromObject = async ({
 
 export default async (username, pwd) => {
   try {
-    const account = (await client.database.getAccounts([username]))[0];
+    const account = (await getClient().database.getAccounts([username]))[0];
     const publicKey = getPublicKeyFromPrivateKeyString(pwd);
     if (publicKey) {
       return validatePrivateKey(account, pwd, publicKey);

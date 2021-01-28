@@ -11,7 +11,7 @@ import CustomInput from 'components/form/CustomInput';
 import EllipticButton from 'components/form/EllipticButton';
 import UserLogo from 'assets/addAccount/icon_username.svg';
 import {translate} from 'utils/localize';
-import hive, {client} from 'utils/dhive';
+import hive, {getClient} from 'utils/dhive';
 
 const Transfer = ({user, route}) => {
   const initialCurrency = route.params
@@ -23,7 +23,7 @@ const Transfer = ({user, route}) => {
   const [memo, setMemo] = useState('');
 
   const onTransfer = async () => {
-    await client.broadcast.transfer(
+    await getClient().broadcast.transfer(
       {
         amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
         memo,
