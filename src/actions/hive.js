@@ -10,7 +10,7 @@ import {
   FETCH_PHISHING_ACCOUNTS,
   FETCH_CONVERSION_REQUESTS,
 } from './types';
-import dhive, {client} from 'utils/dhive';
+import dhive, {getClient} from 'utils/dhive';
 import {getBittrexPrices} from 'utils/price';
 import {getPhishingAccounts} from 'utils/transferValidator';
 import {getDelegatees, getDelegators} from 'utils/hiveUtils';
@@ -24,7 +24,8 @@ export const loadAccount = (name) => async (dispatch, getState) => {
     },
   });
   dispatch(getAccountRC(name));
-  const account = (await client.database.getAccounts([name]))[0];
+  console.log(getClient());
+  const account = (await getClient().database.getAccounts([name]))[0];
   const keys = getState().accounts.find((e) => e.name === name).keys;
   dispatch({
     type: ACTIVE_ACCOUNT,
@@ -36,7 +37,7 @@ export const loadAccount = (name) => async (dispatch, getState) => {
 };
 
 const getAccountRC = (username) => async (dispatch) => {
-  const rc = await client.rc.getRCMana(username);
+  const rc = await getClient().rc.getRCMana(username);
   dispatch({
     type: ACTIVE_ACCOUNT_RC,
     payload: rc,
@@ -45,9 +46,9 @@ const getAccountRC = (username) => async (dispatch) => {
 
 export const loadProperties = () => async (dispatch) => {
   const [globals, price, rewardFund] = await Promise.all([
-    client.database.getDynamicGlobalProperties(),
-    client.database.getCurrentMedianHistoryPrice(),
-    client.database.call('get_reward_fund', ['post']),
+    getClient().database.getDynamicGlobalProperties(),
+    getClient().database.getCurrentMedianHistoryPrice(),
+    getClient().database.call('get_reward_fund', ['post']),
   ]);
   const props = {globals, price, rewardFund};
   dispatch({type: GLOBAL_PROPS, payload: props});
@@ -86,8 +87,7 @@ export const fetchAccountTransactions = (accountName, start) => async (
 const getAccountTransactions = async (accountName, start) => {
   const op = dhive.utils.operationOrders;
   const operationsBitmask = dhive.utils.makeBitMaskFilter([op.transfer]);
-
-  const transactions = await client.database.getAccountHistory(
+  const transactions = await getClient().database.getAccountHistory(
     accountName,
     start || -1,
     start ? Math.min(1000, start) : 1000,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -12,6 +12,7 @@ import Unlock from 'screens/Unlock';
 import Modal from 'screens/Modal';
 import CreateAccount from 'screens/CreateAccount';
 import AccountManagement from 'screens/settings/AccountManagement';
+import Settings from 'screens/settings/Settings';
 import Wallet from 'screens/wallet/Main';
 import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';
@@ -26,6 +27,7 @@ import {
   noHeader,
   modalOptions,
 } from 'utils/navigation';
+import {setRpc} from 'utils/dhive';
 import Hive from 'assets/wallet/hive.svg';
 import Menu from 'assets/wallet/menu.svg';
 import {lock} from 'actions';
@@ -35,9 +37,11 @@ const Root = createStackNavigator();
 const AccountStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const App = ({hasAccounts, auth, lockConnect}) => {
+const App = ({hasAccounts, auth, lockConnect, rpc}) => {
   const {height, width} = useWindowDimensions();
-
+  useEffect(() => {
+    setRpc(rpc);
+  }, [rpc]);
   const renderNavigator = () => {
     if (!hasAccounts) {
       return (
@@ -127,6 +131,18 @@ const App = ({hasAccounts, auth, lockConnect}) => {
             options={{title: 'ADD ACCOUNT'}}
             component={renderAddAccountFromWalletNavigator}
           />
+          <Drawer.Screen
+            headerShown
+            headerTitle="SETTINGS"
+            headerTintColor="white"
+            name="SettingsScreen"
+            component={Settings}
+            options={{
+              headerTintColor: 'white',
+              headerTransparent,
+              title: 'SETTINGS',
+            }}
+          />
           <Drawer.Screen name="ABOUT" component={About} />
         </Drawer.Navigator>
       );
@@ -145,6 +161,7 @@ const App = ({hasAccounts, auth, lockConnect}) => {
           headerTintColor: 'white',
           headerTransparent,
         }}
+        initialParams={{wallet: true}}
         component={AddAccountByKey}
       />
       <AccountStack.Screen
@@ -226,6 +243,7 @@ const mapStateToProps = (state) => {
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
+    rpc: state.settings.rpc,
   };
 };
 

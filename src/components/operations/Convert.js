@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
-import hive, {client} from 'utils/dhive';
+import hive, {getClient} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
@@ -45,7 +45,7 @@ const Convert = ({
       Math.max(...conversions.map((e) => e.requestid), 0) + 1,
     );
     try {
-      await client.broadcast.sendOperations(
+      await getClient().broadcast.sendOperations(
         [
           [
             'convert',

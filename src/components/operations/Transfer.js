@@ -7,7 +7,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
-import hive, {client} from 'utils/dhive';
+import hive, {getClient} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
@@ -43,7 +43,7 @@ const Transfer = ({
 
   const transfer = async () => {
     setLoading(true);
-    await client.broadcast.transfer(
+    await getClient().broadcast.transfer(
       {
         amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
         memo,
@@ -68,7 +68,7 @@ const Transfer = ({
         memo: memo,
       },
     });
-    return await client.broadcast.json(
+    return await getClient().broadcast.json(
       {
         id,
         json,

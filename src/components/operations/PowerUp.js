@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
-import hive, {client} from 'utils/dhive';
+import hive, {getClient} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
@@ -27,7 +27,7 @@ const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
     setLoading(true);
 
     try {
-      await client.broadcast.sendOperations(
+      await getClient().broadcast.sendOperations(
         [
           [
             'transfer_to_vesting',

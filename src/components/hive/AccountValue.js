@@ -6,16 +6,12 @@ import {withCommas} from 'utils/format';
 const AccountValue = ({bittrex, account, properties}) => {
   let accountValue = 0;
   if (bittrex.btc && account && properties.globals) {
-    accountValue = withCommas(
-      getAccountValue(account, bittrex, properties.globals),
-      2,
-    );
+    accountValue = getAccountValue(account, bittrex, properties.globals);
+    accountValue = isNaN(accountValue)
+      ? '...'
+      : `$ ${withCommas(accountValue, 2)}`;
   }
-  return (
-    <Text style={styles.accountValue}>
-      {isNaN(accountValue) ? '...' : `$ ${accountValue}`}
-    </Text>
-  );
+  return <Text style={styles.accountValue}>{accountValue}</Text>;
 };
 
 const styles = StyleSheet.create({

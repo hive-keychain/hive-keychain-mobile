@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
-import hive, {client} from 'utils/dhive';
+import hive, {getClient} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
@@ -44,7 +44,7 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
     Keyboard.dismiss();
 
     try {
-      await client.broadcast.sendOperations(
+      await getClient().broadcast.sendOperations(
         [
           [
             'withdraw_vesting',

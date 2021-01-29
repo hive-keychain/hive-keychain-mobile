@@ -25,12 +25,11 @@ import {translate} from 'utils/localize';
 const AddAccountByKey = ({addAccountConnect, navigation, route}) => {
   const [account, setAccount] = useState('');
   const [key, setKey] = useState('');
-
   const onImportKeys = async () => {
     const keys = await validateNewAccount(account, key);
     if (keys) {
       const wallet = route.params ? route.params.wallet : false;
-      addAccountConnect(account, keys, wallet);
+      addAccountConnect(account, keys, wallet, false);
     } else {
       Toast.show(
         'Something went wrong! Please verify your keys and your connection.',
