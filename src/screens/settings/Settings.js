@@ -10,7 +10,6 @@ import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 
 const AccountManagement = ({navigation, setRpcConnect, settings}) => {
-  console.log(rpcList, settings);
   return (
     <SafeAreaView backgroundColor="white">
       <StatusBar backgroundColor="black" />

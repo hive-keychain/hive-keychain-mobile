@@ -31,6 +31,7 @@ import {setRpc} from 'utils/dhive';
 import Hive from 'assets/wallet/hive.svg';
 import Menu from 'assets/wallet/menu.svg';
 import {lock} from 'actions';
+import Bridge from 'components/bridge';
 
 const Stack = createStackNavigator();
 const Root = createStackNavigator();
@@ -235,6 +236,7 @@ const App = ({hasAccounts, auth, lockConnect, rpc}) => {
   return (
     <NavigationContainer ref={(navigator) => setNavigator(navigator)}>
       {renderRootNavigator()}
+      <Bridge />
     </NavigationContainer>
   );
 };
