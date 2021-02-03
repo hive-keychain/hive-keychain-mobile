@@ -59,7 +59,17 @@ class Bridge extends Component {
   }
 }
 const styles = StyleSheet.create({container: {height: 0}});
+
 export const decodeMemo = (key, string) =>
   self.sendMessage('decodeMemo', [key, string]);
+
+export const encodeMemo = (key, receiverKey, string) =>
+  self.sendMessage('encodeMemo', [key, receiverKey, string]);
+
+export const signBuffer = (string, key) =>
+  self.sendMessage('signBuffer', [string, key]);
+
+export const signedCall = (method, params, username, key) =>
+  self.sendMessage('signedCall', [method, params, username, key]);
 
 export default Bridge;
