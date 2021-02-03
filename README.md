@@ -5,7 +5,7 @@ React Native wallet for the Hive Blockchain
 # Install
 
 - `npm i`
-- `mv android/gradle.properties.example android/gradle.properties`
+- `cp android/gradle.properties.example android/gradle.properties`
 
 # Run in dev environment
 

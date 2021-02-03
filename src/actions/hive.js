@@ -15,6 +15,7 @@ import {getBittrexPrices} from 'utils/price';
 import {getPhishingAccounts} from 'utils/transferValidator';
 import {getDelegatees, getDelegators} from 'utils/hiveUtils';
 import {getConversionRequests} from 'utils/hiveUtils';
+import {decodeMemo} from 'components/bridge';
 
 export const loadAccount = (name) => async (dispatch, getState) => {
   dispatch({
@@ -66,8 +67,29 @@ export const loadBittrex = () => async (dispatch) => {
   }
 };
 
-export const initAccountTransactions = (accountName) => async (dispatch) => {
-  const transfers = await getAccountTransactions(accountName);
+export const initAccountTransactions = (accountName) => async (
+  dispatch,
+  getState,
+) => {
+  const memoKey = getState().accounts.find((a) => a.name === accountName).keys
+    .memo;
+  const trs = await getAccountTransactions(accountName);
+  const transfers = [];
+  for (const transfer of trs) {
+    const {memo} = transfer;
+    if (memo[0] === '#') {
+      if (memoKey) {
+        try {
+          transfer.memo = await decodeMemo(memoKey, memo);
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        transfer.memo = 'Please add your memo key to decrypt this message.';
+      }
+      transfers.push(transfer);
+    }
+  }
   dispatch({
     type: INIT_TRANSACTIONS,
     payload: transfers,

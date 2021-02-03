@@ -44,31 +44,31 @@ const Transfer = ({transaction, user, token}) => {
           amount.split(' ')[1]
         }`}</Text>
       </View>
-      {toggle && renderToggle(user, memo)}
+      {toggle && <Text>{memo}</Text>}
     </TouchableOpacity>
   );
 };
 
-const renderToggle = (user, memo) => {
-  let decryptedMemo = memo;
-  if (!memo || !memo.length) {
-    return null;
-  }
-  try {
-    if (memo[0] === '#') {
-      if (user.keys.memo) {
-        //decryptedMemo = hive.decodeMemo(user.keys.memo, memo);
-        decryptedMemo = 'Decrypting memos is not supported yet';
-      } else {
-        decryptedMemo = 'Please add your memo key to decrypt this message.';
-      }
-    }
-    return <Text>{decryptedMemo}</Text>;
-  } catch (e) {
-    console.log('Not really encrypted');
-    return null;
-  }
-};
+// const renderToggle = (user, memo) => {
+//   let decryptedMemo = memo;
+//   if (!memo || !memo.length) {
+//     return null;
+//   }
+//   try {
+//     if (memo[0] === '#') {
+//       if (user.keys.memo) {
+//         decryptedMemo = `Decrypted: ${decodeMemo(user.keys.memo, memo)}`;
+//         //decryptedMemo = 'Decrypting memos is not supported yet';
+//       } else {
+//         decryptedMemo = 'Please add your memo key to decrypt this message.';
+//       }
+//     }
+//     return <Text>{decryptedMemo}</Text>;
+//   } catch (e) {
+//     console.log('Not really encrypted');
+//     return null;
+//   }
+// };
 
 const getDimensionedStyles = ({width, height, color}) =>
   StyleSheet.create({

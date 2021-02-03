@@ -9,7 +9,6 @@ import html from './html';
 // 4. pass result back to RN  ===> OK
 // 5. (optional) export process as global function
 // 6. hide webview ===> OK
-console.log('debut', html, 'fin');
 let self;
 class Bridge extends Component {
   constructor(props) {
