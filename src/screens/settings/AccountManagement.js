@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, StatusBar, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import UserPicker from 'components/form/UserPicker';
 import EllipticButton from 'components/form/EllipticButton';
@@ -25,7 +25,7 @@ const AccountManagement = ({
     return unsubscribe;
   }, [navigation, account.name]);
   return (
-    <SafeAreaView backgroundColor="white">
+    <SafeArea style={{backgroundColor: 'white'}}>
       <StatusBar backgroundColor="black" />
       <HeaderDrawer title="WALLET KEYS" navigation={navigation} />
 
@@ -88,7 +88,7 @@ const AccountManagement = ({
         />
         <Separator height={50} />
       </ScrollView>
-    </SafeAreaView>
+    </SafeArea>
   );
 };
 
