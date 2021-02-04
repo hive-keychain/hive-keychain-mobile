@@ -6,7 +6,7 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 export default (props) => {
   return (
     <SafeArea style={styles.bgd}>
-      <FocusAwareStatusBar backgroundColor="#A3112A" />
+      <FocusAwareStatusBar barStyle="light-content" backgroundColor="#A3112A" />
       {props.children}
     </SafeArea>
   );

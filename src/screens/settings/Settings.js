@@ -11,8 +11,8 @@ import {translate} from 'utils/localize';
 
 const AccountManagement = ({navigation, setRpcConnect, settings}) => {
   return (
-    <SafeAreaView backgroundColor="white">
-      <FocusAwareStatusBar backgroundColor="black" />
+    <SafeAreaView>
+      <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
       <View style={styles.view}>
         <Text style={styles.title}>RPC Nodes</Text>
         <Text style={styles.disclaimer}>
@@ -36,7 +36,7 @@ const AccountManagement = ({navigation, setRpcConnect, settings}) => {
 };
 
 const styles = StyleSheet.create({
-  view: {paddingHorizontal: 20},
+  view: {paddingHorizontal: 20, backgroundColor: 'white', height: '100%'},
   title: {
     color: '#404950',
     fontWeight: 'bold',
