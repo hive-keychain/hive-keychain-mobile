@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, StatusBar, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Separator from 'components/ui/Separator';
 import {setRpc} from 'actions';
@@ -12,8 +13,7 @@ import {translate} from 'utils/localize';
 const AccountManagement = ({navigation, setRpcConnect, settings}) => {
   return (
     <SafeAreaView backgroundColor="white">
-      <StatusBar backgroundColor="black" />
-      <HeaderDrawer title="SETTINGS" navigation={navigation} />
+      <FocusAwareStatusBar backgroundColor="black" />
       <View style={styles.view}>
         <Text style={styles.title}>RPC Nodes</Text>
         <Text style={styles.disclaimer}>

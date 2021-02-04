@@ -116,14 +116,9 @@ const App = ({hasAccounts, auth, lockConnect, rpc}) => {
           drawerContent={(props) => <DrawerContent {...props} />}>
           <Drawer.Screen name="WALLET" component={renderWalletNavigator} />
           <Drawer.Screen
-            headerShown
-            headerTitle="MANAGE KEYS"
-            headerTintColor="white"
             name="AccountManagementScreen"
-            component={AccountManagement}
+            component={renderAcctMgtStack}
             options={{
-              headerTintColor: 'white',
-              headerTransparent,
               title: 'MANAGE KEYS',
             }}
           />
@@ -133,14 +128,9 @@ const App = ({hasAccounts, auth, lockConnect, rpc}) => {
             component={renderAddAccountFromWalletNavigator}
           />
           <Drawer.Screen
-            headerShown
-            headerTitle="SETTINGS"
-            headerTintColor="white"
             name="SettingsScreen"
-            component={Settings}
+            component={renderSettingsStack}
             options={{
-              headerTintColor: 'white',
-              headerTransparent,
               title: 'SETTINGS',
             }}
           />
@@ -214,6 +204,71 @@ const App = ({hasAccounts, auth, lockConnect, rpc}) => {
       />
     </Stack.Navigator>
   );
+  const renderAcctMgtStack = () => {
+    return (
+      <Stack.Navigator>
+        <Drawer.Screen
+          name="AccountManagementScreen"
+          component={AccountManagement}
+          options={({navigation}) => ({
+            headerStyle: {
+              backgroundColor: 'black',
+            },
+            headerTitleAlign: 'left',
+            title: 'MANAGE KEYS',
+            headerTintColor: 'white',
+            headerRight: () => {
+              return (
+                <>
+                  <Menu
+                    width={25}
+                    height={25}
+                    style={styles.menu}
+                    onPress={() => {
+                      navigation.openDrawer();
+                    }}
+                  />
+                </>
+              );
+            },
+          })}
+        />
+      </Stack.Navigator>
+    );
+  };
+
+  const renderSettingsStack = () => {
+    return (
+      <Stack.Navigator>
+        <Drawer.Screen
+          name="SettingsScreen"
+          component={Settings}
+          options={({navigation}) => ({
+            headerStyle: {
+              backgroundColor: 'black',
+            },
+            headerTitleAlign: 'left',
+            title: 'SETTINGS',
+            headerTintColor: 'white',
+            headerRight: () => {
+              return (
+                <>
+                  <Menu
+                    width={25}
+                    height={25}
+                    style={styles.menu}
+                    onPress={() => {
+                      navigation.openDrawer();
+                    }}
+                  />
+                </>
+              );
+            },
+          })}
+        />
+      </Stack.Navigator>
+    );
+  };
 
   const renderRootNavigator = () => {
     return (

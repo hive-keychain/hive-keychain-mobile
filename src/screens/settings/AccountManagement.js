@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, StatusBar, Text, ScrollView} from 'react-native';
+import {StyleSheet, Text, ScrollView, View} from 'react-native';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import {connect} from 'react-redux';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
@@ -26,8 +27,7 @@ const AccountManagement = ({
   }, [navigation, account.name]);
   return (
     <SafeArea style={{backgroundColor: 'white'}}>
-      <StatusBar backgroundColor="black" />
-      <HeaderDrawer title="WALLET KEYS" navigation={navigation} />
+      <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
 
       <ScrollView style={styles.scrollview}>
         <UserPicker

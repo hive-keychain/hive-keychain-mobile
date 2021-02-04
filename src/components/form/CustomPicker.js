@@ -36,7 +36,7 @@ const CustomPicker = ({
           }}>
           <Text style={styles.iosLabel}>{`${
             prefix ? prefix : ''
-          }{selectedValue}`}</Text>
+          }${selectedValue}`}</Text>
           <Text>{'\u25BC'}</Text>
         </TouchableOpacity>
       );
