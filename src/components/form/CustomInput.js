@@ -32,16 +32,18 @@ const getDimensionedStyles = ({
 }) =>
   StyleSheet.create({
     container: {
+      marginLeft: 0.05 * width,
+      marginRight: 0.05 * width,
+      width: 0.9 * width,
       backgroundColor: backgroundColor || '#000000',
-      display: 'flex',
       borderRadius: 25,
-      alignItems: 'baseline',
       height: 50,
     },
     leftIcon: {height: 30, marginRight: 20},
     rightIcon: {height: 30, marginLeft: 20},
     input: {color: inputColor || '#ffffff'},
     inputContainer: {
+      height: '100%',
       borderBottomWidth: 0,
       marginHorizontal: 15,
       textAlign: textAlign || 'left',
