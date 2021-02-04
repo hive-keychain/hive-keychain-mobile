@@ -5,7 +5,6 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Separator from 'components/ui/Separator';
 import {setRpc} from 'actions';
-import HeaderDrawer from 'components/ui/HeaderDrawerScreens';
 import CustomPicker from 'components/form/CustomPicker';
 import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';

@@ -80,6 +80,7 @@ export default ({
         </>
       ) : (
         <View>
+          <Separator />
           <EllipticButton
             title={translate('settings.keys.add')}
             style={styles.addKey}
@@ -90,6 +91,7 @@ export default ({
               });
             }}
           />
+          <Separator height={30} />
         </View>
       )}
     </View>
@@ -152,7 +154,5 @@ const styles = StyleSheet.create({
   privateActions: {width: '20%'},
   addKey: {
     backgroundColor: '#7E8C9A',
-    marginTop: 20,
-    marginBottom: 30,
   },
 });

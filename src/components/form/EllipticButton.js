@@ -3,8 +3,7 @@ import {StyleSheet, useWindowDimensions} from 'react-native';
 import {Button} from 'react-native-elements';
 import Loader from 'components/ui/Loader';
 
-export default (props) => {
-  const {style, isLoading} = props;
+export default ({style, isLoading, ...props}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
   return (
     <>
@@ -23,8 +22,8 @@ export default (props) => {
   );
 };
 
-const getDimensionedStyles = ({width, height}) =>
-  StyleSheet.create({
+const getDimensionedStyles = ({width, height}) => {
+  return StyleSheet.create({
     button: {
       marginHorizontal: width * 0.1,
       color: 'black',
@@ -33,3 +32,4 @@ const getDimensionedStyles = ({width, height}) =>
       borderRadius: 25,
     },
   });
+};

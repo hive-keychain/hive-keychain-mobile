@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, ScrollView, View} from 'react-native';
+import {StyleSheet, Text, ScrollView} from 'react-native';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import {connect} from 'react-redux';
 import SafeArea from 'components/ui/SafeArea';
@@ -8,7 +8,6 @@ import UserPicker from 'components/form/UserPicker';
 import EllipticButton from 'components/form/EllipticButton';
 import {forgetKey, addKey, forgetAccount} from 'actions';
 import Key from 'components/hive/Key';
-import HeaderDrawer from 'components/ui/HeaderDrawerScreens';
 
 const AccountManagement = ({
   account,
@@ -26,10 +25,10 @@ const AccountManagement = ({
     return unsubscribe;
   }, [navigation, account.name]);
   return (
-    <SafeArea style={{backgroundColor: 'white'}}>
+    <SafeArea style={styles.safeArea}>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
 
-      <ScrollView style={styles.scrollview}>
+      <ScrollView>
         <UserPicker
           username={username}
           accounts={accounts.map((acc) => acc.name)}
@@ -98,7 +97,7 @@ const styles = StyleSheet.create({
   button: {backgroundColor: '#B9122F'},
   keyOdd: {backgroundColor: '#E5EEF7', padding: 20},
   keyEven: {backgroundColor: '#FFFFFF', padding: 20},
-  scrollview: {},
+  safeArea: {backgroundColor: 'white'},
 });
 
 const mapStateToProps = (state) => ({
