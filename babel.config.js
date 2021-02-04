@@ -15,6 +15,7 @@ module.exports = {
           screens: './src/screens',
           store: './src/store',
           utils: './src/utils',
+          navigators: './src/navigators',
           root: './',
         },
         extensions: ['.ios.js', '.android.js', '.js', '.json'],
