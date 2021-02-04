@@ -41,7 +41,6 @@ const CustomPicker = ({
         </TouchableOpacity>
       );
     case 'android':
-      console.log({...styles.picker, ...style});
       return (
         <Picker
           style={{...styles.picker, ...style}}
@@ -67,7 +66,6 @@ const CustomPicker = ({
 const getDimensionedStyles = ({width, height}) =>
   StyleSheet.create({
     iosContainer: {
-      flex: 1,
       justifyContent: 'space-between',
       alignItems: 'center',
       flexDirection: 'row',

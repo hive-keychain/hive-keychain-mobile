@@ -23,6 +23,7 @@ const UserPicker = ({username, accounts, onAccountSelected}) => {
           onSelected={onAccountSelected}
           selectedValue={username}
           prefix="@"
+          style={styles.picker}
           prompt={translate('components.picker.prompt_user')}
         />
       </View>
@@ -50,6 +51,9 @@ const getDimensionedStyles = ({width, height}) =>
       width: height / 15 - 4,
       height: height / 15 - 4,
       borderRadius: height / 30,
+    },
+    picker: {
+      flex: 1,
     },
   });
 
