@@ -26,6 +26,8 @@ import {hiveEngine} from 'utils/config';
 import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {getTransferWarning} from 'utils/transferValidator';
 import CustomRadioGroup from 'components/form/CustomRadioGroup';
+import {encodeMemo} from 'components/bridge';
+import {getAccountKeys} from 'utils/hiveUtils';
 
 const Transfer = ({
   currency,
@@ -45,10 +47,15 @@ const Transfer = ({
 
   const transfer = async () => {
     setLoading(true);
+    let finalMemo = memo;
+    if (privacy === 'PRIVATE') {
+      const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
+      finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
+    }
     await getClient().broadcast.transfer(
       {
         amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
-        memo,
+        memo: finalMemo,
         to: to.toLowerCase(),
         from: user.account.name,
       },
@@ -203,7 +210,9 @@ const Transfer = ({
             <Text style={styles.title}>
               {translate('wallet.operations.transfer.confirm.memo')}
             </Text>
-            <Text style={styles.field}>{memo}</Text>
+            <Text style={styles.field}>{`${memo} ${
+              privacy === 'PRIVATE' ? '(encrypted)' : ''
+            }`}</Text>
           </>
         ) : null}
         <Separator height={40} />

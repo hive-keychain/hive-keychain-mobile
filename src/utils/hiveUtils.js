@@ -121,3 +121,12 @@ export const rpcList = [
   'https://hive-api.arcange.eu/',
   'TESTNET',
 ];
+
+export const getAccountKeys = async (username) => {
+  const account = (await getClient().database.getAccounts([username]))[0];
+  return {
+    memo: account.memo_key,
+    active: account.active,
+    posting: account.posting,
+  };
+};
