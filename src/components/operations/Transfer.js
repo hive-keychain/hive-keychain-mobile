@@ -25,6 +25,7 @@ import {loadAccount} from 'actions';
 import {hiveEngine} from 'utils/config';
 import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {getTransferWarning} from 'utils/transferValidator';
+import CustomRadioGroup from 'components/form/CustomRadioGroup';
 
 const Transfer = ({
   currency,
@@ -40,6 +41,7 @@ const Transfer = ({
   const [memo, setMemo] = useState('');
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
+  const [privacy, setPrivacy] = useState('PUBLIC');
 
   const transfer = async () => {
     setLoading(true);
@@ -143,8 +145,13 @@ const Transfer = ({
           value={memo}
           onChangeText={setMemo}
         />
-
-        <Separator height={40} />
+        <Separator />
+        <CustomRadioGroup
+          list={['PUBLIC', 'PRIVATE']}
+          selected={privacy}
+          onSelect={setPrivacy}
+        />
+        <Separator height={20} />
 
         <ActiveOperationButton
           title={translate('common.send')}
