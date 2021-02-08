@@ -29,6 +29,9 @@ import CustomRadioGroup from 'components/form/CustomRadioGroup';
 import {encodeMemo} from 'components/bridge';
 import {getAccountKeys} from 'utils/hiveUtils';
 
+const PUBLIC = translate('common.public').toUpperCase();
+const PRIVATE = translate('common.private').toUpperCase();
+
 const Transfer = ({
   currency,
   user,
@@ -43,12 +46,12 @@ const Transfer = ({
   const [memo, setMemo] = useState('');
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
-  const [privacy, setPrivacy] = useState('PUBLIC');
+  const [privacy, setPrivacy] = useState(PUBLIC);
 
   const transfer = async () => {
     setLoading(true);
     let finalMemo = memo;
-    if (privacy === 'PRIVATE') {
+    if (privacy === PRIVATE) {
       const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
       finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
     }
@@ -154,7 +157,7 @@ const Transfer = ({
         />
         <Separator />
         <CustomRadioGroup
-          list={['PUBLIC', 'PRIVATE']}
+          list={[PUBLIC, PRIVATE]}
           selected={privacy}
           onSelect={setPrivacy}
         />
@@ -211,7 +214,7 @@ const Transfer = ({
               {translate('wallet.operations.transfer.confirm.memo')}
             </Text>
             <Text style={styles.field}>{`${memo} ${
-              privacy === 'PRIVATE' ? '(encrypted)' : ''
+              privacy === PRIVATE ? '(encrypted)' : ''
             }`}</Text>
           </>
         ) : null}
