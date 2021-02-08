@@ -251,7 +251,11 @@ const getDimensionedStyles = (color, height, width) =>
     back: {backgroundColor: '#7E8C9A', width: width / 3, marginHorizontal: 0},
     currency: {fontWeight: 'bold', fontSize: 18, color},
     title: {fontWeight: 'bold', fontSize: 16},
-    buttonsContainer: {display: 'flex', flexDirection: 'row'},
+    buttonsContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+    },
   });
 
 export default connect(

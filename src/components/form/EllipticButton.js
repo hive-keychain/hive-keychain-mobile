@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import {Button} from 'react-native-elements';
 import Loader from 'components/ui/Loader';
 
@@ -7,8 +7,7 @@ export default ({style, isLoading, ...props}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
   return (
     <>
-      <Loader animating={isLoading} />
-      {!isLoading && (
+      {!isLoading ? (
         <Button
           {...props}
           containerViewStyle={styles.container}
@@ -17,6 +16,10 @@ export default ({style, isLoading, ...props}) => {
           underlayColor={'rgba(0,0,0,0)'}
           activeOpacity={0}
         />
+      ) : (
+        <View style={[style, styles.loader]}>
+          <Loader animating={isLoading} />
+        </View>
       )}
     </>
   );
@@ -30,6 +33,11 @@ const getDimensionedStyles = ({width, height}) => {
       backgroundColor: 'black',
       height: 50,
       borderRadius: 25,
+    },
+    loader: {
+      backgroundColor: 'transparent',
+      flexDirection: 'row',
+      justifyContent: 'space-around',
     },
   });
 };
