@@ -74,26 +74,8 @@ export const initAccountTransactions = (accountName) => async (
   console.log('init transactions');
   const memoKey = getState().accounts.find((a) => a.name === accountName).keys
     .memo;
-  const trs = await getAccountTransactions(accountName);
-  console.log(trs);
-  const transfers = [];
-  for (const transfer of trs) {
-    const {memo} = transfer;
-    if (memo[0] === '#') {
-      if (memoKey) {
-        try {
-          transfer.memo = await decodeMemo(memoKey, memo);
-        } catch (e) {}
-      } else {
-        transfer.memo = 'Please add your memo key to decrypt this message.';
-      }
-      transfers.push(transfer);
-    } else {
-      delete transfer.memo;
-      transfers.push(transfer);
-    }
-  }
-  console.log(transfers);
+  const transfers = await getAccountTransactions(accountName, null, memoKey);
+
   dispatch({
     type: INIT_TRANSACTIONS,
     payload: transfers,
@@ -102,16 +84,19 @@ export const initAccountTransactions = (accountName) => async (
 
 export const fetchAccountTransactions = (accountName, start) => async (
   dispatch,
+  getState,
 ) => {
   console.log('addtransactions');
-  const transfers = await getAccountTransactions(accountName, start);
+  const memoKey = getState().accounts.find((a) => a.name === accountName).keys
+    .memo;
+  const transfers = await getAccountTransactions(accountName, start, memoKey);
   dispatch({
     type: ADD_TRANSACTIONS,
     payload: transfers,
   });
 };
 
-const getAccountTransactions = async (accountName, start) => {
+const getAccountTransactions = async (accountName, start, memoKey) => {
   const op = dhive.utils.operationOrders;
   const operationsBitmask = dhive.utils.makeBitMaskFilter([op.transfer]);
   const transactions = await getClient().database.getAccountHistory(
@@ -131,10 +116,27 @@ const getAccountTransactions = async (accountName, start) => {
       };
     })
     .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
   if (start && Math.min(1000, start) !== 1000) {
     transfers[transfers.length - 1].last = true;
   }
-  return transfers;
+  const trs = [];
+  for (const transfer of transfers) {
+    const {memo} = transfer;
+    if (memo[0] === '#') {
+      if (memoKey) {
+        try {
+          transfer.memo = await decodeMemo(memoKey, memo);
+        } catch (e) {}
+      } else {
+        transfer.memo = 'Please add your memo key to decrypt this message.';
+      }
+      trs.push(transfer);
+    } else {
+      trs.push(transfer);
+    }
+  }
+  return trs;
 };
 
 export const loadDelegators = (username) => async (dispatch) => {

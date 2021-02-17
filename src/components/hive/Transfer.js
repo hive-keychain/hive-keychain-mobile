@@ -44,7 +44,7 @@ const Transfer = ({transaction, user, token}) => {
           amount.split(' ')[1]
         }`}</Text>
       </View>
-      {toggle && <Text>{memo}</Text>}
+      {toggle && memo && memo.length ? <Text>{memo}</Text> : null}
     </TouchableOpacity>
   );
 };

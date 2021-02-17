@@ -27,7 +27,10 @@ const Transactions = ({
       return transactions.length ? (
         <FlatList
           data={transactions}
+          initialNumToRender={20}
+          onEndReachedThreshold={0.5}
           onEndReached={() => {
+            console.log('end reached');
             const newEnd =
               transactions[transactions.length - 1].key.split('!')[1] - 1;
             if (newEnd !== end && !transactions[transactions.length - 1].last) {
@@ -63,7 +66,7 @@ const basicStyles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  console.log(state);
+  console.log(state.transactions.list.length);
   return {
     transactions: state.transactions.list,
     loading: state.transactions.loading,
