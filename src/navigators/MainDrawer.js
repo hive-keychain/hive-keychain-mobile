@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import About from 'screens/settings/About';
+import AboutStack from 'navigators/mainDrawerStacks/About';
 import DrawerContent from 'components/drawer/Content';
 import WalletStack from 'navigators/mainDrawerStacks/Wallet';
 import AccountManagementStack from 'navigators/mainDrawerStacks/AccountManagement';
@@ -42,7 +42,7 @@ export default () => {
           title: 'SETTINGS',
         }}
       />
-      <Drawer.Screen name="ABOUT" component={About} />
+      <Drawer.Screen name="ABOUT" component={AboutStack} />
     </Drawer.Navigator>
   );
 };
