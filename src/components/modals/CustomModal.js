@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {
   View,
+  KeyboardAvoidingView,
   StyleSheet,
   Dimensions,
+  Platform,
   TouchableWithoutFeedback,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -26,7 +28,9 @@ export default class CustomModal extends Component {
       transparent: this.props.transparentContainer,
     });
     return (
-      <View style={styles.fullHeight}>
+      <KeyboardAvoidingView
+        style={styles.fullHeight}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <TouchableWithoutFeedback
           onPress={() => {
             this.props.outsideClick();
@@ -47,7 +51,7 @@ export default class CustomModal extends Component {
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
