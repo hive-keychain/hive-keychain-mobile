@@ -72,17 +72,17 @@ const AddAccountByKey = ({addAccountConnect, navigation, route}) => {
           onChangeText={setKey}
         />
         <Separator height={height / 7.5} />
+        <Button
+          title={translate('common.import').toUpperCase()}
+          onPress={onImportKeys}
+        />
       </View>
-      <Button
-        title={translate('common.import').toUpperCase()}
-        onPress={onImportKeys}
-      />
     </Background>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {display: 'flex', alignItems: 'center'},
+  container: {alignItems: 'center'},
   text: {color: 'white', fontWeight: 'bold', fontSize: 16},
 });
 

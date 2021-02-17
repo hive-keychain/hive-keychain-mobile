@@ -1,38 +1,38 @@
 import React from 'react';
-import {StyleSheet, useWindowDimensions, View} from 'react-native';
-import {Button} from 'react-native-elements';
+import {
+  StyleSheet,
+  useWindowDimensions,
+  View,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import Loader from 'components/ui/Loader';
 
-export default ({style, isLoading, container, ...props}) => {
+export default ({style, isLoading, title, ...props}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
-  return (
-    <>
-      {!isLoading ? (
-        <Button
-          {...props}
-          containerViewStyle={[styles.container, container]}
-          buttonStyle={{...styles.button, ...style}}
-          rounded
-          underlayColor={'rgba(0,0,0,0)'}
-          activeOpacity={0}
-        />
-      ) : (
-        <View style={[style, styles.loader]}>
-          <Loader animating={isLoading} />
-        </View>
-      )}
-    </>
+  return !isLoading ? (
+    <TouchableOpacity {...props} style={[styles.button, style]}>
+      <Text style={styles.text}>{title}</Text>
+    </TouchableOpacity>
+  ) : (
+    <View style={[style, styles.loader]}>
+      <Loader animating={isLoading} />
+    </View>
   );
 };
 
 const getDimensionedStyles = ({width, height}) => {
   return StyleSheet.create({
+    text: {color: 'white', fontSize: 16},
     button: {
       marginHorizontal: width * 0.1,
+      width: '80%',
       color: 'black',
       backgroundColor: 'black',
       height: 50,
       borderRadius: 25,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     loader: {
       backgroundColor: 'transparent',
