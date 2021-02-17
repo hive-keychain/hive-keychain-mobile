@@ -1,8 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-
 import About from 'screens/settings/About';
 import DrawerButton from 'components/ui/DrawerButton';
+import {headerTransparent} from 'utils/navigation';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +20,7 @@ export default () => {
           title: 'ABOUT',
           headerTintColor: 'white',
           headerRight: () => <DrawerButton navigation={navigation} />,
+          headerTransparent,
         })}
       />
     </Stack.Navigator>

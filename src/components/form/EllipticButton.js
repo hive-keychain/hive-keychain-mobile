@@ -3,14 +3,14 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import {Button} from 'react-native-elements';
 import Loader from 'components/ui/Loader';
 
-export default ({style, isLoading, ...props}) => {
+export default ({style, isLoading, container, ...props}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
   return (
     <>
       {!isLoading ? (
         <Button
           {...props}
-          containerViewStyle={styles.container}
+          containerViewStyle={[styles.container, container]}
           buttonStyle={{...styles.button, ...style}}
           rounded
           underlayColor={'rgba(0,0,0,0)'}
