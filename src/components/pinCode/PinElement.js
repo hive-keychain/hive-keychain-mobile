@@ -18,8 +18,8 @@ export default ({number, refNumber, helper, back, onPressElement}) => {
   }
   style.height =
     refNumber < 10
-      ? Math.round(Dimensions.get('window').width * 0.3)
-      : Math.round(Dimensions.get('window').width * 0.15);
+      ? Math.round(Dimensions.get('window').width * 0.25)
+      : Math.round(Dimensions.get('window').width * 0.125);
   return (
     <TouchableOpacity
       disabled={refNumber === 10}
