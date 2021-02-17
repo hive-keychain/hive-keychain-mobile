@@ -4,9 +4,11 @@ import {initAccountTransactions, fetchAccountTransactions} from 'actions';
 import {connect} from 'react-redux';
 import {translate} from 'utils/localize';
 import Transfer from './Transfer';
+import Loader from 'components/ui/Loader';
 
 const Transactions = ({
   transactions,
+  loading,
   initAccountTransactionsConnect,
   fetchAccountTransactionsConnect,
   user,
@@ -17,10 +19,12 @@ const Transactions = ({
     }
   }, [user.account.name, initAccountTransactionsConnect]);
   const [end, setEnd] = useState(0);
-  //style={{display: 'flex', marginBottom: 550}}
-  return (
-    <View style={basicStyles.flex}>
-      {transactions.length ? (
+
+  const renderTransactions = () => {
+    if (loading) {
+      return <Loader animating />;
+    } else {
+      return transactions.length ? (
         <FlatList
           data={transactions}
           onEndReached={() => {
@@ -41,9 +45,11 @@ const Transactions = ({
         <Text style={basicStyles.no_tokens}>
           {translate('wallet.no_transaction')}
         </Text>
-      )}
-    </View>
-  );
+      );
+    }
+  };
+
+  return <View style={basicStyles.flex}>{renderTransactions()}</View>;
 };
 
 const basicStyles = StyleSheet.create({
@@ -57,7 +63,11 @@ const basicStyles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  return {transactions: state.transactions};
+  console.log(state);
+  return {
+    transactions: state.transactions.list,
+    loading: state.transactions.loading,
+  };
 };
 
 export default connect(mapStateToProps, {

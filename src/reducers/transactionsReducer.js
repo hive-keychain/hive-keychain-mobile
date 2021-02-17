@@ -4,19 +4,19 @@ import {
   ACTIVE_ACCOUNT,
 } from '../actions/types';
 
-export default (state = [], {type, payload}) => {
+export default (state = {loading: false, list: []}, {type, payload}) => {
   switch (type) {
     case ACTIVE_ACCOUNT:
-      return [];
+      return {loading: true, list: []};
     case INIT_TRANSACTIONS:
-      return payload;
+      return {loading: false, list: payload};
     case ADD_TRANSACTIONS:
       //check if the transaction is received for the same user (username is part of the unique key)
       if (
-        !state[0] ||
-        state[0].key.split('!')[0] === payload[0].key.split('!')[0]
+        !state.list[0] ||
+        state.list[0].key.split('!')[0] === payload[0].key.split('!')[0]
       ) {
-        return [...state, ...payload];
+        return {...state, list: [...state.list, ...payload]};
       } else {
         return state;
       }
