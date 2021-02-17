@@ -71,9 +71,11 @@ export const initAccountTransactions = (accountName) => async (
   dispatch,
   getState,
 ) => {
+  console.log('init transactions');
   const memoKey = getState().accounts.find((a) => a.name === accountName).keys
     .memo;
   const trs = await getAccountTransactions(accountName);
+  console.log(trs);
   const transfers = [];
   for (const transfer of trs) {
     const {memo} = transfer;
@@ -81,15 +83,17 @@ export const initAccountTransactions = (accountName) => async (
       if (memoKey) {
         try {
           transfer.memo = await decodeMemo(memoKey, memo);
-        } catch (e) {
-          console.log(e);
-        }
+        } catch (e) {}
       } else {
         transfer.memo = 'Please add your memo key to decrypt this message.';
       }
       transfers.push(transfer);
+    } else {
+      delete transfer.memo;
+      transfers.push(transfer);
     }
   }
+  console.log(transfers);
   dispatch({
     type: INIT_TRANSACTIONS,
     payload: transfers,
@@ -99,6 +103,7 @@ export const initAccountTransactions = (accountName) => async (
 export const fetchAccountTransactions = (accountName, start) => async (
   dispatch,
 ) => {
+  console.log('addtransactions');
   const transfers = await getAccountTransactions(accountName, start);
   dispatch({
     type: ADD_TRANSACTIONS,

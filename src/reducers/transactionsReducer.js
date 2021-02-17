@@ -12,6 +12,10 @@ export default (state = {loading: false, list: []}, {type, payload}) => {
       return {loading: false, list: payload};
     case ADD_TRANSACTIONS:
       //check if the transaction is received for the same user (username is part of the unique key)
+      console.log(
+        state.list[0].key.split('!')[0],
+        payload[0].key.split('!')[0],
+      );
       if (
         !state.list[0] ||
         state.list[0].key.split('!')[0] === payload[0].key.split('!')[0]
