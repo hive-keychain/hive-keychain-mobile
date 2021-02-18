@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import Settings from 'screens/settings/Settings';
 import DrawerButton from 'components/ui/DrawerButton';
+import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator();
 
@@ -17,7 +18,7 @@ export default () => {
             backgroundColor: 'black',
           },
           headerTitleAlign: 'left',
-          title: 'SETTINGS',
+          title: translate('navigation.settings'),
           headerTintColor: 'white',
           headerRight: () => <DrawerButton navigation={navigation} />,
         })}

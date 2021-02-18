@@ -6,6 +6,8 @@ import DrawerButton from 'components/ui/DrawerButton';
 import Wallet from 'screens/wallet/Main';
 import Hive from 'assets/wallet/hive.svg';
 
+import {translate} from 'utils/localize';
+
 const Stack = createStackNavigator();
 
 export default () => {
@@ -21,7 +23,7 @@ export default () => {
             backgroundColor: '#A3112A',
           },
           headerTitleAlign: 'center',
-          title: 'WALLET',
+          title: translate('navigation.wallet'),
           headerTintColor: 'white',
           headerRight: () => <DrawerButton navigation={navigation} />,
 

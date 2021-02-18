@@ -36,7 +36,11 @@ export default ({
   return (
     <View style={containerStyle}>
       <View style={styles.row}>
-        <Text style={styles.keyAuthority}>{type.toUpperCase()} KEY</Text>
+        <Text style={styles.keyAuthority}>
+          {translate('keys.key_type', {
+            type: translate(`keys.${type}`),
+          }).toUpperCase()}
+        </Text>
         {privateKey && (
           <RemoveKey
             forgetKey={() => {

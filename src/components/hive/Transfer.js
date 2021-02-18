@@ -49,27 +49,6 @@ const Transfer = ({transaction, user, token}) => {
   );
 };
 
-// const renderToggle = (user, memo) => {
-//   let decryptedMemo = memo;
-//   if (!memo || !memo.length) {
-//     return null;
-//   }
-//   try {
-//     if (memo[0] === '#') {
-//       if (user.keys.memo) {
-//         decryptedMemo = `Decrypted: ${decodeMemo(user.keys.memo, memo)}`;
-//         //decryptedMemo = 'Decrypting memos is not supported yet';
-//       } else {
-//         decryptedMemo = 'Please add your memo key to decrypt this message.';
-//       }
-//     }
-//     return <Text>{decryptedMemo}</Text>;
-//   } catch (e) {
-//     console.log('Not really encrypted');
-//     return null;
-//   }
-// };
-
 const getDimensionedStyles = ({width, height, color}) =>
   StyleSheet.create({
     container: {

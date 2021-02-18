@@ -4,10 +4,13 @@ import {View, StyleSheet} from 'react-native';
 import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';
 
-import MoreInformation from 'components/infoButtons/MoreInfo';
-import {headerTransparent} from 'utils/navigation';
-const AccountStack = createStackNavigator();
 import DrawerButton from 'components/ui/DrawerButton';
+import MoreInformation from 'components/infoButtons/MoreInfo';
+
+import {headerTransparent} from 'utils/navigation';
+import {translate} from 'utils/localize';
+
+const AccountStack = createStackNavigator();
 
 export default () => {
   return (
@@ -24,7 +27,7 @@ export default () => {
             );
           },
           headerTintColor: 'white',
-          title: 'ADD AN ACCOUNT',
+          title: translate('navigation.add_account'),
           headerTitleAlign: 'left',
           headerTransparent,
         })}

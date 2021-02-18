@@ -22,20 +22,6 @@ const Unlock = ({unlockConnect, forgetAccountsConnect, navigation}) => {
   );
 };
 
-// const getDimensionedStyles = ({width, height}) =>
-//   StyleSheet.create({
-//     blackCircle: {
-//       width: width * 0.25,
-//       height: width * 0.25,
-//       backgroundColor: 'black',
-//       borderRadius: width * 0.125,
-//       display: 'flex',
-//       justifyContent: 'center',
-//       alignItems: 'center',
-//     },
-//     image: {width: width * 0.125, height: ((width * 0.125) / 49) * 41},
-//   });
-
 export default connect(null, {
   unlockConnect: unlock,
   forgetAccountsConnect: forgetAccounts,

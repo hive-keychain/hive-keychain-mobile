@@ -6,6 +6,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {navigate} from 'utils/navigation';
+import {translate} from 'utils/localize';
 import ForgotPIN from 'components/modals/ForgotPIN';
 
 export default () => {
@@ -16,7 +17,7 @@ export default () => {
       onPress={() => {
         navigate('ModalScreen', {modalContent: <ForgotPIN />});
       }}>
-      <Text style={styles.text}>Forgot PIN?</Text>
+      <Text style={styles.text}>{translate('components.forgotPIN.title')}</Text>
     </TouchableOpacity>
   );
 };

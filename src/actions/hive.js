@@ -16,6 +16,7 @@ import {getPhishingAccounts} from 'utils/transferValidator';
 import {getDelegatees, getDelegators} from 'utils/hiveUtils';
 import {getConversionRequests} from 'utils/hiveUtils';
 import {decodeMemo} from 'components/bridge';
+import {translate} from 'utils/localize';
 
 export const loadAccount = (name) => async (dispatch, getState) => {
   dispatch({
@@ -71,7 +72,6 @@ export const initAccountTransactions = (accountName) => async (
   dispatch,
   getState,
 ) => {
-  console.log('init transactions');
   const memoKey = getState().accounts.find((a) => a.name === accountName).keys
     .memo;
   const transfers = await getAccountTransactions(accountName, null, memoKey);
@@ -86,7 +86,6 @@ export const fetchAccountTransactions = (accountName, start) => async (
   dispatch,
   getState,
 ) => {
-  console.log('addtransactions');
   const memoKey = getState().accounts.find((a) => a.name === accountName).keys
     .memo;
   const transfers = await getAccountTransactions(accountName, start, memoKey);
@@ -130,7 +129,7 @@ const getAccountTransactions = async (accountName, start, memoKey) => {
             transfer.memo = await decodeMemo(memoKey, memo);
           } catch (e) {}
         } else {
-          transfer.memo = 'Please add your memo key to decrypt this message.';
+          transfer.memo = translate('wallet.add_memo');
         }
         trs.push(transfer);
       } else {

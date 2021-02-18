@@ -1,12 +1,17 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import AboutStack from 'navigators/mainDrawerStacks/About';
+
 import DrawerContent from 'components/drawer/Content';
+
+import AboutStack from 'navigators/mainDrawerStacks/About';
 import WalletStack from 'navigators/mainDrawerStacks/Wallet';
 import AccountManagementStack from 'navigators/mainDrawerStacks/AccountManagement';
 import SettingsStack from 'navigators/mainDrawerStacks/Settings';
 import AddAccountStack from 'navigators/mainDrawerStacks/AddAccount';
+
+import {translate} from 'utils/localize';
+
 const Drawer = createDrawerNavigator();
 
 export default () => {
@@ -27,22 +32,28 @@ export default () => {
         name="AccountManagementScreen"
         component={AccountManagementStack}
         options={{
-          title: 'MANAGE KEYS',
+          title: translate('navigation.manage'),
         }}
       />
       <Drawer.Screen
         name="AddAccountStack"
-        options={{title: 'ADD ACCOUNT'}}
+        options={{title: translate('navigation.add_account')}}
         component={AddAccountStack}
       />
       <Drawer.Screen
         name="SettingsScreen"
         component={SettingsStack}
         options={{
-          title: 'SETTINGS',
+          title: translate('navigation.settings'),
         }}
       />
-      <Drawer.Screen name="ABOUT" component={AboutStack} />
+      <Drawer.Screen
+        name="ABOUT"
+        options={{
+          title: translate('navigation.about'),
+        }}
+        component={AboutStack}
+      />
     </Drawer.Navigator>
   );
 };

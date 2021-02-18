@@ -1,5 +1,5 @@
 {
-  "unlock": {"enterPIN": "Enter your PIN"},
+  "unlock": {"enterPIN": "Enter your PIN", "authenticate": "Authenticate"},
   "signup": {"confirm": "Confirm your PIN", "choose": "Choose your PIN"},
   "intro": {
     "text": "HIVE powers a growing ecosystem of Web 3.0 websites and applications.",
@@ -8,6 +8,12 @@
     "createAccount": "New Account"
   },
   "addAccountByKey": {"text": "Add your existing HIVE account to Keychain"},
+  "keys": {
+    "posting": "Posting",
+    "active": "Active",
+    "memo": "Memo",
+    "key_type": "{{type}} key"
+  },
   "common": {
     "import": "Import",
     "username": "username",
@@ -29,6 +35,8 @@
     "balance": "balance",
     "no_tokens": "No Hive Engine token found.",
     "no_transaction": "No recent transaction.",
+    "add_memo": "Please add your memo key to decrypt this message.",
+    "add_active": "Please add your active key to perform this operation.",
     "operations": {
       "history": "History",
       "transfer": {
@@ -112,6 +120,15 @@
       "not_wanted_key": "This is not your {{type}} key!",
       "not_a_key": "This is not one of your private keys!",
       "copied": "The key was copied to the clipboard!"
-    }
+    },
+    "error_add_account": "Something went wrong! Please verify your keys and your connection."
+  },
+  "navigation": {
+    "log_out": "LOG OUT",
+    "add_account": "ADD ACCOUNT",
+    "manage": "MANAGE KEYS",
+    "settings": "SETTINGS",
+    "about": "ABOUT",
+    "wallet": "WALLET"
   }
 }

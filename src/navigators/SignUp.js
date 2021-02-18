@@ -8,7 +8,9 @@ import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';
 
 import MoreInformation from 'components/infoButtons/MoreInfo';
+
 import {headerTransparent, noHeader} from 'utils/navigation';
+import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator();
 
@@ -29,7 +31,7 @@ export default () => {
       <Stack.Screen
         name="AddAccountByKeyScreen"
         options={{
-          title: 'ADD ACCOUNT',
+          title: translate('navigation.add_account'),
           headerRight: () => <MoreInformation type="moreInfo" />,
           headerTintColor: 'white',
           headerTransparent,

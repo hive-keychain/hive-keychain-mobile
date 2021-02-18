@@ -15,7 +15,6 @@ class Bridge extends Component {
     super(props);
     this.pendingMethods = {};
     self = this;
-    console.log('self', self);
   }
 
   sendMessage(methodName, params) {

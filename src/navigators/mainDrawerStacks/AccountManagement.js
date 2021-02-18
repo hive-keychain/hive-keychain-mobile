@@ -1,7 +1,11 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+
 import AccountManagement from 'screens/settings/AccountManagement';
 import DrawerButton from 'components/ui/DrawerButton';
+
+import {translate} from 'utils/localize';
+
 const Stack = createStackNavigator();
 
 export default () => {
@@ -15,7 +19,7 @@ export default () => {
             backgroundColor: 'black',
           },
           headerTitleAlign: 'left',
-          title: 'MANAGE KEYS',
+          title: translate('navigation.manage'),
           headerTintColor: 'white',
           headerRight: () => <DrawerButton navigation={navigation} />,
         })}

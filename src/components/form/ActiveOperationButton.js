@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 import EllipticButton from './EllipticButton';
 import {connect} from 'react-redux';
+import {translate} from 'utils/localize';
 import Icon from 'assets/addAccount/icon_info.svg';
 
 const ActiveOperationButton = (props) => {
@@ -10,9 +11,7 @@ const ActiveOperationButton = (props) => {
       {!props.user.keys.active && (
         <View style={styles.container}>
           <Icon fill="#A3112A" height={20} />
-          <Text style={styles.text}>
-            Please add your active key to perform the operation.
-          </Text>
+          <Text style={styles.text}>{translate('wallet.add_active')}</Text>
         </View>
       )}
       <EllipticButton {...props} disabled={!props.user.keys.active} />

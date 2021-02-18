@@ -7,6 +7,7 @@ import {
 import DrawerHeader from 'components/drawer/Header';
 import {connect} from 'react-redux';
 import {lock} from 'actions';
+import {translate} from 'utils/localize';
 
 const HeaderContent = (props) => {
   const {user, lockConnect, navigation} = props;
@@ -16,7 +17,7 @@ const HeaderContent = (props) => {
       <DrawerItemList {...props} />
       <DrawerItem
         {...props}
-        label="LOG OUT"
+        label={translate('navigation.log_out')}
         onPress={() => {
           lockConnect();
           navigation.closeDrawer();

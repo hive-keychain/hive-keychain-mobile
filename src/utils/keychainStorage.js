@@ -1,5 +1,6 @@
 import * as Keychain from 'react-native-keychain';
 import {chunkArray} from 'utils/format';
+import {translate} from 'utils/localize';
 
 export const saveOnKeychain = async (radix, string) => {
   const biometrics = await Keychain.getSupportedBiometryType();
@@ -37,7 +38,7 @@ export const getFromKeychain = async (radix) => {
       service: `${radix}_${i}`,
     };
     if (i === 0) {
-      options.authenticationPrompt = {title: 'Authenticate'};
+      options.authenticationPrompt = {title: translate('unlock.authenticate')};
     }
     try {
       const cred = await Keychain.getGenericPassword(options);

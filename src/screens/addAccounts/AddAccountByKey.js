@@ -31,9 +31,7 @@ const AddAccountByKey = ({addAccountConnect, navigation, route}) => {
       const wallet = route.params ? route.params.wallet : false;
       addAccountConnect(account, keys, wallet, false);
     } else {
-      Toast.show(
-        'Something went wrong! Please verify your keys and your connection.',
-      );
+      Toast.show(translate('toast.error_add_account'));
     }
   };
   const {height} = useWindowDimensions();
