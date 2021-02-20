@@ -65,7 +65,36 @@
       "convert": {"title": "Convert to HIVE", "button": "Convert"}
     }
   },
-  "settings": {"keys": {"add": "ADD KEY"}},
+  "settings": {
+    "keys": {
+      "add": "ADD KEY",
+      "disclaimer": [
+        {
+          "text": "To receive funds, simply share your account name (displayed above) with the sender.",
+          "style_do_not_translate": "disclaimer"
+        },
+        {
+          "text": "However, many applications will require a PRIVATE KEY to prove ownership or to conduct transactions on your behalf.",
+          "style_do_not_translate": "disclaimer"
+        },
+        {
+          "text": "ONLY SHARE PRIVATE KEYS WITH PARTIES THAT YOU TRUST!",
+          "style_do_not_translate": "important"
+        },
+        {
+          "text": "In the future, Hive Keychain for mobile will enable App to App transactions, removing the need to use your private keys directly in third-party Apps.",
+          "style_do_not_translate": "disclaimer"
+        }
+      ]
+    },
+    "settings": {
+      "title": "RPC Nodes",
+      "disclaimer": [
+        "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
+        "Use 'DEFAULT' RPC to let Hive Keychain chose the best RPC node at a given time."
+      ]
+    }
+  },
   "components": {
     "moreInformation": {
       "title": "KEYS (HIVE PASSWORDS)",

@@ -14,15 +14,10 @@ const AccountManagement = ({navigation, setRpcConnect, settings}) => {
     <SafeAreaView>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
       <View style={styles.view}>
-        <Text style={styles.title}>RPC Nodes</Text>
-        <Text style={styles.disclaimer}>
-          You can chose which RPC node is used to read information and broadcast
-          transactions from/to the Hive Blockchain.
-        </Text>
-        <Text style={styles.disclaimer}>
-          Use "DEFAULT" RPC to let Hive Keychain chose the best RPC node at a
-          given time.
-        </Text>
+        <Text style={styles.title}>{translate('settings.settings.title')}</Text>
+        {translate('settings.settings.disclaimer').map((disclaimer) => (
+          <Text style={styles.disclaimer}>{disclaimer}</Text>
+        ))}
         <Separator height={20} />
         <CustomPicker
           onSelected={setRpcConnect}

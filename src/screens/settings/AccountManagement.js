@@ -8,6 +8,7 @@ import UserPicker from 'components/form/UserPicker';
 import EllipticButton from 'components/form/EllipticButton';
 import {forgetKey, addKey, forgetAccount} from 'actions';
 import Key from 'components/hive/Key';
+import {translate} from 'utils/localize';
 
 const AccountManagement = ({
   account,
@@ -36,22 +37,9 @@ const AccountManagement = ({
             setUsername(name);
           }}
         />
-        <Text style={styles.disclaimer}>
-          To receive funds, simply share your account name (displayed above)
-          with the sender.
-        </Text>
-        <Text style={styles.disclaimer}>
-          However, many applications will require a PRIVATE KEY to prove
-          ownership or to conduct transactions on your behalf.{' '}
-          <Text style={styles.important}>
-            ONLY SHARE PRIVATE KEYS WITH PARTIES THAT YOU TRUST!
-          </Text>
-        </Text>
-        <Text style={styles.disclaimer}>
-          In the future, Hive Keychain for mobile will enable App to App
-          transactions, removing the need to use your private keys directly in
-          third-party Apps.
-        </Text>
+        {translate('settings.keys.disclaimer').map((e) => (
+          <Text style={styles[e.style_do_not_translate]}>{e.text}</Text>
+        ))}
         <Separator height={20} />
         <Key
           type="posting"
@@ -93,7 +81,12 @@ const AccountManagement = ({
 
 const styles = StyleSheet.create({
   disclaimer: {color: '#404950', marginVertical: 2, paddingHorizontal: 20},
-  important: {color: '#A3112A', fontWeight: 'bold'},
+  important: {
+    color: '#A3112A',
+    fontWeight: 'bold',
+    marginVertical: 2,
+    paddingHorizontal: 20,
+  },
   button: {backgroundColor: '#B9122F'},
   keyOdd: {backgroundColor: '#E5EEF7', padding: 20},
   keyEven: {backgroundColor: '#FFFFFF', padding: 20},
