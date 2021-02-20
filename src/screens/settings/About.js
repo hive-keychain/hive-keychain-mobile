@@ -54,7 +54,7 @@ export default ({navigation, route}) => {
         </Text>
         <Separator height={20} />
         <Text style={styles.text}>
-          Since the application is still in Alpha, we count on you to report
+          Since the application is still in Beta, we count on you to report
           bugs, layout issues and improvement ideas on our{' '}
           <Text
             style={styles.link}
@@ -65,11 +65,6 @@ export default ({navigation, route}) => {
             }}>
             Github.
           </Text>
-        </Text>
-        <Text style={styles.text}>
-          Additionally, if you would rather try it with a test account, contact
-          @stoodkev on Discord (stoodkev#8281) and he will help you create one
-          for free.
         </Text>
       </View>
     </Background>
