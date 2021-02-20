@@ -158,6 +158,7 @@
     "manage": "MANAGE KEYS",
     "settings": "SETTINGS",
     "about": "ABOUT",
-    "wallet": "WALLET"
+    "wallet": "WALLET",
+    "browser": "BROWSER"
   }
 }
