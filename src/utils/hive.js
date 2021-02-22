@@ -22,9 +22,30 @@ export const sendToken = async (key, username, obj) => {
   });
 };
 
+export const powerUp = async (key, obj) => {
+  return await broadcast(key, 'transfer_to_vesting', obj);
+};
+
+export const powerDown = async (key, obj) => {
+  return await broadcast(key, 'withdraw_vesting', obj);
+};
+
+export const delegate = async (key, obj) => {
+  return await broadcast(key, 'delegate_vesting_shares', obj);
+};
+
+export const convert = async (key, obj) => {
+  return await broadcast(key, 'convert', obj);
+};
+
 export const broadcast = async (key, type, obj) => {
   const tx = new hiveTx.Transaction();
   await tx.create([[type, obj]]);
   tx.sign(hiveTx.PrivateKey.from(key));
-  return (await tx.broadcast()).result;
+  const {error, result} = await tx.broadcast();
+  if (error) {
+    throw new Error(error.message);
+  } else {
+    return result;
+  }
 };

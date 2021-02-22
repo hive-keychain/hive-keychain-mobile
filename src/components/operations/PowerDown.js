@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
-import hive, {getClient} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
@@ -16,6 +15,7 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
 import {toHP, fromHP, withCommas} from 'utils/format';
+import {powerDown} from 'utils/hive';
 
 const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
   const [amount, setAmount] = useState('');
@@ -44,20 +44,12 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
     Keyboard.dismiss();
 
     try {
-      await getClient().broadcast.sendOperations(
-        [
-          [
-            'withdraw_vesting',
-            {
-              vesting_shares: `${fromHP(amount, properties.globals).toFixed(
-                6,
-              )} VESTS`,
-              account: user.account.name,
-            },
-          ],
-        ],
-        hive.PrivateKey.fromString(user.keys.active),
-      );
+      await powerDown(user.keys.active, {
+        vesting_shares: `${fromHP(amount, properties.globals).toFixed(
+          6,
+        )} VESTS`,
+        account: user.account.name,
+      });
       loadAccountConnect(user.account.name);
       goBack();
       if (parseFloat(amount) !== 0) {

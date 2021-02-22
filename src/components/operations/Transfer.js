@@ -7,7 +7,6 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
-import hive, {getClient} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
@@ -93,7 +92,7 @@ const Transfer = ({
       loadAccountConnect(user.account.name);
       goBack();
     } catch (e) {
-      console.log(e);
+      Toast.show(`Error:${e}`, Toast.LONG);
       setLoading(false);
     }
   };

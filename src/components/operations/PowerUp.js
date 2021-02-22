@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
-import hive, {getClient} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
@@ -16,6 +15,7 @@ import Hp from 'assets/wallet/icon_hp.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
+import {powerUp} from 'utils/hive';
 
 const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
   const [to, setTo] = useState(user.account.name);
@@ -27,19 +27,11 @@ const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
     setLoading(true);
 
     try {
-      await getClient().broadcast.sendOperations(
-        [
-          [
-            'transfer_to_vesting',
-            {
-              amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
-              to: to.toLowerCase(),
-              from: user.account.name,
-            },
-          ],
-        ],
-        hive.PrivateKey.fromString(user.keys.active),
-      );
+      await powerUp(user.keys.active, {
+        amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
+        to: to.toLowerCase(),
+        from: user.account.name,
+      });
       loadAccountConnect(user.account.name);
       goBack();
       Toast.show(translate('toast.powerup_success'), Toast.LONG);
