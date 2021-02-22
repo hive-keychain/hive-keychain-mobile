@@ -41,7 +41,7 @@ export default () => {
       <Stack.Screen
         name="ScanQRScreen"
         options={{
-          headerTransparent,
+          headerStyle: {backgroundColor: 'black'},
           headerTintColor: 'white',
           title: '',
           headerRight: () => {
