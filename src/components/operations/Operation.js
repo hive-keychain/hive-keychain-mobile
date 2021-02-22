@@ -2,10 +2,12 @@ import React from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Close from 'assets/wallet/icon_close.svg';
 import {goBack} from 'utils/navigation';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 
 export default ({icon, children, logo, title}) => {
   return (
     <>
+      <FocusAwareStatusBar backgroundColor="#b4112A" />
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           {logo}
