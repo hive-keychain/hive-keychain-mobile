@@ -22,12 +22,12 @@ import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
-import {hiveEngine} from 'utils/config';
 import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {getTransferWarning} from 'utils/transferValidator';
 import CustomRadioGroup from 'components/form/CustomRadioGroup';
 import {encodeMemo} from 'components/bridge';
 import {getAccountKeys} from 'utils/hiveUtils';
+import {transfer, sendToken} from 'utils/hive';
 
 const PUBLIC = translate('common.public').toUpperCase();
 const PRIVATE = translate('common.private').toUpperCase();
@@ -48,54 +48,37 @@ const Transfer = ({
   const [step, setStep] = useState(1);
   const [privacy, setPrivacy] = useState(PUBLIC);
 
-  const transfer = async () => {
+  const sendTransfer = async () => {
     setLoading(true);
     let finalMemo = memo;
     if (privacy === PRIVATE) {
       const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
       finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
     }
-    await getClient().broadcast.transfer(
-      {
-        amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
-        memo: finalMemo,
-        to: to.toLowerCase(),
-        from: user.account.name,
-      },
-      hive.PrivateKey.fromString(user.keys.active),
-    );
+    await transfer(user.keys.active, {
+      amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
+      memo: finalMemo,
+      to: to.toLowerCase(),
+      from: user.account.name,
+    });
   };
 
   const transferToken = async () => {
     setLoading(true);
 
-    const id = hiveEngine.CHAIN_ID;
-    const json = JSON.stringify({
-      contractName: 'tokens',
-      contractAction: 'transfer',
-      contractPayload: {
-        symbol: currency,
-        to: to.toLowerCase(),
-        quantity: amount,
-        memo: memo,
-      },
+    return await sendToken(user.keys.active, user.name, {
+      symbol: currency,
+      to: to.toLowerCase(),
+      quantity: amount,
+      memo: memo,
     });
-    return await getClient().broadcast.json(
-      {
-        id,
-        json,
-        required_auths: [user.name],
-        required_posting_auths: [],
-      },
-      hive.PrivateKey.fromString(user.keys.active),
-    );
   };
 
   const onSend = async () => {
     Keyboard.dismiss();
     try {
       if (!engine) {
-        await transfer();
+        await sendTransfer();
         Toast.show(translate('toast.transfer_success'), Toast.LONG);
       } else {
         const {id} = await transferToken();
@@ -110,7 +93,7 @@ const Transfer = ({
       loadAccountConnect(user.account.name);
       goBack();
     } catch (e) {
-      Toast.show(`Error : ${e.message}`, Toast.LONG);
+      console.log(e);
       setLoading(false);
     }
   };
