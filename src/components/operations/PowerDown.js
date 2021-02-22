@@ -83,7 +83,7 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
 
       <OperationInput
         placeholder={'0.000'}
-        keyboardType="numeric"
+        keyboardType="decimal-pad"
         rightIcon={<Text style={styles.currency}>{currency}</Text>}
         textAlign="right"
         value={amount}
