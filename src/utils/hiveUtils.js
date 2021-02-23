@@ -138,6 +138,5 @@ export const sanitizeAmount = (amount, currency, decimals = 3) => {
   const res = `${parseFloat(amount.replaceAll(',', '.')).toFixed(
     decimals,
   )} ${currency}`;
-  console.log(res);
   return res;
 };

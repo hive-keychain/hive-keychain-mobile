@@ -2,11 +2,9 @@ import hsc from 'api/hiveEngine';
 
 export const tryConfirmTransaction = (trxId) => {
   let result;
-  console.log(trxId);
   return new Promise(async function (fulfill, reject) {
     for (let i = 0; i < 20; i++) {
       result = await getDelayedTransactionInfo(trxId);
-      console.log(result);
       if (result != null) {
         break;
       }
