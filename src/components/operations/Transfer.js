@@ -68,8 +68,8 @@ const Transfer = ({
 
     return await sendToken(user.keys.active, user.name, {
       symbol: currency,
-      to: to.toLowerCase(),
-      quantity: amount,
+      to: sanitizeUsername(to),
+      quantity: amount.replace(',', '.'),
       memo: memo,
     });
   };
