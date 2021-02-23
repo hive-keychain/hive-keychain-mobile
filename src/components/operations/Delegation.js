@@ -45,7 +45,7 @@ const Delegation = ({
         delegator: user.account.name,
       });
       console.log(delegation);
-      loadAccountConnect(user.account.name);
+      loadAccountConnect(user.account.name, true);
       goBack();
       if (parseFloat(amount.replace(',', '.')) !== 0) {
         Toast.show(translate('toast.delegation_success'), Toast.LONG);

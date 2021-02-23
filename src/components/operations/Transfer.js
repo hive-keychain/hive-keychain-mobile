@@ -90,7 +90,7 @@ const Transfer = ({
           Toast.LONG,
         );
       }
-      loadAccountConnect(user.account.name);
+      loadAccountConnect(user.account.name, true);
       goBack();
     } catch (e) {
       Toast.show(`Error:${e}`, Toast.LONG);

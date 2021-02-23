@@ -18,7 +18,10 @@ import {getConversionRequests} from 'utils/hiveUtils';
 import {decodeMemo} from 'components/bridge';
 import {translate} from 'utils/localize';
 
-export const loadAccount = (name) => async (dispatch, getState) => {
+export const loadAccount = (name, initTransactions) => async (
+  dispatch,
+  getState,
+) => {
   dispatch({
     type: ACTIVE_ACCOUNT,
     payload: {
@@ -26,6 +29,9 @@ export const loadAccount = (name) => async (dispatch, getState) => {
     },
   });
   dispatch(getAccountRC(name));
+  if (initTransactions) {
+    dispatch(initAccountTransactions(name));
+  }
   const account = (await getClient().database.getAccounts([name]))[0];
   const keys = getState().accounts.find((e) => e.name === name).keys;
   dispatch({

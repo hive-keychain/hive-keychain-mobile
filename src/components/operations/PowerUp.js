@@ -33,7 +33,7 @@ const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
         to: sanitizeUsername(to),
         from: user.account.name,
       });
-      loadAccountConnect(user.account.name);
+      loadAccountConnect(user.account.name, true);
       goBack();
       Toast.show(translate('toast.powerup_success'), Toast.LONG);
     } catch (e) {

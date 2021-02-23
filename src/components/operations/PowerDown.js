@@ -53,7 +53,7 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
         ),
         account: user.account.name,
       });
-      loadAccountConnect(user.account.name);
+      loadAccountConnect(user.account.name, true);
       goBack();
       if (parseFloat(amount.replace(',', '.')) !== 0) {
         Toast.show(translate('toast.powerdown_success'), Toast.LONG);

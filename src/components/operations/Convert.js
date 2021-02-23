@@ -41,17 +41,13 @@ const Convert = ({
   const onConvert = async () => {
     Keyboard.dismiss();
     setLoading(true);
-    console.log(
-      conversions,
-      Math.max(...conversions.map((e) => e.requestid), 0) + 1,
-    );
     try {
       await convert(user.keys.active, {
         owner: user.account.name,
         amount: sanitizeAmount(amount, 'HBD'),
         requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
       });
-      loadAccountConnect(user.account.name);
+      loadAccountConnect(user.account.name, true);
       goBack();
       Toast.show(translate('toast.convert_success'), Toast.LONG);
     } catch (e) {
