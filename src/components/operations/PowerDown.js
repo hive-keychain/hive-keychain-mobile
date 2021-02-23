@@ -16,6 +16,7 @@ import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
 import {toHP, fromHP, withCommas} from 'utils/format';
 import {powerDown} from 'utils/hive';
+import {sanitizeAmount} from 'utils/hiveUtils';
 
 const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
   const [amount, setAmount] = useState('');
@@ -45,14 +46,16 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
 
     try {
       await powerDown(user.keys.active, {
-        vesting_shares: `${fromHP(amount, properties.globals).toFixed(
+        vesting_shares: sanitizeAmount(
+          fromHP(amount.replace(',', '.'), properties.globals).toString(),
+          'VESTS',
           6,
-        )} VESTS`,
+        ),
         account: user.account.name,
       });
       loadAccountConnect(user.account.name);
       goBack();
-      if (parseFloat(amount) !== 0) {
+      if (parseFloat(amount.replace(',', '.')) !== 0) {
         Toast.show(translate('toast.powerdown_success'), Toast.LONG);
       } else {
         Toast.show(translate('toast.stop_powerdown_success'), Toast.LONG);

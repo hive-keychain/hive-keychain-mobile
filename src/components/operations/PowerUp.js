@@ -16,6 +16,7 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
 import {powerUp} from 'utils/hive';
+import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 
 const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
   const [to, setTo] = useState(user.account.name);
@@ -28,8 +29,8 @@ const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
 
     try {
       await powerUp(user.keys.active, {
-        amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
-        to: to.toLowerCase(),
+        amount: sanitizeAmount(amount, currency),
+        to: sanitizeUsername(to),
         from: user.account.name,
       });
       loadAccountConnect(user.account.name);

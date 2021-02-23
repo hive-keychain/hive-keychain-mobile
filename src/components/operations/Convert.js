@@ -22,6 +22,7 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount, fetchConversionRequests} from 'actions';
 import {convert} from 'utils/hive';
+import {sanitizeAmount} from 'utils/hiveUtils';
 
 const Convert = ({
   user,
@@ -47,7 +48,7 @@ const Convert = ({
     try {
       await convert(user.keys.active, {
         owner: user.account.name,
-        amount: `${amount} HBD`,
+        amount: sanitizeAmount(amount, 'HBD'),
         requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
       });
       loadAccountConnect(user.account.name);

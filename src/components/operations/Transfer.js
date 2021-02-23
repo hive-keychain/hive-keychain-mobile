@@ -27,6 +27,7 @@ import CustomRadioGroup from 'components/form/CustomRadioGroup';
 import {encodeMemo} from 'components/bridge';
 import {getAccountKeys} from 'utils/hiveUtils';
 import {transfer, sendToken} from 'utils/hive';
+import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 
 const PUBLIC = translate('common.public').toUpperCase();
 const PRIVATE = translate('common.private').toUpperCase();
@@ -55,9 +56,9 @@ const Transfer = ({
       finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
     }
     await transfer(user.keys.active, {
-      amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
+      amount: sanitizeAmount(amount, currency),
       memo: finalMemo,
-      to: to.toLowerCase(),
+      to: sanitizeUsername(to),
       from: user.account.name,
     });
   };

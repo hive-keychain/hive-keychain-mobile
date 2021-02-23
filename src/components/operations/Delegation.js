@@ -17,6 +17,7 @@ import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
 import {fromHP} from 'utils/format';
 import {delegate} from 'utils/hive';
+import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 
 const Delegation = ({
   currency = 'HP',
@@ -35,16 +36,18 @@ const Delegation = ({
     Keyboard.dismiss();
     try {
       const delegation = await delegate(user.keys.active, {
-        vesting_shares: `${fromHP(amount, properties.globals).toFixed(
+        vesting_shares: sanitizeAmount(
+          fromHP(amount.replace(',', '.'), properties.globals).toString(),
+          'VESTS',
           6,
-        )} VESTS`,
-        delegatee: to.toLowerCase(),
+        ),
+        delegatee: sanitizeUsername(to),
         delegator: user.account.name,
       });
       console.log(delegation);
       loadAccountConnect(user.account.name);
       goBack();
-      if (parseFloat(amount) !== 0) {
+      if (parseFloat(amount.replace(',', '.')) !== 0) {
         Toast.show(translate('toast.delegation_success'), Toast.LONG);
       } else {
         Toast.show(translate('toast.stop_delegation_success'), Toast.LONG);
