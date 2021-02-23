@@ -1,4 +1,4 @@
-import {getClient} from './dhive';
+import {getClient} from './hive';
 import api from 'api/keychain';
 
 const HIVE_VOTING_MANA_REGENERATION_SECONDS = 432000;

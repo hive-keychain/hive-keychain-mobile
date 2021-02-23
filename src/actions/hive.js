@@ -10,7 +10,7 @@ import {
   FETCH_PHISHING_ACCOUNTS,
   FETCH_CONVERSION_REQUESTS,
 } from './types';
-import dhive, {getClient} from 'utils/dhive';
+import dhive, {getClient} from 'utils/hive';
 import {getBittrexPrices} from 'utils/price';
 import {getPhishingAccounts} from 'utils/transferValidator';
 import {getDelegatees, getDelegators} from 'utils/hiveUtils';

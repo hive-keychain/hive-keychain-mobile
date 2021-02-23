@@ -1,4 +1,4 @@
-import hive, {getClient} from './dhive';
+import hive, {getClient} from './hive';
 
 const isMemoWif = (publicKey, memo) => {
   return publicKey === memo;

@@ -1,5 +1,29 @@
 import hiveTx from 'hive-tx';
+import api from 'api/keychain';
 import {hiveEngine} from 'utils/config';
+
+let hive = require('@hiveio/dhive');
+const DEFAULT_RPC = 'https://api.hive.blog';
+
+let client = new hive.Client(DEFAULT_RPC);
+
+const getDefault = async () => {
+  try {
+    return (await api.get('/hive/rpc')).data.rpc;
+  } catch (e) {
+    return DEFAULT_RPC;
+  }
+};
+
+export const setRpc = async (rpc) => {
+  if (rpc === 'DEFAULT') {
+    rpc = await getDefault();
+  }
+  client = new hive.Client(rpc);
+  hiveTx.config.node = rpc;
+};
+
+export const getClient = () => client;
 
 export const transfer = async (key, obj) => {
   return await broadcast(key, 'transfer', obj);
@@ -49,3 +73,5 @@ export const broadcast = async (key, type, obj) => {
     return result;
   }
 };
+
+export default hive;
