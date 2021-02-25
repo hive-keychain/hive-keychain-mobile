@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "android-bundle": "cd android && ./gradlew bundleRelease && cd ..",
+    "android-bundle": "rm -f android/app/build/outputs/bundle/release/app-release.aab && cd android && ./gradlew bundleRelease && cd ..",
     "android-release": "react-native run-android --variant=release",
     "android-clean": "cd android && ./gradlew clean && cd ..",
     "emulator_input": "adb shell input text",

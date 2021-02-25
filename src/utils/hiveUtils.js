@@ -139,10 +139,10 @@ export const sanitizeAmount = (amount, currency, decimals = 3) => {
     amount = amount.toString();
   }
   if (currency) {
-    return `${parseFloat(amount.replaceAll(',', '.')).toFixed(
+    return `${parseFloat(amount.replace(/,/g, '.')).toFixed(
       decimals,
     )} ${currency}`;
   } else {
-    return `${amount.replaceAll(',', '.')}`;
+    return `${amount.replace(/,/g, '.')}`;
   }
 };

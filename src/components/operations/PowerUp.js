@@ -37,7 +37,7 @@ const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
       goBack();
       Toast.show(translate('toast.powerup_success'), Toast.LONG);
     } catch (e) {
-      Toast.show(`Error : ${e.message}`, Toast.LONG);
+      Toast.show(`Error: ${e.message}`, Toast.LONG);
     } finally {
       setLoading(false);
     }
