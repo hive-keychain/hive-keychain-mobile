@@ -135,8 +135,14 @@ export const sanitizeUsername = (username) =>
   username.toLowerCase().replaceAll(' ', '');
 
 export const sanitizeAmount = (amount, currency, decimals = 3) => {
-  const res = `${parseFloat(amount.replaceAll(',', '.')).toFixed(
-    decimals,
-  )} ${currency}`;
-  return res;
+  if (typeof amount !== 'string') {
+    amount = amount.toString();
+  }
+  if (currency) {
+    return `${parseFloat(amount.replaceAll(',', '.')).toFixed(
+      decimals,
+    )} ${currency}`;
+  } else {
+    return `${amount.replaceAll(',', '.')}`;
+  }
 };

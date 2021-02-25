@@ -47,7 +47,7 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
     try {
       await powerDown(user.keys.active, {
         vesting_shares: sanitizeAmount(
-          fromHP(amount.replace(',', '.'), properties.globals).toString(),
+          fromHP(sanitizeAmount(amount), properties.globals).toString(),
           'VESTS',
           6,
         ),

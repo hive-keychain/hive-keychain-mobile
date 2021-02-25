@@ -37,7 +37,7 @@ const Delegation = ({
     try {
       const delegation = await delegate(user.keys.active, {
         vesting_shares: sanitizeAmount(
-          fromHP(amount.replace(',', '.'), properties.globals).toString(),
+          fromHP(sanitizeAmount(amount), properties.globals).toString(),
           'VESTS',
           6,
         ),
