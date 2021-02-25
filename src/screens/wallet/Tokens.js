@@ -37,7 +37,7 @@ const Tokens = ({
       />
       <Separator />
       {userTokens.loading && <Loader animating />}
-      {!userTokens.loading && userTokens.list.length ? (
+      {!userTokens.loading && userTokens.list.length && (
         <FlatList
           style={[styles.half]}
           data={userTokens.list}
@@ -51,7 +51,8 @@ const Tokens = ({
             />
           )}
         />
-      ) : (
+      )}
+      {!userTokens.loading && !userTokens.list.length && (
         <Text style={styles.no_tokens}>{translate('wallet.no_tokens')}</Text>
       )}
     </View>
