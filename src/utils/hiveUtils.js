@@ -8,7 +8,10 @@ export const getVP = (account) => {
   if (!account.name) {
     return null;
   }
-  const estimated_max = getEffectiveVestingSharesPerAccount(account) * 1000000;
+  const estimated_max =
+    (getEffectiveVestingSharesPerAccount(account) -
+      parseFloat(account.vesting_withdraw_rate)) *
+    1000000;
   const current_mana = parseFloat(account.voting_manabar.current_mana);
   const last_update_time = account.voting_manabar.last_update_time;
   const diff_in_seconds = Math.round(Date.now() / 1000 - last_update_time);
@@ -131,8 +134,7 @@ export const getAccountKeys = async (username) => {
   };
 };
 
-export const sanitizeUsername = (username) =>
-  username.toLowerCase().replaceAll(' ', '');
+export const sanitizeUsername = (username) => username.toLowerCase().trim();
 
 export const sanitizeAmount = (amount, currency, decimals = 3) => {
   if (typeof amount !== 'string') {
