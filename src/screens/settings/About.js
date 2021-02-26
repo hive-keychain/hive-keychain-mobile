@@ -8,9 +8,10 @@ export default ({navigation, route}) => {
   return (
     <Background>
       <StatusBar backgroundColor="black" />
+      <Separator height={50} />
       <View style={styles.container}>
         <Text style={styles.title}>
-          Keychain Mobile v{VersionInfo.appVersion} (Alpha)
+          Keychain Mobile v{VersionInfo.appVersion} (Beta)
         </Text>
         <Text style={styles.text}>
           Keychain for mobile is developed by{' '}
@@ -21,7 +22,7 @@ export default ({navigation, route}) => {
             }}>
             @stoodkev
           </Text>{' '}
-          and designed by
+          and designed by{' '}
           <Text
             style={styles.link}
             onPress={() => {
