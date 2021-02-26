@@ -37,8 +37,10 @@ const AccountManagement = ({
             setUsername(name);
           }}
         />
-        {translate('settings.keys.disclaimer').map((e) => (
-          <Text style={styles[e.style_do_not_translate]}>{e.text}</Text>
+        {translate('settings.keys.disclaimer').map((e, i) => (
+          <Text key={i} style={styles[e.style_do_not_translate]}>
+            {e.text}
+          </Text>
         ))}
         <Separator height={20} />
         <Key

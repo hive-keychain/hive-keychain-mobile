@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {connect} from 'react-redux';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import {setRpc} from 'actions';
 import CustomPicker from 'components/form/CustomPicker';
@@ -11,12 +11,14 @@ import {translate} from 'utils/localize';
 
 const AccountManagement = ({navigation, setRpcConnect, settings}) => {
   return (
-    <SafeAreaView>
+    <SafeArea>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
       <View style={styles.view}>
         <Text style={styles.title}>{translate('settings.settings.title')}</Text>
-        {translate('settings.settings.disclaimer').map((disclaimer) => (
-          <Text style={styles.disclaimer}>{disclaimer}</Text>
+        {translate('settings.settings.disclaimer').map((disclaimer, i) => (
+          <Text key={i} style={styles.disclaimer}>
+            {disclaimer}
+          </Text>
         ))}
         <Separator height={20} />
         <CustomPicker
@@ -26,7 +28,7 @@ const AccountManagement = ({navigation, setRpcConnect, settings}) => {
           prompt={translate('components.picker.prompt_rpc')}
         />
       </View>
-    </SafeAreaView>
+    </SafeArea>
   );
 };
 

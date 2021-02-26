@@ -47,10 +47,10 @@ const CustomPicker = ({
           selectedValue={selectedValue}
           prompt={prompt}
           onValueChange={onSelected}>
-          {list.map((item) => {
+          {list.map((item, i) => {
             return (
               <Picker.Item
-                key={item}
+                key={i}
                 label={`${prefix ? prefix : ''}${item}`}
                 value={item}
               />
