@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 
 import Modal from 'screens/Modal';
 import {setNavigator, noHeader, modalOptions} from 'utils/navigation';
-import {setRpc} from 'utils/dhive';
+import {setRpc} from 'utils/hive';
 import {lock} from 'actions';
 import Bridge from 'components/bridge';
 

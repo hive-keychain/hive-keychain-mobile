@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
-import hive, {getClient} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
@@ -16,6 +15,8 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
 import {toHP, fromHP, withCommas} from 'utils/format';
+import {powerDown} from 'utils/hive';
+import {sanitizeAmount} from 'utils/hiveUtils';
 
 const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
   const [amount, setAmount] = useState('');
@@ -44,23 +45,17 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
     Keyboard.dismiss();
 
     try {
-      await getClient().broadcast.sendOperations(
-        [
-          [
-            'withdraw_vesting',
-            {
-              vesting_shares: `${fromHP(amount, properties.globals).toFixed(
-                6,
-              )} VESTS`,
-              account: user.account.name,
-            },
-          ],
-        ],
-        hive.PrivateKey.fromString(user.keys.active),
-      );
-      loadAccountConnect(user.account.name);
+      await powerDown(user.keys.active, {
+        vesting_shares: sanitizeAmount(
+          fromHP(sanitizeAmount(amount), properties.globals).toString(),
+          'VESTS',
+          6,
+        ),
+        account: user.account.name,
+      });
+      loadAccountConnect(user.account.name, true);
       goBack();
-      if (parseFloat(amount) !== 0) {
+      if (parseFloat(amount.replace(',', '.')) !== 0) {
         Toast.show(translate('toast.powerdown_success'), Toast.LONG);
       } else {
         Toast.show(translate('toast.stop_powerdown_success'), Toast.LONG);
@@ -91,7 +86,7 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
 
       <OperationInput
         placeholder={'0.000'}
-        keyboardType="numeric"
+        keyboardType="decimal-pad"
         rightIcon={<Text style={styles.currency}>{currency}</Text>}
         textAlign="right"
         value={amount}

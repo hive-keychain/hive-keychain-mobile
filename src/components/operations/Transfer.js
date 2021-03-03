@@ -7,7 +7,6 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {connect} from 'react-redux';
-import hive, {getClient} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
@@ -22,12 +21,13 @@ import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
-import {hiveEngine} from 'utils/config';
 import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {getTransferWarning} from 'utils/transferValidator';
 import CustomRadioGroup from 'components/form/CustomRadioGroup';
 import {encodeMemo} from 'components/bridge';
 import {getAccountKeys} from 'utils/hiveUtils';
+import {transfer, sendToken} from 'utils/hive';
+import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 
 const PUBLIC = translate('common.public').toUpperCase();
 const PRIVATE = translate('common.private').toUpperCase();
@@ -48,54 +48,37 @@ const Transfer = ({
   const [step, setStep] = useState(1);
   const [privacy, setPrivacy] = useState(PUBLIC);
 
-  const transfer = async () => {
+  const sendTransfer = async () => {
     setLoading(true);
     let finalMemo = memo;
     if (privacy === PRIVATE) {
       const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
       finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
     }
-    await getClient().broadcast.transfer(
-      {
-        amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
-        memo: finalMemo,
-        to: to.toLowerCase(),
-        from: user.account.name,
-      },
-      hive.PrivateKey.fromString(user.keys.active),
-    );
+    await transfer(user.keys.active, {
+      amount: sanitizeAmount(amount, currency),
+      memo: finalMemo,
+      to: sanitizeUsername(to),
+      from: user.account.name,
+    });
   };
 
   const transferToken = async () => {
     setLoading(true);
 
-    const id = hiveEngine.CHAIN_ID;
-    const json = JSON.stringify({
-      contractName: 'tokens',
-      contractAction: 'transfer',
-      contractPayload: {
-        symbol: currency,
-        to: to.toLowerCase(),
-        quantity: amount,
-        memo: memo,
-      },
+    return await sendToken(user.keys.active, user.name, {
+      symbol: currency,
+      to: sanitizeUsername(to),
+      quantity: sanitizeAmount(amount),
+      memo: memo,
     });
-    return await getClient().broadcast.json(
-      {
-        id,
-        json,
-        required_auths: [user.name],
-        required_posting_auths: [],
-      },
-      hive.PrivateKey.fromString(user.keys.active),
-    );
   };
 
   const onSend = async () => {
     Keyboard.dismiss();
     try {
       if (!engine) {
-        await transfer();
+        await sendTransfer();
         Toast.show(translate('toast.transfer_success'), Toast.LONG);
       } else {
         const {id} = await transferToken();
@@ -107,10 +90,10 @@ const Transfer = ({
           Toast.LONG,
         );
       }
-      loadAccountConnect(user.account.name);
+      loadAccountConnect(user.account.name, true);
       goBack();
     } catch (e) {
-      Toast.show(`Error : ${e.message}`, Toast.LONG);
+      Toast.show(`Error:${e}`, Toast.LONG);
       setLoading(false);
     }
   };
@@ -143,7 +126,7 @@ const Transfer = ({
         <Separator />
         <OperationInput
           placeholder={'0.000'}
-          keyboardType="numeric"
+          keyboardType="decimal-pad"
           rightIcon={<Text style={styles.currency}>{currency}</Text>}
           textAlign="right"
           value={amount}

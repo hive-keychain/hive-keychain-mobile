@@ -66,7 +66,6 @@ const basicStyles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-  console.log(state.transactions.list.length);
   return {
     transactions: state.transactions.list,
     loading: state.transactions.loading,

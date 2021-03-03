@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
-import hive, {getClient} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
@@ -16,6 +15,8 @@ import Hp from 'assets/wallet/icon_hp.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
+import {powerUp} from 'utils/hive';
+import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 
 const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
   const [to, setTo] = useState(user.account.name);
@@ -27,24 +28,16 @@ const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
     setLoading(true);
 
     try {
-      await getClient().broadcast.sendOperations(
-        [
-          [
-            'transfer_to_vesting',
-            {
-              amount: `${parseFloat(amount).toFixed(3)} ${currency}`,
-              to: to.toLowerCase(),
-              from: user.account.name,
-            },
-          ],
-        ],
-        hive.PrivateKey.fromString(user.keys.active),
-      );
-      loadAccountConnect(user.account.name);
+      await powerUp(user.keys.active, {
+        amount: sanitizeAmount(amount, currency),
+        to: sanitizeUsername(to),
+        from: user.account.name,
+      });
+      loadAccountConnect(user.account.name, true);
       goBack();
       Toast.show(translate('toast.powerup_success'), Toast.LONG);
     } catch (e) {
-      Toast.show(`Error : ${e.message}`, Toast.LONG);
+      Toast.show(`Error: ${e.message}`, Toast.LONG);
     } finally {
       setLoading(false);
     }
@@ -69,7 +62,7 @@ const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
       <Separator />
       <OperationInput
         placeholder={'0.000'}
-        keyboardType="numeric"
+        keyboardType="decimal-pad"
         rightIcon={<Text style={styles.currency}>{currency}</Text>}
         textAlign="right"
         value={amount}

@@ -2,8 +2,13 @@ import React from 'react';
 import {Input} from 'react-native-elements';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 
-export default (props) => {
-  const {backgroundColor, inputColor, textAlign} = props;
+export default ({
+  backgroundColor,
+  inputColor,
+  textAlign,
+  containerStyle,
+  ...props
+}) => {
   const styles = getDimensionedStyles({
     ...useWindowDimensions(),
     backgroundColor,
@@ -13,7 +18,7 @@ export default (props) => {
   return (
     <Input
       placeholderTextColor="#B9C9D6"
-      containerStyle={styles.container}
+      containerStyle={[styles.container, containerStyle]}
       inputStyle={styles.input}
       leftIconContainerStyle={styles.leftIcon}
       rightIconContainerStyle={styles.rightIcon}

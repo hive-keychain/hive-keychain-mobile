@@ -27,17 +27,11 @@ const Tokens = ({
     loadUserTokensConnect(user.name);
   }, [loadUserTokensConnect, user.name]);
 
-  return (
-    <View style={styles.container}>
-      <Separator />
-      <HiveEngineAccountValue
-        bittrex={bittrex}
-        tokens={userTokens.list}
-        tokensMarket={tokensMarket}
-      />
-      <Separator />
-      {userTokens.loading && <Loader animating />}
-      {!userTokens.loading && userTokens.list.length ? (
+  const renderContent = () => {
+    if (userTokens.loading) {
+      return <Loader animating />;
+    } else if (userTokens.list.length) {
+      return (
         <FlatList
           style={[styles.half]}
           data={userTokens.list}
@@ -51,9 +45,24 @@ const Tokens = ({
             />
           )}
         />
-      ) : (
+      );
+    } else {
+      return (
         <Text style={styles.no_tokens}>{translate('wallet.no_tokens')}</Text>
-      )}
+      );
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Separator />
+      <HiveEngineAccountValue
+        bittrex={bittrex}
+        tokens={userTokens.list}
+        tokensMarket={tokensMarket}
+      />
+      <Separator />
+      {renderContent()}
     </View>
   );
 };

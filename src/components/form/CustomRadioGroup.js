@@ -8,6 +8,7 @@ export default ({list, onSelect, selected}) => (
         data={data}
         onSelect={onSelect}
         selected={selected === data}
+        key={data}
       />
     ))}
   </View>

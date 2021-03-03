@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import {connect} from 'react-redux';
-import hive, {getClient} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
@@ -22,6 +21,8 @@ import Hive from 'assets/wallet/icon_hive.svg';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount, fetchConversionRequests} from 'actions';
+import {convert} from 'utils/hive';
+import {sanitizeAmount} from 'utils/hiveUtils';
 
 const Convert = ({
   user,
@@ -40,26 +41,13 @@ const Convert = ({
   const onConvert = async () => {
     Keyboard.dismiss();
     setLoading(true);
-    console.log(
-      conversions,
-      Math.max(...conversions.map((e) => e.requestid), 0) + 1,
-    );
     try {
-      await getClient().broadcast.sendOperations(
-        [
-          [
-            'convert',
-            {
-              owner: user.account.name,
-              amount: `${amount} HBD`,
-              requestid:
-                Math.max(...conversions.map((e) => e.requestid), 0) + 1,
-            },
-          ],
-        ],
-        hive.PrivateKey.fromString(user.keys.active),
-      );
-      loadAccountConnect(user.account.name);
+      await convert(user.keys.active, {
+        owner: user.account.name,
+        amount: sanitizeAmount(amount, 'HBD'),
+        requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
+      });
+      loadAccountConnect(user.account.name, true);
       goBack();
       Toast.show(translate('toast.convert_success'), Toast.LONG);
     } catch (e) {

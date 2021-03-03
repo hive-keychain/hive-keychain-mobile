@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, Keyboard} from 'react-native';
 import {connect} from 'react-redux';
-import hive, {getClient} from 'utils/dhive';
 import Toast from 'react-native-simple-toast';
 
 import Operation from './Operation';
@@ -17,6 +16,8 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {goBack} from 'utils/navigation';
 import {loadAccount} from 'actions';
 import {fromHP} from 'utils/format';
+import {delegate} from 'utils/hive';
+import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 
 const Delegation = ({
   currency = 'HP',
@@ -34,24 +35,19 @@ const Delegation = ({
 
     Keyboard.dismiss();
     try {
-      await getClient().broadcast.sendOperations(
-        [
-          [
-            'delegate_vesting_shares',
-            {
-              vesting_shares: `${fromHP(amount, properties.globals).toFixed(
-                6,
-              )} VESTS`,
-              delegatee: to.toLowerCase(),
-              delegator: user.account.name,
-            },
-          ],
-        ],
-        hive.PrivateKey.fromString(user.keys.active),
-      );
-      loadAccountConnect(user.account.name);
+      const delegation = await delegate(user.keys.active, {
+        vesting_shares: sanitizeAmount(
+          fromHP(sanitizeAmount(amount), properties.globals).toString(),
+          'VESTS',
+          6,
+        ),
+        delegatee: sanitizeUsername(to),
+        delegator: user.account.name,
+      });
+      console.log(delegation);
+      loadAccountConnect(user.account.name, true);
       goBack();
-      if (parseFloat(amount) !== 0) {
+      if (parseFloat(amount.replace(',', '.')) !== 0) {
         Toast.show(translate('toast.delegation_success'), Toast.LONG);
       } else {
         Toast.show(translate('toast.stop_delegation_success'), Toast.LONG);
@@ -87,7 +83,7 @@ const Delegation = ({
       <Separator />
       <OperationInput
         placeholder={'0.000'}
-        keyboardType="numeric"
+        keyboardType="decimal-pad"
         rightIcon={<Text style={styles.currency}>{currency}</Text>}
         textAlign="right"
         value={amount}
