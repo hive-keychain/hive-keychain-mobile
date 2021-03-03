@@ -27,10 +27,9 @@ export default (props) => {
 
 const styles = StyleSheet.create({
   linearGradient: {
-    width: '80%',
-    marginLeft: '1%',
-    marginRight: '10%',
-    display: 'flex',
+    width: '90%',
+    marginLeft: '5%',
+    marginRight: '5%',
     flexDirection: 'row',
     alignItems: 'center',
   },

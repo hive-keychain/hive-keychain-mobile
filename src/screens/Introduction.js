@@ -55,6 +55,7 @@ const getDimensionedStyles = ({width, height}) =>
       marginHorizontal: width * 0.05,
       fontSize: 15,
       textAlign: 'justify',
+      flex: 1,
     },
   });
 
