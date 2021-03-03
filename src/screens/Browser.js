@@ -1,7 +1,60 @@
 import React from 'react';
+import Browser from 'components/browser';
+import {connect} from 'react-redux';
+import {
+  changeTab,
+  addTab,
+  closeTab,
+  closeAllTabs,
+  addToHistory,
+  clearHistory,
+  addToFavorites,
+  removeFromFavorites,
+} from 'actions';
 
-const Browser = () => {
-  return <></>;
+const BrowserScreen = ({
+  activeTab,
+  tabs,
+  history,
+  favorites,
+  changeTab,
+  addTab,
+  closeTab,
+  closeAllTabs,
+  addToHistory,
+}) => {
+  return (
+    <Browser
+      activeTab={activeTab}
+      tabs={tabs}
+      history={history}
+      favorites={favorites}
+      changeTab={changeTab}
+      addTab={addTab}
+      closeTab={closeTab}
+      closeAllTabs={closeAllTabs}
+      addToHistory={addToHistory}
+      clearHistory={clearHistory}
+      addToFavorites={addToFavorites}
+      removeFromFavorites={removeFromFavorites}
+    />
+  );
 };
 
-export default Browser;
+const mapStateToProps = (state) => ({
+  activeTab: state.browser.active,
+  tabs: state.browser.tabs,
+  history: state.history,
+  favorites: state.favorites,
+});
+
+export default connect(mapStateToProps, {
+  changeTab,
+  addTab,
+  closeTab,
+  closeAllTabs,
+  addToHistory,
+  clearHistory,
+  addToFavorites,
+  removeFromFavorites,
+})(BrowserScreen);

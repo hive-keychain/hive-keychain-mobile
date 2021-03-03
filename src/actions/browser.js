@@ -1,16 +1,16 @@
 import {
   ADD_TO_BROWSER_HISTORY,
   CLEAR_BROWSER_HISTORY,
-  ADD_TO_BROWSER_WHITELIST,
-  REMOVE_FROM_BROWSER_WHITELIST,
-  CREATE_BROWSER_TAB,
+  ADD_TO_BROWSER_FAVORITES,
+  REMOVE_FROM_BROWSER_FAVORITES,
+  ADD_BROWSER_TAB,
   CLOSE_BROWSER_TAB,
   UPDATE_BROWSER_TAB,
   CLOSE_ALL_BROWSER_TABS,
   SET_ACTIVE_BROWSER_TAB,
 } from './types';
 
-export function addToBrowserHistory({url, name}) {
+export function addToHistory({url, name}) {
   return {
     type: ADD_TO_BROWSER_HISTORY,
     payload: {url, name},
@@ -23,48 +23,48 @@ export function clearHistory() {
   };
 }
 
-export function addToBrowserWhitelist(url) {
+export function addToFavorites(url) {
   return {
-    type: ADD_TO_BROWSER_WHITELIST,
+    type: ADD_TO_BROWSER_FAVORITES,
     payload: {url},
   };
 }
 
-export function removeFromBrowserWhitelist(url) {
+export function removeFromFavorites(url) {
   return {
-    type: REMOVE_FROM_BROWSER_WHITELIST,
+    type: REMOVE_FROM_BROWSER_FAVORITES,
     payload: {url},
   };
 }
 
-export function createBrowserTab(url) {
+export function addTab(url) {
   return {
-    type: CREATE_BROWSER_TAB,
+    type: ADD_BROWSER_TAB,
     payload: {url, id: Date.now()},
   };
 }
 
-export function closeBrowserTab(id) {
+export function closeTab(id) {
   return {
     type: CLOSE_BROWSER_TAB,
     payload: {id},
   };
 }
 
-export function closeAllBrowserTabs() {
+export function closeAllTabs() {
   return {
     type: CLOSE_ALL_BROWSER_TABS,
   };
 }
 
-export function setActiveBrowserTab(id) {
+export function changeTab(id) {
   return {
     type: SET_ACTIVE_BROWSER_TAB,
     payload: {id},
   };
 }
 
-export function updateBrowserTab(id, data) {
+export function updateTab(id, data) {
   return {
     type: UPDATE_BROWSER_TAB,
     payload: {id, data},
