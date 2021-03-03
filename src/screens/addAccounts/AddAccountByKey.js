@@ -22,14 +22,14 @@ import QRLogo from 'assets/addAccount/icon_scan-qr.svg';
 import Button from 'components/form/EllipticButton';
 import {translate} from 'utils/localize';
 
-const AddAccountByKey = ({addAccountConnect, navigation, route}) => {
+const AddAccountByKey = ({addAccount, navigation, route}) => {
   const [account, setAccount] = useState('');
   const [key, setKey] = useState('');
   const onImportKeys = async () => {
     const keys = await validateNewAccount(account, key);
     if (keys) {
       const wallet = route.params ? route.params.wallet : false;
-      addAccountConnect(account, keys, wallet, false);
+      addAccount(account, keys, wallet, false);
     } else {
       Toast.show(translate('toast.error_add_account'));
     }
@@ -87,6 +87,4 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   return state;
 };
-export default connect(mapStateToProps, {addAccountConnect: addAccount})(
-  AddAccountByKey,
-);
+export default connect(mapStateToProps, {addAccount})(AddAccountByKey);

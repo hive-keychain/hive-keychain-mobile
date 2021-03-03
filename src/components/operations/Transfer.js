@@ -35,7 +35,7 @@ const PRIVATE = translate('common.private').toUpperCase();
 const Transfer = ({
   currency,
   user,
-  loadAccountConnect,
+  loadAccount,
   engine,
   tokenBalance,
   tokenLogo,
@@ -90,7 +90,7 @@ const Transfer = ({
           Toast.LONG,
         );
       }
-      loadAccountConnect(user.account.name, true);
+      loadAccount(user.account.name, true);
       goBack();
     } catch (e) {
       Toast.show(`Error:${e}`, Toast.LONG);
@@ -248,5 +248,5 @@ export default connect(
       phishingAccounts: state.phishingAccounts,
     };
   },
-  {loadAccountConnect: loadAccount},
+  {loadAccount},
 )(Transfer);

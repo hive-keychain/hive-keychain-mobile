@@ -22,7 +22,7 @@ import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 const Delegation = ({
   currency = 'HP',
   user,
-  loadAccountConnect,
+  loadAccount,
   properties,
   delegatee,
 }) => {
@@ -45,7 +45,7 @@ const Delegation = ({
         delegator: user.account.name,
       });
       console.log(delegation);
-      loadAccountConnect(user.account.name, true);
+      loadAccount(user.account.name, true);
       goBack();
       if (parseFloat(amount.replace(',', '.')) !== 0) {
         Toast.show(translate('toast.delegation_success'), Toast.LONG);
@@ -114,5 +114,5 @@ export default connect(
       user: state.activeAccount,
     };
   },
-  {loadAccountConnect: loadAccount},
+  {loadAccount},
 )(Delegation);

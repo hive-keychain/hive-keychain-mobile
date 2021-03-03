@@ -10,7 +10,7 @@ import {lock} from 'actions';
 import {translate} from 'utils/localize';
 
 const HeaderContent = (props) => {
-  const {user, lockConnect, navigation} = props;
+  const {user, lock, navigation} = props;
   return (
     <DrawerContentScrollView {...props}>
       <DrawerHeader username={user} />
@@ -19,7 +19,7 @@ const HeaderContent = (props) => {
         {...props}
         label={translate('navigation.log_out')}
         onPress={() => {
-          lockConnect();
+          lock();
           navigation.closeDrawer();
         }}
       />
@@ -29,4 +29,4 @@ const HeaderContent = (props) => {
 
 const mapStateToProps = (state) => ({user: state.activeAccount.name});
 
-export default connect(mapStateToProps, {lockConnect: lock})(HeaderContent);
+export default connect(mapStateToProps, {lock})(HeaderContent);

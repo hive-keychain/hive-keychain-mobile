@@ -7,7 +7,6 @@ import {connect} from 'react-redux';
 import Modal from 'screens/Modal';
 import {setNavigator, noHeader, modalOptions} from 'utils/navigation';
 import {setRpc} from 'utils/hive';
-import {lock} from 'actions';
 import Bridge from 'components/bridge';
 
 const Root = createStackNavigator();
@@ -16,7 +15,7 @@ import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
 import MainDrawer from 'navigators/MainDrawer';
 
-const App = ({hasAccounts, auth, lockConnect, rpc}) => {
+const App = ({hasAccounts, auth, rpc}) => {
   useEffect(() => {
     setRpc(rpc);
   }, [rpc]);
@@ -67,4 +66,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {lockConnect: lock})(App);
+export default connect(mapStateToProps, null)(App);

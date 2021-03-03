@@ -16,13 +16,13 @@ const History = ({
   tokenLogo,
   currency,
   history,
-  loadTokenHistoryConnect,
+  loadTokenHistory,
 }) => {
   useEffect(() => {
     if (user.name) {
-      loadTokenHistoryConnect(user.name, currency);
+      loadTokenHistory(user.name, currency);
     }
-  }, [loadTokenHistoryConnect, user.name, currency]);
+  }, [loadTokenHistory, user.name, currency]);
 
   return (
     <Operation
@@ -55,6 +55,6 @@ export default connect(
     };
   },
   {
-    loadTokenHistoryConnect: loadTokenHistory,
+    loadTokenHistory,
   },
 )(History);

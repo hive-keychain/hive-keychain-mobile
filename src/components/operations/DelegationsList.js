@@ -14,8 +14,8 @@ import Delegation from 'components/operations/Delegation';
 
 const DelegationsList = ({
   user,
-  loadDelegateesConnect,
-  loadDelegatorsConnect,
+  loadDelegatees,
+  loadDelegators,
   delegations,
   type,
   properties,
@@ -23,12 +23,12 @@ const DelegationsList = ({
   useEffect(() => {
     if (user) {
       if (type === 'incoming') {
-        loadDelegatorsConnect(user.name);
+        loadDelegators(user.name);
       } else {
-        loadDelegateesConnect(user.name);
+        loadDelegatees(user.name);
       }
     }
-  }, [loadDelegateesConnect, loadDelegatorsConnect, user, type]);
+  }, [loadDelegatees, loadDelegators, user, type]);
 
   const styles = getDimensionedStyles();
 
@@ -118,7 +118,7 @@ export default connect(
     };
   },
   {
-    loadDelegateesConnect: loadDelegatees,
-    loadDelegatorsConnect: loadDelegators,
+    loadDelegatees,
+    loadDelegators,
   },
 )(DelegationsList);

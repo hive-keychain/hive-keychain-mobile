@@ -19,11 +19,11 @@ import Primary from 'screens/wallet/Primary';
 import Tokens from 'screens/wallet/Tokens';
 
 const Main = ({
-  lockConnect,
-  loadAccountConnect,
-  loadPropertiesConnect,
-  loadBittrexConnect,
-  fetchPhishingAccountsConnect,
+  lock,
+  loadAccount,
+  loadProperties,
+  loadBittrex,
+  fetchPhishingAccounts,
   user,
   properties,
   navigation,
@@ -33,16 +33,16 @@ const Main = ({
   const styles = getDimensionedStyles(useWindowDimensions());
 
   useEffect(() => {
-    loadAccountConnect(lastAccount || accounts[0].name);
-    loadPropertiesConnect();
-    loadBittrexConnect();
-    fetchPhishingAccountsConnect();
+    loadAccount(lastAccount || accounts[0].name);
+    loadProperties();
+    loadBittrex();
+    fetchPhishingAccounts();
   }, [
-    loadAccountConnect,
+    loadAccount,
     accounts,
-    loadPropertiesConnect,
-    loadBittrexConnect,
-    fetchPhishingAccountsConnect,
+    loadProperties,
+    loadBittrex,
+    fetchPhishingAccounts,
     lastAccount,
   ]);
 
@@ -57,7 +57,7 @@ const Main = ({
         addAccount={() => {
           navigation.navigate('AddAccountFromWalletScreen', {wallet: true});
         }}
-        onAccountSelected={loadAccountConnect}
+        onAccountSelected={loadAccount}
       />
       <View style={styles.resourcesWrapper}>
         <PercentageDisplay
@@ -114,10 +114,10 @@ export default connect(
     };
   },
   {
-    lockConnect: lock,
-    loadAccountConnect: loadAccount,
-    loadPropertiesConnect: loadProperties,
-    loadBittrexConnect: loadBittrex,
-    fetchPhishingAccountsConnect: fetchPhishingAccounts,
+    lock,
+    loadAccount,
+    loadProperties,
+    loadBittrex,
+    fetchPhishingAccounts,
   },
 )(Main);

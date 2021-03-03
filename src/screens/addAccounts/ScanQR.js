@@ -7,13 +7,13 @@ import {RNCamera} from 'react-native-camera';
 import {validateFromObject} from 'utils/keyValidation';
 import {addAccount} from 'actions';
 
-const ScanQR = ({addAccountConnect, route}) => {
+const ScanQR = ({addAccount, route}) => {
   const onSuccess = async ({data}) => {
     try {
       const obj = JSON.parse(data.replace('keychain://add_account=', ''));
       const keys = await validateFromObject(obj);
       const wallet = route.params ? route.params.wallet : false;
-      addAccountConnect(obj.name, keys, wallet, true);
+      addAccount(obj.name, keys, wallet, true);
     } catch (e) {
       console.log(e, data);
     }
@@ -35,4 +35,4 @@ const styles = StyleSheet.create({
   cameraContainer: {height: Dimensions.get('window').height},
 });
 
-export default connect(null, {addAccountConnect: addAccount})(ScanQR);
+export default connect(null, {addAccount})(ScanQR);
