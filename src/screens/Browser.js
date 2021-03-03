@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {
   changeTab,
   addTab,
+  updateTab,
   closeTab,
   closeAllTabs,
   addToHistory,
@@ -19,6 +20,7 @@ const BrowserScreen = ({
   favorites,
   changeTab,
   addTab,
+  updateTab,
   closeTab,
   closeAllTabs,
   addToHistory,
@@ -31,6 +33,7 @@ const BrowserScreen = ({
       favorites={favorites}
       changeTab={changeTab}
       addTab={addTab}
+      updateTab={updateTab}
       closeTab={closeTab}
       closeAllTabs={closeAllTabs}
       addToHistory={addToHistory}
@@ -51,6 +54,7 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   changeTab,
   addTab,
+  updateTab,
   closeTab,
   closeAllTabs,
   addToHistory,
