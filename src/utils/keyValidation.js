@@ -116,6 +116,6 @@ export default async (username, pwd) => {
     }
     return derivateFromMasterPassword(username, account, pwd);
   } catch (e) {
-    console.log(e);
+    throw new Error(e);
   }
 };

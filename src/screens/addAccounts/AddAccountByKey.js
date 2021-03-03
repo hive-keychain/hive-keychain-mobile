@@ -26,12 +26,16 @@ const AddAccountByKey = ({addAccountConnect, navigation, route}) => {
   const [account, setAccount] = useState('');
   const [key, setKey] = useState('');
   const onImportKeys = async () => {
-    const keys = await validateNewAccount(account, key);
-    if (keys) {
-      const wallet = route.params ? route.params.wallet : false;
-      addAccountConnect(account, keys, wallet, false);
-    } else {
-      Toast.show(translate('toast.error_add_account'));
+    try {
+      const keys = await validateNewAccount(account, key);
+      if (keys) {
+        const wallet = route.params ? route.params.wallet : false;
+        addAccountConnect(account, keys, wallet, false);
+      } else {
+        Toast.show(translate('toast.error_add_account'));
+      }
+    } catch (e) {
+      Toast.show(e.message);
     }
   };
   const {height} = useWindowDimensions();
