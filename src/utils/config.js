@@ -7,5 +7,5 @@ export const hiveConfig = {
 };
 
 export const BrowserConfig = {
-  HOMEPAGE_URL: 'https://peakd.com',
+  HOMEPAGE_URL: 'https://hive.io',
 };
