@@ -24,6 +24,9 @@ const BrowserScreen = ({
   closeTab,
   closeAllTabs,
   addToHistory,
+  clearHistory,
+  addToFavorites,
+  removeFromFavorites,
 }) => {
   return (
     <Browser
