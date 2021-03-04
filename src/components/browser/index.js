@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Tab from './Tab';
-
+import {BrowserConfig} from 'utils/config';
 const Browser = ({
   activeTab,
   tabs,
@@ -16,6 +16,13 @@ const Browser = ({
   addToFavorites,
   removeFromFavorites,
 }) => {
+  // Add tab if browser is opened with no existing tab
+  useEffect(() => {
+    if (!activeTab) {
+      addTab(BrowserConfig.DEFAULT_URI);
+    }
+  }, [activeTab, addTab]);
+
   if (!activeTab) {
     return null;
   } else {
