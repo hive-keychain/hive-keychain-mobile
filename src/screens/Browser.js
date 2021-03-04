@@ -47,12 +47,15 @@ const BrowserScreen = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  activeTab: state.browser.active,
-  tabs: state.browser.tabs,
-  history: state.history,
-  favorites: state.favorites,
-});
+const mapStateToProps = (state) => {
+  console.log(state.browser);
+  return {
+    activeTab: state.browser.activeTab,
+    tabs: state.browser.tabs,
+    history: state.history,
+    favorites: state.favorites,
+  };
+};
 
 export default connect(mapStateToProps, {
   changeTab,
