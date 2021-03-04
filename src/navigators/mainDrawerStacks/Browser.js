@@ -2,8 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Browser from 'screens/Browser';
 import DrawerButton from 'components/ui/DrawerButton';
-import {translate} from 'utils/localize';
-
+import BrowserHeader from 'components/browser/Header.js';
 const Stack = createStackNavigator();
 
 export default () => {
@@ -17,7 +16,7 @@ export default () => {
             backgroundColor: 'black',
           },
           headerTitleAlign: 'left',
-          title: translate('navigation.browser'),
+          headerTitle: () => <BrowserHeader />,
           headerTintColor: 'white',
           headerRight: () => <DrawerButton navigation={navigation} />,
         })}
