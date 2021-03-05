@@ -31,7 +31,12 @@ const Browser = ({
     return (
       <View style={styles.container}>
         {tabs.map((tab) => (
-          <Tab data={tab} active={tab.id === activeTab} key={tab.id} />
+          <Tab
+            data={tab}
+            active={tab.id === activeTab}
+            key={tab.id}
+            updateTab={updateTab}
+          />
         ))}
       </View>
     );

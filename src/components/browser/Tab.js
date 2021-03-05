@@ -2,11 +2,14 @@ import React, {useRef, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
 import Footer from './Footer';
+import ProgressBar from './ProgressBar';
+import {BrowserConfig} from 'utils/config';
 
-export default ({data: {url, id}, active}) => {
+export default ({data: {url, id}, active, updateTab}) => {
   const tabRef = useRef(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const goBack = () => {
     if (!canGoBack) {
@@ -29,15 +32,43 @@ export default ({data: {url, id}, active}) => {
     current && current.reload();
   };
 
+  const goHome = () => {
+    updateTab(id, {url: BrowserConfig.HOMEPAGE_URL});
+  };
+
+  /**
+   * Sets loading bar progress
+   */
+  const onLoadProgress = ({nativeEvent: {progress}}) => {
+    setProgress(progress);
+  };
+
+  /**
+   * When website finished loading
+   */
+  const onLoadEnd = ({
+    nativeEvent: {canGoBack, canGoForward, loading, target, title, url},
+  }) => {
+    if (loading) {
+      return;
+    }
+    setCanGoBack(canGoBack);
+    setCanGoForward(canGoForward);
+    setProgress(0);
+  };
+
   return (
     <>
       <View style={[styles.container, !active && styles.hide]}>
+        <ProgressBar progress={progress} />
         <WebView
           ref={tabRef}
           source={{uri: url}}
           sharedCookiesEnabled
           javascriptEnabled
           allowsInlineMediaPlayback
+          onLoadEnd={onLoadEnd}
+          onLoadProgress={onLoadProgress}
         />
       </View>
       {active && (
@@ -47,6 +78,9 @@ export default ({data: {url, id}, active}) => {
           goBack={goBack}
           goForward={goForward}
           reload={reload}
+          goHome={() => {
+            goHome(id);
+          }}
         />
       )}
     </>

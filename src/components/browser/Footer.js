@@ -35,9 +35,11 @@ const Footer = ({
       <TouchableOpacity onPress={reload}>
         <Icon name="refresh" style={styles.icon} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={addTab}>
-        <Icon name="add" style={styles.icon} />
-      </TouchableOpacity>
+      {
+        //<TouchableOpacity onPress={addTab}>
+        //<Icon name="add" style={styles.icon} />
+        //</TouchableOpacity>
+      }
     </View>
   );
 };
@@ -46,11 +48,13 @@ const styles = StyleSheet.create({
   icon: {color: 'white', fontSize: 35},
   disabled: {color: 'darkgrey'},
   footer: {
-    height: 50,
+    height: 60,
     backgroundColor: 'black',
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
 });
+
 export default Footer;
