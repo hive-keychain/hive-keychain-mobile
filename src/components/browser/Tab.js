@@ -36,16 +36,10 @@ export default ({data: {url, id}, active, updateTab}) => {
     updateTab(id, {url: BrowserConfig.HOMEPAGE_URL});
   };
 
-  /**
-   * Sets loading bar progress
-   */
   const onLoadProgress = ({nativeEvent: {progress}}) => {
     setProgress(progress);
   };
 
-  /**
-   * When website finished loading
-   */
   const onLoadEnd = ({
     nativeEvent: {canGoBack, canGoForward, loading, target, title, url},
   }) => {
@@ -55,6 +49,7 @@ export default ({data: {url, id}, active, updateTab}) => {
     setCanGoBack(canGoBack);
     setCanGoForward(canGoForward);
     setProgress(0);
+    updateTab(id, {url});
   };
 
   return (

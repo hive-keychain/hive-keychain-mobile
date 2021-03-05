@@ -2,13 +2,15 @@ import React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
 import {translate} from 'utils/localize';
+import {urlTransformer} from 'utils/browser';
+import URL from 'url-parse';
 
 const BrowserHeader = ({browser: {activeTab, tabs}}) => {
   const renderText = () => {
     if (activeTab) {
       const activeUrl = tabs.find((e) => e.id === activeTab).url;
       return (
-        <Text style={styles.url}>{activeUrl.replace('https://', '')}</Text>
+        <Text style={styles.url}>{urlTransformer(activeUrl).hostname}</Text>
       );
     } else {
       return (
