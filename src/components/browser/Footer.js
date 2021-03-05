@@ -1,22 +1,50 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const Footer = () => {
+const Footer = ({
+  canGoBack,
+  goBack,
+  canGoForward,
+  goForward,
+  goHome,
+  reload,
+  toggleSearchBar,
+  addTab,
+}) => {
   return (
     <View style={styles.footer}>
-      <Icon name="keyboard-arrow-left" style={styles.icon} />
-      <Icon name="keyboard-arrow-right" style={styles.icon} />
-      <Icon name="home" style={styles.icon} />
-      <Icon name="search" style={styles.icon} />
-      <Icon name="refresh" style={styles.icon} />
-      <Icon name="add" style={styles.icon} />
+      <TouchableOpacity onPress={goBack}>
+        <Icon
+          name="keyboard-arrow-left"
+          style={[styles.icon, !canGoBack && styles.disabled]}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={goForward}>
+        <Icon
+          name="keyboard-arrow-right"
+          style={[styles.icon, !canGoForward && styles.disabled]}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={goHome}>
+        <Icon name="home" style={styles.icon} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={toggleSearchBar}>
+        <Icon name="search" style={styles.icon} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={reload}>
+        <Icon name="refresh" style={styles.icon} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={addTab}>
+        <Icon name="add" style={styles.icon} />
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   icon: {color: 'white', fontSize: 35},
+  disabled: {color: 'darkgrey'},
   footer: {
     height: 50,
     backgroundColor: 'black',

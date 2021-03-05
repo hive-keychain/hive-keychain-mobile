@@ -1,20 +1,55 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
+import Footer from './Footer';
 
 export default ({data: {url, id}, active}) => {
   const tabRef = useRef(null);
-  console.log(active, url);
+  const [canGoBack, setCanGoBack] = useState(false);
+  const [canGoForward, setCanGoForward] = useState(false);
+
+  const goBack = () => {
+    if (!canGoBack) {
+      return;
+    }
+    const {current} = tabRef;
+    current && current.goBack();
+  };
+
+  const goForward = () => {
+    if (!canGoForward) {
+      return;
+    }
+    const {current} = tabRef;
+    current && current.goForward();
+  };
+
+  const reload = () => {
+    const {current} = tabRef;
+    current && current.reload();
+  };
+
   return (
-    <View style={[styles.container, !active && styles.hide]}>
-      <WebView
-        ref={tabRef}
-        source={{uri: url}}
-        sharedCookiesEnabled
-        javascriptEnabled
-        allowsInlineMediaPlayback
-      />
-    </View>
+    <>
+      <View style={[styles.container, !active && styles.hide]}>
+        <WebView
+          ref={tabRef}
+          source={{uri: url}}
+          sharedCookiesEnabled
+          javascriptEnabled
+          allowsInlineMediaPlayback
+        />
+      </View>
+      {active && (
+        <Footer
+          canGoBack={canGoBack}
+          canGoForward={canGoForward}
+          goBack={goBack}
+          goForward={goForward}
+          reload={reload}
+        />
+      )}
+    </>
   );
 };
 
