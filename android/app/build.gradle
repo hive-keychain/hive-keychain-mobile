@@ -80,7 +80,12 @@ import com.android.build.OutputFile
 project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
 ]
+project.ext.vectoricons = [
+        iconFontNames: [ 'FontAwesome.ttf', 'FontAwesome5_Regular.ttf','MaterialIcons.ttf',
+             'FontAwesome5_Solid.ttf', 'FontAwesome5_Brands.ttf'] // <-- add this line (1/2)
+]
 
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle" // <- add this line (2/2)
 apply from: "../../node_modules/react-native/react.gradle"
 
 /**
