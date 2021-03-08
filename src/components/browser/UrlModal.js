@@ -41,7 +41,10 @@ const UrlModal = ({isVisible, toggle, onNewSearch, initialValue}) => {
           onChangeText={setUrl}
           onSubmitEditing={(obj) => {
             toggle(false);
-            onNewSearch(obj.nativeEvent.text);
+            const url = obj.nativeEvent.text;
+            const hasProtocol = url.match(/^[a-z]*:\/\//);
+            const sanitizedURL = hasProtocol ? url : `https://${url}`;
+            onNewSearch(sanitizedURL);
           }}
           placeholder={'Please enter the url'}
           returnKeyType="go"
