@@ -1,9 +1,20 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {View, StyleSheet, TextInput} from 'react-native';
 import Modal from 'react-native-modal';
 
 const UrlModal = ({isVisible, toggle, onNewSearch, initialValue}) => {
   const [url, setUrl] = useState(initialValue);
+  const urlInput = useRef();
+
+  if (isVisible && urlInput) {
+    setTimeout(() => {
+      const {current} = urlInput;
+      if (current && !current.isFocused()) {
+        current.focus();
+      }
+    }, 500);
+  }
+
   return (
     <Modal
       isVisible={isVisible}
@@ -23,6 +34,7 @@ const UrlModal = ({isVisible, toggle, onNewSearch, initialValue}) => {
       <View style={styles.urlModalContent}>
         <TextInput
           keyboardType="web-search"
+          ref={urlInput}
           autoCapitalize="none"
           autoCorrect={false}
           clearButtonMode="while-editing"
