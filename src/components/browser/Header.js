@@ -3,7 +3,6 @@ import {Text, StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
 import {translate} from 'utils/localize';
 import {urlTransformer} from 'utils/browser';
-import URL from 'url-parse';
 
 const BrowserHeader = ({browser: {activeTab, tabs}}) => {
   const renderText = () => {

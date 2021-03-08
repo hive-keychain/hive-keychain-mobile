@@ -4,13 +4,14 @@ import {WebView} from 'react-native-webview';
 import Footer from './Footer';
 import ProgressBar from './ProgressBar';
 import {BrowserConfig} from 'utils/config';
+import UrlModal from './UrlModal';
 
 export default ({data: {url, id}, active, updateTab}) => {
   const tabRef = useRef(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
-
+  const [isVisible, toggleVisibility] = useState(false);
   const goBack = () => {
     if (!canGoBack) {
       return;
@@ -52,6 +53,16 @@ export default ({data: {url, id}, active, updateTab}) => {
     updateTab(id, {url});
   };
 
+  const onNewSearch = (url) => {
+    const {current} = tabRef;
+    if (current) {
+      current.stopLoading();
+      current.injectJavaScript(
+        `(function(){window.location.href = '${url}' })()`,
+      );
+    }
+  };
+
   return (
     <>
       <View style={[styles.container, !active && styles.hide]}>
@@ -73,9 +84,20 @@ export default ({data: {url, id}, active, updateTab}) => {
           goBack={goBack}
           goForward={goForward}
           reload={reload}
+          toggleSearchBar={() => {
+            toggleVisibility(true);
+          }}
           goHome={() => {
             goHome(id);
           }}
+        />
+      )}
+      {active && (
+        <UrlModal
+          isVisible={isVisible}
+          toggle={toggleVisibility}
+          onNewSearch={onNewSearch}
+          initialValue={url}
         />
       )}
     </>
