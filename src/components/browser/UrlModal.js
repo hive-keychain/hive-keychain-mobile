@@ -1,7 +1,7 @@
 import React, {useState, useRef} from 'react';
 import {View, StyleSheet, TextInput} from 'react-native';
 import Modal from 'react-native-modal';
-
+const SLIDE_TIME = 500;
 const UrlModal = ({isVisible, toggle, onNewSearch, initialValue}) => {
   const [url, setUrl] = useState(initialValue);
   const urlInput = useRef();
@@ -12,7 +12,7 @@ const UrlModal = ({isVisible, toggle, onNewSearch, initialValue}) => {
       if (current && !current.isFocused()) {
         current.focus();
       }
-    }, 500);
+    }, SLIDE_TIME);
   }
 
   return (
@@ -28,8 +28,8 @@ const UrlModal = ({isVisible, toggle, onNewSearch, initialValue}) => {
       animationIn="slideInDown"
       animationOut="slideOutUp"
       backdropOpacity={0.8}
-      animationInTiming={500}
-      animationOutTiming={500}
+      animationInTiming={SLIDE_TIME}
+      animationOutTiming={SLIDE_TIME}
       useNativeDriver>
       <View style={styles.urlModalContent}>
         <TextInput
@@ -39,7 +39,10 @@ const UrlModal = ({isVisible, toggle, onNewSearch, initialValue}) => {
           autoCorrect={false}
           clearButtonMode="while-editing"
           onChangeText={setUrl}
-          onSubmitEditing={onNewSearch}
+          onSubmitEditing={(obj) => {
+            toggle(false);
+            onNewSearch(obj.nativeEvent.text);
+          }}
           placeholder={'Please enter the url'}
           returnKeyType="go"
           style={styles.urlInput}
