@@ -648,14 +648,32 @@ window.hive_keychain={
 
     this.dispatchCustomEvent('swRequest_hive', request, callback);
   },
-
   // Send the customEvent
-  dispatchCustomEvent: function (name, data, callback) {
+  dispatchCustomEvent: function(name, data, callback)  {
     this.requests[this.current_id] = callback;
-    data ={
-        request_id: this.current_id,data
-      };
-    window.ReactNativeWebView.postMessage(JSON.stringify(data));
+    const obj = {
+      name,
+      request_id: this.current_id,
+      data,
+    };
+    window.ReactNativeWebView.postMessage(JSON.stringify(obj));
     this.current_id++;
   },
-};`;
+
+  // Receive answer
+  onAnswerReceived : function(type, response){
+    if (type && type === 'hive_keychain_response') {
+      if (response && response.request_id) {
+        if (this.requests[response.request_id]) {
+          this.requests[response.request_id](response);
+          delete this.requests[response.request_id];
+        }
+      }
+    } else if (type && type === 'hive_keychain_handshake') {
+      if (hive_keychain.handshake_callback) {
+        this.handshake_callback();
+      }
+    }
+  }
+};
+`;

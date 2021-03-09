@@ -63,6 +63,21 @@ export default ({data: {url, id}, active, updateTab}) => {
       );
     }
   };
+
+  const onMessage = ({nativeEvent}) => {
+    const {name, request_id, data} = JSON.parse(nativeEvent.data);
+    const {current} = tabRef;
+    if (name === 'swHandshake_hive') {
+      current.injectJavaScript(
+        'window.hive_keychain.onAnswerReceived("hive_keychain_handshake")',
+      );
+    } else if (name === 'swRequest_hive') {
+      showOperationRequestModal(request_id, data);
+    }
+  };
+
+  const showOperationRequestModal = (request_id, data) => {};
+
   return (
     <>
       <View style={[styles.container, !active && styles.hide]}>
@@ -72,10 +87,7 @@ export default ({data: {url, id}, active, updateTab}) => {
           source={{uri: url}}
           sharedCookiesEnabled
           injectedJavaScriptBeforeContentLoaded={hive_keychain}
-          onMessage={({nativeEvent}) => {
-            const {request_id, data} = JSON.parse(nativeEvent.data);
-            console.log(request_id, data);
-          }}
+          onMessage={onMessage}
           javascriptEnabled
           allowsInlineMediaPlayback
           onLoadEnd={onLoadEnd}
