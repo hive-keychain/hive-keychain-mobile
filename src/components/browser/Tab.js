@@ -5,6 +5,7 @@ import Footer from './Footer';
 import ProgressBar from './ProgressBar';
 import {BrowserConfig} from 'utils/config';
 import UrlModal from './UrlModal';
+import {hive_keychain} from './HiveKeychainBridge';
 
 export default ({data: {url, id}, active, updateTab}) => {
   const tabRef = useRef(null);
@@ -62,7 +63,6 @@ export default ({data: {url, id}, active, updateTab}) => {
       );
     }
   };
-
   return (
     <>
       <View style={[styles.container, !active && styles.hide]}>
@@ -71,6 +71,11 @@ export default ({data: {url, id}, active, updateTab}) => {
           ref={tabRef}
           source={{uri: url}}
           sharedCookiesEnabled
+          injectedJavaScriptBeforeContentLoaded={hive_keychain}
+          onMessage={({nativeEvent}) => {
+            const {request_id, data} = JSON.parse(nativeEvent.data);
+            console.log(request_id, data);
+          }}
           javascriptEnabled
           allowsInlineMediaPlayback
           onLoadEnd={onLoadEnd}
