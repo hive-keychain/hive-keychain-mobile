@@ -17,6 +17,7 @@ const Browser = ({
   clearHistory,
   addToFavorites,
   removeFromFavorites,
+  route,
 }) => {
   // Add tab if browser is opened with no existing tab
   useEffect(() => {
@@ -36,6 +37,7 @@ const Browser = ({
             active={tab.id === activeTab}
             key={tab.id}
             updateTab={updateTab}
+            route={route}
           />
         ))}
       </View>

@@ -16,7 +16,7 @@ export default () => {
             backgroundColor: 'black',
           },
           headerTitleAlign: 'left',
-          headerTitle: () => <BrowserHeader />,
+          header: () => <BrowserHeader navigation={navigation} />,
           headerTintColor: 'white',
           headerRight: () => <DrawerButton navigation={navigation} />,
         })}

@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Animated} from 'react-native';
 import {WebView} from 'react-native-webview';
 import Footer from './Footer';
 import ProgressBar from './ProgressBar';
@@ -7,12 +7,21 @@ import {BrowserConfig} from 'utils/config';
 import UrlModal from './UrlModal';
 import {hive_keychain} from './HiveKeychainBridge';
 
-export default ({data: {url, id}, active, updateTab}) => {
+export default ({data: {url, id}, active, updateTab, route}) => {
   const tabRef = useRef(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isVisible, toggleVisibility] = useState(false);
+
+  const scrollY = new Animated.Value(0);
+  const diffClampFooter = Animated.diffClamp(
+    scrollY,
+    0,
+    BrowserConfig.FOOTER_HEIGHT,
+  );
+  const translateYFooter = diffClampFooter;
+
   const goBack = () => {
     if (!canGoBack) {
       return;
@@ -77,37 +86,59 @@ export default ({data: {url, id}, active, updateTab}) => {
   };
 
   const showOperationRequestModal = (request_id, data) => {};
-
   return (
     <>
       <View style={[styles.container, !active && styles.hide]}>
         <ProgressBar progress={progress} />
-        <WebView
-          ref={tabRef}
-          source={{uri: url}}
-          sharedCookiesEnabled
-          injectedJavaScriptBeforeContentLoaded={hive_keychain}
-          onMessage={onMessage}
-          javascriptEnabled
-          allowsInlineMediaPlayback
-          onLoadEnd={onLoadEnd}
-          onLoadProgress={onLoadProgress}
-        />
+        <Animated.View
+          style={{
+            transform: [
+              {translateY: route.params ? route.params.translateYHeader : 0},
+            ],
+            marginBottom: -2 * BrowserConfig.FOOTER_HEIGHT,
+            ...styles.footerAnimated,
+          }}>
+          <WebView
+            ref={tabRef}
+            source={{uri: url}}
+            sharedCookiesEnabled
+            injectedJavaScriptBeforeContentLoaded={hive_keychain}
+            onMessage={onMessage}
+            javascriptEnabled
+            allowsInlineMediaPlayback
+            onLoadEnd={onLoadEnd}
+            onLoadProgress={onLoadProgress}
+            onScroll={(e) => {
+              scrollY.setValue(e.nativeEvent.contentOffset.y);
+              route.params.scrollYHeader.setValue(
+                e.nativeEvent.contentOffset.y,
+              );
+              console.log(-1 * diffClampFooter._value);
+            }}
+          />
+        </Animated.View>
       </View>
       {active && (
-        <Footer
-          canGoBack={canGoBack}
-          canGoForward={canGoForward}
-          goBack={goBack}
-          goForward={goForward}
-          reload={reload}
-          toggleSearchBar={() => {
-            toggleVisibility(true);
-          }}
-          goHome={() => {
-            goHome(id);
-          }}
-        />
+        <Animated.View
+          style={{
+            transform: [{translateY: translateYFooter}],
+            height: BrowserConfig.FOOTER_HEIGHT,
+          }}>
+          <Footer
+            canGoBack={canGoBack}
+            canGoForward={canGoForward}
+            goBack={goBack}
+            goForward={goForward}
+            reload={reload}
+            height={BrowserConfig.FOOTER_HEIGHT}
+            toggleSearchBar={() => {
+              toggleVisibility(true);
+            }}
+            goHome={() => {
+              goHome(id);
+            }}
+          />
+        </Animated.View>
       )}
       {active && (
         <UrlModal
@@ -124,4 +155,5 @@ export default ({data: {url, id}, active, updateTab}) => {
 const styles = StyleSheet.create({
   container: {flex: 1},
   hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
+  footerAnimated: {flex: 1},
 });

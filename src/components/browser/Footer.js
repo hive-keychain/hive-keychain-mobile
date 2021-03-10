@@ -11,7 +11,10 @@ const Footer = ({
   reload,
   toggleSearchBar,
   addTab,
+  height,
 }) => {
+  const styles = getStyles(height);
+
   return (
     <View style={styles.footer}>
       <TouchableOpacity onPress={goBack}>
@@ -44,17 +47,21 @@ const Footer = ({
   );
 };
 
-const styles = StyleSheet.create({
-  icon: {color: 'white', fontSize: 35},
-  disabled: {color: 'darkgrey'},
-  footer: {
-    height: 60,
-    backgroundColor: 'black',
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
-});
+const getStyles = (height) =>
+  StyleSheet.create({
+    icon: {color: 'white', fontSize: 28},
+    disabled: {color: 'darkgrey'},
+    footer: {
+      height: height || 40,
+      backgroundColor: 'black',
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      position: 'absolute',
+      bottom: 0,
+      elevation: 2,
+    },
+  });
 
 export default Footer;

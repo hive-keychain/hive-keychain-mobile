@@ -27,9 +27,13 @@ const BrowserScreen = ({
   clearHistory,
   addToFavorites,
   removeFromFavorites,
+  navigation,
+  route,
 }) => {
   return (
     <Browser
+      navigation={navigation}
+      route={route}
       activeTab={activeTab}
       tabs={tabs}
       history={history}
