@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {View, StyleSheet, Animated} from 'react-native';
+import {View, StyleSheet, Animated, Platform} from 'react-native';
 import {WebView} from 'react-native-webview';
 import Footer from './Footer';
 import ProgressBar from './ProgressBar';
@@ -14,6 +14,7 @@ export default ({data: {url, id}, active, updateTab, route}) => {
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isVisible, toggleVisibility] = useState(false);
+  const [diffClampState, setDiffClampState] = useState(0);
 
   const insets = useSafeAreaInsets();
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
@@ -83,7 +84,6 @@ export default ({data: {url, id}, active, updateTab, route}) => {
       showOperationRequestModal(request_id, data);
     }
   };
-
   const showOperationRequestModal = (request_id, data) => {};
   return (
     <>
@@ -91,11 +91,22 @@ export default ({data: {url, id}, active, updateTab, route}) => {
         <ProgressBar progress={progress} />
         <Animated.View
           style={{
-            transform: [
-              {translateY: route.params ? route.params.translateYHeader : 0},
-            ],
-            marginBottom: -2 * FOOTER_HEIGHT,
-            ...styles.footerAnimated,
+            transform:
+              Platform.OS === 'android'
+                ? [
+                    {
+                      translateY: route.params
+                        ? route.params.translateYHeader
+                        : 0,
+                    },
+                  ]
+                : [],
+            paddingTop:
+              Platform.OS === 'android'
+                ? 0
+                : BrowserConfig.HEADER_HEIGHT + diffClampState,
+            marginBottom: -2 * FOOTER_HEIGHT - diffClampState,
+            ...styles.animated,
           }}>
           <WebView
             ref={tabRef}
@@ -113,7 +124,7 @@ export default ({data: {url, id}, active, updateTab, route}) => {
               route.params.scrollYHeader.setValue(
                 e.nativeEvent.contentOffset.y,
               );
-              console.log(-1 * diffClampFooter._value);
+              setDiffClampState(-1 * diffClampFooter._value);
             }}
           />
         </Animated.View>
@@ -155,5 +166,5 @@ export default ({data: {url, id}, active, updateTab, route}) => {
 const styles = StyleSheet.create({
   container: {flex: 1},
   hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
-  footerAnimated: {flex: 1},
+  animated: {flex: 1},
 });
