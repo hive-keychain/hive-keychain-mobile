@@ -11,12 +11,12 @@ export default () => {
       <Stack.Screen
         name="BrowserScreen"
         component={Browser}
-        options={({navigation}) => ({
+        options={({navigation, route}) => ({
           headerStyle: {
             backgroundColor: 'black',
           },
           headerTitleAlign: 'left',
-          header: () => <BrowserHeader navigation={navigation} />,
+          header: () => <BrowserHeader navigation={navigation} route={route} />,
           headerTintColor: 'white',
           headerRight: () => <DrawerButton navigation={navigation} />,
         })}

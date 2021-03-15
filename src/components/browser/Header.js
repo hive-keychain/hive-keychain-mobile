@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, StyleSheet, View, Animated} from 'react-native';
 import {connect} from 'react-redux';
 import {translate} from 'utils/localize';
@@ -6,17 +6,17 @@ import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import DrawerButton from 'components/ui/DrawerButton';
 
-const BrowserHeader = ({browser: {activeTab, tabs}, navigation}) => {
+const BrowserHeader = ({browser: {activeTab, tabs}, navigation, route}) => {
   const {HEADER_HEIGHT} = BrowserConfig;
-
-  const scrollY = new Animated.Value(0);
-  const diffClampHeader = Animated.diffClamp(scrollY, 0, HEADER_HEIGHT);
-  const translateYHeader = diffClampHeader.interpolate({
-    inputRange: [0, HEADER_HEIGHT],
-    outputRange: [0, -1 * HEADER_HEIGHT],
-  });
-  navigation.setParams({scrollYHeader: scrollY, translateYHeader});
-
+  useState(() => {
+    const scrollY = new Animated.Value(0);
+    const diffClampHeader = Animated.diffClamp(scrollY, 0, HEADER_HEIGHT);
+    const translateYHeader = diffClampHeader.interpolate({
+      inputRange: [0, HEADER_HEIGHT],
+      outputRange: [0, -1 * HEADER_HEIGHT],
+    });
+    navigation.setParams({scrollYHeader: scrollY, translateYHeader});
+  }, [HEADER_HEIGHT, navigation]);
   const styles = getStyles(HEADER_HEIGHT);
 
   const renderText = () => {
@@ -34,7 +34,9 @@ const BrowserHeader = ({browser: {activeTab, tabs}, navigation}) => {
   return (
     <Animated.View
       style={{
-        transform: [{translateY: translateYHeader}],
+        transform: [
+          {translateY: route.params ? route.params.translateYHeader : 0},
+        ],
         height: HEADER_HEIGHT,
       }}>
       <View style={styles.container}>
