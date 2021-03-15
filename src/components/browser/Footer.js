@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const Footer = ({
   canGoBack,
@@ -13,7 +14,8 @@ const Footer = ({
   addTab,
   height,
 }) => {
-  const styles = getStyles(height);
+  const insets = useSafeAreaInsets();
+  const styles = getStyles(height, insets);
 
   return (
     <View style={styles.footer}>
@@ -47,12 +49,13 @@ const Footer = ({
   );
 };
 
-const getStyles = (height) =>
+const getStyles = (height, insets) =>
   StyleSheet.create({
     icon: {color: 'white', fontSize: 28},
     disabled: {color: 'darkgrey'},
     footer: {
       height: height || 40,
+      paddingBottom: insets.bottom,
       backgroundColor: 'black',
       width: '100%',
       flexDirection: 'row',

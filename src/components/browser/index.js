@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, StatusBar} from 'react-native';
 import Tab from './Tab';
 import {BrowserConfig} from 'utils/config';
 
@@ -18,6 +18,7 @@ const Browser = ({
   addToFavorites,
   removeFromFavorites,
   route,
+  navigation,
 }) => {
   // Add tab if browser is opened with no existing tab
   useEffect(() => {
@@ -25,6 +26,14 @@ const Browser = ({
       addTab(BrowserConfig.HOMEPAGE_URL);
     }
   }, [activeTab, addTab]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      StatusBar.setHidden(true);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   if (!activeTab) {
     return <View style={styles.container} />;

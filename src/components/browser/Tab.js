@@ -6,6 +6,7 @@ import ProgressBar from './ProgressBar';
 import {BrowserConfig} from 'utils/config';
 import UrlModal from './UrlModal';
 import {hive_keychain} from './HiveKeychainBridge';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default ({data: {url, id}, active, updateTab, route}) => {
   const tabRef = useRef(null);
@@ -14,12 +15,10 @@ export default ({data: {url, id}, active, updateTab, route}) => {
   const [progress, setProgress] = useState(0);
   const [isVisible, toggleVisibility] = useState(false);
 
+  const insets = useSafeAreaInsets();
+  const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
   const scrollY = new Animated.Value(0);
-  const diffClampFooter = Animated.diffClamp(
-    scrollY,
-    0,
-    BrowserConfig.FOOTER_HEIGHT,
-  );
+  const diffClampFooter = Animated.diffClamp(scrollY, 0, FOOTER_HEIGHT);
   const translateYFooter = diffClampFooter;
 
   const goBack = () => {
@@ -95,7 +94,7 @@ export default ({data: {url, id}, active, updateTab, route}) => {
             transform: [
               {translateY: route.params ? route.params.translateYHeader : 0},
             ],
-            marginBottom: -2 * BrowserConfig.FOOTER_HEIGHT,
+            marginBottom: -2 * FOOTER_HEIGHT,
             ...styles.footerAnimated,
           }}>
           <WebView
@@ -104,6 +103,7 @@ export default ({data: {url, id}, active, updateTab, route}) => {
             sharedCookiesEnabled
             injectedJavaScriptBeforeContentLoaded={hive_keychain}
             onMessage={onMessage}
+            bounces={false}
             javascriptEnabled
             allowsInlineMediaPlayback
             onLoadEnd={onLoadEnd}
@@ -122,7 +122,7 @@ export default ({data: {url, id}, active, updateTab, route}) => {
         <Animated.View
           style={{
             transform: [{translateY: translateYFooter}],
-            height: BrowserConfig.FOOTER_HEIGHT,
+            height: FOOTER_HEIGHT,
           }}>
           <Footer
             canGoBack={canGoBack}
@@ -130,7 +130,7 @@ export default ({data: {url, id}, active, updateTab, route}) => {
             goBack={goBack}
             goForward={goForward}
             reload={reload}
-            height={BrowserConfig.FOOTER_HEIGHT}
+            height={FOOTER_HEIGHT}
             toggleSearchBar={() => {
               toggleVisibility(true);
             }}
