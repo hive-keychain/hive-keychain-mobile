@@ -13,3 +13,14 @@ export const BrowserConfig = {
   FOOTER_HEIGHT: 40,
   HEADER_HEIGHT: 40,
 };
+
+export const KeychainConfig = {
+  NO_USERNAME_TYPES: [
+    'delegation',
+    'witnessVote',
+    'proxy',
+    'custom',
+    'signBuffer',
+    'transfer',
+  ],
+};

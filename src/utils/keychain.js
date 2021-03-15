@@ -1,4 +1,19 @@
-export const validateAuthority = (accounts, req) => true;
+import {KeychainConfig} from 'utils/config';
+
+export const validateAuthority = (accounts, {type, username}: req) => {
+  const wifType = getRequiredWifType(type);
+  if (username) {
+    const account = accounts.find((e) => e.name === username);
+    if (!account || !account.keys[wifType]) {
+      return false;
+    }
+  } else if (KeychainConfig.NO_USERNAME_TYPES.includes(type)) {
+    if (!accounts.filter((e) => !!e.keys[wifType]).length) {
+      return false;
+    }
+  }
+  return true;
+};
 
 export const sendError = (tabRef, error) => {
   console.log(error);
@@ -123,8 +138,41 @@ export const validateRequest = (req) => {
   );
 };
 
-// Functions used to check the incoming data
+const getRequiredWifType = (request) => {
+  switch (request.type) {
+    case 'decode':
+    case 'encode':
+    case 'signBuffer':
+    case 'broadcast':
+    case 'addAccountAuthority':
+    case 'removeAccountAuthority':
+    case 'removeKeyAuthority':
+    case 'addKeyAuthority':
+    case 'signTx':
+      return request.method.toLowerCase();
+    case 'post':
+    case 'vote':
+      return 'posting';
+    case 'custom':
+      return !request.method ? 'posting' : request.method.toLowerCase();
+    case 'signedCall':
+      return request.typeWif.toLowerCase();
+    case 'transfer':
+    case 'sendToken':
+    case 'delegation':
+    case 'witnessVote':
+    case 'proxy':
+    case 'powerUp':
+    case 'powerDown':
+    case 'createClaimedAccount':
+    case 'createProposal':
+    case 'removeProposal':
+    case 'updateProposalVote':
+      return 'active';
+  }
+};
 
+// Functions used to check the incoming data
 const hasTransferInfo = (req) => {
   if (req.enforce) {
     return isFilled(req.username);

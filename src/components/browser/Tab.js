@@ -86,7 +86,12 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
         if (validateAuthority(accounts, data)) {
           showOperationRequestModal(request_id, data);
         } else {
-          sendError(tabRef, {});
+          sendError(tabRef, {
+            error: 'user_cancel',
+            message: 'Request was canceled by the user.',
+            data,
+            request_id,
+          });
         }
       } else {
         sendError(tabRef, {
