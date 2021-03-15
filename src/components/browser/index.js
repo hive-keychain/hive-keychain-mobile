@@ -2,7 +2,6 @@ import React, {useEffect} from 'react';
 import {View, StyleSheet, StatusBar} from 'react-native';
 import Tab from './Tab';
 import {BrowserConfig} from 'utils/config';
-import {useIsFocused} from '@react-navigation/native';
 
 const Browser = ({
   activeTab,

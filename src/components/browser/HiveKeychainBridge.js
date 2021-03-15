@@ -650,6 +650,7 @@ window.hive_keychain={
   },
   // Send the customEvent
   dispatchCustomEvent: function(name, data, callback)  {
+    data.domain = window.location.href;
     this.requests[this.current_id] = callback;
     const obj = {
       name,
