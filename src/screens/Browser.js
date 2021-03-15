@@ -14,6 +14,7 @@ import {
 } from 'actions';
 
 const BrowserScreen = ({
+  accounts,
   activeTab,
   tabs,
   history,
@@ -32,6 +33,7 @@ const BrowserScreen = ({
 }) => {
   return (
     <Browser
+      accounts={accounts}
       navigation={navigation}
       route={route}
       activeTab={activeTab}
@@ -52,8 +54,8 @@ const BrowserScreen = ({
 };
 
 const mapStateToProps = (state) => {
-  console.log(state.browser);
   return {
+    accounts: state.accounts,
     activeTab: state.browser.activeTab,
     tabs: state.browser.tabs,
     history: state.history,

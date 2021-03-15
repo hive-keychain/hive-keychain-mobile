@@ -7,9 +7,9 @@ import {BrowserConfig} from 'utils/config';
 import UrlModal from './UrlModal';
 import {hive_keychain} from './HiveKeychainBridge';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {validateRequest} from 'utils/keychain';
+import {validateRequest, sendError, validateAuthority} from 'utils/keychain';
 
-export default ({data: {url, id}, active, updateTab, route}) => {
+export default ({data: {url, id}, active, updateTab, route, accounts}) => {
   const tabRef = useRef(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
@@ -83,12 +83,14 @@ export default ({data: {url, id}, active, updateTab, route}) => {
       );
     } else if (name === 'swRequest_hive') {
       if (validateRequest(data)) {
-        showOperationRequestModal(request_id, data);
+        if (validateAuthority(accounts, data)) {
+          showOperationRequestModal(request_id, data);
+        } else {
+          sendError(tabRef, {});
+        }
       } else {
-        sendError({
-          success: false,
+        sendError(tabRef, {
           error: 'incomplete',
-          result: null,
           message: 'Incomplete data or wrong format',
           data,
           request_id,
@@ -97,16 +99,8 @@ export default ({data: {url, id}, active, updateTab, route}) => {
     }
   };
 
-  const sendError = (error) => {
-    console.log(error);
-    tabRef.current.injectJavaScript(
-      `window.hive_keychain.onAnswerReceived("hive_keychain_response",${JSON.stringify(
-        error,
-      )})`,
-    );
-  };
-
   const showOperationRequestModal = (request_id, data) => {};
+
   return (
     <>
       <View style={[styles.container, !active && styles.hide]}>

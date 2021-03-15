@@ -4,6 +4,7 @@ import Tab from './Tab';
 import {BrowserConfig} from 'utils/config';
 
 const Browser = ({
+  accounts,
   activeTab,
   tabs,
   history,
@@ -42,6 +43,7 @@ const Browser = ({
       <View style={styles.container}>
         {tabs.map((tab) => (
           <Tab
+            accounts={accounts}
             data={tab}
             active={tab.id === activeTab}
             key={tab.id}
