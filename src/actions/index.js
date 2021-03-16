@@ -23,7 +23,7 @@ export const unlock = (mk, errorCallback) => async (dispatch, getState) => {
     if (e.message === 'Wrapped error: User not authenticated') {
       errorCallback(true);
     } else {
-      Toast.show(translate('toast.authFailed'));
+      Toast.show(`${translate('toast.authFailed')}: ${e.message}`);
       errorCallback();
     }
   }

@@ -21,7 +21,6 @@ export const saveOnKeychain = async (radix, string) => {
         Keychain.AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS;
       options.accessible = Keychain.WHEN_UNLOCKED;
     }
-    console.log(options);
     await Keychain.setGenericPassword(radix, chunk, options);
   }
 };
