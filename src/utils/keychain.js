@@ -1,7 +1,8 @@
 import {KeychainConfig} from 'utils/config';
 
-export const validateAuthority = (accounts, {type, username}: req) => {
-  const wifType = getRequiredWifType(type);
+export const validateAuthority = (accounts, req) => {
+  const {type, username} = req;
+  const wifType = getRequiredWifType(req);
   if (username) {
     const account = accounts.find((e) => e.name === username);
     if (!account || !account.keys[wifType]) {
