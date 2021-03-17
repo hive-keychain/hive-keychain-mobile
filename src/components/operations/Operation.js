@@ -4,7 +4,7 @@ import Close from 'assets/wallet/icon_close.svg';
 import {goBack} from 'utils/navigation';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 
-export default ({icon, children, logo, title}) => {
+export default ({icon, children, logo, title, onClose}) => {
   return (
     <>
       <FocusAwareStatusBar backgroundColor="#b4112A" />
@@ -15,7 +15,11 @@ export default ({icon, children, logo, title}) => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            goBack();
+            if (onClose) {
+              onClose();
+            } else {
+              goBack();
+            }
           }}>
           <Close style={styles.close} />
         </TouchableOpacity>

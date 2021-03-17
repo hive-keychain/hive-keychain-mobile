@@ -5,12 +5,15 @@ import Footer from './Footer';
 import ProgressBar from './ProgressBar';
 import {BrowserConfig} from 'utils/config';
 import UrlModal from './UrlModal';
+import RequestModalContent from './RequestModalContent';
 import {hive_keychain} from './HiveKeychainBridge';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {validateRequest, sendError, validateAuthority} from 'utils/keychain';
+import {navigate, goBack as navigationGoBack} from 'utils/navigation';
 
 export default ({data: {url, id}, active, updateTab, route, accounts}) => {
   const tabRef = useRef(null);
+
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -104,7 +107,27 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
     }
   };
 
-  const showOperationRequestModal = (request_id, data) => {};
+  const showOperationRequestModal = (request_id, data) => {
+    const onForceCloseModal = () => {
+      navigationGoBack();
+      sendError(tabRef, {
+        error: 'user_cancel',
+        message: 'Request was canceled by the user.',
+        data,
+        request_id,
+      });
+    };
+    navigate('ModalScreen', {
+      modalContent: (
+        <RequestModalContent
+          request={{...data, request_id}}
+          accounts={accounts}
+          onForceCloseModal={onForceCloseModal}
+        />
+      ),
+      onForceCloseModal,
+    });
+  };
 
   return (
     <>
