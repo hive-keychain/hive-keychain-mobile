@@ -160,5 +160,34 @@
     "about": "ABOUT",
     "wallet": "WALLET",
     "browser": "BROWSER"
+  },
+  "request": {
+    "title": {
+      "custom": "Custom Transaction",
+      "decode": "Verify Key",
+      "encode": "Encode message",
+      "signBuffer": "Sign Message",
+      "addAccountAuthority": "Add Authority",
+      "removeAccountAuthority": "Remove Authority",
+      "broadcast": "Broadcast",
+      "signTx": "Sign Transaction",
+      "signedCall": "Signed Call",
+      "post": "Post",
+      "vote": "Vote",
+      "transfer": "Transfer",
+      "delegation": "Delegation",
+      "witnessVote": "Witness Vote",
+      "proxy": "Chose Proxy",
+      "sendToken": "Send Tokens",
+      "powerUp": "Power Up",
+      "powerDown": "Power Down",
+      "createClaimedAccount": "Create Claimed Account",
+      "createProposal": "Create Worker Proposal",
+      "removeProposal": "Remove Worker Proposal",
+      "updateProposalVote": "Vote for Proposal",
+      "addKeyAuthority": "Add Key",
+      "removeKeyAuthority": "Remove Key",
+      "addAccount": "Add Account"
+    }
   }
 }
