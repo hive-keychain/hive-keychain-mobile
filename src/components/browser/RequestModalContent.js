@@ -8,7 +8,7 @@ export default ({accounts, request, onForceCloseModal}) => {
   const renderOperationDetails = () => {
     const type = capitalize(request.type);
     const Request = Requests[type];
-    return <Request />;
+    return <Request request={request} />;
   };
   const getOperationTitle = ({type, title}) => {
     if (type === 'signBuffer' && title) {
