@@ -4,7 +4,13 @@ import Requests from './requestOperations';
 import {translate} from 'utils/localize';
 import {capitalize} from 'utils/format';
 import {goBack} from 'utils/navigation';
-export default ({accounts, request, onForceCloseModal}) => {
+export default ({
+  accounts,
+  request,
+  onForceCloseModal,
+  sendResponse,
+  sendError,
+}) => {
   const renderOperationDetails = () => {
     const type = capitalize(request.type);
     const Request = Requests[type];
@@ -12,6 +18,8 @@ export default ({accounts, request, onForceCloseModal}) => {
       <Request
         request={request}
         accounts={accounts}
+        sendResponse={sendResponse}
+        sendError={sendError}
         closeGracefully={() => {
           goBack();
         }}

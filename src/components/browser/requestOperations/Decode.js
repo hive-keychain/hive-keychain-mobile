@@ -5,10 +5,17 @@ import RequestMessage from './components/RequestMessage';
 import OperationButton from 'components/form/ActiveOperationButton';
 import {translate} from 'utils/localize';
 import {urlTransformer} from 'utils/browser';
-import {decodeMemo} from '../../bridge';
+import {decodeMemo} from 'components/bridge';
 
-export default ({request, accounts, closeGracefully}) => {
-  const {domain, method, username, message} = request;
+export default ({
+  request,
+  accounts,
+  closeGracefully,
+  sendResponse,
+  sendError,
+}) => {
+  const {request_id, ...data} = request;
+  const {domain, method, username, message} = data;
   const [loading, setLoading] = useState(false);
   return (
     <View>
@@ -33,7 +40,25 @@ export default ({request, accounts, closeGracefully}) => {
           setLoading(true);
           const account = accounts.find((e) => e.name === request.username);
           const key = account.keys[method.toLowerCase()];
-          const decoded = await decodeMemo(key, message);
+          let msg;
+          try {
+            const result = await decodeMemo(key, message);
+            if (result === message) {
+              throw 'error';
+            }
+            msg = translate('request.success.decode');
+
+            sendResponse({
+              data,
+              request_id,
+              result,
+              message: msg,
+            });
+          } catch (e) {
+            msg = translate('request.error.decode');
+            sendError({data, request_id, error: {}, message: msg});
+          } finally {
+          }
           closeGracefully();
           setLoading(false);
         }}

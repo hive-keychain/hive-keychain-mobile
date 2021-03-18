@@ -193,6 +193,8 @@
       "decode": "The website {{domain}} would like to verify that you have access to the private {{method}} key for the account: @{{username}}"
     },
     "item": {"username": "Username", "method": "Method"},
+    "error": {"decode": "Could not verify key."},
+    "success": {"decode": "Memo decoded successfully."},
     "confirm": "Confirm"
   }
 }

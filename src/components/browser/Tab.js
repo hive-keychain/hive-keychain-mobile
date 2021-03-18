@@ -128,8 +128,12 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
           request={{...data, request_id}}
           accounts={accounts}
           onForceCloseModal={onForceCloseModal}
-          sendError={sendError}
-          sendResponse={sendResponse}
+          sendError={(obj) => {
+            sendError(tabRef, obj);
+          }}
+          sendResponse={(obj) => {
+            sendResponse(tabRef, obj);
+          }}
         />
       ),
       onForceCloseModal,
