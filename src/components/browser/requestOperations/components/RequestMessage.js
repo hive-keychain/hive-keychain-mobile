@@ -10,6 +10,6 @@ export default ({message}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {paddingVertical: 10},
-  msg: {fontSize: 16},
+  container: {paddingBottom: 10, paddingTop: 20},
+  msg: {fontSize: 14, textAlign: 'justify'},
 });

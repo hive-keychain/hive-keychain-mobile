@@ -17,10 +17,17 @@ export const validateAuthority = (accounts, req) => {
 };
 
 export const sendError = (tabRef, error) => {
-  console.log(error);
   tabRef.current.injectJavaScript(
     `window.hive_keychain.onAnswerReceived("hive_keychain_response",${JSON.stringify(
       {success: false, result: null, ...error},
+    )})`,
+  );
+};
+
+export const sendResponse = (tabRef, obj) => {
+  tabRef.current.injectJavaScript(
+    `window.hive_keychain.onAnswerReceived("hive_keychain_response",${JSON.stringify(
+      {success: true, error: null, ...obj},
     )})`,
   );
 };

@@ -8,7 +8,12 @@ import UrlModal from './UrlModal';
 import RequestModalContent from './RequestModalContent';
 import {hive_keychain} from './HiveKeychainBridge';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {validateRequest, sendError, validateAuthority} from 'utils/keychain';
+import {
+  validateRequest,
+  sendError,
+  sendResponse,
+  validateAuthority,
+} from 'utils/keychain';
 import {navigate, goBack as navigationGoBack} from 'utils/navigation';
 
 export default ({data: {url, id}, active, updateTab, route, accounts}) => {
@@ -123,6 +128,8 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
           request={{...data, request_id}}
           accounts={accounts}
           onForceCloseModal={onForceCloseModal}
+          sendError={sendError}
+          sendResponse={sendResponse}
         />
       ),
       onForceCloseModal,

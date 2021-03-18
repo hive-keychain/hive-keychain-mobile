@@ -5,16 +5,20 @@ import {connect} from 'react-redux';
 import {translate} from 'utils/localize';
 import Icon from 'assets/addAccount/icon_info.svg';
 
-const ActiveOperationButton = (props) => {
+const ActiveOperationButton = ({method, ...props}) => {
+  console.log(props);
   return (
     <>
-      {!props.user.keys.active && (
+      {!props.user.keys[method || 'active'] && (
         <View style={styles.container}>
           <Icon fill="#A3112A" height={20} />
           <Text style={styles.text}>{translate('wallet.add_active')}</Text>
         </View>
       )}
-      <EllipticButton {...props} disabled={!props.user.keys.active} />
+      <EllipticButton
+        {...props}
+        disabled={!props.user.keys[method || 'active']}
+      />
     </>
   );
 };
