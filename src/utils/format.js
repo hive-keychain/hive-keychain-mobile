@@ -38,3 +38,6 @@ export const signedNumber = (nb) =>
 
 export const formatBalance = (balance) =>
   balance > 1000 ? withCommas(balance, 0) : withCommas(balance);
+
+export const capitalize = (string) =>
+  string.charAt(0).toUpperCase() + string.slice(1);

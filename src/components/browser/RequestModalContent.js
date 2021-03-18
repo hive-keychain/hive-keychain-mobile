@@ -1,10 +1,14 @@
 import React from 'react';
 import Operation from 'components/operations/Operation';
+import Requests from './requestOperations';
 import {translate} from 'utils/localize';
+import {capitalize} from 'utils/format';
 
 export default ({accounts, request, onForceCloseModal}) => {
   const renderOperationDetails = () => {
-    return null;
+    const type = capitalize(request.type);
+    const Request = Requests[type];
+    return <Request />;
   };
   const getOperationTitle = ({type, title}) => {
     if (type === 'signBuffer' && title) {
