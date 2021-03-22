@@ -17,7 +17,8 @@ export default ({
   const {request_id, ...data} = request;
   const {domain, method, username, message} = data;
   const [loading, setLoading] = useState(false);
-  return (
+  const [resultMessage, setResultMessage] = useState(null);
+  const renderRequestSummary = () => (
     <View>
       <RequestMessage
         message={translate('request.message.decode', {
@@ -58,13 +59,31 @@ export default ({
             msg = translate('request.error.decode');
             sendError({data, request_id, error: {}, message: msg});
           } finally {
+            setResultMessage(msg);
           }
-          closeGracefully();
           setLoading(false);
         }}
       />
     </View>
   );
+
+  if (resultMessage) {
+    return (
+      <View>
+        <RequestMessage message={resultMessage} />
+        <OperationButton
+          style={styles.button}
+          title="OK"
+          method={method.toLowerCase()}
+          onPress={async () => {
+            closeGracefully();
+          }}
+        />
+      </View>
+    );
+  } else {
+    return renderRequestSummary();
+  }
 };
 
 const styles = StyleSheet.create({button: {marginTop: 40}});
