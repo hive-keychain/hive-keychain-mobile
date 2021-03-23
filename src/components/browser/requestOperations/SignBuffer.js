@@ -14,7 +14,9 @@ export default ({
 }) => {
   const {request_id, ...data} = request;
   const {domain, method, username, message} = data;
-
+  const account = accounts.find((e) => e.name === request.username);
+  const key = account.keys[method.toLowerCase()];
+  const publicKey = account.keys[`${method.toLowerCase()}Pubkey`];
   return (
     <RequestOperation
       message={translate('request.message.signBuffer', {
@@ -29,9 +31,10 @@ export default ({
       method={method}
       request={request}
       closeGracefully={closeGracefully}
+      additionalData={{
+        publicKey,
+      }}
       performOperation={async () => {
-        const account = accounts.find((e) => e.name === request.username);
-        const key = account.keys[method.toLowerCase()];
         const result = await signBuffer(key, message);
         return result;
       }}>
