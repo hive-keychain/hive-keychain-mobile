@@ -69,10 +69,10 @@ export default ({
 
   if (resultMessage) {
     return (
-      <View>
+      <View style={styles.msgContainer}>
         <RequestMessage message={resultMessage} />
         <OperationButton
-          style={styles.button}
+          style={styles.buttonConfirm}
           title="OK"
           method={method.toLowerCase()}
           onPress={async () => {
@@ -86,4 +86,8 @@ export default ({
   }
 };
 
-const styles = StyleSheet.create({button: {marginTop: 40}});
+const styles = StyleSheet.create({
+  button: {marginTop: 40},
+  buttonConfirm: {position: 'absolute', bottom: 50},
+  msgContainer: {height: '100%'},
+});
