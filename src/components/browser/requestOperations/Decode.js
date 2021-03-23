@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import RequestItem from './components/RequestItem';
 import RequestMessage from './components/RequestMessage';
+import RequestResultMessage from './components/RequestResultMessage';
 import OperationButton from 'components/form/ActiveOperationButton';
 import {translate} from 'utils/localize';
 import {urlTransformer} from 'utils/browser';
@@ -69,17 +70,10 @@ export default ({
 
   if (resultMessage) {
     return (
-      <View style={styles.msgContainer}>
-        <RequestMessage message={resultMessage} />
-        <OperationButton
-          style={styles.buttonConfirm}
-          title="OK"
-          method={method.toLowerCase()}
-          onPress={async () => {
-            closeGracefully();
-          }}
-        />
-      </View>
+      <RequestResultMessage
+        closeGracefully={closeGracefully}
+        resultMessage={resultMessage}
+      />
     );
   } else {
     return renderRequestSummary();
@@ -88,6 +82,4 @@ export default ({
 
 const styles = StyleSheet.create({
   button: {marginTop: 40},
-  buttonConfirm: {position: 'absolute', bottom: 50},
-  msgContainer: {height: '100%'},
 });
