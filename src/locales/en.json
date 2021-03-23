@@ -190,11 +190,19 @@
       "addAccount": "Add Account"
     },
     "message": {
-      "decode": "The website {{domain}} would like to verify that you have access to the private {{method}} key for the account: @{{username}}"
+      "decode": "The website {{domain}} would like to verify that you have access to the private {{method}} key for the account: @{{username}}",
+      "signBuffer": "The website {{domain}} would like to sign a message using the {{method}} key for the account: @{{username}}",
+      "signBufferNoUsername": "The website {{domain}} would like to sign a message using the {{method}} key."
     },
     "item": {"username": "Username", "method": "Method"},
-    "error": {"decode": "Could not verify key."},
-    "success": {"decode": "Memo decoded successfully."},
+    "error": {
+      "decode": "Could not verify key.",
+      "signBuffer": "Could not sign."
+    },
+    "success": {
+      "decode": "Memo decoded successfully.",
+      "signBuffer": "Message signed succesfully."
+    },
     "confirm": "Confirm"
   }
 }

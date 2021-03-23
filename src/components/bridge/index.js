@@ -15,11 +15,12 @@ class Bridge extends Component {
   sendMessage(methodName, params) {
     const id = Math.random().toString(36).substr(2, 9); //just unique id
     const js = `
+    window.ReactNativeWebView.postMessage(JSON.stringify({id: "${id}", data: 'plop'}););
         returnValue = window.${methodName}("${params.join('","')}");
-
         returnObject = JSON.stringify({id: "${id}", data: returnValue});
         window.ReactNativeWebView.postMessage(returnObject);
     `;
+    console.log(js);
     this.webref.injectJavaScript(js);
 
     return new Promise((resolve, reject) => {
@@ -59,10 +60,10 @@ export const decodeMemo = (key, string) =>
 export const encodeMemo = (key, receiverKey, string) =>
   self.sendMessage('encodeMemo', [key, receiverKey, string]);
 
-export const signBuffer = (string, key) =>
+export const signBuffer = (key, string) =>
   self.sendMessage('signBuffer', [string, key]);
 
-export const signedCall = (method, params, username, key) =>
+export const signedCall = (key, method, params, username) =>
   self.sendMessage('signedCall', [method, params, username, key]);
 
 export default Bridge;

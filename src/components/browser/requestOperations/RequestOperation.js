@@ -44,6 +44,7 @@ export default ({
               message: msg,
             });
           } catch (e) {
+            console.log(e);
             msg = errorMessage;
             sendError({data, request_id, error: {}, message: msg});
           } finally {
