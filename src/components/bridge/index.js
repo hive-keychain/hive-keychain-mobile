@@ -3,17 +3,12 @@ import {View, StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
 import html from './html';
 
-// 1. create webview ===> OK
-// 2. encode memo in webview ===> OK
-// 3. encode memo with a parameter from RN ===> OK
-// 4. pass result back to RN  ===> OK
-// 5. (optional) export process as global function
-// 6. hide webview ===> OK
 let self;
 class Bridge extends Component {
   constructor(props) {
     super(props);
     this.pendingMethods = {};
+    // eslint-disable-next-line consistent-this
     self = this;
   }
 
