@@ -15,8 +15,7 @@ class Bridge extends Component {
   sendMessage(methodName, params) {
     const id = Math.random().toString(36).substr(2, 9); //just unique id
     const js = `
-    window.ReactNativeWebView.postMessage(JSON.stringify({id: "${id}", data: 'plop'}););
-        returnValue = window.${methodName}("${params.join('","')}");
+        returnValue = window.${methodName}('${params.join("','")}');
         returnObject = JSON.stringify({id: "${id}", data: returnValue});
         window.ReactNativeWebView.postMessage(returnObject);
     `;
@@ -36,6 +35,7 @@ class Bridge extends Component {
       console.warn(err);
       return;
     }
+
     self.pendingMethods[msgData.id].resolve(msgData.data);
   }
   render() {

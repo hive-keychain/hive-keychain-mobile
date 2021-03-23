@@ -17,7 +17,7 @@ export default ({
   errorMessage,
   performOperation,
 }) => {
-  const {data, request_id} = request;
+  const {request_id, ...data} = request;
   const [loading, setLoading] = useState(false);
   const [resultMessage, setResultMessage] = useState(null);
 
@@ -36,13 +36,18 @@ export default ({
           try {
             const result = await performOperation();
             msg = successMessage;
-
-            sendResponse({
+            const obj = {
               data,
               request_id,
               result,
               message: msg,
-            });
+            };
+            if (data.type === 'signBuffer') {
+              obj.publicKey =
+                'STM6VKWvjMrSk5jDeN7D2NRV3mV2TcitmReCBN7Yyo7fEU9hfctJZ';
+            }
+            console.log(obj);
+            sendResponse(obj);
           } catch (e) {
             console.log(e);
             msg = errorMessage;

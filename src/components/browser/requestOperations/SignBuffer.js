@@ -32,9 +32,7 @@ export default ({
       performOperation={async () => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys[method.toLowerCase()];
-        console.log(message.replace(/"/g, "'"));
-        const result = await signBuffer(key, message.replace(/"/g, "'"));
-        console.log(result);
+        const result = await signBuffer(key, message);
         return result;
       }}>
       <RequestItem
