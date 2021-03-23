@@ -194,7 +194,7 @@
       "signBuffer": "The website {{domain}} would like to sign a message using the {{method}} key for the account: @{{username}}",
       "signBufferNoUsername": "The website {{domain}} would like to sign a message using the {{method}} key."
     },
-    "item": {"username": "Username", "method": "Method"},
+    "item": {"username": "Username", "method": "Method", "message": "Message"},
     "error": {
       "decode": "Could not verify key.",
       "signBuffer": "Could not sign."
