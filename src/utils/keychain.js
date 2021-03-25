@@ -16,6 +16,10 @@ export const validateAuthority = (accounts, req) => {
   return true;
 };
 
+export const getValidAuthorityAccounts = (accounts, wifType) => {
+  return accounts.filter((e) => !!e.keys[wifType]);
+};
+
 export const sendError = (tabRef, error) => {
   console.log(tabRef, error);
   tabRef.current.injectJavaScript(

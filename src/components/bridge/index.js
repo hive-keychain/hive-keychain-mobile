@@ -19,7 +19,6 @@ class Bridge extends Component {
         returnObject = JSON.stringify({id: "${id}", data: returnValue});
         window.ReactNativeWebView.postMessage(returnObject);
     `;
-    console.log(js);
     this.webref.injectJavaScript(js);
 
     return new Promise((resolve, reject) => {

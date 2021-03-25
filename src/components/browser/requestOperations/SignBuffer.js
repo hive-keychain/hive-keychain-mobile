@@ -4,6 +4,8 @@ import {translate} from 'utils/localize';
 import {urlTransformer} from 'utils/browser';
 import {signBuffer} from 'components/bridge';
 import RequestOperation from './RequestOperation';
+import CustomPicker from 'components/form/CustomPicker';
+import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 
 export default ({
   request,
@@ -14,16 +16,27 @@ export default ({
 }) => {
   const {request_id, ...data} = request;
   const {domain, method, username, message} = data;
-  const account = accounts.find((e) => e.name === request.username);
-  const key = account.keys[method.toLowerCase()];
-  const publicKey = account.keys[`${method.toLowerCase()}Pubkey`];
+  const [
+    account,
+    setAccount,
+    getAccountKey,
+    getAccountPublicKey,
+  ] = usePotentiallyAnonymousRequest(request, accounts);
+
   return (
     <RequestOperation
-      message={translate('request.message.signBuffer', {
-        domain: urlTransformer(domain).hostname,
-        method,
-        username,
-      })}
+      message={
+        username
+          ? translate('request.message.signBuffer', {
+              domain: urlTransformer(domain).hostname,
+              method,
+              username,
+            })
+          : translate('request.message.signBufferNoUsername', {
+              domain: urlTransformer(domain).hostname,
+              method,
+            })
+      }
       sendResponse={sendResponse}
       sendError={sendError}
       successMessage={translate('request.success.signBuffer')}
@@ -32,16 +45,28 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       additionalData={{
-        publicKey,
+        publicKey: getAccountPublicKey(),
       }}
       performOperation={async () => {
-        const result = await signBuffer(key, message);
+        const result = await signBuffer(getAccountKey(), message);
+        console.log(result);
+
         return result;
       }}>
-      <RequestItem
-        title={translate('request.item.username')}
-        content={`@${username}`}
-      />
+      {username ? (
+        <RequestItem
+          title={translate('request.item.username')}
+          content={`@${username}`}
+        />
+      ) : (
+        <CustomPicker
+          list={accounts.map((e) => e.name)}
+          selectedValue={account}
+          onSelectedValue={(acc) => {
+            setAccount(accounts.find((a) => a.name === acc));
+          }}
+        />
+      )}
       <RequestItem title={translate('request.item.method')} content={method} />
       <RequestItem
         title={translate('request.item.message')}
