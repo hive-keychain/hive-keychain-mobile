@@ -1,6 +1,6 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {getValidAuthorityAccounts} from 'utils/keychain';
-
+import RequestUsername from 'components/browser/requestOperations/components/RequestUsername';
 export default (request, accounts) => {
   const {method, username} = request;
 
@@ -19,5 +19,16 @@ export default (request, accounts) => {
   const getAccountPublicKey = () => {
     return account.keys[`${method.toLowerCase()}Pubkey`];
   };
-  return [account, setAccount, getAccountKey, getAccountPublicKey];
+  return [
+    getAccountKey,
+    getAccountPublicKey,
+    () => (
+      <RequestUsername
+        username={username}
+        accounts={accounts}
+        account={account}
+        setAccount={setAccount}
+      />
+    ),
+  ];
 };

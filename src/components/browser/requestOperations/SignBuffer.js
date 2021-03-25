@@ -4,7 +4,6 @@ import {translate} from 'utils/localize';
 import {urlTransformer} from 'utils/browser';
 import {signBuffer} from 'components/bridge';
 import RequestOperation from './RequestOperation';
-import CustomPicker from 'components/form/CustomPicker';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 
 export default ({
@@ -17,10 +16,9 @@ export default ({
   const {request_id, ...data} = request;
   const {domain, method, username, message} = data;
   const [
-    account,
-    setAccount,
     getAccountKey,
     getAccountPublicKey,
+    RequestUsername,
   ] = usePotentiallyAnonymousRequest(request, accounts);
 
   return (
@@ -48,25 +46,9 @@ export default ({
         publicKey: getAccountPublicKey(),
       }}
       performOperation={async () => {
-        const result = await signBuffer(getAccountKey(), message);
-        console.log(result);
-
-        return result;
+        return await signBuffer(getAccountKey(), message);
       }}>
-      {username ? (
-        <RequestItem
-          title={translate('request.item.username')}
-          content={`@${username}`}
-        />
-      ) : (
-        <CustomPicker
-          list={accounts.map((e) => e.name)}
-          selectedValue={account}
-          onSelectedValue={(acc) => {
-            setAccount(accounts.find((a) => a.name === acc));
-          }}
-        />
-      )}
+      <RequestUsername />
       <RequestItem title={translate('request.item.method')} content={method} />
       <RequestItem
         title={translate('request.item.message')}

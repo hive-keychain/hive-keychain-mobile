@@ -4,10 +4,14 @@ import {View, StyleSheet, Text} from 'react-native';
 export default ({title, content}) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
+      {getTitle({title})}
       <Text style={styles.content}>{content}</Text>
     </View>
   );
+};
+
+export const getTitle = ({title}) => {
+  return <Text style={styles.title}>{title}</Text>;
 };
 
 const styles = StyleSheet.create({

@@ -46,6 +46,7 @@ const CustomPicker = ({
           style={{...styles.picker, ...style}}
           selectedValue={selectedValue}
           prompt={prompt}
+          dropdownIconColor="black"
           onValueChange={onSelected}>
           {list.map((item, i) => {
             return (
@@ -72,7 +73,7 @@ const getDimensionedStyles = ({width, height}) =>
       marginRight: 20,
     },
     iosLabel: {fontSize: 18},
-    picker: {width: '100%', color: 'black'},
+    picker: {color: 'black', marginLeft: -7},
   });
 
 export default CustomPicker;
