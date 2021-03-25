@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import RequestMessage from './components/RequestMessage';
-import RequestResultMessage from './components/RequestResultMessage';
+import RequestMessage from './RequestMessage';
+import RequestResultMessage from './RequestResultMessage';
 import OperationButton from 'components/form/ActiveOperationButton';
 import {translate} from 'utils/localize';
 

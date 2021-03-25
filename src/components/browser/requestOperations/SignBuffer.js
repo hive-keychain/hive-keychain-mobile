@@ -3,7 +3,7 @@ import RequestItem from './components/RequestItem';
 import {translate} from 'utils/localize';
 import {urlTransformer} from 'utils/browser';
 import {signBuffer} from 'components/bridge';
-import RequestOperation from './RequestOperation';
+import RequestOperation from './components/RequestOperation';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 
 export default ({
