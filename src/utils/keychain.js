@@ -323,7 +323,7 @@ export const beautifyErrorMessage = (err) => {
     error = err.message;
   }
   if (error.replace(' ', '') === '') {
-    return translate('request.error.unknown_error');
+    return translate('request.error.unknown');
   }
-  return `${translate('request.error.bgd_ops_error')} : ${error}`;
+  return `${translate('request.error.ops')} : ${error}`;
 };

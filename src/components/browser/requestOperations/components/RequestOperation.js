@@ -4,6 +4,7 @@ import RequestMessage from './RequestMessage';
 import RequestResultMessage from './RequestResultMessage';
 import OperationButton from 'components/form/ActiveOperationButton';
 import {translate} from 'utils/localize';
+import {beautifyErrorMessage} from 'utils/keychain';
 
 export default ({
   closeGracefully,
@@ -17,6 +18,7 @@ export default ({
   errorMessage,
   performOperation,
   additionalData = {},
+  beautifyError,
 }) => {
   const {request_id, ...data} = request;
   const [loading, setLoading] = useState(false);
@@ -47,7 +49,12 @@ export default ({
             sendResponse(obj);
           } catch (e) {
             console.log(e);
-            msg = errorMessage;
+            if (!beautifyError) {
+              msg = errorMessage;
+            } else {
+              msg = beautifyErrorMessage(e);
+            }
+            console.log(msg);
             sendError({data, request_id, error: {}, message: msg});
           } finally {
             setResultMessage(msg);

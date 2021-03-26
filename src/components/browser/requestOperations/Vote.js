@@ -23,8 +23,7 @@ export default ({
         permlink,
         weight,
       })}
-      //TODO:Add beautify for error message
-      errorMessage={translate('request.error.vote')}
+      beautifyError
       method={'posting'}
       request={request}
       closeGracefully={closeGracefully}
@@ -33,7 +32,7 @@ export default ({
         const key = account.keys.posting;
         return await vote(key, {
           voter: username,
-          author,
+          author: 'hi',
           permlink,
           weight: parseInt(weight, 10),
         });
