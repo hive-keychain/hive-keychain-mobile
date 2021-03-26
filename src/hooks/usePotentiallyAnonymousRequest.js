@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import {getValidAuthorityAccounts} from 'utils/keychain';
 import RequestUsername from 'components/browser/requestOperations/components/RequestUsername';
-export default (request, accounts) => {
-  const {method, username} = request;
+import {getRequiredWifType} from 'utils/keychain';
 
+export default (request, accounts) => {
+  const {username} = request;
+  const method = getRequiredWifType(request);
   let initAcc;
   if (username) {
     initAcc = accounts.find((e) => e.name === username);
@@ -19,10 +21,10 @@ export default (request, accounts) => {
   const getAccountPublicKey = () => {
     return account.keys[`${method.toLowerCase()}Pubkey`];
   };
-  return [
+  return {
     getAccountKey,
     getAccountPublicKey,
-    () => (
+    RequestUsername: () => (
       <RequestUsername
         username={username}
         accounts={accounts}
@@ -30,5 +32,5 @@ export default (request, accounts) => {
         setAccount={setAccount}
       />
     ),
-  ];
+  };
 };
