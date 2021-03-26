@@ -4,6 +4,7 @@ import {translate} from 'utils/localize';
 import {broadcastJson} from 'utils/hive';
 import RequestOperation from './components/RequestOperation';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
+import CollapsibleData from './components/CollapsibleData';
 
 export default ({
   request,
@@ -13,26 +14,34 @@ export default ({
   sendError,
 }) => {
   const {request_id, ...data} = request;
-  const {display_msg, username, id, json, method} = data;
-  const {getAccountKey, RequestUsername} = usePotentiallyAnonymousRequest(
-    request,
-    accounts,
-  );
+  const {display_msg, id, json, method} = data;
+  const {
+    getUsername,
+    getAccountKey,
+    RequestUsername,
+  } = usePotentiallyAnonymousRequest(request, accounts);
 
   return (
     <RequestOperation
       message={display_msg}
       sendResponse={sendResponse}
       sendError={sendError}
-      successMessage={translate('request.success.signBuffer')}
-      errorMessage={translate('request.error.signBuffer')}
+      successMessage={translate('request.success.broadcast')}
+      beautifyError
       method={method}
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {
+        console.log(
+          getAccountKey(),
+          getUsername(),
+          id,
+          method === 'Active',
+          json,
+        );
         return await broadcastJson(
           getAccountKey(),
-          username,
+          getUsername(),
           id,
           method === 'Active',
           json,
@@ -40,8 +49,9 @@ export default ({
       }}>
       <RequestUsername />
       <RequestItem title={translate('request.item.method')} content={method} />
-      <RequestItem
+      <CollapsibleData
         title={translate('request.item.data')}
+        hidden={translate('request.item.hidden_data')}
         content={JSON.stringify({id, json: JSON.parse(json)}, undefined, 2)}
       />
     </RequestOperation>

@@ -201,7 +201,8 @@
       "author": "Author",
       "permlink": "Permlink",
       "weight": "Weight",
-      "data": "Data"
+      "data": "Data",
+      "hidden_data": "Click to show"
     },
     "error": {
       "decode": "Could not verify key.",
@@ -212,7 +213,8 @@
     "success": {
       "decode": "Memo decoded successfully.",
       "signBuffer": "Message signed succesfully.",
-      "vote": "Successfully voted for @{{author}}'s post {{permlink}} at {{weight}}%."
+      "vote": "Successfully voted for @{{author}}'s post {{permlink}} at {{weight}}%.",
+      "broadcast": "The transaction has been broadcasted successfully."
     },
     "confirm": "Confirm"
   }

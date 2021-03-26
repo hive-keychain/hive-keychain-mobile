@@ -21,7 +21,9 @@ export default (request, accounts) => {
   const getAccountPublicKey = () => {
     return account.keys[`${method.toLowerCase()}Pubkey`];
   };
+  const getUsername = () => account.name;
   return {
+    getUsername,
     getAccountKey,
     getAccountPublicKey,
     RequestUsername: () => (

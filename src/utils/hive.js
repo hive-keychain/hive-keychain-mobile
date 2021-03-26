@@ -30,6 +30,12 @@ export const transfer = async (key, obj) => {
 };
 
 export const broadcastJson = async (key, username, id, active, json) => {
+  console.log(key, 'custom_json', {
+    required_auths: active ? [username] : [],
+    required_posting_auths: !active ? [username] : [],
+    json: typeof json === 'object' ? JSON.stringify(json) : json,
+    id,
+  });
   return await broadcast(key, 'custom_json', {
     required_auths: active ? [username] : [],
     required_posting_auths: !active ? [username] : [],
