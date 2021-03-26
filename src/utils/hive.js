@@ -62,6 +62,11 @@ export const convert = async (key, obj) => {
   return await broadcast(key, 'convert', obj);
 };
 
+export const vote = async (key, obj) => {
+  console.log(key, obj);
+  return await broadcast(key, 'vote', obj);
+};
+
 export const broadcast = async (key, type, obj) => {
   const tx = new hiveTx.Transaction();
   await tx.create([[type, obj]]);

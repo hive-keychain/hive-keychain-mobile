@@ -194,14 +194,24 @@
       "signBuffer": "The website {{domain}} would like to sign a message using the {{method}} key for the account: @{{username}}",
       "signBufferNoUsername": "The website {{domain}} would like to sign a message using the {{method}} key."
     },
-    "item": {"username": "Username", "method": "Method", "message": "Message"},
+    "item": {
+      "username": "Username",
+      "method": "Method",
+      "message": "Message",
+      "author": "Author",
+      "permlink": "Permlink",
+      "weight": "Weight"
+    },
     "error": {
       "decode": "Could not verify key.",
-      "signBuffer": "Could not sign."
+      "signBuffer": "Could not sign.",
+      "ops": "There was an error broadcasting this transaction:",
+      "unknown": "Something went wrong! Please try again!"
     },
     "success": {
       "decode": "Memo decoded successfully.",
-      "signBuffer": "Message signed succesfully."
+      "signBuffer": "Message signed succesfully.",
+      "vote": "Successfully voted for @{{author}}'s post {{permlink}} at {{weight}}%."
     },
     "confirm": "Confirm"
   }

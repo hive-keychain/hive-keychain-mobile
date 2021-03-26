@@ -1,4 +1,5 @@
 import {KeychainConfig} from 'utils/config';
+import {translate} from 'utils/localize';
 
 export const validateAuthority = (accounts, req) => {
   const {type, username} = req;
@@ -307,4 +308,22 @@ const countDecimals = (nb) => {
   return nb.toString().split('.')[1] === undefined
     ? 0
     : nb.toString().split('.')[1].length || 0;
+};
+
+export const beautifyErrorMessage = (err) => {
+  if (!err) {
+    return null;
+  }
+  let error = '';
+  if (err.message.indexOf('xception:') !== -1) {
+    error = err.message.split('xception:').pop().replace('.rethrow', '.');
+  } else if (err.message.indexOf(':') !== -1) {
+    error = err.message.split(':').pop();
+  } else {
+    error = err.message;
+  }
+  if (error.replace(' ', '') === '') {
+    return translate('request.error.unknown_error');
+  }
+  return `${translate('request.error.bgd_ops_error')} : ${error}`;
 };
