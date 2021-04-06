@@ -6,7 +6,6 @@ import {translate} from 'utils/localize';
 import Icon from 'assets/addAccount/icon_info.svg';
 
 const ActiveOperationButton = ({method, ...props}) => {
-  console.log(props);
   return (
     <>
       {!props.user.keys[method || 'active'] && (

@@ -30,7 +30,6 @@ const Transactions = ({
           initialNumToRender={20}
           onEndReachedThreshold={0.5}
           onEndReached={() => {
-            console.log('end reached');
             const newEnd =
               transactions[transactions.length - 1].key.split('!')[1] - 1;
             if (newEnd !== end && !transactions[transactions.length - 1].last) {
