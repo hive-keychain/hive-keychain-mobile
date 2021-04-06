@@ -217,7 +217,7 @@
     "error": {
       "decode": "Could not verify key.",
       "signBuffer": "Could not sign.",
-      "ops": "There was an error broadcasting this transaction:",
+      "ops": "There was an error broadcasting this transaction",
       "unknown": "Something went wrong! Please try again!",
       "broadcasting": "There was an error broadcasting this transaction, please try again.",
       "transfer": {

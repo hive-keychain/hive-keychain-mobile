@@ -4,6 +4,7 @@ import Vote from './Vote';
 import Custom from './Custom';
 import Transfer from './Transfer';
 import Post from './Post';
+import Broadcast from './Broadcast';
 
 export default {
   Decode,
@@ -12,4 +13,5 @@ export default {
   Custom,
   Transfer,
   Post,
+  Broadcast,
 };

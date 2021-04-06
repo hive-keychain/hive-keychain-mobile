@@ -32,13 +32,6 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {
-        console.log(
-          getAccountKey(),
-          getUsername(),
-          id,
-          method === 'Active',
-          json,
-        );
         return await broadcastJson(
           getAccountKey(),
           getUsername(),

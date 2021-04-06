@@ -7,6 +7,9 @@ const DEFAULT_RPC = 'https://api.hive.blog';
 
 let client = new hive.Client(DEFAULT_RPC);
 
+hiveTx.config.rebranded_api = true;
+hiveTx.updateOperations();
+
 const getDefault = async () => {
   try {
     return (await api.get('/hive/rpc')).data.rpc;
@@ -94,9 +97,10 @@ export const post = async (
 
 export const broadcast = async (key, arr) => {
   const tx = new hiveTx.Transaction();
-  console.log(arr);
+  console.log(key, arr);
   await tx.create(arr);
   tx.sign(hiveTx.PrivateKey.from(key));
+
   const {error, result} = await tx.broadcast();
   if (error) {
     throw error;
