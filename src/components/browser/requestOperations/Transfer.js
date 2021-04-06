@@ -4,6 +4,7 @@ import {translate} from 'utils/localize';
 import {transfer} from 'utils/hive';
 import RequestOperation from './components/RequestOperation';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
+import {beautifyTransferError} from 'utils/format';
 
 export default ({
   request,
@@ -30,19 +31,7 @@ export default ({
         username: getUsername(),
         to,
       })}
-      errorMessage={(err) => {
-        switch (err.data.stack[0].context.method) {
-          case 'adjust_balance':
-            return translate('request.error.transfer.adjust_balance', {
-              currency,
-              username: getUsername(),
-            });
-          case 'get_account':
-            return translate('request.error.transfer.get_account', {to});
-          default:
-            return translate('request.error.broadcasting');
-        }
-      }}
+      errorMessage={beautifyTransferError}
       method={'active'}
       request={request}
       closeGracefully={closeGracefully}
