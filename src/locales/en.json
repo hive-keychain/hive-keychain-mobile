@@ -202,7 +202,10 @@
       "permlink": "Permlink",
       "weight": "Weight",
       "data": "Data",
-      "hidden_data": "Click to show"
+      "hidden_data": "Click to show",
+      "to": "To",
+      "amount": "Amount",
+      "memo": "Memo"
     },
     "error": {
       "decode": "Could not verify key.",
