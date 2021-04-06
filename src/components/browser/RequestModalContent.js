@@ -1,4 +1,5 @@
 import React from 'react';
+import {ScrollView} from 'react-native';
 import Operation from 'components/operations/Operation';
 import Requests from './requestOperations';
 import {translate} from 'utils/localize';
@@ -15,15 +16,17 @@ export default ({
     const type = capitalize(request.type);
     const Request = Requests[type];
     return (
-      <Request
-        request={request}
-        accounts={accounts}
-        sendResponse={sendResponse}
-        sendError={sendError}
-        closeGracefully={() => {
-          goBack();
-        }}
-      />
+      <ScrollView>
+        <Request
+          request={request}
+          accounts={accounts}
+          sendResponse={sendResponse}
+          sendError={sendError}
+          closeGracefully={() => {
+            goBack();
+          }}
+        />
+      </ScrollView>
     );
   };
   const getOperationTitle = ({type, title}) => {

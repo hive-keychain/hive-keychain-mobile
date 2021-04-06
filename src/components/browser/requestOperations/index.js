@@ -3,6 +3,7 @@ import SignBuffer from './SignBuffer';
 import Vote from './Vote';
 import Custom from './Custom';
 import Transfer from './Transfer';
+import Post from './Post';
 
 export default {
   Decode,
@@ -10,4 +11,5 @@ export default {
   Vote,
   Custom,
   Transfer,
+  Post,
 };

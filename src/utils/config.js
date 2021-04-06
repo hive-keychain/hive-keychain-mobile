@@ -7,9 +7,9 @@ export const hiveConfig = {
 };
 export const BrowserConfig = {
   HOMEPAGE_URL:
-    process.env.NODE_ENV === 'development'
+    process.env.NODE_ENV === 'developmsent'
       ? 'http://192.168.0.241:1337/example/main.html'
-      : 'https://hive.io',
+      : 'https://peakd.com/@lecaillon',
   FOOTER_HEIGHT: 40,
   HEADER_HEIGHT: 40,
 };

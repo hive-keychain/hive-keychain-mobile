@@ -206,7 +206,13 @@
       "hidden_data": "Click to show",
       "to": "To",
       "amount": "Amount",
-      "memo": "Memo"
+      "memo": "Memo",
+      "title": "Title",
+      "body": "Body",
+      "json_metadata": "JSON Metadata",
+      "parent_perm": "Parent Permlink",
+      "parent_username": "Parent Username",
+      "comment_options": "Comment Options"
     },
     "error": {
       "decode": "Could not verify key.",
@@ -225,7 +231,8 @@
       "signBuffer": "Message signed succesfully.",
       "vote": "Successfully voted for @{{author}}'s post {{permlink}} at {{weight}}%.",
       "broadcast": "The transaction has been broadcasted successfully.",
-      "transfer": "Successfully transfered {{amount}} {{currency}} from @{{username}} to @{{to}}."
+      "transfer": "Successfully transfered {{amount}} {{currency}} from @{{username}} to @{{to}}.",
+      "post": "The post was submitted succesfully."
     },
     "confirm": "Confirm"
   }
