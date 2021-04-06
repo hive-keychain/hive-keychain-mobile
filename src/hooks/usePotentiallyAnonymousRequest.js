@@ -18,6 +18,11 @@ export default (request, accounts) => {
   const getAccountKey = () => {
     return account.keys[method.toLowerCase()];
   };
+
+  const getAccountMemoKey = () => {
+    return account.keys.memo;
+  };
+
   const getAccountPublicKey = () => {
     return account.keys[`${method.toLowerCase()}Pubkey`];
   };
@@ -26,6 +31,7 @@ export default (request, accounts) => {
     getUsername,
     getAccountKey,
     getAccountPublicKey,
+    getAccountMemoKey,
     RequestUsername: () => (
       <RequestUsername
         username={username}

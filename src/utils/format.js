@@ -45,6 +45,9 @@ export const capitalize = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
 export const beautifyTransferError = (err, {currency, username, to}) => {
+  if (!err.data && err.message.includes('Unable to serialize')) {
+    return translate('request.error.transfer.encrypt');
+  }
   switch (err.data.stack[0].context.method) {
     case 'adjust_balance':
       return translate('request.error.transfer.adjust_balance', {

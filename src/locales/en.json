@@ -27,7 +27,8 @@
     "save": "Save",
     "balance": "Balance",
     "available": "Available",
-    "back": "Back"
+    "back": "Back",
+    "encrypted": "encrypted"
   },
   "wallet": {
     "rc": "Resources:",
@@ -215,7 +216,8 @@
       "broadcasting": "There was an error broadcasting this transaction, please try again.",
       "transfer": {
         "adjust_balance": "Insufficient {{currency}} balance on account @{{username}}.",
-        "get_account": "Cannot find account @{{to}}"
+        "get_account": "Cannot find account @{{to}}",
+        "encrypt": "Please add your memo key to encrypt memos."
       }
     },
     "success": {
