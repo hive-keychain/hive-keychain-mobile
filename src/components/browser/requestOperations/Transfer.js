@@ -24,8 +24,25 @@ export default ({
     <RequestOperation
       sendResponse={sendResponse}
       sendError={sendError}
-      successMessage={translate('request.success.transfer')}
-      errorMessage={translate('request.error.transfer')}
+      successMessage={translate('request.success.transfer', {
+        amount,
+        currency,
+        username: getUsername(),
+        to,
+      })}
+      errorMessage={(err) => {
+        switch (err.data.stack[0].context.method) {
+          case 'adjust_balance':
+            return translate('request.error.transfer.adjust_balance', {
+              currency,
+              username: getUsername(),
+            });
+          case 'get_account':
+            return translate('request.error.transfer.get_account', {to});
+          default:
+            return translate('request.error.broadcasting');
+        }
+      }}
       method={'active'}
       request={request}
       closeGracefully={closeGracefully}

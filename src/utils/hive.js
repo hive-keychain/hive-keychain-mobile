@@ -79,7 +79,7 @@ export const broadcast = async (key, type, obj) => {
   tx.sign(hiveTx.PrivateKey.from(key));
   const {error, result} = await tx.broadcast();
   if (error) {
-    throw new Error(error.message);
+    throw error;
   } else {
     return result;
   }

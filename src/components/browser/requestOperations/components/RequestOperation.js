@@ -50,7 +50,11 @@ export default ({
           } catch (e) {
             console.log(e);
             if (!beautifyError) {
-              msg = errorMessage;
+              if (typeof errorMessage === 'function') {
+                msg = errorMessage(e, data);
+              } else {
+                msg = errorMessage;
+              }
             } else {
               msg = beautifyErrorMessage(e);
             }

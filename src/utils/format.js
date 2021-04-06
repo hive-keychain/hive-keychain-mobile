@@ -1,3 +1,5 @@
+import {translate} from 'utils/localize';
+
 export const withCommas = (nb, decimals = 3) =>
   parseFloat(parseFloat(nb).toFixed(decimals))
     .toString()
@@ -41,3 +43,17 @@ export const formatBalance = (balance) =>
 
 export const capitalize = (string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
+
+export const beautifyTransferError = (err, {currency, username, to}) => {
+  switch (err.data.stack[0].context.method) {
+    case 'adjust_balance':
+      return translate('request.error.transfer.adjust_balance', {
+        currency,
+        username,
+      });
+    case 'get_account':
+      return translate('request.error.transfer.get_account', {to});
+    default:
+      return translate('request.error.broadcasting');
+  }
+};

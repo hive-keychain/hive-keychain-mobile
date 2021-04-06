@@ -93,7 +93,7 @@ const Transfer = ({
       loadAccount(user.account.name, true);
       goBack();
     } catch (e) {
-      Toast.show(`Error:${e}`, Toast.LONG);
+      Toast.show(`Error:${e.message}`, Toast.LONG);
       setLoading(false);
     }
   };

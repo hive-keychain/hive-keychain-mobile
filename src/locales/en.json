@@ -211,13 +211,19 @@
       "decode": "Could not verify key.",
       "signBuffer": "Could not sign.",
       "ops": "There was an error broadcasting this transaction:",
-      "unknown": "Something went wrong! Please try again!"
+      "unknown": "Something went wrong! Please try again!",
+      "broadcasting": "There was an error broadcasting this transaction, please try again.",
+      "transfer": {
+        "adjust_balance": "Insufficient {{currency}} balance on account @{{username}}.",
+        "get_account": "Cannot find account @{{to}}"
+      }
     },
     "success": {
       "decode": "Memo decoded successfully.",
       "signBuffer": "Message signed succesfully.",
       "vote": "Successfully voted for @{{author}}'s post {{permlink}} at {{weight}}%.",
-      "broadcast": "The transaction has been broadcasted successfully."
+      "broadcast": "The transaction has been broadcasted successfully.",
+      "transfer": "Successfully transfered {{amount}} {{currency}} from @{{username}} to @{{to}}."
     },
     "confirm": "Confirm"
   }
