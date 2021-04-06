@@ -28,6 +28,7 @@ import {encodeMemo} from 'components/bridge';
 import {getAccountKeys} from 'utils/hiveUtils';
 import {transfer, sendToken} from 'utils/hive';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
+import {beautifyTransferError} from 'utils/format';
 
 const PUBLIC = translate('common.public').toUpperCase();
 const PRIVATE = translate('common.private').toUpperCase();
@@ -93,7 +94,10 @@ const Transfer = ({
       loadAccount(user.account.name, true);
       goBack();
     } catch (e) {
-      Toast.show(`Error:${e.message}`, Toast.LONG);
+      Toast.show(
+        beautifyTransferError(e, {to, currency, username: user.account.name}),
+        Toast.LONG,
+      );
       setLoading(false);
     }
   };
