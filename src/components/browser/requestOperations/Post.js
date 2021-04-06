@@ -23,7 +23,6 @@ export default ({
     json_metadata,
     comment_options,
   } = data;
-  console.log(data);
   return (
     <RequestOperation
       sendResponse={sendResponse}
@@ -33,7 +32,11 @@ export default ({
       method={'posting'}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {}}>
+      performOperation={async () => {
+        const account = accounts.find((e) => e.name === request.username);
+        const key = account.keys.posting;
+        return await post(key, data);
+      }}>
       <RequestItem
         content={`@${username}`}
         title={translate('request.item.username')}

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import RequestMessage from './RequestMessage';
 import RequestResultMessage from './RequestResultMessage';
 import OperationButton from 'components/form/ActiveOperationButton';
@@ -25,7 +25,7 @@ export default ({
   const [resultMessage, setResultMessage] = useState(null);
 
   const renderRequestSummary = () => (
-    <View>
+    <ScrollView>
       <RequestMessage message={message} />
       {children}
       <OperationButton
@@ -66,7 +66,7 @@ export default ({
           setLoading(false);
         }}
       />
-    </View>
+    </ScrollView>
   );
 
   if (resultMessage) {

@@ -39,8 +39,9 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {
-        let finalMemo;
+        let finalMemo = memo;
         if (memo.length && memo[0] === '#') {
+          console.log('pwait');
           const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
           finalMemo = await encodeMemo(
             getAccountMemoKey(),

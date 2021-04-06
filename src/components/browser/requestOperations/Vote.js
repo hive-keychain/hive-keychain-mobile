@@ -32,7 +32,7 @@ export default ({
         const key = account.keys.posting;
         return await vote(key, {
           voter: username,
-          author: 'hi',
+          author,
           permlink,
           weight: parseInt(weight, 10),
         });
@@ -49,7 +49,10 @@ export default ({
         title={translate('request.item.permlink')}
         content={permlink}
       />
-      <RequestItem title={translate('request.item.weight')} content={weight} />
+      <RequestItem
+        title={translate('request.item.weight')}
+        content={`${(parseInt(weight, 10) / 100).toFixed(2)}%`}
+      />
     </RequestOperation>
   );
 };
