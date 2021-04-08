@@ -14,8 +14,6 @@ export const BrowserConfig = {
   HEADER_HEIGHT: 40,
 };
 
-const a = ['transfer', {to: 'lecaillon', amount: '0.001 HIVE', memo: 'hi'}];
-
 export const KeychainConfig = {
   NO_USERNAME_TYPES: [
     'delegation',

@@ -74,9 +74,13 @@ export const vote = async (key, obj) => {
   return await broadcast(key, [['vote', obj]]);
 };
 
+export const voteForWitness = async (key, obj) => {
+  return await broadcast(key, [['account_witness_vote', obj]]);
+};
+
 export const post = async (
   key,
-  {comment_options, username, parent_perm, parent_username, ...data}: obj,
+  {comment_options, username, parent_perm, parent_username, ...data},
 ) => {
   const arr = [
     [
