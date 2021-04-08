@@ -29,24 +29,30 @@ export default ({
       performOperation={async () => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys[method.toLowerCase()];
-        for (const [name, data] of operations) {
+        let ops = operations;
+        if (typeof operations === 'string') {
+          ops = JSON.parse(operations);
+        }
+        console.log(ops);
+        for (const [name, data] of ops) {
+          console.log(name, data);
           switch (name) {
             case 'custom_json':
               data.required_auths = [];
               break;
             case 'transfer':
               const memo = data.memo;
-              if (memo && memo.length > 0 && memo[0] === '#') {
+              if (memo && memo.length && memo[0] === '#') {
                 const receiverMemoKey = (await getAccountKeys(data.to)).memo;
                 if (!receiverMemoKey) {
                   throw new Error('Failed to load receiver memo key');
                 }
-                const memoReceiver = receiverMemoKey[0].memo_key;
-                data.memo = encodeMemo(
-                  accounts.find((e) => e.name === username).memo,
-                  memoReceiver,
-                  memo,
-                );
+                const userMemo = accounts.find((e) => e.name === username).keys
+                  .memo;
+                if (!userMemo) {
+                  throw new Error('You need a memo key to encrypt memos.');
+                }
+                data.memo = await encodeMemo(userMemo, receiverMemoKey, memo);
               }
               break;
           }

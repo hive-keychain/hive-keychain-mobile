@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import RequestMessage from './RequestMessage';
 import RequestResultMessage from './RequestResultMessage';
-import OperationButton from 'components/form/ActiveOperationButton';
+import OperationButton from 'components/form/EllipticButton';
 import {translate} from 'utils/localize';
 import {beautifyErrorMessage} from 'utils/keychain';
 
