@@ -30,7 +30,8 @@
     "back": "Back",
     "encrypted": "encrypted",
     "vote": "Vote",
-    "unvote": "Unvote"
+    "unvote": "Unvote",
+    "none": "None"
   },
   "wallet": {
     "rc": "Resources:",
@@ -216,7 +217,8 @@
       "parent_username": "Parent Username",
       "comment_options": "Comment Options",
       "witness": "Witness",
-      "action": "Action"
+      "action": "Action",
+      "proxy": "Proxy"
     },
     "error": {
       "decode": "Could not verify key.",
@@ -238,7 +240,9 @@
       "transfer": "Successfully transfered {{amount}} {{currency}} from @{{username}} to @{{to}}.",
       "post": "The post was submitted succesfully.",
       "witness_vote": "Successfully voted @{{witness}} for witness.",
-      "witness_unvote": "Successfully unvoted @{{witness}} for witness."
+      "witness_unvote": "Successfully unvoted @{{witness}} for witness.",
+      "proxy": "Succesfully chose @{{proxy}} for proxy.",
+      "remove_proxy": "Succesfully removed the proxy."
     },
     "confirm": "Confirm"
   }
