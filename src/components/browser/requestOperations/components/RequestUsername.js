@@ -1,8 +1,8 @@
 import React from 'react';
-import RequestItem, {getTitle} from './RequestItem';
+import RequestItem from './RequestItem';
 import {translate} from 'utils/localize';
 import {View, StyleSheet} from 'react-native';
-import CustomPicker from 'components/form/CustomPicker';
+import UserPicker from 'components/form/UserPicker';
 
 export default ({username, accounts, account, setAccount}) => {
   return username ? (
@@ -12,20 +12,19 @@ export default ({username, accounts, account, setAccount}) => {
     />
   ) : (
     <View style={styles.container}>
-      {getTitle({title: translate('request.item.username')})}
-      <CustomPicker
-        list={accounts.map((e) => e.name)}
-        selectedValue={account}
-        style={styles.picker}
-        onSelectedValue={(acc) => {
-          setAccount(accounts.find((a) => a.name === acc));
+      <UserPicker
+        accounts={accounts.map((e) => e.name)}
+        username={account}
+        noSort
+        onAccountSelected={(acc) => {
+          setAccount(acc);
         }}
+        style={styles.picker}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {width: '100%'},
-  picker: {marginTop: -10, marginBottom: -10},
+  container: {width: '100%', marginTop: -30},
 });
