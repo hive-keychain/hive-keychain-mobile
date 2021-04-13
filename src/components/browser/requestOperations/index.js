@@ -8,6 +8,7 @@ import Broadcast from './Broadcast';
 import WitnessVote from './Witness';
 import Proxy from './Proxy';
 import PowerUp from './PowerUp';
+import PowerDown from './PowerDown';
 
 export default {
   Decode,
@@ -20,4 +21,5 @@ export default {
   WitnessVote,
   Proxy,
   PowerUp,
+  PowerDown,
 };

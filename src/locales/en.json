@@ -243,7 +243,9 @@
       "witness_unvote": "Successfully unvoted @{{witness}} for witness.",
       "proxy": "Succesfully chose @{{proxy}} for proxy.",
       "remove_proxy": "Succesfully removed the proxy.",
-      "power_up": "Powered up {{hive}} HIVE on @{{to}}."
+      "power_up": "Powered up {{hive}} HIVE on @{{to}}.",
+      "power_down": "Started a {{hp}} HP power down on @{{username}}.",
+      "stop_power_down": "Stopped Power Down on @{{username}}."
     },
     "confirm": "Confirm"
   }
