@@ -7,6 +7,8 @@ import Post from './Post';
 import Broadcast from './Broadcast';
 import WitnessVote from './Witness';
 import Proxy from './Proxy';
+import PowerUp from './PowerUp';
+
 export default {
   Decode,
   SignBuffer,
@@ -17,4 +19,5 @@ export default {
   Broadcast,
   WitnessVote,
   Proxy,
+  PowerUp,
 };

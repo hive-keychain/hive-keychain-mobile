@@ -242,7 +242,8 @@
       "witness_vote": "Successfully voted @{{witness}} for witness.",
       "witness_unvote": "Successfully unvoted @{{witness}} for witness.",
       "proxy": "Succesfully chose @{{proxy}} for proxy.",
-      "remove_proxy": "Succesfully removed the proxy."
+      "remove_proxy": "Succesfully removed the proxy.",
+      "power_up": "Powered up {{hive}} HIVE on @{{to}}."
     },
     "confirm": "Confirm"
   }
