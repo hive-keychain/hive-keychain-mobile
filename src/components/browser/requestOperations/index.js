@@ -9,6 +9,7 @@ import WitnessVote from './Witness';
 import Proxy from './Proxy';
 import PowerUp from './PowerUp';
 import PowerDown from './PowerDown';
+import Delegation from './Delegation';
 
 export default {
   Decode,
@@ -22,4 +23,18 @@ export default {
   Proxy,
   PowerUp,
   PowerDown,
+  Delegation,
 };
+
+/*
+Missing operations :
+ AddAccounts
+ Authority x4
+ CreateAccount
+ Delegation --
+ Encode     --
+ Proposals x3
+ Signed Calls
+ SignTx     --
+ TokensTransfer  --
+*/

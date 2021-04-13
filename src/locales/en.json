@@ -218,7 +218,8 @@
       "comment_options": "Comment Options",
       "witness": "Witness",
       "action": "Action",
-      "proxy": "Proxy"
+      "proxy": "Proxy",
+      "delegatee": "Delegatee"
     },
     "error": {
       "decode": "Could not verify key.",
@@ -245,7 +246,9 @@
       "remove_proxy": "Succesfully removed the proxy.",
       "power_up": "Powered up {{hive}} HIVE on @{{to}}.",
       "power_down": "Started a {{hp}} HP power down on @{{username}}.",
-      "stop_power_down": "Stopped Power Down on @{{username}}."
+      "stop_power_down": "Stopped Power Down on @{{username}}.",
+      "delegate": "Succesfully delegated {{amount}} {{unit}} from @{{username}} to @{{delegatee}}.",
+      "undelegate": "Succesfully stopped the delegation to @{{delegatee}} from account @{{username}}."
     },
     "confirm": "Confirm"
   }
