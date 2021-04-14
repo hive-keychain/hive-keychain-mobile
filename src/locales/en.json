@@ -219,7 +219,8 @@
       "witness": "Witness",
       "action": "Action",
       "proxy": "Proxy",
-      "delegatee": "Delegatee"
+      "delegatee": "Delegatee",
+      "transaction": "Transaction"
     },
     "error": {
       "decode": "Could not verify key.",

@@ -103,9 +103,14 @@ export const post = async (
   return await broadcast(key, arr);
 };
 
+export const signTx = (key, tx) => {
+  const trx = new hiveTx.Transaction(tx);
+  const signed = trx.sign(hiveTx.PrivateKey.from(key));
+  return signed;
+};
+
 export const broadcast = async (key, arr) => {
   const tx = new hiveTx.Transaction();
-  console.log(key, arr);
   await tx.create(arr);
   tx.sign(hiveTx.PrivateKey.from(key));
 

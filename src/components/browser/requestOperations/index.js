@@ -11,6 +11,7 @@ import PowerUp from './PowerUp';
 import PowerDown from './PowerDown';
 import Delegation from './Delegation';
 import Encode from './Encode';
+import SignTx from './SignTx';
 
 export default {
   Decode,
@@ -26,6 +27,7 @@ export default {
   PowerDown,
   Delegation,
   Encode,
+  SignTx,
 };
 
 /*
@@ -33,7 +35,6 @@ Missing operations :
  AddAccounts
  Authority x4
  CreateAccount
- Encode     --
  Proposals x3
  Signed Calls
  SignTx     --
