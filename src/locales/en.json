@@ -223,6 +223,7 @@
     },
     "error": {
       "decode": "Could not verify key.",
+      "encode": "Could not encode the message.",
       "signBuffer": "Could not sign.",
       "ops": "There was an error broadcasting this transaction",
       "unknown": "Something went wrong! Please try again!",
@@ -235,6 +236,7 @@
     },
     "success": {
       "decode": "Memo decoded successfully.",
+      "encode": "Message encoded succesfully.",
       "signBuffer": "Message signed succesfully.",
       "vote": "Successfully voted for @{{author}}'s post {{permlink}} at {{weight}}%.",
       "broadcast": "The transaction has been broadcasted successfully.",

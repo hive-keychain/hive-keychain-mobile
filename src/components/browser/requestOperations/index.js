@@ -10,6 +10,7 @@ import Proxy from './Proxy';
 import PowerUp from './PowerUp';
 import PowerDown from './PowerDown';
 import Delegation from './Delegation';
+import Encode from './Encode';
 
 export default {
   Decode,
@@ -24,6 +25,7 @@ export default {
   PowerUp,
   PowerDown,
   Delegation,
+  Encode,
 };
 
 /*
@@ -31,7 +33,6 @@ Missing operations :
  AddAccounts
  Authority x4
  CreateAccount
- Delegation --
  Encode     --
  Proposals x3
  Signed Calls
