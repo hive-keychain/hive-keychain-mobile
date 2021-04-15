@@ -5,10 +5,13 @@ import {translate} from 'utils/localize';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import DrawerButton from 'components/ui/DrawerButton';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const BrowserHeader = ({browser: {activeTab, tabs}, navigation, route}) => {
   const {HEADER_HEIGHT} = BrowserConfig;
-  const styles = getStyles(HEADER_HEIGHT);
+  const insets = useSafeAreaInsets();
+
+  const styles = getStyles(HEADER_HEIGHT, insets);
 
   const renderText = () => {
     if (activeTab) {
@@ -30,16 +33,16 @@ const BrowserHeader = ({browser: {activeTab, tabs}, navigation, route}) => {
   );
 };
 
-const getStyles = (height) =>
+const getStyles = (height, insets) =>
   StyleSheet.create({
     container: {
-      height,
+      height: height + insets.top,
       backgroundColor: 'black',
       width: '100%',
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-
+      paddingTop: insets.top,
       paddingLeft: 20,
     },
     textContainer: {width: '60%'},

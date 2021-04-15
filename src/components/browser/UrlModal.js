@@ -1,11 +1,14 @@
 import React, {useRef} from 'react';
 import {View, StyleSheet, TextInput} from 'react-native';
 import Modal from 'react-native-modal';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
 const SLIDE_TIME = 500;
 
 const UrlModal = ({isVisible, toggle, onNewSearch, url, setUrl}) => {
   const urlInput = useRef();
-
+  const insets = useSafeAreaInsets();
+  const styles = getStyles(insets);
   if (isVisible && urlInput) {
     setTimeout(() => {
       const {current} = urlInput;
@@ -57,16 +60,18 @@ const UrlModal = ({isVisible, toggle, onNewSearch, url, setUrl}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  urlModal: {
-    height: '100%',
-    width: '100%',
-    backgroundColor: 'white',
-    margin: 0,
-    justifyContent: 'flex-start',
-  },
-  urlModalContent: {backgroundColor: 'white'},
-  urlInput: {borderColor: 'lightgrey', borderBottomWidth: 2, padding: 20},
-});
+const getStyles = (insets) =>
+  StyleSheet.create({
+    urlModal: {
+      height: '100%',
+      width: '100%',
+      backgroundColor: 'white',
+      margin: 0,
+      padding: insets.top,
+      justifyContent: 'flex-start',
+    },
+    urlModalContent: {backgroundColor: 'white'},
+    urlInput: {borderColor: 'lightgrey', borderBottomWidth: 2, padding: 20},
+  });
 
 export default UrlModal;
