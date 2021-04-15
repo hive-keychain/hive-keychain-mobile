@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
 import Footer from './Footer';
@@ -18,14 +18,17 @@ import {navigate, goBack as navigationGoBack} from 'utils/navigation';
 
 export default ({data: {url, id}, active, updateTab, route, accounts}) => {
   const tabRef = useRef(null);
-
+  const [searchUrl, setSearchUrl] = useState(url);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isVisible, toggleVisibility] = useState(false);
-
   const insets = useSafeAreaInsets();
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
+
+  useEffect(() => {
+    setSearchUrl(url);
+  }, [url]);
 
   const goBack = () => {
     if (!canGoBack) {
@@ -53,19 +56,20 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
   };
 
   const onLoadProgress = ({nativeEvent: {progress}}) => {
-    setProgress(progress);
+    setProgress(progress === 1 ? 0 : progress);
   };
 
-  const onLoadEnd = ({
-    nativeEvent: {canGoBack, canGoForward, loading, target, title, url},
-  }) => {
+  const onLoadStart = ({nativeEvent: {url}}) => {
+    updateTab(id, {url});
+  };
+
+  const onLoadEnd = ({nativeEvent: {canGoBack, canGoForward, loading}}) => {
+    setProgress(0);
     if (loading) {
       return;
     }
     setCanGoBack(canGoBack);
     setCanGoForward(canGoForward);
-    setProgress(0);
-    updateTab(id, {url});
   };
 
   const onNewSearch = (url) => {
@@ -152,6 +156,7 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
           javascriptEnabled
           allowsInlineMediaPlayback
           onLoadEnd={onLoadEnd}
+          onLoadStart={onLoadStart}
           onLoadProgress={onLoadProgress}
         />
       </View>
@@ -164,6 +169,8 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
           reload={reload}
           height={FOOTER_HEIGHT}
           toggleSearchBar={() => {
+            const {current} = tabRef;
+            console.log(current, tabRef);
             toggleVisibility(true);
           }}
           goHome={() => {
@@ -176,7 +183,8 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
           isVisible={isVisible}
           toggle={toggleVisibility}
           onNewSearch={onNewSearch}
-          initialValue={url}
+          url={searchUrl}
+          setUrl={setSearchUrl}
         />
       )}
     </>

@@ -1,9 +1,9 @@
-import React, {useState, useRef} from 'react';
+import React, {useRef} from 'react';
 import {View, StyleSheet, TextInput} from 'react-native';
 import Modal from 'react-native-modal';
 const SLIDE_TIME = 500;
-const UrlModal = ({isVisible, toggle, onNewSearch, initialValue}) => {
-  const [url, setUrl] = useState(initialValue);
+
+const UrlModal = ({isVisible, toggle, onNewSearch, url, setUrl}) => {
   const urlInput = useRef();
 
   if (isVisible && urlInput) {
