@@ -152,7 +152,6 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
           injectedJavaScriptBeforeContentLoaded={hive_keychain}
           onMessage={onMessage}
           bounces={false}
-          incognito
           javascriptEnabled
           allowsInlineMediaPlayback
           onLoadEnd={onLoadEnd}
