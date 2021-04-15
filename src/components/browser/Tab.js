@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {View, StyleSheet, Animated, Platform} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
 import Footer from './Footer';
 import ProgressBar from './ProgressBar';
@@ -23,13 +23,9 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isVisible, toggleVisibility] = useState(false);
-  const [diffClampState, setDiffClampState] = useState(0);
 
   const insets = useSafeAreaInsets();
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
-  const scrollY = new Animated.Value(0);
-  const diffClampFooter = Animated.diffClamp(scrollY, 0, FOOTER_HEIGHT);
-  const translateYFooter = diffClampFooter;
 
   const goBack = () => {
     if (!canGoBack) {
@@ -144,68 +140,36 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
     <>
       <View style={[styles.container, !active && styles.hide]}>
         <ProgressBar progress={progress} />
-        <Animated.View
-          style={{
-            transform:
-              Platform.OS === 'android'
-                ? [
-                    {
-                      translateY: route.params
-                        ? route.params.translateYHeader
-                        : 0,
-                    },
-                  ]
-                : [],
-            paddingTop:
-              Platform.OS === 'android'
-                ? 0
-                : BrowserConfig.HEADER_HEIGHT + diffClampState,
-            marginBottom: -2 * FOOTER_HEIGHT - diffClampState,
-            ...styles.animated,
-          }}>
-          <WebView
-            ref={tabRef}
-            source={{uri: url}}
-            sharedCookiesEnabled
-            injectedJavaScriptBeforeContentLoaded={hive_keychain}
-            onMessage={onMessage}
-            bounces={false}
-            incognito
-            javascriptEnabled
-            allowsInlineMediaPlayback
-            onLoadEnd={onLoadEnd}
-            onLoadProgress={onLoadProgress}
-            onScroll={(e) => {
-              scrollY.setValue(e.nativeEvent.contentOffset.y);
-              route.params.scrollYHeader.setValue(
-                e.nativeEvent.contentOffset.y,
-              );
-              setDiffClampState(-1 * diffClampFooter._value);
-            }}
-          />
-        </Animated.View>
+
+        <WebView
+          ref={tabRef}
+          source={{uri: url}}
+          sharedCookiesEnabled
+          injectedJavaScriptBeforeContentLoaded={hive_keychain}
+          onMessage={onMessage}
+          bounces={false}
+          incognito
+          javascriptEnabled
+          allowsInlineMediaPlayback
+          onLoadEnd={onLoadEnd}
+          onLoadProgress={onLoadProgress}
+        />
       </View>
       {active && (
-        <Animated.View
-          style={{
-            transform: [{translateY: translateYFooter}],
-            height: FOOTER_HEIGHT,
-          }}>
-          <Footer
-            canGoBack={canGoBack}
-            canGoForward={canGoForward}
-            goBack={goBack}
-            goForward={goForward}
-            reload={reload}
-            height={FOOTER_HEIGHT}
-            toggleSearchBar={() => {
-              toggleVisibility(true);
-            }}
-            goHome={() => {
-              goHome(id);
-            }}
-          />
-        </Animated.View>
+        <Footer
+          canGoBack={canGoBack}
+          canGoForward={canGoForward}
+          goBack={goBack}
+          goForward={goForward}
+          reload={reload}
+          height={FOOTER_HEIGHT}
+          toggleSearchBar={() => {
+            toggleVisibility(true);
+          }}
+          goHome={() => {
+            goHome(id);
+          }}
+        />
       )}
       {active && (
         <UrlModal
@@ -222,5 +186,4 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
 const styles = StyleSheet.create({
   container: {flex: 1},
   hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
-  animated: {flex: 1},
 });

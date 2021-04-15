@@ -61,9 +61,6 @@ const getStyles = (height, insets) =>
       flexDirection: 'row',
       justifyContent: 'space-around',
       alignItems: 'center',
-      position: 'absolute',
-      bottom: 0,
-      elevation: 2,
     },
   });
 
