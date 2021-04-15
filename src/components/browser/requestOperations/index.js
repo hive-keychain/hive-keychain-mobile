@@ -13,6 +13,7 @@ import Delegation from './Delegation';
 import Encode from './Encode';
 import SignTx from './SignTx';
 import SendToken from './SendToken';
+import UpdateProposalVote from './UpdateProposalVote';
 
 export default {
   Decode,
@@ -30,6 +31,7 @@ export default {
   Encode,
   SignTx,
   SendToken,
+  UpdateProposalVote,
 };
 
 /*
@@ -37,6 +39,6 @@ Missing operations :
  AddAccounts
  Authority x4
  CreateAccount
- Proposals x3
+ Create / Remove proposals
  Signed Calls
 */

@@ -109,6 +109,10 @@ export const signTx = (key, tx) => {
   return signed;
 };
 
+export const updateProposalVote = async (key, obj) => {
+  return await broadcast(key, [['update_proposal_votes', obj]]);
+};
+
 export const broadcast = async (key, arr) => {
   const tx = new hiveTx.Transaction();
   await tx.create(arr);

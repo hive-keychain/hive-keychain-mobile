@@ -220,7 +220,8 @@
       "action": "Action",
       "proxy": "Proxy",
       "delegatee": "Delegatee",
-      "transaction": "Transaction"
+      "transaction": "Transaction",
+      "ids": "Proposal IDs"
     },
     "error": {
       "decode": "Could not verify key.",
@@ -251,6 +252,8 @@
       "remove_proxy": "Succesfully removed the proxy.",
       "power_up": "Powered up {{hive}} HIVE on @{{to}}.",
       "power_down": "Started a {{hp}} HP power down on @{{username}}.",
+      "approveProposal": "Successfully voted for proposal(s) {{ids}}.",
+      "unApproveProposal": "Successfully unvoted proposal(s) {{ids}}.",
       "stop_power_down": "Stopped Power Down on @{{username}}.",
       "delegate": "Succesfully delegated {{amount}} {{unit}} from @{{username}} to @{{delegatee}}.",
       "undelegate": "Succesfully stopped the delegation to @{{delegatee}} from account @{{username}}.",
