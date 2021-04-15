@@ -253,7 +253,8 @@
       "power_down": "Started a {{hp}} HP power down on @{{username}}.",
       "stop_power_down": "Stopped Power Down on @{{username}}.",
       "delegate": "Succesfully delegated {{amount}} {{unit}} from @{{username}} to @{{delegatee}}.",
-      "undelegate": "Succesfully stopped the delegation to @{{delegatee}} from account @{{username}}."
+      "undelegate": "Succesfully stopped the delegation to @{{delegatee}} from account @{{username}}.",
+      "sendToken": "The transaction has been broadcasted successfully. Please check your balance to confirm that it was processed succesfully."
     },
     "confirm": "Confirm"
   }

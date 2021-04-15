@@ -12,6 +12,7 @@ import PowerDown from './PowerDown';
 import Delegation from './Delegation';
 import Encode from './Encode';
 import SignTx from './SignTx';
+import SendToken from './SendToken';
 
 export default {
   Decode,
@@ -28,6 +29,7 @@ export default {
   Delegation,
   Encode,
   SignTx,
+  SendToken,
 };
 
 /*
@@ -37,6 +39,4 @@ Missing operations :
  CreateAccount
  Proposals x3
  Signed Calls
- SignTx     --
- TokensTransfer  --
 */
