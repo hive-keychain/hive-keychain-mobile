@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
+import {Text, StyleSheet, View, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {translate} from 'utils/localize';
 import {urlTransformer} from 'utils/browser';
@@ -10,7 +10,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 const BrowserHeader = ({browser: {activeTab, tabs}, navigation, route}) => {
   const {HEADER_HEIGHT} = BrowserConfig;
   const insets = useSafeAreaInsets();
-
   const styles = getStyles(HEADER_HEIGHT, insets);
 
   const renderText = () => {
@@ -27,7 +26,12 @@ const BrowserHeader = ({browser: {activeTab, tabs}, navigation, route}) => {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.textContainer}>{renderText()}</View>
+      <View style={styles.textContainer}>
+        {route.params && route.params.icon && (
+          <Image style={styles.icon} source={{uri: route.params.icon}} />
+        )}
+        {renderText()}
+      </View>
       <DrawerButton navigation={navigation} />
     </View>
   );
@@ -45,9 +49,10 @@ const getStyles = (height, insets) =>
       paddingTop: insets.top,
       paddingLeft: 20,
     },
-    textContainer: {width: '60%'},
+    textContainer: {width: '60%', flexDirection: 'row'},
     url: {color: 'white', fontSize: 18},
     browser: {color: 'white', fontSize: 18, fontWeight: 'bold'},
+    icon: {width: 20, height: 20, marginRight: 20},
   });
 
 const mapStateToProps = (state) => ({browser: state.browser});

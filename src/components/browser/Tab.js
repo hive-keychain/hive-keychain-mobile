@@ -6,7 +6,7 @@ import ProgressBar from './ProgressBar';
 import {BrowserConfig} from 'utils/config';
 import UrlModal from './UrlModal';
 import RequestModalContent from './RequestModalContent';
-import {hive_keychain} from './HiveKeychainBridge';
+import {hive_keychain} from './bridges/HiveKeychainBridge';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
   validateRequest,
@@ -15,8 +15,16 @@ import {
   validateAuthority,
 } from 'utils/keychain';
 import {navigate, goBack as navigationGoBack} from 'utils/navigation';
+import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 
-export default ({data: {url, id}, active, updateTab, route, accounts}) => {
+export default ({
+  data: {url, id},
+  active,
+  updateTab,
+  route,
+  accounts,
+  navigation,
+}) => {
   const tabRef = useRef(null);
   const [searchUrl, setSearchUrl] = useState(url);
   const [canGoBack, setCanGoBack] = useState(false);
@@ -64,12 +72,16 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
   };
 
   const onLoadEnd = ({nativeEvent: {canGoBack, canGoForward, loading}}) => {
+    const {current} = tabRef;
     setProgress(0);
     if (loading) {
       return;
     }
     setCanGoBack(canGoBack);
     setCanGoForward(canGoForward);
+    if (current) {
+      current.injectJavaScript(BRIDGE_WV_INFO);
+    }
   };
 
   const onNewSearch = (url) => {
@@ -85,30 +97,36 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
   const onMessage = ({nativeEvent}) => {
     const {name, request_id, data} = JSON.parse(nativeEvent.data);
     const {current} = tabRef;
-    if (name === 'swHandshake_hive') {
-      current.injectJavaScript(
-        'window.hive_keychain.onAnswerReceived("hive_keychain_handshake")',
-      );
-    } else if (name === 'swRequest_hive') {
-      if (validateRequest(data)) {
-        if (validateAuthority(accounts, data)) {
-          showOperationRequestModal(request_id, data);
+    switch (name) {
+      case 'swHandshake_hive':
+        current.injectJavaScript(
+          'window.hive_keychain.onAnswerReceived("hive_keychain_handshake")',
+        );
+        break;
+      case 'swRequest_hive':
+        if (validateRequest(data)) {
+          if (validateAuthority(accounts, data)) {
+            showOperationRequestModal(request_id, data);
+          } else {
+            sendError(tabRef, {
+              error: 'user_cancel',
+              message: 'Request was canceled by the user.',
+              data,
+              request_id,
+            });
+          }
         } else {
           sendError(tabRef, {
-            error: 'user_cancel',
-            message: 'Request was canceled by the user.',
+            error: 'incomplete',
+            message: 'Incomplete data or wrong format',
             data,
             request_id,
           });
         }
-      } else {
-        sendError(tabRef, {
-          error: 'incomplete',
-          message: 'Incomplete data or wrong format',
-          data,
-          request_id,
-        });
-      }
+        break;
+      case 'WV_INFO':
+        navigation.setParams({icon: data.icon});
+        break;
     }
   };
 
@@ -168,8 +186,6 @@ export default ({data: {url, id}, active, updateTab, route, accounts}) => {
           reload={reload}
           height={FOOTER_HEIGHT}
           toggleSearchBar={() => {
-            const {current} = tabRef;
-            console.log(current, tabRef);
             toggleVisibility(true);
           }}
           goHome={() => {

@@ -49,6 +49,7 @@ const Browser = ({
             key={tab.id}
             updateTab={updateTab}
             route={route}
+            navigation={navigation}
           />
         ))}
       </View>
