@@ -4,7 +4,7 @@ import {WebView} from 'react-native-webview';
 import Footer from './Footer';
 import ProgressBar from './ProgressBar';
 import {BrowserConfig} from 'utils/config';
-import UrlModal from './UrlModal';
+import UrlModal from './urlModal';
 import RequestModalContent from './RequestModalContent';
 import {hive_keychain} from './bridges/HiveKeychainBridge';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -16,7 +16,6 @@ import {
 } from 'utils/keychain';
 import {navigate, goBack as navigationGoBack} from 'utils/navigation';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
-import {urlTransformer} from 'utils/browser';
 
 export default ({
   data: {url, id},
@@ -27,7 +26,6 @@ export default ({
   addToHistory,
   history,
 }) => {
-  console.log(history);
   const tabRef = useRef(null);
   const [searchUrl, setSearchUrl] = useState(url);
   const [canGoBack, setCanGoBack] = useState(false);
@@ -130,8 +128,8 @@ export default ({
       case 'WV_INFO':
         const {icon, name, url} = data;
         navigation.setParams({icon});
-        if (name && url) {
-          addToHistory({icon, name, url: urlTransformer(url).hostname});
+        if (name && url && url !== 'chromewebdata') {
+          addToHistory({icon, name, url});
         }
         break;
     }
@@ -205,6 +203,7 @@ export default ({
           isVisible={isVisible}
           toggle={toggleVisibility}
           onNewSearch={onNewSearch}
+          history={history}
           url={searchUrl}
           setUrl={setSearchUrl}
         />

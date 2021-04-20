@@ -2,10 +2,11 @@ import React, {useRef} from 'react';
 import {View, StyleSheet, TextInput} from 'react-native';
 import Modal from 'react-native-modal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import UrlAutocomplete from './UrlAutocomplete';
 
 const SLIDE_TIME = 500;
 
-const UrlModal = ({isVisible, toggle, onNewSearch, url, setUrl}) => {
+const UrlModal = ({isVisible, toggle, onNewSearch, url, setUrl, history}) => {
   const urlInput = useRef();
   const insets = useSafeAreaInsets();
   const styles = getStyles(insets);
@@ -18,16 +19,28 @@ const UrlModal = ({isVisible, toggle, onNewSearch, url, setUrl}) => {
     }, SLIDE_TIME);
   }
 
+  const onSubmitUrlFromInput = (obj) => {
+    const url = obj.nativeEvent.text;
+    onSubmitUrl(url);
+  };
+
+  const onSubmitUrl = (url) => {
+    toggle(false);
+    const hasProtocol = url.match(/^[a-z]*:\/\//);
+    const sanitizedURL = hasProtocol ? url : `https://${url}`;
+    onNewSearch(sanitizedURL);
+  };
+
+  const dismissModal = () => {
+    toggle(false);
+  };
+
   return (
     <Modal
       isVisible={isVisible}
       style={styles.urlModal}
-      onBackdropPress={() => {
-        toggle(false);
-      }}
-      onBackButtonPress={() => {
-        toggle(false);
-      }}
+      onBackdropPress={dismissModal}
+      onBackButtonPress={dismissModal}
       animationIn="slideInDown"
       animationOut="slideOutUp"
       backdropOpacity={0.8}
@@ -42,13 +55,7 @@ const UrlModal = ({isVisible, toggle, onNewSearch, url, setUrl}) => {
           autoCorrect={false}
           clearButtonMode="while-editing"
           onChangeText={setUrl}
-          onSubmitEditing={(obj) => {
-            toggle(false);
-            const url = obj.nativeEvent.text;
-            const hasProtocol = url.match(/^[a-z]*:\/\//);
-            const sanitizedURL = hasProtocol ? url : `https://${url}`;
-            onNewSearch(sanitizedURL);
-          }}
+          onSubmitEditing={onSubmitUrlFromInput}
           placeholder={'Please enter the url'}
           returnKeyType="go"
           style={styles.urlInput}
@@ -56,6 +63,12 @@ const UrlModal = ({isVisible, toggle, onNewSearch, url, setUrl}) => {
           selectTextOnFocus
         />
       </View>
+      <UrlAutocomplete
+        onSubmit={onSubmitUrl}
+        input={url}
+        history={history}
+        onDismiss={dismissModal}
+      />
     </Modal>
   );
 };

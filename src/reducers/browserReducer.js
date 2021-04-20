@@ -21,9 +21,12 @@ const browserReducer = (
 ) => {
   switch (type) {
     case ADD_TO_BROWSER_HISTORY:
+      if (state.history.find((e) => e.url === payload.url)) {
+        return state;
+      }
       return {
         ...state,
-        history: [...state.history, {url: payload.url, name: payload.name}],
+        history: [...state.history, payload],
       };
     case ADD_TO_BROWSER_FAVORITES:
       return {

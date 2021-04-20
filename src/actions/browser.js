@@ -10,10 +10,10 @@ import {
   SET_ACTIVE_BROWSER_TAB,
 } from './types';
 
-export function addToHistory({url, name}) {
+export function addToHistory(payload) {
   return {
     type: ADD_TO_BROWSER_HISTORY,
-    payload: {url, name},
+    payload,
   };
 }
 
