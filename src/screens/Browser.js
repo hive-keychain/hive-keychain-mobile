@@ -58,8 +58,8 @@ const mapStateToProps = (state) => {
     accounts: state.accounts,
     activeTab: state.browser.activeTab,
     tabs: state.browser.tabs,
-    history: state.history,
-    favorites: state.favorites,
+    history: state.browser.history,
+    favorites: state.browser.favorites,
   };
 };
 

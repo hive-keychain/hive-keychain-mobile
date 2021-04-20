@@ -16,15 +16,18 @@ import {
 } from 'utils/keychain';
 import {navigate, goBack as navigationGoBack} from 'utils/navigation';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
+import {urlTransformer} from 'utils/browser';
 
 export default ({
   data: {url, id},
   active,
   updateTab,
-  route,
   accounts,
   navigation,
+  addToHistory,
+  history,
 }) => {
+  console.log(history);
   const tabRef = useRef(null);
   const [searchUrl, setSearchUrl] = useState(url);
   const [canGoBack, setCanGoBack] = useState(false);
@@ -63,12 +66,12 @@ export default ({
     updateTab(id, {url: BrowserConfig.HOMEPAGE_URL});
   };
 
-  const onLoadProgress = ({nativeEvent: {progress}}) => {
-    setProgress(progress === 1 ? 0 : progress);
-  };
-
   const onLoadStart = ({nativeEvent: {url}}) => {
     updateTab(id, {url});
+  };
+
+  const onLoadProgress = ({nativeEvent: {progress}}) => {
+    setProgress(progress === 1 ? 0 : progress);
   };
 
   const onLoadEnd = ({nativeEvent: {canGoBack, canGoForward, loading}}) => {
@@ -125,7 +128,11 @@ export default ({
         }
         break;
       case 'WV_INFO':
-        navigation.setParams({icon: data.icon});
+        const {icon, name, url} = data;
+        navigation.setParams({icon});
+        if (name && url) {
+          addToHistory({icon, name, url: urlTransformer(url).hostname});
+        }
         break;
     }
   };

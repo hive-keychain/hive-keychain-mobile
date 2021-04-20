@@ -12,12 +12,18 @@ const getWebviewInfo = `
 		}
 		return favicon && favicon.href
 	}
+	const __getName=function(){
+		const siteName = document.querySelector('head > meta[property="og:site_name"]');
+		const title= siteName || document.querySelector('head > meta[name="title"]');
+		return title ? title.content : document.title
+	}
 	window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(
 		{
 			name: 'WV_INFO',
 			data: {
 				url: location.href,
-				icon: __getFavicon()
+				icon: __getFavicon(),
+				name: __getName()
 			}
 		}
 	))

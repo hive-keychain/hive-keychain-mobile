@@ -50,6 +50,8 @@ const Browser = ({
             updateTab={updateTab}
             route={route}
             navigation={navigation}
+            addToHistory={addToHistory}
+            history={history}
           />
         ))}
       </View>
