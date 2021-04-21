@@ -77,6 +77,9 @@ const UrlModal = ({
           value={url}
           selectTextOnFocus
         />
+        <TouchableOpacity style={styles.erase} onPress={() => setUrl('')}>
+          <Text style={styles.eraseText}>X</Text>
+        </TouchableOpacity>
       </View>
       <UrlAutocomplete
         onSubmit={onSubmitUrl}
@@ -105,8 +108,16 @@ const getStyles = (insets) =>
       padding: insets.top,
       justifyContent: 'flex-start',
     },
-    urlModalContent: {backgroundColor: 'white'},
-    urlInput: {borderColor: 'lightgrey', borderBottomWidth: 2, padding: 20},
+    erase: {width: '10%', alignSelf: 'center'},
+    eraseText: {fontWeight: 'bold'},
+    urlModalContent: {
+      backgroundColor: 'white',
+      flexDirection: 'row',
+      borderColor: 'lightgrey',
+      borderBottomWidth: 2,
+      padding: 20,
+    },
+    urlInput: {width: '90%'},
     clearHistory: {
       marginLeft: 20,
       marginTop: 20,
