@@ -46,10 +46,13 @@ export default ({onDismiss, input, onSubmit, history}) => {
       </TouchableOpacity>
     );
   };
-  return candidates.map((e) => renderItem(e));
+  return (
+    <View style={styles.wrapper}>{candidates.map((e) => renderItem(e))}</View>
+  );
 };
 
 const styles = StyleSheet.create({
+  wrapper: {marginTop: 20},
   itemWrapper: {flexDirection: 'row', marginHorizontal: 20, marginVertical: 5},
   text: {marginLeft: 10},
   name: {fontWeight: 'bold'},

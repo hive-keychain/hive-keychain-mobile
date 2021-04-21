@@ -52,6 +52,7 @@ const Browser = ({
             navigation={navigation}
             addToHistory={addToHistory}
             history={history}
+            clearHistory={clearHistory}
           />
         ))}
       </View>

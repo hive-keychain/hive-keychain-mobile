@@ -260,5 +260,6 @@
       "sendToken": "The transaction has been broadcasted successfully. Please check your balance to confirm that it was processed succesfully."
     },
     "confirm": "Confirm"
-  }
+  },
+  "browser": {"history": {"clear": "Clear History"}}
 }

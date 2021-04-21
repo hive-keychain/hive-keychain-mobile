@@ -1,12 +1,27 @@
 import React, {useRef} from 'react';
-import {View, StyleSheet, TextInput} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import UrlAutocomplete from './UrlAutocomplete';
+import {translate} from 'utils/localize';
 
 const SLIDE_TIME = 500;
 
-const UrlModal = ({isVisible, toggle, onNewSearch, url, setUrl, history}) => {
+const UrlModal = ({
+  isVisible,
+  toggle,
+  onNewSearch,
+  url,
+  setUrl,
+  history,
+  clearHistory,
+}) => {
   const urlInput = useRef();
   const insets = useSafeAreaInsets();
   const styles = getStyles(insets);
@@ -69,6 +84,13 @@ const UrlModal = ({isVisible, toggle, onNewSearch, url, setUrl, history}) => {
         history={history}
         onDismiss={dismissModal}
       />
+      {history.length ? (
+        <TouchableOpacity onPress={clearHistory}>
+          <Text style={styles.clearHistory}>
+            {translate('browser.history.clear')}
+          </Text>
+        </TouchableOpacity>
+      ) : null}
     </Modal>
   );
 };
@@ -85,6 +107,11 @@ const getStyles = (insets) =>
     },
     urlModalContent: {backgroundColor: 'white'},
     urlInput: {borderColor: 'lightgrey', borderBottomWidth: 2, padding: 20},
+    clearHistory: {
+      marginLeft: 20,
+      marginTop: 20,
+      fontWeight: 'bold',
+    },
   });
 
 export default UrlModal;

@@ -24,6 +24,7 @@ export default ({
   accounts,
   navigation,
   addToHistory,
+  clearHistory,
   history,
 }) => {
   const tabRef = useRef(null);
@@ -207,6 +208,7 @@ export default ({
           history={history}
           url={searchUrl}
           setUrl={setSearchUrl}
+          clearHistory={clearHistory}
         />
       )}
     </>
