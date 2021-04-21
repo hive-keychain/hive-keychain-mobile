@@ -191,6 +191,7 @@ export default ({
           reload={reload}
           height={FOOTER_HEIGHT}
           toggleSearchBar={() => {
+            setSearchUrl(url);
             toggleVisibility(true);
           }}
           goHome={() => {
