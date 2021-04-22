@@ -12,6 +12,7 @@ const Footer = ({
   reload,
   toggleSearchBar,
   addTab,
+  manageTabs,
   height,
 }) => {
   const insets = useSafeAreaInsets();
@@ -39,6 +40,9 @@ const Footer = ({
       </TouchableOpacity>
       <TouchableOpacity onPress={reload}>
         <Icon name="refresh" style={styles.icon} />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={manageTabs}>
+        <Icon name="tab" style={styles.icon} />
       </TouchableOpacity>
       {
         //<TouchableOpacity onPress={addTab}>

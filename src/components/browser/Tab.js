@@ -18,7 +18,7 @@ import {navigate, goBack as navigationGoBack} from 'utils/navigation';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 
 export default ({
-  data: {url, id},
+  data: {url, id, icon},
   active,
   updateTab,
   accounts,
@@ -26,6 +26,7 @@ export default ({
   addToHistory,
   clearHistory,
   history,
+  manageTabs,
 }) => {
   const tabRef = useRef(null);
   const [searchUrl, setSearchUrl] = useState(url);
@@ -132,6 +133,7 @@ export default ({
         if (name && url && url !== 'chromewebdata') {
           addToHistory({icon, name, url});
         }
+        updateTab(id, {url, name, icon});
         break;
     }
   };
@@ -190,6 +192,9 @@ export default ({
           goBack={goBack}
           goForward={goForward}
           reload={reload}
+          manageTabs={() => {
+            manageTabs({url, id, icon}, tabRef);
+          }}
           height={FOOTER_HEIGHT}
           toggleSearchBar={() => {
             setSearchUrl(url);
