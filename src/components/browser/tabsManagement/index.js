@@ -1,4 +1,5 @@
 import React from 'react';
+import {TouchableOpacity} from 'react-native';
 import {
   View,
   Text,
@@ -13,12 +14,16 @@ const margin = 20;
 const THUMB_WIDTH = Dimensions.get('window').width - margin * 2;
 const THUMB_HEIGHT = THUMB_WIDTH * 0.4;
 
-export default ({tabs}) => {
+export default ({tabs, onSelectTab}) => {
   console.log(tabs);
   return (
     <ScrollView style={styles.container}>
       {tabs.map(({icon, image, name, id}) => (
-        <View style={styles.tabWrapper}>
+        <TouchableOpacity
+          style={styles.tabWrapper}
+          onPress={() => {
+            onSelectTab(id);
+          }}>
           <View style={styles.titleContainer}>
             <View style={styles.nameContainer}>
               <Image style={styles.icon} source={{uri: icon}} />
@@ -29,7 +34,7 @@ export default ({tabs}) => {
             <Text style={styles.close}>X</Text>
           </View>
           <Image style={styles.screenshot} source={{uri: image}} />
-        </View>
+        </TouchableOpacity>
       ))}
     </ScrollView>
   );

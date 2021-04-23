@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, StatusBar, Dimensions, Platform} from 'react-native';
+import {View, StyleSheet, StatusBar} from 'react-native';
 import Tab from './Tab';
 import TabsManagement from './tabsManagement';
 import {BrowserConfig} from 'utils/config';
@@ -59,11 +59,22 @@ const Browser = ({
     );
   };
 
+  const onSelectTab = (id) => {
+    changeTab(id);
+    setIsManagingTab(false);
+  };
+
   if (!activeTab) {
     return <View style={styles.container} />;
   } else {
     if (isManagingTab) {
-      return <TabsManagement tabs={tabs} />;
+      return (
+        <TabsManagement
+          tabs={tabs}
+          activeTab={activeTab}
+          onSelectTab={onSelectTab}
+        />
+      );
     } else {
       return (
         <View style={styles.container}>
