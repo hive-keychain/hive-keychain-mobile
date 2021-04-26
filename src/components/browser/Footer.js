@@ -41,9 +41,9 @@ const Footer = ({
       <TouchableOpacity onPress={reload}>
         <Icon name="refresh" style={styles.icon} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={manageTabs}>
+      {/* <TouchableOpacity onPress={manageTabs}>
         <Icon name="tab" style={styles.icon} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       {
         //<TouchableOpacity onPress={addTab}>
         //<Icon name="add" style={styles.icon} />
