@@ -12,9 +12,9 @@ import {translate} from 'utils/localize';
 
 const AccountManagement = ({
   account,
-  forgetKeyConnect,
-  forgetAccountConnect,
-  addKeyConnect,
+  forgetKey,
+  forgetAccount,
+  addKey,
   navigation,
   accounts,
 }) => {
@@ -47,24 +47,24 @@ const AccountManagement = ({
           type="posting"
           containerStyle={styles.keyOdd}
           account={accounts.find((e) => e.name === username)}
-          forgetKey={forgetKeyConnect}
-          addKey={addKeyConnect}
+          forgetKey={forgetKey}
+          addKey={addKey}
           navigation={navigation}
         />
         <Key
           type="active"
           containerStyle={styles.keyEven}
           account={accounts.find((e) => e.name === username)}
-          forgetKey={forgetKeyConnect}
-          addKey={addKeyConnect}
+          forgetKey={forgetKey}
+          addKey={addKey}
           navigation={navigation}
         />
         <Key
           type="memo"
           containerStyle={styles.keyOdd}
           account={accounts.find((e) => e.name === username)}
-          forgetKey={forgetKeyConnect}
-          addKey={addKeyConnect}
+          forgetKey={forgetKey}
+          addKey={addKey}
           navigation={navigation}
         />
         <Separator height={20} />
@@ -72,7 +72,7 @@ const AccountManagement = ({
           style={styles.button}
           title="FORGET ACCOUNT"
           onPress={() => {
-            forgetAccountConnect(username);
+            forgetAccount(username);
           }}
         />
         <Separator height={50} />
@@ -101,7 +101,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  forgetAccountConnect: forgetAccount,
-  addKeyConnect: addKey,
-  forgetKeyConnect: forgetKey,
+  forgetAccount,
+  addKey,
+  forgetKey,
 })(AccountManagement);

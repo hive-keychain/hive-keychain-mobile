@@ -8,14 +8,14 @@ import Pincode from 'components/pinCode';
 import KeychainLogo from 'components/ui/KeychainLogo';
 import {translate} from 'utils/localize';
 
-const Unlock = ({unlockConnect, forgetAccountsConnect, navigation}) => {
+const Unlock = ({unlock, forgetAccounts, navigation}) => {
   const {width} = useWindowDimensions();
   return (
     <Background>
       <Pincode
         navigation={navigation}
         title={translate('unlock.enterPIN')}
-        submit={unlockConnect}>
+        submit={unlock}>
         <KeychainLogo width={width / 4} />
       </Pincode>
     </Background>
@@ -23,6 +23,6 @@ const Unlock = ({unlockConnect, forgetAccountsConnect, navigation}) => {
 };
 
 export default connect(null, {
-  unlockConnect: unlock,
-  forgetAccountsConnect: forgetAccounts,
+  unlock,
+  forgetAccounts,
 })(Unlock);

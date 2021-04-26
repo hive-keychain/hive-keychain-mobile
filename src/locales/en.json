@@ -27,7 +27,11 @@
     "save": "Save",
     "balance": "Balance",
     "available": "Available",
-    "back": "Back"
+    "back": "Back",
+    "encrypted": "encrypted",
+    "vote": "Vote",
+    "unvote": "Unvote",
+    "none": "None"
   },
   "wallet": {
     "rc": "Resources:",
@@ -158,6 +162,104 @@
     "manage": "MANAGE KEYS",
     "settings": "SETTINGS",
     "about": "ABOUT",
-    "wallet": "WALLET"
-  }
+    "wallet": "WALLET",
+    "browser": "BROWSER"
+  },
+  "request": {
+    "title": {
+      "custom": "Custom Transaction",
+      "decode": "Verify Key",
+      "encode": "Encode message",
+      "signBuffer": "Sign Message",
+      "addAccountAuthority": "Add Authority",
+      "removeAccountAuthority": "Remove Authority",
+      "broadcast": "Broadcast",
+      "signTx": "Sign Transaction",
+      "signedCall": "Signed Call",
+      "post": "Post",
+      "vote": "Vote",
+      "transfer": "Transfer",
+      "delegation": "Delegation",
+      "witnessVote": "Witness Vote",
+      "proxy": "Chose Proxy",
+      "sendToken": "Send Tokens",
+      "powerUp": "Power Up",
+      "powerDown": "Power Down",
+      "createClaimedAccount": "Create Claimed Account",
+      "createProposal": "Create Worker Proposal",
+      "removeProposal": "Remove Worker Proposal",
+      "updateProposalVote": "Vote for Proposal",
+      "addKeyAuthority": "Add Key",
+      "removeKeyAuthority": "Remove Key",
+      "addAccount": "Add Account"
+    },
+    "message": {
+      "decode": "The website {{domain}} would like to verify that you have access to the private {{method}} key for the account: @{{username}}",
+      "signBuffer": "The website {{domain}} would like to sign a message using the {{method}} key for the account: @{{username}}",
+      "signBufferNoUsername": "The website {{domain}} would like to sign a message using the {{method}} key."
+    },
+    "item": {
+      "username": "Username",
+      "method": "Method",
+      "message": "Message",
+      "author": "Author",
+      "permlink": "Permlink",
+      "weight": "Weight",
+      "data": "Data",
+      "hidden_data": "Click to show",
+      "to": "To",
+      "amount": "Amount",
+      "memo": "Memo",
+      "title": "Title",
+      "body": "Body",
+      "json_metadata": "JSON Metadata",
+      "parent_perm": "Parent Permlink",
+      "parent_username": "Parent Username",
+      "comment_options": "Comment Options",
+      "witness": "Witness",
+      "action": "Action",
+      "proxy": "Proxy",
+      "delegatee": "Delegatee",
+      "transaction": "Transaction",
+      "ids": "Proposal IDs"
+    },
+    "error": {
+      "decode": "Could not verify key.",
+      "encode": "Could not encode the message.",
+      "signBuffer": "Could not sign.",
+      "signTx": "The transaction could not be signed successfully.",
+      "ops": "There was an error broadcasting this transaction",
+      "unknown": "Something went wrong! Please try again!",
+      "broadcasting": "There was an error broadcasting this transaction, please try again.",
+      "transfer": {
+        "adjust_balance": "Insufficient {{currency}} balance on account @{{username}}.",
+        "get_account": "Cannot find account @{{to}}",
+        "encrypt": "Please add your memo key to encrypt memos."
+      }
+    },
+    "success": {
+      "decode": "Memo decoded successfully.",
+      "encode": "Message encoded succesfully.",
+      "signBuffer": "Message signed succesfully.",
+      "signTx": "The transaction has been signed successfully.",
+      "vote": "Successfully voted for @{{author}}'s post {{permlink}} at {{weight}}%.",
+      "broadcast": "The transaction has been broadcasted successfully.",
+      "transfer": "Successfully transfered {{amount}} {{currency}} from @{{username}} to @{{to}}.",
+      "post": "The post was submitted succesfully.",
+      "witness_vote": "Successfully voted @{{witness}} for witness.",
+      "witness_unvote": "Successfully unvoted @{{witness}} for witness.",
+      "proxy": "Succesfully chose @{{proxy}} for proxy.",
+      "remove_proxy": "Succesfully removed the proxy.",
+      "power_up": "Powered up {{hive}} HIVE on @{{to}}.",
+      "power_down": "Started a {{hp}} HP power down on @{{username}}.",
+      "approveProposal": "Successfully voted for proposal(s) {{ids}}.",
+      "unApproveProposal": "Successfully unvoted proposal(s) {{ids}}.",
+      "stop_power_down": "Stopped Power Down on @{{username}}.",
+      "delegate": "Succesfully delegated {{amount}} {{unit}} from @{{username}} to @{{delegatee}}.",
+      "undelegate": "Succesfully stopped the delegation to @{{delegatee}} from account @{{username}}.",
+      "sendToken": "The transaction has been broadcasted successfully. Please check your balance to confirm that it was processed succesfully."
+    },
+    "confirm": "Confirm"
+  },
+  "browser": {"history": {"clear": "Clear History"}}
 }

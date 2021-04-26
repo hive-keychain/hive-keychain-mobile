@@ -9,15 +9,15 @@ import Loader from 'components/ui/Loader';
 const Transactions = ({
   transactions,
   loading,
-  initAccountTransactionsConnect,
-  fetchAccountTransactionsConnect,
+  initAccountTransactions,
+  fetchAccountTransactions,
   user,
 }) => {
   useEffect(() => {
     if (user.account.name) {
-      initAccountTransactionsConnect(user.account.name);
+      initAccountTransactions(user.account.name);
     }
-  }, [user.account.name, initAccountTransactionsConnect]);
+  }, [user.account.name, initAccountTransactions]);
   const [end, setEnd] = useState(0);
 
   const renderTransactions = () => {
@@ -30,11 +30,10 @@ const Transactions = ({
           initialNumToRender={20}
           onEndReachedThreshold={0.5}
           onEndReached={() => {
-            console.log('end reached');
             const newEnd =
               transactions[transactions.length - 1].key.split('!')[1] - 1;
             if (newEnd !== end && !transactions[transactions.length - 1].last) {
-              fetchAccountTransactionsConnect(user.account.name, newEnd);
+              fetchAccountTransactions(user.account.name, newEnd);
               setEnd(newEnd);
             }
           }}
@@ -73,6 +72,6 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  initAccountTransactionsConnect: initAccountTransactions,
-  fetchAccountTransactionsConnect: fetchAccountTransactions,
+  initAccountTransactions,
+  fetchAccountTransactions,
 })(Transactions);

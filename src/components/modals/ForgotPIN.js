@@ -8,7 +8,7 @@ import EllipticButton from 'components/form/EllipticButton';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 
-const ForgotPIN = ({forgetAccountsConnect}) => {
+const ForgotPIN = ({forgetAccounts}) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height});
   return (
@@ -21,7 +21,7 @@ const ForgotPIN = ({forgetAccountsConnect}) => {
         title={translate('components.forgotPIN.button')}
         onPress={() => {
           goBack();
-          forgetAccountsConnect();
+          forgetAccounts();
         }}
       />
     </View>
@@ -33,6 +33,4 @@ const getDimensionedStyles = ({width}) =>
     h4: {fontWeight: 'bold', fontSize: 18},
   });
 
-export default connect(null, {forgetAccountsConnect: forgetAccounts})(
-  ForgotPIN,
-);
+export default connect(null, {forgetAccounts})(ForgotPIN);

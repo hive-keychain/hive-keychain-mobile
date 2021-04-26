@@ -18,7 +18,7 @@ import {toHP, fromHP, withCommas} from 'utils/format';
 import {powerDown} from 'utils/hive';
 import {sanitizeAmount} from 'utils/hiveUtils';
 
-const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
+const PowerDown = ({currency = 'HP', user, loadAccount, properties}) => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -53,7 +53,7 @@ const PowerDown = ({currency = 'HP', user, loadAccountConnect, properties}) => {
         ),
         account: user.account.name,
       });
-      loadAccountConnect(user.account.name, true);
+      loadAccount(user.account.name, true);
       goBack();
       if (parseFloat(amount.replace(',', '.')) !== 0) {
         Toast.show(translate('toast.powerdown_success'), Toast.LONG);
@@ -118,5 +118,5 @@ export default connect(
       properties: state.properties,
     };
   },
-  {loadAccountConnect: loadAccount},
+  {loadAccount},
 )(PowerDown);

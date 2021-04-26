@@ -28,6 +28,7 @@ import {encodeMemo} from 'components/bridge';
 import {getAccountKeys} from 'utils/hiveUtils';
 import {transfer, sendToken} from 'utils/hive';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
+import {beautifyTransferError} from 'utils/format';
 
 const PUBLIC = translate('common.public').toUpperCase();
 const PRIVATE = translate('common.private').toUpperCase();
@@ -35,7 +36,7 @@ const PRIVATE = translate('common.private').toUpperCase();
 const Transfer = ({
   currency,
   user,
-  loadAccountConnect,
+  loadAccount,
   engine,
   tokenBalance,
   tokenLogo,
@@ -90,10 +91,13 @@ const Transfer = ({
           Toast.LONG,
         );
       }
-      loadAccountConnect(user.account.name, true);
+      loadAccount(user.account.name, true);
       goBack();
     } catch (e) {
-      Toast.show(`Error:${e}`, Toast.LONG);
+      Toast.show(
+        beautifyTransferError(e, {to, currency, username: user.account.name}),
+        Toast.LONG,
+      );
       setLoading(false);
     }
   };
@@ -248,5 +252,5 @@ export default connect(
       phishingAccounts: state.phishingAccounts,
     };
   },
-  {loadAccountConnect: loadAccount},
+  {loadAccount},
 )(Transfer);

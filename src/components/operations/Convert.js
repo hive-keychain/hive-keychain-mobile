@@ -24,19 +24,14 @@ import {loadAccount, fetchConversionRequests} from 'actions';
 import {convert} from 'utils/hive';
 import {sanitizeAmount} from 'utils/hiveUtils';
 
-const Convert = ({
-  user,
-  loadAccountConnect,
-  fetchConversionRequestsConnect,
-  conversions,
-}) => {
+const Convert = ({user, loadAccount, fetchConversionRequests, conversions}) => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [showConversionsList, setShowConversionsList] = useState(false);
 
   useEffect(() => {
-    fetchConversionRequestsConnect(user.name);
-  }, [user.name, fetchConversionRequestsConnect]);
+    fetchConversionRequests(user.name);
+  }, [user.name, fetchConversionRequests]);
 
   const onConvert = async () => {
     Keyboard.dismiss();
@@ -47,7 +42,7 @@ const Convert = ({
         amount: sanitizeAmount(amount, 'HBD'),
         requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
       });
-      loadAccountConnect(user.account.name, true);
+      loadAccount(user.account.name, true);
       goBack();
       Toast.show(translate('toast.convert_success'), Toast.LONG);
     } catch (e) {
@@ -149,7 +144,7 @@ export default connect(
     };
   },
   {
-    loadAccountConnect: loadAccount,
-    fetchConversionRequestsConnect: fetchConversionRequests,
+    loadAccount,
+    fetchConversionRequests,
   },
 )(Convert);

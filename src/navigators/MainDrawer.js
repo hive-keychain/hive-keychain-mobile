@@ -9,7 +9,7 @@ import WalletStack from 'navigators/mainDrawerStacks/Wallet';
 import AccountManagementStack from 'navigators/mainDrawerStacks/AccountManagement';
 import SettingsStack from 'navigators/mainDrawerStacks/Settings';
 import AddAccountStack from 'navigators/mainDrawerStacks/AddAccount';
-
+import BrowserStack from 'navigators/mainDrawerStacks/Browser';
 import {translate} from 'utils/localize';
 
 const Drawer = createDrawerNavigator();
@@ -28,6 +28,13 @@ export default () => {
       }}
       drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen name="WALLET" component={WalletStack} />
+      <Drawer.Screen
+        name="BrowserScreen"
+        options={{
+          title: translate('navigation.browser'),
+        }}
+        component={BrowserStack}
+      />
       <Drawer.Screen
         name="AccountManagementScreen"
         component={AccountManagementStack}

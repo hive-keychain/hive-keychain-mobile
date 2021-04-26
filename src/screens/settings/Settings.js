@@ -9,7 +9,7 @@ import CustomPicker from 'components/form/CustomPicker';
 import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 
-const AccountManagement = ({navigation, setRpcConnect, settings}) => {
+const AccountManagement = ({navigation, setRpc, settings}) => {
   return (
     <SafeArea>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
@@ -22,7 +22,7 @@ const AccountManagement = ({navigation, setRpcConnect, settings}) => {
         ))}
         <Separator height={20} />
         <CustomPicker
-          onSelected={setRpcConnect}
+          onSelected={setRpc}
           selectedValue={settings.rpc}
           list={rpcList}
           prompt={translate('components.picker.prompt_rpc')}
@@ -50,5 +50,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  setRpcConnect: setRpc,
+  setRpc,
 })(AccountManagement);

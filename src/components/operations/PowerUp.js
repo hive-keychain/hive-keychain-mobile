@@ -18,7 +18,7 @@ import {loadAccount} from 'actions';
 import {powerUp} from 'utils/hive';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 
-const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
+const PowerUp = ({currency = 'HIVE', user, loadAccount}) => {
   const [to, setTo] = useState(user.account.name);
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,7 +33,7 @@ const PowerUp = ({currency = 'HIVE', user, loadAccountConnect}) => {
         to: sanitizeUsername(to),
         from: user.account.name,
       });
-      loadAccountConnect(user.account.name, true);
+      loadAccount(user.account.name, true);
       goBack();
       Toast.show(translate('toast.powerup_success'), Toast.LONG);
     } catch (e) {
@@ -92,5 +92,5 @@ export default connect(
       user: state.activeAccount,
     };
   },
-  {loadAccountConnect: loadAccount},
+  {loadAccount},
 )(PowerUp);

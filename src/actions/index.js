@@ -37,3 +37,4 @@ export * from 'actions/accounts';
 export * from 'actions/hive';
 export * from 'actions/hiveEngine';
 export * from 'actions/settings';
+export * from 'actions/browser';

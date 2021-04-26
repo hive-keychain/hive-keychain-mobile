@@ -4,7 +4,7 @@ import CustomPicker from './CustomPicker';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import {translate} from 'utils/localize';
 
-const UserPicker = ({username, accounts, onAccountSelected}) => {
+const UserPicker = ({username, accounts, onAccountSelected, noSort}) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height});
 
@@ -12,8 +12,9 @@ const UserPicker = ({username, accounts, onAccountSelected}) => {
     return null;
   }
 
-  const accountsList = [username, ...accounts.filter((e) => e !== username)];
-
+  const accountsList = noSort
+    ? accounts
+    : [username, ...accounts.filter((e) => e !== username)];
   return (
     <View style={styles.container}>
       <UserProfilePicture style={styles.image} username={username} />

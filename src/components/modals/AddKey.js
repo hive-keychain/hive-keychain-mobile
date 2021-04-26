@@ -13,7 +13,7 @@ import KeychainLogo from 'components/ui/KeychainLogo';
 import {goBack} from 'utils/navigation';
 import {addKey} from 'actions';
 
-const AddKey = ({addKeyConnect, name, type}) => {
+const AddKey = ({addKey, name, type}) => {
   console.log(name, type);
   const [key, setKey] = useState('');
   return (
@@ -34,7 +34,7 @@ const AddKey = ({addKeyConnect, name, type}) => {
         title={translate('common.save')}
         onPress={() => {
           console.log('key', key);
-          addKeyConnect(name, type, key);
+          addKey(name, type, key);
           Keyboard.dismiss();
           goBack();
         }}
@@ -49,4 +49,4 @@ const styles = StyleSheet.create({
   currency: {fontWeight: 'bold', fontSize: 18},
 });
 
-export default connect(null, {addKeyConnect: addKey})(AddKey);
+export default connect(null, {addKey})(AddKey);

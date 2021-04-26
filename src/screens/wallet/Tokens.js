@@ -10,22 +10,22 @@ import Loader from 'components/ui/Loader';
 
 const Tokens = ({
   user,
-  loadTokensConnect,
-  loadUserTokensConnect,
-  loadTokensMarketConnect,
+  loadTokens,
+  loadUserTokens,
+  loadTokensMarket,
   tokens,
   userTokens,
   bittrex,
   tokensMarket,
 }) => {
   useEffect(() => {
-    loadTokensConnect();
-    loadTokensMarketConnect();
-  }, [loadTokensConnect, loadTokensMarketConnect]);
+    loadTokens();
+    loadTokensMarket();
+  }, [loadTokens, loadTokensMarket]);
 
   useEffect(() => {
-    loadUserTokensConnect(user.name);
-  }, [loadUserTokensConnect, user.name]);
+    loadUserTokens(user.name);
+  }, [loadUserTokens, user.name]);
 
   const renderContent = () => {
     if (userTokens.loading) {
@@ -88,7 +88,7 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  loadTokensConnect: loadTokens,
-  loadUserTokensConnect: loadUserTokens,
-  loadTokensMarketConnect: loadTokensMarket,
+  loadTokens,
+  loadUserTokens,
+  loadTokensMarket,
 })(Tokens);

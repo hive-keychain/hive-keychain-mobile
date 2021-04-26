@@ -7,11 +7,11 @@ import Pincode from 'components/pinCode';
 import KeychainLogo from 'components/ui/KeychainLogo';
 import {translate} from 'utils/localize';
 
-const Signup = ({signUpConnect, navigation}) => {
+const Signup = ({signUp, navigation}) => {
   const {width} = useWindowDimensions();
 
   const onSubmitSignup = (pwd) => {
-    signUpConnect(pwd);
+    signUp(pwd);
   };
   return (
     <Background>
@@ -27,4 +27,4 @@ const Signup = ({signUpConnect, navigation}) => {
   );
 };
 
-export default connect(null, {signUpConnect: signUp})(Signup);
+export default connect(null, {signUp})(Signup);
