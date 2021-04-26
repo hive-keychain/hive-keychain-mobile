@@ -8,35 +8,39 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
+import TabsManagementBottomBar from './BottomBar';
 
 //TODO: put in config
 const margin = 20;
 const THUMB_WIDTH = Dimensions.get('window').width - margin * 2;
-const THUMB_HEIGHT = THUMB_WIDTH * 0.4;
+const THUMB_HEIGHT = THUMB_WIDTH * 0.3;
 
 export default ({tabs, onSelectTab}) => {
   console.log(tabs);
   return (
-    <ScrollView style={styles.container}>
-      {tabs.map(({icon, image, name, id}) => (
-        <TouchableOpacity
-          style={styles.tabWrapper}
-          onPress={() => {
-            onSelectTab(id);
-          }}>
-          <View style={styles.titleContainer}>
-            <View style={styles.nameContainer}>
-              <Image style={styles.icon} source={{uri: icon}} />
-              <Text style={styles.name} numberOfLines={1}>
-                {name}
-              </Text>
+    <View style={styles.container}>
+      <ScrollView style={styles.container}>
+        {tabs.map(({icon, image, name, id}) => (
+          <TouchableOpacity
+            style={styles.tabWrapper}
+            onPress={() => {
+              onSelectTab(id);
+            }}>
+            <View style={styles.titleContainer}>
+              <View style={styles.nameContainer}>
+                <Image style={styles.icon} source={{uri: icon}} />
+                <Text style={styles.name} numberOfLines={1}>
+                  {name}
+                </Text>
+              </View>
+              <Text style={styles.close}>X</Text>
             </View>
-            <Text style={styles.close}>X</Text>
-          </View>
-          <Image style={styles.screenshot} source={{uri: image}} />
-        </TouchableOpacity>
-      ))}
-    </ScrollView>
+            <Image style={styles.screenshot} source={{uri: image}} />
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      <TabsManagementBottomBar />
+    </View>
   );
 };
 
@@ -63,6 +67,7 @@ const styles = StyleSheet.create({
     height: THUMB_HEIGHT,
     borderBottomRightRadius: 20,
     borderBottomLeftRadius: 20,
+    resizeMode: 'cover',
   },
   icon: {width: 20, height: 20},
   name: {fontSize: 18, color: 'white', marginLeft: 20},
