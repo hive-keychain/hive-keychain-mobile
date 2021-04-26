@@ -10,6 +10,7 @@ import Modal from 'react-native-modal';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import UrlAutocomplete from './UrlAutocomplete';
 import {translate} from 'utils/localize';
+import {Platform} from 'react-native';
 
 const SLIDE_TIME = 500;
 
@@ -77,9 +78,11 @@ const UrlModal = ({
           value={url}
           selectTextOnFocus
         />
-        <TouchableOpacity style={styles.erase} onPress={() => setUrl('')}>
-          <Text style={styles.eraseText}>X</Text>
-        </TouchableOpacity>
+        {Platform.OS === 'android' ? (
+          <TouchableOpacity style={styles.erase} onPress={() => setUrl('')}>
+            <Text style={styles.eraseText}>X</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
       <UrlAutocomplete
         onSubmit={onSubmitUrl}
