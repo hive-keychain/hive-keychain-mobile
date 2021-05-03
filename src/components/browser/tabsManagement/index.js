@@ -15,14 +15,17 @@ const margin = 20;
 const THUMB_WIDTH = Dimensions.get('window').width - margin * 2;
 const THUMB_HEIGHT = THUMB_WIDTH * 0.3;
 
-export default ({tabs, onSelectTab}) => {
+export default ({tabs, onSelectTab, activeTab}) => {
   console.log(tabs);
   return (
     <View style={styles.container}>
       <ScrollView style={styles.container}>
         {tabs.map(({icon, image, name, id}) => (
           <TouchableOpacity
-            style={styles.tabWrapper}
+            style={[
+              styles.tabWrapper,
+              id === activeTab ? styles.activeTab : null,
+            ]}
             onPress={() => {
               onSelectTab(id);
             }}>
@@ -33,7 +36,9 @@ export default ({tabs, onSelectTab}) => {
                   {name}
                 </Text>
               </View>
-              <Text style={styles.close}>X</Text>
+              <TouchableOpacity>
+                <Text style={styles.close}>X</Text>
+              </TouchableOpacity>
             </View>
             <Image style={styles.screenshot} source={{uri: image}} />
           </TouchableOpacity>
@@ -45,10 +50,11 @@ export default ({tabs, onSelectTab}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
+  container: {flex: 1, backgroundColor: 'lightgrey'},
   tabWrapper: {
     flex: 0,
     margin,
+    backgroundColor: 'black',
   },
   titleContainer: {
     width: THUMB_WIDTH,
@@ -61,7 +67,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'space-between',
   },
-  nameContainer: {flexDirection: 'row'},
+  activeTab: {
+    borderColor: '#A3112A',
+    borderWidth: 3,
+    borderRadius: 20,
+    marginRight: 16,
+  },
+  nameContainer: {flexDirection: 'row', maxWidth: '70%'},
   screenshot: {
     width: THUMB_WIDTH,
     height: THUMB_HEIGHT,
