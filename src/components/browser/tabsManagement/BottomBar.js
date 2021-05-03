@@ -3,21 +3,26 @@ import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {BrowserConfig} from 'utils/config';
 
-export default ({onCloseAllTabs}) => {
+export default ({onCloseAllTabs, showSideButtons}) => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => {
-          onCloseAllTabs();
-        }}>
-        <Icon name="close" style={styles.icon} />
-      </TouchableOpacity>
+    <View
+      style={[styles.container, showSideButtons ? null : styles.noSideButtons]}>
+      {showSideButtons ? (
+        <TouchableOpacity
+          onPress={() => {
+            onCloseAllTabs();
+          }}>
+          <Icon name="close" style={styles.icon} />
+        </TouchableOpacity>
+      ) : null}
       <TouchableOpacity onPress={() => {}}>
         <Icon name="add-circle" style={styles.icon} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => {}}>
-        <Icon name="check" style={styles.icon} />
-      </TouchableOpacity>
+      {showSideButtons ? (
+        <TouchableOpacity onPress={() => {}}>
+          <Icon name="check" style={styles.icon} />
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };
@@ -31,5 +36,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  noSideButtons: {justifyContent: 'space-around'},
   icon: {color: 'white', fontSize: 30},
 });

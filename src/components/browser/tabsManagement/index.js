@@ -49,7 +49,10 @@ export default ({tabs, onSelectTab, onCloseTab, onCloseAllTabs, activeTab}) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <TabsManagementBottomBar onCloseAllTabs={onCloseAllTabs} />
+      <TabsManagementBottomBar
+        onCloseAllTabs={onCloseAllTabs}
+        showSideButtons={!!activeTab}
+      />
     </View>
   );
 };
