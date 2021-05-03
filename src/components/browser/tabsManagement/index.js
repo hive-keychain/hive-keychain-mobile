@@ -15,13 +15,15 @@ const margin = 20;
 const THUMB_WIDTH = Dimensions.get('window').width - margin * 2;
 const THUMB_HEIGHT = THUMB_WIDTH * 0.3;
 
-export default ({tabs, onSelectTab, activeTab}) => {
+export default ({tabs, onSelectTab, onCloseTab, onCloseAllTabs, activeTab}) => {
   console.log(tabs);
+  console.log('displaying mgt');
   return (
     <View style={styles.container}>
       <ScrollView style={styles.container}>
         {tabs.map(({icon, image, name, id}) => (
           <TouchableOpacity
+            key={id}
             style={[
               styles.tabWrapper,
               id === activeTab ? styles.activeTab : null,
@@ -36,7 +38,10 @@ export default ({tabs, onSelectTab, activeTab}) => {
                   {name}
                 </Text>
               </View>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  onCloseTab(id);
+                }}>
                 <Text style={styles.close}>X</Text>
               </TouchableOpacity>
             </View>
@@ -44,7 +49,7 @@ export default ({tabs, onSelectTab, activeTab}) => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <TabsManagementBottomBar />
+      <TabsManagementBottomBar onCloseAllTabs={onCloseAllTabs} />
     </View>
   );
 };

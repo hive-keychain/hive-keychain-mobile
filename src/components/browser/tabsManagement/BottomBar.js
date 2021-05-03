@@ -3,10 +3,13 @@ import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {BrowserConfig} from 'utils/config';
 
-export default () => {
+export default ({onCloseAllTabs}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity
+        onPress={() => {
+          onCloseAllTabs();
+        }}>
         <Icon name="close" style={styles.icon} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => {}}>

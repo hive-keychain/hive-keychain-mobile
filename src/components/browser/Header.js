@@ -13,7 +13,7 @@ const BrowserHeader = ({browser: {activeTab, tabs}, navigation, route}) => {
   const styles = getStyles(HEADER_HEIGHT, insets);
 
   const renderText = () => {
-    if (activeTab) {
+    if (activeTab && tabs.find((e) => e.id === activeTab)) {
       const activeUrl = tabs.find((e) => e.id === activeTab).url;
       return (
         <Text style={styles.url}>{urlTransformer(activeUrl).hostname}</Text>

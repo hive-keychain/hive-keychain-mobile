@@ -25,11 +25,11 @@ const Browser = ({
 }) => {
   // Add tab if browser is opened with no existing tab
   const [isManagingTab, setIsManagingTab] = useState(false);
-  useEffect(() => {
-    if (!activeTab) {
-      addTab(BrowserConfig.HOMEPAGE_URL);
-    }
-  }, [activeTab, addTab]);
+  // useEffect(() => {
+  //   if (!activeTab) {
+  //     addTab(BrowserConfig.HOMEPAGE_URL);
+  //   }
+  // }, [activeTab, addTab]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -63,39 +63,47 @@ const Browser = ({
     changeTab(id);
     setIsManagingTab(false);
   };
+  const onCloseTab = (id) => {
+    changeTab(0);
+    closeTab(id);
+  };
 
-  if (!activeTab) {
-    return <View style={styles.container} />;
+  const onCloseAllTabs = () => {
+    changeTab(0);
+    closeAllTabs();
+  };
+
+  if (isManagingTab || !activeTab) {
+    console.log('mgt tab');
+    return (
+      <TabsManagement
+        tabs={tabs}
+        activeTab={activeTab}
+        onSelectTab={onSelectTab}
+        onCloseTab={onCloseTab}
+        onCloseAllTabs={onCloseAllTabs}
+      />
+    );
   } else {
-    if (isManagingTab) {
-      return (
-        <TabsManagement
-          tabs={tabs}
-          activeTab={activeTab}
-          onSelectTab={onSelectTab}
-        />
-      );
-    } else {
-      return (
-        <View style={styles.container}>
-          {tabs.map((tab) => (
-            <Tab
-              accounts={accounts}
-              data={tab}
-              active={tab.id === activeTab}
-              key={tab.id}
-              updateTab={updateTab}
-              route={route}
-              navigation={navigation}
-              addToHistory={addToHistory}
-              history={history}
-              clearHistory={clearHistory}
-              manageTabs={manageTabs}
-            />
-          ))}
-        </View>
-      );
-    }
+    return (
+      <View style={styles.container}>
+        {tabs.map((tab) => (
+          <Tab
+            accounts={accounts}
+            data={tab}
+            active={tab.id === activeTab}
+            key={tab.id}
+            updateTab={updateTab}
+            route={route}
+            navigation={navigation}
+            addToHistory={addToHistory}
+            history={history}
+            clearHistory={clearHistory}
+            manageTabs={manageTabs}
+          />
+        ))}
+      </View>
+    );
   }
 };
 
