@@ -21,6 +21,7 @@ export default ({
   onCloseTab,
   onCloseAllTabs,
   onAddTab,
+  onQuitManagement,
   activeTab,
 }) => {
   console.log(tabs);
@@ -59,6 +60,7 @@ export default ({
       <TabsManagementBottomBar
         onCloseAllTabs={onCloseAllTabs}
         onAddTab={onAddTab}
+        onQuitManagement={onQuitManagement}
         showSideButtons={!!activeTab}
       />
     </View>

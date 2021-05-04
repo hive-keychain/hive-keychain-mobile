@@ -3,7 +3,12 @@ import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {BrowserConfig} from 'utils/config';
 
-export default ({onCloseAllTabs, onAddTab, showSideButtons}) => {
+export default ({
+  onCloseAllTabs,
+  onAddTab,
+  showSideButtons,
+  onQuitManagement,
+}) => {
   return (
     <View
       style={[styles.container, showSideButtons ? null : styles.noSideButtons]}>
@@ -22,7 +27,10 @@ export default ({onCloseAllTabs, onAddTab, showSideButtons}) => {
         <Icon name="add-circle" style={styles.icon} />
       </TouchableOpacity>
       {showSideButtons ? (
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            onQuitManagement();
+          }}>
           <Icon name="check" style={styles.icon} />
         </TouchableOpacity>
       ) : null}

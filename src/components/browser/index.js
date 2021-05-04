@@ -78,6 +78,10 @@ const Browser = ({
     setIsManagingTab(false);
   };
 
+  const onQuitManagement = () => {
+    setIsManagingTab(false);
+  };
+
   if (isManagingTab || !activeTab) {
     console.log('mgt tab');
     return (
@@ -88,6 +92,7 @@ const Browser = ({
         onCloseTab={onCloseTab}
         onCloseAllTabs={onCloseAllTabs}
         onAddTab={onAddTab}
+        onQuitManagement={onQuitManagement}
       />
     );
   } else {
