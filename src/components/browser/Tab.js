@@ -27,6 +27,7 @@ export default ({
   clearHistory,
   history,
   manageTabs,
+  isManagingTab,
 }) => {
   const tabRef = useRef(null);
   const [searchUrl, setSearchUrl] = useState(url);
@@ -165,10 +166,11 @@ export default ({
       onForceCloseModal,
     });
   };
-
+  console.log(active, isManagingTab);
   return (
-    <>
-      <View style={[styles.container, !active && styles.hide]}>
+    <View
+      style={[styles.container, !active || isManagingTab ? styles.hide : null]}>
+      <View style={styles.container}>
         <ProgressBar progress={progress} />
 
         <WebView
@@ -216,7 +218,7 @@ export default ({
           clearHistory={clearHistory}
         />
       )}
-    </>
+    </View>
   );
 };
 

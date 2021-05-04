@@ -38,7 +38,7 @@ const Browser = ({
 
     return unsubscribe;
   }, [navigation]);
-
+  console.log(isManagingTab, tabs, activeTab);
   const manageTabs = ({url, icon, id}, view) => {
     captureRef(view, {
       format: 'jpg',
@@ -82,9 +82,8 @@ const Browser = ({
     setIsManagingTab(false);
   };
 
-  if (isManagingTab || !activeTab) {
-    console.log('mgt tab');
-    return (
+  return (
+    <View style={styles.container}>
       <TabsManagement
         tabs={tabs}
         activeTab={activeTab}
@@ -93,29 +92,26 @@ const Browser = ({
         onCloseAllTabs={onCloseAllTabs}
         onAddTab={onAddTab}
         onQuitManagement={onQuitManagement}
+        show={isManagingTab || !activeTab}
       />
-    );
-  } else {
-    return (
-      <View style={styles.container}>
-        {tabs.map((tab) => (
-          <Tab
-            accounts={accounts}
-            data={tab}
-            active={tab.id === activeTab}
-            key={tab.id}
-            updateTab={updateTab}
-            route={route}
-            navigation={navigation}
-            addToHistory={addToHistory}
-            history={history}
-            clearHistory={clearHistory}
-            manageTabs={manageTabs}
-          />
-        ))}
-      </View>
-    );
-  }
+      {tabs.map((tab) => (
+        <Tab
+          accounts={accounts}
+          data={tab}
+          active={tab.id === activeTab}
+          key={tab.id}
+          updateTab={updateTab}
+          route={route}
+          navigation={navigation}
+          addToHistory={addToHistory}
+          history={history}
+          clearHistory={clearHistory}
+          manageTabs={manageTabs}
+          isManagingTab={isManagingTab}
+        />
+      ))}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

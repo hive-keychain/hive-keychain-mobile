@@ -23,11 +23,10 @@ export default ({
   onAddTab,
   onQuitManagement,
   activeTab,
+  show,
 }) => {
-  console.log(tabs);
-  console.log('displaying mgt');
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, show ? null : styles.hide]}>
       <ScrollView style={styles.container}>
         {tabs.map(({icon, image, name, id}) => (
           <TouchableOpacity
@@ -69,6 +68,7 @@ export default ({
 
 const styles = StyleSheet.create({
   container: {flex: 1, backgroundColor: 'lightgrey'},
+  hide: {display: 'none'},
   tabWrapper: {
     flex: 0,
     margin,
