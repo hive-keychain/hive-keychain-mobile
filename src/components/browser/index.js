@@ -64,7 +64,9 @@ const Browser = ({
     setIsManagingTab(false);
   };
   const onCloseTab = (id) => {
-    changeTab(0);
+    if (id === activeTab) {
+      changeTab(0);
+    }
     closeTab(id);
   };
 
