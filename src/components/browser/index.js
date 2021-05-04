@@ -73,6 +73,11 @@ const Browser = ({
     closeAllTabs();
   };
 
+  const onAddTab = () => {
+    addTab(BrowserConfig.HOMEPAGE_URL);
+    setIsManagingTab(false);
+  };
+
   if (isManagingTab || !activeTab) {
     console.log('mgt tab');
     return (
@@ -82,6 +87,7 @@ const Browser = ({
         onSelectTab={onSelectTab}
         onCloseTab={onCloseTab}
         onCloseAllTabs={onCloseAllTabs}
+        onAddTab={onAddTab}
       />
     );
   } else {

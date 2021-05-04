@@ -3,7 +3,7 @@ import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {BrowserConfig} from 'utils/config';
 
-export default ({onCloseAllTabs, showSideButtons}) => {
+export default ({onCloseAllTabs, onAddTab, showSideButtons}) => {
   return (
     <View
       style={[styles.container, showSideButtons ? null : styles.noSideButtons]}>
@@ -15,7 +15,10 @@ export default ({onCloseAllTabs, showSideButtons}) => {
           <Icon name="close" style={styles.icon} />
         </TouchableOpacity>
       ) : null}
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity
+        onPress={() => {
+          onAddTab();
+        }}>
         <Icon name="add-circle" style={styles.icon} />
       </TouchableOpacity>
       {showSideButtons ? (

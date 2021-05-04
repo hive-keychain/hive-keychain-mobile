@@ -15,7 +15,14 @@ const margin = 20;
 const THUMB_WIDTH = Dimensions.get('window').width - margin * 2;
 const THUMB_HEIGHT = THUMB_WIDTH * 0.3;
 
-export default ({tabs, onSelectTab, onCloseTab, onCloseAllTabs, activeTab}) => {
+export default ({
+  tabs,
+  onSelectTab,
+  onCloseTab,
+  onCloseAllTabs,
+  onAddTab,
+  activeTab,
+}) => {
   console.log(tabs);
   console.log('displaying mgt');
   return (
@@ -51,6 +58,7 @@ export default ({tabs, onSelectTab, onCloseTab, onCloseAllTabs, activeTab}) => {
       </ScrollView>
       <TabsManagementBottomBar
         onCloseAllTabs={onCloseAllTabs}
+        onAddTab={onAddTab}
         showSideButtons={!!activeTab}
       />
     </View>
