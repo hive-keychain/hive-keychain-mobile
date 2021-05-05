@@ -65,7 +65,12 @@ const Browser = ({
   };
   const onCloseTab = (id) => {
     if (id === activeTab) {
-      changeTab(0);
+      const remainingTabs = tabs.filter((t) => t.id !== id);
+      if (remainingTabs.length) {
+        changeTab(remainingTabs[0].id);
+      } else {
+        changeTab(0);
+      }
     }
     closeTab(id);
   };

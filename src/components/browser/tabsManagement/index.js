@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     margin,
     borderRadius: 20,
     overflow: 'hidden',
-    borderColor: 'lightgrey',
+    borderColor: 'darkgrey',
     borderWidth: 3,
   },
   titleContainer: {
