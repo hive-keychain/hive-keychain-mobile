@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {BrowserConfig} from 'utils/config';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default ({
   onCloseAllTabs,
@@ -9,6 +10,8 @@ export default ({
   showSideButtons,
   onQuitManagement,
 }) => {
+  const insets = useSafeAreaInsets();
+  const styles = getsStyles(insets);
   return (
     <View
       style={[styles.container, showSideButtons ? null : styles.noSideButtons]}>
@@ -38,15 +41,17 @@ export default ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    height: BrowserConfig.HEADER_HEIGHT,
-    paddingHorizontal: 20,
-    backgroundColor: 'black',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  noSideButtons: {justifyContent: 'space-around'},
-  icon: {color: 'white', fontSize: 30},
-});
+const getsStyles = (insets) =>
+  StyleSheet.create({
+    container: {
+      height: BrowserConfig.HEADER_HEIGHT + insets.bottom,
+      paddingHorizontal: 20,
+      paddingBottom: insets.bottom,
+      backgroundColor: 'black',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    noSideButtons: {justifyContent: 'space-around'},
+    icon: {color: 'white', fontSize: 30},
+  });
