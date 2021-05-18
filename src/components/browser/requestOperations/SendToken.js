@@ -18,7 +18,7 @@ export default ({
       sendResponse={sendResponse}
       sendError={sendError}
       successMessage={translate('request.success.sendToken')}
-      errorMessage={translate('request.error.sendToken')}
+      errorMessage={translate('request.error.broadcast')}
       method={'active'}
       request={request}
       closeGracefully={closeGracefully}

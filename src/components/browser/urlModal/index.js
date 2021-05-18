@@ -42,9 +42,14 @@ const UrlModal = ({
 
   const onSubmitUrl = (url) => {
     toggle(false);
-    const hasProtocol = url.match(/^[a-z]*:\/\//);
-    const sanitizedURL = hasProtocol ? url : `https://${url}`;
-    onNewSearch(sanitizedURL);
+    // Add duckduck go search for url with no domain
+    if (url.includes(' ') || !url.includes('.')) {
+      onNewSearch(`https://duckduckgo.com/?q=${url.replace(/ /g, '+')}`);
+    } else {
+      const hasProtocol = url.match(/^[a-z]*:\/\//);
+      const sanitizedURL = hasProtocol ? url : `https://${url}`;
+      onNewSearch(sanitizedURL);
+    }
   };
 
   const dismissModal = () => {
