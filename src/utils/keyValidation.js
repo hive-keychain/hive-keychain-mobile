@@ -111,6 +111,9 @@ export default async (username, pwd) => {
   try {
     const account = (await getClient().database.getAccounts([username]))[0];
     const publicKey = getPublicKeyFromPrivateKeyString(pwd);
+    if (pwd.startsWith('STM')) {
+      throw 'This is a public key! Please enter a private key or your master key.';
+    }
     if (publicKey) {
       return validatePrivateKey(account, pwd, publicKey);
     }
