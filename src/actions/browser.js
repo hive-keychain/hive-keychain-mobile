@@ -37,6 +37,18 @@ export function removeFromFavorites(url) {
   };
 }
 
+export const addTabIfNew = (url) => (dispatch, getState) => {
+  if (getState().browser.tabs.some((t) => t.url === url)) {
+    return;
+  }
+  const id = Date.now();
+  dispatch({
+    type: ADD_BROWSER_TAB,
+    payload: {url, id},
+  });
+  dispatch(changeTab(id));
+};
+
 export function addTab(url) {
   return {
     type: ADD_BROWSER_TAB,

@@ -14,8 +14,15 @@ const Root = createStackNavigator();
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
 import MainDrawer from 'navigators/MainDrawer';
-
-const App = ({hasAccounts, auth, rpc}) => {
+import {addTabIfNew} from 'actions/browser';
+import setupLinking, {clearLinkingListeners} from 'utils/linking';
+const App = ({hasAccounts, auth, rpc, addTabIfNew}) => {
+  useEffect(() => {
+    setupLinking(addTabIfNew);
+    return () => {
+      clearLinkingListeners();
+    };
+  }, [addTabIfNew]);
   useEffect(() => {
     setRpc(rpc);
   }, [rpc]);
@@ -66,4 +73,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(App);
+export default connect(mapStateToProps, {addTabIfNew})(App);
