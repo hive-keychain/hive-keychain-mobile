@@ -8,7 +8,9 @@ import {
   UPDATE_BROWSER_TAB,
   CLOSE_ALL_BROWSER_TABS,
   SET_ACTIVE_BROWSER_TAB,
+  BROWSER_FOCUS,
 } from './types';
+import {navigate} from 'utils/navigation';
 
 export function addToHistory(payload) {
   return {
@@ -47,6 +49,18 @@ export const addTabIfNew = (url) => (dispatch, getState) => {
     payload: {url, id},
   });
   dispatch(changeTab(id));
+  if (getState().auth.mk) {
+    navigate('BrowserScreen');
+  } else {
+    dispatch(setBrowserFocus(true));
+  }
+};
+
+export const setBrowserFocus = (shouldFocus) => {
+  return {
+    type: BROWSER_FOCUS,
+    payload: shouldFocus,
+  };
 };
 
 export function addTab(url) {

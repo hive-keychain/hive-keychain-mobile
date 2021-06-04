@@ -8,6 +8,7 @@ import {
   SET_ACTIVE_BROWSER_TAB,
   UPDATE_BROWSER_TAB,
   REMOVE_FROM_BROWSER_FAVORITES,
+  BROWSER_FOCUS,
 } from 'actions/types';
 
 const browserReducer = (
@@ -16,6 +17,7 @@ const browserReducer = (
     whitelist: [],
     tabs: [],
     activeTab: null,
+    shouldFocus: false,
   },
   {type, payload},
 ) => {
@@ -74,6 +76,8 @@ const browserReducer = (
           return {...tab};
         }),
       };
+    case BROWSER_FOCUS:
+      return {...state, shouldFocus: payload};
     default:
       return state;
   }

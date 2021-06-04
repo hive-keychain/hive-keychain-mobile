@@ -23,6 +23,7 @@ const App = ({hasAccounts, auth, rpc, addTabIfNew}) => {
       clearLinkingListeners();
     };
   }, [addTabIfNew]);
+
   useEffect(() => {
     setRpc(rpc);
   }, [rpc]);
@@ -66,6 +67,7 @@ const App = ({hasAccounts, auth, rpc, addTabIfNew}) => {
 };
 
 const mapStateToProps = (state) => {
+  console.log(state);
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,

@@ -19,6 +19,9 @@ export const unlock = (mk, errorCallback) => async (dispatch, getState) => {
       dispatch({type: UNLOCK, payload: mk});
       dispatch({type: INIT_ACCOUNTS, payload: accounts.list});
     }
+    if (getState().browser.shouldFocus) {
+      navigate('BrowserScreen');
+    }
   } catch (e) {
     if (e.message === 'Wrapped error: User not authenticated') {
       errorCallback(true);

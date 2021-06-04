@@ -11,6 +11,7 @@ import {
   clearHistory,
   addToFavorites,
   removeFromFavorites,
+  setBrowserFocus,
 } from 'actions';
 
 const BrowserScreen = ({
@@ -28,6 +29,7 @@ const BrowserScreen = ({
   clearHistory,
   addToFavorites,
   removeFromFavorites,
+  setBrowserFocus,
   navigation,
   route,
 }) => {
@@ -49,6 +51,7 @@ const BrowserScreen = ({
       clearHistory={clearHistory}
       addToFavorites={addToFavorites}
       removeFromFavorites={removeFromFavorites}
+      setBrowserFocus={setBrowserFocus}
     />
   );
 };
@@ -73,4 +76,5 @@ export default connect(mapStateToProps, {
   clearHistory,
   addToFavorites,
   removeFromFavorites,
+  setBrowserFocus,
 })(BrowserScreen);

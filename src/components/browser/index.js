@@ -22,6 +22,7 @@ const Browser = ({
   removeFromFavorites,
   route,
   navigation,
+  setBrowserFocus,
 }) => {
   // Add tab if browser is opened with no existing tab
   const [isManagingTab, setIsManagingTab] = useState(false);
@@ -38,7 +39,9 @@ const Browser = ({
 
     return unsubscribe;
   }, [navigation]);
-  console.log(isManagingTab, tabs, activeTab);
+  useEffect(() => {
+    setBrowserFocus(false);
+  }, [setBrowserFocus]);
   const manageTabs = ({url, icon, id}, view) => {
     captureRef(view, {
       format: 'jpg',
