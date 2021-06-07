@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-
 import {connect} from 'react-redux';
 
 import Modal from 'screens/Modal';
@@ -16,6 +15,7 @@ import UnlockStack from 'navigators/Unlock';
 import MainDrawer from 'navigators/MainDrawer';
 import {addTabFromLinking} from 'actions/browser';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
+
 const App = ({hasAccounts, auth, rpc, addTabFromLinking}) => {
   useEffect(() => {
     setupLinking(addTabFromLinking);

@@ -1,13 +1,13 @@
 import 'react-native-gesture-handler';
-import './global.js';
+import './global';
 import React, {useState} from 'react';
 import {AppRegistry, StatusBar} from 'react-native';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
-import App from './src/App';
-import Loading from './src/screens/Loading';
+import App from 'src/App';
+import Loading from 'screens/Loading';
 import {name as appName} from './app.json';
-import {store, persistor} from './src/store';
+import {store, persistor} from 'store';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 const Root = () => {

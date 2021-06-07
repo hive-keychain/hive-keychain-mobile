@@ -4,7 +4,7 @@ module.exports = {
     [
       'module-resolver',
       {
-        root: ['./src'],
+        root: ['.'],
         alias: {
           actions: './src/actions',
           api: './src/api',
@@ -17,9 +17,18 @@ module.exports = {
           screens: './src/screens',
           store: './src/store',
           utils: './src/utils',
-          root: './',
+          src: './src',
         },
-        extensions: ['.ios.js', '.android.js', '.js', '.json'],
+        extensions: [
+          '.ios.js',
+          '.android.js',
+          '.js',
+          '.json',
+          '.ts',
+          '.ios.tsx',
+          '.android.tsx',
+          '.jsx',
+        ],
       },
     ],
   ],
