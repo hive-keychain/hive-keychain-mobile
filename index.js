@@ -17,7 +17,7 @@ const Root = () => {
     // Take an action before the gate lifts
     setTimeout(() => {
       setGateLifted(true);
-    }, 3000);
+    }, 1000);
   };
   return (
     <SafeAreaProvider>
