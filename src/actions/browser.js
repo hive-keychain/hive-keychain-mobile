@@ -52,6 +52,7 @@ export const addTabFromLinking = (url) => (dispatch, getState) => {
     });
     dispatch(changeTab(id));
   }
+  dispatch(showManagementScreen(false));
   if (getState().auth.mk) {
     navigate('BrowserScreen');
   } else {
