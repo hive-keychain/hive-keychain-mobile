@@ -39,16 +39,18 @@ export function removeFromFavorites(url) {
   };
 }
 
-export const addTabIfNew = (url) => (dispatch, getState) => {
-  if (getState().browser.tabs.some((t) => t.url === url)) {
-    return;
+export const addTabFromLinking = (url) => (dispatch, getState) => {
+  const existingTab = getState().browser.tabs.find((t) => t.url === url);
+  if (existingTab) {
+    dispatch(changeTab(existingTab.id));
+  } else {
+    const id = Date.now();
+    dispatch({
+      type: ADD_BROWSER_TAB,
+      payload: {url, id},
+    });
+    dispatch(changeTab(id));
   }
-  const id = Date.now();
-  dispatch({
-    type: ADD_BROWSER_TAB,
-    payload: {url, id},
-  });
-  dispatch(changeTab(id));
   if (getState().auth.mk) {
     navigate('BrowserScreen');
   } else {

@@ -1,15 +1,14 @@
 import {Linking} from 'react-native';
 
-export default async (addTabIfNew) => {
+export default async (addTabFromLinking) => {
   Linking.addEventListener('url', ({url}) => {
     if (url) {
-      addTabIfNew(url);
+      addTabFromLinking(url);
     }
   });
   const initialUrl = await Linking.getInitialURL();
   if (initialUrl) {
-    console.log('from initial', initialUrl);
-    addTabIfNew(initialUrl);
+    addTabFromLinking(initialUrl);
   }
 };
 
