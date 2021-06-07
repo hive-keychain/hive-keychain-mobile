@@ -48,6 +48,7 @@ export default ({
                   </Text>
                 </View>
                 <TouchableOpacity
+                  style={styles.closeView}
                   onPress={() => {
                     onCloseTab(id);
                   }}>
@@ -101,4 +102,12 @@ const styles = StyleSheet.create({
   icon: {width: 16, height: 16},
   name: {fontSize: 16, color: 'white', marginLeft: 10},
   close: {color: 'white', fontWeight: 'bold', fontSize: 18},
+  closeView: {
+    minWidth: 30,
+    height: '100%',
+    padding: 0,
+    margin: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
