@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet, StatusBar} from 'react-native';
 import Tab from './Tab';
 import TabsManagement from './tabsManagement';
@@ -23,15 +23,9 @@ const Browser = ({
   route,
   navigation,
   setBrowserFocus,
+  showManagementScreen,
+  showManagement,
 }) => {
-  // Add tab if browser is opened with no existing tab
-  const [isManagingTab, setIsManagingTab] = useState(false);
-  // useEffect(() => {
-  //   if (!activeTab) {
-  //     addTab(BrowserConfig.HOMEPAGE_URL);
-  //   }
-  // }, [activeTab, addTab]);
-
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       StatusBar.setHidden(true);
@@ -39,9 +33,11 @@ const Browser = ({
 
     return unsubscribe;
   }, [navigation]);
+
   useEffect(() => {
     setBrowserFocus(false);
   }, [setBrowserFocus]);
+
   const manageTabs = ({url, icon, id}, view) => {
     captureRef(view, {
       format: 'jpg',
@@ -54,7 +50,7 @@ const Browser = ({
           icon,
           image: uri,
         });
-        setIsManagingTab(true);
+        showManagementScreen(true);
       },
       (error) => {
         console.error(error);
@@ -64,7 +60,7 @@ const Browser = ({
 
   const onSelectTab = (id) => {
     changeTab(id);
-    setIsManagingTab(false);
+    showManagementScreen(false);
   };
   const onCloseTab = (id) => {
     if (id === activeTab) {
@@ -85,11 +81,11 @@ const Browser = ({
 
   const onAddTab = () => {
     addTab(BrowserConfig.HOMEPAGE_URL);
-    setIsManagingTab(false);
+    showManagementScreen(false);
   };
 
   const onQuitManagement = () => {
-    setIsManagingTab(false);
+    showManagementScreen(false);
   };
 
   return (
@@ -102,7 +98,7 @@ const Browser = ({
         onCloseAllTabs={onCloseAllTabs}
         onAddTab={onAddTab}
         onQuitManagement={onQuitManagement}
-        show={isManagingTab || !activeTab}
+        show={showManagement || !activeTab}
       />
       {tabs.map((tab) => (
         <Tab
@@ -117,7 +113,7 @@ const Browser = ({
           history={history}
           clearHistory={clearHistory}
           manageTabs={manageTabs}
-          isManagingTab={isManagingTab}
+          isManagingTab={showManagement}
         />
       ))}
     </View>

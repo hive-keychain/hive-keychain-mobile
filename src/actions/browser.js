@@ -9,6 +9,7 @@ import {
   CLOSE_ALL_BROWSER_TABS,
   SET_ACTIVE_BROWSER_TAB,
   BROWSER_FOCUS,
+  UPDATE_MANAGEMENT,
 } from './types';
 import {navigate} from 'utils/navigation';
 
@@ -98,3 +99,8 @@ export function updateTab(id, data) {
     payload: {id, data},
   };
 }
+
+export const showManagementScreen = (show) => ({
+  type: UPDATE_MANAGEMENT,
+  payload: show,
+});

@@ -12,6 +12,7 @@ import {
   addToFavorites,
   removeFromFavorites,
   setBrowserFocus,
+  showManagementScreen,
 } from 'actions';
 
 const BrowserScreen = ({
@@ -32,6 +33,8 @@ const BrowserScreen = ({
   setBrowserFocus,
   navigation,
   route,
+  showManagementScreen,
+  showManagement,
 }) => {
   return (
     <Browser
@@ -52,6 +55,8 @@ const BrowserScreen = ({
       addToFavorites={addToFavorites}
       removeFromFavorites={removeFromFavorites}
       setBrowserFocus={setBrowserFocus}
+      showManagement={showManagement}
+      showManagementScreen={showManagementScreen}
     />
   );
 };
@@ -63,6 +68,7 @@ const mapStateToProps = (state) => {
     tabs: state.browser.tabs,
     history: state.browser.history,
     favorites: state.browser.favorites,
+    showManagement: state.browser.showManagement,
   };
 };
 
@@ -77,4 +83,5 @@ export default connect(mapStateToProps, {
   addToFavorites,
   removeFromFavorites,
   setBrowserFocus,
+  showManagementScreen,
 })(BrowserScreen);

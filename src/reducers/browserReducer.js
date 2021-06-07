@@ -9,6 +9,7 @@ import {
   UPDATE_BROWSER_TAB,
   REMOVE_FROM_BROWSER_FAVORITES,
   BROWSER_FOCUS,
+  UPDATE_MANAGEMENT,
 } from 'actions/types';
 
 const browserReducer = (
@@ -18,6 +19,7 @@ const browserReducer = (
     tabs: [],
     activeTab: null,
     shouldFocus: false,
+    showManagement: false,
   },
   {type, payload},
 ) => {
@@ -78,6 +80,8 @@ const browserReducer = (
       };
     case BROWSER_FOCUS:
       return {...state, shouldFocus: payload};
+    case UPDATE_MANAGEMENT:
+      return {...state, showManagement: payload};
     default:
       return state;
   }
