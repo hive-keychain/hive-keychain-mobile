@@ -5,9 +5,13 @@ import {
   FORGET_ACCOUNT,
   ACTIVE_ACCOUNT,
 } from '../actions/types';
+import {actionPayload, lastAccount} from 'actions/interfaces';
 import {persistConfig} from './configs';
 
-const lastAccountReducer = (state = {has: false}, {type, payload}) => {
+const lastAccountReducer = (
+  state = {has: false},
+  {type, payload}: actionPayload<lastAccount>,
+): lastAccount => {
   switch (type) {
     case ADD_ACCOUNT:
       return {...state, has: true};

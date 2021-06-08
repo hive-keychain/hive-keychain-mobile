@@ -1,6 +1,10 @@
 import {SIGN_UP, LOCK, UNLOCK} from 'actions/types';
+import {actionPayload, auth, nullableString} from 'actions/interfaces';
 
-const authReducer = (state = {mk: null}, {type, payload}) => {
+const authReducer = (
+  state: auth = {mk: null},
+  {type, payload}: actionPayload<nullableString>,
+) => {
   switch (type) {
     case SIGN_UP:
       return {mk: payload};

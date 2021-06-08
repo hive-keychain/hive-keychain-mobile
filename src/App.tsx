@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {connect} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 
 import Modal from 'screens/Modal';
 import {setNavigator, noHeader, modalOptions} from 'utils/navigation';
@@ -15,8 +15,9 @@ import UnlockStack from 'navigators/Unlock';
 import MainDrawer from 'navigators/MainDrawer';
 import {addTabFromLinking} from 'actions/browser';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
+import {RootState} from 'store';
 
-const App = ({hasAccounts, auth, rpc, addTabFromLinking}) => {
+const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
   useEffect(() => {
     setupLinking(addTabFromLinking);
     return () => {
@@ -48,12 +49,7 @@ const App = ({hasAccounts, auth, rpc, addTabFromLinking}) => {
           component={renderNavigator}
           options={noHeader}
         />
-        <Root.Screen
-          name="ModalScreen"
-          mode="modal"
-          component={Modal}
-          {...modalOptions}
-        />
+        <Root.Screen name="ModalScreen" component={Modal} {...modalOptions} />
       </Root.Navigator>
     );
   };
@@ -66,8 +62,7 @@ const App = ({hasAccounts, auth, rpc, addTabFromLinking}) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  console.log(state);
+const mapStateToProps = (state: RootState) => {
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
@@ -75,4 +70,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {addTabFromLinking})(App);
+const connector = connect(mapStateToProps, {addTabFromLinking});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(App);

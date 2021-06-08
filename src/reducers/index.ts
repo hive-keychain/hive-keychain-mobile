@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
-import authReducer from './authReducer';
+import auth from './auth';
 import accountsReducer from './accountsReducer';
-import lastAccountsReducer from './lastAccountsReducer';
+import lastAccount from './lastAccount';
 import activeAccountReducer from './activeAccountReducer';
 import globalPropertiesReducer from './globalPropertiesReducer';
 import bittrexReducer from './bittrexReducer';
@@ -13,13 +13,13 @@ import tokensMarketReducer from './tokensMarketReducer';
 import tokenHistoryReducer from './tokenHistoryReducer';
 import phishingReducer from './phishingReducer';
 import conversionsReducer from './conversionsReducer';
-import settingsReducer from './settingsReducer';
+import settings from './settings';
 import browserReducer from './browserReducer';
 
 export default combineReducers({
-  auth: authReducer,
+  auth,
   accounts: accountsReducer,
-  lastAccount: lastAccountsReducer,
+  lastAccount,
   activeAccount: activeAccountReducer,
   properties: globalPropertiesReducer,
   bittrex: bittrexReducer,
@@ -31,6 +31,6 @@ export default combineReducers({
   tokenHistory: tokenHistoryReducer,
   phishingAccounts: phishingReducer,
   conversions: conversionsReducer,
-  settings: settingsReducer,
+  settings,
   browser: browserReducer,
 });
