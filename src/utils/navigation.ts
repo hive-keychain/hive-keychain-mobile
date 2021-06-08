@@ -1,28 +1,32 @@
 import {NavigationActions} from '@react-navigation/compat';
-import {CommonActions} from '@react-navigation/native';
+import {CommonActions, NavigationContainerRef} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 // Navigation References
-let navigator;
+let navigator: NavigationContainerRef | null;
 
-export const setNavigator = (nav) => {
+export const setNavigator = (nav: NavigationContainerRef | null) => {
   navigator = nav;
 };
 
-export const navigate = (routeName, params) => {
-  navigator.dispatch(NavigationActions.navigate({routeName, params}));
+export const navigate = (routeName: string, params: object) => {
+  if (navigator)
+    navigator.dispatch(NavigationActions.navigate({routeName, params}));
 };
 
 export const goBack = () => {
-  navigator.dispatch(NavigationActions.back());
+  //@ts-ignore
+  if (navigator) navigator.dispatch(NavigationActions.back());
 };
 
-export const resetStackAndNavigate = (name) => {
-  navigator.dispatch({
-    ...CommonActions.reset({
-      index: 0,
-      routes: [{name}],
-    }),
-  });
+export const resetStackAndNavigate = (name: string) => {
+  if (navigator)
+    navigator.dispatch({
+      ...CommonActions.reset({
+        index: 0,
+        routes: [{name}],
+      }),
+    });
 };
 
 // Navigation Options
@@ -48,12 +52,7 @@ export const modalOptions = {
     headerShown: false,
     cardStyle: {backgroundColor: 'transparent'},
     cardOverlayEnabled: true,
-    cardStyleInterpolator: ({
-      current: {progress},
-      next,
-      inverted,
-      layouts: {screen},
-    }) => ({
+    cardStyleInterpolator: ({current: {progress}}: any) => ({
       cardStyle: {
         opacity: progress.interpolate({
           inputRange: [0, 0.5, 0.9, 1],

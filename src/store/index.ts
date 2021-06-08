@@ -10,7 +10,7 @@ const persistConfig = {
   whitelist: ['lastAccount', 'settings', 'browser'],
 };
 
-const persistedReducers = persistReducer(persistConfig, reducers);
+const persistedReducers = persistReducer<any, any>(persistConfig, reducers);
 const store = createStore(persistedReducers, applyMiddleware(thunk));
 
 const persistor = persistStore(store);
