@@ -4,15 +4,15 @@ import accountsReducer from './accountsReducer';
 import lastAccount from './lastAccount';
 import activeAccountReducer from './activeAccountReducer';
 import globalPropertiesReducer from './globalPropertiesReducer';
-import bittrexReducer from './bittrexReducer';
+import bittrex from './bittrex';
 import transactionsReducer from './transactions';
-import delegationsReducer from './delegationsReducer';
-import tokensReducer from './tokensReducer';
-import userTokensReducer from './userTokensReducer';
-import tokensMarketReducer from './tokensMarketReducer';
-import tokenHistoryReducer from './tokenHistoryReducer';
+import delegations from './delegations';
+import tokens from './tokens';
+import userTokens from './userTokens';
+import tokensMarket from './tokensMarket';
+import tokenHistory from './tokenHistory';
 import phishingAccounts from './phishing';
-import conversionsReducer from './conversionsReducer';
+import conversions from './conversions';
 import settings from './settings';
 import browser from './browser';
 
@@ -22,15 +22,15 @@ export default combineReducers({
   lastAccount,
   activeAccount: activeAccountReducer,
   properties: globalPropertiesReducer,
-  bittrex: bittrexReducer,
+  bittrex,
   transactions: transactionsReducer,
-  delegations: delegationsReducer,
-  tokens: tokensReducer,
-  userTokens: userTokensReducer,
-  tokensMarket: tokensMarketReducer,
-  tokenHistory: tokenHistoryReducer,
+  delegations,
+  tokens,
+  userTokens,
+  tokensMarket,
+  tokenHistory,
   phishingAccounts,
-  conversions: conversionsReducer,
+  conversions,
   settings,
   browser,
 });

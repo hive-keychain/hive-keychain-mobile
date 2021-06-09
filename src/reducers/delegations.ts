@@ -1,8 +1,14 @@
+import {
+  actionPayload,
+  delegations,
+  incomingDelegation,
+  outgoingDelegation,
+} from 'actions/interfaces';
 import {FETCH_DELEGATEES, FETCH_DELEGATORS} from 'actions/types';
 
 const delegationsReducer = (
-  state = {incoming: [], outgoing: []},
-  {type, payload},
+  state: delegations = {incoming: [], outgoing: []},
+  {type, payload}: actionPayload<[incomingDelegation?] | [outgoingDelegation?]>,
 ) => {
   switch (type) {
     case FETCH_DELEGATEES:

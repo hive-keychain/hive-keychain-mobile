@@ -104,3 +104,66 @@ export interface userTokens {
   loading: boolean;
   list: [tokenBalance?];
 }
+
+export enum operationsHE {
+  'mining_lottery',
+  'tokens_transfer',
+  'tokens_stake',
+}
+export interface tokenTransaction {
+  account: string;
+  amount: string;
+  blockNumber: number;
+  operation: operationsHE;
+  poolId?: string;
+  from?: string;
+  to?: string;
+  memo?: string;
+  quantity: string;
+  symbol: string;
+  timestamp: number;
+  transactionId: string;
+  _id: string;
+}
+
+export interface incomingDelegation {
+  delegation_date: string;
+  delegator: string;
+  vesting_shares: number;
+}
+export interface outgoingDelegation {
+  delegatee: string;
+  delegator: string;
+  id: number;
+  min_delegation_time: string;
+  vesting_shares: string;
+}
+export interface delegations {
+  incoming: [incomingDelegation?];
+  outgoing: [outgoingDelegation?];
+}
+
+export interface conversion {
+  amount: string;
+  conversion_date: string;
+  id: number;
+  owner: string;
+  requestid: number;
+}
+
+interface btc {
+  Bid: number;
+  Daily: string;
+  PrevDay: number;
+}
+
+interface currency extends btc {
+  DailyUsd: string;
+  Usd: string;
+}
+
+export interface bittrex {
+  btc: btc | {};
+  hive: currency | {};
+  hbd: currency | {};
+}

@@ -1,23 +1,9 @@
-import {actionPayload} from 'actions/interfaces';
+import {actionPayload, transactions, transaction} from 'actions/interfaces';
 import {
   INIT_TRANSACTIONS,
   ADD_TRANSACTIONS,
   ACTIVE_ACCOUNT,
 } from 'actions/types';
-
-interface transaction {
-  key: string;
-  amount: string;
-  from: string;
-  memo: string;
-  timestamp: string;
-  to: string;
-  type: string;
-}
-interface transactions {
-  loading: boolean;
-  list: [transaction?];
-}
 
 export default (
   state: transactions = {loading: false, list: []},
