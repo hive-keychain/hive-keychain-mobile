@@ -11,7 +11,7 @@ import {
 export default (
   state: [account?] = [],
   {type, payload}: actionPayload<any>,
-) => {
+): [account?] => {
   switch (type) {
     case ADD_ACCOUNT:
       return [...state, payload];

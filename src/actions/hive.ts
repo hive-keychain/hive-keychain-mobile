@@ -17,6 +17,7 @@ import {getDelegatees, getDelegators} from 'utils/hiveUtils';
 import {getConversionRequests} from 'utils/hiveUtils';
 import {decodeMemo} from 'components/bridge';
 import {translate} from 'utils/localize';
+import {actionPayload, delegationsPayload} from './interfaces';
 
 export const loadAccount = (name, initTransactions) => async (
   dispatch,
@@ -151,18 +152,20 @@ const getAccountTransactions = async (accountName, start, memoKey) => {
   }
 };
 
-export const loadDelegators = (username) => async (dispatch) => {
-  dispatch({
+export const loadDelegators = (username: string) => async (dispatch) => {
+  const action: actionPayload<delegationsPayload> = {
     type: FETCH_DELEGATORS,
-    payload: await getDelegators(username),
-  });
+    payload: {incoming: await getDelegators(username)},
+  };
+  dispatch(action);
 };
 
-export const loadDelegatees = (username) => async (dispatch) => {
-  dispatch({
+export const loadDelegatees = (username: string) => async (dispatch) => {
+  const action: actionPayload<delegationsPayload> = {
     type: FETCH_DELEGATEES,
-    payload: await getDelegatees(username),
-  });
+    payload: {outgoing: await getDelegatees(username)},
+  };
+  dispatch(action);
 };
 
 export const fetchPhishingAccounts = () => async (dispatch) => {

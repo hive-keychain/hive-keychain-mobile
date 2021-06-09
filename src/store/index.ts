@@ -1,8 +1,8 @@
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import {persistStore, persistReducer} from 'redux-persist';
-import AsyncStorage from '@react-native-community/async-storage';
 import reducers from 'reducers';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const persistConfig = {
   key: 'root',
@@ -10,7 +10,7 @@ const persistConfig = {
   whitelist: ['lastAccount', 'settings', 'browser'],
 };
 
-const persistedReducers = persistReducer<any, any>(persistConfig, reducers);
+const persistedReducers = persistReducer(persistConfig, reducers);
 const store = createStore(persistedReducers, applyMiddleware(thunk));
 
 const persistor = persistStore(store);

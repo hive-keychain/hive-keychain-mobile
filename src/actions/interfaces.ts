@@ -1,6 +1,8 @@
+import {VestingDelegation} from '@hiveio/dhive';
+
 export interface actionPayload<T> {
-  type: string;
-  payload: T;
+  readonly type: string;
+  readonly payload?: T;
 }
 
 export interface lastAccount {
@@ -18,25 +20,34 @@ export interface settings {
   rpc: string;
 }
 
-interface history {
+export interface history {
   url: string;
   name: string;
   icon: string;
 }
 
-interface tab {
+export interface tab {
   id: number;
   url: string;
   name?: string;
   icon?: string;
   image?: string;
 }
-export type browserPayload = any;
+
+export interface browserPayload {
+  url?: string;
+  history?: history;
+  shouldFocus?: boolean;
+  id?: number | null;
+  data?: tab;
+  showManagement?: boolean;
+  whitelist?: [];
+}
 
 export interface browser {
-  history: [history?];
+  history: history[];
   whitelist: [];
-  tabs: [tab?];
+  tabs: tab[];
   activeTab: number | null;
   shouldFocus: boolean;
   showManagement: boolean;
@@ -131,16 +142,13 @@ export interface incomingDelegation {
   delegator: string;
   vesting_shares: number;
 }
-export interface outgoingDelegation {
-  delegatee: string;
-  delegator: string;
-  id: number;
-  min_delegation_time: string;
-  vesting_shares: string;
-}
 export interface delegations {
   incoming: [incomingDelegation?];
-  outgoing: [outgoingDelegation?];
+  outgoing: [VestingDelegation?];
+}
+export interface delegationsPayload {
+  incoming?: [incomingDelegation?];
+  outgoing?: [VestingDelegation?];
 }
 
 export interface conversion {

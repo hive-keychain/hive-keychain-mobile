@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {getValidAuthorityAccounts} from 'utils/keychain';
 import RequestUsername from 'components/browser/requestOperations/components/RequestUsername';
 import {getRequiredWifType} from 'utils/keychain';
+import {account} from 'actions/interfaces';
 
 export default (request, accounts) => {
   const {username} = request;

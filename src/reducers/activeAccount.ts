@@ -16,7 +16,7 @@ export interface activeAccount {
 const activeAccountReducer = (
   state: activeAccount = {account: {}, keys: {}, rc: {}},
   {type, payload}: actionPayload<any>,
-) => {
+): activeAccount => {
   switch (type) {
     case ACTIVE_ACCOUNT:
       return {...state, ...payload};

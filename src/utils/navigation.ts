@@ -9,7 +9,7 @@ export const setNavigator = (nav: NavigationContainerRef | null) => {
   navigator = nav;
 };
 
-export const navigate = (routeName: string, params: object) => {
+export const navigate = (routeName: string, params?: object) => {
   if (navigator)
     navigator.dispatch(NavigationActions.navigate({routeName, params}));
 };
