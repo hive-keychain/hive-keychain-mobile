@@ -1,11 +1,11 @@
 import {combineReducers} from 'redux';
 import auth from './auth';
-import accountsReducer from './accountsReducer';
+import accounts from './accounts';
 import lastAccount from './lastAccount';
-import activeAccountReducer from './activeAccountReducer';
-import globalPropertiesReducer from './globalPropertiesReducer';
+import activeAccount from './activeAccount';
+import properties from './globalProperties';
 import bittrex from './bittrex';
-import transactionsReducer from './transactions';
+import transactions from './transactions';
 import delegations from './delegations';
 import tokens from './tokens';
 import userTokens from './userTokens';
@@ -18,12 +18,12 @@ import browser from './browser';
 
 export default combineReducers({
   auth,
-  accounts: accountsReducer,
+  accounts,
   lastAccount,
-  activeAccount: activeAccountReducer,
-  properties: globalPropertiesReducer,
+  activeAccount,
+  properties,
   bittrex,
-  transactions: transactionsReducer,
+  transactions,
   delegations,
   tokens,
   userTokens,

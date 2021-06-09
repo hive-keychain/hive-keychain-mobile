@@ -167,3 +167,16 @@ export interface bittrex {
   hive: currency | {};
   hbd: currency | {};
 }
+
+export interface accountKeys {
+  posting?: string;
+  active?: string;
+  memo?: string;
+  postingPubkey?: string;
+  activePubkey?: string;
+  memoPubkey?: string;
+}
+export interface account {
+  name: string;
+  keys: accountKeys;
+}
