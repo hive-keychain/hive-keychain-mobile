@@ -63,6 +63,7 @@ const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
 };
 
 const mapStateToProps = (state: RootState) => {
+  console.log(state);
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,

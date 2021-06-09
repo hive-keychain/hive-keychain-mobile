@@ -1,3 +1,4 @@
+import {actionPayload} from 'actions/interfaces';
 import {
   ADD_TO_BROWSER_HISTORY,
   ADD_TO_BROWSER_FAVORITES,
@@ -12,8 +13,32 @@ import {
   UPDATE_MANAGEMENT,
 } from 'actions/types';
 
+interface history {
+  url: string;
+  name: string;
+  icon: string;
+}
+
+interface tab {
+  id: number;
+  url: string;
+  name?: string;
+  icon?: string;
+  image?: string;
+}
+type browserPayload = any;
+
+interface browser {
+  history: [history?];
+  whitelist: [];
+  tabs: [tab?];
+  activeTab: number | null;
+  shouldFocus: boolean;
+  showManagement: boolean;
+}
+
 const browserReducer = (
-  state = {
+  state: browser = {
     history: [],
     whitelist: [],
     tabs: [],
@@ -21,11 +46,11 @@ const browserReducer = (
     shouldFocus: false,
     showManagement: false,
   },
-  {type, payload},
+  {type, payload}: actionPayload<browserPayload>,
 ) => {
   switch (type) {
     case ADD_TO_BROWSER_HISTORY:
-      if (state.history.find((e) => e.url === payload.url)) {
+      if (state.history.find((e) => e!.url === payload.url)) {
         return state;
       }
       return {
@@ -61,7 +86,7 @@ const browserReducer = (
     case CLOSE_BROWSER_TAB:
       return {
         ...state,
-        tabs: state.tabs.filter((tab) => tab.id !== payload.id),
+        tabs: state.tabs.filter((tab) => tab!.id !== payload.id),
       };
     case SET_ACTIVE_BROWSER_TAB:
       return {
@@ -72,7 +97,7 @@ const browserReducer = (
       return {
         ...state,
         tabs: state.tabs.map((tab) => {
-          if (tab.id === payload.id) {
+          if (tab!.id === payload.id) {
             return {...tab, ...payload.data};
           }
           return {...tab};

@@ -5,16 +5,16 @@ import lastAccount from './lastAccount';
 import activeAccountReducer from './activeAccountReducer';
 import globalPropertiesReducer from './globalPropertiesReducer';
 import bittrexReducer from './bittrexReducer';
-import transactionsReducer from './transactionsReducer';
+import transactionsReducer from './transactions';
 import delegationsReducer from './delegationsReducer';
 import tokensReducer from './tokensReducer';
 import userTokensReducer from './userTokensReducer';
 import tokensMarketReducer from './tokensMarketReducer';
 import tokenHistoryReducer from './tokenHistoryReducer';
-import phishingReducer from './phishingReducer';
+import phishingAccounts from './phishing';
 import conversionsReducer from './conversionsReducer';
 import settings from './settings';
-import browserReducer from './browserReducer';
+import browser from './browser';
 
 export default combineReducers({
   auth,
@@ -29,8 +29,8 @@ export default combineReducers({
   userTokens: userTokensReducer,
   tokensMarket: tokensMarketReducer,
   tokenHistory: tokenHistoryReducer,
-  phishingAccounts: phishingReducer,
+  phishingAccounts,
   conversions: conversionsReducer,
   settings,
-  browser: browserReducer,
+  browser,
 });
