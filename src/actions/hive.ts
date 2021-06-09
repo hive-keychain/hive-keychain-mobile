@@ -17,12 +17,13 @@ import {getDelegatees, getDelegators} from 'utils/hiveUtils';
 import {getConversionRequests} from 'utils/hiveUtils';
 import {decodeMemo} from 'components/bridge';
 import {translate} from 'utils/localize';
-import {actionPayload, delegationsPayload} from './interfaces';
+import {actionPayload, delegationsPayload, transaction} from './interfaces';
+import {AppThunk} from 'src/hooks/redux';
 
-export const loadAccount = (name, initTransactions) => async (
-  dispatch,
-  getState,
-) => {
+export const loadAccount = (
+  name: string,
+  initTransactions?: boolean,
+): AppThunk => async (dispatch, getState) => {
   dispatch({
     type: ACTIVE_ACCOUNT,
     payload: {
@@ -34,7 +35,7 @@ export const loadAccount = (name, initTransactions) => async (
     dispatch(initAccountTransactions(name));
   }
   const account = (await getClient().database.getAccounts([name]))[0];
-  const keys = getState().accounts.find((e) => e.name === name).keys;
+  const keys = getState().accounts.find((e) => e.name === name)!.keys;
   dispatch({
     type: ACTIVE_ACCOUNT,
     payload: {
@@ -44,7 +45,7 @@ export const loadAccount = (name, initTransactions) => async (
   });
 };
 
-const getAccountRC = (username) => async (dispatch) => {
+const getAccountRC = (username: string): AppThunk => async (dispatch) => {
   const rc = await getClient().rc.getRCMana(username);
   dispatch({
     type: ACTIVE_ACCOUNT_RC,
@@ -52,7 +53,7 @@ const getAccountRC = (username) => async (dispatch) => {
   });
 };
 
-export const loadProperties = () => async (dispatch) => {
+export const loadProperties = (): AppThunk => async (dispatch) => {
   const [globals, price, rewardFund] = await Promise.all([
     getClient().database.getDynamicGlobalProperties(),
     getClient().database.getCurrentMedianHistoryPrice(),
@@ -62,7 +63,7 @@ export const loadProperties = () => async (dispatch) => {
   dispatch({type: GLOBAL_PROPS, payload: props});
 };
 
-export const loadBittrex = () => async (dispatch) => {
+export const loadBittrex = (): AppThunk => async (dispatch) => {
   try {
     const prices = await getBittrexPrices();
     dispatch({
@@ -74,11 +75,10 @@ export const loadBittrex = () => async (dispatch) => {
   }
 };
 
-export const initAccountTransactions = (accountName) => async (
-  dispatch,
-  getState,
-) => {
-  const memoKey = getState().accounts.find((a) => a.name === accountName).keys
+export const initAccountTransactions = (
+  accountName: string,
+): AppThunk => async (dispatch, getState) => {
+  const memoKey = getState().accounts.find((a) => a.name === accountName)!.keys
     .memo;
   const transfers = await getAccountTransactions(accountName, null, memoKey);
 
@@ -88,11 +88,11 @@ export const initAccountTransactions = (accountName) => async (
   });
 };
 
-export const fetchAccountTransactions = (accountName, start) => async (
-  dispatch,
-  getState,
-) => {
-  const memoKey = getState().accounts.find((a) => a.name === accountName).keys
+export const fetchAccountTransactions = (
+  accountName: string,
+  start: number,
+): AppThunk => async (dispatch, getState) => {
+  const memoKey = getState().accounts.find((a) => a.name === accountName)!.keys
     .memo;
   const transfers = await getAccountTransactions(accountName, start, memoKey);
   dispatch({
@@ -101,29 +101,40 @@ export const fetchAccountTransactions = (accountName, start) => async (
   });
 };
 
-const getAccountTransactions = async (accountName, start, memoKey) => {
-  const op = dhive.utils.operationOrders;
-  const operationsBitmask = dhive.utils.makeBitMaskFilter([op.transfer]);
+const getAccountTransactions = async (
+  accountName: string,
+  start: number | null,
+  memoKey?: string,
+): transaction[] => {
   try {
+    const op = dhive.utils.operationOrders;
+    const operationsBitmask = dhive.utils.makeBitMaskFilter([op.transfer]);
     const transactions = await getClient().database.getAccountHistory(
       accountName,
       start || -1,
       start ? Math.min(10, start) : 1000,
+      //@ts-ignore
       operationsBitmask,
     );
     const transfers = transactions
       .filter((e) => e[1].op[0] === 'transfer')
       .map((e) => {
-        return {
-          ...e[1].op[1],
+        const receivedTransaction = e[1].op[1];
+        //@ts-ignore
+        const tr: transaction = {
+          ...receivedTransaction,
           type: 'transfer',
           timestamp: e[1].timestamp,
           key: `${accountName}!${e[0]}`,
         };
+        return tr;
       })
-      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      .sort(
+        (a, b) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+      );
 
-    if (start && Math.min(1000, start) !== 1000) {
+    if (start && Math.min(1000, start) !== 1000 && transfers.length) {
       transfers[transfers.length - 1].last = true;
     }
     const trs = [];
@@ -152,7 +163,9 @@ const getAccountTransactions = async (accountName, start, memoKey) => {
   }
 };
 
-export const loadDelegators = (username: string) => async (dispatch) => {
+export const loadDelegators = (username: string): AppThunk => async (
+  dispatch,
+) => {
   const action: actionPayload<delegationsPayload> = {
     type: FETCH_DELEGATORS,
     payload: {incoming: await getDelegators(username)},
@@ -160,7 +173,9 @@ export const loadDelegators = (username: string) => async (dispatch) => {
   dispatch(action);
 };
 
-export const loadDelegatees = (username: string) => async (dispatch) => {
+export const loadDelegatees = (username: string): AppThunk => async (
+  dispatch,
+) => {
   const action: actionPayload<delegationsPayload> = {
     type: FETCH_DELEGATEES,
     payload: {outgoing: await getDelegatees(username)},
@@ -168,14 +183,16 @@ export const loadDelegatees = (username: string) => async (dispatch) => {
   dispatch(action);
 };
 
-export const fetchPhishingAccounts = () => async (dispatch) => {
+export const fetchPhishingAccounts = (): AppThunk => async (dispatch) => {
   dispatch({
     type: FETCH_PHISHING_ACCOUNTS,
     payload: await getPhishingAccounts(),
   });
 };
 
-export const fetchConversionRequests = (name) => async (dispatch) => {
+export const fetchConversionRequests = (name: string): AppThunk => async (
+  dispatch,
+) => {
   dispatch({
     type: FETCH_CONVERSION_REQUESTS,
     payload: await getConversionRequests(name),

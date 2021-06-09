@@ -4,10 +4,10 @@ import {actionPayload, settings} from 'actions/interfaces';
 export default (
   state: settings = {rpc: 'DEFAULT'},
   {type, payload}: actionPayload<string>,
-) => {
+): settings => {
   switch (type) {
     case SET_RPC:
-      return {...state, rpc: payload};
+      return {...state, rpc: payload!};
     default:
       return state;
   }

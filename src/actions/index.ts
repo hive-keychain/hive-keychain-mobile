@@ -5,13 +5,17 @@ import {decryptToJson} from 'utils/encrypt';
 import {navigate} from 'utils/navigation';
 import {translate} from 'utils/localize';
 import {getFromKeychain} from 'utils/keychainStorage';
+import {AppThunk} from 'src/hooks/redux';
 
-export const signUp = (pwd) => {
+export const signUp = (pwd: string) => {
   navigate('AddAccountByKeyScreen');
   return {type: SIGN_UP, payload: pwd};
 };
 
-export const unlock = (mk, errorCallback) => async (dispatch, getState) => {
+export const unlock = (
+  mk: string,
+  errorCallback: (b?: boolean) => void,
+): AppThunk => async (dispatch, getState) => {
   try {
     const accountsEncrypted = await getFromKeychain('accounts');
     const accounts = decryptToJson(accountsEncrypted, mk);

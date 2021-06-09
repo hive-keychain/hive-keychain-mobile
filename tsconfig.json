@@ -14,7 +14,7 @@
       "baseUrl": ".",
       "paths": {
           "actions*":["./src/actions*"],
-            "api": ["./src/api"],
+            "api/*": ["./src/api/*"],
             "assets": ["./src/assets"],
             "components/*": ["./src/components/*"],
             "hooks": ["./src/hooks"],

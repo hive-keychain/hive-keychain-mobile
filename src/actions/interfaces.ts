@@ -61,6 +61,7 @@ export interface transaction {
   timestamp: string;
   to: string;
   type: string;
+  last?: boolean;
 }
 
 export interface transactions {
@@ -143,12 +144,12 @@ export interface incomingDelegation {
   vesting_shares: number;
 }
 export interface delegations {
-  incoming: [incomingDelegation?];
-  outgoing: [VestingDelegation?];
+  incoming: incomingDelegation[];
+  outgoing: VestingDelegation[];
 }
 export interface delegationsPayload {
-  incoming?: [incomingDelegation?];
-  outgoing?: [VestingDelegation?];
+  incoming?: incomingDelegation[];
+  outgoing?: VestingDelegation[];
 }
 
 export interface conversion {
@@ -187,4 +188,15 @@ export interface accountKeys {
 export interface account {
   name: string;
   keys: accountKeys;
+}
+
+export interface accountsPayload {
+  account?: account;
+  accounts?: account[];
+  name?: string;
+}
+export enum KeyTypes {
+  'posting',
+  'active',
+  'memo',
 }

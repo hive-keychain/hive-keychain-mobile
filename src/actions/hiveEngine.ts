@@ -6,27 +6,34 @@ import {
   CLEAR_USER_TOKENS,
 } from './types';
 import hsc, {hiveEngineAPI} from 'api/hiveEngine';
+import {AppThunk} from 'src/hooks/redux';
+import {tokenBalance, tokenTransaction} from './interfaces';
 
-export const loadTokens = () => async (dispatch) => {
+export const loadTokens = (): AppThunk => async (dispatch) => {
   dispatch({
     type: LOAD_TOKENS,
     payload: await hsc.find('tokens', 'tokens', {}, 1000, 0, []),
   });
 };
 
-export const loadTokensMarket = () => async (dispatch) => {
+export const loadTokensMarket = (): AppThunk => async (dispatch) => {
   dispatch({
     type: LOAD_TOKENS_MARKET,
     payload: await hsc.find('market', 'metrics', {}, 1000, 0, []),
   });
 };
 
-export const loadUserTokens = (account) => async (dispatch) => {
+export const loadUserTokens = (account: string): AppThunk => async (
+  dispatch,
+) => {
   try {
     dispatch({
       type: CLEAR_USER_TOKENS,
     });
-    const tokensBalance = (await hsc.find('tokens', 'balances', {account}))
+    let tokensBalance: tokenBalance[] = await hsc.find('tokens', 'balances', {
+      account,
+    });
+    tokensBalance = tokensBalance
       .filter((t) => parseFloat(t.balance) !== 0)
       .sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
     dispatch({
@@ -38,12 +45,16 @@ export const loadUserTokens = (account) => async (dispatch) => {
   }
 };
 
-export const loadTokenHistory = (account, currency) => async (dispatch) => {
-  const tokenHistory = (
+export const loadTokenHistory = (
+  account: string,
+  currency: string,
+): AppThunk => async (dispatch) => {
+  let tokenHistory: tokenTransaction[] = (
     await hiveEngineAPI.get('accountHistory', {
       params: {account, symbol: currency, type: 'user'},
     })
-  ).data.map((e) => {
+  ).data;
+  tokenHistory = tokenHistory.map((e) => {
     e.amount = `${e.quantity} ${e.symbol}`;
     return e;
   });

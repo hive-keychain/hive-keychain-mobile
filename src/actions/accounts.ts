@@ -12,11 +12,16 @@ import {translate} from 'utils/localize';
 import {saveOnKeychain, clearKeychain} from 'utils/keychainStorage';
 import validateKeys from 'utils/keyValidation';
 import {loadAccount} from 'actions/hive';
+import {ThunkAction} from 'redux-thunk';
+import {AppThunk} from 'src/hooks/redux';
+import {account, accountKeys, KeyTypes} from './interfaces';
 
-export const addAccount = (name, keys, wallet, qr) => async (
-  dispatch,
-  getState,
-) => {
+export const addAccount = (
+  name: string,
+  keys: accountKeys,
+  wallet: boolean,
+  qr: boolean,
+): AppThunk => async (dispatch, getState) => {
   const mk = getState().auth.mk;
   const previousAccounts = getState().accounts;
   if (previousAccounts.find((e) => e.name === name)) {
@@ -36,14 +41,17 @@ export const addAccount = (name, keys, wallet, qr) => async (
   }
 };
 
-export const forgetAccounts = () => (dispatch) => {
+export const forgetAccounts = (): AppThunk => (dispatch) => {
   clearKeychain('accounts');
   dispatch({
     type: FORGET_ACCOUNTS,
   });
 };
 
-export const forgetAccount = (username) => async (dispatch, getState) => {
+export const forgetAccount = (username: string): AppThunk => async (
+  dispatch,
+  getState,
+) => {
   const mk = getState().auth.mk;
   const previousAccounts = getState().accounts;
   const accounts = previousAccounts.filter((e) => e.name !== username);
@@ -57,9 +65,12 @@ export const forgetAccount = (username) => async (dispatch, getState) => {
   }
 };
 
-export const forgetKey = (username, key) => async (dispatch, getState) => {
+export const forgetKey = (username: string, key: KeyTypes): AppThunk => async (
+  dispatch,
+  getState,
+) => {
   dispatch(
-    updateAccounts((account) => {
+    updateAccounts((account: account) => {
       if (account.name === username) {
         const keys = {...account.keys};
         delete keys[key];
@@ -72,7 +83,11 @@ export const forgetKey = (username, key) => async (dispatch, getState) => {
   );
 };
 
-export const addKey = (username, type, key) => async (dispatch, getState) => {
+export const addKey = (
+  username: string,
+  type: KeyTypes,
+  key: string,
+): AppThunk => async (dispatch, getState) => {
   const keys = await validateKeys(username, key);
   if (!keys) {
     Toast.show(translate('toast.keys.not_a_key'));
@@ -80,7 +95,7 @@ export const addKey = (username, type, key) => async (dispatch, getState) => {
     Toast.show(translate('toast.keys.not_wanted_key', {type}));
   } else {
     dispatch(
-      updateAccounts((account) => {
+      updateAccounts((account: account) => {
         if (account.name === username) {
           return {...account, keys: {...account.keys, ...keys}};
         } else {
@@ -91,7 +106,10 @@ export const addKey = (username, type, key) => async (dispatch, getState) => {
   }
 };
 
-const updateAccounts = (mapper) => async (dispatch, getState) => {
+const updateAccounts = (mapper: (arg0: account) => account): AppThunk => async (
+  dispatch,
+  getState,
+) => {
   const mk = getState().auth.mk;
   const previousAccounts = getState().accounts;
   const accounts = previousAccounts.map(mapper);
