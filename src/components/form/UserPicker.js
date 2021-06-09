@@ -7,7 +7,6 @@ import {translate} from 'utils/localize';
 const UserPicker = ({username, accounts, onAccountSelected, noSort}) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height});
-
   if (!username) {
     return null;
   }

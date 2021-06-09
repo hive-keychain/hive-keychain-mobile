@@ -49,6 +49,7 @@ const Main = ({
   if (!user) {
     return null;
   }
+  console.log(user);
   return (
     <WalletPage>
       <UserPicker

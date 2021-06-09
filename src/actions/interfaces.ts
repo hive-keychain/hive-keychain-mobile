@@ -1,4 +1,6 @@
 import {VestingDelegation} from '@hiveio/dhive';
+import {ExtendedAccount} from '@hiveio/dhive';
+import {Manabar} from '@hiveio/dhive/lib/chain/rc';
 
 export interface actionPayload<T> {
   readonly type: string;
@@ -18,6 +20,10 @@ export interface auth {
 
 export interface settings {
   rpc: string;
+}
+
+export interface settingsPayload {
+  rpc?: string;
 }
 
 export interface history {
@@ -66,7 +72,7 @@ export interface transaction {
 
 export interface transactions {
   loading: boolean;
-  list: [transaction?];
+  list: transaction[];
 }
 
 export interface token {
@@ -114,7 +120,7 @@ export interface tokenBalance {
 
 export interface userTokens {
   loading: boolean;
-  list: [tokenBalance?];
+  list: tokenBalance[];
 }
 
 export enum operationsHE {
@@ -161,20 +167,20 @@ export interface conversion {
 }
 
 interface btc {
-  Bid: number;
-  Daily: string;
-  PrevDay: number;
+  Bid?: number;
+  Daily?: string;
+  PrevDay?: number;
 }
 
 interface currency extends btc {
-  DailyUsd: string;
-  Usd: string;
+  DailyUsd?: string;
+  Usd?: string;
 }
 
 export interface bittrex {
-  btc: btc | {};
-  hive: currency | {};
-  hbd: currency | {};
+  btc: btc;
+  hive: currency;
+  hbd: currency;
 }
 
 export interface accountKeys {
@@ -196,7 +202,19 @@ export interface accountsPayload {
   name?: string;
 }
 export enum KeyTypes {
-  'posting',
-  'active',
-  'memo',
+  posting = 'posting',
+  active = 'active',
+  memo = 'memo',
+}
+
+export enum PubKeyTypes {
+  posting = 'postingPubkey',
+  active = 'activePubkey',
+  memo = 'memoPubkey',
+}
+
+export interface activeAccount {
+  account: ExtendedAccount | {};
+  keys: accountKeys | {};
+  rc: Manabar | {};
 }

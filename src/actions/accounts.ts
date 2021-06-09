@@ -12,9 +12,15 @@ import {translate} from 'utils/localize';
 import {saveOnKeychain, clearKeychain} from 'utils/keychainStorage';
 import validateKeys from 'utils/keyValidation';
 import {loadAccount} from 'actions/hive';
-import {ThunkAction} from 'redux-thunk';
 import {AppThunk} from 'src/hooks/redux';
-import {account, accountKeys, KeyTypes} from './interfaces';
+import {
+  account,
+  accountKeys,
+  accountsPayload,
+  actionPayload,
+  KeyTypes,
+  PubKeyTypes,
+} from './interfaces';
 
 export const addAccount = (
   name: string,
@@ -31,7 +37,11 @@ export const addAccount = (
     }
     return;
   }
-  dispatch({type: ADD_ACCOUNT, payload: {name, keys}});
+  const action: actionPayload<accountsPayload> = {
+    type: ADD_ACCOUNT,
+    payload: {account: {name, keys}},
+  };
+  dispatch(action);
   const accounts = [...previousAccounts, {name, keys}];
   const encrypted = encryptJson({list: accounts}, mk);
   await saveOnKeychain('accounts', encrypted);
@@ -58,7 +68,11 @@ export const forgetAccount = (username: string): AppThunk => async (
   if (accounts.length) {
     const encrypted = encryptJson({list: accounts}, mk);
     await saveOnKeychain('accounts', encrypted);
-    dispatch({type: FORGET_ACCOUNT, payload: username});
+    const action: actionPayload<accountsPayload> = {
+      type: FORGET_ACCOUNT,
+      payload: {name: username},
+    };
+    dispatch(action);
     navigate('WALLET');
   } else {
     dispatch(forgetAccounts());
@@ -67,14 +81,14 @@ export const forgetAccount = (username: string): AppThunk => async (
 
 export const forgetKey = (username: string, key: KeyTypes): AppThunk => async (
   dispatch,
-  getState,
 ) => {
   dispatch(
     updateAccounts((account: account) => {
       if (account.name === username) {
         const keys = {...account.keys};
         delete keys[key];
-        delete keys[`${key}Pubkey`];
+        const pubKey: PubKeyTypes = PubKeyTypes[key];
+        delete keys[pubKey];
         return {...account, keys};
       } else {
         return account;
@@ -87,7 +101,7 @@ export const addKey = (
   username: string,
   type: KeyTypes,
   key: string,
-): AppThunk => async (dispatch, getState) => {
+): AppThunk => async (dispatch) => {
   const keys = await validateKeys(username, key);
   if (!keys) {
     Toast.show(translate('toast.keys.not_a_key'));
@@ -115,5 +129,9 @@ const updateAccounts = (mapper: (arg0: account) => account): AppThunk => async (
   const accounts = previousAccounts.map(mapper);
   const encrypted = encryptJson({list: accounts}, mk);
   await saveOnKeychain('accounts', encrypted);
-  dispatch({type: UPDATE_ACCOUNTS, payload: accounts});
+  const actions: actionPayload<accountsPayload> = {
+    type: UPDATE_ACCOUNTS,
+    payload: {accounts},
+  };
+  dispatch(actions);
 };

@@ -7,7 +7,7 @@ const bittrexReducer = (
 ) => {
   switch (type) {
     case GET_BITTREX_PRICE:
-      return payload;
+      return payload!;
     default:
       return state;
   }

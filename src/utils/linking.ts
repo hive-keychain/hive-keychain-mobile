@@ -1,7 +1,7 @@
 import {Linking} from 'react-native';
 
-export default async (addTabFromLinking) => {
-  Linking.addEventListener('url', ({url}) => {
+export default async (addTabFromLinking: (arg0: string) => void) => {
+  Linking.addEventListener('url', ({url}: {string}) => {
     if (url) {
       addTabFromLinking(url);
     }

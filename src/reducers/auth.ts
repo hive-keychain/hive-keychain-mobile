@@ -4,7 +4,7 @@ import {actionPayload, auth, nullableString} from 'actions/interfaces';
 const authReducer = (
   state: auth = {mk: null},
   {type, payload}: actionPayload<nullableString>,
-): auth => {
+) => {
   switch (type) {
     case SIGN_UP:
       return {mk: payload!};

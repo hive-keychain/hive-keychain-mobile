@@ -41,6 +41,8 @@ const CustomPicker = ({
         </TouchableOpacity>
       );
     case 'android':
+      console.log('picker', selectedValue, list);
+
       return (
         <Picker
           style={{...styles.picker, ...style}}

@@ -5,10 +5,10 @@ import {GLOBAL_PROPS} from 'actions/types';
 const globalPropertiesReducer = (
   state: DynamicGlobalProperties | {} = {},
   {type, payload}: actionPayload<DynamicGlobalProperties>,
-) => {
+): DynamicGlobalProperties | {} => {
   switch (type) {
     case GLOBAL_PROPS:
-      return payload;
+      return payload!;
     default:
       return state;
   }

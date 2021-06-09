@@ -25,7 +25,7 @@ const browserReducer = (
     showManagement: false,
   },
   {type, payload}: actionPayload<browserPayload>,
-): browser => {
+) => {
   switch (type) {
     case ADD_TO_BROWSER_HISTORY:
       if (state.history.find((e) => e!.url === payload!.url)) {

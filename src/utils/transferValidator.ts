@@ -16,7 +16,11 @@ const getExchanges = () => [
   {account: 'upbitsteem', tokens: []},
 ];
 
-const getExchangeValidationWarning = (account, currency, hasMemo) => {
+const getExchangeValidationWarning = (
+  account: string,
+  currency: string,
+  hasMemo: boolean,
+) => {
   const exchanges = getExchanges();
   const exchange = exchanges.find((e) => e.account === account);
   if (!exchange) {
@@ -34,10 +38,10 @@ const getExchangeValidationWarning = (account, currency, hasMemo) => {
 };
 
 export const getTransferWarning = (
-  phishingAccounts,
-  account,
-  currency,
-  hasMemo,
+  phishingAccounts: string[],
+  account: string,
+  currency: string,
+  hasMemo: boolean,
 ) => {
   let warning = null;
   if (phishingAccounts.find((e) => e === account)) {

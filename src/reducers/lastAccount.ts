@@ -20,8 +20,8 @@ const lastAccountReducer = (
     case FORGET_ACCOUNT:
       return {has: state.has};
     case ACTIVE_ACCOUNT:
-      if (payload.name) {
-        return {has: true, name: payload.name};
+      if (payload!.name) {
+        return {has: true, name: payload!.name};
       } else {
         return state;
       }

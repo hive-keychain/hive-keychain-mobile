@@ -4,7 +4,7 @@ import {FETCH_DELEGATEES, FETCH_DELEGATORS} from 'actions/types';
 const delegationsReducer = (
   state: delegations = {incoming: [], outgoing: []},
   {type, payload}: actionPayload<delegations>,
-): delegations => {
+) => {
   switch (type) {
     case FETCH_DELEGATEES:
       return {...state, outgoing: payload!.outgoing};

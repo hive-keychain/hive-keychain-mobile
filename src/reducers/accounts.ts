@@ -11,7 +11,8 @@ import {
 export default (
   state: account[] = [],
   {type, payload}: actionPayload<accountsPayload>,
-): account[] => {
+) => {
+  console.log(type, payload);
   switch (type) {
     case ADD_ACCOUNT:
       return [...state, payload!.account!];

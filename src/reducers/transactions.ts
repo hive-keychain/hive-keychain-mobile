@@ -7,13 +7,13 @@ import {
 
 export default (
   state: transactions = {loading: false, list: []},
-  {type, payload}: actionPayload<[transaction] | undefined>,
+  {type, payload}: actionPayload<transaction[]>,
 ) => {
   switch (type) {
     case ACTIVE_ACCOUNT:
       return {loading: true, list: []};
     case INIT_TRANSACTIONS:
-      return {loading: false, list: payload};
+      return {loading: false, list: payload!};
     case ADD_TRANSACTIONS:
       if (
         !state.list[0] ||

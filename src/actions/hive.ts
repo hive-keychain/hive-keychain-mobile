@@ -105,7 +105,7 @@ const getAccountTransactions = async (
   accountName: string,
   start: number | null,
   memoKey?: string,
-): transaction[] => {
+): Promise<transaction[]> => {
   try {
     const op = dhive.utils.operationOrders;
     const operationsBitmask = dhive.utils.makeBitMaskFilter([op.transfer]);
