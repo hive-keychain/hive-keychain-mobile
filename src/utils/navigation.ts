@@ -1,6 +1,5 @@
 import {NavigationActions} from '@react-navigation/compat';
 import {CommonActions, NavigationContainerRef} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 
 // Navigation References
 let navigator: NavigationContainerRef | null;

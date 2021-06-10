@@ -1,5 +1,9 @@
-import {VestingDelegation} from '@hiveio/dhive';
-import {ExtendedAccount} from '@hiveio/dhive';
+import {
+  DynamicGlobalProperties,
+  ExtendedAccount,
+  Price,
+  VestingDelegation,
+} from '@hiveio/dhive';
 import {Manabar} from '@hiveio/dhive/lib/chain/rc';
 
 export interface actionPayload<T> {
@@ -157,7 +161,11 @@ export interface delegationsPayload {
   incoming?: incomingDelegation[];
   outgoing?: VestingDelegation[];
 }
-
+export interface delegator {
+  delegator: string;
+  vesting_shares: number;
+  delegation_date: string;
+}
 export interface conversion {
   amount: string;
   conversion_date: string;
@@ -217,4 +225,22 @@ export interface activeAccount {
   account: ExtendedAccount | {};
   keys: accountKeys | {};
   rc: Manabar | {};
+}
+
+export interface rewardFund {
+  author_reward_curve: string;
+  content_constant: string;
+  curation_reward_curve: string;
+  id: number;
+  last_update: string;
+  name: string;
+  percent_content_rewards: number;
+  percent_curation_rewards: number;
+  recent_claims: string;
+  reward_balance: string;
+}
+export interface globalProperties {
+  globals?: DynamicGlobalProperties;
+  price?: Price;
+  rewardFund?: rewardFund;
 }

@@ -1,9 +1,13 @@
-import React from 'react';
-import Hive from 'assets/wallet/icon_hive.svg';
+import {ExtendedAccount} from '@hiveio/dhive';
 import Hbd from 'assets/wallet/icon_hbd.svg';
+import Hive from 'assets/wallet/icon_hive.svg';
 import Hp from 'assets/wallet/icon_hp.svg';
+import React from 'react';
 
-export const getCurrencyProperties = (currency, account) => {
+export const getCurrencyProperties = (
+  currency: string,
+  account: ExtendedAccount,
+) => {
   let color, value, logo;
   switch (currency) {
     case 'HIVE':

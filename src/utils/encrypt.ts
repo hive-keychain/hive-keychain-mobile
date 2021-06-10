@@ -1,27 +1,31 @@
 //import CryptoJS from 'react-native-crypto-js';
-import md5 from 'md5';
 import CryptoJS from 'crypto-js';
+import md5 from 'md5';
 // AES implementation using cryptojs
 
 const keySize = 256;
 const iterations = 100;
 
+interface EncryptionJson {
+  hash: string;
+  list: any[];
+}
 // We add an md5 hash to check if decryption is successful later on.
-export const encryptJson = (json, pwd) => {
+export const encryptJson = (json: EncryptionJson, pwd: string) => {
   json.hash = md5(json.list);
   var msg = encrypt(JSON.stringify(json), pwd);
   return msg;
 };
 
 // Decrypt and check the hash to confirm the decryption
-export const decryptToJson = (msg, pwd) => {
+export const decryptToJson = (msg: string, pwd: string) => {
   try {
     let decrypted = decrypt(msg, pwd).toString(CryptoJS.enc.Utf8);
 
     decrypted = JSON.parse(decrypted);
 
     if (decrypted.hash && decrypted.hash === md5(decrypted.list)) {
-      return decrypted;
+      return decrypted as EncryptionJson;
     } else {
       return null;
     }
@@ -32,7 +36,7 @@ export const decryptToJson = (msg, pwd) => {
 };
 
 // AES encryption with master password
-const encrypt = (msg, pass) => {
+const encrypt = (msg: string, pass: string) => {
   var salt = CryptoJS.lib.WordArray.random(128 / 8);
   var key = CryptoJS.PBKDF2(pass, salt, {
     keySize: keySize / 32,
@@ -49,7 +53,7 @@ const encrypt = (msg, pass) => {
 };
 
 // AES decryption with master password
-const decrypt = (transitmessage, pass) => {
+const decrypt = (transitmessage: string, pass: string) => {
   var salt = CryptoJS.enc.Hex.parse(transitmessage.substr(0, 32));
   var iv = CryptoJS.enc.Hex.parse(transitmessage.substr(32, 32));
   var encrypted = transitmessage.substring(64);

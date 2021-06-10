@@ -15,10 +15,10 @@
       "paths": {
           "actions*":["./src/actions*"],
             "api/*": ["./src/api/*"],
-            "assets": ["./src/assets"],
+            "assets/*": ["./src/assets/*"],
             "components/*": ["./src/components/*"],
             "hooks": ["./src/hooks"],
-            "locales": ["./src/locales"],
+            "locales/*": ["./src/locales/*"],
             "navigators/*": ["./src/navigators/*"],
             "reducers": ["./src/reducers"],
             "screens/*": ["./src/screens/*"],

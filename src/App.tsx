@@ -1,21 +1,19 @@
-import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {connect, ConnectedProps} from 'react-redux';
-
-import Modal from 'screens/Modal';
-import {setNavigator, noHeader, modalOptions} from 'utils/navigation';
-import {setRpc} from 'utils/hive';
+import {addTabFromLinking} from 'actions/browser';
 import Bridge from 'components/bridge';
-
-const Root = createStackNavigator();
-
+import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
-import MainDrawer from 'navigators/MainDrawer';
-import {addTabFromLinking} from 'actions/browser';
-import setupLinking, {clearLinkingListeners} from 'utils/linking';
+import React, {useEffect} from 'react';
+import {connect, ConnectedProps} from 'react-redux';
+import Modal from 'screens/Modal';
 import {RootState} from 'store';
+import {setRpc} from 'utils/hive';
+import setupLinking, {clearLinkingListeners} from 'utils/linking';
+import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
+
+const Root = createStackNavigator();
 
 const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
   useEffect(() => {

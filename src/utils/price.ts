@@ -15,7 +15,7 @@ export const getAccountValue = (
   if (!hbd.Usd || !hive.Usd) return 0;
   return (
     parseFloat(hbd_balance as string) * parseFloat(hbd.Usd) +
-    (toHP(vesting_shares, props) + parseFloat(balance as string)) *
+    (toHP(vesting_shares as string, props) + parseFloat(balance as string)) *
       parseFloat(hive.Usd)
   ).toFixed(3);
 };

@@ -1,11 +1,10 @@
-import {DynamicGlobalProperties} from '@hiveio/dhive';
-import {actionPayload} from 'actions/interfaces';
+import {actionPayload, globalProperties} from 'actions/interfaces';
 import {GLOBAL_PROPS} from 'actions/types';
 
 const globalPropertiesReducer = (
-  state: DynamicGlobalProperties | {} = {},
-  {type, payload}: actionPayload<DynamicGlobalProperties>,
-): DynamicGlobalProperties | {} => {
+  state: globalProperties = {},
+  {type, payload}: actionPayload<globalProperties>,
+): globalProperties => {
   switch (type) {
     case GLOBAL_PROPS:
       return payload!;

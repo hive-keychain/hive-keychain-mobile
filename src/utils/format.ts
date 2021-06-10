@@ -1,21 +1,22 @@
+import {DynamicGlobalProperties} from '@hiveio/dhive';
 import {translate} from 'utils/localize';
 
-export const withCommas = (nb, decimals = 3) =>
+export const withCommas = (nb: string, decimals = 3) =>
   parseFloat(parseFloat(nb).toFixed(decimals))
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-export const toHP = (vests, props) =>
+export const toHP = (vests: string, props: DynamicGlobalProperties) =>
   props
-    ? (parseFloat(vests) * parseFloat(props.total_vesting_fund_hive)) /
-      parseFloat(props.total_vesting_shares)
+    ? (parseFloat(vests) * parseFloat(props.total_vesting_fund_hive + '')) /
+      parseFloat(props.total_vesting_shares + '')
     : 0;
 
-export const fromHP = (hp, props) =>
-  (parseFloat(hp) / parseFloat(props.total_vesting_fund_hive)) *
-  parseFloat(props.total_vesting_shares);
+export const fromHP = (hp: string, props: DynamicGlobalProperties) =>
+  (parseFloat(hp) / parseFloat(props.total_vesting_fund_hive + '')) *
+  parseFloat(props.total_vesting_shares + '');
 
-export const chunkArray = (myArray, chunk_size) => {
+export const chunkArray = (myArray: any[], chunk_size: number) => {
   const arrayLength = myArray.length;
   let tempArray = [];
 
@@ -28,23 +29,26 @@ export const chunkArray = (myArray, chunk_size) => {
   return tempArray;
 };
 
-export const objectMap = (object, mapFn) => {
-  return Object.keys(object).reduce(function (result, key) {
+export const objectMap = (object: object, mapFn: (arg: any) => any) => {
+  return Object.keys(object).reduce(function (result: object, key) {
     result[key] = mapFn(object[key]);
     return result;
   }, {});
 };
 
-export const signedNumber = (nb) =>
+export const signedNumber = (nb: number) =>
   nb > 0 ? `+ ${nb}` : `${nb.toString().replace('-', '- ')}`;
 
-export const formatBalance = (balance) =>
-  balance > 1000 ? withCommas(balance, 0) : withCommas(balance);
+export const formatBalance = (balance: number) =>
+  balance > 1000 ? withCommas(balance + '', 0) : withCommas(balance + '');
 
-export const capitalize = (string) =>
+export const capitalize = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
-export const beautifyTransferError = (err, {currency, username, to}) => {
+export const beautifyTransferError = (
+  err: object,
+  {currency, username, to},
+) => {
   if (!err.data && err.message.includes('Unable to serialize')) {
     return translate('request.error.transfer.encrypt');
   }

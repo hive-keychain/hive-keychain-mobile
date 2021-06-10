@@ -1,24 +1,32 @@
-import {
-  ACTIVE_ACCOUNT,
-  GLOBAL_PROPS,
-  ACTIVE_ACCOUNT_RC,
-  GET_BITTREX_PRICE,
-  INIT_TRANSACTIONS,
-  ADD_TRANSACTIONS,
-  FETCH_DELEGATORS,
-  FETCH_DELEGATEES,
-  FETCH_PHISHING_ACCOUNTS,
-  FETCH_CONVERSION_REQUESTS,
-} from './types';
+import {decodeMemo} from 'components/bridge';
+import {AppThunk} from 'src/hooks/redux';
 import dhive, {getClient} from 'utils/hive';
+import {
+  getConversionRequests,
+  getDelegatees,
+  getDelegators,
+} from 'utils/hiveUtils';
+import {translate} from 'utils/localize';
 import {getBittrexPrices} from 'utils/price';
 import {getPhishingAccounts} from 'utils/transferValidator';
-import {getDelegatees, getDelegators} from 'utils/hiveUtils';
-import {getConversionRequests} from 'utils/hiveUtils';
-import {decodeMemo} from 'components/bridge';
-import {translate} from 'utils/localize';
-import {actionPayload, delegationsPayload, transaction} from './interfaces';
-import {AppThunk} from 'src/hooks/redux';
+import {
+  actionPayload,
+  delegationsPayload,
+  globalProperties,
+  transaction,
+} from './interfaces';
+import {
+  ACTIVE_ACCOUNT,
+  ACTIVE_ACCOUNT_RC,
+  ADD_TRANSACTIONS,
+  FETCH_CONVERSION_REQUESTS,
+  FETCH_DELEGATEES,
+  FETCH_DELEGATORS,
+  FETCH_PHISHING_ACCOUNTS,
+  GET_BITTREX_PRICE,
+  GLOBAL_PROPS,
+  INIT_TRANSACTIONS,
+} from './types';
 
 export const loadAccount = (
   name: string,
@@ -60,7 +68,11 @@ export const loadProperties = (): AppThunk => async (dispatch) => {
     getClient().database.call('get_reward_fund', ['post']),
   ]);
   const props = {globals, price, rewardFund};
-  dispatch({type: GLOBAL_PROPS, payload: props});
+  const action: actionPayload<globalProperties> = {
+    type: GLOBAL_PROPS,
+    payload: props,
+  };
+  dispatch(action);
 };
 
 export const loadBittrex = (): AppThunk => async (dispatch) => {

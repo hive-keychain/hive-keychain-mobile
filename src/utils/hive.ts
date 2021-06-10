@@ -1,8 +1,18 @@
-import hiveTx from 'hive-tx';
+import hive, {
+  AccountWitnessProxyOperation,
+  AccountWitnessVoteOperation,
+  CommentOperation,
+  CommentOptionsOperation,
+  ConvertOperation,
+  DelegateVestingSharesOperation,
+  TransferOperation,
+  UpdateProposalVotesOperation,
+  VoteOperation,
+} from '@hiveio/dhive';
 import api from 'api/keychain';
+import hiveTx from 'hive-tx';
 import {hiveEngine} from 'utils/config';
 
-let hive = require('@hiveio/dhive');
 const DEFAULT_RPC = 'https://api.hive.blog';
 
 let client = new hive.Client(DEFAULT_RPC);
@@ -10,7 +20,7 @@ let client = new hive.Client(DEFAULT_RPC);
 hiveTx.config.rebranded_api = true;
 hiveTx.updateOperations();
 
-const getDefault = async () => {
+const getDefault: () => Promise<string> = async () => {
   try {
     return (await api.get('/hive/rpc')).data.rpc;
   } catch (e) {
@@ -18,7 +28,7 @@ const getDefault = async () => {
   }
 };
 
-export const setRpc = async (rpc) => {
+export const setRpc = async (rpc: string) => {
   if (rpc === 'DEFAULT') {
     rpc = await getDefault();
   }
@@ -28,11 +38,17 @@ export const setRpc = async (rpc) => {
 
 export const getClient = () => client;
 
-export const transfer = async (key, obj) => {
+export const transfer = async (key: string, obj: TransferOperation) => {
   return await broadcast(key, [['transfer', obj]]);
 };
 
-export const broadcastJson = async (key, username, id, active, json) => {
+export const broadcastJson = async (
+  key: string,
+  username: string,
+  id: string,
+  active: boolean,
+  json: object,
+) => {
   return await broadcast(key, [
     [
       'custom_json',
@@ -45,8 +61,8 @@ export const broadcastJson = async (key, username, id, active, json) => {
     ],
   ]);
 };
-
-export const sendToken = async (key, username, obj) => {
+//todo type obj
+export const sendToken = async (key: string, username: string, obj: object) => {
   return await broadcastJson(key, username, hiveEngine.CHAIN_ID, true, {
     contractName: 'tokens',
     contractAction: 'transfer',
@@ -54,37 +70,52 @@ export const sendToken = async (key, username, obj) => {
   });
 };
 
-export const powerUp = async (key, obj) => {
+export const powerUp = async (key: string, obj: object) => {
   return await broadcast(key, [['transfer_to_vesting', obj]]);
 };
 
-export const powerDown = async (key, obj) => {
+export const powerDown = async (key: string, obj: object) => {
   return await broadcast(key, [['withdraw_vesting', obj]]);
 };
 
-export const delegate = async (key, obj) => {
+export const delegate = async (
+  key: string,
+  obj: DelegateVestingSharesOperation,
+) => {
   return await broadcast(key, [['delegate_vesting_shares', obj]]);
 };
 
-export const convert = async (key, obj) => {
+export const convert = async (key: string, obj: ConvertOperation) => {
   return await broadcast(key, [['convert', obj]]);
 };
 
-export const vote = async (key, obj) => {
+export const vote = async (key: string, obj: VoteOperation) => {
   return await broadcast(key, [['vote', obj]]);
 };
 
-export const voteForWitness = async (key, obj) => {
+export const voteForWitness = async (
+  key: string,
+  obj: AccountWitnessVoteOperation,
+) => {
   return await broadcast(key, [['account_witness_vote', obj]]);
 };
 
-export const setProxy = async (key, obj) => {
+export const setProxy = async (
+  key: string,
+  obj: AccountWitnessProxyOperation,
+) => {
   return await broadcast(key, [['account_witness_proxy', obj]]);
 };
 
 export const post = async (
-  key,
-  {comment_options, username, parent_perm, parent_username, ...data},
+  key: string,
+  {
+    comment_options,
+    username,
+    parent_perm,
+    parent_username,
+    ...data
+  }: CommentOperation & CommentOptionsOperation,
 ) => {
   const arr = [
     [
@@ -103,22 +134,28 @@ export const post = async (
   return await broadcast(key, arr);
 };
 
-export const signTx = (key, tx) => {
+export const signTx = (key: string, tx: object) => {
   const trx = new hiveTx.Transaction(tx);
   const signed = trx.sign(hiveTx.PrivateKey.from(key));
   return signed;
 };
 
-export const updateProposalVote = async (key, obj) => {
+export const updateProposalVote = async (
+  key: string,
+  obj: UpdateProposalVotesOperation,
+) => {
   return await broadcast(key, [['update_proposal_votes', obj]]);
 };
 
-export const broadcast = async (key, arr) => {
+export const broadcast = async (key: string, arr: any[]) => {
   const tx = new hiveTx.Transaction();
   await tx.create(arr);
   tx.sign(hiveTx.PrivateKey.from(key));
 
-  const {error, result} = await tx.broadcast();
+  const {error, result} = (await tx.broadcast()) as {
+    error: Error;
+    result: object;
+  };
   if (error) {
     throw error;
   } else {
