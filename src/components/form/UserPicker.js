@@ -1,8 +1,8 @@
-import React from 'react';
-import {View, StyleSheet, useWindowDimensions} from 'react-native';
-import CustomPicker from './CustomPicker';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
+import React from 'react';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import {translate} from 'utils/localize';
+import CustomPicker from './CustomPicker';
 
 const UserPicker = ({username, accounts, onAccountSelected, noSort}) => {
   const {width, height} = useWindowDimensions();
@@ -12,15 +12,12 @@ const UserPicker = ({username, accounts, onAccountSelected, noSort}) => {
     return null;
   }
 
-  const accountsList = noSort
-    ? accounts
-    : [username, ...accounts.filter((e) => e !== username)];
   return (
     <View style={styles.container}>
       <UserProfilePicture style={styles.image} username={username} />
       <View style={styles.subContainer}>
         <CustomPicker
-          list={accountsList}
+          list={accounts}
           onSelected={onAccountSelected}
           selectedValue={username}
           prefix="@"
