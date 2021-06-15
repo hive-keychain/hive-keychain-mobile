@@ -1,6 +1,7 @@
 import hive, {
   AccountWitnessProxyOperation,
   AccountWitnessVoteOperation,
+  Client,
   CommentOperation,
   CommentOptionsOperation,
   ConvertOperation,
@@ -14,8 +15,7 @@ import hiveTx from 'hive-tx';
 import {hiveEngine} from 'utils/config';
 
 const DEFAULT_RPC = 'https://api.hive.blog';
-
-let client = new hive.Client(DEFAULT_RPC);
+let client = new Client(DEFAULT_RPC);
 
 hiveTx.config.rebranded_api = true;
 hiveTx.updateOperations();
@@ -32,7 +32,7 @@ export const setRpc = async (rpc: string) => {
   if (rpc === 'DEFAULT') {
     rpc = await getDefault();
   }
-  client = new hive.Client(rpc);
+  client = new Client(rpc);
   hiveTx.config.node = rpc;
 };
 

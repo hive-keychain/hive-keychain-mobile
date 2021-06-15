@@ -1,9 +1,24 @@
-import React from 'react';
-import {StyleSheet, Text, Dimensions, TouchableOpacity} from 'react-native';
 import Backspace from 'assets/backspace.svg';
+import React from 'react';
+import {
+  Dimensions,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
 
-export default ({number, refNumber, helper, back, onPressElement}) => {
-  const style = {};
+interface Props {
+  number?: number;
+  refNumber: number;
+  helper?: string;
+  back?: boolean;
+  onPressElement: (number: number | undefined, back: boolean) => void;
+}
+
+export default ({number, refNumber, helper, back, onPressElement}: Props) => {
+  const style: StyleProp<ViewStyle> = {};
   if (refNumber > 3) {
     style.borderTopWidth = 1;
   }

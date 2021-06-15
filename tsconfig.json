@@ -12,6 +12,7 @@
       "target": "esnext",
       "resolveJsonModule": true,
       "baseUrl": ".",
+      "typeRoots": ["./types","./node_modules/@types"],
       "paths": {
           "actions*":["./src/actions*"],
             "api/*": ["./src/api/*"],

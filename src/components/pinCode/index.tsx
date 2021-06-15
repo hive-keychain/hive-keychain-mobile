@@ -1,26 +1,40 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Text} from 'react-native-elements';
-import Toast from 'react-native-simple-toast';
-import IntentLauncher from 'react-native-intent-launcher';
-
-import PinElement from './PinElement';
-import PinCompletionIndicator from './PinCompletionIndicator';
-import Separator from 'components/ui/Separator';
-import CustomModal from 'components/modals/CustomModal';
 import EllipticButton from 'components/form/EllipticButton';
+import CustomModal from 'components/modals/CustomModal';
+import Separator from 'components/ui/Separator';
+import {UnlockNavProp} from 'navigators/Unlock';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {Text} from 'react-native-elements';
+import IntentLauncher from 'react-native-intent-launcher';
+import Toast from 'react-native-simple-toast';
 import {translate} from 'utils/localize';
+import PinCompletionIndicator from './PinCompletionIndicator';
+import PinElement from './PinElement';
+
+interface Props {
+  children: JSX.Element;
+  signup: boolean;
+  title: string;
+  confirm: boolean;
+  submit: (pin: string, callback?: (unsafe: boolean) => void) => void;
+  navigation: UnlockNavProp;
+}
 
 const PinCode = ({
-  height,
   children,
   signup,
   title,
   confirm,
   submit,
   navigation,
-}) => {
-  const config = [
+}: Props) => {
+  interface PinItem {
+    refNumber: number;
+    number?: number;
+    helper?: string;
+    back?: boolean;
+  }
+  const config: PinItem[][] = [
     [
       {refNumber: 1, number: 1},
       {refNumber: 2, number: 2, helper: 'A B C'},
@@ -38,8 +52,8 @@ const PinCode = ({
     ],
     [{refNumber: 10}, {refNumber: 11, number: 0}, {refNumber: 12, back: true}],
   ];
-  const [code, setCode] = useState([]);
-  const [confirmCode, setConfirmCode] = useState([]);
+  const [code, setCode] = useState<string[]>([]);
+  const [confirmCode, setConfirmCode] = useState<string[]>([]);
   const [step, setStep] = useState(0);
   const [visible, setVisible] = useState(false);
 
@@ -84,17 +98,17 @@ const PinCode = ({
     }
   }, [code, confirmCode, signup, submit]);
 
-  const onPressElement = (number, back) => {
+  const onPressElement = (number: number | undefined, back?: boolean) => {
     if (step === 0) {
       if ((number || number === 0) && code.length !== 6) {
-        setCode([...code, number]);
+        setCode([...code, number + '']);
       }
       if (back) {
         setCode(code.slice(0, -1));
       }
     } else {
       if ((number || number === 0) && confirmCode.length !== 6) {
-        setConfirmCode([...confirmCode, number]);
+        setConfirmCode([...confirmCode, number + '']);
       }
       if (back) {
         setConfirmCode(confirmCode.slice(0, -1));
@@ -121,7 +135,7 @@ const PinCode = ({
       <View style={styles.container}>
         {config.map((row, i) => (
           <View key={i.toString()} style={styles.row}>
-            {row.map((elt, j) => (
+            {row.map((elt, j: number) => (
               <PinElement
                 key={j.toString()}
                 onPressElement={onPressElement}

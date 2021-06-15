@@ -1,8 +1,13 @@
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
 import KeychainIcon from 'assets/keychain.svg';
+import React from 'react';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
-const KeychainLogo = ({style, width}) => {
+interface Props {
+  style: StyleProp<ViewStyle>;
+  width: number;
+}
+
+const KeychainLogo = ({style, width}: Props) => {
   const styles = getDimensionedStyles({width});
   return (
     <View style={[styles.blackCircle, style]}>
@@ -11,7 +16,7 @@ const KeychainLogo = ({style, width}) => {
   );
 };
 
-const getDimensionedStyles = ({width}) =>
+const getDimensionedStyles = ({width}: {width: number}) =>
   StyleSheet.create({
     blackCircle: {
       width: width,

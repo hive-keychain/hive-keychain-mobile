@@ -1,14 +1,22 @@
+import Loader from 'components/ui/Loader';
 import React from 'react';
 import {
+  StyleProp,
   StyleSheet,
-  useWindowDimensions,
-  View,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
+  View,
+  ViewStyle,
 } from 'react-native';
-import Loader from 'components/ui/Loader';
 
-export default ({style, isLoading, title, ...props}) => {
+interface Props {
+  style?: StyleProp<ViewStyle>;
+  isLoading?: boolean;
+  title: string;
+  onPress: () => void;
+}
+export default ({style, isLoading = false, title, ...props}: Props) => {
   const styles = getDimensionedStyles(useWindowDimensions());
   return !isLoading ? (
     <TouchableOpacity {...props} style={[styles.button, style]}>
@@ -21,7 +29,7 @@ export default ({style, isLoading, title, ...props}) => {
   );
 };
 
-const getDimensionedStyles = ({width, height}) => {
+const getDimensionedStyles = ({width}: {width: number}) => {
   return StyleSheet.create({
     text: {color: 'white', fontSize: 16},
     button: {

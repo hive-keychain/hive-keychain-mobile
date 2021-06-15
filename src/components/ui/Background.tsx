@@ -1,10 +1,16 @@
 import React from 'react';
-import {ImageBackground, StyleSheet} from 'react-native';
+import {ImageBackground, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 const imageBgd = require('assets/background.png');
 
-export default (props) => {
+interface BackgroundProps {
+  style?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
+  children: JSX.Element;
+}
+
+export default (props: BackgroundProps) => {
   return (
     <ImageBackground
       {...props}
