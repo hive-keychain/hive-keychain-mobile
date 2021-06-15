@@ -14,7 +14,7 @@ interface Props {
   refNumber: number;
   helper?: string;
   back?: boolean;
-  onPressElement: (number: number | undefined, back: boolean) => void;
+  onPressElement: (number: number | undefined, back?: boolean) => void;
 }
 
 export default ({number, refNumber, helper, back, onPressElement}: Props) => {
