@@ -7,22 +7,23 @@ import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-elements';
 import IntentLauncher from 'react-native-intent-launcher';
 import Toast from 'react-native-simple-toast';
+import {SignupNavProp} from 'screens/Signup';
 import {translate} from 'utils/localize';
 import PinCompletionIndicator from './PinCompletionIndicator';
 import PinElement from './PinElement';
 
 interface Props {
   children: JSX.Element;
-  signup: boolean;
+  signup?: boolean;
   title: string;
-  confirm: boolean;
-  submit: (pin: string, callback?: (unsafe: boolean) => void) => void;
-  navigation: UnlockNavProp;
+  confirm?: string;
+  submit: (pin: string, callback?: (unsafe?: boolean) => void) => void;
+  navigation: UnlockNavProp | SignupNavProp;
 }
 
 const PinCode = ({
   children,
-  signup,
+  signup = false,
   title,
   confirm,
   submit,

@@ -3,7 +3,7 @@ import React from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 interface Props {
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
   width: number;
 }
 

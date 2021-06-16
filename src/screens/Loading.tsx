@@ -1,7 +1,7 @@
-import React from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
 import Background from 'components/ui/Background';
 import KeychainLogo from 'components/ui/KeychainLogo';
+import React from 'react';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 
 const Loading = () => {
   const {width} = useWindowDimensions();

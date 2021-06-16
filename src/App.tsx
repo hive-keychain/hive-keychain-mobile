@@ -13,7 +13,12 @@ import {setRpc} from 'utils/hive';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
 
-const Root = createStackNavigator();
+export type RootStackParam = {
+  Main: undefined;
+  ModalScreen: undefined;
+};
+
+const Root = createStackNavigator<RootStackParam>();
 
 const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
   useEffect(() => {

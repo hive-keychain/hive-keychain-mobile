@@ -1,17 +1,11 @@
 import Toast from 'react-native-simple-toast';
-
-import {SIGN_UP, LOCK, UNLOCK, INIT_ACCOUNTS} from './types';
-import {decryptToJson} from 'utils/encrypt';
-import {navigate} from 'utils/navigation';
-import {translate} from 'utils/localize';
-import {getFromKeychain} from 'utils/keychainStorage';
 import {AppThunk} from 'src/hooks/redux';
-import {
-  accountsPayload,
-  actionPayload,
-  auth,
-  nullableString,
-} from './interfaces';
+import {decryptToJson} from 'utils/encrypt';
+import {getFromKeychain} from 'utils/keychainStorage';
+import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
+import {accountsPayload, actionPayload, nullableString} from './interfaces';
+import {INIT_ACCOUNTS, LOCK, SIGN_UP, UNLOCK} from './types';
 
 export const signUp = (pwd: string) => {
   navigate('AddAccountByKeyScreen');
@@ -21,7 +15,7 @@ export const signUp = (pwd: string) => {
 
 export const unlock = (
   mk: string,
-  errorCallback: (b?: boolean) => void,
+  errorCallback?: (b?: boolean) => void,
 ): AppThunk => async (dispatch, getState) => {
   try {
     const accountsEncrypted = await getFromKeychain('accounts');
@@ -55,7 +49,7 @@ export const lock = () => {
 };
 
 export * from 'actions/accounts';
+export * from 'actions/browser';
 export * from 'actions/hive';
 export * from 'actions/hiveEngine';
 export * from 'actions/settings';
-export * from 'actions/browser';

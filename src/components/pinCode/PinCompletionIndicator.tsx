@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
 
-export default ({code}) => {
+export default ({code}: {code: string[]}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
   return (
     <View style={styles.container}>
@@ -15,7 +15,7 @@ export default ({code}) => {
   );
 };
 
-const getDimensionedStyles = ({width, height}) =>
+const getDimensionedStyles = ({width}: {width: number}) =>
   StyleSheet.create({
     container: {
       display: 'flex',

@@ -1,18 +1,16 @@
-import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-
-import Introduction from 'screens/Introduction';
-import Signup from 'screens/Signup';
-import CreateAccount from 'screens/CreateAccount';
+import MoreInformation from 'components/infoButtons/MoreInfo';
+import React from 'react';
 import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';
-
-import MoreInformation from 'components/infoButtons/MoreInfo';
-
-import {headerTransparent, noHeader} from 'utils/navigation';
+import CreateAccount from 'screens/CreateAccount';
+import Introduction from 'screens/Introduction';
+import Signup from 'screens/Signup';
+import {SignupStackParamList} from 'types/stacks';
 import {translate} from 'utils/localize';
+import {noHeader} from 'utils/navigation';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<SignupStackParamList>();
 
 export default () => {
   return (
@@ -34,7 +32,7 @@ export default () => {
           title: translate('navigation.add_account'),
           headerRight: () => <MoreInformation type="moreInfo" />,
           headerTintColor: 'white',
-          headerTransparent,
+          headerTransparent: true,
         }}
         component={AddAccountByKey}
       />
