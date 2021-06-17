@@ -12,7 +12,7 @@ import {RootState} from 'store';
 import {setRpc} from 'utils/hive';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
-import {RootStackParam} from './App.types';
+import {RootStackParam} from './navigators/Root.types';
 
 const Root = createStackNavigator<RootStackParam>();
 
@@ -62,7 +62,7 @@ const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
 };
 
 const mapStateToProps = (state: RootState) => {
-  //console.log(state);
+  console.log(state);
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,

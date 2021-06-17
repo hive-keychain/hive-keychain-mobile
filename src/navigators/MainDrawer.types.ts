@@ -20,3 +20,9 @@ export type BrowserNavigationProps = {
   navigation: BrowserNavigation;
   route: BrowserNavigationRoute;
 };
+
+type WalletNavigation = StackNavigationProp<MainDrawerStackParam, 'WALLET'>;
+
+export type WalletNavigationProps = {
+  navigation: WalletNavigation;
+};

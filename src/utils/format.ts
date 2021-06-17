@@ -6,7 +6,7 @@ export const withCommas = (nb: string, decimals = 3) =>
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-export const toHP = (vests: string, props: DynamicGlobalProperties) =>
+export const toHP = (vests: string, props?: DynamicGlobalProperties) =>
   props
     ? (parseFloat(vests) * parseFloat(props.total_vesting_fund_hive + '')) /
       parseFloat(props.total_vesting_shares + '')

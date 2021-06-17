@@ -1,26 +1,24 @@
-import React from 'react';
-import {View, StyleSheet, useWindowDimensions} from 'react-native';
-import {connect} from 'react-redux';
-
-import {toHP} from 'utils/format';
-
+import Hbd from 'assets/wallet/icon_hbd.svg';
+import Hive from 'assets/wallet/icon_hive.svg';
+import Hp from 'assets/wallet/icon_hp.svg';
 import AccountValue from 'components/hive/AccountValue';
 import TokenDisplay from 'components/hive/TokenDisplay';
-import Separator from 'components/ui/Separator';
+import Transactions from 'components/hive/Transactions';
 import {
   Send,
-  SendDelegation,
-  SendPowerUp,
-  SendPowerDown,
   SendConversion,
+  SendDelegation,
+  SendPowerDown,
+  SendPowerUp,
 } from 'components/operations/OperationsButtons';
-import Transactions from 'components/hive/Transactions';
+import Separator from 'components/ui/Separator';
+import React from 'react';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
+import {toHP} from 'utils/format';
 
-import Hive from 'assets/wallet/icon_hive.svg';
-import Hbd from 'assets/wallet/icon_hbd.svg';
-import Hp from 'assets/wallet/icon_hp.svg';
-
-const Primary = ({user, bittrex, properties, navigation}) => {
+const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
   const {width} = useWindowDimensions();
 
   return (
@@ -36,7 +34,7 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         color="#A3112A"
         name="HIVE"
         currency="HIVE"
-        value={parseFloat(user.account.balance)}
+        value={parseFloat(user.account.balance as string)}
         logo={<Hive width={width / 15} />}
         price={bittrex.hive}
         buttons={[
@@ -49,7 +47,7 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         color="#005C09"
         name="HIVE DOLLARS"
         currency="HBD"
-        value={parseFloat(user.account.hbd_balance)}
+        value={parseFloat(user.account.hbd_balance as string)}
         logo={<Hbd width={width / 15} />}
         price={bittrex.hbd}
         buttons={[
@@ -62,13 +60,13 @@ const Primary = ({user, bittrex, properties, navigation}) => {
         color="#AC4F00"
         name="HIVE POWER"
         currency="HP"
-        value={toHP(user.account.vesting_shares, properties.globals)}
+        value={toHP(user.account.vesting_shares as string, properties.globals)}
         incoming={toHP(
-          user.account.received_vesting_shares,
+          user.account.received_vesting_shares as string,
           properties.globals,
         )}
         outgoing={toHP(
-          user.account.delegated_vesting_shares,
+          user.account.delegated_vesting_shares as string,
           properties.globals,
         )}
         logo={<Hp width={width / 15} />}
@@ -85,12 +83,13 @@ const styles = StyleSheet.create({
   container: {width: '100%', flex: 1},
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
   return {
     user: state.activeAccount,
     bittrex: state.bittrex,
     properties: state.properties,
   };
 };
-
-export default connect(mapStateToProps)(Primary);
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(Primary);

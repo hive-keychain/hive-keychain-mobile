@@ -180,7 +180,7 @@ interface btc {
   PrevDay?: number;
 }
 
-interface currency extends btc {
+export interface currency extends btc {
   DailyUsd?: string;
   Usd?: string;
 }
@@ -222,9 +222,10 @@ export enum PubKeyTypes {
 }
 
 export interface activeAccount {
-  account: ExtendedAccount | {};
-  keys: accountKeys | {};
-  rc: Manabar | {};
+  account: ExtendedAccount;
+  keys: accountKeys;
+  rc: Manabar;
+  name?: string;
 }
 
 export interface rewardFund {

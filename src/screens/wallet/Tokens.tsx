@@ -1,12 +1,13 @@
-import React, {useEffect} from 'react';
-import {Text, View, StyleSheet, FlatList} from 'react-native';
-import {loadTokens, loadUserTokens, loadTokensMarket} from 'actions';
-import {connect} from 'react-redux';
+import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
-import Separator from 'components/ui/Separator';
-import {translate} from 'utils/localize';
 import HiveEngineAccountValue from 'components/hive/HiveEngineAccountValue';
 import Loader from 'components/ui/Loader';
+import Separator from 'components/ui/Separator';
+import React, {useEffect} from 'react';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
+import {translate} from 'utils/localize';
 
 const Tokens = ({
   user,
@@ -17,14 +18,16 @@ const Tokens = ({
   userTokens,
   bittrex,
   tokensMarket,
-}) => {
+}: PropsFromRedux) => {
   useEffect(() => {
     loadTokens();
     loadTokensMarket();
   }, [loadTokens, loadTokensMarket]);
 
   useEffect(() => {
-    loadUserTokens(user.name);
+    if (user.name) {
+      loadUserTokens(user.name);
+    }
   }, [loadUserTokens, user.name]);
 
   const renderContent = () => {
@@ -33,7 +36,6 @@ const Tokens = ({
     } else if (userTokens.list.length) {
       return (
         <FlatList
-          style={[styles.half]}
           data={userTokens.list}
           keyExtractor={(item) => item._id.toString()}
           ItemSeparatorComponent={() => <Separator height={10} />}
@@ -77,7 +79,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
   return {
     user: state.activeAccount,
     tokens: state.tokens,
@@ -86,9 +88,10 @@ const mapStateToProps = (state) => {
     bittrex: state.bittrex,
   };
 };
-
-export default connect(mapStateToProps, {
+const connector = connect(mapStateToProps, {
   loadTokens,
   loadUserTokens,
   loadTokensMarket,
-})(Tokens);
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(Tokens);

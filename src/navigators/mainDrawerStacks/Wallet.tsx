@@ -1,17 +1,16 @@
-import React from 'react';
-import {useWindowDimensions, StyleSheet} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
-import DrawerButton from 'components/ui/DrawerButton';
-
-import Wallet from 'screens/wallet/Main';
 import Hive from 'assets/wallet/hive.svg';
-
+import DrawerButton from 'components/ui/DrawerButton';
+import React from 'react';
+import {StyleSheet, useWindowDimensions} from 'react-native';
+import Wallet from 'screens/wallet/Main';
+import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator();
 
 export default () => {
-  const {height, width} = useWindowDimensions();
+  const {width} = useWindowDimensions();
 
   return (
     <Stack.Navigator>
@@ -28,7 +27,7 @@ export default () => {
           headerRight: () => <DrawerButton navigation={navigation} />,
 
           headerLeft: () => {
-            return <Hive style={styles(width, height).left} />;
+            return <Hive style={styles({width}).left} />;
           },
         })}
       />
@@ -36,7 +35,7 @@ export default () => {
   );
 };
 
-const styles = (width, height) =>
+const styles = ({width}: Width) =>
   StyleSheet.create({
     left: {marginHorizontal: 0.05 * width},
   });

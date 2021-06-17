@@ -1,35 +1,33 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
-
-import {connect} from 'react-redux';
 import {
-  lock,
-  loadAccount,
-  loadProperties,
-  loadBittrex,
   fetchPhishingAccounts,
-} from 'actions';
-import WalletPage from 'components/ui/WalletPage';
+  loadAccount,
+  loadBittrex,
+  loadProperties,
+} from 'actions/index';
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
-import {translate} from 'utils/localize';
-import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import ScreenToggle from 'components/ui/ScreenToggle';
+import WalletPage from 'components/ui/WalletPage';
+import React, {useEffect} from 'react';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
 import Primary from 'screens/wallet/Primary';
 import Tokens from 'screens/wallet/Tokens';
+import {RootState} from 'store';
+import {Width} from 'utils/common.types';
+import {getVotingDollarsPerAccount, getVP} from 'utils/hiveUtils';
+import {translate} from 'utils/localize';
 
 const Main = ({
-  lock,
   loadAccount,
   loadProperties,
   loadBittrex,
   fetchPhishingAccounts,
   user,
   properties,
-  navigation,
   accounts,
   lastAccount,
-}) => {
+}: PropsFromRedux) => {
   const styles = getDimensionedStyles(useWindowDimensions());
 
   useEffect(() => {
@@ -54,10 +52,10 @@ const Main = ({
     <WalletPage>
       <UserPicker
         accounts={accounts.map((account) => account.name)}
-        username={user.name}
-        addAccount={() => {
-          navigation.navigate('AddAccountFromWalletScreen', {wallet: true});
-        }}
+        username={user.name!}
+        // {addAccount={() => {
+        //   navigation.navigate('AddAccountFromWalletScreen', {wallet: true});
+        // }}}
         onAccountSelected={loadAccount}
       />
       <View style={styles.resourcesWrapper}>
@@ -80,13 +78,13 @@ const Main = ({
         style={styles.toggle}
         menu={['Primary', 'Tokens']}
         toUpperCase
-        components={[<Primary navigation={navigation} />, <Tokens />]}
+        components={[<Primary />, <Tokens />]}
       />
     </WalletPage>
   );
 };
 
-const getDimensionedStyles = ({width, height}) =>
+const getDimensionedStyles = ({width}: Width) =>
   StyleSheet.create({
     textCentered: {textAlign: 'center'},
     white: {color: 'white'},
@@ -104,9 +102,8 @@ const getDimensionedStyles = ({width, height}) =>
       paddingRight: width * 0.05,
     },
   });
-
-export default connect(
-  (state) => {
+const connector = connect(
+  (state: RootState) => {
     return {
       user: state.activeAccount,
       properties: state.properties,
@@ -115,10 +112,12 @@ export default connect(
     };
   },
   {
-    lock,
     loadAccount,
     loadProperties,
     loadBittrex,
     fetchPhishingAccounts,
   },
-)(Main);
+);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(Main);
