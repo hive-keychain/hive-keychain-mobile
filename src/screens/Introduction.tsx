@@ -3,10 +3,10 @@ import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import GradientEllipse from 'components/ui/GradientEllipse';
 import Separator from 'components/ui/Separator';
+import {IntroductionNavProp} from 'navigators/Signup.types';
 import React from 'react';
 import {Linking, StyleSheet, Text, useWindowDimensions} from 'react-native';
-import {Dimensions} from 'types/common';
-import {IntroductionNavProp} from 'types/stacks';
+import {Dimensions} from 'utils/common.types';
 import {hiveConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 

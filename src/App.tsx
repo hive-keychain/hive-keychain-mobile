@@ -12,11 +12,7 @@ import {RootState} from 'store';
 import {setRpc} from 'utils/hive';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
-
-export type RootStackParam = {
-  Main: undefined;
-  ModalScreen: undefined;
-};
+import {RootStackParam} from './App.types';
 
 const Root = createStackNavigator<RootStackParam>();
 

@@ -2,10 +2,10 @@ import {signUp} from 'actions/index';
 import Pincode from 'components/pinCode';
 import Background from 'components/ui/Background';
 import KeychainLogo from 'components/ui/KeychainLogo';
+import {SignupNavProp} from 'navigators/Signup.types';
 import React from 'react';
 import {useWindowDimensions} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
-import {SignupNavProp} from 'types/stacks';
 import {translate} from 'utils/localize';
 
 type Props = PropsFromRedux & SignupNavProp;

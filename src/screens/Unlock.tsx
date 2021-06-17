@@ -2,10 +2,10 @@ import {forgetAccounts, unlock} from 'actions/index';
 import Pincode from 'components/pinCode';
 import Background from 'components/ui/Background';
 import KeychainLogo from 'components/ui/KeychainLogo';
+import {UnlockNavigationProp} from 'navigators/Unlock.types';
 import React from 'react';
 import {useWindowDimensions} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
-import {UnlockNavigationProp} from 'types/stacks';
 import {translate} from 'utils/localize';
 
 type UnlockScreenProps = PropsFromRedux & UnlockNavigationProp;

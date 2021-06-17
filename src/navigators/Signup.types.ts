@@ -1,24 +1,5 @@
 import {StackNavigationProp} from '@react-navigation/stack';
 
-//Root
-export type RootStackParam = {
-  Main: undefined;
-  ModalScreen: undefined;
-};
-
-//Unlock
-export type UnlockStackParamList = {
-  UnlockScreen: undefined;
-};
-
-type UnlockNavigation = StackNavigationProp<
-  UnlockStackParamList,
-  'UnlockScreen'
->;
-export type UnlockNavigationProp = {navigation: UnlockNavigation};
-
-// Signup
-
 export type SignupStackParamList = {
   IntroductionScreen: undefined;
   CreateAccountScreen: undefined;
