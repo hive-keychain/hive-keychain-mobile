@@ -1,7 +1,8 @@
-import React from 'react';
 import CustomModal from 'components/modals/CustomModal';
+import {ModalNavigationProps} from 'navigators/Root.types';
+import React from 'react';
 
-export default ({navigation, route}) => {
+export default ({navigation, route}: ModalNavigationProps) => {
   const onForceCloseModal = route.params
     ? route.params.onForceCloseModal
     : null;
