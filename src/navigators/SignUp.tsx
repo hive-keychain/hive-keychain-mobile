@@ -6,9 +6,9 @@ import ScanQR from 'screens/addAccounts/ScanQR';
 import CreateAccount from 'screens/CreateAccount';
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
-import {SignupStackParamList} from 'types/stacks';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
+import {SignupStackParamList} from './Signup.types';
 
 const Stack = createStackNavigator<SignupStackParamList>();
 

@@ -1,19 +1,21 @@
-import React from 'react';
-import Browser from 'components/browser';
-import {connect} from 'react-redux';
 import {
-  changeTab,
   addTab,
-  updateTab,
-  closeTab,
-  closeAllTabs,
-  addToHistory,
-  clearHistory,
   addToFavorites,
+  addToHistory,
+  changeTab,
+  clearHistory,
+  closeAllTabs,
+  closeTab,
   removeFromFavorites,
   setBrowserFocus,
   showManagementScreen,
-} from 'actions';
+  updateTab,
+} from 'actions/index';
+import Browser from 'components/browser';
+import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
+import React from 'react';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
 
 const BrowserScreen = ({
   accounts,
@@ -35,7 +37,7 @@ const BrowserScreen = ({
   route,
   showManagementScreen,
   showManagement,
-}) => {
+}: PropsFromRedux & BrowserNavigationProps) => {
   return (
     <Browser
       accounts={accounts}
@@ -61,18 +63,18 @@ const BrowserScreen = ({
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
   return {
     accounts: state.accounts,
     activeTab: state.browser.activeTab,
     tabs: state.browser.tabs,
     history: state.browser.history,
-    favorites: state.browser.favorites,
+    favorites: state.browser.whitelist,
     showManagement: state.browser.showManagement,
   };
 };
 
-export default connect(mapStateToProps, {
+const connector = connect(mapStateToProps, {
   changeTab,
   addTab,
   updateTab,
@@ -84,4 +86,8 @@ export default connect(mapStateToProps, {
   removeFromFavorites,
   setBrowserFocus,
   showManagementScreen,
-})(BrowserScreen);
+});
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(BrowserScreen);
