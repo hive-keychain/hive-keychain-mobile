@@ -4,7 +4,7 @@ import React from 'react';
 
 export default ({navigation, route}: ModalNavigationProps) => {
   const onForceCloseModal = route.params
-    ? route.params.onForceCloseModal
+    ? route.params!.onForceCloseModal
     : null;
   return (
     <CustomModal
@@ -15,7 +15,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
         })
       }
       bottomHalf={true}>
-      {route.params && route.params.modalContent}
+      {route.params && route.params!.modalContent}
     </CustomModal>
   );
 };

@@ -1,21 +1,24 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {connect} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
-import {setRpc} from 'actions';
+import {setRpc} from 'actions/index';
 import CustomPicker from 'components/form/CustomPicker';
 import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
+import { RootState } from 'store';
 
-const AccountManagement = ({navigation, setRpc, settings}) => {
+const AccountManagement = ({ setRpc, settings}:PropsFromRedux) => {
   return (
     <SafeArea>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
       <View style={styles.view}>
         <Text style={styles.title}>{translate('settings.settings.title')}</Text>
-        {translate('settings.settings.disclaimer').map((disclaimer, i) => (
+        
+        {//@ts-ignore
+        translate('settings.settings.disclaimer').map((disclaimer, i) => (
           <Text key={i} style={styles.disclaimer}>
             {disclaimer}
           </Text>
@@ -45,10 +48,11 @@ const styles = StyleSheet.create({
   button: {backgroundColor: '#B9122F'},
 });
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state:RootState) => ({
   settings: state.settings,
 });
-
-export default connect(mapStateToProps, {
+const connector=connect(mapStateToProps, {
   setRpc,
-})(AccountManagement);
+});
+type PropsFromRedux=ConnectedProps<typeof connector>
+export default connector(AccountManagement);

@@ -23,7 +23,7 @@ const activeAccountReducer = (
       return {...state, rc: payload};
     case FORGET_ACCOUNT:
     case FORGET_ACCOUNTS:
-      return {account: {}, keys: {}, rc: {}};
+      return {account: {} as ExtendedAccount, keys: {}, rc: {} as Manabar};
     default:
       return state;
   }

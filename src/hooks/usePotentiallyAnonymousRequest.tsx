@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
-import {getValidAuthorityAccounts} from 'utils/keychain';
-import RequestUsername from 'components/browser/requestOperations/components/RequestUsername';
-import {getRequiredWifType} from 'utils/keychain';
 import {account} from 'actions/interfaces';
+import RequestUsername from 'components/browser/requestOperations/components/RequestUsername';
+import React, {useState} from 'react';
+import {getRequiredWifType, getValidAuthorityAccounts} from 'utils/keychain';
 
-export default (request, accounts) => {
+export default (request, accounts: account[]) => {
   const {username} = request;
   const method = getRequiredWifType(request);
   let initAcc;

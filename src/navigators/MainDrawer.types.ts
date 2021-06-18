@@ -26,3 +26,9 @@ type WalletNavigation = StackNavigationProp<MainDrawerStackParam, 'WALLET'>;
 export type WalletNavigationProps = {
   navigation: WalletNavigation;
 };
+
+type MgtNavigation = StackNavigationProp<MainDrawerStackParam, 'AccountManagementScreen'>;
+
+export type MgtNavigationProps = {
+  navigation: MgtNavigation;
+};

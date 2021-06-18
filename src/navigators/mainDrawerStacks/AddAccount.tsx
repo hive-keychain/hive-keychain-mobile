@@ -1,22 +1,22 @@
-import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {View, StyleSheet} from 'react-native';
+import MoreInformation from 'components/infoButtons/MoreInfo';
+import DrawerButton from 'components/ui/DrawerButton';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';
-
-import DrawerButton from 'components/ui/DrawerButton';
-import MoreInformation from 'components/infoButtons/MoreInfo';
-
-import {headerTransparent} from 'utils/navigation';
 import {translate} from 'utils/localize';
+import {headerTransparent} from 'utils/navigation';
+import {AddAccountFromWalletParamList} from './AddAccount.types';
 
-const AccountStack = createStackNavigator();
+const AccountStack = createStackNavigator<AddAccountFromWalletParamList>();
 
 export default () => {
   return (
     <AccountStack.Navigator>
       <AccountStack.Screen
         name="AddAccountFromWalletScreen"
+        //@ts-ignore : both headerRight and headerTransparent are needed here
         options={({navigation}) => ({
           headerRight: () => {
             return (

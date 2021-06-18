@@ -156,7 +156,7 @@ export const validateRequest = (req) => {
   );
 };
 
-export const getRequiredWifType = (request) => {
+export const getRequiredWifType:()=>KeyTypes = (request) => {
   switch (request.type) {
     case 'decode':
     case 'encode':

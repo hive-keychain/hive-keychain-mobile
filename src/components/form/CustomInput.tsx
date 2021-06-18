@@ -1,6 +1,19 @@
 import React from 'react';
-import {Input} from 'react-native-elements';
-import {StyleSheet, useWindowDimensions} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  useWindowDimensions,
+  ViewStyle,
+} from 'react-native';
+import {Input, InputProps} from 'react-native-elements';
+import {Width} from 'utils/common.types';
+
+type Props = InputProps & {
+  textAlign?: string;
+  containerStyle?: StyleProp<ViewStyle>;
+  backgroundColor?: string;
+  inputColor?: string;
+};
 
 export default ({
   backgroundColor,
@@ -8,7 +21,7 @@ export default ({
   textAlign,
   containerStyle,
   ...props
-}) => {
+}: Props) => {
   const styles = getDimensionedStyles({
     ...useWindowDimensions(),
     backgroundColor,
@@ -30,10 +43,13 @@ export default ({
 
 const getDimensionedStyles = ({
   width,
-  height,
   backgroundColor,
   inputColor,
   textAlign,
+}: Width & {
+  backgroundColor?: string;
+  inputColor?: string;
+  textAlign?: string;
 }) =>
   StyleSheet.create({
     container: {

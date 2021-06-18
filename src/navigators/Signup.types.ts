@@ -1,3 +1,4 @@
+import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 export type SignupStackParamList = {
@@ -21,3 +22,17 @@ export type IntroductionNavigation = StackNavigationProp<
 >;
 
 export type IntroductionNavProp = {navigation: IntroductionNavigation};
+
+type AddAccNavigation = StackNavigationProp<
+  SignupStackParamList,
+  'AddAccountByKeyScreen'
+>;
+type AddAccNavigationRoute = RouteProp<
+  SignupStackParamList,
+  'AddAccountByKeyScreen'
+>;
+
+export type AddAccNavigationProps = {
+  navigation: AddAccNavigation;
+  route: AddAccNavigationRoute;
+};
