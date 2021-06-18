@@ -1,8 +1,13 @@
+import {DrawerNavigationProp} from '@react-navigation/drawer';
+import Menu from 'assets/wallet/menu.svg';
 import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import Menu from 'assets/wallet/menu.svg';
 
-export default ({navigation}) => (
+type Props = {
+  navigation: DrawerNavigationProp<any>;
+};
+
+export default ({navigation}: Props) => (
   <TouchableOpacity
     style={styles.container}
     onPress={() => {

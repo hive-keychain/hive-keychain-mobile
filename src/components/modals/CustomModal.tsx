@@ -1,16 +1,25 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
-  View,
-  KeyboardAvoidingView,
-  StyleSheet,
   Dimensions,
+  KeyboardAvoidingView,
   Platform,
+  StyleSheet,
   TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {Dimensions as Dim} from 'utils/common.types';
 
-export default class CustomModal extends Component {
-  constructor(props) {
+type Props = {
+  bottomHalf: boolean;
+  boxBackgroundColor: string;
+  outsideClick: () => void;
+};
+type InnerProps = {height: number; width: number};
+class CustomModal extends React.Component<Props, {}> implements InnerProps {
+  height;
+  width;
+  constructor(props: Props) {
     super(props);
     const {height, width} = Dimensions.get('window');
     this.height = height;
@@ -19,13 +28,9 @@ export default class CustomModal extends Component {
   render() {
     let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
     const styles = StyleSheetFactory.getSheet({
-      boxBgColor: this.props.boxBackgroundColor,
-      fullscreen: this.props.fullscreen,
       modalHeight: modalHeight,
-      bottomHalf: this.props.bottomHalf,
       height: this.height,
       width: this.width,
-      transparent: this.props.transparentContainer,
     });
     return (
       <KeyboardAvoidingView
@@ -57,7 +62,7 @@ export default class CustomModal extends Component {
 }
 
 class StyleSheetFactory {
-  static getSheet({modalHeight, width, height, transparent}) {
+  static getSheet({modalHeight, width, height}: Dim & {modalHeight: number}) {
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
       mainContainer: {
@@ -101,3 +106,5 @@ class StyleSheetFactory {
     return styles;
   }
 }
+
+export default CustomModal;

@@ -50,36 +50,42 @@ const Main = ({
   console.log(user);
   return (
     <WalletPage>
-      <UserPicker
-        accounts={accounts.map((account) => account.name)}
-        username={user.name!}
-        // {addAccount={() => {
-        //   navigation.navigate('AddAccountFromWalletScreen', {wallet: true});
-        // }}}
-        onAccountSelected={loadAccount}
-      />
-      <View style={styles.resourcesWrapper}>
-        <PercentageDisplay
-          name={translate('wallet.rc')}
-          percent={user.rc.percentage / 100 || 100}
-          color="#E59D15"
+      <>
+        <UserPicker
+          accounts={accounts.map((account) => account.name)}
+          username={user.name!}
+          // {addAccount={() => {
+          //   navigation.navigate('AddAccountFromWalletScreen', {wallet: true});
+          // }}}
+          onAccountSelected={loadAccount}
         />
-        <PercentageDisplay
-          name={translate('wallet.vp')}
-          percent={getVP(user.account) || 100}
-          color="#3BB26E"
-          secondary={`$${
-            getVotingDollarsPerAccount(100, properties, user.account, false) ||
-            '0'
-          }`}
+        <View style={styles.resourcesWrapper}>
+          <PercentageDisplay
+            name={translate('wallet.rc')}
+            percent={user.rc.percentage / 100 || 100}
+            color="#E59D15"
+          />
+          <PercentageDisplay
+            name={translate('wallet.vp')}
+            percent={getVP(user.account) || 100}
+            color="#3BB26E"
+            secondary={`$${
+              getVotingDollarsPerAccount(
+                100,
+                properties,
+                user.account,
+                false,
+              ) || '0'
+            }`}
+          />
+        </View>
+        <ScreenToggle
+          style={styles.toggle}
+          menu={['Primary', 'Tokens']}
+          toUpperCase
+          components={[<Primary />, <Tokens />]}
         />
-      </View>
-      <ScreenToggle
-        style={styles.toggle}
-        menu={['Primary', 'Tokens']}
-        toUpperCase
-        components={[<Primary />, <Tokens />]}
-      />
+      </>
     </WalletPage>
   );
 };

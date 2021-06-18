@@ -1,8 +1,20 @@
+import {DynamicGlobalProperties, ExtendedAccount} from '@hiveio/dhive';
 import React from 'react';
-import {View, Text, StyleSheet, useWindowDimensions} from 'react-native';
+import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {Width} from 'utils/common.types';
 import {formatBalance, toHP} from 'utils/format';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
+
+type Props = {
+  currency: string;
+  account?: ExtendedAccount;
+  pd?: boolean;
+  globalProperties?: DynamicGlobalProperties;
+  engine?: boolean;
+  tokenBalance?: string;
+  tokenLogo?: JSX.Element;
+};
 
 const TokenDisplay = ({
   currency,
@@ -12,15 +24,18 @@ const TokenDisplay = ({
   engine,
   tokenBalance,
   tokenLogo,
-}) => {
+}: Props) => {
   let {color, value, logo} = getCurrencyProperties(currency, account);
-  if (pd) {
-    value = parseFloat(value) - parseFloat(account.delegated_vesting_shares);
-    value = toHP(value, globalProperties);
+  let parsedValue = +value!;
+  if (pd && value) {
+    parsedValue =
+      parseFloat(value as string) -
+      parseFloat(account.delegated_vesting_shares as string);
+    parsedValue = toHP(value as string, globalProperties);
   }
   if (engine) {
-    value = tokenBalance;
-    logo = tokenLogo;
+    parsedValue = +tokenBalance!;
+    logo = tokenLogo!;
   }
   const styles = getDimensionedStyles({
     color,
@@ -39,7 +54,7 @@ const TokenDisplay = ({
           </Text>
         </View>
         <Text style={styles.amount}>
-          {formatBalance(value)}
+          {formatBalance(parsedValue)}
           <Text style={styles.currency}>{` ${currency}`}</Text>
         </Text>
       </View>
@@ -47,7 +62,7 @@ const TokenDisplay = ({
   );
 };
 
-const getDimensionedStyles = ({width, height, color}) =>
+const getDimensionedStyles = ({width, color}: Width & {color?: string}) =>
   StyleSheet.create({
     container: {
       display: 'flex',

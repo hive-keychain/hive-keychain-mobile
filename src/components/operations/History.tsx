@@ -1,15 +1,21 @@
+import {loadTokenHistory} from 'actions/index';
+import HistoryIcon from 'assets/wallet/icon_history_green.svg';
+import Transfer from 'components/hive/Transfer';
+import Separator from 'components/ui/Separator';
 import React, {useEffect} from 'react';
 import {FlatList} from 'react-native';
-import {connect} from 'react-redux';
-
-import Operation from './Operation';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import Separator from 'components/ui/Separator';
-import {loadTokenHistory} from 'actions';
-import HistoryIcon from 'assets/wallet/icon_history_green.svg';
 import Balance from './Balance';
-import Transfer from 'components/hive/Transfer';
+import Operation from './Operation';
 
+export type HistoryProps = {
+  tokenBalance: string;
+  tokenLogo: JSX.Element;
+  currency: string;
+};
+type Props = PropsFromRedux & HistoryProps;
 const History = ({
   user,
   tokenBalance,
@@ -17,7 +23,7 @@ const History = ({
   currency,
   history,
   loadTokenHistory,
-}) => {
+}: Props) => {
   useEffect(() => {
     if (user.name) {
       loadTokenHistory(user.name, currency);
@@ -46,9 +52,8 @@ const History = ({
     </Operation>
   );
 };
-
-export default connect(
-  (state) => {
+const connector = connect(
+  (state: RootState) => {
     return {
       user: state.activeAccount,
       history: state.tokenHistory,
@@ -57,4 +62,7 @@ export default connect(
   {
     loadTokenHistory,
   },
-)(History);
+);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(History);

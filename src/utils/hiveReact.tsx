@@ -6,7 +6,7 @@ import React from 'react';
 
 export const getCurrencyProperties = (
   currency: string,
-  account: ExtendedAccount,
+  account?: ExtendedAccount,
 ) => {
   let color, value, logo;
   switch (currency) {
@@ -20,7 +20,7 @@ export const getCurrencyProperties = (
       value = account ? account.hbd_balance : null;
       logo = <Hbd />;
       break;
-    case 'HP':
+    default:
       color = '#AC4F00';
       value = account ? account.vesting_shares : null;
       logo = <Hp />;

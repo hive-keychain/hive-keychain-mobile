@@ -1,13 +1,17 @@
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import SafeArea from 'components/ui/SafeArea';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import SafeArea from 'components/ui/SafeArea';
-import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 
-export default (props) => {
+type Props = {
+  children: JSX.Element;
+};
+
+export default ({children}: Props) => {
   return (
     <SafeArea style={styles.bgd}>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="#A3112A" />
-      {props.children}
+      {children}
     </SafeArea>
   );
 };

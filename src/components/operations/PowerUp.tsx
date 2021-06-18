@@ -1,24 +1,25 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, Keyboard} from 'react-native';
-import {connect} from 'react-redux';
-import Toast from 'react-native-simple-toast';
-
-import Operation from './Operation';
-import {translate} from 'utils/localize';
-import OperationInput from 'components/form/OperationInput';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import Separator from 'components/ui/Separator';
-import Balance from './Balance';
-
-import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
+import {loadAccount} from 'actions/index';
 import Hp from 'assets/wallet/icon_hp.svg';
-import {getCurrencyProperties} from 'utils/hiveReact';
-import {goBack} from 'utils/navigation';
-import {loadAccount} from 'actions';
+import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
+import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import OperationInput from 'components/form/OperationInput';
+import Separator from 'components/ui/Separator';
+import React, {useState} from 'react';
+import {Keyboard, StyleSheet, Text} from 'react-native';
+import Toast from 'react-native-simple-toast';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
 import {powerUp} from 'utils/hive';
+import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
+import {translate} from 'utils/localize';
+import {goBack} from 'utils/navigation';
+import Balance from './Balance';
+import Operation from './Operation';
 
-const PowerUp = ({currency = 'HIVE', user, loadAccount}) => {
+type Props = PropsFromRedux & {currency?: string};
+
+const PowerUp = ({currency = 'HIVE', user, loadAccount}: Props) => {
   const [to, setTo] = useState(user.account.name);
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
@@ -28,7 +29,7 @@ const PowerUp = ({currency = 'HIVE', user, loadAccount}) => {
     setLoading(true);
 
     try {
-      await powerUp(user.keys.active, {
+      await powerUp(user.keys.active!, {
         amount: sanitizeAmount(amount, currency),
         to: sanitizeUsername(to),
         from: user.account.name,
@@ -80,17 +81,19 @@ const PowerUp = ({currency = 'HIVE', user, loadAccount}) => {
   );
 };
 
-const getDimensionedStyles = (color) =>
+const getDimensionedStyles = (color: string) =>
   StyleSheet.create({
     button: {backgroundColor: '#68A0B4'},
     currency: {fontWeight: 'bold', fontSize: 18, color},
   });
 
-export default connect(
-  (state) => {
+const connector = connect(
+  (state: RootState) => {
     return {
       user: state.activeAccount,
     };
   },
   {loadAccount},
-)(PowerUp);
+);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(PowerUp);

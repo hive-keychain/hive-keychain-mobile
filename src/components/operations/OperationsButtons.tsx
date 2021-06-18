@@ -1,27 +1,30 @@
-import React from 'react';
-import {TouchableOpacity, View, StyleSheet} from 'react-native';
-import {navigate} from 'utils/navigation';
-
-import Transfer from 'components/operations/Transfer';
-import PowerUp from 'components/operations/PowerUp';
-import PowerDown from 'components/operations/PowerDown';
-import Delegation from 'components/operations/Delegation';
-import History from 'components/operations/History';
-import Convert from 'components/operations/Convert';
-
+import Conversion from 'assets/wallet/icon_convert.svg';
+import Delegate from 'assets/wallet/icon_delegate.svg';
+import HistoryIcon from 'assets/wallet/icon_history.svg';
 import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
-import Delegate from 'assets/wallet/icon_delegate.svg';
-import Conversion from 'assets/wallet/icon_convert.svg';
-import HistoryIcon from 'assets/wallet/icon_history.svg';
+import Convert from 'components/operations/Convert';
+import Delegation from 'components/operations/Delegation';
+import History, {HistoryProps} from 'components/operations/History';
+import PowerDown from 'components/operations/PowerDown';
+import PowerUp from 'components/operations/PowerUp';
+import Transfer from 'components/operations/Transfer';
+import React from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {navigate} from 'utils/navigation';
 
-type RoundButtonProps={
-  size:number;
-  content:JSX.Element;
-  backgroundColor:string;
-  onPress:()=>void
-}
-const RoundButton = ({size, content, backgroundColor, onPress}:RoundButtonProps) => {
+type RoundButtonProps = {
+  size: number;
+  content: JSX.Element;
+  backgroundColor: string;
+  onPress: () => void;
+};
+const RoundButton = ({
+  size,
+  content,
+  backgroundColor,
+  onPress,
+}: RoundButtonProps) => {
   const styles = getStyleSheet(size, backgroundColor);
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
@@ -30,13 +33,18 @@ const RoundButton = ({size, content, backgroundColor, onPress}:RoundButtonProps)
   );
 };
 
-type SendProps={
-  currency:string;
-  tokenBalance?:number;
-  engine?:boolean;
-  tokenLogo?:JSX.Element;
-}
-export const Send = ({currency, tokenBalance, engine, tokenLogo}:SendProps) => {
+type SendProps = {
+  currency: string;
+  tokenBalance?: number;
+  engine?: boolean;
+  tokenLogo?: JSX.Element;
+};
+export const Send = ({
+  currency,
+  tokenBalance,
+  engine,
+  tokenLogo,
+}: SendProps) => {
   return (
     <RoundButton
       onPress={() => {
@@ -118,7 +126,7 @@ export const SendConversion = () => {
   );
 };
 
-export const ShowHistory = (props) => {
+export const ShowHistory = (props: HistoryProps) => {
   return (
     <RoundButton
       onPress={() => {
@@ -133,7 +141,7 @@ export const ShowHistory = (props) => {
   );
 };
 
-const getStyleSheet = (size:number, backgroundColor:string) =>
+const getStyleSheet = (size: number, backgroundColor: string) =>
   StyleSheet.create({
     container: {
       width: size,

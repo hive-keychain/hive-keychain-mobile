@@ -1,38 +1,48 @@
+import {loadAccount} from 'actions/index';
+import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
+import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
+import {encodeMemo} from 'components/bridge';
+import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import CustomRadioGroup from 'components/form/CustomRadioGroup';
+import EllipticButton from 'components/form/EllipticButton';
+import OperationInput from 'components/form/OperationInput';
+import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {
+  Keyboard,
   StyleSheet,
   Text,
-  Keyboard,
-  View,
   useWindowDimensions,
+  View,
 } from 'react-native';
-import {connect} from 'react-redux';
 import Toast from 'react-native-simple-toast';
-
-import Operation from './Operation';
-import {translate} from 'utils/localize';
-import OperationInput from 'components/form/OperationInput';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import EllipticButton from 'components/form/EllipticButton';
-import Separator from 'components/ui/Separator';
-import Balance from './Balance';
-import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
-import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
-import {getCurrencyProperties} from 'utils/hiveReact';
-import {goBack} from 'utils/navigation';
-import {loadAccount} from 'actions';
-import {tryConfirmTransaction} from 'utils/hiveEngine';
-import {getTransferWarning} from 'utils/transferValidator';
-import CustomRadioGroup from 'components/form/CustomRadioGroup';
-import {encodeMemo} from 'components/bridge';
-import {getAccountKeys} from 'utils/hiveUtils';
-import {transfer, sendToken} from 'utils/hive';
-import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
 import {beautifyTransferError} from 'utils/format';
+import {sendToken, transfer} from 'utils/hive';
+import {tryConfirmTransaction} from 'utils/hiveEngine';
+import {getCurrencyProperties} from 'utils/hiveReact';
+import {
+  getAccountKeys,
+  sanitizeAmount,
+  sanitizeUsername,
+} from 'utils/hiveUtils';
+import {translate} from 'utils/localize';
+import {goBack} from 'utils/navigation';
+import {getTransferWarning} from 'utils/transferValidator';
+import Balance from './Balance';
+import Operation from './Operation';
 
 const PUBLIC = translate('common.public').toUpperCase();
 const PRIVATE = translate('common.private').toUpperCase();
 
+type TransferOperationProps = {
+  currency: string;
+  engine: boolean;
+  tokenBalance: string;
+  tokenLogo: JSX.Element;
+};
+type Props = PropsFromRedux & TransferOperationProps;
 const Transfer = ({
   currency,
   user,
@@ -41,7 +51,7 @@ const Transfer = ({
   tokenBalance,
   tokenLogo,
   phishingAccounts,
-}) => {
+}: Props) => {
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
@@ -102,9 +112,9 @@ const Transfer = ({
     }
   };
   const {color} = getCurrencyProperties(currency);
-  const {height, width} = useWindowDimensions();
+  const {height} = useWindowDimensions();
 
-  const styles = getDimensionedStyles(color, height, width);
+  const styles = getDimensionedStyles(color, height);
   if (step === 1) {
     return (
       <Operation
@@ -179,12 +189,12 @@ const Transfer = ({
         <Text style={styles.title}>
           {translate('wallet.operations.transfer.confirm.from')}
         </Text>
-        <Text style={styles.field}>{`@${user.account.name}`}</Text>
+        <Text>{`@${user.account.name}`}</Text>
         <Separator />
         <Text style={styles.title}>
           {translate('wallet.operations.transfer.confirm.to')}
         </Text>
-        <Text style={styles.field}>{`@${to} ${
+        <Text>{`@${to} ${
           getTransferWarning(phishingAccounts, to, currency, !!memo).exchange
             ? '(exchange)'
             : ''
@@ -193,16 +203,14 @@ const Transfer = ({
         <Text style={styles.title}>
           {translate('wallet.operations.transfer.confirm.amount')}
         </Text>
-        <Text style={styles.field}>{`${amount} ${currency}`}</Text>
+        <Text>{`${amount} ${currency}`}</Text>
         <Separator />
         {memo.length ? (
           <>
             <Text style={styles.title}>
               {translate('wallet.operations.transfer.confirm.memo')}
             </Text>
-            <Text style={styles.field}>{`${memo} ${
-              privacy === PRIVATE ? '(encrypted)' : ''
-            }`}</Text>
+            <Text>{`${memo} ${privacy === PRIVATE ? '(encrypted)' : ''}`}</Text>
           </>
         ) : null}
         <Separator height={40} />
@@ -226,7 +234,7 @@ const Transfer = ({
   }
 };
 
-const getDimensionedStyles = (color, height, width) =>
+const getDimensionedStyles = (color: string, width: number) =>
   StyleSheet.create({
     send: {backgroundColor: '#68A0B4'},
     confirm: {
@@ -244,13 +252,15 @@ const getDimensionedStyles = (color, height, width) =>
       justifyContent: 'space-around',
     },
   });
-
-export default connect(
-  (state) => {
+const connector = connect(
+  (state: RootState) => {
     return {
       user: state.activeAccount,
       phishingAccounts: state.phishingAccounts,
     };
   },
   {loadAccount},
-)(Transfer);
+);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(Transfer);

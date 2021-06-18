@@ -1,7 +1,13 @@
 import React, {useState} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 
-const ScreenToggle = ({components, menu, toUpperCase, style}) => {
+type Props = {
+  components: JSX.Element[];
+  menu: string[];
+  toUpperCase: boolean;
+  style: StyleProp<ViewStyle>;
+};
+const ScreenToggle = ({components, menu, toUpperCase, style}: Props) => {
   const [active, setActive] = useState(0);
 
   return (

@@ -1,8 +1,13 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 import Menu from 'assets/wallet/menu.svg';
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 
-export default ({navigation, title}) => {
+type Props = {
+  navigation: DrawerNavigationProp<any>;
+  title: string;
+};
+export default ({navigation, title}: Props) => {
   return (
     <View style={styles.headerContainer}>
       <Text style={styles.headerTitle}>{title}</Text>

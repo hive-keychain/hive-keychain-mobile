@@ -2,8 +2,6 @@ import hive, {
   AccountWitnessProxyOperation,
   AccountWitnessVoteOperation,
   Client,
-  CommentOperation,
-  CommentOptionsOperation,
   ConvertOperation,
   DelegateVestingSharesOperation,
   TransferOperation,
@@ -13,6 +11,8 @@ import hive, {
 import api from 'api/keychain';
 import hiveTx from 'hive-tx';
 import {hiveEngine} from 'utils/config';
+
+type BroadcastResult = {id: string};
 
 const DEFAULT_RPC = 'https://api.hive.blog';
 let client = new Client(DEFAULT_RPC);
@@ -38,7 +38,7 @@ export const setRpc = async (rpc: string) => {
 
 export const getClient = () => client;
 
-export const transfer = async (key: string, obj: TransferOperation) => {
+export const transfer = async (key: string, obj: TransferOperation[1]) => {
   return await broadcast(key, [['transfer', obj]]);
 };
 
@@ -63,11 +63,18 @@ export const broadcastJson = async (
 };
 //todo type obj
 export const sendToken = async (key: string, username: string, obj: object) => {
-  return await broadcastJson(key, username, hiveEngine.CHAIN_ID, true, {
-    contractName: 'tokens',
-    contractAction: 'transfer',
-    contractPayload: obj,
-  });
+  const result = (await broadcastJson(
+    key,
+    username,
+    hiveEngine.CHAIN_ID,
+    true,
+    {
+      contractName: 'tokens',
+      contractAction: 'transfer',
+      contractPayload: obj,
+    },
+  )) as BroadcastResult;
+  return result;
 };
 
 export const powerUp = async (key: string, obj: object) => {
@@ -80,42 +87,36 @@ export const powerDown = async (key: string, obj: object) => {
 
 export const delegate = async (
   key: string,
-  obj: DelegateVestingSharesOperation,
+  obj: DelegateVestingSharesOperation[1],
 ) => {
   return await broadcast(key, [['delegate_vesting_shares', obj]]);
 };
 
-export const convert = async (key: string, obj: ConvertOperation) => {
+export const convert = async (key: string, obj: ConvertOperation[1]) => {
   return await broadcast(key, [['convert', obj]]);
 };
 
-export const vote = async (key: string, obj: VoteOperation) => {
+export const vote = async (key: string, obj: VoteOperation[1]) => {
   return await broadcast(key, [['vote', obj]]);
 };
 
 export const voteForWitness = async (
   key: string,
-  obj: AccountWitnessVoteOperation,
+  obj: AccountWitnessVoteOperation[1],
 ) => {
   return await broadcast(key, [['account_witness_vote', obj]]);
 };
 
 export const setProxy = async (
   key: string,
-  obj: AccountWitnessProxyOperation,
+  obj: AccountWitnessProxyOperation[1],
 ) => {
   return await broadcast(key, [['account_witness_proxy', obj]]);
 };
 
 export const post = async (
   key: string,
-  {
-    comment_options,
-    username,
-    parent_perm,
-    parent_username,
-    ...data
-  }: CommentOperation & CommentOptionsOperation,
+  {comment_options, username, parent_perm, parent_username, ...data}: object,
 ) => {
   const arr = [
     [

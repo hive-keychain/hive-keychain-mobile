@@ -1,6 +1,7 @@
+import Separator from 'components/ui/Separator';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
-import Separator from 'components/ui/Separator';
+import {Height} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 export default () => {
@@ -27,7 +28,7 @@ export default () => {
   );
 };
 
-const getDimensionedStyles = ({width, height}) =>
+const getDimensionedStyles = ({height}: Height) =>
   StyleSheet.create({
     h4: {fontWeight: 'bold', fontSize: 18},
     bold: {fontWeight: 'bold'},

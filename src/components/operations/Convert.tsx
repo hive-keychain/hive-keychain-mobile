@@ -1,43 +1,47 @@
-import React, {useState, useEffect} from 'react';
+import {fetchConversionRequests, loadAccount} from 'actions/index';
+import Hive from 'assets/wallet/icon_hive.svg';
+import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import OperationInput from 'components/form/OperationInput';
+import Separator from 'components/ui/Separator';
+import React, {useEffect, useState} from 'react';
 import {
+  FlatList,
+  Keyboard,
   StyleSheet,
   Text,
-  Keyboard,
   TouchableOpacity,
-  FlatList,
   View,
 } from 'react-native';
-import {connect} from 'react-redux';
 import Toast from 'react-native-simple-toast';
-
-import Operation from './Operation';
-import {translate} from 'utils/localize';
-import OperationInput from 'components/form/OperationInput';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import Separator from 'components/ui/Separator';
-import Balance from './Balance';
-
-import Hive from 'assets/wallet/icon_hive.svg';
-import {getCurrencyProperties} from 'utils/hiveReact';
-import {goBack} from 'utils/navigation';
-import {loadAccount, fetchConversionRequests} from 'actions';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
 import {convert} from 'utils/hive';
+import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
+import {translate} from 'utils/localize';
+import {goBack} from 'utils/navigation';
+import Balance from './Balance';
+import Operation from './Operation';
 
-const Convert = ({user, loadAccount, fetchConversionRequests, conversions}) => {
+const Convert = ({
+  user,
+  loadAccount,
+  fetchConversionRequests,
+  conversions,
+}: PropsFromRedux) => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [showConversionsList, setShowConversionsList] = useState(false);
 
   useEffect(() => {
-    fetchConversionRequests(user.name);
+    fetchConversionRequests(user.name!);
   }, [user.name, fetchConversionRequests]);
 
   const onConvert = async () => {
     Keyboard.dismiss();
     setLoading(true);
     try {
-      await convert(user.keys.active, {
+      await convert(user.keys.active!, {
         owner: user.account.name,
         amount: sanitizeAmount(amount, 'HBD'),
         requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
@@ -100,7 +104,7 @@ const Convert = ({user, loadAccount, fetchConversionRequests, conversions}) => {
               </View>
             );
           }}
-          keyExtractor={(conversion) => conversion.id}
+          keyExtractor={(conversion) => conversion.id + ''}
         />
       ) : (
         <View style={styles.conversionContainer} />
@@ -117,7 +121,7 @@ const Convert = ({user, loadAccount, fetchConversionRequests, conversions}) => {
   );
 };
 
-const getDimensionedStyles = (color) =>
+const getDimensionedStyles = (color: string) =>
   StyleSheet.create({
     button: {backgroundColor: '#68A0B4'},
     currency: {fontWeight: 'bold', fontSize: 18, color},
@@ -135,9 +139,8 @@ const getDimensionedStyles = (color) =>
     },
     green: {color: '#005C09'},
   });
-
-export default connect(
-  (state) => {
+const connector = connect(
+  (state: RootState) => {
     return {
       user: state.activeAccount,
       conversions: state.conversions,
@@ -147,4 +150,6 @@ export default connect(
     loadAccount,
     fetchConversionRequests,
   },
-)(Convert);
+);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(Convert);

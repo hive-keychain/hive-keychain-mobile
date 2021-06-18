@@ -1,19 +1,20 @@
-import React, {useState} from 'react';
-import {StyleSheet, Keyboard} from 'react-native';
-import {connect} from 'react-redux';
-
-import Operation from 'components/operations/Operation';
-import {translate} from 'utils/localize';
-import OperationInput from 'components/form/OperationInput';
-import EllipticButton from 'components/form/EllipticButton';
-import Separator from 'components/ui/Separator';
-
+import {addKey} from 'actions/index';
+import {KeyTypes} from 'actions/interfaces';
 import KeyIcon from 'assets/addAccount/icon_key.svg';
+import EllipticButton from 'components/form/EllipticButton';
+import OperationInput from 'components/form/OperationInput';
+import Operation from 'components/operations/Operation';
 import KeychainLogo from 'components/ui/KeychainLogo';
+import Separator from 'components/ui/Separator';
+import React, {useState} from 'react';
+import {Keyboard, StyleSheet} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
+import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
-import {addKey} from 'actions';
 
-const AddKey = ({addKey, name, type}) => {
+type Props = PropsFromRedux & {name: string; type: KeyTypes};
+
+const AddKey = ({addKey, name, type}: Props) => {
   console.log(name, type);
   const [key, setKey] = useState('');
   return (
@@ -49,4 +50,7 @@ const styles = StyleSheet.create({
   currency: {fontWeight: 'bold', fontSize: 18},
 });
 
-export default connect(null, {addKey})(AddKey);
+const connector = connect(null, {addKey});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(AddKey);

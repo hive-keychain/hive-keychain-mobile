@@ -1,10 +1,16 @@
-import React from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import Close from 'assets/wallet/icon_close.svg';
-import {goBack} from 'utils/navigation';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import React from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {goBack} from 'utils/navigation';
 
-export default ({icon, children, logo, title, onClose}) => {
+type Props = {
+  children: JSX.Element[];
+  logo: JSX.Element;
+  title: string;
+  onClose?: () => void;
+};
+export default ({children, logo, title, onClose}: Props) => {
   return (
     <>
       <FocusAwareStatusBar backgroundColor="#b4112A" />

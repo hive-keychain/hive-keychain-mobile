@@ -152,7 +152,7 @@ export const sanitizeUsername = (username: string) =>
 
 export const sanitizeAmount = (
   amount: string | number,
-  currency: string,
+  currency?: string,
   decimals = 3,
 ) => {
   if (typeof amount !== 'string') {

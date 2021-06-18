@@ -1,16 +1,18 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, FlatList, Text, View, TouchableOpacity} from 'react-native';
-import {connect} from 'react-redux';
-
-import Operation from './Operation';
-import {translate} from 'utils/localize';
-import Separator from 'components/ui/Separator';
-import Delegate from 'assets/wallet/icon_delegate_dark.svg';
-import {loadDelegators, loadDelegatees} from 'actions';
-import {toHP, withCommas} from 'utils/format';
+import {loadDelegatees, loadDelegators} from 'actions/index';
 import Edit from 'assets/wallet/edit.svg';
-import {navigate} from 'utils/navigation';
+import Delegate from 'assets/wallet/icon_delegate_dark.svg';
 import Delegation from 'components/operations/Delegation';
+import Separator from 'components/ui/Separator';
+import React, {useEffect} from 'react';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
+import {toHP, withCommas} from 'utils/format';
+import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
+import Operation from './Operation';
+
+type Props = PropsFromRedux & {type: string};
 
 const DelegationsList = ({
   user,
@@ -19,7 +21,7 @@ const DelegationsList = ({
   delegations,
   type,
   properties,
-}) => {
+}: Props) => {
   useEffect(() => {
     if (user) {
       if (type === 'incoming') {
@@ -42,7 +44,7 @@ const DelegationsList = ({
             <View style={styles.container}>
               <Text>{`@${item.delegator}`}</Text>
               <Text>{`${withCommas(
-                toHP(item.vesting_shares, properties.globals),
+                toHP(item.vesting_shares + '', properties.globals) + '',
               )} HP`}</Text>
             </View>
           );
@@ -62,7 +64,7 @@ const DelegationsList = ({
               <Text style={styles.text}>{`@${item.delegatee}`}</Text>
               <View style={styles.rightContainer}>
                 <Text style={styles.text}>{`${withCommas(
-                  toHP(item.vesting_shares, properties.globals),
+                  toHP(item.vesting_shares + '', properties.globals) + '',
                 )} HP`}</Text>
                 <TouchableOpacity
                   onPress={() => {
@@ -109,8 +111,8 @@ const getDimensionedStyles = () =>
     separator: {marginVertical: 5, borderBottomWidth: 1},
   });
 
-export default connect(
-  (state) => {
+const connector = connect(
+  (state: RootState) => {
     return {
       user: state.activeAccount,
       delegations: state.delegations,
@@ -121,4 +123,7 @@ export default connect(
     loadDelegatees,
     loadDelegators,
   },
-)(DelegationsList);
+);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(DelegationsList);
