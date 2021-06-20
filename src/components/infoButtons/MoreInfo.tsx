@@ -1,14 +1,14 @@
+import Information from 'assets/addAccount/icon_info.svg';
+import InfoQR from 'components/modals/InfoQR';
+import MoreInformation from 'components/modals/MoreInformation';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, useWindowDimensions} from 'react-native';
+import {Width} from 'utils/common.types';
 import {navigate} from 'utils/navigation';
-import MoreInformation from 'components/modals/MoreInformation';
-import InfoQR from 'components/modals/InfoQR';
-import Information from 'assets/addAccount/icon_info.svg';
 
-export default ({type}) => {
-  const {height, width} = useWindowDimensions();
-  const styles = getDimensionedStyles({height, width});
-  let content = null;
+export default ({type}: {type: string}) => {
+  const styles = getDimensionedStyles(useWindowDimensions());
+  let content = <></>;
   switch (type) {
     case 'moreInfo':
       content = <MoreInformation />;
@@ -26,7 +26,7 @@ export default ({type}) => {
   );
 };
 
-const getDimensionedStyles = ({width, height}) =>
+const getDimensionedStyles = ({width}: Width) =>
   StyleSheet.create({
     info: {marginRight: width * 0.05},
   });
