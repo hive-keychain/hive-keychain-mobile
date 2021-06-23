@@ -1,19 +1,15 @@
-import {actionPayload} from 'actions/interfaces';
+import {actionPayload, browser, browserPayload} from 'actions/interfaces';
 import {
+  ADD_BROWSER_TAB,
   ADD_TO_BROWSER_HISTORY,
-  ADD_TO_BROWSER_FAVORITES,
+  BROWSER_FOCUS,
   CLEAR_BROWSER_HISTORY,
   CLOSE_ALL_BROWSER_TABS,
-  ADD_BROWSER_TAB,
   CLOSE_BROWSER_TAB,
   SET_ACTIVE_BROWSER_TAB,
   UPDATE_BROWSER_TAB,
-  REMOVE_FROM_BROWSER_FAVORITES,
-  BROWSER_FOCUS,
   UPDATE_MANAGEMENT,
 } from 'actions/types';
-
-import {browser, browserPayload} from 'actions/interfaces';
 
 const browserReducer = (
   state: browser = {
@@ -28,7 +24,7 @@ const browserReducer = (
 ) => {
   switch (type) {
     case ADD_TO_BROWSER_HISTORY:
-      if (state.history.find((e) => e!.url === payload!.url)) {
+      if (state.history.find((e) => e!.url === payload!.history!.url)) {
         return state;
       }
       return {

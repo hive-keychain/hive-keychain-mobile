@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import BrowserHeader from 'components/browser/Header.js';
+import BrowserHeader from 'components/browser/Header';
 import DrawerButton from 'components/ui/DrawerButton';
 import React from 'react';
 import Browser from 'screens/Browser';

@@ -26,7 +26,8 @@ const TokenDisplay = ({
   tokenLogo,
 }: Props) => {
   let {color, value, logo} = getCurrencyProperties(currency, account);
-  let parsedValue = +value!;
+  let parsedValue = parseFloat(value as string);
+
   if (pd && value) {
     parsedValue =
       parseFloat(value as string) -
