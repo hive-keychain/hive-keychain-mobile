@@ -1,18 +1,25 @@
 import React, {Component} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {WebView} from 'react-native-webview';
 import html from './html';
 
-let self;
-class Bridge extends Component {
-  constructor(props) {
+let self: Bridge;
+
+type InnerProps = {
+  pendingMethods: object;
+  webref: WebView;
+};
+class Bridge extends Component implements InnerProps {
+  pendingMethods = {};
+  webref: WebView;
+
+  constructor(props: any) {
     super(props);
-    this.pendingMethods = {};
     // eslint-disable-next-line consistent-this
     self = this;
   }
 
-  sendMessage(methodName, params) {
+  sendMessage(methodName: string, params: any[]) {
     const id = Math.random().toString(36).substr(2, 9); //just unique id
     const js = `
         returnValue = window.${methodName}('${params.join("','")}');
@@ -26,7 +33,7 @@ class Bridge extends Component {
     });
   }
 
-  onWebViewMessage(event) {
+  onWebViewMessage(event: {nativeEvent: {data: string}}) {
     let msgData;
     try {
       msgData = JSON.parse(event.nativeEvent.data);
@@ -53,16 +60,23 @@ class Bridge extends Component {
 }
 const styles = StyleSheet.create({container: {height: 0}});
 
-export const decodeMemo = (key, string) =>
-  self.sendMessage('decodeMemo', [key, string]);
+export const decodeMemo = (key: string, string: string) =>
+  self.sendMessage('decodeMemo', [key, string]) as Promise<string>;
 
-export const encodeMemo = (key, receiverKey, string) =>
-  self.sendMessage('encodeMemo', [key, receiverKey, string]);
+export const encodeMemo = (key: string, receiverKey: string, string: string) =>
+  self.sendMessage('encodeMemo', [key, receiverKey, string]) as Promise<string>;
 
-export const signBuffer = (key, string) =>
-  self.sendMessage('signBuffer', [string, key]);
+export const signBuffer = (key: string, string: string) =>
+  self.sendMessage('signBuffer', [string, key]) as Promise<string>;
 
-export const signedCall = (key, method, params, username) =>
-  self.sendMessage('signedCall', [method, params, username, key]);
+export const signedCall = (
+  key: string,
+  method: string,
+  params: string,
+  username: string,
+) =>
+  self.sendMessage('signedCall', [method, params, username, key]) as Promise<
+    string
+  >;
 
 export default Bridge;

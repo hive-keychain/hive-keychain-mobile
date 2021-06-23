@@ -15,6 +15,7 @@ interface Props {
   isLoading?: boolean;
   title: string;
   onPress: () => void;
+  disabled?: boolean;
 }
 export default ({style, isLoading = false, title, ...props}: Props) => {
   const styles = getDimensionedStyles(useWindowDimensions());

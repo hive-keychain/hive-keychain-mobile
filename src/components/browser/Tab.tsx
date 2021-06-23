@@ -1,22 +1,42 @@
-import React, {useRef, useState, useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
-import {WebView} from 'react-native-webview';
-import Footer from './Footer';
-import ProgressBar from './ProgressBar';
-import {BrowserConfig} from 'utils/config';
-import UrlModal from './urlModal';
-import RequestModalContent from './RequestModalContent';
-import {hive_keychain} from './bridges/HiveKeychainBridge';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
-  validateRequest,
+  account,
+  actionPayload,
+  browserPayload,
+  history,
+  tab,
+} from 'actions/interfaces';
+import {BrowserNavigation} from 'navigators/MainDrawer.types';
+import React, {useEffect, useRef, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {WebView} from 'react-native-webview';
+import {BrowserConfig} from 'utils/config';
+import {
   sendError,
   sendResponse,
   validateAuthority,
+  validateRequest,
 } from 'utils/keychain';
-import {navigate, goBack as navigationGoBack} from 'utils/navigation';
+import {goBack as navigationGoBack, navigate} from 'utils/navigation';
+import {hive_keychain} from './bridges/HiveKeychainBridge';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
+import Footer from './Footer';
+import ProgressBar from './ProgressBar';
+import RequestModalContent from './RequestModalContent';
+import UrlModal from './urlModal';
 
+type Props = {
+  data: tab;
+  active: boolean;
+  manageTabs: (tab: tab, webview: WebView) => void;
+  isManagingTab: boolean;
+  accounts: account[];
+  updateTab: (id: number, data: tab) => actionPayload<browserPayload>;
+  addToHistory: (history: history) => actionPayload<browserPayload>;
+  history: history[];
+  clearHistory: () => actionPayload<browserPayload>;
+  navigation: BrowserNavigation;
+};
 export default ({
   data: {url, id, icon},
   active,
@@ -28,7 +48,7 @@ export default ({
   history,
   manageTabs,
   isManagingTab,
-}) => {
+}: Props) => {
   const tabRef = useRef(null);
   const [searchUrl, setSearchUrl] = useState(url);
   const [canGoBack, setCanGoBack] = useState(false);

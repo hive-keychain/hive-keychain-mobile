@@ -1,11 +1,18 @@
-import React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
-import EllipticButton from './EllipticButton';
-import {connect} from 'react-redux';
-import {translate} from 'utils/localize';
+import {KeyTypes} from 'actions/interfaces';
 import Icon from 'assets/addAccount/icon_info.svg';
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
+import {translate} from 'utils/localize';
+import EllipticButton from './EllipticButton';
 
-const ActiveOperationButton = ({method, ...props}) => {
+type Props = {
+  method: KeyTypes;
+  title: string;
+  onPress: () => void;
+} & PropsFromRedux;
+const ActiveOperationButton = ({method, ...props}: Props) => {
   console.log(method, props);
   return (
     <>
@@ -38,6 +45,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect((state) => {
+const connector = connect((state: RootState) => {
   return {user: state.activeAccount};
-})(ActiveOperationButton);
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(ActiveOperationButton);

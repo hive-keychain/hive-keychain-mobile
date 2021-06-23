@@ -1,28 +1,34 @@
+import {activeAccount, tokenTransaction, transaction} from 'actions/interfaces';
 import React, {useState} from 'react';
 import {
-  View,
-  TouchableOpacity,
-  Text,
   StyleSheet,
+  Text,
+  TouchableOpacity,
   useWindowDimensions,
+  View,
 } from 'react-native';
+import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
 
-const Transfer = ({transaction, user, token}) => {
+type Props = {
+  user: activeAccount;
+  transaction: transaction | tokenTransaction;
+  token?: boolean;
+};
+const Transfer = ({transaction, user, token = false}: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
   const {timestamp, from, to, amount, memo} = transaction;
   const other = from === username ? to : from;
   const direction = from === username ? '-' : '+';
   const color = direction === '+' ? '#3BB26E' : '#B9122F';
-  const date = new Date(token ? timestamp * 1000 : timestamp).toLocaleString(
-    [],
-    {
-      year: '2-digit',
-      month: '2-digit',
-      day: '2-digit',
-    },
-  );
+  const date = new Date(
+    token ? (timestamp as number) * 1000 : timestamp,
+  ).toLocaleString([], {
+    year: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
+  });
 
   const styles = getDimensionedStyles({
     ...useWindowDimensions(),
@@ -49,7 +55,7 @@ const Transfer = ({transaction, user, token}) => {
   );
 };
 
-const getDimensionedStyles = ({width, height, color}) =>
+const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
   StyleSheet.create({
     container: {
       borderBottomWidth: 1,

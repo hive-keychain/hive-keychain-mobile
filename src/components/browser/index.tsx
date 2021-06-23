@@ -1,9 +1,12 @@
+import {tab} from 'actions/interfaces';
+import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React, {useEffect} from 'react';
-import {View, StyleSheet, StatusBar} from 'react-native';
+import {StatusBar, StyleSheet, View} from 'react-native';
+import {captureRef} from 'react-native-view-shot';
+import {BrowserPropsFromRedux} from 'screens/Browser';
+import {BrowserConfig} from 'utils/config';
 import Tab from './Tab';
 import TabsManagement from './tabsManagement';
-import {BrowserConfig} from 'utils/config';
-import {captureRef} from 'react-native-view-shot';
 
 const Browser = ({
   accounts,
@@ -25,7 +28,7 @@ const Browser = ({
   setBrowserFocus,
   showManagementScreen,
   showManagement,
-}) => {
+}: BrowserPropsFromRedux & BrowserNavigationProps) => {
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       StatusBar.setHidden(true);
@@ -38,18 +41,14 @@ const Browser = ({
     setBrowserFocus(false);
   }, [setBrowserFocus]);
 
-  const manageTabs = ({url, icon, id}, view) => {
+  const manageTabs = ({url, icon, id}: tab, view) => {
     captureRef(view, {
       format: 'jpg',
       quality: 0.2,
     }).then(
       (uri) => {
         console.log(uri);
-        updateTab(id, {
-          url,
-          icon,
-          image: uri,
-        });
+        updateTab(id, {id, url, icon, image: uri});
         showManagementScreen(true);
       },
       (error) => {
@@ -107,7 +106,6 @@ const Browser = ({
           active={tab.id === activeTab}
           key={tab.id}
           updateTab={updateTab}
-          route={route}
           navigation={navigation}
           addToHistory={addToHistory}
           history={history}

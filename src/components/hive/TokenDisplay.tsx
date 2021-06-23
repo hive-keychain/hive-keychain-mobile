@@ -5,10 +5,10 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   useWindowDimensions,
   View,
-  ViewStyle,
 } from 'react-native';
 import {Width} from 'utils/common.types';
 import {formatBalance, signedNumber} from 'utils/format';
@@ -24,7 +24,7 @@ type Props = {
   incoming?: number;
   outgoing?: number;
   buttons: JSX.Element[];
-  amountStyle?: StyleProp<ViewStyle>;
+  amountStyle?: StyleProp<TextStyle>;
 };
 
 const TokenDisplay = ({

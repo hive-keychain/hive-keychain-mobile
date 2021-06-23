@@ -1,10 +1,11 @@
-import React from 'react';
-import {View, Text, StyleSheet, useWindowDimensions} from 'react-native';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
+import React from 'react';
+import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {Width} from 'utils/common.types';
 
-export default ({username}) => {
-  const {width, height} = useWindowDimensions();
-  const styles = getDimensionedStyles({width, height});
+export default ({username}: {username: string}) => {
+  const {width} = useWindowDimensions();
+  const styles = getDimensionedStyles({width});
   return (
     <View style={styles.container}>
       <UserProfilePicture username={username} style={styles.image} />
@@ -13,7 +14,7 @@ export default ({username}) => {
   );
 };
 
-const getDimensionedStyles = ({width, height}) =>
+const getDimensionedStyles = ({width}: Width) =>
   StyleSheet.create({
     container: {
       marginVertical: 40,

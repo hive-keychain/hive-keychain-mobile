@@ -1,29 +1,38 @@
-import React, {useState, useEffect} from 'react';
-import {Text, StyleSheet, View} from 'react-native';
-import Separator from 'components/ui/Separator';
 import Clipboard from '@react-native-community/clipboard';
-import Toast from 'react-native-simple-toast';
-import {translate} from 'utils/localize';
-import RoundButton from 'components/operations/OperationsButtons';
+import {account, KeyTypes} from 'actions/interfaces';
+import Copy from 'assets/settings/copy.svg';
 import Remove from 'assets/settings/remove.svg';
 import ViewIcon from 'assets/settings/view.svg';
-import Copy from 'assets/settings/copy.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import AddKey from 'components/modals/AddKey';
+import RoundButton from 'components/operations/OperationsButtons';
+import Separator from 'components/ui/Separator';
+import {MainNavigation} from 'navigators/Root.types';
+import React, {useEffect, useState} from 'react';
+import {StyleProp, StyleSheet, Text, View, ViewProps} from 'react-native';
+import Toast from 'react-native-simple-toast';
+import {AppThunk} from 'src/hooks/redux';
+import {translate} from 'utils/localize';
 
+type Props = {
+  type: KeyTypes;
+  account: account;
+  containerStyle: StyleProp<ViewProps>;
+  forgetKey: (username: string, key: KeyTypes) => AppThunk;
+  navigation: MainNavigation;
+};
 export default ({
   type,
   account,
   forgetKey,
-  addKey,
   containerStyle,
   navigation,
-}) => {
+}: Props) => {
   if (!account) {
     return null;
   }
   const privateKey = account.keys[type];
-  const publicKey = account.keys[`${type}Pubkey`];
+  const publicKey = account.keys[`${type}Pubkey` as KeyTypes];
   const [isPKShown, showPK] = useState(false);
 
   useEffect(() => {
@@ -46,7 +55,6 @@ export default ({
             forgetKey={() => {
               forgetKey(account.name, type);
             }}
-            show={!!privateKey}
           />
         )}
       </View>
@@ -102,7 +110,7 @@ export default ({
   );
 };
 
-const RemoveKey = ({forgetKey}) => {
+const RemoveKey = ({forgetKey}: {forgetKey: () => void}) => {
   return (
     <RoundButton
       onPress={forgetKey}
@@ -113,7 +121,7 @@ const RemoveKey = ({forgetKey}) => {
   );
 };
 
-const CopyKey = ({wif}) => {
+const CopyKey = ({wif}: {wif: string}) => {
   return (
     <RoundButton
       onPress={() => {
@@ -126,8 +134,8 @@ const CopyKey = ({wif}) => {
     />
   );
 };
-
-const ViewKey = ({toggle, isPKShown}) => {
+type ViewKeyProps = {toggle: () => void; isPKShown: boolean};
+const ViewKey = ({toggle, isPKShown}: ViewKeyProps) => {
   return (
     <RoundButton
       onPress={toggle}
@@ -138,7 +146,7 @@ const ViewKey = ({toggle, isPKShown}) => {
   );
 };
 
-const hidePrivateKey = (privateKey) => {
+const hidePrivateKey = (privateKey: string) => {
   let hiddenKey = '';
   for (let i = 0; i < privateKey.length; i++) {
     hiddenKey += '\u25cf ';

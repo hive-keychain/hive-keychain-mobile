@@ -37,7 +37,7 @@ const BrowserScreen = ({
   route,
   showManagementScreen,
   showManagement,
-}: PropsFromRedux & BrowserNavigationProps) => {
+}: BrowserPropsFromRedux & BrowserNavigationProps) => {
   return (
     <Browser
       accounts={accounts}
@@ -88,6 +88,6 @@ const connector = connect(mapStateToProps, {
   showManagementScreen,
 });
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
+export type BrowserPropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(BrowserScreen);

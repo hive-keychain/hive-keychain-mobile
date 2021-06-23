@@ -1,8 +1,19 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+type Props = {
+  canGoBack: boolean;
+  goBack: () => void;
+  canGoForward: boolean;
+  goForward: () => void;
+  goHome: () => void;
+  reload: () => void;
+  toggleSearchBar: () => void;
+  manageTabs: () => void;
+  height: number;
+};
 const Footer = ({
   canGoBack,
   goBack,
@@ -11,10 +22,10 @@ const Footer = ({
   goHome,
   reload,
   toggleSearchBar,
-  addTab,
+  //addTab,
   manageTabs,
   height,
-}) => {
+}: Props) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(height, insets);
 
@@ -53,7 +64,7 @@ const Footer = ({
   );
 };
 
-const getStyles = (height, insets) =>
+const getStyles = (height: number, insets: EdgeInsets) =>
   StyleSheet.create({
     icon: {color: 'white', fontSize: 28},
     disabled: {color: 'darkgrey'},

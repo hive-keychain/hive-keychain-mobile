@@ -145,6 +145,7 @@ const getAccountTransactions = async (
         (a, b) =>
           new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
       );
+    console.log(transfers);
 
     if (start && Math.min(1000, start) !== 1000 && transfers.length) {
       transfers[transfers.length - 1].last = true;
@@ -167,6 +168,7 @@ const getAccountTransactions = async (
     }
     return trs;
   } catch (e) {
+    console.log(e);
     return getAccountTransactions(
       accountName,
       e.jse_info.stack[0].data.sequence - 1,

@@ -1,15 +1,18 @@
-import React from 'react';
 import {
+  DrawerContentComponentProps,
   DrawerContentScrollView,
-  DrawerItemList,
   DrawerItem,
+  DrawerItemList,
 } from '@react-navigation/drawer';
+import {lock} from 'actions/index';
 import DrawerHeader from 'components/drawer/Header';
-import {connect} from 'react-redux';
-import {lock} from 'actions';
+import React from 'react';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
 import {translate} from 'utils/localize';
 
-const HeaderContent = (props) => {
+type Props = PropsFromRedux & DrawerContentComponentProps;
+const HeaderContent = (props: Props) => {
   const {user, lock, navigation} = props;
   return (
     <DrawerContentScrollView {...props}>
@@ -27,6 +30,9 @@ const HeaderContent = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({user: state.activeAccount.name});
-
-export default connect(mapStateToProps, {lock})(HeaderContent);
+const mapStateToProps = (state: RootState) => ({
+  user: state.activeAccount.name,
+});
+const connector = connect(mapStateToProps, {lock});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(HeaderContent);

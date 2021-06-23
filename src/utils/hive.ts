@@ -1,4 +1,5 @@
-import hive, {
+const hive = require('@hiveio/dhive');
+import {
   AccountWitnessProxyOperation,
   AccountWitnessVoteOperation,
   Client,
@@ -163,5 +164,4 @@ export const broadcast = async (key: string, arr: any[]) => {
     return result;
   }
 };
-
 export default hive;

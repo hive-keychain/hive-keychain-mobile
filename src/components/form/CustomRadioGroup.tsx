@@ -1,7 +1,13 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-export default ({list, onSelect, selected}) => (
+type Props = {
+  list: string[];
+  onSelect: (arg0: string) => void;
+  selected: string;
+};
+
+export default ({list, onSelect, selected}: Props) => (
   <View style={styles.radioGroup}>
     {list.map((data) => (
       <RadioButton
@@ -14,7 +20,13 @@ export default ({list, onSelect, selected}) => (
   </View>
 );
 
-const RadioButton = ({data, onSelect, selected}) => (
+type RadioProps = {
+  data: string;
+  onSelect: (arg0: string) => void;
+  selected: boolean;
+};
+
+const RadioButton = ({data, onSelect, selected}: RadioProps) => (
   <TouchableOpacity
     style={styles.radioButton}
     onPress={() => {

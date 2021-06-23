@@ -1,10 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
-import {initAccountTransactions, fetchAccountTransactions} from 'actions';
-import {connect} from 'react-redux';
+import {fetchAccountTransactions, initAccountTransactions} from 'actions/index';
+import {activeAccount} from 'actions/interfaces';
+import Loader from 'components/ui/Loader';
+import React, {useEffect, useState} from 'react';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import Transfer from './Transfer';
-import Loader from 'components/ui/Loader';
+
+type Props = PropsFromRedux & {user: activeAccount};
 
 const Transactions = ({
   transactions,
@@ -12,7 +16,7 @@ const Transactions = ({
   initAccountTransactions,
   fetchAccountTransactions,
   user,
-}) => {
+}: Props) => {
   useEffect(() => {
     if (user.account.name) {
       initAccountTransactions(user.account.name);
@@ -31,7 +35,7 @@ const Transactions = ({
           onEndReachedThreshold={0.5}
           onEndReached={() => {
             const newEnd =
-              transactions[transactions.length - 1].key.split('!')[1] - 1;
+              +transactions[transactions.length - 1].key.split('!')[1] - 1;
             if (newEnd !== end && !transactions[transactions.length - 1].last) {
               fetchAccountTransactions(user.account.name, newEnd);
               setEnd(newEnd);
@@ -64,14 +68,15 @@ const basicStyles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: RootState) => {
   return {
     transactions: state.transactions.list,
     loading: state.transactions.loading,
   };
 };
-
-export default connect(mapStateToProps, {
+const connector = connect(mapStateToProps, {
   initAccountTransactions,
   fetchAccountTransactions,
-})(Transactions);
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(Transactions);

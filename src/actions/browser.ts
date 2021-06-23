@@ -1,20 +1,19 @@
+import {AppThunk} from 'src/hooks/redux';
+import {navigate} from 'utils/navigation';
+import {actionPayload, browserPayload, history, tabFields} from './interfaces';
 import {
-  ADD_TO_BROWSER_HISTORY,
-  CLEAR_BROWSER_HISTORY,
-  ADD_TO_BROWSER_FAVORITES,
-  REMOVE_FROM_BROWSER_FAVORITES,
   ADD_BROWSER_TAB,
-  CLOSE_BROWSER_TAB,
-  UPDATE_BROWSER_TAB,
-  CLOSE_ALL_BROWSER_TABS,
-  SET_ACTIVE_BROWSER_TAB,
+  ADD_TO_BROWSER_FAVORITES,
+  ADD_TO_BROWSER_HISTORY,
   BROWSER_FOCUS,
+  CLEAR_BROWSER_HISTORY,
+  CLOSE_ALL_BROWSER_TABS,
+  CLOSE_BROWSER_TAB,
+  REMOVE_FROM_BROWSER_FAVORITES,
+  SET_ACTIVE_BROWSER_TAB,
+  UPDATE_BROWSER_TAB,
   UPDATE_MANAGEMENT,
 } from './types';
-import {navigate} from 'utils/navigation';
-import {actionPayload, browserPayload, tab, history} from './interfaces';
-import {AppThunk, useAppSelector} from 'src/hooks/redux';
-import {AppDispatch, RootState} from 'store';
 
 export const addToHistory = (history: history) => {
   const action: actionPayload<browserPayload> = {
@@ -107,7 +106,7 @@ export const changeTab = (id: number) => {
   };
 };
 
-export const updateTab = (id: number, data: tab) => {
+export const updateTab = (id: number, data: tabFields) => {
   const action: actionPayload<browserPayload> = {
     type: UPDATE_BROWSER_TAB,
     payload: {id, data},

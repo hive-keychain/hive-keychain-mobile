@@ -44,12 +44,20 @@ export interface tab {
   image?: string;
 }
 
+export interface tabFields {
+  id?: number;
+  url?: string;
+  name?: string;
+  icon?: string;
+  image?: string;
+}
+
 export interface browserPayload {
   url?: string;
   history?: history;
   shouldFocus?: boolean;
   id?: number | null;
-  data?: tab;
+  data?: tabFields;
   showManagement?: boolean;
   whitelist?: [];
 }
