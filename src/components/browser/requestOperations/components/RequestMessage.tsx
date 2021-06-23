@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
-export default ({message}) => {
+export default ({message}: {message: string}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.msg}>{message}</Text>

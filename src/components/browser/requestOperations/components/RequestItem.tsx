@@ -1,7 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
-export default ({title, content}) => {
+type Props = {
+  title: string;
+  content: string;
+};
+export default ({title, content}: Props) => {
   return (
     <View style={styles.container}>
       {getTitle({title})}
@@ -10,7 +14,7 @@ export default ({title, content}) => {
   );
 };
 
-export const getTitle = ({title}) => {
+export const getTitle = ({title}: {title: string}) => {
   return <Text style={styles.title}>{title}</Text>;
 };
 

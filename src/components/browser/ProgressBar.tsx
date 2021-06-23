@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-export default ({progress}) => {
+export default ({progress}: {progress: number}) => {
   const styles = getStyles(progress);
   return (
     <View style={styles.container}>
@@ -10,7 +10,7 @@ export default ({progress}) => {
   );
 };
 
-const getStyles = (progress) =>
+const getStyles = (progress: number) =>
   StyleSheet.create({
     container: {width: '100%', height: progress ? 2 : 0},
     bar: {height: '100%', backgroundColor: 'red', width: `${progress * 100}%`},

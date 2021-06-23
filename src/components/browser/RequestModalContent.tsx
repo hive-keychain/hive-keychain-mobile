@@ -1,16 +1,24 @@
-import React from 'react';
+import {account} from 'actions/interfaces';
 import Operation from 'components/operations/Operation';
-import Requests from './requestOperations';
-import {translate} from 'utils/localize';
+import React from 'react';
 import {capitalize} from 'utils/format';
+import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
+import Requests from './requestOperations';
+
+type Props = {
+  accounts: account[];
+  onForceCloseModal: () => void;
+  sendError: () => void;
+  sendResponse: () => void;
+};
 export default ({
   accounts,
   request,
   onForceCloseModal,
   sendResponse,
   sendError,
-}) => {
+}: Props) => {
   const renderOperationDetails = () => {
     const type = capitalize(request.type);
     const Request = Requests[type];

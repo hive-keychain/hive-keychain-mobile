@@ -1,9 +1,10 @@
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import RequestMessage from './RequestMessage';
 import EllipticButton from 'components/form/EllipticButton';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import RequestMessage from './RequestMessage';
 
-export default ({closeGracefully, resultMessage}) => {
+type Props = {closeGracefully: () => void; resultMessage: string};
+export default ({closeGracefully, resultMessage}: Props) => {
   return (
     <View style={styles.msgContainer}>
       <RequestMessage message={resultMessage} />

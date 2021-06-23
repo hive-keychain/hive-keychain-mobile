@@ -1,15 +1,21 @@
 import React from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {BrowserConfig} from 'utils/config';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+type Props = {
+  onCloseAllTabs: () => void;
+  onAddTab: () => void;
+  showSideButtons: boolean;
+  onQuitManagement: () => void;
+};
 export default ({
   onCloseAllTabs,
   onAddTab,
   showSideButtons,
   onQuitManagement,
-}) => {
+}: Props) => {
   const insets = useSafeAreaInsets();
   const styles = getsStyles(insets);
   return (
@@ -41,7 +47,7 @@ export default ({
   );
 };
 
-const getsStyles = (insets) =>
+const getsStyles = (insets: EdgeInsets) =>
   StyleSheet.create({
     container: {
       height: BrowserConfig.HEADER_HEIGHT + insets.bottom,

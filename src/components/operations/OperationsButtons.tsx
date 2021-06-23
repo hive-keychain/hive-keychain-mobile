@@ -35,7 +35,7 @@ const RoundButton = ({
 
 type SendProps = {
   currency: string;
-  tokenBalance?: number;
+  tokenBalance?: string;
   engine?: boolean;
   tokenLogo?: JSX.Element;
 };

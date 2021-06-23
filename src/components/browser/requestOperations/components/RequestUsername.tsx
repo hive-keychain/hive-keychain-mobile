@@ -1,10 +1,17 @@
-import React from 'react';
-import RequestItem from './RequestItem';
-import {translate} from 'utils/localize';
-import {View, StyleSheet} from 'react-native';
+import {account} from 'actions/interfaces';
 import UserPicker from 'components/form/UserPicker';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {translate} from 'utils/localize';
+import RequestItem from './RequestItem';
 
-export default ({username, accounts, account, setAccount}) => {
+type Props = {
+  username: string;
+  accounts: account[];
+  account: string;
+  setAccount: (account: string) => void;
+};
+export default ({username, accounts, account, setAccount}: Props) => {
   return username ? (
     <RequestItem
       title={translate('request.item.username')}
@@ -15,11 +22,9 @@ export default ({username, accounts, account, setAccount}) => {
       <UserPicker
         accounts={accounts.map((e) => e.name)}
         username={account}
-        noSort
         onAccountSelected={(acc) => {
           setAccount(acc);
         }}
-        style={styles.picker}
       />
     </View>
   );

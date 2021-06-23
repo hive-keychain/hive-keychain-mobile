@@ -1,13 +1,14 @@
 import {addKey, forgetAccount, forgetKey} from 'actions/index';
+import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import UserPicker from 'components/form/UserPicker';
 import Key from 'components/hive/Key';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
-import {MgtNavigationProps} from 'navigators/MainDrawer.types';
+import {MainNavigation} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text} from 'react-native';
+import {ScrollView, StyleSheet, Text, ViewStyle} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
@@ -19,7 +20,7 @@ const AccountManagement = ({
   addKey,
   navigation,
   accounts,
-}: PropsFromRedux & MgtNavigationProps) => {
+}: PropsFromRedux & {navigation: MainNavigation}) => {
   const [username, setUsername] = useState(account.name);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -49,27 +50,24 @@ const AccountManagement = ({
         ))}
         <Separator height={20} />
         <Key
-          type="posting"
-          containerStyle={styles.keyOdd}
+          type={KeyTypes.posting}
+          containerStyle={styles.keyOdd as ViewStyle}
           account={accounts.find((e) => e.name === username)}
           forgetKey={forgetKey}
-          addKey={addKey}
           navigation={navigation}
         />
         <Key
-          type="active"
-          containerStyle={styles.keyEven}
+          type={KeyTypes.active}
+          containerStyle={styles.keyEven as ViewStyle}
           account={accounts.find((e) => e.name === username)}
           forgetKey={forgetKey}
-          addKey={addKey}
           navigation={navigation}
         />
         <Key
-          type="memo"
-          containerStyle={styles.keyOdd}
+          type={KeyTypes.memo}
+          containerStyle={styles.keyOdd as ViewStyle}
           account={accounts.find((e) => e.name === username)}
           forgetKey={forgetKey}
-          addKey={addKey}
           navigation={navigation}
         />
         <Separator height={20} />

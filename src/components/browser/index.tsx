@@ -1,8 +1,9 @@
 import {tab} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
-import React, {useEffect} from 'react';
+import React, {MutableRefObject, useEffect} from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
 import {captureRef} from 'react-native-view-shot';
+import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
 import {BrowserConfig} from 'utils/config';
 import Tab from './Tab';
@@ -41,7 +42,10 @@ const Browser = ({
     setBrowserFocus(false);
   }, [setBrowserFocus]);
 
-  const manageTabs = ({url, icon, id}: tab, view) => {
+  const manageTabs = (
+    {url, icon, id}: tab,
+    view: MutableRefObject<WebView>,
+  ) => {
     captureRef(view, {
       format: 'jpg',
       quality: 0.2,
@@ -57,11 +61,11 @@ const Browser = ({
     );
   };
 
-  const onSelectTab = (id) => {
+  const onSelectTab = (id: number) => {
     changeTab(id);
     showManagementScreen(false);
   };
-  const onCloseTab = (id) => {
+  const onCloseTab = (id: number) => {
     if (id === activeTab) {
       const remainingTabs = tabs.filter((t) => t.id !== id);
       if (remainingTabs.length) {

@@ -1,13 +1,20 @@
+import DrawerButton from 'components/ui/DrawerButton';
+import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React from 'react';
-import {Text, StyleSheet, View, Image} from 'react-native';
-import {connect} from 'react-redux';
-import {translate} from 'utils/localize';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
-import DrawerButton from 'components/ui/DrawerButton';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {translate} from 'utils/localize';
 
-const BrowserHeader = ({browser: {activeTab, tabs}, navigation, route}) => {
+type Props = PropsFromRedux & BrowserNavigationProps;
+const BrowserHeader = ({
+  browser: {activeTab, tabs},
+  navigation,
+  route,
+}: Props) => {
   const {HEADER_HEIGHT} = BrowserConfig;
   const insets = useSafeAreaInsets();
   const styles = getStyles(HEADER_HEIGHT, insets);
@@ -37,7 +44,7 @@ const BrowserHeader = ({browser: {activeTab, tabs}, navigation, route}) => {
   );
 };
 
-const getStyles = (height, insets) =>
+const getStyles = (height: number, insets: EdgeInsets) =>
   StyleSheet.create({
     container: {
       height: height + insets.top,
@@ -55,6 +62,7 @@ const getStyles = (height, insets) =>
     icon: {width: 20, height: 20, marginRight: 20},
   });
 
-const mapStateToProps = (state) => ({browser: state.browser});
-
-export default connect(mapStateToProps)(BrowserHeader);
+const mapStateToProps = (state: RootState) => ({browser: state.browser});
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(BrowserHeader);

@@ -11,14 +11,13 @@ import {MainNavigation} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {StyleProp, StyleSheet, Text, View, ViewProps} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {AppThunk} from 'src/hooks/redux';
 import {translate} from 'utils/localize';
 
 type Props = {
   type: KeyTypes;
   account: account;
   containerStyle: StyleProp<ViewProps>;
-  forgetKey: (username: string, key: KeyTypes) => AppThunk;
+  forgetKey: (username: string, key: KeyTypes) => void;
   navigation: MainNavigation;
 };
 export default ({
@@ -97,7 +96,6 @@ export default ({
             title={translate('settings.keys.add')}
             style={styles.addKey}
             onPress={() => {
-              //addKey(account.name, type, key);
               navigation.navigate('ModalScreen', {
                 modalContent: <AddKey type={type} name={account.name} />,
               });

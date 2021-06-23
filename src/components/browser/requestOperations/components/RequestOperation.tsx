@@ -1,11 +1,25 @@
+import OperationButton from 'components/form/EllipticButton';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
+import {beautifyErrorMessage} from 'utils/keychain';
+import {translate} from 'utils/localize';
 import RequestMessage from './RequestMessage';
 import RequestResultMessage from './RequestResultMessage';
-import OperationButton from 'components/form/EllipticButton';
-import {translate} from 'utils/localize';
-import {beautifyErrorMessage} from 'utils/keychain';
 
+type Props = {
+  closeGracefully: () => void;
+  sendResponse: (msg: object) => void;
+  sendError: (msg: object) => void;
+  message: string;
+  children: JSX.Element[];
+  method: any; // TODO : change
+  request: any; // TODO : change
+  successMessage: string;
+  errorMessage: (msg: object, data: object) => void;
+  performOperation: () => void;
+  additionalData?: object;
+  beautifyError: (string: string) => void;
+};
 export default ({
   closeGracefully,
   sendResponse,
@@ -19,7 +33,7 @@ export default ({
   performOperation,
   additionalData = {},
   beautifyError,
-}) => {
+}: Props) => {
   const {request_id, ...data} = request;
   const [loading, setLoading] = useState(false);
   const [resultMessage, setResultMessage] = useState(null);
@@ -32,7 +46,6 @@ export default ({
         style={styles.button}
         title={translate('request.confirm')}
         isLoading={loading}
-        method={method.toLowerCase()}
         onPress={async () => {
           setLoading(true);
           let msg;

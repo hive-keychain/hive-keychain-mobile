@@ -12,7 +12,7 @@ import {Dimensions as Dim} from 'utils/common.types';
 
 type Props = {
   bottomHalf: boolean;
-  boxBackgroundColor: string;
+  boxBackgroundColor?: string;
   outsideClick: () => void;
 };
 type InnerProps = {height: number; width: number};

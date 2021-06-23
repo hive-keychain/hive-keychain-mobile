@@ -1,8 +1,9 @@
 import React from 'react';
-import CustomInput from './CustomInput';
 import {StyleSheet} from 'react-native';
+import {InputProps} from 'react-native-elements';
+import CustomInput from './CustomInput';
 
-export default (props) => {
+export default (props: InputProps) => {
   return (
     <CustomInput
       {...props}

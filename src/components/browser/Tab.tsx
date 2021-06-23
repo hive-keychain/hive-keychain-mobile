@@ -4,12 +4,18 @@ import {
   browserPayload,
   history,
   tab,
+  tabFields,
 } from 'actions/interfaces';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
+import {
+  WebViewMessageEvent,
+  WebViewNativeEvent,
+  WebViewProgressEvent,
+} from 'react-native-webview/lib/WebViewTypes';
 import {BrowserConfig} from 'utils/config';
 import {
   sendError,
@@ -28,10 +34,10 @@ import UrlModal from './urlModal';
 type Props = {
   data: tab;
   active: boolean;
-  manageTabs: (tab: tab, webview: WebView) => void;
+  manageTabs: (tab: tab, webview: MutableRefObject<WebView>) => void;
   isManagingTab: boolean;
   accounts: account[];
-  updateTab: (id: number, data: tab) => actionPayload<browserPayload>;
+  updateTab: (id: number, data: tabFields) => actionPayload<browserPayload>;
   addToHistory: (history: history) => actionPayload<browserPayload>;
   history: history[];
   clearHistory: () => actionPayload<browserPayload>;
@@ -49,7 +55,7 @@ export default ({
   manageTabs,
   isManagingTab,
 }: Props) => {
-  const tabRef = useRef(null);
+  const tabRef: MutableRefObject<WebView> = useRef(null);
   const [searchUrl, setSearchUrl] = useState(url);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
@@ -87,15 +93,23 @@ export default ({
     updateTab(id, {url: BrowserConfig.HOMEPAGE_URL});
   };
 
-  const onLoadStart = ({nativeEvent: {url}}) => {
+  const onLoadStart = ({
+    nativeEvent: {url},
+  }: {
+    nativeEvent: WebViewNativeEvent;
+  }) => {
     updateTab(id, {url});
   };
 
-  const onLoadProgress = ({nativeEvent: {progress}}) => {
+  const onLoadProgress = ({nativeEvent: {progress}}: WebViewProgressEvent) => {
     setProgress(progress === 1 ? 0 : progress);
   };
 
-  const onLoadEnd = ({nativeEvent: {canGoBack, canGoForward, loading}}) => {
+  const onLoadEnd = ({
+    nativeEvent: {canGoBack, canGoForward, loading},
+  }: {
+    nativeEvent: WebViewNativeEvent;
+  }) => {
     const {current} = tabRef;
     setProgress(0);
     if (loading) {
@@ -108,7 +122,7 @@ export default ({
     }
   };
 
-  const onNewSearch = (url) => {
+  const onNewSearch = (url: string) => {
     const {current} = tabRef;
     if (current) {
       current.stopLoading();
@@ -118,7 +132,7 @@ export default ({
     }
   };
 
-  const onMessage = ({nativeEvent}) => {
+  const onMessage = ({nativeEvent}: WebViewMessageEvent) => {
     const {name, request_id, data} = JSON.parse(nativeEvent.data);
     const {current} = tabRef;
     switch (name) {
@@ -149,7 +163,7 @@ export default ({
         }
         break;
       case 'WV_INFO':
-        const {icon, name, url} = data;
+        const {icon, name, url} = data as tabFields;
         navigation.setParams({icon});
         if (name && url && url !== 'chromewebdata') {
           addToHistory({icon, name, url});
@@ -159,7 +173,7 @@ export default ({
     }
   };
 
-  const showOperationRequestModal = (request_id, data) => {
+  const showOperationRequestModal = (request_id: number, data: any) => {
     const onForceCloseModal = () => {
       navigationGoBack();
       sendError(tabRef, {
@@ -175,10 +189,10 @@ export default ({
           request={{...data, request_id}}
           accounts={accounts}
           onForceCloseModal={onForceCloseModal}
-          sendError={(obj) => {
+          sendError={(obj: object) => {
             sendError(tabRef, obj);
           }}
-          sendResponse={(obj) => {
+          sendResponse={(obj: object) => {
             sendResponse(tabRef, obj);
           }}
         />
@@ -200,7 +214,7 @@ export default ({
           injectedJavaScriptBeforeContentLoaded={hive_keychain}
           onMessage={onMessage}
           bounces={false}
-          javascriptEnabled
+          javaScriptEnabled
           allowsInlineMediaPlayback
           onLoadEnd={onLoadEnd}
           onLoadStart={onLoadStart}
@@ -222,9 +236,7 @@ export default ({
             setSearchUrl(url);
             toggleVisibility(true);
           }}
-          goHome={() => {
-            goHome(id);
-          }}
+          goHome={goHome}
         />
       )}
       {active && (

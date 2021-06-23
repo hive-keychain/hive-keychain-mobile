@@ -1,8 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text, Image} from 'react-native';
+import {history, tabFields} from 'actions/interfaces';
 import Fuse from 'fuse.js';
+import React, {useEffect, useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-export default ({onDismiss, input, onSubmit, history}) => {
+type Props = {
+  onSubmit: (string: string) => void;
+  history: history[];
+  input: string;
+};
+export default ({input, onSubmit, history}: Props) => {
   const [candidates, setCandidates] = useState([]);
 
   useEffect(() => {
@@ -11,7 +17,7 @@ export default ({onDismiss, input, onSubmit, history}) => {
       threshold: 0.45,
       location: 0,
       distance: 100,
-      maxPatternLength: 32,
+      //maxPatternLength: 32,
       minMatchCharLength: 1,
       keys: [
         {name: 'name', weight: 0.5},
@@ -26,21 +32,16 @@ export default ({onDismiss, input, onSubmit, history}) => {
     }
   }, [input, history]);
 
-  const renderItem = ({name, url, icon}) => {
+  const renderItem = ({name, url, icon}: tabFields) => {
     return (
-      <TouchableOpacity
-        containerStyle={styles.item}
-        onPress={() => onSubmit(url)}
-        key={url}>
+      <TouchableOpacity onPress={() => onSubmit(url)} key={url}>
         <View style={styles.itemWrapper}>
           <Image style={styles.img} source={{uri: icon}} />
           <View style={styles.text}>
             <Text style={styles.name} numberOfLines={1}>
               {name}
             </Text>
-            <Text style={styles.url} numberOfLines={1}>
-              {url}
-            </Text>
+            <Text numberOfLines={1}>{url}</Text>
           </View>
         </View>
       </TouchableOpacity>

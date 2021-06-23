@@ -1,19 +1,31 @@
-import React, {useRef} from 'react';
+import {actionPayload, browserPayload, history} from 'actions/interfaces';
+import React, {MutableRefObject, useRef} from 'react';
 import {
-  View,
+  NativeSyntheticEvent,
+  Platform,
   StyleSheet,
-  TextInput,
-  TouchableOpacity,
   Text,
+  TextInput,
+  TextInputSubmitEditingEventData,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import UrlAutocomplete from './UrlAutocomplete';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {translate} from 'utils/localize';
-import {Platform} from 'react-native';
+import UrlAutocomplete from './UrlAutocomplete';
 
 const SLIDE_TIME = 500;
 
+type Props = {
+  isVisible: boolean;
+  toggle: (b: boolean) => void;
+  onNewSearch: (string: string) => void;
+  url: string;
+  setUrl: (string: string) => void;
+  history: history[];
+  clearHistory: () => actionPayload<browserPayload>;
+};
 const UrlModal = ({
   isVisible,
   toggle,
@@ -22,8 +34,8 @@ const UrlModal = ({
   setUrl,
   history,
   clearHistory,
-}) => {
-  const urlInput = useRef();
+}: Props) => {
+  const urlInput: MutableRefObject<TextInput> = useRef();
   const insets = useSafeAreaInsets();
   const styles = getStyles(insets);
   if (isVisible && urlInput) {
@@ -35,12 +47,14 @@ const UrlModal = ({
     }, SLIDE_TIME);
   }
 
-  const onSubmitUrlFromInput = (obj) => {
+  const onSubmitUrlFromInput = (
+    obj: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
+  ) => {
     const url = obj.nativeEvent.text;
     onSubmitUrl(url);
   };
 
-  const onSubmitUrl = (url) => {
+  const onSubmitUrl = (url: string) => {
     toggle(false);
     // Add duckduck go search for url with no domain
     if (url.includes(' ') || !url.includes('.')) {
@@ -89,12 +103,7 @@ const UrlModal = ({
           </TouchableOpacity>
         ) : null}
       </View>
-      <UrlAutocomplete
-        onSubmit={onSubmitUrl}
-        input={url}
-        history={history}
-        onDismiss={dismissModal}
-      />
+      <UrlAutocomplete onSubmit={onSubmitUrl} input={url} history={history} />
       {history.length ? (
         <TouchableOpacity onPress={clearHistory}>
           <Text style={styles.clearHistory}>
@@ -106,7 +115,7 @@ const UrlModal = ({
   );
 };
 
-const getStyles = (insets) =>
+const getStyles = (insets: EdgeInsets) =>
   StyleSheet.create({
     urlModal: {
       height: '100%',

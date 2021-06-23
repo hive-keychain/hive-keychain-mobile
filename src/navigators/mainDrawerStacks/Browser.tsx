@@ -1,9 +1,10 @@
-import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import Browser from 'screens/Browser';
-import DrawerButton from 'components/ui/DrawerButton';
 import BrowserHeader from 'components/browser/Header.js';
-const Stack = createStackNavigator();
+import DrawerButton from 'components/ui/DrawerButton';
+import React from 'react';
+import Browser from 'screens/Browser';
+import {BrowserParamList} from './Browser.types';
+const Stack = createStackNavigator<BrowserParamList>();
 
 export default () => {
   return (

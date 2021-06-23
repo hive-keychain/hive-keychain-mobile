@@ -1,12 +1,13 @@
+import {tab} from 'actions/interfaces';
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
   Dimensions,
+  Image,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import TabsManagementBottomBar from './BottomBar';
 
@@ -15,6 +16,16 @@ const margin = 7;
 const THUMB_WIDTH = (Dimensions.get('window').width - margin * 2) * 0.48;
 const THUMB_HEIGHT = THUMB_WIDTH * 1.3;
 
+type Props = {
+  tabs: tab[];
+  onSelectTab: (id: number) => void;
+  onCloseTab: (id: number) => void;
+  onCloseAllTabs: () => void;
+  onQuitManagement: () => void;
+  onAddTab: () => void;
+  activeTab: number;
+  show: boolean;
+};
 export default ({
   tabs,
   onSelectTab,
@@ -24,7 +35,7 @@ export default ({
   onQuitManagement,
   activeTab,
   show,
-}) => {
+}: Props) => {
   console.log(activeTab, tabs);
   return (
     <View style={[styles.container, show ? null : styles.hide]}>
