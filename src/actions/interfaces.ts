@@ -254,4 +254,4 @@ export interface GlobalProperties {
   rewardFund?: RewardFund;
 }
 
-export interface UserPreference {}
+

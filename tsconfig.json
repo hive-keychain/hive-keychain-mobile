@@ -22,7 +22,7 @@
             "hooks": ["./src/hooks"],
             "locales/*": ["./src/locales/*"],
             "navigators/*": ["./src/navigators/*"],
-            "reducers": ["./src/reducers"],
+            "reducers/*": ["./src/reducers/*"],
             "screens/*": ["./src/screens/*"],
             "store": ["./src/store"],
             "utils/*": ["./src/utils/*"],

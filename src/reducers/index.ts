@@ -1,21 +1,21 @@
 import {combineReducers} from 'redux';
-import auth from './auth';
 import accounts from './accounts';
-import lastAccount from './lastAccount';
 import activeAccount from './activeAccount';
-import properties from './globalProperties';
+import auth from './auth';
 import bittrex from './bittrex';
-import transactions from './transactions';
-import delegations from './delegations';
-import tokens from './tokens';
-import userTokens from './userTokens';
-import tokensMarket from './tokensMarket';
-import tokenHistory from './tokenHistory';
-import phishingAccounts from './phishing';
-import conversions from './conversions';
-import settings from './settings';
 import browser from './browser';
-
+import conversions from './conversions';
+import delegations from './delegations';
+import properties from './globalProperties';
+import lastAccount from './lastAccount';
+import phishingAccounts from './phishing';
+import preferences from './preferences';
+import settings from './settings';
+import tokenHistory from './tokenHistory';
+import tokens from './tokens';
+import tokensMarket from './tokensMarket';
+import transactions from './transactions';
+import userTokens from './userTokens';
 export default combineReducers({
   auth,
   accounts,
@@ -33,4 +33,5 @@ export default combineReducers({
   conversions,
   settings,
   browser,
+  preferences,
 });
