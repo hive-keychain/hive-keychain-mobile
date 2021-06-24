@@ -1,9 +1,9 @@
-import {actionPayload, userTokens, tokenBalance} from 'actions/interfaces';
-import {LOAD_USER_TOKENS, CLEAR_USER_TOKENS} from 'actions/types';
+import {ActionPayload, TokenBalance, UserTokens} from 'actions/interfaces';
+import {CLEAR_USER_TOKENS, LOAD_USER_TOKENS} from 'actions/types';
 
 export default (
-  state: userTokens = {loading: false, list: []},
-  {type, payload}: actionPayload<tokenBalance[]>,
+  state: UserTokens = {loading: false, list: []},
+  {type, payload}: ActionPayload<TokenBalance[]>,
 ) => {
   switch (type) {
     case CLEAR_USER_TOKENS:

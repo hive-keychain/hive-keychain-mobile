@@ -1,9 +1,9 @@
+import {ActionPayload, Settings, SettingsPayload} from 'actions/interfaces';
 import {SET_RPC} from 'actions/types';
-import {actionPayload, settings, settingsPayload} from 'actions/interfaces';
 
 export default (
-  state: settings = {rpc: 'DEFAULT'},
-  {type, payload}: actionPayload<settingsPayload>,
+  state: Settings = {rpc: 'DEFAULT'},
+  {type, payload}: ActionPayload<SettingsPayload>,
 ) => {
   switch (type) {
     case SET_RPC:

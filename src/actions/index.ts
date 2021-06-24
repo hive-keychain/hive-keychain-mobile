@@ -4,12 +4,12 @@ import {decryptToJson} from 'utils/encrypt';
 import {getFromKeychain} from 'utils/keychainStorage';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {accountsPayload, actionPayload, nullableString} from './interfaces';
+import {AccountsPayload, ActionPayload, NullableString} from './interfaces';
 import {INIT_ACCOUNTS, LOCK, SIGN_UP, UNLOCK} from './types';
 
 export const signUp = (pwd: string) => {
   navigate('AddAccountByKeyScreen');
-  const action: actionPayload<nullableString> = {type: SIGN_UP, payload: pwd};
+  const action: ActionPayload<NullableString> = {type: SIGN_UP, payload: pwd};
   return action;
 };
 
@@ -21,9 +21,9 @@ export const unlock = (
     const accountsEncrypted = await getFromKeychain('accounts');
     const accounts = decryptToJson(accountsEncrypted, mk);
     if (accounts && accounts.list) {
-      const unlock: actionPayload<nullableString> = {type: UNLOCK, payload: mk};
+      const unlock: ActionPayload<NullableString> = {type: UNLOCK, payload: mk};
       dispatch(unlock);
-      const init: actionPayload<accountsPayload> = {
+      const init: ActionPayload<AccountsPayload> = {
         type: INIT_ACCOUNTS,
         payload: {accounts: accounts.list},
       };
@@ -44,7 +44,7 @@ export const unlock = (
 };
 
 export const lock = () => {
-  const action: actionPayload<any> = {type: LOCK};
+  const action: ActionPayload<any> = {type: LOCK};
   return action;
 };
 

@@ -1,4 +1,4 @@
-import {actionPayload, browser, browserPayload} from 'actions/interfaces';
+import {ActionPayload, Browser, BrowserPayload} from 'actions/interfaces';
 import {
   ADD_BROWSER_TAB,
   ADD_TO_BROWSER_HISTORY,
@@ -12,7 +12,7 @@ import {
 } from 'actions/types';
 
 const browserReducer = (
-  state: browser = {
+  state: Browser = {
     history: [],
     whitelist: [],
     tabs: [],
@@ -20,7 +20,7 @@ const browserReducer = (
     shouldFocus: false,
     showManagement: false,
   },
-  {type, payload}: actionPayload<browserPayload>,
+  {type, payload}: ActionPayload<BrowserPayload>,
 ) => {
   switch (type) {
     case ADD_TO_BROWSER_HISTORY:

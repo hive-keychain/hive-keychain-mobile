@@ -1,9 +1,9 @@
-import {actionPayload, token} from 'actions/interfaces';
+import {ActionPayload, Token} from 'actions/interfaces';
 import {LOAD_TOKENS} from 'actions/types';
 
 export default (
-  state: token[] = [],
-  {type, payload}: actionPayload<token[]>,
+  state: Token[] = [],
+  {type, payload}: ActionPayload<Token[]>,
 ) => {
   switch (type) {
     case LOAD_TOKENS:

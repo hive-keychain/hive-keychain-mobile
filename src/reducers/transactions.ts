@@ -1,13 +1,13 @@
-import {actionPayload, transactions, transaction} from 'actions/interfaces';
+import {ActionPayload, Transaction, Transactions} from 'actions/interfaces';
 import {
-  INIT_TRANSACTIONS,
-  ADD_TRANSACTIONS,
   ACTIVE_ACCOUNT,
+  ADD_TRANSACTIONS,
+  INIT_TRANSACTIONS,
 } from 'actions/types';
 
 export default (
-  state: transactions = {loading: false, list: []},
-  {type, payload}: actionPayload<transaction[]>,
+  state: Transactions = {loading: false, list: []},
+  {type, payload}: ActionPayload<Transaction[]>,
 ) => {
   switch (type) {
     case ACTIVE_ACCOUNT:

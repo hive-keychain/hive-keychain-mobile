@@ -1,4 +1,4 @@
-import {account} from 'actions/interfaces';
+import {Account} from 'actions/interfaces';
 import Operation from 'components/operations/Operation';
 import React from 'react';
 import {capitalize} from 'utils/format';
@@ -7,7 +7,7 @@ import {goBack} from 'utils/navigation';
 import Requests from './requestOperations';
 
 type Props = {
-  accounts: account[];
+  accounts: Account[];
   onForceCloseModal: () => void;
   sendError: () => void;
   sendResponse: () => void;

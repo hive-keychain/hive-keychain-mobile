@@ -1,30 +1,29 @@
-import Toast from 'react-native-simple-toast';
-
-import {
-  ADD_ACCOUNT,
-  FORGET_ACCOUNTS,
-  FORGET_ACCOUNT,
-  UPDATE_ACCOUNTS,
-} from './types';
-import {encryptJson} from 'utils/encrypt';
-import {navigate, resetStackAndNavigate} from 'utils/navigation';
-import {translate} from 'utils/localize';
-import {saveOnKeychain, clearKeychain} from 'utils/keychainStorage';
-import validateKeys from 'utils/keyValidation';
 import {loadAccount} from 'actions/hive';
+import Toast from 'react-native-simple-toast';
 import {AppThunk} from 'src/hooks/redux';
+import {encryptJson} from 'utils/encrypt';
+import {clearKeychain, saveOnKeychain} from 'utils/keychainStorage';
+import validateKeys from 'utils/keyValidation';
+import {translate} from 'utils/localize';
+import {navigate, resetStackAndNavigate} from 'utils/navigation';
 import {
-  account,
-  accountKeys,
-  accountsPayload,
-  actionPayload,
+  Account,
+  AccountKeys,
+  AccountsPayload,
+  ActionPayload,
   KeyTypes,
   PubKeyTypes,
 } from './interfaces';
+import {
+  ADD_ACCOUNT,
+  FORGET_ACCOUNT,
+  FORGET_ACCOUNTS,
+  UPDATE_ACCOUNTS,
+} from './types';
 
 export const addAccount = (
   name: string,
-  keys: accountKeys,
+  keys: AccountKeys,
   wallet: boolean,
   qr: boolean,
 ): AppThunk => async (dispatch, getState) => {
@@ -37,7 +36,7 @@ export const addAccount = (
     }
     return;
   }
-  const action: actionPayload<accountsPayload> = {
+  const action: ActionPayload<AccountsPayload> = {
     type: ADD_ACCOUNT,
     payload: {account: {name, keys}},
   };
@@ -68,7 +67,7 @@ export const forgetAccount = (username: string): AppThunk => async (
   if (accounts.length) {
     const encrypted = encryptJson({list: accounts}, mk);
     await saveOnKeychain('accounts', encrypted);
-    const action: actionPayload<accountsPayload> = {
+    const action: ActionPayload<AccountsPayload> = {
       type: FORGET_ACCOUNT,
       payload: {name: username},
     };
@@ -83,7 +82,7 @@ export const forgetKey = (username: string, key: KeyTypes): AppThunk => async (
   dispatch,
 ) => {
   dispatch(
-    updateAccounts((account: account) => {
+    updateAccounts((account: Account) => {
       if (account.name === username) {
         const keys = {...account.keys};
         delete keys[key];
@@ -109,7 +108,7 @@ export const addKey = (
     Toast.show(translate('toast.keys.not_wanted_key', {type}));
   } else {
     dispatch(
-      updateAccounts((account: account) => {
+      updateAccounts((account: Account) => {
         if (account.name === username) {
           return {...account, keys: {...account.keys, ...keys}};
         } else {
@@ -120,7 +119,7 @@ export const addKey = (
   }
 };
 
-const updateAccounts = (mapper: (arg0: account) => account): AppThunk => async (
+const updateAccounts = (mapper: (arg0: Account) => Account): AppThunk => async (
   dispatch,
   getState,
 ) => {
@@ -129,7 +128,7 @@ const updateAccounts = (mapper: (arg0: account) => account): AppThunk => async (
   const accounts = previousAccounts.map(mapper);
   const encrypted = encryptJson({list: accounts}, mk);
   await saveOnKeychain('accounts', encrypted);
-  const actions: actionPayload<accountsPayload> = {
+  const actions: ActionPayload<AccountsPayload> = {
     type: UPDATE_ACCOUNTS,
     payload: {accounts},
   };

@@ -1,16 +1,16 @@
-import {actionPayload, account, accountsPayload} from 'actions/interfaces';
+import {Account, AccountsPayload, ActionPayload} from 'actions/interfaces';
 import {
   ADD_ACCOUNT,
+  FORGET_ACCOUNT,
+  FORGET_ACCOUNTS,
   INIT_ACCOUNTS,
   LOCK,
-  FORGET_ACCOUNTS,
-  FORGET_ACCOUNT,
   UPDATE_ACCOUNTS,
 } from 'actions/types';
 
 export default (
-  state: account[] = [],
-  {type, payload}: actionPayload<accountsPayload>,
+  state: Account[] = [],
+  {type, payload}: ActionPayload<AccountsPayload>,
 ) => {
   console.log(type, payload);
   switch (type) {

@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-community/clipboard';
-import {account, KeyTypes} from 'actions/interfaces';
+import {Account, KeyTypes} from 'actions/interfaces';
 import Copy from 'assets/settings/copy.svg';
 import Remove from 'assets/settings/remove.svg';
 import ViewIcon from 'assets/settings/view.svg';
@@ -15,7 +15,7 @@ import {translate} from 'utils/localize';
 
 type Props = {
   type: KeyTypes;
-  account: account;
+  account: Account;
   containerStyle: StyleProp<ViewProps>;
   forgetKey: (username: string, key: KeyTypes) => void;
   navigation: MainNavigation;

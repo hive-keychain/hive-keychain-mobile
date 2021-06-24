@@ -1,9 +1,9 @@
-import {actionPayload, conversion} from 'actions/interfaces';
+import {ActionPayload, Conversion} from 'actions/interfaces';
 import {FETCH_CONVERSION_REQUESTS} from 'actions/types';
 
 export default (
-  state: conversion[] = [],
-  {type, payload}: actionPayload<conversion[]>,
+  state: Conversion[] = [],
+  {type, payload}: ActionPayload<Conversion[]>,
 ) => {
   switch (type) {
     case FETCH_CONVERSION_REQUESTS:

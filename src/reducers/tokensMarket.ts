@@ -1,9 +1,9 @@
+import {ActionPayload, TokenMarket} from 'actions/interfaces';
 import {LOAD_TOKENS_MARKET} from 'actions/types';
-import {actionPayload, tokenMarket} from 'actions/interfaces';
 
 export default (
-  state: tokenMarket[] = [],
-  {type, payload}: actionPayload<tokenMarket[]>,
+  state: TokenMarket[] = [],
+  {type, payload}: ActionPayload<TokenMarket[]>,
 ) => {
   switch (type) {
     case LOAD_TOKENS_MARKET:

@@ -1,10 +1,10 @@
 import {
-  account,
-  actionPayload,
-  browserPayload,
-  history,
-  tab,
-  tabFields,
+  Account,
+  ActionPayload,
+  BrowserPayload,
+  History,
+  Tab,
+  TabFields,
 } from 'actions/interfaces';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
@@ -32,15 +32,15 @@ import RequestModalContent from './RequestModalContent';
 import UrlModal from './urlModal';
 
 type Props = {
-  data: tab;
+  data: Tab;
   active: boolean;
-  manageTabs: (tab: tab, webview: MutableRefObject<WebView>) => void;
+  manageTabs: (tab: Tab, webview: MutableRefObject<WebView>) => void;
   isManagingTab: boolean;
-  accounts: account[];
-  updateTab: (id: number, data: tabFields) => actionPayload<browserPayload>;
-  addToHistory: (history: history) => actionPayload<browserPayload>;
-  history: history[];
-  clearHistory: () => actionPayload<browserPayload>;
+  accounts: Account[];
+  updateTab: (id: number, data: TabFields) => ActionPayload<BrowserPayload>;
+  addToHistory: (history: History) => ActionPayload<BrowserPayload>;
+  history: History[];
+  clearHistory: () => ActionPayload<BrowserPayload>;
   navigation: BrowserNavigation;
 };
 export default ({
@@ -163,7 +163,7 @@ export default ({
         }
         break;
       case 'WV_INFO':
-        const {icon, name, url} = data as tabFields;
+        const {icon, name, url} = data as TabFields;
         navigation.setParams({icon});
         if (name && url && url !== 'chromewebdata') {
           addToHistory({icon, name, url});

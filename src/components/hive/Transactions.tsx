@@ -1,5 +1,5 @@
 import {fetchAccountTransactions, initAccountTransactions} from 'actions/index';
-import {activeAccount} from 'actions/interfaces';
+import {ActiveAccount} from 'actions/interfaces';
 import Loader from 'components/ui/Loader';
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
@@ -8,7 +8,7 @@ import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import Transfer from './Transfer';
 
-type Props = PropsFromRedux & {user: activeAccount};
+type Props = PropsFromRedux & {user: ActiveAccount};
 
 const Transactions = ({
   transactions,

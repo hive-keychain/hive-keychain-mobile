@@ -10,10 +10,10 @@ import {translate} from 'utils/localize';
 import {getBittrexPrices} from 'utils/price';
 import {getPhishingAccounts} from 'utils/transferValidator';
 import {
-  actionPayload,
-  delegationsPayload,
-  globalProperties,
-  transaction,
+  ActionPayload,
+  DelegationsPayload,
+  GlobalProperties,
+  Transaction,
 } from './interfaces';
 import {
   ACTIVE_ACCOUNT,
@@ -68,7 +68,7 @@ export const loadProperties = (): AppThunk => async (dispatch) => {
     getClient().database.call('get_reward_fund', ['post']),
   ]);
   const props = {globals, price, rewardFund};
-  const action: actionPayload<globalProperties> = {
+  const action: ActionPayload<GlobalProperties> = {
     type: GLOBAL_PROPS,
     payload: props,
   };
@@ -117,7 +117,7 @@ const getAccountTransactions = async (
   accountName: string,
   start: number | null,
   memoKey?: string,
-): Promise<transaction[]> => {
+): Promise<Transaction[]> => {
   try {
     const op = dhive.utils.operationOrders;
     const operationsBitmask = dhive.utils.makeBitMaskFilter([op.transfer]);
@@ -128,12 +128,13 @@ const getAccountTransactions = async (
       //@ts-ignore
       operationsBitmask,
     );
+
     const transfers = transactions
       .filter((e) => e[1].op[0] === 'transfer')
       .map((e) => {
         const receivedTransaction = e[1].op[1];
         //@ts-ignore
-        const tr: transaction = {
+        const tr: Transaction = {
           ...receivedTransaction,
           type: 'transfer',
           timestamp: e[1].timestamp,
@@ -168,7 +169,7 @@ const getAccountTransactions = async (
     }
     return trs;
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     return getAccountTransactions(
       accountName,
       e.jse_info.stack[0].data.sequence - 1,
@@ -180,21 +181,29 @@ const getAccountTransactions = async (
 export const loadDelegators = (username: string): AppThunk => async (
   dispatch,
 ) => {
-  const action: actionPayload<delegationsPayload> = {
-    type: FETCH_DELEGATORS,
-    payload: {incoming: await getDelegators(username)},
-  };
-  dispatch(action);
+  try {
+    const action: ActionPayload<DelegationsPayload> = {
+      type: FETCH_DELEGATORS,
+      payload: {incoming: await getDelegators(username)},
+    };
+    dispatch(action);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const loadDelegatees = (username: string): AppThunk => async (
   dispatch,
 ) => {
-  const action: actionPayload<delegationsPayload> = {
-    type: FETCH_DELEGATEES,
-    payload: {outgoing: await getDelegatees(username)},
-  };
-  dispatch(action);
+  try {
+    const action: ActionPayload<DelegationsPayload> = {
+      type: FETCH_DELEGATEES,
+      payload: {outgoing: await getDelegatees(username)},
+    };
+    dispatch(action);
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const fetchPhishingAccounts = (): AppThunk => async (dispatch) => {

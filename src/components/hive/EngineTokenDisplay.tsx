@@ -1,4 +1,4 @@
-import {token, tokenBalance, tokenMarket} from 'actions/interfaces';
+import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import {Send, ShowHistory} from 'components/operations/OperationsButtons';
 import React from 'react';
@@ -9,9 +9,9 @@ import {withCommas} from 'utils/format';
 import TokenDisplay from './TokenDisplay';
 
 type Props = {
-  token: tokenBalance;
-  tokensList: token[];
-  market: tokenMarket[];
+  token: TokenBalance;
+  tokensList: Token[];
+  market: TokenMarket[];
 };
 const EngineTokenDisplay = ({token, tokensList, market}: Props) => {
   const styles = getDimensionedStyles(useWindowDimensions());

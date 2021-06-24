@@ -1,14 +1,14 @@
 import {ExtendedAccount} from '@hiveio/dhive';
-import {bittrex, globalProperties} from 'actions/interfaces';
+import {Bittrex, GlobalProperties} from 'actions/interfaces';
 import React from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {withCommas} from 'utils/format';
 import {getAccountValue} from 'utils/price';
 
 type Props = {
-  bittrex: bittrex;
+  bittrex: Bittrex;
   account: ExtendedAccount;
-  properties: globalProperties;
+  properties: GlobalProperties;
 };
 const AccountValue = ({bittrex, account, properties}: Props) => {
   let accountValue = '...';

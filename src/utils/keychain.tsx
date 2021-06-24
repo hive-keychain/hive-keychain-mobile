@@ -1,8 +1,8 @@
-import {account, KeyTypes} from 'actions/interfaces';
+import {Account, KeyTypes} from 'actions/interfaces';
 import {KeychainConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 
-export const validateAuthority = (accounts: account[], req) => {
+export const validateAuthority = (accounts: Account[], req) => {
   const {type, username} = req;
   const wifType = getRequiredWifType(req);
   if (username) {
@@ -19,7 +19,7 @@ export const validateAuthority = (accounts: account[], req) => {
 };
 
 export const getValidAuthorityAccounts = (
-  accounts: account[],
+  accounts: Account[],
   wifType: KeyTypes,
 ) => {
   return accounts.filter((e) => !!e.keys[wifType]);
@@ -156,7 +156,7 @@ export const validateRequest = (req) => {
   );
 };
 
-export const getRequiredWifType:()=>KeyTypes = (request) => {
+export const getRequiredWifType: () => KeyTypes = (request) => {
   switch (request.type) {
     case 'decode':
     case 'encode':

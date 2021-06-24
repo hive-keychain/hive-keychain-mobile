@@ -1,9 +1,9 @@
-import {actionPayload, tokenTransaction} from 'actions/interfaces';
+import {ActionPayload, TokenTransaction} from 'actions/interfaces';
 import {LOAD_TOKEN_HISTORY} from 'actions/types';
 
 export default (
-  state: tokenTransaction[] = [],
-  {type, payload}: actionPayload<tokenTransaction[]>,
+  state: TokenTransaction[] = [],
+  {type, payload}: ActionPayload<TokenTransaction[]>,
 ) => {
   switch (type) {
     case LOAD_TOKEN_HISTORY:

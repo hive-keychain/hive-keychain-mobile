@@ -1,11 +1,11 @@
-import {history, tabFields} from 'actions/interfaces';
+import {History, TabFields} from 'actions/interfaces';
 import Fuse from 'fuse.js';
 import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 type Props = {
   onSubmit: (string: string) => void;
-  history: history[];
+  history: History[];
   input: string;
 };
 export default ({input, onSubmit, history}: Props) => {
@@ -32,7 +32,7 @@ export default ({input, onSubmit, history}: Props) => {
     }
   }, [input, history]);
 
-  const renderItem = ({name, url, icon}: tabFields) => {
+  const renderItem = ({name, url, icon}: TabFields) => {
     return (
       <TouchableOpacity onPress={() => onSubmit(url)} key={url}>
         <View style={styles.itemWrapper}>

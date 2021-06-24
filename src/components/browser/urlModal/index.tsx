@@ -1,4 +1,4 @@
-import {actionPayload, browserPayload, history} from 'actions/interfaces';
+import {ActionPayload, BrowserPayload, History} from 'actions/interfaces';
 import React, {MutableRefObject, useRef} from 'react';
 import {
   NativeSyntheticEvent,
@@ -23,8 +23,8 @@ type Props = {
   onNewSearch: (string: string) => void;
   url: string;
   setUrl: (string: string) => void;
-  history: history[];
-  clearHistory: () => actionPayload<browserPayload>;
+  history: History[];
+  clearHistory: () => ActionPayload<BrowserPayload>;
 };
 const UrlModal = ({
   isVisible,

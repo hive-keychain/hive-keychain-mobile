@@ -1,4 +1,4 @@
-import {tab} from 'actions/interfaces';
+import {Tab} from 'actions/interfaces';
 import React from 'react';
 import {
   Dimensions,
@@ -17,7 +17,7 @@ const THUMB_WIDTH = (Dimensions.get('window').width - margin * 2) * 0.48;
 const THUMB_HEIGHT = THUMB_WIDTH * 1.3;
 
 type Props = {
-  tabs: tab[];
+  tabs: Tab[];
   onSelectTab: (id: number) => void;
   onCloseTab: (id: number) => void;
   onCloseAllTabs: () => void;

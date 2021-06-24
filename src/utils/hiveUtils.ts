@@ -1,5 +1,5 @@
 import {ExtendedAccount} from '@hiveio/dhive';
-import {delegator, globalProperties} from 'actions/interfaces';
+import {Delegator, GlobalProperties} from 'actions/interfaces';
 import api from 'api/keychain';
 import {getClient} from './hive';
 
@@ -43,7 +43,7 @@ const getEffectiveVestingSharesPerAccount = (account: ExtendedAccount) => {
 
 export const getVotingDollarsPerAccount = (
   voteWeight: number,
-  properties: globalProperties,
+  properties: GlobalProperties,
   account: ExtendedAccount,
   full: boolean,
 ) => {
@@ -83,27 +83,27 @@ export const getRC = async (account: ExtendedAccount) => {
   return rc;
 };
 
-const getRewardBalance = (properties: globalProperties) => {
+const getRewardBalance = (properties: GlobalProperties) => {
   return parseFloat(properties.rewardFund!.reward_balance);
 };
 
-const getRecentClaims = (properties: globalProperties) => {
+const getRecentClaims = (properties: GlobalProperties) => {
   return parseInt(properties.rewardFund!.recent_claims, 10);
 };
 
-const getHivePrice = (properties: globalProperties) => {
+const getHivePrice = (properties: GlobalProperties) => {
   return (
     parseFloat(properties.price!.base + '') /
     parseFloat(properties.price!.quote + '')
   );
 };
 
-const getVotePowerReserveRate = (properties: globalProperties) => {
+const getVotePowerReserveRate = (properties: GlobalProperties) => {
   return properties.globals!.vote_power_reserve_rate;
 };
 
 export const getDelegators = async (name: string) => {
-  return ((await api.get(`/hive/delegators/${name}`)).data as delegator[])
+  return ((await api.get(`/hive/delegators/${name}`)).data as Delegator[])
     .filter((e) => e.vesting_shares !== 0)
     .sort((a, b) => b.vesting_shares - a.vesting_shares);
 };

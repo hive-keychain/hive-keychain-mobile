@@ -6,37 +6,37 @@ import {
 } from '@hiveio/dhive';
 import {Manabar} from '@hiveio/dhive/lib/chain/rc';
 
-export interface actionPayload<T> {
+export interface ActionPayload<T> {
   readonly type: string;
   readonly payload?: T;
 }
 
-export interface lastAccount {
+export interface LastAccount {
   has: boolean;
   name?: string;
 }
 
-export type nullableString = string | null;
+export type NullableString = string | null;
 
-export interface auth {
-  mk: nullableString;
+export interface Auth {
+  mk: NullableString;
 }
 
-export interface settings {
+export interface Settings {
   rpc: string;
 }
 
-export interface settingsPayload {
+export interface SettingsPayload {
   rpc?: string;
 }
 
-export interface history {
+export interface History {
   url: string;
   name: string;
   icon: string;
 }
 
-export interface tab {
+export interface Tab {
   id: number;
   url: string;
   name?: string;
@@ -44,7 +44,7 @@ export interface tab {
   image?: string;
 }
 
-export interface tabFields {
+export interface TabFields {
   id?: number;
   url?: string;
   name?: string;
@@ -52,26 +52,26 @@ export interface tabFields {
   image?: string;
 }
 
-export interface browserPayload {
+export interface BrowserPayload {
   url?: string;
-  history?: history;
+  history?: History;
   shouldFocus?: boolean;
   id?: number | null;
-  data?: tabFields;
+  data?: TabFields;
   showManagement?: boolean;
   whitelist?: [];
 }
 
-export interface browser {
-  history: history[];
+export interface Browser {
+  history: History[];
   whitelist: [];
-  tabs: tab[];
+  tabs: Tab[];
   activeTab: number | null;
   shouldFocus: boolean;
   showManagement: boolean;
 }
 
-export interface transaction {
+export interface Transaction {
   key: string;
   amount: string;
   from: string;
@@ -82,12 +82,12 @@ export interface transaction {
   last?: boolean;
 }
 
-export interface transactions {
+export interface Transactions {
   loading: boolean;
-  list: transaction[];
+  list: Transaction[];
 }
 
-export interface token {
+export interface Token {
   circulatingSupply: string;
   delegationEnabled: boolean;
   issuer: string;
@@ -104,7 +104,7 @@ export interface token {
   unstakingCooldown: number;
 }
 
-export interface tokenMarket {
+export interface TokenMarket {
   highestBid: string;
   lastDayPrice: string;
   lastDayPriceExpiration: number;
@@ -118,7 +118,7 @@ export interface tokenMarket {
   _id: number;
 }
 
-export interface tokenBalance {
+export interface TokenBalance {
   account: string;
   balance: string;
   delegationsIn: string;
@@ -130,21 +130,21 @@ export interface tokenBalance {
   _id: number;
 }
 
-export interface userTokens {
+export interface UserTokens {
   loading: boolean;
-  list: tokenBalance[];
+  list: TokenBalance[];
 }
 
-export enum operationsHE {
+export enum OperationsHiveEngine {
   'mining_lottery',
   'tokens_transfer',
   'tokens_stake',
 }
-export interface tokenTransaction {
+export interface TokenTransaction {
   account: string;
   amount: string;
   blockNumber: number;
-  operation: operationsHE;
+  operation: OperationsHiveEngine;
   poolId?: string;
   from?: string;
   to?: string;
@@ -156,25 +156,25 @@ export interface tokenTransaction {
   _id: string;
 }
 
-export interface incomingDelegation {
+export interface IncomingDelegation {
   delegation_date: string;
   delegator: string;
   vesting_shares: number;
 }
-export interface delegations {
-  incoming: incomingDelegation[];
+export interface Delegations {
+  incoming: IncomingDelegation[];
   outgoing: VestingDelegation[];
 }
-export interface delegationsPayload {
-  incoming?: incomingDelegation[];
+export interface DelegationsPayload {
+  incoming?: IncomingDelegation[];
   outgoing?: VestingDelegation[];
 }
-export interface delegator {
+export interface Delegator {
   delegator: string;
   vesting_shares: number;
   delegation_date: string;
 }
-export interface conversion {
+export interface Conversion {
   amount: string;
   conversion_date: string;
   id: number;
@@ -182,24 +182,24 @@ export interface conversion {
   requestid: number;
 }
 
-interface btc {
+interface Btc {
   Bid?: number;
   Daily?: string;
   PrevDay?: number;
 }
 
-export interface currency extends btc {
+export interface Currency extends Btc {
   DailyUsd?: string;
   Usd?: string;
 }
 
-export interface bittrex {
-  btc: btc;
-  hive: currency;
-  hbd: currency;
+export interface Bittrex {
+  btc: Btc;
+  hive: Currency;
+  hbd: Currency;
 }
 
-export interface accountKeys {
+export interface AccountKeys {
   posting?: string;
   active?: string;
   memo?: string;
@@ -207,14 +207,14 @@ export interface accountKeys {
   activePubkey?: string;
   memoPubkey?: string;
 }
-export interface account {
+export interface Account {
   name: string;
-  keys: accountKeys;
+  keys: AccountKeys;
 }
 
-export interface accountsPayload {
-  account?: account;
-  accounts?: account[];
+export interface AccountsPayload {
+  account?: Account;
+  accounts?: Account[];
   name?: string;
 }
 export enum KeyTypes {
@@ -229,14 +229,14 @@ export enum PubKeyTypes {
   memo = 'memoPubkey',
 }
 
-export interface activeAccount {
+export interface ActiveAccount {
   account: ExtendedAccount;
-  keys: accountKeys;
+  keys: AccountKeys;
   rc: Manabar;
   name?: string;
 }
 
-export interface rewardFund {
+export interface RewardFund {
   author_reward_curve: string;
   content_constant: string;
   curation_reward_curve: string;
@@ -248,8 +248,10 @@ export interface rewardFund {
   recent_claims: string;
   reward_balance: string;
 }
-export interface globalProperties {
+export interface GlobalProperties {
   globals?: DynamicGlobalProperties;
   price?: Price;
-  rewardFund?: rewardFund;
+  rewardFund?: RewardFund;
 }
+
+export interface UserPreference {}

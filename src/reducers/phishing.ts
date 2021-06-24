@@ -1,9 +1,9 @@
+import {ActionPayload} from 'actions/interfaces';
 import {FETCH_PHISHING_ACCOUNTS} from 'actions/types';
-import {actionPayload} from 'actions/interfaces';
 
 export default (
   state: string[] = [],
-  {type, payload}: actionPayload<string[]>,
+  {type, payload}: ActionPayload<string[]>,
 ) => {
   switch (type) {
     case FETCH_PHISHING_ACCOUNTS:

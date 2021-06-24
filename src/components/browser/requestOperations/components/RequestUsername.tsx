@@ -1,4 +1,4 @@
-import {account} from 'actions/interfaces';
+import {Account} from 'actions/interfaces';
 import UserPicker from 'components/form/UserPicker';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -7,7 +7,7 @@ import RequestItem from './RequestItem';
 
 type Props = {
   username: string;
-  accounts: account[];
+  accounts: Account[];
   account: string;
   setAccount: (account: string) => void;
 };

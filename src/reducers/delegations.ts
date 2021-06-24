@@ -1,9 +1,9 @@
-import {actionPayload, delegations} from 'actions/interfaces';
+import {ActionPayload, Delegations} from 'actions/interfaces';
 import {FETCH_DELEGATEES, FETCH_DELEGATORS} from 'actions/types';
 
 const delegationsReducer = (
-  state: delegations = {incoming: [], outgoing: []},
-  {type, payload}: actionPayload<delegations>,
+  state: Delegations = {incoming: [], outgoing: []},
+  {type, payload}: ActionPayload<Delegations>,
 ) => {
   switch (type) {
     case FETCH_DELEGATEES:

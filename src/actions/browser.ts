@@ -1,6 +1,6 @@
 import {AppThunk} from 'src/hooks/redux';
 import {navigate} from 'utils/navigation';
-import {actionPayload, browserPayload, history, tabFields} from './interfaces';
+import {ActionPayload, BrowserPayload, History, TabFields} from './interfaces';
 import {
   ADD_BROWSER_TAB,
   ADD_TO_BROWSER_FAVORITES,
@@ -15,8 +15,8 @@ import {
   UPDATE_MANAGEMENT,
 } from './types';
 
-export const addToHistory = (history: history) => {
-  const action: actionPayload<browserPayload> = {
+export const addToHistory = (history: History) => {
+  const action: ActionPayload<BrowserPayload> = {
     type: ADD_TO_BROWSER_HISTORY,
     payload: {history},
   };
@@ -24,14 +24,14 @@ export const addToHistory = (history: history) => {
 };
 
 export const clearHistory = () => {
-  const action: actionPayload<browserPayload> = {
+  const action: ActionPayload<BrowserPayload> = {
     type: CLEAR_BROWSER_HISTORY,
   };
   return action;
 };
 
 export const addToFavorites = (url: string) => {
-  const action: actionPayload<browserPayload> = {
+  const action: ActionPayload<BrowserPayload> = {
     type: ADD_TO_BROWSER_FAVORITES,
     payload: {url},
   };
@@ -39,7 +39,7 @@ export const addToFavorites = (url: string) => {
 };
 
 export const removeFromFavorites = (url: string) => {
-  const action: actionPayload<browserPayload> = {
+  const action: ActionPayload<BrowserPayload> = {
     type: REMOVE_FROM_BROWSER_FAVORITES,
     payload: {url},
   };
@@ -70,7 +70,7 @@ export const addTabFromLinking = (url: string): AppThunk => (
 };
 
 export const setBrowserFocus = (shouldFocus: boolean) => {
-  const action: actionPayload<browserPayload> = {
+  const action: ActionPayload<BrowserPayload> = {
     type: BROWSER_FOCUS,
     payload: {shouldFocus},
   };
@@ -78,7 +78,7 @@ export const setBrowserFocus = (shouldFocus: boolean) => {
 };
 
 export const addTab = (url: string) => {
-  const action: actionPayload<browserPayload> = {
+  const action: ActionPayload<BrowserPayload> = {
     type: ADD_BROWSER_TAB,
     payload: {url, id: Date.now()},
   };
@@ -86,7 +86,7 @@ export const addTab = (url: string) => {
 };
 
 export const closeTab = (id: number) => {
-  const action: actionPayload<browserPayload> = {
+  const action: ActionPayload<BrowserPayload> = {
     type: CLOSE_BROWSER_TAB,
     payload: {id},
   };
@@ -106,8 +106,8 @@ export const changeTab = (id: number) => {
   };
 };
 
-export const updateTab = (id: number, data: tabFields) => {
-  const action: actionPayload<browserPayload> = {
+export const updateTab = (id: number, data: TabFields) => {
+  const action: ActionPayload<BrowserPayload> = {
     type: UPDATE_BROWSER_TAB,
     payload: {id, data},
   };
@@ -115,7 +115,7 @@ export const updateTab = (id: number, data: tabFields) => {
 };
 
 export const showManagementScreen = (showManagement: boolean) => {
-  const action: actionPayload<browserPayload> = {
+  const action: ActionPayload<BrowserPayload> = {
     type: UPDATE_MANAGEMENT,
     payload: {showManagement},
   };

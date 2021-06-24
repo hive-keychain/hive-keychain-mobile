@@ -1,4 +1,4 @@
-import {activeAccount, tokenTransaction, transaction} from 'actions/interfaces';
+import {ActiveAccount, TokenTransaction, Transaction} from 'actions/interfaces';
 import React, {useState} from 'react';
 import {
   StyleSheet,
@@ -11,8 +11,8 @@ import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
 
 type Props = {
-  user: activeAccount;
-  transaction: transaction | tokenTransaction;
+  user: ActiveAccount;
+  transaction: Transaction | TokenTransaction;
   token?: boolean;
 };
 const Transfer = ({transaction, user, token = false}: Props) => {

@@ -1,4 +1,4 @@
-import {currency} from 'actions/interfaces';
+import {Currency} from 'actions/interfaces';
 import DelegationsList from 'components/operations/DelegationsList';
 import React, {useState} from 'react';
 import {
@@ -20,7 +20,7 @@ type Props = {
   currency: string;
   value: number;
   color: string;
-  price: currency;
+  price: Currency;
   incoming?: number;
   outgoing?: number;
   buttons: JSX.Element[];
@@ -75,7 +75,7 @@ const TokenDisplay = ({
 
 const renderLeftBottom = (
   styles: Styles,
-  price: currency,
+  price: Currency,
   currency: string,
   incoming?: number,
   outgoing?: number,

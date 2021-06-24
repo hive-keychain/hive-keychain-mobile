@@ -1,5 +1,5 @@
 import {DynamicGlobalProperties, ExtendedAccount} from '@hiveio/dhive';
-import {bittrex} from 'actions/interfaces';
+import {Bittrex} from 'actions/interfaces';
 import api from 'api/keychain';
 import {toHP} from 'utils/format';
 
@@ -9,7 +9,7 @@ export const getBittrexPrices = async () => {
 
 export const getAccountValue = (
   {hbd_balance, balance, vesting_shares}: ExtendedAccount,
-  {hive, hbd}: bittrex,
+  {hive, hbd}: Bittrex,
   props: DynamicGlobalProperties,
 ) => {
   if (!hbd.Usd || !hive.Usd) return 0;

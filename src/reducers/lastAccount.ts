@@ -1,17 +1,17 @@
+import {ActionPayload, LastAccount} from 'actions/interfaces';
 import {persistReducer} from 'redux-persist';
 import {
-  ADD_ACCOUNT,
-  FORGET_ACCOUNTS,
-  FORGET_ACCOUNT,
   ACTIVE_ACCOUNT,
+  ADD_ACCOUNT,
+  FORGET_ACCOUNT,
+  FORGET_ACCOUNTS,
 } from '../actions/types';
-import {actionPayload, lastAccount} from 'actions/interfaces';
 import {persistConfig} from './configs';
 
 const lastAccountReducer = (
   state = {has: false},
-  {type, payload}: actionPayload<lastAccount>,
-): lastAccount => {
+  {type, payload}: ActionPayload<LastAccount>,
+): LastAccount => {
   switch (type) {
     case ADD_ACCOUNT:
       return {...state, has: true};

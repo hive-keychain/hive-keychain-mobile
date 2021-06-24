@@ -1,5 +1,5 @@
 import {Authority, ExtendedAccount} from '@hiveio/dhive';
-import {accountKeys} from 'actions/interfaces';
+import {AccountKeys} from 'actions/interfaces';
 import hive, {getClient} from 'utils/hive';
 
 const isMemoWif = (publicKey: string, memo: string) => {
@@ -21,8 +21,8 @@ const validatePrivateKey = (
   account: ExtendedAccount,
   pwd: string,
   publicKey: string,
-): accountKeys | null => {
-  let keys: accountKeys;
+): AccountKeys | null => {
+  let keys: AccountKeys;
   if (isMemoWif(publicKey, account.memo_key)) {
     keys = {memo: pwd, memoPubkey: publicKey};
     return keys;
@@ -57,7 +57,7 @@ const derivateFromMasterPassword = (
   const has_posting = getPubkeyWeight(keys.postingPubkey, account.posting);
 
   if (has_active || has_posting || keys.memoPubkey === account.memo_key) {
-    const workingKeys: accountKeys = {};
+    const workingKeys: AccountKeys = {};
     if (has_active) {
       workingKeys.active = keys.active;
       workingKeys.activePubkey = keys.activePubkey;
@@ -91,7 +91,7 @@ export const validateFromObject = async ({
   keys: {memo, posting, active},
 }: {
   name: string;
-  keys: accountKeys;
+  keys: AccountKeys;
 }) => {
   const account = (await getClient().database.getAccounts([name]))[0];
   let keys = {};
@@ -127,7 +127,7 @@ export const validateFromObject = async ({
 export default async (
   username: string,
   pwd: string,
-): Promise<accountKeys | null> => {
+): Promise<AccountKeys | null> => {
   try {
     const account = (await getClient().database.getAccounts([username]))[0];
     const publicKey = getPublicKeyFromPrivateKeyString(pwd);

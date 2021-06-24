@@ -1,10 +1,10 @@
-import {actionPayload, globalProperties} from 'actions/interfaces';
+import {ActionPayload, GlobalProperties} from 'actions/interfaces';
 import {GLOBAL_PROPS} from 'actions/types';
 
 const globalPropertiesReducer = (
-  state: globalProperties = {},
-  {type, payload}: actionPayload<globalProperties>,
-): globalProperties => {
+  state: GlobalProperties = {},
+  {type, payload}: ActionPayload<GlobalProperties>,
+): GlobalProperties => {
   switch (type) {
     case GLOBAL_PROPS:
       return payload!;
