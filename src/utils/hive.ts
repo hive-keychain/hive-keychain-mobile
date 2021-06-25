@@ -12,12 +12,12 @@ import {
 import api from 'api/keychain';
 import hiveTx from 'hive-tx';
 import {hiveEngine} from 'utils/config';
+import {RequestPost} from './keychain.types';
 
 type BroadcastResult = {id: string};
 
 const DEFAULT_RPC = 'https://api.hive.blog';
 let client = new Client(DEFAULT_RPC);
-
 hiveTx.config.rebranded_api = true;
 hiveTx.updateOperations();
 
@@ -117,7 +117,13 @@ export const setProxy = async (
 
 export const post = async (
   key: string,
-  {comment_options, username, parent_perm, parent_username, ...data}: object,
+  {
+    comment_options,
+    username,
+    parent_perm,
+    parent_username,
+    ...data
+  }: RequestPost,
 ) => {
   const arr = [
     [

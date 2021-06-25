@@ -1,8 +1,20 @@
+import {CommentOptionsOperation} from '@hiveio/dhive';
 import {Account, KeyTypes} from 'actions/interfaces';
 import {KeychainConfig} from 'utils/config';
 import {translate} from 'utils/localize';
+import {
+  ErrorMessage,
+  KeychainRequest,
+  RequestAddAccountKeys,
+  RequestDelegation,
+  RequestPost,
+  RequestTransfer,
+} from './keychain.types';
 
-export const validateAuthority = (accounts: Account[], req) => {
+export const validateAuthority = (
+  accounts: Account[],
+  req: KeychainRequest,
+) => {
   const {type, username} = req;
   const wifType = getRequiredWifType(req);
   if (username) {
@@ -42,7 +54,7 @@ export const sendResponse = (tabRef, obj) => {
   );
 };
 
-export const validateRequest = (req) => {
+export const validateRequest = (req: KeychainRequest) => {
   return (
     req &&
     req.type &&
@@ -156,7 +168,9 @@ export const validateRequest = (req) => {
   );
 };
 
-export const getRequiredWifType: () => KeyTypes = (request) => {
+export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
+  request,
+) => {
   switch (request.type) {
     case 'decode':
     case 'encode':
@@ -167,14 +181,16 @@ export const getRequiredWifType: () => KeyTypes = (request) => {
     case 'removeKeyAuthority':
     case 'addKeyAuthority':
     case 'signTx':
-      return request.method.toLowerCase();
+      return request.method.toLowerCase() as KeyTypes;
     case 'post':
     case 'vote':
-      return 'posting';
+      return KeyTypes.posting;
     case 'custom':
-      return !request.method ? 'posting' : request.method.toLowerCase();
+      return (!request.method
+        ? 'posting'
+        : request.method.toLowerCase()) as KeyTypes;
     case 'signedCall':
-      return request.typeWif.toLowerCase();
+      return request.typeWif.toLowerCase() as KeyTypes;
     case 'transfer':
     case 'sendToken':
     case 'delegation':
@@ -186,12 +202,12 @@ export const getRequiredWifType: () => KeyTypes = (request) => {
     case 'createProposal':
     case 'removeProposal':
     case 'updateProposalVote':
-      return 'active';
+      return KeyTypes.active;
   }
 };
 
 // Functions used to check the incoming data
-const hasTransferInfo = (req) => {
+const hasTransferInfo = (req: RequestTransfer) => {
   if (req.enforce) {
     return isFilled(req.username);
   } else if (isFilled(req.memo) && req.memo[0] === '#') {
@@ -201,76 +217,81 @@ const hasTransferInfo = (req) => {
   }
 };
 
-const isFilled = (obj) => {
+const isFilled = (obj: string | number) => {
   return !!obj && obj !== '';
 };
 
-const isBoolean = (obj) => {
+const isBoolean = (obj: any) => {
   return typeof obj === typeof true;
 };
 
-const isFilledOrEmpty = (obj) => {
+const isFilledOrEmpty = (obj: string) => {
   return obj || obj === '';
 };
 
-const isProposalIDs = (obj) => {
+const isProposalIDs = (obj: string) => {
   const parsed = JSON.parse(obj);
   return Array.isArray(parsed) && !parsed.some(isNaN);
 };
 
-const isFilledDelegationMethod = (obj) => {
+const isFilledDelegationMethod = (obj: string) => {
   return obj === 'VESTS' || obj === 'HP';
 };
 
-const isFilledDate = (date) => {
+const isFilledDate = (date: string) => {
   const regex = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d/;
   return regex.test(date);
 };
 
-const isFilledAmt = (obj) => {
-  return isFilled(obj) && !isNaN(obj) && obj > 0 && countDecimals(obj) === 3;
+const isFilledAmt = (obj: string) => {
+  return (
+    isFilled(obj) &&
+    !isNaN(parseFloat(obj)) &&
+    parseFloat(obj) > 0 &&
+    countDecimals(obj) === 3
+  );
 };
 
-const isFilledAmtSP = (obj) => {
+const isFilledAmtSP = (obj: RequestDelegation) => {
   return (
     isFilled(obj.amount) &&
-    !isNaN(obj.amount) &&
+    !isNaN(parseFloat(obj.amount)) &&
     ((countDecimals(obj.amount) === 3 && obj.unit === 'HP') ||
       (countDecimals(obj.amount) === 6 && obj.unit === 'VESTS'))
   );
 };
 
-const isFilledAmtSBD = (amt) => {
+const isFilledAmtSBD = (amt: string) => {
   return (
     amt &&
     amt.split(' ').length === 2 &&
-    !isNaN(amt.split(' ')[0]) &&
-    parseFloat(countDecimals(amt.split(' ')[0])) === 3 &&
+    !isNaN(parseFloat(amt.split(' ')[0])) &&
+    countDecimals(amt.split(' ')[0]) === 3 &&
     amt.split(' ')[1] === 'HBD'
   );
 };
 
-const isFilledWeight = (obj) => {
+const isFilledWeight = (obj: number) => {
   return (
     isFilled(obj) &&
     !isNaN(obj) &&
     obj >= -10000 &&
     obj <= 10000 &&
-    countDecimals(obj) === 0
+    obj === Math.floor(obj)
   );
 };
 
-const isFilledCurrency = (obj) => {
+const isFilledCurrency = (obj: string) => {
   return isFilled(obj) && (obj === 'HIVE' || obj === 'HBD');
 };
 
-const isFilledKey = (obj) => {
+const isFilledKey = (obj: string) => {
   return (
     isFilled(obj) && (obj === 'Memo' || obj === 'Active' || obj === 'Posting')
   );
 };
 
-const isFilledKeys = (obj) => {
+const isFilledKeys = (obj: RequestAddAccountKeys) => {
   if (typeof obj !== 'object') {
     return false;
   }
@@ -287,11 +308,13 @@ const isFilledKeys = (obj) => {
   }
 };
 
-const isCustomOptions = (obj) => {
+const isCustomOptions = (obj: RequestPost) => {
   if (obj.comment_options === '') {
     return true;
   }
-  let comment_options = JSON.parse(obj.comment_options);
+  let comment_options: CommentOptionsOperation[1] = JSON.parse(
+    obj.comment_options,
+  );
   if (
     comment_options.author !== obj.username ||
     comment_options.permlink !== obj.permlink
@@ -308,13 +331,13 @@ const isCustomOptions = (obj) => {
   );
 };
 
-const countDecimals = (nb) => {
+const countDecimals = (nb: string) => {
   return nb.toString().split('.')[1] === undefined
     ? 0
     : nb.toString().split('.')[1].length || 0;
 };
 
-export const beautifyErrorMessage = (err) => {
+export const beautifyErrorMessage = (err: ErrorMessage) => {
   if (!err) {
     return null;
   }

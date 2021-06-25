@@ -1,6 +1,6 @@
 import I18n from 'i18n-js';
-import en from 'locales/en';
-import fr from 'locales/fr';
+import en from 'locales/en.json';
+import fr from 'locales/fr.json';
 import * as RNLocalize from 'react-native-localize';
 
 const locales = RNLocalize.getLocales();

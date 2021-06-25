@@ -20,9 +20,9 @@ export const encryptJson = (json: EncryptionJson, pwd: string) => {
 // Decrypt and check the hash to confirm the decryption
 export const decryptToJson = (msg: string, pwd: string) => {
   try {
-    let decrypted = decrypt(msg, pwd).toString(CryptoJS.enc.Utf8);
+    let decryptedString = decrypt(msg, pwd).toString(CryptoJS.enc.Utf8);
 
-    decrypted = JSON.parse(decrypted);
+    let decrypted = JSON.parse(decryptedString) as EncryptionJson;
 
     if (decrypted.hash && decrypted.hash === md5(decrypted.list)) {
       return decrypted as EncryptionJson;

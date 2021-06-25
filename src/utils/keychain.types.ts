@@ -1,4 +1,3 @@
-import {CommentOptionsOperation, Operation, Transaction} from '@hiveio/dhive';
 import {KeyTypes} from 'actions/interfaces';
 
 export enum KeychainRequestTypes {
@@ -44,7 +43,6 @@ type KeychainOverrideRpc = {
 export type RequestDecode = KeychainOverrideRpc & {
   type: KeychainRequestTypes.decode;
   username: string;
-  receiver: string;
   message: string;
   method: KeychainKeyTypes;
 };
@@ -52,6 +50,7 @@ export type RequestDecode = KeychainOverrideRpc & {
 export type RequestEncode = KeychainOverrideRpc & {
   type: KeychainRequestTypes.encode;
   username: string;
+  receiver: string;
   message: string;
   method: KeychainKeyTypes;
 };
@@ -67,7 +66,7 @@ export type RequestSignBuffer = KeychainOverrideRpc & {
 export type RequestBroadcast = KeychainOverrideRpc & {
   type: KeychainRequestTypes.broadcast;
   username: string;
-  operations: Operation[];
+  operations: string;
   method: KeychainKeyTypes;
 };
 
@@ -108,7 +107,7 @@ export type RequestRemoveKeyAuthority = KeychainOverrideRpc & {
 export type RequestSignTx = KeychainOverrideRpc & {
   type: KeychainRequestTypes.signTx;
   username: string;
-  tx: Transaction;
+  tx: string;
   method: KeychainKeyTypes;
 };
 
@@ -119,9 +118,9 @@ export type RequestPost = KeychainOverrideRpc & {
   body: string;
   parent_perm: string;
   parent_username?: string;
-  json_metadata: object;
+  json_metadata: string;
   permlink: string;
-  comment_options: CommentOptionsOperation[1];
+  comment_options: string;
 };
 
 export type RequestVote = KeychainOverrideRpc & {
@@ -129,7 +128,7 @@ export type RequestVote = KeychainOverrideRpc & {
   username: string;
   permlink: string;
   author: string;
-  weight: string;
+  weight: number;
 };
 
 export type RequestCustomJSON = KeychainOverrideRpc & {
@@ -239,7 +238,7 @@ export type RequestRemoveProposal = KeychainOverrideRpc & {
   extensions: string;
 };
 
-type RequestAddAccountKeys = {
+export type RequestAddAccountKeys = {
   posting?: string;
   active?: string;
   memo?: string;
@@ -301,3 +300,28 @@ export type KeychainRequestData =
 export type RequestId = {request_id: number};
 
 export type KeychainRequest = KeychainRequestData & RequestId;
+
+export type HiveErrorMessage = {
+  message: string;
+  code: number;
+  data?: any;
+};
+
+export type RequestSuccess = {
+  data: KeychainRequestData;
+  request_id: number;
+  result: any;
+  message: string;
+};
+export type RequestError = {
+  data: KeychainRequestData;
+  request_id: number;
+  error: any;
+  message: string;
+};
+
+export type RequestResponse = {
+  success: boolean;
+  error: any | null;
+  result: any | null;
+} & (RequestSuccess | RequestError);
