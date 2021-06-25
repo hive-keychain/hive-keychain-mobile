@@ -16,6 +16,8 @@ import {
   WebViewNativeEvent,
   WebViewProgressEvent,
 } from 'react-native-webview/lib/WebViewTypes';
+import {UserPreference} from 'reducers/preferences.types';
+import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import {
   sendError,
@@ -24,6 +26,7 @@ import {
   validateRequest,
 } from 'utils/keychain';
 import {goBack as navigationGoBack, navigate} from 'utils/navigation';
+import {hasPreference} from 'utils/preferences';
 import {hive_keychain} from './bridges/HiveKeychainBridge';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import Footer from './Footer';
@@ -42,6 +45,7 @@ type Props = {
   history: History[];
   clearHistory: () => ActionPayload<BrowserPayload>;
   navigation: BrowserNavigation;
+  preferences: UserPreference[];
 };
 export default ({
   data: {url, id, icon},
@@ -54,6 +58,7 @@ export default ({
   history,
   manageTabs,
   isManagingTab,
+  preferences,
 }: Props) => {
   const tabRef: MutableRefObject<WebView> = useRef(null);
   const [searchUrl, setSearchUrl] = useState(url);
@@ -174,33 +179,44 @@ export default ({
   };
 
   const showOperationRequestModal = (request_id: number, data: any) => {
-    const onForceCloseModal = () => {
-      navigationGoBack();
-      sendError(tabRef, {
-        error: 'user_cancel',
-        message: 'Request was canceled by the user.',
-        data,
-        request_id,
+    const {username, domain, type} = data;
+    if (
+      hasPreference(
+        preferences,
+        username,
+        urlTransformer(domain).hostname,
+        type,
+      )
+    ) {
+      console.log('has pref');
+    } else {
+      const onForceCloseModal = () => {
+        navigationGoBack();
+        sendError(tabRef, {
+          error: 'user_cancel',
+          message: 'Request was canceled by the user.',
+          data,
+          request_id,
+        });
+      };
+      navigate('ModalScreen', {
+        modalContent: (
+          <RequestModalContent
+            request={{...data, request_id}}
+            accounts={accounts}
+            onForceCloseModal={onForceCloseModal}
+            sendError={(obj: object) => {
+              sendError(tabRef, obj);
+            }}
+            sendResponse={(obj: object) => {
+              sendResponse(tabRef, obj);
+            }}
+          />
+        ),
+        onForceCloseModal,
       });
-    };
-    navigate('ModalScreen', {
-      modalContent: (
-        <RequestModalContent
-          request={{...data, request_id}}
-          accounts={accounts}
-          onForceCloseModal={onForceCloseModal}
-          sendError={(obj: object) => {
-            sendError(tabRef, obj);
-          }}
-          sendResponse={(obj: object) => {
-            sendResponse(tabRef, obj);
-          }}
-        />
-      ),
-      onForceCloseModal,
-    });
+    }
   };
-  console.log(active, isManagingTab);
   return (
     <View
       style={[styles.container, !active || isManagingTab ? styles.hide : null]}>

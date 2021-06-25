@@ -37,6 +37,7 @@ const BrowserScreen = ({
   route,
   showManagementScreen,
   showManagement,
+  preferences,
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
   return (
     <Browser
@@ -59,6 +60,7 @@ const BrowserScreen = ({
       setBrowserFocus={setBrowserFocus}
       showManagement={showManagement}
       showManagementScreen={showManagementScreen}
+      preferences={preferences}
     />
   );
 };
@@ -71,6 +73,7 @@ const mapStateToProps = (state: RootState) => {
     history: state.browser.history,
     favorites: state.browser.whitelist,
     showManagement: state.browser.showManagement,
+    preferences: state.preferences,
   };
 };
 

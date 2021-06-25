@@ -15,6 +15,7 @@ const Browser = ({
   tabs,
   history,
   favorites,
+  preferences,
   changeTab,
   addTab,
   updateTab,
@@ -117,6 +118,7 @@ const Browser = ({
           clearHistory={clearHistory}
           manageTabs={manageTabs}
           isManagingTab={showManagement}
+          preferences={preferences}
         />
       ))}
     </View>
