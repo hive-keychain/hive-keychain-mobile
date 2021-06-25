@@ -1,19 +1,19 @@
-import Decode from './Decode';
-import SignBuffer from './SignBuffer';
-import Vote from './Vote';
-import Custom from './Custom';
-import Transfer from './Transfer';
-import Post from './Post';
 import Broadcast from './Broadcast';
-import WitnessVote from './Witness';
-import Proxy from './Proxy';
-import PowerUp from './PowerUp';
-import PowerDown from './PowerDown';
+import Custom from './Custom';
+import Decode from './Decode';
 import Delegation from './Delegation';
 import Encode from './Encode';
-import SignTx from './SignTx';
+import Post from './Post';
+import PowerDown from './PowerDown';
+import PowerUp from './PowerUp';
+import Proxy from './Proxy';
 import SendToken from './SendToken';
+import SignBuffer from './SignBuffer';
+import SignTx from './SignTx';
+import Transfer from './Transfer';
 import UpdateProposalVote from './UpdateProposalVote';
+import Vote from './Vote';
+import WitnessVote from './Witness';
 
 export default {
   Decode,
@@ -41,4 +41,6 @@ Missing operations :
  CreateAccount
  Create / Remove proposals
  Signed Calls
+ Conversion
+ Recurrent transfer
 */
