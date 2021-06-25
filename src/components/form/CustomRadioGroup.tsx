@@ -38,7 +38,6 @@ export const RadioButton = ({data, onSelect, selected, style}: RadioProps) => (
   <TouchableOpacity
     style={styles.radioButton}
     onPress={() => {
-      console.log('click', data);
       onSelect(data);
     }}>
     <View

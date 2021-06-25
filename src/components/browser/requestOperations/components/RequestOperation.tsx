@@ -1,8 +1,10 @@
 import {KeyTypes} from 'actions/interfaces';
+import {addPreference} from 'actions/preferences';
 import {RadioButton} from 'components/form/CustomRadioGroup';
 import OperationButton from 'components/form/EllipticButton';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
 import {urlTransformer} from 'utils/browser';
 import {beautifyErrorMessage} from 'utils/keychain';
 import {translate} from 'utils/localize';
@@ -22,8 +24,8 @@ type Props = {
   performOperation: () => void;
   additionalData?: object;
   beautifyError: (string: string) => void;
-};
-export default ({
+} & TypesFromRedux;
+const RequestOperation = ({
   closeGracefully,
   sendResponse,
   sendError,
@@ -36,6 +38,7 @@ export default ({
   performOperation,
   additionalData = {},
   beautifyError,
+  addPreference,
 }: Props) => {
   const {request_id, ...data} = request;
   const [loading, setLoading] = useState(false);
@@ -78,6 +81,7 @@ export default ({
               message: msg,
               ...additionalData,
             };
+            addPreference(username, domain, type);
             sendResponse(obj);
           } catch (e) {
             console.log(e);
@@ -118,3 +122,6 @@ const styles = StyleSheet.create({
   keep: {marginTop: 40, flexDirection: 'row'},
   radio: {marginLeft: 0},
 });
+const connector = connect(null, {addPreference});
+type TypesFromRedux = ConnectedProps<typeof connector>;
+export default connector(RequestOperation);
