@@ -1,4 +1,4 @@
-import {Tab} from 'actions/interfaces';
+import {Tab as TabType} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect} from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
@@ -6,6 +6,7 @@ import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
 import {BrowserConfig} from 'utils/config';
+import Tab from './Tab';
 import TabsManagement from './tabsManagement';
 
 const Browser = ({
@@ -29,6 +30,7 @@ const Browser = ({
   showManagementScreen,
   showManagement,
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
+  console.log('a');
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       StatusBar.setHidden(true);
@@ -42,7 +44,7 @@ const Browser = ({
   }, [setBrowserFocus]);
 
   const manageTabs = (
-    {url, icon, id}: Tab,
+    {url, icon, id}: TabType,
     view: MutableRefObject<WebView>,
   ) => {
     captureRef(view, {

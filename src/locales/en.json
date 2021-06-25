@@ -259,7 +259,8 @@
       "undelegate": "Succesfully stopped the delegation to @{{delegatee}} from account @{{username}}.",
       "sendToken": "The transaction has been broadcasted successfully. Please check your balance to confirm that it was processed succesfully."
     },
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}."
   },
   "browser": {"history": {"clear": "Clear History"}}
 }

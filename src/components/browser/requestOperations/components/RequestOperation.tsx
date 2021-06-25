@@ -1,6 +1,9 @@
+import {KeyTypes} from 'actions/interfaces';
+import {RadioButton} from 'components/form/CustomRadioGroup';
 import OperationButton from 'components/form/EllipticButton';
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
+import {urlTransformer} from 'utils/browser';
 import {beautifyErrorMessage} from 'utils/keychain';
 import {translate} from 'utils/localize';
 import RequestMessage from './RequestMessage';
@@ -12,7 +15,7 @@ type Props = {
   sendError: (msg: object) => void;
   message: string;
   children: JSX.Element[];
-  method: any; // TODO : change
+  method: KeyTypes;
   request: any; // TODO : change
   successMessage: string;
   errorMessage: (msg: object, data: object) => void;
@@ -37,11 +40,27 @@ export default ({
   const {request_id, ...data} = request;
   const [loading, setLoading] = useState(false);
   const [resultMessage, setResultMessage] = useState(null);
-
+  const [keep, setKeep] = useState(false);
+  let {domain, type, username} = data;
+  domain = urlTransformer(domain).hostname;
   const renderRequestSummary = () => (
     <ScrollView>
       <RequestMessage message={message} />
       {children}
+      {method !== 'active' ? (
+        <View style={styles.keep}>
+          <RadioButton
+            selected={keep}
+            data={translate('request.keep', {domain, username, type})}
+            style={styles.radio}
+            onSelect={() => {
+              setKeep(!keep);
+            }}
+          />
+        </View>
+      ) : (
+        <></>
+      )}
       <OperationButton
         style={styles.button}
         title={translate('request.confirm')}
@@ -96,4 +115,6 @@ export default ({
 
 const styles = StyleSheet.create({
   button: {marginTop: 40},
+  keep: {marginTop: 40, flexDirection: 'row'},
+  radio: {marginLeft: 0},
 });

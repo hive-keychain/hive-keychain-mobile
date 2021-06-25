@@ -1,12 +1,12 @@
-import React from 'react';
-import RequestItem from './components/RequestItem';
-import {translate} from 'utils/localize';
-import {transfer} from 'utils/hive';
-import RequestOperation from './components/RequestOperation';
-import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
-import {beautifyTransferError} from 'utils/format';
 import {encodeMemo} from 'components/bridge';
+import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
+import React from 'react';
+import {beautifyTransferError} from 'utils/format';
+import {transfer} from 'utils/hive';
 import {getAccountKeys} from 'utils/hiveUtils';
+import {translate} from 'utils/localize';
+import RequestItem from './components/RequestItem';
+import RequestOperation from './components/RequestOperation';
 
 export default ({
   request,
@@ -66,9 +66,11 @@ export default ({
       <RequestItem
         title={translate('request.item.memo')}
         content={
-          memo.length && memo[0] === '#'
-            ? `${memo.substring(1)} (${translate('common.encrypted')})`
-            : memo
+          memo.length
+            ? memo[0] === '#'
+              ? `${memo.substring(1)} (${translate('common.encrypted')})`
+              : memo
+            : translate('common.none')
         }
       />
     </RequestOperation>
