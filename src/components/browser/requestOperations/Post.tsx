@@ -1,9 +1,16 @@
+import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
-import RequestItem from './components/RequestItem';
-import {translate} from 'utils/localize';
 import {post} from 'utils/hive';
-import RequestOperation from './components/RequestOperation';
+import {RequestId, RequestPost} from 'utils/keychain.types';
+import {translate} from 'utils/localize';
 import CollapsibleData from './components/CollapsibleData';
+import RequestItem from './components/RequestItem';
+import RequestOperation from './components/RequestOperation';
+import {RequestComponentCommonProps} from './requestOperations.types';
+
+type Props = {
+  request: RequestPost & RequestId;
+} & RequestComponentCommonProps;
 
 export default ({
   request,
@@ -11,7 +18,7 @@ export default ({
   closeGracefully,
   sendResponse,
   sendError,
-}) => {
+}: Props) => {
   const {request_id, ...data} = request;
   const {
     username,
@@ -29,7 +36,7 @@ export default ({
       sendError={sendError}
       successMessage={translate('request.success.post')}
       beautifyError
-      method={'posting'}
+      method={KeyTypes.posting}
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {

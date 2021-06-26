@@ -7,23 +7,34 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {urlTransformer} from 'utils/browser';
 import {beautifyErrorMessage} from 'utils/keychain';
+import {
+  HiveErrorMessage,
+  KeychainRequest,
+  RequestError,
+  RequestSuccess,
+} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestMessage from './RequestMessage';
 import RequestResultMessage from './RequestResultMessage';
 
 type Props = {
   closeGracefully: () => void;
-  sendResponse: (msg: object) => void;
-  sendError: (msg: object) => void;
-  message: string;
+  sendResponse: (msg: RequestSuccess) => void;
+  sendError: (msg: RequestError) => void;
+  message?: string;
   children: JSX.Element[];
   method: KeyTypes;
-  request: any; // TODO : change
+  request: KeychainRequest;
   successMessage: string;
-  errorMessage: (msg: object, data: object) => void;
+  errorMessage?:
+    | string
+    | ((
+        msg: HiveErrorMessage,
+        data: {currency?: string; username?: string; to?: string},
+      ) => string);
   performOperation: () => void;
   additionalData?: object;
-  beautifyError: (string: string) => void;
+  beautifyError?: boolean;
 } & TypesFromRedux;
 const RequestOperation = ({
   closeGracefully,
@@ -50,7 +61,7 @@ const RequestOperation = ({
     <ScrollView>
       <RequestMessage message={message} />
       {children}
-      {method !== 'active' ? (
+      {method !== KeyTypes.active ? (
         <View style={styles.keep}>
           <RadioButton
             selected={keep}
@@ -70,7 +81,7 @@ const RequestOperation = ({
         isLoading={loading}
         onPress={async () => {
           setLoading(true);
-          let msg;
+          let msg: string;
           try {
             const result = await performOperation();
             msg = successMessage;

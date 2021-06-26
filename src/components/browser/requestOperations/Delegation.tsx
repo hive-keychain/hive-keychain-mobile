@@ -1,13 +1,20 @@
-import React from 'react';
-import RequestItem from './components/RequestItem';
-import {translate} from 'utils/localize';
-import {delegate} from 'utils/hive';
-import RequestOperation from './components/RequestOperation';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
-import {beautifyTransferError} from 'utils/format';
-import {connect} from 'react-redux';
+import React from 'react';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
+import {beautifyTransferError, fromHP} from 'utils/format';
+import {delegate} from 'utils/hive';
 import {sanitizeAmount} from 'utils/hiveUtils';
-import {fromHP} from 'utils/format';
+import {RequestDelegation, RequestId} from 'utils/keychain.types';
+import {translate} from 'utils/localize';
+import RequestItem from './components/RequestItem';
+import RequestOperation from './components/RequestOperation';
+import {RequestComponentCommonProps} from './requestOperations.types';
+
+type Props = {
+  request: RequestDelegation & RequestId;
+} & RequestComponentCommonProps &
+  PropsFromRedux;
 
 const Delegation = ({
   request,
@@ -16,7 +23,7 @@ const Delegation = ({
   sendResponse,
   sendError,
   properties,
-}) => {
+}: Props) => {
   const {request_id, ...data} = request;
   const {delegatee, unit, amount} = data;
   const {
@@ -73,9 +80,10 @@ const Delegation = ({
     </RequestOperation>
   );
 };
-
-export default connect((state) => {
+const connector = connect((state: RootState) => {
   return {
     properties: state.properties,
   };
-})(Delegation);
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(Delegation);

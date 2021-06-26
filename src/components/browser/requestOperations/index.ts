@@ -15,25 +15,25 @@ import UpdateProposalVote from './UpdateProposalVote';
 import Vote from './Vote';
 import WitnessVote from './Witness';
 
-export default {
-  Decode,
-  SignBuffer,
-  Vote,
-  Custom,
-  Transfer,
-  Post,
-  Broadcast,
-  WitnessVote,
-  Proxy,
-  PowerUp,
-  PowerDown,
-  Delegation,
-  Encode,
-  SignTx,
-  SendToken,
-  UpdateProposalVote,
+const map = {
+  decode: Decode,
+  signBuffer: SignBuffer,
+  vote: Vote,
+  custom: Custom,
+  transfer: Transfer,
+  post: Post,
+  broadcast: Broadcast,
+  witnessVote: WitnessVote,
+  proxy: Proxy,
+  powerUp: PowerUp,
+  powerDown: PowerDown,
+  delegation: Delegation,
+  encode: Encode,
+  signTx: SignTx,
+  sendToken: SendToken,
+  updateProposalVote: UpdateProposalVote,
 };
-
+export default map;
 /*
 Missing operations :
  AddAccounts

@@ -1,3 +1,4 @@
+import {Operation, Transaction} from '@hiveio/dhive';
 import {KeyTypes} from 'actions/interfaces';
 
 export enum KeychainRequestTypes {
@@ -36,18 +37,19 @@ export enum KeychainKeyTypes {
   memo = 'Memo',
 }
 
-type KeychainOverrideRpc = {
+type CommonRequestParams = {
   rpc?: string;
+  domain: string;
 };
 
-export type RequestDecode = KeychainOverrideRpc & {
+export type RequestDecode = CommonRequestParams & {
   type: KeychainRequestTypes.decode;
   username: string;
   message: string;
   method: KeychainKeyTypes;
 };
 
-export type RequestEncode = KeychainOverrideRpc & {
+export type RequestEncode = CommonRequestParams & {
   type: KeychainRequestTypes.encode;
   username: string;
   receiver: string;
@@ -55,7 +57,7 @@ export type RequestEncode = KeychainOverrideRpc & {
   method: KeychainKeyTypes;
 };
 
-export type RequestSignBuffer = KeychainOverrideRpc & {
+export type RequestSignBuffer = CommonRequestParams & {
   type: KeychainRequestTypes.signBuffer;
   username?: string;
   message: string;
@@ -63,14 +65,14 @@ export type RequestSignBuffer = KeychainOverrideRpc & {
   title?: string;
 };
 
-export type RequestBroadcast = KeychainOverrideRpc & {
+export type RequestBroadcast = CommonRequestParams & {
   type: KeychainRequestTypes.broadcast;
   username: string;
-  operations: string;
+  operations: string | Operation[];
   method: KeychainKeyTypes;
 };
 
-export type RequestAddAccountAuthority = KeychainOverrideRpc & {
+export type RequestAddAccountAuthority = CommonRequestParams & {
   type: KeychainRequestTypes.addAccountAuthority;
   authorizedUsername: string;
   role: KeychainKeyTypes;
@@ -79,7 +81,7 @@ export type RequestAddAccountAuthority = KeychainOverrideRpc & {
   method: KeychainKeyTypes.active;
 };
 
-export type RequestRemoveAccountAuthority = KeychainOverrideRpc & {
+export type RequestRemoveAccountAuthority = CommonRequestParams & {
   type: KeychainRequestTypes.removeAccountAuthority;
   authorizedUsername: string;
   role: KeychainKeyTypes;
@@ -87,7 +89,7 @@ export type RequestRemoveAccountAuthority = KeychainOverrideRpc & {
   method: KeychainKeyTypes.active;
 };
 
-export type RequestAddKeyAuthority = KeychainOverrideRpc & {
+export type RequestAddKeyAuthority = CommonRequestParams & {
   type: KeychainRequestTypes.addKeyAuthority;
   authorizedKey: string;
   role: KeychainKeyTypes;
@@ -96,7 +98,7 @@ export type RequestAddKeyAuthority = KeychainOverrideRpc & {
   weight: number;
 };
 
-export type RequestRemoveKeyAuthority = KeychainOverrideRpc & {
+export type RequestRemoveKeyAuthority = CommonRequestParams & {
   type: KeychainRequestTypes.removeKeyAuthority;
   authorizedKey: string;
   role: KeychainKeyTypes;
@@ -104,14 +106,14 @@ export type RequestRemoveKeyAuthority = KeychainOverrideRpc & {
   method: KeychainKeyTypes.active;
 };
 
-export type RequestSignTx = KeychainOverrideRpc & {
+export type RequestSignTx = CommonRequestParams & {
   type: KeychainRequestTypes.signTx;
   username: string;
-  tx: string;
+  tx: Transaction;
   method: KeychainKeyTypes;
 };
 
-export type RequestPost = KeychainOverrideRpc & {
+export type RequestPost = CommonRequestParams & {
   type: KeychainRequestTypes.post;
   username: string;
   title?: string;
@@ -123,24 +125,24 @@ export type RequestPost = KeychainOverrideRpc & {
   comment_options: string;
 };
 
-export type RequestVote = KeychainOverrideRpc & {
+export type RequestVote = CommonRequestParams & {
   type: KeychainRequestTypes.vote;
   username: string;
   permlink: string;
   author: string;
-  weight: number;
+  weight: string | number;
 };
 
-export type RequestCustomJSON = KeychainOverrideRpc & {
+export type RequestCustomJSON = CommonRequestParams & {
   type: KeychainRequestTypes.custom;
   username?: string;
   id: string;
-  method: KeyTypes;
+  method: KeychainKeyTypes;
   json: string;
   display_msg: string;
 };
 
-export type RequestSignedCall = KeychainOverrideRpc & {
+export type RequestSignedCall = CommonRequestParams & {
   type: KeychainRequestTypes.signedCall;
   username: string;
   method: string;
@@ -148,7 +150,7 @@ export type RequestSignedCall = KeychainOverrideRpc & {
   typeWif: KeyTypes;
 };
 
-export type RequestTransfer = KeychainOverrideRpc & {
+export type RequestTransfer = CommonRequestParams & {
   type: KeychainRequestTypes.transfer;
   username?: string;
   to: string;
@@ -158,7 +160,7 @@ export type RequestTransfer = KeychainOverrideRpc & {
   currency: string;
 };
 
-export type RequestSendToken = KeychainOverrideRpc & {
+export type RequestSendToken = CommonRequestParams & {
   type: KeychainRequestTypes.sendToken;
   username: string;
   to: string;
@@ -167,7 +169,7 @@ export type RequestSendToken = KeychainOverrideRpc & {
   currency: string;
 };
 
-export type RequestDelegation = KeychainOverrideRpc & {
+export type RequestDelegation = CommonRequestParams & {
   type: KeychainRequestTypes.delegation;
   username?: string;
   delegatee: string;
@@ -175,33 +177,33 @@ export type RequestDelegation = KeychainOverrideRpc & {
   unit: string;
 };
 
-export type RequestWitnessVote = KeychainOverrideRpc & {
+export type RequestWitnessVote = CommonRequestParams & {
   type: KeychainRequestTypes.witnessVote;
   username?: string;
   witness: string;
   vote: boolean;
 };
 
-export type RequestProxy = KeychainOverrideRpc & {
+export type RequestProxy = CommonRequestParams & {
   type: KeychainRequestTypes.proxy;
   username?: string;
   proxy: string;
 };
 
-export type RequestPowerUp = KeychainOverrideRpc & {
+export type RequestPowerUp = CommonRequestParams & {
   type: KeychainRequestTypes.powerUp;
   username: string;
   recipient: string;
   steem: string;
 };
 
-export type RequestPowerDown = KeychainOverrideRpc & {
+export type RequestPowerDown = CommonRequestParams & {
   type: KeychainRequestTypes.powerDown;
   username: string;
   steem_power: string;
 };
 
-export type RequestCreateClaimedAccount = KeychainOverrideRpc & {
+export type RequestCreateClaimedAccount = CommonRequestParams & {
   type: KeychainRequestTypes.createClaimedAccount;
   username: string;
   new_account: string;
@@ -211,15 +213,15 @@ export type RequestCreateClaimedAccount = KeychainOverrideRpc & {
   memo: string;
 };
 
-export type RequestUpdateProposalVote = KeychainOverrideRpc & {
+export type RequestUpdateProposalVote = CommonRequestParams & {
   type: KeychainRequestTypes.updateProposalVote;
   username: string;
   proposal_ids: string;
   approve: boolean;
-  extensions: string;
+  extensions: string | any[];
 };
 
-export type RequestCreateProposal = KeychainOverrideRpc & {
+export type RequestCreateProposal = CommonRequestParams & {
   type: KeychainRequestTypes.createProposal;
   username: string;
   receiver: string;
@@ -231,7 +233,7 @@ export type RequestCreateProposal = KeychainOverrideRpc & {
   extensions: string;
 };
 
-export type RequestRemoveProposal = KeychainOverrideRpc & {
+export type RequestRemoveProposal = CommonRequestParams & {
   type: KeychainRequestTypes.removeProposal;
   username: string;
   proposal_ids: string;
@@ -244,20 +246,20 @@ export type RequestAddAccountKeys = {
   memo?: string;
 };
 
-export type RequestAddAccount = KeychainOverrideRpc & {
+export type RequestAddAccount = CommonRequestParams & {
   type: KeychainRequestTypes.addAccount;
   username: string;
   keys: RequestAddAccountKeys;
 };
 
-export type RequestConvert = KeychainOverrideRpc & {
+export type RequestConvert = CommonRequestParams & {
   type: KeychainRequestTypes.convert;
   username: string;
   amount: string;
   collaterized: boolean;
 };
 
-export type RequestRecurrentTransfer = KeychainOverrideRpc & {
+export type RequestRecurrentTransfer = CommonRequestParams & {
   type: KeychainRequestTypes.recurrentTransfer;
   username?: string;
   to: string;

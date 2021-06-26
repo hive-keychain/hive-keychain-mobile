@@ -5,8 +5,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {goBack} from 'utils/navigation';
 
 type Props = {
-  children: JSX.Element[];
-  logo: JSX.Element;
+  children: JSX.Element;
+  logo?: JSX.Element;
   title: string;
   onClose?: () => void;
 };

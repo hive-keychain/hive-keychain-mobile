@@ -1,10 +1,17 @@
-import React from 'react';
-import RequestItem from './components/RequestItem';
-import {translate} from 'utils/localize';
-import {urlTransformer} from 'utils/browser';
+import {KeyTypes} from 'actions/interfaces';
 import {signBuffer} from 'components/bridge';
-import RequestOperation from './components/RequestOperation';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
+import React from 'react';
+import {urlTransformer} from 'utils/browser';
+import {RequestId, RequestSignBuffer} from 'utils/keychain.types';
+import {translate} from 'utils/localize';
+import RequestItem from './components/RequestItem';
+import RequestOperation from './components/RequestOperation';
+import {RequestComponentCommonProps} from './requestOperations.types';
+
+type Props = {
+  request: RequestSignBuffer & RequestId;
+} & RequestComponentCommonProps;
 
 export default ({
   request,
@@ -12,7 +19,7 @@ export default ({
   closeGracefully,
   sendResponse,
   sendError,
-}) => {
+}: Props) => {
   const {request_id, ...data} = request;
   const {domain, method, username, message} = data;
   const {
@@ -39,7 +46,7 @@ export default ({
       sendError={sendError}
       successMessage={translate('request.success.signBuffer')}
       errorMessage={translate('request.error.signBuffer')}
-      method={method}
+      method={method.toLowerCase() as KeyTypes}
       request={request}
       closeGracefully={closeGracefully}
       additionalData={{

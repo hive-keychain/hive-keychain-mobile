@@ -1,6 +1,6 @@
 import {DynamicGlobalProperties} from '@hiveio/dhive';
 import {translate} from 'utils/localize';
-import {HiveErrorMessage, RequestTransfer} from './keychain.types';
+import {HiveErrorMessage} from './keychain.types';
 
 export const withCommas = (nb: string, decimals = 3) =>
   parseFloat(parseFloat(nb).toFixed(decimals))
@@ -41,7 +41,7 @@ export const capitalize = (string: string) =>
 
 export const beautifyTransferError = (
   err: HiveErrorMessage,
-  {currency, username, to}: RequestTransfer,
+  {currency, username, to}: {currency?: string; username?: string; to?: string},
 ) => {
   if (!err.data && err.message.includes('Unable to serialize')) {
     return translate('request.error.transfer.encrypt');

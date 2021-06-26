@@ -1,11 +1,20 @@
+import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
-import RequestItem from './components/RequestItem';
-import {translate} from 'utils/localize';
-import RequestOperation from './components/RequestOperation';
-import {powerDown} from 'utils/hive';
-import {connect} from 'react-redux';
-import {sanitizeAmount} from 'utils/hiveUtils';
+import {connect, ConnectedProps} from 'react-redux';
+import {RootState} from 'store';
 import {fromHP} from 'utils/format';
+import {powerDown} from 'utils/hive';
+import {sanitizeAmount} from 'utils/hiveUtils';
+import {RequestId, RequestPowerDown} from 'utils/keychain.types';
+import {translate} from 'utils/localize';
+import RequestItem from './components/RequestItem';
+import RequestOperation from './components/RequestOperation';
+import {RequestComponentCommonProps} from './requestOperations.types';
+
+type Props = {
+  request: RequestPowerDown & RequestId;
+} & RequestComponentCommonProps &
+  PropsFromRedux;
 
 const PowerDown = ({
   request,
@@ -14,7 +23,7 @@ const PowerDown = ({
   sendResponse,
   sendError,
   properties,
-}) => {
+}: Props) => {
   const {request_id, ...data} = request;
   const {username, steem_power: hp} = data;
 
@@ -32,7 +41,7 @@ const PowerDown = ({
         },
       )}
       beautifyError
-      method={'active'}
+      method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {
@@ -59,9 +68,10 @@ const PowerDown = ({
     </RequestOperation>
   );
 };
-
-export default connect((state) => {
+const connector = connect((state: RootState) => {
   return {
     properties: state.properties,
   };
-})(PowerDown);
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(PowerDown);

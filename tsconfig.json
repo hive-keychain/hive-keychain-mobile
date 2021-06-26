@@ -19,7 +19,7 @@
             "api/*": ["./src/api/*"],
             "assets/*": ["./src/assets/*"],
             "components/*": ["./src/components/*"],
-            "hooks": ["./src/hooks"],
+            "hooks/*": ["./src/hooks/*"],
             "locales/*": ["./src/locales/*"],
             "navigators/*": ["./src/navigators/*"],
             "reducers/*": ["./src/reducers/*"],

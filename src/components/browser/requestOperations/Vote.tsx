@@ -1,8 +1,15 @@
+import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
-import RequestItem from './components/RequestItem';
-import {translate} from 'utils/localize';
-import RequestOperation from './components/RequestOperation';
 import {vote} from 'utils/hive';
+import {RequestId, RequestVote} from 'utils/keychain.types';
+import {translate} from 'utils/localize';
+import RequestItem from './components/RequestItem';
+import RequestOperation from './components/RequestOperation';
+import {RequestComponentCommonProps} from './requestOperations.types';
+
+type Props = {
+  request: RequestVote & RequestId;
+} & RequestComponentCommonProps;
 
 export default ({
   request,
@@ -10,7 +17,7 @@ export default ({
   closeGracefully,
   sendResponse,
   sendError,
-}) => {
+}: Props) => {
   const {request_id, ...data} = request;
   const {username, author, permlink, weight} = data;
 
@@ -24,7 +31,7 @@ export default ({
         weight,
       })}
       beautifyError
-      method={'posting'}
+      method={KeyTypes.posting}
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {
@@ -34,7 +41,7 @@ export default ({
           voter: username,
           author,
           permlink,
-          weight: parseInt(weight, 10),
+          weight: +weight,
         });
       }}>
       <RequestItem
@@ -51,7 +58,7 @@ export default ({
       />
       <RequestItem
         title={translate('request.item.weight')}
-        content={`${(parseInt(weight, 10) / 100).toFixed(2)}%`}
+        content={`${(+weight / 100).toFixed(2)}%`}
       />
     </RequestOperation>
   );

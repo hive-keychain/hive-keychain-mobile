@@ -3,8 +3,10 @@ import {
   AccountWitnessProxyOperation,
   AccountWitnessVoteOperation,
   Client,
+  CommentOptionsOperation,
   ConvertOperation,
   DelegateVestingSharesOperation,
+  Operation,
   TransferOperation,
   UpdateProposalVotesOperation,
   VoteOperation,
@@ -48,7 +50,7 @@ export const broadcastJson = async (
   username: string,
   id: string,
   active: boolean,
-  json: object,
+  json: object | string,
 ) => {
   return await broadcast(key, [
     [
@@ -125,7 +127,7 @@ export const post = async (
     ...data
   }: RequestPost,
 ) => {
-  const arr = [
+  const arr: Operation[] = [
     [
       'comment',
       {
@@ -137,7 +139,10 @@ export const post = async (
     ],
   ];
   if (comment_options && comment_options.length) {
-    arr.push(['comment_options', JSON.parse(comment_options)]);
+    arr.push([
+      'comment_options',
+      JSON.parse(comment_options) as CommentOptionsOperation[1],
+    ]);
   }
   return await broadcast(key, arr);
 };
@@ -150,12 +155,12 @@ export const signTx = (key: string, tx: object) => {
 
 export const updateProposalVote = async (
   key: string,
-  obj: UpdateProposalVotesOperation,
+  obj: UpdateProposalVotesOperation[1],
 ) => {
   return await broadcast(key, [['update_proposal_votes', obj]]);
 };
 
-export const broadcast = async (key: string, arr: any[]) => {
+export const broadcast = async (key: string, arr: Operation[]) => {
   const tx = new hiveTx.Transaction();
   await tx.create(arr);
   tx.sign(hiveTx.PrivateKey.from(key));

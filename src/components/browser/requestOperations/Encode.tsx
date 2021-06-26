@@ -1,17 +1,24 @@
-import React from 'react';
-import RequestItem from './components/RequestItem';
-import {translate} from 'utils/localize';
-import {getAccountKeys} from 'utils/hiveUtils';
+import {Authority} from '@hiveio/dhive';
+import {KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
+import React from 'react';
+import {getAccountKeys} from 'utils/hiveUtils';
+import {RequestEncode, RequestId} from 'utils/keychain.types';
+import {translate} from 'utils/localize';
+import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
+import {RequestComponentCommonProps} from './requestOperations.types';
 
+type Props = {
+  request: RequestEncode & RequestId;
+} & RequestComponentCommonProps;
 export default ({
   request,
   accounts,
   closeGracefully,
   sendResponse,
   sendError,
-}) => {
+}: Props) => {
   const {request_id, ...data} = request;
   const {receiver, method, username, message} = data;
   console.log(data);
@@ -21,7 +28,7 @@ export default ({
       sendError={sendError}
       successMessage={translate('request.success.encode')}
       errorMessage={translate('request.error.encode')}
-      method={method}
+      method={method.toLowerCase() as KeyTypes}
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {
@@ -31,10 +38,11 @@ export default ({
         if (data.method === 'Memo') {
           publicKey = to.memo;
         } else {
-          publicKey = to[method.toLowerCase()].key_auths[0][0];
+          publicKey = (to[method.toLowerCase() as KeyTypes] as Authority)
+            .key_auths[0][0];
         }
-        const key = account.keys[method.toLowerCase()];
-        const result = await encodeMemo(key, publicKey, message);
+        const key = account.keys[method.toLowerCase() as KeyTypes];
+        const result = await encodeMemo(key, publicKey as string, message);
         if (result === message) {
           throw 'error';
         }

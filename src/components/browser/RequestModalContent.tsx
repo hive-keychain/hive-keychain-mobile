@@ -1,7 +1,11 @@
 import {Account} from 'actions/interfaces';
 import Operation from 'components/operations/Operation';
 import React from 'react';
-import {capitalize} from 'utils/format';
+import {
+  KeychainRequest,
+  RequestError,
+  RequestSuccess,
+} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 import Requests from './requestOperations';
@@ -9,9 +13,11 @@ import Requests from './requestOperations';
 type Props = {
   accounts: Account[];
   onForceCloseModal: () => void;
-  sendError: () => void;
-  sendResponse: () => void;
+  sendError: (obj: RequestError) => void;
+  sendResponse: (obj: RequestSuccess) => void;
+  request: KeychainRequest;
 };
+
 export default ({
   accounts,
   request,
@@ -20,7 +26,8 @@ export default ({
   sendError,
 }: Props) => {
   const renderOperationDetails = () => {
-    const type = capitalize(request.type);
+    const type = request.type;
+    //@ts-ignore
     const Request = Requests[type];
     return (
       <Request
@@ -34,11 +41,11 @@ export default ({
       />
     );
   };
-  const getOperationTitle = ({type, title}) => {
-    if (type === 'signBuffer' && title) {
-      return title;
+  const getOperationTitle = (req: KeychainRequest) => {
+    if (req.type === 'signBuffer' && req.title) {
+      return req.title;
     }
-    return translate(`request.title.${type}`);
+    return translate(`request.title.${req.type}`);
   };
   //TODO : add dApp icon
   return (

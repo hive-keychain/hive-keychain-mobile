@@ -1,9 +1,16 @@
-import React from 'react';
-import RequestItem from './components/RequestItem';
-import {translate} from 'utils/localize';
-import {voteForWitness} from 'utils/hive';
-import RequestOperation from './components/RequestOperation';
+import {KeyTypes} from 'actions/interfaces';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
+import React from 'react';
+import {setProxy} from 'utils/hive';
+import {RequestId, RequestProxy} from 'utils/keychain.types';
+import {translate} from 'utils/localize';
+import RequestItem from './components/RequestItem';
+import RequestOperation from './components/RequestOperation';
+import {RequestComponentCommonProps} from './requestOperations.types';
+
+type Props = {
+  request: RequestProxy & RequestId;
+} & RequestComponentCommonProps;
 
 export default ({
   request,
@@ -11,9 +18,9 @@ export default ({
   closeGracefully,
   sendResponse,
   sendError,
-}) => {
+}: Props) => {
   const {request_id, ...data} = request;
-  const {witness, vote} = data;
+  const {proxy} = data;
   const {
     getAccountKey,
     RequestUsername,
@@ -25,28 +32,23 @@ export default ({
       sendResponse={sendResponse}
       sendError={sendError}
       successMessage={translate(
-        `request.success.${vote ? 'witness_vote' : 'witness_unvote'}`,
-        {witness},
+        `request.success.${proxy.length ? 'proxy' : 'remove_proxy'}`,
+        {proxy},
       )}
       beautifyError
-      method={'active'}
+      method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {
-        return await voteForWitness(getAccountKey(), {
+        return await setProxy(getAccountKey(), {
           account: getUsername(),
-          witness,
-          approve: vote,
+          proxy,
         });
       }}>
       <RequestUsername />
       <RequestItem
-        title={translate('request.item.witness')}
-        content={`@${witness}`}
-      />
-      <RequestItem
-        title={translate('request.item.action')}
-        content={translate(`common.${vote ? 'vote' : 'unvote'}`)}
+        title={translate('request.item.proxy')}
+        content={proxy.length ? `@${proxy}` : translate('common.none')}
       />
     </RequestOperation>
   );

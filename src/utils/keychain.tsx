@@ -1,13 +1,17 @@
 import {CommentOptionsOperation} from '@hiveio/dhive';
 import {Account, KeyTypes} from 'actions/interfaces';
+import {MutableRefObject} from 'react';
+import WebView from 'react-native-webview';
 import {KeychainConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 import {
-  ErrorMessage,
+  HiveErrorMessage,
   KeychainRequest,
   RequestAddAccountKeys,
   RequestDelegation,
+  RequestError,
   RequestPost,
+  RequestSuccess,
   RequestTransfer,
 } from './keychain.types';
 
@@ -37,7 +41,10 @@ export const getValidAuthorityAccounts = (
   return accounts.filter((e) => !!e.keys[wifType]);
 };
 
-export const sendError = (tabRef, error) => {
+export const sendError = (
+  tabRef: MutableRefObject<WebView>,
+  error: RequestError,
+) => {
   console.log(tabRef, error);
   tabRef.current.injectJavaScript(
     `window.hive_keychain.onAnswerReceived("hive_keychain_response",${JSON.stringify(
@@ -46,7 +53,10 @@ export const sendError = (tabRef, error) => {
   );
 };
 
-export const sendResponse = (tabRef, obj) => {
+export const sendResponse = (
+  tabRef: MutableRefObject<WebView>,
+  obj: RequestSuccess,
+) => {
   tabRef.current.injectJavaScript(
     `window.hive_keychain.onAnswerReceived("hive_keychain_response",${JSON.stringify(
       {success: true, error: null, ...obj},
@@ -217,7 +227,7 @@ const hasTransferInfo = (req: RequestTransfer) => {
   }
 };
 
-const isFilled = (obj: string | number) => {
+const isFilled = (obj: any) => {
   return !!obj && obj !== '';
 };
 
@@ -271,13 +281,13 @@ const isFilledAmtSBD = (amt: string) => {
   );
 };
 
-const isFilledWeight = (obj: number) => {
+const isFilledWeight = (obj: string | number) => {
   return (
     isFilled(obj) &&
-    !isNaN(obj) &&
+    !isNaN(+obj) &&
     obj >= -10000 &&
     obj <= 10000 &&
-    obj === Math.floor(obj)
+    obj === Math.floor(+obj)
   );
 };
 
@@ -337,7 +347,7 @@ const countDecimals = (nb: string) => {
     : nb.toString().split('.')[1].length || 0;
 };
 
-export const beautifyErrorMessage = (err: ErrorMessage) => {
+export const beautifyErrorMessage = (err: HiveErrorMessage) => {
   if (!err) {
     return null;
   }
