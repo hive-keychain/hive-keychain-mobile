@@ -61,62 +61,64 @@ const Convert = ({
     <Operation
       logo={<Hive />}
       title={translate('wallet.operations.convert.title')}>
-      <Separator />
-      <Balance currency="HBD" account={user.account} />
-      <Separator />
-      <OperationInput
-        placeholder={'0.000'}
-        keyboardType="numeric"
-        rightIcon={<Text style={styles.currency}>HBD</Text>}
-        textAlign="right"
-        value={amount}
-        onChangeText={setAmount}
-      />
-      <Separator />
-      <TouchableOpacity
-        onPress={() => {
-          setShowConversionsList(!showConversionsList);
-        }}>
-        <Text
-          style={
-            styles.conversions
-          }>{`${conversions.length} conversions`}</Text>
-      </TouchableOpacity>
-      <Separator />
-      {showConversionsList ? (
-        <FlatList
-          data={conversions}
-          style={styles.conversionContainer}
-          renderItem={({item}) => {
-            const [amt, currency] = item.amount.split(' ');
-            return (
-              <View style={styles.conversionRow}>
-                <Text>
-                  {amt} <Text style={styles.green}>{currency}</Text>
-                </Text>
-                <Text>-</Text>
-                <Text>
-                  {item.conversion_date
-                    .replace('T', ' ')
-                    .replace('-', '/')
-                    .replace('-', '/')}
-                </Text>
-              </View>
-            );
-          }}
-          keyExtractor={(conversion) => conversion.id + ''}
+      <>
+        <Separator />
+        <Balance currency="HBD" account={user.account} />
+        <Separator />
+        <OperationInput
+          placeholder={'0.000'}
+          keyboardType="numeric"
+          rightIcon={<Text style={styles.currency}>HBD</Text>}
+          textAlign="right"
+          value={amount}
+          onChangeText={setAmount}
         />
-      ) : (
-        <View style={styles.conversionContainer} />
-      )}
+        <Separator />
+        <TouchableOpacity
+          onPress={() => {
+            setShowConversionsList(!showConversionsList);
+          }}>
+          <Text
+            style={
+              styles.conversions
+            }>{`${conversions.length} conversions`}</Text>
+        </TouchableOpacity>
+        <Separator />
+        {showConversionsList ? (
+          <FlatList
+            data={conversions}
+            style={styles.conversionContainer}
+            renderItem={({item}) => {
+              const [amt, currency] = item.amount.split(' ');
+              return (
+                <View style={styles.conversionRow}>
+                  <Text>
+                    {amt} <Text style={styles.green}>{currency}</Text>
+                  </Text>
+                  <Text>-</Text>
+                  <Text>
+                    {item.conversion_date
+                      .replace('T', ' ')
+                      .replace('-', '/')
+                      .replace('-', '/')}
+                  </Text>
+                </View>
+              );
+            }}
+            keyExtractor={(conversion) => conversion.id + ''}
+          />
+        ) : (
+          <View style={styles.conversionContainer} />
+        )}
 
-      <Separator height={40} />
-      <ActiveOperationButton
-        title={translate('wallet.operations.convert.button')}
-        onPress={onConvert}
-        style={styles.button}
-        isLoading={loading}
-      />
+        <Separator height={40} />
+        <ActiveOperationButton
+          title={translate('wallet.operations.convert.button')}
+          onPress={onConvert}
+          style={styles.button}
+          isLoading={loading}
+        />
+      </>
     </Operation>
   );
 };

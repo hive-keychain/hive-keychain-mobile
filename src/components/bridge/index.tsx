@@ -10,7 +10,7 @@ type InnerProps = {
   webref: WebView;
 };
 class Bridge extends Component implements InnerProps {
-  pendingMethods = {};
+  pendingMethods: Record<string, any> = {};
   webref: WebView;
 
   constructor(props: any) {

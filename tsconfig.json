@@ -8,6 +8,7 @@
       "lib": ["es6"],
       "strictNullChecks": false,
       "moduleResolution": "node",
+      "skipLibCheck": true,
       "noEmit": true,
       "strict": true,
       "target": "esnext",
@@ -32,9 +33,10 @@
     
 
     "exclude": [
-      "node_modules",
+      "./node_modules",
       "babel.config.js",
       "metro.config.js",
-      "typings"
+      "typings",
+      "./types"
     ]
   }

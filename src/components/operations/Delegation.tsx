@@ -65,39 +65,41 @@ const Delegation = ({
     <Operation
       logo={<Delegate />}
       title={translate('wallet.operations.delegation.title')}>
-      <Separator />
-      <Balance
-        currency={currency}
-        account={user.account}
-        pd
-        globalProperties={properties.globals}
-      />
+      <>
+        <Separator />
+        <Balance
+          currency={currency}
+          account={user.account}
+          pd
+          globalProperties={properties.globals}
+        />
 
-      <Separator />
-      <OperationInput
-        placeholder={translate('common.username').toUpperCase()}
-        leftIcon={<AccountLogoDark />}
-        autoCapitalize="none"
-        value={to}
-        onChangeText={setTo}
-      />
-      <Separator />
-      <OperationInput
-        placeholder={'0.000'}
-        keyboardType="decimal-pad"
-        rightIcon={<Text style={styles.currency}>{currency}</Text>}
-        textAlign="right"
-        value={amount}
-        onChangeText={setAmount}
-      />
+        <Separator />
+        <OperationInput
+          placeholder={translate('common.username').toUpperCase()}
+          leftIcon={<AccountLogoDark />}
+          autoCapitalize="none"
+          value={to}
+          onChangeText={setTo}
+        />
+        <Separator />
+        <OperationInput
+          placeholder={'0.000'}
+          keyboardType="decimal-pad"
+          rightIcon={<Text style={styles.currency}>{currency}</Text>}
+          textAlign="right"
+          value={amount}
+          onChangeText={setAmount}
+        />
 
-      <Separator height={40} />
-      <ActiveOperationButton
-        title={translate('common.send')}
-        onPress={onDelegate}
-        style={styles.button}
-        isLoading={loading}
-      />
+        <Separator height={40} />
+        <ActiveOperationButton
+          title={translate('common.send')}
+          onPress={onDelegate}
+          style={styles.button}
+          isLoading={loading}
+        />
+      </>
     </Operation>
   );
 };

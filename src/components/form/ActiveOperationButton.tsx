@@ -1,22 +1,24 @@
 import {KeyTypes} from 'actions/interfaces';
 import Icon from 'assets/addAccount/icon_info.svg';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import EllipticButton from './EllipticButton';
 
 type Props = {
-  method: KeyTypes;
+  method?: KeyTypes;
   title: string;
+  style: StyleProp<ViewStyle>;
   onPress: () => void;
+  isLoading: boolean;
 } & PropsFromRedux;
 const ActiveOperationButton = ({method, ...props}: Props) => {
   console.log(method, props);
   return (
     <>
-      {!props.user.keys[method || 'active'] && (
+      {!props.user.keys[method || KeyTypes.active] && (
         <View style={styles.container}>
           <Icon fill="#A3112A" height={20} />
           <Text style={styles.text}>{translate('wallet.add_active')}</Text>

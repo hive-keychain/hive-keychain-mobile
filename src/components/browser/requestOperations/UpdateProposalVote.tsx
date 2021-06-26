@@ -1,8 +1,15 @@
+import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
-import RequestItem from './components/RequestItem';
-import {translate} from 'utils/localize';
-import RequestOperation from './components/RequestOperation';
 import {updateProposalVote} from 'utils/hive';
+import {RequestId, RequestUpdateProposalVote} from 'utils/keychain.types';
+import {translate} from 'utils/localize';
+import RequestItem from './components/RequestItem';
+import RequestOperation from './components/RequestOperation';
+import {RequestComponentCommonProps} from './requestOperations.types';
+
+type Props = {
+  request: RequestUpdateProposalVote & RequestId;
+} & RequestComponentCommonProps;
 
 export default ({
   request,
@@ -10,7 +17,7 @@ export default ({
   closeGracefully,
   sendResponse,
   sendError,
-}) => {
+}: Props) => {
   const {request_id, ...data} = request;
   const {username, proposal_ids, approve, extensions} = data;
   const ids = `#${JSON.parse(proposal_ids).join(', #')}`;
@@ -25,7 +32,7 @@ export default ({
         {ids},
       )}
       beautifyError
-      method={'active'}
+      method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {

@@ -120,60 +120,62 @@ const Transfer = ({
       <Operation
         logo={<SendArrowBlue />}
         title={translate('wallet.operations.transfer.title')}>
-        <Separator />
-        <Balance
-          currency={currency}
-          account={user.account}
-          tokenBalance={tokenBalance}
-          tokenLogo={tokenLogo}
-          engine={engine}
-        />
+        <>
+          <Separator />
+          <Balance
+            currency={currency}
+            account={user.account}
+            tokenBalance={tokenBalance}
+            tokenLogo={tokenLogo}
+            engine={engine}
+          />
 
-        <Separator />
-        <OperationInput
-          placeholder={translate('common.username').toUpperCase()}
-          leftIcon={<AccountLogoDark />}
-          autoCapitalize="none"
-          value={to}
-          onChangeText={setTo}
-        />
-        <Separator />
-        <OperationInput
-          placeholder={'0.000'}
-          keyboardType="decimal-pad"
-          rightIcon={<Text style={styles.currency}>{currency}</Text>}
-          textAlign="right"
-          value={amount}
-          onChangeText={setAmount}
-        />
-        <Separator />
-        <OperationInput
-          placeholder={translate('wallet.operations.transfer.memo')}
-          value={memo}
-          onChangeText={setMemo}
-        />
-        <Separator />
-        <CustomRadioGroup
-          list={[PUBLIC, PRIVATE]}
-          selected={privacy}
-          onSelect={setPrivacy}
-        />
-        <Separator height={20} />
+          <Separator />
+          <OperationInput
+            placeholder={translate('common.username').toUpperCase()}
+            leftIcon={<AccountLogoDark />}
+            autoCapitalize="none"
+            value={to}
+            onChangeText={setTo}
+          />
+          <Separator />
+          <OperationInput
+            placeholder={'0.000'}
+            keyboardType="decimal-pad"
+            rightIcon={<Text style={styles.currency}>{currency}</Text>}
+            textAlign="right"
+            value={amount}
+            onChangeText={setAmount}
+          />
+          <Separator />
+          <OperationInput
+            placeholder={translate('wallet.operations.transfer.memo')}
+            value={memo}
+            onChangeText={setMemo}
+          />
+          <Separator />
+          <CustomRadioGroup
+            list={[PUBLIC, PRIVATE]}
+            selected={privacy}
+            onSelect={setPrivacy}
+          />
+          <Separator height={20} />
 
-        <ActiveOperationButton
-          title={translate('common.send')}
-          onPress={() => {
-            if (!amount.length || !to.length) {
-              Toast.show(
-                translate('wallet.operations.transfer.warning.missing_info'),
-              );
-            } else {
-              setStep(2);
-            }
-          }}
-          style={styles.send}
-          isLoading={loading}
-        />
+          <ActiveOperationButton
+            title={translate('common.send')}
+            onPress={() => {
+              if (!amount.length || !to.length) {
+                Toast.show(
+                  translate('wallet.operations.transfer.warning.missing_info'),
+                );
+              } else {
+                setStep(2);
+              }
+            }}
+            style={styles.send}
+            isLoading={loading}
+          />
+        </>
       </Operation>
     );
   } else {
@@ -181,54 +183,58 @@ const Transfer = ({
       <Operation
         logo={<SendArrowBlue />}
         title={translate('wallet.operations.transfer.title')}>
-        <Separator height={30} />
-        <Text style={styles.warning}>
-          {getTransferWarning(phishingAccounts, to, currency, !!memo).warning}
-        </Text>
-        <Separator />
-        <Text style={styles.title}>
-          {translate('wallet.operations.transfer.confirm.from')}
-        </Text>
-        <Text>{`@${user.account.name}`}</Text>
-        <Separator />
-        <Text style={styles.title}>
-          {translate('wallet.operations.transfer.confirm.to')}
-        </Text>
-        <Text>{`@${to} ${
-          getTransferWarning(phishingAccounts, to, currency, !!memo).exchange
-            ? '(exchange)'
-            : ''
-        }`}</Text>
-        <Separator />
-        <Text style={styles.title}>
-          {translate('wallet.operations.transfer.confirm.amount')}
-        </Text>
-        <Text>{`${amount} ${currency}`}</Text>
-        <Separator />
-        {memo.length ? (
-          <>
-            <Text style={styles.title}>
-              {translate('wallet.operations.transfer.confirm.memo')}
-            </Text>
-            <Text>{`${memo} ${privacy === PRIVATE ? '(encrypted)' : ''}`}</Text>
-          </>
-        ) : null}
-        <Separator height={40} />
-        <View style={styles.buttonsContainer}>
-          <EllipticButton
-            title={translate('common.back')}
-            style={styles.back}
-            onPress={() => {
-              setStep(1);
-            }}
-          />
-          <ActiveOperationButton
-            title={translate('common.confirm')}
-            onPress={onSend}
-            style={styles.confirm}
-            isLoading={loading}
-          />
-        </View>
+        <>
+          <Separator height={30} />
+          <Text style={styles.warning}>
+            {getTransferWarning(phishingAccounts, to, currency, !!memo).warning}
+          </Text>
+          <Separator />
+          <Text style={styles.title}>
+            {translate('wallet.operations.transfer.confirm.from')}
+          </Text>
+          <Text>{`@${user.account.name}`}</Text>
+          <Separator />
+          <Text style={styles.title}>
+            {translate('wallet.operations.transfer.confirm.to')}
+          </Text>
+          <Text>{`@${to} ${
+            getTransferWarning(phishingAccounts, to, currency, !!memo).exchange
+              ? '(exchange)'
+              : ''
+          }`}</Text>
+          <Separator />
+          <Text style={styles.title}>
+            {translate('wallet.operations.transfer.confirm.amount')}
+          </Text>
+          <Text>{`${amount} ${currency}`}</Text>
+          <Separator />
+          {memo.length ? (
+            <>
+              <Text style={styles.title}>
+                {translate('wallet.operations.transfer.confirm.memo')}
+              </Text>
+              <Text>{`${memo} ${
+                privacy === PRIVATE ? '(encrypted)' : ''
+              }`}</Text>
+            </>
+          ) : null}
+          <Separator height={40} />
+          <View style={styles.buttonsContainer}>
+            <EllipticButton
+              title={translate('common.back')}
+              style={styles.back}
+              onPress={() => {
+                setStep(1);
+              }}
+            />
+            <ActiveOperationButton
+              title={translate('common.confirm')}
+              onPress={onSend}
+              style={styles.confirm}
+              isLoading={loading}
+            />
+          </View>
+        </>
       </Operation>
     );
   }

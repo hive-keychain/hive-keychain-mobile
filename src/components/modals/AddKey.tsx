@@ -21,26 +21,28 @@ const AddKey = ({addKey, name, type}: Props) => {
     <Operation
       title={translate('settings.keys.add')}
       logo={<KeychainLogo width={40} />}>
-      <Separator />
-      <OperationInput
-        placeholder={translate('common.privateKey').toUpperCase()}
-        leftIcon={<KeyIcon />}
-        autoCapitalize="none"
-        value={key}
-        onChangeText={setKey}
-      />
+      <>
+        <Separator />
+        <OperationInput
+          placeholder={translate('common.privateKey').toUpperCase()}
+          leftIcon={<KeyIcon />}
+          autoCapitalize="none"
+          value={key}
+          onChangeText={setKey}
+        />
 
-      <Separator height={40} />
-      <EllipticButton
-        title={translate('common.save')}
-        onPress={() => {
-          console.log('key', key);
-          addKey(name, type, key);
-          Keyboard.dismiss();
-          goBack();
-        }}
-        style={styles.button}
-      />
+        <Separator height={40} />
+        <EllipticButton
+          title={translate('common.save')}
+          onPress={() => {
+            console.log('key', key);
+            addKey(name, type, key);
+            Keyboard.dismiss();
+            goBack();
+          }}
+          style={styles.button}
+        />
+      </>
     </Operation>
   );
 };

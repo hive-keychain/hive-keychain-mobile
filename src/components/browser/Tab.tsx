@@ -3,6 +3,7 @@ import {
   ActionPayload,
   BrowserPayload,
   History,
+  KeyTypes,
   Tab,
   TabFields,
 } from 'actions/interfaces';
@@ -20,11 +21,13 @@ import {UserPreference} from 'reducers/preferences.types';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import {
+  getRequiredWifType,
   sendError,
   sendResponse,
   validateAuthority,
   validateRequest,
 } from 'utils/keychain';
+import {RequestError, RequestSuccess} from 'utils/keychain.types';
 import {goBack as navigationGoBack, navigate} from 'utils/navigation';
 import {hasPreference} from 'utils/preferences';
 import {hive_keychain} from './bridges/HiveKeychainBridge';
@@ -181,6 +184,7 @@ export default ({
   const showOperationRequestModal = (request_id: number, data: any) => {
     const {username, domain, type} = data;
     if (
+      getRequiredWifType(data) !== KeyTypes.active &&
       hasPreference(
         preferences,
         username,
@@ -205,10 +209,10 @@ export default ({
             request={{...data, request_id}}
             accounts={accounts}
             onForceCloseModal={onForceCloseModal}
-            sendError={(obj: object) => {
+            sendError={(obj: RequestError) => {
               sendError(tabRef, obj);
             }}
-            sendResponse={(obj: object) => {
+            sendResponse={(obj: RequestSuccess) => {
               sendResponse(tabRef, obj);
             }}
           />

@@ -86,8 +86,10 @@ const DelegationsList = ({
     <Operation
       logo={<Delegate />}
       title={translate(`wallet.operations.delegation.${type}`)}>
-      <Separator height={40} />
-      {type === 'incoming' ? renderIncoming() : renderOutgoing()}
+      <>
+        <Separator height={40} />
+        {type === 'incoming' ? renderIncoming() : renderOutgoing()}
+      </>
     </Operation>
   );
 };

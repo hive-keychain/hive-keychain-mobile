@@ -34,21 +34,23 @@ const History = ({
     <Operation
       logo={<HistoryIcon />}
       title={translate('wallet.operations.history')}>
-      <Separator height={40} />
-      <Balance
-        currency={currency}
-        tokenBalance={tokenBalance}
-        tokenLogo={tokenLogo}
-        engine
-      />
-      <Separator />
-      <FlatList
-        data={history}
-        keyExtractor={(item) => item._id}
-        renderItem={({item}) => {
-          return <Transfer transaction={item} user={user} token />;
-        }}
-      />
+      <>
+        <Separator height={40} />
+        <Balance
+          currency={currency}
+          tokenBalance={tokenBalance}
+          tokenLogo={tokenLogo}
+          engine
+        />
+        <Separator />
+        <FlatList
+          data={history}
+          keyExtractor={(item) => item._id}
+          renderItem={({item}) => {
+            return <Transfer transaction={item} user={user} token />;
+          }}
+        />
+      </>
     </Operation>
   );
 };

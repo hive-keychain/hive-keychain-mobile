@@ -1,3 +1,4 @@
+import {KeyTypes} from 'actions/interfaces';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
@@ -48,7 +49,7 @@ const Delegation = ({
         },
       )}
       errorMessage={beautifyTransferError}
-      method={'active'}
+      method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {

@@ -7,7 +7,7 @@ const keySize = 256;
 const iterations = 100;
 
 interface EncryptionJson {
-  hash: string;
+  hash?: string;
   list: any[];
 }
 // We add an md5 hash to check if decryption is successful later on.

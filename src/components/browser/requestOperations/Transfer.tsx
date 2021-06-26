@@ -1,12 +1,19 @@
+import {KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {beautifyTransferError} from 'utils/format';
 import {transfer} from 'utils/hive';
 import {getAccountKeys} from 'utils/hiveUtils';
+import {RequestId, RequestTransfer} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
+import {RequestComponentCommonProps} from './requestOperations.types';
+
+type Props = {
+  request: RequestTransfer & RequestId;
+} & RequestComponentCommonProps;
 
 export default ({
   request,
@@ -14,7 +21,7 @@ export default ({
   closeGracefully,
   sendResponse,
   sendError,
-}) => {
+}: Props) => {
   const {request_id, ...data} = request;
   const {to, memo, amount, currency} = data;
   const {
@@ -35,7 +42,7 @@ export default ({
         to,
       })}
       errorMessage={beautifyTransferError}
-      method={'active'}
+      method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {

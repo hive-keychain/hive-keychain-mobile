@@ -76,34 +76,36 @@ const PowerDown = ({currency = 'HP', user, loadAccount, properties}: Props) => {
     <Operation
       logo={<Hp />}
       title={translate('wallet.operations.powerdown.title')}>
-      <Separator />
-      <Balance
-        currency={currency}
-        account={user.account}
-        pd
-        globalProperties={properties.globals}
-      />
+      <>
+        <Separator />
+        <Balance
+          currency={currency}
+          account={user.account}
+          pd
+          globalProperties={properties.globals}
+        />
 
-      <Separator />
-      {renderPDIndicator()}
-      <Separator />
+        <Separator />
+        {renderPDIndicator()}
+        <Separator />
 
-      <OperationInput
-        placeholder={'0.000'}
-        keyboardType="decimal-pad"
-        rightIcon={<Text style={styles.currency}>{currency}</Text>}
-        textAlign="right"
-        value={amount}
-        onChangeText={setAmount}
-      />
+        <OperationInput
+          placeholder={'0.000'}
+          keyboardType="decimal-pad"
+          rightIcon={<Text style={styles.currency}>{currency}</Text>}
+          textAlign="right"
+          value={amount}
+          onChangeText={setAmount}
+        />
 
-      <Separator height={40} />
-      <ActiveOperationButton
-        title={translate('common.send')}
-        onPress={onPowerDown}
-        style={styles.button}
-        isLoading={loading}
-      />
+        <Separator height={40} />
+        <ActiveOperationButton
+          title={translate('common.send')}
+          onPress={onPowerDown}
+          style={styles.button}
+          isLoading={loading}
+        />
+      </>
     </Operation>
   );
 };
