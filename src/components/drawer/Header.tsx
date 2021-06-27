@@ -17,8 +17,8 @@ export default ({username}: {username: string}) => {
 const getDimensionedStyles = ({width}: Width) =>
   StyleSheet.create({
     container: {
-      marginVertical: 40,
-      paddingBottom: 40,
+      marginVertical: '10%',
+      paddingBottom: '10%',
       borderBottomColor: 'white',
       borderBottomWidth: 1,
       display: 'flex',
@@ -29,6 +29,6 @@ const getDimensionedStyles = ({width}: Width) =>
       width: width / 5,
       height: width / 5,
       borderRadius: width / 10,
-      marginBottom: 10,
+      marginBottom: '3%',
     },
   });

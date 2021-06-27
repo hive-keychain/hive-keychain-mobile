@@ -5,8 +5,10 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import {lock} from 'actions/index';
+import DrawerFooter from 'components/drawer/Footer';
 import DrawerHeader from 'components/drawer/Header';
 import React from 'react';
+import {StyleSheet} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
@@ -15,8 +17,10 @@ type Props = PropsFromRedux & DrawerContentComponentProps;
 const HeaderContent = (props: Props) => {
   const {user, lock, navigation} = props;
   return (
-    <DrawerContentScrollView {...props}>
-      <DrawerHeader username={user} />
+    <DrawerContentScrollView
+      {...props}
+      contentContainerStyle={styles.contentContainer}>
+      <DrawerHeader username={user.name} />
       <DrawerItemList {...props} />
       <DrawerItem
         {...props}
@@ -26,13 +30,16 @@ const HeaderContent = (props: Props) => {
           navigation.closeDrawer();
         }}
       />
+      <DrawerFooter user={user} />
     </DrawerContentScrollView>
   );
 };
-
+const styles = StyleSheet.create({contentContainer: {height: '100%'}});
 const mapStateToProps = (state: RootState) => ({
-  user: state.activeAccount.name,
+  user: state.activeAccount,
 });
+
 const connector = connect(mapStateToProps, {lock});
 type PropsFromRedux = ConnectedProps<typeof connector>;
+
 export default connector(HeaderContent);
