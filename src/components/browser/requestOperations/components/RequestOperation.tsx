@@ -137,12 +137,10 @@ export default connector(RequestOperation);
 
 // Without confirmation :
 
-// broadcast
 // custom
 // encode
 // post
 // signTx
-// vote
 
 export const processOperationWithoutConfirmation = async (
   performOperation: () => void,

@@ -1,10 +1,17 @@
-import {KeyTypes} from 'actions/interfaces';
+import {Account, KeyTypes} from 'actions/interfaces';
 import React from 'react';
 import {vote} from 'utils/hive';
-import {RequestId, RequestVote} from 'utils/keychain.types';
+import {
+  RequestError,
+  RequestId,
+  RequestSuccess,
+  RequestVote,
+} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
-import RequestOperation from './components/RequestOperation';
+import RequestOperation, {
+  processOperationWithoutConfirmation,
+} from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
@@ -34,15 +41,8 @@ export default ({
       method={KeyTypes.posting}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
-        const account = accounts.find((e) => e.name === request.username);
-        const key = account.keys.posting;
-        return await vote(key, {
-          voter: username,
-          author,
-          permlink,
-          weight: +weight,
-        });
+      performOperation={() => {
+        return performVoteOperation(accounts, request);
       }}>
       <RequestItem
         title={translate('request.item.username')}
@@ -61,5 +61,36 @@ export default ({
         content={`${(+weight / 100).toFixed(2)}%`}
       />
     </RequestOperation>
+  );
+};
+
+const performVoteOperation = async (
+  accounts: Account[],
+  request: RequestVote & RequestId,
+) => {
+  const {username, author, permlink, weight} = request;
+  const account = accounts.find((e) => e.name === request.username);
+  const key = account.keys.posting;
+  return await vote(key, {
+    voter: username,
+    author,
+    permlink,
+    weight: +weight,
+  });
+};
+
+export const voteWithoutConfirmation = (
+  accounts: Account[],
+  request: RequestVote & RequestId,
+  sendResponse: (msg: RequestSuccess) => void,
+  sendError: (msg: RequestError) => void,
+) => {
+  processOperationWithoutConfirmation(
+    async () => await performVoteOperation(accounts, request),
+    request,
+    sendResponse,
+    sendError,
+    true,
+    translate('request.success.vote'),
   );
 };

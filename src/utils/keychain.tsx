@@ -287,7 +287,7 @@ const isFilledWeight = (obj: string | number) => {
     !isNaN(+obj) &&
     obj >= -10000 &&
     obj <= 10000 &&
-    obj === Math.floor(+obj)
+    +obj === Math.floor(+obj)
   );
 };
 
