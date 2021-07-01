@@ -163,6 +163,7 @@ export const updateProposalVote = async (
 export const broadcast = async (key: string, arr: Operation[]) => {
   const tx = new hiveTx.Transaction();
   await tx.create(arr);
+  console.log(JSON.stringify(tx));
   tx.sign(hiveTx.PrivateKey.from(key));
   try {
     const {error, result} = (await tx.broadcast()) as {

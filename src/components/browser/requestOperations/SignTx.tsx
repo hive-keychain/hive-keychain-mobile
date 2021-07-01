@@ -1,11 +1,18 @@
-import {KeyTypes} from 'actions/interfaces';
+import {Account, KeyTypes} from 'actions/interfaces';
 import React from 'react';
 import {signTx} from 'utils/hive';
-import {RequestId, RequestSignTx} from 'utils/keychain.types';
+import {
+  RequestError,
+  RequestId,
+  RequestSignTx,
+  RequestSuccess,
+} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import CollapsibleData from './components/CollapsibleData';
 import RequestItem from './components/RequestItem';
-import RequestOperation from './components/RequestOperation';
+import RequestOperation, {
+  processOperationWithoutConfirmation,
+} from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
@@ -32,13 +39,7 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {
-        const account = accounts.find((e) => e.name === request.username);
-        const key = account.keys[method.toLowerCase() as KeyTypes];
-        if (!tx.extensions) {
-          tx.extensions = [];
-          tx.expiration = tx.expiration.split('.')[0];
-        }
-        return signTx(key, tx);
+        return performSignTxOperation(accounts, request);
       }}>
       <RequestItem
         title={translate('request.item.username')}
@@ -51,5 +52,35 @@ export default ({
         hidden={translate('request.item.hidden_data')}
       />
     </RequestOperation>
+  );
+};
+const performSignTxOperation = async (
+  accounts: Account[],
+  request: RequestSignTx,
+) => {
+  const {method, username, tx} = request;
+  const account = accounts.find((e) => e.name === username);
+  const key = account.keys[method.toLowerCase() as KeyTypes];
+  if (!tx.extensions) {
+    tx.extensions = [];
+    tx.expiration = tx.expiration.split('.')[0];
+  }
+  return signTx(key, tx);
+};
+
+export const signTxWithoutConfirmation = (
+  accounts: Account[],
+  request: RequestSignTx & RequestId,
+  sendResponse: (msg: RequestSuccess) => void,
+  sendError: (msg: RequestError) => void,
+) => {
+  processOperationWithoutConfirmation(
+    async () => await performSignTxOperation(accounts, request),
+    request,
+    sendResponse,
+    sendError,
+    false,
+    translate('request.success.signTx'),
+    translate('request.error.signTx'),
   );
 };
