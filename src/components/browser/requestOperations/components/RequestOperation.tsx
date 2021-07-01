@@ -137,8 +137,6 @@ export default connector(RequestOperation);
 
 // Without confirmation :
 
-// custom
-// encode
 // signTx
 
 export const processOperationWithoutConfirmation = async (

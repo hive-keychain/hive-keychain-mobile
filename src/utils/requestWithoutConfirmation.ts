@@ -2,6 +2,7 @@ import {Account} from 'actions/interfaces';
 import {broadcastWithoutConfirmation} from 'components/browser/requestOperations/Broadcast';
 import {broacastCustomJSONWithoutConfirmation} from 'components/browser/requestOperations/Custom';
 import {decodeWithoutConfirmation} from 'components/browser/requestOperations/Decode';
+import {encodeWithoutConfirmation} from 'components/browser/requestOperations/Encode';
 import {postWithoutConfirmation} from 'components/browser/requestOperations/Post';
 import {signBufferWithoutConfirmation} from 'components/browser/requestOperations/SignBuffer';
 import {voteWithoutConfirmation} from 'components/browser/requestOperations/Vote';
@@ -11,6 +12,7 @@ import {
   RequestBroadcast,
   RequestCustomJSON,
   RequestDecode,
+  RequestEncode,
   RequestError,
   RequestId,
   RequestPost,
@@ -54,6 +56,10 @@ export const requestWithoutConfirmation = (
         sendResponse,
         sendError,
       );
+      break;
+    case KeychainRequestTypes.encode:
+      request as RequestEncode & RequestId;
+      encodeWithoutConfirmation(accounts, request, sendResponse, sendError);
       break;
   }
 };

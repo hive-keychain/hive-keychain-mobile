@@ -1,12 +1,19 @@
 import {Authority} from '@hiveio/dhive';
-import {KeyTypes} from 'actions/interfaces';
+import {Account, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
 import React from 'react';
 import {getAccountKeys} from 'utils/hiveUtils';
-import {RequestEncode, RequestId} from 'utils/keychain.types';
+import {
+  RequestEncode,
+  RequestError,
+  RequestId,
+  RequestSuccess,
+} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
-import RequestOperation from './components/RequestOperation';
+import RequestOperation, {
+  processOperationWithoutConfirmation,
+} from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
@@ -32,21 +39,7 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {
-        const account = accounts.find((e) => e.name === request.username);
-        const to = await getAccountKeys(receiver.toLowerCase());
-        let publicKey;
-        if (data.method === 'Memo') {
-          publicKey = to.memo;
-        } else {
-          publicKey = (to[method.toLowerCase() as KeyTypes] as Authority)
-            .key_auths[0][0];
-        }
-        const key = account.keys[method.toLowerCase() as KeyTypes];
-        const result = await encodeMemo(key, publicKey as string, message);
-        if (result === message) {
-          throw 'error';
-        }
-        return result;
+        return performEncodeOperation(accounts, request);
       }}>
       <RequestItem
         title={translate('request.item.username')}
@@ -62,5 +55,45 @@ export default ({
         content={message}
       />
     </RequestOperation>
+  );
+};
+
+const performEncodeOperation = async (
+  accounts: Account[],
+  request: RequestEncode,
+) => {
+  const {receiver, method, message} = request;
+
+  const account = accounts.find((e) => e.name === request.username);
+  const to = await getAccountKeys(receiver.toLowerCase());
+  let publicKey;
+  if (method === 'Memo') {
+    publicKey = to.memo;
+  } else {
+    publicKey = (to[method.toLowerCase() as KeyTypes] as Authority)
+      .key_auths[0][0];
+  }
+  const key = account.keys[method.toLowerCase() as KeyTypes];
+  const result = await encodeMemo(key, publicKey as string, message);
+  if (result === message) {
+    throw 'error';
+  }
+  return result;
+};
+
+export const encodeWithoutConfirmation = (
+  accounts: Account[],
+  request: RequestEncode & RequestId,
+  sendResponse: (msg: RequestSuccess) => void,
+  sendError: (msg: RequestError) => void,
+) => {
+  processOperationWithoutConfirmation(
+    () => performEncodeOperation(accounts, request),
+    request,
+    sendResponse,
+    sendError,
+    false,
+    translate('request.success.encode'),
+    translate('request.error.encode'),
   );
 };
