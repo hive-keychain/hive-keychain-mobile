@@ -164,16 +164,20 @@ export const broadcast = async (key: string, arr: Operation[]) => {
   const tx = new hiveTx.Transaction();
   await tx.create(arr);
   tx.sign(hiveTx.PrivateKey.from(key));
-
-  const {error, result} = (await tx.broadcast()) as {
-    error: Error;
-    result: object;
-  };
-  if (error) {
-    console.log(error);
-    throw error;
-  } else {
-    return result;
+  try {
+    const {error, result} = (await tx.broadcast()) as {
+      error: Error;
+      result: object;
+    };
+    if (error) {
+      console.log(error);
+      throw error;
+    } else {
+      return result;
+    }
+  } catch (e) {
+    console.log(e);
+    throw e;
   }
 };
 export default hive;

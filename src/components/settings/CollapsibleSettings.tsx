@@ -26,9 +26,9 @@ const CollaspibleSettings = ({
     if (isCollapsed) return false;
     else
       return (
-        <View style={styles.whitelistContainer}>
+        <View style={styles.whitelistsContainer}>
           {domainPref.whitelisted_requests.map((e) => (
-            <>
+            <View style={styles.whitelistContainer} key={e}>
               <Text style={styles.whitelist}>{e.toUpperCase()}</Text>
               <TouchableOpacity
                 onPress={() => {
@@ -36,7 +36,7 @@ const CollaspibleSettings = ({
                 }}>
                 <Text style={styles.whitelistClose}>X</Text>
               </TouchableOpacity>
-            </>
+            </View>
           ))}
         </View>
       );
@@ -74,6 +74,7 @@ const getStyles = (index: number) =>
       paddingHorizontal: 50,
       paddingVertical: 5,
     },
+    whitelistsContainer: {flexDirection: 'column'},
     whitelistContainer: {flexDirection: 'row', justifyContent: 'space-between'},
   });
 

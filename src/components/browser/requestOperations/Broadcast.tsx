@@ -1,14 +1,21 @@
 import {Operation} from '@hiveio/dhive';
-import {KeyTypes} from 'actions/interfaces';
+import {Account, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
 import React from 'react';
 import {broadcast} from 'utils/hive';
 import {getAccountKeys} from 'utils/hiveUtils';
-import {RequestBroadcast, RequestId} from 'utils/keychain.types';
+import {
+  RequestBroadcast,
+  RequestError,
+  RequestId,
+  RequestSuccess,
+} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import CollapsibleData from './components/CollapsibleData';
 import RequestItem from './components/RequestItem';
-import RequestOperation from './components/RequestOperation';
+import RequestOperation, {
+  processOperationWithoutConfirmation,
+} from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
@@ -23,7 +30,6 @@ export default ({
 }: Props) => {
   const {request_id, ...data} = request;
   const {username, method, operations} = data;
-  console.log(data);
   return (
     <RequestOperation
       sendResponse={sendResponse}
@@ -33,40 +39,8 @@ export default ({
       method={method.toLowerCase() as KeyTypes}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
-        const account = accounts.find((e) => e.name === request.username);
-        const key = account.keys[method.toLowerCase() as KeyTypes];
-        let ops = operations;
-        if (typeof operations === 'string') {
-          ops = JSON.parse(operations) as Operation[];
-        }
-        console.log(ops);
-        for (const op of ops as Operation[]) {
-          const name = op[0];
-          const data = op[1];
-          console.log(name, data);
-          switch (name) {
-            case 'custom_json':
-              data.required_auths = [];
-              break;
-            case 'transfer':
-              const memo = data.memo;
-              if (memo && memo.length && memo[0] === '#') {
-                const receiverMemoKey = (await getAccountKeys(data.to)).memo;
-                if (!receiverMemoKey) {
-                  throw new Error('Failed to load receiver memo key');
-                }
-                const userMemo = accounts.find((e) => e.name === username).keys
-                  .memo;
-                if (!userMemo) {
-                  throw new Error('You need a memo key to encrypt memos.');
-                }
-                data.memo = await encodeMemo(userMemo, receiverMemoKey, memo);
-              }
-              break;
-          }
-        }
-        return await broadcast(key, operations as Operation[]);
+      performOperation={() => {
+        return performBroadcastOperation(accounts, request);
       }}>
       <RequestItem
         content={`@${username}`}
@@ -79,5 +53,60 @@ export default ({
         hidden={translate('request.item.hidden_data')}
       />
     </RequestOperation>
+  );
+};
+
+const performBroadcastOperation = async (
+  accounts: Account[],
+  request: RequestBroadcast & RequestId,
+) => {
+  const {username, method, operations} = request;
+  const account = accounts.find((e) => e.name === request.username);
+  const key = account.keys[method.toLowerCase() as KeyTypes];
+  let ops = operations;
+  if (typeof operations === 'string') {
+    ops = JSON.parse(operations) as Operation[];
+  }
+  for (const op of ops as Operation[]) {
+    const name = op[0];
+    const data = op[1];
+    switch (name) {
+      case 'custom_json':
+        if (!data.required_auths) data.required_auths = [];
+        break;
+      case 'transfer':
+        const memo = data.memo;
+        if (memo && memo.length && memo[0] === '#') {
+          const receiverMemoKey = (await getAccountKeys(data.to)).memo;
+          if (!receiverMemoKey) {
+            throw new Error('Failed to load receiver memo key');
+          }
+          const userMemo = accounts.find((e) => e.name === username).keys.memo;
+          if (!userMemo) {
+            throw new Error('You need a memo key to encrypt memos.');
+          }
+          data.memo = await encodeMemo(userMemo, receiverMemoKey, memo);
+        }
+        break;
+      default:
+        break;
+    }
+  }
+  return await broadcast(key, operations as Operation[]);
+};
+
+export const broadcastWithoutConfirmation = (
+  accounts: Account[],
+  request: RequestBroadcast & RequestId,
+  sendResponse: (msg: RequestSuccess) => void,
+  sendError: (msg: RequestError) => void,
+) => {
+  processOperationWithoutConfirmation(
+    async () => await performBroadcastOperation(accounts, request),
+    request,
+    sendResponse,
+    sendError,
+    true,
+    translate('request.success.broadcast'),
   );
 };

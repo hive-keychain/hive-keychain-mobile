@@ -193,7 +193,6 @@ export default ({
         type,
       )
     ) {
-      console.log('has pref');
       requestWithoutConfirmation(
         accounts,
         {...data, request_id},

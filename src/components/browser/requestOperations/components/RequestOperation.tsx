@@ -95,7 +95,6 @@ const RequestOperation = ({
             if (keep) addPreference(username, domain, type);
             sendResponse(obj);
           } catch (e) {
-            console.log(e);
             if (!beautifyError) {
               if (typeof errorMessage === 'function') {
                 msg = errorMessage(e, data);
@@ -105,7 +104,6 @@ const RequestOperation = ({
             } else {
               msg = beautifyErrorMessage(e);
             }
-            //console.log(msg);
             sendError({data, request_id, error: {}, message: msg});
           } finally {
             setResultMessage(msg);
@@ -141,10 +139,8 @@ export default connector(RequestOperation);
 
 // broadcast
 // custom
-// decode
 // encode
 // post
-// signBuffer
 // signTx
 // vote
 
@@ -171,7 +167,7 @@ export const processOperationWithoutConfirmation = async (
     };
     sendResponse(obj);
   } catch (e) {
-    console.log(e);
+    //console.log(e);
     let msg;
     if (!beautifyError) {
       // if (typeof errorMessage === 'function') {
