@@ -191,7 +191,8 @@ export default ({
         username,
         urlTransformer(domain).hostname,
         type,
-      )
+      ) &&
+      username
     ) {
       requestWithoutConfirmation(
         accounts,

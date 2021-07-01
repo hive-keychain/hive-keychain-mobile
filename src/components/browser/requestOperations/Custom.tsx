@@ -1,12 +1,19 @@
-import {KeyTypes} from 'actions/interfaces';
+import {Account, KeyTypes} from 'actions/interfaces';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {broadcastJson} from 'utils/hive';
-import {RequestCustomJSON, RequestId} from 'utils/keychain.types';
+import {
+  RequestCustomJSON,
+  RequestError,
+  RequestId,
+  RequestSuccess,
+} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import CollapsibleData from './components/CollapsibleData';
 import RequestItem from './components/RequestItem';
-import RequestOperation from './components/RequestOperation';
+import RequestOperation, {
+  processOperationWithoutConfirmation,
+} from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
@@ -54,5 +61,38 @@ export default ({
         content={JSON.stringify({id, json: JSON.parse(json)}, undefined, 2)}
       />
     </RequestOperation>
+  );
+};
+
+const performVoteOperation = async (
+  accounts: Account[],
+  request: RequestCustomJSON & RequestId,
+) => {
+  const {id, json, method, username} = request;
+
+  return await broadcastJson(
+    accounts.find((e) => e.name === username).keys[
+      method.toLowerCase() as KeyTypes
+    ],
+    username,
+    id,
+    method === 'Active',
+    json,
+  );
+};
+
+export const broacastCustomJSONWithoutConfirmation = (
+  accounts: Account[],
+  request: RequestCustomJSON & RequestId,
+  sendResponse: (msg: RequestSuccess) => void,
+  sendError: (msg: RequestError) => void,
+) => {
+  processOperationWithoutConfirmation(
+    async () => await performVoteOperation(accounts, request),
+    request,
+    sendResponse,
+    sendError,
+    true,
+    translate('request.success.vote'),
   );
 };

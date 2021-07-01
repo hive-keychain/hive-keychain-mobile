@@ -1,5 +1,6 @@
 import {Account} from 'actions/interfaces';
 import {broadcastWithoutConfirmation} from 'components/browser/requestOperations/Broadcast';
+import {broacastCustomJSONWithoutConfirmation} from 'components/browser/requestOperations/Custom';
 import {decodeWithoutConfirmation} from 'components/browser/requestOperations/Decode';
 import {postWithoutConfirmation} from 'components/browser/requestOperations/Post';
 import {signBufferWithoutConfirmation} from 'components/browser/requestOperations/SignBuffer';
@@ -8,6 +9,7 @@ import {
   KeychainRequest,
   KeychainRequestTypes,
   RequestBroadcast,
+  RequestCustomJSON,
   RequestDecode,
   RequestError,
   RequestId,
@@ -43,6 +45,15 @@ export const requestWithoutConfirmation = (
     case KeychainRequestTypes.post:
       request as RequestPost & RequestId;
       postWithoutConfirmation(accounts, request, sendResponse, sendError);
+      break;
+    case KeychainRequestTypes.custom:
+      request as RequestCustomJSON & RequestId;
+      broacastCustomJSONWithoutConfirmation(
+        accounts,
+        request,
+        sendResponse,
+        sendError,
+      );
       break;
   }
 };
