@@ -1,11 +1,18 @@
-import {KeyTypes} from 'actions/interfaces';
+import {Account, KeyTypes} from 'actions/interfaces';
 import React from 'react';
 import {post} from 'utils/hive';
-import {RequestId, RequestPost} from 'utils/keychain.types';
+import {
+  RequestError,
+  RequestId,
+  RequestPost,
+  RequestSuccess,
+} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import CollapsibleData from './components/CollapsibleData';
 import RequestItem from './components/RequestItem';
-import RequestOperation from './components/RequestOperation';
+import RequestOperation, {
+  processOperationWithoutConfirmation,
+} from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
@@ -39,10 +46,8 @@ export default ({
       method={KeyTypes.posting}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
-        const account = accounts.find((e) => e.name === request.username);
-        const key = account.keys.posting;
-        return await post(key, data);
+      performOperation={() => {
+        return performPostOperation(accounts, request);
       }}>
       <RequestItem
         content={`@${username}`}
@@ -83,5 +88,32 @@ export default ({
         />
       ) : null}
     </RequestOperation>
+  );
+};
+
+const performPostOperation = async (
+  accounts: Account[],
+  request: RequestPost & RequestId,
+) => {
+  const {request_id, ...data} = request;
+
+  const account = accounts.find((e) => e.name === request.username);
+  const key = account.keys.posting;
+  return await post(key, data);
+};
+
+export const postWithoutConfirmation = (
+  accounts: Account[],
+  request: RequestPost & RequestId,
+  sendResponse: (msg: RequestSuccess) => void,
+  sendError: (msg: RequestError) => void,
+) => {
+  processOperationWithoutConfirmation(
+    async () => await performPostOperation(accounts, request),
+    request,
+    sendResponse,
+    sendError,
+    true,
+    translate('request.success.post'),
   );
 };

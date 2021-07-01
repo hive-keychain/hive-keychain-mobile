@@ -1,6 +1,7 @@
 import {Account} from 'actions/interfaces';
 import {broadcastWithoutConfirmation} from 'components/browser/requestOperations/Broadcast';
 import {decodeWithoutConfirmation} from 'components/browser/requestOperations/Decode';
+import {postWithoutConfirmation} from 'components/browser/requestOperations/Post';
 import {signBufferWithoutConfirmation} from 'components/browser/requestOperations/SignBuffer';
 import {voteWithoutConfirmation} from 'components/browser/requestOperations/Vote';
 import {
@@ -10,6 +11,7 @@ import {
   RequestDecode,
   RequestError,
   RequestId,
+  RequestPost,
   RequestSignBuffer,
   RequestSuccess,
   RequestVote,
@@ -37,6 +39,10 @@ export const requestWithoutConfirmation = (
     case KeychainRequestTypes.vote:
       request as RequestVote & RequestId;
       voteWithoutConfirmation(accounts, request, sendResponse, sendError);
+      break;
+    case KeychainRequestTypes.post:
+      request as RequestPost & RequestId;
+      postWithoutConfirmation(accounts, request, sendResponse, sendError);
       break;
   }
 };
