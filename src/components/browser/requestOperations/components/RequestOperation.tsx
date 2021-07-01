@@ -92,7 +92,7 @@ const RequestOperation = ({
               message: msg,
               ...additionalData,
             };
-            addPreference(username, domain, type);
+            if (keep) addPreference(username, domain, type);
             sendResponse(obj);
           } catch (e) {
             console.log(e);
@@ -105,7 +105,7 @@ const RequestOperation = ({
             } else {
               msg = beautifyErrorMessage(e);
             }
-            console.log(msg);
+            //console.log(msg);
             sendError({data, request_id, error: {}, message: msg});
           } finally {
             setResultMessage(msg);
@@ -136,3 +136,53 @@ const styles = StyleSheet.create({
 const connector = connect(null, {addPreference});
 type TypesFromRedux = ConnectedProps<typeof connector>;
 export default connector(RequestOperation);
+
+// Without confirmation :
+
+// broadcast
+// custom
+// decode
+// encode
+// post
+// signBuffer
+// signTx
+// vote
+
+export const processOperationWithoutConfirmation = async (
+  performOperation: () => void,
+  request: KeychainRequest,
+  sendResponse: (msg: RequestSuccess) => void,
+  sendError: (msg: RequestError) => void,
+  beautifyError: boolean,
+  successMessage?: string,
+  errorMessage?: string,
+  additionalData?: any,
+) => {
+  const {request_id, ...data} = request;
+  try {
+    const result = await performOperation();
+    let msg = successMessage;
+    const obj = {
+      data,
+      request_id,
+      result,
+      message: msg,
+      ...additionalData,
+    };
+    sendResponse(obj);
+  } catch (e) {
+    console.log(e);
+    let msg;
+    if (!beautifyError) {
+      // if (typeof errorMessage === 'function') {
+      //   msg = errorMessage(e, data);
+      // } else {
+      msg = errorMessage;
+      //}
+    } else {
+      msg = beautifyErrorMessage(e);
+    }
+    //console.log(msg);
+    sendError({data, request_id, error: {}, message: msg});
+  }
+};

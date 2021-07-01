@@ -30,6 +30,7 @@ import {
 import {RequestError, RequestSuccess} from 'utils/keychain.types';
 import {goBack as navigationGoBack, navigate} from 'utils/navigation';
 import {hasPreference} from 'utils/preferences';
+import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
 import {hive_keychain} from './bridges/HiveKeychainBridge';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import Footer from './Footer';
@@ -193,6 +194,16 @@ export default ({
       )
     ) {
       console.log('has pref');
+      requestWithoutConfirmation(
+        accounts,
+        {...data, request_id},
+        (obj: RequestSuccess) => {
+          sendResponse(tabRef, obj);
+        },
+        (obj: RequestError) => {
+          sendError(tabRef, obj);
+        },
+      );
     } else {
       const onForceCloseModal = () => {
         navigationGoBack();

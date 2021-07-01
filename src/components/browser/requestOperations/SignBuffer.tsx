@@ -1,12 +1,19 @@
-import {KeyTypes} from 'actions/interfaces';
+import {Account, KeyTypes, PubKeyTypes} from 'actions/interfaces';
 import {signBuffer} from 'components/bridge';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {urlTransformer} from 'utils/browser';
-import {RequestId, RequestSignBuffer} from 'utils/keychain.types';
+import {
+  RequestError,
+  RequestId,
+  RequestSignBuffer,
+  RequestSuccess,
+} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
-import RequestOperation from './components/RequestOperation';
+import RequestOperation, {
+  processOperationWithoutConfirmation,
+} from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
@@ -62,5 +69,38 @@ export default ({
         content={message}
       />
     </RequestOperation>
+  );
+};
+
+const performSignBufferOperation = async (key: string, message: string) => {
+  return await signBuffer(key, message);
+};
+
+export const signBufferWithoutConfirmation = (
+  accounts: Account[],
+  request: RequestSignBuffer & RequestId,
+  sendResponse: (msg: RequestSuccess) => void,
+  sendError: (msg: RequestError) => void,
+) => {
+  const {username, message, method} = request;
+  processOperationWithoutConfirmation(
+    () =>
+      performSignBufferOperation(
+        accounts.find((e) => e.name === username).keys[
+          method.toLowerCase() as KeyTypes
+        ],
+        message,
+      ),
+    request,
+    sendResponse,
+    sendError,
+    false,
+    translate('request.success.signBuffer'),
+    translate('request.error.signBuffer'),
+    {
+      publicKey: accounts.find((e) => e.name === username).keys[
+        `${method.toLowerCase()}Pubkey` as PubKeyTypes
+      ],
+    },
   );
 };
