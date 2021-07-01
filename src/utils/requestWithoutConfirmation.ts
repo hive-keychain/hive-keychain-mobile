@@ -1,4 +1,5 @@
 import {Account} from 'actions/interfaces';
+import {decodeWithoutConfirmation} from 'components/browser/requestOperations/Decode';
 import {signBufferWithoutConfirmation} from 'components/browser/requestOperations/SignBuffer';
 import {
   KeychainRequest,
@@ -19,6 +20,7 @@ export const requestWithoutConfirmation = (
   switch (request.type) {
     case KeychainRequestTypes.decode:
       request as RequestDecode & RequestId;
+      decodeWithoutConfirmation(accounts, request, sendResponse, sendError);
       break;
     case KeychainRequestTypes.signBuffer:
       request as RequestSignBuffer & RequestId;
