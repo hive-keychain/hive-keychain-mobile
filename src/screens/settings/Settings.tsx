@@ -41,8 +41,12 @@ const AccountManagement = ({
     <SafeArea>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
       <View style={styles.view}>
-        <Text style={styles.title}>{translate('settings.settings.title')}</Text>
-
+        <Text style={styles.title}>
+          {translate('settings.settings.global')}
+        </Text>
+        <Text style={styles.subtitle}>
+          {translate('settings.settings.rpc')}
+        </Text>
         {//@ts-ignore
         translate('settings.settings.disclaimer').map((disclaimer, i) => (
           <Text key={i} style={styles.disclaimer}>
@@ -60,7 +64,6 @@ const AccountManagement = ({
         <Text style={[styles.title, styles.userSettings]}>
           {translate('settings.settings.user')}
         </Text>
-
         <UserPicker
           accounts={accounts.map((e) => e.name)}
           username={active.name}
@@ -69,6 +72,11 @@ const AccountManagement = ({
           }}
         />
         <Separator />
+        <Text style={styles.subtitle}>
+          {' '}
+          {translate('settings.settings.whitelisted')}
+        </Text>
+        <Separator />
         {showPreferencesHandler()}
       </View>
     </SafeArea>
@@ -76,13 +84,19 @@ const AccountManagement = ({
 };
 
 const styles = StyleSheet.create({
-  separator: {borderWidth: 1},
+  separator: {borderBottomWidth: 1, paddingTop: 15},
   view: {paddingHorizontal: 20, backgroundColor: 'white', height: '100%'},
   title: {
     color: '#404950',
     fontWeight: 'bold',
     fontSize: 18,
     marginVertical: 15,
+    textTransform: 'uppercase',
+  },
+  subtitle: {
+    color: '#404950',
+    fontSize: 16,
+    marginBottom: 15,
     textTransform: 'uppercase',
   },
   disclaimer: {color: '#404950', marginVertical: 2},

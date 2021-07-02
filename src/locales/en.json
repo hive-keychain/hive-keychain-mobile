@@ -92,7 +92,9 @@
       ]
     },
     "settings": {
-      "title": "RPC Nodes",
+      "rpc": "RPC Nodes",
+      "global": "Global Settings",
+      "whitelisted": "Whitelisted operations",
       "disclaimer": [
         "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
         "Use 'DEFAULT' RPC to let Hive Keychain chose the best RPC node at a given time."
