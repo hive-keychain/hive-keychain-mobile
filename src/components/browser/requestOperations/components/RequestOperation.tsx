@@ -10,6 +10,7 @@ import {beautifyErrorMessage} from 'utils/keychain';
 import {
   HiveErrorMessage,
   KeychainRequest,
+  KeychainRequestTypes,
   RequestError,
   RequestSuccess,
 } from 'utils/keychain.types';
@@ -23,7 +24,7 @@ type Props = {
   sendError: (msg: RequestError) => void;
   message?: string;
   children: JSX.Element[];
-  method: KeyTypes;
+  method?: KeyTypes;
   request: KeychainRequest;
   successMessage: string;
   errorMessage?:
@@ -61,7 +62,8 @@ const RequestOperation = ({
     <ScrollView>
       <RequestMessage message={message} />
       {children}
-      {method !== KeyTypes.active ? (
+      {method !== KeyTypes.active &&
+      type !== KeychainRequestTypes.addAccount ? (
         <View style={styles.keep}>
           <RadioButton
             selected={keep}

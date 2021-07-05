@@ -26,6 +26,7 @@ export default ({
   sendError,
 }: Props) => {
   const renderOperationDetails = () => {
+    console.log(request);
     const type = request.type;
     //@ts-ignore
     const Request = Requests[type];

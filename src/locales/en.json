@@ -224,7 +224,8 @@
       "proxy": "Proxy",
       "delegatee": "Delegatee",
       "transaction": "Transaction",
-      "ids": "Proposal IDs"
+      "ids": "Proposal IDs",
+      "keys": "Keys"
     },
     "error": {
       "decode": "Could not verify key.",
@@ -234,6 +235,7 @@
       "ops": "There was an error broadcasting this transaction",
       "unknown": "Something went wrong! Please try again!",
       "broadcasting": "There was an error broadcasting this transaction, please try again.",
+      "addAccount": "There was an error adding this account. Please verify its username and keys.",
       "transfer": {
         "adjust_balance": "Insufficient {{currency}} balance on account @{{username}}.",
         "get_account": "Cannot find account @{{to}}",
@@ -243,6 +245,7 @@
     "success": {
       "decode": "Memo decoded successfully.",
       "encode": "Message encoded succesfully.",
+      "addAccount": "Succesfully added account @{{username}} to Keychain.",
       "signBuffer": "Message signed succesfully.",
       "signTx": "The transaction has been signed successfully.",
       "vote": "Successfully voted for @{{author}}'s post {{permlink}} at {{weight}}%.",

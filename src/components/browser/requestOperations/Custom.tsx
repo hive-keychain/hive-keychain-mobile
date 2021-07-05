@@ -64,7 +64,7 @@ export default ({
   );
 };
 
-const performVoteOperation = async (
+const performBroadcastJSONOperation = async (
   accounts: Account[],
   request: RequestCustomJSON & RequestId,
 ) => {
@@ -88,11 +88,11 @@ export const broacastCustomJSONWithoutConfirmation = (
   sendError: (msg: RequestError) => void,
 ) => {
   processOperationWithoutConfirmation(
-    async () => await performVoteOperation(accounts, request),
+    async () => await performBroadcastJSONOperation(accounts, request),
     request,
     sendResponse,
     sendError,
     true,
-    translate('request.success.vote'),
+    translate('request.success.broadcast'),
   );
 };

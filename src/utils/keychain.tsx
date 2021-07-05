@@ -7,6 +7,7 @@ import {translate} from 'utils/localize';
 import {
   HiveErrorMessage,
   KeychainRequest,
+  KeychainRequestTypes,
   RequestAddAccountKeys,
   RequestDelegation,
   RequestError,
@@ -20,6 +21,7 @@ export const validateAuthority = (
   req: KeychainRequest,
 ) => {
   const {type, username} = req;
+  if (type === KeychainRequestTypes.addAccount) return true;
   const wifType = getRequiredWifType(req);
   if (username) {
     const account = accounts.find((e) => e.name === username);

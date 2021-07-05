@@ -76,7 +76,7 @@ const derivateFromMasterPassword = (
   }
 };
 
-const getPublicKeyFromPrivateKeyString = (pwd: string) => {
+export const getPublicKeyFromPrivateKeyString = (pwd: string) => {
   try {
     const privateKey = hive.PrivateKey.fromString(pwd);
     const publicKey = privateKey.createPublic();

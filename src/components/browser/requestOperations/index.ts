@@ -1,3 +1,4 @@
+import AddAccount from './AddAccount';
 import Broadcast from './Broadcast';
 import Custom from './Custom';
 import Decode from './Decode';
@@ -32,11 +33,11 @@ const map = {
   signTx: SignTx,
   sendToken: SendToken,
   updateProposalVote: UpdateProposalVote,
+  addAccount: AddAccount,
 };
 export default map;
 /*
 Missing operations :
- AddAccounts
  Authority x4
  CreateAccount
  Create / Remove proposals
