@@ -6,7 +6,7 @@ export const hiveConfig = {
   CREATE_ACCOUNT_URL: 'https://signup.hive.io/',
 };
 export const BrowserConfig = {
-  HOMEPAGE_URL: 'https://peakd.com',
+  HOMEPAGE_URL: 'https://hive.io',
   FOOTER_HEIGHT: 40,
   HEADER_HEIGHT: 40,
 };
