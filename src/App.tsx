@@ -5,6 +5,7 @@ import {
 import {createStackNavigator} from '@react-navigation/stack';
 import {addTabFromLinking} from 'actions/browser';
 import Bridge from 'components/bridge';
+import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
@@ -72,6 +73,9 @@ const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
       onStateChange={async (state) => {
         let currentRouteName = navigationRef.current.getCurrentRoute().name;
         const p = navigationRef.current.getCurrentRoute().params;
+        if (currentRouteName === 'WalletScreen') {
+          currentRouteName = getToggleElement() || 'WalletScreen';
+        }
         if (currentRouteName === 'ModalScreen' && !!p) {
           currentRouteName = 'ModalScreen_' + (p as ModalNavigationRoute).name;
         }
@@ -97,5 +101,4 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(App);
 
-//TODO : Handle wallet toggle
-//TODO : Handle modal browse requests
+//TODO : Handle modal browser requests
