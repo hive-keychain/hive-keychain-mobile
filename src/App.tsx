@@ -1,4 +1,3 @@
-import analytics from '@react-native-firebase/analytics';
 import {
   NavigationContainer,
   NavigationContainerRef,
@@ -13,6 +12,7 @@ import React, {useEffect, useRef} from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import Modal from 'screens/Modal';
 import {RootState} from 'store';
+import {logScreenView} from 'utils/analytics';
 import {setRpc} from 'utils/hive';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
@@ -67,26 +67,15 @@ const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
       }}
       onReady={() => {
         const currentRouteName = navigationRef.current.getCurrentRoute().name;
-        console.log(currentRouteName);
+        logScreenView(currentRouteName);
       }}
       onStateChange={async (state) => {
-        const previousRouteName = routeNameRef.current;
         let currentRouteName = navigationRef.current.getCurrentRoute().name;
         const p = navigationRef.current.getCurrentRoute().params;
-        console.log(p);
         if (currentRouteName === 'ModalScreen' && !!p) {
           currentRouteName = 'ModalScreen_' + (p as ModalNavigationRoute).name;
         }
-        if (previousRouteName !== currentRouteName) {
-          console.log('routename', currentRouteName);
-          await analytics().logScreenView({
-            screen_name: currentRouteName,
-            screen_class: currentRouteName,
-          });
-        }
-
-        // Save the current route name for later comparison
-        routeNameRef.current = currentRouteName;
+        logScreenView(currentRouteName);
       }}>
       {renderRootNavigator()}
       <Bridge />
@@ -108,6 +97,5 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(App);
 
-//TODO : Add initial route to GA
-//TODO : Separate GA in own file to handle duplicate route logs
+//TODO : Handle wallet toggle
 //TODO : Handle modal browse requests

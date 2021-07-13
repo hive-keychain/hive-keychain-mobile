@@ -1,4 +1,3 @@
-import analytics from '@react-native-firebase/analytics';
 import Hbd from 'assets/wallet/icon_hbd.svg';
 import Hive from 'assets/wallet/icon_hive.svg';
 import Hp from 'assets/wallet/icon_hp.svg';
@@ -17,16 +16,12 @@ import React, {useEffect} from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
+import {logScreenView} from 'utils/analytics';
 import {toHP} from 'utils/format';
-
 const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
   const {width} = useWindowDimensions();
   useEffect(() => {
-    console.log('loggingWallet');
-    analytics().logScreenView({
-      screen_class: 'WalletScreen',
-      screen_name: 'WalletScreen',
-    });
+    logScreenView('WalletScreen');
   }, []);
   return (
     <View style={styles.container}>
