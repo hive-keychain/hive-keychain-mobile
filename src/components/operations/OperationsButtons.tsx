@@ -49,6 +49,7 @@ export const Send = ({
     <RoundButton
       onPress={() => {
         navigate('ModalScreen', {
+          name: engine ? 'TransferEngine' : 'Transfer',
           modalContent: (
             <Transfer
               currency={currency}
@@ -71,6 +72,7 @@ export const SendPowerUp = () => {
     <RoundButton
       onPress={() => {
         navigate('ModalScreen', {
+          name: 'PowerUp',
           modalContent: <PowerUp />,
         });
       }}
@@ -86,6 +88,7 @@ export const SendPowerDown = () => {
     <RoundButton
       onPress={() => {
         navigate('ModalScreen', {
+          name: 'PowerDown',
           modalContent: <PowerDown />,
         });
       }}
@@ -101,6 +104,7 @@ export const SendDelegation = () => {
     <RoundButton
       onPress={() => {
         navigate('ModalScreen', {
+          name: 'Delegation',
           modalContent: <Delegation />,
         });
       }}
@@ -116,6 +120,7 @@ export const SendConversion = () => {
     <RoundButton
       onPress={() => {
         navigate('ModalScreen', {
+          name: 'Convert',
           modalContent: <Convert />,
         });
       }}
@@ -131,6 +136,7 @@ export const ShowHistory = (props: HistoryProps) => {
     <RoundButton
       onPress={() => {
         navigate('ModalScreen', {
+          name: 'EngineHistory',
           modalContent: <History {...props} />,
         });
       }}

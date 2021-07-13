@@ -1,3 +1,4 @@
+import analytics from '@react-native-firebase/analytics';
 import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import HiveEngineAccountValue from 'components/hive/HiveEngineAccountValue';
@@ -22,8 +23,18 @@ const Tokens = ({
   useEffect(() => {
     loadTokens();
     loadTokensMarket();
+    analytics().logScreenView({
+      screen_class: 'EngineWalletScreen',
+      screen_name: 'EngineWalletScreen',
+    });
   }, [loadTokens, loadTokensMarket]);
-
+  useEffect(() => {
+    console.log('logging engine');
+    analytics().logScreenView({
+      screen_class: 'EngineWalletScreen',
+      screen_name: 'EngineWalletScreen',
+    });
+  }, []);
   useEffect(() => {
     if (user.name) {
       loadUserTokens(user.name);

@@ -16,7 +16,7 @@ import {RootState} from 'store';
 import {setRpc} from 'utils/hive';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
-import {RootStackParam} from './navigators/Root.types';
+import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 
 const Root = createStackNavigator<RootStackParam>();
 
@@ -65,14 +65,19 @@ const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
         setNavigator(navigator);
         navigationRef.current = navigator;
       }}
+      onReady={() => {
+        const currentRouteName = navigationRef.current.getCurrentRoute().name;
+        console.log(currentRouteName);
+      }}
       onStateChange={async (state) => {
         const previousRouteName = routeNameRef.current;
-        const currentRouteName = navigationRef.current.getCurrentRoute().name;
-
+        let currentRouteName = navigationRef.current.getCurrentRoute().name;
+        const p = navigationRef.current.getCurrentRoute().params;
+        console.log(p);
+        if (currentRouteName === 'ModalScreen' && !!p) {
+          currentRouteName = 'ModalScreen_' + (p as ModalNavigationRoute).name;
+        }
         if (previousRouteName !== currentRouteName) {
-          // The line below uses the expo-firebase-analytics tracker
-          // https://docs.expo.io/versions/latest/sdk/firebase-analytics/
-          // Change this line to use another Mobile analytics SDK
           console.log('routename', currentRouteName);
           await analytics().logScreenView({
             screen_name: currentRouteName,
@@ -102,3 +107,7 @@ const connector = connect(mapStateToProps, {addTabFromLinking});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(App);
+
+//TODO : Add initial route to GA
+//TODO : Separate GA in own file to handle duplicate route logs
+//TODO : Handle modal browse requests
