@@ -215,6 +215,7 @@ export default ({
         });
       };
       navigate('ModalScreen', {
+        name: `Operation_${data.type}`,
         modalContent: (
           <RequestModalContent
             request={{...data, request_id}}

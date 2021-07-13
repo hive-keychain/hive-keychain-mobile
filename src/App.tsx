@@ -100,5 +100,3 @@ const connector = connect(mapStateToProps, {addTabFromLinking});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(App);
-
-//TODO : Handle modal browser requests
