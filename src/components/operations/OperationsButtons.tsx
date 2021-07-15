@@ -115,17 +115,18 @@ export const SendDelegation = () => {
   );
 };
 
-export const SendConversion = () => {
+export const SendConversion = ({currency}: {currency: string}) => {
+  console.log(currency);
   return (
     <RoundButton
       onPress={() => {
         navigate('ModalScreen', {
           name: 'Convert',
-          modalContent: <Convert />,
+          modalContent: <Convert currency={currency} />,
         });
       }}
       size={36}
-      backgroundColor="#A3112A"
+      backgroundColor={currency === 'HBD' ? '#A3112A' : '#005C09'}
       content={<Conversion />}
     />
   );

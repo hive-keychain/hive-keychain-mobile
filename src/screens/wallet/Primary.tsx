@@ -42,6 +42,7 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
         buttons={[
           <Send key="send_hive" currency="HIVE" />,
           <SendPowerUp key="pu" />,
+          <SendConversion key="conversion" currency="HIVE" />,
         ]}
       />
       <Separator height={20} />
@@ -54,7 +55,7 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
         price={bittrex.hbd}
         buttons={[
           <Send key="send_hbd" currency="HBD" />,
-          <SendConversion key="conversion" />,
+          <SendConversion key="conversion" currency="HBD" />,
         ]}
       />
       <Separator height={20} />

@@ -66,7 +66,7 @@
         "incoming": "Incoming Delegations",
         "outgoing": "Outgoing Delegations"
       },
-      "convert": {"title": "Convert to HIVE", "button": "Convert"}
+      "convert": {"title": "Convert to {{to}}", "button": "Convert"}
     }
   },
   "settings": {

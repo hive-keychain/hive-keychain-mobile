@@ -168,7 +168,7 @@ const getDimensionedStyles = ({
     change: {color: +change > 0 ? '#3BB26E' : '#B9122F'},
     green: {color: '#3BB26E'},
     red: {color: '#B9122F'},
-    halfLine: {width: '35%'},
+    halfLine: {width: '40%'},
     rowReverse: {flexDirection: 'row-reverse'},
   });
 type Styles = ReturnType<typeof getDimensionedStyles>;

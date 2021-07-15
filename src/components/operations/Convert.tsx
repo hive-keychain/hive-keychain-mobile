@@ -23,12 +23,14 @@ import {goBack} from 'utils/navigation';
 import Balance from './Balance';
 import Operation from './Operation';
 
+type Props = PropsFromRedux & {currency: string};
 const Convert = ({
   user,
   loadAccount,
   fetchConversionRequests,
   conversions,
-}: PropsFromRedux) => {
+  currency,
+}: Props) => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [showConversionsList, setShowConversionsList] = useState(false);
@@ -55,20 +57,22 @@ const Convert = ({
       setLoading(false);
     }
   };
-  const {color} = getCurrencyProperties('HBD');
+  const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color);
   return (
     <Operation
       logo={<Hive />}
-      title={translate('wallet.operations.convert.title')}>
+      title={translate('wallet.operations.convert.title', {
+        to: currency === 'HIVE' ? 'HBD' : 'HIVE',
+      })}>
       <>
         <Separator />
-        <Balance currency="HBD" account={user.account} />
+        <Balance currency={currency} account={user.account} />
         <Separator />
         <OperationInput
           placeholder={'0.000'}
           keyboardType="numeric"
-          rightIcon={<Text style={styles.currency}>HBD</Text>}
+          rightIcon={<Text style={styles.currency}>{currency}</Text>}
           textAlign="right"
           value={amount}
           onChangeText={setAmount}
