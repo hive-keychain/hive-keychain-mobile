@@ -12,7 +12,6 @@ export default (
   state: Account[] = [],
   {type, payload}: ActionPayload<AccountsPayload>,
 ) => {
-  console.log(type, payload);
   switch (type) {
     case ADD_ACCOUNT:
       return [...state, payload!.account!];
