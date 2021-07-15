@@ -20,7 +20,6 @@ type BroadcastResult = {id: string};
 
 const DEFAULT_RPC = 'https://api.hive.blog';
 let client = new Client(DEFAULT_RPC);
-hiveTx.config.rebranded_api = true;
 hiveTx.updateOperations();
 
 const getDefault: () => Promise<string> = async () => {
