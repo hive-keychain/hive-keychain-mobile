@@ -1,5 +1,9 @@
 import {ExtendedAccount} from '@hiveio/dhive';
-import {Delegator, GlobalProperties} from 'actions/interfaces';
+import {
+  CollateralizedConversion,
+  Delegator,
+  GlobalProperties,
+} from 'actions/interfaces';
 import api from 'api/keychain';
 import {getClient} from './hive';
 
@@ -118,7 +122,26 @@ export const getDelegatees = async (name: string) => {
 };
 
 export const getConversionRequests = async (name: string) => {
-  return await getClient().database.call('get_conversion_requests', [name]);
+  const [hbdConversions, hiveConversions] = await Promise.all([
+    getClient().database.call('get_conversion_requests', [name]),
+    getClient().database.call('get_collateralized_conversion_requests', [name]),
+  ]);
+
+  return [
+    ...hiveConversions.map((e: CollateralizedConversion) => ({
+      amount: e.collateral_amount,
+      conversion_date: e.conversion_date,
+      id: e.id,
+      owner: e.owner,
+      requestid: e.requestid,
+      collaterized: true,
+    })),
+    ...hbdConversions,
+  ].sort(
+    (a, b) =>
+      new Date(a.conversion_date).getTime() -
+      new Date(b.conversion_date).getTime(),
+  );
 };
 
 export const rpcList = [

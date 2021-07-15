@@ -151,7 +151,7 @@
     "stop_powerdown_success": "You successfully stopped your Power down!",
     "delegation_success": "Your delegation was successful!",
     "stop_delegation_success": "You successfully stopped your delegation!",
-    "convert_success": "Your HBD conversion was successful!",
+    "convert_success": "Your {{currency}} conversion started successfully!",
     "keys": {
       "not_wanted_key": "This is not your {{type}} key!",
       "not_a_key": "This is not one of your private keys!",

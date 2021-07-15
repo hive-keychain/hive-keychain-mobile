@@ -15,7 +15,7 @@ import {
 import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
-import {convert} from 'utils/hive';
+import {collateralizedConvert, convert} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
@@ -31,6 +31,7 @@ const Convert = ({
   conversions,
   currency,
 }: Props) => {
+  console.log(conversions);
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [showConversionsList, setShowConversionsList] = useState(false);
@@ -43,14 +44,22 @@ const Convert = ({
     Keyboard.dismiss();
     setLoading(true);
     try {
-      await convert(user.keys.active!, {
-        owner: user.account.name,
-        amount: sanitizeAmount(amount, 'HBD'),
-        requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
-      });
+      if (currency === 'HBD') {
+        await convert(user.keys.active!, {
+          owner: user.account.name,
+          amount: sanitizeAmount(amount, 'HBD'),
+          requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
+        });
+      } else {
+        await collateralizedConvert(user.keys.active!, {
+          owner: user.account.name,
+          amount: sanitizeAmount(amount, 'HIVE'),
+          requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
+        });
+      }
       loadAccount(user.account.name, true);
       goBack();
-      Toast.show(translate('toast.convert_success'), Toast.LONG);
+      Toast.show(translate('toast.convert_success', {currency}), Toast.LONG);
     } catch (e) {
       Toast.show(`Error : ${e.message}`, Toast.LONG);
     } finally {
@@ -97,7 +106,11 @@ const Convert = ({
               return (
                 <View style={styles.conversionRow}>
                   <Text>
-                    {amt} <Text style={styles.green}>{currency}</Text>
+                    {amt}{' '}
+                    <Text
+                      style={currency === 'HBD' ? styles.green : styles.red}>
+                      {currency}
+                    </Text>
                   </Text>
                   <Text>-</Text>
                   <Text>
@@ -144,6 +157,7 @@ const getDimensionedStyles = (color: string) =>
       height: 80,
     },
     green: {color: '#005C09'},
+    red: {color: '#A3112A'},
   });
 const connector = connect(
   (state: RootState) => {

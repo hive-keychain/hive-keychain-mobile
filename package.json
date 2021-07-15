@@ -16,7 +16,7 @@
     "clean": "watchman watch-del-all &&npm run dep-clean && npm run android-clean && npm run start -- --reset-cache"
   },
   "dependencies": {
-    "@hiveio/dhive": "^0.14.12",
+    "@hiveio/dhive": "^0.14.16",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/blur": "^3.6.0",
     "@react-native-community/clipboard": "^1.5.1",
@@ -31,7 +31,7 @@
     "axios": "^0.21.1",
     "crypto-js": "^3.3.0",
     "fuse.js": "^6.4.6",
-    "hive-tx": "^3.1.10",
+    "hive-tx": "^3.3.2",
     "i18n-js": "^3.8.0",
     "lodash.memoize": "^4.1.2",
     "md5": "^2.3.0",

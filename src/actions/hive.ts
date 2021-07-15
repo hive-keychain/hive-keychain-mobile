@@ -214,8 +214,10 @@ export const fetchPhishingAccounts = (): AppThunk => async (dispatch) => {
 export const fetchConversionRequests = (name: string): AppThunk => async (
   dispatch,
 ) => {
+  const conversions = await getConversionRequests(name);
+  console.log(conversions);
   dispatch({
     type: FETCH_CONVERSION_REQUESTS,
-    payload: await getConversionRequests(name),
+    payload: conversions,
   });
 };

@@ -3,6 +3,7 @@ import {
   AccountWitnessProxyOperation,
   AccountWitnessVoteOperation,
   Client,
+  CollateralizedConvertOperation,
   CommentOptionsOperation,
   ConvertOperation,
   DelegateVestingSharesOperation,
@@ -96,6 +97,13 @@ export const delegate = async (
 
 export const convert = async (key: string, obj: ConvertOperation[1]) => {
   return await broadcast(key, [['convert', obj]]);
+};
+
+export const collateralizedConvert = async (
+  key: string,
+  obj: CollateralizedConvertOperation[1],
+) => {
+  return await broadcast(key, [['collateralized_convert', obj]]);
 };
 
 export const vote = async (key: string, obj: VoteOperation[1]) => {
