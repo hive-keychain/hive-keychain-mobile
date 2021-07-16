@@ -46,11 +46,15 @@
       "transfer": {
         "title": "Transfer funds",
         "memo": "MEMO (optional)",
+        "executions": "Number of executions",
+        "recurrence": "Recurrence Period",
         "confirm": {
           "from": "From",
           "to": "To",
           "amount": "Amount",
-          "memo": "Memo"
+          "memo": "Memo",
+          "recurrence": "Recurrence",
+          "recurrenceData": "{{exec}} times, every {{recurrence}} hours."
         },
         "warning": {
           "phishing": "This account has been listed as a potential phishing account, check the spelling and make sure it is the account you want to transfer to.",
@@ -144,6 +148,7 @@
     "authFailed": "Authentication failed",
     "account_already": "You already registered this account",
     "transfer_success": "Your transfer was successful!",
+    "recurrent_transfer_success": "Your recurrent transfer started successfully!",
     "transfer_token_confirmed": "Your transfer was successfully broadcasted to Hive. Your balance might take a little while to update.",
     "transfer_token_unconfirmed": "Your transfer was successfully broadcasted to Hive. However, we couldn't confirm that it was processed by Hive Engine. Please check your balance in a little while before trying again.",
     "powerup_success": "Your Power up was successful!",
