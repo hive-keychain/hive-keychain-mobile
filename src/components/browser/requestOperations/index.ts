@@ -1,4 +1,5 @@
 import AddAccount from './AddAccount';
+import AddAccountAuthority from './AddAccountAuthority';
 import Broadcast from './Broadcast';
 import Custom from './Custom';
 import Decode from './Decode';
@@ -34,6 +35,7 @@ const map = {
   sendToken: SendToken,
   updateProposalVote: UpdateProposalVote,
   addAccount: AddAccount,
+  addAccountAuthority: AddAccountAuthority,
 };
 export default map;
 /*

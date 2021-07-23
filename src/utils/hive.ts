@@ -1,5 +1,6 @@
 const hive = require('@hiveio/dhive');
 import {
+  AccountUpdateOperation,
   AccountWitnessProxyOperation,
   AccountWitnessVoteOperation,
   Client,
@@ -16,7 +17,14 @@ import {
 import api from 'api/keychain';
 import hiveTx from 'hive-tx';
 import {hiveEngine} from 'utils/config';
-import {RequestPost} from './keychain.types';
+import {
+  KeychainKeyTypes,
+  RequestAddAccountAuthority,
+  RequestAddKeyAuthority,
+  RequestPost,
+  RequestRemoveAccountAuthority,
+  RequestRemoveKeyAuthority,
+} from './keychain.types';
 
 type BroadcastResult = {id: string};
 
@@ -166,6 +174,177 @@ export const signTx = (key: string, tx: object) => {
   const trx = new hiveTx.Transaction(tx);
   const signed = trx.sign(hiveTx.PrivateKey.from(key));
   return signed;
+};
+
+export const addAccountAuth = async (
+  key: string,
+  {
+    username,
+    authorizedUsername,
+    role = KeychainKeyTypes.posting,
+    weight,
+  }: RequestAddAccountAuthority,
+) => {
+  const userAccount = (await getClient().database.getAccounts([username]))[0];
+
+  const updatedAuthority =
+    userAccount[role.toLowerCase() as 'posting' | 'active'];
+
+  /** Release callback if the account already exist in the account_auths array */
+  const authorizedAccounts = updatedAuthority.account_auths.map(
+    (auth) => auth[0],
+  );
+  const hasAuthority = authorizedAccounts.indexOf(authorizedUsername) !== -1;
+  if (hasAuthority) {
+    throw new Error('Already has authority');
+  }
+
+  /** Use weight_thresold as default weight */
+  weight =
+    weight ||
+    userAccount[role.toLowerCase() as 'posting' | 'active'].weight_threshold;
+  updatedAuthority.account_auths.push([authorizedUsername, weight]);
+  const active =
+    role === KeychainKeyTypes.active ? updatedAuthority : undefined;
+  const posting =
+    role === KeychainKeyTypes.posting ? updatedAuthority : undefined;
+
+  /** Add authority on user account */
+  accountUpdate(key, {
+    account: userAccount.name,
+    owner: undefined,
+    active,
+    posting,
+    memo_key: userAccount.memo_key,
+    json_metadata: userAccount.json_metadata,
+  });
+};
+
+export const removeAccountAuth = async (
+  key: string,
+  {
+    username,
+    authorizedUsername,
+    role = KeychainKeyTypes.posting,
+  }: RequestRemoveAccountAuthority,
+) => {
+  const userAccount = (await getClient().database.getAccounts([username]))[0];
+
+  const updatedAuthority =
+    userAccount[role.toLowerCase() as 'posting' | 'active'];
+  const totalAuthorizedUser = updatedAuthority.account_auths.length;
+  for (let i = 0; i < totalAuthorizedUser; i++) {
+    const user = updatedAuthority.account_auths[i];
+    if (user[0] === authorizedUsername) {
+      updatedAuthority.account_auths.splice(i, 1);
+      break;
+    }
+  }
+
+  /** Release callback if the account does not exist in the account_auths array */
+  if (totalAuthorizedUser === updatedAuthority.account_auths.length) {
+    throw new Error('Nothing to remove');
+  }
+
+  const active =
+    role === KeychainKeyTypes.active ? updatedAuthority : undefined;
+  const posting =
+    role === KeychainKeyTypes.posting ? updatedAuthority : undefined;
+
+  accountUpdate(key, {
+    account: userAccount.name,
+    owner: undefined,
+    active,
+    posting,
+    memo_key: userAccount.memo_key,
+    json_metadata: userAccount.json_metadata,
+  });
+};
+
+export const addKeyAuth = async (
+  key: string,
+  {
+    username,
+    authorizedKey,
+    role = KeychainKeyTypes.posting,
+    weight,
+  }: RequestAddKeyAuthority,
+) => {
+  const userAccount = (await getClient().database.getAccounts([username]))[0];
+  const updatedAuthority =
+    userAccount[role.toLowerCase() as 'posting' | 'active'];
+
+  /** Release callback if the key already exist in the key_auths array */
+  const authorizedKeys = updatedAuthority.key_auths.map((auth) => auth[0]);
+  const hasAuthority = authorizedKeys.indexOf(authorizedKey) !== -1;
+  if (hasAuthority) {
+    throw new Error('already has authority');
+  }
+
+  /** Use weight_thresold as default weight */
+  weight =
+    weight ||
+    userAccount[role.toLowerCase() as 'posting' | 'active'].weight_threshold;
+  updatedAuthority.key_auths.push([authorizedKey, weight]);
+  const active =
+    role === KeychainKeyTypes.active ? updatedAuthority : undefined;
+  const posting =
+    role === KeychainKeyTypes.posting ? updatedAuthority : undefined;
+
+  /** Add authority on user account */
+  accountUpdate(key, {
+    account: userAccount.name,
+    owner: undefined,
+    active,
+    posting,
+    memo_key: userAccount.memo_key,
+    json_metadata: userAccount.json_metadata,
+  });
+};
+
+export const removeKeyAuth = async (
+  key: string,
+  {
+    username,
+    authorizedKey,
+    role = KeychainKeyTypes.posting,
+  }: RequestRemoveKeyAuthority,
+) => {
+  const userAccount = (await getClient().database.getAccounts([username]))[0];
+
+  const updatedAuthority =
+    userAccount[role.toLowerCase() as 'posting' | 'active'];
+  const totalAuthorizedKey = updatedAuthority.key_auths.length;
+  for (let i = 0; i < totalAuthorizedKey; i++) {
+    const user = updatedAuthority.key_auths[i];
+    if (user[0] === authorizedKey) {
+      updatedAuthority.key_auths.splice(i, 1);
+      break;
+    }
+  }
+
+  /** Release callback if the key does not exist in the key_auths array */
+  if (totalAuthorizedKey === updatedAuthority.key_auths.length) {
+    throw new Error('Missing authority');
+  }
+
+  const active =
+    role === KeychainKeyTypes.active ? updatedAuthority : undefined;
+  const posting =
+    role === KeychainKeyTypes.posting ? updatedAuthority : undefined;
+
+  accountUpdate(key, {
+    account: userAccount.name,
+    owner: undefined,
+    active,
+    posting,
+    memo_key: userAccount.memo_key,
+    json_metadata: userAccount.json_metadata,
+  });
+};
+
+const accountUpdate = async (key: string, obj: AccountUpdateOperation[1]) => {
+  return await broadcast(key, [['account_update', obj]]);
 };
 
 export const updateProposalVote = async (

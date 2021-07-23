@@ -230,7 +230,9 @@
       "delegatee": "Delegatee",
       "transaction": "Transaction",
       "ids": "Proposal IDs",
-      "keys": "Keys"
+      "keys": "Keys",
+      "role": "Role",
+      "authorized_username": "Authorized Account"
     },
     "error": {
       "decode": "Could not verify key.",
@@ -268,7 +270,8 @@
       "stop_power_down": "Stopped Power Down on @{{username}}.",
       "delegate": "Succesfully delegated {{amount}} {{unit}} from @{{username}} to @{{delegatee}}.",
       "undelegate": "Succesfully stopped the delegation to @{{delegatee}} from account @{{username}}.",
-      "sendToken": "The transaction has been broadcasted successfully. Please check your balance to confirm that it was processed succesfully."
+      "sendToken": "The transaction has been broadcasted successfully. Please check your balance to confirm that it was processed succesfully.",
+      "addAccountAuthority": "Successfully gave {{role}} authority to @{{authorizedUsername}} with a weight of {{weight}}."
     },
     "confirm": "Confirm",
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}."
