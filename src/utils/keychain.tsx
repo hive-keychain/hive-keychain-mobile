@@ -47,7 +47,6 @@ export const sendError = (
   tabRef: MutableRefObject<WebView>,
   error: RequestError,
 ) => {
-  console.log(tabRef, error);
   tabRef.current.injectJavaScript(
     `window.hive_keychain.onAnswerReceived("hive_keychain_response",${JSON.stringify(
       {success: false, result: null, ...error},

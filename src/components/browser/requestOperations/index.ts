@@ -9,6 +9,7 @@ import Post from './Post';
 import PowerDown from './PowerDown';
 import PowerUp from './PowerUp';
 import Proxy from './Proxy';
+import RemoveAccountAuthority from './RemoveAccountAuthority';
 import SendToken from './SendToken';
 import SignBuffer from './SignBuffer';
 import SignTx from './SignTx';
@@ -36,6 +37,7 @@ const map = {
   updateProposalVote: UpdateProposalVote,
   addAccount: AddAccount,
   addAccountAuthority: AddAccountAuthority,
+  removeAccountAuthority: RemoveAccountAuthority,
 };
 export default map;
 /*
