@@ -1,5 +1,6 @@
 import AddAccount from './AddAccount';
 import AddAccountAuthority from './AddAccountAuthority';
+import AddKeyAuthority from './AddKeyAuthority';
 import Broadcast from './Broadcast';
 import Custom from './Custom';
 import Decode from './Decode';
@@ -10,6 +11,7 @@ import PowerDown from './PowerDown';
 import PowerUp from './PowerUp';
 import Proxy from './Proxy';
 import RemoveAccountAuthority from './RemoveAccountAuthority';
+import RemoveKeyAuthority from './RemoveKeyAuthority';
 import SendToken from './SendToken';
 import SignBuffer from './SignBuffer';
 import SignTx from './SignTx';
@@ -38,6 +40,8 @@ const map = {
   addAccount: AddAccount,
   addAccountAuthority: AddAccountAuthority,
   removeAccountAuthority: RemoveAccountAuthority,
+  addKeyAuthority: AddKeyAuthority,
+  removeKeyAuthority: RemoveKeyAuthority,
 };
 export default map;
 /*

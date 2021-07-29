@@ -30,7 +30,6 @@ type BroadcastResult = {id: string};
 
 const DEFAULT_RPC = 'https://api.hive.blog';
 let client = new Client(DEFAULT_RPC);
-hiveTx.updateOperations();
 
 const getDefault: () => Promise<string> = async () => {
   try {
@@ -285,7 +284,7 @@ export const addKeyAuth = async (
   weight =
     weight ||
     userAccount[role.toLowerCase() as 'posting' | 'active'].weight_threshold;
-  updatedAuthority.key_auths.push([authorizedKey, weight]);
+  updatedAuthority.key_auths.push([authorizedKey, +weight]);
   const active =
     role === KeychainKeyTypes.active ? updatedAuthority : undefined;
   const posting =

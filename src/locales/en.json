@@ -232,7 +232,8 @@
       "ids": "Proposal IDs",
       "keys": "Keys",
       "role": "Role",
-      "authorized_username": "Authorized Account"
+      "authorized_username": "Authorized Account",
+      "authorized_key": "Authorized Key"
     },
     "error": {
       "decode": "Could not verify key.",
@@ -271,7 +272,10 @@
       "delegate": "Succesfully delegated {{amount}} {{unit}} from @{{username}} to @{{delegatee}}.",
       "undelegate": "Succesfully stopped the delegation to @{{delegatee}} from account @{{username}}.",
       "sendToken": "The transaction has been broadcasted successfully. Please check your balance to confirm that it was processed succesfully.",
-      "addAccountAuthority": "Successfully gave {{role}} authority to @{{authorizedUsername}} with a weight of {{weight}}."
+      "addAccountAuthority": "Successfully gave {{role}} authority to @{{authorizedUsername}} with a weight of {{weight}}.",
+      "removeAccountAuthority": "Successfully removed {{role}} authority from @{{authorizedUsername}}.",
+      "addKeyAuthority": "Successfully added a {{role}} key with a weight of {{weight}}.",
+      "removeKeyAuthority": "Successfully removed a {{role}} key."
     },
     "confirm": "Confirm",
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}."
