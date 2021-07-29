@@ -200,9 +200,9 @@ export const addAccountAuth = async (
 
   /** Use weight_thresold as default weight */
   weight =
-    +weight ||
+    weight ||
     userAccount[role.toLowerCase() as 'posting' | 'active'].weight_threshold;
-  updatedAuthority.account_auths.push([authorizedUsername, weight]);
+  updatedAuthority.account_auths.push([authorizedUsername, +weight]);
   const active =
     role === KeychainKeyTypes.active ? updatedAuthority : undefined;
   const posting =
@@ -354,14 +354,9 @@ export const updateProposalVote = async (
 };
 
 export const broadcast = async (key: string, arr: Operation[]) => {
-  console.log('got up to here', key);
   const tx = new hiveTx.Transaction();
-  console.log(tx);
   await tx.create(arr);
-  console.log('a', tx);
-  console.log(hiveTx.PrivateKey.from(key));
   tx.sign(hiveTx.PrivateKey.from(key));
-  console.log('signed : ', tx);
   try {
     const {error, result} = (await tx.broadcast()) as {
       error: Error;
