@@ -2,6 +2,7 @@ import AddAccount from './AddAccount';
 import AddAccountAuthority from './AddAccountAuthority';
 import AddKeyAuthority from './AddKeyAuthority';
 import Broadcast from './Broadcast';
+import Convert from './Convert';
 import Custom from './Custom';
 import Decode from './Decode';
 import Delegation from './Delegation';
@@ -42,14 +43,13 @@ const map = {
   removeAccountAuthority: RemoveAccountAuthority,
   addKeyAuthority: AddKeyAuthority,
   removeKeyAuthority: RemoveKeyAuthority,
+  convert: Convert,
 };
 export default map;
 /*
-Missing operations :
- Authority x4
+TODO: Add missing operations 
  CreateAccount
  Create / Remove proposals
  Signed Calls
- Conversion
  Recurrent transfer
 */

@@ -199,7 +199,9 @@
       "updateProposalVote": "Vote for Proposal",
       "addKeyAuthority": "Add Key",
       "removeKeyAuthority": "Remove Key",
-      "addAccount": "Add Account"
+      "addAccount": "Add Account",
+      "convert": "Convert",
+      "recurrentTransfer": "Recurrent Transfers"
     },
     "message": {
       "decode": "The website {{domain}} would like to verify that you have access to the private {{method}} key for the account: @{{username}}",
@@ -275,7 +277,8 @@
       "addAccountAuthority": "Successfully gave {{role}} authority to @{{authorizedUsername}} with a weight of {{weight}}.",
       "removeAccountAuthority": "Successfully removed {{role}} authority from @{{authorizedUsername}}.",
       "addKeyAuthority": "Successfully added a {{role}} key with a weight of {{weight}}.",
-      "removeKeyAuthority": "Successfully removed a {{role}} key."
+      "removeKeyAuthority": "Successfully removed a {{role}} key.",
+      "convert": "Succesfully started the conversion of {{amount}} {{from}} to {{to}}."
     },
     "confirm": "Confirm",
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}."

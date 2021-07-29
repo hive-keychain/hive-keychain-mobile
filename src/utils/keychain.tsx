@@ -175,7 +175,17 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilledAmt(req.amount) &&
         isFilled(req.to) &&
         isFilled(req.currency)) ||
-      (req.type === 'addAccount' && isFilledKeys(req.keys)))
+      (req.type === 'addAccount' && isFilledKeys(req.keys)) ||
+      (req.type === 'convert' &&
+        isFilled(req.username) &&
+        isFilledAmt(req.amount) &&
+        isBoolean(req.collaterized)) ||
+      (req.type === 'recurrentTransfer' &&
+        (isFilledAmt(req.amount) || parseFloat(req.amount) === 0) &&
+        isFilledCurrency(req.currency) &&
+        isFilled(req.to) &&
+        Number.isInteger(req.executions) &&
+        Number.isInteger(req.recurrence)))
   );
 };
 
@@ -213,6 +223,8 @@ export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
     case 'createProposal':
     case 'removeProposal':
     case 'updateProposalVote':
+    case 'convert':
+    case 'recurrentTransfer':
       return KeyTypes.active;
   }
 };
