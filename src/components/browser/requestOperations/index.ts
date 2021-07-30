@@ -11,6 +11,7 @@ import Post from './Post';
 import PowerDown from './PowerDown';
 import PowerUp from './PowerUp';
 import Proxy from './Proxy';
+import RecurrentTransfer from './RecurrentTransfer';
 import RemoveAccountAuthority from './RemoveAccountAuthority';
 import RemoveKeyAuthority from './RemoveKeyAuthority';
 import SendToken from './SendToken';
@@ -44,6 +45,7 @@ const map = {
   addKeyAuthority: AddKeyAuthority,
   removeKeyAuthority: RemoveKeyAuthority,
   convert: Convert,
+  recurrentTransfer: RecurrentTransfer,
 };
 export default map;
 /*
@@ -51,5 +53,4 @@ TODO: Add missing operations
  CreateAccount
  Create / Remove proposals
  Signed Calls
- Recurrent transfer
 */

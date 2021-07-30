@@ -235,7 +235,8 @@
       "keys": "Keys",
       "role": "Role",
       "authorized_username": "Authorized Account",
-      "authorized_key": "Authorized Key"
+      "authorized_key": "Authorized Key",
+      "recurrence": "Recurrence"
     },
     "error": {
       "decode": "Could not verify key.",
@@ -278,7 +279,8 @@
       "removeAccountAuthority": "Successfully removed {{role}} authority from @{{authorizedUsername}}.",
       "addKeyAuthority": "Successfully added a {{role}} key with a weight of {{weight}}.",
       "removeKeyAuthority": "Successfully removed a {{role}} key.",
-      "convert": "Succesfully started the conversion of {{amount}} {{from}} to {{to}}."
+      "convert": "Succesfully started the conversion of {{amount}} {{from}} to {{to}}.",
+      "recurrentTransfer": "Successfully started a recurrent transfer. {{amount}} {{currency}} will be sent to {{to}} {{executions}} times, every {{recurrence}} hours."
     },
     "confirm": "Confirm",
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}."
