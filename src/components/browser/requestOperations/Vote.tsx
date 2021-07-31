@@ -35,7 +35,7 @@ export default ({
       successMessage={translate('request.success.vote', {
         author,
         permlink,
-        weight,
+        weight: +weight / 100,
       })}
       beautifyError
       method={KeyTypes.posting}
