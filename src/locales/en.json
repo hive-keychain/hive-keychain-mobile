@@ -236,7 +236,13 @@
       "role": "Role",
       "authorized_username": "Authorized Account",
       "authorized_key": "Authorized Key",
-      "recurrence": "Recurrence"
+      "recurrence": "Recurrence",
+      "creator": "Creator",
+      "new_account": "New account",
+      "owner": "Owner Authority",
+      "active": "Active Authority",
+      "posting": "Posting Authority",
+      "memo_key": "Memo Key"
     },
     "error": {
       "decode": "Could not verify key.",
@@ -280,7 +286,8 @@
       "addKeyAuthority": "Successfully added a {{role}} key with a weight of {{weight}}.",
       "removeKeyAuthority": "Successfully removed a {{role}} key.",
       "convert": "Succesfully started the conversion of {{amount}} {{from}} to {{to}}.",
-      "recurrentTransfer": "Successfully started a recurrent transfer. {{amount}} {{currency}} will be sent to {{to}} {{executions}} times, every {{recurrence}} hours."
+      "recurrentTransfer": "Successfully started a recurrent transfer. {{amount}} {{currency}} will be sent to {{to}} {{executions}} times, every {{recurrence}} hours.",
+      "createClaimedAccount": "Succesfully claimed account @{{new_account}}"
     },
     "confirm": "Confirm",
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}."

@@ -7,6 +7,7 @@ import {
   CollateralizedConvertOperation,
   CommentOptionsOperation,
   ConvertOperation,
+  CreateClaimedAccountOperation,
   DelegateVestingSharesOperation,
   Operation,
   RecurrentTransferOperation,
@@ -137,6 +138,13 @@ export const setProxy = async (
   obj: AccountWitnessProxyOperation[1],
 ) => {
   return await broadcast(key, [['account_witness_proxy', obj]]);
+};
+
+export const createClaimedAccount = async (
+  key: string,
+  obj: CreateClaimedAccountOperation[1],
+) => {
+  return await broadcast(key, [['create_claimed_account', obj]]);
 };
 
 export const post = async (
@@ -357,11 +365,14 @@ export const broadcast = async (key: string, arr: Operation[]) => {
   const tx = new hiveTx.Transaction();
   await tx.create(arr);
   tx.sign(hiveTx.PrivateKey.from(key));
+  console.log(tx);
   try {
-    const {error, result} = (await tx.broadcast()) as {
+    const broadcast = await tx.broadcast();
+    const {error, result} = broadcast as {
       error: Error;
       result: object;
     };
+    console.log(error, result);
     if (error) {
       console.log(error);
       throw error;
@@ -369,7 +380,7 @@ export const broadcast = async (key: string, arr: Operation[]) => {
       return result;
     }
   } catch (e) {
-    console.log(JSON.stringify(e));
+    console.log('hive-tx error', JSON.stringify(e));
     throw e;
   }
 };

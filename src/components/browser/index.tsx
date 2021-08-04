@@ -31,7 +31,6 @@ const Browser = ({
   showManagementScreen,
   showManagement,
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
-  console.log('a');
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       StatusBar.setHidden(true);

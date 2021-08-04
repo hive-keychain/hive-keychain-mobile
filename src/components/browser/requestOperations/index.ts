@@ -3,6 +3,7 @@ import AddAccountAuthority from './AddAccountAuthority';
 import AddKeyAuthority from './AddKeyAuthority';
 import Broadcast from './Broadcast';
 import Convert from './Convert';
+import CreateAccount from './CreateAccount';
 import Custom from './Custom';
 import Decode from './Decode';
 import Delegation from './Delegation';
@@ -46,6 +47,7 @@ const map = {
   removeKeyAuthority: RemoveKeyAuthority,
   convert: Convert,
   recurrentTransfer: RecurrentTransfer,
+  createClaimedAccount: CreateAccount,
 };
 export default map;
 /*
