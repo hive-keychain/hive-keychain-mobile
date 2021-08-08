@@ -57,6 +57,5 @@ export default map;
 
 /*
 TODO: Add missing operations 
- Create / Remove proposals
- Signed Calls
+ Signed Calls (TBD, is it still used?)
 */
