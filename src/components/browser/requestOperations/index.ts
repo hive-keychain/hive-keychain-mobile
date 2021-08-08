@@ -52,7 +52,6 @@ const map = {
 export default map;
 /*
 TODO: Add missing operations 
- CreateAccount
  Create / Remove proposals
  Signed Calls
 */

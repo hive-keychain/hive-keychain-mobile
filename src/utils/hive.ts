@@ -211,10 +211,12 @@ export const addAccountAuth = async (
     weight ||
     userAccount[role.toLowerCase() as 'posting' | 'active'].weight_threshold;
   updatedAuthority.account_auths.push([authorizedUsername, +weight]);
+  updatedAuthority.account_auths.sort((a, b) => a[0].localeCompare(b[0]));
+
   const active =
-    role === KeychainKeyTypes.active ? updatedAuthority : undefined;
+    role === KeychainKeyTypes.active ? updatedAuthority : userAccount.active;
   const posting =
-    role === KeychainKeyTypes.posting ? updatedAuthority : undefined;
+    role === KeychainKeyTypes.posting ? updatedAuthority : userAccount.posting;
 
   /** Add authority on user account */
   return await accountUpdate(key, {
@@ -293,6 +295,10 @@ export const addKeyAuth = async (
     weight ||
     userAccount[role.toLowerCase() as 'posting' | 'active'].weight_threshold;
   updatedAuthority.key_auths.push([authorizedKey, +weight]);
+  updatedAuthority.key_auths.sort((a, b) =>
+    (a[0] as string).localeCompare(b[0] as string),
+  );
+
   const active =
     role === KeychainKeyTypes.active ? updatedAuthority : undefined;
   const posting =
