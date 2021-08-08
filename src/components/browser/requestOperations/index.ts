@@ -4,6 +4,7 @@ import AddKeyAuthority from './AddKeyAuthority';
 import Broadcast from './Broadcast';
 import Convert from './Convert';
 import CreateAccount from './CreateAccount';
+import CreateProposal from './CreateProposal';
 import Custom from './Custom';
 import Decode from './Decode';
 import Delegation from './Delegation';
@@ -15,6 +16,7 @@ import Proxy from './Proxy';
 import RecurrentTransfer from './RecurrentTransfer';
 import RemoveAccountAuthority from './RemoveAccountAuthority';
 import RemoveKeyAuthority from './RemoveKeyAuthority';
+import RemoveProposal from './RemoveProposal';
 import SendToken from './SendToken';
 import SignBuffer from './SignBuffer';
 import SignTx from './SignTx';
@@ -48,8 +50,11 @@ const map = {
   convert: Convert,
   recurrentTransfer: RecurrentTransfer,
   createClaimedAccount: CreateAccount,
+  createProposal: CreateProposal,
+  removeProposal: RemoveProposal,
 };
 export default map;
+
 /*
 TODO: Add missing operations 
  Create / Remove proposals

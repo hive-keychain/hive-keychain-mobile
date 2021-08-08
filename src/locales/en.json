@@ -242,7 +242,10 @@
       "owner": "Owner Authority",
       "active": "Active Authority",
       "posting": "Posting Authority",
-      "memo_key": "Memo Key"
+      "memo_key": "Memo Key",
+      "receiver": "Receiver",
+      "duration": "Duration",
+      "daily_pay": "Daily Pay"
     },
     "error": {
       "decode": "Could not verify key.",
@@ -287,7 +290,9 @@
       "removeKeyAuthority": "Successfully removed a {{role}} key.",
       "convert": "Succesfully started the conversion of {{amount}} {{from}} to {{to}}.",
       "recurrentTransfer": "Successfully started a recurrent transfer. {{amount}} {{currency}} will be sent to {{to}} {{executions}} times, every {{recurrence}} hours.",
-      "createClaimedAccount": "Succesfully claimed account @{{new_account}}"
+      "createClaimedAccount": "Succesfully claimed account @{{new_account}}",
+      "createProposal": "Succesfully created a new proposal!",
+      "removeProposal": "Succesfully removed proposal(s) {{ids}}."
     },
     "confirm": "Confirm",
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}."

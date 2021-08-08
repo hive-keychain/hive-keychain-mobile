@@ -8,9 +8,11 @@ import {
   CommentOptionsOperation,
   ConvertOperation,
   CreateClaimedAccountOperation,
+  CreateProposalOperation,
   DelegateVestingSharesOperation,
   Operation,
   RecurrentTransferOperation,
+  RemoveProposalOperation,
   TransferOperation,
   UpdateProposalVotesOperation,
   VoteOperation,
@@ -365,6 +367,20 @@ export const updateProposalVote = async (
   obj: UpdateProposalVotesOperation[1],
 ) => {
   return await broadcast(key, [['update_proposal_votes', obj]]);
+};
+
+export const createProposal = async (
+  key: string,
+  obj: CreateProposalOperation[1],
+) => {
+  return await broadcast(key, [['create_proposal', obj]]);
+};
+
+export const removeProposal = async (
+  key: string,
+  obj: RemoveProposalOperation[1],
+) => {
+  return await broadcast(key, [['remove_proposal', obj]]);
 };
 
 export const broadcast = async (key: string, arr: Operation[]) => {
