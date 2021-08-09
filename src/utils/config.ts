@@ -6,9 +6,19 @@ export const hiveConfig = {
   CREATE_ACCOUNT_URL: 'https://signup.hive.io/',
 };
 export const BrowserConfig = {
-  HOMEPAGE_URL: 'https://hive.io',
+  HOMEPAGE_URL: 'HOME',
   FOOTER_HEIGHT: 40,
   HEADER_HEIGHT: 40,
+  HomeTab: {
+    categories: [
+      {title: 'finance', color: '#2A5320', logo: ''},
+      {title: 'social', color: '#215858', logo: ''},
+      {title: 'video', color: '#2A435C', logo: ''},
+      {title: 'gaming', color: '#6A3434', logo: ''},
+      {title: 'nft', color: '#6F3D71', logo: ''},
+      {title: 'tool', color: '#353E3E', logo: ''},
+    ],
+  },
 };
 
 export const KeychainConfig = {

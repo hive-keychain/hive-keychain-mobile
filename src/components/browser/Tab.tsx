@@ -34,6 +34,7 @@ import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
 import {hive_keychain} from './bridges/HiveKeychainBridge';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import Footer from './Footer';
+import HomeTab from './HomeTab';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
 import UrlModal from './urlModal';
@@ -239,19 +240,23 @@ export default ({
       <View style={styles.container}>
         <ProgressBar progress={progress} />
 
-        <WebView
-          ref={tabRef}
-          source={{uri: url}}
-          sharedCookiesEnabled
-          injectedJavaScriptBeforeContentLoaded={hive_keychain}
-          onMessage={onMessage}
-          bounces={false}
-          javaScriptEnabled
-          allowsInlineMediaPlayback
-          onLoadEnd={onLoadEnd}
-          onLoadStart={onLoadStart}
-          onLoadProgress={onLoadProgress}
-        />
+        {url === BrowserConfig.HOMEPAGE_URL ? (
+          <HomeTab />
+        ) : (
+          <WebView
+            ref={tabRef}
+            source={{uri: url}}
+            sharedCookiesEnabled
+            injectedJavaScriptBeforeContentLoaded={hive_keychain}
+            onMessage={onMessage}
+            bounces={false}
+            javaScriptEnabled
+            allowsInlineMediaPlayback
+            onLoadEnd={onLoadEnd}
+            onLoadStart={onLoadStart}
+            onLoadProgress={onLoadProgress}
+          />
+        )}
       </View>
       {active && (
         <Footer
