@@ -12,11 +12,12 @@ import {
 
 type Props = {
   list: any[];
-  selectedValue: string;
+  selectedValue: any;
   onSelected: (value: any) => void;
   prefix?: string;
   prompt: string;
   style?: StyleProp<ViewStyle>;
+  labelCreator?: (obj: any) => string;
 };
 const CustomPicker = ({
   list,
@@ -25,6 +26,7 @@ const CustomPicker = ({
   prefix,
   prompt,
   style,
+  labelCreator,
 }: Props) => {
   const styles = getDimensionedStyles();
   switch (Platform.OS) {
@@ -35,16 +37,16 @@ const CustomPicker = ({
           onPress={() => {
             ActionSheetIOS.showActionSheetWithOptions(
               {
-                options: list,
+                options: labelCreator ? list.map((e) => labelCreator(e)) : list,
               },
               (index) => {
                 onSelected(list[index]);
               },
             );
           }}>
-          <Text style={styles.iosLabel}>{`${
-            prefix ? prefix : ''
-          }${selectedValue}`}</Text>
+          <Text style={styles.iosLabel}>{`${prefix ? prefix : ''}${
+            labelCreator ? labelCreator(selectedValue) : selectedValue
+          }`}</Text>
           <Text>{'\u25BC'}</Text>
         </TouchableOpacity>
       );
@@ -60,7 +62,9 @@ const CustomPicker = ({
             return (
               <Picker.Item
                 key={i}
-                label={`${prefix ? prefix : ''}${item}`}
+                label={`${prefix ? prefix : ''}${
+                  labelCreator ? labelCreator(item) : item
+                }`}
                 value={item}
               />
             );

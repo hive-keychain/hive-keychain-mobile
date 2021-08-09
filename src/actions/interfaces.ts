@@ -22,12 +22,17 @@ export interface Auth {
   mk: NullableString;
 }
 
+export interface Rpc {
+  uri: string;
+  testnet?: boolean;
+  chainId?: string;
+}
 export interface Settings {
-  rpc: string;
+  rpc: string | Rpc;
 }
 
 export interface SettingsPayload {
-  rpc?: string;
+  rpc?: string | Rpc;
 }
 
 export interface History {

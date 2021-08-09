@@ -3,6 +3,7 @@ import {
   CollateralizedConversion,
   Delegator,
   GlobalProperties,
+  Rpc,
 } from 'actions/interfaces';
 import api from 'api/keychain';
 import {getClient} from './hive';
@@ -144,21 +145,27 @@ export const getConversionRequests = async (name: string) => {
   );
 };
 
-export const rpcList = [
-  'DEFAULT',
-  'https://api.hive.blog/',
-  'https://api.openhive.network/',
-  'https://api.hivekings.com/',
-  'https://anyx.io/',
-  'https://api.pharesim.me/',
-  'https://hived.hive-engine.com/',
-  'https://hived.privex.io/',
-  'https://hive.roelandp.nl',
-  'https://rpc.ausbit.dev',
-  'https://rpc.ecency.com',
-  'https://techcoderx.com',
-  'https://hive-api.arcange.eu/',
-  'TESTNET',
+export const rpcList: Rpc[] = [
+  {uri: 'DEFAULT', testnet: false},
+  {uri: 'https://api.deathwing.me', testnet: false},
+  {uri: 'https://api.hive.blog', testnet: false},
+  {uri: 'https://api.openhive.network', testnet: false},
+  {uri: 'https://api.hivekings.com', testnet: false},
+  {uri: 'https://anyx.io', testnet: false},
+  {uri: 'https://api.pharesim.me', testnet: false},
+  {uri: 'https://hived.emre.sh', testnet: false},
+  {uri: 'https://hived.hive-engine.com', testnet: false},
+  {uri: 'https://hived.privex.io', testnet: false},
+  {uri: 'https://hive.roelandp.nl', testnet: false},
+  {uri: 'https://rpc.ausbit.dev', testnet: false},
+  {uri: 'https://rpc.ecency.com', testnet: false},
+  {uri: 'https://techcoderx.com', testnet: false},
+  {uri: 'https://hive-api.arcange.eu', testnet: false},
+  {
+    uri: 'https://testnet.openhive.network',
+    testnet: true,
+    chainId: '18dcf0a285365fc58b71f18b3d3fec954aa0c141c44e4e5cb4cf777b9eab274e',
+  },
 ];
 
 export const getAccountKeys = async (username: string) => {

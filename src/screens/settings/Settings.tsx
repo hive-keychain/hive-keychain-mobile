@@ -1,5 +1,6 @@
 import {loadAccount} from 'actions/hive';
 import {setRpc} from 'actions/index';
+import {Rpc} from 'actions/interfaces';
 import {removePreference} from 'actions/preferences';
 import CustomPicker from 'components/form/CustomPicker';
 import UserPicker from 'components/form/UserPicker';
@@ -14,7 +15,7 @@ import {RootState} from 'store';
 import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 
-const AccountManagement = ({
+const Settings = ({
   setRpc,
   settings,
   accounts,
@@ -57,6 +58,9 @@ const AccountManagement = ({
         <CustomPicker
           onSelected={setRpc}
           selectedValue={settings.rpc}
+          labelCreator={(rpc: Rpc) =>
+            `${rpc.uri} ${rpc.testnet ? '(TESTNET)' : ''}`
+          }
           list={rpcList}
           prompt={translate('components.picker.prompt_rpc')}
         />
@@ -116,4 +120,4 @@ const connector = connect(mapStateToProps, {
   removePreference,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
-export default connector(AccountManagement);
+export default connector(Settings);

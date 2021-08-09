@@ -8,6 +8,7 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   whitelist: ['lastAccount', 'settings', 'browser', 'preferences'],
+  //transforms,
 };
 
 const persistedReducers = persistReducer(persistConfig, reducers);

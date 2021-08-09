@@ -4,6 +4,7 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {addTabFromLinking} from 'actions/browser';
+import {Rpc} from 'actions/interfaces';
 import Bridge from 'components/bridge';
 import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
@@ -32,7 +33,7 @@ const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
   }, [addTabFromLinking]);
 
   useEffect(() => {
-    setRpc(rpc);
+    setRpc(rpc as Rpc);
   }, [rpc]);
 
   const renderNavigator = () => {
