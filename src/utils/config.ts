@@ -6,7 +6,7 @@ export const hiveConfig = {
   CREATE_ACCOUNT_URL: 'https://signup.hive.io/',
 };
 export const BrowserConfig = {
-  HOMEPAGE_URL: 'HOME',
+  HOMEPAGE_URL: 'about:blank',
   FOOTER_HEIGHT: 40,
   HEADER_HEIGHT: 40,
   HomeTab: {
@@ -18,6 +18,7 @@ export const BrowserConfig = {
       {title: 'nft', color: '#6F3D71', logo: ''},
       {title: 'tool', color: '#353E3E', logo: ''},
     ],
+    dApps: [{name: '', description: '', categories: ['']}],
   },
 };
 

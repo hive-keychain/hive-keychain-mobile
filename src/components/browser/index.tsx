@@ -118,6 +118,7 @@ const Browser = ({
           manageTabs={manageTabs}
           isManagingTab={showManagement}
           preferences={preferences}
+          favorites={favorites}
         />
       ))}
     </View>

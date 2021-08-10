@@ -35,7 +35,7 @@ export interface SettingsPayload {
   rpc?: string | Rpc;
 }
 
-export interface History {
+export interface Page {
   url: string;
   name: string;
   icon: string;
@@ -59,7 +59,7 @@ export interface TabFields {
 
 export interface BrowserPayload {
   url?: string;
-  history?: History;
+  history?: Page;
   shouldFocus?: boolean;
   id?: number | null;
   data?: TabFields;
@@ -68,8 +68,8 @@ export interface BrowserPayload {
 }
 
 export interface Browser {
-  history: History[];
-  whitelist: [];
+  history: Page[];
+  whitelist: Page[];
   tabs: Tab[];
   activeTab: number | null;
   shouldFocus: boolean;

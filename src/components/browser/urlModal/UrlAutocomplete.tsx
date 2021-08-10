@@ -1,11 +1,12 @@
-import {History, TabFields} from 'actions/interfaces';
+import {Page} from 'actions/interfaces';
 import Fuse from 'fuse.js';
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import HistoryItem from './HistoryItem';
 
 type Props = {
   onSubmit: (string: string) => void;
-  history: History[];
+  history: Page[];
   input: string;
 };
 export default ({input, onSubmit, history}: Props) => {
@@ -32,30 +33,15 @@ export default ({input, onSubmit, history}: Props) => {
     }
   }, [input, history]);
 
-  const renderItem = ({name, url, icon}: TabFields) => {
-    return (
-      <TouchableOpacity onPress={() => onSubmit(url)} key={url}>
-        <View style={styles.itemWrapper}>
-          <Image style={styles.img} source={{uri: icon}} />
-          <View style={styles.text}>
-            <Text style={styles.name} numberOfLines={1}>
-              {name}
-            </Text>
-            <Text numberOfLines={1}>{url}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  };
   return (
-    <View style={styles.wrapper}>{candidates.map((e) => renderItem(e))}</View>
+    <View style={styles.wrapper}>
+      {candidates.map((e) => (
+        <HistoryItem onSubmit={onSubmit} data={e} />
+      ))}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   wrapper: {marginTop: 20},
-  itemWrapper: {flexDirection: 'row', marginHorizontal: 20, marginVertical: 5},
-  text: {marginLeft: 10},
-  name: {fontWeight: 'bold'},
-  img: {width: 20, height: 20},
 });

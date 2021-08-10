@@ -1,10 +1,17 @@
+import {Page} from 'actions/interfaces';
 import KeychainLogo from 'components/ui/KeychainLogo';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import Explore from './Explore';
+import Favorites from './Favorites';
+import History from './History';
 
-const NewTab = () => {
+type Props = {
+  history: Page[];
+  favorites: Page[];
+};
+const NewTab = ({history, favorites}: Props) => {
   const styles = getStyles(useWindowDimensions().width);
   return (
     <View style={styles.container}>
@@ -16,7 +23,11 @@ const NewTab = () => {
       </View>
       <ScreenToggle
         menu={['EXPLORE', 'HISTORY', 'FAVORITES']}
-        components={[<Explore />]}
+        components={[
+          <Explore />,
+          <History history={history} />,
+          <Favorites favorites={favorites} />,
+        ]}
         toUpperCase
         style={styles.sub}
       />

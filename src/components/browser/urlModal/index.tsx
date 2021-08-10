@@ -1,4 +1,4 @@
-import {ActionPayload, BrowserPayload, History} from 'actions/interfaces';
+import {ActionPayload, BrowserPayload, Page} from 'actions/interfaces';
 import React, {MutableRefObject, useRef} from 'react';
 import {
   NativeSyntheticEvent,
@@ -23,7 +23,7 @@ type Props = {
   onNewSearch: (string: string) => void;
   url: string;
   setUrl: (string: string) => void;
-  history: History[];
+  history: Page[];
   clearHistory: () => ActionPayload<BrowserPayload>;
 };
 const UrlModal = ({

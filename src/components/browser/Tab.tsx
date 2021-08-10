@@ -2,8 +2,8 @@ import {
   Account,
   ActionPayload,
   BrowserPayload,
-  History,
   KeyTypes,
+  Page,
   Tab,
   TabFields,
 } from 'actions/interfaces';
@@ -46,11 +46,12 @@ type Props = {
   isManagingTab: boolean;
   accounts: Account[];
   updateTab: (id: number, data: TabFields) => ActionPayload<BrowserPayload>;
-  addToHistory: (history: History) => ActionPayload<BrowserPayload>;
-  history: History[];
+  addToHistory: (history: Page) => ActionPayload<BrowserPayload>;
+  history: Page[];
   clearHistory: () => ActionPayload<BrowserPayload>;
   navigation: BrowserNavigation;
   preferences: UserPreference[];
+  favorites: Page[];
 };
 export default ({
   data: {url, id, icon},
@@ -64,6 +65,7 @@ export default ({
   manageTabs,
   isManagingTab,
   preferences,
+  favorites,
 }: Props) => {
   const tabRef: MutableRefObject<WebView> = useRef(null);
   const [searchUrl, setSearchUrl] = useState(url);
@@ -241,8 +243,12 @@ export default ({
         <ProgressBar progress={progress} />
 
         {url === BrowserConfig.HOMEPAGE_URL ? (
-          <HomeTab />
-        ) : (
+          <HomeTab history={history} favorites={favorites} />
+        ) : null}
+        <View
+          style={
+            url === BrowserConfig.HOMEPAGE_URL ? styles.hide : styles.container
+          }>
           <WebView
             ref={tabRef}
             source={{uri: url}}
@@ -256,7 +262,7 @@ export default ({
             onLoadStart={onLoadStart}
             onLoadProgress={onLoadProgress}
           />
-        )}
+        </View>
       </View>
       {active && (
         <Footer

@@ -1,6 +1,6 @@
 import {AppThunk} from 'src/hooks/redux';
 import {navigate} from 'utils/navigation';
-import {ActionPayload, BrowserPayload, History, TabFields} from './interfaces';
+import {ActionPayload, BrowserPayload, Page, TabFields} from './interfaces';
 import {
   ADD_BROWSER_TAB,
   ADD_TO_BROWSER_FAVORITES,
@@ -15,7 +15,7 @@ import {
   UPDATE_MANAGEMENT,
 } from './types';
 
-export const addToHistory = (history: History) => {
+export const addToHistory = (history: Page) => {
   const action: ActionPayload<BrowserPayload> = {
     type: ADD_TO_BROWSER_HISTORY,
     payload: {history},
@@ -107,6 +107,7 @@ export const changeTab = (id: number) => {
 };
 
 export const updateTab = (id: number, data: TabFields) => {
+  console.log(id, data);
   const action: ActionPayload<BrowserPayload> = {
     type: UPDATE_BROWSER_TAB,
     payload: {id, data},
