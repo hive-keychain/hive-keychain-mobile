@@ -1,47 +1,91 @@
+import {
+  ActionPayload,
+  Browser,
+  BrowserPayload,
+  TabFields,
+} from 'actions/interfaces';
+import Home from 'assets/browser/home.svg';
+import Favorite from 'assets/browser/icon_favorite.svg';
+import NotFavorite from 'assets/browser/icon_favorite_default.svg';
 import DrawerButton from 'components/ui/DrawerButton';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {connect, ConnectedProps} from 'react-redux';
-import {RootState} from 'store';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 
-type Props = PropsFromRedux & BrowserNavigationProps;
+type Props = BrowserNavigationProps & {
+  browser: Browser;
+  updateTab: (id: number, data: TabFields) => ActionPayload<BrowserPayload>;
+};
+
 const BrowserHeader = ({
-  browser: {activeTab, tabs},
+  browser: {activeTab, tabs, whitelist, showManagement},
   navigation,
-  route,
+  updateTab,
 }: Props) => {
   const {HEADER_HEIGHT} = BrowserConfig;
   const insets = useSafeAreaInsets();
   const styles = getStyles(HEADER_HEIGHT, insets);
 
-  const renderText = () => {
-    if (activeTab && tabs.find((e) => e.id === activeTab)) {
-      const activeUrl = tabs.find((e) => e.id === activeTab).url;
-      return (
-        <Text style={styles.url}>{urlTransformer(activeUrl).hostname}</Text>
-      );
-    } else {
-      return (
-        <Text style={styles.browser}>{translate('navigation.browser')}</Text>
-      );
-    }
+  const goHome = () => {
+    updateTab(activeTab, {url: BrowserConfig.HOMEPAGE_URL});
   };
-  return (
-    <View style={styles.container}>
-      <View style={styles.textContainer}>
-        {route.params && route.params.icon && (
-          <Image style={styles.icon} source={{uri: route.params.icon}} />
-        )}
-        {renderText()}
+
+  if (activeTab && tabs.find((e) => e.id === activeTab) && !showManagement) {
+    const activeUrl = tabs.find((e) => e.id === activeTab).url;
+    const renderFavoritesButton = () => {
+      if (activeUrl === BrowserConfig.HOMEPAGE_URL) return null;
+      return whitelist.find((e) => e.url === activeUrl) ? (
+        <TouchableOpacity
+          style={[styles.icon]}
+          onPress={() => {
+            console.log('press fav');
+          }}>
+          <Favorite width={17} height={16} color="#E5E5E5" />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={[styles.icon]}
+          onPress={() => {
+            console.log('press fav');
+          }}>
+          <NotFavorite width={17} height={16} color="#E5E5E5" />
+        </TouchableOpacity>
+      );
+    };
+    return (
+      <View style={styles.container}>
+        <View style={styles.textContainer}>
+          <TouchableOpacity style={styles.icon} onPress={goHome}>
+            <Home width={17} height={16} color="#E5E5E5" />
+          </TouchableOpacity>
+          <Text
+            style={
+              activeUrl !== BrowserConfig.HOMEPAGE_URL
+                ? styles.url
+                : styles.search
+            }
+            numberOfLines={1}>
+            {activeUrl !== BrowserConfig.HOMEPAGE_URL
+              ? urlTransformer(activeUrl).hostname
+              : translate('browser.search')}
+          </Text>
+          {renderFavoritesButton()}
+        </View>
+        <DrawerButton navigation={navigation} style={styles.drawerButton} />
       </View>
-      <DrawerButton navigation={navigation} />
-    </View>
-  );
+    );
+  } else {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.browser}>{translate('navigation.browser')}</Text>
+        <DrawerButton navigation={navigation} style={styles.drawerButton} />
+      </View>
+    );
+  }
 };
 
 const getStyles = (height: number, insets: EdgeInsets) =>
@@ -55,14 +99,22 @@ const getStyles = (height: number, insets: EdgeInsets) =>
       alignItems: 'center',
       paddingTop: insets.top,
       paddingLeft: 20,
+      paddingBottom: 7,
     },
-    textContainer: {width: '60%', flexDirection: 'row'},
-    url: {color: 'white', fontSize: 18},
+    textContainer: {
+      height: 32,
+      backgroundColor: '#535353',
+      borderRadius: 6,
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      lineHeight: 32,
+    },
+    url: {color: 'white', fontSize: 18, flex: 1},
+    search: {fontSize: 18, flex: 1, color: '#E5E5E5', fontStyle: 'italic'},
     browser: {color: 'white', fontSize: 18, fontWeight: 'bold'},
-    icon: {width: 20, height: 20, marginRight: 20},
+    icon: {paddingHorizontal: 10},
+    drawerButton: {alignSelf: 'center'},
   });
 
-const mapStateToProps = (state: RootState) => ({browser: state.browser});
-const connector = connect(mapStateToProps);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-export default connector(BrowserHeader);
+export default BrowserHeader;

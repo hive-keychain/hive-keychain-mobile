@@ -6,15 +6,13 @@ import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
 import {BrowserConfig} from 'utils/config';
+import Header from './Header';
 import Tab from './Tab';
 import TabsManagement from './tabsManagement';
 
 const Browser = ({
   accounts,
-  activeTab,
-  tabs,
-  history,
-  favorites,
+  browser,
   preferences,
   changeTab,
   addTab,
@@ -29,8 +27,14 @@ const Browser = ({
   navigation,
   setBrowserFocus,
   showManagementScreen,
-  showManagement,
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
+  const {
+    showManagement,
+    activeTab,
+    tabs,
+    history,
+    whitelist: favorites,
+  } = browser;
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       StatusBar.setHidden(true);
@@ -94,6 +98,12 @@ const Browser = ({
 
   return (
     <View style={styles.container}>
+      <Header
+        browser={browser}
+        navigation={navigation}
+        route={route}
+        updateTab={updateTab}
+      />
       <TabsManagement
         tabs={tabs}
         activeTab={activeTab}

@@ -8,7 +8,7 @@ export const hiveConfig = {
 export const BrowserConfig = {
   HOMEPAGE_URL: 'about:blank',
   FOOTER_HEIGHT: 40,
-  HEADER_HEIGHT: 40,
+  HEADER_HEIGHT: 45,
   HomeTab: {
     categories: [
       {title: 'finance', color: '#2A5320', logo: ''},

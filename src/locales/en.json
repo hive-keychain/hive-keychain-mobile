@@ -298,6 +298,7 @@
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}."
   },
   "browser": {
+    "search": "Search or enter url",
     "history": {"clear": "Clear History"},
     "home": {
       "menu": {

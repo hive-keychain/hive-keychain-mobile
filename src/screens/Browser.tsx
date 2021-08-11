@@ -19,10 +19,7 @@ import {RootState} from 'store';
 
 const BrowserScreen = ({
   accounts,
-  activeTab,
-  tabs,
-  history,
-  favorites,
+  browser,
   changeTab,
   addTab,
   updateTab,
@@ -36,7 +33,6 @@ const BrowserScreen = ({
   navigation,
   route,
   showManagementScreen,
-  showManagement,
   preferences,
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
   return (
@@ -44,10 +40,7 @@ const BrowserScreen = ({
       accounts={accounts}
       navigation={navigation}
       route={route}
-      activeTab={activeTab}
-      tabs={tabs}
-      history={history}
-      favorites={favorites}
+      browser={browser}
       changeTab={changeTab}
       addTab={addTab}
       updateTab={updateTab}
@@ -58,7 +51,6 @@ const BrowserScreen = ({
       addToFavorites={addToFavorites}
       removeFromFavorites={removeFromFavorites}
       setBrowserFocus={setBrowserFocus}
-      showManagement={showManagement}
       showManagementScreen={showManagementScreen}
       preferences={preferences}
     />
@@ -68,11 +60,7 @@ const BrowserScreen = ({
 const mapStateToProps = (state: RootState) => {
   return {
     accounts: state.accounts,
-    activeTab: state.browser.activeTab,
-    tabs: state.browser.tabs,
-    history: state.browser.history,
-    favorites: state.browser.whitelist,
-    showManagement: state.browser.showManagement,
+    browser: state.browser,
     preferences: state.preferences,
   };
 };

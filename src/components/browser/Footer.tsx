@@ -8,7 +8,6 @@ type Props = {
   goBack: () => void;
   canGoForward: boolean;
   goForward: () => void;
-  goHome: () => void;
   reload: () => void;
   toggleSearchBar: () => void;
   manageTabs: () => void;
@@ -19,7 +18,6 @@ const Footer = ({
   goBack,
   canGoForward,
   goForward,
-  goHome,
   reload,
   toggleSearchBar,
   //addTab,
@@ -43,9 +41,7 @@ const Footer = ({
           style={[styles.icon, !canGoForward && styles.disabled]}
         />
       </TouchableOpacity>
-      <TouchableOpacity onPress={goHome}>
-        <Icon name="home" style={styles.icon} />
-      </TouchableOpacity>
+
       <TouchableOpacity onPress={toggleSearchBar}>
         <Icon name="search" style={styles.icon} />
       </TouchableOpacity>
