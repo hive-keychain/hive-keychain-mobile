@@ -3,6 +3,7 @@ import KeychainLogo from 'components/ui/KeychainLogo';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {translate} from 'utils/localize';
 import Explore from './Explore';
 import Favorites from './Favorites';
 import History from './History';
@@ -22,7 +23,11 @@ const NewTab = ({history, favorites}: Props) => {
         </Text>
       </View>
       <ScreenToggle
-        menu={['EXPLORE', 'HISTORY', 'FAVORITES']}
+        menu={[
+          translate('browser.home.menu.explore'),
+          translate('browser.home.menu.history'),
+          translate('browser.home.menu.favorites'),
+        ]}
         components={[
           <Explore />,
           <History history={history} />,

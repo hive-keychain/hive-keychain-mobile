@@ -297,7 +297,17 @@
     "confirm": "Confirm",
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}."
   },
-  "browser": {"history": {"clear": "Clear History"}},
+  "browser": {
+    "history": {"clear": "Clear History"},
+    "home": {
+      "menu": {
+        "explore": "EXPLORE",
+        "history": " HISTORY",
+        "favorites": "FAVORITES"
+      },
+      "nothing": "Nothing to show."
+    }
+  },
   "drawerFooter": {
     "madeBy": "Made with ❤ by @stoodkev",
     "vote": "Vote for Witness",

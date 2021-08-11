@@ -1,6 +1,7 @@
 import {Page} from 'actions/interfaces';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {translate} from 'utils/localize';
 import HistoryItem from '../urlModal/HistoryItem';
 
 type Props = {
@@ -20,7 +21,7 @@ export default ({favorites}: Props) => {
           />
         ))
       ) : (
-        <Text style={styles.text}>Nothing to show</Text>
+        <Text style={styles.text}>{translate('browser.home.nothing')}</Text>
       )}
     </View>
   );
