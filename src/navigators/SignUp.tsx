@@ -29,6 +29,7 @@ export default () => {
       <Stack.Screen
         name="AddAccountByKeyScreen"
         options={{
+          headerBackTitle: ' ',
           title: translate('navigation.add_account'),
           headerRight: () => <MoreInformation type="moreInfo" />,
           headerTintColor: 'white',
@@ -39,6 +40,7 @@ export default () => {
       <Stack.Screen
         name="ScanQRScreen"
         options={{
+          headerBackTitle: translate('navigation.add_account'),
           headerStyle: {backgroundColor: 'black'},
           headerTintColor: 'white',
           title: '',

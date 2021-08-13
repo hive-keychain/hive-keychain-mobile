@@ -30,10 +30,10 @@ export const clearHistory = () => {
   return action;
 };
 
-export const addToFavorites = (url: string) => {
+export const addToFavorites = (page: Page) => {
   const action: ActionPayload<BrowserPayload> = {
     type: ADD_TO_BROWSER_FAVORITES,
-    payload: {url},
+    payload: {favorite: page},
   };
   return action;
 };

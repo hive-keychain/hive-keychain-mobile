@@ -37,8 +37,8 @@ export interface SettingsPayload {
 
 export interface Page {
   url: string;
-  name: string;
-  icon: string;
+  name?: string;
+  icon?: string;
 }
 
 export interface Tab {
@@ -64,12 +64,12 @@ export interface BrowserPayload {
   id?: number | null;
   data?: TabFields;
   showManagement?: boolean;
-  whitelist?: [];
+  favorite?: Page;
 }
 
 export interface Browser {
   history: Page[];
-  whitelist: Page[];
+  favorites: Page[];
   tabs: Tab[];
   activeTab: number | null;
   shouldFocus: boolean;

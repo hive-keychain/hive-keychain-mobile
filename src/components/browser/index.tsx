@@ -1,6 +1,6 @@
 import {Tab as TabType} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
-import React, {MutableRefObject, useEffect} from 'react';
+import React, {MutableRefObject, useEffect, useState} from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
 import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
@@ -9,6 +9,7 @@ import {BrowserConfig} from 'utils/config';
 import Header from './Header';
 import Tab from './Tab';
 import TabsManagement from './tabsManagement';
+import UrlModal from './urlModal';
 
 const Browser = ({
   accounts,
@@ -28,13 +29,16 @@ const Browser = ({
   setBrowserFocus,
   showManagementScreen,
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
-  const {
-    showManagement,
-    activeTab,
-    tabs,
-    history,
-    whitelist: favorites,
-  } = browser;
+  const {showManagement, activeTab, tabs, history, favorites} = browser;
+  const currentActiveTabData = tabs.find((t) => t.id === activeTab);
+  const url = currentActiveTabData
+    ? currentActiveTabData.url
+    : BrowserConfig.HOMEPAGE_URL;
+  const [isVisible, toggleVisibility] = useState(false);
+  const [searchUrl, setSearchUrl] = useState(url);
+  useEffect(() => {
+    setSearchUrl(url);
+  }, [url]);
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       StatusBar.setHidden(true);
@@ -96,6 +100,10 @@ const Browser = ({
     showManagementScreen(false);
   };
 
+  const onNewSearch = (url: string) => {
+    updateTab(activeTab, {...currentActiveTabData, url});
+  };
+
   return (
     <View style={styles.container}>
       <Header
@@ -103,6 +111,9 @@ const Browser = ({
         navigation={navigation}
         route={route}
         updateTab={updateTab}
+        startSearch={toggleVisibility}
+        addToFavorites={addToFavorites}
+        removeFromFavorites={removeFromFavorites}
       />
       <TabsManagement
         tabs={tabs}
@@ -124,13 +135,22 @@ const Browser = ({
           navigation={navigation}
           addToHistory={addToHistory}
           history={history}
-          clearHistory={clearHistory}
           manageTabs={manageTabs}
           isManagingTab={showManagement}
           preferences={preferences}
           favorites={favorites}
+          addTab={onAddTab}
         />
       ))}
+      <UrlModal
+        isVisible={isVisible}
+        toggle={toggleVisibility}
+        onNewSearch={onNewSearch}
+        history={history}
+        url={searchUrl}
+        setUrl={setSearchUrl}
+        clearHistory={clearHistory}
+      />
     </View>
   );
 };

@@ -9,9 +9,9 @@ type Props = {
   canGoForward: boolean;
   goForward: () => void;
   reload: () => void;
-  toggleSearchBar: () => void;
   manageTabs: () => void;
   height: number;
+  addTab: () => void;
 };
 const Footer = ({
   canGoBack,
@@ -19,8 +19,7 @@ const Footer = ({
   canGoForward,
   goForward,
   reload,
-  toggleSearchBar,
-  //addTab,
+  addTab,
   manageTabs,
   height,
 }: Props) => {
@@ -42,20 +41,16 @@ const Footer = ({
         />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={toggleSearchBar}>
-        <Icon name="search" style={styles.icon} />
-      </TouchableOpacity>
       <TouchableOpacity onPress={reload}>
         <Icon name="refresh" style={styles.icon} />
       </TouchableOpacity>
       <TouchableOpacity onPress={manageTabs}>
         <Icon name="tab" style={styles.icon} />
       </TouchableOpacity>
-      {
-        //<TouchableOpacity onPress={addTab}>
-        //<Icon name="add" style={styles.icon} />
-        //</TouchableOpacity>
-      }
+
+      <TouchableOpacity onPress={addTab}>
+        <Icon name="add" style={styles.icon} />
+      </TouchableOpacity>
     </View>
   );
 };

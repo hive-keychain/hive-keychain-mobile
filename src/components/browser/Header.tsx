@@ -2,6 +2,7 @@ import {
   ActionPayload,
   Browser,
   BrowserPayload,
+  Page,
   TabFields,
 } from 'actions/interfaces';
 import Home from 'assets/browser/home.svg';
@@ -19,12 +20,18 @@ import {translate} from 'utils/localize';
 type Props = BrowserNavigationProps & {
   browser: Browser;
   updateTab: (id: number, data: TabFields) => ActionPayload<BrowserPayload>;
+  startSearch: (b: boolean) => void;
+  addToFavorites: (page: Page) => ActionPayload<BrowserPayload>;
+  removeFromFavorites: (url: string) => ActionPayload<BrowserPayload>;
 };
 
 const BrowserHeader = ({
-  browser: {activeTab, tabs, whitelist, showManagement},
+  browser: {activeTab, tabs, favorites, showManagement},
   navigation,
   updateTab,
+  startSearch,
+  addToFavorites,
+  removeFromFavorites,
 }: Props) => {
   const {HEADER_HEIGHT} = BrowserConfig;
   const insets = useSafeAreaInsets();
@@ -33,16 +40,22 @@ const BrowserHeader = ({
   const goHome = () => {
     updateTab(activeTab, {url: BrowserConfig.HOMEPAGE_URL});
   };
-
-  if (activeTab && tabs.find((e) => e.id === activeTab) && !showManagement) {
-    const activeUrl = tabs.find((e) => e.id === activeTab).url;
+  console.log(activeTab, tabs);
+  if (
+    tabs &&
+    activeTab &&
+    tabs.find((e) => e.id === activeTab) &&
+    !showManagement
+  ) {
+    const active = tabs.find((e) => e.id === activeTab);
+    const activeUrl = active.url;
     const renderFavoritesButton = () => {
       if (activeUrl === BrowserConfig.HOMEPAGE_URL) return null;
-      return whitelist.find((e) => e.url === activeUrl) ? (
+      return favorites.find((e) => e.url === activeUrl) ? (
         <TouchableOpacity
           style={[styles.icon]}
           onPress={() => {
-            console.log('press fav');
+            removeFromFavorites(activeUrl);
           }}>
           <Favorite width={17} height={16} color="#E5E5E5" />
         </TouchableOpacity>
@@ -50,7 +63,7 @@ const BrowserHeader = ({
         <TouchableOpacity
           style={[styles.icon]}
           onPress={() => {
-            console.log('press fav');
+            addToFavorites(active);
           }}>
           <NotFavorite width={17} height={16} color="#E5E5E5" />
         </TouchableOpacity>
@@ -58,21 +71,28 @@ const BrowserHeader = ({
     };
     return (
       <View style={styles.container}>
-        <View style={styles.textContainer}>
+        <View style={styles.topBar}>
           <TouchableOpacity style={styles.icon} onPress={goHome}>
             <Home width={17} height={16} color="#E5E5E5" />
           </TouchableOpacity>
-          <Text
-            style={
-              activeUrl !== BrowserConfig.HOMEPAGE_URL
-                ? styles.url
-                : styles.search
-            }
-            numberOfLines={1}>
-            {activeUrl !== BrowserConfig.HOMEPAGE_URL
-              ? urlTransformer(activeUrl).hostname
-              : translate('browser.search')}
-          </Text>
+          <TouchableOpacity
+            style={styles.textContainer}
+            onPress={() => {
+              startSearch(true);
+            }}>
+            <Text
+              style={
+                activeUrl !== BrowserConfig.HOMEPAGE_URL
+                  ? styles.url
+                  : styles.search
+              }
+              numberOfLines={1}>
+              {activeUrl !== BrowserConfig.HOMEPAGE_URL
+                ? urlTransformer(activeUrl).hostname +
+                  urlTransformer(activeUrl).pathname
+                : translate('browser.search')}
+            </Text>
+          </TouchableOpacity>
           {renderFavoritesButton()}
         </View>
         <DrawerButton navigation={navigation} style={styles.drawerButton} />
@@ -101,14 +121,19 @@ const getStyles = (height: number, insets: EdgeInsets) =>
       paddingLeft: 20,
       paddingBottom: 7,
     },
-    textContainer: {
+    topBar: {
       height: 32,
       backgroundColor: '#535353',
       borderRadius: 6,
       flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
+    },
+    textContainer: {
       lineHeight: 32,
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     url: {color: 'white', fontSize: 18, flex: 1},
     search: {fontSize: 18, flex: 1, color: '#E5E5E5', fontStyle: 'italic'},

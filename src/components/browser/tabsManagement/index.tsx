@@ -36,7 +36,6 @@ export default ({
   activeTab,
   show,
 }: Props) => {
-  console.log(activeTab, tabs);
   return (
     <View style={[styles.container, show ? null : styles.hide]}>
       <ScrollView>

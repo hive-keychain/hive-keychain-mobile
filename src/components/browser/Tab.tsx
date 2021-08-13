@@ -8,7 +8,7 @@ import {
   TabFields,
 } from 'actions/interfaces';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
-import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
+import React, {MutableRefObject, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
@@ -37,7 +37,6 @@ import Footer from './Footer';
 import HomeTab from './HomeTab';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
-import UrlModal from './urlModal';
 
 type Props = {
   data: Tab;
@@ -48,10 +47,10 @@ type Props = {
   updateTab: (id: number, data: TabFields) => ActionPayload<BrowserPayload>;
   addToHistory: (history: Page) => ActionPayload<BrowserPayload>;
   history: Page[];
-  clearHistory: () => ActionPayload<BrowserPayload>;
   navigation: BrowserNavigation;
   preferences: UserPreference[];
   favorites: Page[];
+  addTab: () => void;
 };
 export default ({
   data: {url, id, icon},
@@ -60,25 +59,20 @@ export default ({
   accounts,
   navigation,
   addToHistory,
-  clearHistory,
   history,
   manageTabs,
   isManagingTab,
   preferences,
   favorites,
+  addTab,
 }: Props) => {
   const tabRef: MutableRefObject<WebView> = useRef(null);
-  const [searchUrl, setSearchUrl] = useState(url);
+
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [isVisible, toggleVisibility] = useState(false);
   const insets = useSafeAreaInsets();
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
-
-  useEffect(() => {
-    setSearchUrl(url);
-  }, [url]);
 
   const goBack = () => {
     if (!canGoBack) {
@@ -99,10 +93,6 @@ export default ({
   const reload = () => {
     const {current} = tabRef;
     current && current.reload();
-  };
-
-  const goHome = () => {
-    updateTab(id, {url: BrowserConfig.HOMEPAGE_URL});
   };
 
   const onLoadStart = ({
@@ -131,16 +121,6 @@ export default ({
     setCanGoForward(canGoForward);
     if (current) {
       current.injectJavaScript(BRIDGE_WV_INFO);
-    }
-  };
-
-  const onNewSearch = (url: string) => {
-    const {current} = tabRef;
-    if (current) {
-      current.stopLoading();
-      current.injectJavaScript(
-        `(function(){window.location.href = '${url}' })()`,
-      );
     }
   };
 
@@ -271,26 +251,11 @@ export default ({
           goBack={goBack}
           goForward={goForward}
           reload={reload}
+          addTab={addTab}
           manageTabs={() => {
             manageTabs({url, id, icon}, tabRef);
           }}
           height={FOOTER_HEIGHT}
-          toggleSearchBar={() => {
-            setSearchUrl(url);
-            toggleVisibility(true);
-          }}
-          goHome={goHome}
-        />
-      )}
-      {active && (
-        <UrlModal
-          isVisible={isVisible}
-          toggle={toggleVisibility}
-          onNewSearch={onNewSearch}
-          history={history}
-          url={searchUrl}
-          setUrl={setSearchUrl}
-          clearHistory={clearHistory}
         />
       )}
     </View>
