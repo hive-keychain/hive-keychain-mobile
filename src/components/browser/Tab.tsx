@@ -51,6 +51,7 @@ type Props = {
   preferences: UserPreference[];
   favorites: Page[];
   addTab: () => void;
+  tabsNumber: number;
 };
 export default ({
   data: {url, id, icon},
@@ -65,6 +66,7 @@ export default ({
   preferences,
   favorites,
   addTab,
+  tabsNumber,
 }: Props) => {
   const tabRef: MutableRefObject<WebView> = useRef(null);
 
@@ -102,7 +104,9 @@ export default ({
   }) => {
     updateTab(id, {url});
   };
-
+  const updateTabUrl = (link: string) => {
+    updateTab(id, {url: link});
+  };
   const onLoadProgress = ({nativeEvent: {progress}}: WebViewProgressEvent) => {
     setProgress(progress === 1 ? 0 : progress);
   };
@@ -223,7 +227,11 @@ export default ({
         <ProgressBar progress={progress} />
 
         {url === BrowserConfig.HOMEPAGE_URL ? (
-          <HomeTab history={history} favorites={favorites} />
+          <HomeTab
+            history={history}
+            favorites={favorites}
+            updateTabUrl={updateTabUrl}
+          />
         ) : null}
         <View
           style={
@@ -256,6 +264,7 @@ export default ({
             manageTabs({url, id, icon}, tabRef);
           }}
           height={FOOTER_HEIGHT}
+          tabs={tabsNumber}
         />
       )}
     </View>

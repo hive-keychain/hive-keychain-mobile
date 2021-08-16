@@ -6,17 +6,18 @@ import HistoryItem from '../urlModal/HistoryItem';
 
 type Props = {
   history: Page[];
+  updateTabUrl: (link: string) => void;
 };
 
-export default ({history}: Props) => {
+export default ({history, updateTabUrl}: Props) => {
   return (
     <View style={styles.container}>
       {history.length ? (
-        history.map((h) => (
+        [...history].reverse().map((h) => (
           <HistoryItem
             data={h}
             onSubmit={(e) => {
-              console.log(e);
+              updateTabUrl(e);
             }}
           />
         ))

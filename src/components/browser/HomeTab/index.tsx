@@ -11,9 +11,11 @@ import History from './History';
 type Props = {
   history: Page[];
   favorites: Page[];
+  updateTabUrl: (link: string) => void;
 };
-const NewTab = ({history, favorites}: Props) => {
+const NewTab = ({history, favorites, updateTabUrl}: Props) => {
   const styles = getStyles(useWindowDimensions().width);
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -29,9 +31,9 @@ const NewTab = ({history, favorites}: Props) => {
           translate('browser.home.menu.favorites'),
         ]}
         components={[
-          <Explore />,
-          <History history={history} />,
-          <Favorites favorites={favorites} />,
+          <Explore updateTabUrl={updateTabUrl} />,
+          <History history={history} updateTabUrl={updateTabUrl} />,
+          <Favorites favorites={favorites} updateTabUrl={updateTabUrl} />,
         ]}
         toUpperCase
         style={styles.sub}

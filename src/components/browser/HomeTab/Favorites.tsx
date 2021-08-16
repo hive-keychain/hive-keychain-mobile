@@ -6,9 +6,10 @@ import HistoryItem from '../urlModal/HistoryItem';
 
 type Props = {
   favorites: Page[];
+  updateTabUrl: (link: string) => void;
 };
 
-export default ({favorites}: Props) => {
+export default ({favorites, updateTabUrl}: Props) => {
   return (
     <View style={styles.container}>
       {favorites.length ? (
@@ -16,7 +17,7 @@ export default ({favorites}: Props) => {
           <HistoryItem
             data={h}
             onSubmit={(e) => {
-              console.log(e);
+              updateTabUrl(e);
             }}
           />
         ))

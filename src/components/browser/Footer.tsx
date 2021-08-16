@@ -1,7 +1,10 @@
+import RightArrow from 'assets/browser/icon-forward.svg';
+import LeftArrow from 'assets/browser/icon_back.svg';
+import Add from 'assets/browser/icon_new.svg';
+import Refresh from 'assets/browser/icon_refresh.svg';
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 type Props = {
   canGoBack: boolean;
@@ -12,6 +15,7 @@ type Props = {
   manageTabs: () => void;
   height: number;
   addTab: () => void;
+  tabs: number;
 };
 const Footer = ({
   canGoBack,
@@ -22,6 +26,7 @@ const Footer = ({
   addTab,
   manageTabs,
   height,
+  tabs,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(height, insets);
@@ -29,27 +34,23 @@ const Footer = ({
   return (
     <View style={styles.footer}>
       <TouchableOpacity onPress={goBack}>
-        <Icon
-          name="keyboard-arrow-left"
-          style={[styles.icon, !canGoBack && styles.disabled]}
-        />
+        <LeftArrow fill={canGoBack ? '#838383' : '#555'} />
       </TouchableOpacity>
       <TouchableOpacity onPress={goForward}>
-        <Icon
-          name="keyboard-arrow-right"
-          style={[styles.icon, !canGoForward && styles.disabled]}
-        />
+        <RightArrow fill={canGoForward ? '#838383' : '#555'} />
       </TouchableOpacity>
 
       <TouchableOpacity onPress={reload}>
-        <Icon name="refresh" style={styles.icon} />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={manageTabs}>
-        <Icon name="tab" style={styles.icon} />
+        <Refresh />
       </TouchableOpacity>
 
       <TouchableOpacity onPress={addTab}>
-        <Icon name="add" style={styles.icon} />
+        <Add />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={manageTabs}>
+        <View style={styles.manage}>
+          <Text style={styles.text}>{tabs}</Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -67,6 +68,18 @@ const getStyles = (height: number, insets: EdgeInsets) =>
       flexDirection: 'row',
       justifyContent: 'space-around',
       alignItems: 'center',
+    },
+    manage: {
+      borderColor: '#838383',
+      borderWidth: 3,
+      borderRadius: 5,
+      width: 27,
+      height: 27,
+    },
+    text: {
+      flex: 2,
+      textAlign: 'center',
+      color: '#838383',
     },
   });
 

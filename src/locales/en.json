@@ -306,6 +306,14 @@
         "history": " HISTORY",
         "favorites": "FAVORITES"
       },
+      "categories": {
+        "finance": "Finance",
+        "social": "Social",
+        "nft": "NFT",
+        "gaming": "Gaming",
+        "video": "Video",
+        "tool": "Tool"
+      },
       "nothing": "Nothing to show."
     }
   },

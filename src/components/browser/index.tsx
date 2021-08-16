@@ -140,6 +140,7 @@ const Browser = ({
           preferences={preferences}
           favorites={favorites}
           addTab={onAddTab}
+          tabsNumber={browser.tabs.length}
         />
       ))}
       <UrlModal

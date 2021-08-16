@@ -10,6 +10,7 @@ type Props = {
   showSideButtons: boolean;
   onQuitManagement: () => void;
 };
+
 export default ({
   onCloseAllTabs,
   onAddTab,
