@@ -70,7 +70,7 @@ export default ({updateTabUrl}: Props) => {
           {BrowserConfig.HomeTab.dApps
             .filter((e) => e.categories.includes(category))
             .map((e) => (
-              <DAppCard key={e.name} dApp={e} />
+              <DAppCard key={e.name} dApp={e} updateTabUrl={updateTabUrl} />
             ))}
           {BrowserConfig.HomeTab.dApps.filter((e) =>
             e.categories.includes(category),

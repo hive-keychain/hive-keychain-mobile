@@ -7,21 +7,27 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import {store} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {DApp} from 'utils/config';
 
 type Props = {
   dApp: DApp;
+  updateTabUrl: (link: string) => void;
 };
 
-const DAppCard = ({dApp}: Props) => {
+const DAppCard = ({dApp, updateTabUrl}: Props) => {
   const styles = getStyles(useWindowDimensions());
   console.log(dApp);
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
-        console.log(dApp.url);
+        let url = dApp.url;
+        if (dApp.appendUsername) {
+          url += store.getState().activeAccount.name;
+        }
+        updateTabUrl(url);
       }}>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={{uri: dApp.icon}} />
