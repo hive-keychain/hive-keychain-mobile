@@ -33,7 +33,7 @@ export const BrowserConfig = {
         name: 'Splinterlands',
         description: 'Collect, Trade, Battle!',
         icon: 'https://images.hive.blog/u/splinterlands/avatar',
-        url: 'https://splinterlands.io',
+        url: 'https://m.splinterlands.io',
         categories: ['gaming', 'nft'],
       },
       {

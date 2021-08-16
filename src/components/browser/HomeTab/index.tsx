@@ -1,7 +1,7 @@
 import {Page} from 'actions/interfaces';
 import KeychainLogo from 'components/ui/KeychainLogo';
 import ScreenToggle from 'components/ui/ScreenToggle';
-import React from 'react';
+import React, {MutableRefObject} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {translate} from 'utils/localize';
 import Explore from './Explore';
@@ -12,12 +12,13 @@ type Props = {
   history: Page[];
   favorites: Page[];
   updateTabUrl: (link: string) => void;
+  homeRef: MutableRefObject<View>;
 };
-const NewTab = ({history, favorites, updateTabUrl}: Props) => {
+const NewTab = ({history, favorites, updateTabUrl, homeRef}: Props) => {
   const styles = getStyles(useWindowDimensions().width);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} ref={homeRef} collapsable={false}>
       <View style={styles.titleContainer}>
         <KeychainLogo width={45} />
         <Text style={styles.title}>

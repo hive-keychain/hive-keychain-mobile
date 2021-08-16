@@ -16,6 +16,7 @@ export default ({history, updateTabUrl}: Props) => {
         [...history].reverse().map((h) => (
           <HistoryItem
             data={h}
+            key={h.url}
             onSubmit={(e) => {
               updateTabUrl(e);
             }}

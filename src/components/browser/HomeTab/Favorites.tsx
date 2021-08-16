@@ -16,6 +16,7 @@ export default ({favorites, updateTabUrl}: Props) => {
         favorites.map((h) => (
           <HistoryItem
             data={h}
+            key={h.url}
             onSubmit={(e) => {
               updateTabUrl(e);
             }}

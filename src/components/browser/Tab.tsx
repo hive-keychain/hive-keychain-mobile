@@ -41,7 +41,10 @@ import RequestModalContent from './RequestModalContent';
 type Props = {
   data: Tab;
   active: boolean;
-  manageTabs: (tab: Tab, webview: MutableRefObject<WebView>) => void;
+  manageTabs: (
+    tab: Tab,
+    webview: MutableRefObject<WebView> | MutableRefObject<View>,
+  ) => void;
   isManagingTab: boolean;
   accounts: Account[];
   updateTab: (id: number, data: TabFields) => ActionPayload<BrowserPayload>;
@@ -69,7 +72,7 @@ export default ({
   tabsNumber,
 }: Props) => {
   const tabRef: MutableRefObject<WebView> = useRef(null);
-
+  const homeRef: MutableRefObject<View> = useRef(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -231,6 +234,7 @@ export default ({
             history={history}
             favorites={favorites}
             updateTabUrl={updateTabUrl}
+            homeRef={homeRef}
           />
         ) : null}
         <View
@@ -239,7 +243,9 @@ export default ({
           }>
           <WebView
             ref={tabRef}
-            source={{uri: url}}
+            source={{
+              uri: url === BrowserConfig.HOMEPAGE_URL ? null : url,
+            }}
             sharedCookiesEnabled
             injectedJavaScriptBeforeContentLoaded={hive_keychain}
             onMessage={onMessage}
@@ -261,7 +267,11 @@ export default ({
           reload={reload}
           addTab={addTab}
           manageTabs={() => {
-            manageTabs({url, id, icon}, tabRef);
+            console.log(homeRef, tabRef);
+            manageTabs(
+              {url, id, icon},
+              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabRef,
+            );
           }}
           height={FOOTER_HEIGHT}
           tabs={tabsNumber}

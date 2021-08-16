@@ -53,7 +53,7 @@ const Browser = ({
 
   const manageTabs = (
     {url, icon, id}: TabType,
-    view: MutableRefObject<WebView>,
+    view: MutableRefObject<WebView> | MutableRefObject<View>,
   ) => {
     captureRef(view, {
       format: 'jpg',
