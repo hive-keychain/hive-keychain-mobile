@@ -4,9 +4,9 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import {Dimensions as Dim} from 'utils/common.types';
 
@@ -36,26 +36,24 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
       <KeyboardAvoidingView
         style={styles.fullHeight}
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            this.props.outsideClick();
-          }}>
-          <View style={styles.mainContainer}>
-            <TouchableWithoutFeedback>
-              <View style={styles.modalWrapper}>
-                <View style={styles.modalContainer}>
-                  <LinearGradient
-                    start={{x: 0, y: 0}}
-                    end={{x: 0, y: 1}}
-                    colors={['white', '#B9C9D6']}
-                    style={styles.gradient}>
-                    {this.props.children}
-                  </LinearGradient>
-                </View>
-              </View>
-            </TouchableWithoutFeedback>
+        <View style={styles.mainContainer}>
+          <TouchableWithoutFeedback
+            style={{height: '100%'}}
+            onPress={() => {
+              this.props.outsideClick();
+            }}></TouchableWithoutFeedback>
+          <View style={styles.modalWrapper}>
+            <View style={styles.modalContainer}>
+              <LinearGradient
+                start={{x: 0, y: 0}}
+                end={{x: 0, y: 1}}
+                colors={['white', '#B9C9D6']}
+                style={styles.gradient}>
+                {this.props.children}
+              </LinearGradient>
+            </View>
           </View>
-        </TouchableWithoutFeedback>
+        </View>
       </KeyboardAvoidingView>
     );
   }
