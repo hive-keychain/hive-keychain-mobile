@@ -6,7 +6,6 @@ const rpcTransformer = createTransform(
     return inboundState;
   },
   (outboundState: Settings, key): Settings => {
-    // convert mySet back to a Set.
     if (key === 'settings' && typeof outboundState.rpc === 'string') {
       return {...outboundState, rpc: {uri: outboundState.rpc, testnet: false}};
     }
