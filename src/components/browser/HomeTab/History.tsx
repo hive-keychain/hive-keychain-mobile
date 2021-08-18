@@ -1,6 +1,6 @@
 import {Page} from 'actions/interfaces';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {translate} from 'utils/localize';
 import HistoryItem from '../urlModal/HistoryItem';
 
@@ -13,15 +13,19 @@ export default ({history, updateTabUrl}: Props) => {
   return (
     <View style={styles.container}>
       {history.length ? (
-        [...history].reverse().map((h) => (
-          <HistoryItem
-            data={h}
-            key={h.url}
-            onSubmit={(e) => {
-              updateTabUrl(e);
-            }}
-          />
-        ))
+        <FlatList
+          data={[...history].reverse()}
+          keyExtractor={(item) => item.url}
+          renderItem={({item}) => (
+            <HistoryItem
+              data={item}
+              key={item.url}
+              onSubmit={(e) => {
+                updateTabUrl(e);
+              }}
+            />
+          )}
+        />
       ) : (
         <Text style={styles.text}>{translate('browser.home.nothing')}</Text>
       )}
