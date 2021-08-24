@@ -42,19 +42,25 @@ const getStyles = ({width}: Dimensions) => {
   console.log(width);
   return StyleSheet.create({
     container: {
-      width: 0.29 * width,
+      width: 0.45 * width,
       height: 0.55 * width,
       backgroundColor: 'white',
       borderRadius: 10,
       paddingHorizontal: 10,
       marginBottom: 20,
     },
-    imageContainer: {width: '100%', height: 0.29 * width, paddingVertical: 10},
-    image: {width: '100%', height: '100%', marginBottom: 20},
+    imageContainer: {
+      alignSelf: 'center',
+      width: '60%',
+      height: 0.45 * 0.65 * width,
+      paddingVertical: 10,
+    },
+    image: {width: '100%', height: '100%', marginBottom: 20, borderRadius: 10},
     name: {
       fontSize: 16,
       textAlign: 'center',
       marginBottom: 5,
+      marginTop: 10,
     },
     desc: {fontSize: 12, textAlign: 'center'},
   });
