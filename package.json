@@ -7,7 +7,7 @@
     "android-bundle": "rm -f android/app/build/outputs/bundle/release/app-release.aab && cd android && ./gradlew bundleRelease && cd ..",
     "android-release": "react-native run-android --variant=release",
     "android-clean": "cd android && ./gradlew clean && cd ..",
-    "emulator_input": "adb shell input text",
+    "ei": "adb shell input text",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
