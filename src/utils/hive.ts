@@ -14,6 +14,7 @@ import {
   RecurrentTransferOperation,
   RemoveProposalOperation,
   TransferOperation,
+  TransferToVestingOperation,
   UpdateProposalVotesOperation,
   VoteOperation,
 } from '@hiveio/dhive';
@@ -44,7 +45,6 @@ const getDefault: () => Promise<string> = async () => {
     return DEFAULT_RPC;
   }
 };
-
 export const setRpc = async (rpcObj: Rpc) => {
   let rpc = rpcObj.uri;
   testnet = rpcObj.testnet || false;
@@ -119,7 +119,10 @@ export const sendToken = async (key: string, username: string, obj: object) => {
   return result;
 };
 
-export const powerUp = async (key: string, obj: object) => {
+export const powerUp = async (
+  key: string,
+  obj: TransferToVestingOperation[1],
+) => {
   return await broadcast(key, [['transfer_to_vesting', obj]]);
 };
 

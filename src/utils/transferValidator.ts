@@ -1,6 +1,5 @@
 import api from 'api/keychain';
 import {translate} from 'utils/localize';
-
 const getExchanges = () => [
   {account: 'bittrex', tokens: ['HIVE', 'HBD']},
   {account: 'deepcrypto8', tokens: ['HIVE']},
