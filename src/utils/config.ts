@@ -83,12 +83,20 @@ export const BrowserConfig = {
         categories: ['finance'],
       },
       {
-        name: 'LeoFinance',
-        description: 'Crypto & Finance Blogging Platform',
-        icon: 'https://images.hive.blog/u/steem.leo/avatar',
-        url: 'https://leofinance.io/',
-        categories: ['social', 'finance'],
+        name: 'Tribaldex',
+        description: 'Create Tokens & Smart Contracts on Hive.',
+        icon:
+          'https://files.peakd.com/file/peakd-hive/keychain/48Z7YEkS64Tj1TE4cKoDNQFwWYXoUPthPp8anZLgLM3kEMS5VkKaB8LuNKzVBmV6u6.png',
+        url: 'https://tribaldex.com/',
+        categories: ['finance'],
       },
+      // {
+      //   name: 'LeoFinance',
+      //   description: 'Crypto & Finance Blogging Platform',
+      //   icon: 'https://images.hive.blog/u/steem.leo/avatar',
+      //   url: 'https://leofinance.io/',
+      //   categories: ['social', 'finance'],
+      // }, //Dont support keychain login for now
       {
         name: 'NFT Showroom',
         description: 'Digital Art Marketplace',
@@ -132,6 +140,14 @@ export const BrowserConfig = {
         icon: 'https://images.hive.blog/u/sportstalksocial/avatar',
         url: 'https://www.sportstalksocial.com/',
         categories: ['social'],
+      },
+      {
+        name: 'Peakmonsters',
+        description: 'Fast / Easy / Informative tools for Splinterlands',
+        icon:
+          'https://peakmonsters.com/static/favicons/favicon-196x196.png?v=2',
+        url: 'https://peakmonsters.com/',
+        categories: ['gaming', 'tool'],
       },
     ],
   },
