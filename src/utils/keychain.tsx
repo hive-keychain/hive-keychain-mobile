@@ -21,19 +21,33 @@ export const validateAuthority = (
   req: KeychainRequest,
 ) => {
   const {type, username} = req;
-  if (type === KeychainRequestTypes.addAccount) return true;
+  if (type === KeychainRequestTypes.addAccount) return {valid: true};
   const wifType = getRequiredWifType(req);
   if (username) {
     const account = accounts.find((e) => e.name === username);
-    if (!account || !account.keys[wifType]) {
-      return false;
+    if (!account) {
+      return {
+        valid: false,
+        error: translate('request.error.no_account', {account: username}),
+      };
+    } else if (!account.keys[wifType]) {
+      return {
+        valid: false,
+        error: translate('request.error.no_auth', {
+          account: username,
+          auth: type,
+        }),
+      };
     }
   } else if (KeychainConfig.NO_USERNAME_TYPES.includes(type)) {
     if (!accounts.filter((e) => !!e.keys[wifType]).length) {
-      return false;
+      return {
+        valid: false,
+        error: translate('request.error.no_active_auth'),
+      };
     }
   }
-  return true;
+  return {valid: true};
 };
 
 export const getValidAuthorityAccounts = (

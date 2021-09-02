@@ -12,7 +12,7 @@ import Requests from './requestOperations';
 
 type Props = {
   accounts: Account[];
-  onForceCloseModal: () => void;
+  onForceCloseModal?: () => void;
   sendError: (obj: RequestError) => void;
   sendResponse: (obj: RequestSuccess) => void;
   request: KeychainRequest;

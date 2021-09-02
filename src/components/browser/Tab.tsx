@@ -37,6 +37,7 @@ import Footer from './Footer';
 import HomeTab from './HomeTab';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
+import RequestErr from './requestOperations/components/RequestError';
 
 type Props = {
   data: Tab;
@@ -142,7 +143,8 @@ export default ({
         break;
       case 'swRequest_hive':
         if (validateRequest(data)) {
-          if (validateAuthority(accounts, data)) {
+          const validateAuth = validateAuthority(accounts, data);
+          if (validateAuth.valid) {
             showOperationRequestModal(request_id, data);
           } else {
             sendError(tabRef, {
@@ -150,6 +152,17 @@ export default ({
               message: 'Request was canceled by the user.',
               data,
               request_id,
+            });
+            navigate('ModalScreen', {
+              name: `Operation_${data.type}`,
+              modalContent: (
+                <RequestErr
+                  onClose={() => {
+                    navigationGoBack();
+                  }}
+                  error={validateAuth.error}
+                />
+              ),
             });
           }
         } else {
