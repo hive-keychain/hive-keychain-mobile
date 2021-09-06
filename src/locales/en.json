@@ -41,6 +41,10 @@
     "no_transaction": "No recent transaction.",
     "add_memo": "Please add your memo key to decrypt this message.",
     "add_active": "Please add your active key to perform this operation.",
+    "claim": {
+      "success": "Successfully claimed {{rewards}}!",
+      "error_posting": "Please add your posting key to be able to claim rewards!"
+    },
     "operations": {
       "history": "History",
       "transfer": {

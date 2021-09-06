@@ -2,12 +2,18 @@ import {Settings} from 'actions/interfaces';
 import createTransform from 'redux-persist/es/createTransform';
 
 const rpcTransformer = createTransform(
-  (inboundState: Settings): Settings => {
+  (inboundState) => {
     return inboundState;
   },
-  (outboundState: Settings, key): Settings => {
-    if (key === 'settings' && typeof outboundState.rpc === 'string') {
-      return {...outboundState, rpc: {uri: outboundState.rpc, testnet: false}};
+  (outboundState, key) => {
+    if (
+      key === 'settings' &&
+      typeof (outboundState as Settings).rpc === 'string'
+    ) {
+      return {
+        ...(outboundState as Settings),
+        rpc: {uri: (outboundState as Settings).rpc, testnet: false},
+      };
     }
 
     return outboundState;

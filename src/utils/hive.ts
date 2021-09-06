@@ -3,6 +3,7 @@ import {
   AccountUpdateOperation,
   AccountWitnessProxyOperation,
   AccountWitnessVoteOperation,
+  ClaimRewardBalanceOperation,
   Client,
   CollateralizedConvertOperation,
   CommentOptionsOperation,
@@ -172,7 +173,6 @@ export const createClaimedAccount = async (
 ) => {
   return await broadcast(key, [['create_claimed_account', obj]]);
 };
-
 export const post = async (
   key: string,
   {
@@ -398,6 +398,13 @@ export const createProposal = async (
   obj: CreateProposalOperation[1],
 ) => {
   return await broadcast(key, [['create_proposal', obj]]);
+};
+
+export const claimRewards = async (
+  key: string,
+  obj: ClaimRewardBalanceOperation[1],
+) => {
+  return await broadcast(key, [['claim_reward_balance', obj]]);
 };
 
 export const removeProposal = async (
