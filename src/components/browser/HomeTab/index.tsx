@@ -1,4 +1,4 @@
-import {Page} from 'actions/interfaces';
+import {Account, Page} from 'actions/interfaces';
 import KeychainLogo from 'components/ui/KeychainLogo';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import React, {MutableRefObject} from 'react';
@@ -13,8 +13,15 @@ type Props = {
   favorites: Page[];
   updateTabUrl: (link: string) => void;
   homeRef: MutableRefObject<View>;
+  accounts: Account[];
 };
-const NewTab = ({history, favorites, updateTabUrl, homeRef}: Props) => {
+const NewTab = ({
+  history,
+  favorites,
+  updateTabUrl,
+  homeRef,
+  accounts,
+}: Props) => {
   const styles = getStyles(useWindowDimensions().width);
 
   return (
@@ -32,7 +39,7 @@ const NewTab = ({history, favorites, updateTabUrl, homeRef}: Props) => {
           translate('browser.home.menu.favorites'),
         ]}
         components={[
-          <Explore updateTabUrl={updateTabUrl} />,
+          <Explore updateTabUrl={updateTabUrl} accounts={accounts} />,
           <History history={history} updateTabUrl={updateTabUrl} />,
           <Favorites favorites={favorites} updateTabUrl={updateTabUrl} />,
         ]}

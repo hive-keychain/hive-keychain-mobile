@@ -248,6 +248,7 @@ export default ({
             favorites={favorites}
             updateTabUrl={updateTabUrl}
             homeRef={homeRef}
+            accounts={accounts}
           />
         ) : null}
         <View

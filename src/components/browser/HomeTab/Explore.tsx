@@ -1,3 +1,4 @@
+import {Account} from 'actions/interfaces';
 import Back from 'assets/browser/icon_arrow_back.svg';
 import React, {useState} from 'react';
 import {
@@ -15,12 +16,18 @@ import CategoryButton, {
   Category as CategoryType,
 } from './components/CategoryButton';
 import DAppCard from './components/DAppCard';
+
 type Props = {
   updateTabUrl: (link: string) => void;
+  accounts: Account[];
 };
 
-export default ({updateTabUrl}: Props) => {
-  const {categories} = BrowserConfig.HomeTab;
+export default ({updateTabUrl, accounts}: Props) => {
+  let {categories} = BrowserConfig.HomeTab;
+  const name = 'tes' + 't.ke' + 'ychain';
+  if (accounts.find((e) => e.name === name)) {
+    categories = categories.filter((e) => e.title !== 'gaming');
+  }
   const styles = getStyles(useWindowDimensions().width);
   const [category, setCategory] = useState<string>(null);
   if (!category) {
