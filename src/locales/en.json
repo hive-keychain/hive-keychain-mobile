@@ -31,7 +31,8 @@
     "encrypted": "encrypted",
     "vote": "Vote",
     "unvote": "Unvote",
-    "none": "None"
+    "none": "None",
+    "error": "Error: Something went wrong : {{msg}}"
   },
   "wallet": {
     "rc": "Resources:",

@@ -57,7 +57,10 @@ const ClaimRewards = ({active, props, loadAccount}: PropsFromRedux) => {
               loadAccount(name);
             }
           } catch (e) {
-            console.log('error', e);
+            SimpleToast.show(
+              translate('common.error', {msg: e}),
+              SimpleToast.LONG,
+            );
           }
         }}>
         <ClaimIcon width={25} height={25} />

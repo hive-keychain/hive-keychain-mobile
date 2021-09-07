@@ -39,6 +39,7 @@ const DEFAULT_CHAIN_ID =
   'beeab0de00000000000000000000000000000000000000000000000000000000';
 let client = new Client(DEFAULT_RPC);
 let testnet = false;
+
 const getDefault: () => Promise<string> = async () => {
   try {
     return (await api.get('/hive/rpc')).data.rpc;
@@ -46,17 +47,20 @@ const getDefault: () => Promise<string> = async () => {
     return DEFAULT_RPC;
   }
 };
-export const setRpc = async (rpcObj: Rpc) => {
-  let rpc = rpcObj.uri;
-  testnet = rpcObj.testnet || false;
+
+export const setRpc = async (rpcObj: Rpc | string) => {
+  let rpc = typeof rpcObj === 'string' ? rpcObj : rpcObj.uri;
+  testnet = typeof rpcObj === 'string' ? false : rpcObj.testnet || false;
   console.log('Setting uri to ', rpc, rpcObj);
   if (rpc === 'DEFAULT') {
     rpc = await getDefault();
   }
   client = new Client(rpc);
-  client.chainId = Buffer.from(rpcObj.chainId || DEFAULT_CHAIN_ID);
   hiveTx.config.node = rpc;
-  hiveTx.config.chain_id = rpcObj.chainId || DEFAULT_CHAIN_ID;
+  if (typeof rpcObj !== 'string') {
+    client.chainId = Buffer.from(rpcObj.chainId || DEFAULT_CHAIN_ID);
+    hiveTx.config.chain_id = rpcObj.chainId || DEFAULT_CHAIN_ID;
+  }
 };
 
 export const isTestnet = () => testnet;

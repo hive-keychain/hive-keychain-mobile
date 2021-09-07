@@ -38,14 +38,15 @@ const AddAccountByKey = ({
   const onImportKeys = async () => {
     try {
       const keys = await validateNewAccount(account, key);
+
       if (keys) {
         const wallet = route.params ? route.params.wallet : false;
         addAccount(account, keys, wallet, false);
       } else {
-        Toast.show(translate('toast.error_add_account'));
+        Toast.show(translate('toast.error_add_account'), Toast.LONG);
       }
     } catch (e) {
-      Toast.show(e.message);
+      Toast.show(e.message || e, Toast.LONG);
     }
   };
   const {height} = useWindowDimensions();
