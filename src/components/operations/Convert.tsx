@@ -78,6 +78,12 @@ const Convert = ({
         <Separator />
         <Balance currency={currency} account={user.account} />
         <Separator />
+        <Text style={styles.disclaimer}>
+          {translate(
+            `wallet.operations.convert.disclaimer_${currency.toLowerCase()}`,
+          )}
+        </Text>
+        <Separator />
         <OperationInput
           placeholder={'0.000'}
           keyboardType="numeric"
@@ -124,11 +130,9 @@ const Convert = ({
             }}
             keyExtractor={(conversion) => conversion.id + ''}
           />
-        ) : (
-          <View style={styles.conversionContainer} />
-        )}
+        ) : null}
 
-        <Separator height={40} />
+        <Separator />
         <ActiveOperationButton
           title={translate('wallet.operations.convert.button')}
           onPress={onConvert}
@@ -158,7 +162,9 @@ const getDimensionedStyles = (color: string) =>
     },
     green: {color: '#005C09'},
     red: {color: '#A3112A'},
+    disclaimer: {textAlign: 'justify'},
   });
+
 const connector = connect(
   (state: RootState) => {
     return {
