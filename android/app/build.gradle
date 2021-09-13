@@ -141,6 +141,14 @@ android {
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
     }
+    flavorDimensions "version"
+    productFlavors {
+        dev {
+            dimension "version"
+            versionNameSuffix "-dev"
+            applicationIdSuffix ".dev"
+        }
+    }
     splits {
         abi {
             reset()
