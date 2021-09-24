@@ -3,8 +3,8 @@
   "version": "1.5.2",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "android-bundle": "rm -f android/app/build/outputs/bundle/release/app-release.aab && cd android && ./gradlew bundleRelease && cd ..",
+    "android": "react-native run-android --variant devDebug",
+    "android-bundle": "rm -rf android/app/build/outputs/bundle/* && cd android && ./gradlew bundleRelease && cd ..",
     "android-release": "react-native run-android --variant=release",
     "android-clean": "cd android && ./gradlew clean && cd ..",
     "ei": "adb shell input text",
