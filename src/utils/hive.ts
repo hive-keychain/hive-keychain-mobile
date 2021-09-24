@@ -422,14 +422,12 @@ export const broadcast = async (key: string, arr: Operation[]) => {
   const tx = new hiveTx.Transaction();
   await tx.create(arr);
   tx.sign(hiveTx.PrivateKey.from(key));
-  console.log(tx);
   try {
     const broadcast = await tx.broadcast();
     const {error, result} = broadcast as {
       error: Error;
       result: object;
     };
-    console.log(error, result);
     if (error) {
       console.log(error);
       throw error;

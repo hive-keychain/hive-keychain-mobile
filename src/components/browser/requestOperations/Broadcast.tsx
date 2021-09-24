@@ -71,6 +71,8 @@ const performBroadcastOperation = async (
     const name = op[0];
     const data = op[1];
     switch (name) {
+      case 'update_proposal_votes':
+        if (!data.extensions) data.extensions = [];
       case 'custom_json':
         if (!data.required_auths) data.required_auths = [];
         break;
