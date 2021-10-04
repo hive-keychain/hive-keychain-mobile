@@ -43,7 +43,6 @@ export const BrowserConfig = {
         url: 'https://peakd.com',
         categories: ['social'],
       },
-      ,
       {
         name: 'Hive.blog',
         description: 'Community interface for Hive',
@@ -51,7 +50,13 @@ export const BrowserConfig = {
         url: 'https://hive.blog',
         categories: ['social'],
       },
-      ,
+      {
+        name: 'Hive Market',
+        description: 'Internal Hive/HBD exchange',
+        icon: 'https://images.hive.blog/u/hiveio/avatar',
+        url: 'https://wallet.hive.blog/market',
+        categories: ['finance'],
+      },
       {
         name: 'CryptoBrewMaster',
         description: 'Brew - Study - Trade',
@@ -59,7 +64,6 @@ export const BrowserConfig = {
         url: 'http://cryptobrewmaster.io',
         categories: ['gaming'],
       },
-      ,
       {
         name: 'dCity',
         description: 'City simulation game based on hive-engine NFT tokens.',
@@ -67,7 +71,6 @@ export const BrowserConfig = {
         url: 'https://dcity.io',
         categories: ['gaming', 'nft'],
       },
-      ,
       {
         name: 'Rabona',
         description: 'Soccer Manager on the blockchain',
