@@ -8,6 +8,7 @@ const getWebviewInfo = `
 			if (rel === "icon" || rel === "shortcut icon")
 			{
 				favicon = nodeList[i]
+				break;
 			}
 		}
 		return favicon && favicon.href

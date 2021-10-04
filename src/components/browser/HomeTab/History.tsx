@@ -10,6 +10,7 @@ type Props = {
 };
 
 export default ({history, updateTabUrl}: Props) => {
+  console.log(history);
   return (
     <View style={styles.container}>
       {history.length ? (
