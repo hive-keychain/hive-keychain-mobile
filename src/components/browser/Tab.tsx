@@ -58,7 +58,7 @@ type Props = {
   tabsNumber: number;
 };
 export default ({
-  data: {url, id, icon},
+  data: {url, id, icon, name},
   active,
   updateTab,
   accounts,
@@ -72,6 +72,7 @@ export default ({
   addTab,
   tabsNumber,
 }: Props) => {
+  const tabData = {url, id, icon, name};
   const tabRef: MutableRefObject<WebView> = useRef(null);
   const homeRef: MutableRefObject<View> = useRef(null);
   const [canGoBack, setCanGoBack] = useState(false);
@@ -176,11 +177,18 @@ export default ({
         break;
       case 'WV_INFO':
         const {icon, name, url} = data as TabFields;
-        navigation.setParams({icon});
-        if (name && url && url !== 'chromewebdata') {
-          addToHistory({icon, name, url});
+        if (
+          icon !== tabData.icon ||
+          name !== tabData.name ||
+          url !== tabData.url
+        ) {
+          navigation.setParams({icon});
+          if (name && url && url !== 'chromewebdata') {
+            addToHistory({icon, name, url});
+          }
+          console.log('adding to history');
+          updateTab(id, {url, name, icon});
         }
-        updateTab(id, {url, name, icon});
         break;
     }
   };
