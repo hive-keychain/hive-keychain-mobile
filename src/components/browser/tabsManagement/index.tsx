@@ -110,7 +110,13 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   icon: {width: 16, height: 16},
-  name: {fontSize: 16, color: 'white', marginLeft: 10},
+  name: {
+    fontSize: 16,
+    color: 'white',
+    textAlign: 'center',
+    flex: 1,
+    marginHorizontal: 10,
+  },
   close: {color: 'white', fontWeight: 'bold', fontSize: 18},
   closeView: {
     minWidth: 30,
