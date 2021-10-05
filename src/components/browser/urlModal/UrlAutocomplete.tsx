@@ -32,14 +32,24 @@ export default ({input, onSubmit, history}: Props) => {
       setCandidates([]);
     }
   }, [input, history]);
-
-  return (
-    <View style={styles.wrapper}>
-      {candidates.map((e) => (
-        <HistoryItem onSubmit={onSubmit} data={e} />
-      ))}
-    </View>
-  );
+  if (candidates.length)
+    return (
+      <View style={styles.wrapper}>
+        {candidates.map((e) => (
+          <HistoryItem onSubmit={onSubmit} data={e} />
+        ))}
+      </View>
+    );
+  else {
+    let historyCopy = [...history].reverse().slice(0, 10);
+    return (
+      <View style={styles.wrapper}>
+        {historyCopy.map((e) => (
+          <HistoryItem onSubmit={onSubmit} data={e} />
+        ))}
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
