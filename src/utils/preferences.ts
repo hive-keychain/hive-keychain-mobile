@@ -66,7 +66,6 @@ export const removePreferenceFromState = (
     user.domains = user.domains.filter((d) => d.domain !== domain);
     if (!user.domains.length) {
       copyState = copyState.filter((u) => u.username !== username);
-      console.log(copyState);
     }
   }
   return copyState;

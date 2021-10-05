@@ -186,7 +186,6 @@ export default ({
           if (name && url && url !== 'chromewebdata') {
             addToHistory({icon, name, url});
           }
-          console.log('adding to history');
           updateTab(id, {url, name, icon});
         }
         break;
@@ -289,7 +288,6 @@ export default ({
           reload={reload}
           addTab={addTab}
           manageTabs={() => {
-            console.log(homeRef, tabRef);
             manageTabs(
               {url, id, icon},
               url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabRef,

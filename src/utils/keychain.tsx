@@ -21,7 +21,6 @@ export const validateAuthority = (
   req: KeychainRequest,
 ) => {
   const {type, username} = req;
-  console.log(req);
   if (type === KeychainRequestTypes.addAccount) return {valid: true};
   const wifType = getRequiredWifType(req);
   if (username) {

@@ -40,7 +40,6 @@ const BrowserHeader = ({
   const goHome = () => {
     updateTab(activeTab, {url: BrowserConfig.HOMEPAGE_URL});
   };
-  console.log(activeTab, tabs);
   if (
     tabs &&
     activeTab &&
