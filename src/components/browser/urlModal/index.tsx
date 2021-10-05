@@ -5,7 +5,6 @@ import ShareIcon from 'assets/browser/share.svg';
 import React, {MutableRefObject, useRef} from 'react';
 import {
   NativeSyntheticEvent,
-  Platform,
   Share,
   StyleSheet,
   Text,
@@ -92,7 +91,7 @@ const UrlModal = ({
           ref={urlInput}
           autoCapitalize="none"
           autoCorrect={false}
-          clearButtonMode="while-editing"
+          clearButtonMode="never"
           onChangeText={setUrl}
           onSubmitEditing={onSubmitUrlFromInput}
           placeholder={translate('browser.search')}
@@ -115,7 +114,7 @@ const UrlModal = ({
             <Copy width={16} height={16} />
           </TouchableOpacity>
         ) : null}
-        {Platform.OS === 'android' && url.length ? (
+        {url.length ? (
           <TouchableOpacity style={styles.option} onPress={() => setUrl('')}>
             <Text style={styles.eraseText}>X</Text>
           </TouchableOpacity>
@@ -138,19 +137,19 @@ const getStyles = (insets: EdgeInsets) =>
     urlModal: {
       height: '100%',
       width: '100%',
-      backgroundColor: 'white',
       margin: 0,
-      padding: insets.top,
+      paddingTop: insets.top,
       justifyContent: 'flex-start',
+      backgroundColor: 'white',
     },
     option: {alignSelf: 'center', marginLeft: 20},
     eraseText: {fontWeight: 'bold', fontSize: 16},
     urlModalContent: {
-      backgroundColor: 'white',
       flexDirection: 'row',
       borderColor: 'lightgrey',
       borderBottomWidth: 2,
       padding: 20,
+      margin: 0,
     },
     urlInput: {flex: 1},
     clearHistory: {
