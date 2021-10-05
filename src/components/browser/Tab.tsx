@@ -178,9 +178,10 @@ export default ({
       case 'WV_INFO':
         const {icon, name, url} = data as TabFields;
         if (
-          icon !== tabData.icon ||
-          name !== tabData.name ||
-          url !== tabData.url
+          tabData.url !== 'about:blank' &&
+          (icon !== tabData.icon ||
+            name !== tabData.name ||
+            url !== tabData.url)
         ) {
           navigation.setParams({icon});
           if (name && url && url !== 'chromewebdata') {
