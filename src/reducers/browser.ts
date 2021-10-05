@@ -12,6 +12,7 @@ import {
   UPDATE_BROWSER_TAB,
   UPDATE_MANAGEMENT,
 } from 'actions/types';
+import {translate} from 'utils/localize';
 
 const browserReducer = (
   state: Browser = {
@@ -61,7 +62,15 @@ const browserReducer = (
           ...state,
           activeTab: payload!.id,
           showManagement: false,
-          tabs: [...state.tabs, {url: payload!.url, id: payload!.id}],
+          tabs: [
+            ...state.tabs,
+            {
+              url: payload!.url,
+              id: payload!.id,
+              icon: 'https://hive-keychain.com/img/logo.png',
+              name: translate('browser.home.title'),
+            },
+          ],
         };
       } else return state;
     case CLOSE_BROWSER_TAB:

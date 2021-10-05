@@ -314,6 +314,7 @@
     "search": "Search or enter url",
     "history": {"clear": "Clear History"},
     "home": {
+      "title": "HOME",
       "menu": {
         "explore": "EXPLORE",
         "history": " HISTORY",
