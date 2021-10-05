@@ -1,6 +1,7 @@
 import {TabFields} from 'actions/interfaces';
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import Image from 'react-native-fast-image';
 
 type Props = {
   data: TabFields;

@@ -2,13 +2,13 @@ import {Tab} from 'actions/interfaces';
 import React from 'react';
 import {
   Dimensions,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import Image from 'react-native-fast-image';
 import TabsManagementBottomBar from './BottomBar';
 
 //TODO: put in config

@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native';
+import Image from 'react-native-fast-image';
 import {store} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {DApp} from 'utils/config';
