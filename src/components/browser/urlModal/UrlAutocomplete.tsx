@@ -19,7 +19,7 @@ export default ({input, onSubmit, history}: Props) => {
       location: 0,
       distance: 100,
       //maxPatternLength: 32,
-      minMatchCharLength: 1,
+      minMatchCharLength: 0,
       keys: [
         {name: 'name', weight: 0.5},
         {name: 'url', weight: 0.5},

@@ -1,8 +1,12 @@
+import Clipboard from '@react-native-community/clipboard';
 import {ActionPayload, BrowserPayload, Page} from 'actions/interfaces';
+import Copy from 'assets/browser/copy.svg';
+import ShareIcon from 'assets/browser/share.svg';
 import React, {MutableRefObject, useRef} from 'react';
 import {
   NativeSyntheticEvent,
   Platform,
+  Share,
   StyleSheet,
   Text,
   TextInput,
@@ -91,14 +95,28 @@ const UrlModal = ({
           clearButtonMode="while-editing"
           onChangeText={setUrl}
           onSubmitEditing={onSubmitUrlFromInput}
-          placeholder={'Please enter the url'}
+          placeholder={translate('browser.search')}
           returnKeyType="go"
           style={styles.urlInput}
           value={url}
           selectTextOnFocus
         />
-        {Platform.OS === 'android' ? (
-          <TouchableOpacity style={styles.erase} onPress={() => setUrl('')}>
+        {url.length ? (
+          <TouchableOpacity
+            style={styles.option}
+            onPress={() => Share.share({message: url})}>
+            <ShareIcon width={16} height={16} />
+          </TouchableOpacity>
+        ) : null}
+        {url.length ? (
+          <TouchableOpacity
+            style={styles.option}
+            onPress={() => Clipboard.setString(url)}>
+            <Copy width={16} height={16} />
+          </TouchableOpacity>
+        ) : null}
+        {Platform.OS === 'android' && url.length ? (
+          <TouchableOpacity style={styles.option} onPress={() => setUrl('')}>
             <Text style={styles.eraseText}>X</Text>
           </TouchableOpacity>
         ) : null}
@@ -125,8 +143,8 @@ const getStyles = (insets: EdgeInsets) =>
       padding: insets.top,
       justifyContent: 'flex-start',
     },
-    erase: {width: '10%', alignSelf: 'center'},
-    eraseText: {fontWeight: 'bold'},
+    option: {alignSelf: 'center', marginLeft: 20},
+    eraseText: {fontWeight: 'bold', fontSize: 16},
     urlModalContent: {
       backgroundColor: 'white',
       flexDirection: 'row',
@@ -134,7 +152,7 @@ const getStyles = (insets: EdgeInsets) =>
       borderBottomWidth: 2,
       padding: 20,
     },
-    urlInput: {width: '90%'},
+    urlInput: {flex: 1},
     clearHistory: {
       marginLeft: 20,
       marginTop: 20,
