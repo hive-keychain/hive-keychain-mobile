@@ -3,7 +3,7 @@
   "version": "1.5.3",
   "private": true,
   "scripts": {
-    "android": "react-native run-android --variant devDebug",
+    "android": "react-native run-android --variant devDebug --appIdSuffix dev",
     "android-bundle": "rm -rf android/app/build/outputs/bundle/* && cd android && ./gradlew bundleRelease && cd ..",
     "android-release": "react-native run-android --variant=release",
     "android-clean": "cd android && ./gradlew clean && cd ..",

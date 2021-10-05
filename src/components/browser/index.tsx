@@ -50,7 +50,11 @@ const Browser = ({
   useEffect(() => {
     setBrowserFocus(false);
   }, [setBrowserFocus]);
-
+  useEffect(() => {
+    if (!tabs.length) {
+      addTab('about:blank');
+    }
+  }, [tabs]);
   const manageTabs = (
     {url, icon, id}: TabType,
     view: MutableRefObject<WebView> | MutableRefObject<View>,
@@ -123,7 +127,7 @@ const Browser = ({
         onCloseAllTabs={onCloseAllTabs}
         onAddTab={onAddTab}
         onQuitManagement={onQuitManagement}
-        show={showManagement || !activeTab}
+        show={showManagement}
       />
       {tabs.map((tab) => (
         <Tab

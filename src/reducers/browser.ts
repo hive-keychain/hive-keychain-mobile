@@ -60,6 +60,7 @@ const browserReducer = (
         return {
           ...state,
           activeTab: payload!.id,
+          showManagement: false,
           tabs: [...state.tabs, {url: payload!.url, id: payload!.id}],
         };
       } else return state;
