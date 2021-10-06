@@ -13,6 +13,7 @@ import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import GestureRecognizer from 'react-native-swipe-gestures';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import {translate} from 'utils/localize';
@@ -23,6 +24,7 @@ type Props = BrowserNavigationProps & {
   startSearch: (b: boolean) => void;
   addToFavorites: (page: Page) => ActionPayload<BrowserPayload>;
   removeFromFavorites: (url: string) => ActionPayload<BrowserPayload>;
+  swipeToTab: (right: boolean) => void;
 };
 
 const BrowserHeader = ({
@@ -32,6 +34,7 @@ const BrowserHeader = ({
   startSearch,
   addToFavorites,
   removeFromFavorites,
+  swipeToTab,
 }: Props) => {
   const {HEADER_HEIGHT} = BrowserConfig;
   const insets = useSafeAreaInsets();
@@ -69,7 +72,14 @@ const BrowserHeader = ({
       );
     };
     return (
-      <View style={styles.container}>
+      <GestureRecognizer
+        style={styles.container}
+        onSwipeLeft={() => {
+          swipeToTab(false);
+        }}
+        onSwipeRight={() => {
+          swipeToTab(true);
+        }}>
         <View style={styles.topBar}>
           <TouchableOpacity style={styles.icon} onPress={goHome}>
             <Home width={17} height={16} color="#E5E5E5" />
@@ -95,7 +105,7 @@ const BrowserHeader = ({
           {renderFavoritesButton()}
         </View>
         <DrawerButton navigation={navigation} style={styles.drawerButton} />
-      </View>
+      </GestureRecognizer>
     );
   } else {
     return (

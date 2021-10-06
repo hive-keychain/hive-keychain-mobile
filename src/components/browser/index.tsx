@@ -108,6 +108,16 @@ const Browser = ({
     updateTab(activeTab, {...currentActiveTabData, url});
   };
 
+  const swipeToTab = (right: boolean) => {
+    if (right) {
+      const newTab = tabs[tabs.findIndex((t) => t.id === activeTab) + 1];
+      if (newTab) changeTab(newTab.id);
+    } else {
+      const newTab = tabs[tabs.findIndex((t) => t.id === activeTab) - 1];
+      if (newTab) changeTab(newTab.id);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Header
@@ -118,6 +128,7 @@ const Browser = ({
         startSearch={toggleVisibility}
         addToFavorites={addToFavorites}
         removeFromFavorites={removeFromFavorites}
+        swipeToTab={swipeToTab}
       />
       <TabsManagement
         tabs={tabs}
