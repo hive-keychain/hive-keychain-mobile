@@ -112,9 +112,11 @@ const Browser = ({
     if (right) {
       const newTab = tabs[tabs.findIndex((t) => t.id === activeTab) + 1];
       if (newTab) changeTab(newTab.id);
+      else changeTab(tabs[0].id);
     } else {
       const newTab = tabs[tabs.findIndex((t) => t.id === activeTab) - 1];
       if (newTab) changeTab(newTab.id);
+      else changeTab(tabs[tabs.length - 1].id);
     }
   };
 

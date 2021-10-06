@@ -39,6 +39,9 @@ export default ({
   return (
     <View style={[styles.container, show ? null : styles.hide]}>
       <ScrollView>
+        <Text style={styles.tip}>
+          Switch between tabs by swiping left or right on the url bar.
+        </Text>
         <View style={styles.subcontainer}>
           {tabs.map(({icon, image, name, id}) => (
             <TouchableOpacity
@@ -81,7 +84,14 @@ export default ({
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: 'lightgrey'},
+  tip: {
+    color: '#000',
+    fontSize: 14,
+    fontStyle: 'italic',
+    margin: 10,
+    textAlign: 'justify',
+  },
+  container: {flex: 1, backgroundColor: 'white'},
   subcontainer: {flex: 1, flexDirection: 'row', flexWrap: 'wrap'},
   hide: {display: 'none'},
   tabWrapper: {
