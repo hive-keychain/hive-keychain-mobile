@@ -74,6 +74,7 @@ export const signTxWithoutConfirmation = (
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
 ) => {
+  console.log('signing tx');
   processOperationWithoutConfirmation(
     async () => await performSignTxOperation(accounts, request),
     request,

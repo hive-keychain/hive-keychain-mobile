@@ -143,6 +143,8 @@ export default ({
         );
         break;
       case 'swRequest_hive':
+        console.log(data);
+        console.log(validateRequest(data));
         if (validateRequest(data)) {
           const validateAuth = validateAuthority(accounts, data);
           if (validateAuth.valid) {

@@ -5,6 +5,7 @@ import {decodeWithoutConfirmation} from 'components/browser/requestOperations/De
 import {encodeWithoutConfirmation} from 'components/browser/requestOperations/Encode';
 import {postWithoutConfirmation} from 'components/browser/requestOperations/Post';
 import {signBufferWithoutConfirmation} from 'components/browser/requestOperations/SignBuffer';
+import {signTxWithoutConfirmation} from 'components/browser/requestOperations/SignTx';
 import {voteWithoutConfirmation} from 'components/browser/requestOperations/Vote';
 import {
   KeychainRequest,
@@ -17,6 +18,7 @@ import {
   RequestId,
   RequestPost,
   RequestSignBuffer,
+  RequestSignTx,
   RequestSuccess,
   RequestVote,
 } from './keychain.types';
@@ -60,6 +62,10 @@ export const requestWithoutConfirmation = (
     case KeychainRequestTypes.encode:
       request as RequestEncode & RequestId;
       encodeWithoutConfirmation(accounts, request, sendResponse, sendError);
+      break;
+    case KeychainRequestTypes.signTx:
+      request as RequestSignTx & RequestId;
+      signTxWithoutConfirmation(accounts, request, sendResponse, sendError);
       break;
   }
 };
