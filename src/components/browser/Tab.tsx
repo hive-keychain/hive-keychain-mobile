@@ -177,6 +177,9 @@ export default ({
         break;
       case 'WV_INFO':
         const {icon, name, url} = data as TabFields;
+        if (urlTransformer(url).host !== urlTransformer(tabData.url).host) {
+          break;
+        }
         if (
           tabData.url !== 'about:blank' &&
           (icon !== tabData.icon ||
