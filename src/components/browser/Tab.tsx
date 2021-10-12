@@ -9,7 +9,7 @@ import {
 } from 'actions/interfaces';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useRef, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {KeyboardAvoidingView, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
 import {
@@ -252,57 +252,69 @@ export default ({
   return (
     <View
       style={[styles.container, !active || isManagingTab ? styles.hide : null]}>
-      <View style={styles.container}>
-        <ProgressBar progress={progress} />
+      <KeyboardAvoidingView
+        style={{flex: 1, backgroundColor: 'red'}}
+        behavior="padding">
+        <View style={styles.container}>
+          <ProgressBar progress={progress} />
 
-        {url === BrowserConfig.HOMEPAGE_URL ? (
-          <HomeTab
-            history={history}
-            favorites={favorites}
-            updateTabUrl={updateTabUrl}
-            homeRef={homeRef}
-            accounts={accounts}
-          />
-        ) : null}
-        <View
-          style={
-            url === BrowserConfig.HOMEPAGE_URL ? styles.hide : styles.container
-          }>
-          <WebView
-            ref={tabRef}
-            source={{
-              uri: url === BrowserConfig.HOMEPAGE_URL ? null : url,
-            }}
-            sharedCookiesEnabled
-            injectedJavaScriptBeforeContentLoaded={hive_keychain}
-            onMessage={onMessage}
-            bounces={false}
-            javaScriptEnabled
-            allowsInlineMediaPlayback
-            onLoadEnd={onLoadEnd}
-            onLoadStart={onLoadStart}
-            onLoadProgress={onLoadProgress}
-          />
+          {url === BrowserConfig.HOMEPAGE_URL ? (
+            <HomeTab
+              history={history}
+              favorites={favorites}
+              updateTabUrl={updateTabUrl}
+              homeRef={homeRef}
+              accounts={accounts}
+            />
+          ) : null}
+          <View
+            style={
+              url === BrowserConfig.HOMEPAGE_URL
+                ? styles.hide
+                : styles.container
+            }>
+            <WebView
+              ref={tabRef}
+              source={{
+                uri: url === BrowserConfig.HOMEPAGE_URL ? null : url,
+              }}
+              sharedCookiesEnabled
+              injectedJavaScriptBeforeContentLoaded={hive_keychain}
+              onMessage={onMessage}
+              bounces={false}
+              javaScriptEnabled
+              allowsInlineMediaPlayback
+              onLoadEnd={onLoadEnd}
+              onLoadStart={onLoadStart}
+              onLoadProgress={onLoadProgress}
+              onError={(error) => {
+                console.log('Error', error);
+              }}
+              onHttpError={(error) => {
+                console.log('HttpError', error);
+              }}
+            />
+          </View>
         </View>
-      </View>
-      {active && (
-        <Footer
-          canGoBack={canGoBack}
-          canGoForward={canGoForward}
-          goBack={goBack}
-          goForward={goForward}
-          reload={reload}
-          addTab={addTab}
-          manageTabs={() => {
-            manageTabs(
-              {url, id, icon},
-              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabRef,
-            );
-          }}
-          height={FOOTER_HEIGHT}
-          tabs={tabsNumber}
-        />
-      )}
+        {active && (
+          <Footer
+            canGoBack={canGoBack}
+            canGoForward={canGoForward}
+            goBack={goBack}
+            goForward={goForward}
+            reload={reload}
+            addTab={addTab}
+            manageTabs={() => {
+              manageTabs(
+                {url, id, icon},
+                url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabRef,
+              );
+            }}
+            height={FOOTER_HEIGHT}
+            tabs={tabsNumber}
+          />
+        )}
+      </KeyboardAvoidingView>
     </View>
   );
 };
