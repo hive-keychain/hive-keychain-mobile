@@ -252,9 +252,7 @@ export default ({
   return (
     <View
       style={[styles.container, !active || isManagingTab ? styles.hide : null]}>
-      <KeyboardAvoidingView
-        style={{flex: 1, backgroundColor: 'red'}}
-        behavior="padding">
+      <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
         <View style={styles.container}>
           <ProgressBar progress={progress} />
 
@@ -293,6 +291,13 @@ export default ({
               onHttpError={(error) => {
                 console.log('HttpError', error);
               }}
+              // renderError={(errorDomain, errorCode, errorDescription) => (
+              //   <View style={{flex: 1}}>
+              //     <Text>{errorDomain}</Text>
+              //     <Text>{errorCode}</Text>
+              //     <Text>{errorDescription}</Text>
+              //   </View>
+              // )}
             />
           </View>
         </View>

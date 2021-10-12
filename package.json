@@ -5,7 +5,7 @@
   "scripts": {
     "android": "react-native run-android --variant devDebug --appIdSuffix dev",
     "android-bundle": "rm -rf android/app/build/outputs/bundle/* && cd android && ./gradlew bundleRelease && cd ..",
-    "android-release": "react-native run-android --variant=release",
+    "android-release": "react-native run-android --variant=prodRelease",
     "android-clean": "cd android && ./gradlew clean && cd ..",
     "ei": "adb shell input text",
     "ios": "react-native run-ios",
