@@ -105,6 +105,7 @@ const getDimensionedStyles = (color: string, {width, height}: Dimensions) =>
       marginVertical: height / 30,
       alignContent: 'center',
       justifyContent: 'center',
+      minHeight: 40,
     },
     picker: {
       width: '80%',
