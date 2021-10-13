@@ -54,7 +54,7 @@ const Delegation = ({
         Toast.show(translate('toast.stop_delegation_success'), Toast.LONG);
       }
     } catch (e) {
-      Toast.show(`Error : ${e.message}`, Toast.LONG);
+      Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
     } finally {
       setLoading(false);
     }

@@ -16,7 +16,7 @@ type Props = {
   tokenLogo?: JSX.Element;
 };
 
-const TokenDisplay = ({
+const Balance = ({
   currency,
   account,
   pd,
@@ -97,4 +97,4 @@ const getDimensionedStyles = ({width, color}: Width & {color?: string}) =>
     },
   });
 
-export default TokenDisplay;
+export default Balance;

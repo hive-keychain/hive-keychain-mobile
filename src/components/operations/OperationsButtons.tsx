@@ -1,8 +1,10 @@
 import Conversion from 'assets/wallet/icon_convert.svg';
 import Delegate from 'assets/wallet/icon_delegate.svg';
+import Plus from 'assets/wallet/icon_deposit.svg';
 import HistoryIcon from 'assets/wallet/icon_history.svg';
 import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
+import Minus from 'assets/wallet/icon_withdraw.svg';
 import Convert from 'components/operations/Convert';
 import Delegation from 'components/operations/Delegation';
 import History, {HistoryProps} from 'components/operations/History';
@@ -12,6 +14,7 @@ import Transfer from 'components/operations/Transfer';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {navigate} from 'utils/navigation';
+import Savings, {SavingsOperations} from './Savings';
 
 type RoundButtonProps = {
   size: number;
@@ -128,6 +131,48 @@ export const SendConversion = ({currency}: {currency: string}) => {
       size={36}
       backgroundColor={currency === 'HBD' ? '#A3112A' : '#005C09'}
       content={<Conversion />}
+    />
+  );
+};
+
+export const SendWithdraw = ({currency}: {currency: string}) => {
+  return (
+    <RoundButton
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: 'Widthdraw',
+          modalContent: (
+            <Savings
+              operation={SavingsOperations.withdraw}
+              currency={currency}
+            />
+          ),
+        });
+      }}
+      size={36}
+      backgroundColor="#7E8C9A"
+      content={<Minus />}
+    />
+  );
+};
+
+export const SendDeposit = ({currency}: {currency: string}) => {
+  return (
+    <RoundButton
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: 'Deposit',
+          modalContent: (
+            <Savings
+              operation={SavingsOperations.deposit}
+              currency={currency}
+            />
+          ),
+        });
+      }}
+      size={36}
+      backgroundColor="#7E8C9A"
+      content={<Plus />}
     />
   );
 };

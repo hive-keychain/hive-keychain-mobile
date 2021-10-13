@@ -1,6 +1,7 @@
 import Hbd from 'assets/wallet/icon_hbd.svg';
 import Hive from 'assets/wallet/icon_hive.svg';
 import Hp from 'assets/wallet/icon_hp.svg';
+import Savings from 'assets/wallet/icon_savings.svg';
 import AccountValue from 'components/hive/AccountValue';
 import TokenDisplay from 'components/hive/TokenDisplay';
 import Transactions from 'components/hive/Transactions';
@@ -8,16 +9,19 @@ import {
   Send,
   SendConversion,
   SendDelegation,
+  SendDeposit,
   SendPowerDown,
   SendPowerUp,
+  SendWithdraw,
 } from 'components/operations/OperationsButtons';
 import Separator from 'components/ui/Separator';
 import React, {useEffect} from 'react';
-import {StyleSheet, useWindowDimensions, View} from 'react-native';
+import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {toHP} from 'utils/format';
+import {translate} from 'utils/localize';
 const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
   const {width} = useWindowDimensions();
   useEffect(() => {
@@ -77,6 +81,32 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
         buttons={[<SendDelegation key="del" />, <SendPowerDown key="pd" />]}
       />
       <Separator height={20} />
+      <TokenDisplay
+        color="#7E8C9A"
+        name={translate('common.savings').toUpperCase()}
+        currency="HIVE"
+        value={parseFloat(user.account.savings_balance as string)}
+        secondaryCurrency="HBD"
+        secondaryValue={parseFloat(user.account.savings_hbd_balance as string)}
+        logo={<Savings width={width / 15} />}
+        bottomLeft={
+          <Text>
+            <Text style={styles.apr}>HBD APR:</Text>
+            <Text style={styles.aprValue}>
+              {'   '}
+              {properties.globals && properties.globals.hbd_interest_rate
+                ? `${properties.globals.hbd_interest_rate / 100}%`
+                : ''}
+            </Text>
+          </Text>
+        }
+        price={bittrex.hbd}
+        buttons={[
+          <SendWithdraw key="savings_withdraw" currency="HBD" />,
+          <SendDeposit key="savings_deposit" currency="HBD" />,
+        ]}
+      />
+      <Separator height={20} />
       <Transactions user={user} />
     </View>
   );
@@ -84,6 +114,8 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
 
 const styles = StyleSheet.create({
   container: {width: '100%', flex: 1},
+  apr: {color: '#7E8C9A', fontSize: 14},
+  aprValue: {color: '#3BB26E', fontSize: 14},
 });
 
 const mapStateToProps = (state: RootState) => {

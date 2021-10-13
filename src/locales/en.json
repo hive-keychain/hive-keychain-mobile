@@ -32,7 +32,8 @@
     "vote": "Vote",
     "unvote": "Unvote",
     "none": "None",
-    "error": "Error: Something went wrong : {{msg}}"
+    "error": "Error: Something went wrong : {{msg}}",
+    "savings": "Savings"
   },
   "wallet": {
     "rc": "Resources:",
@@ -48,6 +49,14 @@
     },
     "operations": {
       "history": "History",
+      "savings": {
+        "deposit": "Deposit Funds",
+        "withdraw": "Withdraw Funds",
+        "disclaimer": "Note: Withdrawing funds from savings will take 3.5 days.",
+        "withdraw_button": "Withdraw",
+        "deposit_button": "Deposit",
+        "prompt": "Select a currency"
+      },
       "transfer": {
         "title": "Transfer funds",
         "memo": "MEMO (optional)",

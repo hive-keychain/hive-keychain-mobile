@@ -65,7 +65,7 @@ const PowerDown = ({currency = 'HP', user, loadAccount, properties}: Props) => {
         Toast.show(translate('toast.stop_powerdown_success'), Toast.LONG);
       }
     } catch (e) {
-      Toast.show(`Error : ${e.message}`, Toast.LONG);
+      Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
     } finally {
       setLoading(false);
     }

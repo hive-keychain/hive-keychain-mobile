@@ -19,12 +19,15 @@ type Props = {
   logo: JSX.Element;
   currency: string;
   value: number;
+  secondaryCurrency?: string;
+  secondaryValue?: number;
   color: string;
   price: Currency;
   incoming?: number;
   outgoing?: number;
   buttons: JSX.Element[];
   amountStyle?: StyleProp<TextStyle>;
+  bottomLeft?: JSX.Element;
 };
 
 const TokenDisplay = ({
@@ -38,6 +41,9 @@ const TokenDisplay = ({
   incoming,
   outgoing,
   amountStyle,
+  secondaryCurrency,
+  secondaryValue,
+  bottomLeft,
 }: Props) => {
   const styles = getDimensionedStyles({
     color,
@@ -56,14 +62,24 @@ const TokenDisplay = ({
           <View style={styles.logo}>{logo}</View>
           <Text style={styles.name}>{name}</Text>
         </View>
-        <Text style={amountStyle || styles.amount}>
-          {value ? formatBalance(value) : 0}
-          <Text style={styles.currency}>{` ${currency}`}</Text>
-        </Text>
+        <View>
+          <Text style={amountStyle || styles.amount}>
+            {value ? formatBalance(value) : 0}
+            <Text style={styles.currency}>{` ${currency}`}</Text>
+          </Text>
+          {secondaryValue ? (
+            <Text style={amountStyle || styles.amount}>
+              {value ? formatBalance(secondaryValue) : 0}
+              <Text style={styles.currency}>{` ${secondaryCurrency}`}</Text>
+            </Text>
+          ) : null}
+        </View>
       </View>
       {toggle && (
         <View style={[styles.row, styles.toggle]}>
-          {renderLeftBottom(styles, price, currency, incoming, outgoing)}
+          {bottomLeft
+            ? bottomLeft
+            : renderLeftBottom(styles, price, currency, incoming, outgoing)}
           <View style={[styles.row, styles.halfLine, styles.rowReverse]}>
             {buttons}
           </View>
@@ -146,6 +162,7 @@ const getDimensionedStyles = ({
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
+      alignSelf: 'flex-start',
     },
     logo: {justifyContent: 'center', alignItems: 'center'},
     name: {

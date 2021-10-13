@@ -6,8 +6,8 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
-  ViewStyle,
 } from 'react-native';
 
 type Props = {
@@ -16,7 +16,8 @@ type Props = {
   onSelected: (value: any) => void;
   prefix?: string;
   prompt: string;
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<TextStyle>;
+  dropdownIconColor?: string;
   labelCreator?: (obj: any) => string;
 };
 const CustomPicker = ({
@@ -27,6 +28,7 @@ const CustomPicker = ({
   prompt,
   style,
   labelCreator,
+  dropdownIconColor,
 }: Props) => {
   const styles = getDimensionedStyles();
   switch (Platform.OS) {
@@ -56,7 +58,7 @@ const CustomPicker = ({
           style={[styles.picker, style]}
           selectedValue={selectedValue}
           prompt={prompt}
-          dropdownIconColor="black"
+          dropdownIconColor={dropdownIconColor || 'black'}
           onValueChange={onSelected}>
           {list.map((item, i) => {
             return (
