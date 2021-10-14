@@ -14,7 +14,9 @@ import {
   Operation,
   RecurrentTransferOperation,
   RemoveProposalOperation,
+  TransferFromSavingsOperation,
   TransferOperation,
+  TransferToSavingsOperation,
   TransferToVestingOperation,
   UpdateProposalVotesOperation,
   VoteOperation,
@@ -150,6 +152,20 @@ export const collateralizedConvert = async (
   obj: CollateralizedConvertOperation[1],
 ) => {
   return await broadcast(key, [['collateralized_convert', obj]]);
+};
+
+export const depositToSavings = async (
+  key: string,
+  obj: TransferToSavingsOperation[1],
+) => {
+  return await broadcast(key, [['transfer_to_savings', obj]]);
+};
+
+export const withdrawFromSavings = async (
+  key: string,
+  obj: TransferFromSavingsOperation[1],
+) => {
+  return await broadcast(key, [['transfer_from_savings', obj]]);
 };
 
 export const vote = async (key: string, obj: VoteOperation[1]) => {

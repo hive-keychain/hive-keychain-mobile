@@ -19,6 +19,7 @@ type Props = {
   style?: StyleProp<TextStyle>;
   dropdownIconColor?: string;
   labelCreator?: (obj: any) => string;
+  iosTextStyle?: StyleProp<TextStyle>;
 };
 const CustomPicker = ({
   list,
@@ -29,6 +30,7 @@ const CustomPicker = ({
   style,
   labelCreator,
   dropdownIconColor,
+  iosTextStyle,
 }: Props) => {
   const styles = getDimensionedStyles();
   switch (Platform.OS) {
@@ -46,10 +48,12 @@ const CustomPicker = ({
               },
             );
           }}>
-          <Text style={styles.iosLabel}>{`${prefix ? prefix : ''}${
+          <Text style={[styles.iosLabel, iosTextStyle]}>{`${
+            prefix ? prefix : ''
+          }${
             labelCreator ? labelCreator(selectedValue) : selectedValue
           }`}</Text>
-          <Text>{'\u25BC'}</Text>
+          <Text style={iosTextStyle}>{'\u25BC'}</Text>
         </TouchableOpacity>
       );
     default:

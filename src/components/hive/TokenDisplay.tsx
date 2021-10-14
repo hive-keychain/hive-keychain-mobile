@@ -170,7 +170,7 @@ const getDimensionedStyles = ({
       fontSize: 15,
       color: '#7E8C9A',
     },
-    amount: {fontWeight: 'bold', fontSize: 17},
+    amount: {fontWeight: 'bold', fontSize: 17, textAlign: 'right'},
     currency: {color},
     row: {
       display: 'flex',

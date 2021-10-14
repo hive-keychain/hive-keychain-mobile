@@ -181,7 +181,9 @@
       "not_a_key": "This is not one of your private keys!",
       "copied": "The key was copied to the clipboard!"
     },
-    "error_add_account": "Something went wrong! Please verify your keys and your connection."
+    "error_add_account": "Something went wrong! Please verify your keys and your connection.",
+    "savings_deposit_success": "You succesfully deposited {{amount}} to your savings.",
+    "savings_withdraw_success": "You succesfully started a {{amount}} withdrawal from your savings. It will be credited to your account in 3.5 days."
   },
   "navigation": {
     "log_out": "LOG OUT",

@@ -5,6 +5,7 @@ import {
   getConversionRequests,
   getDelegatees,
   getDelegators,
+  getSavingsRequests,
 } from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {getBittrexPrices} from 'utils/price';
@@ -23,6 +24,7 @@ import {
   FETCH_DELEGATEES,
   FETCH_DELEGATORS,
   FETCH_PHISHING_ACCOUNTS,
+  FETCH_SAVINGS_REQUESTS,
   GET_BITTREX_PRICE,
   GLOBAL_PROPS,
   INIT_TRANSACTIONS,
@@ -170,7 +172,7 @@ const getAccountTransactions = async (
   } catch (e) {
     return getAccountTransactions(
       accountName,
-      e.jse_info.stack[0].data.sequence - 1,
+      (e as any).jse_info.stack[0].data.sequence - 1,
       memoKey,
     );
   }
@@ -219,5 +221,16 @@ export const fetchConversionRequests = (name: string): AppThunk => async (
   dispatch({
     type: FETCH_CONVERSION_REQUESTS,
     payload: conversions,
+  });
+};
+
+export const fetchSavingsRequests = (name: string): AppThunk => async (
+  dispatch,
+) => {
+  const savings = await getSavingsRequests(name);
+  console.log(savings);
+  dispatch({
+    type: FETCH_SAVINGS_REQUESTS,
+    payload: savings,
   });
 };

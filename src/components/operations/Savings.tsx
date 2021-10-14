@@ -16,6 +16,7 @@ import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
+import {depositToSavings, withdrawFromSavings} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
@@ -33,9 +34,40 @@ const Convert = ({user, loadAccount, currency: c, operation}: Props) => {
     Keyboard.dismiss();
     setLoading(true);
     try {
+      if (operation === SavingsOperations.deposit) {
+        await depositToSavings(user.keys.active, {
+          request_id: Date.now(),
+          from: user.name,
+          to: user.name,
+          amount: `${(+amount).toFixed(3)} ${currency}`,
+          memo: '',
+        });
+      } else {
+        await withdrawFromSavings(user.keys.active, {
+          request_id: Date.now(),
+          from: user.name,
+          to: user.name,
+          amount: `${(+amount).toFixed(3)} ${currency}`,
+          memo: '',
+        });
+      }
       loadAccount(user.account.name, true);
       goBack();
-      Toast.show(translate('toast.convert_success', {currency}), Toast.LONG);
+      if (operation === SavingsOperations.deposit) {
+        Toast.show(
+          translate('toast.savings_deposit_success', {
+            amount: `${(+amount).toFixed(3)} ${currency}`,
+          }),
+          Toast.LONG,
+        );
+      } else {
+        Toast.show(
+          translate('toast.savings_withdraw_success', {
+            amount: `${(+amount).toFixed(3)} ${currency}`,
+          }),
+          Toast.LONG,
+        );
+      }
     } catch (e) {
       Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
     } finally {
@@ -57,6 +89,7 @@ const Convert = ({user, loadAccount, currency: c, operation}: Props) => {
             prompt={translate('wallet.operations.savings.prompt')}
             style={styles.picker}
             dropdownIconColor="white"
+            iosTextStyle={styles.iosPickerText}
           />
         </View>
         {operation === SavingsOperations.deposit ? (
@@ -77,7 +110,6 @@ const Convert = ({user, loadAccount, currency: c, operation}: Props) => {
           value={amount}
           onChangeText={setAmount}
         />
-
         <Separator height={50} />
         <ActiveOperationButton
           title={translate(
@@ -87,6 +119,7 @@ const Convert = ({user, loadAccount, currency: c, operation}: Props) => {
           style={styles.button}
           isLoading={loading}
         />
+        <Separator />
       </>
     </Operation>
   );
@@ -105,13 +138,14 @@ const getDimensionedStyles = (color: string, {width, height}: Dimensions) =>
       marginVertical: height / 30,
       alignContent: 'center',
       justifyContent: 'center',
-      minHeight: 40,
+      minHeight: 50,
     },
     picker: {
       width: '80%',
       color: 'white',
       alignContent: 'center',
     },
+    iosPickerText: {color: 'white'},
   });
 
 export enum SavingsOperations {

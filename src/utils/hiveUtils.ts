@@ -145,6 +145,10 @@ export const getConversionRequests = async (name: string) => {
   );
 };
 
+export const getSavingsRequests = async (name: string) => {
+  return await getClient().database.call('get_savings_withdraw_to', [name]);
+};
+
 export const rpcList: Rpc[] = [
   {uri: 'DEFAULT', testnet: false},
   {uri: 'https://api.deathwing.me', testnet: false},
