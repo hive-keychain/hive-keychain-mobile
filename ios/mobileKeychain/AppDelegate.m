@@ -12,6 +12,7 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
+#import "Orientation.h" // <--- import 
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -26,6 +27,14 @@ static void InitializeFlipper(UIApplication *application) {
 
 @implementation AppDelegate
 
+ - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    while ([[UIDevice currentDevice] isGeneratingDeviceOrientationNotifications]) {
+        [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    }
+  
+    return [Orientation getOrientation];
+  }
+  
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [FIRApp configure];

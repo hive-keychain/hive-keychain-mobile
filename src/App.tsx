@@ -11,6 +11,7 @@ import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
 import React, {useEffect, useRef} from 'react';
+import Orientation from 'react-native-orientation';
 import {connect, ConnectedProps} from 'react-redux';
 import Modal from 'screens/Modal';
 import {RootState} from 'store';
@@ -31,7 +32,9 @@ const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
       clearLinkingListeners();
     };
   }, [addTabFromLinking]);
-
+  useEffect(() => {
+    Orientation.lockToPortrait();
+  }, []);
   useEffect(() => {
     setRpc(rpc as Rpc);
   }, [rpc]);

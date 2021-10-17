@@ -14,6 +14,7 @@ import {
 import Browser from 'components/browser';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React from 'react';
+import Orientation from 'react-native-orientation';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 
@@ -35,6 +36,24 @@ const BrowserScreen = ({
   showManagementScreen,
   preferences,
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('got to browser, unlock');
+      Orientation.unlockAllOrientations();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  React.useEffect(() => {
+    console.log('relock');
+    const unsubscribe = navigation.addListener('blur', () => {
+      Orientation.lockToPortrait();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <Browser
       accounts={accounts}
