@@ -26,7 +26,11 @@ const Transactions = ({
 
   const renderTransactions = () => {
     if (loading) {
-      return <Loader animating />;
+      return (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <Loader animating />
+        </View>
+      );
     } else {
       return transactions.length ? (
         <FlatList
