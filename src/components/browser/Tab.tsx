@@ -290,12 +290,12 @@ export default ({
               sharedCookiesEnabled
               injectedJavaScriptBeforeContentLoaded={hive_keychain}
               onMessage={onMessage}
-              bounces={false}
               javaScriptEnabled
               allowsInlineMediaPlayback
               onLoadEnd={onLoadEnd}
               onLoadStart={onLoadStart}
               onLoadProgress={onLoadProgress}
+              pullToRefreshEnabled
               onError={(error) => {
                 console.log('Error', error);
               }}

@@ -32,7 +32,7 @@ export default ({updateTabUrl, accounts}: Props) => {
   const [category, setCategory] = useState<string>(null);
   if (!category) {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         {categories.map((cat: CategoryType) => (
           <CategoryButton
             category={cat}
@@ -56,7 +56,7 @@ export default ({updateTabUrl, accounts}: Props) => {
             !
           </Text>
         </View>
-      </View>
+      </ScrollView>
     );
   } else {
     return (

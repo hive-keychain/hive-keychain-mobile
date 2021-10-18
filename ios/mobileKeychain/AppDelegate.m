@@ -28,13 +28,9 @@ static void InitializeFlipper(UIApplication *application) {
 @implementation AppDelegate
 
  - (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
-    while ([[UIDevice currentDevice] isGeneratingDeviceOrientationNotifications]) {
-        [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
-    }
-  
-    return [Orientation getOrientation];
-  }
-  
+  return [Orientation getOrientation];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   [FIRApp configure];
