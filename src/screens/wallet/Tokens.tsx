@@ -35,7 +35,11 @@ const Tokens = ({
 
   const renderContent = () => {
     if (userTokens.loading) {
-      return <Loader animating />;
+      return (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <Loader animating />
+        </View>
+      );
     } else if (userTokens.list.length) {
       return (
         <FlatList
