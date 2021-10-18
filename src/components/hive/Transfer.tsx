@@ -14,8 +14,9 @@ type Props = {
   user: ActiveAccount;
   transaction: Transaction | TokenTransaction;
   token?: boolean;
+  locale: string;
 };
-const Transfer = ({transaction, user, token = false}: Props) => {
+const Transfer = ({transaction, user, locale, token = false}: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
   const {timestamp, from, to, amount, memo} = transaction;
@@ -24,7 +25,7 @@ const Transfer = ({transaction, user, token = false}: Props) => {
   const color = direction === '+' ? '#3BB26E' : '#B9122F';
   const date = new Date(
     token ? (timestamp as number) * 1000 : timestamp,
-  ).toLocaleString([], {
+  ).toLocaleDateString([locale], {
     year: '2-digit',
     month: '2-digit',
     day: '2-digit',
