@@ -38,7 +38,6 @@ const BrowserScreen = ({
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      console.log('got to browser, unlock');
       Orientation.unlockAllOrientations();
     });
 
@@ -46,7 +45,6 @@ const BrowserScreen = ({
   }, [navigation]);
 
   React.useEffect(() => {
-    console.log('relock');
     const unsubscribe = navigation.addListener('blur', () => {
       Orientation.lockToPortrait();
     });

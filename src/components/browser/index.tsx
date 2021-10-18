@@ -2,6 +2,7 @@ import {Tab as TabType} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useState} from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
+import Orientation from 'react-native-orientation';
 import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
@@ -34,8 +35,11 @@ const Browser = ({
   const url = currentActiveTabData
     ? currentActiveTabData.url
     : BrowserConfig.HOMEPAGE_URL;
+
   const [isVisible, toggleVisibility] = useState(false);
   const [searchUrl, setSearchUrl] = useState(url);
+  const [orientation, setOrientation] = useState('PORTRAIT');
+
   useEffect(() => {
     setSearchUrl(url);
   }, [url]);
@@ -55,6 +59,17 @@ const Browser = ({
       addTab('about:blank');
     }
   }, [tabs]);
+
+  React.useEffect(() => {
+    const a = Orientation.addOrientationListener((orientation: string) => {
+      console.log(orientation);
+      setOrientation(orientation);
+    });
+    return () => {
+      Orientation.removeOrientationListener(a);
+    };
+  }, []);
+
   const manageTabs = (
     {url, icon, id}: TabType,
     view: MutableRefObject<WebView> | MutableRefObject<View>,
@@ -131,6 +146,7 @@ const Browser = ({
         addToFavorites={addToFavorites}
         removeFromFavorites={removeFromFavorites}
         swipeToTab={swipeToTab}
+        landscape={orientation.startsWith('LANDSCAPE')}
       />
       <TabsManagement
         tabs={tabs}
@@ -158,6 +174,7 @@ const Browser = ({
           favorites={favorites}
           addTab={onAddTab}
           tabsNumber={browser.tabs.length}
+          orientation={orientation}
         />
       ))}
       <UrlModal
@@ -174,7 +191,7 @@ const Browser = ({
 };
 
 const styles = StyleSheet.create({
-  container: {width: '100%', height: '100%'},
+  container: {flex: 1},
 });
 
 export default Browser;

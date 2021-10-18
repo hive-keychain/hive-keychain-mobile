@@ -56,7 +56,9 @@ type Props = {
   favorites: Page[];
   addTab: () => void;
   tabsNumber: number;
+  orientation: string;
 };
+
 export default ({
   data: {url, id, icon, name},
   active,
@@ -71,6 +73,7 @@ export default ({
   favorites,
   addTab,
   tabsNumber,
+  orientation,
 }: Props) => {
   const tabData = {url, id, icon, name};
   const tabRef: MutableRefObject<WebView> = useRef(null);
@@ -78,9 +81,10 @@ export default ({
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [layout, setLayout] = useState({width: null, height: null});
   const insets = useSafeAreaInsets();
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
-
+  const styles = getStyles(layout);
   const goBack = () => {
     if (!canGoBack) {
       return;
@@ -88,7 +92,7 @@ export default ({
     const {current} = tabRef;
     current && current.goBack();
   };
-
+  console.log(orientation);
   const goForward = () => {
     if (!canGoForward) {
       return;
@@ -252,8 +256,15 @@ export default ({
   return (
     <View
       style={[styles.container, !active || isManagingTab ? styles.hide : null]}>
-      <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
-        <View style={styles.container}>
+      <KeyboardAvoidingView style={{flexGrow: 1}} behavior="padding">
+        <View
+          style={styles.container}
+          onLayout={({nativeEvent}) => {
+            setLayout({
+              height: nativeEvent.layout.height,
+              width: nativeEvent.layout.width,
+            });
+          }}>
           <ProgressBar progress={progress} />
 
           {url === BrowserConfig.HOMEPAGE_URL ? (
@@ -269,7 +280,7 @@ export default ({
             style={
               url === BrowserConfig.HOMEPAGE_URL
                 ? styles.hide
-                : styles.container
+                : styles.wvcontainer
             }>
             <WebView
               ref={tabRef}
@@ -301,7 +312,7 @@ export default ({
             />
           </View>
         </View>
-        {active && (
+        {active && orientation === 'PORTRAIT' && (
           <Footer
             canGoBack={canGoBack}
             canGoForward={canGoForward}
@@ -324,7 +335,13 @@ export default ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {flex: 1},
-  hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
-});
+const getStyles = (layout: {width: number; height: number}) =>
+  StyleSheet.create({
+    container: {flex: 1, flexDirection: 'column'},
+    wvcontainer: {
+      flex: 1,
+      width: layout.width,
+      height: layout.height,
+    },
+    hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
+  });

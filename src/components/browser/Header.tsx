@@ -25,6 +25,7 @@ type Props = BrowserNavigationProps & {
   addToFavorites: (page: Page) => ActionPayload<BrowserPayload>;
   removeFromFavorites: (url: string) => ActionPayload<BrowserPayload>;
   swipeToTab: (right: boolean) => void;
+  landscape: boolean;
 };
 
 const BrowserHeader = ({
@@ -35,10 +36,11 @@ const BrowserHeader = ({
   addToFavorites,
   removeFromFavorites,
   swipeToTab,
+  landscape,
 }: Props) => {
   const {HEADER_HEIGHT} = BrowserConfig;
   const insets = useSafeAreaInsets();
-  const styles = getStyles(HEADER_HEIGHT, insets);
+  const styles = getStyles(HEADER_HEIGHT, insets, landscape);
 
   const goHome = () => {
     updateTab(activeTab, {url: BrowserConfig.HOMEPAGE_URL});
@@ -104,6 +106,7 @@ const BrowserHeader = ({
           </TouchableOpacity>
           {renderFavoritesButton()}
         </View>
+
         <DrawerButton navigation={navigation} style={styles.drawerButton} />
       </GestureRecognizer>
     );
@@ -117,7 +120,7 @@ const BrowserHeader = ({
   }
 };
 
-const getStyles = (height: number, insets: EdgeInsets) =>
+const getStyles = (height: number, insets: EdgeInsets, landscape: boolean) =>
   StyleSheet.create({
     container: {
       height: height + insets.top,
