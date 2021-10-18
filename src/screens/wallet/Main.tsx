@@ -6,6 +6,7 @@ import {
 } from 'actions/index';
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
+import Transactions from 'components/hive/Transactions';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
 import React, {useEffect} from 'react';
@@ -81,9 +82,9 @@ const Main = ({
         </View>
         <ScreenToggle
           style={styles.toggle}
-          menu={['Primary', 'Tokens']}
+          menu={['hive', 'history', 'tokens']}
           toUpperCase
-          components={[<Primary />, <Tokens />]}
+          components={[<Primary />, <Transactions user={user} />, <Tokens />]}
         />
       </>
     </WalletPage>

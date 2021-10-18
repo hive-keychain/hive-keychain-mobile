@@ -36,6 +36,7 @@
     "savings": "Savings"
   },
   "wallet": {
+    "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
     "rc": "Resources:",
     "vp": "Voting:",
     "balance": "balance",

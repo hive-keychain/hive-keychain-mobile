@@ -4,7 +4,6 @@ import Hp from 'assets/wallet/icon_hp.svg';
 import Savings from 'assets/wallet/icon_savings.svg';
 import AccountValue from 'components/hive/AccountValue';
 import TokenDisplay from 'components/hive/TokenDisplay';
-import Transactions from 'components/hive/Transactions';
 import {
   Send,
   SendConversion,
@@ -107,7 +106,6 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
         ]}
       />
       <Separator height={20} />
-      <Transactions user={user} />
     </View>
   );
 };
