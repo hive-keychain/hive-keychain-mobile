@@ -28,13 +28,14 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
   }, []);
   return (
     <View style={styles.container}>
-      <Separator height={20} />
+      <Separator height={30} />
       <AccountValue
         account={user.account}
         bittrex={bittrex}
         properties={properties}
       />
-      <Separator height={20} />
+      <Separator height={30} />
+
       <TokenDisplay
         color="#A3112A"
         name="HIVE"
@@ -105,7 +106,6 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
           <SendDeposit key="savings_deposit" currency="HBD" />,
         ]}
       />
-      <Separator height={20} />
     </View>
   );
 };
