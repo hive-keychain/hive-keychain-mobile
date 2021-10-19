@@ -82,7 +82,11 @@ const Main = ({
         </View>
         <ScreenToggle
           style={styles.toggle}
-          menu={['hive', 'history', 'tokens']}
+          menu={[
+            translate(`wallet.menu.hive`),
+            translate(`wallet.menu.history`),
+            translate(`wallet.menu.tokens`),
+          ]}
           toUpperCase
           components={[<Primary />, <Transactions user={user} />, <Tokens />]}
         />

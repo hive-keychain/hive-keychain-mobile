@@ -1,7 +1,6 @@
 import {setToggleElement} from 'hooks/toggle';
 import React, {useState} from 'react';
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
-import {translate} from 'utils/localize';
 
 type Props = {
   components: JSX.Element[];
@@ -29,9 +28,7 @@ const ScreenToggle = ({components, menu, toUpperCase, style}: Props) => {
                 setActive(i);
                 setToggleElement(menuItem);
               }}>
-              {toUpperCase
-                ? translate(`wallet.menu.${menuItem}`).toUpperCase()
-                : translate(`wallet.menu.${menuItem}`)}
+              {toUpperCase ? menuItem.toUpperCase() : menuItem}
             </Text>
           </View>
         ))}

@@ -152,6 +152,21 @@ export const BrowserConfig = {
         url: 'https://peakmonsters.com/',
         categories: ['gaming', 'tool'],
       },
+      {
+        name: 'Exode',
+        description: 'Explore. Colonize. Earn Crypto',
+        icon: 'https://exode.io/graphics/pics/favicon_blue.png',
+        url: 'https://exode.io/',
+        categories: ['gaming'],
+      },
+      {
+        name: 'Rising Star',
+        description:
+          'Start as a lowly busker and work your way up to a global mega star!',
+        icon: 'https://images.hive.blog/u/risingstargame/avatar',
+        url: 'https://risingstargame.com',
+        categories: ['gaming'],
+      },
     ],
   },
 };
