@@ -92,7 +92,6 @@ export default ({
     const {current} = tabRef;
     current && current.goBack();
   };
-  console.log(orientation);
   const goForward = () => {
     if (!canGoForward) {
       return;

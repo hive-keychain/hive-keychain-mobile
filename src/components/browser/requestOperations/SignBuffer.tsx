@@ -33,6 +33,7 @@ export default ({
     getAccountKey,
     getAccountPublicKey,
     RequestUsername,
+    getUsername,
   } = usePotentiallyAnonymousRequest(request, accounts);
 
   return (
@@ -59,8 +60,14 @@ export default ({
       additionalData={{
         publicKey: getAccountPublicKey(),
       }}
+      selectedUsername={getUsername()}
       performOperation={async () => {
-        return await signBuffer(getAccountKey(), message);
+        console.log(getAccountKey(), message);
+        console.log(
+          'plop',
+          await performSignBufferOperation(getAccountKey(), message),
+        );
+        return performSignBufferOperation(getAccountKey(), message);
       }}>
       <RequestUsername />
       <RequestItem title={translate('request.item.method')} content={method} />
@@ -73,7 +80,7 @@ export default ({
 };
 
 const performSignBufferOperation = async (key: string, message: string) => {
-  return await signBuffer(key, message);
+  return await signBuffer(key, `${message}`);
 };
 
 export const signBufferWithoutConfirmation = (

@@ -36,7 +36,9 @@ type Props = {
   performOperation: () => void;
   additionalData?: object;
   beautifyError?: boolean;
+  selectedUsername?: string;
 } & TypesFromRedux;
+
 const RequestOperation = ({
   closeGracefully,
   sendResponse,
@@ -51,6 +53,7 @@ const RequestOperation = ({
   additionalData = {},
   beautifyError,
   addPreference,
+  selectedUsername,
 }: Props) => {
   const {request_id, ...data} = request;
   const [loading, setLoading] = useState(false);
@@ -67,7 +70,11 @@ const RequestOperation = ({
         <View style={styles.keep}>
           <RadioButton
             selected={keep}
-            data={translate('request.keep', {domain, username, type})}
+            data={translate('request.keep', {
+              domain,
+              username: username || selectedUsername,
+              type,
+            })}
             style={styles.radio}
             onSelect={() => {
               setKeep(!keep);

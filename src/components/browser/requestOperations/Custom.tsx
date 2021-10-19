@@ -43,6 +43,7 @@ export default ({
       beautifyError
       method={method.toLowerCase() as KeyTypes}
       request={request}
+      selectedUsername={getUsername()}
       closeGracefully={closeGracefully}
       performOperation={async () => {
         return await broadcastJson(
