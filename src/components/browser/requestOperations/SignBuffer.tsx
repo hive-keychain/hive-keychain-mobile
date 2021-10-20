@@ -62,11 +62,6 @@ export default ({
       }}
       selectedUsername={getUsername()}
       performOperation={async () => {
-        console.log(getAccountKey(), message);
-        console.log(
-          'plop',
-          await performSignBufferOperation(getAccountKey(), message),
-        );
         return performSignBufferOperation(getAccountKey(), message);
       }}>
       <RequestUsername />
@@ -80,7 +75,7 @@ export default ({
 };
 
 const performSignBufferOperation = async (key: string, message: string) => {
-  return await signBuffer(key, `${message}`);
+  return await signBuffer(key, message);
 };
 
 export const signBufferWithoutConfirmation = (

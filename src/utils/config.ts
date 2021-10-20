@@ -167,6 +167,14 @@ export const BrowserConfig = {
         url: 'https://risingstargame.com',
         categories: ['gaming'],
       },
+      {
+        name: 'Inji',
+        description:
+          'Your social platform for Crypto, NFTs, DeFi and the Metaverse.',
+        icon: 'https://images.hive.blog/u/inji/avatar',
+        url: 'https://inji.com',
+        categories: ['social'],
+      },
     ],
   },
 };
