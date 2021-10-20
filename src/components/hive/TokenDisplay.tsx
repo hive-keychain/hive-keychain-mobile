@@ -67,9 +67,9 @@ const TokenDisplay = ({
             {value ? formatBalance(value) : 0}
             <Text style={styles.currency}>{` ${currency}`}</Text>
           </Text>
-          {secondaryValue ? (
+          {secondaryCurrency ? (
             <Text style={amountStyle || styles.amount}>
-              {value ? formatBalance(secondaryValue) : 0}
+              {secondaryValue ? formatBalance(secondaryValue) : 0}
               <Text style={styles.currency}>{` ${secondaryCurrency}`}</Text>
             </Text>
           ) : null}
