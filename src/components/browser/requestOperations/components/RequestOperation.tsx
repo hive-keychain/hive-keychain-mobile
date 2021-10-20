@@ -101,6 +101,7 @@ const RequestOperation = ({
               message: msg,
               ...additionalData,
             };
+            if (selectedUsername) obj.data.username = selectedUsername;
             if (keep) addPreference(username, domain, type);
             sendResponse(obj);
           } catch (e) {
