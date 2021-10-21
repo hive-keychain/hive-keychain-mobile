@@ -9,6 +9,7 @@ export const hiveConfig = {
 export const HASConfig = {
   protocol: 'has://',
   auth_req: 'has://auth_req/',
+  socket: 'wss://hive-auth.arcange.eu',
 };
 
 export type DApp = {
