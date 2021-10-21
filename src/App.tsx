@@ -16,6 +16,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import Modal from 'screens/Modal';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
+import {showHASInitRequest} from 'utils/HAS';
 import {setRpc} from 'utils/hive';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
@@ -23,21 +24,36 @@ import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 
 const Root = createStackNavigator<RootStackParam>();
 
-const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
+const App = ({
+  hasAccounts,
+  auth,
+  rpc,
+  addTabFromLinking,
+  has_init,
+}: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
+
   useEffect(() => {
     setupLinking(addTabFromLinking);
     return () => {
       clearLinkingListeners();
     };
   }, [addTabFromLinking]);
+
   useEffect(() => {
     Orientation.lockToPortrait();
   }, []);
+
   useEffect(() => {
     setRpc(rpc as Rpc);
   }, [rpc]);
+
+  useEffect(() => {
+    if (!!auth.mk && has_init.requiresInit) {
+      showHASInitRequest(has_init.data!);
+    }
+  }, [auth.mk, has_init]);
 
   const renderNavigator = () => {
     if (!hasAccounts) {
@@ -97,6 +113,7 @@ const mapStateToProps = (state: RootState) => {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
     rpc: state.settings.rpc,
+    has_init: state.HAS_Init,
   };
 };
 

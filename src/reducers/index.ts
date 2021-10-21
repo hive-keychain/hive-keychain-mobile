@@ -7,6 +7,7 @@ import browser from './browser';
 import conversions from './conversions';
 import delegations from './delegations';
 import properties from './globalProperties';
+import HAS_Init from './HAS/requestInitialization';
 import lastAccount from './lastAccount';
 import phishingAccounts from './phishing';
 import preferences from './preferences';
@@ -34,4 +35,5 @@ export default combineReducers({
   settings,
   browser,
   preferences,
+  HAS_Init,
 });
