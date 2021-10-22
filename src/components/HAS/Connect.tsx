@@ -11,7 +11,7 @@ import {translate} from 'utils/localize';
 
 type Props = PropsFromRedux & {data: HAS_RequestPayload};
 
-const HASConnectionRequest = ({data}: Props) => {
+const HASConnectionRequest = ({data, accounts}: Props) => {
   const onConfirm = () => {
     getHAS().connect(data);
   };
@@ -19,12 +19,23 @@ const HASConnectionRequest = ({data}: Props) => {
     <Operation logo={<Hive />} title={translate('wallet.has.connect.title')}>
       <>
         <Separator height={30} />
-        <Text>{translate('wallet.has.connect.uuid', data)}</Text>
+        <Text style={styles.uuid}>
+          {translate('wallet.has.connect.uuid', data)}
+        </Text>
         <Separator />
         <Text>{translate('wallet.has.connect.text', data)}</Text>
+        {accounts.find((e) => e.name === data.account) ? null : (
+          <>
+            <Separator />
+            <Text style={styles.error}>
+              {translate('wallet.has.connect.no_username', data)}
+            </Text>
+          </>
+        )}
         <Separator height={50} />
         <EllipticButton
           title={translate('wallet.has.connect.confirm')}
+          disabled={!accounts.find((e) => e.name === data.account)}
           onPress={onConfirm}
           style={styles.button}
         />
@@ -35,6 +46,8 @@ const HASConnectionRequest = ({data}: Props) => {
 
 const styles = StyleSheet.create({
   button: {backgroundColor: '#68A0B4'},
+  error: {color: '#A3112A'},
+  uuid: {fontWeight: 'bold'},
 });
 
 const connector = connect((state: RootState) => {
