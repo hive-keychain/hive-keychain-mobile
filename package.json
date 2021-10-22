@@ -66,8 +66,7 @@
     "redux-persist-expire": "^1.1.0",
     "redux-thunk": "^2.3.0",
     "sscjs": "0.0.8",
-    "url-parse": "^1.5.1",
-    "ws": "^8.2.3"
+    "url-parse": "^1.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

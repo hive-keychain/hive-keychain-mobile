@@ -1,6 +1,8 @@
 import {showHASInitRequestAsTreated} from 'actions/hiveAuthenticationService';
 import {store} from 'store';
-//const wsClient = new WebSocket(HASConfig.socket);
+import {HASConfig} from './config';
+
+const wsClient = new WebSocket(HASConfig.socket);
 
 export type HAS_RequestPayload = {
   account: string;
