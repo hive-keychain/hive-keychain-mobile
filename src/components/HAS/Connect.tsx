@@ -6,14 +6,15 @@ import React from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
-import {HAS_RequestPayload} from 'utils/HAS';
+import {getHAS, HAS_RequestPayload} from 'utils/HAS';
 import {translate} from 'utils/localize';
 
 type Props = PropsFromRedux & {data: HAS_RequestPayload};
 
 const HASConnectionRequest = ({data}: Props) => {
-  console.log(data);
-  const onConfirm = () => {};
+  const onConfirm = () => {
+    getHAS().connect(data);
+  };
   return (
     <Operation logo={<Hive />} title={translate('wallet.has.connect.title')}>
       <>
