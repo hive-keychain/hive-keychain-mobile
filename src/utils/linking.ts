@@ -10,6 +10,7 @@ export default async (addTabFromLinking: (arg0: string) => void) => {
     }
   });
   const initialUrl = await Linking.getInitialURL();
+  console.log(initialUrl);
   if (initialUrl) {
     handleUrl(addTabFromLinking, initialUrl);
   }

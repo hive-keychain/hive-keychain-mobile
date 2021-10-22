@@ -4,9 +4,10 @@ import {StackNavigationProp} from '@react-navigation/stack';
 export type RootStackParam = {
   Main: undefined;
   ModalScreen: {
-    modalContent: JSX.Element;
+    modalContent?: JSX.Element;
     onForceCloseModal?: () => void;
     name: string;
+    data?: any;
   };
 };
 
