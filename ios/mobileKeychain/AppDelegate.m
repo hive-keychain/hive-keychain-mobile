@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
 #import "Orientation.h"
+#import <React/RCTLinkingManager.h>
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -52,7 +53,12 @@ static void InitializeFlipper(UIApplication *application) {
   [self.window makeKeyAndVisible];
   return YES;
 }
-
+- (BOOL)application:(UIApplication *)application
+openURL:(NSURL *)url
+options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+return [RCTLinkingManager application:application openURL:url options:options];
+}
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {
 #if DEBUG
