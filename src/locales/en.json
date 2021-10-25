@@ -94,12 +94,17 @@
     },
     "has": {
       "connect": {
-        "title": "Connect dApp",
+        "title": "Connect to HAS",
         "text": "A connection has been requested via Hive Authentication Service for account @{{account}}.",
-        "uuid": "UUID: {{uuid}}",
         "confirm": "Connect",
         "no_username": "Please add account @{{account}} to your wallet to be able to use it on your favorite dApps!"
-      }
+      },
+      "auth": {
+        "title": "Authenticate",
+        "button": "Approve",
+        "text": "Authenticate using account @{{account}} on {{name}}?"
+      },
+      "uuid": "UUID: {{uuid}}"
     }
   },
   "settings": {

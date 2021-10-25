@@ -1,15 +1,15 @@
 import {ActionPayload} from 'actions/interfaces';
 import {HAS_Actions} from 'actions/types';
-import {HAS_RequestPayload} from 'utils/HAS';
+import {HAS_ConnectPayload} from 'utils/HAS';
 
 type HAS_InitState = {
   requiresInit: boolean;
-  data?: HAS_RequestPayload;
+  data?: HAS_ConnectPayload;
 };
 
 export default (
   state: HAS_InitState = {requiresInit: false},
-  {type, payload: data}: ActionPayload<HAS_RequestPayload>,
+  {type, payload: data}: ActionPayload<HAS_ConnectPayload>,
 ) => {
   switch (type) {
     case HAS_Actions.REQUEST:

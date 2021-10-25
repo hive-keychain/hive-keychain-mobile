@@ -6,24 +6,31 @@ import React from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
-import {getHAS, HAS_ConnectPayload} from 'utils/HAS';
+import {HAS_AuthPayload} from 'utils/HAS';
 import {translate} from 'utils/localize';
 
-type Props = PropsFromRedux & {data: HAS_ConnectPayload};
+type Props = PropsFromRedux & {
+  data: HAS_AuthPayload & {
+    callback: (payload: HAS_AuthPayload, approve: boolean) => void;
+  };
+};
 
-const HASConnectionRequest = ({data, accounts}: Props) => {
+const HASAuthRequest = ({data, accounts}: Props) => {
+  console.log(data);
   const onConfirm = () => {
-    getHAS(data.host).connect(data);
-    //rgoBack();
+    data.callback(data, true);
   };
   return (
-    <Operation logo={<Hive />} title={translate('wallet.has.connect.title')}>
+    <Operation logo={<Hive />} title={translate('wallet.has.auth.title')}>
       <>
         <Separator height={30} />
         <Text style={styles.uuid}>{translate('wallet.has.uuid', data)}</Text>
         <Separator />
         <Text>
-          {translate('wallet.has.connect.text', {account: data.account})}
+          {translate('wallet.has.auth.text', {
+            account: data.account,
+            name: data.metadata.name,
+          })}
         </Text>
         {accounts.find((e) => e.name === data.account) ? null : (
           <>
@@ -35,7 +42,7 @@ const HASConnectionRequest = ({data, accounts}: Props) => {
         )}
         <Separator height={50} />
         <EllipticButton
-          title={translate('wallet.has.connect.confirm')}
+          title={translate('wallet.has.auth.button')}
           disabled={!accounts.find((e) => e.name === data.account)}
           onPress={onConfirm}
           style={styles.button}
@@ -58,4 +65,4 @@ const connector = connect((state: RootState) => {
 });
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
-export default connector(HASConnectionRequest);
+export default connector(HASAuthRequest);

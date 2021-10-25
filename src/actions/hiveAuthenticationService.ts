@@ -1,7 +1,7 @@
-import {HAS_RequestPayload} from 'utils/HAS';
+import {HAS_ConnectPayload} from 'utils/HAS';
 import {HAS_Actions} from './types';
 
-export const treatHASRequest = (data: HAS_RequestPayload) => {
+export const treatHASRequest = (data: HAS_ConnectPayload) => {
   return {
     type: HAS_Actions.REQUEST,
     payload: {data},
