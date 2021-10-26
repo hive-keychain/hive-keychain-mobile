@@ -13,7 +13,10 @@ export type RootStackParam = {
 
 export type MainNavigation = StackNavigationProp<RootStackParam, 'Main'>;
 
-type ModalNavigation = StackNavigationProp<RootStackParam, 'ModalScreen'>;
+export type ModalNavigation = StackNavigationProp<
+  RootStackParam,
+  'ModalScreen'
+>;
 export type ModalNavigationRoute = RouteProp<RootStackParam, 'ModalScreen'>;
 
 export type ModalNavigationProps = {

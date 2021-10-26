@@ -2,7 +2,8 @@ import Hive from 'assets/wallet/icon_hive.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
-import React from 'react';
+import {ModalNavigation} from 'navigators/Root.types';
+import React, {useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
@@ -11,14 +12,21 @@ import {translate} from 'utils/localize';
 
 type Props = PropsFromRedux & {
   data: HAS_AuthPayload & {
-    callback: (payload: HAS_AuthPayload, approve: boolean) => void;
+    callback: (
+      payload: HAS_AuthPayload,
+      approve: boolean,
+      callback: () => void,
+    ) => void;
   };
+  navigation: ModalNavigation;
 };
 
-const HASAuthRequest = ({data, accounts}: Props) => {
-  console.log(data);
+const HASAuthRequest = ({data, accounts, navigation}: Props) => {
+  const [success, setSuccess] = useState(false);
   const onConfirm = () => {
-    data.callback(data, true);
+    data.callback(data, true, () => {
+      setSuccess(true);
+    });
   };
   return (
     <Operation logo={<Hive />} title={translate('wallet.has.auth.title')}>
@@ -27,10 +35,15 @@ const HASAuthRequest = ({data, accounts}: Props) => {
         <Text style={styles.uuid}>{translate('wallet.has.uuid', data)}</Text>
         <Separator />
         <Text>
-          {translate('wallet.has.auth.text', {
-            account: data.account,
-            name: data.metadata.name,
-          })}
+          {success
+            ? translate('wallet.has.auth.success', {
+                account: data.account,
+                name: data.metadata.name,
+              })
+            : translate('wallet.has.auth.text', {
+                account: data.account,
+                name: data.metadata.name,
+              })}
         </Text>
         {accounts.find((e) => e.name === data.account) ? null : (
           <>
@@ -42,9 +55,19 @@ const HASAuthRequest = ({data, accounts}: Props) => {
         )}
         <Separator height={50} />
         <EllipticButton
-          title={translate('wallet.has.auth.button')}
+          title={
+            success
+              ? translate('common.ok')
+              : translate('wallet.has.auth.button')
+          }
           disabled={!accounts.find((e) => e.name === data.account)}
-          onPress={onConfirm}
+          onPress={
+            success
+              ? () => {
+                  navigation.goBack();
+                }
+              : onConfirm
+          }
           style={styles.button}
         />
       </>

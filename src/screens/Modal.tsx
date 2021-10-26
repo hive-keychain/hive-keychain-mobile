@@ -18,7 +18,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
       case ModalComponent.HAS_INIT:
         return <HASConnectionRequest data={data as HAS_ConnectPayload} />;
       case ModalComponent.HAS_AUTH:
-        return <HASAuthRequest data={data as any} />;
+        return <HASAuthRequest data={data as any} navigation={navigation} />;
       default:
         return null;
     }

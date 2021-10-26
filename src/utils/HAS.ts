@@ -2,8 +2,8 @@ import {showHASInitRequestAsTreated} from 'actions/hiveAuthenticationService';
 import assert from 'assert';
 import {encodeMemo} from 'components/bridge';
 import {AES} from 'crypto-js';
+import uuid from 'react-native-uuid';
 import {RootState, store} from 'store';
-import {v4} from 'uuid';
 import {ModalComponent} from './modal.enum';
 import {navigate} from './navigation';
 
@@ -319,7 +319,11 @@ class HAS {
     this.send(JSON.stringify(request));
   };
 
-  answerAuthReq = (payload: HAS_AuthPayload, approve: boolean) => {
+  answerAuthReq = (
+    payload: HAS_AuthPayload,
+    approve: boolean,
+    callback: () => void,
+  ) => {
     try {
       // NOTE: The default expiration time for a token is 24 hours - It can be set to a longer duration for "service" APPS
       const EXPIRE_DELAY_APP = 24 * 60 * 60 * 1000;
@@ -329,7 +333,7 @@ class HAS {
       const app_key = connection.key;
 
       if (approve) {
-        const token = v4();
+        const token = uuid.v4() as string;
         const expire = Date.now() + EXPIRE_DELAY_APP;
         console.log(payload.uuid, app_key, 'b');
 
@@ -356,6 +360,7 @@ class HAS {
       } else {
         this.send(JSON.stringify({cmd: 'auth_nack', uuid: payload.uuid}));
       }
+      callback();
       // remove expired tokens
       connection.tokens = connection.tokens.filter(
         (o) => o.expire > Date.now(),

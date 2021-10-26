@@ -2,7 +2,7 @@ import Hive from 'assets/wallet/icon_hive.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
@@ -12,9 +12,10 @@ import {translate} from 'utils/localize';
 type Props = PropsFromRedux & {data: HAS_ConnectPayload};
 
 const HASConnectionRequest = ({data, accounts}: Props) => {
+  const [loading, setLoading] = useState(false);
   const onConfirm = () => {
     getHAS(data.host).connect(data);
-    //rgoBack();
+    setLoading(true);
   };
   return (
     <Operation logo={<Hive />} title={translate('wallet.has.connect.title')}>
@@ -37,6 +38,7 @@ const HASConnectionRequest = ({data, accounts}: Props) => {
         <EllipticButton
           title={translate('wallet.has.connect.confirm')}
           disabled={!accounts.find((e) => e.name === data.account)}
+          isLoading={loading}
           onPress={onConfirm}
           style={styles.button}
         />

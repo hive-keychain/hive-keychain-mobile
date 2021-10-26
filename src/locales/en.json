@@ -33,7 +33,8 @@
     "unvote": "Unvote",
     "none": "None",
     "error": "Error: Something went wrong : {{msg}}",
-    "savings": "Savings"
+    "savings": "Savings",
+    "ok": "OK"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -102,7 +103,8 @@
       "auth": {
         "title": "Authenticate",
         "button": "Approve",
-        "text": "Authenticate using account @{{account}} on {{name}}?"
+        "text": "Authenticate using account @{{account}} on {{name}}?",
+        "success": "Successfully authenticated @{{account}} on {{name}}! You can now return to your dApp."
       },
       "uuid": "UUID: {{uuid}}"
     }
