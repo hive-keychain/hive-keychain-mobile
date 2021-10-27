@@ -17,7 +17,7 @@ export type HAS_ConnectPayload = {
 export type HAS_AuthPayload = {
   cmd: 'auth_req';
   account: string;
-  metadata: any;
+  app: any;
   uuid: string;
   expire: number;
 };
@@ -353,7 +353,7 @@ class HAS {
           token: token,
           expire: expire,
           key: app_key,
-          app: payload.metadata.name,
+          app: payload.app.name,
           ts_create: new Date().toISOString(),
           ts_expire: new Date(expire).toISOString(),
         });

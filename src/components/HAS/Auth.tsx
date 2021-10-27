@@ -38,11 +38,11 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
           {success
             ? translate('wallet.has.auth.success', {
                 account: data.account,
-                name: data.metadata.name,
+                name: data.app.name,
               })
             : translate('wallet.has.auth.text', {
                 account: data.account,
-                name: data.metadata.name,
+                name: data.app.name,
               })}
         </Text>
         {accounts.find((e) => e.name === data.account) ? null : (
