@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import MoreInformation from 'components/infoButtons/MoreInfo';
+import MoreInformation from 'components/info_buttons/MoreInfo';
 import React from 'react';
 import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';

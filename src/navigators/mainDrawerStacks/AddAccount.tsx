@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import MoreInformation from 'components/infoButtons/MoreInfo';
+import MoreInformation from 'components/info_buttons/MoreInfo';
 import DrawerButton from 'components/ui/DrawerButton';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';

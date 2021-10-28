@@ -1,5 +1,5 @@
 import {signUp} from 'actions/index';
-import Pincode from 'components/pinCode';
+import Pincode from 'components/pin_code';
 import Background from 'components/ui/Background';
 import KeychainLogo from 'components/ui/KeychainLogo';
 import {SignupNavProp} from 'navigators/Signup.types';
