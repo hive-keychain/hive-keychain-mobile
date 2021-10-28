@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import MoreInformation from 'components/info_buttons/MoreInfo';
+import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import DrawerButton from 'components/ui/DrawerButton';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -21,7 +21,7 @@ export default () => {
           headerRight: () => {
             return (
               <View style={styles.buttonsContainer}>
-                <MoreInformation type="moreInfo" />
+                <MoreInformation type={Info.KEYS} />
                 <DrawerButton navigation={navigation} />
               </View>
             );
@@ -41,7 +41,7 @@ export default () => {
           headerTintColor: 'white',
           title: '',
           headerRight: () => {
-            return <MoreInformation type="qr" />;
+            return <MoreInformation type={Info.QR_ACCOUNT} />;
           },
         }}
         component={ScanQR}

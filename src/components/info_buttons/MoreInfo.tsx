@@ -6,14 +6,19 @@ import {StyleSheet, TouchableOpacity, useWindowDimensions} from 'react-native';
 import {Width} from 'utils/common.types';
 import {navigate} from 'utils/navigation';
 
+export enum Info {
+  KEYS = 'KEYS',
+  QR_ACCOUNT = 'QR_ACCOUNT',
+  QR_WALLET = 'QR_WALLET',
+}
 export default ({type}: {type: string}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
   let content = <></>;
   switch (type) {
-    case 'moreInfo':
+    case Info.KEYS:
       content = <MoreInformation />;
       break;
-    case 'qr':
+    case Info.QR_ACCOUNT:
       content = <InfoQR />;
   }
   return (
