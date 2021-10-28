@@ -1,4 +1,5 @@
 import {addAccount} from 'actions/index';
+import {AddAccFromWalletNavigationProps} from 'navigators/mainDrawerStacks/AddAccount.types';
 import React from 'react';
 import {Dimensions, StyleSheet, useWindowDimensions, View} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
@@ -7,7 +8,10 @@ import {connect, ConnectedProps} from 'react-redux';
 import {Width} from 'utils/common.types';
 import {validateFromObject} from 'utils/keyValidation';
 
-const ScanQR = ({addAccount, route}: PropsFromRedux) => {
+const ScanQR = ({
+  addAccount,
+  route,
+}: PropsFromRedux & AddAccFromWalletNavigationProps) => {
   const styles = getStyles(useWindowDimensions());
   const onSuccess = async ({data}: BarCodeReadEvent) => {
     try {

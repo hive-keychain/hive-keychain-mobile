@@ -1,5 +1,5 @@
-import HASAuthRequest from 'components/HAS/Auth';
-import HASConnectionRequest from 'components/HAS/Connect';
+import HASAuthRequest from 'components/hive_authentication_service/Auth';
+import HASConnectionRequest from 'components/hive_authentication_service/Connect';
 import CustomModal from 'components/modals/CustomModal';
 import {ModalNavigationProps} from 'navigators/Root.types';
 import React from 'react';

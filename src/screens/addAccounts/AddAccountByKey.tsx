@@ -46,7 +46,7 @@ const AddAccountByKey = ({
         Toast.show(translate('toast.error_add_account'), Toast.LONG);
       }
     } catch (e) {
-      Toast.show(e.message || e, Toast.LONG);
+      Toast.show((e as any).message || e, Toast.LONG);
     }
   };
   const {height} = useWindowDimensions();
