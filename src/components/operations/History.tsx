@@ -6,7 +6,7 @@ import React, {useEffect} from 'react';
 import {FlatList} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
-import {translate} from 'utils/localize';
+import {getMainLocale, translate} from 'utils/localize';
 import Balance from './Balance';
 import Operation from './Operation';
 
@@ -47,7 +47,14 @@ const History = ({
           data={history}
           keyExtractor={(item) => item._id}
           renderItem={({item}) => {
-            return <Transfer transaction={item} user={user} token />;
+            return (
+              <Transfer
+                transaction={item}
+                user={user}
+                token
+                locale={getMainLocale()}
+              />
+            );
           }}
         />
       </>
