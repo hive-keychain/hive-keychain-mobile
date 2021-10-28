@@ -1,5 +1,6 @@
 import Information from 'assets/addAccount/icon_info.svg';
 import InfoQR from 'components/modals/InfoQR';
+import InfoWalletQR from 'components/modals/InfoWalletQR';
 import MoreInformation from 'components/modals/MoreInformation';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, useWindowDimensions} from 'react-native';
@@ -20,6 +21,10 @@ export default ({type}: {type: string}) => {
       break;
     case Info.QR_ACCOUNT:
       content = <InfoQR />;
+      break;
+    case Info.QR_WALLET:
+      content = <InfoWalletQR />;
+      break;
   }
   return (
     <TouchableOpacity

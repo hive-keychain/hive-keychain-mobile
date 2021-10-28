@@ -161,6 +161,13 @@
       "text6": "and",
       "text7": "Show QR Code"
     },
+    "infoWalletQR": {
+      "title": "QR Code Scanner",
+      "text1": "Use this scanner to read Hive related QR Codes.",
+      "text2": "As of now, we only support starting a Hive Authentication Service, but further functionalities will be added along the way.",
+      "text3": "If you wish to scan a QR Code to import an account, please do so in",
+      "text4": "Settings > Add Account"
+    },
     "forgotPIN": {
       "title": "Forgot PIN?",
       "text": "If you forgot your PIN, you can reset Keychain and clear your data but will have to enter all your keys again.",
