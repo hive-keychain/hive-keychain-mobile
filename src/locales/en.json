@@ -164,7 +164,7 @@
     "infoWalletQR": {
       "title": "QR Code Scanner",
       "text1": "Use this scanner to read Hive related QR Codes.",
-      "text2": "As of now, we only support starting a Hive Authentication Service, but further functionalities will be added along the way.",
+      "text2": "As of now, we only support starting Hive Authentication Service sessions and opening URLs in the in-App browser, but further functionalities will be added along the way.",
       "text3": "If you wish to scan a QR Code to import an account, please do so in",
       "text4": "Settings > Add Account"
     },
