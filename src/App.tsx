@@ -3,7 +3,6 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {addTabFromLinking} from 'actions/browser';
 import {Rpc} from 'actions/interfaces';
 import Bridge from 'components/bridge';
 import {getToggleElement} from 'hooks/toggle';
@@ -24,22 +23,16 @@ import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 
 const Root = createStackNavigator<RootStackParam>();
 
-const App = ({
-  hasAccounts,
-  auth,
-  rpc,
-  addTabFromLinking,
-  has_init,
-}: PropsFromRedux) => {
+const App = ({hasAccounts, auth, rpc, has_init}: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
 
   useEffect(() => {
-    setupLinking(addTabFromLinking);
+    setupLinking();
     return () => {
       clearLinkingListeners();
     };
-  }, [addTabFromLinking]);
+  }, []);
 
   useEffect(() => {
     Orientation.lockToPortrait();
@@ -117,7 +110,7 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps, {addTabFromLinking});
+const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(App);
