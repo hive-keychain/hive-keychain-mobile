@@ -3,7 +3,7 @@ import HASConnectionRequest from 'components/hive_authentication_service/Connect
 import CustomModal from 'components/modals/CustomModal';
 import {ModalNavigationProps} from 'navigators/Root.types';
 import React from 'react';
-import {HAS_ConnectPayload} from 'utils/HAS';
+import {HAS_ConnectPayload} from 'utils/hiveAuthenticationService';
 import {ModalComponent} from 'utils/modal.enum';
 export default ({navigation, route}: ModalNavigationProps) => {
   const onForceCloseModal = route.params

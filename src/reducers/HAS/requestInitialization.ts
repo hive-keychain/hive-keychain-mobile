@@ -1,6 +1,6 @@
 import {ActionPayload} from 'actions/interfaces';
 import {HAS_Actions} from 'actions/types';
-import {HAS_ConnectPayload} from 'utils/HAS';
+import {HAS_ConnectPayload} from 'utils/hiveAuthenticationService';
 
 type HAS_InitState = {
   requiresInit: boolean;
