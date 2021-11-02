@@ -1,9 +1,13 @@
+import RequestModalContent from 'components/browser/RequestModalContent';
 import HASAuthRequest from 'components/hive_authentication_service/Auth';
 import HASConnectionRequest from 'components/hive_authentication_service/Connect';
 import CustomModal from 'components/modals/CustomModal';
 import {ModalNavigationProps} from 'navigators/Root.types';
 import React from 'react';
-import {HAS_ConnectPayload} from 'utils/hiveAuthenticationService';
+import {
+  HAS_BroadcastModalPayload,
+  HAS_ConnectPayload,
+} from 'utils/hiveAuthenticationService';
 import {ModalComponent} from 'utils/modal.enum';
 export default ({navigation, route}: ModalNavigationProps) => {
   const onForceCloseModal = route.params
@@ -19,6 +23,8 @@ export default ({navigation, route}: ModalNavigationProps) => {
         return <HASConnectionRequest data={data as HAS_ConnectPayload} />;
       case ModalComponent.HAS_AUTH:
         return <HASAuthRequest data={data as any} navigation={navigation} />;
+      case ModalComponent.HAS_BROADCAST:
+        return <RequestModalContent {...(data as HAS_BroadcastModalPayload)} />;
       default:
         return null;
     }

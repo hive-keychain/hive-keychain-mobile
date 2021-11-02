@@ -1,9 +1,18 @@
+import {Operation} from '@hiveio/dhive';
 import {showHASInitRequestAsTreated} from 'actions/hiveAuthenticationService';
+import {KeyTypes} from 'actions/interfaces';
 import assert from 'assert';
 import {encodeMemo} from 'components/bridge';
-import {AES} from 'crypto-js';
+import Crypto from 'crypto-js';
 import uuid from 'react-native-uuid';
 import {RootState, store} from 'store';
+import {
+  KeychainKeyTypes,
+  KeychainRequest,
+  KeychainRequestTypes,
+  RequestBroadcast,
+  RequestSuccess,
+} from './keychain.types';
 import {ModalComponent} from './modal.enum';
 import {navigate} from './navigation';
 
@@ -22,6 +31,41 @@ export type HAS_AuthPayload = {
   expire: number;
 };
 
+export type HAS_BroadcastPayload = {
+  cmd: 'sign_req';
+  account: string;
+  token: string;
+  data: string;
+  decryptedData?: HAS_OpsData;
+  uuid: string;
+  expire: number;
+};
+
+export type HAS_Connected = {
+  cmd: 'connected';
+};
+
+export type HAS_Error = {
+  cmd: 'error';
+};
+
+export type HAS_Register = {
+  cmd: 'register_ack';
+};
+
+export type HAS_KeyAck = {
+  cmd: 'key_ack';
+  key: string;
+};
+
+type HAS_Type =
+  | HAS_AuthPayload
+  | HAS_BroadcastPayload
+  | HAS_Connected
+  | HAS_Error
+  | HAS_Register
+  | HAS_KeyAck;
+
 type Token = {
   token: string;
   expire: number;
@@ -36,6 +80,20 @@ type Connection = {
   uuid: string;
   key: string;
   tokens: Token[];
+};
+
+type HAS_OpsData = {
+  key_type: KeyTypes;
+  ops: Operation[];
+  broadcast: boolean;
+};
+
+export type HAS_BroadcastModalPayload = {
+  request: KeychainRequest;
+  accounts: any;
+  onForceCloseModal: () => void;
+  sendError: () => void;
+  sendResponse: (obj: RequestSuccess) => void;
 };
 
 export const showHASInitRequest = (data: any) => {
@@ -92,29 +150,10 @@ class HAS {
   onMessage = async (event: WebSocketMessageEvent) => {
     console.log(`[RECV] ${event.data}`);
     try {
-      const payload =
+      const payload: HAS_Type =
         typeof event.data == 'string' ? JSON.parse(event.data) : event.data;
       if (!payload.cmd || typeof payload.cmd !== 'string') {
         throw new Error(`invalid payload (cmd)`);
-      }
-      if (payload.uuid) {
-        // validate APP request forwarded by HAS
-        assert(
-          payload.uuid && typeof payload.uuid == 'string',
-          `invalid payload (uuid)`,
-        );
-        assert(
-          payload.expire && typeof payload.expire == 'number',
-          `invalid payload (expire)`,
-        );
-        assert(
-          payload.account && typeof payload.account == 'string',
-          `invalid payload (account)`,
-        );
-        assert(
-          Date.now() < payload.expire,
-          `request expired - now:${Date.now()} > expire:${payload.expire}}`,
-        );
       }
       switch (payload.cmd) {
         // Process HAS <-> PKSA protocol
@@ -139,156 +178,82 @@ class HAS {
           }
           break;
         case 'auth_req':
-          console.log('authreq', payload);
+          this.checkPayload(payload);
           navigate('ModalScreen', {
             name: ModalComponent.HAS_AUTH,
             data: {...payload, callback: this.answerAuthReq},
           });
           break;
-        /*
+
         case 'sign_req':
           try {
-            assert(
-              payload.broadcast == undefined ||
-                typeof payload.broadcast == 'boolean',
-              'Invalid payload (broadcast)',
+            this.checkPayload(payload);
+
+            const account = this.connections.find(
+              (e) => e.account === payload.account,
             );
-            const account = accounts.find((o) => o.name == payload.account);
-            assert(account, 'unknown account');
-            const auth = account.auths.find(
+            assert(account, 'This account has not been connected through HAS.');
+            const auth = account.tokens.find(
               (o) => o.token == payload.token && o.expire > Date.now(),
             );
             assert(auth, 'Token invalid or expired');
             // Decrypt the ops to sign with the encryption key associated to the token.
-            const ops = JSON.parse(
-              CryptoJS.AES.decrypt(payload.ops, auth.key).toString(
-                CryptoJS.enc.Utf8,
+            const opsData: HAS_OpsData = JSON.parse(
+              Crypto.AES.decrypt(payload.data, auth.key).toString(
+                Crypto.enc.Utf8,
               ),
             );
-            for (const op of ops) {
-              let key_type;
-              switch (op[0]) {
-                // Require posting key
-                case 'claim_reward_balance':
-                case 'claim_reward_balance2':
-                case 'comment':
-                case 'comment_options':
-                case 'custom':
-                case 'custom_binary':
-                case 'custom_json':
-                case 'delete_comment':
-                case 'update_proposal':
-                case 'update_proposal_votes':
-                case 'vote':
-                case 'vote2':
-                  if (key_type != 'active') {
-                    // avoid overwriting upper level
-                    key_type = 'posting';
-                  }
-                  break;
-                // Require active key
-                case 'account_create':
-                case 'account_create_with_delegation':
-                case 'account_update':
-                case 'account_update2':
-                case 'account_witness_proxy':
-                case 'account_witness_vote':
-                case 'cancel_transfer_from_savings':
-                case 'claim_account':
-                case 'collateralized_convert':
-                case 'convert':
-                case 'create_claimed_account':
-                case 'create_proposal':
-                case 'delegate_vesting_shares':
-                case 'escrow_approve':
-                case 'escrow_dispute':
-                case 'escrow_release':
-                case 'escrow_transfer':
-                case 'feed_publish':
-                case 'limit_order_cancel':
-                case 'limit_order_create':
-                case 'limit_order_create2':
-                case 'pow':
-                case 'pow2':
-                case 'recover_account':
-                case 'recurrent_transfer':
-                // NOTE: care should be taken of memo encryption
-                case 'remove_proposal':
-                case 'request_account_recovery':
-                case 'reset_account':
-                case 'set_withdraw_vesting_route':
-                case 'smt_contribute':
-                case 'smt_create':
-                case 'smt_set_runtime_parameters':
-                case 'smt_set_setup_parameters':
-                case 'smt_setup':
-                case 'smt_setup_emissions':
-                case 'transfer':
-                // NOTE: care should be taken of memo encryption
-                case 'transfer_from_savings':
-                case 'transfer_to_savings':
-                // NOTE: care should be taken of memo encryption
-                case 'transfer_to_vesting':
-                case 'withdraw_vesting':
-                case 'witness_set_properties':
-                  key_type = 'active';
-                  break;
-                // Require owner key
-                case 'change_recovery_account':
-                case 'decline_voting_rights':
-                case 'set_reset_account':
-                  throw new Error('owner key not available in PKSA');
-                default:
-                  throw new Error(`unmanaged operation (${op[0]})`);
-              }
-              if (key_type == 'active') {
-                throw new Error('Active key use denied');
-              }
-              const key_private = getPrivateKey(payload.account, key_type);
-              if (!key_private) {
-                throw new Error(`${key_type} key not available in PKSA`);
-              }
+            const {ops, key_type} = opsData;
+            payload.decryptedData = opsData;
 
-              // TODO - PKSA should ask user approval here
-              const approve = true;
-              // TODO
-              if (approve) {
-                if (payload.broadcast) {
-                  const res = await hiveClient.broadcast.sendOperations(
-                    ops,
-                    PrivateKey.from(key_private),
-                  );
-                  this.send(
-                    JSON.stringify({
-                      cmd: 'sign_ack',
-                      uuid: payload.uuid,
-                      broadcast: payload.broadcast,
-                      data: res.id,
-                    }),
-                  );
-                } else {
-                  throw new Error('Transaction signing not implemented');
-                  //                 const tx = new Transaction
-                  //                 tx.ops = ops
-                  // //                const signed_tx = await hiveClient.broadcast.sign(tx, PrivateKey.from(key_private))
-                  //                 this.send(JSON.stringify({cmd:"sign_ack", uuid:uuid, broadcast:payload.broadcast, data:"signed_tx"}))
-                }
-              } else {
-                this.send(
-                  JSON.stringify({cmd: 'sign_nack', uuid: payload.uuid}),
-                );
-              }
-            }
+            const request: RequestBroadcast = {
+              domain: auth.app,
+              type: KeychainRequestTypes.broadcast,
+              username: payload.account,
+              operations: ops,
+              method: KeychainKeyTypes[key_type],
+            };
+
+            const data: HAS_BroadcastModalPayload = {
+              request: {...request, has: true},
+              accounts: await store.getState().accounts,
+              onForceCloseModal: () => {},
+              sendError: () => {
+                this.answerFailedBroadcastReq(payload);
+              },
+              sendResponse: (obj: RequestSuccess) => {
+                this.answerSuccessfulBroadcastReq(payload, obj);
+              },
+            };
+
+            navigate('ModalScreen', {
+              name: ModalComponent.HAS_BROADCAST,
+              data,
+              // modalContent: (
+              //   <RequestModalContent
+              //     request={{...data, request_id}}
+              //     accounts={accounts}
+              //     onForceCloseModal={onForceCloseModal}
+              //     sendError={(obj: RequestError) => {
+              //       sendError(tabRef, obj);
+              //     }}
+              //     sendResponse={(obj: RequestSuccess) => {
+              //       sendResponse(tabRef, obj);
+              //     }}
+              //   />
+              // )
+            });
           } catch (e) {
-            this.send(
-              JSON.stringify({
-                cmd: 'sign_err',
-                uuid: payload.uuid,
-                error: e.message,
-              }),
-            );
+            console.log(e);
+            // this.send(
+            //   JSON.stringify({
+            //     cmd: 'sign_err',
+            //     uuid: payload.uuid,
+            //     error: e.message,
+            //   }),
+            // );
           }
-          break;*/
+          break;
         default:
           throw new Error('Invalid payload (unknown cmd)');
       }
@@ -319,6 +284,28 @@ class HAS {
     this.send(JSON.stringify(request));
   };
 
+  checkPayload = (payload: HAS_BroadcastPayload | HAS_AuthPayload) => {
+    if (payload.uuid) {
+      // validate APP request forwarded by HAS
+      assert(
+        payload.uuid && typeof payload.uuid == 'string',
+        `invalid payload (uuid)`,
+      );
+      assert(
+        payload.expire && typeof payload.expire == 'number',
+        `invalid payload (expire)`,
+      );
+      assert(
+        payload.account && typeof payload.account == 'string',
+        `invalid payload (account)`,
+      );
+      assert(
+        Date.now() < payload.expire,
+        `request expired - now:${Date.now()} > expire:${payload.expire}}`,
+      );
+    }
+  };
+
   answerAuthReq = (
     payload: HAS_AuthPayload,
     approve: boolean,
@@ -335,10 +322,8 @@ class HAS {
       if (approve) {
         const token = uuid.v4() as string;
         const expire = Date.now() + EXPIRE_DELAY_APP;
-        console.log(payload.uuid, app_key, 'b');
 
-        const challenge = AES.encrypt(payload.uuid, app_key).toString();
-        console.log(challenge, 'a');
+        const challenge = Crypto.AES.encrypt(payload.uuid, app_key).toString();
         this.send(
           JSON.stringify({
             cmd: 'auth_ack',
@@ -375,6 +360,33 @@ class HAS {
         }),
       );
     }
+  };
+
+  answerSuccessfulBroadcastReq = (
+    payload: HAS_BroadcastPayload,
+    result: any,
+  ) => {
+    console.log(payload);
+    if (payload.decryptedData.broadcast) {
+      this.send(
+        JSON.stringify({
+          cmd: 'sign_ack',
+          uuid: payload.uuid,
+          broadcast: payload.decryptedData.broadcast,
+          data: result.id,
+        }),
+      );
+    } else {
+      throw new Error('Transaction signing not implemented');
+      //                 const tx = new Transaction
+      //                 tx.ops = ops
+      // //                const signed_tx = await hiveClient.broadcast.sign(tx, PrivateKey.from(key_private))
+      //                 this.send(JSON.stringify({cmd:"sign_ack", uuid:uuid, broadcast:payload.broadcast, data:"signed_tx"}))
+    }
+  };
+
+  answerFailedBroadcastReq = (payload: HAS_BroadcastPayload) => {
+    this.send(JSON.stringify({cmd: 'sign_nack', uuid: payload.uuid}));
   };
 
   send = (message: string) => {
