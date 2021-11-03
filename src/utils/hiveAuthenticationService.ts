@@ -1,4 +1,4 @@
-import {Operation} from '@hiveio/dhive';
+import {CommentOperation, Operation, VoteOperation} from '@hiveio/dhive';
 import {showHASInitRequestAsTreated} from 'actions/hiveAuthenticationService';
 import {KeyTypes} from 'actions/interfaces';
 import assert from 'assert';
@@ -11,7 +11,9 @@ import {
   KeychainRequest,
   KeychainRequestTypes,
   RequestBroadcast,
+  RequestPost,
   RequestSuccess,
+  RequestVote,
 } from './keychain.types';
 import {ModalComponent} from './modal.enum';
 import {navigate} from './navigation';
@@ -205,15 +207,54 @@ class HAS {
             );
             const {ops, key_type} = opsData;
             payload.decryptedData = opsData;
-
-            const request: RequestBroadcast = {
-              domain: auth.app,
-              type: KeychainRequestTypes.broadcast,
-              username: payload.account,
-              operations: ops,
-              method: KeychainKeyTypes[key_type],
-            };
-
+            let request;
+            if (ops.length === 1) {
+              let op = ops[0];
+              switch (op[0]) {
+                case 'vote':
+                  const voteOperation = (op as VoteOperation)[1];
+                  request = {
+                    domain: auth.app,
+                    type: KeychainRequestTypes.vote,
+                    username: payload.account,
+                    permlink: voteOperation.permlink,
+                    author: voteOperation.author,
+                    weight: voteOperation.weight,
+                  } as RequestVote;
+                  break;
+                case 'comment':
+                  const commentOperation = (op as CommentOperation)[1];
+                  request = {
+                    domain: auth.app,
+                    type: KeychainRequestTypes.post,
+                    username: payload.account,
+                    permlink: commentOperation.permlink,
+                    title: commentOperation.title,
+                    body: commentOperation.body,
+                    parent_perm: commentOperation.parent_permlink,
+                    parent_username: commentOperation.parent_author,
+                    json_metadata: commentOperation.json_metadata,
+                  } as RequestPost;
+                  break;
+                default:
+                  request = {
+                    domain: auth.app,
+                    type: KeychainRequestTypes.broadcast,
+                    username: payload.account,
+                    operations: ops,
+                    method: KeychainKeyTypes[key_type],
+                  } as RequestBroadcast;
+                  break;
+              }
+            } else {
+              request = {
+                domain: auth.app,
+                type: KeychainRequestTypes.broadcast,
+                username: payload.account,
+                operations: ops,
+                method: KeychainKeyTypes[key_type],
+              } as RequestBroadcast;
+            }
             const data: HAS_BroadcastModalPayload = {
               request: {...request, has: true},
               accounts: await store.getState().accounts,
@@ -229,19 +270,6 @@ class HAS {
             navigate('ModalScreen', {
               name: ModalComponent.HAS_BROADCAST,
               data,
-              // modalContent: (
-              //   <RequestModalContent
-              //     request={{...data, request_id}}
-              //     accounts={accounts}
-              //     onForceCloseModal={onForceCloseModal}
-              //     sendError={(obj: RequestError) => {
-              //       sendError(tabRef, obj);
-              //     }}
-              //     sendResponse={(obj: RequestSuccess) => {
-              //       sendResponse(tabRef, obj);
-              //     }}
-              //   />
-              // )
             });
           } catch (e) {
             console.log(e);
