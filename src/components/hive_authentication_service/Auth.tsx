@@ -7,7 +7,7 @@ import React, {useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
-import {HAS_AuthPayload} from 'utils/hiveAuthenticationService';
+import {HAS_AuthPayload} from 'utils/hiveAuthenticationService.types';
 import {translate} from 'utils/localize';
 
 type Props = PropsFromRedux & {
@@ -38,11 +38,11 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
           {success
             ? translate('wallet.has.auth.success', {
                 account: data.account,
-                name: data.app.name,
+                name: data.decryptedData.app.name,
               })
             : translate('wallet.has.auth.text', {
                 account: data.account,
-                name: data.app.name,
+                name: data.decryptedData.app.name,
               })}
         </Text>
         {accounts.find((e) => e.name === data.account) ? null : (

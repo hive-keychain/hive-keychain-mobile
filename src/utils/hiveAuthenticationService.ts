@@ -1,14 +1,23 @@
-import {CommentOperation, Operation, VoteOperation} from '@hiveio/dhive';
+import {CommentOperation, VoteOperation} from '@hiveio/dhive';
 import {showHASInitRequestAsTreated} from 'actions/hiveAuthenticationService';
-import {KeyTypes} from 'actions/interfaces';
 import assert from 'assert';
 import {encodeMemo} from 'components/bridge';
 import Crypto from 'crypto-js';
 import uuid from 'react-native-uuid';
 import {RootState, store} from 'store';
 import {
+  Connection,
+  HAS_AuhtDecryptedData,
+  HAS_AuthChallengeData,
+  HAS_AuthPayload,
+  HAS_BroadcastModalPayload,
+  HAS_BroadcastPayload,
+  HAS_ConnectPayload,
+  HAS_OpsData,
+  HAS_Type,
+} from './hiveAuthenticationService.types';
+import {
   KeychainKeyTypes,
-  KeychainRequest,
   KeychainRequestTypes,
   RequestBroadcast,
   RequestPost,
@@ -17,86 +26,6 @@ import {
 } from './keychain.types';
 import {ModalComponent} from './modal.enum';
 import {navigate} from './navigation';
-
-export type HAS_ConnectPayload = {
-  account: string;
-  uuid: string;
-  host: string;
-  key: string;
-};
-
-export type HAS_AuthPayload = {
-  cmd: 'auth_req';
-  account: string;
-  app: any;
-  uuid: string;
-  expire: number;
-};
-
-export type HAS_BroadcastPayload = {
-  cmd: 'sign_req';
-  account: string;
-  token: string;
-  data: string;
-  decryptedData?: HAS_OpsData;
-  uuid: string;
-  expire: number;
-};
-
-export type HAS_Connected = {
-  cmd: 'connected';
-};
-
-export type HAS_Error = {
-  cmd: 'error';
-};
-
-export type HAS_Register = {
-  cmd: 'register_ack';
-};
-
-export type HAS_KeyAck = {
-  cmd: 'key_ack';
-  key: string;
-};
-
-type HAS_Type =
-  | HAS_AuthPayload
-  | HAS_BroadcastPayload
-  | HAS_Connected
-  | HAS_Error
-  | HAS_Register
-  | HAS_KeyAck;
-
-type Token = {
-  token: string;
-  expire: number;
-  key: string;
-  app: string;
-  ts_create: string;
-  ts_expire: string;
-};
-
-type Connection = {
-  account: string;
-  uuid: string;
-  key: string;
-  tokens: Token[];
-};
-
-type HAS_OpsData = {
-  key_type: KeyTypes;
-  ops: Operation[];
-  broadcast: boolean;
-};
-
-export type HAS_BroadcastModalPayload = {
-  request: KeychainRequest;
-  accounts: any;
-  onForceCloseModal: () => void;
-  sendError: () => void;
-  sendResponse: (obj: RequestSuccess) => void;
-};
 
 export const showHASInitRequest = (data: any) => {
   store.dispatch(showHASInitRequestAsTreated());
@@ -181,6 +110,22 @@ class HAS {
           break;
         case 'auth_req':
           this.checkPayload(payload);
+          const accountConnection = this.connections.find(
+            (e) => e.account === payload.account && e.uuid === payload.uuid,
+          );
+          assert(
+            accountConnection,
+            'This account has not been connected through HAS.',
+          );
+
+          const data: HAS_AuhtDecryptedData = JSON.parse(
+            Crypto.AES.decrypt(payload.data, accountConnection.key).toString(
+              Crypto.enc.Utf8,
+            ),
+          );
+          payload.decryptedData = data;
+          console.log(payload);
+
           navigate('ModalScreen', {
             name: ModalComponent.HAS_AUTH,
             data: {...payload, callback: this.answerAuthReq},
@@ -195,13 +140,14 @@ class HAS {
               (e) => e.account === payload.account,
             );
             assert(account, 'This account has not been connected through HAS.');
+            console.log(account.tokens);
             const auth = account.tokens.find(
-              (o) => o.token == payload.token && o.expire > Date.now(),
+              (o) => o.token === payload.token && o.expire > Date.now(),
             );
             assert(auth, 'Token invalid or expired');
             // Decrypt the ops to sign with the encryption key associated to the token.
             const opsData: HAS_OpsData = JSON.parse(
-              Crypto.AES.decrypt(payload.data, auth.key).toString(
+              Crypto.AES.decrypt(payload.data, account.key).toString(
                 Crypto.enc.Utf8,
               ),
             );
@@ -334,7 +280,7 @@ class HAS {
     }
   };
 
-  answerAuthReq = (
+  answerAuthReq = async (
     payload: HAS_AuthPayload,
     approve: boolean,
     callback: () => void,
@@ -350,23 +296,37 @@ class HAS {
       if (approve) {
         const token = uuid.v4() as string;
         const expire = Date.now() + EXPIRE_DELAY_APP;
-
-        const challenge = Crypto.AES.encrypt(payload.uuid, app_key).toString();
+        const auth_ack_data: HAS_AuthChallengeData = {
+          token: token,
+          expire: expire,
+        };
+        console.log('before dec');
+        if (payload.decryptedData.app.pubkey) {
+          auth_ack_data.challenge = await dAppChallenge(
+            payload.account,
+            payload.decryptedData.app.pubkey,
+            payload.account,
+          );
+        }
+        console.log('after dec', auth_ack_data);
+        //const challenge = Crypto.AES.encrypt(payload.uuid, app_key).toString();
+        const data = Crypto.AES.encrypt(
+          JSON.stringify(auth_ack_data),
+          app_key,
+        ).toString();
         this.send(
           JSON.stringify({
             cmd: 'auth_ack',
             uuid: payload.uuid,
-            token: token,
-            expire: expire,
-            challenge: challenge,
+            data,
+            //challenge: challenge,
           }),
         );
         // Add new token into storage
         connection.tokens.push({
           token: token,
           expire: expire,
-          key: app_key,
-          app: payload.app.name,
+          app: payload.decryptedData.app.name,
           ts_create: new Date().toISOString(),
           ts_expire: new Date(expire).toISOString(),
         });
@@ -422,6 +382,25 @@ class HAS {
     this.ws.send(message);
   };
 }
+
+const dAppChallenge = async (
+  username: string,
+  pubkey: string,
+  message: string,
+) => {
+  try {
+    const accounts = (store.getState() as RootState).accounts;
+    const account = accounts.find((e) => e.name === username);
+    if (!account) return null;
+    const key = account.keys.posting;
+    if (!key)
+      //TODO : throw error;
+      return null;
+    return await encodeMemo(key, pubkey, `#${message}`);
+  } catch (e) {
+    console.log('error encrypting', e);
+  }
+};
 
 const prepareChallengeRequest = async (
   username: string,
