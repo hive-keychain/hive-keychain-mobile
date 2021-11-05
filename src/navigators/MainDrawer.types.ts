@@ -21,7 +21,10 @@ export type BrowserNavigationProps = {
   route: BrowserNavigationRoute;
 };
 
-type WalletNavigation = StackNavigationProp<MainDrawerStackParam, 'WALLET'>;
+export type WalletNavigation = StackNavigationProp<
+  MainDrawerStackParam,
+  'WALLET'
+>;
 
 export type WalletNavigationProps = {
   navigation: WalletNavigation;
@@ -35,3 +38,13 @@ export type MgtNavigation = StackNavigationProp<
 export type MgtNavigationProps = {
   navigation: MgtNavigation;
 };
+
+export type AboutNavigation = StackNavigationProp<
+  MainDrawerStackParam,
+  'ABOUT'
+>;
+
+export type SettingsNavigation = StackNavigationProp<
+  MainDrawerStackParam,
+  'SettingsScreen'
+>;

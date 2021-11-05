@@ -9,6 +9,7 @@ import Separator from 'components/ui/Separator';
 import {MainNavigation} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, ViewStyle} from 'react-native';
+import Orientation from 'react-native-orientation-locker';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
@@ -22,6 +23,16 @@ const AccountManagement = ({
   accounts,
 }: PropsFromRedux & {navigation: MainNavigation}) => {
   const [username, setUsername] = useState(account.name);
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      Orientation.lockToPortrait();
+      Orientation.removeAllListeners();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       setUsername(account.name);

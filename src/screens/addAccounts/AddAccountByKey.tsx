@@ -21,6 +21,7 @@ import {
   View,
 } from 'react-native';
 import {Text} from 'react-native-elements';
+import Orientation from 'react-native-orientation-locker';
 import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
@@ -35,6 +36,16 @@ const AddAccountByKey = ({
   (AddAccNavigationProps | AddAccFromWalletNavigationProps)) => {
   const [account, setAccount] = useState('');
   const [key, setKey] = useState('');
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      Orientation.lockToPortrait();
+      Orientation.removeAllListeners();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   const onImportKeys = async () => {
     try {
       const keys = await validateNewAccount(account, key);
@@ -46,7 +57,7 @@ const AddAccountByKey = ({
         Toast.show(translate('toast.error_add_account'), Toast.LONG);
       }
     } catch (e) {
-      Toast.show(e.message || e, Toast.LONG);
+      Toast.show((e as any).message || e, Toast.LONG);
     }
   };
   const {height} = useWindowDimensions();

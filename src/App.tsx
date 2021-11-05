@@ -26,19 +26,21 @@ const Root = createStackNavigator<RootStackParam>();
 const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
+
   useEffect(() => {
     setupLinking(addTabFromLinking);
     return () => {
       clearLinkingListeners();
     };
   }, [addTabFromLinking]);
+
   useEffect(() => {
     Orientation.lockToPortrait();
   }, []);
+
   useEffect(() => {
     setRpc(rpc as Rpc);
   }, [rpc]);
-
   const renderNavigator = () => {
     if (!hasAccounts) {
       // No accounts, sign up process
