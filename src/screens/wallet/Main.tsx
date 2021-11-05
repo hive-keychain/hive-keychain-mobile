@@ -9,10 +9,10 @@ import PercentageDisplay from 'components/hive/PercentageDisplay';
 import Transactions from 'components/hive/Transactions';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
+import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect} from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
-import Orientation from 'react-native-orientation-locker';
 import {connect, ConnectedProps} from 'react-redux';
 import Primary from 'screens/wallet/Primary';
 import Tokens from 'screens/wallet/Tokens';
@@ -48,14 +48,8 @@ const Main = ({
     lastAccount,
   ]);
 
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      Orientation.lockToPortrait();
-      Orientation.removeAllListeners();
-    });
+  useLockedPortrait(navigation);
 
-    return unsubscribe;
-  }, [navigation]);
   if (!user) {
     return null;
   }

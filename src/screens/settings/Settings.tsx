@@ -8,10 +8,10 @@ import CollaspibleSettings from 'components/settings/CollapsibleSettings';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
+import useLockedPortrait from 'hooks/useLockedPortrait';
 import {SettingsNavigation} from 'navigators/MainDrawer.types';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import Orientation from 'react-native-orientation-locker';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {rpcList} from 'utils/hiveUtils';
@@ -27,15 +27,7 @@ const Settings = ({
   removePreference,
   navigation,
 }: PropsFromRedux & {navigation: SettingsNavigation}) => {
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      Orientation.lockToPortrait();
-      Orientation.removeAllListeners();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
-
+  useLockedPortrait(navigation);
   const showPreferencesHandler = () => {
     const userPreference = preferences.find((e) => e.username === active.name);
     if (!userPreference || !userPreference.domains.length)

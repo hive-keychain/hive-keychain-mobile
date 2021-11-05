@@ -7,6 +7,7 @@ import CustomInput from 'components/form/CustomInput';
 import Button from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
+import useLockedPortrait from 'hooks/useLockedPortrait';
 import {
   AddAccFromWalletNavigation,
   AddAccFromWalletNavigationProps,
@@ -21,7 +22,6 @@ import {
   View,
 } from 'react-native';
 import {Text} from 'react-native-elements';
-import Orientation from 'react-native-orientation-locker';
 import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
@@ -37,14 +37,7 @@ const AddAccountByKey = ({
   const [account, setAccount] = useState('');
   const [key, setKey] = useState('');
 
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      Orientation.lockToPortrait();
-      Orientation.removeAllListeners();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+  useLockedPortrait(navigation);
 
   const onImportKeys = async () => {
     try {

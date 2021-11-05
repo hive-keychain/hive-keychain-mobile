@@ -1,20 +1,13 @@
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
+import useLockedPortrait from 'hooks/useLockedPortrait';
 import {AboutNavigation} from 'navigators/MainDrawer.types';
 import React from 'react';
 import {Linking, StatusBar, StyleSheet, Text, View} from 'react-native';
-import Orientation from 'react-native-orientation-locker';
 import VersionInfo from 'react-native-version-info';
 
 export default ({navigation}: {navigation: AboutNavigation}) => {
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      Orientation.lockToPortrait();
-      Orientation.removeAllListeners();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+  useLockedPortrait(navigation);
 
   return (
     <Background>
