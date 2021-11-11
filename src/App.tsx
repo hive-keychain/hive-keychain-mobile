@@ -11,6 +11,7 @@ import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
 import React, {useEffect, useRef} from 'react';
+import RNBootSplash from 'react-native-bootsplash';
 import Orientation from 'react-native-orientation-locker';
 import {connect, ConnectedProps} from 'react-redux';
 import Modal from 'screens/Modal';
@@ -26,7 +27,9 @@ const Root = createStackNavigator<RootStackParam>();
 const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
-
+  useEffect(() => {
+    RNBootSplash.hide({fade: true});
+  }, []);
   useEffect(() => {
     setupLinking(addTabFromLinking);
     return () => {
