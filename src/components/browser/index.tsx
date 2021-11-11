@@ -62,7 +62,7 @@ const Browser = ({
 
   React.useEffect(() => {
     Orientation.addDeviceOrientationListener((orientation) => {
-      console.log(orientation);
+      if (['UNKNOWN', 'FACE-UP', 'FACE-DOWN'].includes(orientation)) return;
       if (Platform.OS === 'android' && orientation !== 'PORTRAIT') {
         Orientation.getAutoRotateState((s) => {
           console.log('s', s);
