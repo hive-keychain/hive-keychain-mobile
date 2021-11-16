@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {translate} from 'utils/localize';
@@ -120,14 +121,17 @@ const UrlModal = ({
           </TouchableOpacity>
         ) : null}
       </View>
-      <UrlAutocomplete onSubmit={onSubmitUrl} input={url} history={history} />
-      {history.length ? (
-        <TouchableOpacity onPress={clearHistory}>
-          <Text style={styles.clearHistory}>
-            {translate('browser.history.clear')}
-          </Text>
-        </TouchableOpacity>
-      ) : null}
+
+      <ScrollView>
+        <UrlAutocomplete onSubmit={onSubmitUrl} input={url} history={history} />
+        {history.length ? (
+          <TouchableOpacity onPress={clearHistory}>
+            <Text style={styles.clearHistory}>
+              {translate('browser.history.clear')}
+            </Text>
+          </TouchableOpacity>
+        ) : null}
+      </ScrollView>
     </Modal>
   );
 };

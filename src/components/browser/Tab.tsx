@@ -252,12 +252,8 @@ export default ({
   };
   return (
     <View
-      style={[
-        styles.container,
-        !active || isManagingTab ? styles.hide : null,
-        {backgroundColor: 'yellow'},
-      ]}>
-      <View style={{flexGrow: 1, backgroundColor: 'red'}}>
+      style={[styles.container, !active || isManagingTab ? styles.hide : null]}>
+      <View style={{flexGrow: 1}}>
         <ProgressBar progress={progress} />
 
         {url === BrowserConfig.HOMEPAGE_URL ? (
@@ -293,13 +289,6 @@ export default ({
             onHttpError={(error) => {
               console.log('HttpError', error);
             }}
-            // renderError={(errorDomain, errorCode, errorDescription) => (
-            //   <View style={{flex: 1}}>
-            //     <Text>{errorDomain}</Text>
-            //     <Text>{errorCode}</Text>
-            //     <Text>{errorDescription}</Text>
-            //   </View>
-            // )}
           />
         </View>
       </View>
