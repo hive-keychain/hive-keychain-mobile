@@ -7,6 +7,7 @@ import CustomInput from 'components/form/CustomInput';
 import Button from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
+import useLockedPortrait from 'hooks/useLockedPortrait';
 import {
   AddAccFromWalletNavigation,
   AddAccFromWalletNavigationProps,
@@ -35,6 +36,9 @@ const AddAccountByKey = ({
   (AddAccNavigationProps | AddAccFromWalletNavigationProps)) => {
   const [account, setAccount] = useState('');
   const [key, setKey] = useState('');
+
+  useLockedPortrait(navigation);
+
   const onImportKeys = async () => {
     try {
       const keys = await validateNewAccount(account, key);

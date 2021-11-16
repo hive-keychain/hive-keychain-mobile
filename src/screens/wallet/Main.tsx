@@ -9,6 +9,8 @@ import PercentageDisplay from 'components/hive/PercentageDisplay';
 import Transactions from 'components/hive/Transactions';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
+import useLockedPortrait from 'hooks/useLockedPortrait';
+import {WalletNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect} from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
@@ -28,7 +30,8 @@ const Main = ({
   properties,
   accounts,
   lastAccount,
-}: PropsFromRedux) => {
+  navigation,
+}: PropsFromRedux & {navigation: WalletNavigation}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
 
   useEffect(() => {
@@ -44,6 +47,8 @@ const Main = ({
     fetchPhishingAccounts,
     lastAccount,
   ]);
+
+  useLockedPortrait(navigation);
 
   if (!user) {
     return null;

@@ -9,7 +9,7 @@ import {
 } from 'actions/interfaces';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useRef, useState} from 'react';
-import {KeyboardAvoidingView, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
 import {
@@ -81,10 +81,8 @@ export default ({
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [layout, setLayout] = useState({width: null, height: null});
   const insets = useSafeAreaInsets();
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
-  const styles = getStyles(layout);
   const goBack = () => {
     if (!canGoBack) {
       return;
@@ -255,92 +253,68 @@ export default ({
   return (
     <View
       style={[styles.container, !active || isManagingTab ? styles.hide : null]}>
-      <KeyboardAvoidingView style={{flexGrow: 1}} behavior="padding">
-        <View
-          style={styles.container}
-          onLayout={({nativeEvent}) => {
-            setLayout({
-              height: nativeEvent.layout.height,
-              width: nativeEvent.layout.width,
-            });
-          }}>
-          <ProgressBar progress={progress} />
+      <View style={{flexGrow: 1}}>
+        <ProgressBar progress={progress} />
 
-          {url === BrowserConfig.HOMEPAGE_URL ? (
-            <HomeTab
-              history={history}
-              favorites={favorites}
-              updateTabUrl={updateTabUrl}
-              homeRef={homeRef}
-              accounts={accounts}
-            />
-          ) : null}
-          <View
-            style={
-              url === BrowserConfig.HOMEPAGE_URL
-                ? styles.hide
-                : styles.wvcontainer
-            }>
-            <WebView
-              ref={tabRef}
-              source={{
-                uri: url === BrowserConfig.HOMEPAGE_URL ? null : url,
-              }}
-              sharedCookiesEnabled
-              injectedJavaScriptBeforeContentLoaded={hive_keychain}
-              onMessage={onMessage}
-              javaScriptEnabled
-              allowsInlineMediaPlayback
-              onLoadEnd={onLoadEnd}
-              onLoadStart={onLoadStart}
-              onLoadProgress={onLoadProgress}
-              pullToRefreshEnabled
-              onError={(error) => {
-                console.log('Error', error);
-              }}
-              onHttpError={(error) => {
-                console.log('HttpError', error);
-              }}
-              // renderError={(errorDomain, errorCode, errorDescription) => (
-              //   <View style={{flex: 1}}>
-              //     <Text>{errorDomain}</Text>
-              //     <Text>{errorCode}</Text>
-              //     <Text>{errorDescription}</Text>
-              //   </View>
-              // )}
-            />
-          </View>
-        </View>
-        {active && orientation === 'PORTRAIT' && (
-          <Footer
-            canGoBack={canGoBack}
-            canGoForward={canGoForward}
-            goBack={goBack}
-            goForward={goForward}
-            reload={reload}
-            addTab={addTab}
-            manageTabs={() => {
-              manageTabs(
-                {url, id, icon},
-                url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabRef,
-              );
-            }}
-            height={FOOTER_HEIGHT}
-            tabs={tabsNumber}
+        {url === BrowserConfig.HOMEPAGE_URL ? (
+          <HomeTab
+            history={history}
+            favorites={favorites}
+            updateTabUrl={updateTabUrl}
+            homeRef={homeRef}
+            accounts={accounts}
           />
-        )}
-      </KeyboardAvoidingView>
+        ) : null}
+        <View
+          style={
+            url === BrowserConfig.HOMEPAGE_URL ? styles.hide : styles.container
+          }>
+          <WebView
+            ref={tabRef}
+            source={{
+              uri: url === BrowserConfig.HOMEPAGE_URL ? null : url,
+            }}
+            sharedCookiesEnabled
+            injectedJavaScriptBeforeContentLoaded={hive_keychain}
+            onMessage={onMessage}
+            javaScriptEnabled
+            allowsInlineMediaPlayback
+            onLoadEnd={onLoadEnd}
+            onLoadStart={onLoadStart}
+            onLoadProgress={onLoadProgress}
+            pullToRefreshEnabled
+            onError={(error) => {
+              console.log('Error', error);
+            }}
+            onHttpError={(error) => {
+              console.log('HttpError', error);
+            }}
+          />
+        </View>
+      </View>
+      {active && orientation === 'PORTRAIT' && (
+        <Footer
+          canGoBack={canGoBack}
+          canGoForward={canGoForward}
+          goBack={goBack}
+          goForward={goForward}
+          reload={reload}
+          addTab={addTab}
+          manageTabs={() => {
+            manageTabs(
+              {url, id, icon},
+              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabRef,
+            );
+          }}
+          height={FOOTER_HEIGHT}
+          tabs={tabsNumber}
+        />
+      )}
     </View>
   );
 };
 
-const getStyles = (layout: {width: number; height: number}) =>
-  StyleSheet.create({
-    container: {flex: 1, flexDirection: 'column'},
-    wvcontainer: {
-      flex: 1,
-      width: layout.width,
-      height: layout.height,
-    },
-    hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
-  });
+const styles = StyleSheet.create({
+  container: {flex: 1, flexDirection: 'column'},
+  hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
+});

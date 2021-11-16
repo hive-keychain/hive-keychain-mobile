@@ -14,7 +14,7 @@ import {
 import Browser from 'components/browser';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React from 'react';
-import Orientation from 'react-native-orientation';
+import Orientation from 'react-native-orientation-locker';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 
@@ -38,19 +38,23 @@ const BrowserScreen = ({
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      Orientation.unlockAllOrientations();
+      Orientation.getAutoRotateState((s) => {
+        if (s) {
+          Orientation.unlockAllOrientations();
+        } else console.log('cant rotate');
+      });
     });
 
     return unsubscribe;
   }, [navigation]);
 
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('blur', () => {
-      Orientation.lockToPortrait();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+  // React.useEffect(() => {
+  //   const unsubscribe = navigation.addListener('blur', () => {
+  //     Orientation.lockToPortrait();
+  //     Orientation.removeAllListeners();
+  //   });
+  //   return unsubscribe;
+  // }, [navigation]);
 
   return (
     <Browser

@@ -1,10 +1,14 @@
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
+import useLockedPortrait from 'hooks/useLockedPortrait';
+import {AboutNavigation} from 'navigators/MainDrawer.types';
 import React from 'react';
 import {Linking, StatusBar, StyleSheet, Text, View} from 'react-native';
 import VersionInfo from 'react-native-version-info';
 
-export default () => {
+export default ({navigation}: {navigation: AboutNavigation}) => {
+  useLockedPortrait(navigation);
+
   return (
     <Background>
       <>

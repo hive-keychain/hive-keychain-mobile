@@ -13,7 +13,8 @@
     "test": "jest",
     "lint": "eslint .",
     "dep-clean": "rm -rf node_modules && npm install && npx jetify",
-    "clean": "watchman watch-del-all &&npm run dep-clean && npm run android-clean && npm run start -- --reset-cache"
+    "clean": "watchman watch-del-all &&npm run dep-clean && npm run android-clean && npm run start -- --reset-cache",
+    "generate-splash": "npx react-native generate-bootsplash src/assets/keychain_logo.png --background-color=000000 --logo-width=320"
   },
   "dependencies": {
     "@hiveio/dhive": "^0.14.16",
@@ -29,7 +30,7 @@
     "@react-navigation/native": "^5.8.10",
     "@react-navigation/stack": "^5.12.8",
     "assert": "^2.0.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "crypto-js": "^3.3.0",
     "fuse.js": "^6.4.6",
     "hive-tx": "^4.0.1",
@@ -38,6 +39,7 @@
     "md5": "^2.3.0",
     "node-libs-browser": "^2.2.1",
     "react": "16.11.0",
+    "react-native-bootsplash": "^3.2.6",
     "react-native-camera": "^3.39.0",
     "react-native-elements": "^2.3.2",
     "react-native-fast-image": "^8.3.4",
@@ -47,7 +49,7 @@
     "react-native-linear-gradient": "^2.5.6",
     "react-native-localize": "^1.4.3",
     "react-native-modal": "^11.7.0",
-    "react-native-orientation": "^3.1.3",
+    "react-native-orientation-locker": "^1.3.1",
     "react-native-permissions": "^3.0.0",
     "react-native-qrcode-scanner": "^1.6.0",
     "react-native-reanimated": "^1.13.2",
@@ -68,8 +70,8 @@
     "redux-persist-expire": "^1.1.0",
     "redux-thunk": "^2.3.0",
     "sscjs": "0.0.8",
-    "url-parse": "^1.5.1",
-    "validator": "^13.6.0"
+    "validator": "^13.6.0",
+    "url-parse": "^1.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

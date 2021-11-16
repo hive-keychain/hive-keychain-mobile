@@ -6,6 +6,7 @@ import Key from 'components/hive/Key';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
+import useLockedPortrait from 'hooks/useLockedPortrait';
 import {MainNavigation} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, ViewStyle} from 'react-native';
@@ -22,6 +23,8 @@ const AccountManagement = ({
   accounts,
 }: PropsFromRedux & {navigation: MainNavigation}) => {
   const [username, setUsername] = useState(account.name);
+  useLockedPortrait(navigation);
+
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       setUsername(account.name);

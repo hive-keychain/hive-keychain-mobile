@@ -8,6 +8,8 @@ import CollaspibleSettings from 'components/settings/CollapsibleSettings';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
+import useLockedPortrait from 'hooks/useLockedPortrait';
+import {SettingsNavigation} from 'navigators/MainDrawer.types';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
@@ -23,7 +25,9 @@ const Settings = ({
   loadAccount,
   preferences,
   removePreference,
-}: PropsFromRedux) => {
+  navigation,
+}: PropsFromRedux & {navigation: SettingsNavigation}) => {
+  useLockedPortrait(navigation);
   const showPreferencesHandler = () => {
     const userPreference = preferences.find((e) => e.username === active.name);
     if (!userPreference || !userPreference.domains.length)

@@ -10,7 +10,8 @@ import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
 import React, {useEffect, useRef} from 'react';
-import Orientation from 'react-native-orientation';
+import RNBootSplash from 'react-native-bootsplash';
+import Orientation from 'react-native-orientation-locker';
 import {connect, ConnectedProps} from 'react-redux';
 import Modal from 'screens/Modal';
 import {RootState} from 'store';
@@ -32,6 +33,10 @@ const App = ({hasAccounts, auth, rpc, has_init}: PropsFromRedux) => {
     return () => {
       clearLinkingListeners();
     };
+  }, []);
+
+  useEffect(() => {
+    RNBootSplash.hide({fade: true});
   }, []);
 
   useEffect(() => {

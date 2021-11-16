@@ -1,8 +1,14 @@
 import {Tab as TabType} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useState} from 'react';
-import {StatusBar, StyleSheet, View} from 'react-native';
-import Orientation from 'react-native-orientation';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
+import Orientation, {OrientationType} from 'react-native-orientation-locker';
 import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
@@ -61,14 +67,38 @@ const Browser = ({
   }, [tabs]);
 
   React.useEffect(() => {
-    const a = Orientation.addOrientationListener((orientation: string) => {
-      console.log(orientation);
-      setOrientation(orientation);
+    Orientation.addDeviceOrientationListener((orientation) => {
+      if (['UNKNOWN', 'FACE-UP', 'FACE-DOWN'].includes(orientation)) return;
+      if (Platform.OS === 'android' && orientation !== 'PORTRAIT') {
+        Orientation.getAutoRotateState((s) => {
+          console.log('s', s);
+          if (s) {
+            setDeviceOrientation(orientation);
+          } else console.log('cant rotate');
+        });
+      } else {
+        setDeviceOrientation(orientation);
+      }
     });
     return () => {
-      Orientation.removeOrientationListener(a);
+      Orientation.removeAllListeners();
     };
   }, []);
+
+  const setDeviceOrientation = (orientation: OrientationType) => {
+    setOrientation(orientation);
+    // switch (orientation) {
+    //   case 'PORTRAIT':
+    //     Orientation.lockToPortrait();
+    //     break;
+    //   case 'LANDSCAPE-LEFT':
+    //     Orientation.lockToLandscapeLeft();
+    //     break;
+    //   case 'LANDSCAPE-RIGHT':
+    //     Orientation.lockToLandscapeRight();
+    //     break;
+    // }
+  };
 
   const manageTabs = (
     {url, icon, id}: TabType,
@@ -136,7 +166,9 @@ const Browser = ({
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Header
         browser={browser}
         navigation={navigation}
@@ -186,12 +218,12 @@ const Browser = ({
         setUrl={setSearchUrl}
         clearHistory={clearHistory}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
+  container: {flexGrow: 1},
 });
 
 export default Browser;
