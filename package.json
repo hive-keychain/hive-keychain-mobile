@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "dep-clean": "rm -rf node_modules && npm install && npx jetify",
     "clean": "watchman watch-del-all &&npm run dep-clean && npm run android-clean && npm run start -- --reset-cache",
-    "generate-splash": "npx react-native generate-bootsplash android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png --background-color=A3112A --logo-width=200"
+    "generate-splash": "npx react-native generate-bootsplash src/assets/keychain_logo.png --background-color=000000 --logo-width=320"
   },
   "dependencies": {
     "@hiveio/dhive": "^0.14.16",
