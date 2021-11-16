@@ -29,7 +29,7 @@
     "@react-navigation/drawer": "^5.11.4",
     "@react-navigation/native": "^5.8.10",
     "@react-navigation/stack": "^5.12.8",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "crypto-js": "^3.3.0",
     "fuse.js": "^6.4.6",
     "hive-tx": "^4.0.1",
@@ -68,7 +68,7 @@
     "redux-persist-expire": "^1.1.0",
     "redux-thunk": "^2.3.0",
     "sscjs": "0.0.8",
-    "url-parse": "^1.5.1"
+    "url-parse": "^1.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
