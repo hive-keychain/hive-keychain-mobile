@@ -1,15 +1,19 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 type Props = {status: boolean};
 
 export default ({status}: Props) => {
   const styles = getStyles(status);
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => {}}
+      onLongPress={() => {}}>
       <Text style={styles.text}>HAS</Text>
       <View style={styles.indicator}></View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
