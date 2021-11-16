@@ -9,7 +9,7 @@ import {
 } from 'actions/interfaces';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useRef, useState} from 'react';
-import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
 import {
@@ -251,10 +251,13 @@ export default ({
     }
   };
   return (
-    <KeyboardAvoidingView
-      style={[styles.container, !active || isManagingTab ? styles.hide : null]}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <View style={{flex: 1}}>
+    <View
+      style={[
+        styles.container,
+        !active || isManagingTab ? styles.hide : null,
+        {backgroundColor: 'yellow'},
+      ]}>
+      <View style={{flexGrow: 1, backgroundColor: 'red'}}>
         <ProgressBar progress={progress} />
 
         {url === BrowserConfig.HOMEPAGE_URL ? (
@@ -318,7 +321,7 @@ export default ({
           tabs={tabsNumber}
         />
       )}
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 

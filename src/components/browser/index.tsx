@@ -1,7 +1,13 @@
 import {Tab as TabType} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useState} from 'react';
-import {Platform, StatusBar, StyleSheet, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+} from 'react-native';
 import Orientation, {OrientationType} from 'react-native-orientation-locker';
 import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
@@ -160,7 +166,9 @@ const Browser = ({
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Header
         browser={browser}
         navigation={navigation}
@@ -210,12 +218,12 @@ const Browser = ({
         setUrl={setSearchUrl}
         clearHistory={clearHistory}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1},
+  container: {flexGrow: 1},
 });
 
 export default Browser;
