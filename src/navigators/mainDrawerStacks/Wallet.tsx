@@ -1,16 +1,12 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import QRLogo from 'assets/addAccount/icon_scan-qr.svg';
 import Hive from 'assets/wallet/hive.svg';
+import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import Claim from 'components/operations/ClaimRewards';
+import HeaderQR from 'components/qr_code/HeaderQR';
 import DrawerButton from 'components/ui/DrawerButton';
 import React from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import Wallet from 'screens/wallet/Main';
 import WalletQRScanner from 'screens/wallet/WalletQRScanner';
 import {Width} from 'utils/common.types';
@@ -36,13 +32,8 @@ export default () => {
           headerRight: () => (
             <View style={styles.containerRight}>
               <Claim />
-              <TouchableOpacity
-                style={styles.qr}
-                onPress={() => {
-                  navigation.navigate('ScanQRFromWalletScreen', {wallet: true});
-                }}>
-                <QRLogo width={25} height={25} />
-              </TouchableOpacity>
+              <StatusIndicator status={false} />
+              <HeaderQR navigation={navigation} />
               <DrawerButton navigation={navigation} />
             </View>
           ),
