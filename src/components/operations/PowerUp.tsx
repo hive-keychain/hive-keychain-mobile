@@ -51,7 +51,13 @@ const PowerUp = ({currency = 'HIVE', user, loadAccount}: Props) => {
       title={translate('wallet.operations.powerup.title')}>
       <>
         <Separator />
-        <Balance currency={currency} account={user.account} />
+        <Balance
+          currency={currency}
+          account={user.account}
+          setMax={(value: string) => {
+            setAmount(value);
+          }}
+        />
 
         <Separator />
         <OperationInput
