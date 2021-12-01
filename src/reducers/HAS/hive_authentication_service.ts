@@ -1,14 +1,18 @@
 import {ActionPayload} from 'actions/interfaces';
 import {HAS_Actions} from 'actions/types';
-import {HAS_ConnectPayload} from 'utils/hiveAuthenticationService.types';
+import {
+  Connection,
+  HAS_ConnectPayload,
+} from 'utils/hiveAuthenticationService.types';
 
 type HAS_InitState = {
   requiresInit: boolean;
+  connections: Connection[];
   data?: HAS_ConnectPayload;
 };
 
 export default (
-  state: HAS_InitState = {requiresInit: false},
+  state: HAS_InitState = {requiresInit: false, connections: []},
   {type, payload: data}: ActionPayload<HAS_ConnectPayload>,
 ) => {
   switch (type) {
