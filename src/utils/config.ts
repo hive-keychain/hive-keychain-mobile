@@ -72,7 +72,7 @@ export const BrowserConfig = {
       },
       {
         name: 'dCity',
-        description: 'City simulation game based on hive-engine NFT tokens.',
+        description: 'City simulation game based on hive-engine NFT tokens',
         icon: 'https://images.hive.blog/u/dcitygame/avatar',
         url: 'https://dcity.io',
         categories: ['gaming', 'nft'],
@@ -82,6 +82,13 @@ export const BrowserConfig = {
         description: 'Soccer Manager on the blockchain',
         icon: 'https://images.hive.blog/u/rabona/avatar',
         url: 'https://rabona.io/',
+        categories: ['gaming'],
+      },
+      {
+        name: 'dCrops',
+        description: 'Farming simulator game built on the Hive blockchain',
+        icon: 'https://images.hive.blog/u/dcrops/avatar',
+        url: 'https://dcrops.com',
         categories: ['gaming'],
       },
       {

@@ -1,6 +1,7 @@
 import {DynamicGlobalProperties, ExtendedAccount} from '@hiveio/dhive';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Width} from 'utils/common.types';
 import {formatBalance, toHP} from 'utils/format';
 import {getCurrencyProperties} from 'utils/hiveReact';
@@ -14,6 +15,7 @@ type Props = {
   engine?: boolean;
   tokenBalance?: string;
   tokenLogo?: JSX.Element;
+  setMax: (value: string) => void;
 };
 
 const Balance = ({
@@ -24,6 +26,7 @@ const Balance = ({
   engine,
   tokenBalance,
   tokenLogo,
+  setMax,
 }: Props) => {
   let {color, value, logo} = getCurrencyProperties(currency, account);
   let parsedValue = parseFloat(value as string);
@@ -43,7 +46,11 @@ const Balance = ({
     ...useWindowDimensions(),
   });
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => {
+        setMax(parsedValue.toFixed(3) + '');
+      }}>
       <View style={styles.main}>
         <View style={styles.left}>
           <View style={styles.logo}>{logo}</View>
@@ -59,7 +66,7 @@ const Balance = ({
           <Text style={styles.currency}>{` ${currency}`}</Text>
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
