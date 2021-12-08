@@ -22,6 +22,7 @@ export type HAS_AuthPayload = {
   cmd: 'auth_req';
   account: string;
   decryptedData?: HAS_AuhtDecryptedData;
+  auth_key: string;
   data: string;
   uuid: string;
   expire: number;
@@ -53,6 +54,14 @@ export type HAS_KeyAck = {
   cmd: 'key_ack';
   key: string;
 };
+export type HAS_ChallengeReq = {
+  cmd: 'challenge_req';
+  account: string;
+  token: string;
+  data: string;
+  decrypted_data?: {key_type: string; challenge: string};
+  uuid: string;
+};
 
 export type HAS_Type =
   | HAS_AuthPayload
@@ -60,7 +69,8 @@ export type HAS_Type =
   | HAS_Connected
   | HAS_Error
   | HAS_Register
-  | HAS_KeyAck;
+  | HAS_KeyAck
+  | HAS_ChallengeReq;
 
 export type Token = {
   token: string;

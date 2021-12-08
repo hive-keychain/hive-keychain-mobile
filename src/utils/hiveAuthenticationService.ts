@@ -1,8 +1,9 @@
 import {CommentOperation, VoteOperation} from '@hiveio/dhive';
 import {showHASInitRequestAsTreated} from 'actions/hiveAuthenticationService';
 import assert from 'assert';
-import {encodeMemo} from 'components/bridge';
+import {encodeMemo, signBuffer} from 'components/bridge';
 import Crypto from 'crypto-js';
+import {useWindowDimensions} from 'react-native';
 import uuid from 'react-native-uuid';
 import {RootState, store} from 'store';
 import {
@@ -12,12 +13,14 @@ import {
   HAS_AuthPayload,
   HAS_BroadcastModalPayload,
   HAS_BroadcastPayload,
+  HAS_ChallengeReq,
   HAS_ConnectPayload,
   HAS_OpsData,
   HAS_Type,
 } from './hiveAuthenticationService.types';
 import {
   KeychainKeyTypes,
+  KeychainKeyTypesLC,
   KeychainRequestTypes,
   RequestBroadcast,
   RequestPost,
@@ -228,6 +231,36 @@ class HAS {
             // );
           }
           break;
+        case 'challenge_req':
+          //this.checkPayload(payload);
+          const connection = this.connections.find((e) =>
+            e.tokens.find((e) => e.token === payload.token),
+          );
+          const token = connection.tokens.find(
+            (e) => e.token === payload.token,
+          );
+          console.log(connection.key);
+          if (token && token.expire > Date.now()) {
+            console.log(payload.data);
+            //console.log(token.auth_key);
+            const decrypted_data = Crypto.AES.decrypt(
+              payload.data,
+              connection.key,
+            ).toString(Crypto.enc.Utf8);
+            payload.decrypted_data = JSON.parse(decrypted_data);
+            navigate('ModalScreen', {
+              name: ModalComponent.HAS_CHALLENGE,
+              data: {
+                ...payload,
+                callback: this.answerChallengeReq,
+                domain: token.app,
+                connection,
+              },
+            });
+          } else {
+            //TODO
+          }
+          break;
         default:
           throw new Error('Invalid payload (unknown cmd)');
       }
@@ -323,12 +356,21 @@ class HAS {
           }),
         );
         // Add new token into storage
+        // const auth_key = Crypto.AES.decrypt(payload.auth_key, connection.key);
+        // console.log(
+        //   auth_key,
+        //   auth_key.toString(Crypto.enc.Utf8),
+        //   'auth',
+        //   payload.auth_key,
+        //   connection.key,
+        // );
         connection.tokens.push({
           token: token,
           expire: expire,
           app: payload.decryptedData.app.name,
           ts_create: new Date().toISOString(),
           ts_expire: new Date(expire).toISOString(),
+          //auth_key: auth_key.toString(Crypto.enc.Utf8),
         });
       } else {
         this.send(JSON.stringify({cmd: 'auth_nack', uuid: payload.uuid}));
@@ -380,6 +422,41 @@ class HAS {
   send = (message: string) => {
     console.log(`[SEND] ${message}`);
     this.ws.send(message);
+  };
+
+  answerChallengeReq = async (
+    payload: HAS_ChallengeReq,
+    approve: boolean,
+    connection: Connection,
+    callback: (success: boolean) => void,
+  ) => {
+    if (approve) {
+      const accounts = (store.getState() as RootState).accounts;
+      const account = accounts.find((e) => e.name === payload.account);
+      const challenge = await signBuffer(
+        account.keys[payload.decrypted_data.key_type as KeychainKeyTypesLC],
+        payload.decrypted_data.challenge,
+      );
+      const pubkey =
+        account.keys[
+          `${payload.decrypted_data.key_type as KeychainKeyTypesLC}Pubkey`
+        ];
+      const data = {challenge, pubkey};
+      console.log(data);
+      const signedData = Crypto.AES.encrypt(
+        JSON.stringify(data),
+        connection.key,
+      ).toString();
+      console.log(signedData);
+      this.send(
+        JSON.stringify({
+          cmd: 'challenge_ack',
+          data: signedData,
+          uuid: payload.uuid,
+        }),
+      );
+      callback(true);
+    }
   };
 }
 
