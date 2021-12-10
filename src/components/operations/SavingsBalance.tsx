@@ -1,7 +1,13 @@
 import {ExtendedAccount} from '@hiveio/dhive';
 import Savings from 'assets/wallet/icon_savings.svg';
 import React from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {Width} from 'utils/common.types';
 import {formatBalance} from 'utils/format';
 import {translate} from 'utils/localize';
@@ -9,10 +15,11 @@ import {translate} from 'utils/localize';
 type Props = {
   currency: string;
   account: ExtendedAccount;
+  setMax: (value: string) => void;
 };
 
-const SavingsBalance = ({currency, account}: Props) => {
-  let value = null;
+const SavingsBalance = ({currency, account, setMax}: Props) => {
+  let value: number = null;
   if (currency === 'HIVE') {
     value = parseFloat(account.savings_balance + '');
   } else value = parseFloat(account.savings_hbd_balance + '');
@@ -20,7 +27,11 @@ const SavingsBalance = ({currency, account}: Props) => {
     ...useWindowDimensions(),
   });
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => {
+        setMax(value.toFixed(3) + '');
+      }}>
       <View style={styles.main}>
         <View style={styles.left}>
           <View style={styles.logo}>
@@ -35,7 +46,7 @@ const SavingsBalance = ({currency, account}: Props) => {
           <Text style={styles.currency}>{` ${currency}`}</Text>
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

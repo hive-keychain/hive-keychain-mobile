@@ -32,7 +32,9 @@ export default () => {
           headerRight: () => (
             <View style={styles.containerRight}>
               <Claim />
-              <StatusIndicator status={false} />
+              {
+                //<StatusIndicator status={false} />
+              }
               <HeaderQR navigation={navigation} />
               <DrawerButton navigation={navigation} />
             </View>

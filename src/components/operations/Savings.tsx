@@ -93,9 +93,21 @@ const Convert = ({user, loadAccount, currency: c, operation}: Props) => {
           />
         </View>
         {operation === SavingsOperations.deposit ? (
-          <Balance currency={currency} account={user.account} />
+          <Balance
+            currency={currency}
+            account={user.account}
+            setMax={(value: string) => {
+              setAmount(value);
+            }}
+          />
         ) : (
-          <SavingsBalance currency={currency} account={user.account} />
+          <SavingsBalance
+            currency={currency}
+            account={user.account}
+            setMax={(value: string) => {
+              setAmount(value);
+            }}
+          />
         )}
         <Separator />
         <Text style={styles.disclaimer}>

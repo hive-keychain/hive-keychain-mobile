@@ -107,6 +107,12 @@
         "text": "Authenticate using account @{{account}} on {{name}}?",
         "success": "Successfully authenticated @{{account}} on {{name}}! You can now return to your dApp."
       },
+      "challenge": {
+        "ask": "{{name}} wants to verify that you have the {{key}} authority for account @{{account}}",
+        "success": "Successfully verified @{{account}} {{key}} authority on {{name}}! You can now return to your dApp.",
+        "no_key": "You don't have the {{key}} key for account @{{account}}",
+        "button": "Verify key"
+      },
       "uuid": "UUID: {{uuid}}"
     }
   },

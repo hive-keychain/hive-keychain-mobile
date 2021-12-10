@@ -129,7 +129,11 @@ const Transfer = ({
       goBack();
     } catch (e) {
       Toast.show(
-        beautifyTransferError(e, {to, currency, username: user.account.name}),
+        beautifyTransferError(e as any, {
+          to,
+          currency,
+          username: user.account.name,
+        }),
         Toast.LONG,
       );
       setLoading(false);
@@ -152,6 +156,9 @@ const Transfer = ({
             tokenBalance={tokenBalance}
             tokenLogo={tokenLogo}
             engine={engine}
+            setMax={(value: string) => {
+              setAmount(value);
+            }}
           />
           <Separator />
           <OperationInput

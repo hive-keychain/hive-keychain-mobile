@@ -1,6 +1,7 @@
 import RequestModalContent from 'components/browser/RequestModalContent';
 import HASAuthRequest from 'components/hive_authentication_service/Auth';
 import HASConnectionRequest from 'components/hive_authentication_service/Connect';
+import HASChallengeRequest from 'components/hive_authentication_service/Challenge';
 import CustomModal from 'components/modals/CustomModal';
 import {ModalNavigationProps} from 'navigators/Root.types';
 import React from 'react';
@@ -25,6 +26,10 @@ export default ({navigation, route}: ModalNavigationProps) => {
         return <HASAuthRequest data={data as any} navigation={navigation} />;
       case ModalComponent.HAS_BROADCAST:
         return <RequestModalContent {...(data as HAS_BroadcastModalPayload)} />;
+      case ModalComponent.HAS_CHALLENGE:
+        return (
+          <HASChallengeRequest data={data as any} navigation={navigation} />
+        );
       default:
         return null;
     }
