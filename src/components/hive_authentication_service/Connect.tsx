@@ -7,7 +7,7 @@ import {StyleSheet, Text} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {getHAS} from 'utils/hiveAuthenticationService';
-import {HAS_ConnectPayload} from 'utils/hiveAuthenticationService.types';
+import {HAS_ConnectPayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {translate} from 'utils/localize';
 
 type Props = PropsFromRedux & {data: HAS_ConnectPayload};

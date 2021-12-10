@@ -1,4 +1,4 @@
-import {HAS_ConnectPayload} from 'utils/hiveAuthenticationService.types';
+import {HAS_ConnectPayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {HAS_Actions} from './types';
 
 export const treatHASRequest = (data: HAS_ConnectPayload) => {

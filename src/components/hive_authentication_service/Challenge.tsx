@@ -7,23 +7,21 @@ import React, {useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
-import {
-  Connection,
-  HAS_ChallengeReq,
-} from 'utils/hiveAuthenticationService.types';
+import {HAS_Session} from 'utils/hiveAuthenticationService/has.types';
+import {HAS_ChallengePayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {KeychainKeyTypesLC} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 
 type Props = PropsFromRedux & {
-  data: HAS_ChallengeReq & {
+  data: HAS_ChallengePayload & {
     callback: (
-      payload: HAS_ChallengeReq,
+      payload: HAS_ChallengePayload,
       approve: boolean,
-      connection: Connection,
+      session: HAS_Session,
       callback: (success: boolean) => void,
     ) => void;
     domain: string;
-    connection: Connection;
+    session: HAS_Session;
   };
   navigation: ModalNavigation;
 };
@@ -36,7 +34,7 @@ enum ChallengeState {
 const HASChallengeRequest = ({data, accounts, navigation}: Props) => {
   const [state, setState] = useState(ChallengeState.ASK);
   const onConfirm = () => {
-    data.callback(data, true, data.connection, (success: boolean) => {
+    data.callback(data, true, data.session, (success: boolean) => {
       setState(success ? ChallengeState.SUCCESS : ChallengeState.ERROR);
       setTimeout(() => {
         navigation.goBack();

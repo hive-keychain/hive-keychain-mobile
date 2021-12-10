@@ -8,7 +8,7 @@ import React from 'react';
 import {
   HAS_BroadcastModalPayload,
   HAS_ConnectPayload,
-} from 'utils/hiveAuthenticationService.types';
+} from 'utils/hiveAuthenticationService/payloads.types';
 import {ModalComponent} from 'utils/modal.enum';
 export default ({navigation, route}: ModalNavigationProps) => {
   const onForceCloseModal = route.params
