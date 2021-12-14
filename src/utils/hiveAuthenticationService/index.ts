@@ -1,12 +1,14 @@
-import {showHASInitRequestAsTreated} from 'actions/hiveAuthenticationService';
+import {
+  addSessionToken,
+  showHASInitRequestAsTreated,
+} from 'actions/hiveAuthenticationService';
 import assert from 'assert';
 import {signBuffer} from 'components/bridge';
 import Crypto from 'crypto-js';
 import uuid from 'react-native-uuid';
+import {HAS_State} from 'reducers/hiveAuthenticationService';
 import {RootState, store} from 'store';
 import {KeychainKeyTypesLC} from '../keychain.types';
-import {ModalComponent} from '../modal.enum';
-import {navigate} from '../navigation';
 import {HAS_Session} from './has.types';
 import {dAppChallenge, prepareChallengeRequest} from './helpers';
 import {onMessageReceived} from './messages';
@@ -14,16 +16,23 @@ import {
   HAS_AuthChallengeData,
   HAS_AuthPayload,
   HAS_ChallengePayload,
-  HAS_ConnectPayload,
   HAS_SignPayload,
 } from './payloads.types';
 
-export const showHASInitRequest = (data: any) => {
-  store.dispatch(showHASInitRequestAsTreated());
-  navigate('ModalScreen', {
-    name: ModalComponent.HAS_INIT,
-    data: data.data,
-  });
+export const showHASInitRequest = (data: HAS_State) => {
+  // navigate('ModalScreen', {
+  //   name: ModalComponent.HAS_INIT,
+  //   data: data.data,
+  // });
+  for (const instance of data.instances) {
+    if (
+      instance.init &&
+      !data.sessions.find((e) => e.host === instance.host && !e.init)
+    )
+      continue;
+    getHAS(instance.host).connect(data.sessions);
+    store.dispatch(showHASInitRequestAsTreated(instance.host));
+  }
 };
 
 let has: HAS[] = [];
@@ -40,8 +49,6 @@ export const getHAS = (host: string) => {
 class HAS {
   ws: WebSocket = null;
   host: string = null;
-  server_key: string = null;
-  sessions: HAS_Session[] = [];
   awaiting_registration: string[] = [];
 
   constructor(host: string) {
@@ -51,18 +58,14 @@ class HAS {
     this.ws.onmessage = this.onMessage;
   }
 
-  connect = (data: HAS_ConnectPayload) => {
-    console.log(`UUID: ${data.uuid}`);
-    this.sessions.push({
-      auth_key: data.key,
-      account: data.account,
-      uuid: data.uuid,
-    });
-    console.log(this, this.sessions);
-    if (this.server_key) {
-      this.registerAccounts([data.account]);
-    } else {
-      this.awaiting_registration.push(data.account);
+  connect = (sessions: HAS_Session[]) => {
+    for (const session of sessions) {
+      if (session.init) continue;
+      if (this.getServerKey()) {
+        this.registerAccounts([session.account]);
+      } else {
+        this.awaiting_registration.push(session.account);
+      }
     }
   };
 
@@ -81,7 +84,7 @@ class HAS {
       accounts.push(
         await prepareChallengeRequest(
           account,
-          this.server_key,
+          this.getServerKey(),
           `${Date.now()}`,
         ),
       );
@@ -126,7 +129,7 @@ class HAS {
       const EXPIRE_DELAY_APP = 24 * 60 * 60 * 1000;
       // NOTE: In "service" or "debug" mode, the APP can pass the encryption key to the PKSA in its auth_req
       //       Secure PKSA should read it from the QR code scanned by the user
-      const session = this.sessions.find((e) => e.uuid === payload.uuid);
+      const session = HAS.findSessionByUUID(payload.uuid);
       const app_key = session.auth_key;
 
       if (approve) {
@@ -157,23 +160,19 @@ class HAS {
             data,
           }),
         );
-
-        session.token = {
+        const sessionToken = {
           token: token,
           expiration: expire,
           app: payload.decryptedData.app.name,
           ts_create: new Date().toISOString(),
           ts_expire: new Date(expire).toISOString(),
         };
-        console.log(session, this.sessions, this);
+        store.dispatch(addSessionToken(payload.uuid, sessionToken));
       } else {
         this.send(JSON.stringify({cmd: 'auth_nack', uuid: payload.uuid}));
       }
       callback();
       // remove expired tokens
-      this.sessions = this.sessions.filter(
-        (session) => session.token.expiration > Date.now(),
-      );
     } catch (e) {
       console.log(e);
       this.send(
@@ -249,6 +248,24 @@ class HAS {
       );
       callback(true);
     }
+  };
+
+  static findSessionByUUID = (uuid: string) => {
+    return (store.getState() as RootState).hive_authentication_service.sessions.find(
+      (e) => e.uuid === uuid,
+    );
+  };
+
+  static findSessionByToken = (token: string) => {
+    return (store.getState() as RootState).hive_authentication_service.sessions.find(
+      (e) => e.token.token === token,
+    );
+  };
+
+  getServerKey = () => {
+    return (store.getState() as RootState).hive_authentication_service.instances.find(
+      (e) => e.host === this.host,
+    )?.server_key;
   };
 }
 

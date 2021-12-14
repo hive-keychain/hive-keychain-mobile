@@ -10,11 +10,9 @@ export const processAuthenticationRequest = (
   payload: HAS_AuthPayload,
 ) => {
   has.checkPayload(payload);
-  const accountSession = has.sessions.find(
-    (e) => e.account === payload.account && e.uuid === payload.uuid,
-  );
+  const accountSession = HAS.findSessionByUUID(payload.uuid);
   assert(accountSession, 'This account has not been connected through HAS.');
-
+  console.log(accountSession, payload);
   const data: HAS_AuhtDecrypted = JSON.parse(
     Crypto.AES.decrypt(payload.data, accountSession.auth_key).toString(
       Crypto.enc.Utf8,

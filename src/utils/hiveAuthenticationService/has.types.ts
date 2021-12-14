@@ -2,7 +2,7 @@
 export type HAS_Instance = {
   host: string;
   server_key?: string;
-  connections: HAS_Session[];
+  init: boolean;
 };
 
 // One HAS_connection per qr code scan / deep linking
@@ -11,6 +11,8 @@ export type HAS_Session = {
   auth_key: string; // secret key passed via QR / DL
   token?: HAS_Token;
   account: string;
+  host: string;
+  init: boolean;
 };
 
 export type HAS_Token = {

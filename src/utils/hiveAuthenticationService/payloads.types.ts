@@ -16,7 +16,7 @@ export type HAS_ConnectPayload = {
   account: string;
   uuid: string;
   host: string;
-  key: string;
+  auth_key: string;
 };
 
 // Authentication

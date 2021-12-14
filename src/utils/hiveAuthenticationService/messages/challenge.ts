@@ -9,8 +9,9 @@ export const processChallengeRequest = (
   payload: HAS_ChallengePayload,
 ) => {
   //has.checkPayload(payload);
-  console.log(has.sessions, has);
-  const session = has.sessions.find((e) => e.token.token === payload.token);
+  console.log(payload);
+  const session = HAS.findSessionByToken(payload.token);
+  console.log(session);
   const token = session.token;
   if (token && token.expiration > Date.now()) {
     console.log(payload.data);

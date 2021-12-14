@@ -1,3 +1,5 @@
+import {addServerKey} from 'actions/hiveAuthenticationService';
+import {store} from 'store';
 import HAS from '..';
 import {HAS_Payload, HAS_PayloadType} from '../payloads.types';
 import {processAuthenticationRequest} from './authenticate';
@@ -8,7 +10,7 @@ export const onMessageReceived = async (
   event: WebSocketMessageEvent,
   has: HAS,
 ) => {
-  console.log(`[RECV] ${event.data}`, has.sessions);
+  console.log(`[RECV] ${event.data}`);
   try {
     const payload: HAS_Payload =
       typeof event.data == 'string' ? JSON.parse(event.data) : event.data;
@@ -31,8 +33,8 @@ export const onMessageReceived = async (
         return;
       case HAS_PayloadType.KEY_ACK:
         // server public key received
-        has.server_key = payload.key;
-        console.log('HAS key ack ', has.server_key);
+        store.dispatch(addServerKey(has.host, payload.key));
+        console.log('HAS key ack ', payload.key);
         if (has.awaiting_registration.length) {
           has.registerAccounts(has.awaiting_registration);
         }

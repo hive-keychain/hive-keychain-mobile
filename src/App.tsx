@@ -24,7 +24,7 @@ import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 
 const Root = createStackNavigator<RootStackParam>();
 
-const App = ({hasAccounts, auth, rpc, has_init}: PropsFromRedux) => {
+const App = ({hasAccounts, auth, rpc, has}: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
 
@@ -48,10 +48,10 @@ const App = ({hasAccounts, auth, rpc, has_init}: PropsFromRedux) => {
   }, [rpc]);
 
   useEffect(() => {
-    if (!!auth.mk && has_init.requiresInit) {
-      showHASInitRequest(has_init.data!);
+    if (!!auth.mk && has) {
+      showHASInitRequest(has);
     }
-  }, [auth.mk, has_init]);
+  }, [auth.mk, has]);
 
   const renderNavigator = () => {
     if (!hasAccounts) {
@@ -111,7 +111,7 @@ const mapStateToProps = (state: RootState) => {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
     rpc: state.settings.rpc,
-    has_init: state.HAS_Init,
+    has: state.hive_authentication_service,
   };
 };
 
