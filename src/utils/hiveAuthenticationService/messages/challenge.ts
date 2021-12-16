@@ -8,20 +8,14 @@ export const processChallengeRequest = (
   has: HAS,
   payload: HAS_ChallengePayload,
 ) => {
-  //has.checkPayload(payload);
-  console.log(payload);
   const session = HAS.findSessionByToken(payload.token);
-  console.log(session);
   const token = session.token;
   if (token && token.expiration > Date.now()) {
-    console.log(payload.data);
-    //console.log(token.auth_key);
     const decrypted_data = Crypto.AES.decrypt(
       payload.data,
       session.auth_key,
     ).toString(Crypto.enc.Utf8);
     payload.decrypted_data = JSON.parse(decrypted_data);
-    console.log(session);
     navigate('ModalScreen', {
       name: ModalComponent.HAS_CHALLENGE,
       data: {

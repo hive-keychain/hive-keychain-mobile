@@ -25,7 +25,7 @@ export const processSigningRequest = async (
 ) => {
   try {
     has.checkPayload(payload);
-    const session = HAS.findSessionByUUID(payload.uuid);
+    const session = HAS.findSessionByToken(payload.token);
     assert(session, 'This account has not been connected through HAS.');
     const auth =
       session.token.token === payload.token &&

@@ -93,6 +93,7 @@ export type HAS_ErrorPayload = {
 
 export type HAS_RegisterPayload = {
   cmd: HAS_PayloadType.REGISTER;
+  account: string;
 };
 
 export type HAS_KeyAckPayload = {

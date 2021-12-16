@@ -49,13 +49,14 @@ export const getHAS = (host: string) => {
 class HAS {
   ws: WebSocket = null;
   host: string = null;
-  awaiting_registration: string[] = [];
-
+  awaitingRegistration: string[] = [];
+  registeredAccounts: string[] = [];
   constructor(host: string) {
     this.host = host;
     this.ws = new WebSocket(host);
     this.ws.onopen = this.onOpen;
     this.ws.onmessage = this.onMessage;
+    this.ws.onclose = this.onClose;
   }
 
   connect = (sessions: HAS_Session[]) => {
@@ -64,7 +65,7 @@ class HAS {
       if (this.getServerKey()) {
         this.registerAccounts([session.account]);
       } else {
-        this.awaiting_registration.push(session.account);
+        this.awaitingRegistration.push(session.account);
       }
     }
   };
@@ -72,6 +73,10 @@ class HAS {
   onOpen = () => {
     console.log('Connection established');
     this.send(JSON.stringify({cmd: 'key_req'}));
+  };
+
+  onClose = () => {
+    console.log('Connection lost');
   };
 
   onMessage = (event: WebSocketMessageEvent) => {

@@ -30,13 +30,14 @@ export const onMessageReceived = async (
       case HAS_PayloadType.REGISTER:
         // registration confirmation from the HAS
         console.log('HAS register_ack', payload);
+        has.registeredAccounts.push(payload.account);
         return;
       case HAS_PayloadType.KEY_ACK:
         // server public key received
         store.dispatch(addServerKey(has.host, payload.key));
         console.log('HAS key ack ', payload.key);
-        if (has.awaiting_registration.length) {
-          has.registerAccounts(has.awaiting_registration);
+        if (has.awaitingRegistration.length) {
+          has.registerAccounts(has.awaitingRegistration);
         }
         break;
       case HAS_PayloadType.AUTH:
