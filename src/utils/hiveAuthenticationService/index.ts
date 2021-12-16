@@ -40,9 +40,10 @@ export const showHASInitRequest = (data: HAS_State) => {
 let has: HAS[] = [];
 
 export const getHAS = (host: string) => {
-  const existing_has = has.find((e) => e.host === host);
+  const formatedHost = host.replace(/\/$/, '');
+  const existing_has = has.find((e) => e.host === formatedHost);
   if (!existing_has) {
-    const new_HAS = new HAS(host);
+    const new_HAS = new HAS(formatedHost);
     has.push(new_HAS);
     return new_HAS;
   } else return existing_has;
@@ -141,7 +142,7 @@ class HAS {
   ) => {
     try {
       // NOTE: The default expiration time for a token is 24 hours - It can be set to a longer duration for "service" APPS
-      const EXPIRE_DELAY_APP = 24 * 60 * 60 * 1000;
+      const EXPIRE_DELAY_APP = 1 * 60 * 1000;
       // NOTE: In "service" or "debug" mode, the APP can pass the encryption key to the PKSA in its auth_req
       //       Secure PKSA should read it from the QR code scanned by the user
       const session = HAS.findSessionByUUID(payload.uuid);
@@ -151,8 +152,8 @@ class HAS {
         const token = uuid.v4() as string;
         const expire = Date.now() + EXPIRE_DELAY_APP;
         const auth_ack_data: HAS_AuthChallengeData = {
-          token: token,
-          expire: expire,
+          token,
+          expire,
         };
         if (payload.decryptedData.app.pubkey) {
           auth_ack_data.challenge = await dAppChallenge(
