@@ -8,6 +8,8 @@ import Crypto from 'crypto-js';
 import uuid from 'react-native-uuid';
 import {HAS_State} from 'reducers/hiveAuthenticationService';
 import {RootState, store} from 'store';
+import {ModalComponent} from 'utils/modal.enum';
+import {navigate} from 'utils/navigation';
 import {KeychainKeyTypesLC} from '../keychain.types';
 import {HAS_Session} from './has.types';
 import {dAppChallenge, prepareChallengeRequest} from './helpers';
@@ -51,6 +53,7 @@ class HAS {
   host: string = null;
   awaitingRegistration: string[] = [];
   registeredAccounts: string[] = [];
+
   constructor(host: string) {
     this.host = host;
     this.ws = new WebSocket(host);
@@ -62,10 +65,17 @@ class HAS {
   connect = (sessions: HAS_Session[]) => {
     for (const session of sessions) {
       if (session.init) continue;
-      if (this.getServerKey()) {
-        this.registerAccounts([session.account]);
+      if (this.registeredAccounts.includes(session.account)) {
+        navigate('ModalScreen', {
+          name: ModalComponent.HAS_AUTH,
+          data: {...session, callback: this.answerAuthReq},
+        });
       } else {
-        this.awaitingRegistration.push(session.account);
+        if (this.getServerKey()) {
+          this.registerAccounts([session.account]);
+        } else {
+          this.awaitingRegistration.push(session.account);
+        }
       }
     }
   };
@@ -144,7 +154,6 @@ class HAS {
           token: token,
           expire: expire,
         };
-        console.log('before dec');
         if (payload.decryptedData.app.pubkey) {
           auth_ack_data.challenge = await dAppChallenge(
             payload.account,
@@ -152,8 +161,7 @@ class HAS {
             payload.account,
           );
         }
-        console.log('after dec', auth_ack_data);
-        //const challenge = Crypto.AES.encrypt(payload.uuid, app_key).toString();
+
         const data = Crypto.AES.encrypt(
           JSON.stringify(auth_ack_data),
           app_key,
@@ -191,7 +199,6 @@ class HAS {
   };
 
   answerSuccessfulBroadcastReq = (payload: HAS_SignPayload, result: any) => {
-    console.log(payload);
     if (payload.decryptedData.broadcast) {
       this.send(
         JSON.stringify({
@@ -226,7 +233,6 @@ class HAS {
     callback: (success: boolean) => void,
   ) => {
     if (approve) {
-      console.log(session);
       const accounts = (store.getState() as RootState).accounts;
       const account = accounts.find((e) => e.name === payload.account);
       const challenge = await signBuffer(
@@ -238,12 +244,10 @@ class HAS {
           `${payload.decrypted_data.key_type as KeychainKeyTypesLC}Pubkey`
         ];
       const data = {challenge, pubkey};
-      console.log(data);
       const signedData = Crypto.AES.encrypt(
         JSON.stringify(data),
         session.auth_key,
       ).toString();
-      console.log(signedData);
       this.send(
         JSON.stringify({
           cmd: 'challenge_ack',
