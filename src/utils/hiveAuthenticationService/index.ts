@@ -21,11 +21,9 @@ import {
   HAS_SignPayload,
 } from './payloads.types';
 
+//store.dispatch(clearHASState());
+
 export const showHASInitRequest = (data: HAS_State) => {
-  // navigate('ModalScreen', {
-  //   name: ModalComponent.HAS_INIT,
-  //   data: data.data,
-  // });
   for (const instance of data.instances) {
     if (
       instance.init &&

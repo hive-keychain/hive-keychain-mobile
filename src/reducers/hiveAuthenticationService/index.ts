@@ -1,14 +1,9 @@
-import {HAS_Actions} from 'actions/types';
+import {HAS_ActionsTypes} from 'actions/types';
 import {
   HAS_Instance,
   HAS_Session,
 } from 'utils/hiveAuthenticationService/has.types';
-import {
-  HAS_AddServerKey,
-  HAS_AddToken,
-  HAS_Connect,
-  HAS_Treated,
-} from './types';
+import {HAS_Actions} from './types';
 
 export type HAS_State = {
   instances: HAS_Instance[];
@@ -19,10 +14,10 @@ export type HAS_State = {
 
 export default (
   state: HAS_State = {sessions: [], instances: []},
-  data: HAS_Connect | HAS_Treated | HAS_AddToken | HAS_AddServerKey,
+  data: HAS_Actions,
 ): HAS_State => {
   switch (data.type) {
-    case HAS_Actions.REQUEST:
+    case HAS_ActionsTypes.REQUEST:
       const instances = [...state.instances];
       if (!state.instances.find((e) => e.host === data.payload.host)) {
         instances.push({host: data.payload.host, init: false});
@@ -31,7 +26,7 @@ export default (
         instances,
         sessions: [...state.sessions, {...data.payload, init: false}],
       };
-    case HAS_Actions.REQUEST_TREATED:
+    case HAS_ActionsTypes.REQUEST_TREATED:
       return {
         instances: [
           ...state.instances.filter((e) => e.host !== data.payload),
@@ -52,13 +47,13 @@ export default (
             }),
         ],
       };
-    case HAS_Actions.ADD_TOKEN: {
+    case HAS_ActionsTypes.ADD_TOKEN: {
       const copyState = {...state};
       copyState.sessions.find((e) => e.uuid === data.payload.uuid).token =
         data.payload.token;
       return copyState;
     }
-    case HAS_Actions.ADD_SERVER_KEY:
+    case HAS_ActionsTypes.ADD_SERVER_KEY:
       return {
         ...state,
         instances: [
@@ -70,6 +65,9 @@ export default (
           },
         ],
       };
+    case HAS_ActionsTypes.CLEAR:
+      console.log('clearing');
+      return {sessions: [], instances: []};
     default:
       return state;
   }
