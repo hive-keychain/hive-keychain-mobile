@@ -6,7 +6,6 @@ import {handleUrl} from 'utils/linking';
 const WalletQRScanner = () => {
   const onSuccess = async ({data}: BarCodeReadEvent) => {
     try {
-      console.log(data);
       handleUrl(data, true);
     } catch (e) {
       console.log(e, data);

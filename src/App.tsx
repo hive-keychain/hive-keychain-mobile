@@ -34,6 +34,10 @@ const App = ({hasAccounts, auth, rpc, has}: PropsFromRedux) => {
       clearLinkingListeners();
     };
   }, []);
+  //TODO:Delete
+  useEffect(() => {
+    console.log(JSON.stringify(has));
+  }, [has]);
 
   useEffect(() => {
     RNBootSplash.hide({fade: true});
@@ -106,7 +110,7 @@ const App = ({hasAccounts, auth, rpc, has}: PropsFromRedux) => {
 };
 
 const mapStateToProps = (state: RootState) => {
-  console.log(state);
+  //console.log(state);
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
