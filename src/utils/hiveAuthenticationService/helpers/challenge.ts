@@ -1,5 +1,6 @@
 import {encodeMemo} from 'components/bridge';
 import {RootState, store} from 'store';
+import {getLeastDangerousKey} from './keys';
 
 export const dAppChallenge = async (
   username: string,
@@ -20,7 +21,7 @@ export const dAppChallenge = async (
   }
 };
 
-export const prepareChallengeRequest = async (
+export const prepareRegistrationChallenge = async (
   username: string,
   serverKey: string,
   message: string,
@@ -35,18 +36,5 @@ export const prepareChallengeRequest = async (
     };
   } catch (e) {
     console.log('memo', e);
-  }
-};
-
-export const getLeastDangerousKey = (username: string) => {
-  const accounts = (store.getState() as RootState).accounts;
-  const account = accounts.find((e) => e.name === username);
-  if (!account) return null;
-  else if (account.keys.memo) {
-    return {type: 'memo', value: account.keys.memo};
-  } else if (account.keys.posting) {
-    return {type: 'posting', value: account.keys.posting};
-  } else {
-    return {type: 'active', value: account.keys.active};
   }
 };

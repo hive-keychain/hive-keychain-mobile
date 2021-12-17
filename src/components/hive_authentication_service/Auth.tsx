@@ -7,12 +7,15 @@ import React, {useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
+import HAS from 'utils/hiveAuthenticationService';
 import {HAS_AuthPayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {translate} from 'utils/localize';
 
 type Props = PropsFromRedux & {
   data: HAS_AuthPayload & {
+    has: HAS;
     callback: (
+      has: HAS,
       payload: HAS_AuthPayload,
       approve: boolean,
       callback: () => void,
@@ -24,7 +27,7 @@ type Props = PropsFromRedux & {
 const HASAuthRequest = ({data, accounts, navigation}: Props) => {
   const [success, setSuccess] = useState(false);
   const onConfirm = () => {
-    data.callback(data, true, () => {
+    data.callback(data.has, data, true, () => {
       setSuccess(true);
     });
   };

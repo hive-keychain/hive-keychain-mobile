@@ -14,6 +14,10 @@ import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
 import HAS from '..';
 import {
+  answerFailedBroadcastReq,
+  answerSuccessfulBroadcastReq,
+} from '../helpers/sign';
+import {
   HAS_BroadcastModalPayload,
   HAS_SignDecrypted,
   HAS_SignPayload,
@@ -24,7 +28,7 @@ export const processSigningRequest = async (
   payload: HAS_SignPayload,
 ) => {
   try {
-    has.checkPayload(payload);
+    HAS.checkPayload(payload);
     const session = HAS.findSessionByToken(payload.token);
     assert(session, 'This account has not been connected through HAS.');
     const auth =
@@ -95,10 +99,10 @@ export const processSigningRequest = async (
       accounts: await store.getState().accounts,
       onForceCloseModal: () => {},
       sendError: () => {
-        has.answerFailedBroadcastReq(payload);
+        answerFailedBroadcastReq(has, payload);
       },
       sendResponse: (obj: RequestSuccess) => {
-        has.answerSuccessfulBroadcastReq(payload, obj);
+        answerSuccessfulBroadcastReq(has, payload, obj);
       },
     };
 
