@@ -10,8 +10,6 @@ import {prepareRegistrationChallenge} from './helpers/challenge';
 import {onMessageReceived} from './messages';
 import {HAS_AuthPayload, HAS_SignPayload} from './payloads.types';
 
-//store.dispatch(clearHASState());
-
 export const showHASInitRequest = (data: HAS_State) => {
   for (const instance of data.instances) {
     const host = instance.host.replace(/\/$/, '');

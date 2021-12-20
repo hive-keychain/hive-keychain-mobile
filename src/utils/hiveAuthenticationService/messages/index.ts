@@ -31,6 +31,9 @@ export const onMessageReceived = async (
         // registration confirmation from the HAS
         console.log('HAS register_ack', payload);
         has.registeredAccounts.push(payload.account);
+        has.awaitingRegistration = has.awaitingRegistration.filter(
+          (e) => e !== payload.account,
+        );
         return;
       case HAS_PayloadType.KEY_ACK:
         // server public key received

@@ -31,6 +31,7 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
       setSuccess(true);
     });
   };
+  console.log(data);
   return (
     <Operation logo={<Hive />} title={translate('wallet.has.auth.title')}>
       <>
