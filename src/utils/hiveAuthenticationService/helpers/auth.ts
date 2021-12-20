@@ -17,16 +17,37 @@ export const answerAuthReq = async (
     const EXPIRE_DELAY_APP = 24 * 60 * 60 * 1000;
     // NOTE: In "service" or "debug" mode, the APP can pass the encryption key to the PKSA in its auth_req
     //       Secure PKSA should read it from the QR code scanned by the user
-    const session = HAS.findSessionByUUID(payload.uuid);
+    let session = HAS.findSessionByToken(payload.token);
+    let newToken = false;
+    if (!session) {
+      session = HAS.findSessionByUUID(payload.uuid);
+      newToken = true;
+    }
     const app_key = session.auth_key;
 
     if (approve) {
-      const token = uuid.v4() as string;
-      const expire = Date.now() + EXPIRE_DELAY_APP;
-      const auth_ack_data: HAS_AuthChallengeData = {
-        token,
-        expire,
-      };
+      let auth_ack_data: HAS_AuthChallengeData;
+      if (newToken) {
+        const token = uuid.v4() as string;
+        const expire = Date.now() + EXPIRE_DELAY_APP;
+        auth_ack_data = {
+          token,
+          expire,
+        };
+        const sessionToken = {
+          token: token,
+          expiration: expire,
+          app: payload.decryptedData.app.name,
+          ts_create: new Date().toISOString(),
+          ts_expire: new Date(expire).toISOString(),
+        };
+        store.dispatch(addSessionToken(payload.uuid, sessionToken));
+      } else {
+        auth_ack_data = {
+          token: session.token.token,
+          expire: session.token.expiration,
+        };
+      }
       if (payload.decryptedData.app.pubkey) {
         auth_ack_data.challenge = await dAppChallenge(
           payload.account,
@@ -46,14 +67,6 @@ export const answerAuthReq = async (
           data,
         }),
       );
-      const sessionToken = {
-        token: token,
-        expiration: expire,
-        app: payload.decryptedData.app.name,
-        ts_create: new Date().toISOString(),
-        ts_expire: new Date(expire).toISOString(),
-      };
-      store.dispatch(addSessionToken(payload.uuid, sessionToken));
     } else {
       has.send(JSON.stringify({cmd: 'auth_nack', uuid: payload.uuid}));
     }

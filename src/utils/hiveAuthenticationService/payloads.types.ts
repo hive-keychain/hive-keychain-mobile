@@ -25,6 +25,7 @@ export type HAS_AuthPayload = {
   cmd: HAS_PayloadType.AUTH;
   account: string;
   decryptedData?: HAS_AuhtDecrypted;
+  token?: string;
   auth_key: string;
   data: string;
   uuid: string;

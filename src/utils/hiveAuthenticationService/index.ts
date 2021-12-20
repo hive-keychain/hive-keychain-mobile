@@ -151,7 +151,10 @@ class HAS {
 
   static findSessionByToken = (token: string) => {
     return (store.getState() as RootState).hive_authentication_service.sessions.find(
-      (e) => e.token.token === token,
+      (e) => {
+        if (e.token) return e.token.token === token;
+        else return false;
+      },
     );
   };
 }

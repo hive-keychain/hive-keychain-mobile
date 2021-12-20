@@ -49,8 +49,11 @@ export default (
       };
     case HAS_ActionsTypes.ADD_TOKEN: {
       const copyState = {...state};
-      copyState.sessions.find((e) => e.uuid === data.payload.uuid).token =
-        data.payload.token;
+      const session = copyState.sessions.find(
+        (e) => e.uuid === data.payload.uuid,
+      );
+      if (!session) return state;
+      session.token = data.payload.token;
       return copyState;
     }
     case HAS_ActionsTypes.ADD_SERVER_KEY:

@@ -11,7 +11,11 @@ export const processAuthenticationRequest = (
   payload: HAS_AuthPayload,
 ) => {
   HAS.checkPayload(payload);
-  const accountSession = HAS.findSessionByUUID(payload.uuid);
+  console.log(payload);
+  let accountSession = HAS.findSessionByToken(payload.token);
+  if (!accountSession) {
+    accountSession = HAS.findSessionByUUID(payload.uuid);
+  }
   assert(accountSession, 'This account has not been connected through HAS.');
   console.log(accountSession, payload);
   const data: HAS_AuhtDecrypted = JSON.parse(
