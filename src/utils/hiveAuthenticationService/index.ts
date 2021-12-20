@@ -1,4 +1,7 @@
-import {showHASInitRequestAsTreated} from 'actions/hiveAuthenticationService';
+import {
+  clearHASState,
+  showHASInitRequestAsTreated,
+} from 'actions/hiveAuthenticationService';
 import assert from 'assert';
 import {HAS_State} from 'reducers/hiveAuthenticationService';
 import {RootState, store} from 'store';
@@ -19,6 +22,15 @@ export const showHASInitRequest = (data: HAS_State) => {
     getHAS(host).connect(data.sessions);
     store.dispatch(showHASInitRequestAsTreated(host));
   }
+};
+
+export const clearHAS = () => {
+  console.log('Attempting to clear');
+  for (const hasInstance of has) {
+    hasInstance.ws.close();
+  }
+  has = [];
+  store.dispatch(clearHASState());
 };
 
 let has: HAS[] = [];
