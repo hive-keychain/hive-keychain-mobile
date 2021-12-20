@@ -29,6 +29,16 @@ export const addServerKey = (host: string, server_key: string) => {
   };
 };
 
+export const updateInstanceConnectionStatus = (
+  host: string,
+  connected: boolean,
+) => {
+  return {
+    type: HAS_ActionsTypes.UPDATE_INSTANCE_CONNECTION_STATUS,
+    payload: {host, connected},
+  };
+};
+
 export const clearHASState = () => {
   return {
     type: HAS_ActionsTypes.CLEAR,

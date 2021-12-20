@@ -1,6 +1,7 @@
 import {
   clearHASState,
   showHASInitRequestAsTreated,
+  updateInstanceConnectionStatus,
 } from 'actions/hiveAuthenticationService';
 import assert from 'assert';
 import {HAS_State} from 'reducers/hiveAuthenticationService';
@@ -33,6 +34,15 @@ export const clearHAS = () => {
   store.dispatch(clearHASState());
 };
 
+export const restartHASSockets = () => {
+  for (const hasInstance of has) {
+    console.log(hasInstance.ws);
+    if (hasInstance.ws.readyState === 3) {
+      hasInstance.reconnect();
+    }
+  }
+};
+
 let has: HAS[] = [];
 
 export const getHAS = (host: string) => {
@@ -52,13 +62,26 @@ class HAS {
 
   constructor(host: string) {
     this.host = host;
-    this.ws = new WebSocket(host);
-    this.ws.onopen = this.onOpen;
-    this.ws.onmessage = this.onMessage;
-    this.ws.onclose = this.onClose;
+    this.initConnection();
   }
 
   //Connection and initialization
+  initConnection = () => {
+    this.ws = new WebSocket(this.host);
+    this.ws.onopen = this.onOpen;
+    this.ws.onmessage = this.onMessage;
+    this.ws.onclose = this.onClose;
+  };
+
+  reconnect = () => {
+    this.awaitingRegistration = [
+      ...this.registeredAccounts,
+      ...this.awaitingRegistration,
+    ];
+    this.registeredAccounts = [];
+    this.initConnection();
+  };
+
   connect = (sessions: HAS_Session[]) => {
     for (const session of sessions) {
       if (session.init) continue;
@@ -81,11 +104,13 @@ class HAS {
 
   onOpen = () => {
     console.log('Connection established');
+    store.dispatch(updateInstanceConnectionStatus(this.host, true));
     this.send(JSON.stringify({cmd: 'key_req'}));
   };
 
   onClose = () => {
     console.log('Connection lost');
+    store.dispatch(updateInstanceConnectionStatus(this.host, false));
   };
 
   //Registration

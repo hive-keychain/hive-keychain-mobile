@@ -56,21 +56,36 @@ export default (
       session.token = data.payload.token;
       return copyState;
     }
-    case HAS_ActionsTypes.ADD_SERVER_KEY:
+    case HAS_ActionsTypes.ADD_SERVER_KEY: {
+      const instance = state.instances.find(
+        (e) => e.host === data.payload.host,
+      );
+      instance.init = true;
+      instance.server_key = data.payload.server_key;
       return {
         ...state,
         instances: [
           ...state.instances.filter((e) => e.host !== data.payload.host),
-          {
-            host: data.payload.host,
-            init: true,
-            server_key: data.payload.server_key,
-          },
+          instance,
         ],
       };
+    }
     case HAS_ActionsTypes.CLEAR:
       console.log('clearing');
       return {sessions: [], instances: []};
+    case HAS_ActionsTypes.UPDATE_INSTANCE_CONNECTION_STATUS:
+      const instance = state.instances.find(
+        (e) => e.host === data.payload.host,
+      );
+      if (!instance) return state;
+      instance.connected = data.payload.connected;
+      return {
+        ...state,
+        instances: [
+          ...state.instances.filter((e) => e.host !== data.payload.host),
+          instance,
+        ],
+      };
     default:
       return state;
   }

@@ -26,9 +26,15 @@ export type HAS_Clear = {
   type: HAS_ActionsTypes.CLEAR;
 };
 
+export type HAS_UpdateInstanceConnectionStatus = {
+  type: HAS_ActionsTypes.UPDATE_INSTANCE_CONNECTION_STATUS;
+  payload: {host: string; connected: boolean};
+};
+
 export type HAS_Actions =
   | HAS_Connect
   | HAS_Treated
   | HAS_AddToken
   | HAS_AddServerKey
-  | HAS_Clear;
+  | HAS_Clear
+  | HAS_UpdateInstanceConnectionStatus;

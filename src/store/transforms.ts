@@ -36,6 +36,7 @@ const hiveAuthenticationServiceTransformer = createTransform<
         .map((e) => {
           e.init = false;
           delete e.server_key;
+          delete e.connected;
           return e;
         }),
       sessions,

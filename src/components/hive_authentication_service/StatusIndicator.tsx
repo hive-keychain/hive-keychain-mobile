@@ -3,7 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
-import {clearHAS} from 'utils/hiveAuthenticationService';
+import {clearHAS, restartHASSockets} from 'utils/hiveAuthenticationService';
 
 //TODO: Use all connection statuses
 enum ConnectionStatus {
@@ -13,7 +13,18 @@ enum ConnectionStatus {
   CONNECTED,
 }
 const StatusIndicator = ({has}: PropsFromRedux) => {
-  const status = has.instances.length && !!has.instances.find((e) => e.init); // && !e.stopped);
+  let status = ConnectionStatus.VOID;
+  if (has.instances.length) {
+    const connected = has.instances.filter((e) => e.init && e.connected).length;
+    if (connected === 0) {
+      status = ConnectionStatus.DISCONNECTED;
+    } else if (connected === has.instances.length) {
+      status = ConnectionStatus.CONNECTED;
+    } else {
+      status = ConnectionStatus.PARTIALLY_CONNECTED;
+    }
+  }
+
   const styles = getStyles(status);
   return (
     <TouchableOpacity
@@ -23,8 +34,12 @@ const StatusIndicator = ({has}: PropsFromRedux) => {
       <Text style={styles.text}>HAS</Text>
       <TouchableOpacity
         onPress={() => {
-          console.log('hmm');
-          clearHAS();
+          console.log('pressing');
+          if (status === ConnectionStatus.CONNECTED) {
+            clearHAS();
+          } else if (status === ConnectionStatus.DISCONNECTED) {
+            restartHASSockets();
+          }
         }}>
         <View style={styles.indicator}></View>
       </TouchableOpacity>
@@ -32,7 +47,7 @@ const StatusIndicator = ({has}: PropsFromRedux) => {
   );
 };
 
-const getStyles = (status: boolean) =>
+const getStyles = (status: ConnectionStatus) =>
   StyleSheet.create({
     container: {
       flexDirection: 'column',
@@ -43,17 +58,32 @@ const getStyles = (status: boolean) =>
     },
     text: {color: 'white', fontSize: 10},
     indicator: {
-      backgroundColor: status ? 'green' : 'darkgrey',
+      backgroundColor: getStatusColor(status),
       width: 10,
       height: 10,
       borderRadius: 5,
     },
   });
+
+const getStatusColor = (status: ConnectionStatus) => {
+  switch (status) {
+    case ConnectionStatus.CONNECTED:
+      return 'green';
+    case ConnectionStatus.DISCONNECTED:
+      return 'red';
+    case ConnectionStatus.PARTIALLY_CONNECTED:
+      return 'yellow';
+    case ConnectionStatus.VOID:
+      return 'darkgrey';
+  }
+};
 const mapStateToProps = (state: RootState) => {
   return {
     has: state.hive_authentication_service,
   };
 };
+
 type PropsFromRedux = ConnectedProps<typeof connector>;
 const connector = connect(mapStateToProps, null);
+
 export default connector(StatusIndicator);

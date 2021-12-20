@@ -3,6 +3,7 @@ export type HAS_Instance = {
   host: string;
   server_key?: string;
   init: boolean;
+  connected?: boolean;
 };
 
 // One HAS_connection per qr code scan / deep linking
