@@ -128,14 +128,15 @@ class HAS {
   registerAccounts = async (acc: string[]) => {
     const accounts = [];
     for (const account of acc) {
-      accounts.push(
-        await prepareRegistrationChallenge(
-          account,
-          this.getServerKey(),
-          `${Date.now()}`,
-        ),
+      const challenge = await prepareRegistrationChallenge(
+        this,
+        account,
+        this.getServerKey(),
+        `${Date.now()}`,
       );
+      if (challenge) accounts.push(challenge);
     }
+    if (!accounts.length) return;
     const request = {
       cmd: 'register_req',
       app: 'Hive Keychain',

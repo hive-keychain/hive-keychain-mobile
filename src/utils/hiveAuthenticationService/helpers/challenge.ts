@@ -1,5 +1,6 @@
 import {encodeMemo} from 'components/bridge';
 import {RootState, store} from 'store';
+import HAS from '..';
 import {getLeastDangerousKey} from './keys';
 
 export const dAppChallenge = async (
@@ -22,19 +23,34 @@ export const dAppChallenge = async (
 };
 
 export const prepareRegistrationChallenge = async (
+  has: HAS,
   username: string,
   serverKey: string,
   message: string,
 ) => {
   try {
     const key = getLeastDangerousKey(username);
-    console.log(key);
-    return {
-      key_type: key.type,
-      challenge: await encodeMemo(key.value, serverKey, `#${message}`),
-      name: username,
-    };
+    if (key) {
+      return {
+        key_type: key.type,
+        challenge: await encodeMemo(key.value, serverKey, `#${message}`),
+        name: username,
+      };
+    } else {
+      throw 'No username';
+    }
   } catch (e) {
-    console.log('memo', e);
+    const session = (store.getState() as RootState).hive_authentication_service.sessions.find(
+      (e) => e.account === username,
+    );
+    if (session) {
+      has.send(
+        JSON.stringify({
+          cmd: 'auth_err',
+          uuid: session.uuid,
+          error: 'Request was canceled by the user.',
+        }),
+      );
+    }
   }
 };
