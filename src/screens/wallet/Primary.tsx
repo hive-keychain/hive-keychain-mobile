@@ -14,18 +14,27 @@ import {
   SendWithdraw,
 } from 'components/operations/OperationsButtons';
 import Separator from 'components/ui/Separator';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {toHP} from 'utils/format';
 import {translate} from 'utils/localize';
+
+enum Token {
+  NONE,
+  HIVE,
+  HBD,
+  HP,
+  SAVINGS,
+}
 const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
   const {width} = useWindowDimensions();
   useEffect(() => {
     logScreenView('WalletScreen');
   }, []);
+  const [toggled, setToggled] = useState(Token.NONE);
   return (
     <View style={styles.container}>
       <Separator height={30} />
@@ -43,6 +52,10 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
         value={parseFloat(user.account.balance as string)}
         logo={<Hive width={width / 15} />}
         price={bittrex.hive}
+        toggled={toggled === Token.HIVE}
+        setToggle={() => {
+          setToggled(toggled === Token.HIVE ? Token.NONE : Token.HIVE);
+        }}
         buttons={[
           <Send key="send_hive" currency="HIVE" />,
           <SendPowerUp key="pu" />,
@@ -57,6 +70,10 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
         value={parseFloat(user.account.hbd_balance as string)}
         logo={<Hbd width={width / 15} />}
         price={bittrex.hbd}
+        toggled={toggled === Token.HBD}
+        setToggle={() => {
+          setToggled(toggled === Token.HBD ? Token.NONE : Token.HBD);
+        }}
         buttons={[
           <Send key="send_hbd" currency="HBD" />,
           <SendConversion key="conversion" currency="HBD" />,
@@ -78,6 +95,10 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
         )}
         logo={<Hp width={width / 15} />}
         price={bittrex.hbd}
+        toggled={toggled === Token.HP}
+        setToggle={() => {
+          setToggled(toggled === Token.HP ? Token.NONE : Token.HP);
+        }}
         buttons={[<SendDelegation key="del" />, <SendPowerDown key="pd" />]}
       />
       <Separator height={20} />
@@ -89,6 +110,10 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
         secondaryCurrency="HBD"
         secondaryValue={parseFloat(user.account.savings_hbd_balance as string)}
         logo={<Savings width={width / 15} />}
+        toggled={toggled === Token.SAVINGS}
+        setToggle={() => {
+          setToggled(toggled === Token.SAVINGS ? Token.NONE : Token.SAVINGS);
+        }}
         bottomLeft={
           <Text>
             <Text style={styles.apr}>HBD APR:</Text>

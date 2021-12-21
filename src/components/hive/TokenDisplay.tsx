@@ -1,6 +1,6 @@
 import {Currency} from 'actions/interfaces';
 import DelegationsList from 'components/operations/DelegationsList';
-import React, {useState} from 'react';
+import React from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -28,6 +28,8 @@ type Props = {
   buttons: JSX.Element[];
   amountStyle?: StyleProp<TextStyle>;
   bottomLeft?: JSX.Element;
+  toggled: boolean;
+  setToggle: () => void;
 };
 
 const TokenDisplay = ({
@@ -44,19 +46,16 @@ const TokenDisplay = ({
   secondaryCurrency,
   secondaryValue,
   bottomLeft,
+  toggled,
+  setToggle,
 }: Props) => {
   const styles = getDimensionedStyles({
     color,
     ...useWindowDimensions(),
     change: price.DailyUsd!,
   });
-  const [toggle, setToggle] = useState(false);
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        setToggle(!toggle);
-      }}>
+    <TouchableOpacity style={styles.container} onPress={setToggle}>
       <View style={styles.main}>
         <View style={styles.left}>
           <View style={styles.logo}>{logo}</View>
@@ -75,7 +74,7 @@ const TokenDisplay = ({
           ) : null}
         </View>
       </View>
-      {toggle && (
+      {toggled && (
         <View style={[styles.row, styles.toggle]}>
           {bottomLeft
             ? bottomLeft
