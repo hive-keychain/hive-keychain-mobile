@@ -119,7 +119,6 @@ export const SendDelegation = () => {
 };
 
 export const SendConversion = ({currency}: {currency: string}) => {
-  console.log(currency);
   return (
     <RoundButton
       onPress={() => {
