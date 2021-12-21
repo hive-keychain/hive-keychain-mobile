@@ -1,3 +1,4 @@
+import {removeHASSession} from 'actions/hiveAuthenticationService';
 import {encodeMemo} from 'components/bridge';
 import {RootState, store} from 'store';
 import HAS from '..';
@@ -44,6 +45,7 @@ export const prepareRegistrationChallenge = async (
       (e) => e.account === username,
     );
     if (session) {
+      store.dispatch(removeHASSession(session.uuid));
       has.send(
         JSON.stringify({
           cmd: 'auth_err',

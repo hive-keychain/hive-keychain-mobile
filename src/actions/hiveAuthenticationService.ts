@@ -44,3 +44,10 @@ export const clearHASState = () => {
     type: HAS_ActionsTypes.CLEAR,
   };
 };
+
+export const removeHASSession = (uuid: string) => {
+  return {
+    type: HAS_ActionsTypes.REMOVE_SESSION,
+    payload: {uuid},
+  };
+};

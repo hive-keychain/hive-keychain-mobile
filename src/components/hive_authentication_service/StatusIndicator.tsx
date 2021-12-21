@@ -37,7 +37,9 @@ const StatusIndicator = ({has}: PropsFromRedux) => {
           restartHASSockets();
         }
       }}
-      onLongPress={() => {}}>
+      onLongPress={() => {
+        clearHAS();
+      }}>
       <Text style={styles.text}>HAS</Text>
       <View style={styles.indicator}></View>
     </TouchableOpacity>

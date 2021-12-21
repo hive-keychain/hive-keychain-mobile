@@ -16,6 +16,7 @@ import {processAuthenticationRequest} from './messages/authenticate';
 import {HAS_AuthPayload, HAS_SignPayload} from './payloads.types';
 
 export const showHASInitRequest = (data: HAS_State) => {
+  // Iinitialize instances if needed
   for (const instance of data.instances) {
     const host = instance.host.replace(/\/$/, '');
 
@@ -24,10 +25,18 @@ export const showHASInitRequest = (data: HAS_State) => {
     getHAS(host).connect(data.sessions);
     store.dispatch(showHASInitRequestAsTreated(host));
   }
+  // Disconnect and remove instances if needed
+  has = has.filter((hasInstance) => {
+    if (!data.instances.find((e) => e.host === hasInstance.host)) {
+      hasInstance.ws.close();
+      return false;
+    }
+    return true;
+  });
 };
 
 export const clearHAS = () => {
-  console.log('Attempting to clear');
+  // Clear all HAS state
   for (const hasInstance of has) {
     hasInstance.ws.close();
   }
@@ -36,8 +45,8 @@ export const clearHAS = () => {
 };
 
 export const restartHASSockets = () => {
+  // Reconnect ws after deconnection (red indicator)
   for (const hasInstance of has) {
-    console.log(hasInstance.ws);
     if (hasInstance.ws.readyState === 3) {
       hasInstance.reconnect();
     }
@@ -47,6 +56,7 @@ export const restartHASSockets = () => {
 let has: HAS[] = [];
 
 export const getHAS = (host: string) => {
+  // Get Has instance by host or create it
   const existing_has = has.find((e) => e.host === host);
   if (!existing_has) {
     const new_HAS = new HAS(host);

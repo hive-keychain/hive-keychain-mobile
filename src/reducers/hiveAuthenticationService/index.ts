@@ -86,6 +86,20 @@ export default (
           instance,
         ],
       };
+    case HAS_ActionsTypes.REMOVE_SESSION: {
+      console.log('rm');
+      const sessions = state.sessions.filter(
+        (session) => session.uuid !== data.payload.uuid,
+      );
+      const instances = state.instances.filter(
+        (e) => !!sessions.find((session) => e.host === session.host),
+      );
+      console.log('removing', {instances, sessions});
+      return {
+        instances,
+        sessions,
+      };
+    }
     default:
       return state;
   }

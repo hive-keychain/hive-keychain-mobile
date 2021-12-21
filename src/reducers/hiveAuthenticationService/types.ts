@@ -31,10 +31,16 @@ export type HAS_UpdateInstanceConnectionStatus = {
   payload: {host: string; connected: boolean};
 };
 
+export type HAS_RemoveSession = {
+  type: HAS_ActionsTypes.REMOVE_SESSION;
+  payload: {uuid: string};
+};
+
 export type HAS_Actions =
   | HAS_Connect
   | HAS_Treated
   | HAS_AddToken
   | HAS_AddServerKey
   | HAS_Clear
-  | HAS_UpdateInstanceConnectionStatus;
+  | HAS_UpdateInstanceConnectionStatus
+  | HAS_RemoveSession;
