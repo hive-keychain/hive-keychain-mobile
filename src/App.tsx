@@ -17,14 +17,13 @@ import Modal from 'screens/Modal';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {setRpc} from 'utils/hive';
-import {showHASInitRequest} from 'utils/hiveAuthenticationService';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 
 const Root = createStackNavigator<RootStackParam>();
 
-const App = ({hasAccounts, auth, rpc, has}: PropsFromRedux) => {
+const App = ({hasAccounts, auth, rpc}: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
 
@@ -35,9 +34,9 @@ const App = ({hasAccounts, auth, rpc, has}: PropsFromRedux) => {
     };
   }, []);
   //TODO:Delete
-  useEffect(() => {
-    console.log(JSON.stringify(has));
-  }, [has]);
+  // useEffect(() => {
+  //   console.log(JSON.stringify(has));
+  // }, [has]);
 
   useEffect(() => {
     RNBootSplash.hide({fade: true});
@@ -51,11 +50,11 @@ const App = ({hasAccounts, auth, rpc, has}: PropsFromRedux) => {
     setRpc(rpc as Rpc);
   }, [rpc]);
 
-  useEffect(() => {
-    if (!!auth.mk && has) {
-      showHASInitRequest(has);
-    }
-  }, [auth.mk, has]);
+  // useEffect(() => {
+  //   if (!!auth.mk && has) {
+  //     showHASInitRequest(has);
+  //   }
+  // }, [auth.mk, has]);
 
   const renderNavigator = () => {
     if (!hasAccounts) {
@@ -115,7 +114,7 @@ const mapStateToProps = (state: RootState) => {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
     rpc: state.settings.rpc,
-    has: state.hive_authentication_service,
+    // has: state.hive_authentication_service,
   };
 };
 
