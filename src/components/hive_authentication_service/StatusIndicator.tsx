@@ -29,20 +29,17 @@ const StatusIndicator = ({has}: PropsFromRedux) => {
   return (
     <TouchableOpacity
       style={styles.container}
-      onPress={() => {}}
+      onPress={() => {
+        console.log('pressing');
+        if (status === ConnectionStatus.CONNECTED) {
+          clearHAS();
+        } else if (status === ConnectionStatus.DISCONNECTED) {
+          restartHASSockets();
+        }
+      }}
       onLongPress={() => {}}>
       <Text style={styles.text}>HAS</Text>
-      <TouchableOpacity
-        onPress={() => {
-          console.log('pressing');
-          if (status === ConnectionStatus.CONNECTED) {
-            clearHAS();
-          } else if (status === ConnectionStatus.DISCONNECTED) {
-            restartHASSockets();
-          }
-        }}>
-        <View style={styles.indicator}></View>
-      </TouchableOpacity>
+      <View style={styles.indicator}></View>
     </TouchableOpacity>
   );
 };

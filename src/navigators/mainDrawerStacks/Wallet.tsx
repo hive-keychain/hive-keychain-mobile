@@ -10,7 +10,6 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import Wallet from 'screens/wallet/Main';
 import WalletQRScanner from 'screens/wallet/WalletQRScanner';
 import {Width} from 'utils/common.types';
-import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator();
 
@@ -26,9 +25,10 @@ export default () => {
           headerStyle: {
             backgroundColor: '#A3112A',
           },
-          headerTitleAlign: 'center',
-          title: translate('navigation.wallet'),
-          headerTintColor: 'white',
+          // headerTitleAlign: 'left',
+          title: '',
+          // title: translate('navigation.wallet'),
+          // headerTintColor: 'white',
           headerRight: () => (
             <View style={styles.containerRight}>
               <Claim />

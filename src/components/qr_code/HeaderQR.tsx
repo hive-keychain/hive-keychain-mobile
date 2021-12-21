@@ -20,5 +20,5 @@ export default ({navigation}: Props) => {
 };
 
 const styles = StyleSheet.create({
-  qr: {marginLeft: 12},
+  qr: {marginLeft: 20},
 });
