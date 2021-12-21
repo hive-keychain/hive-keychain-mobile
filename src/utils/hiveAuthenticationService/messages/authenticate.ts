@@ -11,20 +11,22 @@ export const processAuthenticationRequest = (
   payload: HAS_AuthPayload,
 ) => {
   HAS.checkPayload(payload);
-  console.log(payload);
+
   let accountSession = HAS.findSessionByToken(payload.token);
   if (!accountSession) {
     accountSession = HAS.findSessionByUUID(payload.uuid);
   }
+  if (!accountSession) {
+    has.awaitingAuth.push(payload);
+    return;
+  }
   assert(accountSession, 'This account has not been connected through HAS.');
-  console.log(accountSession, payload);
   const data: HAS_AuhtDecrypted = JSON.parse(
     Crypto.AES.decrypt(payload.data, accountSession.auth_key).toString(
       Crypto.enc.Utf8,
     ),
   );
   payload.decryptedData = data;
-  console.log(payload);
 
   navigate('ModalScreen', {
     name: ModalComponent.HAS_AUTH,

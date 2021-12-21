@@ -12,6 +12,7 @@ import {HAS_Session} from './has.types';
 import {answerAuthReq} from './helpers/auth';
 import {prepareRegistrationChallenge} from './helpers/challenge';
 import {onMessageReceived} from './messages';
+import {processAuthenticationRequest} from './messages/authenticate';
 import {HAS_AuthPayload, HAS_SignPayload} from './payloads.types';
 
 export const showHASInitRequest = (data: HAS_State) => {
@@ -59,6 +60,7 @@ class HAS {
   host: string = null;
   awaitingRegistration: string[] = [];
   registeredAccounts: string[] = [];
+  awaitingAuth: HAS_AuthPayload[] = [];
 
   constructor(host: string) {
     this.host = host;
@@ -86,10 +88,19 @@ class HAS {
     for (const session of sessions) {
       if (session.init) continue;
       if (this.registeredAccounts.includes(session.account)) {
-        navigate('ModalScreen', {
-          name: ModalComponent.HAS_AUTH,
-          data: {...session, has: this, callback: answerAuthReq},
-        });
+        if (session.token) {
+          navigate('ModalScreen', {
+            name: ModalComponent.HAS_AUTH,
+            data: {...session, has: this, callback: answerAuthReq},
+          });
+        } else {
+          const sessionAuthReq = this.awaitingAuth.find(
+            (e) => e.uuid === session.uuid,
+          );
+          if (sessionAuthReq) {
+            processAuthenticationRequest(this, sessionAuthReq);
+          }
+        }
       } else {
         if (this.getServerKey()) {
           this.registerAccounts([session.account]);
