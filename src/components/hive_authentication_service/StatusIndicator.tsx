@@ -30,7 +30,6 @@ const StatusIndicator = ({has}: PropsFromRedux) => {
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
-        console.log('pressing');
         if (status === ConnectionStatus.CONNECTED) {
           clearHAS();
         } else if (status === ConnectionStatus.DISCONNECTED) {
@@ -50,12 +49,18 @@ const getStyles = (status: ConnectionStatus) =>
   StyleSheet.create({
     container: {
       flexDirection: 'column',
-      justifyContent: 'space-around',
+      justifyContent: 'space-between',
       alignItems: 'center',
       width: 25,
       height: 25,
     },
-    text: {color: 'white', fontSize: 10},
+    text: {
+      color: 'white',
+      fontSize: 11,
+      fontWeight: 'bold',
+      textAlignVertical: 'top',
+      lineHeight: 11,
+    },
     indicator: {
       backgroundColor: getStatusColor(status),
       width: 10,
