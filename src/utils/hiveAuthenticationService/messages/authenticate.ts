@@ -4,7 +4,7 @@ import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
 import HAS from '..';
 import {answerAuthReq} from '../helpers/auth';
-import {HAS_AuhtDecrypted, HAS_AuthPayload} from '../payloads.types';
+import {HAS_AuthDecrypted, HAS_AuthPayload} from '../payloads.types';
 
 export const processAuthenticationRequest = (
   has: HAS,
@@ -21,7 +21,7 @@ export const processAuthenticationRequest = (
     return;
   }
   assert(accountSession, 'This account has not been connected through HAS.');
-  const data: HAS_AuhtDecrypted = JSON.parse(
+  const data: HAS_AuthDecrypted = JSON.parse(
     Crypto.AES.decrypt(payload.data, accountSession.auth_key).toString(
       Crypto.enc.Utf8,
     ),

@@ -1,11 +1,9 @@
-import {signBuffer} from 'components/bridge';
 import Crypto from 'crypto-js';
-import {RootState, store} from 'store';
-import {KeychainKeyTypesLC} from 'utils/keychain.types';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
 import HAS from '..';
 import {HAS_Session} from '../has.types';
+import {getChallengeData} from '../helpers/challenge';
 import {HAS_ChallengePayload} from '../payloads.types';
 
 export const processChallengeRequest = (
@@ -43,25 +41,16 @@ const answerChallengeReq = async (
   callback: (success: boolean) => void,
 ) => {
   if (approve) {
-    const accounts = (store.getState() as RootState).accounts;
-    const account = accounts.find((e) => e.name === payload.account);
-    const challenge = await signBuffer(
-      account.keys[payload.decrypted_data.key_type as KeychainKeyTypesLC],
-      payload.decrypted_data.challenge,
+    const challengeData = getChallengeData(
+      session,
+      payload.account,
+      payload.decrypted_data,
+      true,
     );
-    const pubkey =
-      account.keys[
-        `${payload.decrypted_data.key_type as KeychainKeyTypesLC}Pubkey`
-      ];
-    const data = {challenge, pubkey};
-    const signedData = Crypto.AES.encrypt(
-      JSON.stringify(data),
-      session.auth_key,
-    ).toString();
     has.send(
       JSON.stringify({
         cmd: 'challenge_ack',
-        data: signedData,
+        data: challengeData,
         uuid: payload.uuid,
       }),
     );

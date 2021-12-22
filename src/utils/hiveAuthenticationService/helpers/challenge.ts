@@ -1,7 +1,11 @@
 import {removeHASSession} from 'actions/hiveAuthenticationService';
-import {encodeMemo} from 'components/bridge';
+import {encodeMemo, signBuffer} from 'components/bridge';
+import Crypto from 'crypto-js';
 import {RootState, store} from 'store';
+import {KeychainKeyTypesLC} from 'utils/keychain.types';
 import HAS from '..';
+import {HAS_Session} from '../has.types';
+import {HAS_ChallengeDecryptedData} from '../payloads.types';
 import {getLeastDangerousKey} from './keys';
 
 export const dAppChallenge = async (
@@ -55,4 +59,25 @@ export const prepareRegistrationChallenge = async (
       );
     }
   }
+};
+
+export const getChallengeData = async (
+  session: HAS_Session,
+  username: string,
+  decrypted_data: HAS_ChallengeDecryptedData,
+  encrypt: boolean,
+) => {
+  const accounts = (store.getState() as RootState).accounts;
+  const account = accounts.find((e) => e.name === username);
+  const challenge = await signBuffer(
+    account.keys[decrypted_data.key_type as KeychainKeyTypesLC],
+    decrypted_data.challenge,
+  );
+  const pubkey =
+    account.keys[`${decrypted_data.key_type as KeychainKeyTypesLC}Pubkey`];
+  const data = {challenge, pubkey};
+  console.log(session.auth_key, data);
+  return encrypt
+    ? Crypto.AES.encrypt(JSON.stringify(data), session.auth_key).toString()
+    : data;
 };

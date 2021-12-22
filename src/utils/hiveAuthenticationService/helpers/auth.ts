@@ -4,7 +4,7 @@ import uuid from 'react-native-uuid';
 import {store} from 'store';
 import HAS from '..';
 import {HAS_AuthChallengeData, HAS_AuthPayload} from '../payloads.types';
-import {dAppChallenge} from './challenge';
+import {dAppChallenge, getChallengeData} from './challenge';
 
 export const answerAuthReq = async (
   has: HAS,
@@ -48,14 +48,22 @@ export const answerAuthReq = async (
           expire: session.token.expiration,
         };
       }
-      if (payload.decryptedData.app.pubkey) {
+      if (payload.decryptedData.challenge) {
+        console.log('attempting ');
+        auth_ack_data.challenge = (await getChallengeData(
+          session,
+          payload.account,
+          payload.decryptedData.challenge,
+          false,
+        )) as {challenge: string; pubkey: string};
+      } else if (payload.decryptedData?.app?.pubkey) {
         auth_ack_data.challenge = await dAppChallenge(
           payload.account,
           payload.decryptedData.app.pubkey,
           payload.account,
         );
       }
-
+      console.log('a', auth_ack_data);
       const data = Crypto.AES.encrypt(
         JSON.stringify(auth_ack_data),
         app_key,

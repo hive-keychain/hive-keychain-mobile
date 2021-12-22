@@ -24,20 +24,21 @@ export type HAS_ConnectPayload = {
 export type HAS_AuthPayload = {
   cmd: HAS_PayloadType.AUTH;
   account: string;
-  decryptedData?: HAS_AuhtDecrypted;
+  decryptedData?: HAS_AuthDecrypted;
   token?: string;
   data: string;
   uuid: string;
   expire: number;
 };
 
-export type HAS_AuhtDecrypted = {
+export type HAS_AuthDecrypted = {
   app: {
     name: string;
     icon: string;
     description: string;
     pubkey: string;
   };
+  challenge: HAS_ChallengeDecryptedData;
 };
 
 // Challenge
@@ -46,10 +47,11 @@ export type HAS_ChallengePayload = {
   account: string;
   token: string;
   data: string;
-  decrypted_data?: {key_type: string; challenge: string};
+  decrypted_data?: HAS_ChallengeDecryptedData;
   uuid: string;
 };
 
+export type HAS_ChallengeDecryptedData = {key_type: string; challenge: string};
 // Sign transaction
 
 export type HAS_SignPayload = {
@@ -79,7 +81,7 @@ export type HAS_BroadcastModalPayload = {
 export type HAS_AuthChallengeData = {
   token: string;
   expire: number;
-  challenge?: string;
+  challenge?: {pubkey: string; challenge: string} | string;
 };
 
 // Others

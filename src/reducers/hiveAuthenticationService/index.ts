@@ -18,6 +18,7 @@ export default (
 ): HAS_State => {
   switch (data.type) {
     case HAS_ActionsTypes.REQUEST:
+      data.payload.host = data.payload.host.replace(/\/$/, '');
       const instances = [...state.instances];
       if (!state.instances.find((e) => e.host === data.payload.host)) {
         instances.push({host: data.payload.host, init: false});
@@ -27,6 +28,27 @@ export default (
         sessions: [...state.sessions, {...data.payload, init: false}],
       };
     case HAS_ActionsTypes.REQUEST_TREATED:
+      console.log(data);
+      console.log({
+        instances: [
+          ...state.instances.filter((e) => e.host !== data.payload),
+          ...state.instances
+            .filter((e) => e.host === data.payload)
+            .map((e) => {
+              e.init = true;
+              return e;
+            }),
+        ],
+        sessions: [
+          ...state.sessions.filter((e) => e.host !== data.payload),
+          ...state.sessions
+            .filter((e) => e.host === data.payload)
+            .map((e) => {
+              e.init = true;
+              return e;
+            }),
+        ],
+      });
       return {
         instances: [
           ...state.instances.filter((e) => e.host !== data.payload),

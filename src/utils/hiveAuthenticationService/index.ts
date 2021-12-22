@@ -16,6 +16,7 @@ import {processAuthenticationRequest} from './messages/authenticate';
 import {HAS_AuthPayload, HAS_SignPayload} from './payloads.types';
 
 let previousState: RootState = store.getState();
+
 store.subscribe(() => {
   if (!previousState) return;
   const state = store.getState() as RootState;
@@ -24,11 +25,12 @@ store.subscribe(() => {
     previousState.hive_authentication_service !==
       state.hive_authentication_service
   ) {
+    console.log(JSON.stringify(state.hive_authentication_service));
+    previousState = state;
     if (!!state.auth.mk && state.hive_authentication_service) {
       showHASInitRequest(state.hive_authentication_service);
     }
   }
-  previousState = state;
 });
 
 export const showHASInitRequest = (data: HAS_State) => {
