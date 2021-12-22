@@ -34,6 +34,7 @@
     "unvote": "Unvote",
     "none": "None",
     "error": "Error: Something went wrong : {{msg}}",
+    "error_title": "Error",
     "savings": "Savings",
     "ok": "OK"
   },

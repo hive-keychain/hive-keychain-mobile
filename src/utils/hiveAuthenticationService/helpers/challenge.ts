@@ -3,6 +3,9 @@ import {encodeMemo, signBuffer} from 'components/bridge';
 import Crypto from 'crypto-js';
 import {RootState, store} from 'store';
 import {KeychainKeyTypesLC} from 'utils/keychain.types';
+import {translate} from 'utils/localize';
+import {ModalComponent} from 'utils/modal.enum';
+import {navigate} from 'utils/navigation';
 import HAS from '..';
 import {HAS_Session} from '../has.types';
 import {HAS_ChallengeDecryptedData} from '../payloads.types';
@@ -49,6 +52,14 @@ export const prepareRegistrationChallenge = async (
       (e) => e.account === username,
     );
     if (session) {
+      navigate('ModalScreen', {
+        name: ModalComponent.HAS_ERROR,
+        data: {
+          text: translate('wallet.has.connect.no_username', {
+            account: username,
+          }),
+        },
+      });
       store.dispatch(removeHASSession(session.uuid));
       has.send(
         JSON.stringify({
