@@ -351,7 +351,8 @@
       "removeProposal": "Succesfully removed proposal(s) {{ids}}."
     },
     "confirm": "Confirm",
-    "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}."
+    "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}.",
+    "keep_has": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}} until this session expires."
   },
   "browser": {
     "search": "Search or enter url",

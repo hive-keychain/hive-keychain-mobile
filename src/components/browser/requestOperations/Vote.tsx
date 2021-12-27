@@ -6,6 +6,7 @@ import {
   RequestId,
   RequestSuccess,
   RequestVote,
+  UsingHAS,
 } from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
@@ -15,9 +16,8 @@ import RequestOperation, {
 import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
-  request: RequestVote & RequestId;
+  request: RequestVote & RequestId & UsingHAS;
 } & RequestComponentCommonProps;
-
 export default ({
   request,
   accounts,
@@ -25,11 +25,11 @@ export default ({
   sendResponse,
   sendError,
 }: Props) => {
-  const {request_id, ...data} = request;
+  const {request_id, has, ...data} = request;
   const {username, author, permlink, weight} = data;
-
   return (
     <RequestOperation
+      has={has}
       sendResponse={sendResponse}
       sendError={sendError}
       successMessage={translate('request.success.vote', {

@@ -11,7 +11,7 @@ import {
   RequestVote,
 } from 'utils/keychain.types';
 import {ModalComponent} from 'utils/modal.enum';
-import {navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 import HAS from '..';
 import {
   answerFailedBroadcastReq,
@@ -60,6 +60,7 @@ export const processSigningRequest = async (
             author: voteOperation.author,
             weight: voteOperation.weight,
           } as RequestVote;
+          console.log(request);
           break;
         case 'comment':
           const commentOperation = (op as CommentOperation)[1];
@@ -97,7 +98,11 @@ export const processSigningRequest = async (
     const data: HAS_BroadcastModalPayload = {
       request: {...request, has: true},
       accounts: await store.getState().accounts,
-      onForceCloseModal: () => {},
+      onForceCloseModal: () => {
+        console.log('onforceclose');
+        goBack();
+        answerFailedBroadcastReq(has, payload);
+      },
       sendError: () => {
         answerFailedBroadcastReq(has, payload);
       },

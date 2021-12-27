@@ -9,6 +9,7 @@ import {
   RequestError,
   RequestId,
   RequestSuccess,
+  UsingHAS,
 } from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import CollapsibleData from './components/CollapsibleData';
@@ -19,7 +20,7 @@ import RequestOperation, {
 import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
-  request: RequestBroadcast & RequestId;
+  request: RequestBroadcast & RequestId & UsingHAS;
 } & RequestComponentCommonProps;
 export default ({
   request,
@@ -28,10 +29,11 @@ export default ({
   sendResponse,
   sendError,
 }: Props) => {
-  const {request_id, ...data} = request;
+  const {request_id, has, ...data} = request;
   const {username, method, operations} = data;
   return (
     <RequestOperation
+      has={has}
       sendResponse={sendResponse}
       sendError={sendError}
       successMessage={translate('request.success.broadcast')}

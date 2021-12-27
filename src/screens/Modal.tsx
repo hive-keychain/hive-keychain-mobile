@@ -8,13 +8,17 @@ import React from 'react';
 import {HAS_BroadcastModalPayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {ModalComponent} from 'utils/modal.enum';
 export default ({navigation, route}: ModalNavigationProps) => {
-  const onForceCloseModal = route.params
-    ? route.params!.onForceCloseModal
-    : null;
+  console.log(
+    route.params,
+    route.params ? route.params.onForceCloseModal : null,
+  );
+  let onForceCloseModal = route.params ? route.params!.onForceCloseModal : null;
 
   let name = route.params?.name;
   let data = route.params?.data;
-  console.log(data);
+  if (!onForceCloseModal && data.onForceCloseModal) {
+    onForceCloseModal = data.onForceCloseModal;
+  }
   const renderContent = () => {
     switch (name) {
       case ModalComponent.HAS_AUTH:
@@ -37,6 +41,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
       outsideClick={
         onForceCloseModal ||
         (() => {
+          console.log('here', onForceCloseModal);
           navigation.goBack();
         })
       }

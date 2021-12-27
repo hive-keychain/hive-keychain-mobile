@@ -12,6 +12,7 @@ import {
   KeychainRequest,
   KeychainRequestTypes,
   RequestError,
+  RequestId,
   RequestSuccess,
 } from 'utils/keychain.types';
 import {translate} from 'utils/localize';
@@ -19,13 +20,14 @@ import RequestMessage from './RequestMessage';
 import RequestResultMessage from './RequestResultMessage';
 
 type Props = {
+  has?: boolean;
   closeGracefully: () => void;
   sendResponse: (msg: RequestSuccess) => void;
   sendError: (msg: RequestError) => void;
   message?: string;
   children: JSX.Element[];
   method?: KeyTypes;
-  request: KeychainRequest;
+  request: KeychainRequest & RequestId;
   successMessage: string;
   errorMessage?:
     | string
@@ -54,13 +56,15 @@ const RequestOperation = ({
   beautifyError,
   addPreference,
   selectedUsername,
+  has,
 }: Props) => {
   const {request_id, ...data} = request;
   const [loading, setLoading] = useState(false);
   const [resultMessage, setResultMessage] = useState(null);
   const [keep, setKeep] = useState(false);
   let {domain, type, username} = data;
-  domain = urlTransformer(domain).hostname;
+  domain = has ? domain : urlTransformer(domain).hostname;
+
   const renderRequestSummary = () => (
     <ScrollView>
       <RequestMessage message={message} />
@@ -70,7 +74,7 @@ const RequestOperation = ({
         <View style={styles.keep}>
           <RadioButton
             selected={keep}
-            data={translate('request.keep', {
+            data={translate(`request.keep${has ? '_has' : ''}`, {
               domain,
               username: username || selectedUsername,
               type,
@@ -151,7 +155,7 @@ export default connector(RequestOperation);
 
 export const processOperationWithoutConfirmation = async (
   performOperation: () => void,
-  request: KeychainRequest,
+  request: KeychainRequest & RequestId,
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
   beautifyError: boolean,
