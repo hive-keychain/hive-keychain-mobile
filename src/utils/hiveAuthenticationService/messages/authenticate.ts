@@ -1,7 +1,7 @@
 import assert from 'assert';
 import Crypto from 'crypto-js';
 import {ModalComponent} from 'utils/modal.enum';
-import {navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 import HAS from '..';
 import {answerAuthReq} from '../helpers/auth';
 import {HAS_AuthDecrypted, HAS_AuthPayload} from '../payloads.types';
@@ -30,6 +30,14 @@ export const processAuthenticationRequest = (
 
   navigate('ModalScreen', {
     name: ModalComponent.HAS_AUTH,
-    data: {...payload, has, callback: answerAuthReq},
+    data: {
+      ...payload,
+      has,
+      callback: answerAuthReq,
+      onForceCloseModal: () => {
+        has.send(JSON.stringify({cmd: 'auth_nack', uuid: payload.uuid}));
+        goBack();
+      },
+    },
   });
 };

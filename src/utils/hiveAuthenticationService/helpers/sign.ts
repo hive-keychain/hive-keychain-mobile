@@ -23,6 +23,13 @@ export const answerSuccessfulBroadcastReq = (
 export const answerFailedBroadcastReq = (
   has: HAS,
   payload: HAS_SignPayload,
+  error?: string,
 ) => {
-  has.send(JSON.stringify({cmd: 'sign_nack', uuid: payload.uuid}));
+  has.send(
+    JSON.stringify({
+      cmd: 'sign_nack',
+      uuid: payload.uuid,
+      error: error || 'Request was canceled by the user.',
+    }),
+  );
 };

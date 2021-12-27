@@ -6,6 +6,7 @@ import {
   KeychainKeyTypes,
   KeychainRequestTypes,
   RequestBroadcast,
+  RequestError,
   RequestPost,
   RequestSuccess,
   RequestVote,
@@ -103,8 +104,8 @@ export const processSigningRequest = async (
         goBack();
         answerFailedBroadcastReq(has, payload);
       },
-      sendError: () => {
-        answerFailedBroadcastReq(has, payload);
+      sendError: (obj: RequestError) => {
+        answerFailedBroadcastReq(has, payload, obj.error);
       },
       sendResponse: (obj: RequestSuccess) => {
         answerSuccessfulBroadcastReq(has, payload, obj);

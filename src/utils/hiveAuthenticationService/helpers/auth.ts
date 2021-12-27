@@ -76,6 +76,7 @@ export const answerAuthReq = async (
         }),
       );
     } else {
+      //TODO: Discuss nack with arcange, why does it need challenge?
       has.send(JSON.stringify({cmd: 'auth_nack', uuid: payload.uuid}));
     }
     callback();

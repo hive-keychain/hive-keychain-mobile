@@ -16,7 +16,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
 
   let name = route.params?.name;
   let data = route.params?.data;
-  if (!onForceCloseModal && data.onForceCloseModal) {
+  if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
   }
   const renderContent = () => {
@@ -41,7 +41,6 @@ export default ({navigation, route}: ModalNavigationProps) => {
       outsideClick={
         onForceCloseModal ||
         (() => {
-          console.log('here', onForceCloseModal);
           navigation.goBack();
         })
       }

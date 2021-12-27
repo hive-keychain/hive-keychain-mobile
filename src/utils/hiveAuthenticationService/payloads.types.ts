@@ -1,6 +1,10 @@
 import {Operation} from '@hiveio/dhive';
 import {KeyTypes} from 'actions/interfaces';
-import {KeychainRequest, RequestSuccess} from 'utils/keychain.types';
+import {
+  KeychainRequest,
+  RequestError,
+  RequestSuccess,
+} from 'utils/keychain.types';
 
 export enum HAS_PayloadType {
   AUTH = 'auth_req',
@@ -74,7 +78,7 @@ export type HAS_BroadcastModalPayload = {
   request: KeychainRequest;
   accounts: any;
   onForceCloseModal: () => void;
-  sendError: () => void;
+  sendError: (obj: RequestError) => void;
   sendResponse: (obj: RequestSuccess) => void;
 };
 
