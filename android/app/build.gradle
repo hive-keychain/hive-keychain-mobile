@@ -191,7 +191,7 @@ android {
                 debugSymbolLevel 'SYMBOL_TABLE'
             }
         }
-    }
+   } 
 
     packagingOptions {
         pickFirst "lib/armeabi-v7a/libc++_shared.so"
