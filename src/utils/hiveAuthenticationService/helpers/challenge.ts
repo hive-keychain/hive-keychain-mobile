@@ -63,9 +63,8 @@ export const prepareRegistrationChallenge = async (
       store.dispatch(removeHASSession(session.uuid));
       has.send(
         JSON.stringify({
-          cmd: 'auth_err',
+          cmd: 'auth_nack',
           uuid: session.uuid,
-          error: 'Request was canceled by the user.',
         }),
       );
     }

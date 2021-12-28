@@ -8,10 +8,6 @@ import React from 'react';
 import {HAS_BroadcastModalPayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {ModalComponent} from 'utils/modal.enum';
 export default ({navigation, route}: ModalNavigationProps) => {
-  console.log(
-    route.params,
-    route.params ? route.params.onForceCloseModal : null,
-  );
   let onForceCloseModal = route.params ? route.params!.onForceCloseModal : null;
 
   let name = route.params?.name;
@@ -19,6 +15,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
   if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
   }
+  console.log(onForceCloseModal);
   const renderContent = () => {
     switch (name) {
       case ModalComponent.HAS_AUTH:

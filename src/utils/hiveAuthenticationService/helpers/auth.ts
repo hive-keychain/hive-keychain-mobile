@@ -49,7 +49,6 @@ export const answerAuthReq = async (
         };
       }
       if (payload.decryptedData.challenge) {
-        console.log('attempting ');
         auth_ack_data.challenge = (await getChallengeData(
           session,
           payload.account,
@@ -63,7 +62,6 @@ export const answerAuthReq = async (
           payload.account,
         );
       }
-      console.log('a', auth_ack_data);
       const data = Crypto.AES.encrypt(
         JSON.stringify(auth_ack_data),
         app_key,
@@ -83,12 +81,12 @@ export const answerAuthReq = async (
     // remove expired tokens
   } catch (e) {
     console.log(e);
-    has.send(
-      JSON.stringify({
-        cmd: 'auth_err',
-        uuid: payload.uuid,
-        error: 'Request canceled by user',
-      }),
-    );
+    // has.send(
+    //   JSON.stringify({
+    //     cmd: 'auth_err',
+    //     uuid: payload.uuid,
+    //     error: 'Request canceled by user',
+    //   }),
+    // );
   }
 };

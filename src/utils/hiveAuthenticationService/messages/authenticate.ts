@@ -35,7 +35,19 @@ export const processAuthenticationRequest = (
       has,
       callback: answerAuthReq,
       onForceCloseModal: () => {
-        has.send(JSON.stringify({cmd: 'auth_nack', uuid: payload.uuid}));
+        console.log('force close modal');
+        const challenge = Crypto.AES.encrypt(
+          payload.uuid,
+          accountSession.auth_key,
+        ).toString();
+        has.send(
+          JSON.stringify({
+            cmd: 'auth_nack',
+            uuid: payload.uuid,
+            data: challenge,
+          }),
+        );
+        //store.dispatch(removeHASSession(accountSession.uuid));
         goBack();
       },
     },

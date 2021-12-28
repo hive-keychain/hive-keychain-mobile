@@ -14,6 +14,7 @@ import {translate} from 'utils/localize';
 type Props = PropsFromRedux & {
   data: HAS_AuthPayload & {
     has: HAS;
+    onForceCloseModal: () => void;
     callback: (
       has: HAS,
       payload: HAS_AuthPayload,
@@ -31,9 +32,11 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
       setSuccess(true);
     });
   };
-  console.log(data);
   return (
-    <Operation logo={<Hive />} title={translate('wallet.has.auth.title')}>
+    <Operation
+      logo={<Hive />}
+      title={translate('wallet.has.auth.title')}
+      onClose={data.onForceCloseModal}>
       <>
         <Separator height={30} />
         <Text style={styles.uuid}>{translate('wallet.has.uuid', data)}</Text>
