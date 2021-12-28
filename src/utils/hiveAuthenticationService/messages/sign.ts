@@ -97,6 +97,7 @@ export const processSigningRequest = async (
       } as RequestBroadcast;
     }
     const data: HAS_BroadcastModalPayload = {
+      expiration: payload.expire,
       request: {...request, has: true},
       accounts: await store.getState().accounts,
       onForceCloseModal: () => {

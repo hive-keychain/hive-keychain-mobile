@@ -80,6 +80,7 @@ export type HAS_BroadcastModalPayload = {
   onForceCloseModal: () => void;
   sendError: (obj: RequestError) => void;
   sendResponse: (obj: RequestSuccess) => void;
+  expiration: number;
 };
 
 export type HAS_AuthChallengeData = {

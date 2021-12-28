@@ -37,12 +37,10 @@ export const processAuthenticationRequest = (
       has,
       callback: answerAuthReq,
       onExpire: () => {
-        console.log('expire');
         store.dispatch(removeHASSession(accountSession.uuid));
         goBack();
       },
       onForceCloseModal: () => {
-        console.log('force close modal');
         const challenge = Crypto.AES.encrypt(
           payload.uuid,
           accountSession.auth_key,

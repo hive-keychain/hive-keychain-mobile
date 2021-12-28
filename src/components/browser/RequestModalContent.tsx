@@ -1,5 +1,6 @@
 import {Account} from 'actions/interfaces';
 import Operation from 'components/operations/Operation';
+import {useHasExpiration} from 'hooks/useHasExpiration';
 import React from 'react';
 import {
   KeychainRequest,
@@ -16,6 +17,7 @@ type Props = {
   sendError: (obj: RequestError) => void;
   sendResponse: (obj: RequestSuccess) => void;
   request: KeychainRequest;
+  expiration?: number;
 };
 
 export default ({
@@ -24,7 +26,9 @@ export default ({
   onForceCloseModal,
   sendResponse,
   sendError,
+  expiration,
 }: Props) => {
+  useHasExpiration(expiration);
   const renderOperationDetails = () => {
     console.log(request);
     const type = request.type;

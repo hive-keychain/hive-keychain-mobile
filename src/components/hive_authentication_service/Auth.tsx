@@ -2,7 +2,7 @@ import Hive from 'assets/wallet/icon_hive.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
-import {useHasExpiration} from 'hooks/hasExpiration';
+import {useHasExpiration} from 'hooks/useHasExpiration';
 import {ModalNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
