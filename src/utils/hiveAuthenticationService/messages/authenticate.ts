@@ -1,5 +1,7 @@
+import {removeHASSession} from 'actions/hiveAuthenticationService';
 import assert from 'assert';
 import Crypto from 'crypto-js';
+import {store} from 'store';
 import {ModalComponent} from 'utils/modal.enum';
 import {goBack, navigate} from 'utils/navigation';
 import HAS from '..';
@@ -34,6 +36,11 @@ export const processAuthenticationRequest = (
       ...payload,
       has,
       callback: answerAuthReq,
+      onExpire: () => {
+        console.log('expire');
+        store.dispatch(removeHASSession(accountSession.uuid));
+        goBack();
+      },
       onForceCloseModal: () => {
         console.log('force close modal');
         const challenge = Crypto.AES.encrypt(
@@ -47,7 +54,7 @@ export const processAuthenticationRequest = (
             data: challenge,
           }),
         );
-        //store.dispatch(removeHASSession(accountSession.uuid));
+        store.dispatch(removeHASSession(accountSession.uuid));
         goBack();
       },
     },

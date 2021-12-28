@@ -2,6 +2,7 @@ import Hive from 'assets/wallet/icon_hive.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
+import {useHasExpiration} from 'hooks/hasExpiration';
 import {ModalNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
@@ -15,6 +16,7 @@ type Props = PropsFromRedux & {
   data: HAS_AuthPayload & {
     has: HAS;
     onForceCloseModal: () => void;
+    onExpire: () => void;
     callback: (
       has: HAS,
       payload: HAS_AuthPayload,
@@ -32,6 +34,7 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
       setSuccess(true);
     });
   };
+  useHasExpiration(data.expire, data.onExpire);
   return (
     <Operation
       logo={<Hive />}
