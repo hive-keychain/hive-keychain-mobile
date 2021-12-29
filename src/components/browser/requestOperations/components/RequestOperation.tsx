@@ -113,12 +113,12 @@ const RequestOperation = ({
           } catch (e) {
             if (!beautifyError) {
               if (typeof errorMessage === 'function') {
-                msg = errorMessage(e, data);
+                msg = errorMessage(e as any, data);
               } else {
                 msg = errorMessage;
               }
             } else {
-              msg = beautifyErrorMessage(e);
+              msg = beautifyErrorMessage(e as any);
             }
             sendError({data, request_id, error: {}, message: msg});
           } finally {
@@ -187,7 +187,7 @@ export const processOperationWithoutConfirmation = async (
       msg = errorMessage;
       //}
     } else {
-      msg = beautifyErrorMessage(e);
+      msg = beautifyErrorMessage(e as any);
     }
     //console.log(msg);
     sendError({data, request_id, error: {}, message: msg});
