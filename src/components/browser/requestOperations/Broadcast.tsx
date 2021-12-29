@@ -104,6 +104,7 @@ export const broadcastWithoutConfirmation = (
   request: RequestBroadcast & RequestId,
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
+  has?: boolean,
 ) => {
   processOperationWithoutConfirmation(
     async () => await performBroadcastOperation(accounts, request),

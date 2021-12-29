@@ -109,6 +109,7 @@ export const postWithoutConfirmation = (
   request: RequestPost & RequestId,
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
+  has?: boolean,
 ) => {
   processOperationWithoutConfirmation(
     async () => await performPostOperation(accounts, request),

@@ -18,6 +18,7 @@ import {RequestComponentCommonProps} from './requestOperations.types';
 type Props = {
   request: RequestVote & RequestId & UsingHAS;
 } & RequestComponentCommonProps;
+
 export default ({
   request,
   accounts,
@@ -84,6 +85,7 @@ export const voteWithoutConfirmation = (
   request: RequestVote & RequestId,
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
+  has?: boolean,
 ) => {
   processOperationWithoutConfirmation(
     async () => await performVoteOperation(accounts, request),

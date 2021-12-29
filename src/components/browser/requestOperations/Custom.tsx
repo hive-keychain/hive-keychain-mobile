@@ -87,6 +87,7 @@ export const broacastCustomJSONWithoutConfirmation = (
   request: RequestCustomJSON & RequestId,
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
+  has?: boolean,
 ) => {
   processOperationWithoutConfirmation(
     async () => await performBroadcastJSONOperation(accounts, request),

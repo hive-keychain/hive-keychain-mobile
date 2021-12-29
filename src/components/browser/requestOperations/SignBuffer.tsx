@@ -83,6 +83,7 @@ export const signBufferWithoutConfirmation = (
   request: RequestSignBuffer & RequestId,
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
+  has?: boolean,
 ) => {
   const {username, message, method} = request;
   processOperationWithoutConfirmation(

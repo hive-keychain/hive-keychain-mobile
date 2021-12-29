@@ -74,6 +74,7 @@ export const decodeWithoutConfirmation = (
   request: RequestDecode & RequestId,
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
+  has?: boolean,
 ) => {
   processOperationWithoutConfirmation(
     () => performDecodeOperation(accounts, request),

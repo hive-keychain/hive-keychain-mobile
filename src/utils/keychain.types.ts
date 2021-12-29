@@ -305,9 +305,9 @@ export type KeychainRequestData =
   | RequestConvert
   | RequestRecurrentTransfer;
 
-export type RequestId = {request_id: number};
+export type RequestId = {request_id?: number};
 export type UsingHAS = {has?: boolean};
-export type KeychainRequest = KeychainRequestData & (RequestId | UsingHAS);
+export type KeychainRequest = KeychainRequestData & RequestId & UsingHAS;
 
 export type HiveErrorMessage = {
   message: string;
