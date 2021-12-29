@@ -1,3 +1,5 @@
+import {KeychainRequestTypes} from 'utils/keychain.types';
+
 // One HAS_Instance per different domain serving HAS being used
 export type HAS_Instance = {
   host: string;
@@ -14,6 +16,7 @@ export type HAS_Session = {
   account: string;
   host: string;
   init: boolean;
+  whitelist: KeychainRequestTypes[];
 };
 
 export type HAS_Token = {

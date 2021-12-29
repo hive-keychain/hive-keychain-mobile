@@ -15,7 +15,7 @@ type Props = {
   accounts: Account[];
   onForceCloseModal?: () => void;
   sendError: (obj: RequestError) => void;
-  sendResponse: (obj: RequestSuccess) => void;
+  sendResponse: (obj: RequestSuccess, keep?: boolean) => void;
   request: KeychainRequest;
   expiration?: number;
 };

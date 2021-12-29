@@ -1,6 +1,7 @@
 import {HAS_ActionsTypes} from 'actions/types';
 import {HAS_Token} from 'utils/hiveAuthenticationService/has.types';
 import {HAS_ConnectPayload} from 'utils/hiveAuthenticationService/payloads.types';
+import {KeychainRequestTypes} from 'utils/keychain.types';
 
 export type HAS_Connect = {
   type: HAS_ActionsTypes.REQUEST;
@@ -36,6 +37,11 @@ export type HAS_RemoveSession = {
   payload: {uuid: string};
 };
 
+export type HAS_AddWhitelistedOperation = {
+  type: HAS_ActionsTypes.ADD_WHITELISTED_OPERATION;
+  payload: {uuid: string; operation: KeychainRequestTypes};
+};
+
 export type HAS_Actions =
   | HAS_Connect
   | HAS_Treated
@@ -43,4 +49,5 @@ export type HAS_Actions =
   | HAS_AddServerKey
   | HAS_Clear
   | HAS_UpdateInstanceConnectionStatus
-  | HAS_RemoveSession;
+  | HAS_RemoveSession
+  | HAS_AddWhitelistedOperation;

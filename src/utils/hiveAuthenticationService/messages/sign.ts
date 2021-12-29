@@ -1,9 +1,11 @@
 import {CommentOperation, VoteOperation} from '@hiveio/dhive';
+import {addWhitelistedOperationToSession} from 'actions/hiveAuthenticationService';
 import assert from 'assert';
 import Crypto from 'crypto-js';
 import {store} from 'store';
 import {
   KeychainKeyTypes,
+  KeychainRequest,
   KeychainRequestTypes,
   RequestBroadcast,
   RequestError,
@@ -47,7 +49,7 @@ export const processSigningRequest = async (
     );
     const {ops, key_type} = opsData;
     payload.decryptedData = opsData;
-    let request;
+    let request: KeychainRequest;
     if (ops.length === 1) {
       let op = ops[0];
       switch (op[0]) {
@@ -108,8 +110,14 @@ export const processSigningRequest = async (
       sendError: (obj: RequestError) => {
         answerFailedBroadcastReq(has, payload, obj.error);
       },
-      sendResponse: (obj: RequestSuccess) => {
+      sendResponse: (obj: RequestSuccess, keep: boolean) => {
         answerSuccessfulBroadcastReq(has, payload, obj);
+        if (keep) {
+          console.log('keeping');
+          store.dispatch(
+            addWhitelistedOperationToSession(session.uuid, request.type),
+          );
+        }
       },
     };
 

@@ -79,7 +79,7 @@ export type HAS_BroadcastModalPayload = {
   accounts: any;
   onForceCloseModal: () => void;
   sendError: (obj: RequestError) => void;
-  sendResponse: (obj: RequestSuccess) => void;
+  sendResponse: (obj: RequestSuccess, keep: boolean) => void;
   expiration: number;
 };
 

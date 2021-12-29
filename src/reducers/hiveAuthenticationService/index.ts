@@ -25,7 +25,10 @@ export default (
       }
       return {
         instances,
-        sessions: [...state.sessions, {...data.payload, init: false}],
+        sessions: [
+          ...state.sessions,
+          {...data.payload, init: false, whitelist: []},
+        ],
       };
     case HAS_ActionsTypes.REQUEST_TREATED:
       console.log(data);
@@ -93,7 +96,6 @@ export default (
       };
     }
     case HAS_ActionsTypes.CLEAR:
-      console.log('clearing');
       return {sessions: [], instances: []};
     case HAS_ActionsTypes.UPDATE_INSTANCE_CONNECTION_STATUS:
       const instance = state.instances.find(
@@ -116,11 +118,20 @@ export default (
       const instances = state.instances.filter(
         (e) => !!sessions.find((session) => e.host === session.host),
       );
-      console.log('removing', {instances, sessions});
       return {
         instances,
         sessions,
       };
+    }
+    case HAS_ActionsTypes.ADD_WHITELISTED_OPERATION: {
+      console.log('wl', data);
+
+      const instances = state.instances;
+      const sessions = state.sessions;
+      const index = sessions.findIndex((e) => e.uuid === data.payload.uuid);
+      sessions[index]?.whitelist.push(data.payload.operation);
+      console.log(index, sessions);
+      return {instances, sessions};
     }
     default:
       return state;

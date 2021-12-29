@@ -1,5 +1,6 @@
 import {HAS_Token} from 'utils/hiveAuthenticationService/has.types';
 import {HAS_ConnectPayload} from 'utils/hiveAuthenticationService/payloads.types';
+import {KeychainRequestTypes} from 'utils/keychain.types';
 import {HAS_ActionsTypes} from './types';
 
 export const treatHASRequest = (data: HAS_ConnectPayload & {key: string}) => {
@@ -49,5 +50,15 @@ export const removeHASSession = (uuid: string) => {
   return {
     type: HAS_ActionsTypes.REMOVE_SESSION,
     payload: {uuid},
+  };
+};
+
+export const addWhitelistedOperationToSession = (
+  uuid: string,
+  operation: KeychainRequestTypes,
+) => {
+  return {
+    type: HAS_ActionsTypes.ADD_WHITELISTED_OPERATION,
+    payload: {uuid, operation},
   };
 };

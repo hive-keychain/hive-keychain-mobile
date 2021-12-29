@@ -22,7 +22,7 @@ import RequestResultMessage from './RequestResultMessage';
 type Props = {
   has?: boolean;
   closeGracefully: () => void;
-  sendResponse: (msg: RequestSuccess) => void;
+  sendResponse: (msg: RequestSuccess, keep?: boolean) => void;
   sendError: (msg: RequestError) => void;
   message?: string;
   children: JSX.Element[];
@@ -106,8 +106,10 @@ const RequestOperation = ({
               ...additionalData,
             };
             if (selectedUsername) obj.data.username = selectedUsername;
-            if (keep) addPreference(username, domain, type);
-            sendResponse(obj);
+            if (keep && !has) {
+              addPreference(username, domain, type);
+            }
+            sendResponse(obj, keep);
           } catch (e) {
             if (!beautifyError) {
               if (typeof errorMessage === 'function') {
@@ -156,7 +158,7 @@ export default connector(RequestOperation);
 export const processOperationWithoutConfirmation = async (
   performOperation: () => void,
   request: KeychainRequest & RequestId,
-  sendResponse: (msg: RequestSuccess) => void,
+  sendResponse: (msg: RequestSuccess, keep?: boolean) => void,
   sendError: (msg: RequestError) => void,
   beautifyError: boolean,
   successMessage?: string,
