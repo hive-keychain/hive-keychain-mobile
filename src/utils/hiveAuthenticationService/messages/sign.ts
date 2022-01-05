@@ -2,7 +2,7 @@ import {CommentOperation, VoteOperation} from '@hiveio/dhive';
 import {addWhitelistedOperationToSession} from 'actions/hiveAuthenticationService';
 import assert from 'assert';
 import Crypto from 'crypto-js';
-import {store} from 'store';
+import {RootState, store} from 'store';
 import {
   KeychainKeyTypes,
   KeychainRequest,
@@ -15,6 +15,7 @@ import {
 } from 'utils/keychain.types';
 import {ModalComponent} from 'utils/modal.enum';
 import {goBack, navigate} from 'utils/navigation';
+import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
 import HAS from '..';
 import {
   answerFailedBroadcastReq,
@@ -63,7 +64,6 @@ export const processSigningRequest = async (
             author: voteOperation.author,
             weight: voteOperation.weight,
           } as RequestVote;
-          console.log(request);
           break;
         case 'comment':
           const commentOperation = (op as CommentOperation)[1];
@@ -98,33 +98,45 @@ export const processSigningRequest = async (
         method: KeychainKeyTypes[key_type],
       } as RequestBroadcast;
     }
-    const data: HAS_BroadcastModalPayload = {
-      expiration: payload.expire,
-      request: {...request, has: true},
-      accounts: await store.getState().accounts,
-      onForceCloseModal: () => {
-        console.log('onforceclose');
-        goBack();
-        answerFailedBroadcastReq(has, payload);
-      },
-      sendError: (obj: RequestError) => {
-        answerFailedBroadcastReq(has, payload, obj.error);
-      },
-      sendResponse: (obj: RequestSuccess, keep: boolean) => {
-        answerSuccessfulBroadcastReq(has, payload, obj);
-        if (keep) {
-          console.log('keeping');
-          store.dispatch(
-            addWhitelistedOperationToSession(session.uuid, request.type),
-          );
-        }
-      },
-    };
+    if (session.whitelist.includes(request.type)) {
+      requestWithoutConfirmation(
+        (store.getState() as RootState).accounts,
+        request,
+        (obj: RequestSuccess) => {
+          answerSuccessfulBroadcastReq(has, payload, obj);
+        },
+        (obj: RequestError) => {
+          answerFailedBroadcastReq(has, payload, obj.error);
+        },
+        true,
+      );
+    } else {
+      const data: HAS_BroadcastModalPayload = {
+        expiration: payload.expire,
+        request: {...request, has: true},
+        accounts: await store.getState().accounts,
+        onForceCloseModal: () => {
+          goBack();
+          answerFailedBroadcastReq(has, payload);
+        },
+        sendError: (obj: RequestError) => {
+          answerFailedBroadcastReq(has, payload, obj.error);
+        },
+        sendResponse: (obj: RequestSuccess, keep: boolean) => {
+          answerSuccessfulBroadcastReq(has, payload, obj);
+          if (keep) {
+            store.dispatch(
+              addWhitelistedOperationToSession(session.uuid, request.type),
+            );
+          }
+        },
+      };
 
-    navigate('ModalScreen', {
-      name: ModalComponent.HAS_BROADCAST,
-      data,
-    });
+      navigate('ModalScreen', {
+        name: ModalComponent.HAS_BROADCAST,
+        data,
+      });
+    }
   } catch (e) {
     console.log(e);
     // has.send(
