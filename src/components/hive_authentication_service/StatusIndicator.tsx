@@ -4,9 +4,11 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {clearHAS, restartHASSockets} from 'utils/hiveAuthenticationService';
+import {ModalComponent} from 'utils/modal.enum';
+import {navigate} from 'utils/navigation';
 
 //TODO: Use all connection statuses
-enum ConnectionStatus {
+export enum ConnectionStatus {
   VOID,
   DISCONNECTED,
   PARTIALLY_CONNECTED,
@@ -27,45 +29,83 @@ const StatusIndicator = ({has}: PropsFromRedux) => {
 
   const styles = getStyles(status);
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        if (status === ConnectionStatus.CONNECTED) {
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.textContainer}
+        onPress={() => {
+          navigate('ModalScreen', {
+            name: ModalComponent.HAS_INFO,
+          });
+        }}>
+        <Text style={styles.text}>HAS</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          if (status === ConnectionStatus.DISCONNECTED) {
+            restartHASSockets();
+          }
+        }}
+        onLongPress={() => {
           clearHAS();
-        } else if (status === ConnectionStatus.DISCONNECTED) {
-          restartHASSockets();
-        }
-      }}
-      onLongPress={() => {
-        clearHAS();
-      }}>
-      <Text style={styles.text}>HAS</Text>
+        }}
+        style={styles.indicatorView}>
+        <Indicator status={status} />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export const Indicator = ({status}: {status: ConnectionStatus}) => {
+  const styles = getStyles(status);
+  return (
+    <View
+      style={
+        status === ConnectionStatus.CONNECTED ? styles.indicatorShadow : null
+      }>
       <View style={styles.indicator}></View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
 const getStyles = (status: ConnectionStatus) =>
   StyleSheet.create({
     container: {
-      flexDirection: 'column',
+      flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+      width: 60,
+    },
+    textContainer: {
       width: 25,
       height: 25,
+      justifyContent: 'center',
     },
     text: {
       color: 'white',
       fontSize: 11,
       fontWeight: 'bold',
-      textAlignVertical: 'top',
-      lineHeight: 11,
+      includeFontPadding: false,
+    },
+    indicatorView: {
+      width: 25,
+      height: 25,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    indicatorShadow: {
+      width: 20,
+      height: 20,
+      borderRadius: 10,
+      borderColor: getStatusColor(status),
+      borderWidth: 2,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     indicator: {
       backgroundColor: getStatusColor(status),
-      width: 10,
-      height: 10,
-      borderRadius: 5,
+      width: 12,
+      height: 12,
+      borderRadius: 6,
     },
   });
 

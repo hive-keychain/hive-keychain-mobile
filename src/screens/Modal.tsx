@@ -2,6 +2,7 @@ import RequestModalContent from 'components/browser/RequestModalContent';
 import HASAuthRequest from 'components/hive_authentication_service/Auth';
 import HASChallengeRequest from 'components/hive_authentication_service/Challenge';
 import HASError from 'components/hive_authentication_service/Error';
+import HASInfo from 'components/hive_authentication_service/Info';
 import CustomModal from 'components/modals/CustomModal';
 import {ModalNavigationProps} from 'navigators/Root.types';
 import React from 'react';
@@ -28,6 +29,8 @@ export default ({navigation, route}: ModalNavigationProps) => {
         );
       case ModalComponent.HAS_ERROR:
         return <HASError text={data.text} navigation={navigation} />;
+      case ModalComponent.HAS_INFO:
+        return <HASInfo />;
       default:
         return null;
     }

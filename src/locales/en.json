@@ -114,7 +114,29 @@
         "no_key": "You don't have the {{key}} key for account @{{account}}",
         "button": "Verify key"
       },
-      "uuid": "UUID: {{uuid}}"
+      "uuid": "UUID: {{uuid}}",
+      "info": {
+        "title": "Discover HAS",
+        "h1": "What's HAS?",
+        "t1": "The Hive Authentication Services (HAS) provide a way for any applications, (either web, desktop or mobile) to easily authenticate users, and additionally sign and broadcast transactions to the Hive blockchain, without asking them to provide any password or private key.",
+        "h2": "Get started",
+        "t2": "To connect to a desktop dApp, use the QR Code scanner. On mobile, simply chose 'Sign in with Hive' on your favorite dApp.",
+        "h3": "HAS Indicator",
+        "indicator": {
+          "grey": {"title": "No HAS connection"},
+          "red": {
+            "title": "Disconnected",
+            "press": "Try reconnecting",
+            "longPress": "Delete all sessions and disconnect"
+          },
+          "green": {
+            "title": "Connected",
+            "longPress": "Delete all sessions and disconnect"
+          },
+          "press": "Press",
+          "longPress": "Long press"
+        }
+      }
     }
   },
   "settings": {
