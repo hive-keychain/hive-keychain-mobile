@@ -1,8 +1,10 @@
 import {CommentOperation, VoteOperation} from '@hiveio/dhive';
 import {addWhitelistedOperationToSession} from 'actions/hiveAuthenticationService';
+import {KeyTypes} from 'actions/interfaces';
 import assert from 'assert';
 import Crypto from 'crypto-js';
 import {RootState, store} from 'store';
+import {getRequiredWifType} from 'utils/keychain';
 import {
   KeychainKeyTypes,
   KeychainRequest,
@@ -98,7 +100,10 @@ export const processSigningRequest = async (
         method: KeychainKeyTypes[key_type],
       } as RequestBroadcast;
     }
-    if (session.whitelist.includes(request.type)) {
+    if (
+      session.whitelist.includes(request.type) &&
+      getRequiredWifType(request) !== KeyTypes.active
+    ) {
       requestWithoutConfirmation(
         (store.getState() as RootState).accounts,
         request,
