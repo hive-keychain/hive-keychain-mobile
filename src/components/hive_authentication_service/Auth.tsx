@@ -1,4 +1,5 @@
 import Hive from 'assets/wallet/icon_hive.svg';
+import CustomPicker from 'components/form/CustomPicker';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
@@ -21,20 +22,34 @@ type Props = PropsFromRedux & {
       has: HAS,
       payload: HAS_AuthPayload,
       approve: boolean,
+      sessionTime: SessionTime,
       callback: () => void,
     ) => void;
   };
   navigation: ModalNavigation;
 };
 
+export enum SessionTime {
+  HOUR = '1 Hour',
+  DAY = '1 Day',
+  WEEK = '1 Week',
+  MONTH = '1 Month',
+}
+
 const HASAuthRequest = ({data, accounts, navigation}: Props) => {
   const [success, setSuccess] = useState(false);
+  const [sessionTime, setSessionTime] = useState(SessionTime.DAY);
   const onConfirm = () => {
-    data.callback(data.has, data, true, () => {
+    data.callback(data.has, data, true, sessionTime, () => {
       setSuccess(true);
+      setTimeout(() => {
+        navigation.goBack();
+      }, 3000);
     });
   };
+
   useHasExpiration(data.expire, data.onExpire);
+
   return (
     <Operation
       logo={<Hive />}
@@ -63,6 +78,29 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
             </Text>
           </>
         )}
+        <Separator height={30} />
+
+        {!success ? (
+          <>
+            <Text style={{fontStyle: 'italic'}}>
+              {translate('wallet.has.session.prompt')}
+            </Text>
+            <CustomPicker
+              selectedValue={sessionTime}
+              onSelected={setSessionTime}
+              prompt={translate('wallet.has.session.prompt')}
+              list={[
+                SessionTime.HOUR,
+                SessionTime.DAY,
+                SessionTime.WEEK,
+                SessionTime.MONTH,
+              ]}
+            />
+          </>
+        ) : (
+          <></>
+        )}
+
         <Separator height={50} />
         <EllipticButton
           title={

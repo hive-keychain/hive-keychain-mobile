@@ -1,4 +1,5 @@
 import {addSessionToken} from 'actions/hiveAuthenticationService';
+import {SessionTime} from 'components/hive_authentication_service/Auth';
 import Crypto from 'crypto-js';
 import uuid from 'react-native-uuid';
 import {store} from 'store';
@@ -10,11 +11,26 @@ export const answerAuthReq = async (
   has: HAS,
   payload: HAS_AuthPayload,
   approve: boolean,
+  sessionTime: SessionTime,
   callback: () => void,
 ) => {
   try {
-    // NOTE: The default expiration time for a token is 24 hours - It can be set to a longer duration for "service" APPS
-    const EXPIRE_DELAY_APP = 24 * 60 * 60 * 1000;
+    const hour = 60 * 60 * 1000;
+    let expiration_delay = hour;
+    switch (sessionTime) {
+      case SessionTime.HOUR:
+        expiration_delay = hour;
+        break;
+      case SessionTime.DAY:
+        expiration_delay = 24 * hour;
+        break;
+      case SessionTime.WEEK:
+        expiration_delay = 7 * 24 * hour;
+        break;
+      case SessionTime.MONTH:
+        expiration_delay = 30 * 24 * hour;
+        break;
+    }
     // NOTE: In "service" or "debug" mode, the APP can pass the encryption key to the PKSA in its auth_req
     //       Secure PKSA should read it from the QR code scanned by the user
     let session = HAS.findSessionByToken(payload.token);
@@ -24,12 +40,11 @@ export const answerAuthReq = async (
       newToken = true;
     }
     const app_key = session.auth_key;
-
     if (approve) {
       let auth_ack_data: HAS_AuthChallengeData;
       if (newToken) {
         const token = uuid.v4() as string;
-        const expire = Date.now() + EXPIRE_DELAY_APP;
+        const expire = Date.now() + expiration_delay;
         auth_ack_data = {
           token,
           expire,

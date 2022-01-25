@@ -136,6 +136,10 @@
           "press": "Press",
           "longPress": "Long press"
         }
+      },
+      "session": {
+        "time": "How long do you wish to keep this session valid?",
+        "prompt": "Session Validity"
       }
     }
   },
