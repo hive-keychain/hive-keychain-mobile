@@ -1,11 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {clearHAS, restartHASSockets} from 'utils/hiveAuthenticationService';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
+const LOGO_DARK = require('assets/has/logo-dark.png');
 
 //TODO: Use all connection statuses
 export enum ConnectionStatus {
@@ -37,7 +38,7 @@ const StatusIndicator = ({has}: PropsFromRedux) => {
             name: ModalComponent.HAS_INFO,
           });
         }}>
-        <Text style={styles.text}>HAS</Text>
+        <Image source={LOGO_DARK} style={{height: 30, width: 30}} />
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {

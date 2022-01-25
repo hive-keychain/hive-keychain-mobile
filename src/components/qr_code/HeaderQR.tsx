@@ -14,11 +14,17 @@ export default ({navigation}: Props) => {
       onPress={() => {
         navigation.navigate('ScanQRFromWalletScreen', {wallet: true});
       }}>
-      <QRLogo width={25} height={25} />
+      <QRLogo width={23} height={23} />
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  qr: {marginLeft: 20},
+  qr: {
+    marginLeft: 20,
+    height: 25,
+    width: 25,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
