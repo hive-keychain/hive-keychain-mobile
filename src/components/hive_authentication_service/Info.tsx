@@ -1,13 +1,15 @@
-import Hive from 'assets/wallet/icon_hive.svg';
 import Operation from 'components/operations/Operation';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {translate} from 'utils/localize';
 import {ConnectionStatus, Indicator} from './StatusIndicator';
+const LOGO_LIGHT = require('assets/has/full-logo-light.png');
 
 const HASInfo = () => {
   return (
-    <Operation logo={<Hive />} title={translate('wallet.has.info.title')}>
+    <Operation
+      logo={<Image source={LOGO_LIGHT} style={{width: 270, height: 40}} />}
+      title="">
       <View style={styles.view}>
         <Text style={styles.header}>{translate('wallet.has.info.h1')}</Text>
         <Text style={styles.text}>{translate('wallet.has.info.t1')}</Text>
