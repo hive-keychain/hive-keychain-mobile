@@ -1,4 +1,3 @@
-import Hive from 'assets/wallet/icon_hive.svg';
 import CustomPicker from 'components/form/CustomPicker';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
@@ -7,11 +6,13 @@ import {useHasExpiration} from 'hooks/useHasExpiration';
 import {ModalNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import HAS from 'utils/hiveAuthenticationService';
 import {HAS_AuthPayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {translate} from 'utils/localize';
+const LOGO_LIGHT = require('assets/has/logo-light.png');
 
 type Props = PropsFromRedux & {
   data: HAS_AuthPayload & {
@@ -52,7 +53,16 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
 
   return (
     <Operation
-      logo={<Hive />}
+      logo={
+        <FastImage
+          source={
+            data.decryptedData?.app.icon
+              ? {uri: data.decryptedData.app.icon}
+              : LOGO_LIGHT
+          }
+          style={{width: 30, height: 30}}
+        />
+      }
       title={translate('wallet.has.auth.title')}
       onClose={data.onForceCloseModal}>
       <>

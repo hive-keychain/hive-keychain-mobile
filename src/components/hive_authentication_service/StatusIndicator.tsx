@@ -32,7 +32,7 @@ const StatusIndicator = ({has}: PropsFromRedux) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={styles.textContainer}
+        style={styles.hasContainer}
         onPress={() => {
           navigate('ModalScreen', {
             name: ModalComponent.HAS_INFO,
@@ -74,18 +74,12 @@ const getStyles = (status: ConnectionStatus) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      width: 60,
+      width: 70,
     },
-    textContainer: {
+    hasContainer: {
       width: 25,
       height: 25,
       justifyContent: 'center',
-    },
-    text: {
-      color: 'white',
-      fontSize: 11,
-      fontWeight: 'bold',
-      includeFontPadding: false,
     },
     indicatorView: {
       width: 25,
