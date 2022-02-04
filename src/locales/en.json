@@ -97,8 +97,8 @@
     },
     "has": {
       "connect": {
-        "title": "Connect to HAS",
-        "text": "A connection has been requested via Hive Authentication Service for account @{{account}}.",
+        "title": "Connect to Hive Auth",
+        "text": "A connection has been requested via Hive Auth for account @{{account}}.",
         "confirm": "Connect",
         "no_username": "Please add account @{{account}} to your wallet to be able to use it on your favorite dApps!"
       },
@@ -116,14 +116,13 @@
       },
       "uuid": "UUID: {{uuid}}",
       "info": {
-        "title": "Discover HAS",
-        "h1": "What's HAS?",
-        "t1": "The Hive Authentication Services (HAS) provide a way for any applications, (either web, desktop or mobile) to easily authenticate users, and additionally sign and broadcast transactions to the Hive blockchain, without asking them to provide any password or private key.",
+        "h1": "What's Hive Auth?",
+        "t1": "Hive Auth provides a way for any applications, (either web, desktop or mobile) to easily authenticate users, and additionally sign and broadcast transactions to the Hive blockchain, without asking them to provide any password or private key.",
         "h2": "Get started",
         "t2": "To connect to a desktop dApp, use the QR Code scanner. On mobile, simply chose 'Sign in with Hive' on your favorite dApp.",
-        "h3": "HAS Indicator",
+        "h3": "Hive Auth Indicator",
         "indicator": {
-          "grey": {"title": "No HAS connection"},
+          "grey": {"title": "No connection"},
           "red": {
             "title": "Disconnected",
             "press": "Try reconnecting",

@@ -23,6 +23,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     justifyContent: 'center',
     flexDirection: 'row',
+    alignSelf: 'center',
   },
-  menu: {},
 });

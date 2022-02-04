@@ -1,3 +1,4 @@
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {
   ActionPayload,
   Browser,
@@ -9,7 +10,6 @@ import Home from 'assets/browser/home.svg';
 import Favorite from 'assets/browser/icon_favorite.svg';
 import NotFavorite from 'assets/browser/icon_favorite_default.svg';
 import DrawerButton from 'components/ui/DrawerButton';
-import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -18,7 +18,7 @@ import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 
-type Props = BrowserNavigationProps & {
+type Props = {
   browser: Browser;
   updateTab: (id: number, data: TabFields) => ActionPayload<BrowserPayload>;
   startSearch: (b: boolean) => void;
@@ -26,6 +26,7 @@ type Props = BrowserNavigationProps & {
   removeFromFavorites: (url: string) => ActionPayload<BrowserPayload>;
   swipeToTab: (right: boolean) => void;
   landscape: boolean;
+  navigation: DrawerNavigationProp<any>;
 };
 
 const BrowserHeader = ({
@@ -107,14 +108,14 @@ const BrowserHeader = ({
           {renderFavoritesButton()}
         </View>
 
-        <DrawerButton navigation={navigation} style={styles.drawerButton} />
+        <DrawerButton navigation={navigation} />
       </GestureRecognizer>
     );
   } else {
     return (
       <View style={styles.container}>
         <Text style={styles.browser}>{translate('navigation.browser')}</Text>
-        <DrawerButton navigation={navigation} style={styles.drawerButton} />
+        <DrawerButton navigation={navigation} />
       </View>
     );
   }
