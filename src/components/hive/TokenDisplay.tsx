@@ -22,7 +22,7 @@ type Props = {
   secondaryCurrency?: string;
   secondaryValue?: number;
   color: string;
-  price: Currency;
+  price?: Currency;
   incoming?: number;
   outgoing?: number;
   buttons: JSX.Element[];
@@ -52,7 +52,7 @@ const TokenDisplay = ({
   const styles = getDimensionedStyles({
     color,
     ...useWindowDimensions(),
-    change: price.DailyUsd!,
+    change: price ? price.usd_24h_change! + '' : '0',
   });
   return (
     <TouchableOpacity style={styles.container} onPress={setToggle}>
@@ -98,9 +98,9 @@ const renderLeftBottom = (
   if (currency !== 'HP') {
     return (
       <View style={[styles.row, styles.halfLine]}>
-        <Text style={styles.price}>{`$ ${price.Usd}`}</Text>
+        <Text style={styles.price}>{`$ ${price.usd.toFixed(2)}`}</Text>
         <Text style={styles.change}>{`${signedNumber(
-          +price.DailyUsd!,
+          +price.usd_24h_change!.toFixed(2),
         )}%`}</Text>
       </View>
     );

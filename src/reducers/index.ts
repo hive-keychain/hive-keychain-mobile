@@ -2,9 +2,9 @@ import {combineReducers} from 'redux';
 import accounts from './accounts';
 import activeAccount from './activeAccount';
 import auth from './auth';
-import bittrex from './bittrex';
 import browser from './browser';
 import conversions from './conversions';
+import currencyPrices from './currencyPrices';
 import delegations from './delegations';
 import properties from './globalProperties';
 import hive_authentication_service from './hiveAuthenticationService';
@@ -23,7 +23,7 @@ export default combineReducers({
   lastAccount,
   activeAccount,
   properties,
-  bittrex,
+  currencyPrices,
   transactions,
   delegations,
   tokens,

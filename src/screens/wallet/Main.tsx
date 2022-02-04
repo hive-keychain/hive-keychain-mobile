@@ -1,7 +1,7 @@
 import {
   fetchPhishingAccounts,
   loadAccount,
-  loadBittrex,
+  loadPrices,
   loadProperties,
 } from 'actions/index';
 import UserPicker from 'components/form/UserPicker';
@@ -24,7 +24,7 @@ import {translate} from 'utils/localize';
 const Main = ({
   loadAccount,
   loadProperties,
-  loadBittrex,
+  loadPrices,
   fetchPhishingAccounts,
   user,
   properties,
@@ -37,13 +37,13 @@ const Main = ({
   useEffect(() => {
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();
-    loadBittrex();
+    loadPrices();
     fetchPhishingAccounts();
   }, [
     loadAccount,
     accounts,
     loadProperties,
-    loadBittrex,
+    loadPrices,
     fetchPhishingAccounts,
     lastAccount,
   ]);
@@ -126,7 +126,7 @@ const connector = connect(
   {
     loadAccount,
     loadProperties,
-    loadBittrex,
+    loadPrices,
     fetchPhishingAccounts,
   },
 );

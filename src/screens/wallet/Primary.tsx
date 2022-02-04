@@ -29,7 +29,7 @@ enum Token {
   HP,
   SAVINGS,
 }
-const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
+const Primary = ({user, prices, properties}: PropsFromRedux) => {
   const {width} = useWindowDimensions();
   useEffect(() => {
     logScreenView('WalletScreen');
@@ -40,7 +40,7 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
       <Separator height={30} />
       <AccountValue
         account={user.account}
-        bittrex={bittrex}
+        prices={prices}
         properties={properties}
       />
       <Separator height={30} />
@@ -51,7 +51,7 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
         currency="HIVE"
         value={parseFloat(user.account.balance as string)}
         logo={<Hive width={width / 15} />}
-        price={bittrex.hive}
+        price={prices.hive}
         toggled={toggled === Token.HIVE}
         setToggle={() => {
           setToggled(toggled === Token.HIVE ? Token.NONE : Token.HIVE);
@@ -69,7 +69,7 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
         currency="HBD"
         value={parseFloat(user.account.hbd_balance as string)}
         logo={<Hbd width={width / 15} />}
-        price={bittrex.hbd}
+        price={prices.hive_dollar}
         toggled={toggled === Token.HBD}
         setToggle={() => {
           setToggled(toggled === Token.HBD ? Token.NONE : Token.HBD);
@@ -94,7 +94,6 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
           properties.globals,
         )}
         logo={<Hp width={width / 15} />}
-        price={bittrex.hbd}
         toggled={toggled === Token.HP}
         setToggle={() => {
           setToggled(toggled === Token.HP ? Token.NONE : Token.HP);
@@ -125,7 +124,6 @@ const Primary = ({user, bittrex, properties}: PropsFromRedux) => {
             </Text>
           </Text>
         }
-        price={bittrex.hbd}
         buttons={[
           <SendWithdraw key="savings_withdraw" currency="HBD" />,
           <SendDeposit key="savings_deposit" currency="HBD" />,
@@ -144,7 +142,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state: RootState) => {
   return {
     user: state.activeAccount,
-    bittrex: state.bittrex,
+    prices: state.currencyPrices,
     properties: state.properties,
   };
 };

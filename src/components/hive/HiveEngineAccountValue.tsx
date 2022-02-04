@@ -1,15 +1,15 @@
-import {Bittrex, TokenBalance, TokenMarket} from 'actions/interfaces';
+import {CurrencyPrices, TokenBalance, TokenMarket} from 'actions/interfaces';
 import React from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {withCommas} from 'utils/format';
 
 type Props = {
   tokensMarket: TokenMarket[];
-  bittrex: Bittrex;
+  prices: CurrencyPrices;
   tokens: TokenBalance[];
 };
 
-const HiveEngineAccountValue = ({tokens, tokensMarket, bittrex}: Props) => {
+const HiveEngineAccountValue = ({tokens, tokensMarket, prices}: Props) => {
   let accountValue = 0;
   if (tokensMarket.length) {
     for (const token of tokens) {
@@ -22,7 +22,7 @@ const HiveEngineAccountValue = ({tokens, tokensMarket, bittrex}: Props) => {
   }
   return (
     <Text style={styles.accountValue}>{`$ ${withCommas(
-      accountValue * parseFloat(bittrex.hive.Usd) + '',
+      accountValue * prices.hive.usd + '',
     )}`}</Text>
   );
 };

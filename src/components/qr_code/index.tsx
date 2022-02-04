@@ -2,7 +2,7 @@ import React from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import Marker from './Marker';
+import Marker from './MarkerQR';
 
 type Props = {
   onSuccess: (event: BarCodeReadEvent) => void;

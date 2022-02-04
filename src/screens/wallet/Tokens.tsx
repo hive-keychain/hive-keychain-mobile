@@ -17,7 +17,7 @@ const Tokens = ({
   loadTokensMarket,
   tokens,
   userTokens,
-  bittrex,
+  prices,
   tokensMarket,
 }: PropsFromRedux) => {
   useEffect(() => {
@@ -66,7 +66,7 @@ const Tokens = ({
     <View style={styles.container}>
       <Separator />
       <HiveEngineAccountValue
-        bittrex={bittrex}
+        prices={prices}
         tokens={userTokens.list}
         tokensMarket={tokensMarket}
       />
@@ -92,7 +92,7 @@ const mapStateToProps = (state: RootState) => {
     tokens: state.tokens,
     userTokens: state.userTokens,
     tokensMarket: state.tokensMarket,
-    bittrex: state.bittrex,
+    prices: state.currencyPrices,
   };
 };
 const connector = connect(mapStateToProps, {
