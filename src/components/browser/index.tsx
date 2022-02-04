@@ -207,6 +207,7 @@ const Browser = ({
           addTab={onAddTab}
           tabsNumber={browser.tabs.length}
           orientation={orientation}
+          isUrlModalOpen={isVisible}
         />
       ))}
       <UrlModal
