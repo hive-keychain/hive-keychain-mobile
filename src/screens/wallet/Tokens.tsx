@@ -3,7 +3,7 @@ import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import HiveEngineAccountValue from 'components/hive/HiveEngineAccountValue';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
@@ -32,6 +32,7 @@ const Tokens = ({
       loadUserTokens(user.name);
     }
   }, [loadUserTokens, user.name]);
+  const [toggled, setToggled] = useState<number>(null);
 
   const renderContent = () => {
     if (userTokens.loading) {
@@ -51,6 +52,11 @@ const Tokens = ({
               token={item}
               tokensList={tokens}
               market={tokensMarket}
+              toggled={toggled === item._id}
+              setToggle={() => {
+                if (toggled === item._id) setToggled(null);
+                else setToggled(item._id);
+              }}
             />
           )}
         />

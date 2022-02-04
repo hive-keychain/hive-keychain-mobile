@@ -5,15 +5,22 @@ import React from 'react';
 import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
 import Image from 'react-native-fast-image';
 import {Width} from 'utils/common.types';
-import {withCommas} from 'utils/format';
 import TokenDisplay from './TokenDisplay';
 
 type Props = {
   token: TokenBalance;
   tokensList: Token[];
   market: TokenMarket[];
+  toggled: boolean;
+  setToggle: () => void;
 };
-const EngineTokenDisplay = ({token, tokensList, market}: Props) => {
+const EngineTokenDisplay = ({
+  token,
+  tokensList,
+  market,
+  toggled,
+  setToggle,
+}: Props) => {
   const styles = getDimensionedStyles(useWindowDimensions());
   const tokenInfo = tokensList.find((t) => t.symbol === token.symbol);
   const tokenMarket = market.find((t) => t.symbol === token.symbol);
@@ -36,10 +43,13 @@ const EngineTokenDisplay = ({token, tokensList, market}: Props) => {
       color="black"
       amountStyle={styles.amount}
       value={parseFloat(token.balance)}
+      toggled={toggled}
+      setToggle={setToggle}
       price={{
-        Usd: withCommas(tokenMarket ? tokenMarket.lastPrice : '0'),
-        DailyUsd:
-          parseFloat(tokenMarket ? tokenMarket.priceChangePercent : '0') + '',
+        usd: tokenMarket ? parseFloat(tokenMarket.lastPrice) : 0,
+        usd_24h_change: parseFloat(
+          tokenMarket ? tokenMarket.priceChangePercent : '0',
+        ),
       }}
       buttons={[
         <Send
