@@ -76,7 +76,7 @@ class StyleSheetFactory {
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: modalHeight,
-        maxHeight: 0.7 * height,
+        maxHeight: 0.85 * height,
         flex: 1,
         height: 'auto',
       },
