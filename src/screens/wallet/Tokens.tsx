@@ -45,6 +45,7 @@ const Tokens = ({
       return (
         <FlatList
           data={userTokens.list}
+          contentContainerStyle={styles.flatlist}
           keyExtractor={(item) => item._id.toString()}
           ItemSeparatorComponent={() => <Separator height={10} />}
           renderItem={({item}) => (
@@ -84,6 +85,7 @@ const Tokens = ({
 
 const styles = StyleSheet.create({
   container: {flex: 1},
+  flatlist: {paddingBottom: 20},
   no_tokens: {
     fontWeight: 'bold',
     color: 'black',
