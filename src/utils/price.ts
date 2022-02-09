@@ -18,9 +18,7 @@ export const getAccountValue = (
   {hive, hive_dollar}: CurrencyPrices,
   props: DynamicGlobalProperties,
 ) => {
-  console.log('before');
   if (!hive_dollar.usd || !hive.usd) return 0;
-  console.log('after');
   return (
     (parseFloat(hbd_balance as string) +
       parseFloat(savings_hbd_balance as string)) *
