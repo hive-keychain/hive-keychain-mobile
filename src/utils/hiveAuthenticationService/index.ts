@@ -44,6 +44,7 @@ export const showHASInitRequest = (data: HAS_State) => {
     store.dispatch(showHASInitRequestAsTreated(host));
   }
   // Disconnect and remove instances if needed
+  console.log('filtering');
   has = has.filter((hasInstance) => {
     if (!data.instances.find((e) => e.host === hasInstance.host)) {
       hasInstance.ws.close();
@@ -51,6 +52,7 @@ export const showHASInitRequest = (data: HAS_State) => {
     }
     return true;
   });
+  console.log('after filter', has);
 };
 
 export const clearHAS = () => {
@@ -64,6 +66,7 @@ export const clearHAS = () => {
 
 export const restartHASSockets = () => {
   // Reconnect ws after deconnection (red indicator)
+  console.log('try reconnecting', has);
   for (const hasInstance of has) {
     if (hasInstance.ws.readyState === 3) {
       hasInstance.reconnect();

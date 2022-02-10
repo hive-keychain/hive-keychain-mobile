@@ -98,6 +98,7 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
             <CustomPicker
               selectedValue={sessionTime}
               onSelected={setSessionTime}
+              iosTextStyle={styles.text}
               prompt={translate('wallet.has.session.prompt')}
               list={[
                 SessionTime.HOUR,
@@ -137,6 +138,9 @@ const styles = StyleSheet.create({
   button: {backgroundColor: '#68A0B4'},
   error: {color: '#A3112A'},
   uuid: {fontWeight: 'bold'},
+  text: {
+    fontSize: 14,
+  },
 });
 
 const connector = connect((state: RootState) => {

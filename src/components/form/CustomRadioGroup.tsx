@@ -43,7 +43,9 @@ export const RadioButton = ({data, onSelect, selected, style}: RadioProps) => (
     <View
       style={[styles.button, selected ? styles.buttonActive : null, style]}
     />
-    <Text style={styles.label}>{data}</Text>
+    <View style={styles.labelView}>
+      <Text style={styles.label}>{data}</Text>
+    </View>
   </TouchableOpacity>
 );
 
@@ -64,4 +66,8 @@ const styles = StyleSheet.create({
   },
   buttonActive: {backgroundColor: '#77B9D1'},
   label: {marginLeft: 10, marginRight: 10},
+  labelView: {
+    flexDirection: 'column',
+    width: '95%',
+  },
 });
