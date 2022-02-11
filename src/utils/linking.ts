@@ -13,7 +13,7 @@ export default async () => {
     }
   });
   const initialUrl = await Linking.getInitialURL();
-  console.log(initialUrl);
+  console.log('initial url', initialUrl);
   if (initialUrl) {
     handleUrl(initialUrl);
   }

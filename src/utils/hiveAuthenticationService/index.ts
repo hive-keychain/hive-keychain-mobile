@@ -36,10 +36,17 @@ store.subscribe(() => {
 export const showHASInitRequest = (data: HAS_State) => {
   // Iinitialize instances if needed
   for (const instance of data.instances) {
+    console.log(instance);
     const host = instance.host.replace(/\/$/, '');
 
-    if (instance.init && !data.sessions.find((e) => e.host === host && !e.init))
+    if (
+      instance.init &&
+      !data.sessions.find((e) => e.host === host && !e.init)
+    ) {
+      console.log('continue');
       continue;
+    }
+    console.log('connect sessions');
     getHAS(host).connect(data.sessions);
     store.dispatch(showHASInitRequestAsTreated(host));
   }
