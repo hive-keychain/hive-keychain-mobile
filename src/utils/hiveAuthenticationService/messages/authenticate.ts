@@ -5,7 +5,7 @@ import {store} from 'store';
 import {ModalComponent} from 'utils/modal.enum';
 import {goBack, navigate} from 'utils/navigation';
 import HAS from '..';
-import {answerAuthReq} from '../helpers/auth';
+import {answerAuthReq, sendAuth} from '../helpers/auth';
 import {HAS_AuthDecrypted, HAS_AuthPayload} from '../payloads.types';
 
 export const processAuthenticationRequest = (
@@ -29,32 +29,38 @@ export const processAuthenticationRequest = (
     ),
   );
   payload.decryptedData = data;
-
-  navigate('ModalScreen', {
-    name: ModalComponent.HAS_AUTH,
-    data: {
-      ...payload,
-      has,
-      callback: answerAuthReq,
-      onExpire: () => {
-        store.dispatch(removeHASSession(accountSession.uuid));
-        goBack();
+  if (accountSession.token) {
+    sendAuth(has, payload, accountSession, {
+      token: accountSession.token.token,
+      expire: accountSession.token.expiration,
+    });
+  } else {
+    navigate('ModalScreen', {
+      name: ModalComponent.HAS_AUTH,
+      data: {
+        ...payload,
+        has,
+        callback: answerAuthReq,
+        onExpire: () => {
+          store.dispatch(removeHASSession(accountSession.uuid));
+          goBack();
+        },
+        onForceCloseModal: () => {
+          const challenge = Crypto.AES.encrypt(
+            payload.uuid,
+            accountSession.auth_key,
+          ).toString();
+          has.send(
+            JSON.stringify({
+              cmd: 'auth_nack',
+              uuid: payload.uuid,
+              data: challenge,
+            }),
+          );
+          store.dispatch(removeHASSession(accountSession.uuid));
+          goBack();
+        },
       },
-      onForceCloseModal: () => {
-        const challenge = Crypto.AES.encrypt(
-          payload.uuid,
-          accountSession.auth_key,
-        ).toString();
-        has.send(
-          JSON.stringify({
-            cmd: 'auth_nack',
-            uuid: payload.uuid,
-            data: challenge,
-          }),
-        );
-        store.dispatch(removeHASSession(accountSession.uuid));
-        goBack();
-      },
-    },
-  });
+    });
+  }
 };

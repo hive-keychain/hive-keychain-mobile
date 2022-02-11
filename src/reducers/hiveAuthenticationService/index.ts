@@ -111,7 +111,6 @@ export default (
         ],
       };
     case HAS_ActionsTypes.REMOVE_SESSION: {
-      console.log('rm');
       const sessions = state.sessions.filter(
         (session) => session.uuid !== data.payload.uuid,
       );

@@ -4,6 +4,7 @@ import Crypto from 'crypto-js';
 import uuid from 'react-native-uuid';
 import {store} from 'store';
 import HAS from '..';
+import {HAS_Session} from '../has.types';
 import {HAS_AuthChallengeData, HAS_AuthPayload} from '../payloads.types';
 import {dAppChallenge, getChallengeData} from './challenge';
 
@@ -39,7 +40,6 @@ export const answerAuthReq = async (
       session = HAS.findSessionByUUID(payload.uuid);
       newToken = true;
     }
-    const app_key = session.auth_key;
     if (approve) {
       let auth_ack_data: HAS_AuthChallengeData;
       if (newToken) {
@@ -63,31 +63,7 @@ export const answerAuthReq = async (
           expire: session.token.expiration,
         };
       }
-      if (payload.decryptedData.challenge) {
-        auth_ack_data.challenge = (await getChallengeData(
-          session,
-          payload.account,
-          payload.decryptedData.challenge,
-          false,
-        )) as {challenge: string; pubkey: string};
-      } else if (payload.decryptedData?.app?.pubkey) {
-        auth_ack_data.challenge = await dAppChallenge(
-          payload.account,
-          payload.decryptedData.app.pubkey,
-          payload.account,
-        );
-      }
-      const data = Crypto.AES.encrypt(
-        JSON.stringify(auth_ack_data),
-        app_key,
-      ).toString();
-      has.send(
-        JSON.stringify({
-          cmd: 'auth_ack',
-          uuid: payload.uuid,
-          data,
-        }),
-      );
+      await sendAuth(has, payload, session, auth_ack_data);
     } else {
       //TODO: Discuss nack with arcange, why does it need challenge?
       has.send(JSON.stringify({cmd: 'auth_nack', uuid: payload.uuid}));
@@ -104,4 +80,37 @@ export const answerAuthReq = async (
     //   }),
     // );
   }
+};
+
+export const sendAuth = async (
+  has: HAS,
+  payload: HAS_AuthPayload,
+  session: HAS_Session,
+  auth_ack_data: HAS_AuthChallengeData,
+) => {
+  if (payload.decryptedData.challenge) {
+    auth_ack_data.challenge = (await getChallengeData(
+      session,
+      payload.account,
+      payload.decryptedData.challenge,
+      false,
+    )) as {challenge: string; pubkey: string};
+  } else if (payload.decryptedData?.app?.pubkey) {
+    auth_ack_data.challenge = await dAppChallenge(
+      payload.account,
+      payload.decryptedData.app.pubkey,
+      payload.account,
+    );
+  }
+  const data = Crypto.AES.encrypt(
+    JSON.stringify(auth_ack_data),
+    session.auth_key,
+  ).toString();
+  has.send(
+    JSON.stringify({
+      cmd: 'auth_ack',
+      uuid: payload.uuid,
+      data,
+    }),
+  );
 };
