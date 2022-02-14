@@ -10,7 +10,7 @@ export const onMessageReceived = async (
   event: WebSocketMessageEvent,
   has: HAS,
 ) => {
-  console.log(`[RECV] ${event.data}`);
+  console.log(`[HAS RECV] ${event.data}`);
   try {
     const payload: HAS_Payload =
       typeof event.data == 'string' ? JSON.parse(event.data) : event.data;

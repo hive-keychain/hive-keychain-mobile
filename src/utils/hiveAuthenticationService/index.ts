@@ -51,7 +51,6 @@ export const showHASInitRequest = (data: HAS_State) => {
     store.dispatch(showHASInitRequestAsTreated(host));
   }
   // Disconnect and remove instances if needed
-  console.log('filtering');
   has = has.filter((hasInstance) => {
     if (!data.instances.find((e) => e.host === hasInstance.host)) {
       hasInstance.ws.close();
@@ -59,7 +58,7 @@ export const showHASInitRequest = (data: HAS_State) => {
     }
     return true;
   });
-  console.log('after filter', has);
+  //console.log('after filter', has);
 };
 
 export const clearHAS = () => {
@@ -142,7 +141,7 @@ class HAS {
       } else {
         if (this.getServerKey()) {
           this.registerAccounts([session.account]);
-        } else {
+        } else if (!this.awaitingRegistration.includes(session.account)) {
           this.awaitingRegistration.push(session.account);
         }
       }
@@ -185,7 +184,7 @@ class HAS {
 
   // Sending and receiving messages
   send = (message: string) => {
-    console.log(`[SEND] ${message}`);
+    console.log(`[HAS SEND] ${message}`);
     this.ws.send(message);
   };
 
