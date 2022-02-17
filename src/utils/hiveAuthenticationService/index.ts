@@ -4,8 +4,10 @@ import {
   updateInstanceConnectionStatus,
 } from 'actions/hiveAuthenticationService';
 import assert from 'assert';
+import SimpleToast from 'react-native-simple-toast';
 import {HAS_State} from 'reducers/hiveAuthenticationService';
 import {RootState, store} from 'store';
+import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
 import {HAS_Session} from './has.types';
@@ -179,6 +181,7 @@ class HAS {
       app: 'Hive Keychain',
       accounts,
     };
+    SimpleToast.show(translate('wallet.has.toast.register'), SimpleToast.SHORT);
     this.send(JSON.stringify(request));
   };
 

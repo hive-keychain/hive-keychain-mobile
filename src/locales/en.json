@@ -139,6 +139,10 @@
       "session": {
         "time": "How long do you wish to keep this session valid?",
         "prompt": "Session Validity"
+      },
+      "toast": {
+        "register": "Registering accounts to Hive Auth...",
+        "broadcast": "Broadcasting Hive Auth transaction..."
       }
     }
   },

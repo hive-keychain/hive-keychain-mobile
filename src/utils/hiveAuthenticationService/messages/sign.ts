@@ -3,6 +3,7 @@ import {addWhitelistedOperationToSession} from 'actions/hiveAuthenticationServic
 import {KeyTypes} from 'actions/interfaces';
 import assert from 'assert';
 import Crypto from 'crypto-js';
+import SimpleToast from 'react-native-simple-toast';
 import {RootState, store} from 'store';
 import {getRequiredWifType} from 'utils/keychain';
 import {
@@ -15,6 +16,7 @@ import {
   RequestSuccess,
   RequestVote,
 } from 'utils/keychain.types';
+import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
 import {goBack, navigate} from 'utils/navigation';
 import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
@@ -104,6 +106,11 @@ export const processSigningRequest = async (
       session.whitelist.includes(request.type) &&
       getRequiredWifType(request) !== KeyTypes.active
     ) {
+      SimpleToast.show(
+        translate('wallet.has.toast.broadcast'),
+        SimpleToast.SHORT,
+      );
+
       requestWithoutConfirmation(
         (store.getState() as RootState).accounts,
         request,
