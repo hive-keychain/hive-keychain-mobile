@@ -4,6 +4,7 @@ import {RadioButton} from 'components/form/CustomRadioGroup';
 import OperationButton from 'components/form/EllipticButton';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
+import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {urlTransformer} from 'utils/browser';
 import {beautifyErrorMessage} from 'utils/keychain';
@@ -16,8 +17,8 @@ import {
   RequestSuccess,
 } from 'utils/keychain.types';
 import {translate} from 'utils/localize';
+import {goBack} from 'utils/navigation';
 import RequestMessage from './RequestMessage';
-import RequestResultMessage from './RequestResultMessage';
 
 type Props = {
   has?: boolean;
@@ -60,7 +61,6 @@ const RequestOperation = ({
 }: Props) => {
   const {request_id, ...data} = request;
   const [loading, setLoading] = useState(false);
-  const [resultMessage, setResultMessage] = useState(null);
   const [keep, setKeep] = useState(false);
   let {domain, type, username} = data;
   domain = has ? domain : urlTransformer(domain).hostname;
@@ -122,7 +122,8 @@ const RequestOperation = ({
             }
             sendError({data, request_id, error: {}, message: msg});
           } finally {
-            setResultMessage(msg);
+            goBack();
+            SimpleToast.show(msg, SimpleToast.LONG);
           }
           setLoading(false);
         }}
@@ -130,16 +131,7 @@ const RequestOperation = ({
     </ScrollView>
   );
 
-  if (resultMessage) {
-    return (
-      <RequestResultMessage
-        closeGracefully={closeGracefully}
-        resultMessage={resultMessage}
-      />
-    );
-  } else {
-    return renderRequestSummary();
-  }
+  return renderRequestSummary();
 };
 
 const styles = StyleSheet.create({

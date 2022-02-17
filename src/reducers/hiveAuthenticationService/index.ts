@@ -31,27 +31,6 @@ export default (
         ],
       };
     case HAS_ActionsTypes.REQUEST_TREATED:
-      console.log(data);
-      console.log({
-        instances: [
-          ...state.instances.filter((e) => e.host !== data.payload),
-          ...state.instances
-            .filter((e) => e.host === data.payload)
-            .map((e) => {
-              e.init = true;
-              return e;
-            }),
-        ],
-        sessions: [
-          ...state.sessions.filter((e) => e.host !== data.payload),
-          ...state.sessions
-            .filter((e) => e.host === data.payload)
-            .map((e) => {
-              e.init = true;
-              return e;
-            }),
-        ],
-      });
       return {
         instances: [
           ...state.instances.filter((e) => e.host !== data.payload),
@@ -123,13 +102,10 @@ export default (
       };
     }
     case HAS_ActionsTypes.ADD_WHITELISTED_OPERATION: {
-      console.log('wl', data);
-
       const instances = state.instances;
       const sessions = state.sessions;
       const index = sessions.findIndex((e) => e.uuid === data.payload.uuid);
       sessions[index]?.whitelist.push(data.payload.operation);
-      console.log(index, sessions);
       return {instances, sessions};
     }
     default:
