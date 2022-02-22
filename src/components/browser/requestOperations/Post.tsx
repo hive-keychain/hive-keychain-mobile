@@ -6,6 +6,7 @@ import {
   RequestId,
   RequestPost,
   RequestSuccess,
+  UsingHAS,
 } from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import CollapsibleData from './components/CollapsibleData';
@@ -16,7 +17,7 @@ import RequestOperation, {
 import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
-  request: RequestPost & RequestId;
+  request: RequestPost & RequestId & UsingHAS;
 } & RequestComponentCommonProps;
 
 export default ({
@@ -26,7 +27,7 @@ export default ({
   sendResponse,
   sendError,
 }: Props) => {
-  const {request_id, ...data} = request;
+  const {request_id, has, ...data} = request;
   const {
     username,
     title,
@@ -39,6 +40,7 @@ export default ({
   } = data;
   return (
     <RequestOperation
+      has={has}
       sendResponse={sendResponse}
       sendError={sendError}
       successMessage={translate('request.success.post')}
@@ -107,6 +109,7 @@ export const postWithoutConfirmation = (
   request: RequestPost & RequestId,
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
+  has?: boolean,
 ) => {
   processOperationWithoutConfirmation(
     async () => await performPostOperation(accounts, request),

@@ -10,7 +10,6 @@ import Image from 'react-native-fast-image';
 import {store} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {DApp} from 'utils/config';
-
 type Props = {
   dApp: DApp;
   updateTabUrl: (link: string) => void;

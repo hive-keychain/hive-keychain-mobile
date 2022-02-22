@@ -80,7 +80,7 @@ const connector = connect(mapStateToProps, {loadAccount});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const styles = StyleSheet.create({
-  touchable: {alignItems: 'center', marginRight: 8},
+  touchable: {alignItems: 'center', marginRight: 20},
 });
 
 export default connector(ClaimRewards);

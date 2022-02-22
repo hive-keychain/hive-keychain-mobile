@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import InfoPIN from 'components/infoButtons/ForgotPin';
+import InfoPIN from 'components/info_buttons/ForgotPin';
 import React from 'react';
 import Unlock from 'screens/Unlock';
 import {UnlockStackParamList} from './Unlock.types';

@@ -8,7 +8,7 @@ import {
   getSavingsRequests,
 } from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {getBittrexPrices} from 'utils/price';
+import {getPrices} from 'utils/price';
 import {getPhishingAccounts} from 'utils/transferValidator';
 import {
   ActionPayload,
@@ -25,7 +25,7 @@ import {
   FETCH_DELEGATORS,
   FETCH_PHISHING_ACCOUNTS,
   FETCH_SAVINGS_REQUESTS,
-  GET_BITTREX_PRICE,
+  GET_CURRENCY_PRICES,
   GLOBAL_PROPS,
   INIT_TRANSACTIONS,
 } from './types';
@@ -77,15 +77,16 @@ export const loadProperties = (): AppThunk => async (dispatch) => {
   dispatch(action);
 };
 
-export const loadBittrex = (): AppThunk => async (dispatch) => {
+export const loadPrices = (): AppThunk => async (dispatch) => {
   try {
-    const prices = await getBittrexPrices();
+    const prices = await getPrices();
+    console.log(prices);
     dispatch({
-      type: GET_BITTREX_PRICE,
+      type: GET_CURRENCY_PRICES,
       payload: prices,
     });
   } catch (e) {
-    console.log('bittrex error', e);
+    console.log('price error', e);
   }
 };
 

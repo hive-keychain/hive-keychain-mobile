@@ -3,7 +3,6 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {addTabFromLinking} from 'actions/browser';
 import {Rpc} from 'actions/interfaces';
 import Bridge from 'components/bridge';
 import {getToggleElement} from 'hooks/toggle';
@@ -24,18 +23,24 @@ import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 
 const Root = createStackNavigator<RootStackParam>();
 
-const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
+const App = ({hasAccounts, auth, rpc}: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
+
   useEffect(() => {
-    RNBootSplash.hide({fade: true});
-  }, []);
-  useEffect(() => {
-    setupLinking(addTabFromLinking);
+    setupLinking();
     return () => {
       clearLinkingListeners();
     };
-  }, [addTabFromLinking]);
+  }, []);
+  //TODO:Delete
+  // useEffect(() => {
+  //   console.log(JSON.stringify(has));
+  // }, [has]);
+
+  useEffect(() => {
+    RNBootSplash.hide({fade: true});
+  }, []);
 
   useEffect(() => {
     Orientation.lockToPortrait();
@@ -44,6 +49,13 @@ const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
   useEffect(() => {
     setRpc(rpc as Rpc);
   }, [rpc]);
+
+  // useEffect(() => {
+  //   if (!!auth.mk && has) {
+  //     showHASInitRequest(has);
+  //   }
+  // }, [auth.mk, has]);
+
   const renderNavigator = () => {
     if (!hasAccounts) {
       // No accounts, sign up process
@@ -97,15 +109,16 @@ const App = ({hasAccounts, auth, rpc, addTabFromLinking}: PropsFromRedux) => {
 };
 
 const mapStateToProps = (state: RootState) => {
-  console.log(state);
+  //console.log(state);
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
     rpc: state.settings.rpc,
+    // has: state.hive_authentication_service,
   };
 };
 
-const connector = connect(mapStateToProps, {addTabFromLinking});
+const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(App);

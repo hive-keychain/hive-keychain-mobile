@@ -8,6 +8,7 @@
     "createAccount": "New Account"
   },
   "addAccountByKey": {"text": "Add your existing HIVE account to Keychain"},
+  "addAccountByQR": {"wrongQR": "Please scan a Hive Keychain account QR Code"},
   "keys": {
     "posting": "Posting",
     "active": "Active",
@@ -33,7 +34,9 @@
     "unvote": "Unvote",
     "none": "None",
     "error": "Error: Something went wrong : {{msg}}",
-    "savings": "Savings"
+    "error_title": "Error",
+    "savings": "Savings",
+    "ok": "OK"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -91,6 +94,56 @@
         "disclaimer_hive": "You deposit collateral (HIVE), then you are given HBD up front worth half of the collateral amount (minus a 5% fee). Your official final payment is in 3.5 days. At that point remaining collateral (HIVE) is returned.",
         "disclaimer_hbd": "Your HBD will take 3.5 days to get converted to approximately USD worth of HIVE tokens, based on its 3.5 days median price."
       }
+    },
+    "has": {
+      "connect": {
+        "title": "Connect to Hive Auth",
+        "text": "A connection has been requested via Hive Auth for account @{{account}}.",
+        "confirm": "Connect",
+        "no_username": "Please add account @{{account}} to your wallet to be able to use it on your favorite dApps!"
+      },
+      "auth": {
+        "title": "Authenticate",
+        "button": "Approve",
+        "text": "Authenticate using account @{{account}} on {{name}}?",
+        "success": "Successfully authenticated @{{account}} on {{name}}! You can now return to your dApp."
+      },
+      "challenge": {
+        "ask": "{{name}} wants to verify that you have the {{key}} authority for account @{{account}}",
+        "success": "Successfully verified @{{account}} {{key}} authority on {{name}}! You can now return to your dApp.",
+        "no_key": "You don't have the {{key}} key for account @{{account}}",
+        "button": "Verify key"
+      },
+      "uuid": "UUID: {{uuid}}",
+      "info": {
+        "h1": "What's Hive Auth?",
+        "t1": "Hive Auth provides a way for any applications, (either web, desktop or mobile) to easily authenticate users, and additionally sign and broadcast transactions to the Hive blockchain, without asking them to provide any password or private key.",
+        "h2": "Get started",
+        "t2": "To connect to a desktop dApp, use the QR Code scanner. On mobile, simply chose 'Sign in with Hive' on your favorite dApp.",
+        "h3": "Hive Auth Indicator",
+        "indicator": {
+          "grey": {"title": "No connection"},
+          "red": {
+            "title": "Disconnected",
+            "press": "Try reconnecting",
+            "longPress": "Delete all sessions and disconnect"
+          },
+          "green": {
+            "title": "Connected",
+            "longPress": "Delete all sessions and disconnect"
+          },
+          "press": "Press",
+          "longPress": "Long press"
+        }
+      },
+      "session": {
+        "time": "How long do you wish to keep this session valid?",
+        "prompt": "Session Validity"
+      },
+      "toast": {
+        "register": "Registering accounts to Hive Auth...",
+        "broadcast": "Broadcasting Hive Auth transaction..."
+      }
     }
   },
   "settings": {
@@ -143,6 +196,13 @@
       "text5": "Manage Accounts",
       "text6": "and",
       "text7": "Show QR Code"
+    },
+    "infoWalletQR": {
+      "title": "QR Code Scanner",
+      "text1": "Use this scanner to read Hive related QR Codes.",
+      "text2": "As of now, we only support starting Hive Authentication Service sessions and opening URLs in the in-App browser, but further functionalities will be added along the way.",
+      "text3": "If you wish to scan a QR Code to import an account, please do so in",
+      "text4": "Settings > Add Account"
     },
     "forgotPIN": {
       "title": "Forgot PIN?",
@@ -320,7 +380,8 @@
       "removeProposal": "Succesfully removed proposal(s) {{ids}}."
     },
     "confirm": "Confirm",
-    "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}."
+    "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}.",
+    "keep_has": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}} until this session expires."
   },
   "browser": {
     "search": "Search or enter url",

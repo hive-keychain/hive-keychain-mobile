@@ -8,7 +8,7 @@ import {
   TabFields,
 } from 'actions/interfaces';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
-import React, {MutableRefObject, useRef, useState} from 'react';
+import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
@@ -57,6 +57,7 @@ type Props = {
   addTab: () => void;
   tabsNumber: number;
   orientation: string;
+  isUrlModalOpen: boolean;
 };
 
 export default ({
@@ -74,6 +75,7 @@ export default ({
   addTab,
   tabsNumber,
   orientation,
+  isUrlModalOpen,
 }: Props) => {
   const tabData = {url, id, icon, name};
   const tabRef: MutableRefObject<WebView> = useRef(null);
@@ -81,8 +83,18 @@ export default ({
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [shouldUpdateWvInfo, setShouldUpdateWvInfo] = useState(true);
   const insets = useSafeAreaInsets();
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
+  useEffect(() => {
+    if (isUrlModalOpen) {
+      setShouldUpdateWvInfo(false);
+    } else {
+      setTimeout(() => {
+        setShouldUpdateWvInfo(true);
+      }, 2100);
+    }
+  }, [isUrlModalOpen]);
   const goBack = () => {
     if (!canGoBack) {
       return;
@@ -180,7 +192,10 @@ export default ({
         break;
       case 'WV_INFO':
         const {icon, name, url} = data as TabFields;
-        if (urlTransformer(url).host !== urlTransformer(tabData.url).host) {
+        if (
+          urlTransformer(url).host !== urlTransformer(tabData.url).host ||
+          !shouldUpdateWvInfo
+        ) {
           break;
         }
         if (
@@ -190,6 +205,7 @@ export default ({
             url !== tabData.url)
         ) {
           navigation.setParams({icon});
+
           if (name && url && url !== 'chromewebdata') {
             addToHistory({icon, name, url});
           }

@@ -6,5 +6,7 @@ export const setToggleElement = (elt: string) => {
 
 export const getToggleElement = () =>
   toggleElement
-    .replace('Primary', 'WalletScreen')
-    .replace('Tokens', 'EngineWalletScreen');
+    ? toggleElement
+        .replace('Primary', 'WalletScreen')
+        .replace('Tokens', 'EngineWalletScreen')
+    : null;

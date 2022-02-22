@@ -20,9 +20,9 @@ export default ({navigation}: Props) => (
 
 const styles = StyleSheet.create({
   container: {
-    width: 50,
+    paddingHorizontal: 12,
     justifyContent: 'center',
     flexDirection: 'row',
+    alignSelf: 'center',
   },
-  menu: {},
 });

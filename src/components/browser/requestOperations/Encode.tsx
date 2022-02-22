@@ -86,6 +86,7 @@ export const encodeWithoutConfirmation = (
   request: RequestEncode & RequestId,
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
+  has?: boolean,
 ) => {
   processOperationWithoutConfirmation(
     () => performEncodeOperation(accounts, request),

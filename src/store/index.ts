@@ -8,7 +8,13 @@ import transforms from './transforms';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['lastAccount', 'settings', 'browser', 'preferences'],
+  whitelist: [
+    'lastAccount',
+    'settings',
+    'browser',
+    'preferences',
+    'hive_authentication_service',
+  ],
   transforms,
 };
 const persistConfig2 = {

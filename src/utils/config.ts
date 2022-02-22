@@ -6,6 +6,12 @@ export const hiveConfig = {
   CREATE_ACCOUNT_URL: 'https://signup.hive.io/',
 };
 
+export const HASConfig = {
+  protocol: 'has://',
+  auth_req: 'has://auth_req/',
+  socket: 'wss://hive-auth.arcange.eu',
+};
+
 export type DApp = {
   name: string;
   description: string;

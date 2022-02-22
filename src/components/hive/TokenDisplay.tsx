@@ -1,6 +1,6 @@
 import {Currency} from 'actions/interfaces';
 import DelegationsList from 'components/operations/DelegationsList';
-import React, {useState} from 'react';
+import React from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -22,12 +22,14 @@ type Props = {
   secondaryCurrency?: string;
   secondaryValue?: number;
   color: string;
-  price: Currency;
+  price?: Currency;
   incoming?: number;
   outgoing?: number;
   buttons: JSX.Element[];
   amountStyle?: StyleProp<TextStyle>;
   bottomLeft?: JSX.Element;
+  toggled: boolean;
+  setToggle: () => void;
 };
 
 const TokenDisplay = ({
@@ -44,19 +46,16 @@ const TokenDisplay = ({
   secondaryCurrency,
   secondaryValue,
   bottomLeft,
+  toggled,
+  setToggle,
 }: Props) => {
   const styles = getDimensionedStyles({
     color,
     ...useWindowDimensions(),
-    change: price.DailyUsd!,
+    change: price ? price.usd_24h_change! + '' : '0',
   });
-  const [toggle, setToggle] = useState(false);
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        setToggle(!toggle);
-      }}>
+    <TouchableOpacity style={styles.container} onPress={setToggle}>
       <View style={styles.main}>
         <View style={styles.left}>
           <View style={styles.logo}>{logo}</View>
@@ -75,7 +74,7 @@ const TokenDisplay = ({
           ) : null}
         </View>
       </View>
-      {toggle && (
+      {toggled && (
         <View style={[styles.row, styles.toggle]}>
           {bottomLeft
             ? bottomLeft
@@ -99,9 +98,9 @@ const renderLeftBottom = (
   if (currency !== 'HP') {
     return (
       <View style={[styles.row, styles.halfLine]}>
-        <Text style={styles.price}>{`$ ${price.Usd}`}</Text>
+        <Text style={styles.price}>{`$ ${price.usd.toFixed(2)}`}</Text>
         <Text style={styles.change}>{`${signedNumber(
-          +price.DailyUsd!,
+          +price.usd_24h_change!.toFixed(2),
         )}%`}</Text>
       </View>
     );

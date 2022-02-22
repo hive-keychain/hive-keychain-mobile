@@ -136,8 +136,8 @@ android {
         applicationId "com.mobilekeychain"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 45
-        versionName "1.7.6"
+        versionCode 56
+        versionName "1.8.10"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
     }
@@ -191,7 +191,7 @@ android {
                 debugSymbolLevel 'SYMBOL_TABLE'
             }
         }
-    }
+   } 
 
     packagingOptions {
         pickFirst "lib/armeabi-v7a/libc++_shared.so"
