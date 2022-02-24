@@ -44,10 +44,12 @@ export const onMessageReceived = async (
         }
         break;
       case HAS_PayloadType.AUTH:
+        has.send(JSON.stringify({cmd: 'auth_wait'}));
         processAuthenticationRequest(has, payload);
         break;
 
       case HAS_PayloadType.SIGN:
+        has.send(JSON.stringify({cmd: 'sign_wait'}));
         processSigningRequest(has, payload);
         break;
       case HAS_PayloadType.CHALLENGE:
