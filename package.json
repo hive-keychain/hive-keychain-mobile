@@ -71,7 +71,7 @@
     "redux-persist-expire": "^1.1.0",
     "redux-thunk": "^2.3.0",
     "sscjs": "^0.0.9",
-    "url-parse": "^1.5.2",
+    "url-parse": "^1.5.9",
     "validator": "^13.6.0"
   },
   "devDependencies": {
