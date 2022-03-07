@@ -50,11 +50,15 @@ export const RadioButton = ({data, onSelect, selected, style}: RadioProps) => (
 );
 
 const styles = StyleSheet.create({
-  radioGroup: {flexDirection: 'row', justifyContent: 'flex-end'},
+  radioGroup: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    flex: 1,
+  },
   radioButton: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    width: 150,
   },
   button: {
     borderColor: '#77B9D1',

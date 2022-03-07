@@ -151,12 +151,6 @@ export const processSigningRequest = async (
     }
   } catch (e) {
     console.log(e);
-    // has.send(
-    //   JSON.stringify({
-    //     cmd: 'sign_err',
-    //     uuid: payload.uuid,
-    //     error: e.message,
-    //   }),
-    // );
+    SimpleToast.show(e + '', SimpleToast.LONG);
   }
 };
