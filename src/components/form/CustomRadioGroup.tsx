@@ -22,6 +22,7 @@ export default ({list, onSelect, selected}: Props) => (
         onSelect={onSelect}
         selected={selected === data}
         key={data}
+        radioStyle={{width: 150}}
       />
     ))}
   </View>
@@ -32,11 +33,18 @@ type RadioProps = {
   onSelect: (arg0: string) => void;
   selected: boolean;
   style?: StyleProp<ViewStyle>;
+  radioStyle?: StyleProp<ViewStyle>;
 };
 
-export const RadioButton = ({data, onSelect, selected, style}: RadioProps) => (
+export const RadioButton = ({
+  data,
+  onSelect,
+  selected,
+  style,
+  radioStyle,
+}: RadioProps) => (
   <TouchableOpacity
-    style={styles.radioButton}
+    style={[styles.radioButton, radioStyle]}
     onPress={() => {
       onSelect(data);
     }}>
@@ -58,7 +66,6 @@ const styles = StyleSheet.create({
   },
   radioButton: {
     flexDirection: 'row',
-    width: 150,
   },
   button: {
     borderColor: '#77B9D1',

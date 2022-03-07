@@ -19,6 +19,7 @@ const OptionsToggle = ({children, title, toggled, callback}: Props) => {
           }}
           selected={toggled}
           style={styles.toggleButton}
+          radioStyle={{width: 60}}
         />
         <Text style={styles.title}>{title}</Text>
       </View>
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
-  title: {color: 'black', marginLeft: -90},
+  title: {color: 'black'},
 });
 
 export default OptionsToggle;
