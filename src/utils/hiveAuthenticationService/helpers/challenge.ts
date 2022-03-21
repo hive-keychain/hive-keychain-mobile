@@ -86,7 +86,7 @@ export const getChallengeData = async (
   const pubkey =
     account.keys[`${decrypted_data.key_type as KeychainKeyTypesLC}Pubkey`];
   const data = {challenge, pubkey};
-  console.log(session.auth_key, data);
+
   return encrypt
     ? Crypto.AES.encrypt(JSON.stringify(data), session.auth_key).toString()
     : data;
