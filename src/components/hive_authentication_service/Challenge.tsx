@@ -16,6 +16,7 @@ const LOGO_LIGHT = require('assets/has/logo-light.png');
 
 type Props = PropsFromRedux & {
   data: HAS_ChallengePayload & {
+    onForceCloseModal: () => void;
     has: HAS;
     callback: (
       has: HAS,
@@ -65,7 +66,8 @@ const HASChallengeRequest = ({data, accounts, navigation}: Props) => {
   return (
     <Operation
       logo={<FastImage source={LOGO_LIGHT} style={{width: 30, height: 30}} />}
-      title={translate('request.title.decode')}>
+      title={translate('request.title.decode')}
+      onClose={data.onForceCloseModal}>
       <>
         <Separator height={30} />
         <Text style={styles.uuid}>{translate('wallet.has.uuid', data)}</Text>
