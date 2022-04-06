@@ -11,7 +11,7 @@ type Props = {
 
 const OptionsToggle = ({children, title, toggled, callback}: Props) => {
   return (
-    <View>
+    <View style={{flex: 1}}>
       <View style={styles.header}>
         <RadioButton
           onSelect={() => {
@@ -19,6 +19,7 @@ const OptionsToggle = ({children, title, toggled, callback}: Props) => {
           }}
           selected={toggled}
           style={styles.toggleButton}
+          radioStyle={{width: 60}}
         />
         <Text style={styles.title}>{title}</Text>
       </View>
@@ -38,15 +39,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: '#77B9D1',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   toggleButtonText: {
     color: '#77B9D1',
     fontWeight: '800',
     fontSize: 18,
   },
-  header: {flexDirection: 'row'},
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
   title: {color: 'black'},
 });
 

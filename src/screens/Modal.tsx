@@ -45,7 +45,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
         })
       }
       bottomHalf={true}>
-      {route.params && route.params!.modalContent}
+      {route.params && !renderContent() && route.params!.modalContent}
       {renderContent()}
     </CustomModal>
   );

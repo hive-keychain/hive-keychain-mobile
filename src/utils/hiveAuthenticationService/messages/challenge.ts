@@ -1,6 +1,6 @@
 import Crypto from 'crypto-js';
 import {ModalComponent} from 'utils/modal.enum';
-import {navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 import HAS from '..';
 import {HAS_Session} from '../has.types';
 import {getChallengeData} from '../helpers/challenge';
@@ -26,6 +26,21 @@ export const processChallengeRequest = (
         domain: token.app,
         session,
         has,
+
+        onForceCloseModal: () => {
+          const challenge = Crypto.AES.encrypt(
+            payload.uuid,
+            session.auth_key,
+          ).toString();
+          has.send(
+            JSON.stringify({
+              cmd: 'auth_nack',
+              uuid: payload.uuid,
+              data: challenge,
+            }),
+          );
+          goBack();
+        },
       },
     });
   } else {
@@ -41,7 +56,9 @@ const answerChallengeReq = async (
   callback: (success: boolean) => void,
 ) => {
   if (approve) {
-    const challengeData = getChallengeData(
+    console.log('approve');
+    console.log(session, payload);
+    const challengeData = await getChallengeData(
       session,
       payload.account,
       payload.decrypted_data,
