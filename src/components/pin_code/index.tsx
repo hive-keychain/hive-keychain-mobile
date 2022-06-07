@@ -1,3 +1,4 @@
+//import IntentLauncher from '@yz1311/react-native-intent-launcher';
 import EllipticButton from 'components/form/EllipticButton';
 import CustomModal from 'components/modals/CustomModal';
 import Separator from 'components/ui/Separator';
@@ -6,7 +7,6 @@ import {UnlockNavigationProp} from 'navigators/Unlock.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-elements';
-import IntentLauncher from 'react-native-intent-launcher';
 import Toast from 'react-native-simple-toast';
 import {translate} from 'utils/localize';
 import PinCompletionIndicator from './PinCompletionIndicator';
@@ -167,9 +167,11 @@ const PinCode = ({
           <EllipticButton
             title={translate('components.pinCode.unsupportedBiometrics.button')}
             onPress={() => {
-              IntentLauncher.startActivity({
-                action: 'android.settings.SECURITY_SETTINGS',
-              });
+              // IntentLauncher.startActivity({
+              //   action: 'android.settings.SECURITY_SETTINGS',
+              //   data: '',
+              //   category: '',
+              // });
               setVisible(false);
             }}
           />

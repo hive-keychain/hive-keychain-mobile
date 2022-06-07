@@ -7,7 +7,6 @@ import com.facebook.react.ReactApplication;
 import com.BV.LinearGradient.LinearGradientPackage;
 import cx.evermeet.versioninfo.RNVersionInfoPackage;
 import com.reactnativecommunity.picker.RNCPickerPackage;
-import com.poberwong.launcher.IntentLauncherPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.oblador.keychain.KeychainPackage;
 import org.reactnative.camera.RNCameraPackage;

@@ -5,8 +5,6 @@ include ':react-native-version-info'
 project(':react-native-version-info').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-version-info/android')
 include ':@react-native-community_picker'
 project(':@react-native-community_picker').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/picker/android')
-include ':react-native-intent-launcher'
-project(':react-native-intent-launcher').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-intent-launcher/android')
 include ':react-native-vector-icons'
 project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
 include ':react-native-keychain'
@@ -21,3 +19,11 @@ include ':react-native-keychain'
 project(':react-native-keychain').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-keychain/android')
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
+
+includeBuild('../node_modules/react-native-gradle-plugin')
+
+if (settings.hasProperty("newArchEnabled") && settings.newArchEnabled == "true") {
+    include(":ReactAndroid")
+    project(":ReactAndroid").projectDir = file('../node_modules/react-native/ReactAndroid')
+}
+
