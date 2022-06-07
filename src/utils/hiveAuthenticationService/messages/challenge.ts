@@ -34,7 +34,7 @@ export const processChallengeRequest = (
           ).toString();
           has.send(
             JSON.stringify({
-              cmd: 'auth_nack',
+              cmd: 'challenge_nack',
               uuid: payload.uuid,
               data: challenge,
             }),
