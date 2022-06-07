@@ -16,7 +16,6 @@ export default ({navigation, route}: ModalNavigationProps) => {
   if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
   }
-  console.log(onForceCloseModal);
   const renderContent = () => {
     switch (name) {
       case ModalComponent.HAS_AUTH:
