@@ -20,11 +20,10 @@ const HiveEngineAccountValue = ({tokens, tokensMarket, prices}: Props) => {
       }
     }
   }
-  return (
-    <Text style={styles.accountValue}>{`$ ${withCommas(
-      accountValue * prices.hive.usd + '',
-    )}`}</Text>
-  );
+  let usdValue = prices?.hive?.usd
+    ? withCommas(accountValue * prices.hive.usd + '')
+    : '...';
+  return <Text style={styles.accountValue}>{`$ ${usdValue}`}</Text>;
 };
 
 const styles = StyleSheet.create({
