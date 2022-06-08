@@ -1,6 +1,6 @@
 {
   "name": "mobile-keychain",
-  "version": "1.8.10",
+  "version": "1.8.15",
   "private": true,
   "scripts": {
     "android": "react-native run-android --variant devDebug --appIdSuffix dev",
@@ -43,7 +43,8 @@
     "react-native-elements": "^2.3.2",
     "react-native-fast-image": "^8.3.4",
     "react-native-gesture-handler": "^1.9.0",
-    "react-native-keychain": "git+https://github.com/stoodkev/react-native-keychain.git",
+    "react-native-intent-launcher": "github:EldhoseKuriakose/react-native-intent-launcher#compile-issue",
+    "react-native-keychain": "^8.0.0",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-localize": "^1.4.3",
     "react-native-modal": "^11.7.0",

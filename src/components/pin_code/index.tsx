@@ -7,11 +7,11 @@ import {UnlockNavigationProp} from 'navigators/Unlock.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-elements';
+import IntentLauncher from 'react-native-intent-launcher';
 import Toast from 'react-native-simple-toast';
 import {translate} from 'utils/localize';
 import PinCompletionIndicator from './PinCompletionIndicator';
 import PinElement from './PinElement';
-
 interface Props {
   children: JSX.Element;
   signup?: boolean;
@@ -59,6 +59,7 @@ const PinCode = ({
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    //@ts-ignore
     const unsubscribe = navigation.addListener('focus', () => {
       setStep(0);
       setCode([]);
@@ -146,7 +147,7 @@ const PinCode = ({
           </View>
         ))}
       </View>
-      {false && (
+      {visible && (
         <CustomModal
           bottomHalf={true}
           outsideClick={() => {
@@ -167,11 +168,9 @@ const PinCode = ({
           <EllipticButton
             title={translate('components.pinCode.unsupportedBiometrics.button')}
             onPress={() => {
-              // IntentLauncher.startActivity({
-              //   action: 'android.settings.SECURITY_SETTINGS',
-              //   data: '',
-              //   category: '',
-              // });
+              IntentLauncher.startActivity({
+                action: 'android.settings.SECURITY_SETTINGS',
+              });
               setVisible(false);
             }}
           />
