@@ -1,7 +1,7 @@
 import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import {Send, ShowHistory} from 'components/operations/OperationsButtons';
-import React from 'react';
+import React, {useState} from 'react';
 import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
 import Image from 'react-native-fast-image';
 import {Width} from 'utils/common.types';
@@ -22,17 +22,29 @@ const EngineTokenDisplay = ({
   setToggle,
 }: Props) => {
   const styles = getDimensionedStyles(useWindowDimensions());
+  const [hasError, setHasError] = useState(false);
   const tokenInfo = tokensList.find((t) => t.symbol === token.symbol);
   const tokenMarket = market.find((t) => t.symbol === token.symbol);
   if (!tokenInfo) {
     return null;
   }
   const metadata = JSON.parse(tokenInfo.metadata);
-  const logo = (
+
+  const logo = hasError ? (
     <Image
       style={styles.icon}
       source={{
-        uri: metadata.icon || Img.resolveAssetSource(HiveEngine).uri,
+        uri: Img.resolveAssetSource(HiveEngine).uri,
+      }}
+    />
+  ) : (
+    <Image
+      style={styles.icon}
+      source={{
+        uri: metadata.icon,
+      }}
+      onError={() => {
+        setHasError(true);
       }}
     />
   );
