@@ -2,8 +2,8 @@
 import EllipticButton from 'components/form/EllipticButton';
 import CustomModal from 'components/modals/CustomModal';
 import Separator from 'components/ui/Separator';
-import {SignupNavProp} from 'navigators/Signup.types';
-import {UnlockNavigationProp} from 'navigators/Unlock.types';
+import {SignupNavigation} from 'navigators/Signup.types';
+import {UnlockNavigation} from 'navigators/Unlock.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-elements';
@@ -18,7 +18,7 @@ interface Props {
   title: string;
   confirm?: string;
   submit: (pin: string, callback?: (unsafe?: boolean) => void) => void;
-  navigation: UnlockNavigationProp | SignupNavProp;
+  navigation: UnlockNavigation | SignupNavigation;
 }
 
 const PinCode = ({
@@ -59,7 +59,6 @@ const PinCode = ({
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    //@ts-ignore
     const unsubscribe = navigation.addListener('focus', () => {
       setStep(0);
       setCode([]);
