@@ -97,7 +97,7 @@ const renderLeftBottom = (
 ) => {
   if (currency !== 'HP') {
     return (
-      <View style={[styles.row, styles.halfLine]}>
+      <View style={[styles.row, styles.flex]}>
         <Text style={styles.price}>{`$ ${price.usd.toFixed(2)}`}</Text>
         <Text style={styles.change}>{`${signedNumber(
           +price.usd_24h_change!.toFixed(2),
@@ -106,7 +106,7 @@ const renderLeftBottom = (
     );
   } else {
     return (
-      <View style={styles.halfLine}>
+      <View style={styles.flex}>
         <View style={styles.row}>
           <TouchableOpacity
             onPress={() => {
@@ -184,8 +184,9 @@ const getDimensionedStyles = ({
     change: {color: +change > 0 ? '#3BB26E' : '#B9122F'},
     green: {color: '#3BB26E'},
     red: {color: '#B9122F'},
-    halfLine: {width: '40%'},
+    halfLine: {width: '50%'},
     rowReverse: {flexDirection: 'row-reverse'},
+    flex: {flex: 1, marginRight: 30},
   });
 type Styles = ReturnType<typeof getDimensionedStyles>;
 
