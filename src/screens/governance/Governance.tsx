@@ -1,3 +1,4 @@
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
@@ -23,12 +24,13 @@ const Governance = ({
   return (
     <WalletPage>
       <>
+        <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
         <ScreenToggle
           style={styles.toggle}
           menu={[
-            translate(`wallet.menu.hive`),
-            translate(`wallet.menu.history`),
-            translate(`wallet.menu.tokens`),
+            translate(`governance.menu.witnesses`),
+            translate(`governance.menu.proxy`),
+            translate(`governance.menu.proposals`),
           ]}
           toUpperCase
           components={[

@@ -8,9 +8,9 @@ import SettingsStack from 'navigators/mainDrawerStacks/Settings';
 import WalletStack from 'navigators/mainDrawerStacks/Wallet';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import Governance from 'screens/governance/Governance';
 import {translate} from 'utils/localize';
 import {MainDrawerStackParam} from './MainDrawer.types';
+import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 
 const Drawer = createDrawerNavigator<MainDrawerStackParam>();
 
@@ -50,7 +50,7 @@ export default () => {
       <Drawer.Screen
         name="Governance"
         options={{title: translate('navigation.governance')}}
-        component={Governance}
+        component={GovernanceStack}
       />
       <Drawer.Screen
         name="SettingsScreen"
