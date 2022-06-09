@@ -253,7 +253,8 @@
     "settings": "SETTINGS",
     "about": "ABOUT",
     "wallet": "WALLET",
-    "browser": "BROWSER"
+    "browser": "BROWSER",
+    "governance": "GOVERNANCE"
   },
   "request": {
     "title": {
@@ -411,5 +412,18 @@
     "error30": "You already vote for 30 witnesses. You will need to unvote one to vote for a new one.",
     "errorActive": "You need an active key to vote for witnesses",
     "error": "Error: Something went wrong :"
+  },
+  "governance": {
+    "witness": {
+      "error": {
+        "retrieving_witness_ranking": "An error occured while retrieving the witness ranking. Please try again later.",
+        "unvote_wit": "Error while unvoting @{{name}} as a witness.",
+        "wit": "Error while voting for @{{name}} as a witness."
+      },
+      "success": {
+        "unvote_wit": "Succesfully unvoted @{{name}} as a witness.",
+        "wit": "Succesfully voted for @{{name}} as a witness."
+      }
+    }
   }
 }
