@@ -1,5 +1,5 @@
 import {ActionPayload, TokenTransaction} from 'actions/interfaces';
-import {LOAD_TOKEN_HISTORY} from 'actions/types';
+import {CLEAR_TOKEN_HISTORY, LOAD_TOKEN_HISTORY} from 'actions/types';
 
 export default (
   state: TokenTransaction[] = [],
@@ -8,6 +8,8 @@ export default (
   switch (type) {
     case LOAD_TOKEN_HISTORY:
       return payload!;
+    case CLEAR_TOKEN_HISTORY:
+      return [];
     default:
       return state;
   }
