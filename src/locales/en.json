@@ -428,7 +428,11 @@
       "success": {
         "unvote_wit": "Succesfully unvoted @{{name}} as a witness.",
         "wit": "Succesfully voted for @{{name}} as a witness."
-      }
+      },
+      "remaining_votes": "Votes remaining: {{remainingVotes}}",
+      "has_proxy": "You are currently using @{{proxy}} as a proxy. Their votes are displayed.",
+      "link_to_arcange": "For more information, click here to access the witness database",
+      "using_proxy": "Clear the proxy to vote for a witness"
     }
   }
 }

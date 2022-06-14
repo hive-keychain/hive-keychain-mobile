@@ -1,25 +1,39 @@
 import {loadAccount} from 'actions/hive';
 import {ActiveAccount, Witness as WitnessInterface} from 'actions/interfaces';
 import keychain from 'api/keychain';
+import Vote from 'assets/governance/arrow_circle_up.svg';
+import Open from 'assets/governance/open_in_new.svg';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import Toast from 'react-native-simple-toast';
+import {
+  FlatList,
+  Linking,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  default as SimpleToast,
+  default as Toast,
+} from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
-import {getClient} from 'utils/hive';
+import {Width} from 'utils/common.types';
+import {getClient, voteForWitness} from 'utils/hive';
 import {translate} from 'utils/localize';
 import ProxyUtils from 'utils/proxy';
-import WitnessUtils from 'utils/witness';
-
+import * as ValidUrl from 'valid-url';
 const MAX_WITNESS_VOTE = 30;
 
 type Props = {
   user: ActiveAccount;
+  focus: number;
 };
 
-const Witness = ({user, loadAccount}: PropsFromRedux & Props) => {
+const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
   const [displayVotedOnly, setDisplayVotedOnly] = useState(false);
-  const [hideNonActive, setHideNonActive] = useState(true);
+  const [hideNonActive, setHideNonActive] = useState(false);
   const [remainingVotes, setRemainingVotes] = useState<string | number>('...');
   const [ranking, setRanking] = useState<WitnessInterface[]>([]);
   const [filteredRanking, setFilteredRanking] = useState<WitnessInterface[]>(
@@ -30,18 +44,19 @@ const Witness = ({user, loadAccount}: PropsFromRedux & Props) => {
 
   const [usingProxy, setUsingProxy] = useState<boolean>(false);
   const [hasError, setHasError] = useState(false);
-  const [isLoading, setLoading] = useState(false);
+  const [isLoading, setLoading] = useState(true);
+  const styles = getDimensionedStyles(useWindowDimensions());
 
   useEffect(() => {
     init();
-  }, []);
+  }, [focus]);
 
   const init = async () => {
+    let proxy = await ProxyUtils.findUserProxy(user.account);
+    setUsingProxy(proxy !== null);
+
     setRemainingVotes(MAX_WITNESS_VOTE - user.account.witnesses_voted_for);
 
-    let proxy = await ProxyUtils.findUserProxy(user.account);
-
-    setUsingProxy(proxy !== null);
     initWitnessRanking();
     if (proxy) {
       initProxyVotes(proxy);
@@ -78,7 +93,6 @@ const Witness = ({user, loadAccount}: PropsFromRedux & Props) => {
   };
 
   const initWitnessRanking = async () => {
-    setLoading(true);
     const requestResult = await keychain.get('/hive/v2/witnesses-ranks');
     if (requestResult.data !== '') {
       const ranking = requestResult.data;
@@ -95,11 +109,16 @@ const Witness = ({user, loadAccount}: PropsFromRedux & Props) => {
 
   const handleVotedButtonClick = async (witness: WitnessInterface) => {
     if (usingProxy) {
+      SimpleToast.show(translate('governance.witness.using_proxy'));
       return;
     }
     if (user.account.witness_votes.includes(witness.name)) {
       try {
-        await WitnessUtils.unvoteWitness(witness, user);
+        await voteForWitness(user.keys.active, {
+          account: user.name,
+          witness: witness.name,
+          approve: false,
+        });
         loadAccount(user.name);
         Toast.show(
           translate('governance.witness.success.unvote_wit', {
@@ -107,6 +126,7 @@ const Witness = ({user, loadAccount}: PropsFromRedux & Props) => {
           }),
         );
       } catch (err) {
+        console.log(err);
         Toast.show(
           translate('governance.witness.error.unvote_wit', {
             name: witness.name,
@@ -115,10 +135,14 @@ const Witness = ({user, loadAccount}: PropsFromRedux & Props) => {
       }
     } else {
       try {
-        await WitnessUtils.voteWitness(witness, user);
+        await voteForWitness(user.keys.active, {
+          account: user.name,
+          witness: witness.name,
+          approve: true,
+        });
         loadAccount(user.name);
         Toast.show(
-          translate('governance.witness.success.unvote_wit', {
+          translate('governance.witness.success.wit', {
             name: witness.name,
           }),
         );
@@ -132,16 +156,118 @@ const Witness = ({user, loadAccount}: PropsFromRedux & Props) => {
     }
   };
 
-  return <View style={styles.container}></View>;
+  const renderWitnessItem = (witness: WitnessInterface, index: number) => {
+    return (
+      <View
+        style={[styles.witnessItem, index % 2 === 0 ? styles.even : undefined]}
+        key={witness.name}>
+        <View style={styles.rank}>
+          <Text style={styles.activeRank}>
+            {witness.active_rank ? witness.active_rank : '-'}{' '}
+          </Text>
+          {!hideNonActive &&
+            witness.active_rank?.toString() !== witness.rank && (
+              <Text style={styles.includingInactive}>({witness.rank})</Text>
+            )}
+        </View>
+        <View style={styles.nameContainer}>
+          <Text
+            style={[
+              styles.witnessName,
+              witness.signing_key ===
+              'STM1111111111111111111111111111111114T1Anm'
+                ? styles.inactive
+                : undefined,
+            ]}>
+            @{witness.name}
+          </Text>
+          {witness.url && ValidUrl.isWebUri(witness.url) && (
+            <Open
+              onPress={() => Linking.openURL(witness.url)}
+              fill="black"
+              width={16}
+            />
+          )}
+        </View>
+        <View style={styles.vote} />
+        <Vote
+          fill={votedWitnesses.includes(witness.name) ? 'black' : 'lightgrey'}
+          onPress={() => handleVotedButtonClick(witness)}
+        />
+      </View>
+    );
+  };
+
+  if (isLoading) return null;
+  else
+    return (
+      <View style={styles.container}>
+        <View style={styles.withPadding}>
+          {!usingProxy && (
+            <Text style={styles.text}>
+              {translate('governance.witness.remaining_votes', {
+                remainingVotes,
+              })}
+            </Text>
+          )}
+          {usingProxy && (
+            <Text style={styles.text}>
+              {translate('governance.witness.has_proxy', {
+                proxy: user.account.proxy,
+              })}
+            </Text>
+          )}
+
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL('https://hive.arcange.eu/witnesses');
+            }}>
+            <Text style={styles.text}>
+              {translate('governance.witness.link_to_arcange', {
+                proxy: user.account.proxy,
+              })}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <FlatList
+          data={filteredRanking}
+          keyExtractor={(item) => item.name}
+          renderItem={({item, index}) => renderWitnessItem(item, index)}
+        />
+      </View>
+    );
 };
 
-const styles = StyleSheet.create({
-  container: {width: '100%', flex: 1},
-});
+const getDimensionedStyles = ({width}: Width) =>
+  StyleSheet.create({
+    container: {width: '100%', flex: 1, marginTop: 20},
+    text: {marginBottom: 10, fontSize: 16},
+    witnessItem: {
+      flex: 1,
+      flexDirection: 'row',
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      alignContent: 'center',
+    },
+    rank: {
+      flexDirection: 'row',
+      width: 40,
+      justifyContent: 'space-around',
+    },
+    activeRank: {width: 20, textAlign: 'center', fontSize: 12},
+    includingInactive: {width: 24, textAlign: 'center', fontSize: 10},
+    inactive: {textDecorationLine: 'line-through'},
+    nameContainer: {flexDirection: 'row'},
+    witnessName: {marginLeft: 20, paddingRight: 10},
+    even: {backgroundColor: 'white'},
+    withPadding: {paddingHorizontal: width * 0.05},
+    vote: {flex: 1},
+  });
 
 const mapStateToProps = (state: RootState) => {
   return {};
 };
+
 const connector = connect(mapStateToProps, {loadAccount});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(Witness);

@@ -49,7 +49,10 @@ export default () => {
       />
       <Drawer.Screen
         name="Governance"
-        options={{title: translate('navigation.governance')}}
+        options={{
+          title: translate('navigation.governance'),
+          unmountOnBlur: true,
+        }}
         component={GovernanceStack}
       />
       <Drawer.Screen

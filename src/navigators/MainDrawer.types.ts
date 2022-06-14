@@ -27,6 +27,11 @@ export type WalletNavigation = StackNavigationProp<
   'WALLET'
 >;
 
+export type GovernanceNavigation = StackNavigationProp<
+  MainDrawerStackParam,
+  'Governance'
+>;
+
 export type WalletNavigationProps = {
   navigation: WalletNavigation;
 };

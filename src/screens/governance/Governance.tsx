@@ -2,8 +2,8 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
-import {WalletNavigation} from 'navigators/MainDrawer.types';
-import React from 'react';
+import {GovernanceNavigation} from 'navigators/MainDrawer.types';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
@@ -16,10 +16,17 @@ import Witness from './Witness';
 const Governance = ({
   user,
   navigation,
-}: PropsFromRedux & {navigation: WalletNavigation}) => {
+}: PropsFromRedux & {navigation: GovernanceNavigation}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
 
   useLockedPortrait(navigation);
+  const [focus, setFocus] = useState(Math.random());
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setFocus(Math.random());
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <WalletPage>
@@ -34,7 +41,7 @@ const Governance = ({
           ]}
           toUpperCase
           components={[
-            <Witness user={user} />,
+            <Witness user={user} focus={focus} />,
             <Proxy user={user} />,
             <Proposal user={user} />,
           ]}
@@ -49,8 +56,6 @@ const getDimensionedStyles = ({width}: Width) =>
     toggle: {
       display: 'flex',
       flexDirection: 'row',
-      paddingLeft: width * 0.05,
-      paddingRight: width * 0.05,
     },
   });
 
