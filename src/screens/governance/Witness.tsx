@@ -2,7 +2,10 @@ import {loadAccount} from 'actions/hive';
 import {ActiveAccount, Witness as WitnessInterface} from 'actions/interfaces';
 import keychain from 'api/keychain';
 import Vote from 'assets/governance/arrow_circle_up.svg';
+import Clear from 'assets/governance/clear.svg';
 import Open from 'assets/governance/open_in_new.svg';
+import CustomInput from 'components/form/CustomInput';
+import {RadioButton} from 'components/form/CustomRadioGroup';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
@@ -33,7 +36,7 @@ type Props = {
 
 const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
   const [displayVotedOnly, setDisplayVotedOnly] = useState(false);
-  const [hideNonActive, setHideNonActive] = useState(false);
+  const [hideNonActive, setHideNonActive] = useState(true);
   const [remainingVotes, setRemainingVotes] = useState<string | number>('...');
   const [ranking, setRanking] = useState<WitnessInterface[]>([]);
   const [filteredRanking, setFilteredRanking] = useState<WitnessInterface[]>(
@@ -71,6 +74,21 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
   }, [user]);
 
   useEffect(() => {
+    console.log(
+      ranking.filter((witness) => {
+        return (
+          (witness.name?.toLowerCase().includes(filterValue.toLowerCase()) ||
+            witness.rank?.toLowerCase().includes(filterValue.toLowerCase())) &&
+          ((displayVotedOnly && votedWitnesses.includes(witness.name)) ||
+            !displayVotedOnly) &&
+          ((hideNonActive &&
+            witness.signing_key !==
+              'STM1111111111111111111111111111111114T1Anm') ||
+            !hideNonActive)
+        );
+      }),
+    );
+
     setFilteredRanking(
       ranking.filter((witness) => {
         return (
@@ -157,10 +175,11 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
   };
 
   const renderWitnessItem = (witness: WitnessInterface, index: number) => {
+    console.log(witness);
     return (
       <View
         style={[styles.witnessItem, index % 2 === 0 ? styles.even : undefined]}
-        key={witness.name}>
+        key={`${witness.name}_${witness.rank}_${witness.active_rank}`}>
         <View style={styles.rank}>
           <Text style={styles.activeRank}>
             {witness.active_rank ? witness.active_rank : '-'}{' '}
@@ -181,13 +200,13 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
             ]}>
             @{witness.name}
           </Text>
-          {witness.url && ValidUrl.isWebUri(witness.url) && (
+          {witness.url && ValidUrl.isWebUri(witness.url) ? (
             <Open
               onPress={() => Linking.openURL(witness.url)}
               fill="black"
               width={16}
             />
-          )}
+          ) : undefined}
         </View>
         <View style={styles.vote} />
         <Vote
@@ -228,6 +247,41 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
               })}
             </Text>
           </TouchableOpacity>
+          <CustomInput
+            placeholder={translate('governance.witness.search_placeholder')}
+            inputColor="black"
+            backgroundColor="white"
+            containerStyle={{marginLeft: 0, marginVertical: 10}}
+            rightIcon={
+              filterValue.length ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    setFilterValue('');
+                  }}>
+                  <Clear width={16} />
+                </TouchableOpacity>
+              ) : undefined
+            }
+            autoCapitalize="none"
+            value={filterValue}
+            onChangeText={setFilterValue}
+          />
+        </View>
+        <View style={styles.switch}>
+          <RadioButton
+            label={translate('governance.witness.show_voted')}
+            selected={displayVotedOnly}
+            onSelect={() => {
+              setDisplayVotedOnly(!displayVotedOnly);
+            }}
+          />
+          <RadioButton
+            label={translate('governance.witness.hide_inactive')}
+            selected={hideNonActive}
+            onSelect={() => {
+              setHideNonActive(!hideNonActive);
+            }}
+          />
         </View>
         <FlatList
           data={filteredRanking}
@@ -262,6 +316,13 @@ const getDimensionedStyles = ({width}: Width) =>
     even: {backgroundColor: 'white'},
     withPadding: {paddingHorizontal: width * 0.05},
     vote: {flex: 1},
+    switch: {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginTop: 10,
+      marginBottom: 20,
+    },
   });
 
 const mapStateToProps = (state: RootState) => {

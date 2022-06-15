@@ -18,7 +18,7 @@ export default ({list, onSelect, selected}: Props) => (
   <View style={styles.radioGroup}>
     {list.map((data) => (
       <RadioButton
-        data={data}
+        label={data}
         onSelect={onSelect}
         selected={selected === data}
         key={data}
@@ -29,7 +29,7 @@ export default ({list, onSelect, selected}: Props) => (
 );
 
 type RadioProps = {
-  data?: string;
+  label?: string;
   onSelect: (arg0: string) => void;
   selected: boolean;
   style?: StyleProp<ViewStyle>;
@@ -37,7 +37,7 @@ type RadioProps = {
 };
 
 export const RadioButton = ({
-  data,
+  label,
   onSelect,
   selected,
   style,
@@ -46,13 +46,13 @@ export const RadioButton = ({
   <TouchableOpacity
     style={[styles.radioButton, radioStyle]}
     onPress={() => {
-      onSelect(data);
+      onSelect(label);
     }}>
     <View
       style={[styles.button, selected ? styles.buttonActive : null, style]}
     />
     <View style={styles.labelView}>
-      <Text style={styles.label}>{data}</Text>
+      <Text style={styles.label}>{label}</Text>
     </View>
   </TouchableOpacity>
 );
@@ -76,9 +76,8 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   buttonActive: {backgroundColor: '#77B9D1'},
-  label: {marginLeft: 10, marginRight: 10},
+  label: {marginLeft: 10, marginRight: 20},
   labelView: {
     flexDirection: 'column',
-    width: '95%',
   },
 });

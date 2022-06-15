@@ -74,7 +74,7 @@ const RequestOperation = ({
         <View style={styles.keep}>
           <RadioButton
             selected={keep}
-            data={translate(`request.keep${has ? '_has' : ''}`, {
+            label={translate(`request.keep${has ? '_has' : ''}`, {
               domain,
               username: username || selectedUsername,
               type,
