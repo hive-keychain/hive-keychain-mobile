@@ -452,6 +452,24 @@
         "set_proxy": "Succesfully chose @{{name}} for proxy.",
         "clear_proxy": "Succesfully removed the proxy"
       }
+    },
+    "proposal": {
+      "by": "By @{{name}}",
+      "remaining": "{{days}} day(s) remaining",
+      "day": "day",
+      "totally_funded": "Funded",
+      "partially_funded": "Partially funded",
+      "not_funded": "Not funded",
+      "error": {
+        "using_proxy": "Clear the proxy to vote for a proposal",
+        "active": "To vote for a proposal, you must first add your account active key",
+        "vote": "There was an error while voting for a proposal!",
+        "unvote": "There was an error while removing a proposal vote!"
+      },
+      "success": {
+        "vote": "You successfully voted for a proposal!",
+        "unvote": "You successfully removed your vote!"
+      }
     }
   }
 }

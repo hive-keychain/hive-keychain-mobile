@@ -22,7 +22,6 @@ import {
   default as Toast,
 } from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
-import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {getClient, voteForWitness} from 'utils/hive';
 import {translate} from 'utils/localize';
@@ -348,10 +347,6 @@ const getDimensionedStyles = ({width}: Width) =>
     },
   });
 
-const mapStateToProps = (state: RootState) => {
-  return {};
-};
-
-const connector = connect(mapStateToProps, {loadAccount});
+const connector = connect(undefined, {loadAccount});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(Witness);
