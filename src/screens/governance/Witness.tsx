@@ -6,6 +6,7 @@ import Clear from 'assets/governance/clear.svg';
 import Open from 'assets/governance/open_in_new.svg';
 import CustomInput from 'components/form/CustomInput';
 import {RadioButton} from 'components/form/CustomRadioGroup';
+import Loader from 'components/ui/Loader';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
@@ -201,11 +202,13 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
             @{witness.name}
           </Text>
           {witness.url && ValidUrl.isWebUri(witness.url) ? (
-            <Open
-              onPress={() => Linking.openURL(witness.url)}
-              fill="black"
-              width={16}
-            />
+            <View>
+              <Open
+                onPress={() => Linking.openURL(witness.url)}
+                fill="black"
+                width={16}
+              />
+            </View>
           ) : undefined}
         </View>
         <View style={styles.vote} />
@@ -217,7 +220,12 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
     );
   };
 
-  if (isLoading) return null;
+  if (isLoading)
+    return (
+      <View style={{flex: 1, justifyContent: 'center'}}>
+        <Loader animating />
+      </View>
+    );
   else
     return (
       <View style={styles.container}>
@@ -236,17 +244,23 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
               })}
             </Text>
           )}
+          <Text style={styles.text}>
+            {translate('governance.witness.link_to_arcange', {
+              proxy: user.account.proxy,
+            })}
+            <Open
+              height={12}
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onPress={() =>
+                Linking.openURL('https://hive.arcange.eu/witnesses')
+              }
+              fill="black"
+            />
+          </Text>
 
-          <TouchableOpacity
-            onPress={() => {
-              Linking.openURL('https://hive.arcange.eu/witnesses');
-            }}>
-            <Text style={styles.text}>
-              {translate('governance.witness.link_to_arcange', {
-                proxy: user.account.proxy,
-              })}
-            </Text>
-          </TouchableOpacity>
           <CustomInput
             placeholder={translate('governance.witness.search_placeholder')}
             inputColor="black"
@@ -295,24 +309,49 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
 const getDimensionedStyles = ({width}: Width) =>
   StyleSheet.create({
     container: {width: '100%', flex: 1, marginTop: 20},
-    text: {marginBottom: 10, fontSize: 16},
+    text: {
+      marginBottom: 10,
+      fontSize: 16,
+      lineHeight: 16,
+      textAlignVertical: 'center',
+    },
     witnessItem: {
       flex: 1,
       flexDirection: 'row',
       paddingVertical: 10,
       paddingHorizontal: 20,
-      alignContent: 'center',
+      alignContent: 'flex-end',
     },
     rank: {
       flexDirection: 'row',
-      width: 40,
+      height: '100%',
+      width: 44,
+      textVertical: 'center',
+      alignContent: 'center',
       justifyContent: 'space-around',
     },
-    activeRank: {width: 20, textAlign: 'center', fontSize: 12},
-    includingInactive: {width: 24, textAlign: 'center', fontSize: 10},
+    activeRank: {
+      width: 20,
+      textAlign: 'center',
+      textAlignVertical: 'center',
+      fontSize: 12,
+      lineHeight: 20,
+    },
+    includingInactive: {
+      width: 24,
+      textAlign: 'center',
+      textAlignVertical: 'center',
+      fontSize: 10,
+      lineHeight: 20,
+    },
     inactive: {textDecorationLine: 'line-through'},
     nameContainer: {flexDirection: 'row'},
-    witnessName: {marginLeft: 20, paddingRight: 10},
+    witnessName: {
+      marginLeft: 20,
+      paddingRight: 10,
+      lineHeight: 20,
+      textAlignVertical: 'center',
+    },
     even: {backgroundColor: 'white'},
     withPadding: {paddingHorizontal: width * 0.05},
     vote: {flex: 1},
