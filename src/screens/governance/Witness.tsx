@@ -75,21 +75,6 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
   }, [user]);
 
   useEffect(() => {
-    console.log(
-      ranking.filter((witness) => {
-        return (
-          (witness.name?.toLowerCase().includes(filterValue.toLowerCase()) ||
-            witness.rank?.toLowerCase().includes(filterValue.toLowerCase())) &&
-          ((displayVotedOnly && votedWitnesses.includes(witness.name)) ||
-            !displayVotedOnly) &&
-          ((hideNonActive &&
-            witness.signing_key !==
-              'STM1111111111111111111111111111111114T1Anm') ||
-            !hideNonActive)
-        );
-      }),
-    );
-
     setFilteredRanking(
       ranking.filter((witness) => {
         return (
@@ -176,7 +161,6 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
   };
 
   const renderWitnessItem = (witness: WitnessInterface, index: number) => {
-    console.log(witness);
     return (
       <View
         style={[styles.witnessItem, index % 2 === 0 ? styles.even : undefined]}
@@ -308,7 +292,7 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
 
 const getDimensionedStyles = ({width}: Width) =>
   StyleSheet.create({
-    container: {width: '100%', flex: 1, marginTop: 20},
+    container: {width: '100%', flex: 1, marginTop: 30},
     text: {
       marginBottom: 10,
       fontSize: 16,
