@@ -38,7 +38,7 @@ const ProposalItem = ({
   style,
 }: ProposalItemProps) => {
   const [isExpandablePanelOpened, setExpandablePanelOpened] = useState(false);
-
+  const [isPressVote, setIsPressVote] = useState(false);
   const goTo = (link: Proposal['link']) => {
     Linking.openURL(link);
   };
@@ -91,8 +91,11 @@ const ProposalItem = ({
     <TouchableOpacity
       style={[style, styles.container]}
       onPressOut={() => {
-        setExpandablePanelOpened(!isExpandablePanelOpened);
-        console.log('toggle');
+        if (isPressVote) {
+          setIsPressVote(false);
+        } else {
+          setExpandablePanelOpened(!isExpandablePanelOpened);
+        }
       }}>
       <View style={styles.firstLine}>
         <View style={styles.title}>
@@ -125,10 +128,8 @@ const ProposalItem = ({
         <View>
           <Vote
             fill={proposal.voted ? 'black' : 'lightgrey'}
-            onPressIn={(e) => {
-              console.log('vote');
-              e.stopPropagation();
-              e.preventDefault();
+            onPressIn={() => {
+              setIsPressVote(true);
               toggleSupport(proposal);
             }}
           />
