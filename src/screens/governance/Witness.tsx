@@ -111,6 +111,10 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
   };
 
   const handleVotedButtonClick = async (witness: WitnessInterface) => {
+    if (!user.keys.active) {
+      Toast.show(translate('governance.witness.error.active'));
+      return;
+    }
     if (usingProxy) {
       SimpleToast.show(translate('governance.witness.using_proxy'));
       return;

@@ -48,6 +48,10 @@ const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
   if (!isLoading)
     return (
       <View style={styles.container}>
+        <Text style={[styles.withPadding, styles.text]}>
+          The decentralized Hive Fund (DHF) gives funding to project proposals,
+          based on community votes.
+        </Text>
         {displayingProxyVotes && (
           <Text style={[styles.withPadding, styles.text]}>
             {translate('governance.witness.has_proxy', {
@@ -93,6 +97,7 @@ const getDimensionedStyles = ({width}: Width) =>
       flex: 1,
       marginTop: 30,
     },
+
     withPadding: {
       paddingHorizontal: 0.05 * width,
     },

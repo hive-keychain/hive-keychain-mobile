@@ -2,6 +2,7 @@ import {loadAccount} from 'actions/hive';
 import {ActiveAccount} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CustomInput from 'components/form/CustomInput';
+import Loader from 'components/ui/Loader';
 import React, {useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
@@ -17,22 +18,29 @@ type Props = {
 const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
   const [proxyUsername, setProxyUsername] = useState('');
   const styles = getDimensionedStyles(useWindowDimensions());
+  const [loading, setLoading] = useState(false);
 
   const setAsProxy = async () => {
     if (!user.keys.active) {
       Toast.show(translate('governance.proxy.error.active'));
+      return;
     }
+    setLoading(true);
     if (
       await setProxy(user.keys.active, {
         account: user.name,
-        proxy: proxyUsername,
+        proxy: proxyUsername.replace(/\s/g, ''),
       })
     ) {
       Toast.show(
         translate('governance.proxy.success.set_proxy', {name: proxyUsername}),
       );
-      loadAccount(user.name);
+      setTimeout(() => {
+        loadAccount(user.name);
+        setLoading(false);
+      }, 3000);
     } else {
+      setLoading(false);
       Toast.show(translate('governance.proxy.error.set_proxy'));
     }
   };
@@ -40,16 +48,23 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
   const removeProxy = async () => {
     if (!user.keys.active) {
       Toast.show(translate('governance.proxy.error.active'));
+      return;
     }
+    setLoading(true);
+
     if (
       await setProxy(user.keys.active, {
         account: user.name,
-        proxy: proxyUsername,
+        proxy: '',
       })
     ) {
-      loadAccount(user.name);
+      setTimeout(() => {
+        loadAccount(user.name);
+        setLoading(false);
+      }, 3000);
       Toast.show(translate('governance.proxy.success.clear_proxy'));
     } else {
+      setLoading(false);
       Toast.show(translate('governance.proxy.error.clear_proxy'));
     }
   };
@@ -73,7 +88,7 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
           </Text>
         )}
       </View>
-      {user.account.proxy.length === 0 && (
+      {user.account.proxy.length === 0 && !loading && (
         <View>
           <CustomInput
             value={proxyUsername}
@@ -93,7 +108,7 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
           />
         </View>
       )}
-      {user.account.proxy.length > 0 && (
+      {user.account.proxy.length > 0 && !loading && (
         <ActiveOperationButton
           title={translate('governance.proxy.buttons.clear')}
           onPress={() => removeProxy()}
@@ -101,7 +116,11 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
           style={styles.button}
         />
       )}
-
+      {loading && (
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <Loader animating />
+        </View>
+      )}
       <View></View>
     </View>
   );

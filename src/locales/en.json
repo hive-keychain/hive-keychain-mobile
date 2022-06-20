@@ -423,7 +423,8 @@
       "error": {
         "retrieving_witness_ranking": "An error occured while retrieving the witness ranking. Please try again later.",
         "unvote_wit": "Error while unvoting @{{name}} as a witness.",
-        "wit": "Error while voting for @{{name}} as a witness."
+        "wit": "Error while voting for @{{name}} as a witness.",
+        "active": "To vote for a witness, you must first add your account active key"
       },
       "success": {
         "unvote_wit": "Succesfully unvoted @{{name}} as a witness.",
