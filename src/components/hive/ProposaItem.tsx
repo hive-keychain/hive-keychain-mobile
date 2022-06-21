@@ -56,6 +56,7 @@ const ProposalItem = ({
       Toast.show(translate('governance.proposal.error.using_proxy'));
       return;
     }
+    console.log('toggle support');
     if (proposal.voted) {
       if (
         await updateProposalVote(user.keys.active, {
@@ -125,15 +126,13 @@ const ProposalItem = ({
             {translate('governance.proposal.by', {name: proposal.creator})}
           </Text>
         </View>
-        <View>
-          <Vote
-            fill={proposal.voted ? 'black' : 'lightgrey'}
-            onPressIn={() => {
-              setIsPressVote(true);
-              toggleSupport(proposal);
-            }}
-          />
-        </View>
+        <TouchableOpacity
+          onPressIn={() => {
+            setIsPressVote(true);
+            toggleSupport(proposal);
+          }}>
+          <Vote fill={proposal.voted ? 'black' : 'lightgrey'} />
+        </TouchableOpacity>
       </View>
       {isExpandablePanelOpened && (
         <View style={styles.expanded}>
