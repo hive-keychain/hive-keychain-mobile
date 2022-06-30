@@ -28,7 +28,6 @@ export default ({
 }: Props) => {
   const {request_id, ...data} = request;
   const {method, username, tx} = data;
-  console.log(data);
   return (
     <RequestOperation
       sendResponse={sendResponse}
@@ -75,7 +74,6 @@ export const signTxWithoutConfirmation = (
   sendError: (msg: RequestError) => void,
   has?: boolean,
 ) => {
-  console.log('signing tx');
   processOperationWithoutConfirmation(
     async () => await performSignTxOperation(accounts, request),
     request,

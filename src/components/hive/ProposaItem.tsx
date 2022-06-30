@@ -56,7 +56,6 @@ const ProposalItem = ({
       Toast.show(translate('governance.proposal.error.using_proxy'));
       return;
     }
-    console.log('toggle support');
     if (proposal.voted) {
       if (
         await updateProposalVote(user.keys.active, {

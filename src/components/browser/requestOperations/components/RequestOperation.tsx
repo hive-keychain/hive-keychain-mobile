@@ -170,7 +170,6 @@ export const processOperationWithoutConfirmation = async (
     };
     sendResponse(obj);
   } catch (e) {
-    //console.log(e);
     let msg;
     if (!beautifyError) {
       // if (typeof errorMessage === 'function') {
@@ -181,7 +180,6 @@ export const processOperationWithoutConfirmation = async (
     } else {
       msg = beautifyErrorMessage(e as any);
     }
-    //console.log(msg);
     sendError({data, request_id, error: {}, message: msg});
   }
 };

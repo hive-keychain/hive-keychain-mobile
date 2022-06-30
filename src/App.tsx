@@ -54,7 +54,6 @@ const App = ({hasAccounts, auth, rpc}: PropsFromRedux) => {
       // has account but not authenticated yet -> Unlock
       return <UnlockStack />;
     } else {
-      console.log('should show main drawer');
       return <MainDrawer />;
     }
   };

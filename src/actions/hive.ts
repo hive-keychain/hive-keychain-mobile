@@ -80,7 +80,6 @@ export const loadProperties = (): AppThunk => async (dispatch) => {
 export const loadPrices = (): AppThunk => async (dispatch) => {
   try {
     const prices = await getPrices();
-    console.log(prices);
     dispatch({
       type: GET_CURRENCY_PRICES,
       payload: prices,
@@ -218,7 +217,6 @@ export const fetchConversionRequests = (name: string): AppThunk => async (
   dispatch,
 ) => {
   const conversions = await getConversionRequests(name);
-  console.log(conversions);
   dispatch({
     type: FETCH_CONVERSION_REQUESTS,
     payload: conversions,
@@ -229,7 +227,6 @@ export const fetchSavingsRequests = (name: string): AppThunk => async (
   dispatch,
 ) => {
   const savings = await getSavingsRequests(name);
-  console.log(savings);
   dispatch({
     type: FETCH_SAVINGS_REQUESTS,
     payload: savings,

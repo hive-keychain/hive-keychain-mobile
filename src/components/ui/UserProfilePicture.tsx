@@ -11,9 +11,6 @@ export default ({username, style}: Props) => (
   <Image
     style={style}
     source={{uri: `https://images.hive.blog/u/${username}/avatar`}}
-    onError={() => {
-      console.log('error');
-    }}
     resizeMode={Image.resizeMode.contain}
     fallback
   />

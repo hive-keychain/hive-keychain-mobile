@@ -17,7 +17,6 @@ type Props = {
 
 const DAppCard = ({dApp, updateTabUrl}: Props) => {
   const styles = getStyles(useWindowDimensions());
-  console.log(dApp);
   return (
     <TouchableOpacity
       style={styles.container}
@@ -38,7 +37,6 @@ const DAppCard = ({dApp, updateTabUrl}: Props) => {
 };
 
 const getStyles = ({width}: Dimensions) => {
-  console.log(width);
   return StyleSheet.create({
     container: {
       width: 0.45 * width,

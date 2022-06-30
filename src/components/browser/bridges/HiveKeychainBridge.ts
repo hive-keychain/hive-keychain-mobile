@@ -241,7 +241,6 @@ window.hive_keychain={
    * @param {String} [rpc=null] Override user's RPC settings
    */
   requestSignedCall: function (account, method, params, key, callback, rpc) {
-    console.log('getting request');
     var request = {
       type: 'signedCall',
       username: account,

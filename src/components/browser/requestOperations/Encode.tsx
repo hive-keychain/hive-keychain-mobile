@@ -28,7 +28,6 @@ export default ({
 }: Props) => {
   const {request_id, ...data} = request;
   const {receiver, method, username, message} = data;
-  console.log(data);
   return (
     <RequestOperation
       sendResponse={sendResponse}

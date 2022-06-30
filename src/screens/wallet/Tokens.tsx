@@ -43,7 +43,6 @@ const Tokens = ({
         </View>
       );
     } else if (userTokens.list.length) {
-      console.log(tokensMarket.find((t) => t.symbol === 'SWAP.HIVE'));
       const list = userTokens.list.sort((a, b) => {
         return (
           getHiveEngineTokenValue(b, tokensMarket) -

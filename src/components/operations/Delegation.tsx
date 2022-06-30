@@ -45,7 +45,6 @@ const Delegation = ({
         delegatee: sanitizeUsername(to),
         delegator: user.account.name,
       });
-      console.log(delegation);
       loadAccount(user.account.name, true);
       goBack();
       if (parseFloat(amount.replace(',', '.')) !== 0) {
