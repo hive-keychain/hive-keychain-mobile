@@ -1,7 +1,7 @@
 ## Privacy Policy
-## Effective date: December 1, 2020
+## Effective date: June 30, 2022
 
-Quentin Correa (@stoodkev) ("us", "we", or "our") provides and operates the Hive Keychain Mobile App (the "Service").
+Hive Keychain Ltd. ("us", "we", or "our") provides and operates the Hive Keychain Mobile App (the "Service").
 
 This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
 
@@ -9,7 +9,7 @@ This page informs you of our policies regarding the collection, use, and disclos
 The Hive Keychain Mobile App does not collect any personal data of any kind. Account names and private keys entered into the extension are stored locally, are never transmitted anywhere, and are securely encrypted using the user-chosen password.
 
 ### Usage Data
-The Hive Keychain Mobile App does not collect usage data of any kind.
+The Hive Keychain Mobile App collects encrypted navigation data in an anonymous fashion, through an encrypted communication channel. These information will never be given or sold to a third-party.
 
 ### Tracking & Cookies Data
 The Service does not perform any tracking or store any cookies on users' devices.
