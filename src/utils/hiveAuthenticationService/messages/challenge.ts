@@ -56,8 +56,6 @@ const answerChallengeReq = async (
   callback: (success: boolean) => void,
 ) => {
   if (approve) {
-    console.log('approve');
-    console.log(session, payload);
     const challengeData = await getChallengeData(
       session,
       payload.account,

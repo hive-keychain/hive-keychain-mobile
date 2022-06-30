@@ -15,7 +15,6 @@ type Props = {
   isLoading: boolean;
 } & PropsFromRedux;
 const ActiveOperationButton = ({method, ...props}: Props) => {
-  console.log(method, props);
   return (
     <>
       {!props.user.keys[method || KeyTypes.active] && (

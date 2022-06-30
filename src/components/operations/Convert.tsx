@@ -31,7 +31,6 @@ const Convert = ({
   conversions,
   currency,
 }: Props) => {
-  console.log(conversions);
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [showConversionsList, setShowConversionsList] = useState(false);

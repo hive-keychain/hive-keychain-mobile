@@ -35,7 +35,6 @@ const ClaimRewards = ({active, props, loadAccount}: PropsFromRedux) => {
               reward_hive: account.reward_hive_balance,
               reward_vests: account.reward_vesting_balance,
             });
-            console.log(res);
             if (res) {
               const rewards = [
                 account.reward_hbd_balance,

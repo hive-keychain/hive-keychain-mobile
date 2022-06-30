@@ -253,7 +253,8 @@
     "settings": "SETTINGS",
     "about": "ABOUT",
     "wallet": "WALLET",
-    "browser": "BROWSER"
+    "browser": "BROWSER",
+    "governance": "GOVERNANCE"
   },
   "request": {
     "title": {
@@ -411,5 +412,65 @@
     "error30": "You already vote for 30 witnesses. You will need to unvote one to vote for a new one.",
     "errorActive": "You need an active key to vote for witnesses",
     "error": "Error: Something went wrong :"
+  },
+  "governance": {
+    "menu": {
+      "witnesses": "Witnesses",
+      "proxy": "Proxy",
+      "proposals": "Proposals"
+    },
+    "witness": {
+      "error": {
+        "retrieving_witness_ranking": "An error occured while retrieving the witness ranking. Please try again later.",
+        "unvote_wit": "Error while unvoting @{{name}} as a witness.",
+        "wit": "Error while voting for @{{name}} as a witness.",
+        "active": "To vote for a witness, you must first add your account active key"
+      },
+      "success": {
+        "unvote_wit": "Succesfully unvoted @{{name}} as a witness.",
+        "wit": "Succesfully voted for @{{name}} as a witness."
+      },
+      "remaining_votes": "Votes remaining: {{remainingVotes}}",
+      "has_proxy": "You are currently using @{{proxy}} as a proxy. Their votes are displayed.",
+      "link_to_arcange": "For more information, click here to access the witness database",
+      "using_proxy": "Clear the proxy to vote for a witness",
+      "search_placeholder": "Search",
+      "show_voted": "Only voted for",
+      "hide_inactive": "Hide inactive"
+    },
+    "proxy": {
+      "has_proxy": "The proxy account makes governance decisions on your behalf. If you wish to vote for witnesses and proposals by yourself, you must first remove the proxy.",
+      "proxy_def": "Adding an account as a proxy means that the proxy account can use the weight of your HP in governance matters (voting for witnesses and proposals). This will not affect your HP regarding curation, and you can remove the proxy at any given moment.",
+      "using_proxy": "You are currently using @{{name}} as a proxy.",
+      "placeholder": "Proxy",
+      "buttons": {"set": "Set Proxy", "clear": "Remove Proxy"},
+      "error": {
+        "active": "To change your proxy, you must first add your account active key",
+        "set_proxy": "Error while setting user as proxy",
+        "clear_proxy": "Error while clearing proxy"
+      },
+      "success": {
+        "set_proxy": "Succesfully chose @{{name}} for proxy.",
+        "clear_proxy": "Succesfully removed the proxy"
+      }
+    },
+    "proposal": {
+      "by": "By @{{name}}",
+      "remaining": "{{days}} day(s) remaining",
+      "day": "day",
+      "totally_funded": "Funded",
+      "partially_funded": "Partially funded",
+      "not_funded": "Not funded",
+      "error": {
+        "using_proxy": "Clear the proxy to vote for a proposal",
+        "active": "To vote for a proposal, you must first add your account active key",
+        "vote": "There was an error while voting for a proposal!",
+        "unvote": "There was an error while removing a proposal vote!"
+      },
+      "success": {
+        "vote": "You successfully voted for a proposal!",
+        "unvote": "You successfully removed your vote!"
+      }
+    }
   }
 }

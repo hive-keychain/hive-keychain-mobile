@@ -27,7 +27,6 @@ store.subscribe(() => {
     previousState.hive_authentication_service !==
       state.hive_authentication_service
   ) {
-    console.log(JSON.stringify(state.hive_authentication_service));
     previousState = state;
     if (!!state.auth.mk && state.hive_authentication_service) {
       showHASInitRequest(state.hive_authentication_service);
@@ -38,17 +37,14 @@ store.subscribe(() => {
 export const showHASInitRequest = (data: HAS_State) => {
   // Iinitialize instances if needed
   for (const instance of data.instances) {
-    console.log(instance);
     const host = instance.host.replace(/\/$/, '');
 
     if (
       instance.init &&
       !data.sessions.find((e) => e.host === host && !e.init)
     ) {
-      console.log('continue');
       continue;
     }
-    console.log('connect sessions');
     getHAS(host).connect(data.sessions);
     store.dispatch(showHASInitRequestAsTreated(host));
   }
@@ -60,7 +56,6 @@ export const showHASInitRequest = (data: HAS_State) => {
     }
     return true;
   });
-  //console.log('after filter', has);
 };
 
 export const clearHAS = () => {
@@ -74,7 +69,6 @@ export const clearHAS = () => {
 
 export const restartHASSockets = () => {
   // Reconnect ws after deconnection (red indicator)
-  console.log('try reconnecting', has);
   for (const hasInstance of has) {
     if (hasInstance.ws.readyState === 3) {
       hasInstance.reconnect();
@@ -153,7 +147,6 @@ class HAS {
   //Socket
 
   onOpen = () => {
-    console.log('Connection established');
     store.dispatch(updateInstanceConnectionStatus(this.host, true));
     this.send(JSON.stringify({cmd: 'key_req'}));
   };
@@ -187,7 +180,6 @@ class HAS {
 
   // Sending and receiving messages
   send = (message: string) => {
-    console.log(`[HAS SEND] ${message}`);
     this.ws.send(message);
   };
 

@@ -41,7 +41,7 @@ const BrowserScreen = ({
       Orientation.getAutoRotateState((s) => {
         if (s) {
           Orientation.unlockAllOrientations();
-        } else console.log('cant rotate');
+        }
       });
     });
 

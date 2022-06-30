@@ -33,10 +33,6 @@ const App = ({hasAccounts, auth, rpc}: PropsFromRedux) => {
       clearLinkingListeners();
     };
   }, []);
-  //TODO:Delete
-  // useEffect(() => {
-  //   console.log(JSON.stringify(has));
-  // }, [has]);
 
   useEffect(() => {
     RNBootSplash.hide({fade: true});
@@ -49,12 +45,6 @@ const App = ({hasAccounts, auth, rpc}: PropsFromRedux) => {
   useEffect(() => {
     setRpc(rpc as Rpc);
   }, [rpc]);
-
-  // useEffect(() => {
-  //   if (!!auth.mk && has) {
-  //     showHASInitRequest(has);
-  //   }
-  // }, [auth.mk, has]);
 
   const renderNavigator = () => {
     if (!hasAccounts) {
@@ -109,12 +99,10 @@ const App = ({hasAccounts, auth, rpc}: PropsFromRedux) => {
 };
 
 const mapStateToProps = (state: RootState) => {
-  //console.log(state);
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
     rpc: state.settings.rpc,
-    // has: state.hive_authentication_service,
   };
 };
 

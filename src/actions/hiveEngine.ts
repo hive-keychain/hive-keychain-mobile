@@ -8,6 +8,7 @@ import {
   TokenTransaction,
 } from './interfaces';
 import {
+  CLEAR_TOKEN_HISTORY,
   CLEAR_USER_TOKENS,
   LOAD_TOKENS,
   LOAD_TOKENS_MARKET,
@@ -58,6 +59,7 @@ export const loadTokenHistory = (
   account: string,
   currency: string,
 ): AppThunk => async (dispatch) => {
+  dispatch({type: CLEAR_TOKEN_HISTORY});
   let tokenHistory: TokenTransaction[] = (
     await hiveEngineAPI.get('accountHistory', {
       params: {account, symbol: currency, type: 'user'},

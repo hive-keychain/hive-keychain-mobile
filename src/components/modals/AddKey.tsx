@@ -15,7 +15,6 @@ import {goBack} from 'utils/navigation';
 type Props = PropsFromRedux & {name: string; type: KeyTypes};
 
 const AddKey = ({addKey, name, type}: Props) => {
-  console.log(name, type);
   const [key, setKey] = useState('');
   return (
     <Operation
@@ -35,7 +34,6 @@ const AddKey = ({addKey, name, type}: Props) => {
         <EllipticButton
           title={translate('common.save')}
           onPress={() => {
-            console.log('key', key);
             addKey(name, type, key);
             Keyboard.dismiss();
             goBack();

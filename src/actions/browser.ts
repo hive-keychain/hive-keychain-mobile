@@ -107,7 +107,6 @@ export const changeTab = (id: number) => {
 };
 
 export const updateTab = (id: number, data: TabFields) => {
-  console.log(id, data);
   const action: ActionPayload<BrowserPayload> = {
     type: UPDATE_BROWSER_TAB,
     payload: {id, data},

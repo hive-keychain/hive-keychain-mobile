@@ -74,7 +74,7 @@ const RequestOperation = ({
         <View style={styles.keep}>
           <RadioButton
             selected={keep}
-            data={translate(`request.keep${has ? '_has' : ''}`, {
+            label={translate(`request.keep${has ? '_has' : ''}`, {
               domain,
               username: username || selectedUsername,
               type,
@@ -170,7 +170,6 @@ export const processOperationWithoutConfirmation = async (
     };
     sendResponse(obj);
   } catch (e) {
-    //console.log(e);
     let msg;
     if (!beautifyError) {
       // if (typeof errorMessage === 'function') {
@@ -181,7 +180,6 @@ export const processOperationWithoutConfirmation = async (
     } else {
       msg = beautifyErrorMessage(e as any);
     }
-    //console.log(msg);
     sendError({data, request_id, error: {}, message: msg});
   }
 };

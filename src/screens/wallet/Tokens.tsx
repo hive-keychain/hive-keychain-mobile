@@ -8,6 +8,7 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
+import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
 
 const Tokens = ({
@@ -35,16 +36,22 @@ const Tokens = ({
   const [toggled, setToggled] = useState<number>(null);
 
   const renderContent = () => {
-    if (userTokens.loading) {
+    if (userTokens.loading || !tokensMarket.length) {
       return (
         <View style={{flex: 1, justifyContent: 'center'}}>
           <Loader animating />
         </View>
       );
     } else if (userTokens.list.length) {
+      const list = userTokens.list.sort((a, b) => {
+        return (
+          getHiveEngineTokenValue(b, tokensMarket) -
+          getHiveEngineTokenValue(a, tokensMarket)
+        );
+      });
       return (
         <FlatList
-          data={userTokens.list}
+          data={list}
           contentContainerStyle={styles.flatlist}
           keyExtractor={(item) => item._id.toString()}
           ItemSeparatorComponent={() => <Separator height={10} />}

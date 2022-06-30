@@ -73,12 +73,6 @@ export const sendResponse = (
   tabRef: MutableRefObject<WebView>,
   obj: RequestSuccess,
 ) => {
-  console.log(
-    'resp',
-    `window.hive_keychain.onAnswerReceived("hive_keychain_response",${JSON.stringify(
-      {success: true, error: null, ...obj},
-    )})`,
-  );
   tabRef.current.injectJavaScript(
     `window.hive_keychain.onAnswerReceived("hive_keychain_response",${JSON.stringify(
       {success: true, error: null, ...obj},

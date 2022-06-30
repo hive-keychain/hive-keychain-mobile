@@ -77,6 +77,7 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
         buttons={[
           <Send key="send_hbd" currency="HBD" />,
           <SendConversion key="conversion" currency="HBD" />,
+          <View style={{width: 20}}></View>,
         ]}
       />
       <Separator height={20} />
@@ -98,7 +99,11 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
         setToggle={() => {
           setToggled(toggled === Token.HP ? Token.NONE : Token.HP);
         }}
-        buttons={[<SendDelegation key="del" />, <SendPowerDown key="pd" />]}
+        buttons={[
+          <SendDelegation key="del" />,
+          <SendPowerDown key="pd" />,
+          <View style={{width: 20}}></View>,
+        ]}
       />
       <Separator height={20} />
       <TokenDisplay
@@ -127,6 +132,7 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
         buttons={[
           <SendWithdraw key="savings_withdraw" currency="HBD" />,
           <SendDeposit key="savings_deposit" currency="HBD" />,
+          <View style={{width: 20}}></View>,
         ]}
       />
     </View>

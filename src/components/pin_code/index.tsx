@@ -1,8 +1,9 @@
+//import IntentLauncher from '@yz1311/react-native-intent-launcher';
 import EllipticButton from 'components/form/EllipticButton';
 import CustomModal from 'components/modals/CustomModal';
 import Separator from 'components/ui/Separator';
-import {SignupNavProp} from 'navigators/Signup.types';
-import {UnlockNavigationProp} from 'navigators/Unlock.types';
+import {SignupNavigation} from 'navigators/Signup.types';
+import {UnlockNavigation} from 'navigators/Unlock.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-elements';
@@ -11,14 +12,13 @@ import Toast from 'react-native-simple-toast';
 import {translate} from 'utils/localize';
 import PinCompletionIndicator from './PinCompletionIndicator';
 import PinElement from './PinElement';
-
 interface Props {
   children: JSX.Element;
   signup?: boolean;
   title: string;
   confirm?: string;
   submit: (pin: string, callback?: (unsafe?: boolean) => void) => void;
-  navigation: UnlockNavigationProp | SignupNavProp;
+  navigation: UnlockNavigation | SignupNavigation;
 }
 
 const PinCode = ({
@@ -146,7 +146,7 @@ const PinCode = ({
           </View>
         ))}
       </View>
-      {false && (
+      {visible && (
         <CustomModal
           bottomHalf={true}
           outsideClick={() => {

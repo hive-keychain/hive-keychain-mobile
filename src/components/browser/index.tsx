@@ -71,10 +71,9 @@ const Browser = ({
       if (['UNKNOWN', 'FACE-UP', 'FACE-DOWN'].includes(orientation)) return;
       if (Platform.OS === 'android' && orientation !== 'PORTRAIT') {
         Orientation.getAutoRotateState((s) => {
-          console.log('s', s);
           if (s) {
             setDeviceOrientation(orientation);
-          } else console.log('cant rotate');
+          }
         });
       } else {
         setDeviceOrientation(orientation);
@@ -109,7 +108,6 @@ const Browser = ({
       quality: 0.2,
     }).then(
       (uri) => {
-        console.log(uri);
         updateTab(id, {id, url, icon, image: uri});
         showManagementScreen(true);
       },

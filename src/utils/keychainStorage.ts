@@ -47,7 +47,7 @@ export const getFromKeychain = async (radix: string) => {
         if (cred) string += cred.password;
         i++;
       } catch (e) {
-        console.log(e);
+        throw e;
       }
     }
     return string;

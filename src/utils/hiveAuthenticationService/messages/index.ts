@@ -10,7 +10,6 @@ export const onMessageReceived = async (
   event: WebSocketMessageEvent,
   has: HAS,
 ) => {
-  console.log(`[HAS RECV] ${event.data}`);
   try {
     const payload: HAS_Payload =
       typeof event.data == 'string' ? JSON.parse(event.data) : event.data;
@@ -21,7 +20,6 @@ export const onMessageReceived = async (
       // Process HAS <-> PKSA protocol
       case HAS_PayloadType.CONNECTED:
         // connection confirmation from the HAS
-        //console.log('HAS confirm connection', payload);
         return;
       case HAS_PayloadType.ERROR:
         // error from the HAS
@@ -38,7 +36,6 @@ export const onMessageReceived = async (
       case HAS_PayloadType.KEY_ACK:
         // server public key received
         store.dispatch(addServerKey(has.host, payload.key));
-        console.log('HAS key ack ', payload.key);
         if (has.awaitingRegistration.length) {
           has.registerAccounts(has.awaitingRegistration);
         }

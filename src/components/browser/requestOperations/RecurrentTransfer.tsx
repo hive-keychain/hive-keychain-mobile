@@ -51,7 +51,6 @@ export default ({
             memo,
           );
         }
-        console.log(finalMemo);
         await recurrentTransfer(key, {
           amount: `${amount} ${currency}`,
           memo: finalMemo,

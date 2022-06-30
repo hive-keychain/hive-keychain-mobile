@@ -13,7 +13,6 @@ export default async () => {
     }
   });
   const initialUrl = await Linking.getInitialURL();
-  console.log('initial url', initialUrl);
   if (initialUrl) {
     handleUrl(initialUrl);
   }
@@ -24,7 +23,6 @@ export const handleUrl = (url: string, qr: boolean = false) => {
     if (url.startsWith(HASConfig.auth_req)) {
       const buf = Buffer.from(url.replace(HASConfig.auth_req, ''), 'base64');
       const data = JSON.parse(buf.toString());
-      console.log('has:', data);
       if (qr) {
         goBack();
       }

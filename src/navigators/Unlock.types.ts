@@ -4,7 +4,7 @@ export type UnlockStackParamList = {
   UnlockScreen: undefined;
 };
 
-type UnlockNavigation = StackNavigationProp<
+export type UnlockNavigation = StackNavigationProp<
   UnlockStackParamList,
   'UnlockScreen'
 >;

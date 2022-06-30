@@ -8,7 +8,6 @@ export const logScreenView = async (routeName: string) => {
       previousRouteName = routeName;
 
       routeName = routeName.replace('Screen', '');
-      //console.log(`Logging route : ${routeName}`);
       await analytics().logScreenView({
         screen_name: routeName,
         screen_class: routeName,
