@@ -1,5 +1,5 @@
 import {Tab} from 'actions/interfaces';
-import React from 'react';
+import React, {MutableRefObject} from 'react';
 import {
   Dimensions,
   ScrollView,
@@ -12,8 +12,8 @@ import Image from 'react-native-fast-image';
 import TabsManagementBottomBar from './BottomBar';
 
 //TODO: put in config
-const margin = 7;
-const THUMB_WIDTH = (Dimensions.get('window').width - margin * 2) * 0.48;
+const margin = Dimensions.get('window').width * 0.02;
+const THUMB_WIDTH = Dimensions.get('window').width * 0.46;
 const THUMB_HEIGHT = THUMB_WIDTH * 1.3;
 
 type Props = {
@@ -22,7 +22,11 @@ type Props = {
   onCloseTab: (id: number) => void;
   onCloseAllTabs: () => void;
   onQuitManagement: () => void;
-  onAddTab: () => void;
+  onAddTab: (
+    isManagingTab: boolean,
+    tab: Tab,
+    webview: MutableRefObject<View>,
+  ) => void;
   activeTab: number;
   show: boolean;
 };
@@ -75,7 +79,9 @@ export default ({
       </ScrollView>
       <TabsManagementBottomBar
         onCloseAllTabs={onCloseAllTabs}
-        onAddTab={onAddTab}
+        onAddTab={() => {
+          onAddTab(true, null, null);
+        }}
         onQuitManagement={onQuitManagement}
         showSideButtons={!!activeTab}
       />

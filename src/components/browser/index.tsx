@@ -86,17 +86,6 @@ const Browser = ({
 
   const setDeviceOrientation = (orientation: OrientationType) => {
     setOrientation(orientation);
-    // switch (orientation) {
-    //   case 'PORTRAIT':
-    //     Orientation.lockToPortrait();
-    //     break;
-    //   case 'LANDSCAPE-LEFT':
-    //     Orientation.lockToLandscapeLeft();
-    //     break;
-    //   case 'LANDSCAPE-RIGHT':
-    //     Orientation.lockToLandscapeRight();
-    //     break;
-    // }
   };
 
   const manageTabs = (
@@ -138,9 +127,29 @@ const Browser = ({
     closeAllTabs();
   };
 
-  const onAddTab = () => {
-    addTab(BrowserConfig.HOMEPAGE_URL);
-    showManagementScreen(false);
+  const onAddTab = (
+    isManagingTab: boolean,
+    tab: TabType,
+    view: MutableRefObject<View>,
+  ) => {
+    if (!isManagingTab) {
+      const {id, url, icon} = tab;
+      captureRef(view, {
+        format: 'jpg',
+        quality: 0.2,
+      }).then(
+        (uri) => {
+          updateTab(id, {id, url, icon, image: uri});
+          addTab(BrowserConfig.HOMEPAGE_URL);
+        },
+        (error) => {
+          console.error(error);
+        },
+      );
+    } else {
+      addTab(BrowserConfig.HOMEPAGE_URL);
+      showManagementScreen(false);
+    }
   };
 
   const onQuitManagement = () => {

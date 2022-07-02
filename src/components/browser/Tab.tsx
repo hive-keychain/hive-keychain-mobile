@@ -54,7 +54,11 @@ type Props = {
   navigation: BrowserNavigation;
   preferences: UserPreference[];
   favorites: Page[];
-  addTab: () => void;
+  addTab: (
+    isManagingTab: boolean,
+    tab: Tab,
+    webview: MutableRefObject<View>,
+  ) => void;
   tabsNumber: number;
   orientation: string;
   isUrlModalOpen: boolean;
@@ -79,6 +83,7 @@ export default ({
 }: Props) => {
   const tabData = {url, id, icon, name};
   const tabRef: MutableRefObject<WebView> = useRef(null);
+  const tabParentRef: MutableRefObject<View> = useRef(null);
   const homeRef: MutableRefObject<View> = useRef(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
@@ -190,9 +195,11 @@ export default ({
         break;
       case 'WV_INFO':
         const {icon, name, url} = data as TabFields;
+        console.log(urlTransformer(url).host, urlTransformer(tabData.url).host);
         if (
           urlTransformer(url).host !== urlTransformer(tabData.url).host ||
-          !shouldUpdateWvInfo
+          !shouldUpdateWvInfo ||
+          urlTransformer(url).host === 'www.risingstargame.com' //TODO : improve
         ) {
           break;
         }
@@ -282,13 +289,17 @@ export default ({
         <View
           style={
             url === BrowserConfig.HOMEPAGE_URL ? styles.hide : styles.container
-          }>
+          }
+          ref={tabParentRef}
+          collapsable={false}>
           <WebView
-            ref={tabRef}
             source={{
               uri: url === BrowserConfig.HOMEPAGE_URL ? null : url,
             }}
-            sharedCookiesEnabled
+            ref={tabRef}
+            sharedCookiesEnabled={
+              url.includes('risingstargame.com') ? false : true
+            }
             injectedJavaScriptBeforeContentLoaded={hive_keychain}
             onMessage={onMessage}
             javaScriptEnabled
@@ -313,11 +324,17 @@ export default ({
           goBack={goBack}
           goForward={goForward}
           reload={reload}
-          addTab={addTab}
+          addTab={() => {
+            addTab(
+              isManagingTab,
+              {url, id, icon},
+              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabParentRef,
+            );
+          }}
           manageTabs={() => {
             manageTabs(
               {url, id, icon},
-              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabRef,
+              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabParentRef,
             );
           }}
           height={FOOTER_HEIGHT}
