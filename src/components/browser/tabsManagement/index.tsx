@@ -1,5 +1,5 @@
 import {Tab} from 'actions/interfaces';
-import React from 'react';
+import React, {MutableRefObject} from 'react';
 import {
   Dimensions,
   ScrollView,
@@ -22,7 +22,11 @@ type Props = {
   onCloseTab: (id: number) => void;
   onCloseAllTabs: () => void;
   onQuitManagement: () => void;
-  onAddTab: () => void;
+  onAddTab: (
+    isManagingTab: boolean,
+    tab: Tab,
+    webview: MutableRefObject<View>,
+  ) => void;
   activeTab: number;
   show: boolean;
 };
@@ -75,7 +79,9 @@ export default ({
       </ScrollView>
       <TabsManagementBottomBar
         onCloseAllTabs={onCloseAllTabs}
-        onAddTab={onAddTab}
+        onAddTab={() => {
+          onAddTab(true, null, null);
+        }}
         onQuitManagement={onQuitManagement}
         showSideButtons={!!activeTab}
       />

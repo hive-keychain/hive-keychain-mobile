@@ -54,7 +54,11 @@ type Props = {
   navigation: BrowserNavigation;
   preferences: UserPreference[];
   favorites: Page[];
-  addTab: () => void;
+  addTab: (
+    isManagingTab: boolean,
+    tab: Tab,
+    webview: MutableRefObject<View>,
+  ) => void;
   tabsNumber: number;
   orientation: string;
   isUrlModalOpen: boolean;
@@ -320,7 +324,13 @@ export default ({
           goBack={goBack}
           goForward={goForward}
           reload={reload}
-          addTab={addTab}
+          addTab={() => {
+            addTab(
+              isManagingTab,
+              {url, id, icon},
+              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabParentRef,
+            );
+          }}
           manageTabs={() => {
             manageTabs(
               {url, id, icon},
