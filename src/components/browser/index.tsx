@@ -103,11 +103,13 @@ const Browser = ({
     {url, icon, id}: TabType,
     view: MutableRefObject<WebView> | MutableRefObject<View>,
   ) => {
-    captureRef(view, {
+    console.log('before crash', view);
+    captureRef(view.current, {
       format: 'jpg',
       quality: 0.2,
     }).then(
       (uri) => {
+        console.log('yeah');
         updateTab(id, {id, url, icon, image: uri});
         showManagementScreen(true);
       },

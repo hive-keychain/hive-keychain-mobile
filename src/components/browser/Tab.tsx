@@ -79,6 +79,7 @@ export default ({
 }: Props) => {
   const tabData = {url, id, icon, name};
   const tabRef: MutableRefObject<WebView> = useRef(null);
+  const tabParentRef: MutableRefObject<View> = useRef(null);
   const homeRef: MutableRefObject<View> = useRef(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
@@ -284,12 +285,14 @@ export default ({
         <View
           style={
             url === BrowserConfig.HOMEPAGE_URL ? styles.hide : styles.container
-          }>
+          }
+          ref={tabParentRef}
+          collapsable={false}>
           <WebView
-            ref={tabRef}
             source={{
               uri: url === BrowserConfig.HOMEPAGE_URL ? null : url,
             }}
+            ref={tabRef}
             sharedCookiesEnabled={
               url.includes('risingstargame.com') ? false : true
             }
@@ -321,7 +324,7 @@ export default ({
           manageTabs={() => {
             manageTabs(
               {url, id, icon},
-              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabRef,
+              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabParentRef,
             );
           }}
           height={FOOTER_HEIGHT}
