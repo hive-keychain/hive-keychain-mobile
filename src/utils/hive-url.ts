@@ -72,14 +72,20 @@ export const processQRCodeOp = async (op: Operation) => {
     default:
       break;
   }
-  const payload = {
-    request,
-    accounts: await store.getState().accounts,
-    sendResponse: () => {},
-    sendError: () => {},
-  };
-  navigate('ModalScreen', {
-    name: ModalComponent.BROADCAST,
-    data: payload,
-  });
+
+  const accounts = await store.getState().accounts;
+  if (accounts) {
+    const payload = {
+      request,
+      accounts,
+      sendResponse: () => {},
+      sendError: () => {},
+    };
+    navigate('ModalScreen', {
+      name: ModalComponent.BROADCAST,
+      data: payload,
+    });
+  } else {
+    //TODO : if user is not logged in, show the request after initialization
+  }
 };

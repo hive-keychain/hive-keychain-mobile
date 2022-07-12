@@ -52,7 +52,6 @@ export default ({
     }
     return translate(`request.title.${req.type}`);
   };
-  //TODO : add dApp icon
   return (
     <Operation title={getOperationTitle(request)} onClose={onForceCloseModal}>
       {renderOperationDetails()}
