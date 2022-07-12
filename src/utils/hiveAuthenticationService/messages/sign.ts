@@ -145,7 +145,7 @@ export const processSigningRequest = async (
       };
 
       navigate('ModalScreen', {
-        name: ModalComponent.HAS_BROADCAST,
+        name: ModalComponent.BROADCAST,
         data,
       });
     }

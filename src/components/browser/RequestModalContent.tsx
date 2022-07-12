@@ -29,6 +29,7 @@ export default ({
   expiration,
 }: Props) => {
   useHasExpiration(expiration);
+  console.log(request);
   const renderOperationDetails = () => {
     const type = request.type;
     //@ts-ignore
