@@ -6,7 +6,10 @@ import {
   TransferOperation,
 } from '@hiveio/dhive';
 import {saveRequestedOperation} from 'actions/hive-uri';
+import RequestError from 'components/browser/requestOperations/components/RequestError';
+import React from 'react';
 import {store} from 'store';
+import {validateAuthority} from './keychain';
 import {
   KeychainRequestTypes,
   RequestDelegation,
@@ -15,7 +18,7 @@ import {
   RequestWitnessVote,
 } from './keychain.types';
 import {ModalComponent} from './modal.enum';
-import {navigate} from './navigation';
+import {goBack, navigate} from './navigation';
 
 const DOMAIN = 'scanned';
 
@@ -77,19 +80,32 @@ export const processQRCodeOp = async (op: Operation) => {
   const accounts = await store.getState().accounts;
   console.log('accounts', accounts);
   if (accounts && accounts.length) {
-    const payload = {
-      request,
-      accounts,
-      sendResponse: () => {},
-      sendError: () => {},
-    };
-    navigate('ModalScreen', {
-      name: ModalComponent.BROADCAST,
-      data: payload,
-    });
+    const validity = validateAuthority(accounts, request);
+    if (validity.valid) {
+      const payload = {
+        request,
+        accounts,
+        sendResponse: () => {},
+        sendError: () => {},
+      };
+      navigate('ModalScreen', {
+        name: ModalComponent.BROADCAST,
+        data: payload,
+      });
+    } else {
+      navigate('ModalScreen', {
+        name: `Operation_${data.type}`,
+        modalContent: (
+          <RequestError
+            onClose={() => {
+              goBack();
+            }}
+            error={validity.error}
+          />
+        ),
+      });
+    }
   } else {
-    //TODO : if user is not logged in, show the request after initialization
-    console.log('save for later');
     store.dispatch(saveRequestedOperation(op));
   }
 };
