@@ -75,6 +75,7 @@ export const processQRCodeOp = async (op: Operation) => {
   }
 
   const accounts = await store.getState().accounts;
+  console.log('accounts', accounts);
   if (accounts && accounts.length) {
     const payload = {
       request,
@@ -88,6 +89,7 @@ export const processQRCodeOp = async (op: Operation) => {
     });
   } else {
     //TODO : if user is not logged in, show the request after initialization
+    console.log('save for later');
     store.dispatch(saveRequestedOperation(op));
   }
 };
