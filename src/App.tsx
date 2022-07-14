@@ -3,6 +3,7 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {forgetRequestedOperation} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
 import Bridge from 'components/bridge';
 import {getToggleElement} from 'hooks/toggle';
@@ -17,30 +18,41 @@ import Modal from 'screens/Modal';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {setRpc} from 'utils/hive';
+import {processQRCodeOp} from 'utils/hive-uri';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 
 const Root = createStackNavigator<RootStackParam>();
 
-const App = ({hasAccounts, auth, rpc}: PropsFromRedux) => {
+const App = ({
+  hasAccounts,
+  auth,
+  rpc,
+  accounts,
+  requestedOp,
+  forgetRequestedOperation,
+}: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
 
   useEffect(() => {
     setupLinking();
+    RNBootSplash.hide({fade: true});
+    Orientation.lockToPortrait();
     return () => {
       clearLinkingListeners();
     };
   }, []);
 
   useEffect(() => {
-    RNBootSplash.hide({fade: true});
-  }, []);
-
-  useEffect(() => {
-    Orientation.lockToPortrait();
-  }, []);
+    console.log('zzzzz', accounts, requestedOp);
+    if (accounts.length && requestedOp) {
+      console.log('shoooow');
+      processQRCodeOp(requestedOp);
+      forgetRequestedOperation();
+    }
+  }, [accounts, requestedOp]);
 
   useEffect(() => {
     setRpc(rpc as Rpc);
@@ -103,10 +115,12 @@ const mapStateToProps = (state: RootState) => {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
     rpc: state.settings.rpc,
+    accounts: state.accounts,
+    requestedOp: state.hiveUri.operation,
   };
 };
 
-const connector = connect(mapStateToProps);
+const connector = connect(mapStateToProps, {forgetRequestedOperation});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(App);

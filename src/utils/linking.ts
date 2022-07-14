@@ -4,7 +4,7 @@ import {Linking} from 'react-native';
 import {store} from 'store';
 import isURL from 'validator/lib/isURL';
 import {HASConfig} from './config';
-import {processQRCodeOp} from './hive-url';
+import {processQRCodeOp} from './hive-uri';
 import {goBack} from './navigation';
 
 export default async () => {
@@ -13,6 +13,7 @@ export default async () => {
       handleUrl(url);
     }
   });
+
   const initialUrl = await Linking.getInitialURL();
   if (initialUrl) {
     handleUrl(initialUrl);
@@ -47,6 +48,7 @@ export const handleUrl = (url: string, qr: boolean = false) => {
     store.dispatch(addTabFromLinking(url));
   }
 };
+
 export const clearLinkingListeners = () => {
   Linking.removeAllListeners('url');
 };

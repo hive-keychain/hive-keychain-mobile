@@ -7,6 +7,7 @@ import conversions from './conversions';
 import currencyPrices from './currencyPrices';
 import delegations from './delegations';
 import properties from './globalProperties';
+import hiveUri from './hive-uri';
 import hive_authentication_service from './hiveAuthenticationService';
 import lastAccount from './lastAccount';
 import phishingAccounts from './phishing';
@@ -36,4 +37,5 @@ export default combineReducers({
   browser,
   preferences,
   hive_authentication_service,
+  hiveUri,
 });

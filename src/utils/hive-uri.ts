@@ -5,6 +5,7 @@ import {
   Operation,
   TransferOperation,
 } from '@hiveio/dhive';
+import {saveRequestedOperation} from 'actions/hive-uri';
 import {store} from 'store';
 import {
   KeychainRequestTypes,
@@ -74,7 +75,7 @@ export const processQRCodeOp = async (op: Operation) => {
   }
 
   const accounts = await store.getState().accounts;
-  if (accounts) {
+  if (accounts && accounts.length) {
     const payload = {
       request,
       accounts,
@@ -87,5 +88,6 @@ export const processQRCodeOp = async (op: Operation) => {
     });
   } else {
     //TODO : if user is not logged in, show the request after initialization
+    store.dispatch(saveRequestedOperation(op));
   }
 };
