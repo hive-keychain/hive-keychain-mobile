@@ -8,7 +8,7 @@ import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
 const LOGO_DARK = require('assets/has/logo-dark.png');
 
-//TODO: Use all connection statuses
+//TODO: Use all connection statuses. This will be useful when different servers work with Hive Auth.
 export enum ConnectionStatus {
   VOID,
   DISCONNECTED,

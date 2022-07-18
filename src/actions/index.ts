@@ -51,5 +51,6 @@ export const lock = () => {
 export * from 'actions/accounts';
 export * from 'actions/browser';
 export * from 'actions/hive';
+export * from 'actions/hive-uri';
 export * from 'actions/hiveEngine';
 export * from 'actions/settings';

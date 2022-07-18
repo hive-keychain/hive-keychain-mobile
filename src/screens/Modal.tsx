@@ -13,6 +13,8 @@ export default ({navigation, route}: ModalNavigationProps) => {
 
   let name = route.params?.name;
   let data = route.params?.data;
+  console.log('a', data);
+  console.log(route);
   if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
   }
@@ -20,7 +22,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
     switch (name) {
       case ModalComponent.HAS_AUTH:
         return <HASAuthRequest data={data as any} navigation={navigation} />;
-      case ModalComponent.HAS_BROADCAST:
+      case ModalComponent.BROADCAST:
         return <RequestModalContent {...(data as HAS_BroadcastModalPayload)} />;
       case ModalComponent.HAS_CHALLENGE:
         return (

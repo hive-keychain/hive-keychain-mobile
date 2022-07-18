@@ -25,16 +25,18 @@ const Tokens = ({
     loadTokens();
     loadTokensMarket();
   }, [loadTokens, loadTokensMarket]);
+
   useEffect(() => {
     logScreenView('EngineWalletScreen');
   }, []);
+
   useEffect(() => {
     if (user.name) {
       loadUserTokens(user.name);
     }
   }, [loadUserTokens, user.name]);
-  const [toggled, setToggled] = useState<number>(null);
 
+  const [toggled, setToggled] = useState<number>(null);
   const renderContent = () => {
     if (userTokens.loading || !tokensMarket.length) {
       return (

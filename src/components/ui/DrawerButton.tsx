@@ -11,7 +11,6 @@ export default ({navigation}: Props) => (
   <TouchableOpacity
     style={styles.container}
     onPress={() => {
-      console.log('trying to open');
       navigation.openDrawer();
     }}>
     <Menu width={25} height={25} />

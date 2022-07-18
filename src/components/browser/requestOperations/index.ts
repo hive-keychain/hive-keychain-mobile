@@ -54,8 +54,3 @@ const map = {
   removeProposal: RemoveProposal,
 };
 export default map;
-
-/*
-TODO: Add missing operations 
- Signed Calls (TBD, is it still used?)
-*/

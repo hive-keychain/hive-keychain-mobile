@@ -10,8 +10,6 @@ export type HAS_State = {
   sessions: HAS_Session[];
 };
 
-//TODO : on retrieve state : instance init to false / delete expired or no token sessions
-
 export default (
   state: HAS_State = {sessions: [], instances: []},
   data: HAS_Actions,

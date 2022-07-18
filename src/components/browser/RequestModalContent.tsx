@@ -29,6 +29,7 @@ export default ({
   expiration,
 }: Props) => {
   useHasExpiration(expiration);
+  console.log(request);
   const renderOperationDetails = () => {
     const type = request.type;
     //@ts-ignore
@@ -51,7 +52,6 @@ export default ({
     }
     return translate(`request.title.${req.type}`);
   };
-  //TODO : add dApp icon
   return (
     <Operation title={getOperationTitle(request)} onClose={onForceCloseModal}>
       {renderOperationDetails()}
