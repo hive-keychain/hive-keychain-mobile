@@ -25,16 +25,20 @@ const EngineTokenDisplay = ({
   const [hasError, setHasError] = useState(false);
   const tokenInfo = tokensList.find((t) => t.symbol === token.symbol);
   const tokenMarket = market.find((t) => t.symbol === token.symbol);
+
   if (!tokenInfo) {
     return null;
   }
   const metadata = JSON.parse(tokenInfo.metadata);
-
+  console.log('aa', token, tokenMarket);
   const logo = hasError ? (
     <Image
       style={styles.icon}
       source={{
         uri: Img.resolveAssetSource(HiveEngine).uri,
+      }}
+      onError={() => {
+        console.log('default');
       }}
     />
   ) : (

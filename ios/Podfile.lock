@@ -402,7 +402,7 @@ PODS:
     - React-Core
   - react-native-view-shot (3.3.0):
     - React-Core
-  - react-native-webview (11.21.1):
+  - react-native-webview (11.22.2):
     - React-Core
   - React-perflogger (0.68.2)
   - React-RCTActionSheet (0.68.2):
@@ -823,7 +823,7 @@ SPEC CHECKSUMS:
   react-native-simple-toast: bf002828cf816775a6809f7a9ec3907509bce11f
   react-native-version-info: a106f23009ac0db4ee00de39574eb546682579b9
   react-native-view-shot: da768466e1cd371de50a3a5c722d1e95456b5b2c
-  react-native-webview: e6125da6d1cb245ff0692f545b0e5eb3572e12ab
+  react-native-webview: 159034a856a6e95995f5bf2eed40d70b103d6572
   React-perflogger: a18b4f0bd933b8b24ecf9f3c54f9bf65180f3fe6
   React-RCTActionSheet: 547fe42fdb4b6089598d79f8e1d855d7c23e2162
   React-RCTAnimation: bc9440a1c37b06ae9ebbb532d244f607805c6034
