@@ -36,7 +36,7 @@
     "i18n-js": "^3.8.0",
     "lodash.memoize": "^4.1.2",
     "md5": "^2.3.0",
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "node-libs-browser": "^2.2.1",
     "react": "16.11.0",
     "react-native-bootsplash": "^3.2.6",
