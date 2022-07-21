@@ -4,7 +4,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 type Props = {
   style?: StyleProp<ViewStyle>;
-  children: JSX.Element[];
+  children: JSX.Element | JSX.Element[];
 };
 
 const SafeArea = ({style, children}: Props) => {

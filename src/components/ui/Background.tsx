@@ -1,6 +1,6 @@
 import React from 'react';
 import {ImageBackground, StyleProp, StyleSheet, ViewStyle} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import SafeArea from './SafeArea';
 
 const imageBgd = require('assets/background.png');
 
@@ -16,9 +16,9 @@ export default (props: BackgroundProps) => {
       {...props}
       source={imageBgd}
       style={[styles.imageBgd, props.style]}>
-      <SafeAreaView style={[styles.container, props.containerStyle]}>
+      <SafeArea style={[styles.container, props.containerStyle]}>
         {props.children}
-      </SafeAreaView>
+      </SafeArea>
     </ImageBackground>
   );
 };
