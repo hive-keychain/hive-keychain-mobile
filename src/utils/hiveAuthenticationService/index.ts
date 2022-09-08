@@ -103,6 +103,7 @@ class HAS {
   //Connection and initialization
   initConnection = () => {
     this.ws = new WebSocket(this.host);
+    console.log('this.ws: ', this.ws);
     this.ws.onopen = this.onOpen;
     this.ws.onmessage = this.onMessage;
     this.ws.onclose = this.onClose;
@@ -118,6 +119,7 @@ class HAS {
   };
 
   connect = (sessions: HAS_Session[]) => {
+    console.log('on connect!');
     for (const session of sessions) {
       if (session.init) continue;
       if (this.registeredAccounts.includes(session.account)) {
@@ -147,6 +149,7 @@ class HAS {
   //Socket
 
   onOpen = () => {
+    console.log('onOpen!');
     store.dispatch(updateInstanceConnectionStatus(this.host, true));
     this.send(JSON.stringify({cmd: 'key_req'}));
   };
@@ -226,6 +229,7 @@ class HAS {
   };
 
   static findSessionByToken = (token: string) => {
+    console.log('on findSessionByToken');
     return (store.getState() as RootState).hive_authentication_service.sessions.find(
       (e) => {
         if (e.token) return e.token.token === token;
