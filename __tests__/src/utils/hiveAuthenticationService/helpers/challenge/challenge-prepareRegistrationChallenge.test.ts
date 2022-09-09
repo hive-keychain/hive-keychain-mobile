@@ -12,6 +12,7 @@ describe('challenge tests:\n', () => {
   afterEach(async () => {
     await storeDispatch.clear('forgetAccounts');
     await storeDispatch.clear('HAS_CLEAR');
+    jest.clearAllMocks();
   });
   describe('prepareRegistrationChallenge cases:\n', () => {
     it('Must return key with challenge', async () => {

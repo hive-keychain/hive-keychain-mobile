@@ -9,6 +9,7 @@ describe('challenge tests:\n', () => {
   afterEach(async () => {
     await storeDispatch.clear('forgetAccounts');
     await storeDispatch.clear('HAS_CLEAR');
+    jest.clearAllMocks();
   });
   describe('getChallengeData cases:\n', () => {
     it('Must return data encrypted', async () => {

@@ -9,6 +9,7 @@ describe('challenge tests:\n', () => {
   afterEach(async () => {
     await storeDispatch.clear('forgetAccounts');
     await storeDispatch.clear('HAS_CLEAR');
+    jest.clearAllMocks();
   });
   describe('dAppChallenge cases:\n', () => {
     it('Must return null if no account', async () => {

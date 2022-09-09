@@ -38,7 +38,6 @@ export const prepareRegistrationChallenge = async (
 ) => {
   try {
     const key = getLeastDangerousKey(username);
-    console.log('key', key);
     if (key) {
       return {
         key_type: key.type,
@@ -49,11 +48,9 @@ export const prepareRegistrationChallenge = async (
       throw 'No username';
     }
   } catch (e) {
-    console.log('e', e);
     const session = (store.getState() as RootState).hive_authentication_service.sessions.find(
       (e) => e.account === username,
     );
-    console.log('session: ', session);
     if (session) {
       navigate('ModalScreen', {
         name: ModalComponent.HAS_ERROR,

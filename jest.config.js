@@ -13,7 +13,8 @@ module.exports = {
   //     isolatedModules: true,
   //   },
   // },
-  clearMocks: true,
+  clearMocks: false,
+  modulePathIgnorePatterns: ['utils-for-testing', 'mocks', 'othercases'],
   setupFilesAfterEnv: [
     './jest.setup.js',
     //'./node_modules/react-native-gesture-handler/jestSetup.js',
