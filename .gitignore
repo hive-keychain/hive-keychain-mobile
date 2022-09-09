@@ -72,3 +72,6 @@ ios/GoogleService-Info.plist
 
 # Jest coverage
 /coverage
+
+# env
+.env
