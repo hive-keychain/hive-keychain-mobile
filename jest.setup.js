@@ -1,9 +1,13 @@
 import mockAsyncStorage from '@react-native-community/async-storage/jest/async-storage-mock';
-import {WebSocket} from 'mock-socket';
+//import {WebSocket} from 'mock-socket';
+import WebSocket from 'jest-websocket-mock';
 //TODO custom data on load:
 //      - create a customLoadData interface
 //      - add a file using the same as "customData" in extension
 //to add as we need to mock initial modules
+
+//Object.assign(global, require('jest-chrome')); for now not needed.
+
 jest.mock('react-native-localize', () => {
   return {getLocales: jest.fn().mockReturnValue(['en'])};
 });

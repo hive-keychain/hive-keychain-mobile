@@ -35,11 +35,9 @@ export const answerAuthReq = async (
     // NOTE: In "service" or "debug" mode, the APP can pass the encryption key to the PKSA in its auth_req
     //       Secure PKSA should read it from the QR code scanned by the user
     let session = HAS.findSessionByToken(payload.token);
-    console.log('session: ', session);
     let newToken = false;
     if (!session) {
       session = HAS.findSessionByUUID(payload.uuid);
-      console.log('called findSessionByUUID as ', session);
       newToken = true;
     }
     if (approve) {
@@ -108,6 +106,7 @@ export const sendAuth = async (
     JSON.stringify(auth_ack_data),
     session.auth_key,
   ).toString();
+
   has.send(
     JSON.stringify({
       cmd: 'auth_ack',

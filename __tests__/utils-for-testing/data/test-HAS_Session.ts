@@ -1,9 +1,17 @@
-import { HAS_Session } from "utils/hiveAuthenticationService/has.types";
+import {
+  HAS_Session,
+  HAS_Token,
+} from 'utils/hiveAuthenticationService/has.types';
 
 export default {
-    has_session: {
-        justUUID: {
-            uuid: 'UUID-001',
-        } as HAS_Session,
-    },
+  has_session: {
+    _default: {
+      uuid: 'UUID-001',
+      token: {
+        app: 'app',
+        token: 'token',
+        expiration: 10,
+      } as HAS_Token,
+    } as HAS_Session,
+  },
 };

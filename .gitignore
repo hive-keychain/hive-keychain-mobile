@@ -69,3 +69,6 @@ ios/GoogleService-Info.plist
 
 # Jest cache
 .jest/
+
+# Jest coverage
+/coverage
