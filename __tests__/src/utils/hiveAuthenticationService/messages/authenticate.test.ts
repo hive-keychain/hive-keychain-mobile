@@ -16,7 +16,6 @@ import cryptoJSModuleMocks from '__tests__/utils-for-testing/mocks/as-module/cry
 import navigationModuleMocks from '__tests__/utils-for-testing/mocks/as-module/navigation-module-mocks';
 import mockHASClass from '__tests__/utils-for-testing/mocks/mock-HAS-class';
 import asModuleSpy from '__tests__/utils-for-testing/mocks/spies/as-module-spy';
-
 afterAllTest.clearAllMocks;
 describe('authenticate tests"\n', () => {
   describe('processAuthenticationRequest cases:\n', () => {
@@ -56,7 +55,7 @@ describe('authenticate tests"\n', () => {
       );
     });
     it('Must call navigate with params', () => {
-      navigationModuleMocks.navigateWParams;
+      navigationModuleMocks.navigateWParams();
       const clonedHASSession = objects.clone(
         testHAS_Session.has_session._default,
       ) as HAS_Session;

@@ -47,8 +47,8 @@ export const processChallengeRequest = (
     //TODO
   }
 };
-
-const answerChallengeReq = async (
+/* istanbul ignore next */
+export const answerChallengeReq = async (
   has: HAS,
   payload: HAS_ChallengePayload,
   approve: boolean,
