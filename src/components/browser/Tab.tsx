@@ -195,7 +195,6 @@ export default ({
         break;
       case 'WV_INFO':
         const {icon, name, url} = data as TabFields;
-        console.log(urlTransformer(url).host, urlTransformer(tabData.url).host);
         if (
           urlTransformer(url).host !== urlTransformer(tabData.url).host ||
           !shouldUpdateWvInfo ||
@@ -296,6 +295,10 @@ export default ({
             source={{
               uri: url === BrowserConfig.HOMEPAGE_URL ? null : url,
             }}
+            domStorageEnabled={true}
+            allowFileAccess={true}
+            allowUniversalAccessFromFileURLs={true}
+            mixedContentMode={'always'}
             ref={tabRef}
             sharedCookiesEnabled={
               url.includes('risingstargame.com') ? false : true
@@ -314,6 +317,7 @@ export default ({
             onHttpError={(error) => {
               console.log('HttpError', error);
             }}
+            useWebView2
           />
         </View>
       </View>
