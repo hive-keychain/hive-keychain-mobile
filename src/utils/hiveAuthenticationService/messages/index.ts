@@ -13,6 +13,7 @@ export const onMessageReceived = async (
   try {
     const payload: HAS_Payload =
       typeof event.data == 'string' ? JSON.parse(event.data) : event.data;
+    console.log({payload});
     if (!payload.cmd || typeof payload.cmd !== 'string') {
       throw new Error(`invalid payload (cmd)`);
     }
