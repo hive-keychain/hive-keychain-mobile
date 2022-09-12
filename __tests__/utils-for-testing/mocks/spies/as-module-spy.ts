@@ -10,5 +10,6 @@ export default {
   },
   navigation: {
     navigate: jest.spyOn(NavigationModule, 'navigate'),
+    goBack: jest.spyOn(NavigationModule, 'goBack'),
   },
 };
