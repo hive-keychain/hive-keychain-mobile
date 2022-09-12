@@ -3,11 +3,12 @@ import {
   answerSuccessfulBroadcastReq,
 } from 'utils/hiveAuthenticationService/helpers/sign';
 import {HAS_SignPayload} from 'utils/hiveAuthenticationService/payloads.types';
+import afterAllTest from '__tests__/utils-for-testing/config-test/after-all-test';
 import testHas from '__tests__/utils-for-testing/data/test-has';
 import testHAS_SignPayload from '__tests__/utils-for-testing/data/test-HAS_SignPayload';
 import objects from '__tests__/utils-for-testing/helpers/objects';
 import hasSpy from '__tests__/utils-for-testing/mocks/spies/has-spy';
-
+afterAllTest.clearAllMocks;
 describe('sign tests:\n', () => {
   describe('answerSuccessfulBroadcastReq cases:\n', () => {
     it('Must throw an unhandled error', () => {

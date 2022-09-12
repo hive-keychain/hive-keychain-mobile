@@ -1,4 +1,5 @@
 import {prepareRegistrationChallenge} from 'utils/hiveAuthenticationService/helpers/challenge';
+import afterAllTest from '__tests__/utils-for-testing/config-test/after-all-test';
 import storeDispatch from '__tests__/utils-for-testing/data/store/store-dispatch';
 import testAccount from '__tests__/utils-for-testing/data/test-account';
 import testHas from '__tests__/utils-for-testing/data/test-has';
@@ -8,6 +9,7 @@ import navigationModuleMocks from '__tests__/utils-for-testing/mocks/as-module/n
 import asModuleSpy from '__tests__/utils-for-testing/mocks/spies/as-module-spy';
 import hasSpy from '__tests__/utils-for-testing/mocks/spies/has-spy';
 import storeSpy from '__tests__/utils-for-testing/mocks/spies/store-spy';
+afterAllTest.clearAllMocks;
 describe('challenge tests:\n', () => {
   afterEach(async () => {
     await storeDispatch.clear('forgetAccounts');

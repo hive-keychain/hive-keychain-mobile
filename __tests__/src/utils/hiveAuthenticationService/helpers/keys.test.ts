@@ -1,8 +1,10 @@
 import {Account} from 'actions/interfaces';
 import {getLeastDangerousKey} from 'utils/hiveAuthenticationService/helpers/keys';
+import afterAllTest from '__tests__/utils-for-testing/config-test/after-all-test';
 import storeDispatch from '__tests__/utils-for-testing/data/store/store-dispatch';
 import testAccount from '__tests__/utils-for-testing/data/test-account';
 import objects from '__tests__/utils-for-testing/helpers/objects';
+afterAllTest.clearAllMocks;
 describe('keys tests:\n', () => {
   afterEach(async () => {
     await storeDispatch.clear('forgetAccounts');

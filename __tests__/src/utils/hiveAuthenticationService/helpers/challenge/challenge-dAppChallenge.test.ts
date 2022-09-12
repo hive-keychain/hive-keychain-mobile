@@ -1,10 +1,12 @@
 import {AccountKeys} from 'actions/interfaces';
 import {dAppChallenge} from 'utils/hiveAuthenticationService/helpers/challenge';
+import afterAllTest from '__tests__/utils-for-testing/config-test/after-all-test';
 import storeDispatch from '__tests__/utils-for-testing/data/store/store-dispatch';
 import testAccount from '__tests__/utils-for-testing/data/test-account';
 import objects from '__tests__/utils-for-testing/helpers/objects';
 import bridgeModuleMocks from '__tests__/utils-for-testing/mocks/as-module/as-index-file/bridge-module-mocks';
 import consoleSpy from '__tests__/utils-for-testing/mocks/spies/console-spy';
+afterAllTest.clearAllMocks;
 describe('challenge tests:\n', () => {
   afterEach(async () => {
     await storeDispatch.clear('forgetAccounts');

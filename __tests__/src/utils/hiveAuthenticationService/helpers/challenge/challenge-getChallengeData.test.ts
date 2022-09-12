@@ -1,10 +1,12 @@
 import {getChallengeData} from 'utils/hiveAuthenticationService/helpers/challenge';
+import afterAllTest from '__tests__/utils-for-testing/config-test/after-all-test';
 import storeDispatch from '__tests__/utils-for-testing/data/store/store-dispatch';
 import testAccount from '__tests__/utils-for-testing/data/test-account';
 import testHAS_ChallengeDecryptedData from '__tests__/utils-for-testing/data/test-HAS_ChallengeDecryptedData';
 import testHAS_Session from '__tests__/utils-for-testing/data/test-HAS_Session';
 import bridgeModuleMocks from '__tests__/utils-for-testing/mocks/as-module/as-index-file/bridge-module-mocks';
 import cryptoJSModuleMocks from '__tests__/utils-for-testing/mocks/as-module/cryptoJS-module-mocks';
+afterAllTest.clearAllMocks;
 describe('challenge tests:\n', () => {
   afterEach(async () => {
     await storeDispatch.clear('forgetAccounts');
