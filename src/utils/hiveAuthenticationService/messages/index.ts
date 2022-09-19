@@ -13,7 +13,6 @@ export const onMessageReceived = async (
   try {
     const payload: HAS_Payload =
       typeof event.data == 'string' ? JSON.parse(event.data) : event.data;
-    console.log({payload});
     if (!payload.cmd || typeof payload.cmd !== 'string') {
       throw new Error(`invalid payload (cmd)`);
     }
@@ -38,6 +37,7 @@ export const onMessageReceived = async (
         // server public key received
         store.dispatch(addServerKey(has.host, payload.key));
         if (has.awaitingRegistration.length) {
+          console.log('within conditional');
           has.registerAccounts(has.awaitingRegistration);
         }
         break;
