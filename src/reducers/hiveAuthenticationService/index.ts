@@ -1,9 +1,9 @@
-import {HAS_ActionsTypes} from 'actions/types';
+import { HAS_ActionsTypes } from 'actions/types';
 import {
   HAS_Instance,
-  HAS_Session,
+  HAS_Session
 } from 'utils/hiveAuthenticationService/has.types';
-import {HAS_Actions} from './types';
+import { HAS_Actions } from './types';
 
 export type HAS_State = {
   instances: HAS_Instance[];
@@ -59,6 +59,7 @@ export default (
       return copyState;
     }
     case HAS_ActionsTypes.ADD_SERVER_KEY: {
+      console.log({ state });
       const instance = state.instances.find(
         (e) => e.host === data.payload.host,
       );

@@ -84,7 +84,7 @@ describe('auth tests:\n', () => {
     it('Must dispatch with addSessionToken and send', async () => {
       mockHASClass.findSessionByToken(undefined);
       mockHASClass.findSessionByUUID(has_session._default);
-      challengeModuleMock.getChallengeData({
+      challengeModuleMock.helpers.getChallengeData({
         challenge: 'challenge',
         pubkey: 'pubKey',
       });
@@ -112,7 +112,7 @@ describe('auth tests:\n', () => {
     });
     it('Must call dAppChallenge and use expiration', async () => {
       mockHASClass.findSessionByToken(has_session._default);
-      challengeModuleMock.dAppChallenge('data_in_challenge');
+      challengeModuleMock.helpers.dAppChallenge('data_in_challenge');
       const clonedPayload = objects.clone(payload.full) as HAS_AuthPayload;
       delete clonedPayload.decryptedData.challenge;
       await answerAuthReq(
@@ -123,7 +123,7 @@ describe('auth tests:\n', () => {
         callbackSpy.empty,
       );
       await waitFor(() => {
-        expect(asModuleSpy.challenge.dAppChallenge).toBeCalledWith(
+        expect(asModuleSpy.challenge.helpers.dAppChallenge).toBeCalledWith(
           clonedPayload.account,
           clonedPayload.decryptedData.app.pubkey,
           clonedPayload.account,

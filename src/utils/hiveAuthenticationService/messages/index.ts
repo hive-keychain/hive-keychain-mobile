@@ -37,7 +37,6 @@ export const onMessageReceived = async (
         // server public key received
         store.dispatch(addServerKey(has.host, payload.key));
         if (has.awaitingRegistration.length) {
-          console.log('within conditional');
           has.registerAccounts(has.awaitingRegistration);
         }
         break;

@@ -8,7 +8,6 @@ import bridgeModuleMocks from '__tests__/utils-for-testing/mocks/as-module/as-in
 import navigationModuleMocks from '__tests__/utils-for-testing/mocks/as-module/navigation-module-mocks';
 import asModuleSpy from '__tests__/utils-for-testing/mocks/spies/as-module-spy';
 import hasSpy from '__tests__/utils-for-testing/mocks/spies/has-spy';
-import storeSpy from '__tests__/utils-for-testing/mocks/spies/store-spy';
 afterAllTest.clearAllMocks;
 describe('challenge tests:\n', () => {
   afterEach(async () => {
@@ -62,7 +61,6 @@ describe('challenge tests:\n', () => {
       expect(asModuleSpy.navigation.navigate.mock.calls[0][0]).toBe(
         'ModalScreen',
       );
-      expect(storeSpy.dispatch.mock.calls[0][0].type).toBe('HAS_REQUEST');
       expect(hasSpy.send).toBeCalledWith(
         JSON.stringify({
           cmd: 'auth_nack',
