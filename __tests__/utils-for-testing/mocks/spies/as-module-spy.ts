@@ -1,3 +1,4 @@
+import SimpleToast from 'react-native-simple-toast';
 import * as AuthModule from 'src/utils/hiveAuthenticationService/helpers/auth';
 import * as ChallengeHelpersModule from 'src/utils/hiveAuthenticationService/helpers/challenge';
 import * as AuthenticateModule from 'utils/hiveAuthenticationService/messages/authenticate';
@@ -31,5 +32,8 @@ export default {
   },
   sign: {
     processSigningRequest: jest.spyOn(SignModule, 'processSigningRequest'),
+  },
+  simpleToast: {
+    show: jest.spyOn(SimpleToast, 'show'),
   },
 };

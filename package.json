@@ -11,6 +11,7 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
+    "test:cov": "jest --verbose --coverage",
     "lint": "eslint .",
     "dep-clean": "rm -rf node_modules && npm install && npx jetify",
     "clean": "watchman watch-del-all &&npm run dep-clean && npm run android-clean && npm run start -- --reset-cache",
