@@ -5,6 +5,7 @@ import * as AuthenticateModule from 'utils/hiveAuthenticationService/messages/au
 import * as ChallengeMessagesModule from 'utils/hiveAuthenticationService/messages/challenge';
 import * as SignModule from 'utils/hiveAuthenticationService/messages/sign';
 import * as NavigationModule from 'utils/navigation';
+import * as RequestWithoutConfirmationUtilsModule from 'utils/requestWithoutConfirmation';
 //TODO check twice if the module exists on another folder. i.e: challenge in /helpers & /messages
 export default {
   sendAuth: jest.spyOn(AuthModule, 'sendAuth'),
@@ -33,7 +34,15 @@ export default {
   sign: {
     processSigningRequest: jest.spyOn(SignModule, 'processSigningRequest'),
   },
+  /**
+   * Important Note: SimpleToast is a component. Looks like in order to spy,
+   * needs to be called with a cb, otherwise it may fail.
+   */
   simpleToast: {
-    show: jest.spyOn(SimpleToast, 'show'),
+    show: () => jest.spyOn(SimpleToast, 'show'),
   },
+  requestWithoutConfirmation: jest.spyOn(
+    RequestWithoutConfirmationUtilsModule,
+    'requestWithoutConfirmation',
+  ),
 };

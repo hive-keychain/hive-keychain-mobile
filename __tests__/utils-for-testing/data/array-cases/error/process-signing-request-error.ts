@@ -22,12 +22,12 @@ const cases = [
         'AssertionError [ERR_ASSERTION]: This account has not been connected through HAS.',
         undefined,
       ];
-      expect(asModuleSpy.simpleToast.show).toBeCalledWith(...callingParams);
+      expect(asModuleSpy.simpleToast.show()).toBeCalledWith(...callingParams);
       expect(consoleSpy.log).toBeCalledTimes(1);
     },
     toClear: [
       consoleSpy.log,
-      asModuleSpy.simpleToast.show,
+      asModuleSpy.simpleToast.show(),
     ] as jest.SpyInstance[],
   },
   {
@@ -44,12 +44,12 @@ const cases = [
         'AssertionError [ERR_ASSERTION]: Token invalid or expired',
         undefined,
       ];
-      expect(asModuleSpy.simpleToast.show).toBeCalledWith(...callingParams);
+      expect(asModuleSpy.simpleToast.show()).toBeCalledWith(...callingParams);
       expect(consoleSpy.log).toBeCalledTimes(1);
     },
     toClear: [
       consoleSpy.log,
-      asModuleSpy.simpleToast.show,
+      asModuleSpy.simpleToast.show(),
     ] as jest.SpyInstance[],
   },
   {
@@ -67,12 +67,12 @@ const cases = [
         'SyntaxError: Unexpected token d in JSON at position 0',
         undefined,
       ];
-      expect(asModuleSpy.simpleToast.show).toBeCalledWith(...callingParams);
+      expect(asModuleSpy.simpleToast.show()).toBeCalledWith(...callingParams);
       expect(consoleSpy.log).toBeCalledTimes(1);
     },
     toClear: [
       consoleSpy.log,
-      asModuleSpy.simpleToast.show,
+      asModuleSpy.simpleToast.show(),
     ] as jest.SpyInstance[],
   },
 ];
