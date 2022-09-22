@@ -7,7 +7,7 @@ module.exports = {
   testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$',
   testPathIgnorePatterns: ['\\.snap$', '<rootDir>/node_modules/'],
   transformIgnorePatterns: ['node_modules/?!(static-container)'],
-  cacheDirectory: '.jest/cache',
+  //cacheDirectory: '.jest/cache',
   // globals: {
   //   'ts-jest': {
   //     isolatedModules: true,

@@ -18,7 +18,7 @@ import {processAuthenticationRequest} from './messages/authenticate';
 import {HAS_AuthPayload, HAS_SignPayload} from './payloads.types';
 
 let previousState: RootState = store.getState();
-
+/* istanbul ignore next */
 store.subscribe(() => {
   if (!previousState) return;
   const state = store.getState() as RootState;
@@ -35,6 +35,7 @@ store.subscribe(() => {
 });
 
 export const showHASInitRequest = (data: HAS_State) => {
+  console.log({data}); //TODO to remove
   // Iinitialize instances if needed
   for (const instance of data.instances) {
     const host = instance.host.replace(/\/$/, '');
@@ -45,17 +46,22 @@ export const showHASInitRequest = (data: HAS_State) => {
     ) {
       continue;
     }
+    console.log({host, data}); //TODO to remove
     getHAS(host).connect(data.sessions);
     store.dispatch(showHASInitRequestAsTreated(host));
   }
   // Disconnect and remove instances if needed
+  console.log({has}); //TODO to remove
   has = has.filter((hasInstance) => {
     if (!data.instances.find((e) => e.host === hasInstance.host)) {
+      console.log('Not found on data.instances, calling close'); //TODO to remove
       hasInstance.ws.close();
       return false;
     }
+    console.log('Found on data.instances'); //TODO to remove
     return true;
   });
+  console.log('final has: ', {has}); //TODO to remove
 };
 
 export const clearHAS = () => {
@@ -81,6 +87,7 @@ let has: HAS[] = [];
 export const getHAS = (host: string) => {
   // Get Has instance by host or create it
   const existing_has = has.find((e) => e.host === host);
+  console.log({existing_has}); //TODO To remove
   if (!existing_has) {
     const new_HAS = new HAS(host);
     has.push(new_HAS);
@@ -120,6 +127,7 @@ class HAS {
   connect = (sessions: HAS_Session[]) => {
     for (const session of sessions) {
       if (session.init) continue;
+      console.log('registeredAccounts: ', this.registeredAccounts); //TODO to remove
       if (this.registeredAccounts.includes(session.account)) {
         if (session.token) {
           navigate('ModalScreen', {

@@ -1,6 +1,6 @@
 export default {
   clearAllMocks: afterAll(() => {
     jest.clearAllMocks();
-    //jest.resetModules();
+    jest.restoreAllMocks();
   }),
 };
