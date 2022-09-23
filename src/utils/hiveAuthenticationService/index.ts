@@ -62,6 +62,7 @@ export const showHASInitRequest = (data: HAS_State) => {
     return true;
   });
   console.log('final has: ', {has}); //TODO to remove
+  console.log('readyState: ', has[0].ws.readyState); //TODO to remove
 };
 
 export const clearHAS = () => {
@@ -74,6 +75,8 @@ export const clearHAS = () => {
 };
 
 export const restartHASSockets = () => {
+  console.log({has}); //TODO to remove
+  console.log('readyState: ', has[0].ws.readyState); //TODO to remove
   // Reconnect ws after deconnection (red indicator)
   for (const hasInstance of has) {
     if (hasInstance.ws.readyState === 3) {
@@ -192,6 +195,7 @@ class HAS {
   };
 
   onMessage = (event: WebSocketMessageEvent) => {
+    console.log('received msg on client: ', event.data); //TODO to remove
     onMessageReceived(event, this);
   };
 

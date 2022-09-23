@@ -1,11 +1,10 @@
 import mockAsyncStorage from '@react-native-community/async-storage/jest/async-storage-mock';
-//import {WebSocket} from 'mock-socket';
-import WebSocket from 'jest-websocket-mock';
-//TODO custom data on load:
-//      - create a customLoadData interface
-//      - add a file using the same as "customData" in extension
-//to add as we need to mock initial modules
+import {WebSocket} from 'mock-socket';
+global.WebSocket = WebSocket;
 
+//Updates:
+//jest-websocket-mock not needed for now.
+// {...,Server} from mock-server, not being used for now.
 //Object.assign(global, require('jest-chrome')); for now not needed.
 
 jest.mock('react-native-localize', () => {
@@ -17,8 +16,6 @@ jest.mock('react-native-simple-toast', () => ({
 }));
 
 jest.mock('@react-native-community/async-storage', () => mockAsyncStorage);
-
-global.WebSocket = WebSocket;
 
 jest.mock('redux-persist', () => {
   const real = jest.requireActual('redux-persist');

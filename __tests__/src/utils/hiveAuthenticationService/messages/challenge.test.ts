@@ -1,3 +1,4 @@
+import {waitFor} from '@testing-library/react-native';
 import {removeHASSession} from 'actions/hiveAuthenticationService';
 import Crypto from 'crypto-js';
 import {store} from 'store';
@@ -23,7 +24,7 @@ describe('challenge tests:\n', () => {
   const payload = testHAS_ChallengePayload.full;
   const {_default: session} = testHAS_Session.has_session;
   describe('processChallengeRequest cases:\n', () => {
-    it('Must call navigate', () => {
+    it('Must call navigate', async () => {
       navigationModuleMocks.navigateWParams(true);
       const cloneSession = objects.clone(session) as HAS_Session;
       cloneSession.token.expiration = Date.now() + 10;
@@ -31,42 +32,46 @@ describe('challenge tests:\n', () => {
       cryptoJSModuleMocks.AES.encrypt('super_encrypted!');
       mockHASClass.findSessionByToken(cloneSession);
       expect(processChallengeRequest(has, payload)).toBeUndefined();
-      const {calls} = asModuleSpy.navigation.navigate.mock;
-      expect(calls[0][0]).toBe('ModalScreen');
-      expect(JSON.stringify(calls[0][1])).toEqual(
-        JSON.stringify({
-          name: ModalComponent.HAS_CHALLENGE,
-          data: {
-            ...payload,
-            callback: answerChallengeReq,
-            domain: cloneSession.token.app,
-            session: cloneSession,
-            has,
-            onForceCloseModal: () => {
-              const challenge = Crypto.AES.encrypt(
-                payload.uuid,
-                cloneSession.auth_key,
-              ).toString();
-              testHas._default.send(
-                JSON.stringify({
-                  cmd: 'auth_nack',
-                  uuid: payload.uuid,
-                  data: challenge,
-                }),
-              );
-              store.dispatch(removeHASSession(cloneSession.uuid));
-              goBack();
+      await waitFor(() => {
+        const {calls} = asModuleSpy.navigation.navigate.mock;
+        expect(calls[0][0]).toBe('ModalScreen');
+        expect(JSON.stringify(calls[0][1])).toEqual(
+          JSON.stringify({
+            name: ModalComponent.HAS_CHALLENGE,
+            data: {
+              ...payload,
+              callback: answerChallengeReq,
+              domain: cloneSession.token.app,
+              session: cloneSession,
+              has,
+              onForceCloseModal: () => {
+                const challenge = Crypto.AES.encrypt(
+                  payload.uuid,
+                  cloneSession.auth_key,
+                ).toString();
+                testHas._default.send(
+                  JSON.stringify({
+                    cmd: 'auth_nack',
+                    uuid: payload.uuid,
+                    data: challenge,
+                  }),
+                );
+                store.dispatch(removeHASSession(cloneSession.uuid));
+                goBack();
+              },
             },
-          },
-        }),
-      );
-      expect(asModuleSpy.navigation.goBack).toBeCalledTimes(1);
+          }),
+        );
+        expect(asModuleSpy.navigation.goBack).toBeCalledTimes(1);
+      });
     });
-    it('Must return undefined on TODO case', () => {
+    it('Must return undefined on TODO case', async () => {
       const cloneSession = objects.clone(session) as HAS_Session;
       cloneSession.token.expiration = Date.now() - 10;
       mockHASClass.findSessionByToken(cloneSession);
-      expect(processChallengeRequest(has, payload)).toBeUndefined();
+      await waitFor(() => {
+        expect(processChallengeRequest(has, payload)).toBeUndefined();
+      });
     });
   });
 });

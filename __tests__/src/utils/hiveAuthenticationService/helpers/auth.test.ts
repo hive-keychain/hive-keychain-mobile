@@ -58,6 +58,7 @@ describe('auth tests:\n', () => {
         const element = cases[i];
         mockHASClass.findSessionByToken(undefined);
         mockHASClass.findSessionByUUID(has_session._default);
+        WebSocket.prototype.send = jest.fn();
         await answerAuthReq(
           testHas._default,
           payload.justUUID,
