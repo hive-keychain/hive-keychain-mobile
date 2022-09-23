@@ -21,6 +21,8 @@ let previousState: RootState = store.getState();
 /* istanbul ignore next */
 store.subscribe(() => {
   if (!previousState) return;
+  console.log('store state modification!'); //TODO to remove
+  console.log({previousState}); //TODO to remove
   const state = store.getState() as RootState;
   if (
     state.auth.mk !== previousState.auth.mk ||
@@ -90,7 +92,6 @@ let has: HAS[] = [];
 export const getHAS = (host: string) => {
   // Get Has instance by host or create it
   const existing_has = has.find((e) => e.host === host);
-  console.log({existing_has}); //TODO To remove
   if (!existing_has) {
     const new_HAS = new HAS(host);
     has.push(new_HAS);
@@ -146,6 +147,7 @@ class HAS {
           }
         }
       } else {
+        console.log('server key: ', this.getServerKey()); //TODO to remove
         if (this.getServerKey()) {
           this.registerAccounts([session.account]);
         } else if (!this.awaitingRegistration.includes(session.account)) {
@@ -178,6 +180,7 @@ class HAS {
         `${Date.now()}`,
       );
       if (challenge) accounts.push(challenge);
+      console.log({challenge}); //TODO to remove
     }
     if (!accounts.length) return;
     const request = {
@@ -202,6 +205,7 @@ class HAS {
   // Keys
 
   getServerKey = () => {
+    console.log('state: ', store.getState() as RootState); //TODO to remove
     return (store.getState() as RootState).hive_authentication_service.instances.find(
       (e) => e.host === this.host,
     )?.server_key;

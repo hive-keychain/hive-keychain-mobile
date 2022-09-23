@@ -9,10 +9,6 @@ import expirationTimeArray from '__tests__/utils-for-testing/data/array-cases/ex
 import testHas from '__tests__/utils-for-testing/data/test-has';
 import testHASAuthPayload from '__tests__/utils-for-testing/data/test-HAS-auth-payload';
 import testHAS_Session from '__tests__/utils-for-testing/data/test-HAS_Session';
-import {
-  emptyStateStore,
-  initialEmptyStateStore,
-} from '__tests__/utils-for-testing/data/test-initial-state';
 import method from '__tests__/utils-for-testing/helpers/method';
 import objects from '__tests__/utils-for-testing/helpers/objects';
 import challengeModuleMock from '__tests__/utils-for-testing/mocks/as-module/challenge-module-mock';
@@ -24,7 +20,6 @@ import consoleSpy from '__tests__/utils-for-testing/mocks/spies/console-spy';
 import HASClassSpy from '__tests__/utils-for-testing/mocks/spies/HAS-class-spy';
 import hasSpy from '__tests__/utils-for-testing/mocks/spies/has-spy';
 import storeSpy from '__tests__/utils-for-testing/mocks/spies/store-spy';
-import {getFakeStore} from '__tests__/utils-for-testing/store/fake-store';
 afterAllTest.clearAllMocks;
 describe('auth tests:\n', () => {
   beforeEach(() => {
@@ -89,7 +84,6 @@ describe('auth tests:\n', () => {
         challenge: 'challenge',
         pubkey: 'pubKey',
       });
-      const fakeStore = getFakeStore(initialEmptyStateStore);
       await answerAuthReq(
         testHas._default,
         payload.full,
@@ -101,7 +95,6 @@ describe('auth tests:\n', () => {
         expect(storeSpy.dispatch.mock.calls[0][0].type).toBe(
           HAS_ActionsTypes.ADD_TOKEN,
         );
-        expect(fakeStore.getState()).toEqual(emptyStateStore);
         expect(hasSpy.send).toBeCalledWith(
           JSON.stringify({
             cmd: 'auth_ack',
