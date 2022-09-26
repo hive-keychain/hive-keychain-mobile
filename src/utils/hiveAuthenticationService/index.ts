@@ -21,8 +21,6 @@ let previousState: RootState = store.getState();
 /* istanbul ignore next */
 store.subscribe(() => {
   if (!previousState) return;
-  console.log('store state modification!'); //TODO to remove
-  console.log({previousState}); //TODO to remove
   const state = store.getState() as RootState;
   if (
     state.auth.mk !== previousState.auth.mk ||
@@ -37,7 +35,6 @@ store.subscribe(() => {
 });
 
 export const showHASInitRequest = (data: HAS_State) => {
-  console.log({data}); //TODO to remove
   // Iinitialize instances if needed
   for (const instance of data.instances) {
     const host = instance.host.replace(/\/$/, '');
@@ -48,23 +45,17 @@ export const showHASInitRequest = (data: HAS_State) => {
     ) {
       continue;
     }
-    console.log({host, data}); //TODO to remove
     getHAS(host).connect(data.sessions);
     store.dispatch(showHASInitRequestAsTreated(host));
   }
   // Disconnect and remove instances if needed
-  console.log({has}); //TODO to remove
   has = has.filter((hasInstance) => {
     if (!data.instances.find((e) => e.host === hasInstance.host)) {
-      console.log('Not found on data.instances, calling close'); //TODO to remove
       hasInstance.ws.close();
       return false;
     }
-    console.log('Found on data.instances'); //TODO to remove
     return true;
   });
-  console.log('final has: ', {has}); //TODO to remove
-  console.log('readyState: ', has[0].ws.readyState); //TODO to remove
 };
 
 export const clearHAS = () => {
@@ -77,8 +68,6 @@ export const clearHAS = () => {
 };
 
 export const restartHASSockets = () => {
-  console.log({has}); //TODO to remove
-  console.log('readyState: ', has[0].ws.readyState); //TODO to remove
   // Reconnect ws after deconnection (red indicator)
   for (const hasInstance of has) {
     if (hasInstance.ws.readyState === 3) {
@@ -131,7 +120,6 @@ class HAS {
   connect = (sessions: HAS_Session[]) => {
     for (const session of sessions) {
       if (session.init) continue;
-      console.log('registeredAccounts: ', this.registeredAccounts); //TODO to remove
       if (this.registeredAccounts.includes(session.account)) {
         if (session.token) {
           navigate('ModalScreen', {
@@ -147,7 +135,6 @@ class HAS {
           }
         }
       } else {
-        console.log('server key: ', this.getServerKey()); //TODO to remove
         if (this.getServerKey()) {
           this.registerAccounts([session.account]);
         } else if (!this.awaitingRegistration.includes(session.account)) {
@@ -180,7 +167,6 @@ class HAS {
         `${Date.now()}`,
       );
       if (challenge) accounts.push(challenge);
-      console.log({challenge}); //TODO to remove
     }
     if (!accounts.length) return;
     const request = {
@@ -198,14 +184,12 @@ class HAS {
   };
 
   onMessage = (event: WebSocketMessageEvent) => {
-    console.log('received msg on client: ', event.data); //TODO to remove
     onMessageReceived(event, this);
   };
 
   // Keys
 
   getServerKey = () => {
-    console.log('state: ', store.getState() as RootState); //TODO to remove
     return (store.getState() as RootState).hive_authentication_service.instances.find(
       (e) => e.host === this.host,
     )?.server_key;

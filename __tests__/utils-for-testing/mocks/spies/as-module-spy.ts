@@ -45,4 +45,7 @@ export default {
     RequestWithoutConfirmationUtilsModule,
     'requestWithoutConfirmation',
   ),
+  webSocketSpy: {
+    send: jest.spyOn(WebSocket.prototype, 'send'),
+  },
 };

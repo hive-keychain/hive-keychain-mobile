@@ -4,7 +4,8 @@ import {store} from 'store';
 // so it won't mess up with any of its functions.
 export default {
   dispatch: jest.spyOn(store, 'dispatch'),
-  dispatchWithoutImplmentation: jest
+  dispatchCb: () => jest.spyOn(store, 'dispatch'),
+  dispatchWithoutImplementation: jest
     .spyOn(store, 'dispatch')
     .mockReturnValue(undefined),
 };
