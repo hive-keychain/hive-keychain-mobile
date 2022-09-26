@@ -1,3 +1,4 @@
+/* istanbul ignore next */
 export type Width = {width: number};
 
 export type Height = {height: number};
