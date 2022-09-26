@@ -37,7 +37,7 @@ export const formatBalance = (balance: number) =>
   balance > 1000 ? withCommas(balance + '', 0) : withCommas(balance + '');
 
 export const capitalize = (string: string) =>
-  string.charAt(0).toUpperCase() + string.slice(1);
+  string.trim().charAt(0).toUpperCase() + string.trim().slice(1);
 
 export const beautifyTransferError = (
   err: HiveErrorMessage,
