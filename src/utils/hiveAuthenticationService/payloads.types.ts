@@ -1,3 +1,4 @@
+/* istanbul ignore next */
 import {Operation} from '@hiveio/dhive';
 import {KeyTypes} from 'actions/interfaces';
 import {

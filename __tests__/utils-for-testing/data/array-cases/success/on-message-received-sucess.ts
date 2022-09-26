@@ -46,7 +46,7 @@ const cases = [
     } as WebSocketMessageEvent,
     assertion: (result: any, event: WebSocketMessageEvent, has: HAS) => {
       expect(result).toBeUndefined();
-      expect(storeSpy.dispatchWithoutImplmentation).toBeCalledWith({
+      expect(storeSpy.dispatchWithoutImplementation).toBeCalledWith({
         payload: {host: has.host, server_key: event.data.key},
         type: HAS_ActionsTypes.ADD_SERVER_KEY,
       });
@@ -55,7 +55,7 @@ const cases = [
     },
     toClear: [
       consoleSpy.log,
-      storeSpy.dispatchWithoutImplmentation,
+      storeSpy.dispatchWithoutImplementation,
       hasSpy.registerAccounts,
     ] as jest.SpyInstance[],
   },

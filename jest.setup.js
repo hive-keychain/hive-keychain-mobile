@@ -2,6 +2,13 @@ import mockAsyncStorage from '@react-native-community/async-storage/jest/async-s
 import {WebSocket} from 'mock-socket';
 global.WebSocket = WebSocket;
 
+/**
+ * As you need add more vars into the required file and use on each initial
+ * mock.
+ * Note: to be used by jest needs a prefix mock in the vars name
+ */
+const mockInitialData = require('./__tests__/utils-for-testing/config-test/data-initial-mocks');
+
 //Updates:
 //jest-websocket-mock not needed for now.
 // {...,Server} from mock-server, not being used for now.
@@ -28,3 +35,32 @@ jest.mock('redux-persist', () => {
 });
 //for later may be needed:
 //jest.mock('redux-persist/integration/react', () => ({   PersistGate: (props: any) => props.children, }))
+
+//related to
+// - react-native-background-timer
+// - Invariant Violation: `new NativeEventEmitter()` requires a non-null argument. (Error while testing)
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
+
+//firebase relates
+jest.mock('@react-native-firebase/analytics', () => {
+  return () => ({
+    logEvent: jest.fn(),
+    setUserProperties: jest.fn(),
+    setUserId: jest.fn(),
+    setCurrentScreen: jest.fn(),
+  });
+});
+jest.mock('@react-native-firebase/analytics', () => {
+  return () => ({
+    logScreenView: jest.fn().mockImplementation((...args) => {
+      const {
+        causeError,
+        errorMessage,
+      } = mockInitialData.default.firebase.analytics.logScreenView;
+      return causeError
+        ? new Promise.reject(new Error(errorMessage))
+        : new Promise.resolve(undefined);
+    }),
+  });
+});
+//end firebase

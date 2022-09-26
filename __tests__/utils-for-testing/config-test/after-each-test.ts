@@ -1,3 +1,3 @@
 export default {
-  clearAllMocks: jest.clearAllMocks(),
+  clearAllMocks: afterEach(() => jest.clearAllMocks()),
 };
