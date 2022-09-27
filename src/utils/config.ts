@@ -160,8 +160,7 @@ export const BrowserConfig = {
       {
         name: 'Peakmonsters',
         description: 'Fast / Easy / Informative tools for Splinterlands',
-        icon:
-          'https://peakmonsters.com/static/favicons/favicon-196x196.png?v=2',
+        icon: 'https://peakmonsters.com/static/images/logo.svg',
         url: 'https://peakmonsters.com/',
         categories: ['gaming', 'tool'],
       },

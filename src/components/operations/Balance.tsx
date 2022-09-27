@@ -12,10 +12,10 @@ type Props = {
   account?: ExtendedAccount;
   pd?: boolean;
   globalProperties?: DynamicGlobalProperties;
-  engine?: boolean;
+  isHiveEngine?: boolean;
   tokenBalance?: string;
   tokenLogo?: JSX.Element;
-  setMax: (value: string) => void;
+  setMax?: (value: string) => void;
 };
 
 const Balance = ({
@@ -23,7 +23,7 @@ const Balance = ({
   account,
   pd,
   globalProperties,
-  engine,
+  isHiveEngine,
   tokenBalance,
   tokenLogo,
   setMax,
@@ -37,7 +37,7 @@ const Balance = ({
       parseFloat(account.delegated_vesting_shares as string);
     parsedValue = toHP(value as string, globalProperties);
   }
-  if (engine) {
+  if (isHiveEngine) {
     parsedValue = +tokenBalance!;
     logo = tokenLogo!;
   }
@@ -49,7 +49,9 @@ const Balance = ({
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
-        setMax(parsedValue.toFixed(3) + '');
+        if (setMax) {
+          setMax(parsedValue.toFixed(3) + '');
+        }
       }}>
       <View style={styles.main}>
         <View style={styles.left}>
