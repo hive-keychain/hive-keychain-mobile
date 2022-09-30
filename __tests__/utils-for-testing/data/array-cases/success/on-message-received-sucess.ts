@@ -1,3 +1,4 @@
+import {waitFor} from '@testing-library/react-native';
 import {HAS_ActionsTypes} from 'actions/types';
 import HAS from 'utils/hiveAuthenticationService';
 import {HAS_PayloadType} from 'utils/hiveAuthenticationService/payloads.types';
@@ -20,9 +21,11 @@ const cases = [
     webSocketEvent: {
       data: {cmd: HAS_PayloadType.ERROR},
     } as WebSocketMessageEvent,
-    assertion: (result: any, event: WebSocketMessageEvent) => {
+    assertion: async (result: any, event: WebSocketMessageEvent) => {
       expect(result).toBeUndefined();
-      expect(consoleSpy.log).toBeCalledWith('HAS error', event.data);
+      await waitFor(() => {
+        expect(consoleSpy.log).toBeCalledWith('HAS error', event.data);
+      });
     },
     toClear: [consoleSpy.log] as jest.SpyInstance[],
   },
@@ -30,10 +33,12 @@ const cases = [
     webSocketEvent: {
       data: {cmd: HAS_PayloadType.REGISTER, account: testAccount._default.name},
     } as WebSocketMessageEvent,
-    assertion: (result: any, event: WebSocketMessageEvent, has: HAS) => {
+    assertion: async (result: any, event: WebSocketMessageEvent, has: HAS) => {
       expect(result).toBeUndefined();
-      expect(consoleSpy.log).toBeCalledWith('HAS register_ack', event.data);
-      expect(has.awaitingRegistration.length).toBe(1);
+      await waitFor(() => {
+        expect(consoleSpy.log).toBeCalledWith('HAS register_ack', event.data);
+        expect(has.awaitingRegistration.length).toBe(1);
+      });
     },
     toClear: [consoleSpy.log] as jest.SpyInstance[],
   },
@@ -44,14 +49,16 @@ const cases = [
         key: testAccount._default.keys.activePubkey,
       },
     } as WebSocketMessageEvent,
-    assertion: (result: any, event: WebSocketMessageEvent, has: HAS) => {
+    assertion: async (result: any, event: WebSocketMessageEvent, has: HAS) => {
       expect(result).toBeUndefined();
-      expect(storeSpy.dispatchWithoutImplementation).toBeCalledWith({
-        payload: {host: has.host, server_key: event.data.key},
-        type: HAS_ActionsTypes.ADD_SERVER_KEY,
+      await waitFor(() => {
+        expect(storeSpy.dispatchWithoutImplementation).toBeCalledWith({
+          payload: {host: has.host, server_key: event.data.key},
+          type: HAS_ActionsTypes.ADD_SERVER_KEY,
+        });
+        expect(hasSpy.registerAccounts).toBeCalledTimes(1);
+        expect(has.awaitingRegistration.length).toBe(1);
       });
-      expect(hasSpy.registerAccounts).toBeCalledTimes(1);
-      expect(has.awaitingRegistration.length).toBe(1);
     },
     toClear: [
       consoleSpy.log,
@@ -65,12 +72,14 @@ const cases = [
         cmd: HAS_PayloadType.AUTH,
       },
     } as WebSocketMessageEvent,
-    assertion: (result: any, event: WebSocketMessageEvent, has: HAS) => {
+    assertion: async (result: any, event: WebSocketMessageEvent, has: HAS) => {
       expect(result).toBeUndefined();
-      expect(hasSpy.send).toBeCalledWith(JSON.stringify({cmd: 'auth_wait'}));
-      expect(
-        asModuleSpy.authenticate.processAuthenticationRequest,
-      ).toBeCalledWith(has, event.data);
+      await waitFor(() => {
+        expect(hasSpy.send).toBeCalledWith(JSON.stringify({cmd: 'auth_wait'}));
+        expect(
+          asModuleSpy.authenticate.processAuthenticationRequest,
+        ).toBeCalledWith(has, event.data);
+      });
     },
     toClear: [
       hasSpy.send,
@@ -83,13 +92,15 @@ const cases = [
         cmd: HAS_PayloadType.SIGN,
       },
     } as WebSocketMessageEvent,
-    assertion: (result: any, event: WebSocketMessageEvent, has: HAS) => {
+    assertion: async (result: any, event: WebSocketMessageEvent, has: HAS) => {
       expect(result).toBeUndefined();
-      expect(hasSpy.send).toBeCalledWith(JSON.stringify({cmd: 'sign_wait'}));
-      expect(asModuleSpy.sign.processSigningRequest).toBeCalledWith(
-        has,
-        event.data,
-      );
+      await waitFor(() => {
+        expect(hasSpy.send).toBeCalledWith(JSON.stringify({cmd: 'sign_wait'}));
+        expect(asModuleSpy.sign.processSigningRequest).toBeCalledWith(
+          has,
+          event.data,
+        );
+      });
     },
     toClear: [
       hasSpy.send,
@@ -102,11 +113,13 @@ const cases = [
         cmd: HAS_PayloadType.CHALLENGE,
       },
     } as WebSocketMessageEvent,
-    assertion: (result: any, event: WebSocketMessageEvent, has: HAS) => {
+    assertion: async (result: any, event: WebSocketMessageEvent, has: HAS) => {
       expect(result).toBeUndefined();
-      expect(
-        asModuleSpy.challenge.messages.processChallengeRequest,
-      ).toBeCalledWith(has, event.data);
+      await waitFor(() => {
+        expect(
+          asModuleSpy.challenge.messages.processChallengeRequest,
+        ).toBeCalledWith(has, event.data);
+      });
     },
     toClear: [
       asModuleSpy.challenge.messages.processChallengeRequest,
