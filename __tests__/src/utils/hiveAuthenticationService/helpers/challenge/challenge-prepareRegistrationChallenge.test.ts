@@ -1,3 +1,4 @@
+import {waitFor} from '@testing-library/react-native';
 import {prepareRegistrationChallenge} from 'utils/hiveAuthenticationService/helpers/challenge';
 import afterAllTest from '__tests__/utils-for-testing/config-test/after-all-test';
 import storeDispatch from '__tests__/utils-for-testing/data/store/store-dispatch';
@@ -58,15 +59,17 @@ describe('challenge tests:\n', () => {
           'message',
         ),
       ).toBe(undefined);
-      expect(asModuleSpy.navigation.navigate.mock.calls[0][0]).toBe(
-        'ModalScreen',
-      );
-      expect(hasSpy.send).toBeCalledWith(
-        JSON.stringify({
-          cmd: 'auth_nack',
-          uuid: testHAS_ConnectPayload._default.uuid,
-        }),
-      );
+      await waitFor(() => {
+        expect(asModuleSpy.navigation.navigate.mock.calls[0][0]).toBe(
+          'ModalScreen',
+        );
+        expect(hasSpy.send).toBeCalledWith(
+          JSON.stringify({
+            cmd: 'auth_nack',
+            uuid: testHAS_ConnectPayload._default.uuid,
+          }),
+        );
+      });
     });
   });
 });
