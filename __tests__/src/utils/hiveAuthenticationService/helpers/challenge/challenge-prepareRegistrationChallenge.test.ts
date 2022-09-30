@@ -7,6 +7,7 @@ import testHas from '__tests__/utils-for-testing/data/test-has';
 import testHAS_ConnectPayload from '__tests__/utils-for-testing/data/test-HAS_ConnectPayload';
 import bridgeModuleMocks from '__tests__/utils-for-testing/mocks/as-module/as-index-file/bridge-module-mocks';
 import navigationModuleMocks from '__tests__/utils-for-testing/mocks/as-module/navigation-module-mocks';
+import mockWebsocket from '__tests__/utils-for-testing/mocks/mock-websocket';
 import asModuleSpy from '__tests__/utils-for-testing/mocks/spies/as-module-spy';
 import hasSpy from '__tests__/utils-for-testing/mocks/spies/has-spy';
 afterAllTest.clearAllMocks;
@@ -17,6 +18,9 @@ describe('challenge tests:\n', () => {
     jest.clearAllMocks();
   });
   describe('prepareRegistrationChallenge cases:\n', () => {
+    beforeEach(() => {
+      mockWebsocket.prototype.send;
+    });
     it('Must return key with challenge', async () => {
       bridgeModuleMocks.encodeMemo(false, 'challenge_encoded');
       await storeDispatch.one('ADD_ACCOUNT', {

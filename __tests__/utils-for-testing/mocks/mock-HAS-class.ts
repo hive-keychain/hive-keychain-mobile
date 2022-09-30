@@ -11,5 +11,4 @@ export default {
     .fn()
     .mockResolvedValue(undefined),
   connect: HAS.prototype.connect = jest.fn().mockReturnValue(undefined),
-  // awaitingRegistration
 };
