@@ -1,7 +1,9 @@
 import {
   AccountCreateOperation,
+  AccountWitnessVoteOperation,
   Asset,
   CommentOperation,
+  DelegateVestingSharesOperation,
   Operation,
   TransferOperation,
   VoteOperation,
@@ -45,4 +47,20 @@ export default [
       memo: '',
     },
   } as TransferOperation,
+  {
+    0: 'delegate_vesting_shares',
+    1: {
+      delegator: testAccount._default.name,
+      delegatee: 'theghost1980',
+      vesting_shares: '100000000 HP',
+    },
+  } as DelegateVestingSharesOperation,
+  {
+    0: 'account_witness_vote',
+    1: {
+      account: testAccount._default.name,
+      witness: 'theghost1980',
+      approve: true,
+    },
+  } as AccountWitnessVoteOperation,
 ] as Operation[];
