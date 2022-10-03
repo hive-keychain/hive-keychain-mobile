@@ -1,5 +1,7 @@
 import {
   AccountCreateOperation,
+  AccountCreateWithDelegationOperation,
+  AccountWitnessProxyOperation,
   AccountWitnessVoteOperation,
   Asset,
   CommentOperation,
@@ -9,6 +11,7 @@ import {
   VoteOperation,
 } from '@hiveio/dhive';
 import testAccount from '__tests__/utils-for-testing/data/test-account';
+import testAuthorityType from './test-authority-type';
 
 export default [
   {
@@ -63,4 +66,29 @@ export default [
       approve: true,
     },
   } as AccountWitnessVoteOperation,
+  {
+    0: 'account_witness_proxy',
+    1: {
+      account: testAccount._default.name,
+      proxy: 'keychain',
+    },
+  } as AccountWitnessProxyOperation,
+  {
+    0: 'account_create_with_delegation',
+    1: {
+      fee: '1 HIVE',
+      delegation: 'delegation',
+      creator: testAccount._default.name,
+      new_account_name: 'theghost1981',
+      owner: testAuthorityType._default.emptyAuth,
+      active: testAuthorityType._default.emptyAuth,
+      posting: testAuthorityType._default.emptyAuth,
+      memo_key: testAccount._default.keys.memoPubkey,
+      json_metadata: JSON.stringify({metadata: 'metadata'}),
+      /**
+       * Extensions. Not currently used.
+       */
+      extensions: [],
+    },
+  } as AccountCreateWithDelegationOperation,
 ] as Operation[];
