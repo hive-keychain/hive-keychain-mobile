@@ -76,7 +76,6 @@ export const processQRCodeOp = async (op: Operation) => {
     default:
       break;
   }
-  console.log({ state: store.getState()});  //TODO to remove
   const accounts = await store.getState().accounts;
   console.log('accounts', accounts);
   if (accounts && accounts.length) {

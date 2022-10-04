@@ -10,6 +10,7 @@ import {
   TransferOperation,
   VoteOperation,
 } from '@hiveio/dhive';
+import {KeychainKeyTypesLC, KeychainRequestTypes} from 'utils/keychain.types';
 import testAccount from '__tests__/utils-for-testing/data/test-account';
 import testAuthorityType from './test-authority-type';
 
@@ -21,7 +22,7 @@ export default [
       author: testAccount._default.name,
       weight: 100,
     },
-  }, //TODO change to as AccountCreateOperation
+  },
   {
     0: 'vote',
     1: {
@@ -71,6 +72,7 @@ export default [
     1: {
       account: testAccount._default.name,
       proxy: 'keychain',
+      type: KeychainRequestTypes.proxy,
     },
   } as AccountWitnessProxyOperation,
   {
@@ -85,9 +87,6 @@ export default [
       posting: testAuthorityType._default.emptyAuth,
       memo_key: testAccount._default.keys.memoPubkey,
       json_metadata: JSON.stringify({metadata: 'metadata'}),
-      /**
-       * Extensions. Not currently used.
-       */
       extensions: [],
     },
   } as AccountCreateWithDelegationOperation,
