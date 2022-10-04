@@ -6,6 +6,7 @@ import * as ChallengeMessagesModule from 'utils/hiveAuthenticationService/messag
 import * as SignModule from 'utils/hiveAuthenticationService/messages/sign';
 import * as NavigationModule from 'utils/navigation';
 import * as RequestWithoutConfirmationUtilsModule from 'utils/requestWithoutConfirmation';
+import * as HiveUtilsModule from 'utils/hive';
 //TODO check twice if the module exists on another folder. i.e: challenge in /helpers & /messages
 export default {
   sendAuth: jest.spyOn(AuthModule, 'sendAuth'),
@@ -47,5 +48,8 @@ export default {
   ),
   webSocketSpy: {
     send: jest.spyOn(WebSocket.prototype, 'send'),
+  },
+  hiveUtils: {
+    broadcast: jest.spyOn(HiveUtilsModule, 'broadcast'),
   },
 };

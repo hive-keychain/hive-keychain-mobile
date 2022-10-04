@@ -33,6 +33,9 @@ import {
   RequestRemoveAccountAuthority,
   RequestRemoveKeyAuthority,
 } from './keychain.types';
+///testing to being able to mock features
+import * as HiveUtilsModule from 'utils/hive';
+///end testing
 
 type BroadcastResult = {id: string};
 
@@ -80,14 +83,14 @@ export const getCurrency = (baseCurrency: 'HIVE' | 'HBD' | 'HP') => {
 export const getClient = () => client;
 
 export const transfer = async (key: string, obj: TransferOperation[1]) => {
-  return await broadcast(key, [['transfer', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['transfer', obj]]);
 };
 
 export const recurrentTransfer = async (
   key: string,
   obj: RecurrentTransferOperation[1],
 ) => {
-  return await broadcast(key, [['recurrent_transfer', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['recurrent_transfer', obj]]);
 };
 
 export const broadcastJson = async (
@@ -97,7 +100,7 @@ export const broadcastJson = async (
   active: boolean,
   json: object | string,
 ) => {
-  return await broadcast(key, [
+  return await HiveUtilsModule.broadcast(key, [
     [
       'custom_json',
       {
@@ -111,7 +114,7 @@ export const broadcastJson = async (
 };
 //todo type obj
 export const sendToken = async (key: string, username: string, obj: object) => {
-  const result = (await broadcastJson(
+  const result = (await HiveUtilsModule.broadcastJson(
     key,
     username,
     hiveEngine.CHAIN_ID,
@@ -129,68 +132,74 @@ export const powerUp = async (
   key: string,
   obj: TransferToVestingOperation[1],
 ) => {
-  return await broadcast(key, [['transfer_to_vesting', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['transfer_to_vesting', obj]]);
 };
 
 export const powerDown = async (key: string, obj: object) => {
-  return await broadcast(key, [['withdraw_vesting', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['withdraw_vesting', obj]]);
 };
 
 export const delegate = async (
   key: string,
   obj: DelegateVestingSharesOperation[1],
 ) => {
-  return await broadcast(key, [['delegate_vesting_shares', obj]]);
+  return await HiveUtilsModule.broadcast(key, [
+    ['delegate_vesting_shares', obj],
+  ]);
 };
 
 export const convert = async (key: string, obj: ConvertOperation[1]) => {
-  return await broadcast(key, [['convert', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['convert', obj]]);
 };
 
 export const collateralizedConvert = async (
   key: string,
   obj: CollateralizedConvertOperation[1],
 ) => {
-  return await broadcast(key, [['collateralized_convert', obj]]);
+  return await HiveUtilsModule.broadcast(key, [
+    ['collateralized_convert', obj],
+  ]);
 };
 
 export const depositToSavings = async (
   key: string,
   obj: TransferToSavingsOperation[1],
 ) => {
-  return await broadcast(key, [['transfer_to_savings', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['transfer_to_savings', obj]]);
 };
 
 export const withdrawFromSavings = async (
   key: string,
   obj: TransferFromSavingsOperation[1],
 ) => {
-  return await broadcast(key, [['transfer_from_savings', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['transfer_from_savings', obj]]);
 };
 
 export const vote = async (key: string, obj: VoteOperation[1]) => {
-  return await broadcast(key, [['vote', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['vote', obj]]);
 };
 
 export const voteForWitness = async (
   key: string,
   obj: AccountWitnessVoteOperation[1],
 ) => {
-  return await broadcast(key, [['account_witness_vote', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['account_witness_vote', obj]]);
 };
 
 export const setProxy = async (
   key: string,
   obj: AccountWitnessProxyOperation[1],
 ) => {
-  return await broadcast(key, [['account_witness_proxy', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['account_witness_proxy', obj]]);
 };
 
 export const createClaimedAccount = async (
   key: string,
   obj: CreateClaimedAccountOperation[1],
 ) => {
-  return await broadcast(key, [['create_claimed_account', obj]]);
+  return await HiveUtilsModule.broadcast(key, [
+    ['create_claimed_account', obj],
+  ]);
 };
 export const post = async (
   key: string,
@@ -219,7 +228,7 @@ export const post = async (
       JSON.parse(comment_options) as CommentOptionsOperation[1],
     ]);
   }
-  return await broadcast(key, arr);
+  return await HiveUtilsModule.broadcast(key, arr);
 };
 
 export const signTx = (key: string, tx: object) => {
