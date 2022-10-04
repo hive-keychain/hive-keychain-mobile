@@ -7,6 +7,8 @@ import {
   CommentOperation,
   DelegateVestingSharesOperation,
   Operation,
+  PowOperation,
+  RecurrentTransferOperation,
   TransferOperation,
   VoteOperation,
 } from '@hiveio/dhive';
@@ -90,4 +92,16 @@ export default [
       extensions: [],
     },
   } as AccountCreateWithDelegationOperation,
+  {
+    0: 'recurrent_transfer',
+    1: {
+      from: testAccount._default.name,
+      to: 'quentin',
+      amount: '100000 HIVE',
+      memo: '',
+      recurrence: 1,
+      executions: 2,
+      extensions: [],
+    },
+  } as RecurrentTransferOperation,
 ] as Operation[];

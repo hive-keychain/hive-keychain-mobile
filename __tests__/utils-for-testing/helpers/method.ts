@@ -8,7 +8,7 @@ const clearSpies = (spies: jest.SpyInstance[]) => {
 const getTestOperation = (
   operationName: OperationName | VirtualOperationName,
 ) => {
-  return testOperation.filter((op) => op[0] === operationName)[0][1];
+  return testOperation.filter((op) => op[0] === operationName)[0];
 };
 
 export default {clearSpies, getTestOperation};
