@@ -17,6 +17,7 @@ const {active} = testAccount._default.keys;
 
 const cases = [
   {
+    description: '',
     assertion: async (successResponse: BroadcastTestsSuccessResponse) => {
       const op = method.getTestOperation('transfer') as TransferOperation;
       const {[1]: obj} = op;

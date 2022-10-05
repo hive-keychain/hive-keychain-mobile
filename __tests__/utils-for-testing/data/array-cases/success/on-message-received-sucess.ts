@@ -7,9 +7,10 @@ import consoleSpy from '__tests__/utils-for-testing/mocks/spies/console-spy';
 import hasSpy from '__tests__/utils-for-testing/mocks/spies/has-spy';
 import storeSpy from '__tests__/utils-for-testing/mocks/spies/store-spy';
 import testAccount from '../../test-account';
-
+//TODO add description to each case
 const cases = [
   {
+    description: 'Must return ...',
     webSocketEvent: {
       data: {cmd: HAS_PayloadType.CONNECTED},
     } as WebSocketMessageEvent,

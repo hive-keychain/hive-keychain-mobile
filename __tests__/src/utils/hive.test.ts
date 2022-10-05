@@ -50,6 +50,8 @@ describe('hive tests:\n', () => {
   describe('broadcast operations cases:\n', () => {
     const {cases: opCases} = broadcastOperationArray;
     const {sucess: successResponse} = testBroadcastResponse;
+    //TODO instead of having one array, change as having each case on the test with its
+    //    own description.
     it('Must return success response on each case', async () => {
       // powerUp  powerDown delegate convert
       //depositToSavings withdrawFromSavings vote  voteForWitness
