@@ -62,7 +62,6 @@ buck-out/
 
 .env.json
 
-.vscode
 ios/mobileKeychain/GoogleService-Info.plist
 android/app/google-services.json
 ios/GoogleService-Info.plist
