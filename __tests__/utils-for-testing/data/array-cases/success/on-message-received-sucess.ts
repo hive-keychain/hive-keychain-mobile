@@ -7,10 +7,10 @@ import consoleSpy from '__tests__/utils-for-testing/mocks/spies/console-spy';
 import hasSpy from '__tests__/utils-for-testing/mocks/spies/has-spy';
 import storeSpy from '__tests__/utils-for-testing/mocks/spies/store-spy';
 import testAccount from '../../test-account';
-//TODO add description to each case
+
 const cases = [
   {
-    description: 'Must return ...',
+    description: 'default case must return undefined',
     webSocketEvent: {
       data: {cmd: HAS_PayloadType.CONNECTED},
     } as WebSocketMessageEvent,
@@ -19,6 +19,7 @@ const cases = [
     },
   },
   {
+    description: 'must log when error payload',
     webSocketEvent: {
       data: {cmd: HAS_PayloadType.ERROR},
     } as WebSocketMessageEvent,
@@ -31,6 +32,7 @@ const cases = [
     toClear: [consoleSpy.log] as jest.SpyInstance[],
   },
   {
+    description: 'must add to awaiting registration',
     webSocketEvent: {
       data: {cmd: HAS_PayloadType.REGISTER, account: testAccount._default.name},
     } as WebSocketMessageEvent,
@@ -44,6 +46,7 @@ const cases = [
     toClear: [consoleSpy.log] as jest.SpyInstance[],
   },
   {
+    description: 'must register account',
     webSocketEvent: {
       data: {
         cmd: HAS_PayloadType.KEY_ACK,
@@ -68,6 +71,7 @@ const cases = [
     ] as jest.SpyInstance[],
   },
   {
+    description: 'must process the auth request',
     webSocketEvent: {
       data: {
         cmd: HAS_PayloadType.AUTH,
@@ -88,6 +92,7 @@ const cases = [
     ] as jest.SpyInstance[],
   },
   {
+    description: 'must process sign request',
     webSocketEvent: {
       data: {
         cmd: HAS_PayloadType.SIGN,
@@ -109,6 +114,7 @@ const cases = [
     ] as jest.SpyInstance[],
   },
   {
+    description: 'must process challenge request',
     webSocketEvent: {
       data: {
         cmd: HAS_PayloadType.CHALLENGE,
