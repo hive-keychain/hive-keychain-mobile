@@ -4,7 +4,6 @@ import {KeychainRequestTypes} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import testHAS_Session from '__tests__/utils-for-testing/data/test-HAS_Session';
 import objects from '__tests__/utils-for-testing/helpers/objects';
-import cryptoJSModuleMocks from '__tests__/utils-for-testing/mocks/as-module/cryptoJS-module-mocks';
 import navigationModuleMocks from '__tests__/utils-for-testing/mocks/as-module/navigation-module-mocks';
 import requestWithoutConfirmationUtilsModuleMocks from '__tests__/utils-for-testing/mocks/as-module/request-without-confirmation-utils-module-mocks';
 import mockHASClass from '__tests__/utils-for-testing/mocks/mock-HAS-class';
@@ -16,7 +15,6 @@ const {_default: session} = testHAS_Session.has_session;
 const templateCase = {
   mocking: (clonedOpsData: HAS_SignDecrypted, whiteListed?: boolean) => {
     simpletoastMock.show;
-    cryptoJSModuleMocks.AES.decrypt(JSON.stringify(clonedOpsData));
     mockHASClass.checkPayload;
     navigationModuleMocks.navigateWParams(false);
     const clonedSession = objects.clone(session) as HAS_Session;

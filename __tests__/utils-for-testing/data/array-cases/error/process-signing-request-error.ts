@@ -1,7 +1,7 @@
+import {waitFor} from '@testing-library/react-native';
 import {HAS_Session} from 'utils/hiveAuthenticationService/has.types';
 import testHAS_Session from '__tests__/utils-for-testing/data/test-HAS_Session';
 import objects from '__tests__/utils-for-testing/helpers/objects';
-import cryptoJSModuleMocks from '__tests__/utils-for-testing/mocks/as-module/cryptoJS-module-mocks';
 import mockHASClass from '__tests__/utils-for-testing/mocks/mock-HAS-class';
 import simpletoastMock from '__tests__/utils-for-testing/mocks/simpletoast-mock';
 import asModuleSpy from '__tests__/utils-for-testing/mocks/spies/as-module-spy';
@@ -53,22 +53,23 @@ const cases = [
     ] as jest.SpyInstance[],
   },
   {
-    description: 'decrypted data not json',
+    description: 'decrypted data not json but string',
     mocking: () => {
       const clonedSession = objects.clone(session) as HAS_Session;
       clonedSession.token.expiration = Date.now() + 10000;
       mockHASClass.checkPayload;
       mockHASClass.findSessionByToken(clonedSession);
       simpletoastMock.show;
-      cryptoJSModuleMocks.AES.decrypt('decrypted_not_json');
     },
-    assertion: () => {
+    assertion: async () => {
       const callingParams = [
-        'SyntaxError: Unexpected token d in JSON at position 0',
+        'SyntaxError: Unexpected end of JSON input',
         undefined,
       ];
-      expect(asModuleSpy.simpleToast.show()).toBeCalledWith(...callingParams);
-      expect(consoleSpy.log).toBeCalledTimes(1);
+      await waitFor(() => {
+        expect(asModuleSpy.simpleToast.show()).toBeCalledWith(...callingParams);
+        expect(consoleSpy.log).toBeCalledTimes(1);
+      });
     },
     toClear: [
       consoleSpy.log,
