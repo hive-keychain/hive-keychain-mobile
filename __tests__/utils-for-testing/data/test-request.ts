@@ -1,4 +1,9 @@
-import {KeychainRequestTypes, RequestPost} from 'utils/keychain.types';
+import {
+  KeychainKeyTypes,
+  KeychainRequestTypes,
+  RequestAddAccountAuthority,
+  RequestPost,
+} from 'utils/keychain.types';
 import testAccount from './test-account';
 import testCommentOptions from './test-comment-options';
 
@@ -14,4 +19,12 @@ export default {
     permlink: 'https://hive.blog/@theghost1980/amazing-post',
     comment_options: JSON.stringify(testCommentOptions._default),
   } as RequestPost,
+  addaccountAuth: {
+    type: KeychainRequestTypes.addAccountAuthority,
+    authorizedUsername: 'quentin',
+    role: KeychainKeyTypes.active,
+    weight: 0,
+    username: testAccount._default.name,
+    method: KeychainKeyTypes.active,
+  } as RequestAddAccountAuthority,
 };

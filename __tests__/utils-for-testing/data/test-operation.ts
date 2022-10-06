@@ -8,6 +8,7 @@ import {
   ConvertOperation,
   CreateClaimedAccountOperation,
   CreateProposalOperation,
+  CustomJsonOperation,
   DelegateVestingSharesOperation,
   Operation,
   RecurrentTransferOperation,
@@ -227,4 +228,13 @@ export default [
       extensions: [],
     },
   } as RemoveProposalOperation,
+  {
+    0: 'custom_json',
+    1: {
+      required_auths: [],
+      required_posting_auths: [],
+      id: '000001',
+      json: 'encrypted_json',
+    },
+  } as CustomJsonOperation,
 ] as Operation[];

@@ -111,6 +111,7 @@ export const broadcastJson = async (
   ]);
 };
 //todo type obj
+/* istanbul ignore next */
 export const sendToken = async (key: string, username: string, obj: object) => {
   const result = (await HiveUtilsModule.broadcastJson(
     key,
@@ -228,7 +229,7 @@ export const post = async (
   }
   return await HiveUtilsModule.broadcast(key, arr);
 };
-
+/* istanbul ignore next */
 export const signTx = (key: string, tx: object) => {
   const trx = new hiveTx.Transaction(tx);
   const signed = trx.sign(hiveTx.PrivateKey.from(key));
