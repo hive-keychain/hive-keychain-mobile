@@ -12,8 +12,8 @@ const sucess = {
   },
 } as BroadcastTestsSuccessResponse;
 
-const error = {
-  error: {msg: 'Error'},
-} as BroadcastTestsErrorResponse;
+const error = (errorMsg: string): BroadcastTestsErrorResponse => {
+  return {error: new Error(errorMsg)};
+};
 
 export default {sucess, error};

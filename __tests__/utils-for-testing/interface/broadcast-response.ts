@@ -8,5 +8,5 @@ export interface BroadcastTestsSuccessResponse {
 }
 
 export interface BroadcastTestsErrorResponse {
-  error: object;
+  error: Error;
 }
