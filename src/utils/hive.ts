@@ -25,6 +25,7 @@ import {Rpc} from 'actions/interfaces';
 import api from 'api/keychain';
 import hiveTx from 'hive-tx';
 import {hiveEngine} from 'utils/config';
+import * as HiveUtilsModule from 'utils/hive';
 import {
   KeychainKeyTypes,
   RequestAddAccountAuthority,
@@ -33,9 +34,6 @@ import {
   RequestRemoveAccountAuthority,
   RequestRemoveKeyAuthority,
 } from './keychain.types';
-///testing to being able to mock features
-import * as HiveUtilsModule from 'utils/hive';
-///end testing
 
 type BroadcastResult = {id: string};
 
@@ -411,35 +409,35 @@ export const removeKeyAuth = async (
 };
 
 const accountUpdate = async (key: string, obj: AccountUpdateOperation[1]) => {
-  return await broadcast(key, [['account_update', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['account_update', obj]]);
 };
 
 export const updateProposalVote = async (
   key: string,
   obj: UpdateProposalVotesOperation[1],
 ) => {
-  return await broadcast(key, [['update_proposal_votes', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['update_proposal_votes', obj]]);
 };
 
 export const createProposal = async (
   key: string,
   obj: CreateProposalOperation[1],
 ) => {
-  return await broadcast(key, [['create_proposal', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['create_proposal', obj]]);
 };
 
 export const claimRewards = async (
   key: string,
   obj: ClaimRewardBalanceOperation[1],
 ) => {
-  return await broadcast(key, [['claim_reward_balance', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['claim_reward_balance', obj]]);
 };
 
 export const removeProposal = async (
   key: string,
   obj: RemoveProposalOperation[1],
 ) => {
-  return await broadcast(key, [['remove_proposal', obj]]);
+  return await HiveUtilsModule.broadcast(key, [['remove_proposal', obj]]);
 };
 
 export const broadcast = async (key: string, arr: Operation[]) => {
