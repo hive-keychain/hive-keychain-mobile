@@ -1,4 +1,5 @@
-import hive, * as HiveUtilsModule from 'utils/hive';
+import {ExtendedAccount} from '@hiveio/dhive';
+import * as HiveUtilsModule from 'utils/hive';
 
 import {
   BroadcastTestsErrorResponse,
@@ -12,4 +13,15 @@ export default {
     jest
       .spyOn(HiveUtilsModule, 'broadcast')
       .mockImplementation((...args) => Promise.resolve(response)),
+  getClient: {
+    database: {
+      getAccounts: (extendedAccount: ExtendedAccount, error?: Error) =>
+        jest
+          .spyOn(HiveUtilsModule.getClient().database, 'getAccounts')
+          .mockImplementation((...args) => {
+            if (error) return Promise.reject(error);
+            return Promise.resolve([extendedAccount]);
+          }),
+    },
+  },
 };

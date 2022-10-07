@@ -1,3 +1,4 @@
+import {Asset, AuthorityType, ExtendedAccount} from '@hiveio/dhive';
 import {Account, AccountKeys} from 'actions/interfaces';
 require('dotenv').config();
 
@@ -21,7 +22,45 @@ const otherKeys = {
   randomStringKey51: 'MknOPyeXr5CGsCgvDewdny55MREtDpAjhkT9OsPPLCujYD82Urk',
 };
 
+const extended = {
+  name: _default.name,
+  reputation: 100,
+  reward_hbd_balance: '100 HBD',
+  reward_hive_balance: '100 HIVE',
+  reward_vesting_balance: new Asset(1000, 'VESTS'),
+  delegated_vesting_shares: new Asset(100, 'VESTS'),
+  received_vesting_shares: new Asset(20000, 'VESTS'),
+  balance: new Asset(1000, 'HIVE'),
+  hbd_balance: new Asset(1000, 'HBD'),
+  savings_balance: new Asset(10000, 'HBD'),
+  savings_hbd_balance: new Asset(10000, 'HBD'),
+  vesting_shares: new Asset(10000, 'VESTS'),
+  proxy: '',
+  witness_votes: ['aggroed', 'blocktrades'],
+  posting: {
+    weight_threshold: 1,
+    account_auths: [['theghost1980', 1]],
+    key_auths: [[_default.keys.postingPubkey, 1]],
+  } as AuthorityType,
+  active: {
+    weight_threshold: 1,
+    account_auths: [],
+    key_auths: [[_default.keys.activePubkey, 1]],
+  } as AuthorityType,
+  owner: {
+    weight_threshold: 1,
+    account_auths: [],
+    key_auths: [],
+  } as AuthorityType,
+  memo_key: _default.keys.memoPubkey,
+  witnesses_voted_for: 2,
+  voting_manabar: {
+    current_mana: 1000000,
+  },
+} as ExtendedAccount;
+
 export default {
   _default,
   otherKeys,
+  extended,
 };
