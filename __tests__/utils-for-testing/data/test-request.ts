@@ -3,6 +3,7 @@ import {
   KeychainRequestTypes,
   RequestAddAccountAuthority,
   RequestPost,
+  RequestRemoveAccountAuthority,
 } from 'utils/keychain.types';
 import testAccount from './test-account';
 import testCommentOptions from './test-comment-options';
@@ -27,4 +28,9 @@ export default {
     username: testAccount._default.name,
     method: KeychainKeyTypes.active,
   } as RequestAddAccountAuthority,
+  removeAccountAuth: {
+    username: testAccount._default.name,
+    authorizedUsername: 'quentin',
+    role: KeychainKeyTypes.active,
+  } as RequestRemoveAccountAuthority,
 };
