@@ -2,6 +2,7 @@ import {
   KeychainKeyTypes,
   KeychainRequestTypes,
   RequestAddAccountAuthority,
+  RequestAddKeyAuthority,
   RequestPost,
   RequestRemoveAccountAuthority,
 } from 'utils/keychain.types';
@@ -33,4 +34,10 @@ export default {
     authorizedUsername: 'quentin',
     role: KeychainKeyTypes.active,
   } as RequestRemoveAccountAuthority,
+  addKeyAuthority: {
+    username: testAccount._default.name,
+    authorizedKey: testAccount._default.keys.activePubkey,
+    role: KeychainKeyTypes.active,
+    weight: 1,
+  } as RequestAddKeyAuthority,
 };
