@@ -5,6 +5,7 @@ import {
   RequestAddKeyAuthority,
   RequestPost,
   RequestRemoveAccountAuthority,
+  RequestRemoveKeyAuthority,
 } from 'utils/keychain.types';
 import testAccount from './test-account';
 import testCommentOptions from './test-comment-options';
@@ -40,4 +41,9 @@ export default {
     role: KeychainKeyTypes.active,
     weight: 1,
   } as RequestAddKeyAuthority,
+  removeKeyAuthority: {
+    username: testAccount._default.name,
+    authorizedKey: testAccount._default.keys.activePubkey,
+    role: KeychainKeyTypes.active,
+  } as RequestRemoveKeyAuthority,
 };
