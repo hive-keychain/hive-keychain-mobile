@@ -6,7 +6,7 @@ import dataInitialMocks from "../utils-for-testing/config-test/data-initial-mock
 describe('data-initial-mocks tests:\n', () => { 
   it('Must check on initial values/files', () => {
       const jestSetup = require('jest.setup');
-      const jestConfig = require('jest.setup');
+      const jestConfig = require('jest.config');
       const initialData = dataInitialMocks;
       const { jest, engines, scripts } = require('package.json');
     expect(jestSetup).not.toBeNull();
@@ -14,8 +14,8 @@ describe('data-initial-mocks tests:\n', () => {
       expect(initialData.configuration).toBeDefined();
       expect(initialData.configuration.firstTest).toBe(true);
       expect(initialData.configuration.allConfigurationTested).toBe(true);
-      expect(jest.preset).toBeDefined();
-      expect(jest.preset).toBe('react-native');
+      expect(jestConfig.preset).toBeDefined();
+      expect(jestConfig.preset).toBe('react-native');
       expect(engines.node).toBeDefined();
       expect(scripts['show-on-error-notes']).toBeDefined();
   });
