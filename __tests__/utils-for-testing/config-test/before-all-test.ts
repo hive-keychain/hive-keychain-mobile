@@ -1,5 +1,3 @@
-import {store} from 'store';
-
 const mockStore = beforeAll(() => {
   jest.mock('store', () => {
     return {
@@ -8,6 +6,12 @@ const mockStore = beforeAll(() => {
   });
 });
 
+const useFakeTimers = (setTimeout?: number) => {
+  jest.useFakeTimers('legacy');
+  if (setTimeout) jest.setTimeout(setTimeout);
+};
+
 export default {
   mockStore,
+  useFakeTimers,
 };
