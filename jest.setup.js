@@ -14,6 +14,28 @@ const mockInitialData = require('./__tests__/utils-for-testing/config-test/data-
 // {...,Server} from mock-server, not being used for now.
 //Object.assign(global, require('jest-chrome')); for now not needed.
 
+//////native gesture handler & native reanimated & view native component
+import {View} from 'react-native';
+import 'react-native-gesture-handler/jestSetup';
+
+export const enableScreens = jest.fn();
+export const screensEnabled = jest.fn().mockReturnValue(false);
+export const ScreenContainer = View;
+
+jest.mock('react-native-reanimated', () => {
+  const Reanimated = require('react-native-reanimated/mock');
+
+  // The mock for `call` immediately calls the callback which is incorrect
+  // So we override it with a no-op
+  Reanimated.default.call = () => {};
+
+  return Reanimated;
+});
+
+// Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
+jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+//////END native gesture handler & native reanimated
+
 jest.mock('react-native-localize', () => {
   return {getLocales: jest.fn().mockReturnValue(['en'])};
 });
