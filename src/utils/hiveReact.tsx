@@ -12,18 +12,18 @@ export const getCurrencyProperties = (
   switch (currency) {
     case 'HIVE':
       color = '#A3112A';
-      logo = <Hive />;
+      logo = <Hive accessibilityRole={'image'} />;
       value = account ? account.balance : null;
       break;
     case 'HBD':
       color = '#005C09';
       value = account ? account.hbd_balance : null;
-      logo = <Hbd />;
+      logo = <Hbd accessibilityRole={'image'} />;
       break;
     default:
       color = '#AC4F00';
       value = account ? account.vesting_shares : null;
-      logo = <Hp />;
+      logo = <Hp accessibilityRole={'image'} />;
       break;
   }
   return {currency, color, value, logo};
