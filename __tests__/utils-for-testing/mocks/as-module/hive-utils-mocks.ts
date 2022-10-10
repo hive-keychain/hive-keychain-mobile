@@ -1,4 +1,4 @@
-import {ExtendedAccount} from '@hiveio/dhive';
+import {ExtendedAccount, VestingDelegation} from '@hiveio/dhive';
 import * as HiveUtilsModule from 'utils/hive';
 
 import {
@@ -21,6 +21,13 @@ export default {
           .mockImplementation((...args) => {
             if (error) return Promise.reject(error);
             return Promise.resolve([extendedAccount]);
+          }),
+      getDelegatees: (response: VestingDelegation[], error?: boolean) =>
+        jest
+          .spyOn(HiveUtilsModule.getClient().database, 'getVestingDelegations')
+          .mockImplementation((...args) => {
+            if (error) return Promise.reject(error);
+            return Promise.resolve(response);
           }),
     },
   },

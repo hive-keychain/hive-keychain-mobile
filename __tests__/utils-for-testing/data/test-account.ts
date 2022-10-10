@@ -1,4 +1,4 @@
-import {Asset, AuthorityType, ExtendedAccount} from '@hiveio/dhive';
+import {AuthorityType, ExtendedAccount} from '@hiveio/dhive';
 import {Account, AccountKeys} from 'actions/interfaces';
 require('dotenv').config();
 
@@ -27,14 +27,14 @@ const extended = {
   reputation: 100,
   reward_hbd_balance: '100 HBD',
   reward_hive_balance: '100 HIVE',
-  reward_vesting_balance: new Asset(1000, 'VESTS'),
-  delegated_vesting_shares: new Asset(100, 'VESTS'),
-  received_vesting_shares: new Asset(20000, 'VESTS'),
-  balance: new Asset(1000, 'HIVE'),
-  hbd_balance: new Asset(1000, 'HBD'),
-  savings_balance: new Asset(10000, 'HBD'),
-  savings_hbd_balance: new Asset(10000, 'HBD'),
-  vesting_shares: new Asset(10000, 'VESTS'),
+  reward_vesting_balance: '1000 VESTS',
+  delegated_vesting_shares: '100 VESTS',
+  received_vesting_shares: '20000 VESTS',
+  balance: '1000 HIVE',
+  hbd_balance: '1000 HBD',
+  savings_balance: '10000 HBD',
+  savings_hbd_balance: '10000 HBD',
+  vesting_shares: '1000000000 VESTS',
   proxy: '',
   witness_votes: ['aggroed', 'blocktrades'],
   posting: {
@@ -55,8 +55,10 @@ const extended = {
   memo_key: _default.keys.memoPubkey,
   witnesses_voted_for: 2,
   voting_manabar: {
-    current_mana: 1000000,
+    current_mana: 1000000000,
+    last_update_time: 100,
   },
+  vesting_withdraw_rate: '0.000 VESTS',
 } as ExtendedAccount;
 
 export default {

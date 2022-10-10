@@ -28,6 +28,7 @@ export const getVP = (account: ExtendedAccount) => {
     current_mana +
     (diff_in_seconds * estimated_max) / HIVE_VOTING_MANA_REGENERATION_SECONDS;
   if (estimated_mana > estimated_max) {
+    console.log('is max'); //TODO to remove
     estimated_mana = estimated_max;
   }
   const estimated_pct = (estimated_mana / estimated_max) * 100;
@@ -60,7 +61,13 @@ export const getVotingDollarsPerAccount = (
   const recentClaims = getRecentClaims(properties);
   const hivePrice = getHivePrice(properties);
   const votePowerReserveRate = getVotePowerReserveRate(properties);
-
+  console.log({
+    vp,
+    rewardBalance,
+    recentClaims,
+    hivePrice,
+    votePowerReserveRate,
+  }); //TODO to remove
   if (rewardBalance && recentClaims && hivePrice && votePowerReserveRate) {
     const effective_vesting_shares = Math.round(
       getEffectiveVestingSharesPerAccount(account) * 1000000,
@@ -77,11 +84,21 @@ export const getVotingDollarsPerAccount = (
       (effective_vesting_shares * used_power) / HIVE_100_PERCENT,
     );
     const voteValue = ((rshares * rewardBalance) / recentClaims) * hivePrice;
+    console.log({
+      effective_vesting_shares,
+      current_power,
+      weight,
+      max_vote_denom,
+      used_power,
+      rshares,
+      voteValue,
+    }); //TODO to remove
     return isNaN(voteValue) ? '0' : voteValue.toFixed(2);
   } else {
     return;
   }
 };
+/* istanbul ignore next */
 export const getRC = async (account: ExtendedAccount) => {
   const rcAcc = await getClient().rc.findRCAccounts([account.name]);
   const rc = await getClient().rc.calculateRCMana(rcAcc[0]);
@@ -98,8 +115,8 @@ const getRecentClaims = (properties: GlobalProperties) => {
 
 const getHivePrice = (properties: GlobalProperties) => {
   return (
-    parseFloat(properties.price!.base + '') /
-    parseFloat(properties.price!.quote + '')
+    parseFloat(properties.price!.base.amount.toString()) /
+    parseFloat(properties.price!.quote.amount.toString())
   );
 };
 
