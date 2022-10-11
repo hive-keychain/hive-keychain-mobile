@@ -79,7 +79,7 @@ export const sendResponse = (
     )})`,
   );
 };
-
+/* istanbul ignore next */
 export const validateRequest = (req: KeychainRequest) => {
   return (
     req &&
@@ -245,6 +245,7 @@ export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
 };
 
 // Functions used to check the incoming data
+/* istanbul ignore next */
 const hasTransferInfo = (req: RequestTransfer) => {
   if (req.enforce) {
     return isFilled(req.username);
@@ -254,33 +255,33 @@ const hasTransferInfo = (req: RequestTransfer) => {
     return true;
   }
 };
-
+/* istanbul ignore next */
 const isFilled = (obj: any) => {
   return !!obj && obj !== '';
 };
-
+/* istanbul ignore next */
 const isBoolean = (obj: any) => {
   return typeof obj === typeof true;
 };
-
+/* istanbul ignore next */
 const isFilledOrEmpty = (obj: string) => {
   return obj || obj === '';
 };
-
+/* istanbul ignore next */
 const isProposalIDs = (obj: string) => {
   const parsed = JSON.parse(obj);
   return Array.isArray(parsed) && !parsed.some(isNaN);
 };
-
+/* istanbul ignore next */
 const isFilledDelegationMethod = (obj: string) => {
   return obj === 'VESTS' || obj === 'HP';
 };
-
+/* istanbul ignore next */
 const isFilledDate = (date: string) => {
   const regex = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d/;
   return regex.test(date);
 };
-
+/* istanbul ignore next */
 const isFilledAmt = (obj: string) => {
   return (
     isFilled(obj) &&
@@ -289,7 +290,7 @@ const isFilledAmt = (obj: string) => {
     countDecimals(obj) === 3
   );
 };
-
+/* istanbul ignore next */
 const isFilledAmtSP = (obj: RequestDelegation) => {
   return (
     isFilled(obj.amount) &&
@@ -298,7 +299,7 @@ const isFilledAmtSP = (obj: RequestDelegation) => {
       (countDecimals(obj.amount) === 6 && obj.unit === 'VESTS'))
   );
 };
-
+/* istanbul ignore next */
 const isFilledAmtSBD = (amt: string) => {
   return (
     amt &&
@@ -308,7 +309,7 @@ const isFilledAmtSBD = (amt: string) => {
     amt.split(' ')[1] === 'HBD'
   );
 };
-
+/* istanbul ignore next */
 const isFilledWeight = (obj: string | number) => {
   return (
     isFilled(obj) &&
@@ -318,17 +319,17 @@ const isFilledWeight = (obj: string | number) => {
     +obj === Math.floor(+obj)
   );
 };
-
+/* istanbul ignore next */
 const isFilledCurrency = (obj: string) => {
   return isFilled(obj) && (obj === 'HIVE' || obj === 'HBD');
 };
-
+/* istanbul ignore next */
 const isFilledKey = (obj: string) => {
   return (
     isFilled(obj) && (obj === 'Memo' || obj === 'Active' || obj === 'Posting')
   );
 };
-
+/* istanbul ignore next */
 const isFilledKeys = (obj: RequestAddAccountKeys) => {
   if (typeof obj !== 'object') {
     return false;
@@ -345,7 +346,7 @@ const isFilledKeys = (obj: RequestAddAccountKeys) => {
     return true;
   }
 };
-
+/* istanbul ignore next */
 const isCustomOptions = (obj: RequestPost) => {
   if (obj.comment_options === '') {
     return true;
@@ -368,7 +369,7 @@ const isCustomOptions = (obj: RequestPost) => {
     comment_options.hasOwnProperty('extensions')
   );
 };
-
+/* istanbul ignore next */
 const countDecimals = (nb: string) => {
   return nb.toString().split('.')[1] === undefined
     ? 0

@@ -6,9 +6,7 @@ import {
   sendError,
   sendResponse,
   validateAuthority,
-  validateRequest,
 } from 'utils/keychain';
-import {RequestDecode} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import afterAllTest from '__tests__/utils-for-testing/config-test/after-all-test';
 import testAccount from '__tests__/utils-for-testing/data/test-account';
@@ -22,6 +20,12 @@ describe('keychain.tsx part 1 tests:\n', () => {
   describe('validateAuthority cases:\n', () => {
     it('Must validate request', () => {
       expect(validateAuthority(accounts, testRequest.addaccountAuth)).toEqual({
+        valid: true,
+      });
+    });
+
+    it('Must validate addaccount request', () => {
+      expect(validateAuthority(accounts, testRequest.addAccount)).toEqual({
         valid: true,
       });
     });
@@ -116,32 +120,6 @@ describe('keychain.tsx part 1 tests:\n', () => {
           {success: true, error: null, ...success},
         )})`,
       );
-    });
-  });
-
-  describe('validateRequest cases:\n', () => {
-    it('Must return false if no username in decoderequest', () => {
-      const cloneRequest = objects.clone(testRequest.decode) as RequestDecode;
-      delete cloneRequest.username;
-      expect(validateRequest(cloneRequest)).toBe(false);
-    });
-
-    it('Must return false if no message in decode request', () => {
-      const cloneRequest = objects.cloneAndRemoveObjProperties(
-        testRequest.decode,
-        ['message'],
-      ) as RequestDecode;
-      expect(validateRequest(cloneRequest)).toBe(false);
-    });
-
-    it('Must return false if message not encrypted in decode request', () => {
-      expect(validateRequest(testRequest.decode)).toBe(false);
-    });
-
-    it('Must validate decode request', () => {
-      const cloneRequest = objects.clone(testRequest.decode) as RequestDecode;
-      cloneRequest.message = '# to encrypt';
-      expect(validateRequest(cloneRequest)).toBe(true);
     });
   });
 });
