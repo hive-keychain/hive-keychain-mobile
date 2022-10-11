@@ -135,6 +135,7 @@ export default async (
       throw 'This is a public key! Please enter a private key or your master key.';
     }
     if (publicKey) {
+      console.log({publicKey}); //TODO to remove
       return validatePrivateKey(account, pwd, publicKey);
     }
     return derivateFromMasterPassword(username, account, pwd);
