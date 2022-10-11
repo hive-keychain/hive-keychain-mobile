@@ -1,11 +1,16 @@
 import {
   KeychainKeyTypes,
+  KeychainRequestData,
   KeychainRequestTypes,
   RequestAddAccountAuthority,
   RequestAddKeyAuthority,
+  RequestDecode,
+  RequestError,
   RequestPost,
   RequestRemoveAccountAuthority,
   RequestRemoveKeyAuthority,
+  RequestSuccess,
+  RequestWitnessVote,
 } from 'utils/keychain.types';
 import testAccount from './test-account';
 import testCommentOptions from './test-comment-options';
@@ -46,4 +51,31 @@ export default {
     authorizedKey: testAccount._default.keys.activePubkey,
     role: KeychainKeyTypes.active,
   } as RequestRemoveKeyAuthority,
+  witnessVote: {
+    type: KeychainRequestTypes.witnessVote,
+    witness: 'keychain',
+    vote: true,
+  } as RequestWitnessVote,
+  error: (requestData: KeychainRequestData): RequestError => {
+    return {
+      data: requestData,
+      request_id: 10001,
+      error: 'error',
+      message: 'error_message',
+    };
+  },
+  success: (requestData: KeychainRequestData): RequestSuccess => {
+    return {
+      data: requestData,
+      request_id: 10002,
+      result: 'success',
+      message: 'success_message',
+    };
+  },
+  decode: {
+    type: KeychainRequestTypes.decode,
+    username: testAccount._default.name,
+    message: 'message',
+    method: KeychainKeyTypes.memo,
+  } as RequestDecode,
 };
