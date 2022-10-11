@@ -61,13 +61,6 @@ export const getVotingDollarsPerAccount = (
   const recentClaims = getRecentClaims(properties);
   const hivePrice = getHivePrice(properties);
   const votePowerReserveRate = getVotePowerReserveRate(properties);
-  console.log({
-    vp,
-    rewardBalance,
-    recentClaims,
-    hivePrice,
-    votePowerReserveRate,
-  }); //TODO to remove
   if (rewardBalance && recentClaims && hivePrice && votePowerReserveRate) {
     const effective_vesting_shares = Math.round(
       getEffectiveVestingSharesPerAccount(account) * 1000000,
@@ -84,15 +77,6 @@ export const getVotingDollarsPerAccount = (
       (effective_vesting_shares * used_power) / HIVE_100_PERCENT,
     );
     const voteValue = ((rshares * rewardBalance) / recentClaims) * hivePrice;
-    console.log({
-      effective_vesting_shares,
-      current_power,
-      weight,
-      max_vote_denom,
-      used_power,
-      rshares,
-      voteValue,
-    }); //TODO to remove
     return isNaN(voteValue) ? '0' : voteValue.toFixed(2);
   } else {
     return;
@@ -115,8 +99,8 @@ const getRecentClaims = (properties: GlobalProperties) => {
 
 const getHivePrice = (properties: GlobalProperties) => {
   return (
-    parseFloat(properties.price!.base.amount.toString()) /
-    parseFloat(properties.price!.quote.amount.toString())
+    parseFloat(properties.price!.base + '') /
+    parseFloat(properties.price!.quote + '')
   );
 };
 
@@ -161,11 +145,11 @@ export const getConversionRequests = async (name: string) => {
       new Date(b.conversion_date).getTime(),
   );
 };
-
+/* istanbul ignore next */
 export const getSavingsRequests = async (name: string) => {
   return await getClient().database.call('get_savings_withdraw_to', [name]);
 };
-
+/* istanbul ignore next */
 export const rpcList: Rpc[] = [
   {uri: 'DEFAULT', testnet: false},
   {uri: 'https://api.deathwing.me', testnet: false},

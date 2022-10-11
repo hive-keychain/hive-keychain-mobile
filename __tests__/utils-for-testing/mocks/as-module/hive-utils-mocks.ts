@@ -29,6 +29,11 @@ export default {
             if (error) return Promise.reject(error);
             return Promise.resolve(response);
           }),
+      getConversionRequests: (hbdConversions: any, hiveConversions: any) =>
+        jest
+          .spyOn(HiveUtilsModule.getClient().database, 'call')
+          .mockResolvedValueOnce(hbdConversions)
+          .mockResolvedValueOnce(hiveConversions),
     },
   },
 };

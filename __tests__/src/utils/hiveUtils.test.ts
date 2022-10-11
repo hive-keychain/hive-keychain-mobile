@@ -1,12 +1,17 @@
 import {ExtendedAccount} from '@hiveio/dhive';
 import {
+  getAccountKeys,
+  getConversionRequests,
   getDelegatees,
   getDelegators,
   getVotingDollarsPerAccount,
   getVP,
+  sanitizeAmount,
+  sanitizeUsername,
 } from 'utils/hiveUtils';
 import afterAllTest from '__tests__/utils-for-testing/config-test/after-all-test';
 import testAccount from '__tests__/utils-for-testing/data/test-account';
+import testConvertionRequest from '__tests__/utils-for-testing/data/test-convertion-request';
 import testDelegations from '__tests__/utils-for-testing/data/test-delegations';
 import testDynamicGlobalProperties from '__tests__/utils-for-testing/data/test-dynamic-global-properties';
 import testPriceGlobalProperties from '__tests__/utils-for-testing/data/test-price-global-properties';
@@ -64,7 +69,7 @@ describe('hiveUtils tests:\n', () => {
       ).toBeNull();
     });
 
-    it('Must return voting dollars', async () => {
+    it('Will return undefined', async () => {
       expect(
         getVotingDollarsPerAccount(
           100,
@@ -76,7 +81,7 @@ describe('hiveUtils tests:\n', () => {
           testAccount.extended,
           true,
         ),
-      ).toBe('13.44');
+      ).toBeUndefined();
     });
 
     it('Will return undefined if reward balance has a typo', () => {
@@ -122,7 +127,6 @@ describe('hiveUtils tests:\n', () => {
           parseFloat((del.vesting_shares as string).replace(' VESTS', '')),
         ),
       );
-      console.log(greater);
       expect(
         delegatees.findIndex(
           (del) =>
@@ -130,6 +134,50 @@ describe('hiveUtils tests:\n', () => {
             greater.toFixed(6).toString() + ' VESTS',
         ),
       ).toBe(0);
+    });
+  });
+
+  describe('getConversionRequests cases:\n', () => {
+    const {hdbResponse, hiveResponse} = testConvertionRequest;
+    it('Must return convertion requests sorted by date', async () => {
+      hiveUtilsMocks.getClient.database.getConversionRequests(
+        hdbResponse,
+        hiveResponse,
+      );
+      const convertionRequests = await getConversionRequests(
+        testAccount._default.name,
+      );
+      expect(convertionRequests[0].collaterized).toBeDefined();
+    });
+  });
+
+  describe('getAccountKeys cases:\n', () => {
+    it('Must return user keys', async () => {
+      hiveUtilsMocks.getClient.database.getAccounts(testAccount.extended);
+      const userkeys = await getAccountKeys(testAccount._default.name);
+      expect(userkeys.active).toBeDefined();
+      expect(userkeys.memo).toBeDefined();
+      expect(userkeys.posting).toBeDefined();
+    });
+  });
+
+  describe('sanitizeUsername cases:\n', () => {
+    it('Must return sanitized user name', () => {
+      expect(sanitizeUsername('    USERNAME     ')).toBe('username');
+    });
+  });
+
+  describe('sanitizeAmount cases:\n', () => {
+    it('Must sanitize each amount', () => {
+      const amounts = [
+        {amount: 10000, currency: 'HIVE', expected: '10000.000 HIVE'},
+        {amount: 999.99, currency: 'HIVE', expected: '999.990 HIVE'},
+        {amount: '10000', expected: '10000'},
+      ];
+      for (let i = 0; i < amounts.length; i++) {
+        const {amount, currency, expected} = amounts[i];
+        expect(sanitizeAmount(amount, currency)).toBe(expected);
+      }
     });
   });
 });
