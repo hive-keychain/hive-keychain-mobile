@@ -1,9 +1,16 @@
+import {useFocusEffect} from '@react-navigation/native';
 import RightArrow from 'assets/browser/icon-forward.svg';
 import LeftArrow from 'assets/browser/icon_back.svg';
 import Add from 'assets/browser/icon_new.svg';
 import Refresh from 'assets/browser/icon_refresh.svg';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  BackHandler,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 
 type Props = {
@@ -30,6 +37,22 @@ const Footer = ({
 }: Props) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(height, insets);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        if (canGoBack) goBack();
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
+
+      return () => backHandler.remove();
+    }, [canGoBack]),
+  );
 
   return (
     <View style={styles.footer}>
