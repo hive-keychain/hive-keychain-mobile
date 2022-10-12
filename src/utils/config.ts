@@ -161,7 +161,7 @@ export const BrowserConfig = {
         name: 'Peakmonsters',
         description: 'Fast / Easy / Informative tools for Splinterlands',
         icon:
-          'https://peakmonsters.com/static/favicons/favicon-196x196.png?v=2',
+          'https://peakmonsters.com/static/favicons/apple-touch-icon-144x144.png',
         url: 'https://peakmonsters.com/',
         categories: ['gaming', 'tool'],
       },
@@ -187,6 +187,15 @@ export const BrowserConfig = {
         icon: 'https://images.hive.blog/u/inji/avatar',
         url: 'https://inji.com',
         categories: ['social'],
+      },
+      {
+        name: 'Splex.GG',
+        description:
+          'Maximize your RoA on idle cards while you do other things',
+        icon:
+          'https://splex.gg/assets/golem-fav-24a5326faa52366eb657a27defa761d8736fb602a865c356b27e5c1254a04444.png',
+        url: 'https://splex.gg',
+        categories: ['tool'],
       },
     ],
   },

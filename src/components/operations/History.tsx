@@ -40,7 +40,7 @@ const History = ({
           currency={currency}
           tokenBalance={tokenBalance}
           tokenLogo={tokenLogo}
-          engine
+          isHiveEngine
         />
         <Separator />
         <FlatList

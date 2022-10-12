@@ -1,6 +1,6 @@
 {
   "name": "mobile-keychain",
-  "version": "1.10",
+  "version": "1.10.2",
   "private": true,
   "scripts": {
     "android": "react-native run-android --variant devDebug --appIdSuffix dev",
@@ -11,10 +11,13 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
+    "test:cov": "jest --coverage",
     "lint": "eslint .",
     "dep-clean": "rm -rf node_modules && npm install && npx jetify",
     "clean": "watchman watch-del-all &&npm run dep-clean && npm run android-clean && npm run start -- --reset-cache",
-    "generate-splash": "npx react-native generate-bootsplash src/assets/keychain_logo.png --background-color=000000 --logo-width=320"
+    "generate-splash": "npx react-native generate-bootsplash src/assets/keychain_logo.png --background-color=000000 --logo-width=320",
+    "postinstall": "patch-package",
+    "show-on-error-notes": "echo 'Files needed:\nAndroid/gradle.properties'"
   },
   "dependencies": {
     "@hiveio/dhive": "^1.1.1",
@@ -99,6 +102,8 @@
     "eslint-config-airbnb-typescript": "^12.3.1",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.59.0",
+    "mock-socket": "^9.1.5",
+    "patch-package": "^6.4.7",
     "prettier": "2.0.2",
     "react-native": "^0.68.2",
     "react-test-renderer": "16.13.1",
@@ -106,5 +111,9 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "engines": {
+    "node": "~16.4.2",
+    "npm": "~7.18.1"
   }
 }

@@ -155,7 +155,7 @@ const Transfer = ({
             account={user.account}
             tokenBalance={tokenBalance}
             tokenLogo={tokenLogo}
-            engine={engine}
+            isHiveEngine={engine}
             setMax={(value: string) => {
               setAmount(value);
             }}
