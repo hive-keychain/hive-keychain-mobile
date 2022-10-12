@@ -60,15 +60,19 @@ export const loadTokenHistory = (
   currency: string,
 ): AppThunk => async (dispatch) => {
   dispatch({type: CLEAR_TOKEN_HISTORY});
-  let tokenHistory: TokenTransaction[] = (
+  //let tokenHistory: TokenTransaction[] = (
+  let tokenHistory: any[] = (
     await hiveEngineAPI.get('accountHistory', {
       params: {account, symbol: currency, type: 'user'},
     })
   ).data;
-  tokenHistory = tokenHistory.map((e) => {
-    e.amount = `${e.quantity} ${e.symbol}`;
-    return e;
-  });
+
+  tokenHistory = tokenHistory
+    .filter((e) => e.operation === 'tokens_transfer')
+    .map((e) => {
+      e.amount = `${e.quantity} ${e.symbol}`;
+      return e;
+    });
   const action: ActionPayload<TokenTransaction[]> = {
     type: LOAD_TOKEN_HISTORY,
     payload: tokenHistory,
