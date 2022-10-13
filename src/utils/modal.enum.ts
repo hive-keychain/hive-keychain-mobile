@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export enum ModalComponent {
   HAS_AUTH = 'HAS_AUTH',
   BROADCAST = 'HAS_BROADCAST',
