@@ -35,5 +35,17 @@ export default {
           .mockResolvedValueOnce(hbdConversions)
           .mockResolvedValueOnce(hiveConversions),
     },
+    call: {
+      database_api: {
+        list_proposals: (proposalList: any) =>
+          jest
+            .spyOn(HiveUtilsModule.getClient(), 'call')
+            .mockResolvedValueOnce(proposalList),
+        list_proposal_votes: (proposalVotes: any) =>
+          jest
+            .spyOn(HiveUtilsModule.getClient(), 'call')
+            .mockResolvedValueOnce(proposalVotes),
+      },
+    },
   },
 };
