@@ -16,4 +16,7 @@ export default {
           params.data.onForceCloseModal();
         }
       }),
+  goBack: jest.spyOn(NavigationModule, 'goBack').mockImplementation(() => {
+    return undefined;
+  }),
 };

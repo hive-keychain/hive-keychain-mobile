@@ -12,8 +12,13 @@ const getTestOperation = (
   return testOperation.filter((op) => op[0] === operationName)[0];
 };
 
+/**Passing the Obj will stringify + encode as required */
+const toBuffer = (data: Object, encoding: BufferEncoding) => {
+  return Buffer.from(JSON.stringify(data)).toString(encoding);
+};
+
 const formatTestBalance = (parsedValue: number) => {
   return formatBalance(parsedValue);
 };
 
-export default {clearSpies, getTestOperation, formatTestBalance};
+export default {clearSpies, getTestOperation, formatTestBalance, toBuffer};
