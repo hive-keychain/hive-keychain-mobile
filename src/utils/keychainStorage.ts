@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import * as Keychain from 'react-native-keychain';
 import {chunkArray} from './format';
 import {translate} from './localize';

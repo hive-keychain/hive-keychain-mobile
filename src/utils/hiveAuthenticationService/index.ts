@@ -18,7 +18,7 @@ import {processAuthenticationRequest} from './messages/authenticate';
 import {HAS_AuthPayload, HAS_SignPayload} from './payloads.types';
 
 let previousState: RootState = store.getState();
-
+/* istanbul ignore next */
 store.subscribe(() => {
   if (!previousState) return;
   const state = store.getState() as RootState;
