@@ -76,6 +76,7 @@ export const decodeWithoutConfirmation = (
   sendError: (msg: RequestError) => void,
   has?: boolean,
 ) => {
+  console.log('decodeWithoutConfirmation!'); //TODO to remove
   processOperationWithoutConfirmation(
     () => performDecodeOperation(accounts, request),
     request,

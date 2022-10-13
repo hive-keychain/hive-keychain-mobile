@@ -15,4 +15,11 @@ export default {
       jest.spyOn(BridgeModule, 'signBuffer').mockResolvedValue(value as string);
     }
   },
+  decodeMemo: (error: boolean, value: string | Error) => {
+    if (error) {
+      jest.spyOn(BridgeModule, 'decodeMemo').mockRejectedValue(error);
+    } else {
+      jest.spyOn(BridgeModule, 'decodeMemo').mockResolvedValue(value as string);
+    }
+  },
 };

@@ -30,6 +30,7 @@ export const requestWithoutConfirmation = (
   sendError: (msg: RequestError) => void,
   has?: boolean,
 ) => {
+  console.log({request}); //TODO to remove
   switch (request.type) {
     case KeychainRequestTypes.decode:
       request as RequestDecode & RequestId;
