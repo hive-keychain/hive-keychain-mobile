@@ -14,6 +14,7 @@ afterAllTest.clearAllMocks;
 describe('requestWithoutConfirmation tests:\n', () => {
   describe('requestWithoutConfirmation cases:\n', () => {
     it('Must encode without confirmation', async () => {
+      hiveUtilsMocks.getClient.database.getAccounts(testAccount.extended);
       bridgeModuleMocks.encodeMemo(false, 'encod3d');
       const spySuccessCb = jest.fn().mockImplementation(() => {});
       requestWithoutConfirmation(
@@ -22,7 +23,6 @@ describe('requestWithoutConfirmation tests:\n', () => {
         spySuccessCb,
         () => {},
       );
-      await waitFor(() => {});
       await waitFor(() => {
         const {calls} = spySuccessCb.mock;
         expect((calls[0][0] as any).result).toEqual('encod3d');

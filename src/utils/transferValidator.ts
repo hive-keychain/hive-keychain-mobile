@@ -13,6 +13,7 @@ const getExchanges = () => [
   {account: 'probithive', tokens: ['HIVE']},
   {account: 'probitred', tokens: []},
   {account: 'upbitsteem', tokens: []},
+  {account: 'orinoco', tokens: ['HIVE', 'HBD']},
 ];
 
 const getExchangeValidationWarning = (
@@ -54,7 +55,7 @@ export const getTransferWarning = (
     exchange: !warning && !!getExchanges().find((e) => e.account === account),
   };
 };
-
+/* istanbul ignore next */
 export const getPhishingAccounts = async () => {
   return (await api.get('/hive/phishingAccounts')).data;
 };
