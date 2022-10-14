@@ -2,7 +2,7 @@ import {DynamicGlobalProperties, ExtendedAccount} from '@hiveio/dhive';
 import {CurrencyPrices} from 'actions/interfaces';
 import api from 'api/keychain';
 import {toHP} from 'utils/format';
-
+/* istanbul ignore next */
 export const getPrices = async () => {
   return (await api.get('/hive/v2/price')).data;
 };

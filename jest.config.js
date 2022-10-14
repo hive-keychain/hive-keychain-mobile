@@ -13,6 +13,10 @@ module.exports = {
   //     isolatedModules: true,
   //   },
   // },
+  transform: {
+    '^.+\\.jsx?$': 'babel-jest',
+    '^.+\\.svg$': 'jest-svg-transformer',
+  },
   clearMocks: false,
   modulePathIgnorePatterns: ['utils-for-testing', 'mocks', 'othercases'],
   setupFilesAfterEnv: [

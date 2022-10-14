@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import {NavigationActions} from '@react-navigation/compat';
 import {CommonActions, NavigationContainerRef} from '@react-navigation/native';
 

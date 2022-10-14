@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import {Operation, Transaction} from '@hiveio/dhive';
 import {KeyTypes} from 'actions/interfaces';
 

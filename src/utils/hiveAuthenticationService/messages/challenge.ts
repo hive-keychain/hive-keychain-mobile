@@ -48,7 +48,7 @@ export const processChallengeRequest = (
   }
 };
 
-const answerChallengeReq = async (
+export const answerChallengeReq = async (
   has: HAS,
   payload: HAS_ChallengePayload,
   approve: boolean,

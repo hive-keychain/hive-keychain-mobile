@@ -6,7 +6,7 @@ import isURL from 'validator/lib/isURL';
 import {HASConfig} from './config';
 import {processQRCodeOp} from './hive-uri';
 import {goBack} from './navigation';
-
+/* istanbul ignore next */
 export default async () => {
   Linking.addEventListener('url', ({url}) => {
     if (url) {
@@ -48,7 +48,7 @@ export const handleUrl = (url: string, qr: boolean = false) => {
     store.dispatch(addTabFromLinking(url));
   }
 };
-
+/* istanbul ignore next */
 export const clearLinkingListeners = () => {
   Linking.removeAllListeners('url');
 };
