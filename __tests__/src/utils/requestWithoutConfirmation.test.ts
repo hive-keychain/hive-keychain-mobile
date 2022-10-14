@@ -9,9 +9,26 @@ import testRequest from '__tests__/utils-for-testing/data/test-request';
 import objects from '__tests__/utils-for-testing/helpers/objects';
 import bridgeModuleMocks from '__tests__/utils-for-testing/mocks/as-module/as-index-file/bridge-module-mocks';
 import hiveUtilsMocks from '__tests__/utils-for-testing/mocks/as-module/hive-utils-mocks';
+import hiveTxMocks from '__tests__/utils-for-testing/mocks/hive-tx/hive-tx-mocks';
 afterAllTest.clearAllMocks;
 describe('requestWithoutConfirmation tests:\n', () => {
   describe('requestWithoutConfirmation cases:\n', () => {
+    it('Must encode without confirmation', async () => {
+      bridgeModuleMocks.encodeMemo(false, 'encod3d');
+      const spySuccessCb = jest.fn().mockImplementation(() => {});
+      requestWithoutConfirmation(
+        [testAccount._default],
+        {...testRequest.encode, request_id: 1000},
+        spySuccessCb,
+        () => {},
+      );
+      await waitFor(() => {});
+      await waitFor(() => {
+        const {calls} = spySuccessCb.mock;
+        expect((calls[0][0] as any).result).toEqual('encod3d');
+      });
+    });
+
     it('Must decode without confirmation', async () => {
       bridgeModuleMocks.decodeMemo(false, 'decoded');
       const spySuccessCb = jest.fn().mockImplementation(() => {});
@@ -65,7 +82,70 @@ describe('requestWithoutConfirmation tests:\n', () => {
       });
     });
 
-    //TODO complete cases.
-    //  vote, post, custom, encode, signTx
+    it('Must vote without confirmation', async () => {
+      hiveUtilsMocks.broadcast(testBroadcastResponse.sucess);
+      const spySuccessCb = jest.fn().mockImplementation(() => {});
+      requestWithoutConfirmation(
+        [testAccount._default],
+        {...testRequest.vote, request_id: 1000},
+        spySuccessCb,
+        () => {},
+      );
+      await waitFor(() => {
+        const {calls} = spySuccessCb.mock;
+        expect((calls[0][0] as any).result).toEqual(
+          testBroadcastResponse.sucess,
+        );
+      });
+    });
+
+    it('Must post without confirmation', async () => {
+      hiveUtilsMocks.broadcast(testBroadcastResponse.sucess);
+      const spySuccessCb = jest.fn().mockImplementation(() => {});
+      requestWithoutConfirmation(
+        [testAccount._default],
+        {...testRequest.post, request_id: 1000},
+        spySuccessCb,
+        () => {},
+      );
+      await waitFor(() => {
+        const {calls} = spySuccessCb.mock;
+        expect((calls[0][0] as any).result).toEqual(
+          testBroadcastResponse.sucess,
+        );
+      });
+    });
+
+    it('Must broadcast custom without confirmation', async () => {
+      hiveUtilsMocks.broadcast(testBroadcastResponse.sucess);
+      const spySuccessCb = jest.fn().mockImplementation(() => {});
+      requestWithoutConfirmation(
+        [testAccount._default],
+        {...testRequest.custom, request_id: 1000},
+        spySuccessCb,
+        () => {},
+      );
+      await waitFor(() => {
+        const {calls} = spySuccessCb.mock;
+        expect((calls[0][0] as any).result).toEqual(
+          testBroadcastResponse.sucess,
+        );
+      });
+    });
+
+    it('Must signTx without confirmation', async () => {
+      hiveTxMocks.tx.sign();
+      const spySuccessCb = jest.fn().mockImplementation(() => {});
+      requestWithoutConfirmation(
+        [testAccount._default],
+        {...testRequest.signTx, request_id: 1000},
+        spySuccessCb,
+        () => {},
+      );
+      await waitFor(() => {
+        const {calls} = spySuccessCb.mock;
+        expect((calls[0][0] as any).result).toEqual({});
+      });
+    });
   });
 });

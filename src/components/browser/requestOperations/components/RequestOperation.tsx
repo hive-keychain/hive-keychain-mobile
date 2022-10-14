@@ -158,10 +158,8 @@ export const processOperationWithoutConfirmation = async (
   additionalData?: any,
 ) => {
   const {request_id, ...data} = request;
-  console.log({request, successMessage}); //TODO to remove
   try {
     const result = await performOperation();
-    console.log({result}); //TODO to remove
     let msg = successMessage;
     const obj = {
       data,
@@ -172,7 +170,6 @@ export const processOperationWithoutConfirmation = async (
     };
     sendResponse(obj);
   } catch (e) {
-    console.log({e}); //TODO to remove
     let msg;
     if (!beautifyError) {
       // if (typeof errorMessage === 'function') {
