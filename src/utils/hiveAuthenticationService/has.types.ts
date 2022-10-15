@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import {KeychainRequestTypes} from 'utils/keychain.types';
 
 // One HAS_Instance per different domain serving HAS being used

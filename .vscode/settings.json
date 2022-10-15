@@ -24,7 +24,7 @@
     "liveServer.settings.port": 1337,
     "liveServer.settings.donotShowInfoMsg": true,
     "liveServer.settings.useLocalIp": true,
-    "window.zoomLevel": 2,
+    "window.zoomLevel": 0,
     "eslint.codeAction.showDocumentation": {
       "enable": true
     },
