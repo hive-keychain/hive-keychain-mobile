@@ -7,6 +7,7 @@ import {
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import Transactions from 'components/hive/Transactions';
+import Survey from 'components/survey';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
@@ -127,6 +128,7 @@ const Main = ({
           toUpperCase
           components={[<Primary />, <Transactions user={user} />, <Tokens />]}
         />
+        <Survey navigation={navigation} />
       </>
     </WalletPage>
   );
