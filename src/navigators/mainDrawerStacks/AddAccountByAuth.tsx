@@ -33,7 +33,7 @@ export default () => {
           headerTransparent,
         })}
         initialParams={{wallet: true}}
-        component={AddAccountByAuth} //TODO create AddAccountByAuth component.
+        component={AddAccountByAuth}
       />
     </AccountByAuthStack.Navigator>
   );

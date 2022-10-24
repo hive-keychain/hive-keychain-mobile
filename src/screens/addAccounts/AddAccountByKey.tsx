@@ -27,6 +27,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import validateNewAccount from 'utils/keyValidation';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 
 const AddAccountByKey = ({
   addAccount,
@@ -96,6 +97,11 @@ const AddAccountByKey = ({
           <Button
             title={translate('common.import').toUpperCase()}
             onPress={onImportKeys}
+          />
+          <Separator height={height / 22} />
+          <Button
+            onPress={() => navigate('AddAccountByAuth')}
+            title="Use Authorized Account instead"
           />
         </View>
       </>
