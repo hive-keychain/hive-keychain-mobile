@@ -48,7 +48,7 @@ const AddAccountByAuth = ({
   };
 
   const {height} = useWindowDimensions();
-  //TODO scanQR if needed?.
+
   return (
     <Background>
       <>
@@ -60,9 +60,9 @@ const AddAccountByAuth = ({
           <Text style={styles.text}>{translate('addAccountByAuth.text')}</Text>
           <Separator height={height / 15} />
           <CustomInput
+            autoCapitalize="none"
             placeholder={translate('common.username').toUpperCase()}
             leftIcon={<UserLogo />}
-            autoCapitalize="none"
             value={account}
             onChangeText={setAccount}
           />
