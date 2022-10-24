@@ -3,6 +3,7 @@ import DrawerContent from 'components/drawer/Content';
 import AboutStack from 'navigators/mainDrawerStacks/About';
 import AccountManagementStack from 'navigators/mainDrawerStacks/AccountManagement';
 import AddAccountStack from 'navigators/mainDrawerStacks/AddAccount';
+import AddAccountByAuthStack from 'navigators/mainDrawerStacks/AddAccountByAuth';
 import BrowserStack from 'navigators/mainDrawerStacks/Browser';
 import SettingsStack from 'navigators/mainDrawerStacks/Settings';
 import WalletStack from 'navigators/mainDrawerStacks/Wallet';
@@ -46,6 +47,11 @@ export default () => {
         name="AddAccountStack"
         options={{title: translate('navigation.add_account')}}
         component={AddAccountStack}
+      />
+      <Drawer.Screen
+        name="AddAccountByAuth"
+        options={{title: translate('navigation.add_account_by_auth')}}
+        component={AddAccountByAuthStack}
       />
       <Drawer.Screen
         name="Governance"
