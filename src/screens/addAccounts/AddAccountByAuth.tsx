@@ -96,6 +96,6 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps, {addAccount}); //TODO check if needed an specific action to add an account by auth?
+const connector = connect(mapStateToProps, {addAccount});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(AddAccountByAuth);

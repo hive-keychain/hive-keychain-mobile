@@ -16,6 +16,13 @@ const addAuthorizedAccount = async (
   ) {
     throw new Error(translate('toast.account_already'));
   }
+  if (
+    !existingAccounts
+      .map((localAccount: Account) => localAccount.name)
+      .includes(authorizedAccount)
+  ) {
+    throw new Error(translate('toast.no_auth_account', {authorizedAccount}));
+  }
 
   const hiveAccounts = await getClient().database.getAccounts([username]);
 

@@ -3,6 +3,7 @@ import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import DrawerButton from 'components/ui/DrawerButton';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import AddAccountByAuth from 'screens/addAccounts/AddAccountByAuth';
 import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/addAccounts/ScanQR';
 import {translate} from 'utils/localize';
@@ -45,6 +46,26 @@ export default () => {
           },
         }}
         component={ScanQR}
+      />
+      <AccountStack.Screen
+        name="AddAccountFromWalletScreenByAuth"
+        //@ts-ignore : both headerRight and headerTransparent are needed here
+        options={({navigation}) => ({
+          headerRight: () => {
+            return (
+              <View style={styles.buttonsContainer}>
+                <MoreInformation type={Info.KEYS} />
+                <DrawerButton navigation={navigation} />
+              </View>
+            );
+          },
+          headerTintColor: 'white',
+          title: translate('navigation.add_account_by_auth'),
+          headerTitleAlign: 'left',
+          headerTransparent,
+        })}
+        initialParams={{wallet: true}}
+        component={AddAccountByAuth}
       />
     </AccountStack.Navigator>
   );

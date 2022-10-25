@@ -248,7 +248,8 @@
     "savings_deposit_success": "You succesfully deposited {{amount}} to your savings.",
     "savings_withdraw_success": "You succesfully started a {{amount}} withdrawal from your savings. It will be credited to your account in 3.5 days.",
     "incorrect_user": "Please check the username and try again.",
-    "accounts_no_auth": "{{authorizedAccount}} does not have authority over {{username}}."
+    "accounts_no_auth": "{{authorizedAccount}} does not have authority over {{username}}.",
+    "no_auth_account": "Please save {{authorizedAccount}} in Hive Keychain to use it as an authorized account."
   },
   "navigation": {
     "log_out": "LOG OUT",

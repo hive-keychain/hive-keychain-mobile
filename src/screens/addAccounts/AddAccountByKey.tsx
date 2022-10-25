@@ -37,6 +37,9 @@ const AddAccountByKey = ({
   (AddAccNavigationProps | AddAccFromWalletNavigationProps)) => {
   const [account, setAccount] = useState('');
   const [key, setKey] = useState('');
+  const [allowAddByAuth, setAllowAddByAuth] = useState(
+    route.params ? route.params.wallet : false,
+  );
 
   useLockedPortrait(navigation);
 
@@ -99,10 +102,12 @@ const AddAccountByKey = ({
             onPress={onImportKeys}
           />
           <Separator height={height / 22} />
-          <Button
-            onPress={() => navigate('AddAccountByAuth')}
-            title="Use Authorized Account instead"
-          />
+          {allowAddByAuth && (
+            <Button
+              onPress={() => navigate('AddAccountFromWalletScreenByAuth')}
+              title="Use Authorized Account instead"
+            />
+          )}
         </View>
       </>
     </Background>
