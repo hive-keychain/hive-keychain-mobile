@@ -1,6 +1,8 @@
 import {useFocusEffect} from '@react-navigation/native';
 import RightArrow from 'assets/browser/icon-forward.svg';
 import LeftArrow from 'assets/browser/icon_back.svg';
+import DesktopView from 'assets/browser/icon_desktop_view.svg';
+import MovileView from 'assets/browser/icon_mobile_view.svg';
 import Add from 'assets/browser/icon_new.svg';
 import Refresh from 'assets/browser/icon_refresh.svg';
 import React from 'react';
@@ -23,6 +25,8 @@ type Props = {
   height: number;
   addTab: () => void;
   tabs: number;
+  userAgentWebView: string;
+  setUserAgentWebView: () => void;
 };
 const Footer = ({
   canGoBack,
@@ -34,6 +38,8 @@ const Footer = ({
   manageTabs,
   height,
   tabs,
+  userAgentWebView,
+  setUserAgentWebView,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(height, insets);
@@ -75,6 +81,14 @@ const Footer = ({
           <Text style={styles.text}>{tabs}</Text>
         </View>
       </TouchableOpacity>
+
+      <TouchableOpacity onPress={setUserAgentWebView}>
+        {userAgentWebView === '' ? (
+          <MovileView style={styles.icons_view} />
+        ) : (
+          <DesktopView style={styles.icons_view} />
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -103,6 +117,10 @@ const getStyles = (height: number, insets: EdgeInsets) =>
       flex: 2,
       textAlign: 'center',
       color: '#838383',
+    },
+    icons_view: {
+      width: 25,
+      color: 'white',
     },
   });
 

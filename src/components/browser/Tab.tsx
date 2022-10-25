@@ -19,7 +19,7 @@ import {
 } from 'react-native-webview/lib/WebViewTypes';
 import {UserPreference} from 'reducers/preferences.types';
 import {urlTransformer} from 'utils/browser';
-import {BrowserConfig} from 'utils/config';
+import {BrowserConfig, WebViewConfig} from 'utils/config';
 import {
   getRequiredWifType,
   sendError,
@@ -89,6 +89,7 @@ export default ({
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
   const [shouldUpdateWvInfo, setShouldUpdateWvInfo] = useState(true);
+  const [userAgentWebView, setUserAgentWebView] = useState('');
   const insets = useSafeAreaInsets();
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
   useEffect(() => {
@@ -270,6 +271,16 @@ export default ({
       });
     }
   };
+
+  const onHandleWebViewMode = () => {
+    if (userAgentWebView === '') {
+      setUserAgentWebView(WebViewConfig.userAgent);
+    } else {
+      setUserAgentWebView('');
+    }
+    reload();
+  };
+
   return (
     <View
       style={[styles.container, !active || isManagingTab ? styles.hide : null]}>
@@ -292,6 +303,7 @@ export default ({
           ref={tabParentRef}
           collapsable={false}>
           <WebView
+            userAgent={userAgentWebView}
             source={{
               uri: url === BrowserConfig.HOMEPAGE_URL ? null : url,
             }}
@@ -343,6 +355,8 @@ export default ({
           }}
           height={FOOTER_HEIGHT}
           tabs={tabsNumber}
+          userAgentWebView={userAgentWebView}
+          setUserAgentWebView={onHandleWebViewMode}
         />
       )}
     </View>
