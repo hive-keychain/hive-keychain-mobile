@@ -13,8 +13,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
 
   let name = route.params?.name;
   let data = route.params?.data;
-  console.log('a', data);
-  console.log(route);
+
   if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
   }
