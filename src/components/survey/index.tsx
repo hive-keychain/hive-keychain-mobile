@@ -18,7 +18,6 @@ const Survey = ({navigation}: Props): null => {
   }, []);
 
   const init = async () => {
-    await AsyncStorage.removeItem('SURVEY_ID');
     const survey = await AsyncStorage.getItem('SURVEY_ID');
     console.log(+survey);
     console.log(

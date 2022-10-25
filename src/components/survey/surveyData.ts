@@ -6,8 +6,7 @@ export const SurveyData = {
     'The survey is anonymous but if you give us your username, you will get a special badge on HiveBuzz to celebrate your commitment!',
   ],
   image:
-    'https://files.peakd.com/file/peakd-hive/stoodkev/23vsGD1A4ehAFfuzmEF2BKSHf4fQq181fajg9eRTdfuj146KvkWw4pxTHiodkQDMAQzmK.png',
-  link:
-    'https://docs.google.com/forms/d/1VXDfw5XwLEnGwgoSBUaRCnSuuNOI61FMREzsd-RURHo',
+    'https://files.peakd.com/file/peakd-hive/stoodkev/23uQiBc4eMeB4gjf5AfxzqK7FNgeWZTsJtq2RSjVs8Vg17SkTSmMpVpXZWwgGR4iCGYsU.png',
+  link: 'https://forms.gle/PjrY9q61Nx1LUQfdA',
   expirationDate: new Date('2022-11-03'),
 };
