@@ -24,7 +24,6 @@
   "liveServer.settings.port": 1337,
   "liveServer.settings.donotShowInfoMsg": true,
   "liveServer.settings.useLocalIp": true,
-  "window.zoomLevel": 0,
   "eslint.codeAction.showDocumentation": {
     "enable": true
   },
@@ -49,5 +48,5 @@
   },
   "editor.inlineSuggest.enabled": true,
   "thunder-client.saveToWorkspace": true,
-  "editor.minimap.enabled": false
+  "editor.minimap.enabled": false,
 }
