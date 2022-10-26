@@ -103,10 +103,10 @@ const AddAccountByKey = ({
           />
           <Separator height={height / 22} />
           {allowAddByAuth && (
-            <Button
-              onPress={() => navigate('AddAccountFromWalletScreenByAuth')}
-              title="Use Authorized Account instead"
-            />
+            <TouchableOpacity
+              onPress={() => navigate('AddAccountFromWalletScreenByAuth')}>
+              <Text style={styles.text}>Use Authorized Account instead</Text>
+            </TouchableOpacity>
           )}
         </View>
       </>

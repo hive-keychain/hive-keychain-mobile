@@ -14,7 +14,8 @@
     "posting": "Posting",
     "active": "Active",
     "memo": "Memo",
-    "key_type": "{{type}} key"
+    "key_type": "{{type}} key",
+    "using_authorized_account": "Signing using {{authorizedAccount}}'s account"
   },
   "common": {
     "import": "Import",
@@ -249,12 +250,13 @@
     "savings_withdraw_success": "You succesfully started a {{amount}} withdrawal from your savings. It will be credited to your account in 3.5 days.",
     "incorrect_user": "Please check the username and try again.",
     "accounts_no_auth": "{{authorizedAccount}} does not have authority over {{username}}.",
-    "no_auth_account": "Please save {{authorizedAccount}} in Hive Keychain to use it as an authorized account."
+    "no_auth_account": "Please save {{authorizedAccount}} in Hive Keychain to use it as an authorized account.",
+    "no_accounts_no_auth": "Please add at least one account with authority over {{username}}"
   },
   "navigation": {
     "log_out": "LOG OUT",
     "add_account": "ADD ACCOUNT",
-    "add_account_by_auth": "ADD ACCOUNT BY AUTH",
+    "add_account_by_auth": "Authorized account",
     "manage": "MANAGE KEYS",
     "settings": "SETTINGS",
     "about": "ABOUT",

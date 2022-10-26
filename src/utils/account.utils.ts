@@ -6,7 +6,10 @@ const addAuthorizedAccount = async (
   username: string,
   authorizedAccount: string,
   existingAccounts: Account[],
+  simpleToast: any,
 ): Promise<AccountKeys> => {
+  let localAuthorizedAccount: Account;
+
   if (username.trim().length === 0 || authorizedAccount.trim().length === 0)
     throw new Error('Please fill the fields');
   if (
@@ -14,6 +17,10 @@ const addAuthorizedAccount = async (
       .map((localAccount: Account) => localAccount.name)
       .includes(username)
   ) {
+    if (simpleToast) {
+      simpleToast.show(translate('toast.account_already'), simpleToast.LONG);
+      return;
+    }
     throw new Error(translate('toast.account_already'));
   }
   if (
@@ -21,12 +28,21 @@ const addAuthorizedAccount = async (
       .map((localAccount: Account) => localAccount.name)
       .includes(authorizedAccount)
   ) {
+    if (simpleToast) return;
     throw new Error(translate('toast.no_auth_account', {authorizedAccount}));
+  } else {
+    localAuthorizedAccount = existingAccounts.find(
+      (localAccount: Account) => localAccount.name,
+    )!;
   }
 
   const hiveAccounts = await getClient().database.getAccounts([username]);
 
   if (!hiveAccounts || hiveAccounts.length === 0) {
+    if (simpleToast) {
+      simpleToast.show(translate('toast.incorrect_user'), simpleToast.LONG);
+      return;
+    }
     throw new Error(translate('toast.incorrect_user'));
   }
   let hiveAccount = hiveAccounts[0];
@@ -44,6 +60,7 @@ const addAuthorizedAccount = async (
   );
 
   if (!activeAuth && !postingAuth) {
+    if (simpleToast) return;
     throw new Error(
       translate('toast.accounts_no_auth', {authorizedAccount, username}),
     );
@@ -56,7 +73,7 @@ const addAuthorizedAccount = async (
     keys.activePubkey = `@${authorizedAccount}`;
   }
   if (postingAuth && postingAuth[1] >= postingKeyInfo.weight_threshold) {
-    keys.active = existingAccounts.filter(
+    keys.posting = existingAccounts.filter(
       (account) => account.name === authorizedAccount,
     )[0].keys.posting;
     keys.postingPubkey = `@${authorizedAccount}`;
