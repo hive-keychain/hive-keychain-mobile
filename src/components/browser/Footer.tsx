@@ -119,7 +119,7 @@ const getStyles = (height: number, insets: EdgeInsets) =>
       color: '#838383',
     },
     icons_view: {
-      width: 25,
+      width: 27,
       color: 'white',
     },
   });

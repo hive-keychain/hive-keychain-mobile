@@ -278,8 +278,11 @@ export default ({
     } else {
       setUserAgentWebView('');
     }
-    reload();
   };
+
+  useEffect(() => {
+    if (url !== 'about:blank') reload();
+  }, [userAgentWebView]);
 
   return (
     <View
