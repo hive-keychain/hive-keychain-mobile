@@ -105,7 +105,9 @@ const AddAccountByKey = ({
           {allowAddByAuth && (
             <TouchableOpacity
               onPress={() => navigate('AddAccountFromWalletScreenByAuth')}>
-              <Text style={styles.text}>Use Authorized Account instead</Text>
+              <Text style={[styles.text, styles.textUnderlined]}>
+                Use Authorized Account instead
+              </Text>
             </TouchableOpacity>
           )}
         </View>
@@ -117,6 +119,9 @@ const AddAccountByKey = ({
 const styles = StyleSheet.create({
   container: {alignItems: 'center'},
   text: {color: 'white', fontWeight: 'bold', fontSize: 16},
+  textUnderlined: {
+    textDecorationLine: 'underline',
+  },
 });
 
 const mapStateToProps = (state: RootState) => {

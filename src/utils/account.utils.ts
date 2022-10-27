@@ -6,7 +6,7 @@ const addAuthorizedAccount = async (
   username: string,
   authorizedAccount: string,
   existingAccounts: Account[],
-  simpleToast: any,
+  simpleToast?: any,
 ): Promise<AccountKeys> => {
   let localAuthorizedAccount: Account;
 
