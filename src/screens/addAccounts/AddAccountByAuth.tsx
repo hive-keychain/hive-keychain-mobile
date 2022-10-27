@@ -73,6 +73,13 @@ const AddAccountByAuth = ({
             autoCapitalize="none"
             placeholder={translate('common.username').toUpperCase()}
             leftIcon={<UserLogo />}
+            value={account}
+            onChangeText={setAccount}
+          />
+          <Separator height={height / 15} />
+          <CustomInput
+            placeholder={translate('common.authorized_username').toUpperCase()}
+            leftIcon={<UserLogo />}
             rightIcon={
               <TouchableOpacity
                 onPress={() => {
@@ -84,13 +91,6 @@ const AddAccountByAuth = ({
                 <QRLogo />
               </TouchableOpacity>
             }
-            value={account}
-            onChangeText={setAccount}
-          />
-          <Separator height={height / 15} />
-          <CustomInput
-            placeholder={translate('common.authorized_username').toUpperCase()}
-            leftIcon={<UserLogo />}
             autoCapitalize="none"
             value={authorizedAccount}
             onChangeText={setAuthorizedAccount}
