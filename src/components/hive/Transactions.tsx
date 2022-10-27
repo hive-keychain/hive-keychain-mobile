@@ -6,7 +6,7 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {getMainLocale, translate} from 'utils/localize';
-import Transfer from './Transfer';
+import TransactionInfo from './Transaction-info';
 
 type Props = PropsFromRedux & {user: ActiveAccount};
 
@@ -47,7 +47,12 @@ const Transactions = ({
           }}
           renderItem={(transaction) => {
             return (
-              <Transfer
+              // <Transfer
+              //   transaction={transaction.item}
+              //   user={user}
+              //   locale={locale}
+              // />
+              <TransactionInfo
                 transaction={transaction.item}
                 user={user}
                 locale={locale}

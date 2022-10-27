@@ -1,6 +1,16 @@
+import {utils as dHiveUtils} from '@hiveio/dhive';
 import {decodeMemo} from 'components/bridge';
 import {AppThunk} from 'src/hooks/redux';
-import dhive, {getClient} from 'utils/hive';
+import {
+  ClaimReward,
+  FillRecurrentTransfer,
+  RecurrentTransfer,
+  Transaction,
+  Transfer,
+} from 'src/interfaces/transaction.interface';
+import {store} from 'store';
+import {getSymbol, toHP} from 'utils/format';
+import {getClient} from 'utils/hive';
 import {
   getConversionRequests,
   getDelegatees,
@@ -14,7 +24,6 @@ import {
   ActionPayload,
   DelegationsPayload,
   GlobalProperties,
-  Transaction,
 } from './interfaces';
 import {
   ACTIVE_ACCOUNT,
@@ -94,11 +103,11 @@ export const initAccountTransactions = (
 ): AppThunk => async (dispatch, getState) => {
   const memoKey = getState().accounts.find((a) => a.name === accountName)!.keys
     .memo;
-  const transfers = await getAccountTransactions(accountName, null, memoKey);
-
+  const transactions = await getAccountTransactions(accountName, null, memoKey);
+  console.log({transactions}); //TODO to remove
   dispatch({
     type: INIT_TRANSACTIONS,
-    payload: transfers,
+    payload: transactions,
   });
 };
 
@@ -121,8 +130,13 @@ const getAccountTransactions = async (
   memoKey?: string,
 ): Promise<Transaction[]> => {
   try {
-    const op = dhive.utils.operationOrders;
-    const operationsBitmask = dhive.utils.makeBitMaskFilter([op.transfer]);
+    const op = dHiveUtils.operationOrders;
+    const operationsBitmask = dHiveUtils.makeBitMaskFilter([
+      op.transfer,
+      op.recurrent_transfer,
+      op.fill_recurrent_transfer,
+      op.claim_reward_balance,
+    ]) as [number, number];
     const transactions = await getClient().database.getAccountHistory(
       accountName,
       start || -1,
@@ -130,17 +144,65 @@ const getAccountTransactions = async (
       //@ts-ignore
       operationsBitmask,
     );
-
+    console.log('rawTransactions: '); //TODO to remove
+    console.log({transactions}); //TODO to remove
     const transfers = transactions
-      .filter((e) => e[1].op[0] === 'transfer')
+      //.filter((e) => e[1].op[0] === 'transfer')
       .map((e) => {
-        const receivedTransaction = e[1].op[1];
-        //@ts-ignore
+        let specificTransaction = null;
+        switch (e[1].op[0]) {
+          case 'transfer': {
+            specificTransaction = e[1].op[1] as Transfer;
+            break;
+          }
+          case 'recurrent_transfer': {
+            specificTransaction = e[1].op[1] as RecurrentTransfer;
+            break;
+          }
+          case 'fill_recurrent_transfer': {
+            const amtObj = e[1].op[1].amount;
+            const amt =
+              typeof amtObj === 'object'
+                ? parseFloat(amtObj.amount) / 100
+                : parseFloat(amtObj.split(' ')[0]);
+            const currency =
+              typeof amtObj === 'object'
+                ? getSymbol(amtObj.nai)
+                : amtObj.split(' ')[1];
+            let amount = `${amt} ${currency}`;
+
+            specificTransaction = e[1].op[1] as FillRecurrentTransfer;
+            specificTransaction.amount = amount;
+            specificTransaction.remainingExecutions =
+              e[1].op[1].remaining_executions;
+            break;
+          }
+          case 'claim_reward_balance': {
+            specificTransaction = e[1].op[1] as ClaimReward;
+            specificTransaction.hbd = e[1].op[1].reward_hbd;
+            specificTransaction.hive = e[1].op[1].reward_hive;
+            specificTransaction.hp = `${toHP(
+              e[1].op[1].reward_vests,
+              store.getState().globalProperties.globals,
+            ).toFixed(3)} HP`;
+            break;
+          }
+        }
+
         const tr: Transaction = {
-          ...receivedTransaction,
-          type: 'transfer',
+          ...specificTransaction,
+          type: specificTransaction!.type ?? e[1].op[0],
           timestamp: e[1].timestamp,
           key: `${accountName}!${e[0]}`,
+          index: e[0],
+          txId: e[1].trx_id,
+          blockNumber: e[1].block,
+          url:
+            e[1].trx_id === '0000000000000000000000000000000000000000'
+              ? `https://hiveblocks.com/b/${e[1].block}#${e[1].trx_id}`
+              : `https://hiveblocks.com/tx/${e[1].trx_id}`,
+          last: false,
+          lastFetched: false,
         };
         return tr;
       })
@@ -153,14 +215,24 @@ const getAccountTransactions = async (
       transfers[transfers.length - 1].last = true;
     }
     const trs = [];
-    for (const transfer of transfers) {
-      const {memo} = transfer;
+    for (const transfer of transfers.filter(
+      (tr) =>
+        tr.type === 'transfer' ||
+        tr.type === 'recurrent_transfer' ||
+        tr.type === 'fill_recurrent_transfer',
+    )) {
+      const {memo} = transfer as
+        | Transfer
+        | RecurrentTransfer
+        | FillRecurrentTransfer;
       if (memo[0] === '#') {
         if (memoKey) {
           try {
+            //@ts-ignore
             transfer.memo = await decodeMemo(memoKey, memo);
           } catch (e) {}
         } else {
+          //@ts-ignore
           transfer.memo = translate('wallet.add_memo');
         }
         trs.push(transfer);
