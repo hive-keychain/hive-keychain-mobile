@@ -84,9 +84,9 @@ const Footer = ({
 
       <TouchableOpacity onPress={setUserAgentWebView}>
         {userAgentWebView === '' ? (
-          <MovileView style={styles.icons_view} />
+          <MovileView style={styles.icons_view} stroke={'#838383'} />
         ) : (
-          <DesktopView style={styles.icons_view} />
+          <DesktopView style={styles.icons_view} stroke={'#838383'} />
         )}
       </TouchableOpacity>
     </View>
@@ -119,8 +119,9 @@ const getStyles = (height: number, insets: EdgeInsets) =>
       color: '#838383',
     },
     icons_view: {
+      strokeWidth: 40,
       width: 27,
-      color: 'white',
+      height: 27,
     },
   });
 
