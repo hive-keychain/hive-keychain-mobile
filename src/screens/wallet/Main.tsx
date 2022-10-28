@@ -86,6 +86,17 @@ const Main = ({
     };
   }, []);
 
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadAccount(lastAccount || accounts[0].name);
+      loadProperties();
+      loadPrices();
+      fetchPhishingAccounts();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   if (!user) {
     return null;
   }
