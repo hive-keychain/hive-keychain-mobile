@@ -1,5 +1,4 @@
 import {addAccount} from 'actions/index';
-import KeyLogo from 'assets/addAccount/icon_key.svg';
 import QRLogo from 'assets/addAccount/icon_scan-qr.svg';
 import UserLogo from 'assets/addAccount/icon_username.svg';
 import TitleLogo from 'assets/addAccount/img_import.svg';
@@ -25,28 +24,28 @@ import {Text} from 'react-native-elements';
 import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
-import validateNewAccount from 'utils/keyValidation';
+import AccountUtils from 'utils/account.utils';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
 
-const AddAccountByKey = ({
+const AddAccountByAuth = ({
   addAccount,
+  localAccounts,
   navigation,
   route,
 }: PropsFromRedux &
   (AddAccNavigationProps | AddAccFromWalletNavigationProps)) => {
   const [account, setAccount] = useState('');
-  const [key, setKey] = useState('');
-  const [allowAddByAuth, setAllowAddByAuth] = useState(
-    route.params ? route.params.wallet : false,
-  );
+  const [authorizedAccount, setAuthorizedAccount] = useState('');
 
   useLockedPortrait(navigation);
 
-  const onImportKeys = async () => {
+  const onImportKeysByAuth = async () => {
     try {
-      const keys = await validateNewAccount(account, key);
-
+      const keys = await AccountUtils.addAuthorizedAccount(
+        account,
+        authorizedAccount,
+        localAccounts,
+      );
       if (keys) {
         const wallet = route.params ? route.params.wallet : false;
         addAccount(account, keys, wallet, false);
@@ -57,6 +56,7 @@ const AddAccountByKey = ({
       Toast.show((e as any).message || e, Toast.LONG);
     }
   };
+
   const {height} = useWindowDimensions();
 
   return (
@@ -67,21 +67,19 @@ const AddAccountByKey = ({
           <Separator height={height / 7.5} />
           <TitleLogo />
           <Separator height={height / 15} />
-          <Text style={styles.text}>{translate('addAccountByKey.text')}</Text>
+          <Text style={styles.text}>{translate('addAccountByAuth.text')}</Text>
           <Separator height={height / 15} />
           <CustomInput
+            autoCapitalize="none"
             placeholder={translate('common.username').toUpperCase()}
             leftIcon={<UserLogo />}
-            autoCapitalize="none"
             value={account}
             onChangeText={setAccount}
           />
           <Separator height={height / 15} />
-
           <CustomInput
-            placeholder={translate('common.privateKey').toUpperCase()}
-            autoCapitalize="characters"
-            leftIcon={<KeyLogo />}
+            placeholder={translate('common.authorized_username').toUpperCase()}
+            leftIcon={<UserLogo />}
             rightIcon={
               <TouchableOpacity
                 onPress={() => {
@@ -93,23 +91,15 @@ const AddAccountByKey = ({
                 <QRLogo />
               </TouchableOpacity>
             }
-            value={key}
-            onChangeText={setKey}
+            autoCapitalize="none"
+            value={authorizedAccount}
+            onChangeText={setAuthorizedAccount}
           />
           <Separator height={height / 7.5} />
           <Button
             title={translate('common.import').toUpperCase()}
-            onPress={onImportKeys}
+            onPress={onImportKeysByAuth}
           />
-          <Separator height={height / 22} />
-          {allowAddByAuth && (
-            <TouchableOpacity
-              onPress={() => navigate('AddAccountFromWalletScreenByAuth')}>
-              <Text style={[styles.text, styles.textUnderlined]}>
-                Use Authorized Account instead
-              </Text>
-            </TouchableOpacity>
-          )}
         </View>
       </>
     </Background>
@@ -118,16 +108,15 @@ const AddAccountByKey = ({
 
 const styles = StyleSheet.create({
   container: {alignItems: 'center'},
-  text: {color: 'white', fontWeight: 'bold', fontSize: 16},
-  textUnderlined: {
-    textDecorationLine: 'underline',
-  },
+  text: {color: 'white', fontWeight: 'bold', fontSize: 16, textAlign: 'center'},
 });
 
 const mapStateToProps = (state: RootState) => {
-  return state;
+  return {
+    localAccounts: state.accounts,
+  };
 };
 
 const connector = connect(mapStateToProps, {addAccount});
 type PropsFromRedux = ConnectedProps<typeof connector>;
-export default connector(AddAccountByKey);
+export default connector(AddAccountByAuth);
