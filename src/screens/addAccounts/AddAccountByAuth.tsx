@@ -108,7 +108,7 @@ const AddAccountByAuth = ({
 
 const styles = StyleSheet.create({
   container: {alignItems: 'center'},
-  text: {color: 'white', fontWeight: 'bold', fontSize: 16},
+  text: {color: 'white', fontWeight: 'bold', fontSize: 16, textAlign: 'center'},
 });
 
 const mapStateToProps = (state: RootState) => {

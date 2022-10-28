@@ -8,7 +8,9 @@
     "createAccount": "New Account"
   },
   "addAccountByKey": {"text": "Add your existing HIVE account to Keychain"},
-  "addAccountByAuth": {"text": "Add an authorized HIVE account to Keychain"},
+  "addAccountByAuth": {
+    "text": "Add the new account by specifying an account that has authority over it, and that is already saved in Hive Keychain."
+  },
   "addAccountByQR": {"wrongQR": "Please scan a Hive Keychain account QR Code"},
   "keys": {
     "posting": "Posting",
@@ -20,7 +22,7 @@
   "common": {
     "import": "Import",
     "username": "Username",
-    "authorized_username": "Authorized Account",
+    "authorized_username": "Auth. Account",
     "confirm": "Confirm",
     "privateKey": "Private Key",
     "private": "Private",
@@ -256,7 +258,7 @@
   "navigation": {
     "log_out": "LOG OUT",
     "add_account": "ADD ACCOUNT",
-    "add_account_by_auth": "AUTHORIZED ACCOUNT",
+    "add_account_by_auth": "AUTH. ACCOUNT",
     "manage": "MANAGE KEYS",
     "settings": "SETTINGS",
     "about": "ABOUT",

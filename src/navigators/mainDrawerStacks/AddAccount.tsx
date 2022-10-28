@@ -54,7 +54,6 @@ export default () => {
           headerRight: () => {
             return (
               <View style={styles.buttonsContainer}>
-                <MoreInformation type={Info.KEYS} />
                 <DrawerButton navigation={navigation} />
               </View>
             );
@@ -63,6 +62,7 @@ export default () => {
           title: translate('navigation.add_account_by_auth'),
           headerTitleAlign: 'left',
           headerTransparent,
+          headerBackTitleVisible: false,
         })}
         initialParams={{wallet: true}}
         component={AddAccountByAuth}
