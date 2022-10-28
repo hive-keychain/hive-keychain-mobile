@@ -9,7 +9,6 @@ export default (
   state: Transactions = {loading: false, list: []},
   {type, payload}: ActionPayload<Transaction[]>,
 ) => {
-  console.log({type, payload}); //TODO to remove
   switch (type) {
     case ACTIVE_ACCOUNT:
       return {loading: true, list: []};

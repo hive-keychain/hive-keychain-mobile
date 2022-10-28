@@ -7,23 +7,25 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import {Transfer as TransferInterface} from 'src/interfaces/transaction.interface';
+import {FillConvert} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
-import {withCommas} from 'utils/format';
 
 type Props = {
   user: ActiveAccount;
-  transaction: TransferInterface;
+  transaction: FillConvert;
   token?: boolean;
   locale: string;
 };
-const Transfer = ({transaction, user, locale, token = false}: Props) => {
+const FillConvertTransactionComponent = ({
+  transaction,
+  user,
+  locale,
+  token = false,
+}: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
-  const {timestamp, from, to, amount, memo} = transaction;
-  const other = from === username ? to : from;
-  const direction = from === username ? '-' : '+';
-  const color = direction === '+' ? '#3BB26E' : '#B9122F';
+  const {timestamp, amount_in, amount_out} = transaction;
+  const color = '#3BB26E';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -45,14 +47,16 @@ const Transfer = ({transaction, user, locale, token = false}: Props) => {
       <View style={styles.main}>
         <View style={styles.left}>
           <Text>{date}</Text>
-          <Text style={styles.username}>{`@${other}`}</Text>
+          <Text style={styles.username}>Filled {amount_out} as</Text>
         </View>
 
-        <Text style={styles.amount}>{`${direction} ${withCommas(amount)} ${
-          amount.split(' ')[1]
-        }`}</Text>
+        <Text style={styles.amount}>{amount_in}</Text>
       </View>
-      {toggle && memo && memo.length ? <Text>{memo}</Text> : null}
+      {toggle && (
+        <Text>
+          Successfully filled conversion of {amount_out} as {amount_in}.
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };
@@ -74,4 +78,4 @@ const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
     amount: {color},
   });
 
-export default Transfer;
+export default FillConvertTransactionComponent;

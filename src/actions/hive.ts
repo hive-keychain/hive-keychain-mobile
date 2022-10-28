@@ -2,13 +2,27 @@ import {utils as dHiveUtils} from '@hiveio/dhive';
 import {decodeMemo} from 'components/bridge';
 import {AppThunk} from 'src/hooks/redux';
 import {
+  ClaimAccount,
   ClaimReward,
+  CollateralizedConvert,
+  Convert,
+  CreateAccount,
+  CreateClaimedAccount,
+  Delegation,
+  DepositSavings,
+  FillCollateralizedConvert,
+  FillConvert,
   FillRecurrentTransfer,
+  PowerDown,
+  PowerUp,
+  ReceivedInterests,
   RecurrentTransfer,
+  StartWithdrawSavings,
   Transaction,
   Transfer,
+  WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
-import {store} from 'store';
+import {RootState, store} from 'store';
 import {getSymbol, toHP} from 'utils/format';
 import {getClient} from 'utils/hive';
 import {
@@ -104,7 +118,6 @@ export const initAccountTransactions = (
   const memoKey = getState().accounts.find((a) => a.name === accountName)!.keys
     .memo;
   const transactions = await getAccountTransactions(accountName, null, memoKey);
-  console.log({transactions}); //TODO to remove
   dispatch({
     type: INIT_TRANSACTIONS,
     payload: transactions,
@@ -129,6 +142,7 @@ const getAccountTransactions = async (
   start: number | null,
   memoKey?: string,
 ): Promise<Transaction[]> => {
+  const {globals} = (store.getState() as RootState).properties;
   try {
     const op = dHiveUtils.operationOrders;
     const operationsBitmask = dHiveUtils.makeBitMaskFilter([
@@ -136,27 +150,46 @@ const getAccountTransactions = async (
       op.recurrent_transfer,
       op.fill_recurrent_transfer,
       op.claim_reward_balance,
+      op.delegate_vesting_shares,
+      op.transfer_to_vesting,
+      op.withdraw_vesting,
+      op.interest,
+      op.transfer_to_savings,
+      op.transfer_from_savings,
+      op.fill_transfer_from_savings,
+      op.claim_account,
+      op.convert,
+      op.collateralized_convert,
+      op.fill_convert_request,
+      op.fill_collateralized_convert_request,
+      op.create_claimed_account,
+      op.account_create,
     ]) as [number, number];
     const transactions = await getClient().database.getAccountHistory(
       accountName,
       start || -1,
       start ? Math.min(10, start) : 1000,
-      //@ts-ignore
       operationsBitmask,
     );
-    console.log('rawTransactions: '); //TODO to remove
-    console.log({transactions}); //TODO to remove
-    const transfers = transactions
-      //.filter((e) => e[1].op[0] === 'transfer')
+
+    const availableTransactions = transactions
       .map((e) => {
         let specificTransaction = null;
         switch (e[1].op[0]) {
           case 'transfer': {
             specificTransaction = e[1].op[1] as Transfer;
+            specificTransaction = decodeMemoIfNeeded(
+              specificTransaction,
+              memoKey,
+            );
             break;
           }
           case 'recurrent_transfer': {
             specificTransaction = e[1].op[1] as RecurrentTransfer;
+            specificTransaction = decodeMemoIfNeeded(
+              specificTransaction,
+              memoKey,
+            );
             break;
           }
           case 'fill_recurrent_transfer': {
@@ -175,6 +208,10 @@ const getAccountTransactions = async (
             specificTransaction.amount = amount;
             specificTransaction.remainingExecutions =
               e[1].op[1].remaining_executions;
+            specificTransaction = decodeMemoIfNeeded(
+              specificTransaction,
+              memoKey,
+            );
             break;
           }
           case 'claim_reward_balance': {
@@ -183,8 +220,92 @@ const getAccountTransactions = async (
             specificTransaction.hive = e[1].op[1].reward_hive;
             specificTransaction.hp = `${toHP(
               e[1].op[1].reward_vests,
-              store.getState().globalProperties.globals,
+              globals,
             ).toFixed(3)} HP`;
+            break;
+          }
+          case 'delegate_vesting_shares': {
+            specificTransaction = e[1].op[1] as Delegation;
+            specificTransaction.amount = `${toHP(
+              e[1].op[1].vesting_shares,
+              globals,
+            ).toFixed(3)} HP`;
+            break;
+          }
+          case 'transfer_to_vesting': {
+            specificTransaction = e[1].op[1] as PowerUp;
+            specificTransaction.type = 'power_up_down';
+            specificTransaction.subType = 'transfer_to_vesting';
+            break;
+          }
+          case 'withdraw_vesting': {
+            specificTransaction = e[1].op[1] as PowerDown;
+            specificTransaction.type = 'power_up_down';
+            specificTransaction.subType = 'withdraw_vesting';
+            specificTransaction.amount = `${toHP(
+              e[1].op[1].vesting_shares,
+              globals,
+            ).toFixed(3)} HP`;
+            break;
+          }
+          case 'interest': {
+            specificTransaction = e[1].op[1] as ReceivedInterests;
+            specificTransaction.type = 'savings';
+            specificTransaction.subType = 'interest';
+            break;
+          }
+          case 'transfer_to_savings': {
+            specificTransaction = e[1].op[1] as DepositSavings;
+            specificTransaction.type = 'savings';
+            specificTransaction.subType = 'transfer_to_savings';
+            break;
+          }
+          case 'transfer_from_savings': {
+            specificTransaction = e[1].op[1] as StartWithdrawSavings;
+            specificTransaction.type = 'savings';
+            specificTransaction.subType = 'transfer_from_savings';
+            break;
+          }
+          case 'fill_transfer_from_savings': {
+            specificTransaction = e[1].op[1] as WithdrawSavings;
+            specificTransaction.type = 'savings';
+            specificTransaction.subType = 'fill_transfer_from_savings';
+            break;
+          }
+          case 'claim_account': {
+            specificTransaction = e[1].op[1] as ClaimAccount;
+            break;
+          }
+          case 'convert': {
+            specificTransaction = e[1].op[1] as Convert;
+            specificTransaction.type = 'convert';
+            specificTransaction.subType = 'convert';
+            break;
+          }
+          case 'collateralized_convert': {
+            specificTransaction = e[1].op[1] as CollateralizedConvert;
+            specificTransaction.type = 'convert';
+            specificTransaction.subType = 'collateralized_convert';
+            break;
+          }
+          case 'fill_convert_request': {
+            specificTransaction = e[1].op[1] as FillConvert;
+            specificTransaction.type = 'convert';
+            specificTransaction.subType = 'fill_convert_request';
+            break;
+          }
+          case 'fill_collateralized_convert_request': {
+            specificTransaction = e[1].op[1] as FillCollateralizedConvert;
+            specificTransaction.type = 'convert';
+            specificTransaction.subType = 'fill_collateralized_convert_request';
+            break;
+          }
+          case 'create_claimed_account': {
+            specificTransaction = e[1].op[1] as CreateClaimedAccount;
+            break;
+          }
+          case 'account_create': {
+            specificTransaction = e[1].op[1] as CreateAccount;
             break;
           }
         }
@@ -211,36 +332,14 @@ const getAccountTransactions = async (
           new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
       );
 
-    if (start && Math.min(1000, start) !== 1000 && transfers.length) {
-      transfers[transfers.length - 1].last = true;
+    if (
+      start &&
+      Math.min(1000, start) !== 1000 &&
+      availableTransactions.length
+    ) {
+      availableTransactions[availableTransactions.length - 1].last = true;
     }
-    const trs = [];
-    for (const transfer of transfers.filter(
-      (tr) =>
-        tr.type === 'transfer' ||
-        tr.type === 'recurrent_transfer' ||
-        tr.type === 'fill_recurrent_transfer',
-    )) {
-      const {memo} = transfer as
-        | Transfer
-        | RecurrentTransfer
-        | FillRecurrentTransfer;
-      if (memo[0] === '#') {
-        if (memoKey) {
-          try {
-            //@ts-ignore
-            transfer.memo = await decodeMemo(memoKey, memo);
-          } catch (e) {}
-        } else {
-          //@ts-ignore
-          transfer.memo = translate('wallet.add_memo');
-        }
-        trs.push(transfer);
-      } else {
-        trs.push(transfer);
-      }
-    }
-    return trs;
+    return availableTransactions;
   } catch (e) {
     return getAccountTransactions(
       accountName,
@@ -248,6 +347,25 @@ const getAccountTransactions = async (
       memoKey,
     );
   }
+};
+
+const decodeMemoIfNeeded = (transfer: Transfer, memoKey: string) => {
+  const {memo} = transfer;
+  if (memo[0] === '#') {
+    if (memoKey) {
+      decodeMemo(memoKey, memo)
+        .then((decoded) => {
+          transfer.memo = decoded;
+          return transfer;
+        })
+        .catch((e) => {
+          console.log('Error while decoding memo: ', e);
+        });
+    } else {
+      transfer.memo = translate('wallet.add_memo');
+    }
+  }
+  return transfer;
 };
 
 export const loadDelegators = (username: string): AppThunk => async (
