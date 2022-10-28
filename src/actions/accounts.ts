@@ -72,7 +72,6 @@ export const forgetAccount = (username: string): AppThunk => async (
       payload: {name: username},
     };
     dispatch(action);
-    navigate('WALLET');
   } else {
     dispatch(forgetAccounts());
   }

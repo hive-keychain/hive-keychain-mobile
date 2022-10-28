@@ -8,16 +8,21 @@
     "createAccount": "New Account"
   },
   "addAccountByKey": {"text": "Add your existing HIVE account to Keychain"},
+  "addAccountByAuth": {
+    "text": "Add the new account by specifying an account that has authority over it, and that is already saved in Hive Keychain."
+  },
   "addAccountByQR": {"wrongQR": "Please scan a Hive Keychain account QR Code"},
   "keys": {
     "posting": "Posting",
     "active": "Active",
     "memo": "Memo",
-    "key_type": "{{type}} key"
+    "key_type": "{{type}} key",
+    "using_authorized_account": "Signing using {{authorizedAccount}}'s account"
   },
   "common": {
     "import": "Import",
-    "username": "username",
+    "username": "Username",
+    "authorized_username": "Auth. Account",
     "confirm": "Confirm",
     "privateKey": "Private Key",
     "private": "Private",
@@ -244,11 +249,16 @@
     },
     "error_add_account": "Something went wrong! Please verify your keys and your connection.",
     "savings_deposit_success": "You succesfully deposited {{amount}} to your savings.",
-    "savings_withdraw_success": "You succesfully started a {{amount}} withdrawal from your savings. It will be credited to your account in 3.5 days."
+    "savings_withdraw_success": "You succesfully started a {{amount}} withdrawal from your savings. It will be credited to your account in 3.5 days.",
+    "incorrect_user": "Please check the username and try again.",
+    "accounts_no_auth": "{{authorizedAccount}} does not have authority over {{username}}.",
+    "no_auth_account": "Please save {{authorizedAccount}} in Hive Keychain to use it as an authorized account.",
+    "no_accounts_no_auth": "Please add at least one account with authority over {{username}}"
   },
   "navigation": {
     "log_out": "LOG OUT",
     "add_account": "ADD ACCOUNT",
+    "add_account_by_auth": "AUTH. ACCOUNT",
     "manage": "MANAGE KEYS",
     "settings": "SETTINGS",
     "about": "ABOUT",
