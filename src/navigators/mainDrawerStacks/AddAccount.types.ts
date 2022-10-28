@@ -4,6 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 export type AddAccountFromWalletParamList = {
   ScanQRScreen: {wallet: boolean};
   AddAccountFromWalletScreen: {wallet: boolean};
+  AddAccountFromWalletScreenByAuth: {wallet: boolean};
 };
 
 export type AddAccFromWalletNavigation = StackNavigationProp<
