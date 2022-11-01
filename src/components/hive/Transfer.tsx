@@ -36,6 +36,7 @@ const Transfer = ({transaction, user, locale, token = false}: Props) => {
     ...useWindowDimensions(),
     color,
   });
+
   return (
     <TouchableOpacity
       style={styles.container}

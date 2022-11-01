@@ -36,7 +36,8 @@
     "error": "Error: Something went wrong : {{msg}}",
     "error_title": "Error",
     "savings": "Savings",
-    "ok": "OK"
+    "ok": "OK",
+    "search_box_placeholder": "Input to search"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},

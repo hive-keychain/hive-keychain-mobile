@@ -1,6 +1,7 @@
 import {ActiveAccount} from 'actions/interfaces';
 import React from 'react';
 import {View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
 import {
   ClaimAccount,
   ClaimReward,
@@ -21,6 +22,7 @@ import {
   Transfer as TransferInterface,
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
+import {RootState} from 'store';
 import ClaimAccountTransactionComponent from './ClaimAccountTransactionComponent';
 import ClaimRewardsTransactionComponent from './ClaimRewardsTransactionComponent';
 import CollateralizedConvertTransactionComponent from './CollateralizedConvertTransactionComponent';
@@ -47,7 +49,12 @@ type Props = {
   locale: string;
 };
 
-const TransactionInfo = ({transaction, user, locale, token = false}: Props) => {
+const WalletTransactionInfo = ({
+  transaction,
+  user,
+  locale,
+  token = false,
+}: Props & PropsFromRedux) => {
   const getTransactionContent = () => {
     switch (transaction.type) {
       case 'transfer':
@@ -220,4 +227,11 @@ const TransactionInfo = ({transaction, user, locale, token = false}: Props) => {
   return <View>{getTransactionContent()}</View>;
 };
 
-export default TransactionInfo;
+const mapStateToProps = (state: RootState) => {
+  return {};
+};
+
+const connector = connect(mapStateToProps, {});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export const WalletTransactionInfoComponent = connector(WalletTransactionInfo);

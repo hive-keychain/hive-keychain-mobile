@@ -1,6 +1,5 @@
 import {utils as dHiveUtils} from '@hiveio/dhive';
 import {decodeMemo} from 'components/bridge';
-import {AppThunk} from 'src/hooks/redux';
 import {
   ClaimAccount,
   ClaimReward,
@@ -23,134 +22,30 @@ import {
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
 import {RootState, store} from 'store';
-import {getSymbol, toHP} from 'utils/format';
-import {getClient} from 'utils/hive';
-import {
-  getConversionRequests,
-  getDelegatees,
-  getDelegators,
-  getSavingsRequests,
-} from 'utils/hiveUtils';
-import {translate} from 'utils/localize';
-import {getPrices} from 'utils/price';
-import TransactionUtils from 'utils/transactions.utils';
-import {getPhishingAccounts} from 'utils/transferValidator';
-import {
-  ActionPayload,
-  DelegationsPayload,
-  GlobalProperties,
-} from './interfaces';
-import {
-  ACTIVE_ACCOUNT,
-  ACTIVE_ACCOUNT_RC,
-  ADD_TRANSACTIONS,
-  FETCH_CONVERSION_REQUESTS,
-  FETCH_DELEGATEES,
-  FETCH_DELEGATORS,
-  FETCH_PHISHING_ACCOUNTS,
-  FETCH_SAVINGS_REQUESTS,
-  GET_CURRENCY_PRICES,
-  GLOBAL_PROPS,
-  INIT_TRANSACTIONS,
-} from './types';
+import {getSymbol, toHP} from './format';
+import {getClient} from './hive';
+import {translate} from './localize';
 
-export const loadAccount = (
-  name: string,
-  initTransactions?: boolean,
-): AppThunk => async (dispatch, getState) => {
-  dispatch({
-    type: ACTIVE_ACCOUNT,
-    payload: {
-      name,
-    },
-  });
-  dispatch(getAccountRC(name));
-  if (initTransactions) {
-    dispatch(initAccountTransactions(name));
-  }
-  const account = (await getClient().database.getAccounts([name]))[0];
-  const keys = getState().accounts.find((e) => e.name === name)!.keys;
-  dispatch({
-    type: ACTIVE_ACCOUNT,
-    payload: {
-      account,
-      keys,
-    },
-  });
-};
+export const NB_TRANSACTION_FETCHED = 1000;
+export const HAS_IN_OUT_TRANSACTIONS = ['transfer', 'delegate_vesting_shares'];
+export const TRANSFER_TYPE_TRANSACTIONS = [
+  'transfer',
+  'fill_reccurent_transfer',
+  'recurrent_transfer',
+];
 
-const getAccountRC = (username: string): AppThunk => async (dispatch) => {
-  const rc = await getClient().rc.getRCMana(username);
-  dispatch({
-    type: ACTIVE_ACCOUNT_RC,
-    payload: rc,
-  });
-};
-
-export const loadProperties = (): AppThunk => async (dispatch) => {
-  const [globals, price, rewardFund] = await Promise.all([
-    getClient().database.getDynamicGlobalProperties(),
-    getClient().database.getCurrentMedianHistoryPrice(),
-    getClient().database.call('get_reward_fund', ['post']),
-  ]);
-  const props = {globals, price, rewardFund};
-  const action: ActionPayload<GlobalProperties> = {
-    type: GLOBAL_PROPS,
-    payload: props,
-  };
-  dispatch(action);
-};
-
-export const loadPrices = (): AppThunk => async (dispatch) => {
-  try {
-    const prices = await getPrices();
-    dispatch({
-      type: GET_CURRENCY_PRICES,
-      payload: prices,
-    });
-  } catch (e) {
-    console.log('price error', e);
-  }
-};
-
-export const initAccountTransactions = (
-  accountName: string,
-): AppThunk => async (dispatch, getState) => {
-  const memoKey = getState().accounts.find((a) => a.name === accountName)!.keys
-    .memo;
-  const transactions = await TransactionUtils.getAccountTransactions(
-    accountName,
-    null,
-    memoKey,
-  );
-  dispatch({
-    type: INIT_TRANSACTIONS,
-    payload: transactions,
-  });
-};
-
-export const fetchAccountTransactions = (
-  accountName: string,
-  start: number,
-): AppThunk => async (dispatch, getState) => {
-  const memoKey = getState().accounts.find((a) => a.name === accountName)!.keys
-    .memo;
-  const transfers = await TransactionUtils.getAccountTransactions(
-    accountName,
-    start,
-    memoKey,
-  );
-  dispatch({
-    type: ADD_TRANSACTIONS,
-    payload: transfers,
-  });
-};
+export const CONVERT_TYPE_TRANSACTIONS = [
+  'convert',
+  'fill_collateralized_convert_request',
+  'fill_convert_request',
+  'collateralized_convert',
+];
 
 const getAccountTransactions = async (
   accountName: string,
   start: number | null,
   memoKey?: string,
-): Promise<Transaction[]> => {
+): Promise<[Transaction[], number]> => {
   const {globals} = (store.getState() as RootState).properties;
   try {
     const op = dHiveUtils.operationOrders;
@@ -174,10 +69,15 @@ const getAccountTransactions = async (
       op.create_claimed_account,
       op.account_create,
     ]) as [number, number];
+
+    let limit = Math.min(start, NB_TRANSACTION_FETCHED);
+
+    if (limit <= 0) return [[], 0];
+
     const transactions = await getClient().database.getAccountHistory(
       accountName,
-      start || -1,
-      start ? Math.min(10, start) : 1000,
+      start,
+      limit,
       operationsBitmask,
     );
 
@@ -342,13 +242,20 @@ const getAccountTransactions = async (
       );
 
     if (
+      start - NB_TRANSACTION_FETCHED < 0 &&
+      availableTransactions.length > 1
+    ) {
+      availableTransactions[availableTransactions.length - 1].last = true;
+    }
+
+    if (
       start &&
       Math.min(1000, start) !== 1000 &&
       availableTransactions.length
     ) {
       availableTransactions[availableTransactions.length - 1].last = true;
     }
-    return availableTransactions;
+    return [availableTransactions, start];
   } catch (e) {
     return getAccountTransactions(
       accountName,
@@ -377,57 +284,28 @@ const decodeMemoIfNeeded = (transfer: Transfer, memoKey: string) => {
   return transfer;
 };
 
-export const loadDelegators = (username: string): AppThunk => async (
-  dispatch,
-) => {
-  try {
-    const action: ActionPayload<DelegationsPayload> = {
-      type: FETCH_DELEGATORS,
-      payload: {incoming: await getDelegators(username)},
-    };
-    dispatch(action);
-  } catch (e) {
-    console.log(e);
-  }
+const getLastTransaction = async (accountName: string) => {
+  const op = dHiveUtils.operationOrders;
+  const allOp = Object.values(op);
+  const allOperationsBitmask = dHiveUtils.makeBitMaskFilter(allOp) as [
+    number,
+    number,
+  ];
+  const transactionsFromBlockchain = await getClient().database.getAccountHistory(
+    accountName,
+    -1,
+    1,
+    allOperationsBitmask,
+  );
+  return transactionsFromBlockchain.length > 0
+    ? transactionsFromBlockchain[0][0]
+    : -1;
 };
 
-export const loadDelegatees = (username: string): AppThunk => async (
-  dispatch,
-) => {
-  try {
-    const action: ActionPayload<DelegationsPayload> = {
-      type: FETCH_DELEGATEES,
-      payload: {outgoing: await getDelegatees(username)},
-    };
-    dispatch(action);
-  } catch (e) {
-    console.log(e);
-  }
+const TransactionUtils = {
+  getAccountTransactions,
+  getLastTransaction,
+  decodeMemoIfNeeded,
 };
 
-export const fetchPhishingAccounts = (): AppThunk => async (dispatch) => {
-  dispatch({
-    type: FETCH_PHISHING_ACCOUNTS,
-    payload: await getPhishingAccounts(),
-  });
-};
-
-export const fetchConversionRequests = (name: string): AppThunk => async (
-  dispatch,
-) => {
-  const conversions = await getConversionRequests(name);
-  dispatch({
-    type: FETCH_CONVERSION_REQUESTS,
-    payload: conversions,
-  });
-};
-
-export const fetchSavingsRequests = (name: string): AppThunk => async (
-  dispatch,
-) => {
-  const savings = await getSavingsRequests(name);
-  dispatch({
-    type: FETCH_SAVINGS_REQUESTS,
-    payload: savings,
-  });
-};
+export default TransactionUtils;

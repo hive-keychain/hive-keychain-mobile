@@ -6,7 +6,7 @@ import {
 } from 'actions/hive';
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
-import Transactions from 'components/hive/Transactions';
+import {WalletHistoryComponent} from 'components/hive/WalletHistoryComponent';
 import Survey from 'components/survey';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
@@ -27,7 +27,7 @@ import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getVotingDollarsPerAccount, getVP} from 'utils/hiveUtils';
-import {translate} from 'utils/localize';
+import {getMainLocale, translate} from 'utils/localize';
 
 const Main = ({
   loadAccount,
@@ -42,7 +42,7 @@ const Main = ({
   hive_authentication_service,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
-
+  const locale = getMainLocale();
   useEffect(() => {
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();
@@ -126,7 +126,12 @@ const Main = ({
             translate(`wallet.menu.tokens`),
           ]}
           toUpperCase
-          components={[<Primary />, <Transactions user={user} />, <Tokens />]}
+          // components={[<Primary />, <Transactions user={user} />, <Tokens />]}
+          components={[
+            <Primary />,
+            <WalletHistoryComponent user={user} />,
+            <Tokens />,
+          ]}
         />
         <Survey navigation={navigation} />
       </>
