@@ -33,9 +33,7 @@ const WalletHistoryItem = ({
 };
 
 const mapStateToProps = (state: RootState) => {
-  return {
-    activeAccountName: state.activeAccount.name,
-  };
+  return {};
 };
 
 const connector = connect(mapStateToProps, {});

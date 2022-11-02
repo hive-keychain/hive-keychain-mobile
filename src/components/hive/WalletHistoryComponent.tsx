@@ -4,14 +4,7 @@ import CustomInput from 'components/form/CustomInput';
 import Loader from 'components/ui/Loader';
 import moment from 'moment';
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {
   ClaimReward,
@@ -29,8 +22,11 @@ import {
   Transfer,
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keyChainStorageKeyEnum';
 import {RootState} from 'store';
 import ArrayUtils from 'utils/array.utils';
+import {addRandomToKeyString} from 'utils/format';
+import {getFromKeychain, saveOnKeychain} from 'utils/keychainStorage';
 import {getMainLocale, translate} from 'utils/localize';
 import TransactionUtils, {
   HAS_IN_OUT_TRANSACTIONS,
@@ -77,15 +73,12 @@ const WalletHistory = ({
   transactions,
   activeAccountName,
   fetchAccountTransactions,
-  initAccountTransactions,
   user,
   token,
-}: // setTitleContainerProperties,
-PropsFromRedux) => {
+}: PropsFromRedux) => {
   const locale = getMainLocale();
   const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
   let lastOperationFetched = -1;
-
   const [filter, setFilter] = useState<WalletHistoryFilter>(DEFAULT_FILTER);
   const [filterReady, setFilterReady] = useState<boolean>(false);
 
@@ -97,7 +90,9 @@ PropsFromRedux) => {
 
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
 
-  const walletItemList = useRef<HTMLDivElement>(null);
+  const flatListRef = useRef();
+
+  const [heightFlatList, setHeightFlatList] = useState(0);
 
   const [loading, setLoading] = useState(true);
 
@@ -146,13 +141,6 @@ PropsFromRedux) => {
 
   const updateFilter = (filter: any) => {
     setFilter(filter);
-    //   setTimeout(() => {
-    //     walletItemList?.current?.scrollTo({
-    //       top: 0,
-    //       left: 0,
-    //       behavior: 'smooth',
-    //     });
-    //   }, 200);
   };
 
   useEffect(() => {
@@ -165,16 +153,11 @@ PropsFromRedux) => {
   };
 
   const init = async () => {
-    //   setTitleContainerProperties({
-    //     title: 'popup_html_wallet_history',
-    //     isBackButtonEnabled: true,
-    //   });
     lastOperationFetched = await TransactionUtils.getLastTransaction(
       activeAccountName!,
     );
     setLoading(true);
     fetchAccountTransactions(activeAccountName!, lastOperationFetched);
-    // initAccountTransactions(user.account.name);
     initFilters();
   };
 
@@ -209,12 +192,13 @@ PropsFromRedux) => {
   }, [transactions]);
 
   const initFilters = async () => {
-    //   const filter = await LocalStorageUtils.getValueFromLocalStorage(
-    //     LocalStorageKeyEnum.WALLET_HISTORY_FILTERS,
-    //   );
-    //   if (filter) {
-    //     setFilter(filter);
-    //   }
+    const filter = await getFromKeychain(
+      KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
+    );
+    if (filter) {
+      const newFilterFound = JSON.parse(filter) as WalletHistoryFilter;
+      setFilter(newFilterFound);
+    }
     setFilterReady(true);
   };
 
@@ -226,11 +210,11 @@ PropsFromRedux) => {
     }
   }, [filter]);
 
-  const saveFilterInLocalStorage = () => {
-    //   LocalStorageUtils.saveValueInLocalStorage(
-    //     LocalStorageKeyEnum.WALLET_HISTORY_FILTERS,
-    //     filter,
-    //   );
+  const saveFilterInLocalStorage = async () => {
+    await saveOnKeychain(
+      KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
+      JSON.stringify(filter),
+    );
   };
 
   const filterTransactions = () => {
@@ -358,25 +342,8 @@ PropsFromRedux) => {
 
   const clearFilters = () => {
     setFilter(DEFAULT_FILTER);
-    //   setTimeout(() => {
-    //     walletItemList?.current?.scrollTo({
-    //       top: 0,
-    //       left: 0,
-    //       behavior: 'smooth',
-    //     });
-    //   }, 200);
+    handleScrollToTop();
   };
-
-  // const renderListItem = (transaction: Transaction) => {
-  //   return (
-  //     <WalletHistoryItemComponent
-  //     user={user}
-  //     locale={locale}
-  //       ariaLabel="wallet-history-item"
-  //       key={transaction.key}
-  //       transaction={transaction}></WalletHistoryItemComponent>
-  //   );
-  // };
 
   const tryToLoadMore = () => {
     if (loading) return;
@@ -397,177 +364,154 @@ PropsFromRedux) => {
       transactions.lastUsedStart === 0
     )
       return;
-    setDisplayedScrollToTop(event.target.scrollTop !== 0);
-
-    if (
-      event.target.scrollHeight - event.target.scrollTop ===
-      event.target.clientHeight
-    ) {
+    const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
+    setDisplayedScrollToTop(innerScrollViewY !== 0);
+    if (innerScrollViewY >= heightFlatList - 400) {
       tryToLoadMore();
     }
   };
 
-  const randomizeKey = (key: string) => {
-    const newKey = key + Math.random().toString();
-    return newKey;
+  const handleScrollToTop = () => {
+    if (flatListRef.current) {
+      setDisplayedScrollToTop(false);
+      (flatListRef.current as FlatList).scrollToIndex({
+        animated: true,
+        index: 0,
+      });
+    }
+  };
+
+  const handlePressedStyleFilterOperations = (filterOperationType: string) => {
+    return filter.selectedTransactionTypes[filterOperationType]
+      ? styles.pressedStyle
+      : styles.touchableItem2;
+  };
+
+  const handlePressedStyleInOut = (inOutSelected: boolean) => {
+    return inOutSelected ? styles.pressedStyle : styles.touchableItem;
   };
 
   return (
     <View style={styles.rootContainer}>
-      <View
-        aria-label="wallet-history-filter-panel"
-        // className={
-        //   'filter-panel ' + (isFilterOpened ? 'filter-opened' : 'filter-closed')
-        // }
-      >
-        <View
-        // className="title-panel" onClick={() => toggleFilter()}
-        >
+      <View aria-label="wallet-history-filter-panel">
+        <View>
           <TouchableOpacity
             style={styles.filterToggler}
             onPress={() => toggleFilter()}>
             <Text style={styles.filterTogglerText}>Filter</Text>
           </TouchableOpacity>
-          {/* <div className="title">Filter</div>
-          <img className={'icon'} src="/assets/images/downarrow.png" /> */}
         </View>
         {isFilterOpened && (
-          <ScrollView>
-            <View
-              style={styles.filtersContainer}
-              // className="filters"
-            >
-              <View
-                style={styles.searchPanel}
-                // className="search-panel"
-              >
-                <CustomInput
-                  // ariaLabel="input-filter-box"
-                  // type={InputType.TEXT}
-                  containerStyle={styles.customInputStyle}
-                  placeholder={translate('common.search_box_placeholder')}
-                  value={filter.filterValue}
-                  onChangeText={updateFilterValue}
-                />
+          <View style={styles.filtersContainer}>
+            <View style={styles.searchPanel}>
+              <CustomInput
+                containerStyle={styles.customInputStyle}
+                placeholder={translate('common.search_box_placeholder')}
+                value={filter.filterValue}
+                onChangeText={updateFilterValue}
+              />
+              <TouchableOpacity
+                style={styles.touchableItem}
+                aria-label="clear-filters"
+                onPress={() => clearFilters()}>
+                <Text>Clear Filters</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.filterSelectors}>
+              <View style={styles.filterTypes}>
+                {filter.selectedTransactionTypes &&
+                  Object.keys(filter.selectedTransactionTypes).map(
+                    (filterOperationType) => (
+                      <TouchableOpacity
+                        style={handlePressedStyleFilterOperations(
+                          filterOperationType,
+                        )}
+                        aria-label={`filter-selector-${filterOperationType}`}
+                        key={filterOperationType}
+                        onPress={() => toggleFilterType(filterOperationType)}>
+                        <Text>{filterOperationType}</Text>
+                      </TouchableOpacity>
+                    ),
+                  )}
+              </View>
+              <View>
                 <TouchableOpacity
-                  style={styles.touchableItem}
-                  aria-label="clear-filters"
-                  //   className={'filter-button'}
-                  onPress={() => clearFilters()}>
-                  <Text>Clear Filters</Text>
+                  style={handlePressedStyleInOut(filter.inSelected)}
+                  aria-label="filter-by-incoming"
+                  onPress={() => toggleFilterIn()}>
+                  <Text>{'IN'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={handlePressedStyleInOut(filter.outSelected)}
+                  aria-label="filter-by-outgoing"
+                  onPress={() => toggleFilterOut()}>
+                  <Text>{'OUT'}</Text>
                 </TouchableOpacity>
               </View>
-              <View
-                style={styles.filterSelectors}
-                // className="filter-selectors"
-              >
-                <View
-                // className="types"
-                >
-                  {filter.selectedTransactionTypes &&
-                    Object.keys(filter.selectedTransactionTypes).map(
-                      (filterOperationType) => (
-                        <TouchableOpacity
-                          style={styles.touchableItem}
-                          aria-label={`filter-selector-${filterOperationType}`}
-                          key={filterOperationType}
-                          //   className={
-                          //     'filter-button ' +
-                          //     (filter.selectedTransactionTypes[filterOperationType]
-                          //       ? 'selected'
-                          //       : 'not-selected')
-                          //   }
-                          onPress={() => toggleFilterType(filterOperationType)}>
-                          <Text>{filterOperationType}</Text>
-                        </TouchableOpacity>
-                      ),
-                    )}
-                </View>
-                {/* <div className="vertical-divider"></div> */}
-                <View
-                // className="in-out-panel"
-                >
-                  <TouchableOpacity
-                    style={
-                      filter.inSelected
-                        ? styles.pressedStyle
-                        : styles.touchableItem
-                    }
-                    aria-label="filter-by-incoming"
-                    // className={
-                    //   'filter-button ' +
-                    //   (filter.inSelected ? 'selected' : 'not-selected')
-                    // }
-                    onPress={() => toggleFilterIn()}>
-                    <Text>{'IN'}</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.touchableItem}
-                    aria-label="filter-by-outgoing"
-                    // className={
-                    //   'filter-button ' +
-                    //   (filter.outSelected ? 'selected' : 'not-selected')
-                    // }
-                    onPress={() => toggleFilterOut()}>
-                    <Text>{'OUT'}</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
             </View>
-          </ScrollView>
+          </View>
         )}
       </View>
 
-      <View
-        style={styles.flex}
-        aria-label="wallet-item-list"
-        // ref={walletItemList}
-        // className="wallet-item-list"
-        // onScroll={handleScroll}
-      >
-        <FlatList
-          data={displayedTransactions}
-          // initialNumToRender={20}
-          // onEndReachedThreshold={0.5}
-          renderItem={(transaction) => {
-            return (
-              <WalletHistoryItemComponent
-                user={user}
-                locale={locale}
-                ariaLabel="wallet-history-item"
-                transaction={transaction.item}
-              />
-            );
-          }}
-          //   renderOnScroll
-          ListEmptyComponent={() => {
-            return (
-              <Text
-                style={{
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  marginTop: 20,
-                }}>
-                Nothing to show. Try another filter
-              </Text>
-            );
-          }}
-          keyExtractor={(transaction) => randomizeKey(transaction.key)}
-          style={styles.flex}
-        />
-        {/* {transactions.list[transactions.list.length - 1]?.last === false &&
-          transactions.lastUsedStart !== 0 &&
-          !loading && (
-            <div className="load-more-panel" onClick={tryToLoadMore}>
-              <span className="label">{'Load More'}</span>
-              <TestIconToChange />
-            </div>
-          )} */}
-      </View>
+      {!loading && (
+        <View style={styles.flex} aria-label="wallet-item-list">
+          <FlatList
+            ref={flatListRef}
+            data={displayedTransactions}
+            initialNumToRender={20}
+            onEndReachedThreshold={0.5}
+            renderItem={(transaction) => {
+              return (
+                <WalletHistoryItemComponent
+                  user={user}
+                  locale={locale}
+                  ariaLabel="wallet-history-item"
+                  transaction={transaction.item}
+                />
+              );
+            }}
+            ListEmptyComponent={() => {
+              return (
+                <Text
+                  style={{
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    marginTop: 20,
+                  }}>
+                  Nothing to show. Try another filter
+                </Text>
+              );
+            }}
+            keyExtractor={(transaction) =>
+              addRandomToKeyString(transaction.key, 6)
+            }
+            style={styles.flex}
+            onScroll={handleScroll}
+            onContentSizeChange={(x: number, y: number) => setHeightFlatList(y)}
+          />
+          {transactions.list[transactions.list.length - 1]?.last === false &&
+            transactions.lastUsedStart !== 0 &&
+            !loading && (
+              <View>
+                <TouchableOpacity onPress={tryToLoadMore}>
+                  <Text>Load More</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+        </View>
+      )}
 
       {loading && (
         <View style={{flex: 1, justifyContent: 'center'}}>
           <Loader animating />
+        </View>
+      )}
+
+      {displayScrollToTop && (
+        <View style={styles.overlayButton}>
+          <TouchableOpacity onPress={handleScrollToTop}>
+            <Text style={styles.overlayButtonText}>{'TOP'}</Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>
@@ -600,6 +544,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     margin: 8,
     opacity: 8,
+    height: 30,
   },
   filterTogglerText: {
     color: 'white',
@@ -615,9 +560,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  touchableItem2: {
+    borderColor: 'black',
+    maxWidth: 100,
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 8,
+    margin: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   filterSelectors: {
     flexDirection: 'row',
-    justifyContent: 'center',
+  },
+  filterTypes: {
+    width: '70%',
+    height: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
   },
   pressedStyle: {
     borderColor: '#946464',
@@ -630,7 +591,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     color: 'white',
     fontWeight: 'bold',
-    opacity: 8,
+    elevation: 8,
+  },
+  overlayButton: {
+    justifyContent: 'center',
+    borderRadius: 8,
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: 'red',
+    borderWidth: 1,
+    width: 50,
+    height: 30,
+    opacity: 0.65,
+  },
+  overlayButtonText: {
+    fontWeight: 'bold',
+    color: 'white',
   },
 });
 
@@ -644,7 +622,6 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps, {
   fetchAccountTransactions,
   initAccountTransactions,
-  // setTitleContainerProperties,
 });
 type PropsFromRedux = ConnectedProps<typeof connector> & WalletHistoryProps;
 
