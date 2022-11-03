@@ -31,6 +31,7 @@
     "@react-navigation/drawer": "^5.11.4",
     "@react-navigation/native": "^5.8.10",
     "@react-navigation/stack": "^5.12.8",
+    "@therealeight/react-native-banner-carousel-updated": "^1.1.0",
     "assert": "^2.0.0",
     "axios": "^0.21.2",
     "crypto-js": "^3.3.0",

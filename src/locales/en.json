@@ -482,5 +482,13 @@
         "unvote": "You successfully removed your vote!"
       }
     }
+  },
+  "popup": {
+    "whats_new": {
+      "intro": "What's new in {{content_version}}",
+      "next": "Next",
+      "previous": "Previous",
+      "got_it": "Got it!"
+    }
   }
 }
