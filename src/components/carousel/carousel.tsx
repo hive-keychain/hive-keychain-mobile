@@ -4,7 +4,7 @@ import {Button, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 interface Props {
   listItems: any;
 }
-
+//TODO keep working on the carousel.
 const Carousel = ({listItems}: Props) => {
   const [index, setIndex] = useState(0);
   const handleMoveSlide = (direction: number) => {
