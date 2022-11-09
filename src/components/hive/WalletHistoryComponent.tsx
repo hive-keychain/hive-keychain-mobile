@@ -22,7 +22,7 @@ import {
   Transfer,
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keyChainStorageKeyEnum';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState} from 'store';
 import ArrayUtils from 'utils/array.utils';
 import {addRandomToKeyString} from 'utils/format';
