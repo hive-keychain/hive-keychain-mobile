@@ -150,6 +150,15 @@
         "register": "Registering accounts to Hive Auth...",
         "broadcast": "Broadcasting Hive Auth transaction..."
       }
+    },
+    "filter": {
+      "transfer": "Transfer",
+      "claim_reward_balance": "Claim Reward Balance",
+      "delegate_vesting_shares": "Delegate Vesting Shares",
+      "claim_account": "Claim Account",
+      "savings": "Savings",
+      "power_up_down": "Power Up Down",
+      "convert": "Convert"
     }
   },
   "settings": {

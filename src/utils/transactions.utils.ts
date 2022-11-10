@@ -250,13 +250,16 @@ const getAccountTransactions = async (
 
     if (
       start &&
-      Math.min(1000, start) !== 1000 &&
-      availableTransactions.length
+      Math.min(1000, start) !== NB_TRANSACTION_FETCHED &&
+      availableTransactions.length > 1
     ) {
-      availableTransactions[availableTransactions.length - 1].last = true;
+      availableTransactions[
+        availableTransactions.length - 1
+      ].lastFetched = true;
     }
     return [availableTransactions, start];
   } catch (e) {
+    console.log('transactions utils: ', e); //TODO to remove
     return getAccountTransactions(
       accountName,
       (e as any).jse_info.stack[0].data.sequence - 1,

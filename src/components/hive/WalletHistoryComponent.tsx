@@ -1,10 +1,19 @@
 import {fetchAccountTransactions, initAccountTransactions} from 'actions/hive';
 import {ActiveAccount} from 'actions/interfaces';
-import CustomInput from 'components/form/CustomInput';
+import ExpandLessIcon from 'assets/governance/expand_less.svg';
+import ExpandMoreIcon from 'assets/governance/expand_more.svg';
 import Loader from 'components/ui/Loader';
 import moment from 'moment';
 import React, {useEffect, useRef, useState} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {
   ClaimReward,
@@ -77,6 +86,7 @@ const WalletHistory = ({
   token,
 }: PropsFromRedux) => {
   const locale = getMainLocale();
+  const windowDimensions = useWindowDimensions();
   const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
   let lastOperationFetched = -1;
   const [filter, setFilter] = useState<WalletHistoryFilter>(DEFAULT_FILTER);
@@ -91,6 +101,7 @@ const WalletHistory = ({
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
 
   const flatListRef = useRef();
+  const walletItemListRef = useRef();
 
   const [heightFlatList, setHeightFlatList] = useState(0);
 
@@ -161,10 +172,46 @@ const WalletHistory = ({
     initFilters();
   };
 
+  // useEffect(() => {
+  //   //TODO to remove
+  //   if (transactions && transactions.list.length) {
+  //     console.log({
+  //       loading: transactions.loading,
+  //       lasUsedStart: transactions.lastUsedStart,
+  //       Last: transactions.list[transactions.list.length - 1],
+  //     }); //TODO to remove
+  //   }
+  //   //END to remove
+  //   if (transactions && !transactions.loading) {
+  //     setLoading(false);
+  //   }
+  //   if (transactions.lastUsedStart !== -1) {
+  //     if (
+  //       transactions.list.length < MINIMUM_FETCHED_TRANSACTIONS &&
+  //       !transactions.list.some((t) => t.last)
+  //     ) {
+  //       if (transactions.lastUsedStart === 1) {
+  //         setLoading(false);
+  //         return;
+  //       }
+  //       setLoading(true);
+  //       fetchAccountTransactions(
+  //         activeAccountName!,
+  //         transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
+  //       );
+  //     } else {
+  //       setTimeout(() => {
+  //         filterTransactions();
+  //       }, 0);
+
+  //       setLastTransactionIndex(
+  //         ArrayUtils.getMinValue(transactions.list, 'index'),
+  //       );
+  //     }
+  //   }
+  // }, [transactions]);
+
   useEffect(() => {
-    if (transactions && !transactions.loading) {
-      setLoading(false);
-    }
     if (transactions.lastUsedStart !== -1) {
       if (
         transactions.list.length < MINIMUM_FETCHED_TRANSACTIONS &&
@@ -359,26 +406,48 @@ const WalletHistory = ({
   };
 
   const handleScroll = (event: any) => {
+    const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
+    const {height: heightX} = event.nativeEvent.contentSize;
+    console.log({innerScrollViewY, heightFlatList, heightX, windowDimensions});
+
     if (
       transactions.list[transactions.list.length - 1]?.last === true ||
       transactions.lastUsedStart === 0
     )
       return;
-    const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
-    setDisplayedScrollToTop(innerScrollViewY !== 0);
-    if (innerScrollViewY >= heightFlatList - 400) {
-      tryToLoadMore();
-    }
+    //TODO find the clientHeight and keep working on this.
+    // console.log({innerScrollViewY, heightFlatList}); //TODO to remove
+    // setDisplayedScrollToTop(innerScrollViewY !== 0);
+
+    // if (heightFlatList - innerScrollViewY) {
+    //   tryToLoadMore();
+    // }
+
+    //original code
+    // if (
+    //   transactions.list[transactions.list.length - 1]?.last === true ||
+    //   transactions.lastUsedStart === 0
+    // )
+    //   return;
+    // setDisplayedScrollToTop(event.target.scrollTop !== 0);
+
+    // if (
+    //   event.target.scrollHeight - event.target.scrollTop ===
+    //   event.target.clientHeight
+    // ) {
+    //   tryToLoadMore();
+    // }
+    //END original Code
   };
 
   const handleScrollToTop = () => {
-    if (flatListRef.current) {
-      setDisplayedScrollToTop(false);
-      (flatListRef.current as FlatList).scrollToIndex({
-        animated: true,
-        index: 0,
-      });
-    }
+    // if (flatListRef.current) {
+    //   setDisplayedScrollToTop(false);
+    //   (flatListRef.current as FlatList).scrollToIndex({
+    //     animated: true,
+    //     index: 0,
+    //   });
+    // } TODO to finish here
   };
 
   const handlePressedStyleFilterOperations = (filterOperationType: string) => {
@@ -394,18 +463,21 @@ const WalletHistory = ({
   return (
     <View style={styles.rootContainer}>
       <View aria-label="wallet-history-filter-panel">
-        <View>
-          <TouchableOpacity
-            style={styles.filterToggler}
-            onPress={() => toggleFilter()}>
-            <Text style={styles.filterTogglerText}>Filter</Text>
-          </TouchableOpacity>
+        <View style={styles.filterTogglerContainer}>
+          <View style={styles.filterTogglerInnerContainer}>
+            <Text>Filter</Text>
+            <TouchableOpacity
+              style={styles.circularContainer}
+              onPress={() => toggleFilter()}>
+              {isFilterOpened ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </TouchableOpacity>
+          </View>
         </View>
         {isFilterOpened && (
           <View style={styles.filtersContainer}>
             <View style={styles.searchPanel}>
-              <CustomInput
-                containerStyle={styles.customInputStyle}
+              <TextInput
+                style={styles.customInputStyle}
                 placeholder={translate('common.search_box_placeholder')}
                 value={filter.filterValue}
                 onChangeText={updateFilterValue}
@@ -429,7 +501,9 @@ const WalletHistory = ({
                         aria-label={`filter-selector-${filterOperationType}`}
                         key={filterOperationType}
                         onPress={() => toggleFilterType(filterOperationType)}>
-                        <Text>{filterOperationType}</Text>
+                        <Text>
+                          {translate(`wallet.filter.${filterOperationType}`)}
+                        </Text>
                       </TouchableOpacity>
                     ),
                   )}
@@ -453,24 +527,30 @@ const WalletHistory = ({
         )}
       </View>
 
-      {!loading && (
-        <View style={styles.flex} aria-label="wallet-item-list">
-          <FlatList
-            ref={flatListRef}
-            data={displayedTransactions}
-            initialNumToRender={20}
-            onEndReachedThreshold={0.5}
-            renderItem={(transaction) => {
-              return (
-                <WalletHistoryItemComponent
-                  user={user}
-                  locale={locale}
-                  ariaLabel="wallet-history-item"
-                  transaction={transaction.item}
-                />
-              );
-            }}
-            ListEmptyComponent={() => {
+      <View
+        style={styles.flex}
+        aria-label="wallet-item-list"
+        ref={walletItemListRef}>
+        <FlatList
+          // ref={flatListRef}
+          data={displayedTransactions}
+          initialNumToRender={20}
+          onEndReachedThreshold={0.5}
+          // refreshControl={}
+          renderItem={(transaction) => {
+            return (
+              <WalletHistoryItemComponent
+                user={user}
+                locale={locale}
+                ariaLabel="wallet-history-item"
+                transaction={transaction.item}
+              />
+            );
+          }}
+          ListEmptyComponent={() => {
+            if (loading) {
+              return <View></View>;
+            } else {
               return (
                 <Text
                   style={{
@@ -481,25 +561,29 @@ const WalletHistory = ({
                   Nothing to show. Try another filter
                 </Text>
               );
-            }}
-            keyExtractor={(transaction) =>
-              addRandomToKeyString(transaction.key, 6)
             }
-            style={styles.flex}
-            onScroll={handleScroll}
-            onContentSizeChange={(x: number, y: number) => setHeightFlatList(y)}
-          />
-          {transactions.list[transactions.list.length - 1]?.last === false &&
-            transactions.lastUsedStart !== 0 &&
-            !loading && (
-              <View>
-                <TouchableOpacity onPress={tryToLoadMore}>
-                  <Text>Load More</Text>
-                </TouchableOpacity>
+          }}
+          keyExtractor={(transaction) =>
+            addRandomToKeyString(transaction.key, 6)
+          }
+          style={styles.flex}
+          onScroll={handleScroll}
+          onContentSizeChange={(x: number, y: number) => setHeightFlatList(y)}
+        />
+      </View>
+
+      {transactions.list[transactions.list.length - 1]?.last === false &&
+        transactions.lastUsedStart !== 0 &&
+        !loading && (
+          <View style={styles.loadMoreContainer}>
+            <Text style={styles.loadMoreText}>load more</Text>
+            <TouchableOpacity onPress={tryToLoadMore}>
+              <View style={[styles.circularContainer, {width: 20, height: 20}]}>
+                <Text>+</Text>
               </View>
-            )}
-        </View>
-      )}
+            </TouchableOpacity>
+          </View>
+        )}
 
       {loading && (
         <View style={{flex: 1, justifyContent: 'center'}}>
@@ -522,32 +606,50 @@ const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
   },
-  flex: {flex: 1},
+  flex: {
+    flex: 1,
+  },
   searchPanel: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
   },
   customInputStyle: {
     width: '60%',
-    margin: 0,
-    marginLeft: 0,
-    marginRight: 0,
+    height: 40,
+    borderWidth: 1,
+    marginTop: 4,
+    marginBottom: 4,
+    borderRadius: 8,
+    backgroundColor: '#dbd6d6',
+    marginLeft: 4,
   },
   filtersContainer: {
     flexDirection: 'column',
   },
-  filterToggler: {
+  filterTogglerContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  filterTogglerInnerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  circularContainer: {
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#9e6c6c',
-    borderRadius: 5,
+    borderRadius: 100,
     margin: 8,
     opacity: 8,
     height: 30,
+    width: 30,
   },
   filterTogglerText: {
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
   },
   touchableItem: {
@@ -555,23 +657,24 @@ const styles = StyleSheet.create({
     minWidth: '20%',
     borderWidth: 1,
     borderRadius: 8,
-    padding: 8,
+    padding: 4,
     margin: 4,
     justifyContent: 'center',
     alignItems: 'center',
   },
   touchableItem2: {
     borderColor: 'black',
-    maxWidth: 100,
+    maxWidth: 150,
     borderWidth: 1,
     borderRadius: 8,
-    padding: 8,
+    padding: 4,
     margin: 4,
     justifyContent: 'center',
     alignItems: 'center',
   },
   filterSelectors: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   filterTypes: {
     width: '70%',
@@ -598,7 +701,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     position: 'absolute',
-    bottom: 0,
+    bottom: 30,
     right: 0,
     backgroundColor: 'red',
     borderWidth: 1,
@@ -609,6 +712,15 @@ const styles = StyleSheet.create({
   overlayButtonText: {
     fontWeight: 'bold',
     color: 'white',
+  },
+  loadMoreContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+  loadMoreText: {
+    fontStyle: 'italic',
   },
 });
 
