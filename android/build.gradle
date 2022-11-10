@@ -29,7 +29,8 @@ buildscript {
 
 allprojects {
     repositories {
-        //added to test
+        //references:   https://stackoverflow.com/questions/63358372/task-react-native-reanimatedcompiledebugjavawithjavac-failed
+        //              https://github.com/facebook/react-native/issues/35210
         exclusiveContent {
            // We get React Native's Android binaries exclusively through npm,
            // from a local Maven repo inside node_modules/react-native/.
@@ -44,7 +45,6 @@ allprojects {
                }
            }
         }
-        //END added to test
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url("$rootDir/../node_modules/react-native/android")
