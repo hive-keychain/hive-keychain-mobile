@@ -74,14 +74,14 @@ const getAccountTransactions = async (
 
     if (limit <= 0) return [[], 0];
 
-    const transactions = await getClient().database.getAccountHistory(
+    const transactionsFromBlockchain = await getClient().database.getAccountHistory(
       accountName,
       start,
       limit,
       operationsBitmask,
     );
 
-    const availableTransactions = transactions
+    const transactions = transactionsFromBlockchain
       .map((e) => {
         let specificTransaction = null;
         switch (e[1].op[0]) {
@@ -241,23 +241,18 @@ const getAccountTransactions = async (
           new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
       );
 
-    if (
-      start - NB_TRANSACTION_FETCHED < 0 &&
-      availableTransactions.length > 1
-    ) {
-      availableTransactions[availableTransactions.length - 1].last = true;
+    if (start - NB_TRANSACTION_FETCHED < 0 && transactions.length > 1) {
+      transactions[transactions.length - 1].last = true;
     }
 
     if (
       start &&
-      Math.min(1000, start) !== NB_TRANSACTION_FETCHED &&
-      availableTransactions.length > 1
+      Math.min(NB_TRANSACTION_FETCHED, start) !== NB_TRANSACTION_FETCHED &&
+      transactions.length > 1
     ) {
-      availableTransactions[
-        availableTransactions.length - 1
-      ].lastFetched = true;
+      transactions[transactions.length - 1].lastFetched = true;
     }
-    return [availableTransactions, start];
+    return [transactions, start];
   } catch (e) {
     console.log('transactions utils: ', e); //TODO to remove
     return getAccountTransactions(

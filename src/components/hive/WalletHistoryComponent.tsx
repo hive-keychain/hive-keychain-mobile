@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import {fetchAccountTransactions, initAccountTransactions} from 'actions/hive';
 import {ActiveAccount} from 'actions/interfaces';
 import ExpandLessIcon from 'assets/governance/expand_less.svg';
@@ -7,6 +8,8 @@ import moment from 'moment';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
+  LayoutChangeEvent,
+  LayoutRectangle,
   StyleSheet,
   Text,
   TextInput,
@@ -35,7 +38,6 @@ import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum'
 import {RootState} from 'store';
 import ArrayUtils from 'utils/array.utils';
 import {addRandomToKeyString} from 'utils/format';
-import {getFromKeychain, saveOnKeychain} from 'utils/keychainStorage';
 import {getMainLocale, translate} from 'utils/localize';
 import TransactionUtils, {
   HAS_IN_OUT_TRANSACTIONS,
@@ -43,6 +45,7 @@ import TransactionUtils, {
   TRANSFER_TYPE_TRANSACTIONS,
 } from 'utils/transactions.utils';
 import {WalletHistoryUtils} from 'utils/walletHistoryUtils';
+import {BackToTopButton} from './Back-To-Top-Button';
 import {WalletHistoryItemComponent} from './WalletHistoryItemComponent';
 
 type FilterTransactionTypes = {
@@ -100,8 +103,13 @@ const WalletHistory = ({
 
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
 
+  const [flatListLayoutRectangle, setFlatListLayoutRectangle] = useState<
+    LayoutRectangle
+  >({height: 0, width: 0, x: 0, y: 0});
+
   const flatListRef = useRef();
-  const walletItemListRef = useRef();
+
+  // const walletItemListRef = useRef();
 
   const [heightFlatList, setHeightFlatList] = useState(0);
 
@@ -239,9 +247,10 @@ const WalletHistory = ({
   }, [transactions]);
 
   const initFilters = async () => {
-    const filter = await getFromKeychain(
+    const filter = await AsyncStorage.getItem(
       KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
     );
+
     if (filter) {
       const newFilterFound = JSON.parse(filter) as WalletHistoryFilter;
       setFilter(newFilterFound);
@@ -258,7 +267,7 @@ const WalletHistory = ({
   }, [filter]);
 
   const saveFilterInLocalStorage = async () => {
-    await saveOnKeychain(
+    await AsyncStorage.setItem(
       KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
       JSON.stringify(filter),
     );
@@ -405,10 +414,43 @@ const WalletHistory = ({
     );
   };
 
+  //TODO remove all unused code
+  // const handleFlatListOnLayout = (event: LayoutChangeEvent) => {
+  //   if (event.nativeEvent.layout) {
+  //     // const {x, y, height, width} = event.nativeEvent.layout;
+  //     setFlatListLayoutRectangle(event.nativeEvent.layout);
+  //   }
+  //   // console.log('LayoutOnChange event::::');
+  //   // console.log({x, y, height, width});
+  // };
+
   const handleScroll = (event: any) => {
+    console.log(
+      'last: ',
+      transactions.list[transactions.list.length - 1]?.last,
+    );
+    console.log('tsLastStart: ', transactions.lastUsedStart);
+
     const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
     const {height: heightX} = event.nativeEvent.contentSize;
-    console.log({innerScrollViewY, heightFlatList, heightX, windowDimensions});
+
+    console.log({
+      innerScrollViewY,
+      heightFlatList,
+      heightX,
+      windowDimensions,
+      flatListLayoutRectangle,
+    }); //TODO to remoe
+
+    setDisplayedScrollToTop(innerScrollViewY >= 35);
+
+    const scrollHeightAndRectangleHeight =
+      innerScrollViewY + flatListLayoutRectangle.height;
+    console.log({scrollHeightAndRectangleHeight});
+    if (scrollHeightAndRectangleHeight >= heightFlatList.toFixed(0)) {
+      console.log('Now we can show the load more button if needed!!!');
+      // tryToLoadMore();
+    }
 
     if (
       transactions.list[transactions.list.length - 1]?.last === true ||
@@ -418,10 +460,6 @@ const WalletHistory = ({
     //TODO find the clientHeight and keep working on this.
     // console.log({innerScrollViewY, heightFlatList}); //TODO to remove
     // setDisplayedScrollToTop(innerScrollViewY !== 0);
-
-    // if (heightFlatList - innerScrollViewY) {
-    //   tryToLoadMore();
-    // }
 
     //original code
     // if (
@@ -441,13 +479,13 @@ const WalletHistory = ({
   };
 
   const handleScrollToTop = () => {
-    // if (flatListRef.current) {
-    //   setDisplayedScrollToTop(false);
-    //   (flatListRef.current as FlatList).scrollToIndex({
-    //     animated: true,
-    //     index: 0,
-    //   });
-    // } TODO to finish here
+    if (flatListRef.current) {
+      setDisplayedScrollToTop(false);
+      (flatListRef.current as FlatList).scrollToIndex({
+        animated: true,
+        index: 0,
+      });
+    }
   };
 
   const handlePressedStyleFilterOperations = (filterOperationType: string) => {
@@ -527,12 +565,9 @@ const WalletHistory = ({
         )}
       </View>
 
-      <View
-        style={styles.flex}
-        aria-label="wallet-item-list"
-        ref={walletItemListRef}>
+      <View style={styles.flex} aria-label="wallet-item-list">
         <FlatList
-          // ref={flatListRef}
+          ref={flatListRef}
           data={displayedTransactions}
           initialNumToRender={20}
           onEndReachedThreshold={0.5}
@@ -569,35 +604,33 @@ const WalletHistory = ({
           style={styles.flex}
           onScroll={handleScroll}
           onContentSizeChange={(x: number, y: number) => setHeightFlatList(y)}
+          onLayout={(event: LayoutChangeEvent) =>
+            setFlatListLayoutRectangle(event.nativeEvent.layout)
+          }
         />
-      </View>
 
-      {transactions.list[transactions.list.length - 1]?.last === false &&
-        transactions.lastUsedStart !== 0 &&
-        !loading && (
-          <View style={styles.loadMoreContainer}>
-            <Text style={styles.loadMoreText}>load more</Text>
-            <TouchableOpacity onPress={tryToLoadMore}>
-              <View style={[styles.circularContainer, {width: 20, height: 20}]}>
-                <Text>+</Text>
-              </View>
-            </TouchableOpacity>
+        {/* {transactions.list[transactions.list.length - 1]?.last === false &&
+          transactions.lastUsedStart !== 0 &&
+          !loading && (
+            <View style={styles.loadMoreContainer}>
+              <Text style={styles.loadMoreText}>load more</Text>
+              <TouchableOpacity onPress={tryToLoadMore}>
+                <View
+                  style={[styles.circularContainer, {width: 20, height: 20}]}>
+                  <Text>+</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )} */}
+
+        {loading && (
+          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+            <Loader animating />
           </View>
         )}
 
-      {loading && (
-        <View style={{flex: 1, justifyContent: 'center'}}>
-          <Loader animating />
-        </View>
-      )}
-
-      {displayScrollToTop && (
-        <View style={styles.overlayButton}>
-          <TouchableOpacity onPress={handleScrollToTop}>
-            <Text style={styles.overlayButtonText}>{'TOP'}</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+        {displayScrollToTop && <BackToTopButton element={flatListRef} />}
+      </View>
     </View>
   );
 };
@@ -696,23 +729,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     elevation: 8,
   },
-  overlayButton: {
-    justifyContent: 'center',
-    borderRadius: 8,
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 30,
-    right: 0,
-    backgroundColor: 'red',
-    borderWidth: 1,
-    width: 50,
-    height: 30,
-    opacity: 0.65,
-  },
-  overlayButtonText: {
-    fontWeight: 'bold',
-    color: 'white',
-  },
+  // overlayButton: {
+  //   justifyContent: 'center',
+  //   borderRadius: 8,
+  //   alignItems: 'center',
+  //   position: 'absolute',
+  //   bottom: 30,
+  //   right: 0,
+  //   backgroundColor: 'red',
+  //   borderWidth: 1,
+  //   width: 50,
+  //   height: 30,
+  //   opacity: 0.65,
+  // },
+  // overlayButtonText: {
+  //   fontWeight: 'bold',
+  //   color: 'white',
+  // },
   loadMoreContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
