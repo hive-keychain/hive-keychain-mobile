@@ -63,6 +63,7 @@ const WalletTransactionInfo = ({
             transaction={transaction as TransferInterface}
             user={user}
             locale={locale}
+            useIcon={true}
           />
         );
 
@@ -119,6 +120,7 @@ const WalletTransactionInfo = ({
                 transaction={transaction as ReceivedInterests}
                 user={user}
                 locale={locale}
+                useIcon={true}
               />
             );
           case 'transfer_to_savings':
@@ -127,6 +129,7 @@ const WalletTransactionInfo = ({
                 transaction={transaction as DepositSavings}
                 user={user}
                 locale={locale}
+                useIcon={true}
               />
             );
           case 'transfer_from_savings':
@@ -135,6 +138,7 @@ const WalletTransactionInfo = ({
                 transaction={transaction as WithdrawSavings}
                 user={user}
                 locale={locale}
+                useIcon={true}
               />
             );
           case 'fill_transfer_from_savings':
@@ -143,6 +147,7 @@ const WalletTransactionInfo = ({
                 transaction={transaction as StartWithdrawSavings}
                 user={user}
                 locale={locale}
+                useIcon={true}
               />
             );
         }
@@ -155,6 +160,7 @@ const WalletTransactionInfo = ({
                 transaction={transaction as PowerDown}
                 user={user}
                 locale={locale}
+                useIcon={true}
               />
             );
           case 'transfer_to_vesting':
@@ -163,6 +169,7 @@ const WalletTransactionInfo = ({
                 transaction={transaction as PowerUp}
                 user={user}
                 locale={locale}
+                useIcon={true}
               />
             );
         }

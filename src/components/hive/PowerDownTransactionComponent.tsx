@@ -9,12 +9,14 @@ import {
 } from 'react-native';
 import {PowerDown} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import Icon from './Icon';
 
 type Props = {
   user: ActiveAccount;
   transaction: PowerDown;
   token?: boolean;
   locale: string;
+  useIcon?: boolean;
 };
 
 const PowerDownTransactionComponent = ({
@@ -22,6 +24,7 @@ const PowerDownTransactionComponent = ({
   user,
   locale,
   token = false,
+  useIcon,
 }: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
@@ -47,6 +50,9 @@ const PowerDownTransactionComponent = ({
       }}>
       <View style={styles.main}>
         <View style={styles.left}>
+          {useIcon && (
+            <Icon name={transaction.type} subType={transaction.subType} />
+          )}
           <Text>{date}</Text>
           <Text style={styles.username}>Initiated Power down:</Text>
         </View>

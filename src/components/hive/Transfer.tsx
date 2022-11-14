@@ -10,14 +10,22 @@ import {
 import {Transfer as TransferInterface} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
+import Icon from './Icon';
 
 type Props = {
   user: ActiveAccount;
   transaction: TransferInterface;
   token?: boolean;
   locale: string;
+  useIcon: boolean;
 };
-const Transfer = ({transaction, user, locale, token = false}: Props) => {
+const Transfer = ({
+  transaction,
+  user,
+  locale,
+  token = false,
+  useIcon,
+}: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
   const {timestamp, from, to, amount, memo} = transaction;
@@ -45,6 +53,7 @@ const Transfer = ({transaction, user, locale, token = false}: Props) => {
       }}>
       <View style={styles.main}>
         <View style={styles.left}>
+          {useIcon && <Icon name={transaction.type} />}
           <Text>{date}</Text>
           <Text style={styles.username}>{`@${other}`}</Text>
         </View>

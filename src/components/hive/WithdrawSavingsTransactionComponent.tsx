@@ -9,18 +9,21 @@ import {
 } from 'react-native';
 import {StartWithdrawSavings} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import Icon from './Icon';
 
 type Props = {
   user: ActiveAccount;
   transaction: StartWithdrawSavings;
   token?: boolean;
   locale: string;
+  useIcon?: boolean;
 };
 const WithdrawSavingsTransactionComponent = ({
   transaction,
   user,
   locale,
   token = false,
+  useIcon,
 }: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
@@ -46,6 +49,7 @@ const WithdrawSavingsTransactionComponent = ({
       }}>
       <View style={styles.main}>
         <View style={styles.left}>
+          {useIcon && <Icon name={transaction.type} />}
           <Text>{date}</Text>
           <Text style={styles.username}>Started savings withdraw</Text>
         </View>

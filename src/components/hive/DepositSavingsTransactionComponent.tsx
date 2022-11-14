@@ -9,18 +9,21 @@ import {
 } from 'react-native';
 import {DepositSavings} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import Icon from './Icon';
 
 type Props = {
   user: ActiveAccount;
   transaction: DepositSavings;
   token?: boolean;
   locale: string;
+  useIcon?: boolean;
 };
 const DepositSavingsTransactionComponent = ({
   transaction,
   user,
   locale,
   token = false,
+  useIcon,
 }: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
@@ -46,6 +49,7 @@ const DepositSavingsTransactionComponent = ({
       }}>
       <View style={styles.main}>
         <View style={styles.left}>
+          {useIcon && <Icon name={transaction.type} />}
           <Text>{date}</Text>
           <Text style={styles.username}>Deposit to Savings</Text>
         </View>
