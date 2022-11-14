@@ -42,7 +42,9 @@
     "error_title": "Error",
     "savings": "Savings",
     "ok": "OK",
-    "search_box_placeholder": "Input to search"
+    "search_box_placeholder": "Input to search",
+    "load_more": "Click to load more",
+    "top": "Top"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},

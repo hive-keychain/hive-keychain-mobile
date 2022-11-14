@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {translate} from 'utils/localize';
 
 interface BackToTopButtonProps {
   element: any;
@@ -15,7 +16,7 @@ export const BackToTopButton = (props: BackToTopButtonProps) => {
   return (
     <View style={styles.overlayButton}>
       <TouchableOpacity onPress={scrollToTop}>
-        <Text style={styles.overlayButtonText}>{'TOP'}</Text>
+        <Text style={styles.overlayButtonText}>{translate('common.top')}</Text>
       </TouchableOpacity>
     </View>
   );

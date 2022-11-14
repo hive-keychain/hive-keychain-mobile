@@ -254,7 +254,6 @@ const getAccountTransactions = async (
     }
     return [transactions, start];
   } catch (e) {
-    console.log('transactions utils: ', e); //TODO to remove
     return getAccountTransactions(
       accountName,
       (e as any).jse_info.stack[0].data.sequence - 1,
