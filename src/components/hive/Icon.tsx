@@ -1,29 +1,37 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import PowerDownIcon from 'src/assets/icons/svgs/arrow_downward.svg';
+import PowerUpIcon from 'src/assets/icons/svgs/arrow_upward.svg';
+import ConvertIcon from 'src/assets/icons/svgs/currency_exchange.svg';
+import ClaimAccount from 'src/assets/icons/svgs/person_add.svg';
+import ClaimIcon from 'src/assets/icons/svgs/redeem.svg';
+import SavingsIcon from 'src/assets/icons/svgs/savings.svg';
+import TransferIcon from 'src/assets/icons/svgs/send.svg';
+import DelegateIcon from 'src/assets/icons/svgs/swap_horiz.svg';
 
-const getIconFilePath = (name: string, subType: string) => {
+const getIconFilePath = (name: string, subType: string, style: any) => {
   switch (name) {
     case 'transfer' || 'recurrent_transfer' || 'fill_recurrent_transfer':
-      return require('src/assets/icons/transfer.png');
+      return <TransferIcon style={style} />;
     case 'savings':
-      return require('src/assets/icons/savings.png');
+      return <SavingsIcon style={style} />;
     case 'power_up_down':
       switch (subType) {
         case 'transfer_to_vesting':
-          return require('src/assets/icons/powerup.png');
+          return <PowerUpIcon style={style} />;
         case 'withdraw_vesting':
-          return require('src/assets/icons/powerdown.png');
+          return <PowerDownIcon style={style} />;
       }
     case 'claim_reward_balance' || 'interest':
-      return require('src/assets/icons/claim.png');
+      return <ClaimIcon style={style} />;
     case 'delegate_vesting_shares':
-      return require('src/assets/icons/delegate.png');
+      return <DelegateIcon style={style} />;
     case 'claim_account' || 'account_create' || 'create_claimed_account':
-      return require('src/assets/icons/add_account.png');
+      return <ClaimAccount style={style} />;
     case 'convert':
-      return require('src/assets/icons/currency_exchange.png');
+      return <ConvertIcon style={style} />;
     default:
-      return require('src/assets/icons/transfer.png');
+      return <TransferIcon style={style} />;
   }
 };
 
@@ -47,20 +55,17 @@ const Icon = (props: IconProps) => {
   //       </TouchableOpacity>
   //     );
   //   } else {
-  const iconPath = getIconFilePath(props.name, props.subType);
-  return (
-    <View>
-      <Image source={iconPath} style={styles.defaultIcon} />
-    </View>
+  const iconComponent = getIconFilePath(
+    props.name,
+    props.subType,
+    styles.defaultIcon,
   );
+  return <View>{iconComponent}</View>;
   //   }
 };
 
 const styles = StyleSheet.create({
   defaultIcon: {
-    width: 30,
-    height: 30,
-    tintColor: 'black',
     marginRight: 5,
   },
 });
