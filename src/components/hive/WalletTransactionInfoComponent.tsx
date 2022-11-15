@@ -73,6 +73,7 @@ const WalletTransactionInfo = ({
             transaction={transaction as RecurrentTransferInterface}
             user={user}
             locale={locale}
+            useIcon={true}
           />
         );
 
@@ -82,6 +83,7 @@ const WalletTransactionInfo = ({
             transaction={transaction as FillRecurrentTransferInterface}
             user={user}
             locale={locale}
+            useIcon={true}
           />
         );
 
@@ -91,6 +93,7 @@ const WalletTransactionInfo = ({
             transaction={transaction as ClaimReward}
             user={user}
             locale={locale}
+            useIcon={true}
           />
         );
 
@@ -100,6 +103,7 @@ const WalletTransactionInfo = ({
             transaction={transaction as Delegation}
             user={user}
             locale={locale}
+            useIcon={true}
           />
         );
 
@@ -109,6 +113,7 @@ const WalletTransactionInfo = ({
             transaction={transaction as ClaimAccount}
             user={user}
             locale={locale}
+            useIcon={true}
           />
         );
 
@@ -183,6 +188,7 @@ const WalletTransactionInfo = ({
                 transaction={transaction as Convert}
                 user={user}
                 locale={locale}
+                useIcon={true}
               />
             );
           case 'collateralized_convert':
@@ -191,6 +197,7 @@ const WalletTransactionInfo = ({
                 transaction={transaction as Convert}
                 user={user}
                 locale={locale}
+                useIcon={true}
               />
             );
           case 'fill_convert_request':
@@ -199,6 +206,7 @@ const WalletTransactionInfo = ({
                 transaction={transaction as FillConvert}
                 user={user}
                 locale={locale}
+                useIcon={true}
               />
             );
           case 'fill_collateralized_convert_request':
@@ -207,6 +215,7 @@ const WalletTransactionInfo = ({
                 transaction={transaction as FillCollateralizedConvert}
                 user={user}
                 locale={locale}
+                useIcon={true}
               />
             );
         }
@@ -218,6 +227,7 @@ const WalletTransactionInfo = ({
             transaction={transaction as CreateAccount}
             user={user}
             locale={locale}
+            useIcon={true}
           />
         );
 
@@ -227,6 +237,7 @@ const WalletTransactionInfo = ({
             transaction={transaction as CreateClaimedAccount}
             user={user}
             locale={locale}
+            useIcon={true}
           />
         );
     }

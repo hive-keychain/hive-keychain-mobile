@@ -9,12 +9,14 @@ import {
 } from 'react-native';
 import {ClaimReward} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import Icon from './Icon';
 
 type Props = {
   user: ActiveAccount;
   transaction: ClaimReward;
   token?: boolean;
   locale: string;
+  useIcon?: boolean;
 };
 
 const ClaimRewardTransactionComponent = ({
@@ -22,6 +24,7 @@ const ClaimRewardTransactionComponent = ({
   user,
   locale,
   token = false,
+  useIcon,
 }: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
@@ -47,6 +50,7 @@ const ClaimRewardTransactionComponent = ({
       }}>
       <View style={styles.main}>
         <View style={styles.left}>
+          {useIcon && <Icon name={transaction.type} />}
           <Text>{date}</Text>
           <Text style={styles.username}>Rewards Claimed</Text>
         </View>

@@ -9,18 +9,21 @@ import {
 } from 'react-native';
 import {CreateAccount} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import Icon from './Icon';
 
 type Props = {
   user: ActiveAccount;
   transaction: CreateAccount;
   token?: boolean;
   locale: string;
+  useIcon?: boolean;
 };
 const CreateAccountTransactionComponent = ({
   transaction,
   user,
   locale,
   token = false,
+  useIcon,
 }: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
@@ -46,6 +49,7 @@ const CreateAccountTransactionComponent = ({
       }}>
       <View style={styles.main}>
         <View style={styles.left}>
+          {useIcon && <Icon name={transaction.type} />}
           <Text>{date}</Text>
           <Text style={styles.username}>New account @{new_account_name}</Text>
           <Text style={styles.amount}>{fee}</Text>

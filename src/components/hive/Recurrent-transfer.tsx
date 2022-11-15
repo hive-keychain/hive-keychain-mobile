@@ -1,4 +1,4 @@
-import {ActiveAccount, TokenTransaction, Transaction} from 'actions/interfaces';
+import {ActiveAccount, Transaction} from 'actions/interfaces';
 import React, {useState} from 'react';
 import {
   StyleSheet,
@@ -10,12 +10,14 @@ import {
 import {RecurrentTransfer as RecurrentTransferInterface} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
+import Icon from './Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: Transaction | TokenTransaction;
+  transaction: Transaction;
   token?: boolean;
   locale: string;
+  useIcon?: boolean;
 };
 
 const RecurrentTransfer = ({
@@ -23,6 +25,7 @@ const RecurrentTransfer = ({
   user,
   locale,
   token = false,
+  useIcon,
 }: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
@@ -58,6 +61,7 @@ const RecurrentTransfer = ({
       }}>
       <View style={styles.main}>
         <View style={styles.left}>
+          {useIcon && <Icon name={transaction.type} />}
           <Text>{date}</Text>
           <Text style={styles.username}>{`@${other} (Recurrent)`}</Text>
         </View>

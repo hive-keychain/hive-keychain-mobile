@@ -2,9 +2,8 @@ import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 
 const getIconFilePath = (name: string, subType: string) => {
-  console.log({name}); //TODO to remove
   switch (name) {
-    case 'transfer':
+    case 'transfer' || 'recurrent_transfer' || 'fill_recurrent_transfer':
       return require('src/assets/icons/transfer.png');
     case 'savings':
       return require('src/assets/icons/savings.png');
@@ -15,8 +14,16 @@ const getIconFilePath = (name: string, subType: string) => {
         case 'withdraw_vesting':
           return require('src/assets/icons/powerdown.png');
       }
+    case 'claim_reward_balance' || 'interest':
+      return require('src/assets/icons/claim.png');
+    case 'delegate_vesting_shares':
+      return require('src/assets/icons/delegate.png');
+    case 'claim_account' || 'account_create' || 'create_claimed_account':
+      return require('src/assets/icons/add_account.png');
+    case 'convert':
+      return require('src/assets/icons/currency_exchange.png');
     default:
-      break;
+      return require('src/assets/icons/transfer.png');
   }
 };
 
