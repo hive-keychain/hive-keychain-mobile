@@ -94,7 +94,8 @@
           "missing_info": "Please fill the username and amount to proceed"
         },
         "fill_recurrent_transfer_out": "Sent {{amount}} to @{{other}} ({{remainingExecutions}} remaining)",
-        "fill_recurrent_transfer_in": "Received {{amount}} from @{{other}} ({{remainingExecutions}} remaining)"
+        "fill_recurrent_transfer_in": "Received {{amount}} from @{{other}} ({{remainingExecutions}} remaining)",
+        "start_recurrent_transfer_out": "Started recurrent transfer of {{amount}} to @{{other} (every {{recurrence}} hours - {{executions}} times)"
       },
       "powerup": {
         "title": "Power up!",
