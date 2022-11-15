@@ -96,8 +96,14 @@
         "fill_recurrent_transfer_out": "Sent {{amount}} to @{{other}} ({{remainingExecutions}} remaining)",
         "fill_recurrent_transfer_in": "Received {{amount}} from @{{other}} ({{remainingExecutions}} remaining)"
       },
-      "powerup": {"title": "Power up!"},
-      "powerdown": {"title": "Power down"},
+      "powerup": {
+        "title": "Power up!",
+        "info_power_up": "Powered up {{amount}}"
+      },
+      "powerdown": {
+        "title": "Power down",
+        "info_power_down": "Initiated a {{amount}} power down"
+      },
       "delegation": {
         "title": "Delegate Hive Power",
         "incoming": "Incoming Delegations",
