@@ -5,7 +5,7 @@ import PowerUpIcon from 'src/assets/icons/svgs/arrow_upward.svg';
 import ConvertIcon from 'src/assets/icons/svgs/currency_exchange.svg';
 import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import ExpandMoreIcon from 'src/assets/icons/svgs/expand_more.svg';
-import ClaimAccount from 'src/assets/icons/svgs/person_add.svg';
+import LinkIcon from 'src/assets/icons/svgs/link.svg';
 import ClaimIcon from 'src/assets/icons/svgs/redeem.svg';
 import SavingsIcon from 'src/assets/icons/svgs/savings.svg';
 import TransferIcon from 'src/assets/icons/svgs/send.svg';
@@ -13,7 +13,9 @@ import DelegateIcon from 'src/assets/icons/svgs/swap_horiz.svg';
 
 const getIconFilePath = (name: string, subType: string, style: any) => {
   switch (name) {
-    case 'transfer' || 'recurrent_transfer' || 'fill_recurrent_transfer':
+    case 'transfer':
+    case 'recurrent_transfer':
+    case 'fill_recurrent_transfer':
       return <TransferIcon style={style} />;
     case 'savings':
       return <SavingsIcon style={style} />;
@@ -24,12 +26,15 @@ const getIconFilePath = (name: string, subType: string, style: any) => {
         case 'withdraw_vesting':
           return <PowerDownIcon style={style} />;
       }
-    case 'claim_reward_balance' || 'interest':
+    case 'claim_reward_balance':
+    case 'interest':
       return <ClaimIcon style={style} />;
     case 'delegate_vesting_shares':
       return <DelegateIcon style={style} />;
-    case 'claim_account' || 'account_create' || 'create_claimed_account':
-      return <ClaimAccount style={style} />;
+    case 'claim_account':
+    case 'account_create':
+    case 'create_claimed_account':
+      return <LinkIcon style={style} />;
     case 'convert':
       return <ConvertIcon style={style} />;
     case 'expand_more':
@@ -49,6 +54,9 @@ interface IconProps {
 }
 
 const Icon = (props: IconProps) => {
+  //TODO finish when needed.
+  //  to: open a link in browser.
+
   //   if (props.onClick) {
   //     return (
   //       <TouchableOpacity onPress={props.onClick}>

@@ -57,7 +57,8 @@
     "add_active": "Please add your active key to perform this operation.",
     "claim": {
       "success": "Successfully claimed {{rewards}}!",
-      "error_posting": "Please add your posting key to be able to claim rewards!"
+      "error_posting": "Please add your posting key to be able to claim rewards!",
+      "info_claim_account": "Claimed account"
     },
     "operations": {
       "history": "History",
@@ -95,7 +96,8 @@
         },
         "fill_recurrent_transfer_out": "Sent {{amount}} to @{{other}} ({{remainingExecutions}} remaining)",
         "fill_recurrent_transfer_in": "Received {{amount}} from @{{other}} ({{remainingExecutions}} remaining)",
-        "start_recurrent_transfer_out": "Started recurrent transfer of {{amount}} to @{{other} (every {{recurrence}} hours - {{executions}} times)"
+        "start_recurrent_transfer_out": "Started recurrent transfer of {{amount}} to @{{other} (every {{recurrence}} hours - {{executions}} times)",
+        "info_recurrent_transfer_in": "@{{other}} started transfer of {{amount}} (every {{recurrence}} hours - {{executions}} times)"
       },
       "powerup": {
         "title": "Power up!",

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {CreateClaimedAccount} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import {translate} from 'utils/localize';
 import Icon from './Icon';
 
 type Props = {
@@ -48,19 +49,17 @@ const CreateClaimedAccountTransactionComponent = ({
         setToggle(!toggle);
       }}>
       <View style={styles.main}>
-        <View style={styles.left}>
+        <View style={[styles.row, styles.alignedContent]}>
           {useIcon && <Icon name={transaction.type} />}
           <Text>{date}</Text>
+        </View>
+        <View style={styles.rowContainer}>
           <Text style={styles.username}>
-            @{creator} created @{new_account_name}
+            {translate('wallet.claim.info_claim_account')}
+            {` @${new_account_name}`}
           </Text>
         </View>
       </View>
-      {toggle && (
-        <Text>
-          @{creator} successfully created new account: @{new_account_name}
-        </Text>
-      )}
     </TouchableOpacity>
   );
 };
@@ -74,12 +73,21 @@ const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
     },
     main: {
       display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: 'column',
     },
-    left: {display: 'flex', flexDirection: 'row'},
-    username: {paddingLeft: 10},
+    username: {},
     amount: {color},
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    rowContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    alignedContent: {
+      alignItems: 'center',
+    },
   });
 
 export default CreateClaimedAccountTransactionComponent;

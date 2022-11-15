@@ -76,21 +76,18 @@ const RecurrentTransfer = ({
                     executions,
                   },
                 )
-              : null}
+              : translate(
+                  'wallet.operations.transfer.info_recurrent_transfer_in',
+                  {
+                    other,
+                    amount,
+                    recurrence,
+                    executions,
+                  },
+                )}
           </Text>
         </View>
-        {/* <Text style={styles.amount}>{`${direction} ${withCommas(amount)} ${
-          amount.split(' ')[1]
-        }`}</Text> */}
       </View>
-      {toggle && memo && memo.length ? (
-        <View>
-          <Text>
-            Each: {recurrence} / Executions: {executions}
-          </Text>
-          <Text>Memo: {memo}</Text>
-        </View>
-      ) : null}
     </TouchableOpacity>
   );
 };
