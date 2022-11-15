@@ -64,11 +64,6 @@ const PowerUpTransactionComponent = ({
           </Text>
         </View>
       </View>
-      {toggle && (
-        <View>
-          <Text>Successfully powered UP.</Text>
-        </View>
-      )}
     </TouchableOpacity>
   );
 };
