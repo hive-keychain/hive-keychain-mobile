@@ -60,7 +60,8 @@
       "error_posting": "Please add your posting key to be able to claim rewards!",
       "info_claim_account": "Claimed account",
       "info_create_claimed_account": "Claimed account",
-      "info_claim_rewards": "{{amount}} claimed"
+      "info_claim_rewards": "{{amount}} claimed",
+      "info_account_create": "Paid {{fee}} to create @{{new_account_name}}"
     },
     "operations": {
       "history": "History",
