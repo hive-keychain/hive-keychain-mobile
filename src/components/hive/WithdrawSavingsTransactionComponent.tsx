@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {StartWithdrawSavings} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import {translate} from 'utils/localize';
 import Icon from './Icon';
 
 type Props = {
@@ -48,15 +49,18 @@ const WithdrawSavingsTransactionComponent = ({
         setToggle(!toggle);
       }}>
       <View style={styles.main}>
-        <View style={styles.left}>
+        <View style={[styles.row, styles.alignedContent]}>
           {useIcon && <Icon name={transaction.type} />}
           <Text>{date}</Text>
-          <Text style={styles.username}>Started savings withdraw</Text>
         </View>
-
-        <Text style={styles.amount}>{amount}</Text>
+        <View style={styles.rowContainer}>
+          <Text style={styles.username}>
+            {translate('wallet.operations.savings.start_withdraw_savings', {
+              amount,
+            })}
+          </Text>
+        </View>
       </View>
-      {toggle && <Text>Successfull started a withdraw from savings.</Text>}
     </TouchableOpacity>
   );
 };
@@ -70,12 +74,21 @@ const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
     },
     main: {
       display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: 'column',
     },
-    left: {display: 'flex', flexDirection: 'row'},
-    username: {paddingLeft: 10},
+    username: {},
     amount: {color},
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    rowContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    alignedContent: {
+      alignItems: 'center',
+    },
   });
 
 export default WithdrawSavingsTransactionComponent;

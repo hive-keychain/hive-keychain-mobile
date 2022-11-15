@@ -68,7 +68,9 @@
         "withdraw_button": "Withdraw",
         "deposit_button": "Deposit",
         "prompt": "Select a currency",
-        "fill_withdraw_savings": "Successfully withdrawn {{amount}} from savings"
+        "fill_withdraw_savings": "Successfully withdrawn {{amount}} from savings",
+        "start_withdraw_savings": "Started a {{amount}} withdrawal from savings",
+        "info_deposit_savings": "Deposit of {{amount}} into savings"
       },
       "transfer": {
         "title": "Transfer funds",
