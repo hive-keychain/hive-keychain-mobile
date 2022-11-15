@@ -107,7 +107,8 @@
       "delegation": {
         "title": "Delegate Hive Power",
         "incoming": "Incoming Delegations",
-        "outgoing": "Outgoing Delegations"
+        "outgoing": "Outgoing Delegations",
+        "info_delegation_in": "@{{delegator}} delegated {{amount}}"
       },
       "convert": {
         "title": "Convert to {{to}}",
