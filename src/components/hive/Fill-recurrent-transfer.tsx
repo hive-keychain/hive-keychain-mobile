@@ -7,9 +7,10 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import {Icons} from 'src/enums/icons.enums';
 import {FillRecurrentTransfer as FillRecurrentTransferInterface} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
-import {withCommas} from 'utils/format';
+import {translate} from 'utils/localize';
 import Icon from './Icon';
 
 type Props = {
@@ -48,6 +49,14 @@ const FillRecurrentTransfer = ({
     day: '2-digit',
   });
 
+  const toggleExpandMoreIcon = () => {
+    return toggle ? (
+      <Icon name={Icons.EXPAND_LESS} />
+    ) : (
+      <Icon name={Icons.EXPAND_MORE} />
+    );
+  };
+
   const styles = getDimensionedStyles({
     ...useWindowDimensions(),
     color,
@@ -59,21 +68,36 @@ const FillRecurrentTransfer = ({
         setToggle(!toggle);
       }}>
       <View style={styles.main}>
-        <View style={styles.left}>
-          {useIcon && <Icon name={transaction.type} />}
-          <Text>{date}</Text>
-          <Text style={styles.username}>{`@${other} (Filled)`}</Text>
+        <View style={[styles.row, styles.alignedContent]}>
+          <View
+            style={[
+              styles.row,
+              {width: '100%', justifyContent: 'space-between'},
+            ]}>
+            <View style={styles.row}>
+              {useIcon && <Icon name={transaction.type} />}
+              <Text>{date}</Text>
+            </View>
+            <View>{memo && memo.length ? toggleExpandMoreIcon() : null}</View>
+          </View>
         </View>
-
-        <Text style={styles.amount}>{`${direction} ${withCommas(amount)} ${
-          amount.split(' ')[1]
-        }`}</Text>
+        <View style={styles.rowContainer}>
+          <Text>
+            {direction === '+'
+              ? translate(
+                  'wallet.operations.transfer.fill_recurrent_transfer_in',
+                  {amount, other, remainingExecutions},
+                )
+              : translate(
+                  'wallet.operations.transfer.fill_recurrent_transfer_out',
+                  {amount, other, remainingExecutions},
+                )}
+          </Text>
+        </View>
       </View>
       {toggle && memo && memo.length ? (
         <View>
-          <Text>Recurrent transfer filled.</Text>
-          <Text>Remaining: {remainingExecutions}</Text>
-          <Text>Memo: {memo}</Text>
+          <Text>{memo}</Text>
         </View>
       ) : null}
     </TouchableOpacity>
@@ -89,12 +113,21 @@ const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
     },
     main: {
       display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: 'column',
     },
-    left: {display: 'flex', flexDirection: 'row'},
-    username: {paddingLeft: 10},
+    username: {},
     amount: {color},
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    rowContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    alignedContent: {
+      alignItems: 'center',
+    },
   });
 
 export default FillRecurrentTransfer;

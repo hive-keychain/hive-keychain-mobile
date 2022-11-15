@@ -67,7 +67,8 @@
         "disclaimer": "Note: Withdrawing funds from savings will take 3.5 days.",
         "withdraw_button": "Withdraw",
         "deposit_button": "Deposit",
-        "prompt": "Select a currency"
+        "prompt": "Select a currency",
+        "fill_withdraw_savings": "Successfully withdrawn {{amount}} from savings"
       },
       "transfer": {
         "title": "Transfer funds",
@@ -89,7 +90,9 @@
           "exchange_currency": "This exchange account does not accept {{currency}} deposits.",
           "exchange_memo": "Make sure you add a memo when transfering to an exchange account.",
           "missing_info": "Please fill the username and amount to proceed"
-        }
+        },
+        "fill_recurrent_transfer_out": "Sent {{amount}} to @{{other}} ({{remainingExecutions}} remaining)",
+        "fill_recurrent_transfer_in": "Received {{amount}} from @{{other}} ({{remainingExecutions}} remaining)"
       },
       "powerup": {"title": "Power up!"},
       "powerdown": {"title": "Power down"},
