@@ -122,6 +122,11 @@ const WalletHistory = ({
     setIsFilterPanelOpened(!isFilterOpened);
   };
 
+  //TODO important:
+  //  - follow same pattern to render & count as <Transactions...
+  //  - do this until works as good as the extension.
+  //  - work on filter as card says.
+  //  - fix styling for selected filters + check why filters are moving when selected/unselected.
   const toggleFilterType = (transactionName: string) => {
     const newFilter = {
       ...filter?.selectedTransactionTypes,
