@@ -3,6 +3,8 @@ import {StyleSheet, View} from 'react-native';
 import PowerDownIcon from 'src/assets/icons/svgs/arrow_downward.svg';
 import PowerUpIcon from 'src/assets/icons/svgs/arrow_upward.svg';
 import ConvertIcon from 'src/assets/icons/svgs/currency_exchange.svg';
+import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
+import ExpandMoreIcon from 'src/assets/icons/svgs/expand_more.svg';
 import ClaimAccount from 'src/assets/icons/svgs/person_add.svg';
 import ClaimIcon from 'src/assets/icons/svgs/redeem.svg';
 import SavingsIcon from 'src/assets/icons/svgs/savings.svg';
@@ -30,6 +32,10 @@ const getIconFilePath = (name: string, subType: string, style: any) => {
       return <ClaimAccount style={style} />;
     case 'convert':
       return <ConvertIcon style={style} />;
+    case 'expand_more':
+      return <ExpandMoreIcon style={style} />;
+    case 'expand_less':
+      return <ExpandLessIcon style={style} />;
     default:
       return <TransferIcon style={style} />;
   }
@@ -39,11 +45,6 @@ interface IconProps {
   onClick?: (params: any) => void;
   name: string;
   subType?: string;
-  // type: IconType;
-  // additionalStyle?: string;
-  // tooltipMessage?: string;
-  // tooltipPosition?: CustomTooltipPosition;
-  // skipTooltipTranslation?: boolean;
   // ariaLabel?: string;
 }
 

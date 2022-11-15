@@ -74,6 +74,8 @@
         "memo": "MEMO (optional)",
         "executions": "Number of executions",
         "recurrence": "Recurrence Period",
+        "sent": "Sent",
+        "received": "Received",
         "confirm": {
           "from": "From",
           "to": "To",

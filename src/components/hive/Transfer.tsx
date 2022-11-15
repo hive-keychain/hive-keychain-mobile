@@ -7,9 +7,11 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import {Icons} from 'src/enums/icons.enums';
 import {Transfer as TransferInterface} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
+import {translate} from 'utils/localize';
 import Icon from './Icon';
 
 type Props = {
@@ -32,6 +34,16 @@ const Transfer = ({
   const other = from === username ? to : from;
   const direction = from === username ? '-' : '+';
   const color = direction === '+' ? '#3BB26E' : '#B9122F';
+  const operationDetails = {
+    action:
+      direction === '+'
+        ? translate('wallet.operations.transfer.received')
+        : translate('wallet.operations.transfer.sent'),
+    actionFromTo:
+      direction === '+'
+        ? translate('wallet.operations.transfer.confirm.from')
+        : translate('wallet.operations.transfer.confirm.to'),
+  };
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -39,6 +51,14 @@ const Transfer = ({
     month: '2-digit',
     day: '2-digit',
   });
+
+  const toggleExpandMoreIcon = () => {
+    return toggle ? (
+      <Icon name={Icons.EXPAND_LESS} />
+    ) : (
+      <Icon name={Icons.EXPAND_MORE} />
+    );
+  };
 
   const styles = getDimensionedStyles({
     ...useWindowDimensions(),
@@ -52,15 +72,22 @@ const Transfer = ({
         setToggle(!toggle);
       }}>
       <View style={styles.main}>
-        <View style={styles.left}>
+        <View style={[styles.row, styles.alignedContent]}>
           {useIcon && <Icon name={transaction.type} />}
           <Text>{date}</Text>
-          <Text style={styles.username}>{`@${other}`}</Text>
         </View>
-
-        <Text style={styles.amount}>{`${direction} ${withCommas(amount)} ${
-          amount.split(' ')[1]
-        }`}</Text>
+        <View style={styles.rowContainer}>
+          <View style={styles.row}>
+            <Text style={styles.username}>{`${operationDetails.action} `}</Text>
+            <Text style={styles.amount}>{`${direction} ${withCommas(amount)} ${
+              amount.split(' ')[1]
+            }`}</Text>
+            <Text style={styles.username}>
+              {` ${operationDetails.actionFromTo} `} {`@${other}`}
+            </Text>
+          </View>
+          <View>{memo && memo.length ? toggleExpandMoreIcon() : null}</View>
+        </View>
       </View>
       {toggle && memo && memo.length ? <Text>{memo}</Text> : null}
     </TouchableOpacity>
@@ -76,12 +103,22 @@ const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
     },
     main: {
       display: 'flex',
+      flexDirection: 'column',
+    },
+    username: {},
+    amount: {color},
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    rowContainer: {
+      display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
-    left: {display: 'flex', flexDirection: 'row'},
-    username: {paddingLeft: 10},
-    amount: {color},
+    alignedContent: {
+      alignItems: 'center',
+    },
   });
 
 export default Transfer;

@@ -30,6 +30,7 @@ export enum Icons {
   EDIT = 'edit',
   ERROR = 'error',
   EXPAND_MORE = 'expand_more',
+  EXPAND_LESS = 'expand_less',
   EXPORT = 'file_download',
   FILTER = 'filter_alt',
   HIDDEN = 'visibility_off',
