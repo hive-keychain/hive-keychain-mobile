@@ -59,7 +59,8 @@
       "success": "Successfully claimed {{rewards}}!",
       "error_posting": "Please add your posting key to be able to claim rewards!",
       "info_claim_account": "Claimed account",
-      "info_create_claimed_account": "Claimed account"
+      "info_create_claimed_account": "Claimed account",
+      "info_claim_rewards": "{{amount}} claimed"
     },
     "operations": {
       "history": "History",
