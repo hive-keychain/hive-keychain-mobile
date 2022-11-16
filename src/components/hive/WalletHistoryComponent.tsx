@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {fetchAccountTransactions, initAccountTransactions} from 'actions/hive';
+import {fetchAccountTransactions} from 'actions/hive';
 import {ActiveAccount} from 'actions/interfaces';
 import ExpandLessIcon from 'assets/governance/expand_less.svg';
 import ExpandMoreIcon from 'assets/governance/expand_more.svg';
@@ -8,7 +8,6 @@ import moment from 'moment';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
-  LayoutChangeEvent,
   LayoutRectangle,
   StyleSheet,
   Text,
@@ -47,7 +46,7 @@ import TransactionUtils, {
 import {WalletHistoryUtils} from 'utils/walletHistoryUtils';
 import {BackToTopButton} from './Back-To-Top-Button';
 import LoadMoreButton from './Load-More-Button';
-import {WalletHistoryItemComponent} from './WalletHistoryItemComponent';
+import WalletHistoryItemComponent from './WalletHistoryItemComponent';
 
 type FilterTransactionTypes = {
   [key: string]: boolean;
@@ -118,15 +117,14 @@ const WalletHistory = ({
 
   const [previousTransactionLength, setPreviousTransactionLength] = useState(0);
 
+  const [end, setEnd] = useState(0);
+
   const toggleFilter = () => {
     setIsFilterPanelOpened(!isFilterOpened);
   };
 
-  //TODO important:
-  //  - follow same pattern to render & count as <Transactions...
-  //  - do this until works as good as the extension.
-  //  - work on filter as card says.
-  //  - fix styling for selected filters + check why filters are moving when selected/unselected.
+  //TODO important: To remove as not used anymore!!!
+
   const toggleFilterType = (transactionName: string) => {
     const newFilter = {
       ...filter?.selectedTransactionTypes,
@@ -181,12 +179,23 @@ const WalletHistory = ({
     lastOperationFetched = await TransactionUtils.getLastTransaction(
       activeAccountName!,
     );
+    console.log({lastOperationFetched}); //TODO to remove
     setLoading(true);
     fetchAccountTransactions(activeAccountName!, lastOperationFetched);
     initFilters();
   };
 
   useEffect(() => {
+    //extra debug code //TODO to remove
+    console.log({
+      lastUsedStart: transactions.lastUsedStart,
+      loading: transactions.loading,
+    });
+    if (transactions.list.length) {
+      const lastOne = transactions.list[transactions.list.length - 1];
+      console.log({last: lastOne.last, lastFetched: lastOne.lastFetched});
+    }
+    //end extra debug code
     if (transactions.lastUsedStart !== -1) {
       if (
         transactions.list.length < MINIMUM_FETCHED_TRANSACTIONS &&
@@ -205,7 +214,6 @@ const WalletHistory = ({
         setTimeout(() => {
           filterTransactions();
         }, 0);
-
         setLastTransactionIndex(
           ArrayUtils.getMinValue(transactions.list, 'index'),
         );
@@ -370,6 +378,7 @@ const WalletHistory = ({
 
   const tryToLoadMore = () => {
     if (loading) return;
+    setShowLoadMoreButton(false);
     setPreviousTransactionLength(displayedTransactions.length);
     setLoading(true);
     fetchAccountTransactions(
@@ -383,22 +392,22 @@ const WalletHistory = ({
 
   const handleScroll = (event: any) => {
     const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
-
-    if (
-      transactions.list[transactions.list.length - 1]?.last === true ||
-      transactions.lastUsedStart === 0
-    )
-      return;
     setDisplayedScrollToTop(innerScrollViewY >= 35);
+    // if (
+    //   transactions.list[transactions.list.length - 1]?.last === true ||
+    //   transactions.lastUsedStart === 0
+    // )
+    //   return;
+    // setDisplayedScrollToTop(innerScrollViewY >= 35);
 
-    const scrollHeightAndRectangleHeight =
-      innerScrollViewY + flatListLayoutRectangle.height;
-    if (scrollHeightAndRectangleHeight >= heightFlatList.toFixed(0)) {
-      setShowLoadMoreButton(true);
-      tryToLoadMore();
-    } else {
-      setShowLoadMoreButton(false);
-    }
+    // const scrollHeightAndRectangleHeight =
+    //   innerScrollViewY + flatListLayoutRectangle.height;
+    // if (scrollHeightAndRectangleHeight >= heightFlatList.toFixed(0)) {
+    //   setShowLoadMoreButton(true);
+    //   tryToLoadMore();
+    // } else {
+    //   setShowLoadMoreButton(false);
+    // }
   };
 
   const handleScrollToTop = () => {
@@ -419,6 +428,24 @@ const WalletHistory = ({
 
   const handlePressedStyleInOut = (inOutSelected: boolean) => {
     return inOutSelected ? styles.pressedStyle : styles.touchableItem;
+  };
+
+  const handleFlatlistOnEndReached = () => {
+    // const newEnd = +displayedTransactions[
+    //   displayedTransactions.length - 1
+    // ].key.split('!')[1];
+    // if (
+    //   newEnd !== end &&
+    //   !displayedTransactions[displayedTransactions.length - 1].last
+    // ) {
+    //   //fecthing more data auto so we have the infinite scroll like
+    //   //how or when to show the loadMore??
+    //   fetchAccountTransactions(user.account.name, newEnd);
+    //   setEnd(newEnd);
+    // }
+    if (!transactions.list[transactions.list.length - 1].lastFetched) {
+      setShowLoadMoreButton(true);
+    }
   };
 
   return (
@@ -494,6 +521,7 @@ const WalletHistory = ({
           data={displayedTransactions}
           initialNumToRender={20}
           onEndReachedThreshold={0.5}
+          onEndReached={handleFlatlistOnEndReached}
           renderItem={(transaction) => {
             return (
               <WalletHistoryItemComponent
@@ -523,11 +551,13 @@ const WalletHistory = ({
           keyExtractor={(transaction) =>
             addRandomToKeyString(transaction.key, 6)
           }
+          //Muted as not needed for new logic
           onScroll={handleScroll}
-          onContentSizeChange={(x: number, y: number) => setHeightFlatList(y)}
-          onLayout={(event: LayoutChangeEvent) =>
-            setFlatListLayoutRectangle(event.nativeEvent.layout)
-          }
+          // onContentSizeChange={(x: number, y: number) => setHeightFlatList(y)}
+          // onLayout={(event: LayoutChangeEvent) =>
+          //   setFlatListLayoutRectangle(event.nativeEvent.layout)
+          // }
+          //END Muted
         />
 
         {!loading && showLoadMoreButton && (
@@ -660,7 +690,6 @@ const mapStateToProps = (state: RootState) => {
 
 const connector = connect(mapStateToProps, {
   fetchAccountTransactions,
-  initAccountTransactions,
 });
 type PropsFromRedux = ConnectedProps<typeof connector> & WalletHistoryProps;
 

@@ -6,7 +6,7 @@ import {
 } from 'actions/hive';
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
-import {WalletHistoryComponent} from 'components/hive/WalletHistoryComponent';
+import WalletHistoryTest from 'components/hive/WalletHistoryTest';
 import Survey from 'components/survey';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
@@ -137,10 +137,9 @@ const Main = ({
             translate(`wallet.menu.tokens`),
           ]}
           toUpperCase
-          // components={[<Primary />, <Transactions user={user} />, <Tokens />]}
           components={[
             <Primary />,
-            <WalletHistoryComponent user={user} />,
+            <WalletHistoryTest user={user} />,
             <Tokens />,
           ]}
         />
