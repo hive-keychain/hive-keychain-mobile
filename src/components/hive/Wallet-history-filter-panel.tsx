@@ -49,6 +49,7 @@ interface WalletHistoryFilterPanelProps {
   finalizeDisplayedList: any; //TODO add type
   setLoading: any; //TODO add type
   fetchAccountTransactions: any; //TODO add type
+  walletFilters: any; //TODO add type
 }
 
 type Props = WalletHistoryFilterPanelProps;
@@ -64,6 +65,7 @@ const WalletHistoryFilterPanel = ({
   finalizeDisplayedList,
   setLoading,
   fetchAccountTransactions,
+  walletFilters,
 }: Props) => {
   const [filter, setFilter] = useState<WalletHistoryFilter>(DEFAULT_FILTER);
   const [filterReady, setFilterReady] = useState<boolean>(false);
@@ -86,13 +88,15 @@ const WalletHistoryFilterPanel = ({
       KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
       JSON.stringify(filter),
     );
+    //testing to set newFilter
+    //TODO code the actions...
   };
 
   const initFilters = async () => {
     const filter = await AsyncStorage.getItem(
       KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
     );
-
+    console.log({walletFilters}); //TODO to remove
     if (filter) {
       const newFilterFound = JSON.parse(filter) as WalletHistoryFilter;
       setFilter(newFilterFound);

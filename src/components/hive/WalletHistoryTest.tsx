@@ -42,6 +42,7 @@ type Props = PropsFromRedux & WalletHistoryProps;
 
 const WalletHistoryTest = ({
   transactions,
+  walletFilters,
   fetchAccountTransactions,
   user,
 }: Props) => {
@@ -70,6 +71,8 @@ const WalletHistoryTest = ({
     setLoading(true);
     fetchAccountTransactions(user.account.name!, lastOperationFetched);
   };
+
+  //TODO tryToLoadMore but guidance needed.
 
   useEffect(() => {
     if (transactions.lastUsedStart !== -1) {
@@ -180,6 +183,7 @@ const WalletHistoryTest = ({
         finalizeDisplayedList={finalizeDisplayedList}
         setLoading={setLoading}
         fetchAccountTransactions={fetchAccountTransactions}
+        walletFilters={walletFilters}
       />
       {renderTransactions()}
       {displayScrollToTop && <BackToTopButton element={flatListRef} />}
@@ -200,6 +204,7 @@ const basicStyles = StyleSheet.create({
 const mapStateToProps = (state: RootState) => {
   return {
     transactions: state.transactions as Transactions,
+    walletFilters: state.walletFilters,
   };
 };
 const connector = connect(mapStateToProps, {
