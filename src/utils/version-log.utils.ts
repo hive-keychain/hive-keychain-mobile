@@ -11,7 +11,7 @@ const getCurrentMobileAppVersion = (): AppInfo => {
   const appVersionVersionInfo = VersionInfo.appVersion;
   console.log({appVersionVersionInfo}); //TODO to remove actual -> "1.10.6-dev"
   //TODO change back to version: appVersionVersionInfo
-  return {name, version: '2.2.6-dev'};
+  return {name, version: '2.3.6-dev'};
 };
 
 //  TODO:

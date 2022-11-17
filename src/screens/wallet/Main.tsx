@@ -18,7 +18,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
-  AsyncStorage,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -26,13 +25,11 @@ import {
 import {connect, ConnectedProps} from 'react-redux';
 import Primary from 'screens/wallet/Primary';
 import Tokens from 'screens/wallet/Tokens';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getVotingDollarsPerAccount, getVP} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {VersionLogUtils} from 'utils/version-log.utils';
 
 const Main = ({
   loadAccount,
@@ -56,7 +53,7 @@ const Main = ({
     loadProperties();
     loadPrices();
     fetchPhishingAccounts();
-    initWhatsNew();
+    // initWhatsNew();
   }, [
     loadAccount,
     accounts,
@@ -110,25 +107,25 @@ const Main = ({
     return null;
   }
 
-  const initWhatsNew = async () => {
-    const lastVersionSeen = await AsyncStorage.getItem(
-      KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
-    );
+  // const initWhatsNew = async () => {
+  //   const lastVersionSeen = await AsyncStorage.getItem(
+  //     KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
+  //   );
 
-    const versionLog = await VersionLogUtils.getLastVersion();
-    const extensionVersion = VersionLogUtils.getCurrentMobileAppVersion()
-      .version.split('.')
-      .splice(0, 2)
-      .join('.');
-    console.log({extensionVersion, versionLog, lastVersionSeen}); //TODO to remove
-    if (
-      extensionVersion !== lastVersionSeen &&
-      versionLog.version === extensionVersion
-    ) {
-      setWhatsNewContent(versionLog);
-      setDisplayWhatsNew(true);
-    }
-  };
+  //   const versionLog = await VersionLogUtils.getLastVersion();
+  //   const extensionVersion = VersionLogUtils.getCurrentMobileAppVersion()
+  //     .version.split('.')
+  //     .splice(0, 2)
+  //     .join('.');
+  //   console.log({extensionVersion, versionLog, lastVersionSeen}); //TODO to remove
+  //   if (
+  //     extensionVersion !== lastVersionSeen &&
+  //     versionLog.version === extensionVersion
+  //   ) {
+  //     setWhatsNewContent(versionLog);
+  //     setDisplayWhatsNew(true);
+  //   }
+  // };
 
   return (
     <WalletPage>
@@ -169,13 +166,14 @@ const Main = ({
           components={[<Primary />, <Transactions user={user} />, <Tokens />]}
         />
         <Survey navigation={navigation} />
-        {displayWhatsNew && (
+        <WhatsNewComponent navigation={navigation} />
+        {/* {displayWhatsNew && (
           <WhatsNewComponent
             onOverlayClick={() => setDisplayWhatsNew(false)}
             content={whatsNewContent!}
             navigation={navigation}
           />
-        )}
+        )} */}
       </>
     </WalletPage>
   );

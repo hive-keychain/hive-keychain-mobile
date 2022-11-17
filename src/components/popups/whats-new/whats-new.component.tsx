@@ -1,14 +1,16 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import Carousel from 'components/carousel/carousel';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {WhatsNewContent} from './whats-new.interface';
+import {VersionLogUtils} from 'utils/version-log.utils';
 
 interface Props {
-  onOverlayClick: () => void;
-  content: WhatsNewContent;
+  // onOverlayClick: () => void;
+  // content: WhatsNewContent;
   navigation: WalletNavigation;
 }
 
@@ -16,10 +18,11 @@ interface ImageItems {
   source: string;
 }
 
-const WhatsNew = ({onOverlayClick, content, navigation}: Props): null => {
+const WhatsNew = ({navigation}: Props): null => {
   const [pageIndex, setPageIndex] = useState(0);
-  const [images, setImages] = useState<JSX.Element[]>();
-  const [ready, setReady] = useState(false);
+  const [content, setContent] = useState(null);
+  // const [images, setImages] = useState<JSX.Element[]>();
+  // const [ready, setReady] = useState(false);
   const locale = 'en'; // later use getUILanguage()
 
   useEffect(() => {
@@ -27,81 +30,98 @@ const WhatsNew = ({onOverlayClick, content, navigation}: Props): null => {
   }, []);
 
   const init = async () => {
-    const imgs: ImageItems[] = [];
-    for (const feature of content.features[locale]) {
-      const imageItem: ImageItems = {
-        source: feature.image,
-      };
-      imgs.push(imageItem);
-    }
-    const Images = imgs.map((img, index) => {
-      console.log({index});
-      return <Image source={{uri: img.source}} style={styles.whatsNewImage} />;
-    });
-    setImages(Images);
-    setReady(true);
-
-    navigate('ModalScreen', {
-      name: 'Whats_new_popup',
-      modalContent: renderContent(),
-      onForceCloseModal: () => navigation.goBack(),
-    });
-  };
-
-  const next = () => {
-    setPageIndex(pageIndex + 1);
-  };
-  const previous = () => {
-    setPageIndex(pageIndex - 1);
-  };
-
-  const navigateToArticle = (url: string) => {
-    //TODO implement
-    // chrome.tabs.create({url: url});
-  };
-
-  const finish = async () => {
-    //  TODO uncomment after testing all good so it will modify the
-    //  lastSeenVersion and will not load anymore :D
-    // await AsyncStorage.setItem(KeychainStorageKeyEnum.LAST_VERSION_UPDATE, content.version);
-    onOverlayClick();
-  };
-
-  const renderCustomIndicator = (
-    clickHandler: (e: React.MouseEvent | React.KeyboardEvent) => void,
-    isSelected: boolean,
-    index: number,
-    label: string,
-  ) => {
-    return (
-      <li
-        className={`dot ${isSelected ? 'selected' : ''}`}
-        onClick={(e) => {
-          clickHandler(e);
-          setPageIndex(index);
-        }}></li>
+    //check if show
+    const lastVersionSeen = await AsyncStorage.getItem(
+      KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
     );
+
+    const versionLog = await VersionLogUtils.getLastVersion();
+    const extensionVersion = VersionLogUtils.getCurrentMobileAppVersion()
+      .version.split('.')
+      .splice(0, 2)
+      .join('.');
+    console.log({extensionVersion, versionLog, lastVersionSeen}); //TODO to remove
+    if (
+      extensionVersion !== lastVersionSeen &&
+      versionLog.version === extensionVersion
+    ) {
+      //TODO keep the good work
+      //set the content
+      setContent(versionLog);
+      //we call modal.
+      navigate('ModalScreen', {
+        name: 'Whats_new_popup',
+        modalContent: renderContent(),
+        onForceCloseModal: () => navigation.goBack(),
+      });
+    }
+
+    // const imgs: ImageItems[] = [];
+    // for (const feature of content.features[locale]) {
+    //   const imageItem: ImageItems = {
+    //     source: feature.image,
+    //   };
+    //   imgs.push(imageItem);
+    // }
+    // const Images = imgs.map((img, index) => {
+    //   return <Image source={{uri: img.source}} style={styles.whatsNewImage} />;
+    // });
+    // setImages(Images);
+    // setReady(true);
+
+    // navigate('ModalScreen', {
+    //   name: 'Whats_new_popup',
+    //   modalContent: renderContent(),
+    //   onForceCloseModal: () => navigation.goBack(),
+    // });
   };
+
+  // const next = () => {
+  //   setPageIndex(pageIndex + 1);
+  // };
+  // const previous = () => {
+  //   setPageIndex(pageIndex - 1);
+  // };
+
+  // const navigateToArticle = (url: string) => {
+  //   //TODO implement
+  //   // chrome.tabs.create({url: url});
+  // };
+
+  // const finish = async () => {
+  //   //  TODO uncomment after testing all good so it will modify the
+  //   //  lastSeenVersion and will not load anymore :D
+  //   // await AsyncStorage.setItem(KeychainStorageKeyEnum.LAST_VERSION_UPDATE, content.version);
+  //   // onOverlayClick();
+  // };
+
+  // const renderCustomIndicator = (
+  //   clickHandler: (e: React.MouseEvent | React.KeyboardEvent) => void,
+  //   isSelected: boolean,
+  //   index: number,
+  //   label: string,
+  // ) => {
+  //   return (
+  //     <li
+  //       className={`dot ${isSelected ? 'selected' : ''}`}
+  //       onClick={(e) => {
+  //         clickHandler(e);
+  //         setPageIndex(index);
+  //       }}></li>
+  //   );
+  // };
 
   const renderContent = () => {
-    if (!ready) return null;
-    else
-      return (
-        <View aria-label="whats-new-component" style={styles.rootContainer}>
-          <View style={styles.whatsNewContainer}>
-            <Text style={styles.whatsNewTitle}>
-              {translate('popup.whats_new.intro', {
-                content_version: content.version,
-              })}
-            </Text>
-            <Carousel
-              listItems={[
-                {text: 'text 1', color: 'white'},
-                {text: 'text 2', color: 'blue'},
-                {text: 'text 3', color: 'yellow'},
-              ]}
-            />
-            {/* {images && (
+    return (
+      <View aria-label="whats-new-component" style={styles.rootContainer}>
+        <View style={styles.whatsNewContainer}>
+          <Text style={styles.whatsNewTitle}>
+            {translate('popup.whats_new.intro', {
+              content_version: content.version,
+            })}
+          </Text>
+          <Carousel listItems={content.features[locale]} />
+          {/* {images && (
               // <Carousel
               //   showArrows={false}
               //   showIndicators={content.features[locale].length > 1}
@@ -133,7 +153,7 @@ const WhatsNew = ({onOverlayClick, content, navigation}: Props): null => {
               <Text>Hi</Text>
             )} */}
 
-            {/* <View
+          {/* <View
               // className="button-panel"
               style={styles.whatsNewButtonPanel}>
               {pageIndex > 0 && (
@@ -169,9 +189,9 @@ const WhatsNew = ({onOverlayClick, content, navigation}: Props): null => {
                 />
               )}
             </View> */}
-          </View>
         </View>
-      );
+      </View>
+    );
   };
   return null;
 };
@@ -179,11 +199,13 @@ const WhatsNew = ({onOverlayClick, content, navigation}: Props): null => {
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    backgroundColor: 'red',
+    // backgroundColor: 'red',
     width: '100%',
     height: '100%',
   },
-  whatsNewContainer: {},
+  whatsNewContainer: {
+    flex: 1,
+  },
   whatsNewTitle: {
     textAlign: 'center',
     color: 'white',
@@ -192,8 +214,8 @@ const styles = StyleSheet.create({
   },
   whatsNewButtonPanel: {},
   whatsNewImage: {
-    width: 100,
-    height: 100,
+    // width: '60%',
+    // height: '60%',
   },
 });
 
