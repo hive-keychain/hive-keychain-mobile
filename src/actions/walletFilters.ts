@@ -16,5 +16,3 @@ export const clearWalletFilters = () => {
   };
   return action;
 };
-
-// const saveWalletHistoryFilter = () => {} //TODO test and finish it

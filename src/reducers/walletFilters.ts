@@ -27,7 +27,6 @@ const walletFilterReducer = (
     case UPDATE_WALLET_FILTER:
       return {...state, ...payload};
     case CLEAR_WALLET_FILTERS:
-      console.log('clearing as: ', {DEFAULT_FILTER}); //TODO to remove
       return DEFAULT_FILTER;
     default:
       return state;

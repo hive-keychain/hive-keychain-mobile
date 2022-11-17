@@ -41,7 +41,7 @@ interface WalletHistoryProps {
 
 type Props = WalletHistoryPropsFromRedux & WalletHistoryProps;
 
-const WalletHistoryTest = ({
+const WalletHistoryComponent = ({
   transactions,
   walletFilters,
   fetchAccountTransactions,
@@ -56,6 +56,7 @@ const WalletHistoryTest = ({
     Transaction[]
   >(transactions.list);
   const [previousTransactionLength, setPreviousTransactionLength] = useState(0);
+  const [bottomLoader, setBottomLoader] = useState(false);
 
   useEffect(() => {
     init();
@@ -70,7 +71,6 @@ const WalletHistoryTest = ({
     const lastOperationFetched = await TransactionUtils.getLastTransaction(
       user.account.name!,
     );
-    console.log({lastOperationFetched}); //TODO to remove
     setLoading(true);
     fetchAccountTransactions(user.account.name!, lastOperationFetched);
   };
@@ -91,15 +91,16 @@ const WalletHistoryTest = ({
           transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
         );
       } else {
-        //  so now the wallet-history-filter-panel
-        //  will load automatically filterTransactions when received the fecthed data
-        //  and filters are ready.
         const lastIndexFound = ArrayUtils.getMinValue(
           transactions.list,
           'index',
         );
         setLastTransactionIndex(lastIndexFound);
-        console.log({lastIndexFound}); //TODO to remove
+        if (transactions.list.some((t) => t.lastFetched)) {
+          setBottomLoader(false);
+        } else {
+          setBottomLoader(true);
+        }
       }
     }
   }, [transactions]);
@@ -162,6 +163,7 @@ const WalletHistoryTest = ({
               );
             }}
           />
+          {bottomLoader && <Loader animating />}
         </>
       ) : (
         <Text style={basicStyles.no_tokens}>
@@ -216,4 +218,4 @@ const connector = connect(mapStateToProps, {
   clearWalletFilters,
 });
 export type WalletHistoryPropsFromRedux = ConnectedProps<typeof connector>;
-export default connector(WalletHistoryTest);
+export default connector(WalletHistoryComponent);

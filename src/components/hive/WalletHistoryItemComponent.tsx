@@ -30,14 +30,4 @@ const WalletHistoryItemComponent = ({
   );
 };
 
-//TODO remove redux as no needed here.
-// const mapStateToProps = (state: RootState) => {
-//   return {};
-// };
-
-// const connector = connect(mapStateToProps, {});
-// type PropsFromRedux = ConnectedProps<typeof connector> & WalletHistoryItemProps;
-
-// export const WalletHistoryItemComponent = connector(WalletHistoryItem);
-
 export default WalletHistoryItemComponent;

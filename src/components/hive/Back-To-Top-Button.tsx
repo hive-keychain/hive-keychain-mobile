@@ -1,6 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {translate} from 'utils/localize';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Icons} from 'src/enums/icons.enums';
+import Icon from './Icon';
 
 interface BackToTopButtonProps {
   element: any;
@@ -16,7 +17,7 @@ export const BackToTopButton = (props: BackToTopButtonProps) => {
   return (
     <View style={styles.overlayButton}>
       <TouchableOpacity onPress={scrollToTop}>
-        <Text style={styles.overlayButtonText}>{translate('common.top')}</Text>
+        <Icon name={Icons.ARROW_UPWARDS} />
       </TouchableOpacity>
     </View>
   );
@@ -25,14 +26,13 @@ export const BackToTopButton = (props: BackToTopButtonProps) => {
 const styles = StyleSheet.create({
   overlayButton: {
     justifyContent: 'center',
-    borderRadius: 8,
+    borderRadius: 100,
     alignItems: 'center',
     position: 'absolute',
     bottom: 30,
-    right: 0,
-    backgroundColor: 'red',
+    right: 30,
     borderWidth: 1,
-    width: 50,
+    width: 30,
     height: 30,
     opacity: 0.65,
   },

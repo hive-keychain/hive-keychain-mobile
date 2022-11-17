@@ -35,7 +35,7 @@ import {
 } from 'utils/transactions.utils';
 import {WalletHistoryUtils} from 'utils/walletHistoryUtils';
 import Icon from './Icon';
-import {WalletHistoryPropsFromRedux} from './WalletHistoryTest';
+import {WalletHistoryPropsFromRedux} from './Wallet-history-component';
 
 interface WalletHistoryFilterPanelProps {
   DEFAULT_FILTER: WalletHistoryFilter;
@@ -288,14 +288,14 @@ const WalletHistoryFilterPanel = ({
     <View aria-label="wallet-history-filter-panel">
       <View style={styles.filterTogglerContainer}>
         <View style={styles.filterTogglerInnerContainer}>
-          <Text>Filter</Text>
+          <Text style={styles.filterTitleText}>Filters</Text>
           <TouchableOpacity
             style={styles.circularContainer}
             onPress={() => toggleFilter()}>
             {isFilterOpened ? (
-              <Icon name={Icons.EXPAND_LESS} />
+              <Icon name={Icons.EXPAND_LESS} marginRight={false} />
             ) : (
-              <Icon name={Icons.EXPAND_MORE} />
+              <Icon name={Icons.EXPAND_MORE} marginRight={false} />
             )}
           </TouchableOpacity>
         </View>
@@ -378,8 +378,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     borderRadius: 100,
-    margin: 8,
-    opacity: 8,
+    margin: 4,
     height: 30,
     width: 30,
   },
@@ -442,6 +441,9 @@ const styles = StyleSheet.create({
   searchPanel: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  filterTitleText: {
+    fontWeight: 'bold',
   },
 });
 
