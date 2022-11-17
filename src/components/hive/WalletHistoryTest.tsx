@@ -1,5 +1,6 @@
 import {fetchAccountTransactions} from 'actions/index';
 import {ActiveAccount} from 'actions/interfaces';
+import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
 import Loader from 'components/ui/Loader';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
@@ -38,12 +39,14 @@ interface WalletHistoryProps {
   token?: boolean;
 }
 
-type Props = PropsFromRedux & WalletHistoryProps;
+type Props = WalletHistoryPropsFromRedux & WalletHistoryProps;
 
 const WalletHistoryTest = ({
   transactions,
   walletFilters,
   fetchAccountTransactions,
+  updateWalletFilter,
+  clearWalletFilters,
   user,
 }: Props) => {
   const [lastTransactionIndex, setLastTransactionIndex] = useState<number>(-1);
@@ -71,8 +74,6 @@ const WalletHistoryTest = ({
     setLoading(true);
     fetchAccountTransactions(user.account.name!, lastOperationFetched);
   };
-
-  //TODO tryToLoadMore but guidance needed.
 
   useEffect(() => {
     if (transactions.lastUsedStart !== -1) {
@@ -184,6 +185,8 @@ const WalletHistoryTest = ({
         setLoading={setLoading}
         fetchAccountTransactions={fetchAccountTransactions}
         walletFilters={walletFilters}
+        updateWalletFilter={updateWalletFilter}
+        clearWalletFilters={clearWalletFilters}
       />
       {renderTransactions()}
       {displayScrollToTop && <BackToTopButton element={flatListRef} />}
@@ -209,6 +212,8 @@ const mapStateToProps = (state: RootState) => {
 };
 const connector = connect(mapStateToProps, {
   fetchAccountTransactions,
+  updateWalletFilter,
+  clearWalletFilters,
 });
-type PropsFromRedux = ConnectedProps<typeof connector>;
+export type WalletHistoryPropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(WalletHistoryTest);

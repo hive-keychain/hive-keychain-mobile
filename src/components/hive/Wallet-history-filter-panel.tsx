@@ -1,5 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
-import {ActiveAccount} from 'actions/interfaces';
+import {ActionPayload, ActiveAccount} from 'actions/interfaces';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {
@@ -26,7 +25,6 @@ import {
   Transfer,
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {WalletHistoryFilter} from 'src/types/wallet.history.types';
 import {translate} from 'utils/localize';
 import {
@@ -37,19 +35,24 @@ import {
 } from 'utils/transactions.utils';
 import {WalletHistoryUtils} from 'utils/walletHistoryUtils';
 import Icon from './Icon';
+import {WalletHistoryPropsFromRedux} from './WalletHistoryTest';
 
 interface WalletHistoryFilterPanelProps {
   DEFAULT_FILTER: WalletHistoryFilter;
   transactions: Transactions;
-  flatListRef: any; //TODO add type
-  setDisplayedTransactions: any; //TODO add type
-  setPreviousTransactionLength: any; //TODO add type
+  flatListRef: React.MutableRefObject<undefined>;
+  setDisplayedTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
+  setPreviousTransactionLength: React.Dispatch<React.SetStateAction<number>>;
   user: ActiveAccount;
   previousTransactionLength: number;
-  finalizeDisplayedList: any; //TODO add type
-  setLoading: any; //TODO add type
-  fetchAccountTransactions: any; //TODO add type
-  walletFilters: any; //TODO add type
+  finalizeDisplayedList: (list: Transaction[]) => void;
+  setLoading: (value: React.SetStateAction<boolean>) => void;
+  fetchAccountTransactions: (accountName: string, start: number) => void;
+  walletFilters: WalletHistoryFilter;
+  updateWalletFilter: (
+    walletFilters: WalletHistoryFilter,
+  ) => ActionPayload<WalletHistoryFilter>;
+  clearWalletFilters: () => ActionPayload<WalletHistoryFilter>;
 }
 
 type Props = WalletHistoryFilterPanelProps;
@@ -66,8 +69,10 @@ const WalletHistoryFilterPanel = ({
   setLoading,
   fetchAccountTransactions,
   walletFilters,
-}: Props) => {
-  const [filter, setFilter] = useState<WalletHistoryFilter>(DEFAULT_FILTER);
+  updateWalletFilter,
+  clearWalletFilters,
+}: WalletHistoryPropsFromRedux & Props) => {
+  const [filter, setFilter] = useState<WalletHistoryFilter>(walletFilters);
   const [filterReady, setFilterReady] = useState<boolean>(false);
   const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
 
@@ -84,23 +89,11 @@ const WalletHistoryFilterPanel = ({
   }, [filter, transactions]);
 
   const saveFilterInLocalStorage = async () => {
-    await AsyncStorage.setItem(
-      KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
-      JSON.stringify(filter),
-    );
-    //testing to set newFilter
-    //TODO code the actions...
+    updateWalletFilter(filter);
   };
 
-  const initFilters = async () => {
-    const filter = await AsyncStorage.getItem(
-      KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
-    );
-    console.log({walletFilters}); //TODO to remove
-    if (filter) {
-      const newFilterFound = JSON.parse(filter) as WalletHistoryFilter;
-      setFilter(newFilterFound);
-    }
+  const initFilters = () => {
+    setFilter(walletFilters);
     setFilterReady(true);
   };
 
@@ -149,12 +142,14 @@ const WalletHistoryFilterPanel = ({
     setIsFilterPanelOpened(!isFilterOpened);
   };
 
-  const clearFilters = () => {
-    setFilter(DEFAULT_FILTER);
-    if (flatListRef && flatListRef.current && transactions.list.length > 0) {
-      flatListRef.current.scrollToIndex({animated: false, index: 0});
-    }
-  };
+  // disabled for now, need help to implement it.
+  // const clearFilters = () => {
+  //   clearWalletFilters();
+  //   if (flatListRef && flatListRef.current && transactions.list.length > 0) {
+  //     flatListRef.current.scrollToIndex({animated: false, index: 0});
+  //   }
+  //   initFilters();
+  // };
 
   const handlePressedStyleFilterOperations = (filterOperationType: string) => {
     return filter.selectedTransactionTypes[filterOperationType]
@@ -314,12 +309,12 @@ const WalletHistoryFilterPanel = ({
               value={filter.filterValue}
               onChangeText={updateFilterValue}
             />
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.touchableItem}
               aria-label="clear-filters"
-              onPress={() => clearFilters()}>
+              onPress={() => clearFilters()}> //clearFilters()
               <Text>Clear Filters</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View style={styles.filterSelectors}>
             <View style={styles.filterTypes}>
@@ -381,6 +376,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    alignContent: 'center',
     borderRadius: 100,
     margin: 8,
     opacity: 8,
