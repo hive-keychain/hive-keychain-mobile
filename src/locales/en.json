@@ -179,12 +179,16 @@
     },
     "filter": {
       "transfer": "Transfer",
-      "claim_reward_balance": "Claim Reward Balance",
-      "delegate_vesting_shares": "Delegate Vesting Shares",
+      "claim_reward_balance": "Claim rewards",
+      "delegate_vesting_shares": "Delegations",
       "claim_account": "Claim Account",
       "savings": "Savings",
-      "power_up_down": "Power Up Down",
-      "convert": "Convert"
+      "power_up_down": "Power up/down",
+      "convert": "Conversion",
+      "filter_in": "In",
+      "filter_out": "Out",
+      "filters_title": "Filters",
+      "clear_filters": "Clear"
     }
   },
   "settings": {

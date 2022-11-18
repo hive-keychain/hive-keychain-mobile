@@ -4,7 +4,7 @@ import {persistReducer} from 'redux-persist';
 import {WalletHistoryFilter} from 'src/types/wallet.history.types';
 import {persistConfig} from './configs';
 
-const DEFAULT_FILTER: WalletHistoryFilter = {
+export const DEFAULT_WALLET_FILTER: WalletHistoryFilter = {
   filterValue: '',
   inSelected: false,
   outSelected: false,
@@ -20,14 +20,14 @@ const DEFAULT_FILTER: WalletHistoryFilter = {
 };
 
 const walletFilterReducer = (
-  state: WalletHistoryFilter = DEFAULT_FILTER,
+  state: WalletHistoryFilter = DEFAULT_WALLET_FILTER,
   {type, payload}: ActionPayload<WalletHistoryFilter>,
 ) => {
   switch (type) {
     case UPDATE_WALLET_FILTER:
       return {...state, ...payload};
     case CLEAR_WALLET_FILTERS:
-      return DEFAULT_FILTER;
+      return DEFAULT_WALLET_FILTER;
     default:
       return state;
   }

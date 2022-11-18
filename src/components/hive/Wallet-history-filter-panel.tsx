@@ -2,6 +2,7 @@ import {ActionPayload, ActiveAccount} from 'actions/interfaces';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {
+  FlatList,
   StyleSheet,
   Text,
   TextInput,
@@ -38,9 +39,9 @@ import Icon from './Icon';
 import {WalletHistoryPropsFromRedux} from './Wallet-history-component';
 
 interface WalletHistoryFilterPanelProps {
-  DEFAULT_FILTER: WalletHistoryFilter;
+  DEFAULT_WALLET_FILTER: WalletHistoryFilter;
   transactions: Transactions;
-  flatListRef: React.MutableRefObject<undefined>;
+  flatListRef: React.MutableRefObject<FlatList>;
   setDisplayedTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
   setPreviousTransactionLength: React.Dispatch<React.SetStateAction<number>>;
   user: ActiveAccount;
@@ -58,7 +59,7 @@ interface WalletHistoryFilterPanelProps {
 type Props = WalletHistoryFilterPanelProps;
 
 const WalletHistoryFilterPanel = ({
-  DEFAULT_FILTER,
+  DEFAULT_WALLET_FILTER,
   transactions,
   flatListRef,
   setDisplayedTransactions,
@@ -75,6 +76,7 @@ const WalletHistoryFilterPanel = ({
   const [filter, setFilter] = useState<WalletHistoryFilter>(walletFilters);
   const [filterReady, setFilterReady] = useState<boolean>(false);
   const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
+  let filteredTransactions: Transaction[];
 
   useEffect(() => {
     initFilters();
@@ -142,23 +144,28 @@ const WalletHistoryFilterPanel = ({
     setIsFilterPanelOpened(!isFilterOpened);
   };
 
-  // disabled for now, need help to implement it.
-  // const clearFilters = () => {
-  //   clearWalletFilters();
-  //   if (flatListRef && flatListRef.current && transactions.list.length > 0) {
-  //     flatListRef.current.scrollToIndex({animated: false, index: 0});
-  //   }
-  //   initFilters();
-  // };
+  const clearFilters = () => {
+    updateWalletFilter(DEFAULT_WALLET_FILTER);
+    setFilter(DEFAULT_WALLET_FILTER);
+    if (
+      flatListRef &&
+      flatListRef.current &&
+      transactions.list.length > 0 &&
+      filteredTransactions &&
+      filteredTransactions.length > 0
+    ) {
+      flatListRef.current.scrollToIndex({animated: false, index: 0});
+    }
+  };
 
   const handlePressedStyleFilterOperations = (filterOperationType: string) => {
     return filter.selectedTransactionTypes[filterOperationType]
-      ? styles.pressedStyle
-      : styles.touchableItem2;
+      ? styles.filterSelectorItemPressed
+      : styles.filterSelectorItem;
   };
 
   const handlePressedStyleInOut = (inOutSelected: boolean) => {
-    return inOutSelected ? styles.pressedStyle : styles.touchableItem;
+    return inOutSelected ? styles.inOutPressedItem : styles.inOutItem;
   };
 
   const filterTransactions = () => {
@@ -167,7 +174,7 @@ const WalletHistoryFilterPanel = ({
     ).filter(
       (transactionName) => filter.selectedTransactionTypes[transactionName],
     );
-    let filteredTransactions = transactions.list.filter(
+    filteredTransactions = transactions.list.filter(
       (transaction: Transaction) => {
         const isInOrOutSelected = filter.inSelected || filter.outSelected;
         if (
@@ -288,7 +295,9 @@ const WalletHistoryFilterPanel = ({
     <View aria-label="wallet-history-filter-panel">
       <View style={styles.filterTogglerContainer}>
         <View style={styles.filterTogglerInnerContainer}>
-          <Text style={styles.filterTitleText}>Filters</Text>
+          <Text style={styles.filterTitleText}>
+            {translate('wallet.filter.filters_title')}
+          </Text>
           <TouchableOpacity
             style={styles.circularContainer}
             onPress={() => toggleFilter()}>
@@ -309,15 +318,15 @@ const WalletHistoryFilterPanel = ({
               value={filter.filterValue}
               onChangeText={updateFilterValue}
             />
-            {/* <TouchableOpacity
+            <TouchableOpacity
               style={styles.touchableItem}
               aria-label="clear-filters"
-              onPress={() => clearFilters()}> //clearFilters()
-              <Text>Clear Filters</Text>
-            </TouchableOpacity> */}
+              onPress={() => clearFilters()}>
+              <Text>{translate('wallet.filter.clear_filters')}</Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.filterSelectors}>
-            <View style={styles.filterTypes}>
+            <View style={styles.filterSelectorContainer}>
               {filter.selectedTransactionTypes &&
                 Object.keys(filter.selectedTransactionTypes).map(
                   (filterOperationType) => (
@@ -340,13 +349,13 @@ const WalletHistoryFilterPanel = ({
                 style={handlePressedStyleInOut(filter.inSelected)}
                 aria-label="filter-by-incoming"
                 onPress={() => toggleFilterIn()}>
-                <Text>{'IN'}</Text>
+                <Text>{translate('wallet.filter.filter_in')}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={handlePressedStyleInOut(filter.outSelected)}
                 aria-label="filter-by-outgoing"
                 onPress={() => toggleFilterOut()}>
-                <Text>{'OUT'}</Text>
+                <Text>{translate('wallet.filter.filter_out')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -386,9 +395,30 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
   },
+  inOutItem: {
+    borderColor: 'black',
+    width: 65,
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 4,
+    margin: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inOutPressedItem: {
+    borderColor: 'black',
+    width: 65,
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 4,
+    margin: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#b1aeae',
+  },
   touchableItem: {
     borderColor: 'black',
-    minWidth: '20%',
+    width: '20%',
     borderWidth: 1,
     borderRadius: 8,
     padding: 4,
@@ -398,7 +428,7 @@ const styles = StyleSheet.create({
   },
   touchableItem2: {
     borderColor: 'black',
-    maxWidth: 150,
+    width: '50%',
     borderWidth: 1,
     borderRadius: 8,
     padding: 4,
@@ -408,25 +438,42 @@ const styles = StyleSheet.create({
   },
   filterSelectors: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
   },
-  filterTypes: {
-    width: '70%',
-    height: '100%',
+  filterSelectorContainer: {
+    flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  filterSelectorItem: {
+    width: '45%',
+    margin: 4,
+    borderWidth: 1,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 30,
+  },
+  filterSelectorItemPressed: {
+    width: '45%',
+    margin: 4,
+    borderWidth: 1,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 30,
+    backgroundColor: '#b1aeae',
   },
   pressedStyle: {
     borderColor: 'black',
-    maxWidth: 150,
+    width: '20%',
     borderWidth: 1,
     borderRadius: 8,
     padding: 4,
     margin: 4,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#b89f9f',
+    backgroundColor: '#b1aeae',
   },
   customInputStyle: {
     width: '60%',
@@ -435,8 +482,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 4,
     borderRadius: 8,
-    backgroundColor: '#dbd6d6',
     marginLeft: 4,
+    padding: 6,
   },
   searchPanel: {
     flexDirection: 'row',

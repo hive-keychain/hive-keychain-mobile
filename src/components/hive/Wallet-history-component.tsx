@@ -5,8 +5,8 @@ import Loader from 'components/ui/Loader';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import {DEFAULT_WALLET_FILTER} from 'reducers/walletFilters';
 import {Transaction, Transactions} from 'src/interfaces/transaction.interface';
-import {WalletHistoryFilter} from 'src/types/wallet.history.types';
 import {RootState} from 'store';
 import ArrayUtils from 'utils/array.utils';
 import {getMainLocale, translate} from 'utils/localize';
@@ -17,22 +17,6 @@ import TransactionUtils, {
 import {BackToTopButton} from './Back-To-Top-Button';
 import WalletHistoryFilterPanel from './Wallet-history-filter-panel';
 import WalletHistoryItemComponent from './WalletHistoryItemComponent';
-
-const DEFAULT_FILTER: WalletHistoryFilter = {
-  filterValue: '',
-  inSelected: false,
-  outSelected: false,
-  selectedTransactionTypes: {
-    transfer: false,
-    claim_reward_balance: false,
-    delegate_vesting_shares: false,
-    claim_account: false,
-    savings: false,
-    power_up_down: false,
-    convert: false,
-  },
-};
-
 interface WalletHistoryProps {
   user: ActiveAccount;
   ariaLabel?: string;
@@ -176,7 +160,7 @@ const WalletHistoryComponent = ({
   return (
     <View style={basicStyles.flex}>
       <WalletHistoryFilterPanel
-        DEFAULT_FILTER={DEFAULT_FILTER}
+        DEFAULT_WALLET_FILTER={DEFAULT_WALLET_FILTER}
         transactions={transactions}
         flatListRef={flatListRef}
         setDisplayedTransactions={setDisplayedTransactions}
