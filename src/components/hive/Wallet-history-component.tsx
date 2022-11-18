@@ -101,7 +101,7 @@ const WalletHistoryComponent = ({
   const renderTransactions = () => {
     if (loading) {
       return (
-        <View style={{flex: 1, justifyContent: 'center'}}>
+        <View style={basicStyles.renderTransactions}>
           <Loader animating />
         </View>
       );
@@ -136,7 +136,7 @@ const WalletHistoryComponent = ({
             }}
             onScroll={handleOnScroll}
             keyExtractor={(transaction) => transaction.key}
-            style={basicStyles.flex}
+            style={basicStyles.transactionsList}
             ListEmptyComponent={() => {
               return (
                 <View>
@@ -187,6 +187,13 @@ const basicStyles = StyleSheet.create({
     color: 'black',
     fontSize: 16,
     marginVertical: 20,
+  },
+  renderTransactions: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  transactionsList: {
+    marginBottom: 33,
   },
 });
 
