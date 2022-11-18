@@ -29,6 +29,7 @@ const WalletHistoryComponent = ({
   transactions,
   walletFilters,
   fetchAccountTransactions,
+  activeAccount,
   updateWalletFilter,
   clearWalletFilters,
   user,
@@ -53,10 +54,10 @@ const WalletHistoryComponent = ({
 
   const init = async () => {
     const lastOperationFetched = await TransactionUtils.getLastTransaction(
-      user.account.name!,
+      activeAccount.account.name!,
     );
     setLoading(true);
-    fetchAccountTransactions(user.account.name!, lastOperationFetched);
+    fetchAccountTransactions(activeAccount.account.name!, lastOperationFetched);
   };
 
   useEffect(() => {
@@ -71,7 +72,7 @@ const WalletHistoryComponent = ({
         }
         setLoading(true);
         fetchAccountTransactions(
-          user.account.name!,
+          activeAccount.account.name!,
           transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
         );
       } else {
@@ -114,22 +115,28 @@ const WalletHistoryComponent = ({
             initialNumToRender={20}
             onEndReachedThreshold={0.5}
             onEndReached={() => {
-              const newEnd =
-                +transactions.list[transactions.list.length - 1].key.split(
-                  '!',
-                )[1] - 1;
-              const isLastTransaction =
-                transactions.list[transactions.list.length - 1].last;
-              if (newEnd !== end && !isLastTransaction) {
-                fetchAccountTransactions(user.account.name, newEnd);
-                setEnd(newEnd);
-              }
+              // const newEnd =
+              //   +transactions.list[transactions.list.length - 1].key.split(
+              //     '!',
+              //   )[1] - 1;
+              // const isLastTransaction =
+              //   transactions.list[transactions.list.length - 1].last;
+              // if (newEnd !== end && !isLastTransaction) {
+              //   fetchAccountTransactions(activeAccount.account.name, newEnd);
+              //   setEnd(newEnd);
+              // }
+              console.log(
+                'We reached the end of the list and last fecthing...Now what???',
+              ); //TODO to remove
+              const isLastFetched =
+                transactions.list[transactions.list.length - 1].lastFetched;
+              console.log({isLastFetched}); //TODO to remove
             }}
             renderItem={(transaction) => {
               return (
                 <WalletHistoryItemComponent
                   transaction={transaction.item}
-                  user={user}
+                  user={activeAccount}
                   locale={locale}
                 />
               );
@@ -139,7 +146,11 @@ const WalletHistoryComponent = ({
             style={basicStyles.transactionsList}
             ListEmptyComponent={() => {
               return (
-                <View>
+                <View
+                  style={[
+                    basicStyles.flex,
+                    basicStyles.justifyAlignedCenteredFixedHeight,
+                  ]}>
                   <Text>
                     {translate('common.list_is_empty_try_clear_filter')}
                   </Text>
@@ -147,7 +158,9 @@ const WalletHistoryComponent = ({
               );
             }}
           />
-          {bottomLoader && <Loader animating />}
+          {bottomLoader && displayedTransactions.length >= 0 && (
+            <Loader animating />
+          )}
         </>
       ) : (
         <Text style={basicStyles.no_tokens}>
@@ -165,7 +178,7 @@ const WalletHistoryComponent = ({
         flatListRef={flatListRef}
         setDisplayedTransactions={setDisplayedTransactions}
         setPreviousTransactionLength={setPreviousTransactionLength}
-        user={user}
+        activeAccount={activeAccount}
         previousTransactionLength={previousTransactionLength}
         finalizeDisplayedList={finalizeDisplayedList}
         setLoading={setLoading}
@@ -182,6 +195,11 @@ const WalletHistoryComponent = ({
 
 const basicStyles = StyleSheet.create({
   flex: {flex: 1},
+  justifyAlignedCenteredFixedHeight: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 200,
+  },
   no_tokens: {
     fontWeight: 'bold',
     color: 'black',
@@ -201,6 +219,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     transactions: state.transactions as Transactions,
     walletFilters: state.walletFilters,
+    activeAccount: state.activeAccount as ActiveAccount,
   };
 };
 const connector = connect(mapStateToProps, {

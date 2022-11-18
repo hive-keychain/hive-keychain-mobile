@@ -44,7 +44,7 @@ interface WalletHistoryFilterPanelProps {
   flatListRef: React.MutableRefObject<FlatList>;
   setDisplayedTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
   setPreviousTransactionLength: React.Dispatch<React.SetStateAction<number>>;
-  user: ActiveAccount;
+  activeAccount: ActiveAccount;
   previousTransactionLength: number;
   finalizeDisplayedList: (list: Transaction[]) => void;
   setLoading: (value: React.SetStateAction<boolean>) => void;
@@ -64,7 +64,6 @@ const WalletHistoryFilterPanel = ({
   flatListRef,
   setDisplayedTransactions,
   setPreviousTransactionLength,
-  user,
   previousTransactionLength,
   finalizeDisplayedList,
   setLoading,
@@ -72,6 +71,7 @@ const WalletHistoryFilterPanel = ({
   walletFilters,
   updateWalletFilter,
   clearWalletFilters,
+  activeAccount,
 }: WalletHistoryPropsFromRedux & Props) => {
   const [filter, setFilter] = useState<WalletHistoryFilter>(walletFilters);
   const [filterReady, setFilterReady] = useState<boolean>(false);
@@ -188,16 +188,18 @@ const WalletHistoryFilterPanel = ({
             return (
               (filter.inSelected &&
                 ((TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
-                  (transaction as Transfer).to === user.account.name) ||
+                  (transaction as Transfer).to ===
+                    activeAccount.account.name) ||
                   (transaction.type === 'delegate_vesting_shares' &&
                     (transaction as Delegation).delegatee ===
-                      user.account.name))) ||
+                      activeAccount.account.name))) ||
               (filter.outSelected &&
                 ((TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
-                  (transaction as Transfer).from === user.account.name) ||
+                  (transaction as Transfer).from ===
+                    activeAccount.account.name) ||
                   (transaction.type === 'delegate_vesting_shares' &&
                     (transaction as Delegation).delegator ===
-                      user.account.name)))
+                      activeAccount.account.name)))
             );
           } else {
             return true;
@@ -211,7 +213,7 @@ const WalletHistoryFilterPanel = ({
           WalletHistoryUtils.filterTransfer(
             transaction as Transfer,
             filter.filterValue,
-            user.account.name!,
+            activeAccount.account.name!,
           )) ||
         (transaction.type === 'claim_reward_balance' &&
           WalletHistoryUtils.filterClaimReward(
@@ -222,7 +224,7 @@ const WalletHistoryFilterPanel = ({
           WalletHistoryUtils.filterDelegation(
             transaction as Delegation,
             filter.filterValue,
-            user.account.name!,
+            activeAccount.account.name!,
           )) ||
         (transaction.subType === 'withdraw_vesting' &&
           WalletHistoryUtils.filterPowerUpDown(
@@ -285,7 +287,7 @@ const WalletHistoryFilterPanel = ({
     } else {
       setLoading(true);
       fetchAccountTransactions(
-        user.account.name!,
+        activeAccount.account.name!,
         transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
       );
     }
