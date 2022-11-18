@@ -139,7 +139,7 @@ const Main = ({
           toUpperCase
           components={[
             <Primary />,
-            <WalletHistoryComponent user={user} />,
+            <WalletHistoryComponent />, //initially passing user redux prop
             <Tokens />,
           ]}
         />

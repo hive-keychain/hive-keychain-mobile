@@ -27,7 +27,7 @@ const walletFilterReducer = (
     case UPDATE_WALLET_FILTER:
       return {...state, ...payload};
     case CLEAR_WALLET_FILTERS:
-      return DEFAULT_WALLET_FILTER;
+      return {...DEFAULT_WALLET_FILTER};
     default:
       return state;
   }

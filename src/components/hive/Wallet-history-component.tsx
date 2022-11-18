@@ -1,5 +1,4 @@
-import {fetchAccountTransactions} from 'actions/index';
-import {ActiveAccount} from 'actions/interfaces';
+import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
 import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
 import Loader from 'components/ui/Loader';
 import React, {useEffect, useRef, useState} from 'react';
@@ -18,7 +17,7 @@ import {BackToTopButton} from './Back-To-Top-Button';
 import WalletHistoryFilterPanel from './Wallet-history-filter-panel';
 import WalletHistoryItemComponent from './WalletHistoryItemComponent';
 interface WalletHistoryProps {
-  user: ActiveAccount;
+  // user: ActiveAccount;
   ariaLabel?: string;
   token?: boolean;
 }
@@ -29,9 +28,9 @@ const WalletHistoryComponent = ({
   transactions,
   walletFilters,
   fetchAccountTransactions,
-  activeAccount,
   updateWalletFilter,
   clearWalletFilters,
+  clearUserTransactions,
   user,
 }: Props) => {
   const [lastTransactionIndex, setLastTransactionIndex] = useState<number>(-1);
@@ -44,20 +43,25 @@ const WalletHistoryComponent = ({
   const [bottomLoader, setBottomLoader] = useState(false);
 
   useEffect(() => {
-    init();
-  }, []);
+    if (user.name) {
+      setLoading(true);
+      setDisplayedScrollToTop(false);
+      init();
+    }
+  }, [user.name]);
 
   const finalizeDisplayedList = (list: Transaction[]) => {
     setDisplayedTransactions(list);
     setLoading(false);
+    setBottomLoader(false);
   };
 
   const init = async () => {
+    clearUserTransactions();
     const lastOperationFetched = await TransactionUtils.getLastTransaction(
-      activeAccount.account.name!,
+      user.name!,
     );
-    setLoading(true);
-    fetchAccountTransactions(activeAccount.account.name!, lastOperationFetched);
+    fetchAccountTransactions(user.name!, lastOperationFetched);
   };
 
   useEffect(() => {
@@ -72,7 +76,7 @@ const WalletHistoryComponent = ({
         }
         setLoading(true);
         fetchAccountTransactions(
-          activeAccount.account.name!,
+          user.name!,
           transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
         );
       } else {
@@ -81,22 +85,29 @@ const WalletHistoryComponent = ({
           'index',
         );
         setLastTransactionIndex(lastIndexFound);
-        if (transactions.list.some((t) => t.lastFetched)) {
-          setBottomLoader(false);
-        } else {
-          setBottomLoader(true);
-        }
       }
     }
   }, [transactions]);
 
   const [loading, setLoading] = useState(true);
-  const [end, setEnd] = useState(0);
   const locale = getMainLocale();
 
   const handleOnScroll = (event: any) => {
     const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
     setDisplayedScrollToTop(innerScrollViewY >= 50);
+  };
+
+  const tryToLoadMore = () => {
+    if (loading) return;
+    setPreviousTransactionLength(displayedTransactions.length);
+    setBottomLoader(true);
+    fetchAccountTransactions(
+      user.name!,
+      Math.min(
+        lastTransactionIndex,
+        transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
+      ),
+    );
   };
 
   const renderTransactions = () => {
@@ -107,7 +118,7 @@ const WalletHistoryComponent = ({
         </View>
       );
     } else {
-      return transactions.list.length ? (
+      return transactions.list.length > 0 ? (
         <>
           <FlatList
             ref={flatListRef}
@@ -115,28 +126,17 @@ const WalletHistoryComponent = ({
             initialNumToRender={20}
             onEndReachedThreshold={0.5}
             onEndReached={() => {
-              // const newEnd =
-              //   +transactions.list[transactions.list.length - 1].key.split(
-              //     '!',
-              //   )[1] - 1;
-              // const isLastTransaction =
-              //   transactions.list[transactions.list.length - 1].last;
-              // if (newEnd !== end && !isLastTransaction) {
-              //   fetchAccountTransactions(activeAccount.account.name, newEnd);
-              //   setEnd(newEnd);
-              // }
-              console.log(
-                'We reached the end of the list and last fecthing...Now what???',
-              ); //TODO to remove
               const isLastFetched =
                 transactions.list[transactions.list.length - 1].lastFetched;
-              console.log({isLastFetched}); //TODO to remove
+              if (!isLastFetched) {
+                tryToLoadMore();
+              }
             }}
             renderItem={(transaction) => {
               return (
                 <WalletHistoryItemComponent
                   transaction={transaction.item}
-                  user={activeAccount}
+                  user={user}
                   locale={locale}
                 />
               );
@@ -164,7 +164,7 @@ const WalletHistoryComponent = ({
         </>
       ) : (
         <Text style={basicStyles.no_tokens}>
-          {translate('wallet.no_transaction')}
+          {!transactions.loading && translate('wallet.no_transaction')}
         </Text>
       );
     }
@@ -178,7 +178,7 @@ const WalletHistoryComponent = ({
         flatListRef={flatListRef}
         setDisplayedTransactions={setDisplayedTransactions}
         setPreviousTransactionLength={setPreviousTransactionLength}
-        activeAccount={activeAccount}
+        user={user}
         previousTransactionLength={previousTransactionLength}
         finalizeDisplayedList={finalizeDisplayedList}
         setLoading={setLoading}
@@ -219,13 +219,14 @@ const mapStateToProps = (state: RootState) => {
   return {
     transactions: state.transactions as Transactions,
     walletFilters: state.walletFilters,
-    activeAccount: state.activeAccount as ActiveAccount,
+    user: state.activeAccount,
   };
 };
 const connector = connect(mapStateToProps, {
   fetchAccountTransactions,
   updateWalletFilter,
   clearWalletFilters,
+  clearUserTransactions,
 });
-export type WalletHistoryPropsFromRedux = ConnectedProps<typeof connector>;
+type WalletHistoryPropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(WalletHistoryComponent);

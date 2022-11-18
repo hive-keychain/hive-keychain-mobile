@@ -44,6 +44,7 @@ import {
   ACTIVE_ACCOUNT,
   ACTIVE_ACCOUNT_RC,
   ADD_TRANSACTIONS,
+  CLEAR_USER_TRANSACTIONS,
   FETCH_CONVERSION_REQUESTS,
   FETCH_DELEGATEES,
   FETCH_DELEGATORS,
@@ -111,6 +112,12 @@ export const loadPrices = (): AppThunk => async (dispatch) => {
   } catch (e) {
     console.log('price error', e);
   }
+};
+
+export const clearUserTransactions = (): AppThunk => async (dispatch) => {
+  dispatch({
+    type: CLEAR_USER_TRANSACTIONS,
+  });
 };
 
 export const initAccountTransactions = (

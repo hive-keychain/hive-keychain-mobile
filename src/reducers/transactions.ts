@@ -2,6 +2,7 @@ import {ActionPayload} from 'actions/interfaces';
 import {
   ACTIVE_ACCOUNT,
   ADD_TRANSACTIONS,
+  CLEAR_USER_TRANSACTIONS,
   INIT_TRANSACTIONS,
 } from 'actions/types';
 import {Transaction, Transactions} from 'src/interfaces/transaction.interface';
@@ -12,6 +13,7 @@ export default (
   {type, payload}: ActionPayload<[Transaction[], number]>,
 ) => {
   switch (type) {
+    case CLEAR_USER_TRANSACTIONS:
     case ACTIVE_ACCOUNT:
       return {loading: true, list: [], lastUsedStart: -1};
     case INIT_TRANSACTIONS:

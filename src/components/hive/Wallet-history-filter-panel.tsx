@@ -36,7 +36,6 @@ import {
 } from 'utils/transactions.utils';
 import {WalletHistoryUtils} from 'utils/walletHistoryUtils';
 import Icon from './Icon';
-import {WalletHistoryPropsFromRedux} from './Wallet-history-component';
 
 interface WalletHistoryFilterPanelProps {
   DEFAULT_WALLET_FILTER: WalletHistoryFilter;
@@ -44,7 +43,7 @@ interface WalletHistoryFilterPanelProps {
   flatListRef: React.MutableRefObject<FlatList>;
   setDisplayedTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
   setPreviousTransactionLength: React.Dispatch<React.SetStateAction<number>>;
-  activeAccount: ActiveAccount;
+  user: ActiveAccount;
   previousTransactionLength: number;
   finalizeDisplayedList: (list: Transaction[]) => void;
   setLoading: (value: React.SetStateAction<boolean>) => void;
@@ -62,6 +61,7 @@ const WalletHistoryFilterPanel = ({
   DEFAULT_WALLET_FILTER,
   transactions,
   flatListRef,
+  user,
   setDisplayedTransactions,
   setPreviousTransactionLength,
   previousTransactionLength,
@@ -71,8 +71,8 @@ const WalletHistoryFilterPanel = ({
   walletFilters,
   updateWalletFilter,
   clearWalletFilters,
-  activeAccount,
-}: WalletHistoryPropsFromRedux & Props) => {
+}: Props) => {
+  //removed WalletHistoryPropsFromRedux
   const [filter, setFilter] = useState<WalletHistoryFilter>(walletFilters);
   const [filterReady, setFilterReady] = useState<boolean>(false);
   const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
@@ -147,15 +147,6 @@ const WalletHistoryFilterPanel = ({
   const clearFilters = () => {
     updateWalletFilter(DEFAULT_WALLET_FILTER);
     setFilter(DEFAULT_WALLET_FILTER);
-    if (
-      flatListRef &&
-      flatListRef.current &&
-      transactions.list.length > 0 &&
-      filteredTransactions &&
-      filteredTransactions.length > 0
-    ) {
-      flatListRef.current.scrollToIndex({animated: false, index: 0});
-    }
   };
 
   const handlePressedStyleFilterOperations = (filterOperationType: string) => {
@@ -188,18 +179,14 @@ const WalletHistoryFilterPanel = ({
             return (
               (filter.inSelected &&
                 ((TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
-                  (transaction as Transfer).to ===
-                    activeAccount.account.name) ||
+                  (transaction as Transfer).to === user.name!) ||
                   (transaction.type === 'delegate_vesting_shares' &&
-                    (transaction as Delegation).delegatee ===
-                      activeAccount.account.name))) ||
+                    (transaction as Delegation).delegatee === user.name!))) ||
               (filter.outSelected &&
                 ((TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
-                  (transaction as Transfer).from ===
-                    activeAccount.account.name) ||
+                  (transaction as Transfer).from === user.name!) ||
                   (transaction.type === 'delegate_vesting_shares' &&
-                    (transaction as Delegation).delegator ===
-                      activeAccount.account.name)))
+                    (transaction as Delegation).delegator === user.name!)))
             );
           } else {
             return true;
@@ -213,7 +200,7 @@ const WalletHistoryFilterPanel = ({
           WalletHistoryUtils.filterTransfer(
             transaction as Transfer,
             filter.filterValue,
-            activeAccount.account.name!,
+            user.name!,
           )) ||
         (transaction.type === 'claim_reward_balance' &&
           WalletHistoryUtils.filterClaimReward(
@@ -224,7 +211,7 @@ const WalletHistoryFilterPanel = ({
           WalletHistoryUtils.filterDelegation(
             transaction as Delegation,
             filter.filterValue,
-            activeAccount.account.name!,
+            user.name!,
           )) ||
         (transaction.subType === 'withdraw_vesting' &&
           WalletHistoryUtils.filterPowerUpDown(
@@ -287,7 +274,7 @@ const WalletHistoryFilterPanel = ({
     } else {
       setLoading(true);
       fetchAccountTransactions(
-        activeAccount.account.name!,
+        user.name!,
         transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
       );
     }

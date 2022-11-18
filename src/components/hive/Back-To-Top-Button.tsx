@@ -10,7 +10,11 @@ interface BackToTopButtonProps {
 export const BackToTopButton = (props: BackToTopButtonProps) => {
   const scrollToTop = () => {
     if (props.element && props.element.current) {
-      props.element.current.scrollToIndex({animated: false, index: 0});
+      try {
+        props.element.current.scrollToIndex({animated: false, index: 0});
+      } catch (error) {
+        //In case the list has no element TODO finish testing.
+      }
     }
   };
 
