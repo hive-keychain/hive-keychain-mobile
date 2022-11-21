@@ -1,30 +1,51 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
-  Button,
+  Animated,
   Linking,
   SafeAreaView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {WhatsNewContent} from '../popups/whats-new/whats-new.interface';
 
 interface Props {
-  whatsNewContent: WhatsNewContent;
-  locale: string;
   nextButtonConfig: {
     nextTitle: string;
     lastTitle: string;
-    lastSlideAction?: any; //TODO set type
+    lastSlideAction?: () => void | any;
   };
+  itemData: any[];
+  /**
+   * By default as 'clickOnNext'
+   */
+  interaction?: InteractionType;
 }
-//TODO save in async storage & have 2 options to load from
-const Carousel = ({whatsNewContent, locale, nextButtonConfig}: Props) => {
+
+type InteractionType = 'clickOnNext' | 'swapImage';
+
+const Carousel = ({
+  nextButtonConfig,
+  itemData,
+  interaction = 'clickOnNext',
+}: Props) => {
   const [index, setIndex] = useState(0);
 
+  let fadeAnim = useRef(new Animated.Value(1)).current;
+
+  //TODO keep working on animation to swipe by image as an option for carousel.
+  const fadeOut = () => {
+    // Will change fadeAnim value to 1 in 5 seconds
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 2000,
+    } as Animated.TimingAnimationConfig).start();
+  };
+
   const handleOnPressNextButton = (direction: number) => {
-    if (direction > 0 && whatsNewContent.features[locale][index + 1]) {
+    if (direction > 0 && itemData[index + 1]) {
+      fadeOut();
       setIndex((prevIndex) => prevIndex + 1);
     } else {
       if (nextButtonConfig.lastSlideAction) {
@@ -35,15 +56,40 @@ const Carousel = ({whatsNewContent, locale, nextButtonConfig}: Props) => {
     }
   };
 
+  const getCurrentTitleOnNextSlideButton = () => {
+    if (index === itemData.length - 1) {
+      return nextButtonConfig.lastTitle;
+    } else {
+      return nextButtonConfig.nextTitle;
+    }
+  };
+
   const renderItem = (item: any) => {
-    console.log({item});
+    const fastImageComponent = (
+      <FastImage
+        style={styles.image}
+        source={{uri: item.image}}
+        resizeMode={FastImage.resizeMode.contain}
+      />
+    );
     return (
-      <View style={[styles.itemContainer, {backgroundColor: item.color}]}>
-        <FastImage
-          style={styles.image}
-          source={{uri: item.image}}
-          resizeMode={FastImage.resizeMode.contain}
-        />
+      <View style={styles.itemContainer}>
+        {interaction === 'clickOnNext' ? (
+          fastImageComponent
+        ) : (
+          <TouchableOpacity onPress={() => handleOnPressNextButton(1)}>
+            <Animated.View
+              style={[
+                //styles.fadingContainer,
+                {
+                  // Bind opacity to animated value
+                  opacity: fadeAnim,
+                },
+              ]}>
+              {fastImageComponent}
+            </Animated.View>
+          </TouchableOpacity>
+        )}
         <Text style={styles.titleText}>{item.title}</Text>
         <Text style={styles.descriptionText}>{item.description}</Text>
         <Text
@@ -57,23 +103,24 @@ const Carousel = ({whatsNewContent, locale, nextButtonConfig}: Props) => {
     );
   };
 
-  const getCurrentTitleOnNextSlideButton = () => {
-    if (index === whatsNewContent.features[locale].length - 1) {
-      return nextButtonConfig.lastTitle;
-    } else {
-      return nextButtonConfig.nextTitle;
-    }
-  };
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        {renderItem(whatsNewContent.features[locale][index])}
-        <View style={styles.buttonsContainer}>
-          <Button
-            title={getCurrentTitleOnNextSlideButton()}
-            onPress={() => handleOnPressNextButton(1)}
-          />
-        </View>
+        {renderItem(itemData[index])}
+        {interaction === 'clickOnNext' && (
+          <View style={styles.buttonsSectionContainer}>
+            <TouchableOpacity
+              style={styles.buttonsContainer}
+              onPress={() => handleOnPressNextButton(1)}>
+              <Text>{getCurrentTitleOnNextSlideButton()}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {interaction === 'swapImage' && (
+          <View style={styles.swapByImageIndicatorsContainer}>
+            <Text>{index}</Text>
+          </View>
+        )}
       </SafeAreaView>
     </View>
   );
@@ -84,8 +131,6 @@ const styles = StyleSheet.create({
     height: '90%',
   },
   itemContainer: {
-    height: '90%',
-    justifyContent: 'space-around',
     alignItems: 'center',
     flexDirection: 'column',
   },
@@ -93,18 +138,29 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: '#000',
+    marginBottom: 8,
   },
   descriptionText: {
     fontSize: 12,
+    marginBottom: 8,
   },
   externalLink: {
     textDecorationLine: 'underline',
     fontWeight: 'bold',
   },
+  buttonsSectionContainer: {
+    width: '100%',
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
+  },
   buttonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'center',
+    alignContent: 'center',
+    borderWidth: 1,
+    borderRadius: 8,
+    width: 70,
   },
   imageContainer: {
     width: '70%',
@@ -115,6 +171,12 @@ const styles = StyleSheet.create({
     aspectRatio: 1.6,
     alignSelf: 'center',
     width: '100%',
+  },
+  swapByImageIndicatorsContainer: {
+    flexDirection: 'column',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

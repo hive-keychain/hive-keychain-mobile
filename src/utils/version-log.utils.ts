@@ -11,18 +11,14 @@ const getCurrentMobileAppVersion = (): AppInfo => {
   const appVersionVersionInfo = VersionInfo.appVersion;
   console.log({appVersionVersionInfo}); //TODO to remove actual -> "1.10.6-dev"
   //TODO change back to version: appVersionVersionInfo
-  return {name, version: '2.3.6-dev'};
+  return {name, version: '2.8.6-dev'};
 };
 
-//  TODO:
-//  - clone the api repo: https://github.com/hive-keychain/hive-keychain-api
-//      - run the server locally.
-//      - change api.EP locally in mobile app.
-//      - ask quentin if i must add the info for mobile(same structure as cedric did), enable it on
-//          api + test it on app.
-//      - if yes, then change to mobile EP as: '/hive/last-extension-version-mobile'
 const getLastVersion = async () => {
-  const response = await api.get('/hive/last-extension-version');
+  const response = await api.get('/hive/last-extension-version'); ///hive/last-extension-version-mobile
+  //added while working on it
+  response.data = {...response.data, version: '2.8'};
+  //end added
   return response.data;
 };
 

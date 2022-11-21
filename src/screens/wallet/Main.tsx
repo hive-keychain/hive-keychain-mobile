@@ -8,13 +8,12 @@ import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import Transactions from 'components/hive/Transactions';
 import WhatsNewComponent from 'components/popups/whats-new/whats-new.component';
-import {WhatsNewContent} from 'components/popups/whats-new/whats-new.interface';
 import Survey from 'components/survey';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   AppState,
   AppStateStatus,
@@ -43,9 +42,6 @@ const Main = ({
   navigation,
   hive_authentication_service,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
-  const [displayWhatsNew, setDisplayWhatsNew] = useState(false);
-  const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
-
   const styles = getDimensionedStyles(useWindowDimensions());
 
   useEffect(() => {
@@ -53,7 +49,6 @@ const Main = ({
     loadProperties();
     loadPrices();
     fetchPhishingAccounts();
-    // initWhatsNew();
   }, [
     loadAccount,
     accounts,
@@ -107,26 +102,6 @@ const Main = ({
     return null;
   }
 
-  // const initWhatsNew = async () => {
-  //   const lastVersionSeen = await AsyncStorage.getItem(
-  //     KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
-  //   );
-
-  //   const versionLog = await VersionLogUtils.getLastVersion();
-  //   const extensionVersion = VersionLogUtils.getCurrentMobileAppVersion()
-  //     .version.split('.')
-  //     .splice(0, 2)
-  //     .join('.');
-  //   console.log({extensionVersion, versionLog, lastVersionSeen}); //TODO to remove
-  //   if (
-  //     extensionVersion !== lastVersionSeen &&
-  //     versionLog.version === extensionVersion
-  //   ) {
-  //     setWhatsNewContent(versionLog);
-  //     setDisplayWhatsNew(true);
-  //   }
-  // };
-
   return (
     <WalletPage>
       <>
@@ -167,13 +142,6 @@ const Main = ({
         />
         <Survey navigation={navigation} />
         <WhatsNewComponent navigation={navigation} />
-        {/* {displayWhatsNew && (
-          <WhatsNewComponent
-            onOverlayClick={() => setDisplayWhatsNew(false)}
-            content={whatsNewContent!}
-            navigation={navigation}
-          />
-        )} */}
       </>
     </WalletPage>
   );
