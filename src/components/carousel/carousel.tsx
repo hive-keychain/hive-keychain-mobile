@@ -8,19 +8,30 @@ import {
   View,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {WhatsNewContent} from '../popups/whats-new/whats-new.interface';
 
 interface Props {
-  listItems: any;
+  whatsNewContent: WhatsNewContent;
+  locale: string;
+  nextButtonConfig: {
+    nextTitle: string;
+    lastTitle: string;
+    lastSlideAction?: any; //TODO set type
+  };
 }
-//TODO keep working on the carousel.
-const Carousel = ({listItems}: Props) => {
+//TODO save in async storage & have 2 options to load from
+const Carousel = ({whatsNewContent, locale, nextButtonConfig}: Props) => {
   const [index, setIndex] = useState(0);
 
-  const handleMoveSlide = (direction: number) => {
-    if (direction > 0 && listItems[index + 1]) {
+  const handleOnPressNextButton = (direction: number) => {
+    if (direction > 0 && whatsNewContent.features[locale][index + 1]) {
       setIndex((prevIndex) => prevIndex + 1);
     } else {
-      setIndex(0);
+      if (nextButtonConfig.lastSlideAction) {
+        nextButtonConfig.lastSlideAction();
+      } else {
+        setIndex(0);
+      }
     }
   };
 
@@ -28,7 +39,6 @@ const Carousel = ({listItems}: Props) => {
     console.log({item});
     return (
       <View style={[styles.itemContainer, {backgroundColor: item.color}]}>
-        {/* <View style={styles.imageContainer}>{image}</View> */}
         <FastImage
           style={styles.image}
           source={{uri: item.image}}
@@ -46,12 +56,23 @@ const Carousel = ({listItems}: Props) => {
       </View>
     );
   };
+
+  const getCurrentTitleOnNextSlideButton = () => {
+    if (index === whatsNewContent.features[locale].length - 1) {
+      return nextButtonConfig.lastTitle;
+    } else {
+      return nextButtonConfig.nextTitle;
+    }
+  };
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        {renderItem(listItems[index])}
+        {renderItem(whatsNewContent.features[locale][index])}
         <View style={styles.buttonsContainer}>
-          <Button title="Next" onPress={() => handleMoveSlide(1)} />
+          <Button
+            title={getCurrentTitleOnNextSlideButton()}
+            onPress={() => handleOnPressNextButton(1)}
+          />
         </View>
       </SafeAreaView>
     </View>
@@ -61,7 +82,6 @@ const Carousel = ({listItems}: Props) => {
 const styles = StyleSheet.create({
   container: {
     height: '90%',
-    // justifyContent: 'flex-start',
   },
   itemContainer: {
     height: '90%',

@@ -1,12 +1,11 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import Carousel from 'components/carousel/carousel';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {VersionLogUtils} from 'utils/version-log.utils';
+import {WhatsNewContent} from './whats-new.interface';
 
 interface Props {
   // onOverlayClick: () => void;
@@ -20,7 +19,8 @@ interface ImageItems {
 
 const WhatsNew = ({navigation}: Props): null => {
   const [pageIndex, setPageIndex] = useState(0);
-  const [content, setContent] = useState(null);
+  // const [content, setContent] = useState(null);
+  const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
   // const [images, setImages] = useState<JSX.Element[]>();
   // const [ready, setReady] = useState(false);
   const locale = 'en'; // later use getUILanguage()
@@ -30,10 +30,18 @@ const WhatsNew = ({navigation}: Props): null => {
   }, []);
 
   const init = async () => {
-    //check if show
-    const lastVersionSeen = await AsyncStorage.getItem(
-      KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
-    );
+    //by passed for now
+    const lastVersionSeen = '0';
+    // const lastVersionSeen = await AsyncStorage.getItem(
+    //   KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
+    // );
+
+    // if (!lastVersionSeen) {
+    //   //TODO code WhatsNewUtils.saveLastSeen
+    //   //WhatsNewUtils.saveLastSeen();
+    //   return;
+    // }
+    //END by passed for now
 
     const versionLog = await VersionLogUtils.getLastVersion();
     const extensionVersion = VersionLogUtils.getCurrentMobileAppVersion()
@@ -45,15 +53,7 @@ const WhatsNew = ({navigation}: Props): null => {
       extensionVersion !== lastVersionSeen &&
       versionLog.version === extensionVersion
     ) {
-      //TODO keep the good work
-      //set the content
-      setContent(versionLog);
-      //we call modal.
-      navigate('ModalScreen', {
-        name: 'Whats_new_popup',
-        modalContent: renderContent(),
-        onForceCloseModal: () => navigation.goBack(),
-      });
+      setWhatsNewContent(versionLog);
     }
 
     // const imgs: ImageItems[] = [];
@@ -75,6 +75,17 @@ const WhatsNew = ({navigation}: Props): null => {
     //   onForceCloseModal: () => navigation.goBack(),
     // });
   };
+
+  useEffect(() => {
+    console.log({whatsNewContent}); //TODO to remove
+    if (whatsNewContent) {
+      navigate('ModalScreen', {
+        name: 'Whats_new_popup',
+        modalContent: renderContent(),
+        onForceCloseModal: () => navigation.goBack(),
+      });
+    }
+  }, [whatsNewContent]);
 
   // const next = () => {
   //   setPageIndex(pageIndex + 1);
@@ -113,84 +124,26 @@ const WhatsNew = ({navigation}: Props): null => {
 
   const renderContent = () => {
     return (
-      <View aria-label="whats-new-component" style={styles.rootContainer}>
-        <View style={styles.whatsNewContainer}>
+      whatsNewContent && (
+        <View aria-label="whats-new-component" style={styles.rootContainer}>
+          {/* <View style={styles.whatsNewContainer}> */}
           <Text style={styles.whatsNewTitle}>
             {translate('popup.whats_new.intro', {
-              content_version: content.version,
+              content_version: whatsNewContent.version,
             })}
           </Text>
-          <Carousel listItems={content.features[locale]} />
-          {/* {images && (
-              // <Carousel
-              //   showArrows={false}
-              //   showIndicators={content.features[locale].length > 1}
-              //   selectedItem={pageIndex}
-              //   showThumbs={false}
-              //   showStatus={false}
-              //   renderIndicator={renderCustomIndicator}>
-              //   {content.features[locale].map((feature, index) => (
-              //     <div className="carousel-item" key={`feature-${index}`}>
-              //       <div className="image">
-              //         <img src={images[index].src} />
-              //       </div>
-              //       <div className="title">{feature.title}</div>
-              //       <div className="description">{feature.description}</div>
-              //       <div className="extra-information">
-              //         {feature.extraInformation}
-              //       </div>
-              //       <a
-              //         aria-label="link-whats-new-read-more"
-              //         className="read-more-link"
-              //         onClick={() =>
-              //           navigateToArticle(`${content.url}#${feature.anchor}`)
-              //         }>
-              //         {chrome.i18n.getMessage('html_popup_read_more')}
-              //       </a>
-              //     </div>
-              //   ))}
-              // </Carousel>
-              <Text>Hi</Text>
-            )} */}
-
-          {/* <View
-              // className="button-panel"
-              style={styles.whatsNewButtonPanel}>
-              {pageIndex > 0 && (
-                <RoundButton
-                  // type={ButtonType.STROKED}
-                  // label="popup_html_whats_new_previous"
-                  onPress={() => previous()}
-                  content={<Text>{translate('popup.previous')}</Text>}
-                  size={30}
-                  backgroundColor={'red'}
-                />
-              )}
-              {pageIndex === content.features[locale].length - 1 && (
-                <RoundButton
-                  // ariaLabel="button-last-page"
-                  // type={ButtonType.STROKED}
-                  // label="popup_html_whats_new_got_it"
-                  onPress={() => finish()}
-                  content={<Text>{translate('popup.got_it')}</Text>}
-                  size={30}
-                  backgroundColor={'red'}
-                />
-              )}
-              {pageIndex < content.features[locale].length - 1 && (
-                <RoundButton
-                  // ariaLabel="button-next-page"
-                  // type={ButtonType.STROKED}
-                  // label="popup_html_whats_new_next"
-                  onPress={() => next()}
-                  content={<Text>{translate('popup.next')}</Text>}
-                  size={30}
-                  backgroundColor={'red'}
-                />
-              )}
-            </View> */}
+          <Carousel
+            whatsNewContent={whatsNewContent}
+            locale={locale}
+            nextButtonConfig={{
+              nextTitle: 'Next',
+              lastTitle: 'Got it!',
+              lastSlideAction: () => console.log('Executing last Action!'),
+            }}
+          />
+          {/* </View> */}
         </View>
-      </View>
+      )
     );
   };
   return null;
@@ -203,14 +156,16 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  whatsNewContainer: {
-    flex: 1,
-  },
+  // whatsNewContainer: {
+  //   flex: 1,
+  // },
   whatsNewTitle: {
     textAlign: 'center',
-    color: 'white',
+    color: 'black',
     fontSize: 15,
     fontWeight: 'bold',
+    textDecorationLine: 'underline',
+    marginBottom: 4,
   },
   whatsNewButtonPanel: {},
   whatsNewImage: {
