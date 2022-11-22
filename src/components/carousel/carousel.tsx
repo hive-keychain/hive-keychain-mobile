@@ -1,6 +1,5 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
-  Animated,
   Linking,
   SafeAreaView,
   StyleSheet,
@@ -17,35 +16,13 @@ interface Props {
     lastSlideAction?: () => void | any;
   };
   itemData: any[];
-  /**
-   * By default as 'clickOnNext'
-   */
-  interaction?: InteractionType;
 }
 
-type InteractionType = 'clickOnNext' | 'swapImage';
-
-const Carousel = ({
-  nextButtonConfig,
-  itemData,
-  interaction = 'clickOnNext',
-}: Props) => {
+const Carousel = ({nextButtonConfig, itemData}: Props) => {
   const [index, setIndex] = useState(0);
-
-  let fadeAnim = useRef(new Animated.Value(1)).current;
-
-  //TODO keep working on animation to swipe by image as an option for carousel.
-  const fadeOut = () => {
-    // Will change fadeAnim value to 1 in 5 seconds
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 2000,
-    } as Animated.TimingAnimationConfig).start();
-  };
 
   const handleOnPressNextButton = (direction: number) => {
     if (direction > 0 && itemData[index + 1]) {
-      fadeOut();
       setIndex((prevIndex) => prevIndex + 1);
     } else {
       if (nextButtonConfig.lastSlideAction) {
@@ -65,31 +42,13 @@ const Carousel = ({
   };
 
   const renderItem = (item: any) => {
-    const fastImageComponent = (
-      <FastImage
-        style={styles.image}
-        source={{uri: item.image}}
-        resizeMode={FastImage.resizeMode.contain}
-      />
-    );
     return (
       <View style={styles.itemContainer}>
-        {interaction === 'clickOnNext' ? (
-          fastImageComponent
-        ) : (
-          <TouchableOpacity onPress={() => handleOnPressNextButton(1)}>
-            <Animated.View
-              style={[
-                //styles.fadingContainer,
-                {
-                  // Bind opacity to animated value
-                  opacity: fadeAnim,
-                },
-              ]}>
-              {fastImageComponent}
-            </Animated.View>
-          </TouchableOpacity>
-        )}
+        <FastImage
+          style={styles.image}
+          source={{uri: item.image}}
+          resizeMode={FastImage.resizeMode.contain}
+        />
         <Text style={styles.titleText}>{item.title}</Text>
         <Text style={styles.descriptionText}>{item.description}</Text>
         <Text
@@ -107,20 +66,13 @@ const Carousel = ({
     <View style={styles.container}>
       <SafeAreaView>
         {renderItem(itemData[index])}
-        {interaction === 'clickOnNext' && (
-          <View style={styles.buttonsSectionContainer}>
-            <TouchableOpacity
-              style={styles.buttonsContainer}
-              onPress={() => handleOnPressNextButton(1)}>
-              <Text>{getCurrentTitleOnNextSlideButton()}</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        {interaction === 'swapImage' && (
-          <View style={styles.swapByImageIndicatorsContainer}>
-            <Text>{index}</Text>
-          </View>
-        )}
+        <View style={styles.buttonsSectionContainer}>
+          <TouchableOpacity
+            style={styles.buttonsContainer}
+            onPress={() => handleOnPressNextButton(1)}>
+            <Text>{getCurrentTitleOnNextSlideButton()}</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </View>
   );

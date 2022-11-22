@@ -29,11 +29,6 @@ const WhatsNew = ({navigation}: Props): null => {
 
     console.log('Reading from async as: ', {lastVersionSeen});
 
-    if (!lastVersionSeen) {
-      await WhatsNewUtils.saveLastSeen();
-      return;
-    }
-
     const versionLog = await VersionLogUtils.getLastVersion();
     const extensionVersion = VersionLogUtils.getCurrentMobileAppVersion()
       .version.split('.')
@@ -81,7 +76,6 @@ const WhatsNew = ({navigation}: Props): null => {
               lastSlideAction: finish,
             }}
             itemData={whatsNewContent.features[locale]}
-            interaction={'swapImage'}
           />
         </View>
       )
