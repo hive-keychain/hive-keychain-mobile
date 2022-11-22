@@ -47,6 +47,7 @@ interface WalletHistoryFilterPanelProps {
   previousTransactionLength: number;
   finalizeDisplayedList: (list: Transaction[]) => void;
   setLoading: (value: React.SetStateAction<boolean>) => void;
+  loading: boolean;
   fetchAccountTransactions: (accountName: string, start: number) => void;
   walletFilters: WalletHistoryFilter;
   updateWalletFilter: (
@@ -67,12 +68,12 @@ const WalletHistoryFilterPanel = ({
   previousTransactionLength,
   finalizeDisplayedList,
   setLoading,
+  loading,
   fetchAccountTransactions,
   walletFilters,
   updateWalletFilter,
   clearWalletFilters,
 }: Props) => {
-  //removed WalletHistoryPropsFromRedux
   const [filter, setFilter] = useState<WalletHistoryFilter>(walletFilters);
   const [filterReady, setFilterReady] = useState<boolean>(false);
   const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
@@ -281,76 +282,78 @@ const WalletHistoryFilterPanel = ({
   };
 
   return (
-    <View aria-label="wallet-history-filter-panel">
-      <View style={styles.filterTogglerContainer}>
-        <View style={styles.filterTogglerInnerContainer}>
-          <Text style={styles.filterTitleText}>
-            {translate('wallet.filter.filters_title')}
-          </Text>
-          <TouchableOpacity
-            style={styles.circularContainer}
-            onPress={() => toggleFilter()}>
-            {isFilterOpened ? (
-              <Icon name={Icons.EXPAND_LESS} marginRight={false} />
-            ) : (
-              <Icon name={Icons.EXPAND_MORE} marginRight={false} />
-            )}
-          </TouchableOpacity>
-        </View>
-      </View>
-      {isFilterOpened && (
-        <View style={styles.filtersContainer}>
-          <View style={styles.searchPanel}>
-            <TextInput
-              style={styles.customInputStyle}
-              placeholder={translate('common.search_box_placeholder')}
-              value={filter.filterValue}
-              onChangeText={updateFilterValue}
-            />
+    !loading && (
+      <View aria-label="wallet-history-filter-panel">
+        <View style={styles.filterTogglerContainer}>
+          <View style={styles.filterTogglerInnerContainer}>
+            <Text style={styles.filterTitleText}>
+              {translate('wallet.filter.filters_title')}
+            </Text>
             <TouchableOpacity
-              style={styles.touchableItem}
-              aria-label="clear-filters"
-              onPress={() => clearFilters()}>
-              <Text>{translate('wallet.filter.clear_filters')}</Text>
+              style={styles.circularContainer}
+              onPress={() => toggleFilter()}>
+              {isFilterOpened ? (
+                <Icon name={Icons.EXPAND_LESS} marginRight={false} />
+              ) : (
+                <Icon name={Icons.EXPAND_MORE} marginRight={false} />
+              )}
             </TouchableOpacity>
           </View>
-          <View style={styles.filterSelectors}>
-            <View style={styles.filterSelectorContainer}>
-              {filter.selectedTransactionTypes &&
-                Object.keys(filter.selectedTransactionTypes).map(
-                  (filterOperationType) => (
-                    <TouchableOpacity
-                      style={handlePressedStyleFilterOperations(
-                        filterOperationType,
-                      )}
-                      aria-label={`filter-selector-${filterOperationType}`}
-                      key={filterOperationType}
-                      onPress={() => toggleFilterType(filterOperationType)}>
-                      <Text>
-                        {translate(`wallet.filter.${filterOperationType}`)}
-                      </Text>
-                    </TouchableOpacity>
-                  ),
-                )}
+        </View>
+        {isFilterOpened && (
+          <View style={styles.filtersContainer}>
+            <View style={styles.searchPanel}>
+              <TextInput
+                style={styles.customInputStyle}
+                placeholder={translate('common.search_box_placeholder')}
+                value={filter.filterValue}
+                onChangeText={updateFilterValue}
+              />
+              <TouchableOpacity
+                style={styles.touchableItem}
+                aria-label="clear-filters"
+                onPress={() => clearFilters()}>
+                <Text>{translate('wallet.filter.clear_filters')}</Text>
+              </TouchableOpacity>
             </View>
-            <View>
-              <TouchableOpacity
-                style={handlePressedStyleInOut(filter.inSelected)}
-                aria-label="filter-by-incoming"
-                onPress={() => toggleFilterIn()}>
-                <Text>{translate('wallet.filter.filter_in')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={handlePressedStyleInOut(filter.outSelected)}
-                aria-label="filter-by-outgoing"
-                onPress={() => toggleFilterOut()}>
-                <Text>{translate('wallet.filter.filter_out')}</Text>
-              </TouchableOpacity>
+            <View style={styles.filterSelectors}>
+              <View style={styles.filterSelectorContainer}>
+                {filter.selectedTransactionTypes &&
+                  Object.keys(filter.selectedTransactionTypes).map(
+                    (filterOperationType) => (
+                      <TouchableOpacity
+                        style={handlePressedStyleFilterOperations(
+                          filterOperationType,
+                        )}
+                        aria-label={`filter-selector-${filterOperationType}`}
+                        key={filterOperationType}
+                        onPress={() => toggleFilterType(filterOperationType)}>
+                        <Text>
+                          {translate(`wallet.filter.${filterOperationType}`)}
+                        </Text>
+                      </TouchableOpacity>
+                    ),
+                  )}
+              </View>
+              <View>
+                <TouchableOpacity
+                  style={handlePressedStyleInOut(filter.inSelected)}
+                  aria-label="filter-by-incoming"
+                  onPress={() => toggleFilterIn()}>
+                  <Text>{translate('wallet.filter.filter_in')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={handlePressedStyleInOut(filter.outSelected)}
+                  aria-label="filter-by-outgoing"
+                  onPress={() => toggleFilterOut()}>
+                  <Text>{translate('wallet.filter.filter_out')}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      )}
-    </View>
+        )}
+      </View>
+    )
   );
 };
 
@@ -377,8 +380,8 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     borderRadius: 100,
     margin: 4,
-    height: 30,
-    width: 30,
+    height: 22,
+    width: 22,
   },
   filterTogglerText: {
     color: 'black',
@@ -408,16 +411,6 @@ const styles = StyleSheet.create({
   touchableItem: {
     borderColor: 'black',
     width: '20%',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 4,
-    margin: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  touchableItem2: {
-    borderColor: 'black',
-    width: '50%',
     borderWidth: 1,
     borderRadius: 8,
     padding: 4,
@@ -465,7 +458,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#b1aeae',
   },
   customInputStyle: {
-    width: '60%',
+    width: '72%',
     height: 40,
     borderWidth: 1,
     marginTop: 4,
@@ -477,6 +470,7 @@ const styles = StyleSheet.create({
   searchPanel: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    width: '100%',
   },
   filterTitleText: {
     fontWeight: 'bold',

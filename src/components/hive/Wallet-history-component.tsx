@@ -182,6 +182,7 @@ const WalletHistoryComponent = ({
         previousTransactionLength={previousTransactionLength}
         finalizeDisplayedList={finalizeDisplayedList}
         setLoading={setLoading}
+        loading={loading}
         fetchAccountTransactions={fetchAccountTransactions}
         walletFilters={walletFilters}
         updateWalletFilter={updateWalletFilter}
