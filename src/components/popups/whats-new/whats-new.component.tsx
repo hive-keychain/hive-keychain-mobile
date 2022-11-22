@@ -27,15 +27,11 @@ const WhatsNew = ({navigation}: Props): null => {
       KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
     );
 
-    console.log('Reading from async as: ', {lastVersionSeen});
-
     const versionLog = await VersionLogUtils.getLastVersion();
     const extensionVersion = VersionLogUtils.getCurrentMobileAppVersion()
       .version.split('.')
       .splice(0, 2)
       .join('.');
-
-    console.log({extensionVersion, versionLog, lastVersionSeen}); //TODO to remove
 
     if (
       extensionVersion !== lastVersionSeen &&
@@ -50,7 +46,7 @@ const WhatsNew = ({navigation}: Props): null => {
       navigate('ModalScreen', {
         name: 'Whats_new_popup',
         modalContent: renderContent(),
-        onForceCloseModal: () => navigation.goBack(),
+        onForceCloseModal: () => finish(),
       });
     }
   }, [whatsNewContent]);
@@ -70,7 +66,8 @@ const WhatsNew = ({navigation}: Props): null => {
             })}
           </Text>
           <Carousel
-            nextButtonConfig={{
+            buttonsConfig={{
+              prevTitle: translate('popup.whats_new.previous'),
               nextTitle: translate('popup.whats_new.next'),
               lastTitle: translate('popup.whats_new.got_it'),
               lastSlideAction: finish,

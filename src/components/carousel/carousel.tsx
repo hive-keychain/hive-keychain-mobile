@@ -10,7 +10,8 @@ import {
 import FastImage from 'react-native-fast-image';
 
 interface Props {
-  nextButtonConfig: {
+  buttonsConfig: {
+    prevTitle: string;
     nextTitle: string;
     lastTitle: string;
     lastSlideAction?: () => void | any;
@@ -18,27 +19,51 @@ interface Props {
   itemData: any[];
 }
 
-const Carousel = ({nextButtonConfig, itemData}: Props) => {
+const Carousel = ({buttonsConfig, itemData}: Props) => {
   const [index, setIndex] = useState(0);
 
-  const handleOnPressNextButton = (direction: number) => {
-    if (direction > 0 && itemData[index + 1]) {
+  const handleOnPressNextButton = () => {
+    if (itemData[index + 1]) {
       setIndex((prevIndex) => prevIndex + 1);
     } else {
-      if (nextButtonConfig.lastSlideAction) {
-        nextButtonConfig.lastSlideAction();
+      if (buttonsConfig.lastSlideAction) {
+        buttonsConfig.lastSlideAction();
       } else {
         setIndex(0);
       }
     }
   };
 
+  const handleOnPressPreviousButton = () => {
+    if (itemData[index - 1]) {
+      setIndex((prevIndex) => prevIndex - 1);
+    } else {
+      setIndex(itemData.length - 1);
+    }
+  };
+
   const getCurrentTitleOnNextSlideButton = () => {
     if (index === itemData.length - 1) {
-      return nextButtonConfig.lastTitle;
+      return buttonsConfig.lastTitle;
     } else {
-      return nextButtonConfig.nextTitle;
+      return buttonsConfig.nextTitle;
     }
+  };
+
+  const drawPageIndicators = (length: number, currentIndex: number) => {
+    if (length <= 0) return;
+    const createCircleAddKey = (index: number, active?: boolean) => (
+      <Text
+        key={`${index}-circle-${Math.random().toFixed(5).toString()}`}
+        style={active ? styles.indicatorCircleActive : styles.indicatorCircle}>
+        o
+      </Text>
+    );
+    const circleArray: JSX.Element[] = [];
+    for (let i = 0; i < length; i++) {
+      circleArray.push(createCircleAddKey(i, currentIndex === i));
+    }
+    return circleArray;
   };
 
   const renderItem = (item: any) => {
@@ -69,9 +94,19 @@ const Carousel = ({nextButtonConfig, itemData}: Props) => {
         <View style={styles.buttonsSectionContainer}>
           <TouchableOpacity
             style={styles.buttonsContainer}
-            onPress={() => handleOnPressNextButton(1)}>
+            onPress={() => handleOnPressPreviousButton()}>
+            <Text>{buttonsConfig.prevTitle}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonsContainer}
+            onPress={() => handleOnPressNextButton()}>
             <Text>{getCurrentTitleOnNextSlideButton()}</Text>
           </TouchableOpacity>
+        </View>
+        <View style={styles.pageIndicatorsContainer}>
+          {drawPageIndicators(itemData.length, index).map((indicator) => {
+            return indicator;
+          })}
         </View>
       </SafeAreaView>
     </View>
@@ -102,7 +137,7 @@ const styles = StyleSheet.create({
   },
   buttonsSectionContainer: {
     width: '100%',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     flexDirection: 'row',
   },
   buttonsContainer: {
@@ -129,6 +164,22 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  pageIndicatorsContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  indicatorCircle: {
+    marginRight: 5,
+    fontWeight: 'normal',
+    textDecorationLine: 'none',
+  },
+  indicatorCircleActive: {
+    fontWeight: 'bold',
+    marginRight: 5,
+    textDecorationLine: 'underline',
   },
 });
 

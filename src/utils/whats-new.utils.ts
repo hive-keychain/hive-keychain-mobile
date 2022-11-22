@@ -7,7 +7,6 @@ const saveLastSeen = async () => {
     .version.split('.')
     .splice(0, 2)
     .join('.');
-  console.log('Saving on async as: ', {currentAppVersion});
 
   await AsyncStorage.setItem(
     KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
