@@ -197,6 +197,14 @@ export const BrowserConfig = {
         url: 'https://splex.gg',
         categories: ['tool'],
       },
+      {
+        name: 'hivehub.dev',
+        description: 'A block explorer for the Hive ecosystem',
+        icon:
+          'https://files.peakd.com/file/peakd-hive/theghost1980/23tbHLrpPr5Vr5HodaksVq3JbzsDJo7eA3vscTv65LYm15osgSspCWUx2qLTpj3t8usUU.png',
+        url: 'https://hivehub.dev/market/',
+        categories: ['finance'],
+      },
     ],
   },
 };
