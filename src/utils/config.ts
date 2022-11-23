@@ -197,6 +197,14 @@ export const BrowserConfig = {
         url: 'https://splex.gg',
         categories: ['tool'],
       },
+      {
+        name: 'BeeSwap',
+        description: 'Exchange your crypto in a fast & easy way',
+        icon:
+          'https://files.peakd.com/file/peakd-hive/theghost1980/AKJ58fKYro4jwSevzwc9rpQSWe2P5w72yPWY2kKqtSbwnk5b3zy2EAye2rwZG7k.png',
+        url: 'https://beeswap.dcity.io/swap',
+        categories: ['finance'],
+      },
     ],
   },
 };
