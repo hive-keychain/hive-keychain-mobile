@@ -6,7 +6,7 @@ import {
 } from 'actions/hive';
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
-import WalletHistoryComponent from 'components/hive/Wallet-history-component';
+import {WalletTestHistoryComponent} from 'components/hive/Wallet-test-history';
 import Survey from 'components/survey';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
@@ -139,7 +139,11 @@ const Main = ({
           toUpperCase
           components={[
             <Primary />,
-            <WalletHistoryComponent />, //initially passing user redux prop
+            // <WalletHistoryComponent />, //initially passing user redux prop
+
+            //TESTING new guys
+            <WalletTestHistoryComponent />,
+            //END TESTING
             <Tokens />,
           ]}
         />

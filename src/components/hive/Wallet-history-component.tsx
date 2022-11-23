@@ -2,7 +2,7 @@ import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
 import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
 import Loader from 'components/ui/Loader';
 import React, {useEffect, useRef, useState} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {DEFAULT_WALLET_FILTER} from 'reducers/walletFilters';
 import {Transaction, Transactions} from 'src/interfaces/transaction.interface';
@@ -42,6 +42,8 @@ const WalletHistoryComponent = ({
   const [previousTransactionLength, setPreviousTransactionLength] = useState(0);
   const [bottomLoader, setBottomLoader] = useState(false);
 
+  let lastOperationFetched = -1;
+
   useEffect(() => {
     if (user.name) {
       console.log('First setLoading'); //TODO to remove
@@ -59,22 +61,22 @@ const WalletHistoryComponent = ({
 
   const init = async () => {
     clearUserTransactions();
-    const lastOperationFetched = await TransactionUtils.getLastTransaction(
+    lastOperationFetched = await TransactionUtils.getLastTransaction(
       user.name!,
     );
     fetchAccountTransactions(user.name!, lastOperationFetched);
   };
 
   useEffect(() => {
-    // console.log({
-    //   important: {
-    //     lastUsedStart: transactions.lastUsedStart,
-    //     listLenght: transactions.list.length,
-    //     loading: loading,
-    //     isThereAtLeastOneWithlast: transactions.list.some((t) => t.last),
-    //     displayedTransactionsLenght: displayedTransactions.length,
-    //   },
-    // }); //TODO to remove
+    console.log({
+      important: {
+        lastUsedStart: transactions.lastUsedStart,
+        listLenght: transactions.list.length,
+        loading: loading,
+        isThereAtLeastOneWithlast: transactions.list.some((t) => t.last),
+        displayedTransactionsLenght: displayedTransactions.length,
+      },
+    }); //TODO to remove
     if (transactions.lastUsedStart !== -1) {
       if (
         transactions.list.length < MINIMUM_FETCHED_TRANSACTIONS &&
@@ -95,6 +97,7 @@ const WalletHistoryComponent = ({
           transactions.list,
           'index',
         );
+        console.log({lastIndexFound}); //TODO to remove
         setLastTransactionIndex(lastIndexFound);
       }
     }
@@ -112,15 +115,15 @@ const WalletHistoryComponent = ({
 
   const tryToLoadMore = () => {
     //changing condition to
-    if (displayedTransactions.length >= 1) {
-      setLoading(false);
-    } else {
-      setLoading(true);
-      return;
-    }
+    // if (displayedTransactions.length >= 1) {
+    //   setLoading(false);
+    // } else {
+    //   setLoading(true);
+    //   return;
+    // }
     //end changing
 
-    // if (loading) return;
+    if (loading) return;
     setPreviousTransactionLength(displayedTransactions.length);
     setBottomLoader(true);
     fetchAccountTransactions(
@@ -147,19 +150,19 @@ const WalletHistoryComponent = ({
             data={displayedTransactions}
             initialNumToRender={20}
             onEndReachedThreshold={0.5}
-            onEndReached={() => {
-              const isLastFetched =
-                transactions.list[transactions.list.length - 1].lastFetched;
-              console.log({
-                isLastFetched,
-                loading,
-                displayedTransactionsLenght: displayedTransactions.length,
-              });
-              setshowLoadMore(!isLastFetched);
-              if (!isLastFetched) {
-                tryToLoadMore();
-              }
-            }}
+            // onEndReached={() => {
+            //   const isLastFetched =
+            //     transactions.list[transactions.list.length - 1].lastFetched;
+            //   console.log({
+            //     isLastFetched,
+            //     loading,
+            //     displayedTransactionsLenght: displayedTransactions.length,
+            //   });
+            //   // setshowLoadMore(!isLastFetched);
+            //   if (!isLastFetched) {
+            //     tryToLoadMore();
+            //   }
+            // }}
             renderItem={(transaction) => {
               return (
                 <WalletHistoryItemComponent
@@ -192,7 +195,7 @@ const WalletHistoryComponent = ({
             </View>
           )}
           {/* testing loadmorebutton */}
-          {showLoadMore && !bottomLoader && (
+          {/* {showLoadMore && !bottomLoader && (
             <View style={basicStyles.centeredContainer}>
               <TouchableOpacity
                 style={basicStyles.borderedRoundContainer}
@@ -200,7 +203,7 @@ const WalletHistoryComponent = ({
                 <Text>load more</Text>
               </TouchableOpacity>
             </View>
-          )}
+          )} */}
           {/* end testing */}
         </>
       ) : (

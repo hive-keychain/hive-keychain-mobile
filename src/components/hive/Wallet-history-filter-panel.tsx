@@ -84,12 +84,14 @@ const WalletHistoryFilterPanel = ({
   }, []);
 
   useEffect(() => {
+    console.log({filter, filterReady}); //TODO to remove
     setPreviousTransactionLength(0);
-    if (filterReady && transactions.list.length) {
+    if (filterReady) {
+      //TODO check if needed, removed from condition && transactions.list.length
       filterTransactions();
       saveFilterInLocalStorage();
     }
-  }, [filter, transactions]);
+  }, [filter, transactions]); //TODO check if needed removing dep transactions
 
   const saveFilterInLocalStorage = async () => {
     updateWalletFilter(filter);
@@ -265,6 +267,7 @@ const WalletHistoryFilterPanel = ({
             .includes(filter.filterValue.toLowerCase()))
       );
     });
+    console.log({filteredTransactionsLeght: filteredTransactions.length}); //TODO to remove
     if (
       (filteredTransactions.length >= MINIMUM_FETCHED_TRANSACTIONS &&
         filteredTransactions.length >= previousTransactionLength + 1) ||
@@ -274,7 +277,7 @@ const WalletHistoryFilterPanel = ({
       finalizeDisplayedList(filteredTransactions);
     } else {
       //commenting this control as it is being handled on parent TODO check if needed
-      // setLoading(true);
+      setLoading(true);
 
       fetchAccountTransactions(
         user.name!,
