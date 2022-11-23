@@ -2,7 +2,7 @@ import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
 import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
 import Loader from 'components/ui/Loader';
 import React, {useEffect, useRef, useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {DEFAULT_WALLET_FILTER} from 'reducers/walletFilters';
 import {Transaction, Transactions} from 'src/interfaces/transaction.interface';
@@ -44,6 +44,7 @@ const WalletHistoryComponent = ({
 
   useEffect(() => {
     if (user.name) {
+      console.log('First setLoading'); //TODO to remove
       setLoading(true);
       setDisplayedScrollToTop(false);
       init();
@@ -65,6 +66,15 @@ const WalletHistoryComponent = ({
   };
 
   useEffect(() => {
+    // console.log({
+    //   important: {
+    //     lastUsedStart: transactions.lastUsedStart,
+    //     listLenght: transactions.list.length,
+    //     loading: loading,
+    //     isThereAtLeastOneWithlast: transactions.list.some((t) => t.last),
+    //     displayedTransactionsLenght: displayedTransactions.length,
+    //   },
+    // }); //TODO to remove
     if (transactions.lastUsedStart !== -1) {
       if (
         transactions.list.length < MINIMUM_FETCHED_TRANSACTIONS &&
@@ -74,6 +84,7 @@ const WalletHistoryComponent = ({
           setLoading(false);
           return;
         }
+        console.log('consecutives setLoading'); //TODO to remove
         setLoading(true);
         fetchAccountTransactions(
           user.name!,
@@ -90,6 +101,8 @@ const WalletHistoryComponent = ({
   }, [transactions]);
 
   const [loading, setLoading] = useState(true);
+  const [showLoadMore, setshowLoadMore] = useState(false);
+
   const locale = getMainLocale();
 
   const handleOnScroll = (event: any) => {
@@ -98,7 +111,16 @@ const WalletHistoryComponent = ({
   };
 
   const tryToLoadMore = () => {
-    if (loading) return;
+    //changing condition to
+    if (displayedTransactions.length >= 1) {
+      setLoading(false);
+    } else {
+      setLoading(true);
+      return;
+    }
+    //end changing
+
+    // if (loading) return;
     setPreviousTransactionLength(displayedTransactions.length);
     setBottomLoader(true);
     fetchAccountTransactions(
@@ -118,7 +140,7 @@ const WalletHistoryComponent = ({
         </View>
       );
     } else {
-      return transactions.list.length > 0 ? (
+      return displayedTransactions.length > 0 ? (
         <>
           <FlatList
             ref={flatListRef}
@@ -128,6 +150,12 @@ const WalletHistoryComponent = ({
             onEndReached={() => {
               const isLastFetched =
                 transactions.list[transactions.list.length - 1].lastFetched;
+              console.log({
+                isLastFetched,
+                loading,
+                displayedTransactionsLenght: displayedTransactions.length,
+              });
+              setshowLoadMore(!isLastFetched);
               if (!isLastFetched) {
                 tryToLoadMore();
               }
@@ -159,8 +187,21 @@ const WalletHistoryComponent = ({
             }}
           />
           {bottomLoader && displayedTransactions.length >= 0 && (
-            <Loader animating />
+            <View style={basicStyles.centeredContainer}>
+              <Loader animating size={'small'} />
+            </View>
           )}
+          {/* testing loadmorebutton */}
+          {showLoadMore && !bottomLoader && (
+            <View style={basicStyles.centeredContainer}>
+              <TouchableOpacity
+                style={basicStyles.borderedRoundContainer}
+                onPress={() => tryToLoadMore()}>
+                <Text>load more</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {/* end testing */}
         </>
       ) : (
         <Text style={basicStyles.no_tokens}>
@@ -213,6 +254,16 @@ const basicStyles = StyleSheet.create({
   },
   transactionsList: {
     marginBottom: 33,
+  },
+  centeredContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  borderedRoundContainer: {
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 4,
   },
 });
 

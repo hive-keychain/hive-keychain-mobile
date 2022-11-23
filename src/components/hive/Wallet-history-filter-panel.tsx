@@ -273,7 +273,9 @@ const WalletHistoryFilterPanel = ({
     ) {
       finalizeDisplayedList(filteredTransactions);
     } else {
-      setLoading(true);
+      //commenting this control as it is being handled on parent TODO check if needed
+      // setLoading(true);
+
       fetchAccountTransactions(
         user.name!,
         transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
