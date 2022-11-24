@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
 import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
 import Loader from 'components/ui/Loader';
@@ -29,11 +30,13 @@ import {
   Transfer,
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState} from 'store';
 import ArrayUtils from 'utils/array.utils';
 import {getMainLocale, translate} from 'utils/localize';
 import TransactionUtils, {
   HAS_IN_OUT_TRANSACTIONS,
+  MINIMUM_FETCHED_TRANSACTIONS,
   NB_TRANSACTION_FETCHED,
   TRANSFER_TYPE_TRANSACTIONS,
 } from 'utils/transactions.utils';
@@ -60,7 +63,6 @@ const DEFAULT_FILTER: WalletHistoryFilter = {
     convert: false,
   },
 };
-const MINIMUM_FETCHED_TRANSACTIONS = 1;
 
 type WalletHistoryFilter = {
   filterValue: string;
@@ -81,6 +83,8 @@ const WalletTestHistory = ({
   activeAccount,
   fetchAccountTransactions,
   walletFilters,
+  updateWalletFilter,
+  clearUserTransactions,
 }: PropsFromRedux) => {
   const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
   let lastOperationFetched = -1;
@@ -158,15 +162,21 @@ const WalletTestHistory = ({
 
   useEffect(() => {
     init();
+    return () => {
+      console.log('I have been unmounted!!'); //TODO remove cleanUp if not needed
+      clearUserTransactions();
+    };
   }, []);
 
   const finalizeDisplayedList = (list: Transaction[]) => {
     setDisplayedTransactions(list);
     setLoading(false);
-    setBottomLoader(false);
+    console.log('Setted loading as FALSE!!'); //TODO to remove
+    // setBottomLoader(false);
   };
 
   const init = async () => {
+    clearUserTransactions();
     lastOperationFetched = await TransactionUtils.getLastTransaction(
       activeAccount.name!,
     );
@@ -177,6 +187,19 @@ const WalletTestHistory = ({
   };
 
   useEffect(() => {
+    // if (transactions.list.length) {
+    //   console.log({
+    //     lastUsedStart: transactions.lastUsedStart,
+    //     listLength: transactions.list.length,
+    //     displayedListLenght: displayedTransactions.length,
+    //     loading: loading,
+    //     bottomLoader,
+    //     last: transactions.list[transactions.list.length - 1].last,
+    //     lastFetched:
+    //       transactions.list[transactions.list.length - 1].lastFetched,
+    //   }); //TODO to remove
+    // }
+
     if (transactions.lastUsedStart !== -1) {
       if (
         transactions.list.length < MINIMUM_FETCHED_TRANSACTIONS &&
@@ -192,9 +215,12 @@ const WalletTestHistory = ({
           transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
         );
       } else {
+        // if (!loading) {
         setTimeout(() => {
+          // console.log('Calling filterTransactions!'); //TODO to remove
           filterTransactions();
         }, 0);
+        // }
 
         setLastTransactionIndex(
           ArrayUtils.getMinValue(transactions.list, 'index'),
@@ -204,7 +230,13 @@ const WalletTestHistory = ({
   }, [transactions]);
 
   const initFilters = async () => {
-    setFilter(walletFilters);
+    // setFilter(walletFilters);
+    const filter = await AsyncStorage.getItem(
+      KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
+    );
+    if (filter) {
+      setFilter(JSON.parse(filter));
+    }
     setFilterReady(true);
   };
 
@@ -216,9 +248,19 @@ const WalletTestHistory = ({
     }
   }, [filter]);
 
-  const saveFilterInLocalStorage = () => {
-    updateWalletFilter(filter);
+  const saveFilterInLocalStorage = async () => {
+    await AsyncStorage.setItem(
+      KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
+      JSON.stringify(filter),
+    );
+    // updateWalletFilter(filter);
   };
+
+  //TODO to remove
+  // useEffect(() => {
+  //   console.log({walletFilters});
+  // }, [walletFilters]);
+  //END to remove
 
   const filterTransactions = () => {
     const selectedTransactionsTypes = Object.keys(
@@ -333,6 +375,7 @@ const WalletTestHistory = ({
       transactions.list.some((t) => t.last) ||
       transactions.lastUsedStart === 0
     ) {
+      // console.log('Within condition on filterTransactions: ', {loading});
       finalizeDisplayedList(filteredTransactions);
     } else {
       setLoading(true);
@@ -344,8 +387,9 @@ const WalletTestHistory = ({
   };
 
   const clearFilters = () => {
-    updateWalletFilter(DEFAULT_FILTER);
+    // updateWalletFilter(DEFAULT_FILTER);
     setFilter(DEFAULT_FILTER);
+    // setFilter(DEFAULT_FILTER);
   };
 
   const renderListItem = (transaction: Transaction) => {
@@ -359,10 +403,11 @@ const WalletTestHistory = ({
   };
 
   const tryToLoadMore = () => {
+    // console.log('Executing tryToLoadMore'); //TODO to remove
     if (loading) return;
     setPreviousTransactionLength(displayedTransactions.length);
-    // setLoading(true);
-    setBottomLoader(true);
+    setLoading(true);
+    // setBottomLoader(true);
     fetchAccountTransactions(
       activeAccount.name!,
       Math.min(
@@ -407,6 +452,10 @@ const WalletTestHistory = ({
 
   return (
     <View style={styles.flex}>
+      {console.log('On Rendering: ', {
+        loading,
+        displayedTransactionsLentgh: displayedTransactions.length,
+      })}
       {!loading && (
         <View aria-label="wallet-history-filter-panel">
           <View style={styles.filterTogglerContainer}>
@@ -514,25 +563,35 @@ const WalletTestHistory = ({
           //     }
           //   }}
           ListEmptyComponent={() => {
-            return (
-              <View
-                style={[styles.flex, styles.justifyAlignedCenteredFixedHeight]}>
-                <Text>
-                  {translate('common.list_is_empty_try_clear_filter')}
-                </Text>
-              </View>
-            );
+            // console.log('Within ListEmptyComponent: ', {loading}); //TODO to remove
+            if (loading) {
+              return null;
+            } else {
+              return (
+                <View
+                  style={[
+                    styles.flex,
+                    styles.justifyAlignedCenteredFixedHeight,
+                  ]}>
+                  <Text>
+                    {translate('common.list_is_empty_try_clear_filter')}
+                  </Text>
+                </View>
+              );
+            }
           }}
           onScroll={handleScroll}
           onEndReached={() => {
+            const isLast = transactions.list[transactions.list.length - 1].last;
             const isLastFetched =
               transactions.list[transactions.list.length - 1].lastFetched;
-            //   console.log({
-            //     isLastFetched,
-            //     loading,
-            //     displayedTransactionsLenght: displayedTransactions.length,
-            //   });
-            if (!isLastFetched) {
+            // console.log('onEndReached fired!', {
+            //   isLast,
+            //   isLastFetched,
+            //   isThereALast: transactions.list.some((tr) => tr.last),
+            //   // list: transactions.list,
+            // }); //TODO to remove
+            if (!isLast) {
               tryToLoadMore();
             }
           }}

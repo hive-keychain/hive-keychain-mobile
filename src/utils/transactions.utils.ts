@@ -64,11 +64,11 @@ const getAccountTransactions = async (
       op.fill_transfer_from_savings,
       op.claim_account,
       op.convert,
-      op.collateralized_convert,
       op.fill_convert_request,
+      op.collateralized_convert,
       op.fill_collateralized_convert_request,
-      op.create_claimed_account,
       op.account_create,
+      op.create_claimed_account,
     ]) as [number, number];
 
     let limit = Math.min(start, NB_TRANSACTION_FETCHED);
@@ -241,7 +241,6 @@ const getAccountTransactions = async (
         (a, b) =>
           new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
       );
-
     if (start - NB_TRANSACTION_FETCHED < 0 && transactions.length > 1) {
       transactions[transactions.length - 1].last = true;
     }
