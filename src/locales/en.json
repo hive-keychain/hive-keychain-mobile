@@ -41,7 +41,8 @@
     "error": "Error: Something went wrong : {{msg}}",
     "error_title": "Error",
     "savings": "Savings",
-    "ok": "OK"
+    "ok": "OK",
+    "popup_read_more": "Read more"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},

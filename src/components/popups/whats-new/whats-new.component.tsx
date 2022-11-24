@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Carousel from 'components/carousel/carousel';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -14,8 +14,28 @@ interface Props {
   navigation: WalletNavigation;
 }
 
+////TODO check on desktop file and finish all points.
+
+interface PrefetchImageProps {
+  [key: string]: any;
+}
+let prefetchedImages: PrefetchImageProps = {};
+
+export function prefetchImage(url: string) {
+  return Image.prefetch(url).then((val) => {
+    prefetchedImages[url] = true;
+    return val;
+  });
+}
+
+export function isPrefetched(url: string) {
+  return prefetchedImages[url] !== undefined;
+}
+////
+
 const WhatsNew = ({navigation}: Props): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
+  const [ready, setReady] = useState(false);
   const locale = 'en'; // later use getUILanguage()
 
   useEffect(() => {
@@ -43,10 +63,14 @@ const WhatsNew = ({navigation}: Props): null => {
 
   useEffect(() => {
     if (whatsNewContent) {
+      for (const feature of whatsNewContent.features[locale]) {
+        prefetchImage(feature.image);
+      }
+
       navigate('ModalScreen', {
         name: 'Whats_new_popup',
         modalContent: renderContent(),
-        onForceCloseModal: () => finish(),
+        onForceCloseModal: () => {},
       });
     }
   }, [whatsNewContent]);
@@ -97,6 +121,12 @@ const styles = StyleSheet.create({
   },
   whatsNewButtonPanel: {},
   whatsNewImage: {},
+  image: {
+    marginBottom: 30,
+    aspectRatio: 1.6,
+    alignSelf: 'center',
+    width: '100%',
+  },
 });
 
 export default WhatsNew;

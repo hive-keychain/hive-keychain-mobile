@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  Image,
   Linking,
   SafeAreaView,
   StyleSheet,
@@ -7,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
+import {translate} from 'utils/localize';
 
 interface Props {
   buttonsConfig: {
@@ -21,7 +22,7 @@ interface Props {
 
 const Carousel = ({buttonsConfig, itemData}: Props) => {
   const [index, setIndex] = useState(0);
-
+  console.log({itemData});
   const handleOnPressNextButton = () => {
     if (itemData[index + 1]) {
       setIndex((prevIndex) => prevIndex + 1);
@@ -66,13 +67,20 @@ const Carousel = ({buttonsConfig, itemData}: Props) => {
     return circleArray;
   };
 
+  //TODO missing handleOnClick on link as there is 2 types: link or ...(check the extension)
   const renderItem = (item: any) => {
     return (
       <View style={styles.itemContainer}>
-        <FastImage
+        {/* <FastImage
           style={styles.image}
           source={{uri: item.image}}
+          onLoadEnd={() => console.log('Img loaded!')}
           resizeMode={FastImage.resizeMode.contain}
+        /> */}
+        <Image
+          style={styles.image}
+          source={{uri: item.image}}
+          resizeMode={'contain'}
         />
         <Text style={styles.titleText}>{item.title}</Text>
         <Text style={styles.descriptionText}>{item.description}</Text>
@@ -81,7 +89,7 @@ const Carousel = ({buttonsConfig, itemData}: Props) => {
           onPress={() => {
             Linking.openURL(item.externalUrl);
           }}>
-          {item.overrideReadMoreLabel}
+          {item.overrideReadMoreLabel ?? translate('common.popup_read_more')}
         </Text>
       </View>
     );
@@ -92,21 +100,23 @@ const Carousel = ({buttonsConfig, itemData}: Props) => {
       <SafeAreaView>
         {renderItem(itemData[index])}
         <View style={styles.buttonsSectionContainer}>
-          <TouchableOpacity
-            style={styles.buttonsContainer}
-            onPress={() => handleOnPressPreviousButton()}>
-            <Text>{buttonsConfig.prevTitle}</Text>
-          </TouchableOpacity>
+          {index != 0 && (
+            <TouchableOpacity
+              style={styles.buttonsContainer}
+              onPress={() => handleOnPressPreviousButton()}>
+              <Text>{buttonsConfig.prevTitle}</Text>
+            </TouchableOpacity>
+          )}
+          <View style={styles.pageIndicatorsContainer}>
+            {drawPageIndicators(itemData.length, index).map((indicator) => {
+              return indicator;
+            })}
+          </View>
           <TouchableOpacity
             style={styles.buttonsContainer}
             onPress={() => handleOnPressNextButton()}>
             <Text>{getCurrentTitleOnNextSlideButton()}</Text>
           </TouchableOpacity>
-        </View>
-        <View style={styles.pageIndicatorsContainer}>
-          {drawPageIndicators(itemData.length, index).map((indicator) => {
-            return indicator;
-          })}
         </View>
       </SafeAreaView>
     </View>
@@ -137,7 +147,7 @@ const styles = StyleSheet.create({
   },
   buttonsSectionContainer: {
     width: '100%',
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     flexDirection: 'row',
   },
   buttonsContainer: {
@@ -167,19 +177,19 @@ const styles = StyleSheet.create({
   },
   pageIndicatorsContainer: {
     flexDirection: 'row',
-    width: '100%',
+    width: 100,
     justifyContent: 'center',
     alignItems: 'center',
   },
   indicatorCircle: {
     marginRight: 5,
     fontWeight: 'normal',
-    textDecorationLine: 'none',
+    fontSize: 16,
   },
   indicatorCircleActive: {
     fontWeight: 'bold',
     marginRight: 5,
-    textDecorationLine: 'underline',
+    fontSize: 16,
   },
 });
 

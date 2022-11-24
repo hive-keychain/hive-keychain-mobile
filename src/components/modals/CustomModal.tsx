@@ -70,7 +70,8 @@ class StyleSheetFactory {
       },
       modalWrapper: {
         position: 'absolute',
-        bottom: 0,
+        // bottom: 0, original
+        bottom: 65, //TODO check if this is the best way to handle it
         left: 0,
         right: 0,
         justifyContent: 'center',
