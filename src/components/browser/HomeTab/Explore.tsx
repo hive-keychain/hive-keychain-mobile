@@ -3,6 +3,7 @@ import Back from 'assets/browser/icon_arrow_back.svg';
 import React, {useState} from 'react';
 import {
   Linking,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -24,8 +25,7 @@ type Props = {
 
 export default ({updateTabUrl, accounts}: Props) => {
   let {categories} = BrowserConfig.HomeTab;
-  const name = 'tes' + 't.ke' + 'ychain';
-  if (accounts.find((e) => e.name === name)) {
+  if (Platform.OS === 'ios') {
     categories = categories.filter((e) => e.title !== 'gaming');
   }
   const styles = getStyles(useWindowDimensions().width);
