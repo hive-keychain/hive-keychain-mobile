@@ -104,8 +104,6 @@ const WalletTestHistory = ({
 
   const flatListRef = useRef();
 
-  const [loading, setLoading] = useState(true);
-
   const [previousTransactionLength, setPreviousTransactionLength] = useState(0);
 
   const [bottomLoader, setBottomLoader] = useState(false);
@@ -170,9 +168,6 @@ const WalletTestHistory = ({
 
   const finalizeDisplayedList = (list: Transaction[]) => {
     setDisplayedTransactions(list);
-    setLoading(false);
-    console.log('Setted loading as FALSE!!'); //TODO to remove
-    // setBottomLoader(false);
   };
 
   const init = async () => {
@@ -181,46 +176,24 @@ const WalletTestHistory = ({
       activeAccount.name!,
     );
     console.log({lastOperationFetched}); //TODO to remove
-    setLoading(true);
     fetchAccountTransactions(activeAccount.name!, lastOperationFetched);
     initFilters();
   };
 
   useEffect(() => {
-    // if (transactions.list.length) {
-    //   console.log({
-    //     lastUsedStart: transactions.lastUsedStart,
-    //     listLength: transactions.list.length,
-    //     displayedListLenght: displayedTransactions.length,
-    //     loading: loading,
-    //     bottomLoader,
-    //     last: transactions.list[transactions.list.length - 1].last,
-    //     lastFetched:
-    //       transactions.list[transactions.list.length - 1].lastFetched,
-    //   }); //TODO to remove
-    // }
-
     if (transactions.lastUsedStart !== -1) {
       if (
         transactions.list.length < MINIMUM_FETCHED_TRANSACTIONS &&
         !transactions.list.some((t) => t.last)
       ) {
-        if (transactions.lastUsedStart === 1) {
-          setLoading(false);
-          return;
-        }
-        setLoading(true);
         fetchAccountTransactions(
           activeAccount.name!,
           transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
         );
       } else {
-        // if (!loading) {
         setTimeout(() => {
-          // console.log('Calling filterTransactions!'); //TODO to remove
           filterTransactions();
         }, 0);
-        // }
 
         setLastTransactionIndex(
           ArrayUtils.getMinValue(transactions.list, 'index'),
@@ -375,10 +348,8 @@ const WalletTestHistory = ({
       transactions.list.some((t) => t.last) ||
       transactions.lastUsedStart === 0
     ) {
-      // console.log('Within condition on filterTransactions: ', {loading});
       finalizeDisplayedList(filteredTransactions);
     } else {
-      setLoading(true);
       fetchAccountTransactions(
         activeAccount.name!,
         transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
@@ -403,11 +374,7 @@ const WalletTestHistory = ({
   };
 
   const tryToLoadMore = () => {
-    // console.log('Executing tryToLoadMore'); //TODO to remove
-    if (loading) return;
     setPreviousTransactionLength(displayedTransactions.length);
-    setLoading(true);
-    // setBottomLoader(true);
     fetchAccountTransactions(
       activeAccount.name!,
       Math.min(
@@ -452,11 +419,7 @@ const WalletTestHistory = ({
 
   return (
     <View style={styles.flex}>
-      {console.log('On Rendering: ', {
-        loading,
-        displayedTransactionsLentgh: displayedTransactions.length,
-      })}
-      {!loading && (
+      {!!displayedTransactions.length && (
         <View aria-label="wallet-history-filter-panel">
           <View style={styles.filterTogglerContainer}>
             <View style={styles.filterTogglerInnerContainer}>
@@ -529,7 +492,7 @@ const WalletTestHistory = ({
         </View>
       )}
 
-      {!loading && (
+      {!!displayedTransactions.length && (
         <FlatList
           ref={flatListRef}
           data={displayedTransactions}
@@ -564,7 +527,7 @@ const WalletTestHistory = ({
           //   }}
           ListEmptyComponent={() => {
             // console.log('Within ListEmptyComponent: ', {loading}); //TODO to remove
-            if (loading) {
+            if (!displayedTransactions.length) {
               return null;
             } else {
               return (
@@ -599,7 +562,7 @@ const WalletTestHistory = ({
       )}
 
       {/* LOADER */}
-      {loading && (
+      {!displayedTransactions.length && (
         <View style={styles.renderTransactions}>
           <Loader animating />
         </View>
@@ -615,7 +578,7 @@ const WalletTestHistory = ({
       {/* END BOTTOM LOADER */}
 
       {/* ScrollToTop Button */}
-      {!loading && displayScrollToTop && (
+      {!!displayedTransactions.length && displayScrollToTop && (
         <BackToTopButton element={flatListRef} />
       )}
     </View>
