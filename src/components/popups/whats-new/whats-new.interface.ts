@@ -4,6 +4,8 @@ export interface Feature {
   title: string;
   description: string;
   extraInformation: string;
+  externalUrl?: string;
+  overrideReadMoreLabel?: string;
 }
 
 export interface Features {

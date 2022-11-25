@@ -1,3 +1,7 @@
+import {
+  Feature,
+  WhatsNewContent,
+} from 'components/popups/whats-new/whats-new.interface';
 import React, {useState} from 'react';
 import {
   Image,
@@ -17,14 +21,27 @@ interface Props {
     lastTitle: string;
     lastSlideAction?: () => void | any;
   };
-  itemData: any[];
+  content: WhatsNewContent;
+  locale: string;
 }
 
-const Carousel = ({buttonsConfig, itemData}: Props) => {
+type DisplayFlex = 'flex' | 'none';
+
+const Carousel = ({buttonsConfig, content, locale}: Props) => {
+  console.log({content});
+
+  // const [leftButtonDisplayStyle, setLeftButtonDisplayStyle] = useState<
+  //   DisplayFlex
+  // >('flex');
   const [index, setIndex] = useState(0);
-  console.log({itemData});
+
   const handleOnPressNextButton = () => {
-    if (itemData[index + 1]) {
+    // if (index === 0) {
+    //   setLeftButtonDisplayStyle('none');
+    // } else {
+    //   setLeftButtonDisplayStyle('flex');
+    // }
+    if (content.features[locale][index + 1]) {
       setIndex((prevIndex) => prevIndex + 1);
     } else {
       if (buttonsConfig.lastSlideAction) {
@@ -36,15 +53,15 @@ const Carousel = ({buttonsConfig, itemData}: Props) => {
   };
 
   const handleOnPressPreviousButton = () => {
-    if (itemData[index - 1]) {
+    if (content.features[locale][index - 1]) {
       setIndex((prevIndex) => prevIndex - 1);
     } else {
-      setIndex(itemData.length - 1);
+      setIndex(content.features[locale].length - 1);
     }
   };
 
   const getCurrentTitleOnNextSlideButton = () => {
-    if (index === itemData.length - 1) {
+    if (index === content.features[locale].length - 1) {
       return buttonsConfig.lastTitle;
     } else {
       return buttonsConfig.nextTitle;
@@ -67,29 +84,28 @@ const Carousel = ({buttonsConfig, itemData}: Props) => {
     return circleArray;
   };
 
-  //TODO missing handleOnClick on link as there is 2 types: link or ...(check the extension)
-  const renderItem = (item: any) => {
+  const handleOnClick = (content: WhatsNewContent, feature: Feature) => {
+    if (feature.externalUrl) {
+      Linking.openURL(feature.externalUrl);
+    } else {
+      Linking.openURL(`${content.url}#${feature.anchor}`);
+    }
+  };
+
+  const renderItem = (feature: Feature) => {
     return (
       <View style={styles.itemContainer}>
-        {/* <FastImage
-          style={styles.image}
-          source={{uri: item.image}}
-          onLoadEnd={() => console.log('Img loaded!')}
-          resizeMode={FastImage.resizeMode.contain}
-        /> */}
         <Image
           style={styles.image}
-          source={{uri: item.image}}
+          source={{uri: feature.image}}
           resizeMode={'contain'}
         />
-        <Text style={styles.titleText}>{item.title}</Text>
-        <Text style={styles.descriptionText}>{item.description}</Text>
+        <Text style={styles.titleText}>{feature.title}</Text>
+        <Text style={styles.descriptionText}>{feature.description}</Text>
         <Text
           style={styles.externalLink}
-          onPress={() => {
-            Linking.openURL(item.externalUrl);
-          }}>
-          {item.overrideReadMoreLabel ?? translate('common.popup_read_more')}
+          onPress={() => handleOnClick(content, feature)}>
+          {feature.overrideReadMoreLabel ?? translate('common.popup_read_more')}
         </Text>
       </View>
     );
@@ -98,19 +114,24 @@ const Carousel = ({buttonsConfig, itemData}: Props) => {
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        {renderItem(itemData[index])}
+        {renderItem(content.features[locale][index])}
         <View style={styles.buttonsSectionContainer}>
-          {index != 0 && (
+          <View style={styles.emptyButtonContainer}>
             <TouchableOpacity
-              style={styles.buttonsContainer}
+              style={[
+                styles.buttonsContainer,
+                {display: index === 0 ? 'none' : 'flex'},
+              ]}
               onPress={() => handleOnPressPreviousButton()}>
               <Text>{buttonsConfig.prevTitle}</Text>
             </TouchableOpacity>
-          )}
+          </View>
           <View style={styles.pageIndicatorsContainer}>
-            {drawPageIndicators(itemData.length, index).map((indicator) => {
-              return indicator;
-            })}
+            {drawPageIndicators(content.features[locale].length, index).map(
+              (indicator) => {
+                return indicator;
+              },
+            )}
           </View>
           <TouchableOpacity
             style={styles.buttonsContainer}
@@ -149,6 +170,9 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-evenly',
     flexDirection: 'row',
+  },
+  emptyButtonContainer: {
+    width: 70,
   },
   buttonsContainer: {
     flexDirection: 'row',

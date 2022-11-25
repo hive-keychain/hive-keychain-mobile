@@ -35,7 +35,6 @@ export function isPrefetched(url: string) {
 
 const WhatsNew = ({navigation}: Props): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
-  const [ready, setReady] = useState(false);
   const locale = 'en'; // later use getUILanguage()
 
   useEffect(() => {
@@ -96,7 +95,8 @@ const WhatsNew = ({navigation}: Props): null => {
               lastTitle: translate('popup.whats_new.got_it'),
               lastSlideAction: finish,
             }}
-            itemData={whatsNewContent.features[locale]}
+            content={whatsNewContent}
+            locale={locale}
           />
         </View>
       )
