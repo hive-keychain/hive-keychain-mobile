@@ -14,16 +14,23 @@ type Props = {
   bottomHalf: boolean;
   boxBackgroundColor?: string;
   outsideClick: () => void;
+  centerModal?: boolean;
 };
-type InnerProps = {height: number; width: number};
+type InnerProps = {
+  height: number;
+  width: number;
+  isCentered: boolean | undefined;
+};
 class CustomModal extends React.Component<Props, {}> implements InnerProps {
   height;
   width;
+  isCentered;
   constructor(props: Props) {
     super(props);
     const {height, width} = Dimensions.get('window');
     this.height = height;
     this.width = width;
+    this.isCentered = this.props.centerModal || undefined;
   }
   render() {
     let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
@@ -42,7 +49,12 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
             onPress={() => {
               this.props.outsideClick();
             }}></TouchableWithoutFeedback>
-          <View style={styles.modalWrapper}>
+          <View
+            style={
+              this.isCentered != undefined
+                ? styles.modalWrapperCentered
+                : styles.modalWrapper
+            }>
             <View style={styles.modalContainer}>
               <LinearGradient
                 start={{x: 0, y: 0}}
@@ -70,8 +82,7 @@ class StyleSheetFactory {
       },
       modalWrapper: {
         position: 'absolute',
-        // bottom: 0, original
-        bottom: 65, //TODO check if this is the best way to handle it
+        bottom: 0,
         left: 0,
         right: 0,
         justifyContent: 'center',
@@ -99,6 +110,11 @@ class StyleSheetFactory {
         padding: 0,
         paddingHorizontal: width * 0.05,
         paddingVertical: width * 0.05,
+      },
+      modalWrapperCentered: {
+        position: 'absolute',
+        left: 0,
+        top: width / 2 - modalHeight / 2 / 2 - 8,
       },
     });
 

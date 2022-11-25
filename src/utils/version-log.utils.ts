@@ -14,10 +14,6 @@ const getCurrentMobileAppVersion = (): AppInfo => {
 
 const getLastVersion = async () => {
   const response = await api.get('/hive/last-version-mobile');
-  //TODO remove to apply API source to load whatsnew.
-  //added while working on it
-  response.data = {...response.data, version: '1.10'};
-  //end remove
   return response.data;
 };
 

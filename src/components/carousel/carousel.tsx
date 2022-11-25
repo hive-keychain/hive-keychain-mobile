@@ -25,22 +25,10 @@ interface Props {
   locale: string;
 }
 
-type DisplayFlex = 'flex' | 'none';
-
 const Carousel = ({buttonsConfig, content, locale}: Props) => {
-  console.log({content});
-
-  // const [leftButtonDisplayStyle, setLeftButtonDisplayStyle] = useState<
-  //   DisplayFlex
-  // >('flex');
   const [index, setIndex] = useState(0);
 
   const handleOnPressNextButton = () => {
-    // if (index === 0) {
-    //   setLeftButtonDisplayStyle('none');
-    // } else {
-    //   setLeftButtonDisplayStyle('flex');
-    // }
     if (content.features[locale][index + 1]) {
       setIndex((prevIndex) => prevIndex + 1);
     } else {
@@ -103,7 +91,7 @@ const Carousel = ({buttonsConfig, content, locale}: Props) => {
         <Text style={styles.titleText}>{feature.title}</Text>
         <Text style={styles.descriptionText}>{feature.description}</Text>
         <Text
-          style={styles.externalLink}
+          style={styles.readMoreText}
           onPress={() => handleOnClick(content, feature)}>
           {feature.overrideReadMoreLabel ?? translate('common.popup_read_more')}
         </Text>
@@ -162,9 +150,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: 8,
   },
-  externalLink: {
+  readMoreText: {
     textDecorationLine: 'underline',
     fontWeight: 'bold',
+    marginBottom: 8,
   },
   buttonsSectionContainer: {
     width: '100%',

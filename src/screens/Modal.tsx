@@ -13,6 +13,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
 
   let name = route.params?.name;
   let data = route.params?.data;
+  let centerModal = route.params?.centerModal || undefined;
 
   if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
@@ -44,7 +45,8 @@ export default ({navigation, route}: ModalNavigationProps) => {
           navigation.goBack();
         })
       }
-      bottomHalf={true}>
+      bottomHalf={true}
+      centerModal={centerModal}>
       {route.params && !renderContent() && route.params!.modalContent}
       {renderContent()}
     </CustomModal>

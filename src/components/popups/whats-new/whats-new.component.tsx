@@ -14,11 +14,10 @@ interface Props {
   navigation: WalletNavigation;
 }
 
-////TODO check on desktop file and finish all points.
-
 interface PrefetchImageProps {
   [key: string]: any;
 }
+
 let prefetchedImages: PrefetchImageProps = {};
 
 export function prefetchImage(url: string) {
@@ -31,7 +30,6 @@ export function prefetchImage(url: string) {
 export function isPrefetched(url: string) {
   return prefetchedImages[url] !== undefined;
 }
-////
 
 const WhatsNew = ({navigation}: Props): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
@@ -70,6 +68,7 @@ const WhatsNew = ({navigation}: Props): null => {
         name: 'Whats_new_popup',
         modalContent: renderContent(),
         onForceCloseModal: () => {},
+        centerModal: true,
       });
     }
   }, [whatsNewContent]);
@@ -119,8 +118,6 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     marginBottom: 10,
   },
-  whatsNewButtonPanel: {},
-  whatsNewImage: {},
   image: {
     marginBottom: 30,
     aspectRatio: 1.6,
