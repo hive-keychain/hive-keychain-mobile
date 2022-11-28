@@ -71,13 +71,6 @@ type WalletHistoryFilter = {
   selectedTransactionTypes: FilterTransactionTypes;
 };
 
-//TODO  - fix for one user
-//          - must load transfers seamleasly, show bottom loader as user goes down.
-//          - redux filter not getting cleared.
-//      - apply clearHistory, userLoading on activeAccount changes.
-//      - delete wallet-history-component.tsx & wallet-history-filter-panel.tsx
-//      - rename wallet-test-history.tsx -> wallet-history-component.
-
 const WalletTestHistory = ({
   transactions,
   activeAccount,
@@ -108,7 +101,7 @@ const WalletTestHistory = ({
 
   const [previousTransactionLength, setPreviousTransactionLength] = useState(0);
 
-  const [bottomLoader, setBottomLoader] = useState(false);
+  const [bottomLoader, setBottomLoader] = useState(true);
 
   const toggleFilter = () => {
     setIsFilterPanelOpened(!isFilterOpened);
@@ -151,31 +144,22 @@ const WalletTestHistory = ({
 
   const updateFilter = (filter: any) => {
     setFilter(filter);
-    //   setTimeout(() => {
-    //     walletItemList?.current?.scrollTo({
-    //       top: 0,
-    //       left: 0,
-    //       behavior: 'smooth',
-    //     });
-    //   }, 200);
   };
 
   useEffect(() => {
-    init();
-    return () => {
-      console.log('I have been unmounted!!'); //TODO remove
-      clearUserTransactions();
-    };
-  }, []);
+    if (activeAccount.name) {
+      init();
+      return () => {
+        clearUserTransactions();
+      };
+    }
+  }, [activeAccount.name]);
 
   const finalizeDisplayedList = (list: Transaction[]) => {
-    console.log('Setting list!'); //TODO to remove
     setDisplayedTransactions(list);
     setLoading(false);
     setBottomLoader(false);
   };
-
-  //TODO keep working on this.
 
   const init = async () => {
     setLoading(true);
@@ -183,17 +167,11 @@ const WalletTestHistory = ({
     lastOperationFetched = await TransactionUtils.getLastTransaction(
       activeAccount.name!,
     );
-    console.log({lastOperationFetched}); //TODO to remove
     fetchAccountTransactions(activeAccount.name!, lastOperationFetched);
     initFilters();
   };
 
   useEffect(() => {
-    console.log({
-      lastUsedStart: transactions.lastUsedStart,
-      transactionsLenght: transactions.list.length,
-      displayedTransactionslenght: displayedTransactions.length,
-    }); //TODO to remove
     if (transactions.lastUsedStart !== -1) {
       if (
         transactions.list.length < MINIMUM_FETCHED_TRANSACTIONS &&
@@ -246,12 +224,6 @@ const WalletTestHistory = ({
     );
     // updateWalletFilter(filter);
   };
-
-  //TODO to remove
-  // useEffect(() => {
-  //   console.log({walletFilters});
-  // }, [walletFilters]);
-  //END to remove
 
   const filterTransactions = () => {
     const selectedTransactionsTypes = Object.keys(
@@ -366,10 +338,9 @@ const WalletTestHistory = ({
       transactions.list.some((t) => t.last) ||
       transactions.lastUsedStart === 0
     ) {
-      console.log({filteredTransactionsLenght: filteredTransactions.length}); //TODO to remove
       finalizeDisplayedList(filteredTransactions);
     } else {
-      setLoading(true);
+      setBottomLoader(true);
       fetchAccountTransactions(
         activeAccount.name!,
         transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
@@ -396,7 +367,6 @@ const WalletTestHistory = ({
   const tryToLoadMore = () => {
     if (loading) return;
     setPreviousTransactionLength(displayedTransactions.length);
-    // setLoading(true);
     setBottomLoader(true);
     fetchAccountTransactions(
       activeAccount.name!,
@@ -410,24 +380,11 @@ const WalletTestHistory = ({
   const handleScroll = (event: any) => {
     const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
     setDisplayedScrollToTop(innerScrollViewY >= 50);
-
-    console.log('trLastUsed: ', transactions.lastUsedStart); //TODO to remove
-    console.log(
-      'last: ',
-      transactions.list[transactions.list.length - 1]?.last,
-    ); //TODO to remove
     if (
       transactions.list[transactions.list.length - 1]?.last === true ||
       transactions.lastUsedStart === 0
     )
       return;
-
-    // if (
-    //   event.target.scrollHeight - event.target.scrollTop ===
-    //   event.target.clientHeight
-    // ) {
-    //   tryToLoadMore();
-    // }
   };
 
   const handlePressedStyleFilterOperations = (filterOperationType: string) => {
@@ -516,81 +473,44 @@ const WalletTestHistory = ({
       )}
 
       {!loading && displayedTransactions.length > 0 && (
-        <FlatList
-          ref={flatListRef}
-          data={displayedTransactions}
-          initialNumToRender={20}
-          onEndReachedThreshold={0.5}
-          renderItem={(transaction) => renderListItem(transaction.item)}
-          keyExtractor={(transaction) => transaction.key}
-          style={styles.transactionsList}
-          //   renderOnScroll
-          //   renderWhenEmpty={() => {
-          //     if (loading) {
-          //       return <div></div>;
-          //     } else {
-          //       return (
-          //         <div className="empty-list">
-          //           <Icon name={Icons.INBOX} type={IconType.OUTLINED}></Icon>
-          //           <div className="labels">
-          //             <span>
-          //               {chrome.i18n.getMessage(
-          //                 'popup_html_transaction_list_is_empty',
-          //               )}
-          //             </span>
-          //             <span>
-          //               {chrome.i18n.getMessage(
-          //                 'popup_html_transaction_list_is_empty_try_clear_filter',
-          //               )}
-          //             </span>
-          //           </div>
-          //         </div>
-          //       );
-          //     }
-          //   }}
-          // ListEmptyComponent={() => {
-          //   // console.log('Within ListEmptyComponent: ', {loading}); //TODO to remove
-          //   if (displayedTransactions.length) {
-          //     return null;
-          //   } else if (
-          //     displayedTransactions.length === 0 &&
-          //     transactions.list.length > 0
-          //   ) {
-          //     return (
-          //       <View
-          //         style={[
-          //           styles.flex,
-          //           styles.justifyAlignedCenteredFixedHeight,
-          //         ]}>
-          //         <Text>
-          //           {translate('common.list_is_empty_try_clear_filter')}
-          //         </Text>
-          //       </View>
-          //     );
-          //   } else {
-          //     return null;
-          //   }
-          // }}
-          onScroll={handleScroll}
-          onEndReached={() => {
-            const isLast = transactions.list[transactions.list.length - 1].last;
-            // const isLastFetched =
-            //   transactions.list[transactions.list.length - 1].lastFetched;
-            console.log('onEndReached fired!', {
-              isLast,
-            }); //TODO to remove
-            if (!isLast) {
-              tryToLoadMore();
-            }
-          }}
-        />
+        <View style={styles.viewContainer}>
+          <FlatList
+            ref={flatListRef}
+            data={displayedTransactions}
+            initialNumToRender={20}
+            onEndReachedThreshold={0.5}
+            renderItem={(transaction) => renderListItem(transaction.item)}
+            keyExtractor={(transaction) => transaction.key}
+            style={styles.transactionsList}
+            onScroll={handleScroll}
+            onEndReached={() => {
+              const isLast =
+                transactions.list[transactions.list.length - 1].last;
+              if (!isLast && displayedTransactions.length > 8) {
+                tryToLoadMore();
+              }
+            }}
+          />
+          {/* tryloadmore button */}
+          {transactions.list[transactions.list.length - 1]?.last === false &&
+            transactions.lastUsedStart !== 0 &&
+            !loading &&
+            !bottomLoader && (
+              <TouchableOpacity
+                style={styles.loadMorePanel}
+                onPress={() => tryToLoadMore()}>
+                <Text>{translate('common.load_more')}</Text>
+                <Icon name={Icons.ADD_CIRCLE} />
+              </TouchableOpacity>
+            )}
+          {/* end */}
+        </View>
       )}
 
       {/* NO results on applied filter */}
       {!loading &&
         displayedTransactions.length === 0 &&
         transactions.list.length > 0 && (
-          //TODO set styles for this
           <View
             style={[
               {flex: 1},
@@ -621,6 +541,7 @@ const WalletTestHistory = ({
       {!loading && displayScrollToTop && (
         <BackToTopButton element={flatListRef} />
       )}
+      {/* END ScrollToTop Button */}
     </View>
   );
 };
@@ -776,6 +697,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 5,
+  },
+  viewContainer: {
+    height: '90%',
+  },
+  loadMorePanel: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import AddCircleOutlineIcon from 'src/assets/icons/svgs/add_circle_outline.svg';
 import PowerDownIcon from 'src/assets/icons/svgs/arrow_downward.svg';
 import {
   default as ArrowUpwardIcon,
@@ -52,6 +53,8 @@ const getIconFilePath = (
       return <ExpandLessIcon style={styles.defaultIconContainer} />;
     case 'arrow_upward':
       return <ArrowUpwardIcon style={styles.defaultIconContainer} />;
+    case 'add_circle_outline':
+      return <AddCircleOutlineIcon style={styles.defaultIconContainer} />;
     default:
       return <TransferIcon style={finalStyleOnIcon} />;
   }
