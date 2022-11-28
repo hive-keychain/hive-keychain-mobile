@@ -74,7 +74,7 @@ const getAccountTransactions = async (
     let limit = Math.min(start, NB_TRANSACTION_FETCHED);
 
     if (limit <= 0) return [[], 0];
-
+    console.log({start, limit}); //TODO to remove
     const transactionsFromBlockchain = await getClient().database.getAccountHistory(
       accountName,
       start,

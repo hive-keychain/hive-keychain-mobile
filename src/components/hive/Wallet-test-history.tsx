@@ -104,6 +104,8 @@ const WalletTestHistory = ({
 
   const flatListRef = useRef();
 
+  const [loading, setLoading] = useState(true);
+
   const [previousTransactionLength, setPreviousTransactionLength] = useState(0);
 
   const [bottomLoader, setBottomLoader] = useState(false);
@@ -161,16 +163,22 @@ const WalletTestHistory = ({
   useEffect(() => {
     init();
     return () => {
-      console.log('I have been unmounted!!'); //TODO remove cleanUp if not needed
+      console.log('I have been unmounted!!'); //TODO remove
       clearUserTransactions();
     };
   }, []);
 
   const finalizeDisplayedList = (list: Transaction[]) => {
+    console.log('Setting list!'); //TODO to remove
     setDisplayedTransactions(list);
+    setLoading(false);
+    setBottomLoader(false);
   };
 
+  //TODO keep working on this.
+
   const init = async () => {
+    setLoading(true);
     clearUserTransactions();
     lastOperationFetched = await TransactionUtils.getLastTransaction(
       activeAccount.name!,
@@ -181,11 +189,21 @@ const WalletTestHistory = ({
   };
 
   useEffect(() => {
+    console.log({
+      lastUsedStart: transactions.lastUsedStart,
+      transactionsLenght: transactions.list.length,
+      displayedTransactionslenght: displayedTransactions.length,
+    }); //TODO to remove
     if (transactions.lastUsedStart !== -1) {
       if (
         transactions.list.length < MINIMUM_FETCHED_TRANSACTIONS &&
         !transactions.list.some((t) => t.last)
       ) {
+        if (transactions.lastUsedStart === 1) {
+          setLoading(false);
+          return;
+        }
+        setLoading(true);
         fetchAccountTransactions(
           activeAccount.name!,
           transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
@@ -348,8 +366,10 @@ const WalletTestHistory = ({
       transactions.list.some((t) => t.last) ||
       transactions.lastUsedStart === 0
     ) {
+      console.log({filteredTransactionsLenght: filteredTransactions.length}); //TODO to remove
       finalizeDisplayedList(filteredTransactions);
     } else {
+      setLoading(true);
       fetchAccountTransactions(
         activeAccount.name!,
         transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
@@ -374,7 +394,10 @@ const WalletTestHistory = ({
   };
 
   const tryToLoadMore = () => {
+    if (loading) return;
     setPreviousTransactionLength(displayedTransactions.length);
+    // setLoading(true);
+    setBottomLoader(true);
     fetchAccountTransactions(
       activeAccount.name!,
       Math.min(
@@ -419,7 +442,7 @@ const WalletTestHistory = ({
 
   return (
     <View style={styles.flex}>
-      {!!displayedTransactions.length && (
+      {!loading && (
         <View aria-label="wallet-history-filter-panel">
           <View style={styles.filterTogglerContainer}>
             <View style={styles.filterTogglerInnerContainer}>
@@ -492,7 +515,7 @@ const WalletTestHistory = ({
         </View>
       )}
 
-      {!!displayedTransactions.length && (
+      {!loading && displayedTransactions.length > 0 && (
         <FlatList
           ref={flatListRef}
           data={displayedTransactions}
@@ -525,35 +548,37 @@ const WalletTestHistory = ({
           //       );
           //     }
           //   }}
-          ListEmptyComponent={() => {
-            // console.log('Within ListEmptyComponent: ', {loading}); //TODO to remove
-            if (!displayedTransactions.length) {
-              return null;
-            } else {
-              return (
-                <View
-                  style={[
-                    styles.flex,
-                    styles.justifyAlignedCenteredFixedHeight,
-                  ]}>
-                  <Text>
-                    {translate('common.list_is_empty_try_clear_filter')}
-                  </Text>
-                </View>
-              );
-            }
-          }}
+          // ListEmptyComponent={() => {
+          //   // console.log('Within ListEmptyComponent: ', {loading}); //TODO to remove
+          //   if (displayedTransactions.length) {
+          //     return null;
+          //   } else if (
+          //     displayedTransactions.length === 0 &&
+          //     transactions.list.length > 0
+          //   ) {
+          //     return (
+          //       <View
+          //         style={[
+          //           styles.flex,
+          //           styles.justifyAlignedCenteredFixedHeight,
+          //         ]}>
+          //         <Text>
+          //           {translate('common.list_is_empty_try_clear_filter')}
+          //         </Text>
+          //       </View>
+          //     );
+          //   } else {
+          //     return null;
+          //   }
+          // }}
           onScroll={handleScroll}
           onEndReached={() => {
             const isLast = transactions.list[transactions.list.length - 1].last;
-            const isLastFetched =
-              transactions.list[transactions.list.length - 1].lastFetched;
-            // console.log('onEndReached fired!', {
-            //   isLast,
-            //   isLastFetched,
-            //   isThereALast: transactions.list.some((tr) => tr.last),
-            //   // list: transactions.list,
-            // }); //TODO to remove
+            // const isLastFetched =
+            //   transactions.list[transactions.list.length - 1].lastFetched;
+            console.log('onEndReached fired!', {
+              isLast,
+            }); //TODO to remove
             if (!isLast) {
               tryToLoadMore();
             }
@@ -561,8 +586,23 @@ const WalletTestHistory = ({
         />
       )}
 
+      {/* NO results on applied filter */}
+      {!loading &&
+        displayedTransactions.length === 0 &&
+        transactions.list.length > 0 && (
+          //TODO set styles for this
+          <View
+            style={[
+              {flex: 1},
+              {justifyContent: 'center', alignItems: 'center'},
+            ]}>
+            <Text>{translate('common.list_is_empty_try_clear_filter')}</Text>
+          </View>
+        )}
+      {/* END no results */}
+
       {/* LOADER */}
-      {!displayedTransactions.length && (
+      {loading && (
         <View style={styles.renderTransactions}>
           <Loader animating />
         </View>
@@ -570,7 +610,7 @@ const WalletTestHistory = ({
       {/* END LOADER */}
 
       {/* BOTTOM LOADER */}
-      {bottomLoader && displayedTransactions.length >= 0 && (
+      {!loading && bottomLoader && (
         <View style={styles.centeredContainer}>
           <Loader animating size={'small'} />
         </View>
@@ -578,7 +618,7 @@ const WalletTestHistory = ({
       {/* END BOTTOM LOADER */}
 
       {/* ScrollToTop Button */}
-      {!!displayedTransactions.length && displayScrollToTop && (
+      {!loading && displayScrollToTop && (
         <BackToTopButton element={flatListRef} />
       )}
     </View>
@@ -610,7 +650,7 @@ const styles = StyleSheet.create({
   justifyAlignedCenteredFixedHeight: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: 200,
+    // height: 200,
   },
   filtersContainer: {
     flexDirection: 'column',
