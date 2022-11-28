@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
 import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
 import Loader from 'components/ui/Loader';
@@ -30,7 +29,6 @@ import {
   Transfer,
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState} from 'store';
 import ArrayUtils from 'utils/array.utils';
 import {getMainLocale, translate} from 'utils/localize';
@@ -199,13 +197,13 @@ const WalletTestHistory = ({
   }, [transactions]);
 
   const initFilters = async () => {
-    // setFilter(walletFilters);
-    const filter = await AsyncStorage.getItem(
-      KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
-    );
-    if (filter) {
-      setFilter(JSON.parse(filter));
-    }
+    setFilter(walletFilters);
+    // const filter = await AsyncStorage.getItem(
+    //   KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
+    // );
+    // if (filter) {
+    //   setFilter(JSON.parse(filter));
+    // }
     setFilterReady(true);
   };
 
@@ -218,11 +216,11 @@ const WalletTestHistory = ({
   }, [filter]);
 
   const saveFilterInLocalStorage = async () => {
-    await AsyncStorage.setItem(
-      KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
-      JSON.stringify(filter),
-    );
-    // updateWalletFilter(filter);
+    // await AsyncStorage.setItem(
+    //   KeychainStorageKeyEnum.WALLET_HISTORY_FILTERS,
+    //   JSON.stringify(filter),
+    // );
+    updateWalletFilter(filter);
   };
 
   const filterTransactions = () => {
@@ -349,9 +347,8 @@ const WalletTestHistory = ({
   };
 
   const clearFilters = () => {
-    // updateWalletFilter(DEFAULT_FILTER);
+    updateWalletFilter(DEFAULT_FILTER);
     setFilter(DEFAULT_FILTER);
-    // setFilter(DEFAULT_FILTER);
   };
 
   const renderListItem = (transaction: Transaction) => {
