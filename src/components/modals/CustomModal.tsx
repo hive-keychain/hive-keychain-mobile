@@ -35,26 +35,28 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
   render() {
     let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
     const styles = StyleSheetFactory.getSheet({
-      modalHeight: modalHeight,
+      modalHeight: this.isCentered ? 450 : modalHeight,
       height: this.height,
       width: this.width,
+      isCentered: this.isCentered,
     });
     return (
       <KeyboardAvoidingView
         style={styles.fullHeight}
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <View style={styles.mainContainer}>
-          <TouchableWithoutFeedback
-            style={{height: '100%'}}
-            onPress={() => {
-              this.props.outsideClick();
-            }}></TouchableWithoutFeedback>
+          {!this.isCentered && (
+            <TouchableWithoutFeedback
+              style={{height: '100%'}}
+              onPress={() => {
+                this.props.outsideClick();
+              }}></TouchableWithoutFeedback>
+          )}
           <View
-            style={
-              this.isCentered != undefined
-                ? styles.modalWrapperCentered
-                : styles.modalWrapper
-            }>
+            style={[
+              styles.modalWrapper,
+              !this.isCentered ? styles.absoluteModalWrapper : undefined,
+            ]}>
             <View style={styles.modalContainer}>
               <LinearGradient
                 start={{x: 0, y: 0}}
@@ -72,23 +74,32 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
 }
 
 class StyleSheetFactory {
-  static getSheet({modalHeight, width, height}: Dim & {modalHeight: number}) {
+  static getSheet({
+    modalHeight,
+    width,
+    height,
+    isCentered,
+  }: Dim & {modalHeight: number; isCentered: boolean}) {
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
       mainContainer: {
         flex: 1,
         backgroundColor: 'transparent',
-        justifyContent: 'flex-end',
+        justifyContent: isCentered ? 'space-around' : 'flex-end',
+        height: '100%',
       },
-      modalWrapper: {
+      absoluteModalWrapper: {
         position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
+      },
+      modalWrapper: {
+        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: modalHeight,
-        maxHeight: 0.85 * height,
+        maxHeight: isCentered ? 450 : 0.85 * height,
         flex: 1,
         height: 'auto',
       },
@@ -110,11 +121,6 @@ class StyleSheetFactory {
         padding: 0,
         paddingHorizontal: width * 0.05,
         paddingVertical: width * 0.05,
-      },
-      modalWrapperCentered: {
-        position: 'absolute',
-        left: 0,
-        top: width / 2 - modalHeight / 2 / 2 - 8,
       },
     });
 

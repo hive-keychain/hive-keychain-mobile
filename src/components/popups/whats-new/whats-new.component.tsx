@@ -106,9 +106,7 @@ const WhatsNew = ({navigation}: Props): null => {
 
 const styles = StyleSheet.create({
   rootContainer: {
-    flex: 1,
     width: '100%',
-    height: '100%',
   },
   whatsNewTitle: {
     textAlign: 'center',

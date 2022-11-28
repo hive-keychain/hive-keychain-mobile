@@ -105,14 +105,13 @@ const Carousel = ({buttonsConfig, content, locale}: Props) => {
         {renderItem(content.features[locale][index])}
         <View style={styles.buttonsSectionContainer}>
           <View style={styles.emptyButtonContainer}>
-            <TouchableOpacity
-              style={[
-                styles.buttonsContainer,
-                {display: index === 0 ? 'none' : 'flex'},
-              ]}
-              onPress={() => handleOnPressPreviousButton()}>
-              <Text>{buttonsConfig.prevTitle}</Text>
-            </TouchableOpacity>
+            {index !== 0 && (
+              <TouchableOpacity
+                style={[styles.buttonsContainer, {display: 'flex'}]}
+                onPress={() => handleOnPressPreviousButton()}>
+                <Text>{buttonsConfig.prevTitle}</Text>
+              </TouchableOpacity>
+            )}
           </View>
           <View style={styles.pageIndicatorsContainer}>
             {drawPageIndicators(content.features[locale].length, index).map(
@@ -159,6 +158,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-evenly',
     flexDirection: 'row',
+    marginTop: 35,
   },
   emptyButtonContainer: {
     width: 70,
@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     width: 70,
+    height: 30,
   },
   imageContainer: {
     width: '70%',
