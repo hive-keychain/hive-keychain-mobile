@@ -68,7 +68,6 @@ const WhatsNew = ({navigation}: Props): null => {
         name: 'Whats_new_popup',
         modalContent: renderContent(),
         onForceCloseModal: () => {},
-        centerModal: true,
       });
     }
   }, [whatsNewContent]);
@@ -80,25 +79,23 @@ const WhatsNew = ({navigation}: Props): null => {
 
   const renderContent = () => {
     return (
-      whatsNewContent && (
-        <View aria-label="whats-new-component" style={styles.rootContainer}>
-          <Text style={styles.whatsNewTitle}>
-            {translate('popup.whats_new.intro', {
-              content_version: whatsNewContent.version,
-            })}
-          </Text>
-          <Carousel
-            buttonsConfig={{
-              prevTitle: translate('popup.whats_new.previous'),
-              nextTitle: translate('popup.whats_new.next'),
-              lastTitle: translate('popup.whats_new.got_it'),
-              lastSlideAction: finish,
-            }}
-            content={whatsNewContent}
-            locale={locale}
-          />
-        </View>
-      )
+      <View aria-label="whats-new-component" style={styles.rootContainer}>
+        <Text style={styles.whatsNewTitle}>
+          {translate('popup.whats_new.intro', {
+            content_version: whatsNewContent.version,
+          })}
+        </Text>
+        <Carousel
+          buttonsConfig={{
+            prevTitle: translate('popup.whats_new.previous'),
+            nextTitle: translate('popup.whats_new.next'),
+            lastTitle: translate('popup.whats_new.got_it'),
+            lastSlideAction: finish,
+          }}
+          content={whatsNewContent}
+          locale={locale}
+        />
+      </View>
     );
   };
   return null;

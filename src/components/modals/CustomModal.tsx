@@ -14,49 +14,35 @@ type Props = {
   bottomHalf: boolean;
   boxBackgroundColor?: string;
   outsideClick: () => void;
-  centerModal?: boolean;
 };
-type InnerProps = {
-  height: number;
-  width: number;
-  isCentered: boolean | undefined;
-};
+type InnerProps = {height: number; width: number};
 class CustomModal extends React.Component<Props, {}> implements InnerProps {
   height;
   width;
-  isCentered;
   constructor(props: Props) {
     super(props);
     const {height, width} = Dimensions.get('window');
     this.height = height;
     this.width = width;
-    this.isCentered = this.props.centerModal || undefined;
   }
   render() {
     let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
     const styles = StyleSheetFactory.getSheet({
-      modalHeight: this.isCentered ? 450 : modalHeight,
+      modalHeight: modalHeight,
       height: this.height,
       width: this.width,
-      isCentered: this.isCentered,
     });
     return (
       <KeyboardAvoidingView
         style={styles.fullHeight}
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <View style={styles.mainContainer}>
-          {!this.isCentered && (
-            <TouchableWithoutFeedback
-              style={{height: '100%'}}
-              onPress={() => {
-                this.props.outsideClick();
-              }}></TouchableWithoutFeedback>
-          )}
-          <View
-            style={[
-              styles.modalWrapper,
-              !this.isCentered ? styles.absoluteModalWrapper : undefined,
-            ]}>
+          <TouchableWithoutFeedback
+            style={{height: '100%'}}
+            onPress={() => {
+              this.props.outsideClick();
+            }}></TouchableWithoutFeedback>
+          <View style={styles.modalWrapper}>
             <View style={styles.modalContainer}>
               <LinearGradient
                 start={{x: 0, y: 0}}
@@ -74,32 +60,23 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
 }
 
 class StyleSheetFactory {
-  static getSheet({
-    modalHeight,
-    width,
-    height,
-    isCentered,
-  }: Dim & {modalHeight: number; isCentered: boolean}) {
+  static getSheet({modalHeight, width, height}: Dim & {modalHeight: number}) {
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
       mainContainer: {
         flex: 1,
         backgroundColor: 'transparent',
-        justifyContent: isCentered ? 'space-around' : 'flex-end',
-        height: '100%',
+        justifyContent: 'flex-end',
       },
-      absoluteModalWrapper: {
+      modalWrapper: {
         position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
-      },
-      modalWrapper: {
-        width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         minHeight: modalHeight,
-        maxHeight: isCentered ? 450 : 0.85 * height,
+        maxHeight: 0.85 * height,
         flex: 1,
         height: 'auto',
       },
