@@ -30,7 +30,7 @@ const EngineTokenDisplay = ({
     return null;
   }
   const metadata = JSON.parse(tokenInfo.metadata);
-  console.log('aa', token, tokenMarket);
+  console.log('aa', {token, tokenMarket, tokenInfo});
   const logo = hasError ? (
     <Image
       style={styles.icon}
@@ -75,6 +75,10 @@ const EngineTokenDisplay = ({
           tokenBalance={token.balance}
           tokenLogo={logo}
         />,
+        //TODO here:
+        //  - check condition (stake enabled || delegation) => render + button
+        //  - code the plusButton.
+        //  - make it usable + add all the necessary utils.
         <ShowHistory
           key="history_token"
           currency={token.symbol}
