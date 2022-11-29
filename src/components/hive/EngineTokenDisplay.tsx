@@ -1,6 +1,10 @@
 import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import HiveEngine from 'assets/wallet/hive_engine.png';
-import {Send, ShowHistory} from 'components/operations/OperationsButtons';
+import {
+  Send,
+  ShowHistory,
+  ShowMoreTokenInfo,
+} from 'components/operations/OperationsButtons';
 import React, {useState} from 'react';
 import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
 import Image from 'react-native-fast-image';
@@ -79,6 +83,8 @@ const EngineTokenDisplay = ({
         //  - check condition (stake enabled || delegation) => render + button
         //  - code the plusButton.
         //  - make it usable + add all the necessary utils.
+        <ShowMoreTokenInfo key={'more_info_token'} tokenInfo={tokenInfo} />,
+        //////
         <ShowHistory
           key="history_token"
           currency={token.symbol}

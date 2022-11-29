@@ -1,3 +1,4 @@
+import {Token} from 'actions/interfaces';
 import Conversion from 'assets/wallet/icon_convert.svg';
 import Delegate from 'assets/wallet/icon_delegate.svg';
 import Plus from 'assets/wallet/icon_deposit.svg';
@@ -13,6 +14,7 @@ import PowerUp from 'components/operations/PowerUp';
 import Transfer from 'components/operations/Transfer';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Text} from 'react-native-svg';
 import {navigate} from 'utils/navigation';
 import Savings, {SavingsOperations} from './Savings';
 
@@ -191,6 +193,29 @@ export const ShowHistory = (props: HistoryProps) => {
     />
   );
 };
+
+//TODO delete comments when done
+///tokens more information + ops
+export const ShowMoreTokenInfo = (tokenInfo: Token) => {
+  return (
+    <RoundButton
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: 'EngineTokenInfo',
+          modalContent: (
+            <View>
+              <Text>Hi there!</Text>
+            </View>
+          ),
+        });
+      }}
+      size={36}
+      backgroundColor="blue"
+      content={<HistoryIcon />}
+    />
+  );
+};
+///////
 
 const getStyleSheet = (size: number, backgroundColor: string) =>
   StyleSheet.create({
