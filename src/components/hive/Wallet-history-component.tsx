@@ -471,26 +471,43 @@ const WallettHistory = ({
             style={styles.transactionsList}
             onScroll={handleScroll}
             onEndReached={() => {
-              const isLast =
-                transactions.list[transactions.list.length - 1].last;
-              if (!isLast && displayedTransactions.length > 8) {
-                tryToLoadMore();
+              if (
+                transactions.list.length &&
+                transactions.list[transactions.list.length - 1].last
+              ) {
+                const isLast =
+                  transactions.list[transactions.list.length - 1].last;
+                if (!isLast && displayedTransactions.length > 8) {
+                  tryToLoadMore();
+                }
               }
             }}
+            ListFooterComponent={() => {
+              return (
+                <>
+                  {transactions.list[transactions.list.length - 1]?.last ===
+                    false &&
+                    transactions.lastUsedStart !== 0 &&
+                    !loading &&
+                    !bottomLoader && (
+                      <TouchableOpacity
+                        style={styles.loadMorePanel}
+                        onPress={() => tryToLoadMore()}>
+                        <Text>{translate('common.load_more')}</Text>
+                        <Icon name={Icons.ADD_CIRCLE} />
+                      </TouchableOpacity>
+                    )}
+                  {/* BOTTOM LOADER */}
+                  {!loading && bottomLoader && (
+                    <View style={styles.centeredContainer}>
+                      <Loader animating size={'small'} />
+                    </View>
+                  )}
+                  {/* END BOTTOM LOADER */}
+                </>
+              );
+            }}
           />
-          {/* tryloadmore button */}
-          {transactions.list[transactions.list.length - 1]?.last === false &&
-            transactions.lastUsedStart !== 0 &&
-            !loading &&
-            !bottomLoader && (
-              <TouchableOpacity
-                style={styles.loadMorePanel}
-                onPress={() => tryToLoadMore()}>
-                <Text>{translate('common.load_more')}</Text>
-                <Icon name={Icons.ADD_CIRCLE} />
-              </TouchableOpacity>
-            )}
-          {/* end */}
         </View>
       )}
 
@@ -515,14 +532,6 @@ const WallettHistory = ({
         </View>
       )}
       {/* END LOADER */}
-
-      {/* BOTTOM LOADER */}
-      {!loading && bottomLoader && (
-        <View style={styles.centeredContainer}>
-          <Loader animating size={'small'} />
-        </View>
-      )}
-      {/* END BOTTOM LOADER */}
 
       {/* ScrollToTop Button */}
       {!loading && displayScrollToTop && (
@@ -683,7 +692,7 @@ const styles = StyleSheet.create({
   centeredContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 5,
+    marginVertical: 8,
   },
   viewContainer: {
     height: '90%',
@@ -692,6 +701,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginVertical: 8,
   },
 });
 
