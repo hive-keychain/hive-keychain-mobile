@@ -83,7 +83,12 @@ const EngineTokenDisplay = ({
         //  - check condition (stake enabled || delegation) => render + button
         //  - code the plusButton.
         //  - make it usable + add all the necessary utils.
-        <ShowMoreTokenInfo key={'more_info_token'} tokenInfo={tokenInfo} />,
+        <ShowMoreTokenInfo
+          key={'more_info_token'}
+          tokenInfo={tokenInfo}
+          token={token}
+          tokenLogo={logo}
+        />,
         //////
         <ShowHistory
           key="history_token"

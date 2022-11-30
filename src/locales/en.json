@@ -41,7 +41,8 @@
     "error": "Error: Something went wrong : {{msg}}",
     "error_title": "Error",
     "savings": "Savings",
-    "ok": "OK"
+    "ok": "OK",
+    "stake": "Stake"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -98,6 +99,19 @@
         "button": "Convert",
         "disclaimer_hive": "You deposit collateral (HIVE), then you are given HBD up front worth half of the collateral amount (minus a 5% fee). Your official final payment is in 3.5 days. At that point remaining collateral (HIVE) is returned.",
         "disclaimer_hbd": "Your HBD will take 3.5 days to get converted to approximately USD worth of HIVE tokens, based on its 3.5 days median price."
+      },
+      "more_token_info": "{{currency}} information",
+      "token_stake": {
+        "title": "Stake",
+        "staking_token": "Staking {{currency}}"
+      },
+      "token_unstake": {
+        "title": "Unstake"
+      },
+      "token_delegation": {
+        "title": "Delegate",
+        "in": "Delegation in",
+        "out": "Delegation out"
       }
     },
     "has": {
@@ -253,7 +267,8 @@
     "incorrect_user": "Please check the username and try again.",
     "accounts_no_auth": "{{authorizedAccount}} does not have authority over {{username}}.",
     "no_auth_account": "Please save {{authorizedAccount}} in Hive Keychain to use it as an authorized account.",
-    "no_accounts_no_auth": "Please add at least one account with authority over {{username}}"
+    "no_accounts_no_auth": "Please add at least one account with authority over {{username}}",
+    "token_stake_success": "Your stake of {{currency}} was successful!"
   },
   "navigation": {
     "log_out": "LOG OUT",

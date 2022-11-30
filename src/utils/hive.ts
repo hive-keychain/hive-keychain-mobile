@@ -109,7 +109,7 @@ export const broadcastJson = async (
     ],
   ]);
 };
-//todo type obj
+//TODO type obj
 export const sendToken = async (key: string, username: string, obj: object) => {
   const result = (await broadcastJson(
     key,
@@ -119,6 +119,25 @@ export const sendToken = async (key: string, username: string, obj: object) => {
     {
       contractName: 'tokens',
       contractAction: 'transfer',
+      contractPayload: obj,
+    },
+  )) as BroadcastResult;
+  return result;
+};
+
+export const stakeToken = async (
+  key: string,
+  username: string,
+  obj: object,
+) => {
+  const result = (await broadcastJson(
+    key,
+    username,
+    hiveEngine.CHAIN_ID,
+    true,
+    {
+      contractName: 'tokens',
+      contractAction: 'stake',
       contractPayload: obj,
     },
   )) as BroadcastResult;
@@ -192,6 +211,7 @@ export const createClaimedAccount = async (
 ) => {
   return await broadcast(key, [['create_claimed_account', obj]]);
 };
+
 export const post = async (
   key: string,
   {
