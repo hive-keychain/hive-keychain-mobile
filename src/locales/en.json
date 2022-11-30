@@ -43,7 +43,8 @@
     "savings": "Savings",
     "ok": "OK",
     "stake": "Stake",
-    "unstake": "Unstake"
+    "unstake": "Unstake",
+    "delegate": "Delegate"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -112,6 +113,7 @@
       },
       "token_delegation": {
         "title": "Delegate",
+        "delegating_token": "Delegating {{currency}}",
         "in": "Delegation in",
         "out": "Delegation out"
       }
@@ -271,7 +273,9 @@
     "no_auth_account": "Please save {{authorizedAccount}} in Hive Keychain to use it as an authorized account.",
     "no_accounts_no_auth": "Please add at least one account with authority over {{username}}",
     "token_stake_success": "Your stake of {{currency}} was successful!",
-    "token_unstake_success": "Your unstake of {{currency}} was successful!"
+    "token_unstake_success": "Your unstake of {{currency}} was successful!",
+    "token_delegate_sucess": "Your delegation of {{currency}} was successful!",
+    "token_undelegate_sucess": "Your undelegation of {{currency}} was successful!"
   },
   "navigation": {
     "log_out": "LOG OUT",

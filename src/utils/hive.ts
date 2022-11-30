@@ -163,6 +163,25 @@ export const unstakeToken = async (
   return result;
 };
 
+export const delegateToken = async (
+  key: string,
+  username: string,
+  obj: object,
+) => {
+  const result = (await broadcastJson(
+    key,
+    username,
+    hiveEngine.CHAIN_ID,
+    true,
+    {
+      contractName: 'tokens',
+      contractAction: 'delegate',
+      contractPayload: obj,
+    },
+  )) as BroadcastResult;
+  return result;
+};
+
 export const powerUp = async (
   key: string,
   obj: TransferToVestingOperation[1],

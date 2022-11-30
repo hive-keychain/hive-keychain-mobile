@@ -1,7 +1,6 @@
 import {loadTokenHistory} from 'actions/index';
 import {Token, TokenBalance} from 'actions/interfaces';
 import HistoryIcon from 'assets/wallet/icon_history_green.svg';
-import CustomInput from 'components/form/CustomInput';
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
@@ -10,6 +9,7 @@ import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import Balance from './Balance';
+import DelegateToken from './DelegateToken';
 import Operation from './Operation';
 import StakeToken from './StakeToken';
 import UnstakeToken from './UnstakeToken';
@@ -75,7 +75,14 @@ const MoreTokenInfo = ({
         break;
       case 'delegate_token':
         modalParams.name = 'DelegateToken';
-        modalParams.modalContent = <CustomInput />; //TODO code the Op component
+        modalParams.modalContent = (
+          <DelegateToken
+            currency={token.symbol}
+            tokenLogo={tokenLogo}
+            balance={token.balance}
+          />
+        ); //TODO finish component
+        //TODO add 'undelegate_token' + component + icon
         break;
       default:
         break;
