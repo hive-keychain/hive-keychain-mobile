@@ -12,6 +12,7 @@ import {navigate} from 'utils/navigation';
 import Balance from './Balance';
 import Operation from './Operation';
 import StakeToken from './StakeToken';
+import UnstakeToken from './UnstakeToken';
 
 export type MoreInfoTokenProps = {
   token: TokenBalance;
@@ -64,7 +65,13 @@ const MoreTokenInfo = ({
         break;
       case 'unstake_token':
         modalParams.name = 'UnstakeToken';
-        modalParams.modalContent = <CustomInput />; //TODO code the Op component
+        modalParams.modalContent = (
+          <UnstakeToken
+            currency={token.symbol}
+            tokenLogo={tokenLogo}
+            balance={token.stake}
+          />
+        ); //TODO finish component
         break;
       case 'delegate_token':
         modalParams.name = 'DelegateToken';

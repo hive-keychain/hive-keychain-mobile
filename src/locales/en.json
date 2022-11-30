@@ -42,7 +42,8 @@
     "error_title": "Error",
     "savings": "Savings",
     "ok": "OK",
-    "stake": "Stake"
+    "stake": "Stake",
+    "unstake": "Unstake"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -106,7 +107,8 @@
         "staking_token": "Staking {{currency}}"
       },
       "token_unstake": {
-        "title": "Unstake"
+        "title": "Unstake",
+        "unstaking_token": "Unstaking {{currency}}"
       },
       "token_delegation": {
         "title": "Delegate",
@@ -268,7 +270,8 @@
     "accounts_no_auth": "{{authorizedAccount}} does not have authority over {{username}}.",
     "no_auth_account": "Please save {{authorizedAccount}} in Hive Keychain to use it as an authorized account.",
     "no_accounts_no_auth": "Please add at least one account with authority over {{username}}",
-    "token_stake_success": "Your stake of {{currency}} was successful!"
+    "token_stake_success": "Your stake of {{currency}} was successful!",
+    "token_unstake_success": "Your unstake of {{currency}} was successful!"
   },
   "navigation": {
     "log_out": "LOG OUT",

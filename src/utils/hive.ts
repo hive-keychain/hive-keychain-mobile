@@ -144,6 +144,25 @@ export const stakeToken = async (
   return result;
 };
 
+export const unstakeToken = async (
+  key: string,
+  username: string,
+  obj: object,
+) => {
+  const result = (await broadcastJson(
+    key,
+    username,
+    hiveEngine.CHAIN_ID,
+    true,
+    {
+      contractName: 'tokens',
+      contractAction: 'unstake',
+      contractPayload: obj,
+    },
+  )) as BroadcastResult;
+  return result;
+};
+
 export const powerUp = async (
   key: string,
   obj: TransferToVestingOperation[1],
