@@ -1,3 +1,4 @@
+import AddIconWhite from 'assets/wallet/icon_add_circle_outline_white.svg';
 import Conversion from 'assets/wallet/icon_convert.svg';
 import Delegate from 'assets/wallet/icon_delegate.svg';
 import Plus from 'assets/wallet/icon_deposit.svg';
@@ -205,8 +206,8 @@ export const ShowMoreTokenInfo = (props: MoreInfoTokenProps) => {
         });
       }}
       size={36}
-      backgroundColor="blue"
-      content={<HistoryIcon />}
+      backgroundColor="#77B9D1"
+      content={<AddIconWhite />}
     />
   );
 };

@@ -1,4 +1,5 @@
 import {loadAccount} from 'actions/index';
+import {Token} from 'actions/interfaces';
 import Delegate from 'assets/wallet/icon_delegate_dark.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
@@ -21,6 +22,7 @@ type Props = PropsFromRedux & {
   currency: string;
   tokenLogo: JSX.Element;
   balance: string;
+  tokenInfo: Token;
 };
 
 const UnstakeToken = ({
@@ -30,6 +32,7 @@ const UnstakeToken = ({
   loadAccount,
   properties,
   tokenLogo,
+  tokenInfo,
 }: Props) => {
   //TODO remove comments when finished.
   const [amount, setAmount] = useState('');
@@ -69,6 +72,12 @@ const UnstakeToken = ({
         currency,
       })}>
       <>
+        <Text>
+          {translate('wallet.operations.token_unstake.cooldown_disclaimer', {
+            unstakingCooldown: tokenInfo.unstakingCooldown,
+          })}
+          {tokenInfo.unstakingCooldown === 1 ? '' : 's'}
+        </Text>
         <Separator />
         <Balance
           currency={currency}

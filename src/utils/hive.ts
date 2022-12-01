@@ -182,6 +182,25 @@ export const delegateToken = async (
   return result;
 };
 
+export const cancelDelegateToken = async (
+  key: string,
+  username: string,
+  obj: object,
+) => {
+  const result = (await broadcastJson(
+    key,
+    username,
+    hiveEngine.CHAIN_ID,
+    true,
+    {
+      contractName: 'tokens',
+      contractAction: 'undelegate',
+      contractPayload: obj,
+    },
+  )) as BroadcastResult;
+  return result;
+};
+
 export const powerUp = async (
   key: string,
   obj: TransferToVestingOperation[1],

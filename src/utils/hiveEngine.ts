@@ -2,6 +2,16 @@ import {TokenBalance, TokenMarket} from 'actions/interfaces';
 import hsc from 'api/hiveEngine';
 type sscjsResult = {logs: string};
 
+//TODO move if needed to organize in an interface file
+export interface TokenDelegation {
+  from: string;
+  quantity: string;
+  symbol: string;
+  to: string;
+  created: number;
+  updated: number;
+}
+
 export const tryConfirmTransaction = async (trxId: string) => {
   let result;
   for (let i = 0; i < 20; i++) {
@@ -42,4 +52,24 @@ export const getHiveEngineTokenValue = (
     ? 1
     : 0;
   return parseFloat(balance.balance) * price;
+};
+
+export const getIncomingTokenDelegations = async (
+  username: string,
+  symbol: string,
+): Promise<TokenDelegation[]> => {
+  return hsc.find('tokens', 'delegations', {
+    to: username,
+    symbol: symbol,
+  });
+};
+
+export const getOutgoingTokenDelegations = async (
+  username: string,
+  symbol: string,
+): Promise<TokenDelegation[]> => {
+  return hsc.find('tokens', 'delegations', {
+    from: username,
+    symbol: symbol,
+  });
 };

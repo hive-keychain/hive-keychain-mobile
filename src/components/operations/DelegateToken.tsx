@@ -33,6 +33,13 @@ const DelegateToken = ({
   tokenLogo,
 }: Props) => {
   //TODO remove comments when finished.
+  //TODO using same patterns:
+  //  - code show list of incomming/outgoing token's delegations.
+  //  - code total token incomming/outgoing delegations.
+  //  - for outgoing, code the edit/delete button which:
+  //    -> Edit:    it will add a new token's delegation.
+  //    -> Delete:  it will set a new token delegation but as 0.000 so it will cancel.
+  //                Using hive.cancelDelegateToken obj = { from: from, symbol: symbol, quantity: amount }
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
@@ -67,11 +74,14 @@ const DelegateToken = ({
   const styles = getDimensionedStyles(color);
   return (
     <Operation
-      logo={<Delegate />} //TODO change logo
+      logo={<Delegate />}
       title={translate('wallet.operations.token_delegation.delegating_token', {
         currency,
       })}>
       <>
+        <Text>
+          {translate('wallet.operations.token_delegation.info_requirements')}
+        </Text>
         <Separator />
         <Balance
           currency={currency}

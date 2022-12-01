@@ -1,6 +1,7 @@
 import {loadTokenHistory} from 'actions/index';
 import {Token, TokenBalance} from 'actions/interfaces';
-import HistoryIcon from 'assets/wallet/icon_history_green.svg';
+import AddIcon from 'assets/wallet/icon_add_circle_outline.svg';
+import ListBlackIcon from 'assets/wallet/icon_list_black.svg';
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
@@ -10,9 +11,12 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import Balance from './Balance';
 import DelegateToken from './DelegateToken';
+import IncomingOutGoingTokenDelegations from './IncomingOutGoingTokenDelegations';
 import Operation from './Operation';
 import StakeToken from './StakeToken';
 import UnstakeToken from './UnstakeToken';
+
+type TokenDelegationType = 'Outgoing' | 'Incoming';
 
 export type MoreInfoTokenProps = {
   token: TokenBalance;
@@ -28,12 +32,6 @@ const MoreTokenInfo = ({
   history,
   loadTokenHistory,
 }: Props) => {
-  //   useEffect(() => {
-  //     if (user.name) {
-  //       loadTokenHistory(user.name, currency);
-  //     }
-  //   }, [loadTokenHistory, user.name, currency]);
-
   const handleClickIssuer = () => {
     if (tokenInfo.metadata) {
       try {
@@ -52,14 +50,17 @@ const MoreTokenInfo = ({
       name: '',
       modalContent: undefined,
     };
+    let availableBalance = 0;
     switch (operation) {
       case 'stake_token':
+        availableBalance =
+          parseFloat(token.balance) - parseFloat(token.delegationsIn);
         modalParams.name = 'StakeToken';
         modalParams.modalContent = (
           <StakeToken
             currency={token.symbol}
             tokenLogo={tokenLogo}
-            balance={token.balance}
+            balance={availableBalance.toString()}
           />
         ); //TODO finish the component
         break;
@@ -70,16 +71,19 @@ const MoreTokenInfo = ({
             currency={token.symbol}
             tokenLogo={tokenLogo}
             balance={token.stake}
+            tokenInfo={tokenInfo}
           />
         ); //TODO finish component
         break;
       case 'delegate_token':
+        availableBalance =
+          parseFloat(token.balance) - parseFloat(token.delegationsIn);
         modalParams.name = 'DelegateToken';
         modalParams.modalContent = (
           <DelegateToken
             currency={token.symbol}
             tokenLogo={tokenLogo}
-            balance={token.balance}
+            balance={availableBalance.toString()}
           />
         ); //TODO finish component
         //TODO add 'undelegate_token' + component + icon
@@ -95,9 +99,30 @@ const MoreTokenInfo = ({
     navigate('ModalScreen', modalParams);
   };
 
+  const handleIncomingOutGoingTokenDelegations = (
+    showTokenDelegations: TokenDelegationType,
+  ) => {
+    navigate('ModalScreen', {
+      name: `Show${showTokenDelegations}TokenDelegations`,
+      modalContent: (
+        <IncomingOutGoingTokenDelegations
+          delegationType={showTokenDelegations.toLowerCase()}
+          total={
+            showTokenDelegations === 'Incoming'
+              ? token.delegationsIn
+              : token.delegationsOut
+          }
+          token={token}
+          tokenLogo={tokenLogo}
+          tokenInfo={tokenInfo}
+        />
+      ),
+    });
+  };
+
   return (
     <Operation
-      logo={<HistoryIcon />} //TODO change to token info icon???
+      logo={<AddIcon />}
       title={translate('wallet.operations.more_token_info', {
         currency: token.symbol,
       })}>
@@ -122,19 +147,44 @@ const MoreTokenInfo = ({
               {token.stake}
             </Text>
           )}
+          {/* //TODO add pendingStake if any. */}
+          {/* token.stakingEnabled &&
+              parseFloat(tokenBalance.pendingUnstake) > 0 && ( */}
           {tokenInfo.delegationEnabled && (
-            <Text>
-              {translate('wallet.operations.token_delegation.in')}
-              {' : '}
-              {token.delegationsIn}
-            </Text>
+            <View style={styles.delegationInOutContainer}>
+              <Text>
+                {translate('wallet.operations.token_delegation.in')}
+                {' : '}
+                {token.delegationsIn}
+              </Text>
+              {/* //TODO here incomming/outgoing token delegation list component (one component plz) */}
+              {parseFloat(token.delegationsIn) > 0 && (
+                <TouchableOpacity
+                  onPress={() =>
+                    handleIncomingOutGoingTokenDelegations('Incoming')
+                  }>
+                  <ListBlackIcon />
+                </TouchableOpacity>
+              )}
+            </View>
           )}
           {tokenInfo.delegationEnabled && (
-            <Text>
-              {translate('wallet.operations.token_delegation.out')}
-              {' : '}
-              {token.delegationsOut}
-            </Text>
+            <View style={styles.delegationInOutContainer}>
+              <Text>
+                {translate('wallet.operations.token_delegation.out')}
+                {' : '}
+                {token.delegationsOut}
+              </Text>
+              {/* //TODO here incomming/outgoing token delegation list component (one component plz) */}
+              {parseFloat(token.delegationsOut) > 0 && (
+                <TouchableOpacity
+                  onPress={() =>
+                    handleIncomingOutGoingTokenDelegations('Outgoing')
+                  }>
+                  <ListBlackIcon />
+                </TouchableOpacity>
+              )}
+            </View>
           )}
         </View>
         <Separator height={20} />
@@ -206,6 +256,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 6,
     padding: 6,
+  },
+  delegationInOutContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 });
 
