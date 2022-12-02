@@ -140,7 +140,9 @@ const WallettHistory = ({
     updateFilter(newFilter);
   };
 
-  const updateFilter = (filter: any) => {
+  const updateFilter = (filter: WalletHistoryFilter) => {
+    //TODO testing to change to walletFilter(initially as any)
+    console.log('updateFilter: ', {filter}); //TODO to remove
     setFilter(filter);
   };
 
@@ -202,6 +204,7 @@ const WallettHistory = ({
   };
 
   useEffect(() => {
+    console.log({filter}); //TODO to remove
     setPreviousTransactionLength(0);
     if (filterReady) {
       filterTransactions();
@@ -387,7 +390,15 @@ const WallettHistory = ({
   };
 
   const handlePressedStyleInOut = (inOutSelected: boolean) => {
-    return inOutSelected ? styles.inOutPressedItem : styles.inOutItem;
+    return inOutSelected
+      ? [styles.inOutItem, styles.inOutPressedItem]
+      : styles.inOutItem;
+  };
+
+  const handlePressedStyleInOutText = (inOutSelected: boolean) => {
+    return inOutSelected
+      ? [styles.inOutItemText, styles.inOutItemPressedText]
+      : styles.inOutItemText;
   };
 
   return (
@@ -410,6 +421,7 @@ const WallettHistory = ({
               </TouchableOpacity>
             </View>
           </View>
+          {/* //TODO check if this solves the issue(commented for now) */}
           {isFilterOpened && (
             <View style={styles.filtersContainer}>
               <View style={styles.searchPanel}>
@@ -453,13 +465,19 @@ const WallettHistory = ({
                     style={handlePressedStyleInOut(filter.inSelected)}
                     aria-label="filter-by-incoming"
                     onPress={() => toggleFilterIn()}>
-                    <Text>{translate('wallet.filter.filter_in')}</Text>
+                    <Text
+                      style={handlePressedStyleInOutText(filter.inSelected)}>
+                      {translate('wallet.filter.filter_in')}
+                    </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={handlePressedStyleInOut(filter.outSelected)}
                     aria-label="filter-by-outgoing"
                     onPress={() => toggleFilterOut()}>
-                    <Text>{translate('wallet.filter.filter_out')}</Text>
+                    <Text
+                      style={handlePressedStyleInOutText(filter.outSelected)}>
+                      {translate('wallet.filter.filter_out')}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -615,16 +633,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  inOutItemText: {
+    color: 'black',
+  },
   inOutPressedItem: {
-    borderColor: 'black',
-    width: 65,
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 4,
-    margin: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#b1aeae',
+    borderColor: '#68A0B4',
+    backgroundColor: '#68A0B4',
+  },
+  inOutItemPressedText: {
+    color: 'white',
   },
   touchableItem: {
     borderColor: 'black',
@@ -653,14 +670,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 30,
-    borderColor: '#68A0B4',
+    borderColor: 'black',
   },
   filterButtonText: {
     color: 'black',
   },
   filterButtonPressed: {
-    borderWidth: 0,
     borderColor: '#68A0B4',
+    backgroundColor: '#68A0B4',
   },
   filterButtonTextPressed: {
     color: 'white',
