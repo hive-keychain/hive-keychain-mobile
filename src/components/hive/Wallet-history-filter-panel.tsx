@@ -1,6 +1,11 @@
 import {ActionPayload, ActiveAccount} from 'actions/interfaces';
 import moment from 'moment';
-import React, {useEffect, useState} from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -43,251 +48,264 @@ interface WalletHistoryFilterPanelProps {
   flatListRef: React.MutableRefObject<FlatList>;
   setDisplayedTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
   setPreviousTransactionLength: React.Dispatch<React.SetStateAction<number>>;
-  user: ActiveAccount;
+  activeAccount: ActiveAccount;
   previousTransactionLength: number;
   finalizeDisplayedList: (list: Transaction[]) => void;
-  setLoading: (value: React.SetStateAction<boolean>) => void;
-  loading: boolean;
   fetchAccountTransactions: (accountName: string, start: number) => void;
   walletFilters: WalletHistoryFilter;
   updateWalletFilter: (
     walletFilters: WalletHistoryFilter,
   ) => ActionPayload<WalletHistoryFilter>;
   clearWalletFilters: () => ActionPayload<WalletHistoryFilter>;
+  setBottomLoader: React.Dispatch<React.SetStateAction<boolean>>;
+  loading: boolean;
 }
 
-type Props = WalletHistoryFilterPanelProps;
+const WalletHistoryFilterPanel = forwardRef(
+  (props: WalletHistoryFilterPanelProps, ref) => {
+    const [filter, setFilter] = useState<WalletHistoryFilter>(
+      props.walletFilters,
+    );
+    const [filterReady, setFilterReady] = useState<boolean>(false);
+    const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
 
-const WalletHistoryFilterPanel = ({
-  DEFAULT_WALLET_FILTER,
-  transactions,
-  flatListRef,
-  user,
-  setDisplayedTransactions,
-  setPreviousTransactionLength,
-  previousTransactionLength,
-  finalizeDisplayedList,
-  setLoading,
-  loading,
-  fetchAccountTransactions,
-  walletFilters,
-  updateWalletFilter,
-  clearWalletFilters,
-}: Props) => {
-  const [filter, setFilter] = useState<WalletHistoryFilter>(walletFilters);
-  const [filterReady, setFilterReady] = useState<boolean>(false);
-  const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
-  let filteredTransactions: Transaction[];
+    useEffect(() => {
+      initFilters();
+    }, []);
 
-  useEffect(() => {
-    initFilters();
-  }, []);
+    useEffect(() => {
+      props.setPreviousTransactionLength(0);
+      if (filterReady) {
+        filterTransactions();
+        saveFilterInLocalStorage();
+      }
+    }, [filter]);
 
-  useEffect(() => {
-    console.log({filter, filterReady}); //TODO to remove
-    setPreviousTransactionLength(0);
-    if (filterReady) {
-      //TODO check if needed, removed from condition && transactions.list.length
-      filterTransactions();
-      saveFilterInLocalStorage();
-    }
-  }, [filter, transactions]); //TODO check if needed removing dep transactions
+    useImperativeHandle(ref, () => ({
+      filterNow: () => {
+        filterTransactions();
+      },
+    }));
 
-  const saveFilterInLocalStorage = async () => {
-    updateWalletFilter(filter);
-  };
-
-  const initFilters = () => {
-    setFilter(walletFilters);
-    setFilterReady(true);
-  };
-
-  const toggleFilterType = (transactionName: string) => {
-    const newFilter = {
-      ...filter?.selectedTransactionTypes,
-      [transactionName]: !filter?.selectedTransactionTypes![transactionName],
+    const toggleFilter = () => {
+      setIsFilterPanelOpened(!isFilterOpened);
     };
-    updateFilter({
-      ...filter,
-      selectedTransactionTypes: newFilter,
-    });
-  };
 
-  const toggleFilterIn = () => {
-    const newFilter = {
-      ...filter,
-      inSelected: !filter.inSelected,
+    const toggleFilterType = (transactionName: string) => {
+      const newFilter = {...filter.selectedTransactionTypes};
+      newFilter[transactionName] = !filter.selectedTransactionTypes[
+        transactionName
+      ];
+      updateFilter({
+        ...filter,
+        selectedTransactionTypes: newFilter,
+      });
     };
-    updateFilter(newFilter);
-  };
 
-  const toggleFilterOut = () => {
-    const newFilter = {
-      ...filter,
-      outSelected: !filter.outSelected,
+    const toggleFilterIn = () => {
+      const newFilter = {
+        ...filter,
+        inSelected: !filter.inSelected,
+      };
+      updateFilter(newFilter);
     };
-    updateFilter(newFilter);
-  };
 
-  const updateFilterValue = (value: string) => {
-    if (value.trim() !== '') {
+    const toggleFilterOut = () => {
+      const newFilter = {
+        ...filter,
+        outSelected: !filter.outSelected,
+      };
+      updateFilter(newFilter);
+    };
+
+    const updateFilterValue = (value: string) => {
       const newFilter = {
         ...filter,
         filterValue: value,
       };
       updateFilter(newFilter);
-    }
-  };
+    };
 
-  const updateFilter = (filter: any) => {
-    setFilter(filter);
-  };
+    const updateFilter = (filter: WalletHistoryFilter) => {
+      setFilter(filter);
+    };
 
-  const toggleFilter = () => {
-    setIsFilterPanelOpened(!isFilterOpened);
-  };
+    const initFilters = async () => {
+      setFilter(props.walletFilters);
+      setFilterReady(true);
+    };
 
-  const clearFilters = () => {
-    updateWalletFilter(DEFAULT_WALLET_FILTER);
-    setFilter(DEFAULT_WALLET_FILTER);
-  };
+    useEffect(() => {
+      props.setPreviousTransactionLength(0);
+      if (filterReady) {
+        filterTransactions();
+        saveFilterInLocalStorage();
+      }
+    }, [filter]);
 
-  const handlePressedStyleFilterOperations = (filterOperationType: string) => {
-    return filter.selectedTransactionTypes[filterOperationType]
-      ? styles.filterSelectorItemPressed
-      : styles.filterSelectorItem;
-  };
+    const saveFilterInLocalStorage = async () => {
+      props.updateWalletFilter(filter);
+    };
 
-  const handlePressedStyleInOut = (inOutSelected: boolean) => {
-    return inOutSelected ? styles.inOutPressedItem : styles.inOutItem;
-  };
-
-  const filterTransactions = () => {
-    const selectedTransactionsTypes = Object.keys(
-      filter.selectedTransactionTypes,
-    ).filter(
-      (transactionName) => filter.selectedTransactionTypes[transactionName],
-    );
-    filteredTransactions = transactions.list.filter(
-      (transaction: Transaction) => {
-        const isInOrOutSelected = filter.inSelected || filter.outSelected;
-        if (
-          selectedTransactionsTypes.includes(transaction.type) ||
-          selectedTransactionsTypes.length === 0
-        ) {
+    const filterTransactions = () => {
+      const selectedTransactionsTypes = Object.keys(
+        filter.selectedTransactionTypes,
+      ).filter(
+        (transactionName) => filter.selectedTransactionTypes[transactionName],
+      );
+      let filteredTransactions = props.transactions.list.filter(
+        (transaction: Transaction) => {
+          const isInOrOutSelected = filter.inSelected || filter.outSelected;
           if (
-            HAS_IN_OUT_TRANSACTIONS.includes(transaction.type) &&
-            isInOrOutSelected
+            selectedTransactionsTypes.includes(transaction.type) ||
+            selectedTransactionsTypes.length === 0
           ) {
-            return (
-              (filter.inSelected &&
-                ((TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
-                  (transaction as Transfer).to === user.name!) ||
-                  (transaction.type === 'delegate_vesting_shares' &&
-                    (transaction as Delegation).delegatee === user.name!))) ||
-              (filter.outSelected &&
-                ((TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
-                  (transaction as Transfer).from === user.name!) ||
-                  (transaction.type === 'delegate_vesting_shares' &&
-                    (transaction as Delegation).delegator === user.name!)))
-            );
-          } else {
-            return true;
+            if (
+              HAS_IN_OUT_TRANSACTIONS.includes(transaction.type) &&
+              isInOrOutSelected
+            ) {
+              return (
+                (filter.inSelected &&
+                  ((TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
+                    (transaction as Transfer).to ===
+                      props.activeAccount.name!) ||
+                    (transaction.type === 'delegate_vesting_shares' &&
+                      (transaction as Delegation).delegatee ===
+                        props.activeAccount.name!))) ||
+                (filter.outSelected &&
+                  ((TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
+                    (transaction as Transfer).from ===
+                      props.activeAccount.name!) ||
+                    (transaction.type === 'delegate_vesting_shares' &&
+                      (transaction as Delegation).delegator ===
+                        props.activeAccount.name!)))
+              );
+            } else {
+              return true;
+            }
           }
-        }
-      },
-    );
-    filteredTransactions = filteredTransactions.filter((transaction) => {
-      return (
-        (TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
-          WalletHistoryUtils.filterTransfer(
-            transaction as Transfer,
-            filter.filterValue,
-            user.name!,
-          )) ||
-        (transaction.type === 'claim_reward_balance' &&
-          WalletHistoryUtils.filterClaimReward(
-            transaction as ClaimReward,
-            filter.filterValue,
-          )) ||
-        (transaction.type === 'delegate_vesting_shares' &&
-          WalletHistoryUtils.filterDelegation(
-            transaction as Delegation,
-            filter.filterValue,
-            user.name!,
-          )) ||
-        (transaction.subType === 'withdraw_vesting' &&
-          WalletHistoryUtils.filterPowerUpDown(
-            transaction as PowerDown,
-            filter.filterValue,
-          )) ||
-        (transaction.subType === 'transfer_to_vesting' &&
-          WalletHistoryUtils.filterPowerUpDown(
-            transaction as PowerUp,
-            filter.filterValue,
-          )) ||
-        (transaction.subType === 'transfer_from_savings' &&
-          WalletHistoryUtils.filterSavingsTransaction(
-            transaction as WithdrawSavings,
-            filter.filterValue,
-          )) ||
-        (transaction.subType === 'transfer_to_savings' &&
-          WalletHistoryUtils.filterSavingsTransaction(
-            transaction as DepositSavings,
-            filter.filterValue,
-          )) ||
-        (transaction.subType === 'interest' &&
-          WalletHistoryUtils.filterInterest(
-            transaction as ReceivedInterests,
-            filter.filterValue,
-          )) ||
-        (transaction.subType === 'fill_collateralized_convert_request' &&
-          WalletHistoryUtils.filterFillConversion(
-            transaction as FillCollateralizedConvert,
-            filter.filterValue,
-          )) ||
-        (transaction.subType === 'fill_convert_request' &&
-          WalletHistoryUtils.filterFillConversion(
-            transaction as FillConvert,
-            filter.filterValue,
-          )) ||
-        (transaction.subType === 'collateralized_convert' &&
-          WalletHistoryUtils.filterConversion(
-            transaction as CollateralizedConvert,
-            filter.filterValue,
-          )) ||
-        (transaction.subType === 'convert' &&
-          WalletHistoryUtils.filterConversion(
-            transaction as Convert,
-            filter.filterValue,
-          )) ||
-        (transaction.timestamp &&
-          moment(transaction.timestamp)
-            .format('L')
-            .includes(filter.filterValue.toLowerCase()))
+        },
       );
-    });
-    console.log({filteredTransactionsLeght: filteredTransactions.length}); //TODO to remove
-    if (
-      (filteredTransactions.length >= MINIMUM_FETCHED_TRANSACTIONS &&
-        filteredTransactions.length >= previousTransactionLength + 1) ||
-      transactions.list.some((t) => t.last) ||
-      transactions.lastUsedStart === 0
-    ) {
-      finalizeDisplayedList(filteredTransactions);
-    } else {
-      //commenting this control as it is being handled on parent TODO check if needed
-      setLoading(true);
+      filteredTransactions = filteredTransactions.filter((transaction) => {
+        return (
+          (TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
+            WalletHistoryUtils.filterTransfer(
+              transaction as Transfer,
+              filter.filterValue,
+              props.activeAccount.name!,
+            )) ||
+          (transaction.type === 'claim_reward_balance' &&
+            WalletHistoryUtils.filterClaimReward(
+              transaction as ClaimReward,
+              filter.filterValue,
+            )) ||
+          (transaction.type === 'delegate_vesting_shares' &&
+            WalletHistoryUtils.filterDelegation(
+              transaction as Delegation,
+              filter.filterValue,
+              props.activeAccount.name!,
+            )) ||
+          (transaction.subType === 'withdraw_vesting' &&
+            WalletHistoryUtils.filterPowerUpDown(
+              transaction as PowerDown,
+              filter.filterValue,
+            )) ||
+          (transaction.subType === 'transfer_to_vesting' &&
+            WalletHistoryUtils.filterPowerUpDown(
+              transaction as PowerUp,
+              filter.filterValue,
+            )) ||
+          (transaction.subType === 'transfer_from_savings' &&
+            WalletHistoryUtils.filterSavingsTransaction(
+              transaction as WithdrawSavings,
+              filter.filterValue,
+            )) ||
+          (transaction.subType === 'transfer_to_savings' &&
+            WalletHistoryUtils.filterSavingsTransaction(
+              transaction as DepositSavings,
+              filter.filterValue,
+            )) ||
+          (transaction.subType === 'interest' &&
+            WalletHistoryUtils.filterInterest(
+              transaction as ReceivedInterests,
+              filter.filterValue,
+            )) ||
+          (transaction.subType === 'fill_collateralized_convert_request' &&
+            WalletHistoryUtils.filterFillConversion(
+              transaction as FillCollateralizedConvert,
+              filter.filterValue,
+            )) ||
+          (transaction.subType === 'fill_convert_request' &&
+            WalletHistoryUtils.filterFillConversion(
+              transaction as FillConvert,
+              filter.filterValue,
+            )) ||
+          (transaction.subType === 'collateralized_convert' &&
+            WalletHistoryUtils.filterConversion(
+              transaction as CollateralizedConvert,
+              filter.filterValue,
+            )) ||
+          (transaction.subType === 'convert' &&
+            WalletHistoryUtils.filterConversion(
+              transaction as Convert,
+              filter.filterValue,
+            )) ||
+          (transaction.timestamp &&
+            moment(transaction.timestamp)
+              .format('L')
+              .includes(filter.filterValue.toLowerCase()))
+        );
+      });
+      if (
+        (filteredTransactions.length >= MINIMUM_FETCHED_TRANSACTIONS &&
+          filteredTransactions.length >= props.previousTransactionLength + 1) ||
+        props.transactions.list.some((t) => t.last) ||
+        props.transactions.lastUsedStart === 0
+      ) {
+        props.finalizeDisplayedList(filteredTransactions);
+      } else {
+        props.setBottomLoader(true);
+        props.fetchAccountTransactions(
+          props.activeAccount.name!,
+          props.transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
+        );
+      }
+    };
 
-      fetchAccountTransactions(
-        user.name!,
-        transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
-      );
-    }
-  };
+    const clearFilters = () => {
+      props.updateWalletFilter(props.DEFAULT_WALLET_FILTER);
+      setFilter(props.DEFAULT_WALLET_FILTER);
+    };
 
-  return (
-    !loading && (
+    const handlePressedStyleFilterOperations = (
+      filterOperationType: string,
+    ) => {
+      return filter.selectedTransactionTypes[filterOperationType]
+        ? [styles.filterButton, styles.filterButtonPressed]
+        : styles.filterButton;
+    };
+
+    const handlePressedStyleFilterButtonText = (
+      filterOperationType: string,
+    ) => {
+      return filter.selectedTransactionTypes[filterOperationType]
+        ? styles.filterButtonTextPressed
+        : styles.filterButtonText;
+    };
+
+    const handlePressedStyleInOut = (inOutSelected: boolean) => {
+      return inOutSelected
+        ? [styles.inOutItem, styles.inOutPressedItem]
+        : styles.inOutItem;
+    };
+
+    const handlePressedStyleInOutText = (inOutSelected: boolean) => {
+      return inOutSelected
+        ? [styles.inOutItemText, styles.inOutItemPressedText]
+        : styles.inOutItemText;
+    };
+
+    return !props.loading ? (
       <View aria-label="wallet-history-filter-panel">
         <View style={styles.filterTogglerContainer}>
           <View style={styles.filterTogglerInnerContainer}>
@@ -295,7 +313,7 @@ const WalletHistoryFilterPanel = ({
               {translate('wallet.filter.filters_title')}
             </Text>
             <TouchableOpacity
-              style={styles.circularContainer}
+              style={styles.filterIconContainer}
               onPress={() => toggleFilter()}>
               {isFilterOpened ? (
                 <Icon name={Icons.EXPAND_LESS} marginRight={false} />
@@ -333,7 +351,10 @@ const WalletHistoryFilterPanel = ({
                         aria-label={`filter-selector-${filterOperationType}`}
                         key={filterOperationType}
                         onPress={() => toggleFilterType(filterOperationType)}>
-                        <Text>
+                        <Text
+                          style={handlePressedStyleFilterButtonText(
+                            filterOperationType,
+                          )}>
                           {translate(`wallet.filter.${filterOperationType}`)}
                         </Text>
                       </TouchableOpacity>
@@ -345,24 +366,29 @@ const WalletHistoryFilterPanel = ({
                   style={handlePressedStyleInOut(filter.inSelected)}
                   aria-label="filter-by-incoming"
                   onPress={() => toggleFilterIn()}>
-                  <Text>{translate('wallet.filter.filter_in')}</Text>
+                  <Text style={handlePressedStyleInOutText(filter.inSelected)}>
+                    {translate('wallet.filter.filter_in')}
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={handlePressedStyleInOut(filter.outSelected)}
                   aria-label="filter-by-outgoing"
                   onPress={() => toggleFilterOut()}>
-                  <Text>{translate('wallet.filter.filter_out')}</Text>
+                  <Text style={handlePressedStyleInOutText(filter.outSelected)}>
+                    {translate('wallet.filter.filter_out')}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         )}
       </View>
-    )
-  );
-};
+    ) : null;
+  },
+);
 
 const styles = StyleSheet.create({
+  flex: {flex: 1},
   filtersContainer: {
     flexDirection: 'column',
   },
@@ -370,6 +396,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 8,
   },
   filterTogglerInnerContainer: {
     flexDirection: 'row',
@@ -378,12 +405,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  circularContainer: {
-    borderWidth: 1,
+  filterIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
-    borderRadius: 100,
     margin: 4,
     height: 22,
     width: 22,
@@ -402,16 +427,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  inOutItemText: {
+    color: 'black',
+  },
   inOutPressedItem: {
-    borderColor: 'black',
-    width: 65,
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 4,
-    margin: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#b1aeae',
+    borderColor: '#68A0B4',
+    backgroundColor: '#68A0B4',
+  },
+  inOutItemPressedText: {
+    color: 'white',
   },
   touchableItem: {
     borderColor: 'black',
@@ -432,7 +456,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'flex-start',
   },
-  filterSelectorItem: {
+  filterButton: {
     width: '45%',
     margin: 4,
     borderWidth: 1,
@@ -440,16 +464,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 30,
+    borderColor: 'black',
   },
-  filterSelectorItemPressed: {
-    width: '45%',
-    margin: 4,
-    borderWidth: 1,
-    borderRadius: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 30,
-    backgroundColor: '#b1aeae',
+  filterButtonText: {
+    color: 'black',
+  },
+  filterButtonPressed: {
+    borderColor: '#68A0B4',
+    backgroundColor: '#68A0B4',
+  },
+  filterButtonTextPressed: {
+    color: 'white',
   },
   pressedStyle: {
     borderColor: 'black',
@@ -479,6 +504,9 @@ const styles = StyleSheet.create({
   },
   filterTitleText: {
     fontWeight: 'bold',
+  },
+  transactionsList: {
+    marginBottom: 33,
   },
 });
 
