@@ -7,6 +7,7 @@ import {
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import Transactions from 'components/hive/Transactions';
+import WhatsNewComponent from 'components/popups/whats-new/whats-new.component';
 import Survey from 'components/survey';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
@@ -141,6 +142,7 @@ const Main = ({
           components={[<Primary />, <Transactions user={user} />, <Tokens />]}
         />
         <Survey navigation={navigation} />
+        <WhatsNewComponent navigation={navigation} />
       </>
     </WalletPage>
   );

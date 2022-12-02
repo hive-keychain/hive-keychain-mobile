@@ -41,7 +41,8 @@
     "error": "Error: Something went wrong : {{msg}}",
     "error_title": "Error",
     "savings": "Savings",
-    "ok": "OK"
+    "ok": "OK",
+    "popup_read_more": "Read more"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -481,6 +482,14 @@
         "vote": "You successfully voted for a proposal!",
         "unvote": "You successfully removed your vote!"
       }
+    }
+  },
+  "popup": {
+    "whats_new": {
+      "intro": "What's new in {{content_version}}",
+      "next": "Next",
+      "previous": "Previous",
+      "got_it": "Got it!"
     }
   }
 }
