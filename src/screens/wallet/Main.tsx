@@ -43,11 +43,15 @@ const Main = ({
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
 
-  useEffect(() => {
+  const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();
     loadPrices();
     fetchPhishingAccounts();
+  };
+
+  useEffect(() => {
+    updateUserWallet(lastAccount);
   }, [
     loadAccount,
     accounts,
@@ -88,14 +92,11 @@ const Main = ({
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      loadAccount(lastAccount || accounts[0].name);
-      loadProperties();
-      loadPrices();
-      fetchPhishingAccounts();
+      updateUserWallet(lastAccount);
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, lastAccount]);
 
   if (!user) {
     return null;
