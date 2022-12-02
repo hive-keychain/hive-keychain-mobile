@@ -376,8 +376,14 @@ const WallettHistory = ({
 
   const handlePressedStyleFilterOperations = (filterOperationType: string) => {
     return filter.selectedTransactionTypes[filterOperationType]
-      ? styles.filterSelectorItemPressed
-      : styles.filterSelectorItem;
+      ? [styles.filterButton, styles.filterButtonPressed]
+      : styles.filterButton;
+  };
+
+  const handlePressedStyleFilterButtonText = (filterOperationType: string) => {
+    return filter.selectedTransactionTypes[filterOperationType]
+      ? styles.filterButtonTextPressed
+      : styles.filterButtonText;
   };
 
   const handlePressedStyleInOut = (inOutSelected: boolean) => {
@@ -394,7 +400,7 @@ const WallettHistory = ({
                 {translate('wallet.filter.filters_title')}
               </Text>
               <TouchableOpacity
-                style={styles.circularContainer}
+                style={styles.filterIconContainer}
                 onPress={() => toggleFilter()}>
                 {isFilterOpened ? (
                   <Icon name={Icons.EXPAND_LESS} marginRight={false} />
@@ -432,7 +438,10 @@ const WallettHistory = ({
                           aria-label={`filter-selector-${filterOperationType}`}
                           key={filterOperationType}
                           onPress={() => toggleFilterType(filterOperationType)}>
-                          <Text>
+                          <Text
+                            style={handlePressedStyleFilterButtonText(
+                              filterOperationType,
+                            )}>
                             {translate(`wallet.filter.${filterOperationType}`)}
                           </Text>
                         </TouchableOpacity>
@@ -567,7 +576,6 @@ const styles = StyleSheet.create({
   justifyAlignedCenteredFixedHeight: {
     justifyContent: 'center',
     alignItems: 'center',
-    // height: 200,
   },
   filtersContainer: {
     flexDirection: 'column',
@@ -576,6 +584,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 8,
   },
   filterTogglerInnerContainer: {
     flexDirection: 'row',
@@ -584,12 +593,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  circularContainer: {
-    borderWidth: 1,
+  filterIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
-    borderRadius: 100,
     margin: 4,
     height: 22,
     width: 22,
@@ -638,7 +645,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     alignItems: 'flex-start',
   },
-  filterSelectorItem: {
+  filterButton: {
     width: '45%',
     margin: 4,
     borderWidth: 1,
@@ -646,16 +653,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 30,
+    borderColor: '#68A0B4',
   },
-  filterSelectorItemPressed: {
-    width: '45%',
-    margin: 4,
-    borderWidth: 1,
-    borderRadius: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 30,
-    backgroundColor: '#b1aeae',
+  filterButtonText: {
+    color: 'black',
+  },
+  filterButtonPressed: {
+    borderWidth: 0,
+    borderColor: '#68A0B4',
+  },
+  filterButtonTextPressed: {
+    color: 'white',
   },
   pressedStyle: {
     borderColor: 'black',
