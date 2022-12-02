@@ -106,10 +106,10 @@ const WallettHistory = ({
   };
 
   const toggleFilterType = (transactionName: string) => {
-    const newFilter = {
-      ...filter?.selectedTransactionTypes,
-      [transactionName]: !filter?.selectedTransactionTypes![transactionName],
-    };
+    const newFilter = {...filter.selectedTransactionTypes};
+    newFilter[transactionName] = !filter.selectedTransactionTypes[
+      transactionName
+    ];
     updateFilter({
       ...filter,
       selectedTransactionTypes: newFilter,
@@ -141,8 +141,6 @@ const WallettHistory = ({
   };
 
   const updateFilter = (filter: WalletHistoryFilter) => {
-    //TODO testing to change to walletFilter(initially as any)
-    console.log('updateFilter: ', {filter}); //TODO to remove
     setFilter(filter);
   };
 
@@ -204,7 +202,6 @@ const WallettHistory = ({
   };
 
   useEffect(() => {
-    console.log({filter}); //TODO to remove
     setPreviousTransactionLength(0);
     if (filterReady) {
       filterTransactions();
@@ -421,7 +418,6 @@ const WallettHistory = ({
               </TouchableOpacity>
             </View>
           </View>
-          {/* //TODO check if this solves the issue(commented for now) */}
           {isFilterOpened && (
             <View style={styles.filtersContainer}>
               <View style={styles.searchPanel}>
