@@ -77,7 +77,7 @@ const MoreTokenInfo = ({
         break;
       case 'delegate_token':
         availableBalance =
-          parseFloat(token.balance) - parseFloat(token.delegationsIn);
+          parseFloat(token.stake) - parseFloat(token.delegationsOut);
         modalParams.name = 'DelegateToken';
         modalParams.modalContent = (
           <DelegateToken

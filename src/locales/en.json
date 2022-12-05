@@ -115,6 +115,8 @@
       "token_delegation": {
         "title": "Delegate",
         "delegating_token": "Delegating {{currency}}",
+        "cancel_delegation": "Cancelling Delegation {{currency}}",
+        "title_confirm_cancel_delegation": "Please confirm you want to cancel a {{amount}} {{currency}} Token Delegation",
         "in": "Delegation in",
         "out": "Delegation out",
         "info_requirements": "Some tokens require stake to delegate",
@@ -280,6 +282,7 @@
     "token_stake_success": "Your stake of {{currency}} was successful!",
     "token_unstake_success": "Your unstake of {{currency}} was successful!",
     "token_delegate_sucess": "Your delegation of {{currency}} was successful!",
+    "token_cancel_delegation_sucess": "Your delegation of {{currency}} was successfully cancelled!",
     "token_undelegate_sucess": "Your undelegation of {{currency}} was successful!"
   },
   "navigation": {

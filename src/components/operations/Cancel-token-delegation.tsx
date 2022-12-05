@@ -1,18 +1,15 @@
 import {loadAccount} from 'actions/index';
 import Delegate from 'assets/wallet/icon_delegate_dark.svg';
-import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import OperationInput from 'components/form/OperationInput';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {Keyboard, StyleSheet, Text} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
-import {delegateToken} from 'utils/hive';
+import {cancelDelegateToken} from 'utils/hive';
 import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {getCurrencyProperties} from 'utils/hiveReact';
-import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 import Balance from './Balance';
@@ -21,50 +18,35 @@ import Operation from './Operation';
 type Props = PropsFromRedux & {
   currency: string;
   tokenLogo: JSX.Element;
-  balance: string;
-  sendTo?: string;
-  delegateAmount?: string;
-  update?: boolean;
+  from?: string;
+  amount?: string;
 };
 
-const DelegateToken = ({
+const CancelDelegationToken = ({
   currency,
   user,
-  balance,
   loadAccount,
-  properties,
   tokenLogo,
-  sendTo,
-  delegateAmount,
-  update,
+  from,
+  amount,
 }: Props) => {
-  const [to, setTo] = useState(sendTo || '');
-  const [amount, setAmount] = useState(delegateAmount || '');
   const [loading, setLoading] = useState(false);
 
-  console.log({update}); //TODO to remove
-
-  const onDelegateToken = async () => {
+  const onCancelDelegateToken = async () => {
     setLoading(true);
     Keyboard.dismiss();
-    console.log('values on delegateToken as:', {
-      to,
-      currency,
-      amount,
-      userName: user.name,
-    });
     try {
-      const delegate = await delegateToken(user.keys.active, user.name!, {
-        to: sanitizeUsername(to),
-        symbol: currency,
-        quantity: sanitizeAmount(amount),
-      });
-      console.log({delegate}); //TODO to remove
-      const {id} = delegate;
+      const cancelDelegation = await cancelDelegateToken(
+        user.keys.active,
+        user.name!,
+        {from: from, symbol: currency, quantity: amount},
+      );
+      console.log({cancelDelegation}); //TODO to remove
+      const {id} = cancelDelegation;
       const {confirmed} = await tryConfirmTransaction(id);
       Toast.show(
         confirmed
-          ? translate('toast.token_delegate_sucess')
+          ? translate('toast.token_cancel_delegation_sucess')
           : translate('toast.transfer_token_unconfirmed'),
         Toast.LONG,
       );
@@ -83,48 +65,34 @@ const DelegateToken = ({
   return (
     <Operation
       logo={<Delegate />}
-      title={translate('wallet.operations.token_delegation.delegating_token', {
+      title={translate('wallet.operations.token_delegation.cancel_delegation', {
         currency,
       })}>
       <>
         <Text>
-          {translate('wallet.operations.token_delegation.info_requirements')}
+          {translate(
+            'wallet.operations.token_delegation.title_confirm_cancel_delegation',
+            {amount: amount, currency: currency},
+          )}
         </Text>
         <Separator />
         <Balance
           currency={currency}
           account={user.account}
           isHiveEngine
-          // globalProperties={properties.globals}
-          setMax={(value: string) => {
-            setAmount(value);
-          }}
           tokenLogo={tokenLogo}
-          tokenBalance={balance}
+          tokenBalance={amount}
         />
 
         <Separator />
-        <OperationInput
-          placeholder={translate('common.username').toUpperCase()}
-          leftIcon={<AccountLogoDark />}
-          autoCapitalize="none"
-          value={to}
-          onChangeText={setTo}
-        />
-        <Separator />
-        <OperationInput
-          placeholder={'0.000'}
-          keyboardType="decimal-pad"
-          rightIcon={<Text style={styles.currency}>{currency}</Text>}
-          textAlign="right"
-          value={amount}
-          onChangeText={setAmount}
-        />
+
+        <Text>@{from}</Text>
 
         <Separator height={40} />
+
         <ActiveOperationButton
-          title={translate(update ? 'common.confirm' : 'common.delegate')}
-          onPress={onDelegateToken}
+          title={translate('common.confirm')}
+          onPress={onCancelDelegateToken}
           style={styles.button}
           isLoading={loading}
         />
@@ -142,7 +110,6 @@ const getDimensionedStyles = (color: string) =>
 const connector = connect(
   (state: RootState) => {
     return {
-      properties: state.properties,
       user: state.activeAccount,
     };
   },
@@ -150,4 +117,4 @@ const connector = connect(
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(DelegateToken);
+export default connector(CancelDelegationToken);
