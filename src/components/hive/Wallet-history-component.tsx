@@ -74,6 +74,12 @@ const WallettHistory = ({
 
   const [bottomLoader, setBottomLoader] = useState(true);
 
+  const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
+
+  const toggleFilter = () => {
+    setIsFilterPanelOpened(!isFilterOpened);
+  };
+
   useEffect(() => {
     if (activeAccount.name) {
       init();
@@ -179,6 +185,8 @@ const WallettHistory = ({
         clearWalletFilters={clearWalletFilters}
         setBottomLoader={setBottomLoader}
         loading={loading}
+        isFilterOpened={isFilterOpened}
+        toggleFilter={toggleFilter}
       />
 
       {!loading && displayedTransactions.length > 0 && (
@@ -190,7 +198,11 @@ const WallettHistory = ({
             onEndReachedThreshold={0.5}
             renderItem={(transaction) => renderListItem(transaction.item)}
             keyExtractor={(transaction) => transaction.key}
-            style={styles.transactionsList}
+            style={
+              isFilterOpened
+                ? [styles.transactionsList, styles.transactionListFilterOpened]
+                : styles.transactionsList
+            }
             onScroll={handleScroll}
             onEndReached={() => {
               if (
@@ -288,6 +300,9 @@ const styles = StyleSheet.create({
   flex: {flex: 1},
   transactionsList: {
     marginBottom: 33,
+  },
+  transactionListFilterOpened: {
+    maxHeight: 230,
   },
   centeredContainer: {
     justifyContent: 'center',

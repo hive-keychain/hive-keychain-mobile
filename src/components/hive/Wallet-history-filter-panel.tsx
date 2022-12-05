@@ -59,6 +59,8 @@ interface WalletHistoryFilterPanelProps {
   clearWalletFilters: () => ActionPayload<WalletHistoryFilter>;
   setBottomLoader: React.Dispatch<React.SetStateAction<boolean>>;
   loading: boolean;
+  isFilterOpened: boolean;
+  toggleFilter: () => void;
 }
 
 const WalletHistoryFilterPanel = forwardRef(
@@ -67,7 +69,7 @@ const WalletHistoryFilterPanel = forwardRef(
       props.walletFilters,
     );
     const [filterReady, setFilterReady] = useState<boolean>(false);
-    const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
+    // const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
 
     useEffect(() => {
       initFilters();
@@ -87,9 +89,9 @@ const WalletHistoryFilterPanel = forwardRef(
       },
     }));
 
-    const toggleFilter = () => {
-      setIsFilterPanelOpened(!isFilterOpened);
-    };
+    // const toggleFilter = () => {
+    //   setIsFilterPanelOpened(!isFilterOpened);
+    // };
 
     const toggleFilterType = (transactionName: string) => {
       const newFilter = {...filter.selectedTransactionTypes};
@@ -314,8 +316,8 @@ const WalletHistoryFilterPanel = forwardRef(
             </Text>
             <TouchableOpacity
               style={styles.filterIconContainer}
-              onPress={() => toggleFilter()}>
-              {isFilterOpened ? (
+              onPress={() => props.toggleFilter()}>
+              {props.isFilterOpened ? (
                 <Icon name={Icons.EXPAND_LESS} marginRight={false} />
               ) : (
                 <Icon name={Icons.EXPAND_MORE} marginRight={false} />
@@ -323,7 +325,7 @@ const WalletHistoryFilterPanel = forwardRef(
             </TouchableOpacity>
           </View>
         </View>
-        {isFilterOpened && (
+        {props.isFilterOpened && (
           <View style={styles.filtersContainer}>
             <View style={styles.searchPanel}>
               <TextInput
