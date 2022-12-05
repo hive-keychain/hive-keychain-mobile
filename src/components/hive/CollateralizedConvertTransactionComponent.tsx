@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {CollateralizedConvert} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
@@ -42,6 +43,9 @@ const CollateralizedConvertTransactionComponent = ({
     ...useWindowDimensions(),
     color,
   });
+
+  const formattedAmount = withCommas(amount);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -58,7 +62,7 @@ const CollateralizedConvertTransactionComponent = ({
             {translate(
               'wallet.operations.convert.start_collateralized_convert',
               {
-                amount,
+                formattedAmount,
               },
             )}
           </Text>

@@ -10,6 +10,7 @@ import {
 import {Icons} from 'src/enums/icons.enums';
 import {FillRecurrentTransfer as FillRecurrentTransferInterface} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
@@ -61,6 +62,9 @@ const FillRecurrentTransfer = ({
     ...useWindowDimensions(),
     color,
   });
+
+  const formattedAmount = withCommas(amount);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -86,11 +90,11 @@ const FillRecurrentTransfer = ({
             {direction === '+'
               ? translate(
                   'wallet.operations.transfer.fill_recurrent_transfer_in',
-                  {amount, other, remainingExecutions},
+                  {formattedAmount, other, remainingExecutions},
                 )
               : translate(
                   'wallet.operations.transfer.fill_recurrent_transfer_out',
-                  {amount, other, remainingExecutions},
+                  {formattedAmount, other, remainingExecutions},
                 )}
           </Text>
         </View>

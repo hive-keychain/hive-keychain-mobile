@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {RecurrentTransfer as RecurrentTransferInterface} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
@@ -53,6 +54,9 @@ const RecurrentTransfer = ({
     ...useWindowDimensions(),
     color,
   });
+
+  const formattedAmount = withCommas(amount);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -70,7 +74,7 @@ const RecurrentTransfer = ({
               ? translate(
                   'wallet.operations.transfer.start_recurrent_transfer_out',
                   {
-                    amount,
+                    formattedAmount,
                     other,
                     recurrence,
                     executions,
@@ -80,7 +84,7 @@ const RecurrentTransfer = ({
                   'wallet.operations.transfer.info_recurrent_transfer_in',
                   {
                     other,
-                    amount,
+                    formattedAmount,
                     recurrence,
                     executions,
                   },

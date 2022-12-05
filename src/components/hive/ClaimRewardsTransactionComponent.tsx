@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {ClaimReward} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
@@ -47,6 +48,7 @@ const ClaimRewardTransactionComponent = ({
     ...useWindowDimensions(),
     color,
   });
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -62,19 +64,19 @@ const ClaimRewardTransactionComponent = ({
           {hbd && !isZeroAmount(hbd) && (
             <Text style={styles.username}>
               {translate('wallet.claim.info_claim_rewards', {
-                amount: hbd,
+                amount: withCommas(hbd),
               })}
             </Text>
           )}
           {hp && !isZeroAmount(hp) && (
             <Text style={styles.username}>
               {translate('wallet.claim.info_claim_rewards', {
-                amount: hp,
+                amount: withCommas(hp),
               })}
               {hive && !isZeroAmount(hive) && (
                 <Text style={styles.username}>
                   {translate('wallet.claim.info_claim_rewards', {
-                    amount: hive,
+                    amount: withCommas(hive),
                   })}
                 </Text>
               )}

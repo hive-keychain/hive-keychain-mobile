@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {ReceivedInterests} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import {withCommas} from 'utils/format';
 import Icon from './Icon';
 
 type Props = {
@@ -41,6 +42,7 @@ const ReceivedInterestTransactionComponent = ({
     ...useWindowDimensions(),
     color,
   });
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -54,7 +56,7 @@ const ReceivedInterestTransactionComponent = ({
           <Text style={styles.username}>Received Interest</Text>
         </View>
 
-        <Text style={styles.amount}>{interest}</Text>
+        <Text style={styles.amount}>{withCommas(interest)}</Text>
       </View>
       {toggle && <Text>Successfully received interest.</Text>}
     </TouchableOpacity>

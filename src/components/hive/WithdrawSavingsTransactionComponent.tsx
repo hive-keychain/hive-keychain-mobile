@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {StartWithdrawSavings} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
@@ -42,6 +43,9 @@ const WithdrawSavingsTransactionComponent = ({
     ...useWindowDimensions(),
     color,
   });
+
+  const formattedAmount = withCommas(amount);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -56,7 +60,7 @@ const WithdrawSavingsTransactionComponent = ({
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
             {translate('wallet.operations.savings.start_withdraw_savings', {
-              amount,
+              formattedAmount,
             })}
           </Text>
         </View>

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {Convert} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
@@ -42,6 +43,9 @@ const ConvertTransactionComponent = ({
     ...useWindowDimensions(),
     color,
   });
+
+  const formattedAmount = withCommas(amount);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -56,7 +60,7 @@ const ConvertTransactionComponent = ({
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
             {translate('wallet.operations.convert.start_convert', {
-              amount,
+              formattedAmount,
             })}
           </Text>
         </View>

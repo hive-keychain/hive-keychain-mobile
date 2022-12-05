@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {PowerDown} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
@@ -43,6 +44,9 @@ const PowerDownTransactionComponent = ({
     ...useWindowDimensions(),
     color,
   });
+
+  const formattedAmount = withCommas(amount);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -59,7 +63,7 @@ const PowerDownTransactionComponent = ({
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
             {translate('wallet.operations.powerdown.info_power_down', {
-              amount,
+              formattedAmount,
             })}
           </Text>
         </View>

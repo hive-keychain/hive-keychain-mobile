@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {Delegation} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
@@ -43,6 +44,9 @@ const DelegationTransactionComponent = ({
     ...useWindowDimensions(),
     color,
   });
+
+  const formattedAmount = withCommas(amount);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -58,7 +62,7 @@ const DelegationTransactionComponent = ({
           <Text style={styles.username}>
             {translate('wallet.operations.delegation.info_delegation_in', {
               delegator,
-              amount,
+              formattedAmount,
             })}
           </Text>
         </View>

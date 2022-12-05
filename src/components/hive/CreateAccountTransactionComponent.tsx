@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {CreateAccount} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
@@ -42,6 +43,9 @@ const CreateAccountTransactionComponent = ({
     ...useWindowDimensions(),
     color,
   });
+
+  const formattedFee = withCommas(fee);
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -56,7 +60,7 @@ const CreateAccountTransactionComponent = ({
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
             {translate('wallet.claim.info_account_create', {
-              fee,
+              formattedFee,
               new_account_name,
             })}
           </Text>

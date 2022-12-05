@@ -42,6 +42,7 @@ const CreateClaimedAccountTransactionComponent = ({
     ...useWindowDimensions(),
     color,
   });
+
   return (
     <TouchableOpacity
       style={styles.container}
