@@ -60,7 +60,7 @@ const ConvertTransactionComponent = ({
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
             {translate('wallet.operations.convert.start_convert', {
-              formattedAmount,
+              amount: formattedAmount,
             })}
           </Text>
         </View>

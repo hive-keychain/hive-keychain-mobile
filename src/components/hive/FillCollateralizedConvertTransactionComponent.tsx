@@ -61,7 +61,7 @@ const FillCollateralizedConvertTransactionComponent = ({
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
             {translate('wallet.operations.convert.fill_convert_request', {
-              formattedAmountOut,
+              amount_out: formattedAmountOut,
             })}
           </Text>
           <Text style={styles.amount}>{formattedAmountIn}</Text>

@@ -62,7 +62,7 @@ const CollateralizedConvertTransactionComponent = ({
             {translate(
               'wallet.operations.convert.start_collateralized_convert',
               {
-                formattedAmount,
+                amount: formattedAmount,
               },
             )}
           </Text>
