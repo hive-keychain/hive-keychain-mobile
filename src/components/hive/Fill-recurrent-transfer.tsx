@@ -90,11 +90,11 @@ const FillRecurrentTransfer = ({
             {direction === '+'
               ? translate(
                   'wallet.operations.transfer.fill_recurrent_transfer_in',
-                  {formattedAmount, other, remainingExecutions},
+                  {amount: formattedAmount, other, remainingExecutions},
                 )
               : translate(
                   'wallet.operations.transfer.fill_recurrent_transfer_out',
-                  {formattedAmount, other, remainingExecutions},
+                  {amount: formattedAmount, other, remainingExecutions},
                 )}
           </Text>
         </View>

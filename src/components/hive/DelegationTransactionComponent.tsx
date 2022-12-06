@@ -62,7 +62,7 @@ const DelegationTransactionComponent = ({
           <Text style={styles.username}>
             {translate('wallet.operations.delegation.info_delegation_in', {
               delegator,
-              formattedAmount,
+              amount: formattedAmount,
             })}
           </Text>
         </View>

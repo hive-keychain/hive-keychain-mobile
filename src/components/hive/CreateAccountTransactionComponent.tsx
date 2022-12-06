@@ -60,7 +60,7 @@ const CreateAccountTransactionComponent = ({
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
             {translate('wallet.claim.info_account_create', {
-              formattedFee,
+              fee: formattedFee,
               new_account_name,
             })}
           </Text>

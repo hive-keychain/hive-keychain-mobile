@@ -63,7 +63,7 @@ const PowerDownTransactionComponent = ({
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
             {translate('wallet.operations.powerdown.info_power_down', {
-              formattedAmount,
+              amount: formattedAmount,
             })}
           </Text>
         </View>

@@ -74,7 +74,7 @@ const RecurrentTransfer = ({
               ? translate(
                   'wallet.operations.transfer.start_recurrent_transfer_out',
                   {
-                    formattedAmount,
+                    amount: formattedAmount,
                     other,
                     recurrence,
                     executions,
@@ -84,7 +84,7 @@ const RecurrentTransfer = ({
                   'wallet.operations.transfer.info_recurrent_transfer_in',
                   {
                     other,
-                    formattedAmount,
+                    amount: formattedAmount,
                     recurrence,
                     executions,
                   },
