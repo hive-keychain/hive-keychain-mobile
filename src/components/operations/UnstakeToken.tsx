@@ -1,5 +1,5 @@
-import {loadAccount} from 'actions/index';
-import {Token} from 'actions/interfaces';
+import {loadAccount, loadUserTokens} from 'actions/index';
+import {KeyTypes, Token} from 'actions/interfaces';
 import Delegate from 'assets/wallet/icon_delegate_dark.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
@@ -10,11 +10,11 @@ import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {unstakeToken} from 'utils/hive';
-import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
+import BlockchainTransactionUtils from 'utils/tokens.utils';
 import Balance from './Balance';
 import Operation from './Operation';
 
@@ -33,41 +33,82 @@ const UnstakeToken = ({
   properties,
   tokenLogo,
   tokenInfo,
+  loadUserTokens,
 }: Props) => {
   //TODO remove comments when finished.
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const onStakeToken = async () => {
+  const onUnstakeToken = async () => {
+    if (!user.keys.active) {
+      return Toast.show(
+        translate('common.missing_key', {key: KeyTypes.active}),
+      );
+    }
+
+    if (parseFloat(amount) <= 0) {
+      return Toast.show(translate('common.need_positive_amount'), Toast.LONG);
+    }
+
     setLoading(true);
     Keyboard.dismiss();
-    try {
-      const unstake = await unstakeToken(user.keys.active, user.name!, {
+
+    const tokenOperationResult: any = await unstakeToken(
+      user.keys.active,
+      user.name!,
+      {
         symbol: currency,
         quantity: sanitizeAmount(amount),
-      });
-      console.log({unstake}); //TODO to remove
-      const {id} = unstake;
-      const {confirmed} = await tryConfirmTransaction(id);
+      },
+    );
+    console.log({tokenOperationResult}); //TODO to remove comments.
+    if (tokenOperationResult && tokenOperationResult.tx_id) {
+      let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
+        tokenOperationResult.tx_id,
+      );
+      console.log({confirmationResult}); //TODO to remove
+      if (confirmationResult && confirmationResult.confirmed) {
+        if (confirmationResult.error) {
+          //confirmation error
+          console.log('Error on confirmation: ', confirmationResult.error);
+          Toast.show(
+            translate('toast.hive_engine_error', {
+              error: confirmationResult.error,
+            }),
+            Toast.LONG,
+          );
+        } else {
+          //confirmation success
+          console.log('Confirmation Success: ', {confirmationResult});
+          Toast.show(
+            translate('toast.token_stake_success', {currency}),
+            Toast.LONG,
+          );
+        }
+      } else {
+        //timeout error.
+        console.log('Timeout error !!');
+        Toast.show(translate('toast.token_timeout'), Toast.LONG);
+      }
+    } else {
+      //token operation failed. //TODO remove comments when last cleanUp.
+      console.log('Token operation failed!!!');
       Toast.show(
-        confirmed
-          ? translate('toast.token_unstake_success')
-          : translate('toast.transfer_token_unconfirmed'),
+        translate('toast.tokens_operation_failed', {tokenOperation: 'unstake'}),
         Toast.LONG,
       );
-      loadAccount(user.account.name, true);
-      goBack();
-    } catch (e) {
-      Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
-    } finally {
-      setLoading(false);
     }
+
+    setLoading(false);
+    loadAccount(user.account.name, true);
+    loadUserTokens(user.name!);
+    goBack();
   };
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color);
   return (
     <Operation
-      logo={<Delegate />} //TODO change logo
+      logo={<Delegate />}
       title={translate('wallet.operations.token_unstake.unstaking_token', {
         currency,
       })}>
@@ -103,7 +144,7 @@ const UnstakeToken = ({
         <Separator height={40} />
         <ActiveOperationButton
           title={translate('common.unstake')}
-          onPress={onStakeToken}
+          onPress={onUnstakeToken}
           style={styles.button}
           isLoading={loading}
         />
@@ -125,7 +166,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {loadAccount},
+  {loadAccount, loadUserTokens},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

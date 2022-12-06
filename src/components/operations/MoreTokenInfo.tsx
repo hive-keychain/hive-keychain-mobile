@@ -2,6 +2,7 @@ import {loadTokenHistory} from 'actions/index';
 import {Token, TokenBalance} from 'actions/interfaces';
 import AddIcon from 'assets/wallet/icon_add_circle_outline.svg';
 import ListBlackIcon from 'assets/wallet/icon_list_black.svg';
+import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
@@ -62,7 +63,7 @@ const MoreTokenInfo = ({
             tokenLogo={tokenLogo}
             balance={availableBalance.toString()}
           />
-        ); //TODO finish the component
+        );
         break;
       case 'unstake_token':
         modalParams.name = 'UnstakeToken';
@@ -186,43 +187,47 @@ const MoreTokenInfo = ({
         <Separator height={20} />
         <View style={styles.buttonsContainer}>
           {tokenInfo.stakingEnabled && (
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={() => handleClickTokenOperation('stake_token')}>
-              <Text>{translate('wallet.operations.token_stake.title')}</Text>
-            </TouchableOpacity>
+            // <TouchableOpacity
+            //   style={styles.buttonContainer}
+            //   onPress={() => handleClickTokenOperation('stake_token')}>
+            //   <Text>{translate('wallet.operations.token_stake.title')}</Text>
+            // </TouchableOpacity>
+            <ActiveOperationButton
+              title={translate('wallet.operations.token_stake.title')}
+              onPress={() => handleClickTokenOperation('stake_token')}
+              style={styles.button}
+              isLoading={false}
+            />
           )}
           {tokenInfo.stakingEnabled && (
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={() => handleClickTokenOperation('unstake_token')}>
-              <Text>{translate('wallet.operations.token_unstake.title')}</Text>
-            </TouchableOpacity>
+            // <TouchableOpacity
+            //   style={styles.buttonContainer}
+            //   onPress={() => handleClickTokenOperation('unstake_token')}>
+            //   <Text>{translate('wallet.operations.token_unstake.title')}</Text>
+            // </TouchableOpacity>
+            <ActiveOperationButton
+              title={translate('wallet.operations.token_unstake.title')}
+              onPress={() => handleClickTokenOperation('unstake_token')}
+              style={styles.button}
+              isLoading={false}
+            />
           )}
           {tokenInfo.delegationEnabled && (
-            <TouchableOpacity
-              style={styles.buttonContainer}
-              onPress={() => handleClickTokenOperation('delegate_token')}>
-              <Text>
-                {translate('wallet.operations.token_delegation.title')}
-              </Text>
-            </TouchableOpacity>
+            // <TouchableOpacity
+            //   style={styles.buttonContainer}
+            //   onPress={() => handleClickTokenOperation('delegate_token')}>
+            //   <Text>
+            //     {translate('wallet.operations.token_delegation.title')}
+            //   </Text>
+            // </TouchableOpacity>
+            <ActiveOperationButton
+              title={translate('wallet.operations.token_delegation.title')}
+              onPress={() => handleClickTokenOperation('delegate_token')}
+              style={styles.button}
+              isLoading={false}
+            />
           )}
         </View>
-        {/* <FlatList
-          data={history}
-          keyExtractor={(item) => item._id}
-          renderItem={({item}) => {
-            return (
-              <Transfer
-                transaction={item}
-                user={user}
-                token
-                locale={getMainLocale()}
-              />
-            );
-          }}
-        /> */}
       </>
     </Operation>
   );
@@ -258,6 +263,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
+  button: {backgroundColor: '#68A0B4', width: 100},
 });
 
 export default connector(MoreTokenInfo);

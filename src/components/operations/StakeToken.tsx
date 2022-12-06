@@ -89,7 +89,7 @@ const StakeToken = ({
         Toast.show(translate('toast.token_timeout'), Toast.LONG);
       }
     } else {
-      //token operation failed.
+      //token operation failed. //TODO remove comments when last cleanUp.
       console.log('Token operation failed!!!');
       Toast.show(
         translate('toast.tokens_operation_failed', {tokenOperation: 'stake'}),
@@ -106,7 +106,7 @@ const StakeToken = ({
   const styles = getDimensionedStyles(color);
   return (
     <Operation
-      logo={<Delegate />} //TODO change logo
+      logo={<Delegate />}
       title={translate('wallet.operations.token_stake.staking_token', {
         currency,
       })}>
