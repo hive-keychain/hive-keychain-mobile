@@ -32,7 +32,6 @@ const Tokens = ({
 
   useEffect(() => {
     if (user.name) {
-      console.log('Loading user tokens!'); //TODO to remove
       loadUserTokens(user.name);
     }
   }, [loadUserTokens, user.name]);
