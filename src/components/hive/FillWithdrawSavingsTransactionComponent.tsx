@@ -60,7 +60,7 @@ const FillWithdrawSavingsTransactionComponent = ({
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
             {translate('wallet.operations.savings.fill_withdraw_savings', {
-              formattedAmount,
+              amount: formattedAmount,
             })}
           </Text>
         </View>
