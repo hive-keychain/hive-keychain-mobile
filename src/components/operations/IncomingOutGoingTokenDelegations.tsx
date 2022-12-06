@@ -25,7 +25,7 @@ type Props = PropsFromRedux & {
   tokenLogo: JSX.Element;
   tokenInfo: Token;
 };
-//TODO remove unused redux,actions
+
 const IncomingOutGoingTokenDelegations = ({
   delegationType,
   total,
@@ -55,12 +55,6 @@ const IncomingOutGoingTokenDelegations = ({
 
     setDelegationList(delegations);
     setLoading(false);
-    // setTotal(
-    //   FormatUtils.withCommas(
-    //     balance,
-    //     FormatUtils.hasMoreThanXDecimal(parseFloat(balance), 3) ? 8 : 3,
-    //   ),
-    // );
   };
 
   const renderListItem = (tokenDelegation: TokenDelegation) => {
@@ -79,7 +73,7 @@ const IncomingOutGoingTokenDelegations = ({
 
   return (
     <Operation
-      logo={<Delegate />} //TODO change logo
+      logo={<Delegate />}
       title={translate(`wallet.operations.token_delegation.${delegationType}`)}>
       <>
         {delegationType === 'outgoing' && (
@@ -99,14 +93,11 @@ const IncomingOutGoingTokenDelegations = ({
           account={user.account}
           globalProperties={properties.globals}
           isHiveEngine
-          //   setMax={(value: string) => {
-          //     setAmount(value);
-          //   }}
           tokenLogo={tokenLogo}
           tokenBalance={total}
         />
         {loading && <Loader animating={true} />}
-        {/* USING a flatList  */}
+
         {!loading && delegationList.length > 0 && (
           <FlatList
             data={delegationList}
@@ -118,7 +109,6 @@ const IncomingOutGoingTokenDelegations = ({
             }
           />
         )}
-        {/* END flatList */}
       </>
     </Operation>
   );

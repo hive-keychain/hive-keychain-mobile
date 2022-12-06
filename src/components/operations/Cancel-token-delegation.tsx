@@ -1,4 +1,5 @@
-import {loadAccount} from 'actions/index';
+import {loadAccount, loadUserTokens} from 'actions/index';
+import {KeyTypes} from 'actions/interfaces';
 import Delegate from 'assets/wallet/icon_delegate_dark.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import Separator from 'components/ui/Separator';
@@ -7,11 +8,12 @@ import {Keyboard, StyleSheet, Text} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
+import AccountUtils from 'utils/account.utils';
 import {cancelDelegateToken} from 'utils/hive';
-import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
+import BlockchainTransactionUtils from 'utils/tokens.utils';
 import Balance from './Balance';
 import Operation from './Operation';
 
@@ -29,34 +31,65 @@ const CancelDelegationToken = ({
   tokenLogo,
   from,
   amount,
+  loadUserTokens,
 }: Props) => {
   const [loading, setLoading] = useState(false);
 
   const onCancelDelegateToken = async () => {
+    if (!(await AccountUtils.doesAccountExist(from))) {
+      return Toast.show(translate('toast.no_such_account'), Toast.LONG);
+    }
+
+    if (!user.keys.active) {
+      return Toast.show(
+        translate('common.missing_key', {key: KeyTypes.active}),
+      );
+    }
+
     setLoading(true);
     Keyboard.dismiss();
-    try {
-      const cancelDelegation = await cancelDelegateToken(
-        user.keys.active,
-        user.name!,
-        {from: from, symbol: currency, quantity: amount},
+
+    const tokenOperationResult: any = await cancelDelegateToken(
+      user.keys.active,
+      user.name!,
+      {from: from, symbol: currency, quantity: amount},
+    );
+
+    if (tokenOperationResult && tokenOperationResult.tx_id) {
+      let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
+        tokenOperationResult.tx_id,
       );
-      console.log({cancelDelegation}); //TODO to remove
-      const {id} = cancelDelegation;
-      const {confirmed} = await tryConfirmTransaction(id);
+
+      if (confirmationResult && confirmationResult.confirmed) {
+        if (confirmationResult.error) {
+          Toast.show(
+            translate('toast.hive_engine_error', {
+              error: confirmationResult.error,
+            }),
+            Toast.LONG,
+          );
+        } else {
+          Toast.show(
+            translate('toast.token_cancel_delegation_sucess', {currency}),
+            Toast.LONG,
+          );
+        }
+      } else {
+        Toast.show(translate('toast.token_timeout'), Toast.LONG);
+      }
+    } else {
       Toast.show(
-        confirmed
-          ? translate('toast.token_cancel_delegation_sucess')
-          : translate('toast.transfer_token_unconfirmed'),
+        translate('toast.tokens_operation_failed', {
+          tokenOperation: 'cancel delegation',
+        }),
         Toast.LONG,
       );
-      loadAccount(user.account.name, true);
-      goBack();
-    } catch (e) {
-      Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
-    } finally {
-      setLoading(false);
     }
+
+    setLoading(false);
+    loadAccount(user.account.name, true);
+    loadUserTokens(user.name!);
+    goBack();
   };
 
   const {color} = getCurrencyProperties(currency);
@@ -113,7 +146,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {loadAccount},
+  {loadAccount, loadUserTokens},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

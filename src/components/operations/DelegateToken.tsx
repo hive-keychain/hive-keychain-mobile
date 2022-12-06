@@ -1,4 +1,5 @@
-import {loadAccount} from 'actions/index';
+import {loadAccount, loadUserTokens} from 'actions/index';
+import {KeyTypes} from 'actions/interfaces';
 import Delegate from 'assets/wallet/icon_delegate_dark.svg';
 import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
@@ -9,12 +10,13 @@ import {Keyboard, StyleSheet, Text} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
+import AccountUtils from 'utils/account.utils';
 import {delegateToken} from 'utils/hive';
-import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
+import BlockchainTransactionUtils from 'utils/tokens.utils';
 import Balance from './Balance';
 import Operation from './Operation';
 
@@ -37,44 +39,75 @@ const DelegateToken = ({
   sendTo,
   delegateAmount,
   update,
+  loadUserTokens,
 }: Props) => {
   const [to, setTo] = useState(sendTo || '');
   const [amount, setAmount] = useState(delegateAmount || '');
   const [loading, setLoading] = useState(false);
 
-  console.log({update}); //TODO to remove
-
   const onDelegateToken = async () => {
+    if (!(await AccountUtils.doesAccountExist(to))) {
+      return Toast.show(translate('toast.no_such_account'), Toast.LONG);
+    }
+
+    if (!user.keys.active) {
+      return Toast.show(
+        translate('common.missing_key', {key: KeyTypes.active}),
+      );
+    }
+
+    if (parseFloat(amount) <= 0) {
+      return Toast.show(translate('common.need_positive_amount'), Toast.LONG);
+    }
+
     setLoading(true);
     Keyboard.dismiss();
-    console.log('values on delegateToken as:', {
-      to,
-      currency,
-      amount,
-      userName: user.name,
-    });
-    try {
-      const delegate = await delegateToken(user.keys.active, user.name!, {
+
+    const tokenOperationResult: any = await delegateToken(
+      user.keys.active,
+      user.name!,
+      {
         to: sanitizeUsername(to),
         symbol: currency,
         quantity: sanitizeAmount(amount),
-      });
-      console.log({delegate}); //TODO to remove
-      const {id} = delegate;
-      const {confirmed} = await tryConfirmTransaction(id);
+      },
+    );
+
+    if (tokenOperationResult && tokenOperationResult.tx_id) {
+      let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
+        tokenOperationResult.tx_id,
+      );
+
+      if (confirmationResult && confirmationResult.confirmed) {
+        if (confirmationResult.error) {
+          Toast.show(
+            translate('toast.hive_engine_error', {
+              error: confirmationResult.error,
+            }),
+            Toast.LONG,
+          );
+        } else {
+          Toast.show(
+            translate('toast.token_delegate_sucess', {currency}),
+            Toast.LONG,
+          );
+        }
+      } else {
+        Toast.show(translate('toast.token_timeout'), Toast.LONG);
+      }
+    } else {
       Toast.show(
-        confirmed
-          ? translate('toast.token_delegate_sucess')
-          : translate('toast.transfer_token_unconfirmed'),
+        translate('toast.tokens_operation_failed', {
+          tokenOperation: 'delegate',
+        }),
         Toast.LONG,
       );
-      loadAccount(user.account.name, true);
-      goBack();
-    } catch (e) {
-      Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
-    } finally {
-      setLoading(false);
     }
+
+    setLoading(false);
+    loadAccount(user.account.name, true);
+    loadUserTokens(user.name!);
+    goBack();
   };
 
   const {color} = getCurrencyProperties(currency);
@@ -87,15 +120,11 @@ const DelegateToken = ({
         currency,
       })}>
       <>
-        <Text>
-          {translate('wallet.operations.token_delegation.info_requirements')}
-        </Text>
         <Separator />
         <Balance
           currency={currency}
           account={user.account}
           isHiveEngine
-          // globalProperties={properties.globals}
           setMax={(value: string) => {
             setAmount(value);
           }}
@@ -146,7 +175,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {loadAccount},
+  {loadAccount, loadUserTokens},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

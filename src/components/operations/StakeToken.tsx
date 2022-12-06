@@ -59,16 +59,14 @@ const StakeToken = ({
         quantity: sanitizeAmount(amount),
       },
     );
-    console.log({tokenOperationResult}); //TODO to remove
+
     if (tokenOperationResult && tokenOperationResult.tx_id) {
       let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
         tokenOperationResult.tx_id,
       );
-      console.log({confirmationResult}); //TODO to remove
+
       if (confirmationResult && confirmationResult.confirmed) {
         if (confirmationResult.error) {
-          //confirmation error
-          console.log('Error on confirmation: ', confirmationResult.error);
           Toast.show(
             translate('toast.hive_engine_error', {
               error: confirmationResult.error,
@@ -76,21 +74,15 @@ const StakeToken = ({
             Toast.LONG,
           );
         } else {
-          //confirmation success
-          console.log('Confirmation Success: ', {confirmationResult});
           Toast.show(
             translate('toast.token_stake_success', {currency}),
             Toast.LONG,
           );
         }
       } else {
-        //timeout error.
-        console.log('Timeout error !!');
         Toast.show(translate('toast.token_timeout'), Toast.LONG);
       }
     } else {
-      //token operation failed. //TODO remove comments when last cleanUp.
-      console.log('Token operation failed!!!');
       Toast.show(
         translate('toast.tokens_operation_failed', {tokenOperation: 'stake'}),
         Toast.LONG,

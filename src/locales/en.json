@@ -112,7 +112,8 @@
       "token_unstake": {
         "title": "Unstake",
         "unstaking_token": "Unstaking {{currency}}",
-        "cooldown_disclaimer": "Unstake this token will take: {{unstakingCooldown}} day"
+        "cooldown_disclaimer": "Unstake this token will take: {{unstakingCooldown}} day",
+        "token_pending_unstake": "Pending unstake"
       },
       "token_delegation": {
         "title": "Delegate",
@@ -124,7 +125,8 @@
         "info_requirements": "Some tokens require stake to delegate",
         "incoming": "Incoming Delegations",
         "outgoing": "Outgoing Delegations",
-        "undelegation_cooldown_disclaimer": "After removing a {{symbol}} delegation, the staked tokens will be available after a {{undelegationCooldown}} days cooldown."
+        "undelegation_cooldown_disclaimer": "After removing a {{symbol}} delegation, the staked tokens will be available after a {{undelegationCooldown}} days cooldown.",
+        "token_pending_undelegation": "Pending undelegation"
       }
     },
     "has": {
@@ -288,7 +290,8 @@
     "token_undelegate_sucess": "Your undelegation of {{currency}} was successful!",
     "hive_engine_error": "Hive Engine error: {{error}}",
     "token_timeout": "We could not verify this transaction on Hive Engine. This might mean that Hive Engine is behind blocks, wait for the operation to appear in your history, or contact the Hive Engine team on Discord.",
-    "tokens_operation_failed": "Failed to {{tokenOperation}} a token"
+    "tokens_operation_failed": "Failed to {{tokenOperation}} a token",
+    "no_such_account": "This username is not registered on the blockchain!"
   },
   "navigation": {
     "log_out": "LOG OUT",

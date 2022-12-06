@@ -51,17 +51,14 @@ const MoreTokenInfo = ({
       name: '',
       modalContent: undefined,
     };
-    let availableBalance = 0;
     switch (operation) {
       case 'stake_token':
-        availableBalance =
-          parseFloat(token.balance) - parseFloat(token.delegationsIn);
         modalParams.name = 'StakeToken';
         modalParams.modalContent = (
           <StakeToken
             currency={token.symbol}
             tokenLogo={tokenLogo}
-            balance={availableBalance.toString()}
+            balance={token.balance}
           />
         );
         break;
@@ -74,20 +71,19 @@ const MoreTokenInfo = ({
             balance={token.stake}
             tokenInfo={tokenInfo}
           />
-        ); //TODO finish component
+        );
         break;
       case 'delegate_token':
-        availableBalance =
-          parseFloat(token.stake) - parseFloat(token.delegationsOut);
         modalParams.name = 'DelegateToken';
         modalParams.modalContent = (
           <DelegateToken
             currency={token.symbol}
             tokenLogo={tokenLogo}
-            balance={availableBalance.toString()}
+            balance={(
+              parseFloat(token.stake) - parseFloat(token.pendingUnstake)
+            ).toString()}
           />
-        ); //TODO finish component
-        //TODO add 'undelegate_token' + component + icon
+        );
         break;
       default:
         break;
@@ -144,9 +140,14 @@ const MoreTokenInfo = ({
               {token.stake}
             </Text>
           )}
-          {/* //TODO add pendingStake if any. */}
-          {/* token.stakingEnabled &&
-              parseFloat(tokenBalance.pendingUnstake) > 0 && ( */}
+          {tokenInfo.stakingEnabled && parseFloat(token.pendingUnstake) > 0 && (
+            <Text>
+              {translate(
+                'wallet.operations.token_unstake.token_pending_unstake',
+              )}{' '}
+              {token.pendingUnstake}
+            </Text>
+          )}
           {tokenInfo.delegationEnabled && (
             <View style={styles.delegationInOutContainer}>
               <Text>
@@ -154,7 +155,6 @@ const MoreTokenInfo = ({
                 {' : '}
                 {token.delegationsIn}
               </Text>
-              {/* //TODO here incomming/outgoing token delegation list component (one component plz) */}
               {parseFloat(token.delegationsIn) > 0 && (
                 <TouchableOpacity
                   onPress={() =>
@@ -172,7 +172,6 @@ const MoreTokenInfo = ({
                 {' : '}
                 {token.delegationsOut}
               </Text>
-              {/* //TODO here incomming/outgoing token delegation list component (one component plz) */}
               {parseFloat(token.delegationsOut) > 0 && (
                 <TouchableOpacity
                   onPress={() =>
@@ -183,15 +182,19 @@ const MoreTokenInfo = ({
               )}
             </View>
           )}
+          {tokenInfo.delegationEnabled &&
+            parseFloat(token.pendingUndelegations) > 0 && (
+              <Text>
+                {translate(
+                  'wallet.operations.token_delegation.token_pending_undelegation',
+                )}{' '}
+                {token.pendingUndelegations}
+              </Text>
+            )}
         </View>
         <Separator height={20} />
         <View style={styles.buttonsContainer}>
           {tokenInfo.stakingEnabled && (
-            // <TouchableOpacity
-            //   style={styles.buttonContainer}
-            //   onPress={() => handleClickTokenOperation('stake_token')}>
-            //   <Text>{translate('wallet.operations.token_stake.title')}</Text>
-            // </TouchableOpacity>
             <ActiveOperationButton
               title={translate('wallet.operations.token_stake.title')}
               onPress={() => handleClickTokenOperation('stake_token')}
@@ -200,11 +203,6 @@ const MoreTokenInfo = ({
             />
           )}
           {tokenInfo.stakingEnabled && (
-            // <TouchableOpacity
-            //   style={styles.buttonContainer}
-            //   onPress={() => handleClickTokenOperation('unstake_token')}>
-            //   <Text>{translate('wallet.operations.token_unstake.title')}</Text>
-            // </TouchableOpacity>
             <ActiveOperationButton
               title={translate('wallet.operations.token_unstake.title')}
               onPress={() => handleClickTokenOperation('unstake_token')}
@@ -213,13 +211,6 @@ const MoreTokenInfo = ({
             />
           )}
           {tokenInfo.delegationEnabled && (
-            // <TouchableOpacity
-            //   style={styles.buttonContainer}
-            //   onPress={() => handleClickTokenOperation('delegate_token')}>
-            //   <Text>
-            //     {translate('wallet.operations.token_delegation.title')}
-            //   </Text>
-            // </TouchableOpacity>
             <ActiveOperationButton
               title={translate('wallet.operations.token_delegation.title')}
               onPress={() => handleClickTokenOperation('delegate_token')}
