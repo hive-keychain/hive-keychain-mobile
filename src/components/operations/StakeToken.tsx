@@ -1,4 +1,5 @@
-import {loadAccount} from 'actions/index';
+import {loadAccount, loadUserTokens} from 'actions/index';
+import {KeyTypes} from 'actions/interfaces';
 import Delegate from 'assets/wallet/icon_delegate_dark.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
@@ -9,11 +10,11 @@ import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {stakeToken} from 'utils/hive';
-import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
+import BlockchainTransactionUtils from 'utils/tokens.utils';
 import Balance from './Balance';
 import Operation from './Operation';
 
@@ -30,47 +31,76 @@ const StakeToken = ({
   loadAccount,
   properties,
   tokenLogo,
+  loadUserTokens,
 }: Props) => {
-  //TODO remove comments when finished.
-  //   const [to, setTo] = useState('');
-  const [amount, setAmount] = useState('');
+  const [amount, setAmount] = useState('0');
   const [loading, setLoading] = useState(false);
 
   const onStakeToken = async () => {
+    if (!user.keys.active) {
+      return Toast.show(
+        translate('common.missing_key', {key: KeyTypes.active}),
+      );
+    }
+
+    if (parseFloat(amount) <= 0) {
+      return Toast.show(translate('common.need_positive_amount'), Toast.LONG);
+    }
+
     setLoading(true);
     Keyboard.dismiss();
-    try {
-      //TODO implement stake token using the same pattern
-      //   const delegation = await delegate(user.keys.active, {
-      //     vesting_shares: sanitizeAmount(
-      //       fromHP(sanitizeAmount(amount), properties.globals).toString(),
-      //       'VESTS',
-      //       6,
-      //     ),
-      //     delegatee: sanitizeUsername(to),
-      //     delegator: user.account.name,
-      //   });
-      const stake = await stakeToken(user.keys.active, user.name!, {
+
+    const tokenOperationResult: any = await stakeToken(
+      user.keys.active,
+      user.name!,
+      {
         to: sanitizeUsername(user.name!),
         symbol: currency,
         quantity: sanitizeAmount(amount),
-      });
-      console.log({stake}); //TODO to remove
-      const {id} = stake;
-      const {confirmed} = await tryConfirmTransaction(id);
+      },
+    );
+    console.log({tokenOperationResult}); //TODO to remove
+    if (tokenOperationResult && tokenOperationResult.tx_id) {
+      let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
+        tokenOperationResult.tx_id,
+      );
+      console.log({confirmationResult}); //TODO to remove
+      if (confirmationResult && confirmationResult.confirmed) {
+        if (confirmationResult.error) {
+          //confirmation error
+          console.log('Error on confirmation: ', confirmationResult.error);
+          Toast.show(
+            translate('toast.hive_engine_error', {
+              error: confirmationResult.error,
+            }),
+            Toast.LONG,
+          );
+        } else {
+          //confirmation success
+          console.log('Confirmation Success: ', {confirmationResult});
+          Toast.show(
+            translate('toast.token_stake_success', {currency}),
+            Toast.LONG,
+          );
+        }
+      } else {
+        //timeout error.
+        console.log('Timeout error !!');
+        Toast.show(translate('toast.token_timeout'), Toast.LONG);
+      }
+    } else {
+      //token operation failed.
+      console.log('Token operation failed!!!');
       Toast.show(
-        confirmed
-          ? translate('toast.token_stake_success')
-          : translate('toast.transfer_token_unconfirmed'),
+        translate('toast.tokens_operation_failed', {tokenOperation: 'stake'}),
         Toast.LONG,
       );
-      loadAccount(user.account.name, true);
-      goBack();
-    } catch (e) {
-      Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
-    } finally {
-      setLoading(false);
     }
+
+    setLoading(false);
+    loadAccount(user.account.name, true);
+    loadUserTokens(user.name!);
+    goBack();
   };
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color);
@@ -94,14 +124,6 @@ const StakeToken = ({
           tokenBalance={balance}
         />
 
-        {/* <Separator /> */}
-        {/* <OperationInput
-          placeholder={translate('common.username').toUpperCase()}
-          leftIcon={<AccountLogoDark />}
-          autoCapitalize="none"
-          value={to}
-          onChangeText={setTo}
-        /> */}
         <Separator />
         <OperationInput
           placeholder={'0.000'}
@@ -137,7 +159,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {loadAccount},
+  {loadAccount, loadUserTokens},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

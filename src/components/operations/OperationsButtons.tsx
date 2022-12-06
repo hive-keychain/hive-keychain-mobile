@@ -194,10 +194,8 @@ export const ShowHistory = (props: HistoryProps) => {
   );
 };
 
-//TODO delete comments when done
-///tokens more information + ops
 export const ShowMoreTokenInfo = (props: MoreInfoTokenProps) => {
-  return (
+  return props.tokenInfo.stakingEnabled || props.tokenInfo.delegationEnabled ? (
     <RoundButton
       onPress={() => {
         navigate('ModalScreen', {
@@ -206,12 +204,11 @@ export const ShowMoreTokenInfo = (props: MoreInfoTokenProps) => {
         });
       }}
       size={36}
-      backgroundColor="#77B9D1"
+      backgroundColor="#c0ccd0"
       content={<AddIconWhite />}
     />
-  );
+  ) : null;
 };
-///////
 
 const getStyleSheet = (size: number, backgroundColor: string) =>
   StyleSheet.create({

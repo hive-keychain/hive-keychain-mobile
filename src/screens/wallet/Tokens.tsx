@@ -32,11 +32,13 @@ const Tokens = ({
 
   useEffect(() => {
     if (user.name) {
+      console.log('Loading user tokens!'); //TODO to remove
       loadUserTokens(user.name);
     }
   }, [loadUserTokens, user.name]);
 
   const [toggled, setToggled] = useState<number>(null);
+
   const renderContent = () => {
     if (userTokens.loading || !tokensMarket.length) {
       return (

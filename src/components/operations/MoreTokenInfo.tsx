@@ -121,11 +121,7 @@ const MoreTokenInfo = ({
   };
 
   return (
-    <Operation
-      logo={<AddIcon />}
-      title={translate('wallet.operations.more_token_info', {
-        currency: token.symbol,
-      })}>
+    <Operation logo={<AddIcon />} title={token.symbol}>
       <>
         <Separator height={40} />
         <Balance
@@ -136,7 +132,7 @@ const MoreTokenInfo = ({
         />
         <Separator height={10} />
         <TouchableOpacity onPress={handleClickIssuer}>
-          <Text>Click to visit @{tokenInfo.issuer}</Text>
+          <Text>@{tokenInfo.issuer}</Text>
         </TouchableOpacity>
         <Separator height={10} />
         <View>
