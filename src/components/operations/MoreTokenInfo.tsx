@@ -9,7 +9,7 @@ import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 import Balance from './Balance';
 import DelegateToken from './DelegateToken';
 import IncomingOutGoingTokenDelegations from './IncomingOutGoingTokenDelegations';
@@ -23,6 +23,7 @@ export type MoreInfoTokenProps = {
   token: TokenBalance;
   tokenLogo: JSX.Element;
   tokenInfo: Token;
+  gobackAction?: () => void;
 };
 type Props = PropsFromRedux & MoreInfoTokenProps;
 const MoreTokenInfo = ({
@@ -31,6 +32,7 @@ const MoreTokenInfo = ({
   tokenLogo,
   tokenInfo,
   history,
+  gobackAction,
   loadTokenHistory,
 }: Props) => {
   const handleClickIssuer = () => {
@@ -59,6 +61,22 @@ const MoreTokenInfo = ({
             currency={token.symbol}
             tokenLogo={tokenLogo}
             balance={token.balance}
+            gobackAction={() => {
+              navigate('ModalScreen', {
+                name: 'EngineTokenInfo',
+                modalContent: (
+                  <MoreTokenInfo
+                    user={user}
+                    token={token}
+                    tokenLogo={tokenLogo}
+                    history={history}
+                    loadTokenHistory={loadTokenHistory}
+                    tokenInfo={tokenInfo}
+                    gobackAction={() => goBack()}
+                  />
+                ),
+              });
+            }}
           />
         );
         break;
@@ -117,8 +135,23 @@ const MoreTokenInfo = ({
     });
   };
 
+  const renderIconComponent = () => {
+    return gobackAction ? (
+      <View style={styles.rowContainer}>
+        <TouchableOpacity
+          onPress={() => gobackAction()}
+          style={styles.goBackButton}>
+          <Text>back</Text>
+        </TouchableOpacity>
+        <AddIcon />
+      </View>
+    ) : (
+      <AddIcon />
+    );
+  };
+
   return (
-    <Operation logo={<AddIcon />} title={token.symbol}>
+    <Operation logo={renderIconComponent()} title={token.symbol}>
       <>
         <Separator height={40} />
         <Balance
@@ -129,13 +162,13 @@ const MoreTokenInfo = ({
         />
         <Separator height={10} />
         <TouchableOpacity onPress={handleClickIssuer}>
-          <Text>@{tokenInfo.issuer}</Text>
+          <Text>By @{tokenInfo.issuer}</Text>
         </TouchableOpacity>
         <Separator height={10} />
         <View>
           {tokenInfo.stakingEnabled && (
             <Text>
-              {translate('wallet.operations.token_stake.title')}
+              {translate('wallet.operations.token_stake.titled')}
               {' : '}
               {token.stake}
             </Text>
@@ -148,38 +181,34 @@ const MoreTokenInfo = ({
               {token.pendingUnstake}
             </Text>
           )}
-          {tokenInfo.delegationEnabled && (
+          {tokenInfo.delegationEnabled && parseFloat(token.delegationsIn) > 0 && (
             <View style={styles.delegationInOutContainer}>
               <Text>
                 {translate('wallet.operations.token_delegation.in')}
                 {' : '}
                 {token.delegationsIn}
               </Text>
-              {parseFloat(token.delegationsIn) > 0 && (
-                <TouchableOpacity
-                  onPress={() =>
-                    handleIncomingOutGoingTokenDelegations('Incoming')
-                  }>
-                  <ListBlackIcon />
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity
+                onPress={() =>
+                  handleIncomingOutGoingTokenDelegations('Incoming')
+                }>
+                <ListBlackIcon />
+              </TouchableOpacity>
             </View>
           )}
-          {tokenInfo.delegationEnabled && (
+          {tokenInfo.delegationEnabled && parseFloat(token.delegationsOut) > 0 && (
             <View style={styles.delegationInOutContainer}>
               <Text>
                 {translate('wallet.operations.token_delegation.out')}
                 {' : '}
                 {token.delegationsOut}
               </Text>
-              {parseFloat(token.delegationsOut) > 0 && (
-                <TouchableOpacity
-                  onPress={() =>
-                    handleIncomingOutGoingTokenDelegations('Outgoing')
-                  }>
-                  <ListBlackIcon />
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity
+                onPress={() =>
+                  handleIncomingOutGoingTokenDelegations('Outgoing')
+                }>
+                <ListBlackIcon />
+              </TouchableOpacity>
             </View>
           )}
           {tokenInfo.delegationEnabled &&
@@ -255,6 +284,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   button: {backgroundColor: '#68A0B4', width: 100},
+  rowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  goBackButton: {
+    margin: 7,
+  },
 });
 
 export default connector(MoreTokenInfo);

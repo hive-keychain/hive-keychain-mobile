@@ -5,7 +5,7 @@ import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {Keyboard, StyleSheet, Text} from 'react-native';
+import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
@@ -22,6 +22,7 @@ type Props = PropsFromRedux & {
   currency: string;
   tokenLogo: JSX.Element;
   balance: string;
+  gobackAction?: () => void;
 };
 
 const StakeToken = ({
@@ -32,6 +33,7 @@ const StakeToken = ({
   properties,
   tokenLogo,
   loadUserTokens,
+  gobackAction,
 }: Props) => {
   const [amount, setAmount] = useState('0');
   const [loading, setLoading] = useState(false);
@@ -94,11 +96,26 @@ const StakeToken = ({
     loadUserTokens(user.name!);
     goBack();
   };
+
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color);
+
+  const renderIconComponent = () => {
+    return gobackAction ? (
+      <View style={styles.rowContainer}>
+        <TouchableOpacity onPress={gobackAction} style={styles.goBackButton}>
+          <Text>back</Text>
+        </TouchableOpacity>
+        <Delegate />
+      </View>
+    ) : (
+      <Delegate />
+    );
+  };
+
   return (
     <Operation
-      logo={<Delegate />}
+      logo={renderIconComponent()}
       title={translate('wallet.operations.token_stake.staking_token', {
         currency,
       })}>
@@ -142,6 +159,14 @@ const getDimensionedStyles = (color: string) =>
   StyleSheet.create({
     button: {backgroundColor: '#68A0B4'},
     currency: {fontWeight: 'bold', fontSize: 18, color},
+    rowContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    goBackButton: {
+      margin: 7,
+    },
   });
 
 const connector = connect(

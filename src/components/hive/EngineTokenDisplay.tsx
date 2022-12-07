@@ -9,6 +9,7 @@ import React, {useState} from 'react';
 import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
 import Image from 'react-native-fast-image';
 import {Width} from 'utils/common.types';
+import {goBack} from 'utils/navigation';
 import TokenDisplay from './TokenDisplay';
 
 type Props = {
@@ -34,8 +35,6 @@ const EngineTokenDisplay = ({
     return null;
   }
   const metadata = JSON.parse(tokenInfo.metadata);
-  //TODO remove comments.
-  // console.log('aa', {token, tokenMarket, tokenInfo});
   const logo = hasError ? (
     <Image
       style={styles.icon}
@@ -85,6 +84,7 @@ const EngineTokenDisplay = ({
           tokenInfo={tokenInfo}
           token={token}
           tokenLogo={logo}
+          gobackAction={() => goBack()}
         />,
         <ShowHistory
           key="history_token"

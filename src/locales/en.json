@@ -107,13 +107,14 @@
       "more_token_info": "{{currency}} information",
       "token_stake": {
         "title": "Stake",
+        "titled": "Staked",
         "staking_token": "Staking {{currency}}"
       },
       "token_unstake": {
         "title": "Unstake",
         "unstaking_token": "Unstaking {{currency}}",
-        "cooldown_disclaimer": "Unstake this token will take: {{unstakingCooldown}} day",
-        "token_pending_unstake": "Pending unstake"
+        "cooldown_disclaimer": "Unstaking this token will take: {{unstakingCooldown}} day",
+        "token_pending_unstake": "Pending unstaking"
       },
       "token_delegation": {
         "title": "Delegate",
@@ -125,7 +126,7 @@
         "info_requirements": "Some tokens require stake to delegate",
         "incoming": "Incoming Delegations",
         "outgoing": "Outgoing Delegations",
-        "undelegation_cooldown_disclaimer": "After removing a {{symbol}} delegation, the staked tokens will be available after a {{undelegationCooldown}} days cooldown.",
+        "undelegation_cooldown_disclaimer": "When removing a {{symbol}} delegation, the staked tokens will be available after a {{undelegationCooldown}} days cooldown.",
         "token_pending_undelegation": "Pending undelegation"
       }
     },
