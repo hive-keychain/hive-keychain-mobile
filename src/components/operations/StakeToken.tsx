@@ -8,6 +8,7 @@ import React, {useState} from 'react';
 import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
+import IconBack from 'src/assets/Icon_arrow_back_black.svg';
 import {RootState} from 'store';
 import {stakeToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
@@ -104,9 +105,8 @@ const StakeToken = ({
     return gobackAction ? (
       <View style={styles.rowContainer}>
         <TouchableOpacity onPress={gobackAction} style={styles.goBackButton}>
-          <Text>back</Text>
+          <IconBack />
         </TouchableOpacity>
-        <Delegate />
       </View>
     ) : (
       <Delegate />

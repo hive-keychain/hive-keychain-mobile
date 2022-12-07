@@ -6,9 +6,10 @@ import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {Keyboard, StyleSheet, Text} from 'react-native';
+import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
+import IconBack from 'src/assets/Icon_arrow_back_black.svg';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
 import {delegateToken} from 'utils/hive';
@@ -27,6 +28,7 @@ type Props = PropsFromRedux & {
   sendTo?: string;
   delegateAmount?: string;
   update?: boolean;
+  gobackAction?: () => void;
 };
 
 const DelegateToken = ({
@@ -40,6 +42,7 @@ const DelegateToken = ({
   delegateAmount,
   update,
   loadUserTokens,
+  gobackAction,
 }: Props) => {
   const [to, setTo] = useState(sendTo || '');
   const [amount, setAmount] = useState(delegateAmount || '');
@@ -113,9 +116,21 @@ const DelegateToken = ({
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color);
 
+  const renderIconComponent = () => {
+    return gobackAction ? (
+      <View style={styles.rowContainer}>
+        <TouchableOpacity onPress={gobackAction} style={styles.goBackButton}>
+          <IconBack />
+        </TouchableOpacity>
+      </View>
+    ) : (
+      <Delegate />
+    );
+  };
+
   return (
     <Operation
-      logo={<Delegate />}
+      logo={renderIconComponent()}
       title={translate('wallet.operations.token_delegation.delegating_token', {
         currency,
       })}>
@@ -166,6 +181,14 @@ const getDimensionedStyles = (color: string) =>
   StyleSheet.create({
     button: {backgroundColor: '#68A0B4'},
     currency: {fontWeight: 'bold', fontSize: 18, color},
+    rowContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    goBackButton: {
+      margin: 7,
+    },
   });
 
 const connector = connect(

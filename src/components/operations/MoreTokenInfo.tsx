@@ -7,6 +7,7 @@ import Separator from 'components/ui/Separator';
 import React from 'react';
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import IconBack from 'src/assets/Icon_arrow_back_black.svg';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
@@ -46,6 +47,23 @@ const MoreTokenInfo = ({
     }
   };
 
+  const navigateToModalScreen = () => {
+    navigate('ModalScreen', {
+      name: 'EngineTokenInfo',
+      modalContent: (
+        <MoreTokenInfo
+          user={user}
+          token={token}
+          tokenLogo={tokenLogo}
+          history={history}
+          loadTokenHistory={loadTokenHistory}
+          tokenInfo={tokenInfo}
+          gobackAction={() => goBack()}
+        />
+      ),
+    });
+  };
+
   const handleClickTokenOperation = (
     operation: 'stake_token' | 'unstake_token' | 'delegate_token',
   ) => {
@@ -61,22 +79,7 @@ const MoreTokenInfo = ({
             currency={token.symbol}
             tokenLogo={tokenLogo}
             balance={token.balance}
-            gobackAction={() => {
-              navigate('ModalScreen', {
-                name: 'EngineTokenInfo',
-                modalContent: (
-                  <MoreTokenInfo
-                    user={user}
-                    token={token}
-                    tokenLogo={tokenLogo}
-                    history={history}
-                    loadTokenHistory={loadTokenHistory}
-                    tokenInfo={tokenInfo}
-                    gobackAction={() => goBack()}
-                  />
-                ),
-              });
-            }}
+            gobackAction={navigateToModalScreen}
           />
         );
         break;
@@ -88,6 +91,7 @@ const MoreTokenInfo = ({
             tokenLogo={tokenLogo}
             balance={token.stake}
             tokenInfo={tokenInfo}
+            gobackAction={navigateToModalScreen}
           />
         );
         break;
@@ -100,6 +104,7 @@ const MoreTokenInfo = ({
             balance={(
               parseFloat(token.stake) - parseFloat(token.pendingUnstake)
             ).toString()}
+            gobackAction={navigateToModalScreen}
           />
         );
         break;
@@ -130,6 +135,7 @@ const MoreTokenInfo = ({
           token={token}
           tokenLogo={tokenLogo}
           tokenInfo={tokenInfo}
+          gobackAction={navigateToModalScreen}
         />
       ),
     });
@@ -141,9 +147,8 @@ const MoreTokenInfo = ({
         <TouchableOpacity
           onPress={() => gobackAction()}
           style={styles.goBackButton}>
-          <Text>back</Text>
+          <IconBack />
         </TouchableOpacity>
-        <AddIcon />
       </View>
     ) : (
       <AddIcon />

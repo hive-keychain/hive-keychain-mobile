@@ -1,4 +1,4 @@
-import {TokenBalance} from 'actions/interfaces';
+import {Token, TokenBalance} from 'actions/interfaces';
 import React, {useState} from 'react';
 import {
   StyleSheet,
@@ -10,15 +10,17 @@ import {
 import ClearIcon from 'src/assets/wallet/icon_delete_black.svg';
 import EditIcon from 'src/assets/wallet/icon_edit_black.svg';
 import {TokenDelegation} from 'utils/hiveEngine';
-import {navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 import CancelTokenDelegation from './Cancel-token-delegation';
 import DelegateToken from './DelegateToken';
+import MoreTokenInfo from './MoreTokenInfo';
 
 type Props = {
   tokenDelegation: TokenDelegation;
   delegationType: string;
   tokenLogo: JSX.Element;
   token: TokenBalance;
+  tokenInfo: Token;
 };
 
 const IncomingOutGoingTokenDelegationItem = ({
@@ -26,6 +28,7 @@ const IncomingOutGoingTokenDelegationItem = ({
   delegationType,
   tokenLogo,
   token,
+  tokenInfo,
 }: Props) => {
   const [isOutGoingDelegation, setIsOutGoingDelegation] = useState(
     delegationType === 'outgoing',
@@ -37,6 +40,20 @@ const IncomingOutGoingTokenDelegationItem = ({
     setAmount(value);
   };
 
+  const navigateToModalScreen = () => {
+    navigate('ModalScreen', {
+      name: 'EngineTokenInfo',
+      modalContent: (
+        <MoreTokenInfo
+          token={token}
+          tokenLogo={tokenLogo}
+          tokenInfo={tokenInfo}
+          gobackAction={() => goBack()}
+        />
+      ),
+    });
+  };
+
   const handleCancelTokenDelegation = () => {
     navigate('ModalScreen', {
       name: 'DelegateToken',
@@ -46,6 +63,7 @@ const IncomingOutGoingTokenDelegationItem = ({
           tokenLogo={tokenLogo}
           amount={tokenDelegation.quantity}
           from={tokenDelegation.to}
+          gobackAction={navigateToModalScreen}
         />
       ),
     });

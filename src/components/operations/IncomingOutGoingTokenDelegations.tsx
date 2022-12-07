@@ -4,8 +4,9 @@ import Delegate from 'assets/wallet/icon_delegate_dark.svg';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text} from 'react-native';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import IconBack from 'src/assets/Icon_arrow_back_black.svg';
 import {RootState} from 'store';
 import {
   getIncomingTokenDelegations,
@@ -24,6 +25,7 @@ type Props = PropsFromRedux & {
   token: TokenBalance;
   tokenLogo: JSX.Element;
   tokenInfo: Token;
+  gobackAction?: () => void;
 };
 
 const IncomingOutGoingTokenDelegations = ({
@@ -35,6 +37,7 @@ const IncomingOutGoingTokenDelegations = ({
   tokenInfo,
   loadAccount,
   properties,
+  gobackAction,
 }: Props) => {
   const [loading, setLoading] = useState(false);
   const [delegationList, setDelegationList] = useState<TokenDelegation[]>([]);
@@ -64,6 +67,7 @@ const IncomingOutGoingTokenDelegations = ({
         delegationType={delegationType}
         tokenLogo={tokenLogo}
         token={token}
+        tokenInfo={tokenInfo}
       />
     );
   };
@@ -71,9 +75,21 @@ const IncomingOutGoingTokenDelegations = ({
   const {color} = getCurrencyProperties(token.symbol);
   const styles = getDimensionedStyles(color);
 
+  const renderIconComponent = () => {
+    return gobackAction ? (
+      <View style={styles.rowContainer}>
+        <TouchableOpacity onPress={gobackAction} style={styles.goBackButton}>
+          <IconBack />
+        </TouchableOpacity>
+      </View>
+    ) : (
+      <Delegate />
+    );
+  };
+
   return (
     <Operation
-      logo={<Delegate />}
+      logo={renderIconComponent()}
       title={translate(`wallet.operations.token_delegation.${delegationType}`)}>
       <>
         {delegationType === 'outgoing' && (
@@ -117,6 +133,14 @@ const IncomingOutGoingTokenDelegations = ({
 const getDimensionedStyles = (color: string) =>
   StyleSheet.create({
     currency: {fontWeight: 'bold', fontSize: 18, color},
+    rowContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    goBackButton: {
+      margin: 7,
+    },
   });
 
 const connector = connect(
