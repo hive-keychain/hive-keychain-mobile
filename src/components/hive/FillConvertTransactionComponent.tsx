@@ -62,9 +62,11 @@ const FillConvertTransactionComponent = ({
           <Text style={styles.username}>
             {translate('wallet.operations.convert.fill_convert_request', {
               amount_out: formattedAmountOut,
+              currency_out: 'HBD',
+              amount_in: formattedAmountIn,
+              currency_in: 'HIVE',
             })}
           </Text>
-          <Text style={styles.amount}>{formattedAmountIn}</Text>
         </View>
       </View>
     </TouchableOpacity>

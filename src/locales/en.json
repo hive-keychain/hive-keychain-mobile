@@ -61,7 +61,7 @@
       "error_posting": "Please add your posting key to be able to claim rewards!",
       "info_claim_account": "Claimed account",
       "info_create_claimed_account": "Claimed account",
-      "info_claim_rewards": "{{amount}} claimed",
+      "info_claim_rewards": "{{amount}} {{currency}} claimed",
       "info_account_create": "Paid {{fee}} to create @{{new_account_name}}"
     },
     "operations": {
@@ -73,9 +73,10 @@
         "withdraw_button": "Withdraw",
         "deposit_button": "Deposit",
         "prompt": "Select a currency",
-        "fill_withdraw_savings": "Successfully withdrawn {{amount}} from savings",
-        "start_withdraw_savings": "Started a {{amount}} withdrawal from savings",
-        "info_deposit_savings": "Deposit of {{amount}} into savings"
+        "fill_withdraw_savings": "Successfully withdrawn {{amount}} {{currency}} from savings",
+        "start_withdraw_savings": "Started a {{amount}} {{currency}} withdrawal from savings",
+        "info_deposit_savings": "Deposit of {{amount}} {{currency}} into savings",
+        "info_received_interests": "Received {{amount}} {{currency}} of interests from savings"
       },
       "transfer": {
         "title": "Transfer funds",
@@ -105,26 +106,29 @@
       },
       "powerup": {
         "title": "Power up!",
-        "info_power_up": "Powered up {{amount}}"
+        "info_power_up": "Powered up {{amount}} {{currency}}"
       },
       "powerdown": {
         "title": "Power down",
-        "info_power_down": "Initiated a {{amount}} power down"
+        "info_power_down": "Initiated a {{amount}} {{currency}} power down",
+        "cancelled_power_down": "Cancelled power down"
       },
       "delegation": {
         "title": "Delegate Hive Power",
         "incoming": "Incoming Delegations",
         "outgoing": "Outgoing Delegations",
-        "info_delegation_in": "@{{delegator}} delegated {{amount}} HP"
+        "info_delegation_out": "Delegated {{amount}} {{currency}} to @{{delegatee}}",
+        "cancelled_delegation": "Cancelled delegation to {{delegatee}}",
+        "info_delegation_in": "@{{delegator}} delegated {{amount}} {{currency}}"
       },
       "convert": {
         "title": "Convert to {{to}}",
         "button": "Convert",
         "disclaimer_hive": "You deposit collateral (HIVE), then you are given HBD up front worth half of the collateral amount (minus a 5% fee). Your official final payment is in 3.5 days. At that point remaining collateral (HIVE) is returned.",
         "disclaimer_hbd": "Your HBD will take 3.5 days to get converted to approximately USD worth of HIVE tokens, based on its 3.5 days median price.",
-        "fill_convert_request": "Filled conversion: {{amount_out}} => ",
-        "start_convert": "Started a {{amount}} conversion",
-        "start_collateralized_convert": "Started a {{amount}} collateralized conversion"
+        "fill_convert_request": "Filled conversion: {{amount_out}} {{currency_out}} => {{amount_in}} {{currency_in}}",
+        "start_convert": "Started a {{amount}} HBD conversion",
+        "start_collateralized_convert": "Started a {{amount}} HIVE collateralized conversion"
       }
     },
     "has": {

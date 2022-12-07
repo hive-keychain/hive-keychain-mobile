@@ -62,9 +62,12 @@ const PowerDownTransactionComponent = ({
         </View>
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
-            {translate('wallet.operations.powerdown.info_power_down', {
-              amount: formattedAmount,
-            })}
+            {parseFloat(formattedAmount) === 0
+              ? translate('wallet.operations.powerdown.cancelled_power_down')
+              : translate('wallet.operations.powerdown.info_power_down', {
+                  amount: formattedAmount,
+                  currency: 'HP',
+                })}
           </Text>
         </View>
       </View>

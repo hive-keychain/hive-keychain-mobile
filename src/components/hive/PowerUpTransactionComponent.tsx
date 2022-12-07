@@ -64,6 +64,7 @@ const PowerUpTransactionComponent = ({
           <Text style={styles.username}>
             {translate('wallet.operations.powerup.info_power_up', {
               amount: formattedAmount,
+              currency: 'HP',
             })}
           </Text>
         </View>

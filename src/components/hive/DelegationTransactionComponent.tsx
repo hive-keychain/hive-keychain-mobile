@@ -31,7 +31,8 @@ const DelegationTransactionComponent = ({
   const [toggle, setToggle] = useState(false);
   const username = user.name;
   const {timestamp, amount, delegatee, delegator} = transaction as Delegation;
-  const color = '#3BB26E';
+  const direction = delegator === username ? '-' : '+';
+  const color = direction === '+' ? '#3BB26E' : '#B9122F';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -59,12 +60,30 @@ const DelegationTransactionComponent = ({
           <Text>{date}</Text>
         </View>
         <View style={styles.rowContainer}>
-          <Text style={styles.username}>
-            {translate('wallet.operations.delegation.info_delegation_in', {
-              delegator,
-              amount: formattedAmount,
-            })}
-          </Text>
+          {parseFloat(formattedAmount) === 0 ? (
+            <Text>
+              {translate('wallet.operations.delegation.cancelled_delegation', {
+                delegatee,
+              })}
+            </Text>
+          ) : direction === '+' ? (
+            <Text style={{color: color}}>
+              {translate('wallet.operations.delegation.info_delegation_in', {
+                delegator: delegator,
+                amount: formattedAmount,
+                currency: 'HP',
+                delegatee: delegatee,
+              })}
+            </Text>
+          ) : (
+            <Text style={{color: color}}>
+              {translate('wallet.operations.delegation.info_delegation_out', {
+                amount: formattedAmount,
+                currency: 'HP',
+                delegatee,
+              })}
+            </Text>
+          )}
         </View>
       </View>
     </TouchableOpacity>

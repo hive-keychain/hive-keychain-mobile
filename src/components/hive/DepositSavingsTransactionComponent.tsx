@@ -61,6 +61,7 @@ const DepositSavingsTransactionComponent = ({
           <Text style={styles.username}>
             {translate('wallet.operations.savings.info_deposit_savings', {
               amount: formattedAmount,
+              currency: 'HBD',
             })}
           </Text>
         </View>

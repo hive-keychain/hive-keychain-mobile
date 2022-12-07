@@ -61,6 +61,7 @@ const WithdrawSavingsTransactionComponent = ({
           <Text style={styles.username}>
             {translate('wallet.operations.savings.start_withdraw_savings', {
               amount: formattedAmount,
+              currency: 'HBD',
             })}
           </Text>
         </View>

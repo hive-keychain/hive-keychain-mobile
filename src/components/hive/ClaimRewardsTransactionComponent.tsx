@@ -65,6 +65,7 @@ const ClaimRewardTransactionComponent = ({
             <Text style={styles.username}>
               {translate('wallet.claim.info_claim_rewards', {
                 amount: withCommas(hbd),
+                currency: 'HBD',
               })}
             </Text>
           )}
@@ -72,11 +73,13 @@ const ClaimRewardTransactionComponent = ({
             <Text style={styles.username}>
               {translate('wallet.claim.info_claim_rewards', {
                 amount: withCommas(hp),
+                currency: 'HP',
               })}
               {hive && !isZeroAmount(hive) && (
                 <Text style={styles.username}>
                   {translate('wallet.claim.info_claim_rewards', {
                     amount: withCommas(hive),
+                    currency: 'HIVE',
                   })}
                 </Text>
               )}

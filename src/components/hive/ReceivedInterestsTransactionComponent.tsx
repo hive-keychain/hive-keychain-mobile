@@ -1,5 +1,5 @@
 import {ActiveAccount} from 'actions/interfaces';
-import React, {useState} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,6 +10,7 @@ import {
 import {ReceivedInterests} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
+import {translate} from 'utils/localize';
 import Icon from './Icon';
 
 type Props = {
@@ -26,7 +27,6 @@ const ReceivedInterestTransactionComponent = ({
   token = false,
   useIcon,
 }: Props) => {
-  const [toggle, setToggle] = useState(false);
   const username = user.name;
   const {timestamp, interest} = transaction;
   const color = '#3BB26E';
@@ -44,21 +44,33 @@ const ReceivedInterestTransactionComponent = ({
   });
 
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        setToggle(!toggle);
-      }}>
-      <View style={styles.main}>
+    <TouchableOpacity style={styles.container}>
+      {/* <View style={styles.main}>
         <View style={styles.left}>
           {useIcon && <Icon name={transaction.type} />}
           <Text>{date}</Text>
-          <Text style={styles.username}>Received Interest</Text>
         </View>
-
-        <Text style={styles.amount}>{withCommas(interest)}</Text>
+        <Text style={styles.amount}>
+          {translate('wallet.operations.savings.info_received_interests', {
+            amount: withCommas(interest),
+            currency: 'HBD',
+          })}
+        </Text>
+      </View> */}
+      <View style={styles.main}>
+        <View style={[styles.row, styles.alignedContent]}>
+          {useIcon && <Icon name={transaction.type} />}
+          <Text>{date}</Text>
+        </View>
+        <View style={styles.rowContainer}>
+          <Text style={styles.username}>
+            {translate('wallet.operations.savings.info_received_interests', {
+              amount: withCommas(interest),
+              currency: 'HBD',
+            })}
+          </Text>
+        </View>
       </View>
-      {toggle && <Text>Successfully received interest.</Text>}
     </TouchableOpacity>
   );
 };
@@ -72,12 +84,22 @@ const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
     },
     main: {
       display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: 'column',
     },
     left: {display: 'flex', flexDirection: 'row'},
-    username: {paddingLeft: 10},
+    username: {},
     amount: {color},
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    rowContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    alignedContent: {
+      alignItems: 'center',
+    },
   });
 
 export default ReceivedInterestTransactionComponent;

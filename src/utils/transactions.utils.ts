@@ -254,11 +254,19 @@ const getAccountTransactions = async (
     }
     return [transactions, start];
   } catch (e) {
-    return getAccountTransactions(
-      accountName,
-      (e as any).jse_info.stack[0].data.sequence - 1,
-      memoKey,
-    );
+    //TODO testing quentin suggestion to keep fecthing after error catched.
+    console.log({e, message: e.message, start}); //TODO to remove
+    if (e.message && e.message === 'Request Timeout') {
+      setTimeout(() => {
+        return getAccountTransactions(accountName, start, memoKey);
+      }, 20);
+    } else {
+      return getAccountTransactions(
+        accountName,
+        (e as any).jse_info.stack[0].data.sequence - 1,
+        memoKey,
+      );
+    }
   }
 };
 
