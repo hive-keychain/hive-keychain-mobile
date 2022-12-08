@@ -128,6 +128,7 @@ export const initAccountTransactions = (
   const transactions = await TransactionUtils.getAccountTransactions(
     accountName,
     null,
+    getState().properties.globals!,
     memoKey,
   );
   dispatch({
@@ -145,12 +146,15 @@ export const fetchAccountTransactions = (
   const transfers = await TransactionUtils.getAccountTransactions(
     accountName,
     start,
+    getState().properties.globals!,
     memoKey,
   );
-  dispatch({
-    type: ADD_TRANSACTIONS,
-    payload: transfers,
-  });
+  if (transfers) {
+    dispatch({
+      type: ADD_TRANSACTIONS,
+      payload: transfers,
+    });
+  }
 };
 
 const getAccountTransactions = async (

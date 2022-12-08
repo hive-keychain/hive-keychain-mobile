@@ -1,4 +1,4 @@
-import {utils as dHiveUtils} from '@hiveio/dhive';
+import {DynamicGlobalProperties, utils as dHiveUtils} from '@hiveio/dhive';
 import {decodeMemo} from 'components/bridge';
 import {
   ClaimAccount,
@@ -21,7 +21,6 @@ import {
   Transfer,
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
-import {RootState, store} from 'store';
 import {getSymbol, toHP} from './format';
 import {getClient} from './hive';
 import {translate} from './localize';
@@ -45,9 +44,9 @@ export const CONVERT_TYPE_TRANSACTIONS = [
 const getAccountTransactions = async (
   accountName: string,
   start: number | null,
+  globals: DynamicGlobalProperties,
   memoKey?: string,
 ): Promise<[Transaction[], number]> => {
-  const {globals} = (store.getState() as RootState).properties;
   try {
     const op = dHiveUtils.operationOrders;
     const operationsBitmask = dHiveUtils.makeBitMaskFilter([
@@ -254,16 +253,13 @@ const getAccountTransactions = async (
     }
     return [transactions, start];
   } catch (e) {
-    //TODO testing quentin suggestion to keep fecthing after error catched.
-    console.log({e, message: e.message, start}); //TODO to remove
     if (e.message && e.message === 'Request Timeout') {
-      setTimeout(() => {
-        return getAccountTransactions(accountName, start, memoKey);
-      }, 20);
+      return await getAccountTransactions(accountName, start, globals, memoKey);
     } else {
-      return getAccountTransactions(
+      return await getAccountTransactions(
         accountName,
         (e as any).jse_info.stack[0].data.sequence - 1,
+        globals,
         memoKey,
       );
     }

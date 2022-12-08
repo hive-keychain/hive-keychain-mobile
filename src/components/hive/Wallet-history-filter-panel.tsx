@@ -69,7 +69,6 @@ const WalletHistoryFilterPanel = forwardRef(
       props.walletFilters,
     );
     const [filterReady, setFilterReady] = useState<boolean>(false);
-    // const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
 
     useEffect(() => {
       initFilters();
@@ -88,10 +87,6 @@ const WalletHistoryFilterPanel = forwardRef(
         filterTransactions();
       },
     }));
-
-    // const toggleFilter = () => {
-    //   setIsFilterPanelOpened(!isFilterOpened);
-    // };
 
     const toggleFilterType = (transactionName: string) => {
       const newFilter = {...filter.selectedTransactionTypes};

@@ -14,6 +14,7 @@ export default (
 ) => {
   switch (type) {
     case CLEAR_USER_TRANSACTIONS:
+      return {loading: false, list: [], lastUsedStart: -1};
     case ACTIVE_ACCOUNT:
       return {loading: true, list: [], lastUsedStart: -1};
     case INIT_TRANSACTIONS:
