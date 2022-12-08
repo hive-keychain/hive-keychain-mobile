@@ -118,7 +118,7 @@
         "incoming": "Incoming Delegations",
         "outgoing": "Outgoing Delegations",
         "info_delegation_out": "Delegated {{amount}} {{currency}} to @{{delegatee}}",
-        "cancelled_delegation": "Cancelled delegation to {{delegatee}}",
+        "cancelled_delegation": "Cancelled delegation to @{{delegatee}}",
         "info_delegation_in": "@{{delegator}} delegated {{amount}} {{currency}}"
       },
       "convert": {
