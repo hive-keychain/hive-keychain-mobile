@@ -1,3 +1,6 @@
+import {ActiveAccount} from 'actions/interfaces';
+import moment from 'moment';
+import {WalletHistoryFilter} from 'src/types/wallet.history.types';
 import {
   ClaimReward,
   CollateralizedConvert,
@@ -10,9 +13,14 @@ import {
   PowerUp,
   ReceivedInterests,
   StartWithdrawSavings,
+  Transaction,
   Transfer,
   WithdrawSavings,
 } from '../interfaces/transaction.interface';
+import {
+  HAS_IN_OUT_TRANSACTIONS,
+  TRANSFER_TYPE_TRANSACTIONS,
+} from './transactions.utils';
 
 const filterTransfer = (
   transfer: Transfer,
@@ -82,6 +90,7 @@ export const filterConversion = (
     .toLowerCase()
     .includes(filterValue.toLowerCase());
 };
+
 export const filterFillConversion = (
   fillConversion: FillConvert | FillCollateralizedConvert,
   filterValue: string,
@@ -98,6 +107,120 @@ export const filterFillConversion = (
   );
 };
 
+const applyAllFilters = (
+  transactionsList: Transaction[],
+  filter: WalletHistoryFilter,
+  activeAccount: ActiveAccount,
+) => {
+  const selectedTransactionsTypes = Object.keys(
+    filter.selectedTransactionTypes,
+  ).filter(
+    (transactionName) => filter.selectedTransactionTypes[transactionName],
+  );
+  let filteredTransactions = transactionsList.filter(
+    (transaction: Transaction) => {
+      const isInOrOutSelected = filter.inSelected || filter.outSelected;
+      if (
+        selectedTransactionsTypes.includes(transaction.type) ||
+        selectedTransactionsTypes.length === 0
+      ) {
+        if (
+          HAS_IN_OUT_TRANSACTIONS.includes(transaction.type) &&
+          isInOrOutSelected
+        ) {
+          return (
+            (filter.inSelected &&
+              ((TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
+                (transaction as Transfer).to === activeAccount.name!) ||
+                (transaction.type === 'delegate_vesting_shares' &&
+                  (transaction as Delegation).delegatee ===
+                    activeAccount.name!))) ||
+            (filter.outSelected &&
+              ((TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
+                (transaction as Transfer).from === activeAccount.name!) ||
+                (transaction.type === 'delegate_vesting_shares' &&
+                  (transaction as Delegation).delegator ===
+                    activeAccount.name!)))
+          );
+        } else {
+          return true;
+        }
+      }
+    },
+  );
+
+  return filteredTransactions.filter((transaction) => {
+    return (
+      (TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
+        WalletHistoryUtils.filterTransfer(
+          transaction as Transfer,
+          filter.filterValue,
+          activeAccount.name!,
+        )) ||
+      (transaction.type === 'claim_reward_balance' &&
+        WalletHistoryUtils.filterClaimReward(
+          transaction as ClaimReward,
+          filter.filterValue,
+        )) ||
+      (transaction.type === 'delegate_vesting_shares' &&
+        WalletHistoryUtils.filterDelegation(
+          transaction as Delegation,
+          filter.filterValue,
+          activeAccount.name!,
+        )) ||
+      (transaction.subType === 'withdraw_vesting' &&
+        WalletHistoryUtils.filterPowerUpDown(
+          transaction as PowerDown,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'transfer_to_vesting' &&
+        WalletHistoryUtils.filterPowerUpDown(
+          transaction as PowerUp,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'transfer_from_savings' &&
+        WalletHistoryUtils.filterSavingsTransaction(
+          transaction as WithdrawSavings,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'transfer_to_savings' &&
+        WalletHistoryUtils.filterSavingsTransaction(
+          transaction as DepositSavings,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'interest' &&
+        WalletHistoryUtils.filterInterest(
+          transaction as ReceivedInterests,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'fill_collateralized_convert_request' &&
+        WalletHistoryUtils.filterFillConversion(
+          transaction as FillCollateralizedConvert,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'fill_convert_request' &&
+        WalletHistoryUtils.filterFillConversion(
+          transaction as FillConvert,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'collateralized_convert' &&
+        WalletHistoryUtils.filterConversion(
+          transaction as CollateralizedConvert,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'convert' &&
+        WalletHistoryUtils.filterConversion(
+          transaction as Convert,
+          filter.filterValue,
+        )) ||
+      (transaction.timestamp &&
+        moment(transaction.timestamp)
+          .format('L')
+          .includes(filter.filterValue.toLowerCase()))
+    );
+  });
+};
+
 export const WalletHistoryUtils = {
   filterTransfer,
   filterClaimReward,
@@ -107,4 +230,5 @@ export const WalletHistoryUtils = {
   filterInterest,
   filterFillConversion,
   filterConversion,
+  applyAllFilters,
 };
