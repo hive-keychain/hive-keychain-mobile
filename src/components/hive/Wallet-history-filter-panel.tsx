@@ -42,6 +42,122 @@ import {
 import {WalletHistoryUtils} from 'utils/walletHistoryUtils';
 import Icon from './Icon';
 
+//TODO important move maybe to a filters.utils
+const applyFilters = (
+  transactionsList: Transaction[],
+  filter: WalletHistoryFilter,
+  activeAccount: ActiveAccount,
+) => {
+  const selectedTransactionsTypes = Object.keys(
+    filter.selectedTransactionTypes,
+  ).filter(
+    (transactionName) => filter.selectedTransactionTypes[transactionName],
+  );
+  let filteredTransactions = transactionsList.filter(
+    (transaction: Transaction) => {
+      const isInOrOutSelected = filter.inSelected || filter.outSelected;
+      if (
+        selectedTransactionsTypes.includes(transaction.type) ||
+        selectedTransactionsTypes.length === 0
+      ) {
+        if (
+          HAS_IN_OUT_TRANSACTIONS.includes(transaction.type) &&
+          isInOrOutSelected
+        ) {
+          return (
+            (filter.inSelected &&
+              ((TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
+                (transaction as Transfer).to === activeAccount.name!) ||
+                (transaction.type === 'delegate_vesting_shares' &&
+                  (transaction as Delegation).delegatee ===
+                    activeAccount.name!))) ||
+            (filter.outSelected &&
+              ((TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
+                (transaction as Transfer).from === activeAccount.name!) ||
+                (transaction.type === 'delegate_vesting_shares' &&
+                  (transaction as Delegation).delegator ===
+                    activeAccount.name!)))
+          );
+        } else {
+          return true;
+        }
+      }
+    },
+  );
+
+  return filteredTransactions.filter((transaction) => {
+    return (
+      (TRANSFER_TYPE_TRANSACTIONS.includes(transaction.type) &&
+        WalletHistoryUtils.filterTransfer(
+          transaction as Transfer,
+          filter.filterValue,
+          activeAccount.name!,
+        )) ||
+      (transaction.type === 'claim_reward_balance' &&
+        WalletHistoryUtils.filterClaimReward(
+          transaction as ClaimReward,
+          filter.filterValue,
+        )) ||
+      (transaction.type === 'delegate_vesting_shares' &&
+        WalletHistoryUtils.filterDelegation(
+          transaction as Delegation,
+          filter.filterValue,
+          activeAccount.name!,
+        )) ||
+      (transaction.subType === 'withdraw_vesting' &&
+        WalletHistoryUtils.filterPowerUpDown(
+          transaction as PowerDown,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'transfer_to_vesting' &&
+        WalletHistoryUtils.filterPowerUpDown(
+          transaction as PowerUp,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'transfer_from_savings' &&
+        WalletHistoryUtils.filterSavingsTransaction(
+          transaction as WithdrawSavings,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'transfer_to_savings' &&
+        WalletHistoryUtils.filterSavingsTransaction(
+          transaction as DepositSavings,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'interest' &&
+        WalletHistoryUtils.filterInterest(
+          transaction as ReceivedInterests,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'fill_collateralized_convert_request' &&
+        WalletHistoryUtils.filterFillConversion(
+          transaction as FillCollateralizedConvert,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'fill_convert_request' &&
+        WalletHistoryUtils.filterFillConversion(
+          transaction as FillConvert,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'collateralized_convert' &&
+        WalletHistoryUtils.filterConversion(
+          transaction as CollateralizedConvert,
+          filter.filterValue,
+        )) ||
+      (transaction.subType === 'convert' &&
+        WalletHistoryUtils.filterConversion(
+          transaction as Convert,
+          filter.filterValue,
+        )) ||
+      (transaction.timestamp &&
+        moment(transaction.timestamp)
+          .format('L')
+          .includes(filter.filterValue.toLowerCase()))
+    );
+  });
+};
+//end moving
+
 interface WalletHistoryFilterPanelProps {
   DEFAULT_WALLET_FILTER: WalletHistoryFilter;
   transactions: Transactions;
@@ -61,6 +177,8 @@ interface WalletHistoryFilterPanelProps {
   loading: boolean;
   isFilterOpened: boolean;
   toggleFilter: () => void;
+  setLoading: any; //TODO add type
+  displayedTransactions: any; //TODO/ADD type
 }
 
 const WalletHistoryFilterPanel = forwardRef(
@@ -77,6 +195,21 @@ const WalletHistoryFilterPanel = forwardRef(
     useEffect(() => {
       props.setPreviousTransactionLength(0);
       if (filterReady) {
+        //TODO check if testing this allow app t oshow the loader
+        // if (props.displayedTransactions.length === 0) props.setLoading(true);
+        console.log('about to filter', {
+          dt: props.displayedTransactions.length,
+        });
+        //check if within displayedTransactions exists at least one of the selected filter
+        //if yes setLoader(true).
+        const checkOnDisplayedTransactions = applyFilters(
+          props.displayedTransactions,
+          filter,
+          props.activeAccount,
+        );
+        console.log({checkLenght: checkOnDisplayedTransactions.length});
+        if (checkOnDisplayedTransactions.length === 0) props.setLoading(true);
+        //END TEST
         filterTransactions();
         saveFilterInLocalStorage();
       }

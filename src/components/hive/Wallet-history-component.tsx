@@ -187,6 +187,8 @@ const WallettHistory = ({
         loading={loading}
         isFilterOpened={isFilterOpened}
         toggleFilter={toggleFilter}
+        setLoading={setLoading}
+        displayedTransactions={displayedTransactions}
       />
 
       {!loading && displayedTransactions.length > 0 && (
