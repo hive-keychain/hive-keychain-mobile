@@ -67,22 +67,30 @@ const DelegationTransactionComponent = ({
               })}
             </Text>
           ) : direction === '+' ? (
-            <Text style={{color: color}}>
-              {translate('wallet.operations.delegation.info_delegation_in', {
-                delegator: delegator,
-                amount: formattedAmount,
-                currency: 'HP',
-                delegatee: delegatee,
-              })}
-            </Text>
+            <>
+              <Text>
+                {translate('wallet.operations.delegation.info_delegation_in', {
+                  delegator: delegator,
+                })}
+              </Text>
+              <Text style={{color: color}}>
+                {' '}
+                {formattedAmount} {amount.split(' ')[1]}{' '}
+              </Text>
+            </>
           ) : (
-            <Text style={{color: color}}>
-              {translate('wallet.operations.delegation.info_delegation_out', {
-                amount: formattedAmount,
-                currency: 'HP',
-                delegatee,
-              })}
-            </Text>
+            <>
+              <Text>Delegated</Text>
+              <Text style={{color: color}}>
+                {' '}
+                {formattedAmount} {amount.split(' ')[1]}{' '}
+              </Text>
+              <Text>
+                {translate('wallet.operations.delegation.info_delegation_out', {
+                  delegatee,
+                })}
+              </Text>
+            </>
           )}
         </View>
       </View>

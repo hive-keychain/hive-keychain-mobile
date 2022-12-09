@@ -62,10 +62,11 @@ const PowerUpTransactionComponent = ({
         </View>
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
-            {translate('wallet.operations.powerup.info_power_up', {
-              amount: formattedAmount,
-              currency: 'HIVE',
-            })}
+            {translate('wallet.operations.powerup.info_power_up')}
+          </Text>
+          <Text style={{color}}>
+            {' '}
+            {formattedAmount} {amount.split(' ')[1]}
           </Text>
         </View>
       </View>

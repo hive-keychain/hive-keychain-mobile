@@ -58,11 +58,13 @@ const DepositSavingsTransactionComponent = ({
           <Text>{date}</Text>
         </View>
         <View style={styles.rowContainer}>
+          <Text>Deposit of</Text>
+          <Text style={{color: color}}>
+            {' '}
+            {formattedAmount} {'HBD'}{' '}
+          </Text>
           <Text style={styles.username}>
-            {translate('wallet.operations.savings.info_deposit_savings', {
-              amount: formattedAmount,
-              currency: 'HBD',
-            })}
+            {translate('wallet.operations.savings.info_deposit_savings')}
           </Text>
         </View>
       </View>

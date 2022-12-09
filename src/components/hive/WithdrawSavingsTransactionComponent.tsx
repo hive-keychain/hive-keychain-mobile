@@ -58,11 +58,13 @@ const WithdrawSavingsTransactionComponent = ({
           <Text>{date}</Text>
         </View>
         <View style={styles.rowContainer}>
+          <Text>Started a</Text>
+          <Text style={{color: color}}>
+            {' '}
+            {formattedAmount} {'HBD'}{' '}
+          </Text>
           <Text style={styles.username}>
-            {translate('wallet.operations.savings.start_withdraw_savings', {
-              amount: formattedAmount,
-              currency: 'HBD',
-            })}
+            {translate('wallet.operations.savings.start_withdraw_savings')}
           </Text>
         </View>
       </View>

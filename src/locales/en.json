@@ -73,10 +73,10 @@
         "withdraw_button": "Withdraw",
         "deposit_button": "Deposit",
         "prompt": "Select a currency",
-        "fill_withdraw_savings": "Successfully withdrawn {{amount}} {{currency}} from savings",
-        "start_withdraw_savings": "Started a {{amount}} {{currency}} withdrawal from savings",
-        "info_deposit_savings": "Deposit of {{amount}} {{currency}} into savings",
-        "info_received_interests": "Received {{amount}} {{currency}} of interests from savings"
+        "fill_withdraw_savings": "from savings",
+        "start_withdraw_savings": "withdrawal from savings",
+        "info_deposit_savings": "into savings",
+        "info_received_interests": "of interests from savings"
       },
       "transfer": {
         "title": "Transfer funds",
@@ -99,36 +99,36 @@
           "exchange_memo": "Make sure you add a memo when transfering to an exchange account.",
           "missing_info": "Please fill the username and amount to proceed"
         },
-        "fill_recurrent_transfer_out": "Sent {{amount}} to @{{other}} ({{remainingExecutions}} remaining)",
-        "fill_recurrent_transfer_in": "Received {{amount}} from @{{other}} ({{remainingExecutions}} remaining)",
-        "start_recurrent_transfer_out": "Started recurrent transfer of {{amount}} to @{{other} (every {{recurrence}} hours - {{executions}} times)",
+        "fill_recurrent_transfer_out": "to @{{other}} ({{remainingExecutions}} remaining)",
+        "fill_recurrent_transfer_in": "from @{{other}} ({{remainingExecutions}} remaining)",
+        "start_recurrent_transfer_out": "to @{{other} (every {{recurrence}} hours - {{executions}} times)",
         "info_recurrent_transfer_in": "@{{other}} started transfer of {{amount}} (every {{recurrence}} hours - {{executions}} times)"
       },
       "powerup": {
         "title": "Power up!",
-        "info_power_up": "Powered up {{amount}} {{currency}}"
+        "info_power_up": "Powered up"
       },
       "powerdown": {
         "title": "Power down",
-        "info_power_down": "Initiated a {{amount}} {{currency}} power down",
+        "info_power_down": "power down",
         "cancelled_power_down": "Cancelled power down"
       },
       "delegation": {
         "title": "Delegate Hive Power",
         "incoming": "Incoming Delegations",
         "outgoing": "Outgoing Delegations",
-        "info_delegation_out": "Delegated {{amount}} {{currency}} to @{{delegatee}}",
+        "info_delegation_out": "to @{{delegatee}}",
         "cancelled_delegation": "Cancelled delegation to @{{delegatee}}",
-        "info_delegation_in": "@{{delegator}} delegated {{amount}} {{currency}}"
+        "info_delegation_in": "@{{delegator}} delegated"
       },
       "convert": {
         "title": "Convert to {{to}}",
         "button": "Convert",
         "disclaimer_hive": "You deposit collateral (HIVE), then you are given HBD up front worth half of the collateral amount (minus a 5% fee). Your official final payment is in 3.5 days. At that point remaining collateral (HIVE) is returned.",
         "disclaimer_hbd": "Your HBD will take 3.5 days to get converted to approximately USD worth of HIVE tokens, based on its 3.5 days median price.",
-        "fill_convert_request": "Filled conversion: {{amount_out}} {{currency_out}} => {{amount_in}} {{currency_in}}",
-        "start_convert": "Started a {{amount}} HBD conversion",
-        "start_collateralized_convert": "Started a {{amount}} HIVE collateralized conversion"
+        "fill_convert_request": "Filled conversion:",
+        "start_convert": "conversion",
+        "start_collateralized_convert": "collateralized conversion"
       }
     },
     "has": {

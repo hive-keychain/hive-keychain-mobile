@@ -7,6 +7,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import {Icons} from 'src/enums/icons.enums';
 import {RecurrentTransfer as RecurrentTransferInterface} from 'src/interfaces/transaction.interface';
 import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
@@ -55,6 +56,14 @@ const RecurrentTransfer = ({
     color,
   });
 
+  const toggleExpandMoreIcon = () => {
+    return toggle ? (
+      <Icon name={Icons.EXPAND_LESS} />
+    ) : (
+      <Icon name={Icons.EXPAND_MORE} />
+    );
+  };
+
   const formattedAmount = withCommas(amount);
 
   return (
@@ -63,35 +72,69 @@ const RecurrentTransfer = ({
       onPress={() => {
         setToggle(!toggle);
       }}>
-      <View style={styles.main}>
+      <View style={styles.columnContainer}>
         <View style={[styles.row, styles.alignedContent]}>
-          {useIcon && <Icon name={transaction.type} />}
-          <Text>{date}</Text>
+          <View
+            style={[
+              styles.row,
+              {width: '100%', justifyContent: 'space-between'},
+            ]}>
+            <View style={styles.row}>
+              {useIcon && <Icon name={transaction.type} />}
+              <Text>{date}</Text>
+            </View>
+            <View>{memo && memo.length ? toggleExpandMoreIcon() : null}</View>
+          </View>
         </View>
         <View style={styles.rowContainer}>
-          <Text style={styles.username}>
-            {direction === '-'
-              ? translate(
+          {direction === '-' ? (
+            <View style={styles.columnContainer}>
+              <View style={styles.rowContainer}>
+                <Text>Started recurrent transfer of</Text>
+                <Text style={{color}}>
+                  {' '}
+                  {direction}
+                  {formattedAmount} {amount.split(' ')[1]}{' '}
+                </Text>
+              </View>
+              <Text>
+                {translate(
                   'wallet.operations.transfer.start_recurrent_transfer_out',
                   {
-                    amount: formattedAmount,
                     other,
-                    recurrence,
-                    executions,
-                  },
-                )
-              : translate(
-                  'wallet.operations.transfer.info_recurrent_transfer_in',
-                  {
-                    other,
-                    amount: formattedAmount,
                     recurrence,
                     executions,
                   },
                 )}
-          </Text>
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.columnContainer}>
+              <View style={styles.rowContainer}>
+                <Text>Received</Text>
+                <Text style={{color}}>
+                  {' '}
+                  {formattedAmount} {amount.split(' ')[1]}{' '}
+                </Text>
+              </View>
+              <Text>
+                {translate(
+                  'wallet.operations.transfer.fill_recurrent_transfer_in',
+                  {
+                    other,
+                    remainingExecutions: executions,
+                  },
+                )}
+              </Text>
+            </View>
+          )}
         </View>
       </View>
+      {toggle && memo && memo.length ? (
+        <View>
+          <Text>{memo}</Text>
+        </View>
+      ) : null}
     </TouchableOpacity>
   );
 };
@@ -103,7 +146,7 @@ const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
       borderColor: 'black',
       padding: height * 0.01,
     },
-    main: {
+    columnContainer: {
       display: 'flex',
       flexDirection: 'column',
     },

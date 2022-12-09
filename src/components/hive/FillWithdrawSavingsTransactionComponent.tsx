@@ -58,11 +58,13 @@ const FillWithdrawSavingsTransactionComponent = ({
           <Text>{date}</Text>
         </View>
         <View style={styles.rowContainer}>
+          <Text>Successfully withdrawn</Text>
+          <Text style={{color: '#B9122F'}}>
+            {' '}
+            {formattedAmount} {amount.split(' ')[1]}{' '}
+          </Text>
           <Text style={styles.username}>
-            {translate('wallet.operations.savings.fill_withdraw_savings', {
-              amount: formattedAmount,
-              currency: 'HBD',
-            })}
+            {translate('wallet.operations.savings.fill_withdraw_savings')}
           </Text>
         </View>
       </View>

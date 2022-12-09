@@ -71,7 +71,7 @@ const FillRecurrentTransfer = ({
       onPress={() => {
         setToggle(!toggle);
       }}>
-      <View style={styles.main}>
+      <View style={styles.columnContainer}>
         <View style={[styles.row, styles.alignedContent]}>
           <View
             style={[
@@ -86,17 +86,41 @@ const FillRecurrentTransfer = ({
           </View>
         </View>
         <View style={styles.rowContainer}>
-          <Text>
-            {direction === '+'
-              ? translate(
+          {direction === '+' ? (
+            <View style={styles.columnContainer}>
+              <View style={styles.rowContainer}>
+                <Text>Received</Text>
+                <Text style={{color}}>
+                  {' '}
+                  {direction}
+                  {formattedAmount} {amount.split(' ')[1]}
+                </Text>
+              </View>
+              <Text>
+                {translate(
                   'wallet.operations.transfer.fill_recurrent_transfer_in',
-                  {amount: formattedAmount, other, remainingExecutions},
-                )
-              : translate(
-                  'wallet.operations.transfer.fill_recurrent_transfer_out',
-                  {amount: formattedAmount, other, remainingExecutions},
+                  {other, remainingExecutions},
                 )}
-          </Text>
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.columnContainer}>
+              <View style={styles.rowContainer}>
+                <Text>Sent</Text>
+                <Text style={{color}}>
+                  {' '}
+                  {direction}
+                  {formattedAmount} {amount.split(' ')[1]}
+                </Text>
+              </View>
+              <Text>
+                {translate(
+                  'wallet.operations.transfer.fill_recurrent_transfer_out',
+                  {other, remainingExecutions},
+                )}
+              </Text>
+            </View>
+          )}
         </View>
       </View>
       {toggle && memo && memo.length ? (
@@ -115,7 +139,7 @@ const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
       borderColor: 'black',
       padding: height * 0.01,
     },
-    main: {
+    columnContainer: {
       display: 'flex',
       flexDirection: 'column',
     },

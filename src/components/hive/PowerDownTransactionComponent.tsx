@@ -31,7 +31,7 @@ const PowerDownTransactionComponent = ({
   const [toggle, setToggle] = useState(false);
   const username = user.name;
   const {timestamp, amount} = transaction;
-  const color = '#3BB26E';
+  const color = '#B9122F';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -61,14 +61,22 @@ const PowerDownTransactionComponent = ({
           <Text>{date}</Text>
         </View>
         <View style={styles.rowContainer}>
-          <Text style={styles.username}>
-            {parseFloat(formattedAmount) === 0
-              ? translate('wallet.operations.powerdown.cancelled_power_down')
-              : translate('wallet.operations.powerdown.info_power_down', {
-                  amount: formattedAmount,
-                  currency: 'HP',
-                })}
-          </Text>
+          {parseFloat(formattedAmount) === 0 ? (
+            <Text>
+              {translate('wallet.operations.powerdown.cancelled_power_down')}
+            </Text>
+          ) : (
+            <>
+              <Text>Initiated a</Text>
+              <Text style={{color}}>
+                {' '}
+                {formattedAmount} {amount.split(' ')[1]}{' '}
+              </Text>
+              <Text>
+                {translate('wallet.operations.powerdown.info_power_down')}
+              </Text>
+            </>
+          )}
         </View>
       </View>
     </TouchableOpacity>

@@ -45,29 +45,18 @@ const ReceivedInterestTransactionComponent = ({
 
   return (
     <TouchableOpacity style={styles.container}>
-      {/* <View style={styles.main}>
-        <View style={styles.left}>
-          {useIcon && <Icon name={transaction.type} />}
-          <Text>{date}</Text>
-        </View>
-        <Text style={styles.amount}>
-          {translate('wallet.operations.savings.info_received_interests', {
-            amount: withCommas(interest),
-            currency: 'HBD',
-          })}
-        </Text>
-      </View> */}
       <View style={styles.main}>
         <View style={[styles.row, styles.alignedContent]}>
           {useIcon && <Icon name={transaction.type} />}
           <Text>{date}</Text>
         </View>
         <View style={styles.rowContainer}>
+          <Text>Received </Text>
+          <Text style={{color: color}}>
+            {withCommas(interest)} {'HBD'}{' '}
+          </Text>
           <Text style={styles.username}>
-            {translate('wallet.operations.savings.info_received_interests', {
-              amount: withCommas(interest),
-              currency: 'HBD',
-            })}
+            {translate('wallet.operations.savings.info_received_interests')}
           </Text>
         </View>
       </View>

@@ -30,7 +30,7 @@ const CollateralizedConvertTransactionComponent = ({
   const [toggle, setToggle] = useState(false);
   const username = user.name;
   const {timestamp, amount} = transaction;
-  const color = '#3BB26E';
+  const color = '#B9122F';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -58,12 +58,14 @@ const CollateralizedConvertTransactionComponent = ({
           <Text>{date}</Text>
         </View>
         <View style={styles.rowContainer}>
+          <Text>Started a</Text>
+          <Text style={{color}}>
+            {' '}
+            {formattedAmount} {amount.split(' ')[1]}{' '}
+          </Text>
           <Text style={styles.username}>
             {translate(
               'wallet.operations.convert.start_collateralized_convert',
-              {
-                amount: formattedAmount,
-              },
             )}
           </Text>
         </View>

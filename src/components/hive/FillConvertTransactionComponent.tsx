@@ -60,12 +60,15 @@ const FillConvertTransactionComponent = ({
         </View>
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
-            {translate('wallet.operations.convert.fill_convert_request', {
-              amount_out: formattedAmountOut,
-              currency_out: 'HBD',
-              amount_in: formattedAmountIn,
-              currency_in: 'HIVE',
-            })}
+            {translate('wallet.operations.convert.fill_convert_request')}
+          </Text>
+          <Text style={{color: '#B9122F'}}>
+            {' '}
+            {formattedAmountOut} {amount_out.split(' ')[1]}
+          </Text>
+          <Text> =&gt; </Text>
+          <Text style={{color: color}}>
+            {formattedAmountIn} {amount_in.split(' ')[1]}
           </Text>
         </View>
       </View>
