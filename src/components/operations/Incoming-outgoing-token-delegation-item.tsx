@@ -170,8 +170,9 @@ const styles = StyleSheet.create({
   smallButton: {
     borderWidth: 1,
     borderRadius: 6,
-    margin: 5,
-    padding: 3,
+    margin: 3,
+    width: 25,
+    height: 25,
   },
 });
 

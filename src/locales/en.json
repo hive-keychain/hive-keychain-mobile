@@ -113,7 +113,7 @@
       "token_unstake": {
         "title": "Unstake",
         "unstaking_token": "Unstaking {{currency}}",
-        "cooldown_disclaimer": "Unstaking this token will take: {{unstakingCooldown}} day",
+        "cooldown_disclaimer": "Unstaking this token will take {{unstakingCooldown}} day",
         "token_pending_unstake": "Pending unstaking"
       },
       "token_delegation": {

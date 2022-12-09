@@ -7,7 +7,6 @@ import Separator from 'components/ui/Separator';
 import React from 'react';
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
-import IconBack from 'src/assets/Icon_arrow_back_black.svg';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
@@ -141,22 +140,8 @@ const MoreTokenInfo = ({
     });
   };
 
-  const renderIconComponent = () => {
-    return gobackAction ? (
-      <View style={styles.rowContainer}>
-        <TouchableOpacity
-          onPress={() => gobackAction()}
-          style={styles.goBackButton}>
-          <IconBack />
-        </TouchableOpacity>
-      </View>
-    ) : (
-      <AddIcon />
-    );
-  };
-
   return (
-    <Operation logo={renderIconComponent()} title={token.symbol}>
+    <Operation logo={<AddIcon />} title={token.symbol}>
       <>
         <Separator height={40} />
         <Balance
@@ -172,14 +157,14 @@ const MoreTokenInfo = ({
         <Separator height={10} />
         <View>
           {tokenInfo.stakingEnabled && (
-            <Text>
+            <Text style={styles.textBold}>
               {translate('wallet.operations.token_stake.titled')}
               {' : '}
               {token.stake}
             </Text>
           )}
           {tokenInfo.stakingEnabled && parseFloat(token.pendingUnstake) > 0 && (
-            <Text>
+            <Text style={styles.textBold}>
               {translate(
                 'wallet.operations.token_unstake.token_pending_unstake',
               )}{' '}
@@ -188,7 +173,7 @@ const MoreTokenInfo = ({
           )}
           {tokenInfo.delegationEnabled && parseFloat(token.delegationsIn) > 0 && (
             <View style={styles.delegationInOutContainer}>
-              <Text>
+              <Text style={styles.textBold}>
                 {translate('wallet.operations.token_delegation.in')}
                 {' : '}
                 {token.delegationsIn}
@@ -203,7 +188,7 @@ const MoreTokenInfo = ({
           )}
           {tokenInfo.delegationEnabled && parseFloat(token.delegationsOut) > 0 && (
             <View style={styles.delegationInOutContainer}>
-              <Text>
+              <Text style={styles.textBold}>
                 {translate('wallet.operations.token_delegation.out')}
                 {' : '}
                 {token.delegationsOut}
@@ -218,7 +203,7 @@ const MoreTokenInfo = ({
           )}
           {tokenInfo.delegationEnabled &&
             parseFloat(token.pendingUndelegations) > 0 && (
-              <Text>
+              <Text style={styles.textBold}>
                 {translate(
                   'wallet.operations.token_delegation.token_pending_undelegation',
                 )}{' '}
@@ -296,6 +281,9 @@ const styles = StyleSheet.create({
   },
   goBackButton: {
     margin: 7,
+  },
+  textBold: {
+    fontWeight: 'bold',
   },
 });
 
