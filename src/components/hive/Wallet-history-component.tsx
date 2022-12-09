@@ -97,11 +97,15 @@ const WallettHistory = ({
 
   const init = async () => {
     setLoading(true);
-    clearUserTransactions();
     lastOperationFetched = await TransactionUtils.getLastTransaction(
       activeAccount.name!,
     );
+
     fetchAccountTransactions(activeAccount.name!, lastOperationFetched);
+    if (childRef.current) {
+      //@ts-ignore
+      childRef.current.initFiltersNow();
+    }
   };
 
   useEffect(() => {

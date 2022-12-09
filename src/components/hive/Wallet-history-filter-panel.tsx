@@ -55,10 +55,6 @@ const WalletHistoryFilterPanel = forwardRef(
     const [filterReady, setFilterReady] = useState<boolean>(false);
 
     useEffect(() => {
-      initFilters();
-    }, []);
-
-    useEffect(() => {
       props.setPreviousTransactionLength(0);
       if (filterReady) {
         if (props.displayedTransactions.length > 0) {
@@ -77,6 +73,9 @@ const WalletHistoryFilterPanel = forwardRef(
     useImperativeHandle(ref, () => ({
       filterNow: () => {
         filterTransactions();
+      },
+      initFiltersNow: () => {
+        initFilters();
       },
     }));
 
