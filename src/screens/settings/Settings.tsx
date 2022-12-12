@@ -4,7 +4,7 @@ import {Rpc} from 'actions/interfaces';
 import {removePreference} from 'actions/preferences';
 import CustomPicker from 'components/form/CustomPicker';
 import UserPicker from 'components/form/UserPicker';
-import CollaspibleSettings from 'components/settings/CollapsibleSettings';
+import CollapsibleSettings from 'components/settings/CollapsibleSettings';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
@@ -37,7 +37,7 @@ const Settings = ({
         data={userPreference.domains}
         renderItem={(preference) => {
           return (
-            <CollaspibleSettings
+            <CollapsibleSettings
               username={active.name}
               key={preference.item.domain}
               index={preference.index}
