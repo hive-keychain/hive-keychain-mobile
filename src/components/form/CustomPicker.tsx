@@ -57,7 +57,6 @@ const CustomPicker = ({
         </TouchableOpacity>
       );
     default:
-      console.log({selectedValue}); //TODO to remove
       return (
         <Picker
           style={[styles.picker, style]}

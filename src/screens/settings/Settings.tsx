@@ -49,6 +49,7 @@ const Settings = ({
       />
     );
   };
+
   return (
     <SafeArea>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
@@ -66,6 +67,8 @@ const Settings = ({
           </Text>
         ))}
         <Separator height={20} />
+        {/* //TODO keep finding why this is not loading on the first load?? */}
+        {/* //TODO shall I do my own picker instead??? */}
         <CustomPicker
           onSelected={setRpc}
           selectedValue={settings.rpc}
