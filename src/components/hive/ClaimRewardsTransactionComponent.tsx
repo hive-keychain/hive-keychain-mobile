@@ -63,26 +63,32 @@ const ClaimRewardTransactionComponent = ({
         <View style={styles.rowContainer}>
           {hbd && !isZeroAmount(hbd) && (
             <Text style={styles.username}>
-              {translate('wallet.claim.info_claim_rewards', {
-                amount: withCommas(hbd),
-                currency: 'HBD',
-              })}
+              <Text style={{color}}>{withCommas(hbd)} </Text>
+              <Text>
+                {translate('wallet.claim.info_claim_rewards', {
+                  currency: 'HBD',
+                })}
+              </Text>
             </Text>
           )}
           {hp && !isZeroAmount(hp) && (
             <Text style={styles.username}>
-              {translate('wallet.claim.info_claim_rewards', {
-                amount: withCommas(hp),
-                currency: 'HP',
-              })}
-              {hive && !isZeroAmount(hive) && (
-                <Text style={styles.username}>
-                  {translate('wallet.claim.info_claim_rewards', {
-                    amount: withCommas(hive),
-                    currency: 'HIVE',
-                  })}
-                </Text>
-              )}
+              <Text style={{color}}> {withCommas(hp)} </Text>
+              <Text>
+                {translate('wallet.claim.info_claim_rewards', {
+                  currency: 'HP',
+                })}
+              </Text>
+            </Text>
+          )}
+          {hive && !isZeroAmount(hive) && (
+            <Text style={styles.username}>
+              <Text style={{color}}>{withCommas(hive)} </Text>
+              <Text>
+                {translate('wallet.claim.info_claim_rewards', {
+                  currency: 'HIVE',
+                })}
+              </Text>
             </Text>
           )}
         </View>
@@ -111,6 +117,7 @@ const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
     rowContainer: {
       display: 'flex',
       flexDirection: 'row',
+      flexWrap: 'wrap',
     },
     alignedContent: {
       alignItems: 'center',
