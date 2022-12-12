@@ -125,11 +125,6 @@ const IncomingOutGoingTokenDelegationItem = ({
                 onPress={handleUpdateDelegateToken}>
                 <Text>OK</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.smallButton}
-                onPress={() => setEditMode(!editMode)}>
-                <Text>Cancel</Text>
-              </TouchableOpacity>
             </View>
           )}
         </View>
@@ -148,6 +143,7 @@ const IncomingOutGoingTokenDelegationItem = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginLeft: 22,
   },
   delegationItemContainer: {
     flexDirection: 'row',
@@ -171,8 +167,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 6,
     margin: 3,
-    width: 25,
-    height: 25,
+    padding: 5,
   },
 });
 

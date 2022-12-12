@@ -112,7 +112,11 @@ const IncomingOutGoingTokenDelegations = ({
           tokenLogo={tokenLogo}
           tokenBalance={total}
         />
-        {loading && <Loader animating={true} />}
+        {loading && (
+          <View style={styles.flex}>
+            <Loader animating={true} />
+          </View>
+        )}
 
         {!loading && delegationList.length > 0 && (
           <FlatList
@@ -140,6 +144,11 @@ const getDimensionedStyles = (color: string) =>
     },
     goBackButton: {
       margin: 7,
+    },
+    flex: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   });
 
