@@ -55,6 +55,7 @@ const App = ({
   }, [accounts, requestedOp]);
 
   useEffect(() => {
+    console.log({rpc}); //TODO to remove
     setRpc(rpc as Rpc);
   }, [rpc]);
 

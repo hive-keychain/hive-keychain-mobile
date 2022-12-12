@@ -11,7 +11,7 @@ import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {SettingsNavigation} from 'navigators/MainDrawer.types';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {rpcList} from 'utils/hiveUtils';
@@ -31,16 +31,23 @@ const Settings = ({
   const showPreferencesHandler = () => {
     const userPreference = preferences.find((e) => e.username === active.name);
     if (!userPreference || !userPreference.domains.length)
-      return <Text>Nothing to show</Text>;
-    return userPreference.domains.map((e, i) => (
-      <CollaspibleSettings
-        username={active.name}
-        key={e.domain}
-        index={i}
-        domainPref={e}
-        removePreference={removePreference}
+      return <Text>{translate('settings.settings.no_pref')}</Text>;
+    return (
+      <FlatList
+        data={userPreference.domains}
+        renderItem={(preference) => {
+          return (
+            <CollaspibleSettings
+              username={active.name}
+              key={preference.item.domain}
+              index={preference.index}
+              domainPref={preference.item}
+              removePreference={removePreference}
+            />
+          );
+        }}
       />
-    ));
+    );
   };
   return (
     <SafeArea>
