@@ -42,7 +42,6 @@ const Main = ({
   hive_authentication_service,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
-
   useEffect(() => {
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();

@@ -157,26 +157,33 @@ const MoreTokenInfo = ({
         <Separator height={10} />
         <View>
           {tokenInfo.stakingEnabled && (
-            <Text style={styles.textBold}>
-              {translate('wallet.operations.token_stake.titled')}
-              {' : '}
-              {token.stake}
+            <Text>
+              <Text style={styles.textBold}>
+                {translate('wallet.operations.token_stake.titled')}
+                {' : '}
+              </Text>
+              <Text>{token.stake}</Text>
             </Text>
           )}
           {tokenInfo.stakingEnabled && parseFloat(token.pendingUnstake) > 0 && (
-            <Text style={styles.textBold}>
-              {translate(
-                'wallet.operations.token_unstake.token_pending_unstake',
-              )}{' '}
-              {token.pendingUnstake}
+            <Text>
+              <Text style={styles.textBold}>
+                {translate(
+                  'wallet.operations.token_unstake.token_pending_unstake',
+                )}
+                {' : '}
+              </Text>
+              <Text>{token.pendingUnstake}</Text>
             </Text>
           )}
           {tokenInfo.delegationEnabled && parseFloat(token.delegationsIn) > 0 && (
             <View style={styles.delegationInOutContainer}>
-              <Text style={styles.textBold}>
-                {translate('wallet.operations.token_delegation.in')}
-                {' : '}
-                {token.delegationsIn}
+              <Text>
+                <Text style={styles.textBold}>
+                  {translate('wallet.operations.token_delegation.in')}
+                  {' : '}
+                </Text>
+                <Text>{token.delegationsIn}</Text>
               </Text>
               <TouchableOpacity
                 onPress={() =>
@@ -188,10 +195,12 @@ const MoreTokenInfo = ({
           )}
           {tokenInfo.delegationEnabled && parseFloat(token.delegationsOut) > 0 && (
             <View style={styles.delegationInOutContainer}>
-              <Text style={styles.textBold}>
-                {translate('wallet.operations.token_delegation.out')}
-                {' : '}
-                {token.delegationsOut}
+              <Text>
+                <Text style={styles.textBold}>
+                  {translate('wallet.operations.token_delegation.out')}
+                  {' : '}
+                </Text>
+                <Text>{token.delegationsOut}</Text>
               </Text>
               <TouchableOpacity
                 onPress={() =>
