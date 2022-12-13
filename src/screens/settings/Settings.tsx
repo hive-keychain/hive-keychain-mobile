@@ -67,15 +67,13 @@ const Settings = ({
           </Text>
         ))}
         <Separator height={20} />
-        {/* //TODO keep finding why this is not loading on the first load?? */}
-        {/* //TODO shall I do my own picker instead??? */}
         <CustomPicker
+          list={rpcList}
           onSelected={setRpc}
           selectedValue={settings.rpc}
           labelCreator={(rpc: Rpc) =>
             `${rpc.uri} ${rpc.testnet ? '(TESTNET)' : ''}`
           }
-          list={rpcList}
           prompt={translate('components.picker.prompt_rpc')}
         />
         <View style={styles.separator}></View>
