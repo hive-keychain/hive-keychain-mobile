@@ -1,12 +1,7 @@
 import hsc, {hiveEngineAPI} from 'api/hiveEngine';
 import {AppThunk} from 'src/hooks/redux';
-import {
-  ActionPayload,
-  Token,
-  TokenBalance,
-  TokenMarket,
-  TokenTransaction,
-} from './interfaces';
+import {TokenTransaction} from 'src/interfaces/tokens.interface';
+import {ActionPayload, Token, TokenBalance, TokenMarket} from './interfaces';
 import {
   CLEAR_TOKEN_HISTORY,
   CLEAR_USER_TOKENS,
@@ -68,7 +63,7 @@ export const loadTokenHistory = (
   ).data;
 
   tokenHistory = tokenHistory
-    .filter((e) => e.operation === 'tokens_transfer')
+    // .filter((e) => e.operation === 'tokens_transfer')
     .map((e) => {
       e.amount = `${e.quantity} ${e.symbol}`;
       return e;
@@ -78,4 +73,10 @@ export const loadTokenHistory = (
     payload: tokenHistory,
   };
   dispatch(action);
+};
+
+export const clearTokenHistory = (): AppThunk => async (dispatch) => {
+  dispatch({
+    type: CLEAR_TOKEN_HISTORY,
+  });
 };

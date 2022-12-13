@@ -1,5 +1,6 @@
-import {ActionPayload, TokenTransaction} from 'actions/interfaces';
+import {ActionPayload} from 'actions/interfaces';
 import {CLEAR_TOKEN_HISTORY, LOAD_TOKEN_HISTORY} from 'actions/types';
+import {TokenTransaction} from 'src/interfaces/tokens.interface';
 
 export default (
   state: TokenTransaction[] = [],
