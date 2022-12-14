@@ -22,7 +22,9 @@ const Tokens = ({
   tokensMarket,
 }: PropsFromRedux) => {
   useEffect(() => {
+    console.log('about to loadTokens'); //TODO to remove
     loadTokens();
+    console.log('about to loadTokensMarket'); //TODO to remove
     loadTokensMarket();
   }, [loadTokens, loadTokensMarket]);
 
