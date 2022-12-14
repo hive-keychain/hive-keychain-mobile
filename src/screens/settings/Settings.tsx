@@ -50,6 +50,18 @@ const Settings = ({
     );
   };
 
+  const customSortRpctList = (orderedRpcList: Rpc[]) => {
+    if (typeof settings.rpc === 'object') {
+      const selectedIndex = orderedRpcList.findIndex(
+        (item) => item.uri === (settings.rpc as Rpc).uri,
+      );
+      const temp = orderedRpcList[0];
+      orderedRpcList[0] = orderedRpcList[selectedIndex];
+      orderedRpcList[selectedIndex] = temp;
+    }
+    return orderedRpcList;
+  };
+
   return (
     <SafeArea>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
@@ -68,7 +80,7 @@ const Settings = ({
         ))}
         <Separator height={20} />
         <CustomPicker
-          list={rpcList}
+          list={customSortRpctList(rpcList)}
           onSelected={setRpc}
           selectedValue={settings.rpc}
           labelCreator={(rpc: Rpc) =>
