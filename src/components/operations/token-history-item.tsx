@@ -117,7 +117,6 @@ const TokenHistoryItem = ({
       case OperationsHiveEngine.TOKEN_UNDELEGATE_DONE: {
         const t = transaction as UndelegateTokenDoneTransaction;
         iconName = 'delegate_vesting_shares';
-        console.log(t);
         if (t.delegator === activeAccountName) {
           return translate(
             'wallet.operations.tokens.info_cancel_delegation_out',

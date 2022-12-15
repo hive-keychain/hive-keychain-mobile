@@ -7,6 +7,8 @@ import {
   TokenMarket,
   TokenTransaction,
 } from 'src/interfaces/tokens.interface';
+import {RootState, store} from 'store';
+import {decodeMemoIfNeeded} from 'utils/hiveEngine';
 import {ActionPayload} from './interfaces'; //TODO check this: removed Token, TokenBalance, TokenMarket
 import {
   CLEAR_TOKEN_HISTORY,
@@ -60,6 +62,9 @@ export const loadTokenHistory = (
   account: string,
   currency: string,
 ): AppThunk => async (dispatch) => {
+  const memoKey = (store.getState() as RootState).accounts.find(
+    (a) => a.name === account,
+  )!.keys.memo;
   let tokenHistory: TokenTransaction[] = [];
 
   let start = 0;
@@ -107,7 +112,7 @@ export const loadTokenHistory = (
           ...(t as TokenTransaction),
           from: t.from,
           to: t.to,
-          memo: t.memo,
+          memo: decodeMemoIfNeeded(t.memo, memoKey),
         };
       case OperationsHiveEngine.TOKEN_STAKE:
         return {
