@@ -42,7 +42,8 @@
     "error_title": "Error",
     "savings": "Savings",
     "ok": "OK",
-    "popup_read_more": "Read more"
+    "popup_read_more": "Read more",
+    "history_of": "History of"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},

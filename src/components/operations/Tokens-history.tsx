@@ -1,7 +1,8 @@
 import {clearTokenHistory, loadTokenHistory} from 'actions/index';
+import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import Loader from 'components/ui/Loader';
 import moment from 'moment';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {
@@ -15,12 +16,15 @@ import {
   TransferTokenTransaction,
 } from 'src/interfaces/tokens.interface';
 import {RootState} from 'store';
+import {translate} from 'utils/localize';
 import {TokenTransactionUtils} from 'utils/token-transaction.utils';
-import {HistoryProps} from './History';
 import {TokenHistoryItemComponent} from './token-history-item';
 
-//TODO add fecthing logic same as used in complete-history:
-//  TODO add src\popup\actions\token.actions.ts
+export type TokenHistoryProps = {
+  tokenBalance: string;
+  tokenLogo: JSX.Element;
+  currency: string;
+};
 
 const TokensHistory = ({
   activeAccountName,
@@ -29,14 +33,17 @@ const TokensHistory = ({
   tokenHistory,
   loadTokenHistory,
   clearTokenHistory,
+  tokenLogo,
 }: // setTitleContainerProperties,
-HistoryProps & PropsFromRedux) => {
+TokenHistoryProps & PropsFromRedux) => {
   const [displayedTransactions, setDisplayedTransactions] = useState<
     TokenTransaction[]
   >([]);
 
   const [filterValue, setFilterValue] = useState('');
   const [loading, setLoading] = useState(true);
+  const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
+  const flatListRef = useRef();
 
   useEffect(() => {
     setLoading(true);
@@ -48,57 +55,57 @@ HistoryProps & PropsFromRedux) => {
 
   useEffect(() => {
     console.log({thL: tokenHistory.length, dL: displayedTransactions.length});
-    setDisplayedTransactions(
-      tokenHistory.filter((item) => {
-        return (
-          (CURATIONS_REWARDS_TYPES.includes(item.operation) &&
-            TokenTransactionUtils.filterCurationReward(
-              item as CommentCurationTransaction,
-              filterValue,
-            )) ||
-          (item.operation === OperationsHiveEngine.TOKENS_TRANSFER &&
-            TokenTransactionUtils.filterTransfer(
-              item as TransferTokenTransaction,
-              filterValue,
-            )) ||
-          (item.operation === OperationsHiveEngine.TOKEN_STAKE &&
-            TokenTransactionUtils.filterStake(
-              item as StakeTokenTransaction,
-              filterValue,
-            )) ||
-          (item.operation === OperationsHiveEngine.MINING_LOTTERY &&
-            TokenTransactionUtils.filterMiningLottery(
-              item as MiningLotteryTransaction,
-              filterValue,
-            )) ||
-          (item.operation === OperationsHiveEngine.TOKENS_DELEGATE &&
-            TokenTransactionUtils.filterDelegation(
-              item as DelegationTokenTransaction,
-              filterValue,
-            )) ||
-          item.amount.toLowerCase().includes(filterValue.toLowerCase()) ||
-          item.operation.toLowerCase().includes(filterValue.toLowerCase()) ||
-          (item.timestamp &&
-            moment(item.timestamp)
-              .format('L')
-              .includes(filterValue.toLowerCase()))
-        );
-      }),
-    );
-    setLoading(false);
+    if (tokenHistory.length > 0) {
+      setDisplayedTransactions(
+        tokenHistory.filter((item) => {
+          return (
+            (CURATIONS_REWARDS_TYPES.includes(item.operation) &&
+              TokenTransactionUtils.filterCurationReward(
+                item as CommentCurationTransaction,
+                filterValue,
+              )) ||
+            (item.operation === OperationsHiveEngine.TOKENS_TRANSFER &&
+              TokenTransactionUtils.filterTransfer(
+                item as TransferTokenTransaction,
+                filterValue,
+              )) ||
+            (item.operation === OperationsHiveEngine.TOKEN_STAKE &&
+              TokenTransactionUtils.filterStake(
+                item as StakeTokenTransaction,
+                filterValue,
+              )) ||
+            (item.operation === OperationsHiveEngine.MINING_LOTTERY &&
+              TokenTransactionUtils.filterMiningLottery(
+                item as MiningLotteryTransaction,
+                filterValue,
+              )) ||
+            (item.operation === OperationsHiveEngine.TOKENS_DELEGATE &&
+              TokenTransactionUtils.filterDelegation(
+                item as DelegationTokenTransaction,
+                filterValue,
+              )) ||
+            item.amount.toLowerCase().includes(filterValue.toLowerCase()) ||
+            item.operation.toLowerCase().includes(filterValue.toLowerCase()) ||
+            (item.timestamp &&
+              moment(item.timestamp)
+                .format('L')
+                .includes(filterValue.toLowerCase()))
+          );
+        }),
+      );
+      setLoading(false);
+    }
   }, [tokenHistory, filterValue]);
 
-  //   useEffect(() => {
-  //     console.log({l: displayedTransactions.length}); //TODO to remove
-  //     if (displayedTransactions.length !== 0) {
-  //       setLoading(false);
-  //     } else {
-  //       setLoading(true);
-  //     }
-  //   }, [displayedTransactions]);
+  const handleScroll = (event: any) => {
+    const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
+    setDisplayedScrollToTop(innerScrollViewY >= 50);
+  };
 
   const renderItem = (transaction: TokenTransaction) => {
-    return <TokenHistoryItemComponent transaction={transaction} />;
+    return (
+      <TokenHistoryItemComponent transaction={transaction} useIcon={true} />
+    );
   };
 
   return (
@@ -112,11 +119,20 @@ HistoryProps & PropsFromRedux) => {
           onChange={setFilterValue}
         /> */}
       {!loading && displayedTransactions.length > 0 && (
-        <View style={{maxHeight: 400}}>
+        <View style={{maxHeight: 400, marginBottom: 30}}>
+          <View style={[styles.rowContainerSpaceBetween, styles.marginBottom]}>
+            <View style={styles.logo}>{tokenLogo}</View>
+            <Text style={styles.title}>
+              {translate('common.history_of')} {currency}
+            </Text>
+          </View>
           <FlatList
+            ref={flatListRef}
             data={displayedTransactions}
             renderItem={(transaction) => renderItem(transaction.item)}
             keyExtractor={(transaction) => transaction._id}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            onScroll={handleScroll}
           />
         </View>
       )}
@@ -128,6 +144,12 @@ HistoryProps & PropsFromRedux) => {
           <Loader animating={true} />
         </View>
       )}
+
+      {/* ScrollToTop Button */}
+      {!loading && displayScrollToTop && (
+        <BackToTopButton element={flatListRef} />
+      )}
+      {/* END ScrollToTop Button */}
     </View>
   );
 };
@@ -156,9 +178,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  separator: {marginVertical: 3, borderBottomWidth: 1},
+  logo: {justifyContent: 'center', alignItems: 'center'},
+  rowContainerSpaceBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  marginBottom: {
+    marginBottom: 5,
+  },
 });
 
 export const TokensHistoryComponent = connector(TokensHistory);
-function dispatch(arg0: {type: any}) {
-  throw new Error('Function not implemented.');
-}

@@ -37,11 +37,9 @@ export const loadUserTokens = (account: string): AppThunk => async (
   dispatch,
 ) => {
   try {
-    console.log('about to clear user tokens'); //TODO to remove
     dispatch({
       type: CLEAR_USER_TOKENS,
     });
-    console.log('about to find user tokens'); //TODO to remove
     let tokensBalance: TokenBalance[] = await hsc.find('tokens', 'balances', {
       account,
     });
@@ -52,40 +50,12 @@ export const loadUserTokens = (account: string): AppThunk => async (
       type: LOAD_USER_TOKENS,
       payload: tokensBalance,
     };
-    console.log('about dispatch user tokens'); //TODO to remove
     dispatch(action);
   } catch (e) {
     console.log(e);
   }
 };
 
-//OLD way
-// export const loadTokenHistory = (
-//   account: string,
-//   currency: string,
-// ): AppThunk => async (dispatch) => {
-//   dispatch({type: CLEAR_TOKEN_HISTORY});
-//   //let tokenHistory: TokenTransaction[] = (
-//   let tokenHistory: any[] = (
-//     await hiveEngineAPI.get('accountHistory', {
-//       params: {account, symbol: currency, type: 'user'},
-//     })
-//   ).data;
-
-//   tokenHistory = tokenHistory
-//     // .filter((e) => e.operation === 'tokens_transfer')
-//     .map((e) => {
-//       e.amount = `${e.quantity} ${e.symbol}`;
-//       return e;
-//     });
-//   const action: ActionPayload<TokenTransaction[]> = {
-//     type: LOAD_TOKEN_HISTORY,
-//     payload: tokenHistory,
-//   };
-//   dispatch(action);
-// };
-
-//TODO new way, keepin consistency, remove comments when done & tested.
 export const loadTokenHistory = (
   account: string,
   currency: string,
@@ -162,7 +132,7 @@ export const loadTokenHistory = (
         return t as TokenTransaction;
     }
   });
-  console.log('about to dispatch: ', {thL: tokenHistory.length}); //TODO to remove
+
   const action: ActionPayload<TokenTransaction[]> = {
     type: LOAD_TOKEN_HISTORY,
     payload: tokenHistory,
