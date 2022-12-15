@@ -3,7 +3,14 @@ import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import Loader from 'components/ui/Loader';
 import moment from 'moment';
 import React, {useEffect, useRef, useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {
   CommentCurationTransaction,
@@ -26,16 +33,18 @@ export type TokenHistoryProps = {
   currency: string;
 };
 
+//TODO here:
+//    - fix the no trs found logic.
+//    - set color if in/out amount.
+
 const TokensHistory = ({
   activeAccountName,
-  // currentTokenBalance,
   currency,
   tokenHistory,
   loadTokenHistory,
   clearTokenHistory,
   tokenLogo,
-}: // setTitleContainerProperties,
-TokenHistoryProps & PropsFromRedux) => {
+}: TokenHistoryProps & PropsFromRedux) => {
   const [displayedTransactions, setDisplayedTransactions] = useState<
     TokenTransaction[]
   >([]);
@@ -54,7 +63,6 @@ TokenHistoryProps & PropsFromRedux) => {
   }, []);
 
   useEffect(() => {
-    console.log({thL: tokenHistory.length, dL: displayedTransactions.length});
     if (tokenHistory.length > 0) {
       setDisplayedTransactions(
         tokenHistory.filter((item) => {
@@ -119,12 +127,26 @@ TokenHistoryProps & PropsFromRedux) => {
           onChange={setFilterValue}
         /> */}
       {!loading && displayedTransactions.length > 0 && (
-        <View style={{maxHeight: 400, marginBottom: 30}}>
+        <View style={{maxHeight: 500, marginBottom: 30}}>
           <View style={[styles.rowContainerSpaceBetween, styles.marginBottom]}>
             <View style={styles.logo}>{tokenLogo}</View>
             <Text style={styles.title}>
               {translate('common.history_of')} {currency}
             </Text>
+          </View>
+          <View style={styles.rowContainerSpaceBetween}>
+            <TextInput
+              style={styles.customInputStyle}
+              placeholder={translate('common.search_box_placeholder')}
+              value={filterValue}
+              onChangeText={setFilterValue}
+            />
+            <TouchableOpacity
+              style={styles.touchableItem}
+              aria-label="clear-filters"
+              onPress={() => setFilterValue('')}>
+              <Text>clear</Text>
+            </TouchableOpacity>
           </View>
           <FlatList
             ref={flatListRef}
@@ -136,9 +158,11 @@ TokenHistoryProps & PropsFromRedux) => {
           />
         </View>
       )}
-      {!loading && displayedTransactions.length === 0 && (
-        <Text>No transactions on this token yet!</Text>
-      )}
+      {!loading &&
+        tokenHistory.length > 0 &&
+        displayedTransactions.length === 0 && (
+          <Text>{translate('common.no_transaction_or_clear')}</Text>
+        )}
       {loading && (
         <View style={[styles.flex, styles.verticallyCentered]}>
           <Loader animating={true} />
@@ -158,7 +182,6 @@ const mapStateToProps = (state: RootState) => {
   return {
     activeAccountName: state.activeAccount?.name,
     userTokens: state.userTokens,
-    //   currentTokenBalance: state.navigation.params?.tokenBalance as TokenBalance,
     tokenHistory: state.tokenHistory as TokenTransaction[],
   };
 };
@@ -166,7 +189,6 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps, {
   loadTokenHistory,
   clearTokenHistory,
-  // setTitleContainerProperties,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -190,6 +212,26 @@ const styles = StyleSheet.create({
   },
   marginBottom: {
     marginBottom: 5,
+  },
+  customInputStyle: {
+    width: '72%',
+    height: 40,
+    borderWidth: 1,
+    marginTop: 4,
+    marginBottom: 4,
+    borderRadius: 8,
+    marginLeft: 4,
+    padding: 6,
+  },
+  touchableItem: {
+    borderColor: 'black',
+    width: '20%',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 4,
+    margin: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
