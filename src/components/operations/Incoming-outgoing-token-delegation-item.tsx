@@ -56,7 +56,7 @@ const IncomingOutGoingTokenDelegationItem = ({
 
   const handleCancelTokenDelegation = () => {
     navigate('ModalScreen', {
-      name: 'DelegateToken',
+      name: 'CancelDelegateToken',
       modalContent: (
         <CancelTokenDelegation
           currency={token.symbol}
