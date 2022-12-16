@@ -104,23 +104,85 @@
         "disclaimer_hbd": "Your HBD will take 3.5 days to get converted to approximately USD worth of HIVE tokens, based on its 3.5 days median price."
       },
       "tokens": {
-        "info_author_reward": "Received {{amount}} as author reward",
-        "info_comment_curation_reward": "Received {{amount}} as comment curation reward",
-        "info_mining_lottery": "Received {{amount}} from mining lottery ({{poolId}})",
-        "info_transfer_out": "Sent {{amount}} to @{{to}}",
-        "info_transfer_in": "Received {{amount}} from @{{from}}",
-        "info_delegation_out": "Delegated {{amount}} to @{{delegatee}}",
-        "info_delegation_in": "@{{delegator}} delegated {{amount}}",
-        "info_start_cancel_delegation_out": "Canceled a {{amount}} delegation to @{{delegatee}}",
-        "info_start_cancel_delegation_in": "@{{delegator}} canceled a {{amount}} delegation",
-        "info_cancel_delegation_out": "Canceled a delegation of {{amount}} to @{{delegatee}}",
-        "info_cancel_delegation_in": "@{{delegator}} canceled a {{amount}} delegation",
-        "info_stake_other_user": "@{{from}} staked {{amount}} for @{{to}}",
-        "info_stake": "Staked {{amount}}",
-        "info_start_unstake": "Started to unstake {{amount}}",
-        "info_unstake_done": "{{amount}} unstaked",
-        "info_issue": "Received {{amount}}",
-        "info_pegged_buy": "Bought {{amount}}"
+        "info_author_reward": {
+          "part_1": "Received",
+          "amount": "{{amount}}",
+          "part_2": "as author reward"
+        },
+        "info_comment_curation_reward": {
+          "part_1": "Received",
+          "amount": "{{amount}}",
+          "part_2": "as comment curation reward"
+        },
+        "info_mining_lottery": {
+          "part_1": "Received",
+          "amount": "{{amount}}",
+          "part_2": "from mining lottery ({{poolId}})"
+        },
+        "info_transfer_out": {
+          "part_1": "Sent",
+          "amount": "{{amount}}",
+          "part_2": "to @{{to}}"
+        },
+        "info_transfer_in": {
+          "part_1": "Received",
+          "amount": "{{amount}}",
+          "part_2": "from @{{from}}"
+        },
+        "info_delegation_out": {
+          "part_1": "Delegated",
+          "amount": "{{amount}}",
+          "part_2": "to @{{delegatee}}}"
+        },
+        "info_delegation_in": {
+          "part_1": "@{{delegator}} delegated",
+          "amount": "{{amount}}"
+        },
+        "info_start_cancel_delegation_out": {
+          "part_1": "Canceled a",
+          "amount": "{{amount}}",
+          "part_2": "delegation to @{{delegatee}}"
+        },
+        "info_start_cancel_delegation_in": {
+          "part_1": "@{{delegator}} canceled a",
+          "amount": "{{amount}}",
+          "part_2": "delegation"
+        },
+        "info_cancel_delegation_out": {
+          "part_1": "Canceled a delegation of",
+          "amount": "{{amount}}",
+          "part_2": "to @{{delegatee}}"
+        },
+        "info_cancel_delegation_in": {
+          "part_1": "@{{delegator}} canceled a",
+          "amount": "{{amount}}",
+          "part_2": "delegation"
+        },
+        "info_stake_other_user": {
+          "part_1": "@{{from}} staked",
+          "amount": "{{amount}}",
+          "part_2": "for @{{to}}"
+        },
+        "info_stake": {
+          "part_1": "Staked",
+          "amount": "{{amount}}"
+        },
+        "info_start_unstake": {
+          "part_1": "Started to unstake",
+          "amount": "{{amount}}"
+        },
+        "info_unstake_done": {
+          "amount": "{{amount}}",
+          "part_1": "unstaked"
+        },
+        "info_issue": {
+          "part_1": "Received",
+          "amount": "{{amount}}"
+        },
+        "info_pegged_buy": {
+          "part_1": "Bought",
+          "amount": "{{amount}}"
+        }
       }
     },
     "has": {
