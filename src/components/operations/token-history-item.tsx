@@ -38,7 +38,7 @@ interface TokenHistoryItemProps {
   useIcon?: boolean;
   ariaLabel?: string;
 }
-//TODO refactor gerLabels as it is to much lines of code.
+//TODO refactor gerLabels as it is to much lines of code. IP:SR
 const TokenHistoryItem = ({
   transaction,
   activeAccountName,
