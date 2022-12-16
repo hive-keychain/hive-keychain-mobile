@@ -3,14 +3,7 @@ import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import Loader from 'components/ui/Loader';
 import moment from 'moment';
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {
   CommentCurationTransaction,
@@ -26,6 +19,7 @@ import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {TokenTransactionUtils} from 'utils/token-transaction.utils';
 import {TokenHistoryItemComponent} from './token-history-item';
+import TokensHistoryFilterPanel from './Tokens-history-filter-panel';
 
 export type TokenHistoryProps = {
   tokenBalance: string;
@@ -34,7 +28,6 @@ export type TokenHistoryProps = {
 };
 
 //TODO here:
-//    - fix the no trs found logic.
 //    - set color if in/out amount.
 
 const TokensHistory = ({
@@ -118,50 +111,37 @@ const TokensHistory = ({
 
   return (
     <View style={styles.flex}>
-      {/* //TODO filter */}
-      {/* <InputComponent
-          ariaLabel="input-filter-box"
-          type={InputType.TEXT}
-          placeholder="popup_html_search"
-          value={filterValue}
-          onChange={setFilterValue}
-        /> */}
-      {!loading && displayedTransactions.length > 0 && (
-        <View style={{maxHeight: 500, marginBottom: 30}}>
-          <View style={[styles.rowContainerSpaceBetween, styles.marginBottom]}>
-            <View style={styles.logo}>{tokenLogo}</View>
-            <Text style={styles.title}>
-              {translate('common.history_of')} {currency}
-            </Text>
-          </View>
-          <View style={styles.rowContainerSpaceBetween}>
-            <TextInput
-              style={styles.customInputStyle}
-              placeholder={translate('common.search_box_placeholder')}
-              value={filterValue}
-              onChangeText={setFilterValue}
-            />
-            <TouchableOpacity
-              style={styles.touchableItem}
-              aria-label="clear-filters"
-              onPress={() => setFilterValue('')}>
-              <Text>clear</Text>
-            </TouchableOpacity>
-          </View>
-          <FlatList
-            ref={flatListRef}
-            data={displayedTransactions}
-            renderItem={(transaction) => renderItem(transaction.item)}
-            keyExtractor={(transaction) => transaction._id}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-            onScroll={handleScroll}
-          />
+      <View style={{maxHeight: 500, marginBottom: 30}}>
+        <View style={[styles.rowContainerSpaceBetween, styles.marginBottom]}>
+          <View style={styles.logo}>{tokenLogo}</View>
+          <Text style={styles.title}>
+            {translate('common.history_of')} {currency}
+          </Text>
         </View>
-      )}
+
+        <TokensHistoryFilterPanel
+          loading={loading}
+          filterValue={filterValue}
+          setFilterValue={setFilterValue}
+        />
+        <FlatList
+          ref={flatListRef}
+          data={displayedTransactions}
+          renderItem={(transaction) => renderItem(transaction.item)}
+          keyExtractor={(transaction) => transaction._id}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          onScroll={handleScroll}
+        />
+      </View>
+
       {!loading &&
         tokenHistory.length > 0 &&
         displayedTransactions.length === 0 && (
-          <Text>{translate('common.no_transaction_or_clear')}</Text>
+          <View style={[styles.flex, styles.verticallyCentered]}>
+            <Text style={styles.textBold}>
+              {translate('common.no_transaction_or_clear')}
+            </Text>
+          </View>
         )}
       {loading && (
         <View style={[styles.flex, styles.verticallyCentered]}>
@@ -213,25 +193,8 @@ const styles = StyleSheet.create({
   marginBottom: {
     marginBottom: 5,
   },
-  customInputStyle: {
-    width: '72%',
-    height: 40,
-    borderWidth: 1,
-    marginTop: 4,
-    marginBottom: 4,
-    borderRadius: 8,
-    marginLeft: 4,
-    padding: 6,
-  },
-  touchableItem: {
-    borderColor: 'black',
-    width: '20%',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 4,
-    margin: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
+  textBold: {
+    fontWeight: 'bold',
   },
 });
 
