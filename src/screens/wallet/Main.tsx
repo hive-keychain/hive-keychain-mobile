@@ -7,6 +7,7 @@ import {
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import Transactions from 'components/hive/Transactions';
+import WhatsNewComponent from 'components/popups/whats-new/whats-new.component';
 import Survey from 'components/survey';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
@@ -43,11 +44,15 @@ const Main = ({
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
 
-  useEffect(() => {
+  const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();
     loadPrices();
     fetchPhishingAccounts();
+  };
+
+  useEffect(() => {
+    updateUserWallet(lastAccount);
   }, [
     loadAccount,
     accounts,
@@ -88,14 +93,11 @@ const Main = ({
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      loadAccount(lastAccount || accounts[0].name);
-      loadProperties();
-      loadPrices();
-      fetchPhishingAccounts();
+      updateUserWallet(lastAccount);
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, lastAccount]);
 
   if (!user) {
     return null;
@@ -140,6 +142,7 @@ const Main = ({
           components={[<Primary />, <Transactions user={user} />, <Tokens />]}
         />
         <Survey navigation={navigation} />
+        <WhatsNewComponent navigation={navigation} />
       </>
     </WalletPage>
   );
