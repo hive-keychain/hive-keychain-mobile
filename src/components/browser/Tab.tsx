@@ -304,6 +304,7 @@ export default ({
               url.includes('risingstargame.com') ? false : true
             }
             injectedJavaScriptBeforeContentLoaded={hive_keychain}
+            mediaPlaybackRequiresUserAction={false}
             onMessage={onMessage}
             javaScriptEnabled
             allowsInlineMediaPlayback
