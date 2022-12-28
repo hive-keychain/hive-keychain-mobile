@@ -2,6 +2,8 @@ import {Page} from 'actions/interfaces';
 import Fuse from 'fuse.js';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {store} from 'store';
+import {BrowserConfig} from 'utils/config';
 import HistoryItem from './HistoryItem';
 
 type Props = {
@@ -13,11 +15,26 @@ export default ({input, onSubmit, history}: Props) => {
   const [candidates, setCandidates] = useState([]);
 
   useEffect(() => {
-    const fuse = new Fuse(history, {
+    const dApps = [
+      ...history,
+      ...BrowserConfig.HomeTab.dApps
+        .map((e) => ({
+          url:
+            e.url +
+            (e.appendUsername ? store.getState().activeAccount.name : ''),
+          name: e.name,
+          icon: e.icon,
+        }))
+        .filter((e) => !history.find((f) => f.url === e.url)),
+    ];
+    const fuse = new Fuse(dApps, {
       shouldSort: true,
-      threshold: 0.45,
+      threshold: 0.3,
       location: 0,
       distance: 100,
+      isCaseSensitive: false,
+      useExtendedSearch: true,
+      ignoreLocation: true,
       //maxPatternLength: 32,
       minMatchCharLength: 0,
       keys: [
