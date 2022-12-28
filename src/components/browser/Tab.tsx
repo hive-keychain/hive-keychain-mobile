@@ -300,9 +300,9 @@ export default ({
             allowUniversalAccessFromFileURLs={true}
             mixedContentMode={'always'}
             ref={tabRef}
-            sharedCookiesEnabled={
-              url.includes('risingstargame.com') ? false : true
-            }
+            // sharedCookiesEnabled={
+            //   url.includes('risingstargame.com') ? false : true
+            // }
             injectedJavaScriptBeforeContentLoaded={hive_keychain}
             mediaPlaybackRequiresUserAction={false}
             onMessage={onMessage}
