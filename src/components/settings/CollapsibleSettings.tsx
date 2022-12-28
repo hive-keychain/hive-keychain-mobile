@@ -14,7 +14,7 @@ type Props = {
   ) => ActionPayload<PreferencePayload>;
 };
 
-const CollaspibleSettings = ({
+const CollapsibleSettings = ({
   domainPref,
   index,
   removePreference,
@@ -78,4 +78,4 @@ const getStyles = (index: number) =>
     whitelistContainer: {flexDirection: 'row', justifyContent: 'space-between'},
   });
 
-export default CollaspibleSettings;
+export default CollapsibleSettings;

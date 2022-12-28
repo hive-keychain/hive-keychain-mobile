@@ -46,6 +46,7 @@
     "load_more": "Click to load more",
     "top": "Top",
     "list_is_empty_try_clear_filter": "Nothing found, try to clear your filter."
+    "popup_read_more": "Read more"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -221,6 +222,7 @@
       "rpc": "RPC Nodes",
       "global": "Global Settings",
       "whitelisted": "Whitelisted operations",
+      "no_pref": "No whitelisted operations",
       "disclaimer": [
         "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
         "Use 'DEFAULT' RPC to let Hive Keychain chose the best RPC node at a given time."
@@ -525,6 +527,14 @@
         "vote": "You successfully voted for a proposal!",
         "unvote": "You successfully removed your vote!"
       }
+    }
+  },
+  "popup": {
+    "whats_new": {
+      "intro": "What's new in {{content_version}}",
+      "next": "Next",
+      "previous": "Previous",
+      "got_it": "Got it!"
     }
   }
 }

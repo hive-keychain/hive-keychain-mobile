@@ -4,14 +4,14 @@ import {Rpc} from 'actions/interfaces';
 import {removePreference} from 'actions/preferences';
 import CustomPicker from 'components/form/CustomPicker';
 import UserPicker from 'components/form/UserPicker';
-import CollaspibleSettings from 'components/settings/CollapsibleSettings';
+import CollapsibleSettings from 'components/settings/CollapsibleSettings';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {SettingsNavigation} from 'navigators/MainDrawer.types';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {rpcList} from 'utils/hiveUtils';
@@ -31,17 +31,37 @@ const Settings = ({
   const showPreferencesHandler = () => {
     const userPreference = preferences.find((e) => e.username === active.name);
     if (!userPreference || !userPreference.domains.length)
-      return <Text>Nothing to show</Text>;
-    return userPreference.domains.map((e, i) => (
-      <CollaspibleSettings
-        username={active.name}
-        key={e.domain}
-        index={i}
-        domainPref={e}
-        removePreference={removePreference}
+      return <Text>{translate('settings.settings.no_pref')}</Text>;
+    return (
+      <FlatList
+        data={userPreference.domains}
+        renderItem={(preference) => {
+          return (
+            <CollapsibleSettings
+              username={active.name}
+              key={preference.item.domain}
+              index={preference.index}
+              domainPref={preference.item}
+              removePreference={removePreference}
+            />
+          );
+        }}
       />
-    ));
+    );
   };
+
+  const customSortRpctList = (orderedRpcList: Rpc[]) => {
+    if (typeof settings.rpc === 'object') {
+      const selectedIndex = orderedRpcList.findIndex(
+        (item) => item.uri === (settings.rpc as Rpc).uri,
+      );
+      const temp = orderedRpcList[0];
+      orderedRpcList[0] = orderedRpcList[selectedIndex];
+      orderedRpcList[selectedIndex] = temp;
+    }
+    return orderedRpcList;
+  };
+
   return (
     <SafeArea>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
@@ -60,12 +80,12 @@ const Settings = ({
         ))}
         <Separator height={20} />
         <CustomPicker
+          list={customSortRpctList(rpcList)}
           onSelected={setRpc}
           selectedValue={settings.rpc}
           labelCreator={(rpc: Rpc) =>
             `${rpc.uri} ${rpc.testnet ? '(TESTNET)' : ''}`
           }
-          list={rpcList}
           prompt={translate('components.picker.prompt_rpc')}
         />
         <View style={styles.separator}></View>

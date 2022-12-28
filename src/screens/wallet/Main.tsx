@@ -7,6 +7,8 @@ import {
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import {WalletHistoryComponent} from 'components/hive/Wallet-history-component';
+import Transactions from 'components/hive/Transactions';
+import WhatsNewComponent from 'components/popups/whats-new/whats-new.component';
 import Survey from 'components/survey';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
@@ -42,12 +44,16 @@ const Main = ({
   hive_authentication_service,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
-  const locale = getMainLocale();
-  useEffect(() => {
+ 
+  const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();
     loadPrices();
     fetchPhishingAccounts();
+  };
+
+  useEffect(() => {
+    updateUserWallet(lastAccount);
   }, [
     loadAccount,
     accounts,
@@ -88,14 +94,11 @@ const Main = ({
 
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      loadAccount(lastAccount || accounts[0].name);
-      loadProperties();
-      loadPrices();
-      fetchPhishingAccounts();
+      updateUserWallet(lastAccount);
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, lastAccount]);
 
   if (!user) {
     return null;
@@ -140,6 +143,7 @@ const Main = ({
           components={[<Primary />, <WalletHistoryComponent />, <Tokens />]}
         />
         <Survey navigation={navigation} />
+        <WhatsNewComponent navigation={navigation} />
       </>
     </WalletPage>
   );
