@@ -131,7 +131,6 @@
         "title": "Convert to {{to}}",
         "button": "Convert",
         "disclaimer_hive": "You deposit collateral (HIVE), then you are given HBD up front worth half of the collateral amount (minus a 5% fee). Your official final payment is in 3.5 days. At that point remaining collateral (HIVE) is returned.",
-<<<<<<< HEAD
         "disclaimer_hbd": "Your HBD will take 3.5 days to get converted to approximately USD worth of HIVE tokens, based on its 3.5 days median price."
       },
       "more_token_info": "{{currency}} information",
@@ -157,13 +156,11 @@
         "incoming": "Incoming Delegations",
         "outgoing": "Outgoing Delegations",
         "undelegation_cooldown_disclaimer": "When removing a {{symbol}} delegation, the staked tokens will be available after a {{undelegationCooldown}} days cooldown.",
-        "token_pending_undelegation": "Pending undelegation"
-=======
+        "token_pending_undelegation": "Pending undelegation",
         "disclaimer_hbd": "Your HBD will take 3.5 days to get converted to approximately USD worth of HIVE tokens, based on its 3.5 days median price.",
         "fill_convert_request": "Filled conversion:",
         "start_convert": "conversion",
         "start_collateralized_convert": "collateralized conversion"
->>>>>>> dev
       }
     },
     "has": {
