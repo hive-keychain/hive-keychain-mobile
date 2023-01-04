@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import ClearIcon from 'src/assets/wallet/icon_delete_black.svg';
-import EditIcon from 'src/assets/wallet/icon_edit_black.svg';
 import {TokenDelegation} from 'utils/hiveEngine';
 import {goBack, navigate} from 'utils/navigation';
 import CancelTokenDelegation from './Cancel-token-delegation';
@@ -107,11 +106,11 @@ const IncomingOutGoingTokenDelegationItem = ({
           )}
           {!editMode ? (
             <View style={styles.buttonRowContainer}>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.smallButton}
                 onPress={() => setEditMode(!editMode)}>
                 <EditIcon />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={styles.smallButton}
                 onPress={handleCancelTokenDelegation}>
@@ -143,13 +142,13 @@ const IncomingOutGoingTokenDelegationItem = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginLeft: 22,
   },
   delegationItemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 6,
+    padding: 6,
+    paddingHorizontal: 10,
   },
   customInputStyle: {
     width: '40%',

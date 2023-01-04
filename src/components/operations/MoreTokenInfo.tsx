@@ -8,6 +8,7 @@ import React from 'react';
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
 import Balance from './Balance';
@@ -162,7 +163,9 @@ const MoreTokenInfo = ({
                 {translate('wallet.operations.token_stake.titled')}
                 {' : '}
               </Text>
-              <Text>{token.stake}</Text>
+              <Text>
+                {withCommas(token.stake)} {tokenInfo.symbol}
+              </Text>
             </Text>
           )}
           {tokenInfo.stakingEnabled && parseFloat(token.pendingUnstake) > 0 && (
@@ -173,7 +176,9 @@ const MoreTokenInfo = ({
                 )}
                 {' : '}
               </Text>
-              <Text>{token.pendingUnstake}</Text>
+              <Text>
+                {withCommas(token.pendingUnstake)} {tokenInfo.symbol}
+              </Text>
             </Text>
           )}
           {tokenInfo.delegationEnabled && parseFloat(token.delegationsIn) > 0 && (
@@ -183,7 +188,9 @@ const MoreTokenInfo = ({
                   {translate('wallet.operations.token_delegation.in')}
                   {' : '}
                 </Text>
-                <Text>{token.delegationsIn}</Text>
+                <Text>
+                  {withCommas(token.delegationsIn)} {tokenInfo.symbol}
+                </Text>
               </Text>
               <TouchableOpacity
                 onPress={() =>
@@ -200,7 +207,9 @@ const MoreTokenInfo = ({
                   {translate('wallet.operations.token_delegation.out')}
                   {' : '}
                 </Text>
-                <Text>{token.delegationsOut}</Text>
+                <Text>
+                  {withCommas(token.delegationsOut)} {tokenInfo.symbol}
+                </Text>
               </Text>
               <TouchableOpacity
                 onPress={() =>
@@ -212,11 +221,16 @@ const MoreTokenInfo = ({
           )}
           {tokenInfo.delegationEnabled &&
             parseFloat(token.pendingUndelegations) > 0 && (
-              <Text style={styles.textBold}>
-                {translate(
-                  'wallet.operations.token_delegation.token_pending_undelegation',
-                )}{' '}
-                {token.pendingUndelegations}
+              <Text>
+                <Text style={styles.textBold}>
+                  {translate(
+                    'wallet.operations.token_delegation.token_pending_undelegation',
+                  )}
+                  {' : '}
+                </Text>
+                <Text>
+                  {withCommas(token.pendingUndelegations)} {tokenInfo.symbol}
+                </Text>
               </Text>
             )}
         </View>
