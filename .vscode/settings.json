@@ -48,5 +48,5 @@
   },
   "editor.inlineSuggest.enabled": true,
   "thunder-client.saveToWorkspace": true,
-  "editor.minimap.enabled": false,
+  "editor.minimap.enabled": false
 }

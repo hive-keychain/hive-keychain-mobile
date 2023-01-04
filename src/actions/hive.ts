@@ -1,25 +1,24 @@
-import {decodeMemo} from 'components/bridge';
 import {AppThunk} from 'src/hooks/redux';
-import dhive, {getClient} from 'utils/hive';
+import {getClient} from 'utils/hive';
 import {
   getConversionRequests,
   getDelegatees,
   getDelegators,
   getSavingsRequests,
 } from 'utils/hiveUtils';
-import {translate} from 'utils/localize';
 import {getPrices} from 'utils/price';
+import TransactionUtils from 'utils/transactions.utils';
 import {getPhishingAccounts} from 'utils/transferValidator';
 import {
   ActionPayload,
   DelegationsPayload,
   GlobalProperties,
-  Transaction,
 } from './interfaces';
 import {
   ACTIVE_ACCOUNT,
   ACTIVE_ACCOUNT_RC,
   ADD_TRANSACTIONS,
+  CLEAR_USER_TRANSACTIONS,
   FETCH_CONVERSION_REQUESTS,
   FETCH_DELEGATEES,
   FETCH_DELEGATORS,
@@ -89,16 +88,26 @@ export const loadPrices = (): AppThunk => async (dispatch) => {
   }
 };
 
+export const clearUserTransactions = (): AppThunk => async (dispatch) => {
+  dispatch({
+    type: CLEAR_USER_TRANSACTIONS,
+  });
+};
+
 export const initAccountTransactions = (
   accountName: string,
 ): AppThunk => async (dispatch, getState) => {
   const memoKey = getState().accounts.find((a) => a.name === accountName)!.keys
     .memo;
-  const transfers = await getAccountTransactions(accountName, null, memoKey);
-
+  const transactions = await TransactionUtils.getAccountTransactions(
+    accountName,
+    null,
+    getState().properties.globals!,
+    memoKey,
+  );
   dispatch({
     type: INIT_TRANSACTIONS,
-    payload: transfers,
+    payload: transactions,
   });
 };
 
@@ -108,73 +117,17 @@ export const fetchAccountTransactions = (
 ): AppThunk => async (dispatch, getState) => {
   const memoKey = getState().accounts.find((a) => a.name === accountName)!.keys
     .memo;
-  const transfers = await getAccountTransactions(accountName, start, memoKey);
-  dispatch({
-    type: ADD_TRANSACTIONS,
-    payload: transfers,
-  });
-};
-
-const getAccountTransactions = async (
-  accountName: string,
-  start: number | null,
-  memoKey?: string,
-): Promise<Transaction[]> => {
-  try {
-    const op = dhive.utils.operationOrders;
-    const operationsBitmask = dhive.utils.makeBitMaskFilter([op.transfer]);
-    const transactions = await getClient().database.getAccountHistory(
-      accountName,
-      start || -1,
-      start ? Math.min(10, start) : 1000,
-      //@ts-ignore
-      operationsBitmask,
-    );
-
-    const transfers = transactions
-      .filter((e) => e[1].op[0] === 'transfer')
-      .map((e) => {
-        const receivedTransaction = e[1].op[1];
-        //@ts-ignore
-        const tr: Transaction = {
-          ...receivedTransaction,
-          type: 'transfer',
-          timestamp: e[1].timestamp,
-          key: `${accountName}!${e[0]}`,
-        };
-        return tr;
-      })
-      .sort(
-        (a, b) =>
-          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-      );
-
-    if (start && Math.min(1000, start) !== 1000 && transfers.length) {
-      transfers[transfers.length - 1].last = true;
-    }
-    const trs = [];
-    for (const transfer of transfers) {
-      const {memo} = transfer;
-      if (memo[0] === '#') {
-        if (memoKey) {
-          try {
-            transfer.memo = await decodeMemo(memoKey, memo);
-          } catch (e) {}
-        } else {
-          transfer.memo = translate('wallet.add_memo');
-        }
-        trs.push(transfer);
-      } else {
-        trs.push(transfer);
-      }
-    }
-    return trs;
-  } catch (e) {
-    return getAccountTransactions(
-      accountName,
-      (e as any).jse_info.stack[0].data.sequence - 1,
-      memoKey,
-    );
+  const transfers = await TransactionUtils.getAccountTransactions(
+    accountName,
+    start,
+    getState().properties.globals!,
+    memoKey,
+  );
+  if (transfers) {
+    dispatch({
+      type: ADD_TRANSACTIONS,
+      payload: transfers,
+    });
   }
 };
 

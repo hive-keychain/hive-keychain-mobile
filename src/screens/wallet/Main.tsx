@@ -6,6 +6,7 @@ import {
 } from 'actions/hive';
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
+import {WalletHistoryComponent} from 'components/hive/Wallet-history-component';
 import Transactions from 'components/hive/Transactions';
 import WhatsNewComponent from 'components/popups/whats-new/whats-new.component';
 import Survey from 'components/survey';
@@ -28,7 +29,7 @@ import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getVotingDollarsPerAccount, getVP} from 'utils/hiveUtils';
-import {translate} from 'utils/localize';
+import {getMainLocale, translate} from 'utils/localize';
 
 const Main = ({
   loadAccount,
@@ -43,7 +44,7 @@ const Main = ({
   hive_authentication_service,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
-
+ 
   const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();
@@ -139,7 +140,7 @@ const Main = ({
             translate(`wallet.menu.tokens`),
           ]}
           toUpperCase
-          components={[<Primary />, <Transactions user={user} />, <Tokens />]}
+          components={[<Primary />, <WalletHistoryComponent />, <Tokens />]}
         />
         <Survey navigation={navigation} />
         <WhatsNewComponent navigation={navigation} />
