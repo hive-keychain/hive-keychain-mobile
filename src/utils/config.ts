@@ -213,6 +213,31 @@ export const BrowserConfig = {
         url: 'https://beeswap.dcity.io/swap',
         categories: ['finance'],
       },
+      {
+        name: 'Reverio',
+        description:
+          'Ask and answer questions on Reverio and earn rewards for valuable contributions on $hive',
+        icon: 'https://images.hive.blog/u/reverio/avatar',
+        url: 'https://www.reverio.io/',
+        categories: ['social', 'tool'],
+      },
+      {
+        name: 'WOO',
+        description:
+          'Play-To-Earn business management game. Build your own wrestling organization',
+        icon:
+          'https://files.peakd.com/file/peakd-hive/theghost1980/AL1geTDPibhiR6soMiVAiLMoP9ymyNDf783WLXQCj71u42wj9C72R15ujEfVQxc.png',
+        url: 'https://wrestlingorganizationonline.com/',
+        categories: ['gaming', 'nft'],
+      },
+      {
+        name: 'Kryptogamers',
+        description:
+          'Leading Provably Fair Hive Casino - Play 30+ games and earn daily dividends',
+        icon: 'https://images.hive.blog/u/kryptogames/avatar',
+        url: 'https://kryptogamers.com/',
+        categories: ['gaming'],
+      },
     ],
   },
 };
