@@ -230,6 +230,7 @@ export const BrowserConfig = {
         url: 'https://wrestlingorganizationonline.com/',
         categories: ['gaming', 'nft'],
       },
+      {
         name: 'Kryptogamers',
         description:
           'Leading Provably Fair Hive Casino - Play 30+ games and earn daily dividends',

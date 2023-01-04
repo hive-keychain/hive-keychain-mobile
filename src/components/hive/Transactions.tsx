@@ -6,7 +6,7 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {getMainLocale, translate} from 'utils/localize';
-import Transfer from './Transfer';
+import {WalletHistoryItemComponent} from './WalletHistoryItemComponent';
 
 type Props = PropsFromRedux & {user: ActiveAccount};
 
@@ -22,6 +22,12 @@ const Transactions = ({
       initAccountTransactions(user.account.name);
     }
   }, [user.account.name, initAccountTransactions]);
+
+  // const [isFilterPanelOpened, setIsFilterPanelOpened] = useState(false);
+  // const toggleFilter = () => {
+  //   setIsFilterPanelOpened(!isFilterPanelOpened);
+  // };
+
   const [end, setEnd] = useState(0);
   const locale = getMainLocale();
   const renderTransactions = () => {
@@ -33,30 +39,35 @@ const Transactions = ({
       );
     } else {
       return transactions.length ? (
-        <FlatList
-          data={transactions}
-          initialNumToRender={20}
-          onEndReachedThreshold={0.5}
-          onEndReached={() => {
-            const newEnd =
-              +transactions[transactions.length - 1].key.split('!')[1] - 1;
-            if (newEnd !== end && !transactions[transactions.length - 1].last) {
-              fetchAccountTransactions(user.account.name, newEnd);
-              setEnd(newEnd);
-            }
-          }}
-          renderItem={(transaction) => {
-            return (
-              <Transfer
-                transaction={transaction.item}
-                user={user}
-                locale={locale}
-              />
-            );
-          }}
-          keyExtractor={(transaction) => transaction.key}
-          style={basicStyles.flex}
-        />
+        <>
+          <FlatList
+            data={transactions}
+            initialNumToRender={20}
+            onEndReachedThreshold={0.5}
+            onEndReached={() => {
+              const newEnd =
+                +transactions[transactions.length - 1].key.split('!')[1] - 1;
+              if (
+                newEnd !== end &&
+                !transactions[transactions.length - 1].last
+              ) {
+                fetchAccountTransactions(user.account.name, newEnd);
+                setEnd(newEnd);
+              }
+            }}
+            renderItem={(transaction) => {
+              return (
+                <WalletHistoryItemComponent
+                  transaction={transaction.item}
+                  user={user}
+                  locale={locale}
+                />
+              );
+            }}
+            keyExtractor={(transaction) => transaction.key}
+            style={basicStyles.flex}
+          />
+        </>
       ) : (
         <Text style={basicStyles.no_tokens}>
           {translate('wallet.no_transaction')}
