@@ -1,11 +1,6 @@
+import FloatingCloseButton from 'components/ui/FloatingCloseButton';
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, TextInput, View} from 'react-native';
 import {translate} from 'utils/localize';
 
 type TokensHistoryFilterPanelProps = {
@@ -27,12 +22,13 @@ const TokensHistoryFilterPanel = ({
         value={filterValue}
         onChangeText={setFilterValue}
       />
-      <TouchableOpacity
-        style={styles.touchableItem}
-        aria-label="clear-filters"
-        onPress={() => setFilterValue('')}>
-        <Text>clear</Text>
-      </TouchableOpacity>
+      {filterValue.length > 0 && (
+        <FloatingCloseButton
+          style={styles.touchableItem}
+          ariaLabel={'clear-filter-button'}
+          onPressHandler={() => setFilterValue('')}
+        />
+      )}
     </View>
   ) : null;
 };
@@ -44,26 +40,22 @@ const styles = StyleSheet.create({
   rowContainerSpaceBetween: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 10,
   },
   customInputStyle: {
-    width: '72%',
+    width: '100%',
     height: 40,
     borderWidth: 1,
     marginTop: 4,
     marginBottom: 4,
     borderRadius: 8,
-    marginLeft: 4,
+    // marginLeft: 4,
     padding: 6,
   },
   touchableItem: {
-    borderColor: 'black',
-    width: '20%',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 4,
-    margin: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: 'absolute',
+    right: 10,
+    top: 15,
   },
 });
 

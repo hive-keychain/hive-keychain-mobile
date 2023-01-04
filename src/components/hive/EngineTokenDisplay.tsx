@@ -30,7 +30,7 @@ const EngineTokenDisplay = ({
     return null;
   }
   const metadata = JSON.parse(tokenInfo.metadata);
-  // console.log('aa', token, tokenMarket); //TODO uncomment
+  // console.log('aa', token, tokenMarket); //TODO uncomment if needed
   const logo = hasError ? (
     <Image
       style={styles.icon}

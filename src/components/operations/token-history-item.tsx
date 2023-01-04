@@ -298,7 +298,7 @@ const TokenHistoryItem = ({
       case OperationsHiveEngine.TOKEN_UNSTAKE_DONE: {
         const t = transaction as UnStakeTokenDoneTransaction;
         iconName = 'power_up_down';
-        iconNameSubType = 'transfer_to_vesting';
+        iconNameSubType = 'withdraw_vesting';
         labelDataList = [
           {
             label: 'info_unstake_done.amount',

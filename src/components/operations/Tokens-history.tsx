@@ -18,6 +18,7 @@ import {
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {TokenTransactionUtils} from 'utils/token-transaction.utils';
+import Operation from './Operation';
 import {TokenHistoryItemComponent} from './token-history-item';
 import TokensHistoryFilterPanel from './Tokens-history-filter-panel';
 
@@ -26,9 +27,6 @@ export type TokenHistoryProps = {
   tokenLogo: JSX.Element;
   currency: string;
 };
-
-//TODO here:
-//    - set color if in/out amount.
 
 const TokensHistory = ({
   activeAccountName,
@@ -110,51 +108,50 @@ const TokensHistory = ({
   };
 
   return (
-    <View style={styles.flex}>
-      <View style={{maxHeight: 500, marginBottom: 30}}>
-        <View style={[styles.rowContainerSpaceBetween, styles.marginBottom]}>
-          <View style={styles.logo}>{tokenLogo}</View>
-          <Text style={styles.title}>
-            {translate('common.history_of')} {currency}
-          </Text>
-        </View>
-
-        <TokensHistoryFilterPanel
-          loading={loading}
-          filterValue={filterValue}
-          setFilterValue={setFilterValue}
-        />
-        <FlatList
-          ref={flatListRef}
-          data={displayedTransactions}
-          renderItem={(transaction) => renderItem(transaction.item)}
-          keyExtractor={(transaction) => transaction._id}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
-          onScroll={handleScroll}
-        />
-      </View>
-
-      {!loading &&
-        tokenHistory.length > 0 &&
-        displayedTransactions.length === 0 && (
-          <View style={[styles.flex, styles.verticallyCentered]}>
-            <Text style={styles.textBold}>
-              {translate('common.no_transaction_or_clear')}
-            </Text>
+    <Operation
+      title={`${currency} ${translate('common.history').toUpperCase()}`}
+      logo={tokenLogo}>
+      <>
+        <View style={styles.flex}>
+          <View style={styles.container}>
+            <TokensHistoryFilterPanel
+              loading={loading}
+              filterValue={filterValue}
+              setFilterValue={setFilterValue}
+            />
+            <FlatList
+              ref={flatListRef}
+              data={displayedTransactions}
+              renderItem={(transaction) => renderItem(transaction.item)}
+              keyExtractor={(transaction) => transaction._id}
+              ItemSeparatorComponent={() => <View style={styles.separator} />}
+              onScroll={handleScroll}
+            />
           </View>
-        )}
-      {loading && (
-        <View style={[styles.flex, styles.verticallyCentered]}>
-          <Loader animating={true} />
-        </View>
-      )}
 
-      {/* ScrollToTop Button */}
-      {!loading && displayScrollToTop && (
-        <BackToTopButton element={flatListRef} />
-      )}
-      {/* END ScrollToTop Button */}
-    </View>
+          {!loading &&
+            tokenHistory.length > 0 &&
+            displayedTransactions.length === 0 && (
+              <View style={[styles.flex, styles.verticallyCentered]}>
+                <Text style={styles.textBold}>
+                  {translate('common.no_transaction_or_clear')}
+                </Text>
+              </View>
+            )}
+          {loading && (
+            <View style={[styles.flex, styles.verticallyCentered]}>
+              <Loader animating={true} />
+            </View>
+          )}
+
+          {/* ScrollToTop Button */}
+          {!loading && displayScrollToTop && (
+            <BackToTopButton element={flatListRef} />
+          )}
+          {/* END ScrollToTop Button */}
+        </View>
+      </>
+    </Operation>
   );
 };
 
@@ -182,19 +179,23 @@ const styles = StyleSheet.create({
   },
   separator: {marginVertical: 3, borderBottomWidth: 1},
   logo: {justifyContent: 'center', alignItems: 'center'},
-  rowContainerSpaceBetween: {
+  rowContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   title: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 18,
+    marginLeft: 10,
   },
   marginBottom: {
     marginBottom: 5,
   },
   textBold: {
     fontWeight: 'bold',
+  },
+  container: {
+    maxHeight: 500,
+    marginBottom: 30,
   },
 });
 

@@ -29,7 +29,9 @@ const CustomAmountLabel = ({list, translatePrefix}: CustomAmountLabelProps) => {
                 amount: withCommas(listItem.data.amount.split(' ')[0]),
               })}{' '}
             </Text>
-            <Text>{listItem.data.amount.split(' ')[1]} </Text>
+            <Text style={{color: listItem.color ?? 'black'}}>
+              {listItem.data.amount.split(' ')[1]}{' '}
+            </Text>
           </View>
         ) : (
           <Text
