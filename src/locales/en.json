@@ -332,7 +332,7 @@
     "no_auth_account": "Please save {{authorizedAccount}} in Hive Keychain to use it as an authorized account.",
     "no_accounts_no_auth": "Please add at least one account with authority over {{username}}",
     "token_stake_success": "You succesfully staked some {{currency}}!",
-    "token_unstake_success": "You succesfully unstaked some {{currency}}!",
+    "token_unstake_success": "You succesfully started unstaking some {{currency}}!",
     "token_delegate_sucess": "You succesfully delegated some {{currency}}!",
     "token_cancel_delegation_sucess": "Your delegation of {{currency}} has been cancelled!",
     "token_undelegate_sucess": "Your delegation of {{currency}} was removed!",
