@@ -213,6 +213,14 @@ export const BrowserConfig = {
         url: 'https://beeswap.dcity.io/swap',
         categories: ['finance'],
       },
+      {
+        name: 'Kryptogamers',
+        description:
+          'Leading Provably Fair Hive Casino - Play 30+ games and earn daily dividends',
+        icon: 'https://images.hive.blog/u/kryptogames/avatar',
+        url: 'https://kryptogamers.com/',
+        categories: ['gaming'],
+      },
     ],
   },
 };
