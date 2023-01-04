@@ -112,7 +112,7 @@
       "powerdown": {
         "title": "Power down",
         "info_power_down": "power down",
-        "cancelled_power_down": "Cancelled power down"
+        "cancelled_power_down": "Cancelled a power down"
       },
       "delegation": {
         "title": "Delegate Hive Power",
