@@ -9,6 +9,7 @@ export type RootStackParam = {
     name: string;
     data?: any;
     centerModal?: boolean | undefined;
+    fixedHeight?: number;
   };
 };
 

@@ -14,23 +14,27 @@ type Props = {
   bottomHalf: boolean;
   boxBackgroundColor?: string;
   outsideClick: () => void;
+  fixedHeight?: number;
 };
 type InnerProps = {height: number; width: number};
 class CustomModal extends React.Component<Props, {}> implements InnerProps {
   height;
   width;
+  fixedHeight;
   constructor(props: Props) {
     super(props);
     const {height, width} = Dimensions.get('window');
     this.height = height;
     this.width = width;
+    this.fixedHeight = props.fixedHeight;
   }
   render() {
     let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
-    const styles = StyleSheetFactory.getSheet({
+    let styles = StyleSheetFactory.getSheet({
       modalHeight: modalHeight,
       height: this.height,
       width: this.width,
+      fixedHeight: this.fixedHeight,
     });
     return (
       <KeyboardAvoidingView
@@ -42,7 +46,10 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
             onPress={() => {
               this.props.outsideClick();
             }}></TouchableWithoutFeedback>
-          <View style={styles.modalWrapper}>
+          <View
+            style={
+              this.fixedHeight ? styles.modalWrapperFixed : styles.modalWrapper
+            }>
             <View style={styles.modalContainer}>
               <LinearGradient
                 start={{x: 0, y: 0}}
@@ -60,7 +67,13 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
 }
 
 class StyleSheetFactory {
-  static getSheet({modalHeight, width, height}: Dim & {modalHeight: number}) {
+  static getSheet({
+    modalHeight,
+    width,
+    height,
+    fixedHeight,
+  }: Dim & {modalHeight: number; fixedHeight: number}) {
+    console.log(fixedHeight);
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
       mainContainer: {
@@ -77,8 +90,16 @@ class StyleSheetFactory {
         alignItems: 'center',
         minHeight: modalHeight,
         maxHeight: 0.85 * height,
-        flex: 1,
         height: 'auto',
+      },
+      modalWrapperFixed: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: fixedHeight * height,
       },
       modalContainer: {
         backgroundColor: 'white',

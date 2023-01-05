@@ -185,8 +185,8 @@ export const ShowHistory = (props: HistoryProps) => {
       onPress={() => {
         navigate('ModalScreen', {
           name: 'EngineHistory',
-          // modalContent: <History {...props} />, OLD one
-          modalContent: <TokensHistoryComponent {...props} />, //new ONE
+          modalContent: <TokensHistoryComponent {...props} />,
+          fixedHeight: 0.75,
         });
       }}
       size={36}
