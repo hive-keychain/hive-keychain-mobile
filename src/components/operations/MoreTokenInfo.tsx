@@ -144,18 +144,18 @@ const MoreTokenInfo = ({
   return (
     <Operation logo={<AddIcon />} title={token.symbol}>
       <>
-        <Separator height={40} />
+        <Separator height={20} />
         <Balance
           currency={token.symbol}
           tokenBalance={token.balance}
           tokenLogo={tokenLogo}
           isHiveEngine
         />
-        <Separator height={10} />
+        <Separator height={20} />
         <TouchableOpacity onPress={handleClickIssuer}>
           <Text>By @{tokenInfo.issuer}</Text>
         </TouchableOpacity>
-        <Separator height={10} />
+        <Separator height={20} />
         <View>
           {tokenInfo.stakingEnabled && (
             <Text>
@@ -234,7 +234,7 @@ const MoreTokenInfo = ({
               </Text>
             )}
         </View>
-        <Separator height={20} />
+        <Separator height={50} />
         <View style={styles.buttonsContainer}>
           {tokenInfo.stakingEnabled && (
             <ActiveOperationButton
@@ -261,6 +261,7 @@ const MoreTokenInfo = ({
             />
           )}
         </View>
+        <Separator height={20} />
       </>
     </Operation>
   );
@@ -283,6 +284,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
+    marginHorizontal: 20,
   },
   buttonContainer: {
     justifyContent: 'center',

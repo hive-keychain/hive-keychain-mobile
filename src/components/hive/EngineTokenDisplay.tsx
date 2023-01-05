@@ -35,6 +35,7 @@ const EngineTokenDisplay = ({
     return null;
   }
   const metadata = JSON.parse(tokenInfo.metadata);
+
   const logo = hasError ? (
     <Image
       style={styles.icon}
