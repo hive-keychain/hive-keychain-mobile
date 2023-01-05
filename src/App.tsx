@@ -46,9 +46,7 @@ const App = ({
   }, []);
 
   useEffect(() => {
-    console.log('zzzzz', accounts, requestedOp);
     if (accounts.length && requestedOp) {
-      console.log('shoooow');
       processQRCodeOp(requestedOp);
       forgetRequestedOperation();
     }
