@@ -1,3 +1,4 @@
+import AddIconWhite from 'assets/wallet/icon_add_circle_outline_white.svg';
 import Conversion from 'assets/wallet/icon_convert.svg';
 import Delegate from 'assets/wallet/icon_delegate.svg';
 import Plus from 'assets/wallet/icon_deposit.svg';
@@ -14,6 +15,7 @@ import Transfer from 'components/operations/Transfer';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {navigate} from 'utils/navigation';
+import MoreTokenInfo, {MoreInfoTokenProps} from './MoreTokenInfo';
 import Savings, {SavingsOperations} from './Savings';
 
 type RoundButtonProps = {
@@ -190,6 +192,22 @@ export const ShowHistory = (props: HistoryProps) => {
       content={<HistoryIcon />}
     />
   );
+};
+
+export const ShowMoreTokenInfo = (props: MoreInfoTokenProps) => {
+  return props.tokenInfo.stakingEnabled || props.tokenInfo.delegationEnabled ? (
+    <RoundButton
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: 'EngineTokenInfo',
+          modalContent: <MoreTokenInfo {...props} />,
+        });
+      }}
+      size={36}
+      backgroundColor="#c0ccd0"
+      content={<AddIconWhite />}
+    />
+  ) : null;
 };
 
 const getStyleSheet = (size: number, backgroundColor: string) =>

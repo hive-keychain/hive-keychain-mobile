@@ -82,6 +82,14 @@ const addAuthorizedAccount = async (
   return keys;
 };
 
-const AccountUtils = {addAuthorizedAccount};
+const doesAccountExist = async (username: string) => {
+  return (await AccountUtils.getAccount(username)).length > 0;
+};
+
+const getAccount = async (username: string) => {
+  return getClient().database.getAccounts([username]);
+};
+
+const AccountUtils = {addAuthorizedAccount, doesAccountExist, getAccount};
 
 export default AccountUtils;
