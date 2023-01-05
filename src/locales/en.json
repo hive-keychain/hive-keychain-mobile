@@ -193,7 +193,7 @@
         "info_delegation_out": {
           "part_1": "Delegated",
           "amount": "{{amount}}",
-          "part_2": "to @{{delegatee}}}"
+          "part_2": "to @{{delegatee}}"
         },
         "info_delegation_in": {
           "part_1": "@{{delegator}} delegated",

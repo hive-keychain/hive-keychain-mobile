@@ -48,7 +48,7 @@ const TokenHistoryItem = ({
   let iconNameSubType = '';
   const localePrefix = 'wallet.operations.tokens';
   let labelDataList: LabelDataType[];
-
+  console.log(transaction);
   const getLabelsComponents = () => {
     function returnWithList(labelDataList: any) {
       return (
@@ -220,7 +220,7 @@ const TokenHistoryItem = ({
             {
               label: 'info_cancel_delegation_out.amount',
               data: {amount: t.amount},
-              color: '#B9122F',
+              color: '#3BB26E',
             },
             {
               label: 'info_cancel_delegation_out.part_2',
@@ -236,7 +236,7 @@ const TokenHistoryItem = ({
             {
               label: 'info_cancel_delegation_in.amount',
               data: {amount: t.amount},
-              color: '#3BB26E',
+              color: '#B9122F',
             },
             {
               label: 'info_cancel_delegation_out.part_2',
@@ -273,7 +273,7 @@ const TokenHistoryItem = ({
             {
               label: 'info_stake.amount',
               data: {amount: t.amount},
-              color: '#B9122F',
+              color: '#3BB26E',
             },
           ];
         }
@@ -282,7 +282,7 @@ const TokenHistoryItem = ({
       case OperationsHiveEngine.TOKEN_UNSTAKE_START: {
         const t = transaction as UnStakeTokenStartTransaction;
         iconName = 'power_up_down';
-        iconNameSubType = 'transfer_to_vesting';
+        iconNameSubType = 'withdraw_vesting';
         labelDataList = [
           {
             label: 'info_start_unstake.part_1',
@@ -290,7 +290,7 @@ const TokenHistoryItem = ({
           {
             label: 'info_start_unstake.amount',
             data: {amount: t.amount},
-            color: '#3BB26E',
+            color: '#B9122F',
           },
         ];
         return returnWithList(labelDataList);

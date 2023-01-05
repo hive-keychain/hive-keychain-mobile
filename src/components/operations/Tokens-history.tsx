@@ -130,6 +130,7 @@ const TokensHistory = ({
               ItemSeparatorComponent={() => <View style={styles.separator} />}
               onScroll={handleScroll}
             />
+            <Separator />
           </View>
 
           {!loading &&

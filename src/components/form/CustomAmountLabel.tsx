@@ -26,7 +26,7 @@ const CustomAmountLabel = ({list, translatePrefix}: CustomAmountLabelProps) => {
           <View key={applyRandomKey()} style={styles.rowContainer}>
             <Text style={{color: listItem.color ?? 'black'}}>
               {translate(`${translatePrefix}.${listItem.label}`, {
-                amount: withCommas(listItem.data.amount.split(' ')[0]),
+                amount: withCommas(listItem.data.amount.split(' ')[0], 3),
               })}{' '}
             </Text>
             <Text style={{color: listItem.color ?? 'black'}}>
