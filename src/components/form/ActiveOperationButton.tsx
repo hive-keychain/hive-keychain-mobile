@@ -1,7 +1,7 @@
 import {KeyTypes} from 'actions/interfaces';
-import Icon from 'assets/addAccount/icon_info.svg';
 import React from 'react';
-import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {StyleProp, ViewStyle} from 'react-native';
+import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
@@ -14,37 +14,24 @@ type Props = {
   onPress: () => void;
   isLoading: boolean;
 } & PropsFromRedux;
-const ActiveOperationButton = ({method, ...props}: Props) => {
+const ActiveOperationButton = ({method, onPress, style, ...props}: Props) => {
+  const disabled = !props.user.keys[method || KeyTypes.active];
   return (
     <>
-      {!props.user.keys[method || KeyTypes.active] && (
-        <View style={styles.container}>
-          <Icon fill="#A3112A" height={20} />
-          <Text style={styles.text}>{translate('wallet.add_active')}</Text>
-        </View>
-      )}
       <EllipticButton
         {...props}
-        disabled={!props.user.keys[method || 'active']}
+        style={[style, disabled ? {backgroundColor: '#AAA'} : undefined]}
+        onPress={() => {
+          if (disabled) {
+            SimpleToast.show(translate('wallet.add_active'), SimpleToast.LONG);
+          } else {
+            onPress();
+          }
+        }}
       />
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  text: {
-    color: '#A3112A',
-    textAlign: 'center',
-    fontSize: 13,
-  },
-  container: {
-    display: 'flex',
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 20,
-  },
-});
 
 const connector = connect((state: RootState) => {
   return {user: state.activeAccount};

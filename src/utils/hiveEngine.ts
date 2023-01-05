@@ -4,6 +4,16 @@ import {decodeMemo} from 'components/bridge';
 import {translate} from './localize';
 type sscjsResult = {logs: string};
 
+//TODO move if needed to organize in an interface file
+export interface TokenDelegation {
+  from: string;
+  quantity: string;
+  symbol: string;
+  to: string;
+  created: number;
+  updated: number;
+}
+
 export const tryConfirmTransaction = async (trxId: string) => {
   let result;
   for (let i = 0; i < 20; i++) {
@@ -61,4 +71,24 @@ export const decodeMemoIfNeeded = (memo: string, memoKey: string) => {
     }
   }
   return memo;
+};
+
+export const getIncomingTokenDelegations = async (
+  username: string,
+  symbol: string,
+): Promise<TokenDelegation[]> => {
+  return hsc.find('tokens', 'delegations', {
+    to: username,
+    symbol: symbol,
+  });
+};
+
+export const getOutgoingTokenDelegations = async (
+  username: string,
+  symbol: string,
+): Promise<TokenDelegation[]> => {
+  return hsc.find('tokens', 'delegations', {
+    from: username,
+    symbol: symbol,
+  });
 };

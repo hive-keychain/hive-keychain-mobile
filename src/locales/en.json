@@ -46,6 +46,11 @@
     "history": "History",
     "search_box_placeholder": "Search",
     "no_transaction_or_clear": "No transactions found. Try to clear the filter.",
+    "stake": "Stake",
+    "unstake": "Unstake",
+    "delegate": "Delegate",
+    "need_positive_amount": "The amount needs to be greater than 0",
+    "missing_key": "Please add your {{key}} key to perform this operation!",
     "load_more": "Click to load more",
     "top": "Top",
     "list_is_empty_try_clear_filter": "Nothing found, try to clear your filter."
@@ -128,6 +133,32 @@
         "title": "Convert to {{to}}",
         "button": "Convert",
         "disclaimer_hive": "You deposit collateral (HIVE), then you are given HBD up front worth half of the collateral amount (minus a 5% fee). Your official final payment is in 3.5 days. At that point remaining collateral (HIVE) is returned.",
+        "disclaimer_hbd": "Your HBD will take 3.5 days to get converted to approximately USD worth of HIVE tokens, based on its 3.5 days median price."
+      },
+      "more_token_info": "{{currency}} information",
+      "token_stake": {
+        "title": "Stake",
+        "titled": "Staked",
+        "staking_token": "Staking {{currency}}"
+      },
+      "token_unstake": {
+        "title": "Unstake",
+        "unstaking_token": "Unstaking {{currency}}",
+        "cooldown_disclaimer": "Unstaking this token will take {{unstakingCooldown}} day",
+        "token_pending_unstake": "Pending unstaking"
+      },
+      "token_delegation": {
+        "title": "Delegate",
+        "delegating_token": "Delegating {{currency}}",
+        "cancel_delegation": "Cancelling Delegation {{currency}}",
+        "title_confirm_cancel_delegation": "Please confirm you want to cancel a {{amount}} {{currency}} Token Delegation",
+        "in": "Delegation in",
+        "out": "Delegation out",
+        "info_requirements": "Some tokens require stake to delegate",
+        "incoming": "Incoming Delegations",
+        "outgoing": "Outgoing Delegations",
+        "undelegation_cooldown_disclaimer": "When removing a {{symbol}} delegation, the staked tokens will be available after a {{undelegationCooldown}} days cooldown.",
+        "token_pending_undelegation": "Pending undelegation",
         "disclaimer_hbd": "Your HBD will take 3.5 days to get converted to approximately USD worth of HIVE tokens, based on its 3.5 days median price.",
         "fill_convert_request": "Filled conversion:",
         "start_convert": "conversion",
@@ -382,7 +413,16 @@
     "incorrect_user": "Please check the username and try again.",
     "accounts_no_auth": "{{authorizedAccount}} does not have authority over {{username}}.",
     "no_auth_account": "Please save {{authorizedAccount}} in Hive Keychain to use it as an authorized account.",
-    "no_accounts_no_auth": "Please add at least one account with authority over {{username}}"
+    "no_accounts_no_auth": "Please add at least one account with authority over {{username}}",
+    "token_stake_success": "You succesfully staked some {{currency}}!",
+    "token_unstake_success": "You succesfully started unstaking some {{currency}}!",
+    "token_delegate_sucess": "You succesfully delegated some {{currency}}!",
+    "token_cancel_delegation_sucess": "Your delegation of {{currency}} has been cancelled!",
+    "token_undelegate_sucess": "Your delegation of {{currency}} was removed!",
+    "hive_engine_error": "Hive Engine error: {{error}}",
+    "token_timeout": "We could not verify this transaction on Hive Engine. This might mean that Hive Engine is behind blocks, wait for the operation to appear in your history, or contact the Hive Engine team on Discord.",
+    "tokens_operation_failed": "Failed to {{tokenOperation}} a token",
+    "no_such_account": "This username is not registered on the blockchain!"
   },
   "navigation": {
     "log_out": "LOG OUT",
