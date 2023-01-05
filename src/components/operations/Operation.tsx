@@ -27,7 +27,7 @@ export default ({children, logo, title, onClose}: Props) => {
               goBack();
             }
           }}>
-          <Close style={styles.close} />
+          <Close style={styles.close} width={15} height={15} />
         </TouchableOpacity>
       </View>
       {children}

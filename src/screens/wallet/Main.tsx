@@ -6,7 +6,9 @@ import {
 } from 'actions/hive';
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
+import {WalletHistoryComponent} from 'components/hive/Wallet-history-component';
 import Transactions from 'components/hive/Transactions';
+import WhatsNewComponent from 'components/popups/whats-new/whats-new.component';
 import Survey from 'components/survey';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
@@ -27,7 +29,7 @@ import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getVotingDollarsPerAccount, getVP} from 'utils/hiveUtils';
-import {translate} from 'utils/localize';
+import {getMainLocale, translate} from 'utils/localize';
 
 const Main = ({
   loadAccount,
@@ -42,12 +44,16 @@ const Main = ({
   hive_authentication_service,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
-
-  useEffect(() => {
+ 
+  const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();
     loadPrices();
     fetchPhishingAccounts();
+  };
+
+  useEffect(() => {
+    updateUserWallet(lastAccount);
   }, [
     loadAccount,
     accounts,
@@ -85,6 +91,14 @@ const Main = ({
       AppState.removeEventListener('change', handler);
     };
   }, []);
+
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      updateUserWallet(lastAccount);
+    });
+
+    return unsubscribe;
+  }, [navigation, lastAccount]);
 
   if (!user) {
     return null;
@@ -126,9 +140,10 @@ const Main = ({
             translate(`wallet.menu.tokens`),
           ]}
           toUpperCase
-          components={[<Primary />, <Transactions user={user} />, <Tokens />]}
+          components={[<Primary />, <WalletHistoryComponent />, <Tokens />]}
         />
         <Survey navigation={navigation} />
+        <WhatsNewComponent navigation={navigation} />
       </>
     </WalletPage>
   );

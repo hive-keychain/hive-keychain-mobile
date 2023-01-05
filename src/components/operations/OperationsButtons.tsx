@@ -1,3 +1,4 @@
+import AddIconWhite from 'assets/wallet/icon_add_circle_outline_white.svg';
 import Conversion from 'assets/wallet/icon_convert.svg';
 import Delegate from 'assets/wallet/icon_delegate.svg';
 import Plus from 'assets/wallet/icon_deposit.svg';
@@ -7,14 +8,16 @@ import SendArrow from 'assets/wallet/icon_send.svg';
 import Minus from 'assets/wallet/icon_withdraw.svg';
 import Convert from 'components/operations/Convert';
 import Delegation from 'components/operations/Delegation';
-import History, {HistoryProps} from 'components/operations/History';
+import {HistoryProps} from 'components/operations/History';
 import PowerDown from 'components/operations/PowerDown';
 import PowerUp from 'components/operations/PowerUp';
 import Transfer from 'components/operations/Transfer';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {navigate} from 'utils/navigation';
+import MoreTokenInfo, {MoreInfoTokenProps} from './MoreTokenInfo';
 import Savings, {SavingsOperations} from './Savings';
+import {TokensHistoryComponent} from './Tokens-history';
 
 type RoundButtonProps = {
   size: number;
@@ -182,7 +185,8 @@ export const ShowHistory = (props: HistoryProps) => {
       onPress={() => {
         navigate('ModalScreen', {
           name: 'EngineHistory',
-          modalContent: <History {...props} />,
+          modalContent: <TokensHistoryComponent {...props} />,
+          fixedHeight: 0.75,
         });
       }}
       size={36}
@@ -190,6 +194,22 @@ export const ShowHistory = (props: HistoryProps) => {
       content={<HistoryIcon />}
     />
   );
+};
+
+export const ShowMoreTokenInfo = (props: MoreInfoTokenProps) => {
+  return props.tokenInfo.stakingEnabled || props.tokenInfo.delegationEnabled ? (
+    <RoundButton
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: 'EngineTokenInfo',
+          modalContent: <MoreTokenInfo {...props} />,
+        });
+      }}
+      size={36}
+      backgroundColor="#c0ccd0"
+      content={<AddIconWhite />}
+    />
+  ) : null;
 };
 
 const getStyleSheet = (size: number, backgroundColor: string) =>

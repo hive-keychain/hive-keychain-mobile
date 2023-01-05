@@ -8,6 +8,8 @@ export type RootStackParam = {
     onForceCloseModal?: () => void;
     name: string;
     data?: any;
+    centerModal?: boolean | undefined;
+    fixedHeight?: number;
   };
 };
 

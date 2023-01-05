@@ -1,10 +1,15 @@
 import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import HiveEngine from 'assets/wallet/hive_engine.png';
-import {Send, ShowHistory} from 'components/operations/OperationsButtons';
+import {
+  Send,
+  ShowHistory,
+  ShowMoreTokenInfo,
+} from 'components/operations/OperationsButtons';
 import React, {useState} from 'react';
 import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
 import Image from 'react-native-fast-image';
 import {Width} from 'utils/common.types';
+import {goBack} from 'utils/navigation';
 import TokenDisplay from './TokenDisplay';
 
 type Props = {
@@ -30,7 +35,7 @@ const EngineTokenDisplay = ({
     return null;
   }
   const metadata = JSON.parse(tokenInfo.metadata);
-  console.log('aa', token, tokenMarket);
+
   const logo = hasError ? (
     <Image
       style={styles.icon}
@@ -74,6 +79,13 @@ const EngineTokenDisplay = ({
           engine
           tokenBalance={token.balance}
           tokenLogo={logo}
+        />,
+        <ShowMoreTokenInfo
+          key={'more_info_token'}
+          tokenInfo={tokenInfo}
+          token={token}
+          tokenLogo={logo}
+          gobackAction={() => goBack()}
         />,
         <ShowHistory
           key="history_token"

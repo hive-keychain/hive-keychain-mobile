@@ -197,6 +197,47 @@ export const BrowserConfig = {
         url: 'https://splex.gg',
         categories: ['tool'],
       },
+      {
+        name: 'HiveHub',
+        description: 'A block explorer for the Hive ecosystem',
+        icon:
+          'https://files.peakd.com/file/peakd-hive/theghost1980/23tbHLrpPr5Vr5HodaksVq3JbzsDJo7eA3vscTv65LYm15osgSspCWUx2qLTpj3t8usUU.png',
+        url: 'https://hivehub.dev/market/',
+        categories: ['finance', 'tool'],
+      },
+      {
+        name: 'BeeSwap',
+        description: 'Exchange your crypto in a fast & easy way',
+        icon:
+          'https://files.peakd.com/file/peakd-hive/theghost1980/AKJ58fKYro4jwSevzwc9rpQSWe2P5w72yPWY2kKqtSbwnk5b3zy2EAye2rwZG7k.png',
+        url: 'https://beeswap.dcity.io/swap',
+        categories: ['finance'],
+      },
+      {
+        name: 'Reverio',
+        description:
+          'Ask and answer questions on Reverio and earn rewards for valuable contributions on $hive',
+        icon: 'https://images.hive.blog/u/reverio/avatar',
+        url: 'https://www.reverio.io/',
+        categories: ['social', 'tool'],
+      },
+      {
+        name: 'WOO',
+        description:
+          'Play-To-Earn business management game. Build your own wrestling organization',
+        icon:
+          'https://files.peakd.com/file/peakd-hive/theghost1980/AL1geTDPibhiR6soMiVAiLMoP9ymyNDf783WLXQCj71u42wj9C72R15ujEfVQxc.png',
+        url: 'https://wrestlingorganizationonline.com/',
+        categories: ['gaming', 'nft'],
+      },
+      {
+        name: 'Kryptogamers',
+        description:
+          'Leading Provably Fair Hive Casino - Play 30+ games and earn daily dividends',
+        icon: 'https://images.hive.blog/u/kryptogames/avatar',
+        url: 'https://kryptogamers.com/',
+        categories: ['gaming'],
+      },
     ],
   },
 };

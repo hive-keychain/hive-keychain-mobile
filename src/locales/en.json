@@ -8,16 +8,21 @@
     "createAccount": "New Account"
   },
   "addAccountByKey": {"text": "Add your existing HIVE account to Keychain"},
+  "addAccountByAuth": {
+    "text": "Add the new account by specifying an account that has authority over it, and that is already saved in Hive Keychain."
+  },
   "addAccountByQR": {"wrongQR": "Please scan a Hive Keychain account QR Code"},
   "keys": {
     "posting": "Posting",
     "active": "Active",
     "memo": "Memo",
-    "key_type": "{{type}} key"
+    "key_type": "{{type}} key",
+    "using_authorized_account": "Signing using {{authorizedAccount}}'s account"
   },
   "common": {
     "import": "Import",
-    "username": "username",
+    "username": "Username",
+    "authorized_username": "Auth. Account",
     "confirm": "Confirm",
     "privateKey": "Private Key",
     "private": "Private",
@@ -36,7 +41,19 @@
     "error": "Error: Something went wrong : {{msg}}",
     "error_title": "Error",
     "savings": "Savings",
-    "ok": "OK"
+    "ok": "OK",
+    "popup_read_more": "Read more",
+    "history": "History",
+    "search_box_placeholder": "Search",
+    "no_transaction_or_clear": "No transactions found. Try to clear the filter.",
+    "stake": "Stake",
+    "unstake": "Unstake",
+    "delegate": "Delegate",
+    "need_positive_amount": "The amount needs to be greater than 0",
+    "missing_key": "Please add your {{key}} key to perform this operation!",
+    "load_more": "Click to load more",
+    "top": "Top",
+    "list_is_empty_try_clear_filter": "Nothing found, try to clear your filter."
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -49,7 +66,11 @@
     "add_active": "Please add your active key to perform this operation.",
     "claim": {
       "success": "Successfully claimed {{rewards}}!",
-      "error_posting": "Please add your posting key to be able to claim rewards!"
+      "error_posting": "Please add your posting key to be able to claim rewards!",
+      "info_claim_account": "Claimed account",
+      "info_create_claimed_account": "Claimed account",
+      "info_claim_rewards": "{{currency}} claimed",
+      "info_account_create": "Paid {{fee}} to create @{{new_account_name}}"
     },
     "operations": {
       "history": "History",
@@ -59,13 +80,19 @@
         "disclaimer": "Note: Withdrawing funds from savings will take 3.5 days.",
         "withdraw_button": "Withdraw",
         "deposit_button": "Deposit",
-        "prompt": "Select a currency"
+        "prompt": "Select a currency",
+        "fill_withdraw_savings": "from savings",
+        "start_withdraw_savings": "withdrawal from savings",
+        "info_deposit_savings": "into savings",
+        "info_received_interests": "of interests from savings"
       },
       "transfer": {
         "title": "Transfer funds",
         "memo": "MEMO (optional)",
         "executions": "Number of executions",
         "recurrence": "Recurrence Period",
+        "sent": "Sent",
+        "received": "Received",
         "confirm": {
           "from": "From",
           "to": "To",
@@ -79,20 +106,144 @@
           "exchange_currency": "This exchange account does not accept {{currency}} deposits.",
           "exchange_memo": "Make sure you add a memo when transfering to an exchange account.",
           "missing_info": "Please fill the username and amount to proceed"
-        }
+        },
+        "fill_recurrent_transfer_out": "to @{{other}} ({{remainingExecutions}} remaining)",
+        "fill_recurrent_transfer_in": "from @{{other}} ({{remainingExecutions}} remaining)",
+        "start_recurrent_transfer_out": "to @{{other} (every {{recurrence}} hours - {{executions}} times)",
+        "info_recurrent_transfer_in": "@{{other}} started transfer of {{amount}} (every {{recurrence}} hours - {{executions}} times)"
       },
-      "powerup": {"title": "Power up!"},
-      "powerdown": {"title": "Power down"},
+      "powerup": {
+        "title": "Power up!",
+        "info_power_up": "Powered up"
+      },
+      "powerdown": {
+        "title": "Power down",
+        "info_power_down": "power down",
+        "cancelled_power_down": "Cancelled a power down"
+      },
       "delegation": {
         "title": "Delegate Hive Power",
         "incoming": "Incoming Delegations",
-        "outgoing": "Outgoing Delegations"
+        "outgoing": "Outgoing Delegations",
+        "info_delegation_out": "to @{{delegatee}}",
+        "cancelled_delegation": "Cancelled delegation to @{{delegatee}}",
+        "info_delegation_in": "@{{delegator}} delegated"
       },
       "convert": {
         "title": "Convert to {{to}}",
         "button": "Convert",
         "disclaimer_hive": "You deposit collateral (HIVE), then you are given HBD up front worth half of the collateral amount (minus a 5% fee). Your official final payment is in 3.5 days. At that point remaining collateral (HIVE) is returned.",
         "disclaimer_hbd": "Your HBD will take 3.5 days to get converted to approximately USD worth of HIVE tokens, based on its 3.5 days median price."
+      },
+      "more_token_info": "{{currency}} information",
+      "token_stake": {
+        "title": "Stake",
+        "titled": "Staked",
+        "staking_token": "Staking {{currency}}"
+      },
+      "token_unstake": {
+        "title": "Unstake",
+        "unstaking_token": "Unstaking {{currency}}",
+        "cooldown_disclaimer": "Unstaking this token will take {{unstakingCooldown}} day",
+        "token_pending_unstake": "Pending unstaking"
+      },
+      "token_delegation": {
+        "title": "Delegate",
+        "delegating_token": "Delegating {{currency}}",
+        "cancel_delegation": "Cancelling Delegation {{currency}}",
+        "title_confirm_cancel_delegation": "Please confirm you want to cancel a {{amount}} {{currency}} Token Delegation",
+        "in": "Delegation in",
+        "out": "Delegation out",
+        "info_requirements": "Some tokens require stake to delegate",
+        "incoming": "Incoming Delegations",
+        "outgoing": "Outgoing Delegations",
+        "undelegation_cooldown_disclaimer": "When removing a {{symbol}} delegation, the staked tokens will be available after a {{undelegationCooldown}} days cooldown.",
+        "token_pending_undelegation": "Pending undelegation",
+        "disclaimer_hbd": "Your HBD will take 3.5 days to get converted to approximately USD worth of HIVE tokens, based on its 3.5 days median price.",
+        "fill_convert_request": "Filled conversion:",
+        "start_convert": "conversion",
+        "start_collateralized_convert": "collateralized conversion"
+      },
+      "tokens": {
+        "info_author_reward": {
+          "part_1": "Received",
+          "amount": "{{amount}}",
+          "part_2": "as author reward"
+        },
+        "info_comment_curation_reward": {
+          "part_1": "Received",
+          "amount": "{{amount}}",
+          "part_2": "as comment curation reward"
+        },
+        "info_mining_lottery": {
+          "part_1": "Received",
+          "amount": "{{amount}}",
+          "part_2": "from mining lottery ({{poolId}})"
+        },
+        "info_transfer_out": {
+          "part_1": "Sent",
+          "amount": "{{amount}}",
+          "part_2": "to @{{to}}"
+        },
+        "info_transfer_in": {
+          "part_1": "Received",
+          "amount": "{{amount}}",
+          "part_2": "from @{{from}}"
+        },
+        "info_delegation_out": {
+          "part_1": "Delegated",
+          "amount": "{{amount}}",
+          "part_2": "to @{{delegatee}}"
+        },
+        "info_delegation_in": {
+          "part_1": "@{{delegator}} delegated",
+          "amount": "{{amount}}"
+        },
+        "info_start_cancel_delegation_out": {
+          "part_1": "Canceled a",
+          "amount": "{{amount}}",
+          "part_2": "delegation to @{{delegatee}}"
+        },
+        "info_start_cancel_delegation_in": {
+          "part_1": "@{{delegator}} canceled a",
+          "amount": "{{amount}}",
+          "part_2": "delegation"
+        },
+        "info_cancel_delegation_out": {
+          "part_1": "Canceled a delegation of",
+          "amount": "{{amount}}",
+          "part_2": "to @{{delegatee}}"
+        },
+        "info_cancel_delegation_in": {
+          "part_1": "@{{delegator}} canceled a",
+          "amount": "{{amount}}",
+          "part_2": "delegation"
+        },
+        "info_stake_other_user": {
+          "part_1": "@{{from}} staked",
+          "amount": "{{amount}}",
+          "part_2": "for @{{to}}"
+        },
+        "info_stake": {
+          "part_1": "Staked",
+          "amount": "{{amount}}"
+        },
+        "info_start_unstake": {
+          "part_1": "Started to unstake",
+          "amount": "{{amount}}"
+        },
+        "info_unstake_done": {
+          "amount": "{{amount}}",
+          "part_1": "unstaked"
+        },
+        "info_issue": {
+          "part_1": "Received",
+          "amount": "{{amount}}"
+        },
+        "info_pegged_buy": {
+          "part_1": "Bought",
+          "amount": "{{amount}}"
+        }
       }
     },
     "has": {
@@ -144,6 +295,19 @@
         "register": "Registering accounts to Hive Auth...",
         "broadcast": "Broadcasting Hive Auth transaction..."
       }
+    },
+    "filter": {
+      "transfer": "Transfer",
+      "claim_reward_balance": "Claim rewards",
+      "delegate_vesting_shares": "Delegations",
+      "claim_account": "Claim Account",
+      "savings": "Savings",
+      "power_up_down": "Power up/down",
+      "convert": "Conversion",
+      "filter_in": "In",
+      "filter_out": "Out",
+      "filters_title": "Filters",
+      "clear_filters": "Clear"
     }
   },
   "settings": {
@@ -172,6 +336,7 @@
       "rpc": "RPC Nodes",
       "global": "Global Settings",
       "whitelisted": "Whitelisted operations",
+      "no_pref": "No whitelisted operations",
       "disclaimer": [
         "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
         "Use 'DEFAULT' RPC to let Hive Keychain chose the best RPC node at a given time."
@@ -244,11 +409,25 @@
     },
     "error_add_account": "Something went wrong! Please verify your keys and your connection.",
     "savings_deposit_success": "You succesfully deposited {{amount}} to your savings.",
-    "savings_withdraw_success": "You succesfully started a {{amount}} withdrawal from your savings. It will be credited to your account in 3.5 days."
+    "savings_withdraw_success": "You succesfully started a {{amount}} withdrawal from your savings. It will be credited to your account in 3.5 days.",
+    "incorrect_user": "Please check the username and try again.",
+    "accounts_no_auth": "{{authorizedAccount}} does not have authority over {{username}}.",
+    "no_auth_account": "Please save {{authorizedAccount}} in Hive Keychain to use it as an authorized account.",
+    "no_accounts_no_auth": "Please add at least one account with authority over {{username}}",
+    "token_stake_success": "You succesfully staked some {{currency}}!",
+    "token_unstake_success": "You succesfully started unstaking some {{currency}}!",
+    "token_delegate_sucess": "You succesfully delegated some {{currency}}!",
+    "token_cancel_delegation_sucess": "Your delegation of {{currency}} has been cancelled!",
+    "token_undelegate_sucess": "Your delegation of {{currency}} was removed!",
+    "hive_engine_error": "Hive Engine error: {{error}}",
+    "token_timeout": "We could not verify this transaction on Hive Engine. This might mean that Hive Engine is behind blocks, wait for the operation to appear in your history, or contact the Hive Engine team on Discord.",
+    "tokens_operation_failed": "Failed to {{tokenOperation}} a token",
+    "no_such_account": "This username is not registered on the blockchain!"
   },
   "navigation": {
     "log_out": "LOG OUT",
     "add_account": "ADD ACCOUNT",
+    "add_account_by_auth": "AUTH. ACCOUNT",
     "manage": "MANAGE KEYS",
     "settings": "SETTINGS",
     "about": "ABOUT",
@@ -471,6 +650,14 @@
         "vote": "You successfully voted for a proposal!",
         "unvote": "You successfully removed your vote!"
       }
+    }
+  },
+  "popup": {
+    "whats_new": {
+      "intro": "What's new in {{content_version}}",
+      "next": "Next",
+      "previous": "Previous",
+      "got_it": "Got it!"
     }
   }
 }

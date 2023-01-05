@@ -18,6 +18,7 @@ import tokens from './tokens';
 import tokensMarket from './tokensMarket';
 import transactions from './transactions';
 import userTokens from './userTokens';
+import walletFilters from './walletFilters';
 export default combineReducers({
   auth,
   accounts,
@@ -38,4 +39,5 @@ export default combineReducers({
   preferences,
   hive_authentication_service,
   hiveUri,
+  walletFilters,
 });

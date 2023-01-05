@@ -11,6 +11,7 @@ import {MainNavigation} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {StyleProp, StyleSheet, Text, View, ViewProps} from 'react-native';
 import Toast from 'react-native-simple-toast';
+import {KeyUtils} from 'utils/key.utils';
 import {translate} from 'utils/localize';
 
 type Props = {
@@ -30,9 +31,17 @@ export default ({
   if (!account) {
     return null;
   }
+
   const privateKey = account.keys[type];
   const publicKey = account.keys[`${type}Pubkey` as KeyTypes];
   const [isPKShown, showPK] = useState(false);
+  const [isAuthorizedAccount, setIsAuthorizedAccount] = useState(false);
+
+  useEffect(() => {
+    if (publicKey) {
+      setIsAuthorizedAccount(KeyUtils.isAuthorizedAccount(publicKey));
+    }
+  }, [publicKey]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
@@ -64,11 +73,17 @@ export default ({
             <Text style={styles.keyType}>
               {translate('common.public').toUpperCase()}
             </Text>
-            <CopyKey wif={publicKey} />
+            {!isAuthorizedAccount && <CopyKey wif={publicKey} />}
           </View>
           <Separator height={5} />
 
-          <Text style={styles.key}>{publicKey}</Text>
+          <Text style={styles.key}>
+            {isAuthorizedAccount
+              ? translate('keys.using_authorized_account', {
+                  authorizedAccount: publicKey,
+                })
+              : publicKey}
+          </Text>
           <Separator height={20} />
           <View style={styles.row}>
             <Text style={styles.keyType}>

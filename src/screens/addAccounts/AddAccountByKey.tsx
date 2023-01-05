@@ -27,6 +27,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import validateNewAccount from 'utils/keyValidation';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 
 const AddAccountByKey = ({
   addAccount,
@@ -36,6 +37,9 @@ const AddAccountByKey = ({
   (AddAccNavigationProps | AddAccFromWalletNavigationProps)) => {
   const [account, setAccount] = useState('');
   const [key, setKey] = useState('');
+  const [allowAddByAuth, setAllowAddByAuth] = useState(
+    route.params ? route.params.wallet : false,
+  );
 
   useLockedPortrait(navigation);
 
@@ -97,6 +101,15 @@ const AddAccountByKey = ({
             title={translate('common.import').toUpperCase()}
             onPress={onImportKeys}
           />
+          <Separator height={height / 22} />
+          {allowAddByAuth && (
+            <TouchableOpacity
+              onPress={() => navigate('AddAccountFromWalletScreenByAuth')}>
+              <Text style={[styles.text, styles.textUnderlined]}>
+                Use Authorized Account instead
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </>
     </Background>
@@ -106,6 +119,9 @@ const AddAccountByKey = ({
 const styles = StyleSheet.create({
   container: {alignItems: 'center'},
   text: {color: 'white', fontWeight: 'bold', fontSize: 16},
+  textUnderlined: {
+    textDecorationLine: 'underline',
+  },
 });
 
 const mapStateToProps = (state: RootState) => {

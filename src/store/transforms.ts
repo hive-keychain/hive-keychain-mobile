@@ -23,7 +23,6 @@ const hiveAuthenticationServiceTransformer = createTransform<
 >(
   (inboundState, key, state) => {
     if (state?.auth?.mk) return inboundState;
-    console.log('modifying state');
     const sessions = inboundState.sessions
       .filter((e) => e.token && e.token.expiration > Date.now())
       .map((e) => {

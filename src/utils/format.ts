@@ -105,3 +105,8 @@ export const nFormatter = (num: number, digits: number) => {
   }
   return (num / si[i].value).toFixed(digits).replace(rx, '$1') + si[i].symbol;
 };
+
+export const addRandomToKeyString = (key: string, toFixed: number) => {
+  const newKey = key + Math.random().toFixed(toFixed).toString();
+  return newKey;
+};

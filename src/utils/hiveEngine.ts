@@ -1,6 +1,18 @@
 import {TokenBalance, TokenMarket} from 'actions/interfaces';
 import hsc from 'api/hiveEngine';
+import {decodeMemo} from 'components/bridge';
+import {translate} from './localize';
 type sscjsResult = {logs: string};
+
+//TODO move if needed to organize in an interface file
+export interface TokenDelegation {
+  from: string;
+  quantity: string;
+  symbol: string;
+  to: string;
+  created: number;
+  updated: number;
+}
 
 export const tryConfirmTransaction = async (trxId: string) => {
   let result;
@@ -42,4 +54,41 @@ export const getHiveEngineTokenValue = (
     ? 1
     : 0;
   return parseFloat(balance.balance) * price;
+};
+
+export const decodeMemoIfNeeded = (memo: string, memoKey: string) => {
+  if (memo && memo[0] === '#') {
+    if (memoKey) {
+      decodeMemo(memoKey, memo)
+        .then((decoded) => {
+          return decoded;
+        })
+        .catch((e) => {
+          console.log('Error while decoding memo: ', e);
+        });
+    } else {
+      return translate('wallet.add_memo');
+    }
+  }
+  return memo;
+};
+
+export const getIncomingTokenDelegations = async (
+  username: string,
+  symbol: string,
+): Promise<TokenDelegation[]> => {
+  return hsc.find('tokens', 'delegations', {
+    to: username,
+    symbol: symbol,
+  });
+};
+
+export const getOutgoingTokenDelegations = async (
+  username: string,
+  symbol: string,
+): Promise<TokenDelegation[]> => {
+  return hsc.find('tokens', 'delegations', {
+    from: username,
+    symbol: symbol,
+  });
 };

@@ -13,6 +13,7 @@ import {ScrollView, StyleSheet, Text, ViewStyle} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 
 const AccountManagement = ({
   account,
@@ -32,6 +33,7 @@ const AccountManagement = ({
     return unsubscribe;
   }, [navigation, account.name]);
   if (!username) return null;
+
   return (
     <SafeArea style={styles.safeArea}>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
@@ -78,7 +80,10 @@ const AccountManagement = ({
           style={styles.button}
           title="FORGET ACCOUNT"
           onPress={() => {
-            if (username) forgetAccount(username);
+            if (username) {
+              forgetAccount(username);
+              navigate('WALLET');
+            }
           }}
         />
         <Separator height={50} />

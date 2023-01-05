@@ -37,6 +37,7 @@ const Tokens = ({
   }, [loadUserTokens, user.name]);
 
   const [toggled, setToggled] = useState<number>(null);
+
   const renderContent = () => {
     if (userTokens.loading || !tokensMarket.length) {
       return (

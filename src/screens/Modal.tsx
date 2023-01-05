@@ -8,12 +8,12 @@ import {ModalNavigationProps} from 'navigators/Root.types';
 import React from 'react';
 import {HAS_BroadcastModalPayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {ModalComponent} from 'utils/modal.enum';
+
 export default ({navigation, route}: ModalNavigationProps) => {
   let onForceCloseModal = route.params ? route.params!.onForceCloseModal : null;
-
-  let name = route.params?.name;
-  let data = route.params?.data;
-
+  const name = route.params?.name;
+  const data = route.params?.data;
+  const fixedHeight = route.params?.fixedHeight;
   if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
   }
@@ -44,6 +44,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
           navigation.goBack();
         })
       }
+      fixedHeight={fixedHeight}
       bottomHalf={true}>
       {route.params && !renderContent() && route.params!.modalContent}
       {renderContent()}
