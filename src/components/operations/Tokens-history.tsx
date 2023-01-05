@@ -1,6 +1,7 @@
 import {clearTokenHistory, loadTokenHistory} from 'actions/index';
 import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import Loader from 'components/ui/Loader';
+import Separator from 'components/ui/Separator';
 import moment from 'moment';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
@@ -18,9 +19,9 @@ import {
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {TokenTransactionUtils} from 'utils/token-transaction.utils';
+import ClearableInput from '../form/ClearableInput';
 import Operation from './Operation';
 import {TokenHistoryItemComponent} from './token-history-item';
-import TokensHistoryFilterPanel from './Tokens-history-filter-panel';
 
 export type TokenHistoryProps = {
   tokenBalance: string;
@@ -114,11 +115,13 @@ const TokensHistory = ({
       <>
         <View style={styles.flex}>
           <View style={styles.container}>
-            <TokensHistoryFilterPanel
+            <Separator />
+            <ClearableInput
               loading={loading}
               filterValue={filterValue}
               setFilterValue={setFilterValue}
             />
+            <Separator />
             <FlatList
               ref={flatListRef}
               data={displayedTransactions}

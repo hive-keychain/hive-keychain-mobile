@@ -3,17 +3,17 @@ import React from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {translate} from 'utils/localize';
 
-type TokensHistoryFilterPanelProps = {
+type ClearableInputProps = {
   loading: boolean;
   filterValue: string;
   setFilterValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const TokensHistoryFilterPanel = ({
+const ClearableInput = ({
   loading,
   filterValue,
   setFilterValue,
-}: TokensHistoryFilterPanelProps) => {
+}: ClearableInputProps) => {
   return !loading ? (
     <View style={styles.rowContainerSpaceBetween}>
       <TextInput
@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 4,
     borderRadius: 8,
-    // marginLeft: 4,
     padding: 6,
   },
   touchableItem: {
@@ -59,4 +58,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TokensHistoryFilterPanel;
+export default ClearableInput;
