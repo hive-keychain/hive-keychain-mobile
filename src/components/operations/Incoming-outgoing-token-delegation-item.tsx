@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 6,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
   },
   customInputStyle: {
     width: '40%',
@@ -163,10 +163,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   smallButton: {
-    borderWidth: 1,
-    borderRadius: 6,
-    margin: 3,
-    padding: 5,
+    marginVertical: 3,
+    paddingVertical: 5,
   },
 });
 
