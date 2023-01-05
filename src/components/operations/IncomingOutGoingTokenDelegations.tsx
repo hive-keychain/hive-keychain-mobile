@@ -117,7 +117,7 @@ const IncomingOutGoingTokenDelegations = ({
             <Loader animating={true} />
           </View>
         )}
-
+        <Separator />
         {!loading && delegationList.length > 0 && (
           <FlatList
             data={delegationList}
