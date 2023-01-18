@@ -116,5 +116,14 @@
   "engines": {
     "node": "~16.4.2",
     "npm": "~7.18.1"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "$root$": false,
+      "@hiveio/dhive>core-js": false,
+      "@react-native-community/eslint-config>eslint-plugin-react>xregexp>@babel/runtime-corejs3>core-js-pure": false,
+      "hive-tx>secp256k1": false,
+      "react-native-elements": false
+    }
   }
 }
