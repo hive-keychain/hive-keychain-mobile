@@ -5,6 +5,7 @@ import Plus from 'assets/wallet/icon_deposit.svg';
 import HistoryIcon from 'assets/wallet/icon_history.svg';
 import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
+import ShoppingCartIconWhite from 'assets/wallet/icon_shopping_cart_white.svg';
 import Minus from 'assets/wallet/icon_withdraw.svg';
 import Convert from 'components/operations/Convert';
 import Delegation from 'components/operations/Delegation';
@@ -15,6 +16,7 @@ import Transfer from 'components/operations/Transfer';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {navigate} from 'utils/navigation';
+import BuyCoinsOperation, {BuyCoinsprops} from './BuyCoinsOperation';
 import MoreTokenInfo, {MoreInfoTokenProps} from './MoreTokenInfo';
 import Savings, {SavingsOperations} from './Savings';
 import {TokensHistoryComponent} from './Tokens-history';
@@ -206,10 +208,27 @@ export const ShowMoreTokenInfo = (props: MoreInfoTokenProps) => {
         });
       }}
       size={36}
-      backgroundColor="#c0ccd0"
+      backgroundColor="#32393c"
       content={<AddIconWhite />}
     />
   ) : null;
+};
+
+export const BuyCoins = (props: BuyCoinsprops) => {
+  return (
+    <RoundButton
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: 'BuyCoinsInfo',
+          modalContent: <BuyCoinsOperation {...props} />,
+          fixedHeight: 0.75,
+        });
+      }}
+      size={36}
+      backgroundColor="#A3112A"
+      content={<ShoppingCartIconWhite />}
+    />
+  );
 };
 
 const getStyleSheet = (size: number, backgroundColor: string) =>

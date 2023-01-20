@@ -5,6 +5,7 @@ import Savings from 'assets/wallet/icon_savings.svg';
 import AccountValue from 'components/hive/AccountValue';
 import TokenDisplay from 'components/hive/TokenDisplay';
 import {
+  BuyCoins,
   Send,
   SendConversion,
   SendDelegation,
@@ -17,6 +18,7 @@ import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import {BuyCoinType} from 'src/enums/operations.enum';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {toHP} from 'utils/format';
@@ -60,6 +62,7 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
           <Send key="send_hive" currency="HIVE" />,
           <SendPowerUp key="pu" />,
           <SendConversion key="conversion" currency="HIVE" />,
+          <BuyCoins key="buy_coins" currency={BuyCoinType.BUY_HIVE} />,
         ]}
       />
       <Separator height={20} />
@@ -77,7 +80,8 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
         buttons={[
           <Send key="send_hbd" currency="HBD" />,
           <SendConversion key="conversion" currency="HBD" />,
-          <View style={{width: 20}}></View>,
+          // <View style={{width: 20}}></View>,
+          <BuyCoins key="buy_coins" currency={BuyCoinType.BUY_HDB} />,
         ]}
       />
       <Separator height={20} />
