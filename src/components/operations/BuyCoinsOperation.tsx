@@ -1,7 +1,7 @@
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import AssetImage from 'components/ui/AssetImage';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   FlatList,
   Linking,
@@ -25,6 +25,7 @@ export type BuyCoinsprops = {
 type Props = PropsFromRedux & BuyCoinsprops;
 
 const BuyCoinsOperation = ({user, currency}: Props) => {
+  const flatListRef = useRef();
   const [isEnabled, setIsEnabled] = useState(
     currency === BuyCoinType.BUY_HDB ? true : false,
   );
@@ -78,6 +79,15 @@ const BuyCoinsOperation = ({user, currency}: Props) => {
     }
   };
 
+  const scrollToTop = () => {
+    if (flatListRef && flatListRef.current) {
+      (flatListRef.current as FlatList).scrollToIndex({
+        animated: true,
+        index: 0,
+      });
+    }
+  };
+
   const {height} = useWindowDimensions();
 
   const styles = getDimensionedStyles(height);
@@ -97,7 +107,10 @@ const BuyCoinsOperation = ({user, currency}: Props) => {
               trackColor={{false: '#767577', true: '#81b0ff'}}
               thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
               ios_backgroundColor="#3e3e3e"
-              onValueChange={setIsEnabled}
+              onValueChange={(value: boolean) => {
+                setIsEnabled(value);
+                scrollToTop();
+              }}
               value={isEnabled}
             />
             <Text style={styles.switchText}>
@@ -107,6 +120,7 @@ const BuyCoinsOperation = ({user, currency}: Props) => {
 
           {/* Flatlist one list */}
           <FlatList
+            ref={flatListRef}
             data={join2Arrays(
               BuyCoinsListItem(
                 isEnabled ? BuyCoinType.BUY_HIVE : BuyCoinType.BUY_HDB,
