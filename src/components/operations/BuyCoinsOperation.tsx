@@ -37,7 +37,6 @@ const BuyCoinsOperation = ({user, currency}: Props) => {
 
   const renderItems = (item: any) => {
     const handleOnClick = () => {
-      //TODO add app browser navigation as well.
       Linking.openURL(item.link);
     };
 

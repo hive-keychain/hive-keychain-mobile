@@ -21,7 +21,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
-import {toHP} from 'utils/format';
+import {signedNumber, toHP} from 'utils/format';
 import {translate} from 'utils/localize';
 
 enum Token {
@@ -58,6 +58,20 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
         setToggle={() => {
           setToggled(toggled === Token.HIVE ? Token.NONE : Token.HIVE);
         }}
+        bottomLeft={
+          <Text>
+            <View style={{flexDirection: 'column'}}>
+              <Text>$ {`${prices.hive.usd.toFixed(2)}`}</Text>
+              <Text
+                style={{
+                  color:
+                    +prices.hive.usd_24h_change > 0 ? '#3BB26E' : '#B9122F',
+                }}>{`${signedNumber(
+                +prices.hive.usd_24h_change!.toFixed(2),
+              )}%`}</Text>
+            </View>
+          </Text>
+        }
         buttons={[
           <Send key="send_hive" currency="HIVE" />,
           <SendPowerUp key="pu" />,
@@ -80,7 +94,6 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
         buttons={[
           <Send key="send_hbd" currency="HBD" />,
           <SendConversion key="conversion" currency="HBD" />,
-          // <View style={{width: 20}}></View>,
           <BuyCoins key="buy_coins" currency={BuyCoinType.BUY_HDB} />,
         ]}
       />
