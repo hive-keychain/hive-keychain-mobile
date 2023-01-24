@@ -76,6 +76,8 @@ const WallettHistory = ({
 
   const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
 
+  const [filteringCounter, setFilteringCounter] = useState(0);
+
   const toggleFilter = () => {
     setIsFilterPanelOpened(!isFilterOpened);
   };
@@ -85,6 +87,7 @@ const WallettHistory = ({
       init();
       return () => {
         clearUserTransactions();
+        setFilteringCounter(0);
       };
     }
   }, [activeAccount.name]);
@@ -128,6 +131,7 @@ const WallettHistory = ({
           if (childRef.current) {
             //@ts-ignore
             childRef.current.filterNow();
+            setFilteringCounter((prevCount) => prevCount + 1);
           }
         }, 0);
 
@@ -137,6 +141,14 @@ const WallettHistory = ({
       }
     }
   }, [transactions]);
+
+  const forceResetFilters = () => {
+    if (childRef.current) {
+      setFilteringCounter(0);
+      //@ts-ignore
+      childRef.current.forceResetFilters();
+    }
+  };
 
   const renderListItem = (transaction: Transaction) => {
     return (
@@ -278,6 +290,16 @@ const WallettHistory = ({
         <BackToTopButton element={flatListRef} />
       )}
       {/* END ScrollToTop Button */}
+
+      {/* //testing counter */}
+      {filteringCounter > 40 && (
+        <TouchableOpacity style={styles.centered} onPress={forceResetFilters}>
+          <Text style={styles.alertText}>
+            Taking too long? Click to reset filters!
+          </Text>
+        </TouchableOpacity>
+      )}
+      {/* end testing */}
     </View>
   );
 };
@@ -323,6 +345,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 8,
+  },
+  centered: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  alertText: {
+    color: 'red',
+    fontWeight: 'bold',
+    marginBottom: 8,
   },
 });
 
