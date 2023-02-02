@@ -47,7 +47,6 @@ const BrowserScreen = ({
 
     return unsubscribe;
   }, [navigation]);
-
   // React.useEffect(() => {
   //   const unsubscribe = navigation.addListener('blur', () => {
   //     Orientation.lockToPortrait();

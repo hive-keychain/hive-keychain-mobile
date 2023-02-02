@@ -75,7 +75,16 @@ export default ({updateTabUrl, accounts}: Props) => {
         </View>
         <View style={styles.cards}>
           {BrowserConfig.HomeTab.dApps
-            .filter((e) => e.categories.includes(category))
+            .filter((e) => {
+              if (Platform.OS === 'ios') {
+                return (
+                  e.categories.includes(category) &&
+                  !e.categories.includes('gaming')
+                );
+              } else {
+                return e.categories.includes(category);
+              }
+            })
             .map((e) => (
               <DAppCard key={e.name} dApp={e} updateTabUrl={updateTabUrl} />
             ))}

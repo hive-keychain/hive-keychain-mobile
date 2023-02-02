@@ -8,7 +8,7 @@ interface AppInfo {
 }
 
 const getCurrentMobileAppVersion = (): AppInfo => {
-  const appVersionVersionInfo = VersionInfo.appVersion;
+  const appVersionVersionInfo = VersionInfo.appVersion.split('-')[0];
   return {name, version: appVersionVersionInfo};
 };
 
