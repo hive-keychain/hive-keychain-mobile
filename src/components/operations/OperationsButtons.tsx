@@ -6,6 +6,8 @@ import HistoryIcon from 'assets/wallet/icon_history.svg';
 import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
 import Minus from 'assets/wallet/icon_withdraw.svg';
+import CurrentSavingsWithdrawComponent from 'components/hive/CurrentSavingsWithdrawComponent';
+import Icon from 'components/hive/Icon';
 import Convert from 'components/operations/Convert';
 import Delegation from 'components/operations/Delegation';
 import {HistoryProps} from 'components/operations/History';
@@ -14,6 +16,7 @@ import PowerUp from 'components/operations/PowerUp';
 import Transfer from 'components/operations/Transfer';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {CurrentWithdrawingListItem} from 'src/interfaces/list-item.interface';
 import {navigate} from 'utils/navigation';
 import MoreTokenInfo, {MoreInfoTokenProps} from './MoreTokenInfo';
 import Savings, {SavingsOperations} from './Savings';
@@ -175,6 +178,32 @@ export const SendDeposit = ({currency}: {currency: string}) => {
       size={36}
       backgroundColor="#7E8C9A"
       content={<Plus />}
+    />
+  );
+};
+
+export const CancelSavingsWithdraw = ({
+  currentWithdrawingList,
+}: {
+  currentWithdrawingList: CurrentWithdrawingListItem[];
+}) => {
+  return (
+    <RoundButton
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: 'CancelSavingsWithdraw',
+          modalContent: (
+            <CurrentSavingsWithdrawComponent
+              operation={SavingsOperations.deposit}
+              currency={'HBD'}
+              currentWithdrawingList={currentWithdrawingList}
+            />
+          ),
+        });
+      }}
+      size={28}
+      backgroundColor="#ffffff"
+      content={<Icon name="savings" />}
     />
   );
 };

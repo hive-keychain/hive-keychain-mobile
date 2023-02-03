@@ -7,6 +7,7 @@ import {
   default as PowerUpIcon,
 } from 'src/assets/icons/svgs/arrow_upward.svg';
 import ConvertIcon from 'src/assets/icons/svgs/currency_exchange.svg';
+import DeleteIcon from 'src/assets/icons/svgs/delete_black.svg';
 import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import ExpandMoreIcon from 'src/assets/icons/svgs/expand_more.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
@@ -55,6 +56,8 @@ const getIconFilePath = (
       return <ArrowUpwardIcon style={styles.defaultIconContainer} />;
     case 'add_circle_outline':
       return <AddCircleOutlineIcon style={styles.defaultIconContainer} />;
+    case 'delete' || 'remove':
+      return <DeleteIcon style={style.defaultIconContainer} />;
     default:
       return <TransferIcon style={finalStyleOnIcon} />;
   }

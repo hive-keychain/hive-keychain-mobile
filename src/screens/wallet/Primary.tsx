@@ -5,6 +5,7 @@ import Savings from 'assets/wallet/icon_savings.svg';
 import AccountValue from 'components/hive/AccountValue';
 import TokenDisplay from 'components/hive/TokenDisplay';
 import {
+  CancelSavingsWithdraw,
   Send,
   SendConversion,
   SendDelegation,
@@ -17,10 +18,12 @@ import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import {CurrentWithdrawingListItem} from 'src/interfaces/list-item.interface';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {toHP} from 'utils/format';
 import {translate} from 'utils/localize';
+import {SavingsUtils} from 'utils/savings.utils';
 
 enum Token {
   NONE,
@@ -29,12 +32,47 @@ enum Token {
   HP,
   SAVINGS,
 }
-const Primary = ({user, prices, properties}: PropsFromRedux) => {
+const Primary = ({
+  user,
+  prices,
+  properties,
+  userSavingsWithdrawRequests,
+}: PropsFromRedux) => {
   const {width} = useWindowDimensions();
+  const [toggled, setToggled] = useState(Token.NONE);
+  const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
+    CurrentWithdrawingListItem[]
+  >([]);
+
   useEffect(() => {
     logScreenView('WalletScreen');
   }, []);
-  const [toggled, setToggled] = useState(Token.NONE);
+
+  useEffect(() => {
+    console.log({userSavingsWithdrawRequests}); //TODO to remove
+    if (userSavingsWithdrawRequests > 0) {
+      fetchCurrentWithdrawingList();
+    }
+  }, [user]);
+
+  const fetchCurrentWithdrawingList = async () => {
+    setCurrentWithdrawingList(
+      await SavingsUtils.getSavingsWitdrawFrom(user.name!),
+    );
+  };
+
+  // const gotoCurrentWithdrawPopup = () => {
+  //   navigate('ModalScreen', {
+  //     name: 'CurrentWithdrawDetails',
+  //     content: (
+  //       <CurrentSavingsWithdrawComponent
+  //         currency={'HBD'}
+  //         operation={SavingsOperations.deposit}
+  //       />
+  //     ),
+  //   });
+  // };
+
   return (
     <View style={styles.container}>
       <Separator height={30} />
@@ -119,15 +157,36 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
           setToggled(toggled === Token.SAVINGS ? Token.NONE : Token.SAVINGS);
         }}
         bottomLeft={
-          <Text>
-            <Text style={styles.apr}>HBD APR:</Text>
-            <Text style={styles.aprValue}>
-              {'   '}
-              {properties.globals && properties.globals.hbd_interest_rate
-                ? `${properties.globals.hbd_interest_rate / 100}%`
-                : ''}
+          <View>
+            <Text>
+              <Text style={styles.apr}>HBD APR:</Text>
+              <Text style={styles.aprValue}>
+                {'   '}
+                {properties.globals && properties.globals.hbd_interest_rate
+                  ? `${properties.globals.hbd_interest_rate / 100}%`
+                  : ''}
+              </Text>
             </Text>
-          </Text>
+
+            {currentWithdrawingList.length > 0 && (
+              <View style={styles.flexRowAligned}>
+                <Text style={styles.apr}>PENDING:</Text>
+                <Text style={styles.withdrawingValue}>
+                  {' '}
+                  {currentWithdrawingList
+                    .reduce(
+                      (acc, current) =>
+                        acc + parseFloat(current.amount.split(' ')[0]),
+                      0,
+                    )
+                    .toFixed(5)}{' '}
+                </Text>
+                <CancelSavingsWithdraw
+                  currentWithdrawingList={currentWithdrawingList}
+                />
+              </View>
+            )}
+          </View>
         }
         buttons={[
           <SendWithdraw key="savings_withdraw" currency="HBD" />,
@@ -143,11 +202,18 @@ const styles = StyleSheet.create({
   container: {width: '100%', flex: 1},
   apr: {color: '#7E8C9A', fontSize: 14},
   aprValue: {color: '#3BB26E', fontSize: 14},
+  withdrawingValue: {color: '#b8343f', fontSize: 14},
+  flexRowAligned: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });
 
 const mapStateToProps = (state: RootState) => {
   return {
     user: state.activeAccount,
+    userSavingsWithdrawRequests:
+      state.activeAccount.account.savings_withdraw_requests,
     prices: state.currencyPrices,
     properties: state.properties,
   };
