@@ -31,9 +31,13 @@ const FallbackComponent = (props: Props) => (
         </Text>
         .
       </Text>
-      <Text style={styles.error}>{props.error.toString()}</Text>
-      <Text style={styles.error}>{`${props.error.stack?.slice(0, 500)}
-       ${props.error.stack.length > 500 ? '...' : ''}`}</Text>
+      <Text style={styles.error}>{props?.error.toString?.()}</Text>
+      <Text style={styles.error}>{`${props.error?.stack?.slice(0, 500)}
+       ${
+         props.error && props.error.stack && props.error.stack.length > 500
+           ? '...'
+           : ''
+       }`}</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
