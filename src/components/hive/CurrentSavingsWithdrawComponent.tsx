@@ -19,7 +19,7 @@ import {Dimensions} from 'utils/common.types';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
-
+//TODO rename using same pattern as extension.
 type Props = PropsFromRedux & {
   currency: string;
   operation: SavingsOperations;
@@ -107,7 +107,7 @@ const CurrentSavingsWithdrawComponent = ({
     <Operation
       logo={<Icon name="savings" />}
       //TODO add into locales
-      title={'SAVINGS WITHDRAWS'}>
+      title={'PENDING WITHDRAWAL'}>
       <>
         <View style={styles.container}>
           <CustomPicker
