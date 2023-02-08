@@ -1,4 +1,4 @@
-export interface CurrentWithdrawingListItem {
+export interface SavingsWithdrawal {
   amount: string;
   complete: string;
   from: string;

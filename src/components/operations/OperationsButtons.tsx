@@ -16,7 +16,7 @@ import PowerUp from 'components/operations/PowerUp';
 import Transfer from 'components/operations/Transfer';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {CurrentWithdrawingListItem} from 'src/interfaces/list-item.interface';
+import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {navigate} from 'utils/navigation';
 import MoreTokenInfo, {MoreInfoTokenProps} from './MoreTokenInfo';
 import Savings, {SavingsOperations} from './Savings';
@@ -185,7 +185,7 @@ export const SendDeposit = ({currency}: {currency: string}) => {
 export const CancelSavingsWithdraw = ({
   currentWithdrawingList,
 }: {
-  currentWithdrawingList: CurrentWithdrawingListItem[];
+  currentWithdrawingList: SavingsWithdrawal[];
 }) => {
   return (
     <RoundButton

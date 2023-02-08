@@ -1,5 +1,6 @@
 import {loadAccount} from 'actions/index';
 import CustomPicker from 'components/form/CustomPicker';
+import CancelPendingSavingsWithdrawalItem from 'components/operations/Cancel-pending-savings-withdrawal-item';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
@@ -13,17 +14,18 @@ import {
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {connect, ConnectedProps} from 'react-redux';
-import {CurrentWithdrawingListItem} from 'src/interfaces/list-item.interface';
+import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 import Icon from './Icon';
 //TODO rename using same pattern as extension.
 type Props = PropsFromRedux & {
   currency: string;
   operation: SavingsOperations;
-  currentWithdrawingList: CurrentWithdrawingListItem[];
+  currentWithdrawingList: SavingsWithdrawal[];
 };
 const CurrentSavingsWithdrawComponent = ({
   user,
@@ -83,8 +85,31 @@ const CurrentSavingsWithdrawComponent = ({
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, useWindowDimensions());
 
-  const renderListItem = (item: CurrentWithdrawingListItem) => {
-    const cancelSavingWithDraw = () => {};
+  //TODO remove comments
+  // const gotoCurrentWithdrawPopup = () => {
+  //   navigate('ModalScreen', {
+  //     name: 'CurrentWithdrawDetails',
+  //     content: (
+  //       <CurrentSavingsWithdrawComponent
+  //         currency={'HBD'}
+  //         operation={SavingsOperations.deposit}
+  //       />
+  //     ),
+  //   });
+  // };
+  //end comments
+  const renderListItem = (item: SavingsWithdrawal) => {
+    const cancelSavingWithDraw = () => {
+      navigate('ModalScreen', {
+        name: 'CancelPendingSavingsWithdrawalItem',
+        modalContent: (
+          <CancelPendingSavingsWithdrawalItem
+            item={item}
+            itemList={currentWithdrawingList}
+          />
+        ),
+      });
+    };
 
     return (
       <View
@@ -107,7 +132,7 @@ const CurrentSavingsWithdrawComponent = ({
     <Operation
       logo={<Icon name="savings" />}
       //TODO add into locales
-      title={'PENDING WITHDRAWAL'}>
+      title={'PENDING WITHDRAWALS'}>
       <>
         <View style={styles.container}>
           <CustomPicker
@@ -135,6 +160,13 @@ const CurrentSavingsWithdrawComponent = ({
           renderItem={(withdraw) => renderListItem(withdraw.item)}
           //TODO move style to styles.
           style={{maxHeight: 200}}
+          ListEmptyComponent={() => {
+            return (
+              <View>
+                <Text>{`There is no pending ${currency} withdrawals`}</Text>
+              </View>
+            );
+          }}
         />
         {/* <OperationInput
           placeholder={'0.000'}

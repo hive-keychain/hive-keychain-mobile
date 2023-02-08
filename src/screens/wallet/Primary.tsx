@@ -18,7 +18,7 @@ import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
-import {CurrentWithdrawingListItem} from 'src/interfaces/list-item.interface';
+import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {toHP} from 'utils/format';
@@ -40,8 +40,9 @@ const Primary = ({
 }: PropsFromRedux) => {
   const {width} = useWindowDimensions();
   const [toggled, setToggled] = useState(Token.NONE);
+  //TODO rename as extension
   const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
-    CurrentWithdrawingListItem[]
+    SavingsWithdrawal[]
   >([]);
 
   useEffect(() => {
@@ -61,6 +62,7 @@ const Primary = ({
     );
   };
 
+  //TODO remove comments.
   // const gotoCurrentWithdrawPopup = () => {
   //   navigate('ModalScreen', {
   //     name: 'CurrentWithdrawDetails',
@@ -179,7 +181,7 @@ const Primary = ({
                         acc + parseFloat(current.amount.split(' ')[0]),
                       0,
                     )
-                    .toFixed(5)}{' '}
+                    .toFixed(4)}{' '}
                 </Text>
                 <CancelSavingsWithdraw
                   currentWithdrawingList={currentWithdrawingList}
