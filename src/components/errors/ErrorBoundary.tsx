@@ -1,8 +1,9 @@
-import React, { type ComponentType, type ReactNode } from 'react'
+import React, { type ComponentType, type ReactNode } from 'react';
 
+import crashlytics from "@react-native-firebase/crashlytics";
 import FallbackComponent, {
   type Props as FallbackComponentProps
-} from './FallbackComponent'
+} from './FallbackComponent';
 
 export type Props = {
   children: Exclude<NonNullable<ReactNode>, string | number | boolean>
@@ -26,6 +27,7 @@ class ErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: { componentStack: string }) {
+    crashlytics().recordError(error);
     if (typeof this.props.onError === 'function') {
       this.props.onError(error, info?.componentStack)
     }
