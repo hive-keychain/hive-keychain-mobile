@@ -5,7 +5,7 @@ import Savings from 'assets/wallet/icon_savings.svg';
 import AccountValue from 'components/hive/AccountValue';
 import TokenDisplay from 'components/hive/TokenDisplay';
 import {
-  CancelSavingsWithdraw,
+  PendingSavingsWithdraw,
   Send,
   SendConversion,
   SendDelegation,
@@ -40,7 +40,6 @@ const Primary = ({
 }: PropsFromRedux) => {
   const {width} = useWindowDimensions();
   const [toggled, setToggled] = useState(Token.NONE);
-  //TODO rename as extension
   const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
     SavingsWithdrawal[]
   >([]);
@@ -50,7 +49,6 @@ const Primary = ({
   }, []);
 
   useEffect(() => {
-    console.log({userSavingsWithdrawRequests}); //TODO to remove
     if (userSavingsWithdrawRequests > 0) {
       fetchCurrentWithdrawingList();
     }
@@ -61,19 +59,6 @@ const Primary = ({
       await SavingsUtils.getSavingsWitdrawFrom(user.name!),
     );
   };
-
-  //TODO remove comments.
-  // const gotoCurrentWithdrawPopup = () => {
-  //   navigate('ModalScreen', {
-  //     name: 'CurrentWithdrawDetails',
-  //     content: (
-  //       <CurrentSavingsWithdrawComponent
-  //         currency={'HBD'}
-  //         operation={SavingsOperations.deposit}
-  //       />
-  //     ),
-  //   });
-  // };
 
   return (
     <View style={styles.container}>
@@ -172,7 +157,11 @@ const Primary = ({
 
             {currentWithdrawingList.length > 0 && (
               <View style={styles.flexRowAligned}>
-                <Text style={styles.apr}>PENDING:</Text>
+                <Text style={styles.apr}>
+                  {translate(
+                    'wallet.operations.savings.pending_withdraw.pending',
+                  )}
+                </Text>
                 <Text style={styles.withdrawingValue}>
                   {' '}
                   {currentWithdrawingList
@@ -183,7 +172,7 @@ const Primary = ({
                     )
                     .toFixed(4)}{' '}
                 </Text>
-                <CancelSavingsWithdraw
+                <PendingSavingsWithdraw
                   currentWithdrawingList={currentWithdrawingList}
                 />
               </View>

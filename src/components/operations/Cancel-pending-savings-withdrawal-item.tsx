@@ -1,8 +1,8 @@
 import {loadAccount, loadUserTokens} from 'actions/index';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import CurrentSavingsWithdrawComponent, {
+import PendingSavingsWithdrawalPageComponent, {
   SavingsOperations,
-} from 'components/hive/CurrentSavingsWithdrawComponent';
+} from 'components/hive/Pending-savings-withdrawal-page.component';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
 import React, {useState} from 'react';
@@ -14,10 +14,9 @@ import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {RootState} from 'store';
 import {cancelPendingSavings} from 'utils/hive';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
-import BlockchainTransactionUtils from 'utils/tokens.utils';
+import {goBack, navigate} from 'utils/navigation';
 import Operation from './Operation';
-//TODO here, important: change names & beheviours.
+
 type Props = PropsFromRedux & {
   item: SavingsWithdrawal;
   itemList: SavingsWithdrawal[];
@@ -32,58 +31,29 @@ const CancelPendingSavingsWithdrawalItem = ({
 }: Props) => {
   const [loading, setLoading] = useState(false);
 
-  console.log('about to remove: ', {item}); //TODO to remove
   const onCancelPendingSavings = async () => {
     setLoading(true);
     Keyboard.dismiss();
 
-    const cancelPendingSavingsResult: any = await cancelPendingSavings(
-      user.keys.active!,
-      {from: user.name!, request_id: item.request_id},
-    );
-
-    console.log({cancelPendingSavingsResult}); //TODO to remove
-    //TODO here,
-    //  just follow same pattern as extension, if we have a cancelPendingSavingsItemResult.tx_id, then success -> goBack to main wallet screen so it
-    //  will render the updated savings.
-    //  if not error, just go back as it is now -> goBackPendingWithdrawals
-
-    //TODO update all bellow following the extension. :)
-    if (cancelPendingSavingsResult && cancelPendingSavingsResult.tx_id) {
-      let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
-        cancelPendingSavingsResult.tx_id,
+    try {
+      await cancelPendingSavings(user.keys.active!, {
+        from: user.name!,
+        request_id: item.request_id,
+      });
+      loadAccount(user.account.name, true);
+      goBack();
+      Toast.show(
+        translate(
+          'wallet.operations.savings.pending_withdraw.cancelled.success',
+        ),
+        Toast.LONG,
       );
-
-      if (confirmationResult && confirmationResult.confirmed) {
-        if (confirmationResult.error) {
-          Toast.show(
-            translate('toast.hive_engine_error', {
-              error: confirmationResult.error,
-            }),
-            Toast.LONG,
-          );
-        } else {
-          //TODO create locales...
-          Toast.show(
-            `Withdraw savings canceled: rId: ${item.request_id}`,
-            Toast.LONG,
-          );
-        }
-      } else {
-        Toast.show(translate('toast.token_timeout'), Toast.LONG);
-      }
-    } else {
-      //TODO add failed message locales
-      Toast.show('Cancel pending savings withdraw failed!!!', Toast.LONG);
+    } catch (e) {
+      Toast.show(`Error: ${(e as any).message}`, Toast.LONG);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
-    loadAccount(user.account.name, true);
-    loadUserTokens(user.name!);
-    goBackPendingWithdrawals();
   };
-
-  // const {color} = getCurrencyProperties(currency);
 
   const color = 'red';
   const styles = getDimensionedStyles(color);
@@ -92,7 +62,7 @@ const CancelPendingSavingsWithdrawalItem = ({
     navigate('ModalScreen', {
       name: 'CancelSavingsWithdraw',
       modalContent: (
-        <CurrentSavingsWithdrawComponent
+        <PendingSavingsWithdrawalPageComponent
           operation={SavingsOperations.deposit}
           currency={'HBD'}
           currentWithdrawingList={itemList}
@@ -116,23 +86,26 @@ const CancelPendingSavingsWithdrawalItem = ({
   return (
     <Operation
       logo={renderGoBackComponent()}
-      //TODO add to locales all bellow
-      title="CANCEL WITHDRAW">
+      title={translate(
+        'wallet.operations.savings.pending_withdraw.cancel_withdraw_title',
+      )}>
       <>
-        <Text>
-          Please confirm that you want to cancel this $1 withdraw from savings.
+        <Text style={styles.marginTop}>
+          {translate(
+            'wallet.operations.savings.pending_withdraw.cancel_confirm_disclaimer',
+          )}
         </Text>
         <Separator />
 
-        <Text>
-          {item.amount} {moment(item.complete).format('L')}
-        </Text>
+        <View style={styles.itemContainer}>
+          <Text>{item.amount}</Text>
+          <Text>{moment(item.complete).format('L')}</Text>
+        </View>
 
         <Separator height={50} />
 
         <ActiveOperationButton
           title={translate('common.confirm')}
-          //TODO finish here bellow
           onPress={onCancelPendingSavings}
           style={styles.button}
           isLoading={loading}
@@ -153,6 +126,16 @@ const getDimensionedStyles = (color: string) =>
     },
     goBackButton: {
       margin: 7,
+    },
+    marginHorizontal: {
+      marginHorizontal: 10,
+    },
+    itemContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    marginTop: {
+      marginTop: 12,
     },
   });
 

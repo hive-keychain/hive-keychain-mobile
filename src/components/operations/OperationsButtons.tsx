@@ -6,8 +6,8 @@ import HistoryIcon from 'assets/wallet/icon_history.svg';
 import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
 import Minus from 'assets/wallet/icon_withdraw.svg';
-import CurrentSavingsWithdrawComponent from 'components/hive/CurrentSavingsWithdrawComponent';
 import Icon from 'components/hive/Icon';
+import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savings-withdrawal-page.component';
 import Convert from 'components/operations/Convert';
 import Delegation from 'components/operations/Delegation';
 import {HistoryProps} from 'components/operations/History';
@@ -182,7 +182,7 @@ export const SendDeposit = ({currency}: {currency: string}) => {
   );
 };
 
-export const CancelSavingsWithdraw = ({
+export const PendingSavingsWithdraw = ({
   currentWithdrawingList,
 }: {
   currentWithdrawingList: SavingsWithdrawal[];
@@ -193,7 +193,7 @@ export const CancelSavingsWithdraw = ({
         navigate('ModalScreen', {
           name: 'CancelSavingsWithdraw',
           modalContent: (
-            <CurrentSavingsWithdrawComponent
+            <PendingSavingsWithdrawalPageComponent
               operation={SavingsOperations.deposit}
               currency={'HBD'}
               currentWithdrawingList={currentWithdrawingList}
