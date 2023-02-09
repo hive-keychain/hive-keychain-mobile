@@ -33,6 +33,7 @@ const CustomPicker = ({
   iosTextStyle,
 }: Props) => {
   const styles = getDimensionedStyles();
+  console.log({list}); //TODO to remove
   switch (Platform.OS) {
     case 'ios':
       return (

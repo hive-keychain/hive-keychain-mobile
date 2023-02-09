@@ -7,6 +7,7 @@ export type MainDrawerStackParam = {
   AccountManagementScreen: undefined;
   AddAccountStack: undefined;
   AddAccountByAuth: undefined;
+  CreateAccountScreen: undefined;
   SettingsScreen: undefined;
   ABOUT: undefined;
   Governance: undefined;

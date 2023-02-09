@@ -433,7 +433,8 @@
     "about": "ABOUT",
     "wallet": "WALLET",
     "browser": "BROWSER",
-    "governance": "GOVERNANCE"
+    "governance": "GOVERNANCE",
+    "create_account": "CREATE ACCOUNT"
   },
   "request": {
     "title": {

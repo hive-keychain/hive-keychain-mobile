@@ -10,6 +10,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {translate} from 'utils/localize';
 import {MainDrawerStackParam} from './MainDrawer.types';
+import CreateAccount from './mainDrawerStacks/CreateAccount';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 
 const Drawer = createDrawerNavigator<MainDrawerStackParam>();
@@ -46,6 +47,11 @@ export default () => {
         name="AddAccountStack"
         options={{title: translate('navigation.add_account')}}
         component={AddAccountStack}
+      />
+      <Drawer.Screen
+        name="CreateAccountScreen"
+        options={{title: translate('navigation.create_account')}}
+        component={CreateAccount}
       />
       <Drawer.Screen
         name="Governance"
