@@ -15,6 +15,11 @@ export default ({user}: {user: ActiveAccount}) => {
     return (
       <TouchableOpacity
         style={styles.witness}
+        onLongPress={() => {
+          //@ts-ignore
+          //throw new Error('test error');
+          user.crash.test();
+        }}
         onPress={async () => {
           try {
             if (!user.keys[KeyTypes.active]) {

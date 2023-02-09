@@ -11,6 +11,7 @@ target 'mobileKeychain' do
   use_react_native!(:path => config["reactNativePath"])
   pod 'Firebase', :modular_headers => true
   pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
   pod 'Firebase/Analytics'
 
