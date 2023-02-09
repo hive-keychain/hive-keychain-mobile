@@ -7,6 +7,7 @@ import Separator from 'components/ui/Separator';
 import moment from 'moment';
 import React, {useState} from 'react';
 import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import IconBack from 'src/assets/Icon_arrow_back_black.svg';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
@@ -14,6 +15,7 @@ import {RootState} from 'store';
 import {cancelPendingSavings} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
+import BlockchainTransactionUtils from 'utils/tokens.utils';
 import Operation from './Operation';
 //TODO here, important: change names & beheviours.
 type Props = PropsFromRedux & {
@@ -31,57 +33,54 @@ const CancelPendingSavingsWithdrawalItem = ({
   const [loading, setLoading] = useState(false);
 
   console.log('about to remove: ', {item}); //TODO to remove
-  const onCancelDelegateToken = async () => {
+  const onCancelPendingSavings = async () => {
     setLoading(true);
     Keyboard.dismiss();
 
-    const cancelPendingSavingsItemResult: any = await cancelPendingSavings(
+    const cancelPendingSavingsResult: any = await cancelPendingSavings(
       user.keys.active!,
       {from: user.name!, request_id: item.request_id},
     );
 
-    console.log({cancelPendingSavingsItemResult}); //TODO to remove
+    console.log({cancelPendingSavingsResult}); //TODO to remove
     //TODO here,
     //  just follow same pattern as extension, if we have a cancelPendingSavingsItemResult.tx_id, then success -> goBack to main wallet screen so it
     //  will render the updated savings.
     //  if not error, just go back as it is now -> goBackPendingWithdrawals
 
     //TODO update all bellow following the extension. :)
-    // if (
-    //   cancelPendingSavingsItemResult &&
-    //   cancelPendingSavingsItemResult.tx_id
-    // ) {
-    //   let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
-    //     cancelPendingSavingsItemResult.tx_id,
-    //   );
+    if (cancelPendingSavingsResult && cancelPendingSavingsResult.tx_id) {
+      let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
+        cancelPendingSavingsResult.tx_id,
+      );
 
-    //   if (confirmationResult && confirmationResult.confirmed) {
-    //     if (confirmationResult.error) {
-    //       Toast.show(
-    //         translate('toast.hive_engine_error', {
-    //           error: confirmationResult.error,
-    //         }),
-    //         Toast.LONG,
-    //       );
-    //     } else {
-    //       //TODO create locales...
-    //       Toast.show(
-    //         `Pending withdraw savings canceled: rId: ${item.request_id}`,
-    //         Toast.LONG,
-    //       );
-    //     }
-    //   } else {
-    //     Toast.show(translate('toast.token_timeout'), Toast.LONG);
-    //   }
-    // } else {
-    //   //TODO add failed message locales
-    //   Toast.show('Cancel pending savings withdraw failed!!!', Toast.LONG);
-    // }
+      if (confirmationResult && confirmationResult.confirmed) {
+        if (confirmationResult.error) {
+          Toast.show(
+            translate('toast.hive_engine_error', {
+              error: confirmationResult.error,
+            }),
+            Toast.LONG,
+          );
+        } else {
+          //TODO create locales...
+          Toast.show(
+            `Withdraw savings canceled: rId: ${item.request_id}`,
+            Toast.LONG,
+          );
+        }
+      } else {
+        Toast.show(translate('toast.token_timeout'), Toast.LONG);
+      }
+    } else {
+      //TODO add failed message locales
+      Toast.show('Cancel pending savings withdraw failed!!!', Toast.LONG);
+    }
 
-    // setLoading(false);
-    // loadAccount(user.account.name, true);
-    // loadUserTokens(user.name!);
-    // goBackPendingWithdrawals();
+    setLoading(false);
+    loadAccount(user.account.name, true);
+    loadUserTokens(user.name!);
+    goBackPendingWithdrawals();
   };
 
   // const {color} = getCurrencyProperties(currency);
@@ -134,7 +133,7 @@ const CancelPendingSavingsWithdrawalItem = ({
         <ActiveOperationButton
           title={translate('common.confirm')}
           //TODO finish here bellow
-          onPress={onCancelDelegateToken}
+          onPress={onCancelPendingSavings}
           style={styles.button}
           isLoading={loading}
         />
