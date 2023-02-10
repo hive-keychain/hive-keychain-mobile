@@ -9,7 +9,9 @@ interface LoadMoreProps {
 const LoadMoreButton = (props: LoadMoreProps) => {
   return (
     <View style={styles.loadMoreContainer}>
-      <Text style={styles.loadMoreText}>{translate('common.load_more')}</Text>
+      <Text style={styles.loadMoreText}>
+        {translate('operations.history.load_more')}
+      </Text>
       <TouchableOpacity onPress={props.onTryLoadMore}>
         <View style={[styles.circularContainer, {width: 20, height: 20}]}>
           <Text>+</Text>
