@@ -1,13 +1,15 @@
 import 'react-native-gesture-handler';
 import './global';
+
+import ErrorBoundary from 'components/errors/ErrorBoundary';
 import React, {useState} from 'react';
 import {AppRegistry, StatusBar} from 'react-native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import App from 'src/App';
+import {persistor, store} from 'store';
 import {name as appName} from './app.json';
-import {store, persistor} from 'store';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 const Root = () => {
   const [gateLifted, setGateLifted] = useState(false);
@@ -17,14 +19,16 @@ const Root = () => {
     setGateLifted(true);
   };
   return (
-    <SafeAreaProvider>
-      <Provider store={store}>
-        <StatusBar backgroundColor="black" />
-        <PersistGate persistor={persistor} onBeforeLift={onBeforeLift}>
-          {gateLifted ? <App /> : null}
-        </PersistGate>
-      </Provider>
-    </SafeAreaProvider>
+    <ErrorBoundary>
+      <SafeAreaProvider>
+        <Provider store={store}>
+          <StatusBar backgroundColor="black" />
+          <PersistGate persistor={persistor} onBeforeLift={onBeforeLift}>
+            {gateLifted ? <App /> : null}
+          </PersistGate>
+        </Provider>
+      </SafeAreaProvider>
+    </ErrorBoundary>
   );
 };
 

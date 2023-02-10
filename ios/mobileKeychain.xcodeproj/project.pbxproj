@@ -777,6 +777,7 @@
 				INFOPLIST_FILE = mobileKeychain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.11.5;
+
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -800,6 +801,7 @@
 				INFOPLIST_FILE = mobileKeychain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.11.5;
+
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
