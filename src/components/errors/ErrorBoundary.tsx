@@ -27,7 +27,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: Error, info: { componentStack: string }) {
     if (typeof this.props.onError === 'function') {
-      this.props.onError(error, info.componentStack)
+      this.props.onError(error, info?.componentStack)
     }
   }
 

@@ -26,7 +26,7 @@ import {getClient} from './hive';
 import {translate} from './localize';
 
 export const MINIMUM_FETCHED_TRANSACTIONS = 1;
-export const NB_TRANSACTION_FETCHED = 1000;
+export const NB_TRANSACTION_FETCHED = 200;
 export const HAS_IN_OUT_TRANSACTIONS = ['transfer', 'delegate_vesting_shares'];
 export const TRANSFER_TYPE_TRANSACTIONS = [
   'transfer',
