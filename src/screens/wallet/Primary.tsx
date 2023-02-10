@@ -61,13 +61,13 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
         bottomLeft={
           <Text>
             <View style={{flexDirection: 'column'}}>
-              <Text>$ {`${prices.hive.usd.toFixed(2)}`}</Text>
+              <Text>$ {`${prices.hive.usd?.toFixed(2)}`}</Text>
               <Text
                 style={{
                   color:
                     +prices.hive.usd_24h_change > 0 ? '#3BB26E' : '#B9122F',
                 }}>{`${signedNumber(
-                +prices.hive.usd_24h_change!.toFixed(2),
+                +prices.hive.usd_24h_change?.toFixed(2),
               )}%`}</Text>
             </View>
           </Text>

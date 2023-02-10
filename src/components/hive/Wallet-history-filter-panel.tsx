@@ -77,6 +77,9 @@ const WalletHistoryFilterPanel = forwardRef(
       initFiltersNow: () => {
         initFilters();
       },
+      forceResetFilters: () => {
+        clearFilters();
+      },
     }));
 
     const toggleFilterType = (transactionName: string) => {
