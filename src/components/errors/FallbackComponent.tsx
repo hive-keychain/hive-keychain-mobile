@@ -31,8 +31,8 @@ const FallbackComponent = (props: Props) => (
         </Text>
         .
       </Text>
-      <Text style={styles.error}>{props?.error.toString?.()}</Text>
-      <Text style={styles.error}>{`${props.error?.stack?.slice(0, 500)}
+      <Text style={styles.error}>{props?.error?.toString?.()}</Text>
+      <Text style={styles.error}>{`${props?.error?.stack?.slice(0, 500)}
        ${
          props.error && props.error.stack && props.error.stack.length > 500
            ? '...'
@@ -42,7 +42,7 @@ const FallbackComponent = (props: Props) => (
         style={styles.button}
         onPress={() => {
           Clipboard.setString(
-            props.error.toString() + '\n\n' + props.error.stack,
+            props?.error?.toString?.() + '\n\n' + props?.error?.stack,
           );
         }}>
         <Text style={styles.buttonText}>Copy Stack</Text>

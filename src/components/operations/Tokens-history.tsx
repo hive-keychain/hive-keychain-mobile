@@ -138,7 +138,9 @@ const TokensHistory = ({
             displayedTransactions.length === 0 && (
               <View style={[styles.flex, styles.verticallyCentered]}>
                 <Text style={styles.textBold}>
-                  {translate('common.no_transaction_or_clear')}
+                  {translate(
+                    'wallet.operations.history.no_transaction_or_clear',
+                  )}
                 </Text>
               </View>
             )}
