@@ -45,15 +45,11 @@
     "popup_read_more": "Read more",
     "history": "History",
     "search_box_placeholder": "Search",
-    "no_transaction_or_clear": "No transactions found. Try to clear the filter.",
     "stake": "Stake",
     "unstake": "Unstake",
     "delegate": "Delegate",
-    "need_positive_amount": "The amount needs to be greater than 0",
     "missing_key": "Please add your {{key}} key to perform this operation!",
-    "load_more": "Click to load more",
-    "top": "Top",
-    "list_is_empty_try_clear_filter": "Nothing found, try to clear your filter."
+    "need_positive_amount": "The amount needs to be greater than 0"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -73,7 +69,12 @@
       "info_account_create": "Paid {{fee}} to create @{{new_account_name}}"
     },
     "operations": {
-      "history": "History",
+      "history": {
+        "no_transaction_or_clear": "No transactions found. Try to clear the filter.",
+        "load_more": "Click to load more",
+        "list_is_empty_try_clear_filter": "Nothing found, try to clear your filter.",
+        "reset_filters": "Taking too long? Click to reset the filters!"
+      },
       "savings": {
         "deposit": "Deposit Funds",
         "withdraw": "Withdraw Funds",

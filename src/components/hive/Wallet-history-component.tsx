@@ -1,11 +1,12 @@
 import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
 import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
 import Loader from 'components/ui/Loader';
+import Separator from 'components/ui/Separator';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Icons} from 'src/enums/icons.enums';
-import {Transaction, Transactions} from 'src/interfaces/transaction.interface';
+import {Transaction} from 'src/interfaces/transaction.interface';
 import {RootState} from 'store';
 import ArrayUtils from 'utils/array.utils';
 import {getMainLocale, translate} from 'utils/localize';
@@ -76,6 +77,8 @@ const WallettHistory = ({
 
   const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
 
+  const [filteringCounter, setFilteringCounter] = useState(0);
+
   const toggleFilter = () => {
     setIsFilterPanelOpened(!isFilterOpened);
   };
@@ -85,6 +88,7 @@ const WallettHistory = ({
       init();
       return () => {
         clearUserTransactions();
+        setFilteringCounter(0);
       };
     }
   }, [activeAccount.name]);
@@ -128,6 +132,7 @@ const WallettHistory = ({
           if (childRef.current) {
             //@ts-ignore
             childRef.current.filterNow();
+            setFilteringCounter((prevCount: number) => prevCount + 1);
           }
         }, 0);
 
@@ -137,6 +142,14 @@ const WallettHistory = ({
       }
     }
   }, [transactions]);
+
+  const forceResetFilters = () => {
+    if (childRef.current) {
+      setFilteringCounter(0);
+      //@ts-ignore
+      childRef.current.forceResetFilters();
+    }
+  };
 
   const renderListItem = (transaction: Transaction) => {
     return (
@@ -233,7 +246,9 @@ const WallettHistory = ({
                       <TouchableOpacity
                         style={styles.loadMorePanel}
                         onPress={() => tryToLoadMore()}>
-                        <Text>{translate('common.load_more')}</Text>
+                        <Text>
+                          {translate('wallet.operations.history.load_more')}
+                        </Text>
                         <Icon name={Icons.ADD_CIRCLE} />
                       </TouchableOpacity>
                     )}
@@ -260,7 +275,11 @@ const WallettHistory = ({
               {flex: 1},
               {justifyContent: 'center', alignItems: 'center'},
             ]}>
-            <Text>{translate('common.list_is_empty_try_clear_filter')}</Text>
+            <Text>
+              {translate(
+                'wallet.operations.history.list_is_empty_try_clear_filter',
+              )}
+            </Text>
           </View>
         )}
       {/* END results */}
@@ -268,7 +287,19 @@ const WallettHistory = ({
       {/* LOADER */}
       {loading && (
         <View style={styles.renderTransactions}>
+          <Separator height={120} />
           <Loader animating />
+          {filteringCounter > 40 ? (
+            <TouchableOpacity
+              style={styles.centered}
+              onPress={forceResetFilters}>
+              <Text style={styles.alertText}>
+                {translate('wallet.operations.history.reset_filters')}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <Separator height={120} />
+          )}
         </View>
       )}
       {/* END LOADER */}
@@ -278,13 +309,17 @@ const WallettHistory = ({
         <BackToTopButton element={flatListRef} />
       )}
       {/* END ScrollToTop Button */}
+
+      {/* //testing counter */}
+
+      {/* end testing */}
     </View>
   );
 };
 
 const mapStateToProps = (state: RootState) => {
   return {
-    transactions: state.transactions as Transactions,
+    transactions: state.transactions,
     activeAccount: state.activeAccount,
     walletFilters: state.walletFilters,
   };
@@ -323,6 +358,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 8,
+  },
+  centered: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  alertText: {
+    marginTop: 30,
+    fontWeight: 'bold',
+    marginBottom: 80,
   },
 });
 
