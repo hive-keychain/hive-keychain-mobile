@@ -170,7 +170,7 @@ const Primary = ({
                         acc + parseFloat(current.amount.split(' ')[0]),
                       0,
                     )
-                    .toFixed(4)}{' '}
+                    .toFixed(3)}{' '}
                 </Text>
                 <PendingSavingsWithdraw
                   currentWithdrawingList={currentWithdrawingList}
