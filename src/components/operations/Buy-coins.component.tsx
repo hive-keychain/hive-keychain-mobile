@@ -118,11 +118,11 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
             ref={flatListRef}
             data={ArrayUtils.mergeWithoutDuplicate(
               BuyCoinsListItem(
-                isEnabled ? BuyCoinType.BUY_HIVE : BuyCoinType.BUY_HDB,
+                isEnabled ? BuyCoinType.BUY_HDB : BuyCoinType.BUY_HIVE,
                 user.name,
               ).list,
               BuyCoinsListItem(
-                isEnabled ? BuyCoinType.BUY_HIVE : BuyCoinType.BUY_HDB,
+                isEnabled ? BuyCoinType.BUY_HDB : BuyCoinType.BUY_HIVE,
                 user.name,
               ).exchanges,
             )}
