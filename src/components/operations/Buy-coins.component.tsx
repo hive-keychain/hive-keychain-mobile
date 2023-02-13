@@ -45,7 +45,13 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
     } else if (item.name) {
       return (
         <View>
-          <AssetImage nameImage={item.image.split('.')[0]} />
+          <AssetImage
+            containerStyles={{
+              borderRadius: 0,
+              borderWidth: 0,
+            }}
+            nameImage={item.image.split('.')[0]}
+          />
           <Text style={styles.marginHorizontal}>
             {translate(`wallet.operations.buy_coins.${item.description}`)}
           </Text>
@@ -65,6 +71,10 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
       return (
         <View>
           <AssetImage
+            containerStyles={{
+              borderRadius: 0,
+              borderWidth: 0,
+            }}
             onClick={handleOnClick}
             nameImage={item.image.split('.')[0]}
           />
