@@ -111,7 +111,7 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
             </Text>
             <Switch
               trackColor={{false: '#767577', true: '#cbcacb'}}
-              thumbColor={isEnabled ? 'rgb(227,19,55)' : '#f4f3f4'}
+              thumbColor={isEnabled ? '#77B9D1' : '#f4f3f4'}
               ios_backgroundColor="#3e3e3e"
               onValueChange={(value: boolean) => {
                 setIsEnabled(value);
