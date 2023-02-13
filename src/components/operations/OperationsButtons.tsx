@@ -225,7 +225,7 @@ export const BuyCoins = (props: BuyCoinsprops) => {
         });
       }}
       size={36}
-      backgroundColor="#dd2e4b"
+      backgroundColor={props.iconColor}
       content={<ShoppingCartIconWhite />}
     />
   );

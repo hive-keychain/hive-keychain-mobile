@@ -76,7 +76,11 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
           <Send key="send_hive" currency="HIVE" />,
           <SendPowerUp key="pu" />,
           <SendConversion key="conversion" currency="HIVE" />,
-          <BuyCoins key="buy_coins" currency={BuyCoinType.BUY_HIVE} />,
+          <BuyCoins
+            key="buy_coins"
+            currency={BuyCoinType.BUY_HIVE}
+            iconColor={'#dd2e4b'}
+          />,
         ]}
       />
       <Separator height={20} />
@@ -91,10 +95,30 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
         setToggle={() => {
           setToggled(toggled === Token.HBD ? Token.NONE : Token.HBD);
         }}
+        bottomLeft={
+          <Text>
+            <View style={{flexDirection: 'column'}}>
+              <Text>$ {`${prices.hive_dollar.usd?.toFixed(2)}`}</Text>
+              <Text
+                style={{
+                  color:
+                    +prices.hive_dollar.usd_24h_change > 0
+                      ? '#3BB26E'
+                      : '#B9122F',
+                }}>{`${signedNumber(
+                +prices.hive_dollar.usd_24h_change?.toFixed(2),
+              )}%`}</Text>
+            </View>
+          </Text>
+        }
         buttons={[
           <Send key="send_hbd" currency="HBD" />,
           <SendConversion key="conversion" currency="HBD" />,
-          <BuyCoins key="buy_coins" currency={BuyCoinType.BUY_HDB} />,
+          <BuyCoins
+            key="buy_coins"
+            currency={BuyCoinType.BUY_HDB}
+            iconColor={'#3BB26E'}
+          />,
         ]}
       />
       <Separator height={20} />

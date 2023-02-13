@@ -22,6 +22,7 @@ import Operation from './Operation';
 
 export type BuyCoinsprops = {
   currency: BuyCoinType;
+  iconColor: string;
 };
 type Props = PropsFromRedux & BuyCoinsprops;
 
@@ -109,8 +110,8 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
               {translate('wallet.operations.buy_coins.title_hive')}
             </Text>
             <Switch
-              trackColor={{false: '#767577', true: '#81b0ff'}}
-              thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+              trackColor={{false: '#767577', true: '#cbcacb'}}
+              thumbColor={isEnabled ? 'rgb(227,19,55)' : '#f4f3f4'}
               ios_backgroundColor="#3e3e3e"
               onValueChange={(value: boolean) => {
                 setIsEnabled(value);
