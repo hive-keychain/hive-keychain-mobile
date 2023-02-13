@@ -16,6 +16,7 @@ import ShoppingCartIconBlack from 'src/assets/wallet/icon_shopping_cart_black.sv
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {BuyCoinsListItem} from 'src/reference-data/buy-coins-list-item.list';
 import {RootState} from 'store';
+import ArrayUtils from 'utils/array.utils';
 import {translate} from 'utils/localize';
 import Operation from './Operation';
 
@@ -24,16 +25,11 @@ export type BuyCoinsprops = {
 };
 type Props = PropsFromRedux & BuyCoinsprops;
 
-const BuyCoinsOperation = ({user, currency}: Props) => {
+const BuyCoinsComponent = ({user, currency}: Props) => {
   const flatListRef = useRef();
   const [isEnabled, setIsEnabled] = useState(
     currency === BuyCoinType.BUY_HDB ? true : false,
   );
-
-  const join2Arrays = (a: any, b: any): [] => {
-    const newArray = a.concat(b);
-    return newArray;
-  };
 
   const renderItems = (item: any) => {
     const handleOnClick = () => {
@@ -120,7 +116,7 @@ const BuyCoinsOperation = ({user, currency}: Props) => {
           {/* Flatlist one list */}
           <FlatList
             ref={flatListRef}
-            data={join2Arrays(
+            data={ArrayUtils.mergeWithoutDuplicate(
               BuyCoinsListItem(
                 isEnabled ? BuyCoinType.BUY_HIVE : BuyCoinType.BUY_HDB,
                 user.name,
@@ -174,4 +170,4 @@ const getDimensionedStyles = (width: number) =>
     },
   });
 
-export default connector(BuyCoinsOperation);
+export default connector(BuyCoinsComponent);

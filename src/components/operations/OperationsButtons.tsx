@@ -16,7 +16,7 @@ import Transfer from 'components/operations/Transfer';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {navigate} from 'utils/navigation';
-import BuyCoinsOperation, {BuyCoinsprops} from './BuyCoinsOperation';
+import BuyCoinsComponent, {BuyCoinsprops} from './Buy-coins.component';
 import MoreTokenInfo, {MoreInfoTokenProps} from './MoreTokenInfo';
 import Savings, {SavingsOperations} from './Savings';
 import {TokensHistoryComponent} from './Tokens-history';
@@ -220,7 +220,7 @@ export const BuyCoins = (props: BuyCoinsprops) => {
       onPress={() => {
         navigate('ModalScreen', {
           name: 'BuyCoinsInfo',
-          modalContent: <BuyCoinsOperation {...props} />,
+          modalContent: <BuyCoinsComponent {...props} />,
           fixedHeight: 0.75,
         });
       }}
