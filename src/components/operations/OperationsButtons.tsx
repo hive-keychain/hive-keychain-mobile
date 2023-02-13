@@ -6,7 +6,6 @@ import HistoryIcon from 'assets/wallet/icon_history.svg';
 import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
 import Minus from 'assets/wallet/icon_withdraw.svg';
-import Icon from 'components/hive/Icon';
 import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savings-withdrawal-page.component';
 import Convert from 'components/operations/Convert';
 import Delegation from 'components/operations/Delegation';
@@ -184,11 +183,13 @@ export const SendDeposit = ({currency}: {currency: string}) => {
 
 export const PendingSavingsWithdraw = ({
   currentWithdrawingList,
+  children,
 }: {
   currentWithdrawingList: SavingsWithdrawal[];
+  children: JSX.Element;
 }) => {
   return (
-    <RoundButton
+    <TouchableOpacity
       onPress={() => {
         navigate('ModalScreen', {
           name: 'CancelSavingsWithdraw',
@@ -200,11 +201,9 @@ export const PendingSavingsWithdraw = ({
             />
           ),
         });
-      }}
-      size={28}
-      backgroundColor="#ffffff"
-      content={<Icon name="savings" />}
-    />
+      }}>
+      {children}
+    </TouchableOpacity>
   );
 };
 

@@ -22,6 +22,7 @@ import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {toHP} from 'utils/format';
+import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {SavingsUtils} from 'utils/savings.utils';
 
@@ -43,6 +44,14 @@ const Primary = ({
   const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
     SavingsWithdrawal[]
   >([]);
+  const [
+    totalPendingHBDSavingsWithdrawals,
+    setTotalPendingHBDSavingsWithdrawals,
+  ] = useState(0);
+  const [
+    totalPendingHIVESavingsWithdrawals,
+    setTotalPendingHIVESavingsWithdrawals,
+  ] = useState(0);
 
   useEffect(() => {
     logScreenView('WalletScreen');
@@ -55,8 +64,29 @@ const Primary = ({
   }, [user]);
 
   const fetchCurrentWithdrawingList = async () => {
-    setCurrentWithdrawingList(
-      await SavingsUtils.getSavingsWitdrawFrom(user.name!),
+    const pendingSavingsWithdrawalsList: SavingsWithdrawal[] = await SavingsUtils.getSavingsWitdrawFrom(
+      user.name!,
+    );
+    setCurrentWithdrawingList(pendingSavingsWithdrawalsList);
+    setTotalPendingHIVESavingsWithdrawals(
+      pendingSavingsWithdrawalsList
+        .filter(
+          (current) => current.amount.split(' ')[1] === getCurrency('HIVE'),
+        )
+        .reduce(
+          (acc, current) => acc + parseFloat(current.amount.split(' ')[0]),
+          0,
+        ),
+    );
+    setTotalPendingHBDSavingsWithdrawals(
+      pendingSavingsWithdrawalsList
+        .filter(
+          (current) => current.amount.split(' ')[1] === getCurrency('HBD'),
+        )
+        .reduce(
+          (acc, current) => acc + parseFloat(current.amount.split(' ')[0]),
+          0,
+        ),
     );
   };
 
@@ -156,26 +186,31 @@ const Primary = ({
             </Text>
 
             {currentWithdrawingList.length > 0 && (
-              <View style={styles.flexRowAligned}>
-                <Text style={styles.apr}>
-                  {translate(
-                    'wallet.operations.savings.pending_withdraw.pending',
+              <PendingSavingsWithdraw
+                currentWithdrawingList={currentWithdrawingList}>
+                <View>
+                  <Text style={styles.apr}>
+                    {translate(
+                      'wallet.operations.savings.pending_withdraw.pending',
+                    ).toUpperCase()}
+                    :
+                  </Text>
+                  {totalPendingHIVESavingsWithdrawals > 0 && (
+                    <Text style={styles.withdrawingValue}>
+                      {`${totalPendingHIVESavingsWithdrawals.toFixed(
+                        3,
+                      )} ${getCurrency('HIVE')}`}
+                    </Text>
                   )}
-                </Text>
-                <Text style={styles.withdrawingValue}>
-                  {' '}
-                  {currentWithdrawingList
-                    .reduce(
-                      (acc, current) =>
-                        acc + parseFloat(current.amount.split(' ')[0]),
-                      0,
-                    )
-                    .toFixed(3)}{' '}
-                </Text>
-                <PendingSavingsWithdraw
-                  currentWithdrawingList={currentWithdrawingList}
-                />
-              </View>
+                  {totalPendingHBDSavingsWithdrawals > 0 && (
+                    <Text style={styles.withdrawingValue}>
+                      {`${totalPendingHBDSavingsWithdrawals.toFixed(
+                        3,
+                      )} ${getCurrency('HBD')}`}
+                    </Text>
+                  )}
+                </View>
+              </PendingSavingsWithdraw>
             )}
           </View>
         }
