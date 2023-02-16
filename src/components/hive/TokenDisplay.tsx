@@ -98,7 +98,7 @@ const renderLeftBottom = (
   if (currency !== 'HP') {
     return (
       <View style={[styles.row, styles.flex]}>
-        <Text style={styles.price}>{`$ ${price.usd.toFixed(2)}`}</Text>
+        <Text style={styles.price}>{`$ ${price.usd?.toFixed(2)}`}</Text>
         <Text style={styles.change}>{`${signedNumber(
           +price.usd_24h_change!.toFixed(2),
         )}%`}</Text>
