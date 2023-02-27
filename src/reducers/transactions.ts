@@ -11,15 +11,16 @@ import ArrayUtils from 'utils/array.utils';
 export default (
   state: Transactions = {loading: false, list: [], lastUsedStart: -1},
   {type, payload}: ActionPayload<[Transaction[], number]>,
-) => {
+): Transactions => {
   switch (type) {
     case CLEAR_USER_TRANSACTIONS:
       return {loading: false, list: [], lastUsedStart: -1};
     case ACTIVE_ACCOUNT:
       return {loading: true, list: [], lastUsedStart: -1};
     case INIT_TRANSACTIONS:
-      return {loading: false, list: payload!};
+      return {loading: false, list: payload[0]!, lastUsedStart: payload![1]};
     case ADD_TRANSACTIONS:
+      console.log(state.lastUsedStart);
       return {
         ...state,
         list: ArrayUtils.mergeWithoutDuplicate(state.list, payload![0], 'key'),

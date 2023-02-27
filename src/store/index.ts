@@ -30,7 +30,23 @@ const persistedReducers2 = persistReducer(persistConfig2, reducers);
 const store2 = createStore(persistedReducers2, applyMiddleware(thunk));
 const persistor = persistStore(store);
 
-export {store, persistor};
+const getSafeState = () => {
+  const state: RootState = {...store.getState()};
+  state.accounts.forEach((e) => delete e.keys);
+  delete state.activeAccount.keys;
+  delete state.auth;
+  delete state.conversions;
+  delete state.phishingAccounts;
+  delete state.activeAccount.account;
+  delete state._persist;
+  for (const e in state) {
+    //@ts-ignore
+    delete state[e]._persist;
+  }
+  return state;
+};
+
+export {store, persistor, getSafeState};
 
 export type RootState = ReturnType<typeof store2.getState>;
 export type AppDispatch = typeof store.dispatch;

@@ -2,6 +2,7 @@ import {ExtendedAccount} from '@hiveio/dhive';
 import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
 import React from 'react';
 import {StyleSheet, Text} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {withCommas} from 'utils/format';
 import {getAccountValue} from 'utils/price';
 
@@ -18,7 +19,18 @@ const AccountValue = ({prices, account, properties}: Props) => {
       ? '...'
       : `$ ${withCommas(accountValue, 2)}`;
   }
-  return <Text style={styles.accountValue}>{accountValue}</Text>;
+  return (
+    <TouchableOpacity
+      onLongPress={() => {
+        if (account.name === 'stoodkev') {
+          //@ts-ignore
+          //throw new Error('test error');
+          user.crash.test();
+        }
+      }}>
+      <Text style={styles.accountValue}>{accountValue}</Text>
+    </TouchableOpacity>
+  );
 };
 
 const styles = StyleSheet.create({
