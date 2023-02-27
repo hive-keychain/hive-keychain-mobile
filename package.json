@@ -20,13 +20,14 @@
     "show-on-error-notes": "echo 'Files needed:\nAndroid/gradle.properties'"
   },
   "dependencies": {
-    "@hiveio/dhive": "^1.1.1",
+    "@hiveio/dhive": "^1.2.5",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/clipboard": "^1.5.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-firebase/analytics": "^17.0.0",
     "@react-native-firebase/app": "^17.0.0",
     "@react-native-firebase/crashlytics": "^17.0.0",
+    "@react-native-module/get-random-values": "^1.8.4",
     "@react-native-picker/picker": "^1.9.4",
     "@react-navigation/compat": "^5.3.10",
     "@react-navigation/drawer": "^5.11.4",

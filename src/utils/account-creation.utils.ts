@@ -5,6 +5,7 @@ import {
   CreateClaimedAccountOperation,
   PrivateKey,
 } from '@hiveio/dhive';
+import {getRandomValues} from '@react-native-module/get-random-values';
 import AccountUtils from './account.utils';
 
 export enum AccountCreationType {
@@ -33,12 +34,13 @@ export interface AccountAuthorities {
 
 const checkAccountNameAvailable = async (username: string) => {
   const account = await AccountUtils.getAccount(username);
-  return account.length === 0 ? false : true;
+  return account.length !== 0 ? false : true;
 };
 
 const generateMasterKey = () => {
   const array = new Uint32Array(10);
-  Cr.getRandomValues(array);
+  // CryptoJS.getRandomValues(array);
+  getRandomValues(array);
   return 'P' + PrivateKey.fromSeed(array.toString()).toString();
 };
 

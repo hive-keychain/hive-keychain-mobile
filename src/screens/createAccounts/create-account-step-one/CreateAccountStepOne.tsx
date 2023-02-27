@@ -8,17 +8,25 @@ import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
+import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
+import {
+  AccountCreationType,
+  AccountCreationUtils,
+} from 'utils/account-creation.utils';
+import AccountUtils from 'utils/account.utils';
 import {Width} from 'utils/common.types';
 import {getAccountPrice} from 'utils/hiveUtils';
+import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 
 interface SelectOption {
   label: string;
   value: string;
 }
 
-const CreateAccounts = ({
+const CreateAccountStepOne = ({
   user,
   navigation,
   accounts,
@@ -27,6 +35,7 @@ const CreateAccounts = ({
   const [accountOptions, setAccountOptions] = useState<SelectOption[]>();
   const [price, setPrice] = useState(3);
   const [accountName, setAccountName] = useState('');
+  const [creationType, setCreationType] = useState<AccountCreationType>();
 
   const [focus, setFocus] = useState(Math.random());
 
@@ -54,11 +63,10 @@ const CreateAccounts = ({
   }, [accounts]);
 
   useEffect(() => {
-    // setSelectedAccount({
-    //   label: `@${user.name!}`,
-    //   value: user.name!,
-    // });
     setSelectedAccount(user.name!);
+    //TODO same code to later on stablish CreationType
+    //for now just by buying.
+    setCreationType(AccountCreationType.BUYING);
   }, [user]);
 
   const initAccountOptions = async () => {
@@ -89,18 +97,53 @@ const CreateAccounts = ({
   const validateAccountName = async () => {
     //TODO add bellow to locales or find them
     if (accountName.length < 3) {
-      setErrorMessage('html_popup_create_account_username_too_short');
+      Toast.show(translate('toast.username_too_short'));
       return false;
     }
     if (!AccountCreationUtils.validateUsername(accountName)) {
-      setErrorMessage('html_popup_create_account_account_name_not_valid');
+      Toast.show(translate('toast.account_name_not_valid'));
       return false;
     }
     if (await AccountCreationUtils.checkAccountNameAvailable(accountName)) {
       return true;
     } else {
-      setErrorMessage('html_popup_create_account_username_already_used');
+      Toast.show(translate('toast.account_username_already_used'));
       return false;
+    }
+  };
+
+  const goToNextPage = async () => {
+    console.log({validateAccountName: await validateAccountName()});
+    if (await validateAccountName()) {
+      const account = await AccountUtils.getAccount(selectedAccount);
+      const balance = parseFloat(account[0].balance.split(' ')[0]);
+      console.log({balance}); //TODO to remove
+      if (
+        creationType === AccountCreationType.USING_TICKET ||
+        (creationType === AccountCreationType.BUYING && balance >= 3)
+      ) {
+        console.log('It will go to page 2!'); //TODO to remove
+        //TODO add proper types????
+        navigate('CreateAccountFromWalletScreenPageTwo', {
+          usedAccount: accounts.find(
+            (localAccount: any) => localAccount.name === selectedAccount,
+          ),
+          newUsername: accountName,
+          creationType: creationType,
+          price: price,
+        });
+        // navigateToWithParams(Screen.CREATE_ACCOUNT_PAGE_STEP_TWO, {
+        //   usedAccount: accounts.find(
+        //     (localAccount: LocalAccount) =>
+        //       localAccount.name === selectedAccount?.value,
+        //   ),
+        //   newUsername: accountName,
+        //   creationType: creationType,
+        //   price: price,
+        // });
+      } else {
+        Toast.show(translate('toast.account_creation_not_enough_found'));
+      }
     }
   };
 
@@ -153,7 +196,7 @@ const CreateAccounts = ({
           //TODO add to locales or find it
           title={'NEXT'}
           // isLoading={loading}
-          onPress={() => {}}
+          onPress={() => goToNextPage()}
         />
       </>
     </WalletPage>
@@ -177,4 +220,4 @@ const connector = connect((state: RootState) => {
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(CreateAccounts);
+export default connector(CreateAccountStepOne);
