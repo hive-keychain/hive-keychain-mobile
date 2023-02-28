@@ -1,4 +1,6 @@
+import {Asset} from '@hiveio/dhive';
 import {Account} from 'actions/interfaces';
+import UserLogo from 'assets/addAccount/icon_username.svg';
 import CustomInput from 'components/form/CustomInput';
 import CustomPicker from 'components/form/CustomPicker';
 import OperationButton from 'components/form/EllipticButton';
@@ -63,11 +65,23 @@ const CreateAccountStepOne = ({
   }, [accounts]);
 
   useEffect(() => {
-    setSelectedAccount(user.name!);
-    //TODO same code to later on stablish CreationType
-    //for now just by buying.
-    setCreationType(AccountCreationType.BUYING);
-  }, [user]);
+    onSelectedAccountChange(selectedAccount);
+  }, [selectedAccount]);
+
+  const onSelectedAccountChange = async (username: string) => {
+    const account = (await AccountUtils.getAccount(username)) as any;
+    if (
+      account[0] &&
+      account[0].pending_claimed_accounts &&
+      account[0].pending_claimed_accounts > 0
+    ) {
+      setPrice(0);
+      setCreationType(AccountCreationType.USING_TICKET);
+    } else {
+      setPrice(3);
+      setCreationType(AccountCreationType.BUYING);
+    }
+  };
 
   const initAccountOptions = async () => {
     const options = [];
@@ -78,6 +92,7 @@ const CreateAccountStepOne = ({
       });
     }
     setAccountOptions(options);
+    setSelectedAccount(user.name!);
   };
 
   const onSelected = (value: any) => {
@@ -85,17 +100,17 @@ const CreateAccountStepOne = ({
   };
 
   const getPriceLabel = () => {
-    // switch (creationType) {
-    //   case AccountCreationType.BUYING:
-    //TODO get from locales
-    return `${price} HIVE`;
-    //   case AccountCreationType.USING_TICKET:
-    //     return chrome.i18n.getMessage('html_popup_ticket', ['1']);
-    // }
+    switch (creationType) {
+      case AccountCreationType.BUYING:
+        return `${price} HIVE`;
+      case AccountCreationType.USING_TICKET:
+        return translate('components.create_account.create_account_ticket', {
+          tickets: 1,
+        });
+    }
   };
 
   const validateAccountName = async () => {
-    //TODO add bellow to locales or find them
     if (accountName.length < 3) {
       Toast.show(translate('toast.username_too_short'));
       return false;
@@ -113,34 +128,21 @@ const CreateAccountStepOne = ({
   };
 
   const goToNextPage = async () => {
-    console.log({validateAccountName: await validateAccountName()});
     if (await validateAccountName()) {
       const account = await AccountUtils.getAccount(selectedAccount);
-      const balance = parseFloat(account[0].balance.split(' ')[0]);
-      console.log({balance}); //TODO to remove
+      const balance = Asset.fromString(account[0].balance.toString());
       if (
         creationType === AccountCreationType.USING_TICKET ||
-        (creationType === AccountCreationType.BUYING && balance >= 3)
+        (creationType === AccountCreationType.BUYING && balance.amount >= 3)
       ) {
-        console.log('It will go to page 2!'); //TODO to remove
-        //TODO add proper types????
         navigate('CreateAccountFromWalletScreenPageTwo', {
           usedAccount: accounts.find(
-            (localAccount: any) => localAccount.name === selectedAccount,
+            (localAccount: Account) => localAccount.name === selectedAccount,
           ),
           newUsername: accountName,
           creationType: creationType,
           price: price,
         });
-        // navigateToWithParams(Screen.CREATE_ACCOUNT_PAGE_STEP_TWO, {
-        //   usedAccount: accounts.find(
-        //     (localAccount: LocalAccount) =>
-        //       localAccount.name === selectedAccount?.value,
-        //   ),
-        //   newUsername: accountName,
-        //   creationType: creationType,
-        //   price: price,
-        // });
       } else {
         Toast.show(translate('toast.account_creation_not_enough_found'));
       }
@@ -151,20 +153,9 @@ const CreateAccountStepOne = ({
     <WalletPage>
       <>
         <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
-        {/* <ScreenToggle
-            style={styles.toggle}
-            menu={[
-              translate(`governance.menu.witnesses`),
-              translate(`governance.menu.proxy`),
-              translate(`governance.menu.proposals`),
-            ]}
-            toUpperCase
-            components={[
-              <Witness user={user} focus={focus} />,
-              <Proxy user={user} />,
-              <Proposal user={user} />,
-            ]}
-          /> */}
+        <Text style={styles.marginText}>
+          {translate('components.create_account.disclaimer')}
+        </Text>
         {selectedAccount.length > 0 && accountOptions && (
           <CustomPicker
             list={accountOptions.map((account) => account.value)}
@@ -185,17 +176,16 @@ const CreateAccountStepOne = ({
         </Text>
         <CustomInput
           autoCapitalize="none"
-          //TODO add to locales
-          placeholder={'New Account username'}
-          // leftIcon={<UserLogo />}
+          placeholder={translate(
+            'components.create_account.new_account_username',
+          )}
+          leftIcon={<UserLogo />}
           value={accountName}
           onChangeText={setAccountName}
         />
         <OperationButton
           style={styles.button}
-          //TODO add to locales or find it
-          title={'NEXT'}
-          // isLoading={loading}
+          title={translate('common.next')}
           onPress={() => goToNextPage()}
         />
       </>
@@ -210,6 +200,12 @@ const getDimensionedStyles = ({width}: Width) =>
       flexDirection: 'row',
     },
     button: {marginTop: 40},
+    marginText: {
+      marginHorizontal: 5,
+      marginTop: 10,
+      marginBottom: 10,
+      textAlign: 'center',
+    },
   });
 
 const connector = connect((state: RootState) => {

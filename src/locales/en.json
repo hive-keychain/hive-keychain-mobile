@@ -49,7 +49,8 @@
     "unstake": "Unstake",
     "delegate": "Delegate",
     "missing_key": "Please add your {{key}} key to perform this operation!",
-    "need_positive_amount": "The amount needs to be greater than 0"
+    "need_positive_amount": "The amount needs to be greater than 0",
+    "next": "Next"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -387,6 +388,20 @@
       "prompt_user": "Select an account",
       "prompt_rpc": "Select an RPC node",
       "add_account": "+ ADD NEW ACCOUNT"
+    },
+    "create_account": {
+      "new_account_username": "New Account username",
+      "disclaimer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tristique nunc id sagittis ornare. Aliquam erat volutpat. In vel molestie nulla, sed hendrerit tortor.",
+      "safely_copied_keys": "I have safely copied my keys and saved them outside of Keychain",
+      "storage_understanding": "I understand that Keychain should not be considered as the primary place of storage for my keys",
+      "buy_method_message": "I agree to pay {{price}} HIVE with account @{{account}} to create this account",
+      "claim_account_method_message": "I agree to use one account creation ticket from @{{account}} to create this account",
+      "copy": "COPY",
+      "create_account": "CREATE ACCOUNT",
+      "need_accept_terms_condition": "You need to accept the terms and condition before creating account",
+      "create_account_successful": "Your account has been successfully created and added to your Keychain",
+      "create_account_failed": "Your account creation has failed. Please try again later",
+      "create_account_ticket": "{{tickets}} account creation ticket"
     }
   },
   "toast": {
@@ -427,7 +442,8 @@
     "username_too_short": "Username is too short. Needs minimum 4 characters",
     "account_name_not_valid": "Account name is not valid",
     "account_username_already_used": "Username is already used. Please pick a new one",
-    "account_creation_not_enough_found": "You don't have enough HIVE to buy an account"
+    "account_creation_not_enough_found": "You don't have enough HIVE to buy an account",
+    "copied_text": "Keys copied to clipboard!"
   },
   "navigation": {
     "log_out": "LOG OUT",

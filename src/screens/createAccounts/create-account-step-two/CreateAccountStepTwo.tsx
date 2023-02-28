@@ -1,16 +1,33 @@
+import {PrivateKey} from '@hiveio/dhive';
+import Clipboard from '@react-native-community/clipboard';
+import {addAccount} from 'actions/accounts';
 import {Account} from 'actions/interfaces';
+import OperationButton from 'components/form/EllipticButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import WalletPage from 'components/ui/WalletPage';
+import useLockedPortrait from 'hooks/useLockedPortrait';
 import {CreateAccountFromWalletNavigationProps} from 'navigators/mainDrawerStacks/CreateAccount.types';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, useWindowDimensions} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import {CheckBox} from 'react-native-elements';
+import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {
+  AccountCreationType,
   AccountCreationUtils,
   GeneratedKeys,
 } from 'utils/account-creation.utils';
 import {Width} from 'utils/common.types';
+import {KeychainKeyTypes} from 'utils/keychain.types';
+import {translate} from 'utils/localize';
+import {resetStackAndNavigate} from 'utils/navigation';
 
 const DEFAULT_EMPTY_KEYS = {
   owner: {public: '', private: ''},
@@ -19,25 +36,26 @@ const DEFAULT_EMPTY_KEYS = {
   memo: {public: '', private: ''},
 } as GeneratedKeys;
 
+const DEFAULT_EXTRA_INFO_CLIPBOARD = (account: string) =>
+  `\n    Account creation date: ${new Date().toISOString()}\n    Created using account: ${account}`;
+
 const CreateAccountStepTwo = ({
   user,
   navigation,
   route,
   accounts,
+  addAccount,
 }: PropsFromRedux & CreateAccountFromWalletNavigationProps) => {
   const [focus, setFocus] = useState(Math.random());
   const styles = getDimensionedStyles(useWindowDimensions());
 
-  //TODO fix this
-  //   useLockedPortrait(navigation);
-  //   useEffect(() => {
-  //     const unsubscribe = navigation.addListener('focus', () => {
-  //       setFocus(Math.random());
-  //     });
-  //     return unsubscribe;
-  //   }, []);
-
-  //TODO to fill from here...
+  useLockedPortrait(navigation);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setFocus(Math.random());
+    });
+    return unsubscribe;
+  }, []);
 
   const navigationParams = route.params;
 
@@ -47,7 +65,7 @@ const CreateAccountStepTwo = ({
 
   const accountName = navigationParams.newUsername;
   const price = navigationParams.price;
-  const creationType = navigationParams.creationType;
+  const creationType = navigationParams.creationType as AccountCreationType;
   const selectedAccount = navigationParams.usedAccount as Account;
 
   const [paymentUnderstanding, setPaymentUnderstanding] = useState(false);
@@ -56,64 +74,197 @@ const CreateAccountStepTwo = ({
     notPrimaryStorageUnderstanding,
     setNotPrimaryStorageUnderstanding,
   ] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const masterKeys = AccountCreationUtils.generateMasterKey();
-    console.log({masterKeys});
+    const masterKey = AccountCreationUtils.generateMasterKey();
+    setMasterKey(masterKey);
   }, []);
+
+  useEffect(() => {
+    if (masterKey === '') {
+      setGeneratedKeys(DEFAULT_EMPTY_KEYS);
+      return;
+    }
+    const posting = PrivateKey.fromLogin(accountName, masterKey, 'posting');
+    const active = PrivateKey.fromLogin(accountName, masterKey, 'active');
+    const memo = PrivateKey.fromLogin(accountName, masterKey, 'memo');
+    const owner = PrivateKey.fromLogin(accountName, masterKey, 'owner');
+
+    setGeneratedKeys({
+      owner: {
+        private: owner.toString(),
+        public: owner.createPublic().toString(),
+      },
+      active: {
+        private: active.toString(),
+        public: active.createPublic().toString(),
+      },
+      posting: {
+        private: posting.toString(),
+        public: posting.createPublic().toString(),
+      },
+      memo: {
+        private: memo.toString(),
+        public: memo.createPublic().toString(),
+      },
+    });
+  }, [masterKey]);
+
+  useEffect(() => {
+    if (masterKey.length) {
+      setKeysTextVersion(generateKeysTextVersion());
+    } else {
+      setKeysTextVersion('');
+    }
+    setNotPrimaryStorageUnderstanding(false);
+    setSafelyCopied(false);
+    setPaymentUnderstanding(false);
+  }, [generatedKeys]);
+
+  const generateKeysTextVersion = () => {
+    return `    WARNING: Store offline
+    Account name: @${accountName}
+    ---------Master password:--------- 
+    ${masterKey}
+    ---------Owner Key:--------- 
+    Private: ${generatedKeys.owner.private}
+    Public: ${generatedKeys.owner.public}
+    ---------Active Key:--------- 
+    Private: ${generatedKeys.active.private}
+    Public: ${generatedKeys.active.public}
+    ---------Posting Key:---------
+    Private: ${generatedKeys.posting.private}
+    Public: ${generatedKeys.posting.public}
+    ---------Memo Key:---------
+    Private: ${generatedKeys.memo.private}
+    Public: ${generatedKeys.memo.public}
+    -------------------------------`;
+  };
+
+  const copyAllKeys = () => {
+    Clipboard.setString(
+      generateKeysTextVersion() + DEFAULT_EXTRA_INFO_CLIPBOARD(user.name!),
+    );
+    Toast.show(translate('toast.copied_text'));
+  };
+
+  const getPaymentCheckboxLabel = () => {
+    switch (creationType) {
+      case AccountCreationType.BUYING:
+        return translate('components.create_account.buy_method_message', {
+          price: price.toString(),
+          account: selectedAccount.name,
+        });
+      case AccountCreationType.USING_TICKET:
+        return translate(
+          'components.create_account.claim_account_method_message',
+          {account: selectedAccount.name},
+        );
+    }
+  };
+
+  const createAccount = async () => {
+    if (
+      paymentUnderstanding &&
+      safelyCopied &&
+      notPrimaryStorageUnderstanding
+    ) {
+      setLoading(true);
+      try {
+        if (!selectedAccount.keys.active)
+          throw new Error(
+            translate('common.missing_key', {key: KeychainKeyTypes.active}),
+          );
+        const result = await AccountCreationUtils.createAccount(
+          creationType,
+          accountName,
+          selectedAccount.name!,
+          selectedAccount.keys.active!,
+          AccountCreationUtils.generateAccountAuthorities(generatedKeys),
+          price,
+          generatedKeys,
+        );
+        if (result) {
+          Toast.show(
+            translate('components.create_account.create_account_successful'),
+          );
+          addAccount(result.name, result.keys, true, false);
+          resetStackAndNavigate('WALLET');
+        } else {
+          Toast.show(
+            translate('components.create_account.create_account_failed'),
+          );
+        }
+      } catch (err) {
+        Toast.show(err.message);
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      Toast.show('components.create_account.need_accept_terms_condition');
+      return;
+    }
+  };
 
   return (
     <WalletPage>
       <>
         <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
-        <Text>Hi 2dn step!</Text>
-        {/* <ScreenToggle
-            style={styles.toggle}
-            menu={[
-              translate(`governance.menu.witnesses`),
-              translate(`governance.menu.proxy`),
-              translate(`governance.menu.proposals`),
-            ]}
-            toUpperCase
-            components={[
-              <Witness user={user} focus={focus} />,
-              <Proxy user={user} />,
-              <Proposal user={user} />,
-            ]}
-          /> */}
-        {/* {selectedAccount.length > 0 && accountOptions && (
-          <CustomPicker
-            list={accountOptions.map((account) => account.value)}
-            prefix={'@'}
-            selectedValue={selectedAccount}
-            onSelected={onSelected}
-            prompt={'prompt'}
-          />
+        {keysTextVersion.length > 0 && (
+          <>
+            <ScrollView style={styles.keysContainer}>
+              <Text style={styles.keysText}>{keysTextVersion}</Text>
+            </ScrollView>
+            <View style={styles.checkboxContainer}>
+              <CheckBox
+                checked={paymentUnderstanding}
+                onPress={() => setPaymentUnderstanding(!paymentUnderstanding)}
+                title={getPaymentCheckboxLabel()}
+              />
+              <CheckBox
+                checked={safelyCopied}
+                onPress={() => setSafelyCopied(!safelyCopied)}
+                title={translate(
+                  'components.create_account.safely_copied_keys',
+                )}
+              />
+              <CheckBox
+                checked={notPrimaryStorageUnderstanding}
+                onPress={() =>
+                  setNotPrimaryStorageUnderstanding(
+                    !notPrimaryStorageUnderstanding,
+                  )
+                }
+                title={translate(
+                  'components.create_account.storage_understanding',
+                )}
+              />
+            </View>
+            <OperationButton
+              style={styles.button}
+              title={translate('components.create_account.copy')}
+              onPress={() => copyAllKeys()}
+            />
+            <OperationButton
+              isLoading={loading}
+              disabled={
+                !safelyCopied &&
+                !notPrimaryStorageUnderstanding &&
+                !paymentUnderstanding
+              }
+              style={
+                safelyCopied &&
+                notPrimaryStorageUnderstanding &&
+                paymentUnderstanding
+                  ? styles.button
+                  : styles.buttonDisabled
+              }
+              title={translate('components.create_account.create_account')}
+              onPress={() => createAccount()}
+            />
+          </>
         )}
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            marginVertical: 10,
-          }}>
-          {getPriceLabel()}
-        </Text>
-        <CustomInput
-          autoCapitalize="none"
-          //TODO add to locales
-          placeholder={'New Account username'}
-          // leftIcon={<UserLogo />}
-          value={accountName}
-          onChangeText={setAccountName}
-        />
-        <OperationButton
-          style={styles.button}
-          //TODO add to locales or find it
-          title={'NEXT'}
-          // isLoading={loading}
-          onPress={() => {}}
-        /> */}
       </>
     </WalletPage>
   );
@@ -125,17 +276,38 @@ const getDimensionedStyles = ({width}: Width) =>
       display: 'flex',
       flexDirection: 'row',
     },
-    button: {marginTop: 40},
+    button: {marginTop: 20},
+    buttonDisabled: {
+      backgroundColor: 'gray',
+      marginTop: 20,
+    },
+    keysContainer: {
+      maxHeight: 300,
+    },
+    keysText: {
+      marginHorizontal: 4,
+      marginTop: 5,
+      borderColor: 'black',
+      borderWidth: 1,
+      padding: 3,
+    },
+    checkboxContainer: {
+      flexDirection: 'column',
+    },
+    checkbox: {
+      alignSelf: 'center',
+    },
   });
 
-const connector = connect((state: RootState) => {
-  return {
-    testState: state, //TODO to remove
-    user: state.activeAccount,
-    accounts: state.accounts,
-    // navParams: state.navigation.params,
-  };
-});
+const connector = connect(
+  (state: RootState) => {
+    return {
+      user: state.activeAccount,
+      accounts: state.accounts,
+    };
+  },
+  {addAccount},
+);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(CreateAccountStepTwo);
