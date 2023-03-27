@@ -25,6 +25,7 @@ const browserReducer = (
   },
   {type, payload}: ActionPayload<BrowserPayload>,
 ) => {
+  console.log({type}); //TODO to remove
   switch (type) {
     case ADD_TO_BROWSER_HISTORY:
       if (state.history.find((e) => e!.url === payload!.history!.url)) {
@@ -86,6 +87,7 @@ const browserReducer = (
         activeTab: payload!.id!,
       };
     case UPDATE_BROWSER_TAB:
+      console.log({payload}); //TODO to remove
       return {
         ...state,
         tabs: state.tabs.map((tab) => {

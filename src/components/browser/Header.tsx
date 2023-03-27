@@ -54,6 +54,7 @@ const BrowserHeader = ({
   ) {
     const active = tabs.find((e) => e.id === activeTab);
     const activeUrl = active.url;
+    console.log('From Header: ', {activeUrl});
     const renderFavoritesButton = () => {
       if (activeUrl === BrowserConfig.HOMEPAGE_URL) return null;
       return favorites.find((e) => e.url === activeUrl) ? (

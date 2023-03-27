@@ -54,6 +54,14 @@ const BrowserScreen = ({
   //   return unsubscribe;
   // }, [navigation]);
 
+  //TODO remove this testing block
+  console.log('Hey from Browser Screen', {browser}); //TODO to remove
+  console.log('active tab', browser.activeTab); //TODO to remove //seems to be the same as 1679565075222
+  if (browser.activeTab === 1679671188511) {
+    closeAllTabs();
+  }
+  //END testing block
+
   return (
     <Browser
       accounts={accounts}

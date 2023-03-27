@@ -125,6 +125,7 @@ export default ({
   }: {
     nativeEvent: WebViewNativeEvent;
   }) => {
+    console.log('onLoadStart from Tab.tsx!'); //TODO to remove
     updateTab(id, {url});
   };
   const updateTabUrl = (link: string) => {
@@ -140,13 +141,19 @@ export default ({
     nativeEvent: WebViewNativeEvent;
   }) => {
     const {current} = tabRef;
+    console.log('Entering onLoadEnd!!!!', {loading, current}); //TODO to remove
     setProgress(0);
     if (loading) {
       return;
     }
     setCanGoBack(canGoBack);
     setCanGoForward(canGoForward);
+    console.log('before checking current!!!!', {current, loading}); //TODO to remove
     if (current) {
+      //TODO check if works testing line
+      console.log('ABOUT TO CLEAR CACHE!!!'); //TODO to remove
+      current.clearCache(true);
+      //end testing line
       current.injectJavaScript(BRIDGE_WV_INFO);
     }
   };
@@ -270,6 +277,7 @@ export default ({
       });
     }
   };
+  console.log('Hi from TAB!!!!!!!!!'); //TODO to remove
   return (
     <View
       style={[styles.container, !active || isManagingTab ? styles.hide : null]}>

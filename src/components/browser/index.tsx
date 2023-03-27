@@ -92,6 +92,8 @@ const Browser = ({
     {url, icon, id}: TabType,
     view: MutableRefObject<WebView> | MutableRefObject<View>,
   ) => {
+    console.log('Calling manageTabs!!!'); //TODO to remove
+    //TODO here test making lower quality and see if works.
     captureRef(view, {
       format: 'jpg',
       quality: 0.2,
@@ -133,6 +135,7 @@ const Browser = ({
     view: MutableRefObject<View>,
   ) => {
     if (!isManagingTab) {
+      console.log('Calling onAddTab!!!'); //TODO to remove
       const {id, url, icon} = tab;
       captureRef(view, {
         format: 'jpg',
