@@ -60,7 +60,7 @@ const FillConvertTransactionComponent = ({
         </View>
         <View style={styles.rowContainer}>
           <Text style={styles.username}>
-            {translate('wallet.operations.convert.fill_convert_request')}
+            {translate('wallet.operations.convert.fill_convert_request')}{' '}
           </Text>
           <Text style={{color: '#B9122F'}}>
             {' '}

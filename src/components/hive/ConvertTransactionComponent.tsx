@@ -58,7 +58,7 @@ const ConvertTransactionComponent = ({
           <Text>{date}</Text>
         </View>
         <View style={styles.rowContainer}>
-          <Text>Started a</Text>
+          <Text>{translate('wallet.operations.convert.started_a')}</Text>
           <Text style={{color: '#B9122F'}}>
             {' '}
             {formattedAmount} {amount.split(' ')[1]}{' '}

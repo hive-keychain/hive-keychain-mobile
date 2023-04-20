@@ -44,7 +44,6 @@ const BrowserScreen = ({
         }
       });
     });
-
     return unsubscribe;
   }, [navigation]);
   // React.useEffect(() => {

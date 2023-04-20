@@ -1,67 +1,60 @@
+import Clipboard from '@react-native-community/clipboard';
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {AboutNavigation} from 'navigators/MainDrawer.types';
-import React from 'react';
+import React, {useState} from 'react';
 import {Linking, StatusBar, StyleSheet, Text, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import SimpleToast from 'react-native-simple-toast';
 import VersionInfo from 'react-native-version-info';
+import {getSafeState} from 'store';
 
 export default ({navigation}: {navigation: AboutNavigation}) => {
   useLockedPortrait(navigation);
-
+  const [pressed, setPressed] = useState(0);
   return (
     <Background>
       <>
         <StatusBar backgroundColor="black" />
         <Separator height={50} />
         <View style={styles.container}>
-          <Text style={styles.title}>
-            Keychain Mobile v{VersionInfo.appVersion} (Beta)
-          </Text>
-          <Text style={styles.text}>
-            Keychain for mobile is developed by{' '}
-            <Text
-              style={styles.link}
-              onPress={() => {
-                Linking.openURL('https://peakd.com/@stoodkev');
-              }}>
-              @stoodkev
-            </Text>{' '}
-            and designed by{' '}
-            <Text
-              style={styles.link}
-              onPress={() => {
-                Linking.openURL('https://peakd.com/@nateaguila');
-              }}>
-              @nateaguila
+          <TouchableOpacity
+            onPress={() => {
+              if (pressed < 4) {
+                setPressed(pressed + 1);
+              } else {
+                Clipboard.setString(JSON.stringify(getSafeState()));
+                SimpleToast.show(
+                  'Debug Mode : The Application state has been copied to the clipboard. Contact our team to help you debug.',
+                  SimpleToast.LONG,
+                );
+              }
+            }}>
+            <Text style={styles.title}>
+              Keychain Mobile v{VersionInfo.appVersion} (Beta)
             </Text>
-            .
+          </TouchableOpacity>
+          <Text style={styles.text}>
+            Hive Keychain for mobile is developed by the Keychain team and
+            founded through the Hive DAO.
           </Text>
           <Separator height={20} />
           <Text style={styles.text}>
-            It originates from Hive Keychain, a browser extension imagined by
-            the Splinterlands' funders{' '}
-            <Text
-              style={styles.link}
-              onPress={() => {
-                Linking.openURL('https://peakd.com/@yabapmatt');
-              }}>
-              @yabapmatt
-            </Text>{' '}
-            and{' '}
-            <Text
-              style={styles.link}
-              onPress={() => {
-                Linking.openURL('https://peakd.com/@aggroed');
-              }}>
-              @aggroed
-            </Text>
-            .
+            Process transactions and enjoy your favorite dApps on your mobile
+            device!
           </Text>
           <Separator height={20} />
           <Text style={styles.text}>
-            Since the application is still in Beta, we count on you to report
-            bugs, layout issues and improvement ideas on our{' '}
+            Should you encounter any issue, contact us on our{' '}
+            <Text
+              style={styles.link}
+              onPress={() => {
+                Linking.openURL('https://discord.gg/3EM6YfRrGv');
+              }}>
+              Discord server
+            </Text>{' '}
+            or on{' '}
             <Text
               style={styles.link}
               onPress={() => {

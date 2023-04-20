@@ -12,7 +12,7 @@ export const answerSuccessfulBroadcastReq = (
         cmd: 'sign_ack',
         uuid: payload.uuid,
         broadcast: payload.decryptedData.broadcast,
-        data: result.id,
+        data: result.result.tx_id,
       }),
     );
   } else {
