@@ -249,6 +249,14 @@
           "part_1": "Bought",
           "amount": "{{amount}}"
         }
+      },
+      "buy_coins": {
+        "title_hive": "HIVE",
+        "title_hbd": "HBD",
+        "title_buy": "BUY",
+        "html_popup_transak_description": "Transak helps you buy HIVE using fiat. It supports credit cards, bank transfers, Apple Pay and MobiKwik in more than 100 countries (options vary per country). You will receive your HIVE directly in your Hive Keychain wallet.",
+        "html_popup_blocktrades_description": "With Blocktrades, quickly swap between other major cryptocurrencies and HIVE/HBD.",
+        "title_exchanges": "Exchanges"
       }
     },
     "has": {

@@ -5,6 +5,7 @@ import Savings from 'assets/wallet/icon_savings.svg';
 import AccountValue from 'components/hive/AccountValue';
 import TokenDisplay from 'components/hive/TokenDisplay';
 import {
+  BuyCoins,
   Send,
   SendConversion,
   SendDelegation,
@@ -17,9 +18,10 @@ import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import {BuyCoinType} from 'src/enums/operations.enum';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
-import {toHP} from 'utils/format';
+import {signedNumber, toHP} from 'utils/format';
 import {translate} from 'utils/localize';
 
 enum Token {
@@ -56,10 +58,29 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
         setToggle={() => {
           setToggled(toggled === Token.HIVE ? Token.NONE : Token.HIVE);
         }}
+        bottomLeft={
+          <Text>
+            <View style={{flexDirection: 'column'}}>
+              <Text>$ {`${prices.hive.usd?.toFixed(2)}`}</Text>
+              <Text
+                style={{
+                  color:
+                    +prices.hive.usd_24h_change > 0 ? '#3BB26E' : '#B9122F',
+                }}>{`${signedNumber(
+                +prices.hive.usd_24h_change?.toFixed(2),
+              )}%`}</Text>
+            </View>
+          </Text>
+        }
         buttons={[
           <Send key="send_hive" currency="HIVE" />,
           <SendPowerUp key="pu" />,
           <SendConversion key="conversion" currency="HIVE" />,
+          <BuyCoins
+            key="buy_coins"
+            currency={BuyCoinType.BUY_HIVE}
+            iconColor={'#dd2e4b'}
+          />,
         ]}
       />
       <Separator height={20} />
@@ -74,10 +95,30 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
         setToggle={() => {
           setToggled(toggled === Token.HBD ? Token.NONE : Token.HBD);
         }}
+        bottomLeft={
+          <Text>
+            <View style={{flexDirection: 'column'}}>
+              <Text>$ {`${prices.hive_dollar.usd?.toFixed(2)}`}</Text>
+              <Text
+                style={{
+                  color:
+                    +prices.hive_dollar.usd_24h_change > 0
+                      ? '#3BB26E'
+                      : '#B9122F',
+                }}>{`${signedNumber(
+                +prices.hive_dollar.usd_24h_change?.toFixed(2),
+              )}%`}</Text>
+            </View>
+          </Text>
+        }
         buttons={[
           <Send key="send_hbd" currency="HBD" />,
           <SendConversion key="conversion" currency="HBD" />,
-          <View style={{width: 20}}></View>,
+          <BuyCoins
+            key="buy_coins"
+            currency={BuyCoinType.BUY_HDB}
+            iconColor={'#3BB26E'}
+          />,
         ]}
       />
       <Separator height={20} />
