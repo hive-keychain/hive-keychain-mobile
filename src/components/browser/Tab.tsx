@@ -120,6 +120,11 @@ export default ({
     current && current.reload();
   };
 
+  const clearCache = () => {
+    const {current} = tabRef;
+    current && current.clearCache(true);
+  };
+
   const onLoadStart = ({
     nativeEvent: {url},
   }: {
@@ -329,6 +334,7 @@ export default ({
           goBack={goBack}
           goForward={goForward}
           reload={reload}
+          clearCache={clearCache}
           addTab={() => {
             addTab(
               isManagingTab,
