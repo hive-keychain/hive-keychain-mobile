@@ -58,15 +58,13 @@ const CollateralizedConvertTransactionComponent = ({
           <Text>{date}</Text>
         </View>
         <View style={styles.rowContainer}>
-          <Text>Started a</Text>
+          <Text>{translate('wallet.operations.convert.started_a')}</Text>
           <Text style={{color}}>
             {' '}
             {formattedAmount} {amount.split(' ')[1]}{' '}
           </Text>
           <Text style={styles.username}>
-            {translate(
-              'wallet.operations.convert.start_collateralized_convert',
-            )}
+            {translate('wallet.operations.convert.start_collateralized')}
           </Text>
         </View>
       </View>

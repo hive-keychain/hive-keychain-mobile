@@ -4,6 +4,7 @@ import {
   AccountUpdateOperation,
   AccountWitnessProxyOperation,
   AccountWitnessVoteOperation,
+  CancelTransferFromSavingsOperation,
   ClaimRewardBalanceOperation,
   Client,
   CollateralizedConvertOperation,
@@ -245,6 +246,13 @@ export const withdrawFromSavings = async (
   obj: TransferFromSavingsOperation[1],
 ) => {
   return await broadcast(key, [['transfer_from_savings', obj]]);
+};
+
+export const cancelPendingSavings = async (
+  key: string,
+  obj: CancelTransferFromSavingsOperation[1],
+) => {
+  return await broadcast(key, [['cancel_transfer_from_savings', obj]]);
 };
 
 export const vote = async (key: string, obj: VoteOperation[1]) => {

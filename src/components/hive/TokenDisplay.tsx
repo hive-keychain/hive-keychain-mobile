@@ -79,7 +79,12 @@ const TokenDisplay = ({
           {bottomLeft
             ? bottomLeft
             : renderLeftBottom(styles, price, currency, incoming, outgoing)}
-          <View style={[styles.row, styles.halfLine, styles.rowReverse]}>
+          <View
+            style={[
+              styles.row,
+              currency !== 'HIVE' ? styles.halfLine : styles.sixtyPercentLine,
+              styles.rowReverse,
+            ]}>
             {buttons}
           </View>
         </View>
@@ -185,6 +190,7 @@ const getDimensionedStyles = ({
     green: {color: '#3BB26E'},
     red: {color: '#B9122F'},
     halfLine: {width: '50%'},
+    sixtyPercentLine: {width: '60%'},
     rowReverse: {flexDirection: 'row-reverse'},
     flex: {flex: 1, marginRight: 30},
   });

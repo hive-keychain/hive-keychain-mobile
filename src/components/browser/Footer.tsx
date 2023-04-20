@@ -12,6 +12,7 @@ import {
   View,
 } from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import SimpleToast from 'react-native-simple-toast';
 
 type Props = {
   canGoBack: boolean;
@@ -19,6 +20,7 @@ type Props = {
   canGoForward: boolean;
   goForward: () => void;
   reload: () => void;
+  clearCache: () => void;
   manageTabs: () => void;
   height: number;
   addTab: () => void;
@@ -34,6 +36,7 @@ const Footer = ({
   manageTabs,
   height,
   tabs,
+  clearCache,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(height, insets);
@@ -63,7 +66,13 @@ const Footer = ({
         <RightArrow fill={canGoForward ? '#838383' : '#555'} />
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={reload}>
+      <TouchableOpacity
+        onPress={reload}
+        onLongPress={() => {
+          clearCache();
+          SimpleToast.show('Cache cleared');
+          reload();
+        }}>
         <Refresh />
       </TouchableOpacity>
 
