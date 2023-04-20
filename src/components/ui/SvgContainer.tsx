@@ -25,11 +25,7 @@ const SvgContainer = (props: SvgContainerProps) => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          marginLeft: '0%',
-          marginRight: '0%',
-        }}>
+      <View style={styles.innerContainer}>
         <View style={styles.svgContainer}>{props.svgFile}</View>
       </View>
     </View>
@@ -46,9 +42,16 @@ const getAppliedStyles = (containerStyles: ContainerStylesProps) =>
       borderWidth: containerStyles?.borderWidth ?? 1,
       margin: containerStyles?.margin ?? 8,
     },
+    innerContainer: {
+      marginLeft: '0%',
+      marginRight: '0%',
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     svgContainer: {
-      width: containerStyles?.svgContainerWidth ?? '100%',
-      height: 90,
+      width: containerStyles?.svgContainerWidth ?? '70%',
+      height: 60,
       justifyContent: 'center',
       alignItems: 'center',
     },

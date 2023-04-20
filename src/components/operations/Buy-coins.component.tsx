@@ -56,7 +56,7 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
           <Text style={styles.marginHorizontal}>
             {translate(`wallet.operations.buy_coins.${item.description}`)}
           </Text>
-          <Separator height={5} />
+          <Separator height={25} />
           <View style={styles.centeredView}>
             <ActiveOperationButton
               title={translate('wallet.operations.buy_coins.title_buy')}
@@ -79,7 +79,7 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
             onClick={handleOnClick}
             nameImage={item.image.split('.')[0]}
           />
-          <Separator height={10} />
+          <Separator height={5} />
         </View>
       );
     }
