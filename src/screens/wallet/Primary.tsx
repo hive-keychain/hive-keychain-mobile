@@ -6,6 +6,7 @@ import AccountValue from 'components/hive/AccountValue';
 import TokenDisplay from 'components/hive/TokenDisplay';
 import {
   BuyCoins,
+  PendingSavingsWithdraw,
   Send,
   SendConversion,
   SendDelegation,
@@ -19,10 +20,13 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {BuyCoinType} from 'src/enums/operations.enum';
+import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
-import {signedNumber, toHP} from 'utils/format';
+import {signedNumber, toHP, withCommas} from 'utils/format';
+import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
+import {SavingsUtils} from 'utils/savings.utils';
 
 enum Token {
   NONE,
@@ -31,12 +35,63 @@ enum Token {
   HP,
   SAVINGS,
 }
-const Primary = ({user, prices, properties}: PropsFromRedux) => {
+const Primary = ({
+  user,
+  prices,
+  properties,
+  userSavingsWithdrawRequests,
+}: PropsFromRedux) => {
   const {width} = useWindowDimensions();
+  const [toggled, setToggled] = useState(Token.NONE);
+  const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
+    SavingsWithdrawal[]
+  >([]);
+  const [
+    totalPendingHBDSavingsWithdrawals,
+    setTotalPendingHBDSavingsWithdrawals,
+  ] = useState(0);
+  const [
+    totalPendingHIVESavingsWithdrawals,
+    setTotalPendingHIVESavingsWithdrawals,
+  ] = useState(0);
+
   useEffect(() => {
     logScreenView('WalletScreen');
   }, []);
-  const [toggled, setToggled] = useState(Token.NONE);
+
+  useEffect(() => {
+    if (userSavingsWithdrawRequests > 0) {
+      fetchCurrentWithdrawingList();
+    }
+  }, [user]);
+
+  const fetchCurrentWithdrawingList = async () => {
+    const pendingSavingsWithdrawalsList: SavingsWithdrawal[] = await SavingsUtils.getSavingsWitdrawFrom(
+      user.name!,
+    );
+    setCurrentWithdrawingList(pendingSavingsWithdrawalsList);
+    setTotalPendingHIVESavingsWithdrawals(
+      pendingSavingsWithdrawalsList
+        .filter(
+          (current) => current.amount.split(' ')[1] === getCurrency('HIVE'),
+        )
+        .reduce(
+          (acc, current) => acc + parseFloat(current.amount.split(' ')[0]),
+          0,
+        ),
+    );
+    setTotalPendingHBDSavingsWithdrawals(
+      pendingSavingsWithdrawalsList
+        .filter(
+          (current) => current.amount.split(' ')[1] === getCurrency('HBD'),
+        )
+        .reduce(
+          (acc, current) => acc + parseFloat(current.amount.split(' ')[0]),
+          0,
+        ),
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Separator height={30} />
@@ -160,15 +215,45 @@ const Primary = ({user, prices, properties}: PropsFromRedux) => {
           setToggled(toggled === Token.SAVINGS ? Token.NONE : Token.SAVINGS);
         }}
         bottomLeft={
-          <Text>
-            <Text style={styles.apr}>HBD APR:</Text>
-            <Text style={styles.aprValue}>
-              {'   '}
-              {properties.globals && properties.globals.hbd_interest_rate
-                ? `${properties.globals.hbd_interest_rate / 100}%`
-                : ''}
+          <View>
+            <Text>
+              <Text style={styles.apr}>HBD APR:</Text>
+              <Text style={styles.aprValue}>
+                {'   '}
+                {properties.globals && properties.globals.hbd_interest_rate
+                  ? `${properties.globals.hbd_interest_rate / 100}%`
+                  : ''}
+              </Text>
             </Text>
-          </Text>
+
+            {currentWithdrawingList.length > 0 && (
+              <PendingSavingsWithdraw
+                currentWithdrawingList={currentWithdrawingList}>
+                <View>
+                  <Text style={styles.apr}>
+                    {translate(
+                      'wallet.operations.savings.pending_withdraw.pending',
+                    ).toUpperCase()}
+                    :
+                  </Text>
+                  {totalPendingHIVESavingsWithdrawals > 0 && (
+                    <Text style={styles.withdrawingValue}>
+                      {`${withCommas(
+                        totalPendingHIVESavingsWithdrawals.toFixed(3),
+                      )} ${getCurrency('HIVE')}`}
+                    </Text>
+                  )}
+                  {totalPendingHBDSavingsWithdrawals > 0 && (
+                    <Text style={styles.withdrawingValue}>
+                      {`${withCommas(
+                        totalPendingHBDSavingsWithdrawals.toFixed(3),
+                      )} ${getCurrency('HBD')}`}
+                    </Text>
+                  )}
+                </View>
+              </PendingSavingsWithdraw>
+            )}
+          </View>
         }
         buttons={[
           <SendWithdraw key="savings_withdraw" currency="HBD" />,
@@ -184,11 +269,18 @@ const styles = StyleSheet.create({
   container: {width: '100%', flex: 1},
   apr: {color: '#7E8C9A', fontSize: 14},
   aprValue: {color: '#3BB26E', fontSize: 14},
+  withdrawingValue: {color: '#b8343f', fontSize: 14},
+  flexRowAligned: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });
 
 const mapStateToProps = (state: RootState) => {
   return {
     user: state.activeAccount,
+    userSavingsWithdrawRequests:
+      state.activeAccount.account.savings_withdraw_requests,
     prices: state.currencyPrices,
     properties: state.properties,
   };

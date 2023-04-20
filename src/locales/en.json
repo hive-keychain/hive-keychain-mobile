@@ -85,7 +85,18 @@
         "fill_withdraw_savings": "from savings",
         "start_withdraw_savings": "withdrawal from savings",
         "info_deposit_savings": "into savings",
-        "info_received_interests": "of interests from savings"
+        "info_received_interests": "of interests from savings",
+        "pending_withdraw": {
+          "pending": "Withdrawing",
+          "pending_disclaimer": "Withdrawing from savings takes 3 days. Cancel the operation if you wish to keep your {{currency}} in the savings.",
+          "no_pending_withdrawals": "There are no pending {{currency}} withdrawals",
+          "title_page": "PENDING WITHDRAWALS",
+          "cancel_confirm_disclaimer": "Please confirm that you want to cancel this withdrawal from savings",
+          "cancel_withdraw_title": "CANCEL WITHDRAWAL",
+          "cancelled": {
+            "success": "Savings withdrawal cancelled succesfully"
+          }
+        }
       },
       "transfer": {
         "title": "Transfer funds",

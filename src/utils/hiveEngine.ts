@@ -4,7 +4,6 @@ import {decodeMemo} from 'components/bridge';
 import {translate} from './localize';
 type sscjsResult = {logs: string};
 
-//TODO move if needed to organize in an interface file
 export interface TokenDelegation {
   from: string;
   quantity: string;

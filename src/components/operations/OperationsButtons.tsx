@@ -7,6 +7,7 @@ import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
 import ShoppingCartIconWhite from 'assets/wallet/icon_shopping_cart_white.svg';
 import Minus from 'assets/wallet/icon_withdraw.svg';
+import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savings-withdrawal-page.component';
 import Convert from 'components/operations/Convert';
 import Delegation from 'components/operations/Delegation';
 import {HistoryProps} from 'components/operations/History';
@@ -15,6 +16,7 @@ import PowerUp from 'components/operations/PowerUp';
 import Transfer from 'components/operations/Transfer';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {navigate} from 'utils/navigation';
 import BuyCoinsComponent, {BuyCoinsprops} from './Buy-coins.component';
 import MoreTokenInfo, {MoreInfoTokenProps} from './MoreTokenInfo';
@@ -178,6 +180,32 @@ export const SendDeposit = ({currency}: {currency: string}) => {
       backgroundColor="#7E8C9A"
       content={<Plus />}
     />
+  );
+};
+
+export const PendingSavingsWithdraw = ({
+  currentWithdrawingList,
+  children,
+}: {
+  currentWithdrawingList: SavingsWithdrawal[];
+  children: JSX.Element;
+}) => {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: 'CancelSavingsWithdraw',
+          modalContent: (
+            <PendingSavingsWithdrawalPageComponent
+              operation={SavingsOperations.deposit}
+              currency={'HBD'}
+              currentWithdrawingList={currentWithdrawingList}
+            />
+          ),
+        });
+      }}>
+      {children}
+    </TouchableOpacity>
   );
 };
 
