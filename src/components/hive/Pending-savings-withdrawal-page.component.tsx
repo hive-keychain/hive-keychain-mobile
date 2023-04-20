@@ -60,7 +60,7 @@ const PendingSavingsWithdrawalPageComponent = ({
           justifyContent: 'space-between',
           alignContent: 'center',
         }}>
-        <Text>{`${withCommas(item.amount)} HBD`}</Text>
+        <Text>{`${withCommas(item.amount)} ${currency}`}</Text>
         <Text>{`On ${moment(item.complete).format('L')}`}</Text>
         <TouchableOpacity onPress={cancelSavingWithDraw}>
           <Icon name="delete" />
