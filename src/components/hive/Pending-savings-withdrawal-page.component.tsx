@@ -17,6 +17,7 @@ import {connect, ConnectedProps} from 'react-redux';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
+import {withCommas} from 'utils/format';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -59,8 +60,8 @@ const PendingSavingsWithdrawalPageComponent = ({
           justifyContent: 'space-between',
           alignContent: 'center',
         }}>
-        <Text>{item.amount}</Text>
-        <Text>{moment(item.complete).format('L')}</Text>
+        <Text>{`${withCommas(item.amount)} HBD`}</Text>
+        <Text>{`On ${moment(item.complete).format('L')}`}</Text>
         <TouchableOpacity onPress={cancelSavingWithDraw}>
           <Icon name="delete" />
         </TouchableOpacity>

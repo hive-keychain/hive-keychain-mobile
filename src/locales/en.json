@@ -89,7 +89,7 @@
         "pending_withdraw": {
           "pending": "Withdrawing",
           "pending_disclaimer": "Withdrawing from savings takes 3 days. Cancel the operation if you wish to keep your {{currency}} in the savings.",
-          "no_pending_withdrawals": "There is no pending {{currency}} withdrawals",
+          "no_pending_withdrawals": "There are no pending {{currency}} withdrawals",
           "title_page": "PENDING WITHDRAWALS",
           "cancel_confirm_disclaimer": "Please confirm that you want to cancel this withdrawal from savings",
           "cancel_withdraw_title": "CANCEL WITHDRAWAL",

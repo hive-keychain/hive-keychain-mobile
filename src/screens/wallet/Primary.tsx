@@ -23,7 +23,7 @@ import {BuyCoinType} from 'src/enums/operations.enum';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
-import {signedNumber, toHP} from 'utils/format';
+import {signedNumber, toHP, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {SavingsUtils} from 'utils/savings.utils';
@@ -238,15 +238,15 @@ const Primary = ({
                   </Text>
                   {totalPendingHIVESavingsWithdrawals > 0 && (
                     <Text style={styles.withdrawingValue}>
-                      {`${totalPendingHIVESavingsWithdrawals.toFixed(
-                        3,
+                      {`${withCommas(
+                        totalPendingHIVESavingsWithdrawals.toFixed(3),
                       )} ${getCurrency('HIVE')}`}
                     </Text>
                   )}
                   {totalPendingHBDSavingsWithdrawals > 0 && (
                     <Text style={styles.withdrawingValue}>
-                      {`${totalPendingHBDSavingsWithdrawals.toFixed(
-                        3,
+                      {`${withCommas(
+                        totalPendingHBDSavingsWithdrawals.toFixed(3),
                       )} ${getCurrency('HBD')}`}
                     </Text>
                   )}
