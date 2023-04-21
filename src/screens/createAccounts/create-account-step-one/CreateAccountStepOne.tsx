@@ -5,12 +5,16 @@ import CustomInput from 'components/form/CustomInput';
 import CustomPicker from 'components/form/CustomPicker';
 import OperationButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
-import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, useWindowDimensions} from 'react-native';
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
@@ -19,7 +23,7 @@ import {
   AccountCreationUtils,
 } from 'utils/account-creation.utils';
 import AccountUtils from 'utils/account.utils';
-import {Width} from 'utils/common.types';
+import {Height} from 'utils/common.types';
 import {getCurrency} from 'utils/hive';
 import {getAccountPrice} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
@@ -43,7 +47,7 @@ const CreateAccountStepOne = ({
 
   const [focus, setFocus] = useState(Math.random());
 
-  const styles = getDimensionedStyles(useWindowDimensions());
+  const styles = getDimensionedStyles({...useWindowDimensions()});
 
   useLockedPortrait(navigation);
 
@@ -152,19 +156,17 @@ const CreateAccountStepOne = ({
   };
 
   return (
-    <WalletPage>
-      <Background>
-        <>
-          <FocusAwareStatusBar
-            barStyle="light-content"
-            backgroundColor="black"
-          />
+    <Background>
+      <>
+        <StatusBar backgroundColor="black" />
+        <View style={styles.container}>
           <Text style={[styles.text, styles.marginText]}>
             {translate('components.create_account.disclaimer', {
               amount: '3',
               currency: getCurrency('HIVE'),
             })}
           </Text>
+          <Text style={styles.text}>Created by @</Text>
           {selectedAccount.length > 0 && accountOptions && (
             <CustomPicker
               list={accountOptions.map((account) => account.value)}
@@ -173,10 +175,11 @@ const CreateAccountStepOne = ({
               onSelected={onSelected}
               prompt={translate('components.picker.prompt_user')}
               style={styles.text}
+              dropdownIconColor="white"
             />
           )}
           <Text style={[styles.text, styles.biggerFontSize, styles.marginText]}>
-            {getPriceLabel()}
+            {translate('components.create_account.cost')}: {getPriceLabel()}
           </Text>
           <CustomInput
             autoCapitalize="none"
@@ -192,14 +195,17 @@ const CreateAccountStepOne = ({
             title={translate('common.next')}
             onPress={() => goToNextPage()}
           />
-        </>
-      </Background>
-    </WalletPage>
+        </View>
+      </>
+    </Background>
   );
 };
 
-const getDimensionedStyles = ({width}: Width) =>
+const getDimensionedStyles = ({height}: Height) =>
   StyleSheet.create({
+    container: {
+      height: height,
+    },
     toggle: {
       display: 'flex',
       flexDirection: 'row',
@@ -217,6 +223,10 @@ const getDimensionedStyles = ({width}: Width) =>
     },
     biggerFontSize: {
       fontSize: 20,
+    },
+    rowContainer: {
+      display: 'flex',
+      flexDirection: 'row',
     },
   });
 

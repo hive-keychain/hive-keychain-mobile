@@ -25,7 +25,7 @@ import {
   AccountCreationUtils,
   GeneratedKeys,
 } from 'utils/account-creation.utils';
-import {Width} from 'utils/common.types';
+import {Height} from 'utils/common.types';
 import {KeychainKeyTypes} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {resetStackAndNavigate} from 'utils/navigation';
@@ -48,7 +48,7 @@ const CreateAccountStepTwo = ({
   addAccount,
 }: PropsFromRedux & CreateAccountFromWalletNavigationProps) => {
   const [focus, setFocus] = useState(Math.random());
-  const styles = getDimensionedStyles(useWindowDimensions());
+  const styles = getDimensionedStyles({...useWindowDimensions()});
 
   useLockedPortrait(navigation);
   useEffect(() => {
@@ -124,7 +124,7 @@ const CreateAccountStepTwo = ({
   }, [generatedKeys]);
 
   const generateKeysTextVersion = () => {
-    return `    WARNING: Store offline
+    return `    
     Account name: @${accountName}
     ---------Master password:--------- 
     ${masterKey}
@@ -284,7 +284,7 @@ const CreateAccountStepTwo = ({
   );
 };
 
-const getDimensionedStyles = ({width}: Width) =>
+const getDimensionedStyles = ({height}: Height) =>
   StyleSheet.create({
     toggle: {
       display: 'flex',
@@ -302,7 +302,7 @@ const getDimensionedStyles = ({width}: Width) =>
     keysText: {
       marginHorizontal: 4,
       marginTop: 5,
-      borderColor: 'black',
+      borderColor: 'white',
       borderWidth: 1,
       padding: 3,
     },
@@ -315,7 +315,7 @@ const getDimensionedStyles = ({width}: Width) =>
     whiteText: {
       color: 'white',
     },
-    transparentColor: {backgroundColor: 'rgba(0,0,0,0)'},
+    transparentColor: {backgroundColor: 'rgba(0,0,0,0)', borderWidth: 0},
   });
 
 const connector = connect(

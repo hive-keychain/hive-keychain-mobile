@@ -34,7 +34,7 @@ export default () => {
             backgroundColor: 'black',
           },
           headerTitleAlign: 'left',
-          title: translate('navigation.create_account_step_two'),
+          title: translate('navigation.create_account'),
           headerTintColor: 'white',
           headerRight: () => <DrawerButton navigation={navigation} />,
         })}
