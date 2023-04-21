@@ -4,6 +4,7 @@ import UserLogo from 'assets/addAccount/icon_username.svg';
 import CustomInput from 'components/form/CustomInput';
 import CustomPicker from 'components/form/CustomPicker';
 import OperationButton from 'components/form/EllipticButton';
+import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
@@ -11,7 +12,7 @@ import {GovernanceNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {
   AccountCreationType,
@@ -19,6 +20,7 @@ import {
 } from 'utils/account-creation.utils';
 import AccountUtils from 'utils/account.utils';
 import {Width} from 'utils/common.types';
+import {getCurrency} from 'utils/hive';
 import {getAccountPrice} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -151,44 +153,47 @@ const CreateAccountStepOne = ({
 
   return (
     <WalletPage>
-      <>
-        <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
-        <Text style={styles.marginText}>
-          {translate('components.create_account.disclaimer')}
-        </Text>
-        {selectedAccount.length > 0 && accountOptions && (
-          <CustomPicker
-            list={accountOptions.map((account) => account.value)}
-            prefix={'@'}
-            selectedValue={selectedAccount}
-            onSelected={onSelected}
-            prompt={'prompt'}
+      <Background>
+        <>
+          <FocusAwareStatusBar
+            barStyle="light-content"
+            backgroundColor="black"
           />
-        )}
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            marginVertical: 10,
-          }}>
-          {getPriceLabel()}
-        </Text>
-        <CustomInput
-          autoCapitalize="none"
-          placeholder={translate(
-            'components.create_account.new_account_username',
+          <Text style={[styles.text, styles.marginText]}>
+            {translate('components.create_account.disclaimer', {
+              amount: '3',
+              currency: getCurrency('HIVE'),
+            })}
+          </Text>
+          {selectedAccount.length > 0 && accountOptions && (
+            <CustomPicker
+              list={accountOptions.map((account) => account.value)}
+              prefix={'@'}
+              selectedValue={selectedAccount}
+              onSelected={onSelected}
+              prompt={translate('components.picker.prompt_user')}
+              style={styles.text}
+            />
           )}
-          leftIcon={<UserLogo />}
-          value={accountName}
-          onChangeText={setAccountName}
-        />
-        <OperationButton
-          style={styles.button}
-          title={translate('common.next')}
-          onPress={() => goToNextPage()}
-        />
-      </>
+          <Text style={[styles.text, styles.biggerFontSize, styles.marginText]}>
+            {getPriceLabel()}
+          </Text>
+          <CustomInput
+            autoCapitalize="none"
+            placeholder={translate(
+              'components.create_account.new_account_username',
+            )}
+            leftIcon={<UserLogo />}
+            value={accountName}
+            onChangeText={setAccountName}
+          />
+          <OperationButton
+            style={styles.button}
+            title={translate('common.next')}
+            onPress={() => goToNextPage()}
+          />
+        </>
+      </Background>
     </WalletPage>
   );
 };
@@ -201,10 +206,17 @@ const getDimensionedStyles = ({width}: Width) =>
     },
     button: {marginTop: 40},
     marginText: {
-      marginHorizontal: 5,
       marginTop: 10,
       marginBottom: 10,
+    },
+    text: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: 16,
       textAlign: 'center',
+    },
+    biggerFontSize: {
+      fontSize: 20,
     },
   });
 

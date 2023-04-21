@@ -3,6 +3,7 @@ import Clipboard from '@react-native-community/clipboard';
 import {addAccount} from 'actions/accounts';
 import {Account} from 'actions/interfaces';
 import OperationButton from 'components/form/EllipticButton';
+import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
@@ -12,12 +13,12 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import Toast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {
   AccountCreationType,
@@ -209,63 +210,76 @@ const CreateAccountStepTwo = ({
 
   return (
     <WalletPage>
-      <>
-        <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
-        {keysTextVersion.length > 0 && (
-          <>
-            <ScrollView style={styles.keysContainer}>
-              <Text style={styles.keysText}>{keysTextVersion}</Text>
-            </ScrollView>
-            <View style={styles.checkboxContainer}>
-              <CheckBox
-                checked={paymentUnderstanding}
-                onPress={() => setPaymentUnderstanding(!paymentUnderstanding)}
-                title={getPaymentCheckboxLabel()}
+      <Background>
+        <>
+          <FocusAwareStatusBar
+            barStyle="light-content"
+            backgroundColor="black"
+          />
+          {keysTextVersion.length > 0 && (
+            <>
+              <ScrollView style={styles.keysContainer}>
+                <Text style={[styles.keysText, styles.whiteText]}>
+                  {keysTextVersion}
+                </Text>
+              </ScrollView>
+              <View style={styles.checkboxContainer}>
+                <CheckBox
+                  checked={paymentUnderstanding}
+                  onPress={() => setPaymentUnderstanding(!paymentUnderstanding)}
+                  title={getPaymentCheckboxLabel()}
+                  containerStyle={styles.transparentColor}
+                  textStyle={styles.whiteText}
+                />
+                <CheckBox
+                  checked={safelyCopied}
+                  onPress={() => setSafelyCopied(!safelyCopied)}
+                  title={translate(
+                    'components.create_account.safely_copied_keys',
+                  )}
+                  containerStyle={styles.transparentColor}
+                  textStyle={styles.whiteText}
+                />
+                <CheckBox
+                  checked={notPrimaryStorageUnderstanding}
+                  onPress={() =>
+                    setNotPrimaryStorageUnderstanding(
+                      !notPrimaryStorageUnderstanding,
+                    )
+                  }
+                  title={translate(
+                    'components.create_account.storage_understanding',
+                  )}
+                  containerStyle={styles.transparentColor}
+                  textStyle={styles.whiteText}
+                />
+              </View>
+              <OperationButton
+                style={styles.button}
+                title={translate('components.create_account.copy')}
+                onPress={() => copyAllKeys()}
               />
-              <CheckBox
-                checked={safelyCopied}
-                onPress={() => setSafelyCopied(!safelyCopied)}
-                title={translate(
-                  'components.create_account.safely_copied_keys',
-                )}
-              />
-              <CheckBox
-                checked={notPrimaryStorageUnderstanding}
-                onPress={() =>
-                  setNotPrimaryStorageUnderstanding(
-                    !notPrimaryStorageUnderstanding,
-                  )
+              <OperationButton
+                isLoading={loading}
+                disabled={
+                  !safelyCopied &&
+                  !notPrimaryStorageUnderstanding &&
+                  !paymentUnderstanding
                 }
-                title={translate(
-                  'components.create_account.storage_understanding',
-                )}
+                style={
+                  safelyCopied &&
+                  notPrimaryStorageUnderstanding &&
+                  paymentUnderstanding
+                    ? styles.button
+                    : styles.buttonDisabled
+                }
+                title={translate('components.create_account.create_account')}
+                onPress={() => createAccount()}
               />
-            </View>
-            <OperationButton
-              style={styles.button}
-              title={translate('components.create_account.copy')}
-              onPress={() => copyAllKeys()}
-            />
-            <OperationButton
-              isLoading={loading}
-              disabled={
-                !safelyCopied &&
-                !notPrimaryStorageUnderstanding &&
-                !paymentUnderstanding
-              }
-              style={
-                safelyCopied &&
-                notPrimaryStorageUnderstanding &&
-                paymentUnderstanding
-                  ? styles.button
-                  : styles.buttonDisabled
-              }
-              title={translate('components.create_account.create_account')}
-              onPress={() => createAccount()}
-            />
-          </>
-        )}
-      </>
+            </>
+          )}
+        </>
+      </Background>
     </WalletPage>
   );
 };
@@ -283,6 +297,7 @@ const getDimensionedStyles = ({width}: Width) =>
     },
     keysContainer: {
       maxHeight: 300,
+      backgroundColor: 'rgba(0, 0, 0, 0.34)',
     },
     keysText: {
       marginHorizontal: 4,
@@ -297,6 +312,10 @@ const getDimensionedStyles = ({width}: Width) =>
     checkbox: {
       alignSelf: 'center',
     },
+    whiteText: {
+      color: 'white',
+    },
+    transparentColor: {backgroundColor: 'rgba(0,0,0,0)'},
   });
 
 const connector = connect(

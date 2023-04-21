@@ -414,7 +414,7 @@
     },
     "create_account": {
       "new_account_username": "New Account username",
-      "disclaimer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tristique nunc id sagittis ornare. Aliquam erat volutpat. In vel molestie nulla, sed hendrerit tortor.",
+      "disclaimer": "Create a Hive account for {{amount}} {{currency}} or an account creation token",
       "safely_copied_keys": "I have safely copied my keys and saved them outside of Keychain",
       "storage_understanding": "I understand that Keychain should not be considered as the primary place of storage for my keys",
       "buy_method_message": "I agree to pay {{price}} HIVE with account @{{account}} to create this account",
