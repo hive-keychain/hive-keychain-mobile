@@ -230,6 +230,7 @@ const CreateAccountStepTwo = ({
                   title={getPaymentCheckboxLabel()}
                   containerStyle={styles.transparentColor}
                   textStyle={styles.whiteText}
+                  checkedColor="white"
                 />
                 <CheckBox
                   checked={safelyCopied}
@@ -239,6 +240,7 @@ const CreateAccountStepTwo = ({
                   )}
                   containerStyle={styles.transparentColor}
                   textStyle={styles.whiteText}
+                  checkedColor="white"
                 />
                 <CheckBox
                   checked={notPrimaryStorageUnderstanding}
@@ -252,6 +254,7 @@ const CreateAccountStepTwo = ({
                   )}
                   containerStyle={styles.transparentColor}
                   textStyle={styles.whiteText}
+                  checkedColor="white"
                 />
               </View>
               <OperationButton
