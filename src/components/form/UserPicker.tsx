@@ -1,6 +1,13 @@
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React from 'react';
-import {StyleSheet, useWindowDimensions, View} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  useWindowDimensions,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import CustomPicker from './CustomPicker';
@@ -9,8 +16,18 @@ type Props = {
   username: string;
   accounts: string[];
   onAccountSelected: (value: string) => void;
+  additionalContainerStyle?: StyleProp<ViewStyle>;
+  additionalPickerStyle?: StyleProp<TextStyle>;
+  dropdownIconColor?: string;
 };
-const UserPicker = ({username, accounts, onAccountSelected}: Props) => {
+const UserPicker = ({
+  username,
+  accounts,
+  onAccountSelected,
+  additionalContainerStyle,
+  additionalPickerStyle,
+  dropdownIconColor,
+}: Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height});
   if (!username) {
@@ -18,7 +35,7 @@ const UserPicker = ({username, accounts, onAccountSelected}: Props) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, additionalContainerStyle]}>
       <UserProfilePicture style={styles.image} username={username} />
       <View style={styles.subContainer}>
         <CustomPicker
@@ -26,8 +43,9 @@ const UserPicker = ({username, accounts, onAccountSelected}: Props) => {
           onSelected={onAccountSelected}
           selectedValue={username}
           prefix="@"
-          style={styles.picker}
+          style={[styles.picker, additionalPickerStyle]}
           prompt={translate('components.picker.prompt_user')}
+          dropdownIconColor={dropdownIconColor}
         />
       </View>
     </View>

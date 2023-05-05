@@ -61,7 +61,6 @@ export const setRpc = async (rpcObj: Rpc | string) => {
   client = new Client(rpc);
   hiveTx.config.node = rpc;
   if (typeof rpcObj !== 'string') {
-    //TODO quentin check if it is ok to ignore
     //@ts-ignore
     client.chainId = Buffer.from(rpcObj.chainId || DEFAULT_CHAIN_ID);
     hiveTx.config.chain_id = rpcObj.chainId || DEFAULT_CHAIN_ID;

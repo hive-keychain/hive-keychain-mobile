@@ -2,8 +2,8 @@ import {Asset} from '@hiveio/dhive';
 import {Account} from 'actions/interfaces';
 import UserLogo from 'assets/addAccount/icon_username.svg';
 import CustomInput from 'components/form/CustomInput';
-import CustomPicker from 'components/form/CustomPicker';
 import OperationButton from 'components/form/EllipticButton';
+import UserPicker from 'components/form/UserPicker';
 import Background from 'components/ui/Background';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
@@ -23,8 +23,7 @@ import {
   AccountCreationUtils,
 } from 'utils/account-creation.utils';
 import AccountUtils from 'utils/account.utils';
-import {Height} from 'utils/common.types';
-import {getCurrency} from 'utils/hive';
+import {Dimensions} from 'utils/common.types';
 import {getAccountPrice} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -45,8 +44,6 @@ const CreateAccountStepOne = ({
   const [accountName, setAccountName] = useState('');
   const [creationType, setCreationType] = useState<AccountCreationType>();
 
-  const [focus, setFocus] = useState(Math.random());
-
   const styles = getDimensionedStyles({...useWindowDimensions()});
 
   useLockedPortrait(navigation);
@@ -58,13 +55,6 @@ const CreateAccountStepOne = ({
   const initPrice = async () => {
     setPrice(await getAccountPrice());
   };
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      setFocus(Math.random());
-    });
-    return unsubscribe;
-  }, []);
 
   useEffect(() => {
     initAccountOptions();
@@ -160,73 +150,95 @@ const CreateAccountStepOne = ({
       <>
         <StatusBar backgroundColor="black" />
         <View style={styles.container}>
-          <Text style={[styles.text, styles.marginText]}>
-            {translate('components.create_account.disclaimer', {
-              amount: '3',
-              currency: getCurrency('HIVE'),
-            })}
-          </Text>
-          <Text style={styles.text}>Created by @</Text>
-          {selectedAccount.length > 0 && accountOptions && (
-            <CustomPicker
-              list={accountOptions.map((account) => account.value)}
-              prefix={'@'}
-              selectedValue={selectedAccount}
-              onSelected={onSelected}
-              prompt={translate('components.picker.prompt_user')}
-              style={styles.text}
-              dropdownIconColor="white"
-            />
-          )}
-          <Text style={[styles.text, styles.biggerFontSize, styles.marginText]}>
-            {translate('components.create_account.cost')}: {getPriceLabel()}
-          </Text>
-          <CustomInput
-            autoCapitalize="none"
-            placeholder={translate(
-              'components.create_account.new_account_username',
+          <View style={styles.content}>
+            {selectedAccount.length > 0 && accountOptions && (
+              <UserPicker
+                username={selectedAccount}
+                accounts={accountOptions.map((account) => account.value)}
+                onAccountSelected={onSelected}
+                additionalContainerStyle={styles.additionalContainerStyle}
+                additionalPickerStyle={styles.additionalPickerStyle}
+                dropdownIconColor="white"
+              />
             )}
-            leftIcon={<UserLogo />}
-            value={accountName}
-            onChangeText={setAccountName}
-          />
-          <OperationButton
-            style={styles.button}
-            title={translate('common.next')}
-            onPress={() => goToNextPage()}
-          />
+            <Text
+              style={[
+                styles.text,
+                styles.marginVertical,
+                styles.uniqueFontSize,
+              ]}>
+              {translate('components.create_account.cost', {
+                price: getPriceLabel(),
+                account: selectedAccount,
+              })}
+            </Text>
+            <CustomInput
+              autoCapitalize="none"
+              placeholder={translate(
+                'components.create_account.new_account_username',
+              )}
+              leftIcon={<UserLogo />}
+              value={accountName}
+              onChangeText={setAccountName}
+              containerStyle={styles.marginVertical}
+              style={styles.uniqueFontSize}
+            />
+            <View style={styles.buttonContainer}>
+              <OperationButton
+                style={styles.button}
+                title={translate('common.next')}
+                onPress={() => goToNextPage()}
+                additionalTextStyle={styles.uniqueFontSize}
+              />
+            </View>
+          </View>
         </View>
       </>
     </Background>
   );
 };
 
-const getDimensionedStyles = ({height}: Height) =>
+const getDimensionedStyles = ({width, height}: Dimensions) =>
   StyleSheet.create({
     container: {
-      height: height,
+      height: height - 100,
+      marginHorizontal: width * 0.06,
     },
-    toggle: {
+    content: {
+      flex: 1,
+      marginVertical: height * 0.05,
+      height: '90%',
+      alignItems: 'center',
+    },
+    button: {
+      width: '100%',
+      height: height * 0.08,
+    },
+    buttonContainer: {
+      width: '100%',
+      justifyContent: 'flex-end',
+      alignItems: 'center',
+      height: '30%',
       display: 'flex',
-      flexDirection: 'row',
-    },
-    button: {marginTop: 40},
-    marginText: {
-      marginTop: 10,
-      marginBottom: 10,
     },
     text: {
       color: 'white',
-      fontWeight: 'bold',
-      fontSize: 16,
       textAlign: 'center',
     },
-    biggerFontSize: {
-      fontSize: 20,
+    additionalPickerStyle: {
+      color: 'white',
     },
-    rowContainer: {
-      display: 'flex',
-      flexDirection: 'row',
+    additionalContainerStyle: {
+      backgroundColor: 'black',
+      marginHorizontal: 0,
+      width: '100%',
+    },
+    marginVertical: {
+      marginVertical: height / 30,
+    },
+    uniqueFontSize: {
+      fontSize: 17,
+      fontWeight: 'bold',
     },
   });
 

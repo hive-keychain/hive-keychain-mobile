@@ -25,7 +25,7 @@ import {
   AccountCreationUtils,
   GeneratedKeys,
 } from 'utils/account-creation.utils';
-import {Height} from 'utils/common.types';
+import {Dimensions} from 'utils/common.types';
 import {KeychainKeyTypes} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {resetStackAndNavigate} from 'utils/navigation';
@@ -44,19 +44,11 @@ const CreateAccountStepTwo = ({
   user,
   navigation,
   route,
-  accounts,
   addAccount,
 }: PropsFromRedux & CreateAccountFromWalletNavigationProps) => {
-  const [focus, setFocus] = useState(Math.random());
   const styles = getDimensionedStyles({...useWindowDimensions()});
 
   useLockedPortrait(navigation);
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      setFocus(Math.random());
-    });
-    return unsubscribe;
-  }, []);
 
   const navigationParams = route.params;
 
@@ -122,6 +114,58 @@ const CreateAccountStepTwo = ({
     setSafelyCopied(false);
     setPaymentUnderstanding(false);
   }, [generatedKeys]);
+
+  const wrapInHorizontalScrollView = (text: string) => {
+    return (
+      <ScrollView horizontal>
+        <Text style={styles.whiteText}>{text}</Text>
+      </ScrollView>
+    );
+  };
+
+  const renderKeys = () => {
+    return (
+      <View style={styles.marginHorizontal}>
+        <Text style={styles.whiteText}>Account name: @{accountName}</Text>
+        <Text
+          style={[
+            styles.whiteText,
+            styles.textCentered,
+          ]}>{`----- Master password: ----- `}</Text>
+        {wrapInHorizontalScrollView(`${masterKey}`)}
+        <Text
+          style={[
+            styles.whiteText,
+            styles.textCentered,
+          ]}>{`------------ Owner Key:---------`}</Text>
+        {wrapInHorizontalScrollView(`Private: ${generatedKeys.owner.private}`)}
+        {wrapInHorizontalScrollView(`Public: ${generatedKeys.owner.public}`)}
+        <Text
+          style={[
+            styles.whiteText,
+            styles.textCentered,
+          ]}>{`------------ Active Key:--------- `}</Text>
+        {wrapInHorizontalScrollView(`Private: ${generatedKeys.active.private}`)}
+        {wrapInHorizontalScrollView(`Public: ${generatedKeys.active.public}`)}
+        <Text
+          style={[
+            styles.whiteText,
+            styles.textCentered,
+          ]}>{`------------ Posting Key:--------`}</Text>
+        {wrapInHorizontalScrollView(
+          `Private: ${generatedKeys.posting.private}`,
+        )}
+        {wrapInHorizontalScrollView(`Public: ${generatedKeys.posting.public}`)}
+        <Text
+          style={[
+            styles.whiteText,
+            styles.textCentered,
+          ]}>{`------------ Memo Key:---------`}</Text>
+        {wrapInHorizontalScrollView(`Private: ${generatedKeys.memo.private}`)}
+        {wrapInHorizontalScrollView(`Public: ${generatedKeys.memo.public}`)}
+      </View>
+    );
+  };
 
   const generateKeysTextVersion = () => {
     return `    
@@ -217,18 +261,16 @@ const CreateAccountStepTwo = ({
             backgroundColor="black"
           />
           {keysTextVersion.length > 0 && (
-            <>
+            <View style={styles.container}>
               <ScrollView style={styles.keysContainer}>
-                <Text style={[styles.keysText, styles.whiteText]}>
-                  {keysTextVersion}
-                </Text>
+                {renderKeys()}
               </ScrollView>
-              <View style={styles.checkboxContainer}>
+              <View style={styles.checkboxesContainer}>
                 <CheckBox
                   checked={paymentUnderstanding}
                   onPress={() => setPaymentUnderstanding(!paymentUnderstanding)}
                   title={getPaymentCheckboxLabel()}
-                  containerStyle={styles.transparentColor}
+                  containerStyle={styles.checkbox}
                   textStyle={styles.whiteText}
                   checkedColor="white"
                 />
@@ -238,7 +280,7 @@ const CreateAccountStepTwo = ({
                   title={translate(
                     'components.create_account.safely_copied_keys',
                   )}
-                  containerStyle={styles.transparentColor}
+                  containerStyle={styles.checkbox}
                   textStyle={styles.whiteText}
                   checkedColor="white"
                 />
@@ -252,13 +294,13 @@ const CreateAccountStepTwo = ({
                   title={translate(
                     'components.create_account.storage_understanding',
                   )}
-                  containerStyle={styles.transparentColor}
+                  containerStyle={styles.checkbox}
                   textStyle={styles.whiteText}
                   checkedColor="white"
                 />
               </View>
               <OperationButton
-                style={styles.button}
+                style={[styles.button, styles.buttonMarginTop]}
                 title={translate('components.create_account.copy')}
                 onPress={() => copyAllKeys()}
               />
@@ -269,17 +311,18 @@ const CreateAccountStepTwo = ({
                   !notPrimaryStorageUnderstanding &&
                   !paymentUnderstanding
                 }
-                style={
+                style={[
                   safelyCopied &&
                   notPrimaryStorageUnderstanding &&
                   paymentUnderstanding
                     ? styles.button
-                    : styles.buttonDisabled
-                }
+                    : styles.buttonDisabled,
+                  styles.buttonMarginTop,
+                ]}
                 title={translate('components.create_account.create_account')}
                 onPress={() => createAccount()}
               />
-            </>
+            </View>
           )}
         </>
       </Background>
@@ -287,45 +330,54 @@ const CreateAccountStepTwo = ({
   );
 };
 
-const getDimensionedStyles = ({height}: Height) =>
+const getDimensionedStyles = ({width, height}: Dimensions) =>
   StyleSheet.create({
-    toggle: {
-      display: 'flex',
-      flexDirection: 'row',
+    container: {
+      marginHorizontal: width * 0.06,
+      flex: 1,
     },
-    button: {marginTop: 20},
+    button: {
+      width: '100%',
+      marginHorizontal: 0,
+    },
     buttonDisabled: {
       backgroundColor: 'gray',
-      marginTop: 20,
+      width: '100%',
+      marginHorizontal: 0,
     },
     keysContainer: {
-      maxHeight: 300,
+      maxHeight: 250,
       backgroundColor: 'rgba(0, 0, 0, 0.34)',
+      overflow: 'hidden',
+      marginTop: 20,
     },
     keysText: {
-      marginHorizontal: 4,
-      marginTop: 5,
       borderColor: 'white',
       borderWidth: 1,
-      padding: 3,
     },
-    checkboxContainer: {
-      flexDirection: 'column',
-    },
-    checkbox: {
-      alignSelf: 'center',
+    checkboxesContainer: {
+      marginVertical: 10,
     },
     whiteText: {
       color: 'white',
     },
-    transparentColor: {backgroundColor: 'rgba(0,0,0,0)', borderWidth: 0},
+    textCentered: {textAlign: 'center'},
+    buttonMarginTop: {
+      marginTop: 20,
+    },
+    checkbox: {
+      backgroundColor: 'rgba(0,0,0,0)',
+      width: '95%',
+      padding: 0,
+      borderColor: 'rgba(0,0,0,0)',
+    },
+    marginHorizontal: {marginHorizontal: 10},
   });
 
 const connector = connect(
   (state: RootState) => {
     return {
       user: state.activeAccount,
-      accounts: state.accounts,
     };
   },
   {addAccount},
