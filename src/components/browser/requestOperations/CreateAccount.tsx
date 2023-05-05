@@ -35,7 +35,7 @@ const CreateAccount = ({
       performOperation={async () => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
-        await createClaimedAccount(key, {
+        return await createClaimedAccount(key, {
           creator: username,
           new_account_name: new_account,
           owner: JSON.parse(owner),

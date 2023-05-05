@@ -28,6 +28,7 @@ import hiveTx from 'hive-tx';
 import {hiveEngine} from 'utils/config';
 import {
   KeychainKeyTypes,
+  KeychainKeyTypesLC,
   RequestAddAccountAuthority,
   RequestAddKeyAuthority,
   RequestPost,
@@ -61,6 +62,7 @@ export const setRpc = async (rpcObj: Rpc | string) => {
   hiveTx.config.node = rpc;
   if (typeof rpcObj !== 'string') {
     client.chainId = Buffer.from(rpcObj.chainId || DEFAULT_CHAIN_ID);
+    client.chainId.set(Buffer.from(rpcObj.chainId || DEFAULT_CHAIN_ID));
     hiveTx.config.chain_id = rpcObj.chainId || DEFAULT_CHAIN_ID;
   }
 };
@@ -323,9 +325,8 @@ export const addAccountAuth = async (
   }: RequestAddAccountAuthority,
 ) => {
   const userAccount = (await getClient().database.getAccounts([username]))[0];
-
-  const updatedAuthority =
-    userAccount[role.toLowerCase() as 'posting' | 'active'];
+  const roleLC = role.toLowerCase() as KeychainKeyTypesLC;
+  const updatedAuthority = userAccount[roleLC as 'posting' | 'active'];
 
   /** Release callback if the account already exist in the account_auths array */
   const authorizedAccounts = updatedAuthority.account_auths.map(
@@ -338,15 +339,18 @@ export const addAccountAuth = async (
 
   /** Use weight_thresold as default weight */
   weight =
-    weight ||
-    userAccount[role.toLowerCase() as 'posting' | 'active'].weight_threshold;
+    weight || userAccount[roleLC as 'posting' | 'active'].weight_threshold;
   updatedAuthority.account_auths.push([authorizedUsername, +weight]);
   updatedAuthority.account_auths.sort((a, b) => a[0].localeCompare(b[0]));
 
   const active =
-    role === KeychainKeyTypes.active ? updatedAuthority : userAccount.active;
+    roleLC === KeychainKeyTypesLC.active
+      ? updatedAuthority
+      : userAccount.active;
   const posting =
-    role === KeychainKeyTypes.posting ? updatedAuthority : userAccount.posting;
+    roleLC === KeychainKeyTypesLC.posting
+      ? updatedAuthority
+      : userAccount.posting;
 
   /** Add authority on user account */
   return await accountUpdate(key, {
@@ -368,9 +372,8 @@ export const removeAccountAuth = async (
   }: RequestRemoveAccountAuthority,
 ) => {
   const userAccount = (await getClient().database.getAccounts([username]))[0];
-
-  const updatedAuthority =
-    userAccount[role.toLowerCase() as 'posting' | 'active'];
+  const roleLC = role.toLowerCase() as KeychainKeyTypesLC;
+  const updatedAuthority = userAccount[roleLC as 'posting' | 'active'];
   const totalAuthorizedUser = updatedAuthority.account_auths.length;
   for (let i = 0; i < totalAuthorizedUser; i++) {
     const user = updatedAuthority.account_auths[i];
@@ -386,9 +389,9 @@ export const removeAccountAuth = async (
   }
 
   const active =
-    role === KeychainKeyTypes.active ? updatedAuthority : undefined;
+    roleLC === KeychainKeyTypesLC.active ? updatedAuthority : undefined;
   const posting =
-    role === KeychainKeyTypes.posting ? updatedAuthority : undefined;
+    roleLC === KeychainKeyTypesLC.posting ? updatedAuthority : undefined;
 
   return await accountUpdate(key, {
     account: userAccount.name,
@@ -409,9 +412,10 @@ export const addKeyAuth = async (
     weight,
   }: RequestAddKeyAuthority,
 ) => {
+  const roleLC = role.toLowerCase() as KeychainKeyTypesLC;
+
   const userAccount = (await getClient().database.getAccounts([username]))[0];
-  const updatedAuthority =
-    userAccount[role.toLowerCase() as 'posting' | 'active'];
+  const updatedAuthority = userAccount[roleLC as 'posting' | 'active'];
 
   /** Release callback if the key already exist in the key_auths array */
   const authorizedKeys = updatedAuthority.key_auths.map((auth) => auth[0]);
@@ -422,20 +426,19 @@ export const addKeyAuth = async (
 
   /** Use weight_thresold as default weight */
   weight =
-    weight ||
-    userAccount[role.toLowerCase() as 'posting' | 'active'].weight_threshold;
+    weight || userAccount[roleLC as 'posting' | 'active'].weight_threshold;
   updatedAuthority.key_auths.push([authorizedKey, +weight]);
   updatedAuthority.key_auths.sort((a, b) =>
     (a[0] as string).localeCompare(b[0] as string),
   );
 
   const active =
-    role === KeychainKeyTypes.active ? updatedAuthority : undefined;
+    roleLC === KeychainKeyTypesLC.active ? updatedAuthority : undefined;
   const posting =
-    role === KeychainKeyTypes.posting ? updatedAuthority : undefined;
+    roleLC === KeychainKeyTypesLC.posting ? updatedAuthority : undefined;
 
   /** Add authority on user account */
-  accountUpdate(key, {
+  return accountUpdate(key, {
     account: userAccount.name,
     owner: undefined,
     active,
@@ -454,9 +457,9 @@ export const removeKeyAuth = async (
   }: RequestRemoveKeyAuthority,
 ) => {
   const userAccount = (await getClient().database.getAccounts([username]))[0];
+  const roleLC = role.toLowerCase() as KeychainKeyTypesLC;
 
-  const updatedAuthority =
-    userAccount[role.toLowerCase() as 'posting' | 'active'];
+  const updatedAuthority = userAccount[roleLC as 'posting' | 'active'];
   const totalAuthorizedKey = updatedAuthority.key_auths.length;
   for (let i = 0; i < totalAuthorizedKey; i++) {
     const user = updatedAuthority.key_auths[i];
@@ -472,11 +475,11 @@ export const removeKeyAuth = async (
   }
 
   const active =
-    role === KeychainKeyTypes.active ? updatedAuthority : undefined;
+    roleLC === KeychainKeyTypesLC.active ? updatedAuthority : undefined;
   const posting =
-    role === KeychainKeyTypes.posting ? updatedAuthority : undefined;
+    roleLC === KeychainKeyTypesLC.posting ? updatedAuthority : undefined;
 
-  accountUpdate(key, {
+  return accountUpdate(key, {
     account: userAccount.name,
     owner: undefined,
     active,

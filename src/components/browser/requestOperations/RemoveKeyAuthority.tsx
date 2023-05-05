@@ -36,7 +36,7 @@ const RemoveKeyAuthority = ({
       performOperation={async () => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
-        await removeKeyAuth(key, data);
+        return await removeKeyAuth(key, data);
       }}>
       <RequestItem
         title={translate('request.item.username')}
