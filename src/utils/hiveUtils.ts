@@ -1,4 +1,4 @@
-import {ExtendedAccount} from '@hiveio/dhive';
+import {Asset, ExtendedAccount} from '@hiveio/dhive';
 import {
   CollateralizedConversion,
   Delegator,
@@ -199,4 +199,9 @@ export const sanitizeAmount = (
   } else {
     return `${amount.replace(/,/g, '.')}`;
   }
+};
+
+export const getAccountPrice = async () => {
+  const price = await getClient().database.call('get_chain_properties', []);
+  return Asset.fromString(price.account_creation_fee.toString()).amount;
 };

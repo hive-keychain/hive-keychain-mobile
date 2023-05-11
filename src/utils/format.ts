@@ -110,3 +110,7 @@ export const addRandomToKeyString = (key: string, toFixed: number) => {
   const newKey = key + Math.random().toFixed(toFixed).toString();
   return newKey;
 };
+
+export const removeHtmlTags = (str: string) => {
+  return str.replace(/<(?:.|\n)*?>/gm, '');
+};

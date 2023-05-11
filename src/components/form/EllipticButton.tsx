@@ -4,6 +4,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -16,12 +17,19 @@ interface Props {
   title: string;
   onPress: () => void;
   disabled?: boolean;
+  additionalTextStyle?: StyleProp<TextStyle>;
 }
-export default ({style, isLoading = false, title, ...props}: Props) => {
+export default ({
+  style,
+  isLoading = false,
+  title,
+  additionalTextStyle,
+  ...props
+}: Props) => {
   const styles = getDimensionedStyles(useWindowDimensions());
   return !isLoading ? (
     <TouchableOpacity {...props} style={[styles.button, style]}>
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[styles.text, additionalTextStyle]}>{title}</Text>
     </TouchableOpacity>
   ) : (
     <View style={[style, styles.loader]}>

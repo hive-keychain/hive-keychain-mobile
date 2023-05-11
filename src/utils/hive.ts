@@ -1,5 +1,6 @@
 const hive = require('@hiveio/dhive');
 import {
+  AccountCreateOperation,
   AccountUpdateOperation,
   AccountWitnessProxyOperation,
   AccountWitnessVoteOperation,
@@ -61,6 +62,7 @@ export const setRpc = async (rpcObj: Rpc | string) => {
   client = new Client(rpc);
   hiveTx.config.node = rpc;
   if (typeof rpcObj !== 'string') {
+    //@ts-ignore
     client.chainId = Buffer.from(rpcObj.chainId || DEFAULT_CHAIN_ID);
     client.chainId.set(Buffer.from(rpcObj.chainId || DEFAULT_CHAIN_ID));
     hiveTx.config.chain_id = rpcObj.chainId || DEFAULT_CHAIN_ID;
@@ -112,7 +114,7 @@ export const broadcastJson = async (
     ],
   ]);
 };
-//TODO type obj
+
 export const sendToken = async (key: string, username: string, obj: object) => {
   const result = (await broadcastJson(
     key,
@@ -277,6 +279,13 @@ export const createClaimedAccount = async (
   obj: CreateClaimedAccountOperation[1],
 ) => {
   return await broadcast(key, [['create_claimed_account', obj]]);
+};
+
+export const createNewAccount = async (
+  key: string,
+  obj: AccountCreateOperation[1],
+) => {
+  return await broadcast(key, [['account_create', obj]]);
 };
 
 export const post = async (
