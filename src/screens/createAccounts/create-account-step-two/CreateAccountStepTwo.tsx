@@ -37,9 +37,6 @@ const DEFAULT_EMPTY_KEYS = {
   memo: {public: '', private: ''},
 } as GeneratedKeys;
 
-const DEFAULT_EXTRA_INFO_CLIPBOARD = (account: string) =>
-  `\n    Account creation date: ${new Date().toISOString()}\n    Created using account: ${account}`;
-
 const CreateAccountStepTwo = ({
   user,
   navigation,
@@ -123,6 +120,9 @@ const CreateAccountStepTwo = ({
     );
   };
 
+  const addExtraInfoToClipboard = (account: string) =>
+    `\n    Account creation date: ${new Date().toISOString()}\n    Created using account: @${account}`;
+
   const renderKeys = () => {
     return (
       <View style={styles.marginHorizontal}>
@@ -189,7 +189,7 @@ const CreateAccountStepTwo = ({
 
   const copyAllKeys = () => {
     Clipboard.setString(
-      generateKeysTextVersion() + DEFAULT_EXTRA_INFO_CLIPBOARD(user.name!),
+      generateKeysTextVersion() + addExtraInfoToClipboard(selectedAccount.name),
     );
     Toast.show(translate('toast.copied_text'));
   };
