@@ -30,7 +30,6 @@ export function prefetchImage(url: string) {
 export function isPrefetched(url: string) {
   return prefetchedImages[url] !== undefined;
 }
-
 const WhatsNew = ({navigation}: Props): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
   const locale = 'en'; // later use getUILanguage()
@@ -49,8 +48,9 @@ const WhatsNew = ({navigation}: Props): null => {
       .version.split('.')
       .splice(0, 2)
       .join('.');
-
-    if (
+    if (!lastVersionSeen) {
+      WhatsNewUtils.saveLastSeen();
+    } else if (
       extensionVersion !== lastVersionSeen &&
       versionLog.version === extensionVersion
     ) {
@@ -59,17 +59,19 @@ const WhatsNew = ({navigation}: Props): null => {
   };
 
   useEffect(() => {
-    if (whatsNewContent) {
-      for (const feature of whatsNewContent.features[locale]) {
-        prefetchImage(feature.image);
-      }
+    (async () => {
+      if (whatsNewContent) {
+        for (const feature of whatsNewContent.features[locale]) {
+          await prefetchImage(feature.image);
+        }
 
-      navigate('ModalScreen', {
-        name: 'Whats_new_popup',
-        modalContent: renderContent(),
-        onForceCloseModal: () => {},
-      });
-    }
+        navigate('ModalScreen', {
+          name: 'Whats_new_popup',
+          modalContent: renderContent(),
+          onForceCloseModal: () => {},
+        });
+      }
+    })();
   }, [whatsNewContent]);
 
   const finish = async () => {
