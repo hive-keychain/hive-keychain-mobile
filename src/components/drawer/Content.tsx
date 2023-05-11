@@ -8,8 +8,7 @@ import {lock} from 'actions/index';
 import DrawerFooter from 'components/drawer/Footer';
 import DrawerHeader from 'components/drawer/Header';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {StyleSheet, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
@@ -20,6 +19,8 @@ const hiddenRoutesInMain = [
   'CreateAccountScreen',
   'AddAccountStack',
   'AccountManagementScreen',
+  'WALLET',
+  'BrowserScreen',
 ];
 
 const HeaderContent = (props: Props) => {
@@ -64,8 +65,27 @@ const HeaderContent = (props: Props) => {
     <DrawerContentScrollView
       {...props}
       contentContainerStyle={styles.contentContainer}>
-      <ScrollView style={{flex: 1, height: '100%'}}>
+      <View style={{flex: 1, height: '100%'}}>
         <DrawerHeader username={user.name} />
+        <DrawerItem
+          {...props}
+          label={translate('navigation.wallet')}
+          onPress={() => {
+            navigation.navigate('WALLET');
+          }}
+          style={itemStyle}
+          focused={newState.index === 0 && !isAccountMenuExpanded}
+        />
+        <DrawerItem
+          {...props}
+          label={translate('navigation.browser')}
+          onPress={() => {
+            navigation.navigate('BrowserScreen');
+          }}
+          focused={newState.index === 1 && !isAccountMenuExpanded}
+          style={itemStyle}
+        />
+
         <DrawerItem
           {...props}
           label={translate('navigation.accounts')}
@@ -92,7 +112,7 @@ const HeaderContent = (props: Props) => {
         <DrawerItemList
           state={{
             ...newState,
-            index: isAccountMenuExpanded ? -1 : newState.index,
+            index: isAccountMenuExpanded ? -1 : newState.index - 2,
           }}
           navigation={navigation}
           itemStyle={itemStyle}
@@ -107,7 +127,7 @@ const HeaderContent = (props: Props) => {
           }}
         />
         <DrawerFooter user={user} />
-      </ScrollView>
+      </View>
     </DrawerContentScrollView>
   );
 };
