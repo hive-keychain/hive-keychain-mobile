@@ -2,20 +2,27 @@ import {
   clearHASState,
   showHASInitRequestAsTreated,
   updateInstanceConnectionStatus,
+  updateNonce,
 } from 'actions/hiveAuthenticationService';
 import assert from 'assert';
+import Crypto from 'crypto-js';
 import SimpleToast from 'react-native-simple-toast';
 import {HAS_State} from 'reducers/hiveAuthenticationService';
 import {RootState, store} from 'store';
 import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
-import {HAS_Session} from './has.types';
+import {HAS_Instance, HAS_Session} from './has.types';
 import {answerAuthReq} from './helpers/auth';
 import {prepareRegistrationChallenge} from './helpers/challenge';
 import {onMessageReceived} from './messages';
 import {processAuthenticationRequest} from './messages/authenticate';
-import {HAS_AuthPayload, HAS_SignPayload} from './payloads.types';
+import {
+  HAS_AuthPayload,
+  HAS_ChallengePayload,
+  HAS_PayloadType,
+  HAS_SignPayload,
+} from './payloads.types';
 
 let previousState: RootState = store.getState();
 
@@ -45,7 +52,7 @@ export const showHASInitRequest = (data: HAS_State) => {
     ) {
       continue;
     }
-    getHAS(host).connect(data.sessions);
+    getHAS(instance).connect(data.sessions);
     store.dispatch(showHASInitRequestAsTreated(host));
   }
   // Disconnect and remove instances if needed
@@ -78,11 +85,12 @@ export const restartHASSockets = () => {
 
 let has: HAS[] = [];
 
-export const getHAS = (host: string) => {
+export const getHAS = (instance: HAS_Instance) => {
   // Get Has instance by host or create it
+  const host = instance.host;
   const existing_has = has.find((e) => e.host === host);
   if (!existing_has) {
-    const new_HAS = new HAS(host);
+    const new_HAS = new HAS(instance);
     has.push(new_HAS);
     return new_HAS;
   } else return existing_has;
@@ -91,12 +99,14 @@ export const getHAS = (host: string) => {
 class HAS {
   ws: WebSocket = null;
   host: string = null;
+  version: string = null;
   awaitingRegistration: string[] = [];
   registeredAccounts: string[] = [];
   awaitingAuth: HAS_AuthPayload[] = [];
 
-  constructor(host: string) {
+  constructor({host, version}: HAS_Instance) {
     this.host = host;
+    this.version = version;
     this.initConnection();
   }
 
@@ -184,6 +194,7 @@ class HAS {
   };
 
   onMessage = (event: WebSocketMessageEvent) => {
+    console.log('message', event);
     onMessageReceived(event, this);
   };
 
@@ -233,6 +244,39 @@ class HAS {
       },
     );
   };
+
+  static findSessionByDecryption(
+    payload: HAS_SignPayload | HAS_ChallengePayload | HAS_AuthPayload,
+  ) {
+    // Check if the account is managed by the PKSA
+
+    const sessions = (store.getState() as RootState).hive_authentication_service.sessions.filter(
+      (e) => e.account === payload.account && e.token?.expiration > Date.now(),
+    );
+    for (const session of sessions) {
+      try {
+        const data = JSON.parse(
+          Crypto.AES.decrypt(payload.data, session.auth_key).toString(
+            Crypto.enc.Utf8,
+          ),
+        );
+        if (data !== '') {
+          if (payload.cmd !== HAS_PayloadType.AUTH) {
+            // Decryption succeeded, check payload against replay attack
+            assert(data.nonce > (session.nonce || 0), 'invalid (nonce)');
+            // update auth in local storage with current nonce
+            store.dispatch(updateNonce(session.uuid, data.nonce));
+          }
+          return {session, data};
+        }
+      } catch (e) {
+        if (e.code === 'ERR_ASSERTION') throw e;
+        console.debug(e.stack);
+      }
+    }
+
+    return undefined;
+  }
 }
 
 export default HAS;

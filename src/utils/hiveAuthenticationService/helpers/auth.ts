@@ -1,11 +1,16 @@
 import {addSessionToken} from 'actions/hiveAuthenticationService';
+import {AssertionError} from 'assert';
 import {SessionTime} from 'components/hive_authentication_service/Auth';
 import Crypto from 'crypto-js';
 import uuid from 'react-native-uuid';
-import {store} from 'store';
+import {RootState, store} from 'store';
 import HAS from '..';
 import {HAS_Session} from '../has.types';
-import {HAS_AuthChallengeData, HAS_AuthPayload} from '../payloads.types';
+import {
+  HAS_AuthChallengeData,
+  HAS_AuthDecrypted,
+  HAS_AuthPayload,
+} from '../payloads.types';
 import {dAppChallenge, getChallengeData} from './challenge';
 
 export const answerAuthReq = async (
@@ -113,4 +118,61 @@ export const sendAuth = async (
       data,
     }),
   );
+};
+
+export const validateAuthPayloadAndGetData = (
+  has: HAS,
+  payload: HAS_AuthPayload,
+) => {
+  const version = parseInt(has.version);
+  let session, data: HAS_AuthDecrypted;
+  console.log('version', version);
+  if (!version) {
+    // session = HAS.findSessionByToken(payload.token);
+    // if (!session) {
+    //   session = HAS.findSessionByUUID(payload.uuid);
+    //   console.log('tried uuid', payload.uuid);
+    // }
+    // console.log('session', session);
+
+    // data = JSON.parse(
+    //   Crypto.AES.decrypt(payload.data, session.auth_key).toString(
+    //     Crypto.enc.Utf8,
+    //   ),
+    // );
+    console.log('hereeeee');
+    console.log(
+      payload,
+      (store.getState() as RootState).hive_authentication_service.sessions,
+    );
+    session = HAS.findSessionByToken(payload.token);
+    console.log('hereeeee sess', session);
+
+    if (!session) {
+      session = HAS.findSessionByUUID(payload.uuid);
+      console.log('hereeeee sess2', session);
+    }
+    if (!session) return {session, data};
+
+    data = JSON.parse(
+      Crypto.AES.decrypt(payload.data, session.auth_key).toString(
+        Crypto.enc.Utf8,
+      ),
+    );
+  } else if (version === 1) {
+    const result = HAS.findSessionByDecryption(payload);
+    if (result) {
+      session = result.session;
+      data = result.data;
+    }
+    if (!session) {
+      session = HAS.findSessionByUUID(payload.uuid);
+      data = JSON.parse(
+        Crypto.AES.decrypt(payload.data, session.auth_key).toString(
+          Crypto.enc.Utf8,
+        ),
+      );
+    }
+  } else new AssertionError({message: 'Invalid server version'});
+  return {session, data};
 };

@@ -1,38 +1,34 @@
 import {removeHASSession} from 'actions/hiveAuthenticationService';
-import assert from 'assert';
 import Crypto from 'crypto-js';
 import {store} from 'store';
 import {ModalComponent} from 'utils/modal.enum';
 import {goBack, navigate} from 'utils/navigation';
 import HAS from '..';
-import {answerAuthReq, sendAuth} from '../helpers/auth';
-import {HAS_AuthDecrypted, HAS_AuthPayload} from '../payloads.types';
+import {
+  answerAuthReq,
+  sendAuth,
+  validateAuthPayloadAndGetData,
+} from '../helpers/auth';
+import {HAS_AuthPayload} from '../payloads.types';
 
 export const processAuthenticationRequest = (
   has: HAS,
   payload: HAS_AuthPayload,
 ) => {
   HAS.checkPayload(payload);
-
-  let accountSession = HAS.findSessionByToken(payload.token);
-  if (!accountSession) {
-    accountSession = HAS.findSessionByUUID(payload.uuid);
-  }
-  if (!accountSession) {
+  console.log('hoho');
+  const {session, data} = validateAuthPayloadAndGetData(has, payload);
+  if (!session) {
     has.awaitingAuth.push(payload);
     return;
   }
-  assert(accountSession, 'This account has not been connected through HAS.');
-  const data: HAS_AuthDecrypted = JSON.parse(
-    Crypto.AES.decrypt(payload.data, accountSession.auth_key).toString(
-      Crypto.enc.Utf8,
-    ),
-  );
+  console.log('hi', session, data);
   payload.decryptedData = data;
-  if (accountSession.token) {
-    sendAuth(has, payload, accountSession, {
-      token: accountSession.token.token,
-      expire: accountSession.token.expiration,
+
+  if (session.token) {
+    sendAuth(has, payload, session, {
+      token: session.token.token,
+      expire: session.token.expiration,
     });
   } else {
     navigate('ModalScreen', {
@@ -42,13 +38,13 @@ export const processAuthenticationRequest = (
         has,
         callback: answerAuthReq,
         onExpire: () => {
-          store.dispatch(removeHASSession(accountSession.uuid));
+          store.dispatch(removeHASSession(session.uuid));
           goBack();
         },
         onForceCloseModal: () => {
           const challenge = Crypto.AES.encrypt(
             payload.uuid,
-            accountSession.auth_key,
+            session.auth_key,
           ).toString();
           has.send(
             JSON.stringify({
@@ -57,7 +53,7 @@ export const processAuthenticationRequest = (
               data: challenge,
             }),
           );
-          store.dispatch(removeHASSession(accountSession.uuid));
+          store.dispatch(removeHASSession(session.uuid));
           goBack();
         },
       },

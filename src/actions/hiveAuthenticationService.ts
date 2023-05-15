@@ -30,6 +30,13 @@ export const addServerKey = (host: string, server_key: string) => {
   };
 };
 
+export const addServerVersion = (host: string, version: string) => {
+  return {
+    type: HAS_ActionsTypes.ADD_SERVER_VERSION,
+    payload: {host, version},
+  };
+};
+
 export const updateInstanceConnectionStatus = (
   host: string,
   connected: boolean,
@@ -60,5 +67,12 @@ export const addWhitelistedOperationToSession = (
   return {
     type: HAS_ActionsTypes.ADD_WHITELISTED_OPERATION,
     payload: {uuid, operation},
+  };
+};
+
+export const updateNonce = (uuid: string, nonce: number) => {
+  return {
+    type: HAS_ActionsTypes.UPDATE_NONCE,
+    payload: {uuid, nonce},
   };
 };

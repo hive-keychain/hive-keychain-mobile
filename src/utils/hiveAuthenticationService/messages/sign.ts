@@ -1,8 +1,6 @@
 import {CommentOperation, VoteOperation} from '@hiveio/dhive';
 import {addWhitelistedOperationToSession} from 'actions/hiveAuthenticationService';
 import {KeyTypes} from 'actions/interfaces';
-import assert from 'assert';
-import Crypto from 'crypto-js';
 import SimpleToast from 'react-native-simple-toast';
 import {RootState, store} from 'store';
 import {getRequiredWifType} from 'utils/keychain';
@@ -24,6 +22,7 @@ import HAS from '..';
 import {
   answerFailedBroadcastReq,
   answerSuccessfulBroadcastReq,
+  validatePayloadAndGetData,
 } from '../helpers/sign';
 import {
   HAS_BroadcastModalPayload,
@@ -37,23 +36,12 @@ export const processSigningRequest = async (
 ) => {
   try {
     HAS.checkPayload(payload);
-    const session = HAS.findSessionByToken(payload.token);
-    assert(session, 'This account has not been connected through HAS.');
-    const auth =
-      session.token.token === payload.token &&
-      session.token.expiration > Date.now()
-        ? session.token
-        : undefined;
-
-    assert(auth, 'Token invalid or expired');
-    // Decrypt the ops to sign with the encryption key associated to the token.
-    const opsData: HAS_SignDecrypted = JSON.parse(
-      Crypto.AES.decrypt(payload.data, session.auth_key).toString(
-        Crypto.enc.Utf8,
-      ),
+    const {session, data} = validatePayloadAndGetData<HAS_SignDecrypted>(
+      has,
+      payload,
     );
-    const {ops, key_type} = opsData;
-    payload.decryptedData = opsData;
+    const {ops, key_type} = data;
+    payload.decryptedData = data;
     let request: KeychainRequest;
     if (ops.length === 1) {
       let op = ops[0];
@@ -61,7 +49,7 @@ export const processSigningRequest = async (
         case 'vote':
           const voteOperation = (op as VoteOperation)[1];
           request = {
-            domain: auth.app,
+            domain: session.token.app,
             type: KeychainRequestTypes.vote,
             username: payload.account,
             permlink: voteOperation.permlink,
@@ -72,7 +60,7 @@ export const processSigningRequest = async (
         case 'comment':
           const commentOperation = (op as CommentOperation)[1];
           request = {
-            domain: auth.app,
+            domain: session.token.app,
             type: KeychainRequestTypes.post,
             username: payload.account,
             permlink: commentOperation.permlink,
@@ -85,7 +73,7 @@ export const processSigningRequest = async (
           break;
         default:
           request = {
-            domain: auth.app,
+            domain: session.token.app,
             type: KeychainRequestTypes.broadcast,
             username: payload.account,
             operations: ops,
@@ -95,7 +83,7 @@ export const processSigningRequest = async (
       }
     } else {
       request = {
-        domain: auth.app,
+        domain: session.token.app,
         type: KeychainRequestTypes.broadcast,
         username: payload.account,
         operations: ops,

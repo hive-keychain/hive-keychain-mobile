@@ -72,6 +72,7 @@ export type HAS_SignDecrypted = {
   key_type: KeyTypes;
   ops: Operation[];
   broadcast: boolean;
+  nonce: number;
 };
 
 export type HAS_BroadcastModalPayload = {
@@ -92,6 +93,7 @@ export type HAS_AuthChallengeData = {
 // Others
 export type HAS_ConnectedPayload = {
   cmd: HAS_PayloadType.CONNECTED;
+  version: string;
 };
 
 export type HAS_ErrorPayload = {

@@ -1,4 +1,7 @@
-import {addServerKey} from 'actions/hiveAuthenticationService';
+import {
+  addServerKey,
+  addServerVersion,
+} from 'actions/hiveAuthenticationService';
 import {store} from 'store';
 import HAS from '..';
 import {HAS_Payload, HAS_PayloadType} from '../payloads.types';
@@ -19,7 +22,8 @@ export const onMessageReceived = async (
     switch (payload.cmd) {
       // Process HAS <-> PKSA protocol
       case HAS_PayloadType.CONNECTED:
-        // connection confirmation from the HAS
+        store.dispatch(addServerVersion(has.host, payload.version));
+        has.version = payload.version;
         return;
       case HAS_PayloadType.ERROR:
         // error from the HAS

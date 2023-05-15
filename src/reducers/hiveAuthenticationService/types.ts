@@ -23,6 +23,11 @@ export type HAS_AddServerKey = {
   payload: {host: string; server_key: string};
 };
 
+export type HAS_AddServerVersion = {
+  type: HAS_ActionsTypes.ADD_SERVER_VERSION;
+  payload: {host: string; version: string};
+};
+
 export type HAS_Clear = {
   type: HAS_ActionsTypes.CLEAR;
 };
@@ -42,11 +47,18 @@ export type HAS_AddWhitelistedOperation = {
   payload: {uuid: string; operation: KeychainRequestTypes};
 };
 
+export type HAS_UpdateNonce = {
+  type: HAS_ActionsTypes.UPDATE_NONCE;
+  payload: {uuid: string; nonce: number};
+};
+
 export type HAS_Actions =
   | HAS_Connect
   | HAS_Treated
   | HAS_AddToken
   | HAS_AddServerKey
+  | HAS_AddServerVersion
+  | HAS_UpdateNonce
   | HAS_Clear
   | HAS_UpdateInstanceConnectionStatus
   | HAS_RemoveSession

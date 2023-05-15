@@ -72,6 +72,20 @@ export default (
         ],
       };
     }
+    case HAS_ActionsTypes.ADD_SERVER_VERSION: {
+      const instance = state.instances.find(
+        (e) => e.host === data.payload.host,
+      );
+      instance.init = true;
+      instance.version = data.payload.version;
+      return {
+        ...state,
+        instances: [
+          ...state.instances.filter((e) => e.host !== data.payload.host),
+          instance,
+        ],
+      };
+    }
     case HAS_ActionsTypes.CLEAR:
       return {sessions: [], instances: []};
     case HAS_ActionsTypes.UPDATE_INSTANCE_CONNECTION_STATUS:
@@ -104,6 +118,13 @@ export default (
       const sessions = state.sessions;
       const index = sessions.findIndex((e) => e.uuid === data.payload.uuid);
       sessions[index]?.whitelist.push(data.payload.operation);
+      return {instances, sessions};
+    }
+    case HAS_ActionsTypes.UPDATE_NONCE: {
+      const instances = state.instances;
+      const sessions = state.sessions;
+      const index = sessions.findIndex((e) => e.uuid === data.payload.uuid);
+      sessions[index].nonce = data.payload.nonce;
       return {instances, sessions};
     }
     default:
