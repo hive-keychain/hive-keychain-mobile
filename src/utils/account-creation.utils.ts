@@ -70,12 +70,13 @@ const createAccount = async (
       break;
     }
     case AccountCreationType.USING_TICKET: {
-      success = await createAccountUsingTicket(
-        authorities,
-        newUsername,
-        parentUsername,
-        parentActiveKey,
-      );
+      success = await createClaimedAccount(parentActiveKey, {
+        creator: parentUsername,
+        new_account_name: newUsername,
+        json_metadata: '{}',
+        extensions: [],
+        ...authorities,
+      });
       break;
     }
   }
@@ -95,54 +96,6 @@ const createAccount = async (
     return false;
   }
 };
-
-const createAccountUsingTicket = async (
-  authorities: AccountAuthorities,
-  newUsername: string,
-  parentUsername: string,
-  parentActiveKey: Key,
-) => {
-  return createClaimedAccount(parentActiveKey, {
-    creator: parentUsername,
-    new_account_name: newUsername,
-    json_metadata: '{}',
-    extensions: [],
-    ...authorities,
-  });
-};
-//TODO check if needed or remove
-// /* istanbul ignore next */
-// const getCreateClaimedAccountOperation = (
-//   authorities: AccountAuthorities,
-//   newUsername: string,
-//   parentUsername: string,
-// ) => {
-//   const extensions: any[] = [];
-//   return [
-//     'create_claimed_account',
-//     {
-//       creator: parentUsername,
-//       new_account_name: newUsername,
-//       json_metadata: '{}',
-//       extensions: extensions,
-//       ...authorities,
-//     },
-//   ] as CreateClaimedAccountOperation;
-// };
-// /* istanbul ignore next */
-// const getCreateClaimedAccountTransaction = (
-//   authorities: AccountAuthorities,
-//   newUsername: string,
-//   parentUsername: string,
-// ) => {
-//   return HiveTxUtils.createTransaction([
-//     AccountCreationUtils.getCreateClaimedAccountOperation(
-//       authorities,
-//       newUsername,
-//       parentUsername,
-//     ),
-//   ]);
-// };
 
 const createPayingAccount = async (
   authorities: AccountAuthorities,
@@ -182,34 +135,11 @@ const generateAccountAuthorities = (
     memo_key: keys.memo.public,
   };
 };
-// /* istanbul ignore next */
-// const setRecoveryAccountOperation = (
-//   accountName: string,
-//   newRecoveryAccount: string,
-//   ownerKey: string,
-// ) => {
-//   return HiveTxUtils.sendOperation(
-//     [
-//       [
-//         'change_recovery_account',
-//         {
-//           account_to_recover: accountName,
-//           new_recovery_account: newRecoveryAccount,
-//           extensions: [],
-//         },
-//       ] as ChangeRecoveryAccountOperation,
-//     ],
-//     ownerKey as Key,
-//   );
-// };
 
 export const AccountCreationUtils = {
   checkAccountNameAvailable,
   generateMasterKey,
   validateUsername,
   createAccount,
-  // setRecoveryAccountOperation,
   generateAccountAuthorities,
-  // getCreateClaimedAccountOperation,
-  // getCreateClaimedAccountTransaction,
 };
