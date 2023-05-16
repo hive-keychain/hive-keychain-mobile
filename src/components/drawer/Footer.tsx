@@ -10,10 +10,11 @@ import {translate} from 'utils/localize';
 export default ({user}: {user: ActiveAccount}) => {
   const showVoteForWitness = () => {
     if (
+      !user.account.name ||
       user.account.proxy?.length ||
-      (user.account.witness_votes &&
-        user.account.witness_votes.includes('stoodkev') &&
-        user.account.witness_votes.includes('cedricguillas'))
+      (user.account?.witness_votes &&
+        user.account.witness_votes?.includes('stoodkev') &&
+        user.account.witness_votes?.includes('cedricguillas'))
     )
       return <></>;
     else {
