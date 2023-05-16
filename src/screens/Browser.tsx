@@ -12,10 +12,11 @@ import {
   updateTab,
 } from 'actions/index';
 import Browser from 'components/browser';
+import ProposalReminder from 'components/popups/proposal-reminder';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React from 'react';
 import Orientation from 'react-native-orientation-locker';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 
 const BrowserScreen = ({
@@ -55,24 +56,27 @@ const BrowserScreen = ({
   // }, [navigation]);
 
   return (
-    <Browser
-      accounts={accounts}
-      navigation={navigation}
-      route={route}
-      browser={browser}
-      changeTab={changeTab}
-      addTab={addTab}
-      updateTab={updateTab}
-      closeTab={closeTab}
-      closeAllTabs={closeAllTabs}
-      addToHistory={addToHistory}
-      clearHistory={clearHistory}
-      addToFavorites={addToFavorites}
-      removeFromFavorites={removeFromFavorites}
-      setBrowserFocus={setBrowserFocus}
-      showManagementScreen={showManagementScreen}
-      preferences={preferences}
-    />
+    <>
+      <Browser
+        accounts={accounts}
+        navigation={navigation}
+        route={route}
+        browser={browser}
+        changeTab={changeTab}
+        addTab={addTab}
+        updateTab={updateTab}
+        closeTab={closeTab}
+        closeAllTabs={closeAllTabs}
+        addToHistory={addToHistory}
+        clearHistory={clearHistory}
+        addToFavorites={addToFavorites}
+        removeFromFavorites={removeFromFavorites}
+        setBrowserFocus={setBrowserFocus}
+        showManagementScreen={showManagementScreen}
+        preferences={preferences}
+      />
+      <ProposalReminder navigation={navigation} />
+    </>
   );
 };
 

@@ -632,7 +632,7 @@
   },
   "drawerFooter": {
     "madeBy": "Made with ❤ by Keychain Team",
-    "vote": "Vote @stoodkev for Witness",
+    "vote": "Vote @{{account}} for Witness",
     "thanks": "Thanks for your support ❤",
     "error30": "You already vote for 30 witnesses. You will need to unvote one to vote for a new one.",
     "errorActive": "You need an active key to vote for witnesses",
