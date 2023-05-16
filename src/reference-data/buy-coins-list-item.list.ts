@@ -1,5 +1,5 @@
-import Config from 'src/config';
 import {BuyCoinType} from 'src/enums/operations.enum';
+import {TransakConfig} from 'utils/config';
 
 export const BuyCoinsListItem = (type: BuyCoinType, username: string) => {
   switch (type) {
@@ -9,7 +9,7 @@ export const BuyCoinsListItem = (type: BuyCoinType, username: string) => {
           {
             name: 'Transak',
             image: 'transak.svg',
-            link: `https://global.transak.com?apiKey=${Config.transak.apiKey}&defaultCryptoCurrency=HIVE&exchangeScreenTitle=Buy%20HIVEs&isFeeCalculationHidden=true&walletAddress=${username}`,
+            link: `https://global.transak.com?apiKey=${TransakConfig.apiKey}&defaultCryptoCurrency=HIVE&exchangeScreenTitle=Buy%20HIVEs&isFeeCalculationHidden=true&walletAddress=${username}`,
             description: 'html_popup_transak_description',
           },
           {
