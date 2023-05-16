@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import {addTab} from 'actions/browser';
 import EllipticButton from 'components/form/EllipticButton';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect} from 'react';
-import {Image, Linking, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
@@ -10,7 +11,6 @@ import {RootState} from 'store';
 import {toHP} from 'utils/format';
 import {getClient, updateProposalVote} from 'utils/hive';
 import {navigate} from 'utils/navigation';
-
 interface Props {
   navigation: BrowserNavigation;
 }
@@ -28,7 +28,6 @@ const hasVotedForProposal = async (
     'list_proposal_votes',
     [[proposalId, username], 1, 'by_proposal_voter', 'ascending', 'all'],
   );
-  console.log('p', listProposalVotes[0].voter === username);
   return listProposalVotes[0].voter === username;
 };
 const getNotifiedVoters = async (): Promise<string[]> => {
@@ -37,8 +36,6 @@ const getNotifiedVoters = async (): Promise<string[]> => {
       '[]',
   );
 };
-
-AsyncStorage.removeItem(KeychainStorageKeyEnum.PROPOSAL_NOTIFIED);
 
 const addNotifiedVoter = async (name: string) => {
   await AsyncStorage.setItem(
@@ -51,20 +48,19 @@ const ProposalReminder = ({
   navigation,
   user,
   globalProps,
+  addTab,
 }: Props & PropsFromRedux): null => {
   useEffect(() => {
     checkIfShouldNotify();
   }, [user]);
-
   const checkIfShouldNotify = async () => {
-    const NOTIFIED = await getNotifiedVoters();
-
+    const notified = await getNotifiedVoters();
     if (
-      !NOTIFIED.includes(user.name) &&
+      !notified.includes(user.name) &&
       !user.account.proxy.length &&
       toHP(user.account.vesting_shares.toString(), globalProps) > 100 &&
       !(await hasVotedForProposal(user.name, KEYCHAIN_PROPOSAL))
-    )
+    ) {
       Image.prefetch(IMAGE_URI).then((val) => {
         navigate('ModalScreen', {
           name: 'Whats_new_popup',
@@ -72,6 +68,7 @@ const ProposalReminder = ({
           onForceCloseModal: () => {},
         });
       });
+    }
   };
 
   const renderContent = () => {
@@ -85,29 +82,58 @@ const ProposalReminder = ({
           }}
         />
         <Text style={styles.text}>
+          Hive Keychain is developed thanks to our community support through the
+          Decentralized Hive Fund.
+        </Text>
+        <Text style={styles.text}>
           We need your help to continue our work on Hive Keychain Apps and
-          extensions. Please consider supporting our DHF proposal.
+          extensions. Please consider supporting our DHF proposal with your
+          vote.
+        </Text>
+        <Text style={styles.text}>
+          Read more{' '}
+          <Text
+            style={{color: 'black', fontWeight: 'bold'}}
+            onPress={() => {
+              addNotifiedVoter(user.name);
+              addTab(`https://peakd.com/proposals/${KEYCHAIN_PROPOSAL}`);
+              navigation.navigate('BrowserScreen');
+            }}>
+            here
+          </Text>
+          .
         </Text>
         <View
           style={{
-            flex: 1,
+            width: '100%',
             flexDirection: 'row',
-            justifyContent: 'space-around',
-            marginTop: 40,
+            justifyContent: 'space-between',
+            marginTop: 10,
           }}>
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 100,
+            }}>
+            <Text
+              style={{
+                fontSize: 14,
+                textAlign: 'center',
+                fontWeight: 'bold',
+                textDecorationColor: 'black',
+                textDecorationLine: 'underline',
+              }}
+              onPress={() => {
+                addNotifiedVoter(user.name);
+                navigation.navigate('BrowserScreen');
+              }}>
+              I won't support
+            </Text>
+          </View>
           <EllipticButton
-            title="Read"
-            style={{width: 100}}
-            onPress={() => {
-              addNotifiedVoter(user.name);
-              navigation.navigate('BrowserScreen');
-              Linking.openURL(
-                `https://peakd.com/proposals/${KEYCHAIN_PROPOSAL}`,
-              );
-            }}></EllipticButton>
-          <EllipticButton
-            style={{width: 150}}
-            title="Support"
+            style={{width: 170}}
+            title="Vote for Proposal"
             onPress={() => {
               addNotifiedVoter(user.name);
               updateProposalVote(user.keys.active, {
@@ -139,7 +165,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  text: {fontSize: 16},
+  text: {fontSize: 16, marginBottom: 10},
   image: {
     marginBottom: 30,
     aspectRatio: 1.6,
@@ -155,6 +181,6 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps);
+const connector = connect(mapStateToProps, {addTab});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(ProposalReminder);
