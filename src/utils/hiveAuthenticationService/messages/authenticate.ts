@@ -16,13 +16,11 @@ export const processAuthenticationRequest = (
   payload: HAS_AuthPayload,
 ) => {
   HAS.checkPayload(payload);
-  console.log('hoho');
   const {session, data} = validateAuthPayloadAndGetData(has, payload);
   if (!session) {
     has.awaitingAuth.push(payload);
     return;
   }
-  console.log('hi', session, data);
   payload.decryptedData = data;
 
   if (session.token) {

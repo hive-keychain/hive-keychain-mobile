@@ -14,7 +14,6 @@ export const processChallengeRequest = (
   has: HAS,
   payload: HAS_ChallengePayload,
 ) => {
-  console.log('challenge');
   const {session, data} = validatePayloadAndGetData<HAS_ChallengeDecryptedData>(
     has,
     payload,

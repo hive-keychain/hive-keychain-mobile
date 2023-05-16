@@ -3,7 +3,7 @@ import {AssertionError} from 'assert';
 import {SessionTime} from 'components/hive_authentication_service/Auth';
 import Crypto from 'crypto-js';
 import uuid from 'react-native-uuid';
-import {RootState, store} from 'store';
+import {store} from 'store';
 import HAS from '..';
 import {HAS_Session} from '../has.types';
 import {
@@ -126,31 +126,11 @@ export const validateAuthPayloadAndGetData = (
 ) => {
   const version = parseInt(has.version);
   let session, data: HAS_AuthDecrypted;
-  console.log('version', version);
   if (!version) {
-    // session = HAS.findSessionByToken(payload.token);
-    // if (!session) {
-    //   session = HAS.findSessionByUUID(payload.uuid);
-    //   console.log('tried uuid', payload.uuid);
-    // }
-    // console.log('session', session);
-
-    // data = JSON.parse(
-    //   Crypto.AES.decrypt(payload.data, session.auth_key).toString(
-    //     Crypto.enc.Utf8,
-    //   ),
-    // );
-    console.log('hereeeee');
-    console.log(
-      payload,
-      (store.getState() as RootState).hive_authentication_service.sessions,
-    );
     session = HAS.findSessionByToken(payload.token);
-    console.log('hereeeee sess', session);
 
     if (!session) {
       session = HAS.findSessionByUUID(payload.uuid);
-      console.log('hereeeee sess2', session);
     }
     if (!session) return {session, data};
 
