@@ -5,7 +5,9 @@ import Plus from 'assets/wallet/icon_deposit.svg';
 import HistoryIcon from 'assets/wallet/icon_history.svg';
 import Power from 'assets/wallet/icon_power.svg';
 import SendArrow from 'assets/wallet/icon_send.svg';
+import ShoppingCartIconWhite from 'assets/wallet/icon_shopping_cart_white.svg';
 import Minus from 'assets/wallet/icon_withdraw.svg';
+import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savings-withdrawal-page.component';
 import Convert from 'components/operations/Convert';
 import Delegation from 'components/operations/Delegation';
 import {HistoryProps} from 'components/operations/History';
@@ -14,7 +16,9 @@ import PowerUp from 'components/operations/PowerUp';
 import Transfer from 'components/operations/Transfer';
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {navigate} from 'utils/navigation';
+import BuyCoinsComponent, {BuyCoinsprops} from './Buy-coins.component';
 import MoreTokenInfo, {MoreInfoTokenProps} from './MoreTokenInfo';
 import Savings, {SavingsOperations} from './Savings';
 import {TokensHistoryComponent} from './Tokens-history';
@@ -179,6 +183,32 @@ export const SendDeposit = ({currency}: {currency: string}) => {
   );
 };
 
+export const PendingSavingsWithdraw = ({
+  currentWithdrawingList,
+  children,
+}: {
+  currentWithdrawingList: SavingsWithdrawal[];
+  children: JSX.Element;
+}) => {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: 'CancelSavingsWithdraw',
+          modalContent: (
+            <PendingSavingsWithdrawalPageComponent
+              operation={SavingsOperations.deposit}
+              currency={'HBD'}
+              currentWithdrawingList={currentWithdrawingList}
+            />
+          ),
+        });
+      }}>
+      {children}
+    </TouchableOpacity>
+  );
+};
+
 export const ShowHistory = (props: HistoryProps) => {
   return (
     <RoundButton
@@ -206,10 +236,27 @@ export const ShowMoreTokenInfo = (props: MoreInfoTokenProps) => {
         });
       }}
       size={36}
-      backgroundColor="#c0ccd0"
+      backgroundColor="#32393c"
       content={<AddIconWhite />}
     />
   ) : null;
+};
+
+export const BuyCoins = (props: BuyCoinsprops) => {
+  return (
+    <RoundButton
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: 'BuyCoinsInfo',
+          modalContent: <BuyCoinsComponent {...props} />,
+          fixedHeight: 0.75,
+        });
+      }}
+      size={36}
+      backgroundColor={props.iconColor}
+      content={<ShoppingCartIconWhite />}
+    />
+  );
 };
 
 const getStyleSheet = (size: number, backgroundColor: string) =>

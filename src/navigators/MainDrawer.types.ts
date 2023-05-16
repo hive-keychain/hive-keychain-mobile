@@ -4,9 +4,11 @@ import {StackNavigationProp} from '@react-navigation/stack';
 export type MainDrawerStackParam = {
   WALLET: undefined;
   BrowserScreen: {icon: string};
+  Accounts: undefined;
   AccountManagementScreen: undefined;
   AddAccountStack: undefined;
   AddAccountByAuth: undefined;
+  CreateAccountScreen: undefined;
   SettingsScreen: undefined;
   ABOUT: undefined;
   Governance: undefined;

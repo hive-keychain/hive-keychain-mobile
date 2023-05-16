@@ -9,7 +9,7 @@ import {
 } from 'src/interfaces/tokens.interface';
 import {RootState, store} from 'store';
 import {decodeMemoIfNeeded} from 'utils/hiveEngine';
-import {ActionPayload} from './interfaces'; //TODO check this: removed Token, TokenBalance, TokenMarket
+import {ActionPayload} from './interfaces';
 import {
   CLEAR_TOKEN_HISTORY,
   CLEAR_USER_TOKENS,

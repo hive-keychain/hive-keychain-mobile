@@ -12,6 +12,10 @@ export const HASConfig = {
   socket: 'wss://hive-auth.arcange.eu',
 };
 
+export const TransakConfig = {
+  apiKey: '716078e4-939c-445a-8c6d-534614cd31b1',
+};
+
 export type DApp = {
   name: string;
   description: string;

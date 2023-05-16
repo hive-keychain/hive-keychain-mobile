@@ -41,13 +41,13 @@ export default ({
         const requestid =
           Math.max(...conversions.map((e) => e.requestid), 0) + 1;
         if (!collaterized) {
-          await convert(key, {
+          return await convert(key, {
             owner: username,
             amount: `${amount} HBD`,
             requestid,
           });
         } else {
-          await collateralizedConvert(key, {
+          return await collateralizedConvert(key, {
             owner: username,
             amount: `${amount} HIVE`,
             requestid,

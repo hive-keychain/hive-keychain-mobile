@@ -38,7 +38,7 @@ const AddAccountAuthority = ({
       performOperation={async () => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
-        await addAccountAuth(key, data);
+        return await addAccountAuth(key, data);
       }}>
       <RequestItem
         title={translate('request.item.username')}

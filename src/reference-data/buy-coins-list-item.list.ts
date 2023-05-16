@@ -1,0 +1,99 @@
+import {BuyCoinType} from 'src/enums/operations.enum';
+import {TransakConfig} from 'utils/config';
+
+export const BuyCoinsListItem = (type: BuyCoinType, username: string) => {
+  switch (type) {
+    case BuyCoinType.BUY_HIVE:
+      return {
+        list: [
+          {
+            name: 'Transak',
+            image: 'transak.svg',
+            link: `https://global.transak.com?apiKey=${TransakConfig.apiKey}&defaultCryptoCurrency=HIVE&exchangeScreenTitle=Buy%20HIVEs&isFeeCalculationHidden=true&walletAddress=${username}`,
+            description: 'html_popup_transak_description',
+          },
+          {
+            name: 'Blocktrades',
+            image: 'blocktrades.svg',
+            link: `https://blocktrades.us/en/trade?affiliate_id=dfccdbcb-6093-4e4a-992d-689bf46e2523&input_coin_type=btc&output_coin_type=hive&output_coin_amount=10&receive_address=${username}`,
+            description: 'html_popup_blocktrades_description',
+          },
+        ],
+        exchanges: [
+          {
+            titleKey: 'wallet.operations.buy_coins.title_exchanges',
+          },
+          // {
+          //   image: 'bittrex.png',
+          //   link: 'https://global.bittrex.com/Market/Index?MarketName=BTC-HIVE',
+          // },
+          {
+            image: 'binance.svg',
+            link: 'https://www.binance.com/en/trade/HIVE_BTC',
+          },
+          {
+            image: 'upbit.svg',
+            link: 'https://id.upbit.com/exchange?code=CRIX.UPBIT.BTC-HIVE',
+          },
+          {image: 'gateio.svg', link: 'https://www.gate.io/trade/HIVE_USDT'},
+          // { image: 'bkex.png', link: 'https://www.bkex.com/trade/HIVE_USDT' },
+          // {
+          //   image: 'bithumb.png',
+          //   link: 'https://en.bithumb.com/trade/order/HIVE_KRW',
+          // },
+          {
+            image: 'ionomy.svg',
+            link: 'https://exchange.ionomy.com/en/markets/btc-hive',
+          },
+          {
+            image: 'huobi.svg',
+            link: 'https://www.huobi.com/en-us/exchange/hive_usdt/',
+          },
+          {
+            image: 'mexc.svg',
+            link: 'https://www.mexc.com/exchange/HIVE_USDT',
+          },
+          {
+            image: 'probit.png',
+            link: 'https://www.probit.com/app/exchange/HIVE-USDT',
+          },
+          {
+            image: 'cryptex24.svg',
+            link: 'https://www.cryptex24.io/trade/HIVE&USDT',
+          },
+        ],
+      };
+    case BuyCoinType.BUY_HDB:
+      return {
+        list: [
+          {
+            name: 'Blocktrades',
+            image: 'blocktrades.svg',
+            link: `https://blocktrades.us/en/trade?affiliate_id=dfccdbcb-6093-4e4a-992d-689bf46e2523&input_coin_type=btc&output_coin_type=hbd&output_coin_amount=10&receive_address=${username}`,
+            description: 'html_popup_blocktrades_description',
+          },
+        ],
+        exchanges: [
+          {
+            titleKey: 'wallet.operations.buy_coins.title_exchanges',
+          },
+          // {
+          //   image: 'bittrex.png',
+          //   link: 'https://global.bittrex.com/Market/Index?MarketName=BTC-HIVE',
+          // },
+          {
+            image: 'upbit.svg',
+            link: 'https://id.upbit.com/exchange?code=CRIX.UPBIT.BTC-HBD',
+          },
+          {
+            image: 'ionomy.svg',
+            link: 'https://exchange.ionomy.com/en/markets/btc-hbd',
+          },
+          {
+            image: 'cryptex24.svg',
+            link: 'https://www.cryptex24.io/trade/HBD&USDT',
+          },
+        ],
+      };
+  }
+};
