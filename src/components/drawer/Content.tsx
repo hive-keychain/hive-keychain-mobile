@@ -8,7 +8,8 @@ import {lock} from 'actions/index';
 import DrawerFooter from 'components/drawer/Footer';
 import DrawerHeader from 'components/drawer/Header';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
@@ -51,6 +52,7 @@ const HeaderContent = (props: Props) => {
   );
 
   const handleSetMenuExpanded = () => {
+    if (isAccountMenuExpanded && subMenuSelectedScreenName.length) return;
     setIsAccountMenuExpanded(!isAccountMenuExpanded);
     if (!isAccountMenuExpanded) setSubMenuSelectedScreenName('');
   };
@@ -65,7 +67,7 @@ const HeaderContent = (props: Props) => {
     <DrawerContentScrollView
       {...props}
       contentContainerStyle={styles.contentContainer}>
-      <View style={{flex: 1, height: '100%'}}>
+      <ScrollView style={{flex: 1, height: '100%'}}>
         <DrawerHeader username={user.name} />
         <DrawerItem
           {...props}
@@ -127,7 +129,7 @@ const HeaderContent = (props: Props) => {
           }}
         />
         <DrawerFooter user={user} />
-      </View>
+      </ScrollView>
     </DrawerContentScrollView>
   );
 };
