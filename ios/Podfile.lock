@@ -416,6 +416,8 @@ PODS:
     - React-Core
   - react-native-camera/RN (3.44.3):
     - React-Core
+  - react-native-get-random-values (1.8.4):
+    - React-Core
   - react-native-orientation-locker (1.5.0):
     - React-Core
   - react-native-safe-area-context (2.0.3):
@@ -624,6 +626,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - "react-native-get-random-values (from `../node_modules/@react-native-module/get-random-values`)"
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
@@ -738,6 +741,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-get-random-values:
+    :path: "../node_modules/@react-native-module/get-random-values"
   react-native-orientation-locker:
     :path: "../node_modules/react-native-orientation-locker"
   react-native-safe-area-context:
@@ -859,6 +864,7 @@ SPEC CHECKSUMS:
   React-jsinspector: e396d5e56af08fce39f50571726b68a40f1e302d
   React-logger: cec52b3f8fb0be0d47b2cb75dec69de60f2de3b6
   react-native-camera: b8cc03e2feec0c04403d0998e37cf519d8fd4c6f
+  react-native-get-random-values: ffa0d20db4c7b54a06986d6f85877e64ca9760d2
   react-native-orientation-locker: 851f6510d8046ea2f14aa169b1e01fcd309a94ba
   react-native-safe-area-context: 14c793e8b0bfe51e74dcdbe75dd14ee7498b88b8
   react-native-simple-toast: 8ee5d23f0b92b935ab7434cdb65159ce12dfb4b7
