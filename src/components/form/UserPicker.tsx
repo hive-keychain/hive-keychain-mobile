@@ -19,6 +19,7 @@ type Props = {
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalPickerStyle?: StyleProp<TextStyle>;
   dropdownIconColor?: string;
+  iosTextStyle?: StyleProp<TextStyle>;
 };
 const UserPicker = ({
   username,
@@ -27,6 +28,7 @@ const UserPicker = ({
   additionalContainerStyle,
   additionalPickerStyle,
   dropdownIconColor,
+  iosTextStyle,
 }: Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height});
@@ -46,6 +48,7 @@ const UserPicker = ({
           style={[styles.picker, additionalPickerStyle]}
           prompt={translate('components.picker.prompt_user')}
           dropdownIconColor={dropdownIconColor}
+          iosTextStyle={iosTextStyle}
         />
       </View>
     </View>
