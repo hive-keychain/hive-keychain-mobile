@@ -8,7 +8,7 @@
     "android-release": "react-native run-android --variant=devRelease",
     "android-clean": "cd android && ./gradlew clean && cd ..",
     "ei": "adb shell input text",
-    "ios": "react-native run-ios",
+    "ios": "npx react-native run-ios --simulator=\"iPhone 14\"",
     "start": "react-native start",
     "test": "jest",
     "test:cov": "jest --coverage",
@@ -108,7 +108,7 @@
     "mock-socket": "^9.1.5",
     "patch-package": "^6.4.7",
     "prettier": "2.0.2",
-    "react-native": "^0.68.2",
+    "react-native": "0.68.6",
     "react-test-renderer": "16.13.1",
     "typescript": "^4.3.2"
   },

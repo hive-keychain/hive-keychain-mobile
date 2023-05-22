@@ -158,6 +158,7 @@ const CreateAccountStepOne = ({
                 onAccountSelected={onSelected}
                 additionalContainerStyle={styles.additionalContainerStyle}
                 additionalPickerStyle={styles.additionalPickerStyle}
+                iosTextStyle={styles.additionalPickerStyle}
                 dropdownIconColor="white"
               />
             )}
