@@ -319,6 +319,9 @@
       "toast": {
         "register": "Registering accounts to Hive Auth...",
         "broadcast": "Broadcasting Hive Auth transaction..."
+      },
+      "error": {
+        "key": "The {{key}} key is missing. Please add it to Keychain and try again."
       }
     },
     "filter": {

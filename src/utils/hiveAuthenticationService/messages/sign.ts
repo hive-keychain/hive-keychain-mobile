@@ -1,4 +1,4 @@
-import {CommentOperation, VoteOperation} from '@hiveio/dhive';
+import {CommentOperation} from '@hiveio/dhive';
 import {addWhitelistedOperationToSession} from 'actions/hiveAuthenticationService';
 import {KeyTypes} from 'actions/interfaces';
 import SimpleToast from 'react-native-simple-toast';
@@ -12,7 +12,6 @@ import {
   RequestError,
   RequestPost,
   RequestSuccess,
-  RequestVote,
 } from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
@@ -46,17 +45,17 @@ export const processSigningRequest = async (
     if (ops.length === 1) {
       let op = ops[0];
       switch (op[0]) {
-        case 'vote':
-          const voteOperation = (op as VoteOperation)[1];
-          request = {
-            domain: session.token.app,
-            type: KeychainRequestTypes.vote,
-            username: payload.account,
-            permlink: voteOperation.permlink,
-            author: voteOperation.author,
-            weight: voteOperation.weight,
-          } as RequestVote;
-          break;
+        // case 'vote':
+        //   const voteOperation = (op as VoteOperation)[1];
+        //   request = {
+        //     domain: session.token.app,
+        //     type: KeychainRequestTypes.vote,
+        //     username: payload.account,
+        //     permlink: voteOperation.permlink,
+        //     author: voteOperation.author,
+        //     weight: voteOperation.weight,
+        //   } as RequestVote;
+        //   break;
         case 'comment':
           const commentOperation = (op as CommentOperation)[1];
           request = {
@@ -111,6 +110,19 @@ export const processSigningRequest = async (
         true,
       );
     } else {
+      const keyType = getRequiredWifType(request);
+      if (
+        !(store.getState() as RootState).accounts.find(
+          (e) => e.name === request.username,
+        )?.keys[keyType]
+      ) {
+        SimpleToast.show(
+          translate('wallet.has.error.key', {
+            key: translate(`keys.${keyType}`),
+          }),
+        );
+        return;
+      }
       const data: HAS_BroadcastModalPayload = {
         expiration: payload.expire,
         request: {...request, has: true},
