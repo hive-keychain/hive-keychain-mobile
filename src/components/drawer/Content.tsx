@@ -4,11 +4,13 @@ import {
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import {lock} from 'actions/index';
+import {closeAllTabs, lock} from 'actions/index';
 import DrawerFooter from 'components/drawer/Footer';
 import DrawerHeader from 'components/drawer/Header';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
@@ -29,7 +31,6 @@ const HeaderContent = (props: Props) => {
   const [subMenuSelectedScreenName, setSubMenuSelectedScreenName] = useState(
     '',
   );
-
   const subMenuList = [
     {
       labelTranslationKey: 'navigation.manage',
@@ -83,15 +84,21 @@ const HeaderContent = (props: Props) => {
             style={itemStyle}
             focused={newState.index === 0 && !isAccountMenuExpanded}
           />
-          <DrawerItem
-            {...props}
-            label={translate('navigation.browser')}
-            onPress={() => {
-              navigation.navigate('BrowserScreen');
-            }}
-            focused={newState.index === 1 && !isAccountMenuExpanded}
-            style={itemStyle}
-          />
+          <TouchableOpacity
+            onLongPress={() => {
+              props.closeAllTabs();
+              SimpleToast.show('Browser data was deleted');
+            }}>
+            <DrawerItem
+              {...props}
+              label={translate('navigation.browser')}
+              onPress={() => {
+                navigation.navigate('BrowserScreen');
+              }}
+              focused={newState.index === 1 && !isAccountMenuExpanded}
+              style={itemStyle}
+            />
+          </TouchableOpacity>
 
           <DrawerItem
             {...props}
@@ -145,7 +152,7 @@ const mapStateToProps = (state: RootState) => ({
   user: state.activeAccount,
 });
 
-const connector = connect(mapStateToProps, {lock});
+const connector = connect(mapStateToProps, {lock, closeAllTabs});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(HeaderContent);
