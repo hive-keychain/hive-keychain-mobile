@@ -5,7 +5,7 @@ import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
@@ -39,13 +39,13 @@ const Tokens = ({
   const [toggled, setToggled] = useState<number>(null);
 
   const renderContent = () => {
-    if (userTokens.loading || !tokensMarket.length) {
+    if (userTokens.loading || !tokensMarket?.length) {
       return (
         <View style={{flex: 1, justifyContent: 'center'}}>
           <Loader animating />
         </View>
       );
-    } else if (userTokens.list.length) {
+    } else if (userTokens.list?.length) {
       const list = userTokens.list.sort((a, b) => {
         return (
           getHiveEngineTokenValue(b, tokensMarket) -
