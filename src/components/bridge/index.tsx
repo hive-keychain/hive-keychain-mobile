@@ -66,8 +66,32 @@ export const decodeMemo = (key: string, string: string) =>
 export const encodeMemo = (key: string, receiverKey: string, string: string) =>
   self.sendMessage('encodeMemo', [key, receiverKey, string]) as Promise<string>;
 
-export const signBuffer = (key: string, string: string) =>
-  self.sendMessage('signBuffer', [string, key]) as Promise<string>;
+export const signBuffer = (key: string, message: string) => {
+  let buf;
+  try {
+    const o = JSON.parse(message, (k, v) => {
+      if (
+        v !== null &&
+        typeof v === 'object' &&
+        'type' in v &&
+        v.type === 'Buffer' &&
+        'data' in v &&
+        Array.isArray(v.data)
+      ) {
+        return Buffer.from(v.data);
+      }
+      return v;
+    });
+    if (Buffer.isBuffer(o)) {
+      buf = o;
+    } else {
+      buf = message;
+    }
+  } catch (e) {
+    buf = message;
+  }
+  return self.sendMessage('signBuffer', [buf, key]) as Promise<string>;
+};
 
 export const signedCall = (
   key: string,
