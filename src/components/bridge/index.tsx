@@ -21,11 +21,18 @@ class Bridge extends Component implements InnerProps {
 
   sendMessage(methodName: string, params: any[]) {
     const id = Math.random().toString(36).substr(2, 9); //just unique id
+    console.log(params);
+    const paramsJoined = params
+      .map((e) => e.replace(/\\/g, '\\\\'))
+      .join("','");
+    console.log(paramsJoined);
     const js = `
-        returnValue = window.${methodName}('${params.join("','")}');
+        returnValue = window.${methodName}('${paramsJoined}');
         returnObject = JSON.stringify({id: "${id}", data: returnValue});
         window.ReactNativeWebView.postMessage(returnObject);
     `;
+    console.log(js);
+
     this.webref.injectJavaScript(js);
 
     return new Promise((resolve, reject) => {
