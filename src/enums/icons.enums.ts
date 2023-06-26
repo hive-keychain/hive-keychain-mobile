@@ -36,6 +36,7 @@ export enum Icons {
   HIDDEN = 'visibility_off',
   HISTORY = 'history',
   HIVE = 'hive-brands.svg',
+  HBD = 'hbd_green.svg',
   INBOX = 'inbox',
   INFO = 'info',
   IMPORT = 'file_upload',

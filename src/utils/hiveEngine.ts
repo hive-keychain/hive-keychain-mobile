@@ -1,4 +1,4 @@
-import {TokenBalance, TokenMarket} from 'actions/interfaces';
+import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import hsc from 'api/hiveEngine';
 import {decodeMemo} from 'components/bridge';
 import {translate} from './localize';
@@ -89,5 +89,14 @@ export const getOutgoingTokenDelegations = async (
   return hsc.find('tokens', 'delegations', {
     from: username,
     symbol: symbol,
+  });
+};
+
+export const getAllTokens = async (): Promise<Token[]> => {
+  return (await hsc.find('tokens', 'tokens', {}, 1000, 0, [])).map((t: any) => {
+    return {
+      ...t,
+      metadata: JSON.parse(t.metadata),
+    };
   });
 };
