@@ -240,9 +240,9 @@ const Icon = (props: IconProps) => {
     props.subType,
     props.style ?? styles.defaultIcon,
     props.marginRight,
-    props.fillIconColor,
-    props.width ?? 40,
-    props.height ?? 40,
+    props.fillIconColor ?? 'black',
+    props.width ?? 30,
+    props.height ?? 30,
   );
 
   let iconComponent = iconComponentTemp;
