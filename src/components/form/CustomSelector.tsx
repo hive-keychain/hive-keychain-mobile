@@ -1,11 +1,17 @@
 import Icon from 'components/hive/Icon';
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Image from 'react-native-fast-image';
 import HBDSvgIcon from 'src/assets/icons/svgs/hbd_green.svg';
 import HIVESvgIcon from 'src/assets/icons/svgs/hive-engine.svg';
 import {Dimensions} from 'utils/common.types';
-
+//TODO remove file
 export interface SelectOption {
   label: string;
   subLabel?: string;
@@ -26,20 +32,16 @@ const CustomSelector = ({list}: CustomSelectorProps) => {
   const styles = getDimensionedStyles({width, height});
 
   const renderItemSelect = (item: SelectOption) => {
-    console.log({item}); //TODO to remove
+    // console.log({item}); //TODO to remove
 
     const getImageElement = () => {
       switch (true) {
         case item.img.includes('hbd_green.svg'):
-          console.log('hbd'); //TODO remove
           return <HBDSvgIcon height={40} width={40} />;
         case item.img.includes('hive-engine.svg'):
-          console.log('hive'); //TODO remove
           return <HIVESvgIcon height={40} width={40} />;
 
         default:
-          console.log('regular icon'); //TODO remove
-
           return (
             <Image
               style={styles.image}
@@ -59,7 +61,7 @@ const CustomSelector = ({list}: CustomSelectorProps) => {
           // justifyContent: 'space-between',
         }}
         key={item.label}>
-        {getImageElement()}
+        {/* {getImageElement()} */}
         {/* //TODO onClick */}
         <Text>{item.label}</Text>
       </View>
@@ -83,11 +85,15 @@ const CustomSelector = ({list}: CustomSelectorProps) => {
         />
       </View>
       {isExpanded && (
-        <View>
+        <ScrollView
+          style={{
+            overflow: 'scroll',
+            maxHeight: 200,
+          }}>
           {list.map((itemList) => {
             return renderItemSelect(itemList);
           })}
-        </View>
+        </ScrollView>
       )}
     </View>
   );

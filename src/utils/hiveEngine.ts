@@ -100,3 +100,18 @@ export const getAllTokens = async (): Promise<Token[]> => {
     };
   });
 };
+
+export const getTokenPrecision = async (symbol: string) => {
+  if (symbol === 'HBD' || symbol === 'HIVE') {
+    return 3;
+  }
+  const token = await hsc
+    .find('tokens', 'tokens', {symbol}, 1000, 0, [])
+    .map((t: any) => {
+      return {
+        ...t,
+        metadata: JSON.parse(t.metadata),
+      };
+    })[0];
+  return token.precision;
+};

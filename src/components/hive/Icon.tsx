@@ -1,5 +1,12 @@
-import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useRef} from 'react';
+import {
+  Animated,
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import AddCircleOutlineIcon from 'src/assets/icons/svgs/add_circle_outline.svg';
 import PowerDownIcon from 'src/assets/icons/svgs/arrow_downward.svg';
 import {
@@ -15,9 +22,11 @@ import ExpandMoreIcon from 'src/assets/icons/svgs/expand_more.svg';
 import HistoryIcon from 'src/assets/icons/svgs/history.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
 import ClaimIcon from 'src/assets/icons/svgs/redeem.svg';
+import RefreshIcon from 'src/assets/icons/svgs/refresh.svg';
 import SavingsIcon from 'src/assets/icons/svgs/savings.svg';
 import TransferIcon from 'src/assets/icons/svgs/send.svg';
 import DelegateIcon from 'src/assets/icons/svgs/swap_horiz.svg';
+import SwapIcon from 'src/assets/icons/svgs/swap_vert.svg';
 
 const getIconFilePath = (
   name: string,
@@ -25,6 +34,8 @@ const getIconFilePath = (
   style: any,
   marginRight?: boolean,
   fill?: string,
+  width?: number,
+  height?: number,
 ) => {
   const finalStyleOnIcon = marginRight ? styles.defaultIconContainer : style;
 
@@ -32,51 +43,182 @@ const getIconFilePath = (
     case 'transfer':
     case 'recurrent_transfer':
     case 'fill_recurrent_transfer':
-      return <TransferIcon style={finalStyleOnIcon} fill={fill} />;
+      return (
+        <TransferIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
     case 'savings':
-      return <SavingsIcon style={finalStyleOnIcon} fill={fill} />;
+      return (
+        <SavingsIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
     case 'power_up_down':
       switch (subType) {
         case 'transfer_to_vesting':
-          return <PowerUpIcon style={finalStyleOnIcon} fill={fill} />;
+          return (
+            <PowerUpIcon
+              style={finalStyleOnIcon}
+              fill={fill}
+              width={width}
+              height={height}
+            />
+          );
         case 'withdraw_vesting':
-          return <PowerDownIcon style={finalStyleOnIcon} fill={fill} />;
+          return (
+            <PowerDownIcon
+              style={finalStyleOnIcon}
+              fill={fill}
+              width={width}
+              height={height}
+            />
+          );
       }
     case 'claim_reward_balance':
     case 'interest':
-      return <ClaimIcon style={finalStyleOnIcon} fill={fill} />;
+      return (
+        <ClaimIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
     case 'delegate_vesting_shares':
-      return <DelegateIcon style={finalStyleOnIcon} fill={fill} />;
+      return (
+        <DelegateIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
     case 'claim_account':
     case 'account_create':
     case 'create_claimed_account':
-      return <LinkIcon style={finalStyleOnIcon} fill={fill} />;
+      return (
+        <LinkIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
     case 'convert':
-      return <ConvertIcon style={finalStyleOnIcon} fill={fill} />;
+      return (
+        <ConvertIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
     case 'expand_more':
-      return <ExpandMoreIcon style={styles.defaultIconContainer} fill={fill} />;
+      return (
+        <ExpandMoreIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
     case 'expand_less':
-      return <ExpandLessIcon style={styles.defaultIconContainer} fill={fill} />;
+      return (
+        <ExpandLessIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
     case 'arrow_upward':
       return (
-        <ArrowUpwardIcon style={styles.defaultIconContainer} fill={fill} />
+        <ArrowUpwardIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
       );
     case 'add_circle_outline':
       return (
-        <AddCircleOutlineIcon style={styles.defaultIconContainer} fill={fill} />
+        <AddCircleOutlineIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
       );
     case 'delete' || 'remove':
-      return <DeleteIcon style={style.defaultIconContainer} fill={fill} />;
+      return (
+        <DeleteIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
     case 'cloud_off':
       return (
-        <ServerUnavailable style={style.defaultIconContainer} fill={fill} />
+        <ServerUnavailable
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
       );
     case 'engineering':
-      return <Engineering style={style.defaultIconContainer} fill={fill} />;
+      return (
+        <Engineering
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
     case 'history':
-      return <HistoryIcon style={style.defaultIconContainer} fill={fill} />;
+      return (
+        <HistoryIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
+    case 'swap_vert':
+      return (
+        <SwapIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
+    case 'refresh':
+      return (
+        <RefreshIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
     default:
-      return <TransferIcon style={finalStyleOnIcon} fill={fill} />;
+      return (
+        <TransferIcon
+          style={finalStyleOnIcon}
+          fill={fill}
+          width={width}
+          height={height}
+        />
+      );
   }
 };
 
@@ -86,16 +228,43 @@ interface IconProps {
   subType?: string;
   marginRight?: boolean;
   fillIconColor?: string;
+  style?: StyleProp<ViewStyle>;
+  width?: number;
+  height?: number;
+  rotate?: boolean;
 }
 
 const Icon = (props: IconProps) => {
-  const iconComponent = getIconFilePath(
+  const iconComponentTemp = getIconFilePath(
     props.name,
     props.subType,
-    styles.defaultIcon,
+    props.style ?? styles.defaultIcon,
     props.marginRight,
     props.fillIconColor,
+    props.width ?? 40,
+    props.height ?? 40,
   );
+
+  let iconComponent = iconComponentTemp;
+  if (props.rotate) {
+    const spinAnim = useRef(new Animated.Value(0)).current;
+    const spin = () => {
+      Animated.timing(spinAnim, {
+        toValue: 360,
+        duration: 10000,
+        useNativeDriver: true,
+      }).start();
+    };
+    spin();
+    iconComponent = (
+      <Animated.View
+        style={{
+          transform: [{rotate: spinAnim}],
+        }}>
+        {iconComponent}
+      </Animated.View>
+    );
+  }
 
   if (props.onClick) {
     return (

@@ -32,6 +32,7 @@ const CustomPicker = ({
   dropdownIconColor,
   iosTextStyle,
 }: Props) => {
+  console.log({selectedValue}); //TODO remove
   const styles = getDimensionedStyles();
   switch (Platform.OS) {
     case 'ios':

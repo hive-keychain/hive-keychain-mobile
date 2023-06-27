@@ -13,7 +13,7 @@ const getSwapTokenStartList = async (account: ExtendedAccount) => {
   //   account.name,
   // );
   let userTokenList: TokenBalance[] = await hsc.find('tokens', 'balances', {
-    account,
+    account: account.name,
   });
   userTokenList = userTokenList.filter(
     (token) => parseFloat(token.balance) > 0,
@@ -21,7 +21,7 @@ const getSwapTokenStartList = async (account: ExtendedAccount) => {
   userTokenList = userTokenList.sort((a, b) =>
     b.symbol.toLowerCase() > a.symbol.toLowerCase() ? -1 : 1,
   );
-
+  console.log({userTokenList}); //TODO remove
   if (Asset.fromString(account.balance.toString()).amount > 0) {
     userTokenList.unshift({
       account: account.name,

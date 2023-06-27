@@ -711,6 +711,12 @@
   "swapTokens": {
     "swap_under_maintenance": "Keychain Swap is under maintenance, please try again later",
     "swap_caption": "Keychain compares all the different providers to make sure you get your tokens at the best possible rate.",
-    "swap_fee": "Fee"
+    "swap_fee": "Fee",
+    "swap_start_end_token_should_be_different": "Please choose two different tokens",
+    "swap_autorefresh": "Refreshing in {{autoRefreshCountdown}}s",
+    "swap_cannot_switch_tokens": "Cannot switch tokens because you don't have any {{symbol}}",
+    "swap": "Swap",
+    "swap_no_estimate_error": "You need an estimate to be able to process",
+    "swap_min_slippage_error": "The slippage should be at least {{min}}%"
   }
 }
