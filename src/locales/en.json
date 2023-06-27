@@ -717,6 +717,7 @@
     "swap_cannot_switch_tokens": "Cannot switch tokens because you don't have any {{symbol}}",
     "swap": "Swap",
     "swap_no_estimate_error": "You need an estimate to be able to process",
-    "swap_min_slippage_error": "The slippage should be at least {{min}}%"
+    "swap_min_slippage_error": "The slippage should be at least {{min}}%",
+    "swap_token_title_modal": "Swap Token"
   }
 }

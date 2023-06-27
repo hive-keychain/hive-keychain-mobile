@@ -21,6 +21,7 @@ import {navigate} from 'utils/navigation';
 import BuyCoinsComponent, {BuyCoinsprops} from './Buy-coins.component';
 import MoreTokenInfo, {MoreInfoTokenProps} from './MoreTokenInfo';
 import Savings, {SavingsOperations} from './Savings';
+import TokenSwap from './TokenSwap';
 import {TokensHistoryComponent} from './Tokens-history';
 
 type RoundButtonProps = {
@@ -255,6 +256,43 @@ export const BuyCoins = (props: BuyCoinsprops) => {
       size={36}
       backgroundColor={props.iconColor}
       content={<ShoppingCartIconWhite />}
+    />
+  );
+};
+
+type SendTokenSwapProps = {
+  currency: string;
+  tokenBalance?: string;
+  engine?: boolean;
+  tokenLogo?: JSX.Element;
+};
+//TODO this button will be added but within the tokens menu, so it can open the swap tokens page
+//  & load the selected token if user has balance.
+//TODO change props & add both symbols to show as icons on top bar
+export const SendTokenSwap = ({
+  currency,
+  tokenBalance,
+  engine,
+  tokenLogo,
+}: SendTokenSwapProps) => {
+  return (
+    <RoundButton
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: engine ? 'TransferEngine' : 'Transfer',
+          modalContent: (
+            <TokenSwap
+              currency={currency}
+              tokenBalance={tokenBalance}
+              tokenLogo={tokenLogo}
+              engine={true}
+            />
+          ),
+        });
+      }}
+      size={36}
+      backgroundColor="#77B9D1"
+      content={<SendArrow />}
     />
   );
 };

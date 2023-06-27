@@ -21,7 +21,6 @@ const getSwapTokenStartList = async (account: ExtendedAccount) => {
   userTokenList = userTokenList.sort((a, b) =>
     b.symbol.toLowerCase() > a.symbol.toLowerCase() ? -1 : 1,
   );
-  console.log({userTokenList}); //TODO remove
   if (Asset.fromString(account.balance.toString()).amount > 0) {
     userTokenList.unshift({
       account: account.name,
@@ -157,13 +156,11 @@ const cancelSwap = async (swapId: string) => {
 
 const getServerStatus = async () => {
   const res = await KeychainSwapApi.get(`server/status`);
-  console.log({res}); //TODO remove line
   return res.result;
 };
 
 const getConfig = async (): Promise<SwapConfig> => {
   const res = await KeychainSwapApi.get(`token-swap/public-config`);
-  console.log({res}); //TODO remove line
   return res.result;
 };
 

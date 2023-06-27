@@ -1,10 +1,11 @@
 import {loadTokensMarket} from 'actions/hiveEngine';
-import {Token} from 'actions/interfaces';
+import {KeyTypes, Token} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CustomPicker from 'components/form/CustomPicker';
 import {SelectOption} from 'components/form/CustomSelector';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import TokenSwap from 'components/operations/TokenSwap';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import {ThrottleSettings, throttle} from 'lodash';
@@ -20,6 +21,7 @@ import {BaseCurrencies} from 'utils/currency.utils';
 import {withCommas} from 'utils/format';
 import {getAllTokens, getTokenPrecision} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
 
 export const SVGICONPATHPREFIX = 'src/assets/icons/svgs/';
@@ -29,6 +31,7 @@ const SwapTokens = ({
   activeAccount,
   price,
   tokenMarket,
+  navigate,
 }: PropsFromRedux) => {
   const [swapConfig, setSwapConfig] = useState({} as SwapConfig);
   const [underMaintenance, setUnderMaintenance] = useState(false);
@@ -314,28 +317,41 @@ const SwapTokens = ({
       return;
     }
 
-    const startTokenPrecision = await getTokenPrecision(
-      startToken?.value.symbol,
-    );
-    const endTokenPrecision = await getTokenPrecision(endToken?.value.symbol);
+    // const startTokenPrecision = await getTokenPrecision(
+    //   startToken?.value.symbol,
+    // );
+    // const endTokenPrecision = await getTokenPrecision(endToken?.value.symbol);
 
-    const fields = [
-      {label: 'html_popup_swap_swap_id', value: estimateId},
-      {
-        label: 'html_popup_swap_swap_amount',
-        value: `${withCommas(Number(amount).toFixed(startTokenPrecision))} ${
-          startToken?.value.symbol
-        } => ${withCommas(estimateValue!.toString())} ${
-          endToken?.value.symbol
-        }`,
-      },
-      {
-        label: 'html_popup_swap_swap_slipperage',
-        value: `${slippage}% (for each step)`,
-      },
-    ];
+    // const fields = [
+    //   {label: 'html_popup_swap_swap_id', value: estimateId},
+    //   {
+    //     label: 'html_popup_swap_swap_amount',
+    //     value: `${withCommas(Number(amount).toFixed(startTokenPrecision))} ${
+    //       startToken?.value.symbol
+    //     } => ${withCommas(estimateValue!.toString())} ${
+    //       endToken?.value.symbol
+    //     }`,
+    //   },
+    //   {
+    //     label: 'html_popup_swap_swap_slipperage',
+    //     value: `${slippage}% (for each step)`,
+    //   },
+    // ];
 
-    //TOD uncomment + finish bellow
+    navigate('ModalScreen', {
+      name: 'TransferEngine', //TODO check & fix
+      modalContent: (
+        <TokenSwap
+          currency={BaseCurrencies.HBD}
+          tokenBalance={estimateValue}
+          tokenLogo={<Icon name="transfer" />} //TODO add start & end tokens, symbols.
+          engine={true}
+        />
+      ),
+    });
+
+    //Bellow will move to TokenSwap.
+    //TODO uncomment + finish bellow
     // navigateToWithParams(Screen.CONFIRMATION_PAGE, {
     //   message: chrome.i18n.getMessage('html_popup_swap_token_confirm_message'),
     //   fields: fields,
@@ -391,9 +407,9 @@ const SwapTokens = ({
   };
 
   //TODO remove block
-  // useEffect(() => {
-  //   if (autoRefreshCountdown) console.log({autoRefreshCountdown});
-  // }, [autoRefreshCountdown]);
+  useEffect(() => {
+    if (startToken) console.log({startToken});
+  }, [startToken]);
   //end block
 
   if (loading)
@@ -549,6 +565,7 @@ const SwapTokens = ({
               onPress={processSwap}
               style={styles.send}
               isLoading={loading}
+              method={KeyTypes.active}
             />
           </>
         )}
@@ -599,6 +616,7 @@ const mapStateToProps = (state: RootState) => {
 };
 const connector = connect(mapStateToProps, {
   loadTokensMarket,
+  navigate,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(SwapTokens);
