@@ -110,6 +110,14 @@ export const BrowserConfig = {
         url: 'https://tribaldex.com/',
         categories: ['finance'],
       },
+      {
+        name: 'V4V.app',
+        description: 'Hive to Bitcoin Lightning Gateway.',
+        icon:
+          'https://v4v.app/site-logo/v4vapp-logo-shadows.svg',
+        url: 'https://v4v.app/',
+        categories: ['finance'],
+      },
       // {
       //   name: 'LeoFinance',
       //   description: 'Crypto & Finance Blogging Platform',
