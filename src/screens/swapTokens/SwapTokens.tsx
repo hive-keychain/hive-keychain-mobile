@@ -11,6 +11,7 @@ import Separator from 'components/ui/Separator';
 import {ThrottleSettings, throttle} from 'lodash';
 import React, {useEffect, useMemo, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Icons} from 'src/enums/icons.enums';
@@ -25,13 +26,12 @@ import {navigate} from 'utils/navigation';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
 
 export const SVGICONPATHPREFIX = 'src/assets/icons/svgs/';
-
+//TODO add styles to const styles
 const SwapTokens = ({
   loadTokensMarket,
   activeAccount,
   price,
   tokenMarket,
-  navigate,
 }: PropsFromRedux) => {
   const [swapConfig, setSwapConfig] = useState({} as SwapConfig);
   const [underMaintenance, setUnderMaintenance] = useState(false);
@@ -224,7 +224,6 @@ const SwapTokens = ({
           setAutoRefreshCountdown(null);
         },
       );
-      console.log({result}); //TODO remove
       if (result.length) {
         const precision = await getTokenPrecision(
           result[result.length - 1].endToken,
@@ -317,99 +316,33 @@ const SwapTokens = ({
       return;
     }
 
-    // const startTokenPrecision = await getTokenPrecision(
-    //   startToken?.value.symbol,
-    // );
-    // const endTokenPrecision = await getTokenPrecision(endToken?.value.symbol);
-
-    // const fields = [
-    //   {label: 'html_popup_swap_swap_id', value: estimateId},
-    //   {
-    //     label: 'html_popup_swap_swap_amount',
-    //     value: `${withCommas(Number(amount).toFixed(startTokenPrecision))} ${
-    //       startToken?.value.symbol
-    //     } => ${withCommas(estimateValue!.toString())} ${
-    //       endToken?.value.symbol
-    //     }`,
-    //   },
-    //   {
-    //     label: 'html_popup_swap_swap_slipperage',
-    //     value: `${slippage}% (for each step)`,
-    //   },
-    // ];
+    const startTokenPrecision = await getTokenPrecision(
+      startToken?.value.symbol,
+    );
+    const endTokenPrecision = await getTokenPrecision(endToken?.value.symbol);
 
     navigate('ModalScreen', {
-      name: 'TransferEngine', //TODO check & fix
+      name: 'SwapTokenEngine',
       modalContent: (
         <TokenSwap
-          currency={BaseCurrencies.HBD}
-          tokenBalance={estimateValue}
-          tokenLogo={<Icon name="transfer" />} //TODO add start & end tokens, symbols.
-          engine={true}
+          estimateId={estimateId}
+          startToken={startToken}
+          endToken={endToken}
+          amount={amount}
+          swapAccount={swapConfig.account}
+          slippage={slippage}
+          estimateValue={estimateValue}
+          startTokenPrecision={startTokenPrecision}
+          endTokenPrecision={endTokenPrecision}
         />
       ),
     });
-
-    //Bellow will move to TokenSwap.
-    //TODO uncomment + finish bellow
-    // navigateToWithParams(Screen.CONFIRMATION_PAGE, {
-    //   message: chrome.i18n.getMessage('html_popup_swap_token_confirm_message'),
-    //   fields: fields,
-    //   title: 'html_popup_swap_token_confirm_title',
-    //   formParams: getFormParams(),
-    //   afterConfirmAction: async () => {
-    //     addToLoadingList(
-    //       'html_popup_swap_sending_token_to_swap_account',
-    //       KeysUtils.getKeyType(
-    //         activeAccount.keys.active!,
-    //         activeAccount.keys.activePubkey!,
-    //       ),
-    //       [startToken?.value.symbol, swapConfig.account],
-    //     );
-    //     try {
-    //       let success;
-
-    //       success = await SwapTokenUtils.processSwap(
-    //         estimateId,
-    //         startToken?.value.symbol,
-    //         parseFloat(amount),
-    //         activeAccount,
-    //         swapConfig.account,
-    //       );
-
-    //       removeFromLoadingList(
-    //         'html_popup_swap_sending_token_to_swap_account',
-    //       );
-
-    //       if (success) {
-    //         await SwapTokenUtils.saveLastUsed(
-    //           startToken?.value,
-    //           endToken?.value,
-    //         );
-    //         await SwapTokenUtils.setAsInitiated(estimateId);
-    //         setSuccessMessage('html_popup_swap_sending_token_successful');
-    //         goBackToThenNavigate(Screen.TOKENS_SWAP_HISTORY);
-    //       } else {
-    //         SimpleToast.show('html_popup_swap_error_sending_token', [
-    //           swapConfig.account,
-    //         ]);
-    //       }
-    //     } catch (err: any) {
-    //       SimpleToast.show(err.message);
-    //     } finally {
-    //       removeFromLoadingList('html_popup_delegate_rc_operation');
-    //     }
-    //   },
-    //   afterCancelAction: async () => {
-    //     await SwapTokenUtils.cancelSwap(estimateId);
-    //   },
-    // });
   };
 
   //TODO remove block
-  useEffect(() => {
-    if (startToken) console.log({startToken});
-  }, [startToken]);
+  // useEffect(() => {
+  //   if (startToken) console.log({startToken});
+  // }, [startToken]);
   //end block
 
   if (loading)
@@ -439,9 +372,7 @@ const SwapTokens = ({
               <Icon
                 name={'history'}
                 fillIconColor="black"
-                // type={IconType.OUTLINED}
-                //TODO swap history page
-                // onClick={() => navigateTo(Screen.TOKENS_SWAP_HISTORY)}
+                onClick={() => navigate('SwapTokensHistoryScreen')}
               />
             </View>
 
@@ -466,7 +397,6 @@ const SwapTokens = ({
               <OperationInput
                 placeholder={'0.000'}
                 keyboardType="decimal-pad"
-                // rightIcon={<Text style={styles.currency}>{currency}</Text>}
                 textAlign="right"
                 value={amount}
                 onChangeText={setAmount}
@@ -523,13 +453,13 @@ const SwapTokens = ({
               <OperationInput
                 placeholder={'0.000'}
                 keyboardType="decimal-pad"
-                // rightIcon={<Text style={styles.currency}>{currency}</Text>}
                 textAlign="right"
                 value={estimateValue ? withCommas(estimateValue!) : ''}
                 onChangeText={setEstimateValue}
                 containerStyle={{
                   maxWidth: '40%',
                 }}
+                disabled={true}
               />
               <Icon
                 name="refresh"
@@ -550,13 +480,54 @@ const SwapTokens = ({
             </View>
 
             {!!autoRefreshCountdown && (
-              <Text>
+              <Text style={{textAlign: 'right'}}>
                 {translate('swapTokens.swap_autorefresh', {
                   autoRefreshCountdown: autoRefreshCountdown.toString(),
                 })}
               </Text>
             )}
             {/* End Selector To */}
+
+            {/* Advance Parameters */}
+            <View>
+              <TouchableOpacity
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+                onPress={() =>
+                  setIsAdvancedParametersOpen(!isAdvancedParametersOpen)
+                }>
+                <Text style={styles.title}>
+                  {translate('swapTokens.swap_advanced_parameters')}
+                </Text>
+                <Icon
+                  name={
+                    !isAdvancedParametersOpen ? 'expand_more' : 'expand_less'
+                  }
+                />
+              </TouchableOpacity>
+              {isAdvancedParametersOpen && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text>{translate('swapTokens.swaps_slipperage')}</Text>
+                  <OperationInput
+                    placeholder={'0.000'}
+                    keyboardType="decimal-pad"
+                    textAlign="right"
+                    value={slippage.toString()}
+                    onChangeText={(value) => setSlippage(parseFloat(value))}
+                    containerStyle={{
+                      maxWidth: '40%',
+                      marginLeft: 4,
+                    }}
+                  />
+                </View>
+              )}
+            </View>
 
             <Separator />
 
@@ -605,6 +576,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   send: {backgroundColor: '#68A0B4', marginBottom: 20},
+  title: {fontWeight: 'bold', fontSize: 16},
 });
 
 const mapStateToProps = (state: RootState) => {
@@ -616,7 +588,6 @@ const mapStateToProps = (state: RootState) => {
 };
 const connector = connect(mapStateToProps, {
   loadTokensMarket,
-  navigate,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(SwapTokens);

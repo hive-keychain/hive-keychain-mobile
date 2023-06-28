@@ -14,12 +14,16 @@ import {
   default as PowerUpIcon,
 } from 'src/assets/icons/svgs/arrow_upward.svg';
 import ServerUnavailable from 'src/assets/icons/svgs/cloud_off.svg';
-import ConvertIcon from 'src/assets/icons/svgs/currency_exchange.svg';
+import {
+  default as ConvertIcon,
+  default as CurrencyExchangeIcon,
+} from 'src/assets/icons/svgs/currency_exchange.svg';
 import DeleteIcon from 'src/assets/icons/svgs/delete_black.svg';
 import Engineering from 'src/assets/icons/svgs/engineering.svg';
 import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import ExpandMoreIcon from 'src/assets/icons/svgs/expand_more.svg';
 import HistoryIcon from 'src/assets/icons/svgs/history.svg';
+import InboxIcon from 'src/assets/icons/svgs/inbox.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
 import ClaimIcon from 'src/assets/icons/svgs/redeem.svg';
 import RefreshIcon from 'src/assets/icons/svgs/refresh.svg';
@@ -38,187 +42,59 @@ const getIconFilePath = (
   height?: number,
 ) => {
   const finalStyleOnIcon = marginRight ? styles.defaultIconContainer : style;
+  const props = {fill, width, height};
 
   switch (name) {
     case 'transfer':
     case 'recurrent_transfer':
     case 'fill_recurrent_transfer':
-      return (
-        <TransferIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <TransferIcon style={finalStyleOnIcon} {...props} />;
     case 'savings':
-      return (
-        <SavingsIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <SavingsIcon style={finalStyleOnIcon} {...props} />;
     case 'power_up_down':
       switch (subType) {
         case 'transfer_to_vesting':
-          return (
-            <PowerUpIcon
-              style={finalStyleOnIcon}
-              fill={fill}
-              width={width}
-              height={height}
-            />
-          );
+          return <PowerUpIcon style={finalStyleOnIcon} {...props} />;
         case 'withdraw_vesting':
-          return (
-            <PowerDownIcon
-              style={finalStyleOnIcon}
-              fill={fill}
-              width={width}
-              height={height}
-            />
-          );
+          return <PowerDownIcon style={finalStyleOnIcon} {...props} />;
       }
     case 'claim_reward_balance':
     case 'interest':
-      return (
-        <ClaimIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <ClaimIcon style={finalStyleOnIcon} {...props} />;
     case 'delegate_vesting_shares':
-      return (
-        <DelegateIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <DelegateIcon style={finalStyleOnIcon} {...props} />;
     case 'claim_account':
     case 'account_create':
     case 'create_claimed_account':
-      return (
-        <LinkIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <LinkIcon style={finalStyleOnIcon} {...props} />;
     case 'convert':
-      return (
-        <ConvertIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <ConvertIcon style={finalStyleOnIcon} {...props} />;
     case 'expand_more':
-      return (
-        <ExpandMoreIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <ExpandMoreIcon style={finalStyleOnIcon} {...props} />;
     case 'expand_less':
-      return (
-        <ExpandLessIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <ExpandLessIcon style={finalStyleOnIcon} {...props} />;
     case 'arrow_upward':
-      return (
-        <ArrowUpwardIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <ArrowUpwardIcon style={finalStyleOnIcon} {...props} />;
     case 'add_circle_outline':
-      return (
-        <AddCircleOutlineIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <AddCircleOutlineIcon style={finalStyleOnIcon} {...props} />;
     case 'delete' || 'remove':
-      return (
-        <DeleteIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <DeleteIcon style={finalStyleOnIcon} {...props} />;
     case 'cloud_off':
-      return (
-        <ServerUnavailable
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <ServerUnavailable style={finalStyleOnIcon} {...props} />;
     case 'engineering':
-      return (
-        <Engineering
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <Engineering style={finalStyleOnIcon} {...props} />;
     case 'history':
-      return (
-        <HistoryIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <HistoryIcon style={finalStyleOnIcon} {...props} />;
     case 'swap_vert':
-      return (
-        <SwapIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <SwapIcon style={finalStyleOnIcon} {...props} />;
     case 'refresh':
-      return (
-        <RefreshIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <RefreshIcon style={finalStyleOnIcon} {...props} />;
+    case 'currency_exchange':
+      return <CurrencyExchangeIcon style={finalStyleOnIcon} {...props} />;
+    case 'inbox':
+      return <InboxIcon style={finalStyleOnIcon} {...props} />;
     default:
-      return (
-        <TransferIcon
-          style={finalStyleOnIcon}
-          fill={fill}
-          width={width}
-          height={height}
-        />
-      );
+      return <TransferIcon style={finalStyleOnIcon} {...props} />;
   }
 };
 

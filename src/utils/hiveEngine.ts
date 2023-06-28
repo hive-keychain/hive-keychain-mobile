@@ -2,6 +2,7 @@ import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import hsc from 'api/hiveEngine';
 import {decodeMemo} from 'components/bridge';
 import {translate} from './localize';
+
 type sscjsResult = {logs: string};
 
 export interface TokenDelegation {
@@ -21,7 +22,7 @@ export const tryConfirmTransaction = async (trxId: string) => {
       break;
     }
   }
-
+  console.log({result}); //TODO remove line
   var error = null;
   if (result && result.logs) {
     var logs = JSON.parse(result.logs);
@@ -101,17 +102,21 @@ export const getAllTokens = async (): Promise<Token[]> => {
   });
 };
 
+export const getTokenInfo = async (symbol: string): Promise<Token> => {
+  return (
+    await hsc.find('tokens', 'tokens', {symbol: symbol}, 1000, 0, [])
+  ).map((t: any) => {
+    return {
+      ...t,
+      metadata: JSON.parse(t.metadata),
+    };
+  })[0];
+};
+
 export const getTokenPrecision = async (symbol: string) => {
   if (symbol === 'HBD' || symbol === 'HIVE') {
     return 3;
   }
-  const token = await hsc
-    .find('tokens', 'tokens', {symbol}, 1000, 0, [])
-    .map((t: any) => {
-      return {
-        ...t,
-        metadata: JSON.parse(t.metadata),
-      };
-    })[0];
+  const token = await getTokenInfo(symbol);
   return token.precision;
 };

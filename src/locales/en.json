@@ -481,7 +481,8 @@
     "browser": "BROWSER",
     "governance": "GOVERNANCE",
     "create_account": "CREATE ACCOUNT",
-    "swap_tokens": "SWAP TOKENS"
+    "swap_tokens": "SWAP TOKENS",
+    "swap_tokens_history": "SWAP TOKEN HISTORY"
   },
   "request": {
     "title": {
@@ -718,6 +719,17 @@
     "swap": "Swap",
     "swap_no_estimate_error": "You need an estimate to be able to process",
     "swap_min_slippage_error": "The slippage should be at least {{min}}%",
-    "swap_token_title_modal": "Swap Token"
+    "swap_token_confirm_title": "Confirm token swap",
+    "swap_token_confirm_message": "You are about to initiate a token swap using Keychain. You can track its status from the swap history screen.",
+    "swap_id": "Swap ID",
+    "swap_amount": "Swap Estimation",
+    "swap_slipperage": "Slippage",
+    "swap_slippage": "{{slippage}}% (for each step)",
+    "swap_sending_token_successful": "Your swap is on the way! Thank you for using our service!",
+    "swap_error_sending_token": "There was an error while sending tokens to @{{account}}.",
+    "swap_advanced_parameters": "Advanced parameters",
+    "swaps_slipperage": "Slippage",
+    "swap_refresh_countdown": "Refreshing in {{autoRefreshCountdown}}s",
+    "swap_no_history": "Your swap history is empty"
   }
 }

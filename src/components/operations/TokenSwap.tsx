@@ -1,179 +1,138 @@
-import {loadAccount} from 'actions/index';
-import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import {SelectOption} from 'components/form/CustomSelector';
 import EllipticButton from 'components/form/EllipticButton';
+import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
-import {getCurrencyProperties} from 'utils/hiveReact';
+import {withCommas} from 'utils/format';
+import {tryConfirmTransaction} from 'utils/hiveEngine';
+import {sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
+import {SwapTokenUtils} from 'utils/swap-token.utils';
 import Operation from './Operation';
 
+//TODO just befire finishing this up, check:
+//  - what intefaces are available in /hive-keychain-commons & remove them from here + re-import using hive-key-chain-commons.
+
+//TODO clean up
+//TODO add styles to const styles
+
 type TokenSwapOperationProps = {
-  currency: string;
-  engine: boolean;
-  tokenBalance: string;
-  tokenLogo: JSX.Element;
+  estimateId: string;
+  startToken: SelectOption;
+  endToken: SelectOption;
+  amount: string;
+  swapAccount: string;
+  slippage: number;
+  estimateValue: string;
+  startTokenPrecision: any;
+  endTokenPrecision: any;
 };
 type Props = PropsFromRedux & TokenSwapOperationProps;
 const TokenSwap = ({
-  currency,
+  estimateId,
+  startToken,
+  endToken,
+  slippage,
+  amount,
+  swapAccount,
+  estimateValue,
+  startTokenPrecision,
+  endTokenPrecision,
   user,
-  loadAccount,
-  engine,
-  tokenBalance,
-  tokenLogo,
-  phishingAccounts,
 }: Props) => {
-  const [to, setTo] = useState('');
-  const [amount, setAmount] = useState('');
-  const [memo, setMemo] = useState('');
-  const [recurrence, setRecurrence] = useState('');
-  const [exec, setExec] = useState('');
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState(1);
-  //   const [privacy, setPrivacy] = useState(PUBLIC);
-  const [isRecurrent, setRecurrent] = useState(false);
 
-  //   const sendTransfer = async () => {
-  //     setLoading(true);
-  //     let finalMemo = memo;
-  //     if (privacy === PRIVATE) {
-  //       const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
-  //       finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
-  //     }
-  //     if (!isRecurrent) {
-  //       await transfer(user.keys.active, {
-  //         amount: sanitizeAmount(amount, currency),
-  //         memo: finalMemo,
-  //         to: sanitizeUsername(to),
-  //         from: user.account.name,
-  //       });
-  //     } else {
-  //       await recurrentTransfer(user.keys.active, {
-  //         amount: sanitizeAmount(amount, currency),
-  //         memo: finalMemo,
-  //         to: sanitizeUsername(to),
-  //         from: user.account.name,
-  //         recurrence: +recurrence,
-  //         executions: +exec,
-  //         extensions: [],
-  //       });
-  //     }
-  //   };
+  const onSendSwap = async () => {
+    Keyboard.dismiss();
+    setLoading(true);
+    try {
+      let success;
+      success = await SwapTokenUtils.processSwap(
+        estimateId,
+        startToken?.value.symbol,
+        parseFloat(amount),
+        user,
+        sanitizeUsername(swapAccount),
+      );
+      console.log({success}); //TODO remove line
 
-  //   const transferToken = async () => {
-  //     setLoading(true);
+      if (success && success.hasOwnProperty('tx_id')) {
+        const {confirmed} = await tryConfirmTransaction((success as any).tx_id);
+        console.log({confirmed});
 
-  //     return await sendToken(user.keys.active, user.name, {
-  //       symbol: currency,
-  //       to: sanitizeUsername(to),
-  //       quantity: sanitizeAmount(amount),
-  //       memo: memo,
-  //     });
-  //   };
+        await SwapTokenUtils.saveLastUsed(startToken?.value, endToken?.value);
 
-  //   const onSend = async () => {
-  //     Keyboard.dismiss();
-  //     try {
-  //       if (!engine) {
-  //         await sendTransfer();
-  //         Toast.show(
-  //           translate(
-  //             isRecurrent
-  //               ? 'toast.recurrent_transfer_success'
-  //               : 'toast.transfer_success',
-  //           ),
-  //           Toast.LONG,
-  //         );
-  //       } else {
-  //         const {id} = await transferToken();
-  //         const {confirmed} = await tryConfirmTransaction(id);
-  //         Toast.show(
-  //           confirmed
-  //             ? translate('toast.transfer_token_confirmed')
-  //             : translate('toast.transfer_token_unconfirmed'),
-  //           Toast.LONG,
-  //         );
-  //       }
-  //       loadAccount(user.account.name, true);
-  //       goBack();
-  //     } catch (e) {
-  //       Toast.show(
-  //         beautifyTransferError(e as any, {
-  //           to,
-  //           currency,
-  //           username: user.account.name,
-  //         }),
-  //         Toast.LONG,
-  //       );
-  //       setLoading(false);
-  //     }
-  //   };
+        // await SwapTokenUtils.setAsInitiated(estimateId); //TODO ask cedric/quentin what to do here??
+        if (confirmed) {
+          SimpleToast.show(
+            translate('swapTokens.swap_sending_token_successful'),
+            SimpleToast.LONG,
+          );
+        } else {
+          SimpleToast.show(
+            translate('toast.transfer_token_unconfirmed'),
+            SimpleToast.LONG,
+          );
+        }
+        //TODO swap history page first.
+        goBack(); //While coding
+        // goBackToThenNavigate(Screen.TOKENS_SWAP_HISTORY);
+      } else {
+        SimpleToast.show(
+          translate('swapTokens.swap_error_sending_token', {
+            account: swapAccount,
+          }),
+          SimpleToast.LONG,
+        );
+      }
+    } catch (err) {
+      SimpleToast.show(err.message, SimpleToast.LONG);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const {color} = getCurrencyProperties(currency);
   const {height} = useWindowDimensions();
 
-  const styles = getDimensionedStyles(color, height);
+  const styles = getDimensionedStyles(height);
 
   return (
     <Operation
-      logo={<SendArrowBlue />}
-      title={translate('swapTokens.swap_token_title_modal')}>
+      logo={<Icon name="currency_exchange" />}
+      title={translate('swapTokens.swap_token_confirm_title')}>
       <ScrollView>
         <Separator height={30} />
-        {/* <Text style={styles.warning}>
-          {getTransferWarning(phishingAccounts, to, currency, !!memo).warning}
-        </Text> */}
+        <Text>{translate('swapTokens.swap_token_confirm_message')}</Text>
         <Separator />
-        <Text style={styles.title}>
-          {translate('wallet.operations.transfer.confirm.from')}
-        </Text>
-        <Text>{`@${user.account.name}`}</Text>
+        <Text style={styles.title}>{translate('swapTokens.swap_id')}</Text>
+        <Text>{estimateId}</Text>
         <Separator />
-        <Text style={styles.title}>
-          {translate('wallet.operations.transfer.confirm.to')}
-        </Text>
-        {/* <Text>{`@${to} ${
-          getTransferWarning(phishingAccounts, to, currency, !!memo).exchange
-            ? '(exchange)'
-            : ''
-        }`}</Text> */}
-        <Separator />
-        <Text style={styles.title}>
-          {translate('wallet.operations.transfer.confirm.amount')}
-        </Text>
-        <Text>{`${amount} ${currency}`}</Text>
+        <Text style={styles.title}>{translate('swapTokens.swap_amount')}</Text>
+        <Text>{`${withCommas(Number(amount).toFixed(startTokenPrecision))} ${
+          startToken?.value.symbol
+        } => ${withCommas(estimateValue!.toString())} ${
+          endToken?.value.symbol
+        }`}</Text>
 
-        {/* {memo.length ? (
-            <>
-              <Separator />
-              <Text style={styles.title}>
-                {translate('wallet.operations.transfer.confirm.memo')}
-              </Text>
-              <Text>{`${memo} ${
-                privacy === PRIVATE ? '(encrypted)' : ''
-              }`}</Text>
-            </>
-          ) : null} */}
         <Separator />
-        {/* {isRecurrent ? (
-          <>
-            <Text style={styles.title}>
-              {translate('wallet.operations.transfer.confirm.recurrence')}
-            </Text>
-            <Text>
-              {translate('wallet.operations.transfer.confirm.recurrenceData', {
-                exec,
-                recurrence,
-              })}
-            </Text>
-          </>
-        ) : null} */}
+        <Text style={styles.title}>
+          {translate('swapTokens.swap_slipperage')}
+        </Text>
+        <Text>{translate('swapTokens.swap_slippage', {slippage})}</Text>
+        <Text></Text>
         <Separator height={40} />
         <View style={styles.buttonsContainer}>
           <EllipticButton
@@ -183,7 +142,7 @@ const TokenSwap = ({
           />
           <ActiveOperationButton
             title={translate('common.confirm')}
-            onPress={() => {}} //onSend
+            onPress={onSendSwap}
             style={styles.confirm}
             isLoading={loading}
           />
@@ -193,7 +152,7 @@ const TokenSwap = ({
   );
 };
 
-const getDimensionedStyles = (color: string, width: number) =>
+const getDimensionedStyles = (width: number) =>
   StyleSheet.create({
     send: {backgroundColor: '#68A0B4'},
     confirm: {
@@ -203,7 +162,6 @@ const getDimensionedStyles = (color: string, width: number) =>
     },
     warning: {color: 'red', fontWeight: 'bold'},
     back: {backgroundColor: '#7E8C9A', width: width / 5, marginHorizontal: 0},
-    currency: {fontWeight: 'bold', fontSize: 18, color},
     title: {fontWeight: 'bold', fontSize: 16},
     buttonsContainer: {
       display: 'flex',
@@ -211,15 +169,11 @@ const getDimensionedStyles = (color: string, width: number) =>
       justifyContent: 'space-around',
     },
   });
-const connector = connect(
-  (state: RootState) => {
-    return {
-      user: state.activeAccount,
-      phishingAccounts: state.phishingAccounts,
-    };
-  },
-  {loadAccount},
-);
+const connector = connect((state: RootState) => {
+  return {
+    user: state.activeAccount,
+  };
+}, {});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(TokenSwap);

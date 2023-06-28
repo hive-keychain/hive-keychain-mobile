@@ -1,17 +1,22 @@
 import {Asset, ExtendedAccount} from '@hiveio/dhive';
+import {ActiveAccount} from 'actions/interfaces';
 import hsc from 'api/hiveEngine';
 import {KeychainSwapApi} from 'api/keychain-swap';
-import {SwapConfig, SwapStep} from 'src/interfaces/swap-token.interface';
+import {
+  Swap,
+  SwapConfig,
+  SwapStatus,
+  SwapStep,
+} from 'src/interfaces/swap-token.interface';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {BaseCurrencies} from './currency.utils';
+import {withCommas} from './format';
+import {sendToken, transfer} from './hive';
+import {getTokenInfo} from './hiveEngine';
 import {getFromKeychain, saveOnKeychain} from './keychainStorage';
 
 const getSwapTokenStartList = async (account: ExtendedAccount) => {
-  //TODO temp using hsc directly, to discuss with Quentin.c:\cygwin64\home\Saturno\KeyChain\hive-keychain-extension\src\utils\currency.utils.ts
-  // let userTokenList: TokenBalance[] = await TokensUtils.getUserBalance(
-  //   account.name,
-  // );
   let userTokenList: TokenBalance[] = await hsc.find('tokens', 'balances', {
     account: account.name,
   });
@@ -86,69 +91,72 @@ const saveEstimate = async (
   }
 };
 
-// const processSwap = async (
-//   estimateId: string,
-//   startToken: string,
-//   amount: number,
-//   activeAccount: ActiveAccount,
-//   swapAccount: string,
-// ) => {
-//   if (
-//     startToken === BaseCurrencies.HBD.toUpperCase() ||
-//     startToken === BaseCurrencies.HIVE.toUpperCase()
-//   ) {
-//     const status = await TransferUtils.sendTransfer(
-//       activeAccount.name!,
-//       swapAccount,
-//       `${amount.toFixed(3)} ${startToken}`,
-//       estimateId,
-//       false,
-//       0,
-//       0,
-//       activeAccount.keys.active!,
-//     );
-//     return status?.tx_id;
-//   } else {
-//     const tokenInfo = await TokensUtils.getTokenInfo(startToken);
-//     const status = await TokensUtils.sendToken(
-//       startToken,
-//       swapAccount,
-//       `${amount.toFixed(tokenInfo.precision)}`,
-//       estimateId,
-//       activeAccount.keys.active!,
-//       activeAccount.name!,
-//     );
-//     return status.tx_id;
-//   }
-// };
+const processSwap = async (
+  estimateId: string,
+  startToken: string,
+  amount: number,
+  activeAccount: ActiveAccount,
+  swapAccount: string,
+) => {
+  if (
+    startToken === BaseCurrencies.HBD.toUpperCase() ||
+    startToken === BaseCurrencies.HIVE.toUpperCase()
+  ) {
+    const status = await transfer(activeAccount.keys.active!, {
+      from: activeAccount.name!,
+      to: swapAccount,
+      amount: `${amount.toFixed(3)} ${startToken}`,
+      memo: estimateId,
+    });
+    return status;
+  } else {
+    const tokenInfo = await getTokenInfo(startToken);
+    const status = await sendToken(
+      activeAccount.keys.active!,
+      activeAccount.name!,
+      {
+        symbol: startToken,
+        to: swapAccount,
+        quantity: `${amount.toFixed(tokenInfo.precision)}`,
+        memo: estimateId,
+      },
+    );
+    // const status = await TokensUtils.sendToken(
+    //   startToken,
+    //   swapAccount,
+    //   `${amount.toFixed(tokenInfo.precision)}`,
+    //   estimateId,
+    //   activeAccount.keys.active!,
+    //   activeAccount.name!,
+    // );
+    return status;
+  }
+};
 
-// const retrieveSwapHistory = async (username: string): Promise<Swap[]> => {
-//   const res = await KeychainSwapApi.get(`token-swap/history/${username}`);
-//   if (res.error) {
-//     return [];
-//   }
-//   const swaps = [];
-//   for (const s of res.result) {
-//     // const precisionStartToken = await TokensUtils.getTokenPrecision(
-//     //   s.startToken,
-//     // );
-//     // const precisionEndToken = await TokensUtils.getTokenPrecision(s.endToken);
-//     if (s.status === SwapStatus.PENDING && !s.transferInitiated) continue;
-//     swaps.push({
-//       ...s,
-//       amount: FormatUtils.withCommas(Number(s.amount).toString(), 3, true),
-//       received:
-//         s.received &&
-//         FormatUtils.withCommas(Number(s.received).toString(), 3, true),
-//       finalAmount: FormatUtils.withCommas(
-//         Number(s.received ?? s.expectedAmountAfterFee).toString(),
-//         3,
-//         true,
-//       ),
-//     });
-//   }
-//   return swaps;
-// };
+const retrieveSwapHistory = async (username: string): Promise<Swap[]> => {
+  const res = await KeychainSwapApi.get(`token-swap/history/${username}`);
+  if (res.error) {
+    return [];
+  }
+  const swaps = [];
+  for (const s of res.result) {
+    // const precisionStartToken = await TokensUtils.getTokenPrecision(
+    //   s.startToken,
+    // );
+    // const precisionEndToken = await TokensUtils.getTokenPrecision(s.endToken);
+    if (s.status === SwapStatus.PENDING && !s.transferInitiated) continue;
+    swaps.push({
+      ...s,
+      amount: withCommas(Number(s.amount).toString(), 3),
+      received: s.received && withCommas(Number(s.received).toString(), 3),
+      finalAmount: withCommas(
+        Number(s.received ?? s.expectedAmountAfterFee).toString(),
+        3,
+      ),
+    });
+  }
+  return swaps;
+};
 
 const cancelSwap = async (swapId: string) => {
   await KeychainSwapApi.post(`token-swap/${swapId}/cancel`, {});
@@ -178,24 +186,25 @@ const getLastUsed = async () => {
   else return JSON.parse(lastUsed);
 };
 
-// const setAsInitiated = async (swapId: Swap['id']) => {
-//   const res = await KeychainSwapApi.post(`token-swap/${swapId}/confirm`, {});
-//   if (!res.result) {
-//     Logger.error(`Couldn't set as initiated`);
-//   }
-// };
+const setAsInitiated = async (swapId: Swap['id']) => {
+  const res = await KeychainSwapApi.post(`token-swap/${swapId}/confirm`, {});
+  console.log({res}); //TODO remove line
+  if (!res.result) {
+    throw new Error(`Couldn't set as initiated`);
+  }
+};
 
 export const SwapTokenUtils = {
   getSwapTokenStartList,
   getSwapTokenEndList,
-  // processSwap,
+  processSwap,
   getEstimate,
   saveEstimate,
-  // retrieveSwapHistory,
+  retrieveSwapHistory,
   cancelSwap,
   getServerStatus,
   getConfig,
   saveLastUsed,
   getLastUsed,
-  // setAsInitiated,
+  setAsInitiated,
 };
