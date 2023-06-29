@@ -16,18 +16,15 @@ import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'store';
 import {withCommas} from 'utils/format';
-import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
 import Operation from './Operation';
 
 //TODO just befire finishing this up, check:
 //  - what intefaces are available in /hive-keychain-commons & remove them from here + re-import using hive-key-chain-commons.
-
-//TODO clean up
-//TODO add styles to const styles
+// do this: I guess, updating the extension swap branch -> then make all those changes in the mobile. Will do that tomorrow then
 
 type TokenSwapOperationProps = {
   estimateId: string;
@@ -67,29 +64,15 @@ const TokenSwap = ({
         user,
         sanitizeUsername(swapAccount),
       );
-      console.log({success}); //TODO remove line
 
       if (success && success.hasOwnProperty('tx_id')) {
-        const {confirmed} = await tryConfirmTransaction((success as any).tx_id);
-        console.log({confirmed});
-
         await SwapTokenUtils.saveLastUsed(startToken?.value, endToken?.value);
-
-        // await SwapTokenUtils.setAsInitiated(estimateId); //TODO ask cedric/quentin what to do here??
-        if (confirmed) {
-          SimpleToast.show(
-            translate('swapTokens.swap_sending_token_successful'),
-            SimpleToast.LONG,
-          );
-        } else {
-          SimpleToast.show(
-            translate('toast.transfer_token_unconfirmed'),
-            SimpleToast.LONG,
-          );
-        }
-        //TODO swap history page first.
-        goBack(); //While coding
-        // goBackToThenNavigate(Screen.TOKENS_SWAP_HISTORY);
+        await SwapTokenUtils.setAsInitiated(estimateId);
+        SimpleToast.show(
+          translate('swapTokens.swap_sending_token_successful'),
+          SimpleToast.LONG,
+        );
+        navigate('SwapTokensHistoryScreen');
       } else {
         SimpleToast.show(
           translate('swapTokens.swap_error_sending_token', {

@@ -121,14 +121,6 @@ const processSwap = async (
         memo: estimateId,
       },
     );
-    // const status = await TokensUtils.sendToken(
-    //   startToken,
-    //   swapAccount,
-    //   `${amount.toFixed(tokenInfo.precision)}`,
-    //   estimateId,
-    //   activeAccount.keys.active!,
-    //   activeAccount.name!,
-    // );
     return status;
   }
 };
@@ -188,7 +180,6 @@ const getLastUsed = async () => {
 
 const setAsInitiated = async (swapId: Swap['id']) => {
   const res = await KeychainSwapApi.post(`token-swap/${swapId}/confirm`, {});
-  console.log({res}); //TODO remove line
   if (!res.result) {
     throw new Error(`Couldn't set as initiated`);
   }

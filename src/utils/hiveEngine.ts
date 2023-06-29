@@ -120,3 +120,16 @@ export const getTokenPrecision = async (symbol: string) => {
   const token = await getTokenInfo(symbol);
   return token.precision;
 };
+
+export const getHiveEngineTokenPrice = (
+  {symbol}: Partial<TokenBalance>,
+  market: TokenMarket[],
+) => {
+  const tokenMarket = market.find((t) => t.symbol === symbol);
+  const price = tokenMarket
+    ? parseFloat(tokenMarket.lastPrice)
+    : symbol === 'SWAP.HIVE'
+    ? 1
+    : 0;
+  return price;
+};

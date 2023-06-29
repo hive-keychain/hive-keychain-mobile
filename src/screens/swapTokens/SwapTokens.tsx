@@ -6,11 +6,12 @@ import {SelectOption} from 'components/form/CustomSelector';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import TokenSwap from 'components/operations/TokenSwap';
+import CustomToolTip from 'components/ui/CustomToolTip';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import {ThrottleSettings, throttle} from 'lodash';
 import React, {useEffect, useMemo, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Button, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
@@ -20,13 +21,17 @@ import {RootState} from 'store';
 import {SwapsConfig} from 'utils/config';
 import {BaseCurrencies} from 'utils/currency.utils';
 import {withCommas} from 'utils/format';
-import {getAllTokens, getTokenPrecision} from 'utils/hiveEngine';
+import {
+  getAllTokens,
+  getHiveEngineTokenPrice,
+  getTokenPrecision,
+} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
 
 export const SVGICONPATHPREFIX = 'src/assets/icons/svgs/';
-//TODO add styles to const styles
+
 const SwapTokens = ({
   loadTokensMarket,
   activeAccount,
@@ -112,18 +117,14 @@ const SwapTokens = ({
       setLoading(true);
       tokenInitialization = initTokenSelectOptions();
 
-      const [serverStatus, res] = await Promise.all([
+      const [serverStatus, config] = await Promise.all([
         SwapTokenUtils.getServerStatus(),
         SwapTokenUtils.getConfig(),
       ]);
       setUnderMaintenance(serverStatus.isMaintenanceOn);
-      setSwapConfig(res);
-      setSlippage(res.slippage.default);
+      setSwapConfig(config);
+      setSlippage(config.slippage.default);
     } catch (err) {
-      // Logger.error(err);
-      console.log({err}); //TODO remove line
-      // Toast.show(err.reason.template, 3000);
-      // setErrorMessage(err.reason.template, err.reason.params);
       setServiceUnavailable(true);
     } finally {
       await tokenInitialization;
@@ -142,7 +143,7 @@ const SwapTokens = ({
       let img = '';
       let imgBackup = '';
       if (tokenInfo) {
-        const parsedMetadata: any = tokenInfo.metadata; //TODO why??
+        const parsedMetadata: any = tokenInfo.metadata;
         img =
           parsedMetadata.icon && parsedMetadata.icon.length > 0
             ? parsedMetadata.icon
@@ -174,7 +175,7 @@ const SwapTokens = ({
         img: `${SVGICONPATHPREFIX}${Icons.HBD}`,
       },
       ...allTokens.map((token: Token) => {
-        const parsedMetadata: any = token.metadata; //TODO why??
+        const parsedMetadata: any = token.metadata;
         let img = '';
         img = parsedMetadata.icon ?? `${SVGICONPATHPREFIX}hive-engine.svg`;
         return {
@@ -207,8 +208,6 @@ const SwapTokens = ({
     swapConfig: SwapConfig,
   ) => {
     if (startToken === endToken) {
-      // setErrorMessage('swap_start_end_token_should_be_different');
-      // Toast.show(translate('swapTokens.swap_start_end_token_should_be_different'), Toast.LONG);
       return;
     }
 
@@ -240,9 +239,17 @@ const SwapTokens = ({
       }
     } catch (err) {
       setEstimate(undefined);
-      // setErrorMessage(err.reason.template, err.reason.params);
-      // Toast.show(err.reason.template, 3000);
-      console.log({err});
+      SimpleToast.show(
+        translate(
+          `swapTokens.${err.reason.template}`,
+          err.reason.params
+            ? {
+                value: err.reason.params.join(' '),
+              }
+            : null,
+        ),
+        SimpleToast.LONG,
+      );
     } finally {
       setLoadingEstimate(false);
     }
@@ -310,9 +317,9 @@ const SwapTokens = ({
         activeAccount.name!,
       );
     } catch (err) {
-      console.log({err});
-      //TODO finish bellow
-      // SimpleToast.show(err.reason.template, err.reason.params);
+      SimpleToast.show(
+        translate(`swapTokens.${err.reason.template}`, ...err.reason.params),
+      );
       return;
     }
 
@@ -339,11 +346,32 @@ const SwapTokens = ({
     });
   };
 
-  //TODO remove block
-  // useEffect(() => {
-  //   if (startToken) console.log({startToken});
-  // }, [startToken]);
-  //end block
+  const getTokenUSDPrice = (
+    estimateValue: string | undefined,
+    symbol: string,
+  ) => {
+    if (!estimateValue) return '';
+    else {
+      let tokenPrice;
+      if (symbol === BaseCurrencies.HIVE.toUpperCase()) {
+        tokenPrice = price.hive.usd!;
+      } else if (symbol === BaseCurrencies.HBD.toUpperCase()) {
+        tokenPrice = price.hive_dollar.usd!;
+      } else {
+        tokenPrice =
+          getHiveEngineTokenPrice(
+            {
+              symbol,
+            },
+            tokenMarket,
+          ) * price.hive.usd!;
+      }
+      return `≈ $${withCommas(
+        Number.parseFloat(estimateValue) * tokenPrice + '',
+        2,
+      )}`;
+    }
+  };
 
   if (loading)
     return (
@@ -359,13 +387,7 @@ const SwapTokens = ({
             <Text style={{marginTop: 10}}>
               {translate('swapTokens.swap_caption')}
             </Text>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}>
+            <View style={styles.flexRowBetween}>
               <Text>
                 {translate('swapTokens.swap_fee')}: {swapConfig.fee.amount}%
               </Text>
@@ -401,8 +423,20 @@ const SwapTokens = ({
                 value={amount}
                 onChangeText={setAmount}
                 containerStyle={{
-                  maxWidth: '40%',
+                  maxWidth: '55%',
                 }}
+                rightIcon={
+                  <Button
+                    title="MAX"
+                    onPress={() =>
+                      setAmount(
+                        startToken?.value.balance
+                          ? startToken?.value.balance
+                          : '',
+                      )
+                    }
+                  />
+                }
               />
             </View>
             <Text
@@ -420,12 +454,7 @@ const SwapTokens = ({
 
             <Separator />
 
-            <View
-              style={{
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+            <View style={styles.flexColumnCenteredAligned}>
               <Icon
                 name="swap_vert"
                 fillIconColor="black"
@@ -456,26 +485,46 @@ const SwapTokens = ({
                 textAlign="right"
                 value={estimateValue ? withCommas(estimateValue!) : ''}
                 onChangeText={setEstimateValue}
+                rightIcon={
+                  <View style={styles.flexRowAligned}>
+                    {estimateValue ? (
+                      <CustomToolTip
+                        message={getTokenUSDPrice(
+                          estimateValue,
+                          endToken?.value.symbol,
+                        )}
+                        width={100}
+                        skipTranslation
+                        iconHeight={20}
+                        iconWidth={20}
+                      />
+                    ) : null}
+                    <Icon
+                      name="refresh"
+                      fillIconColor="black"
+                      width={25}
+                      height={25}
+                      onClick={() => {
+                        if (amount && startToken && endToken) {
+                          calculateEstimate(
+                            amount,
+                            startToken!,
+                            endToken!,
+                            swapConfig!,
+                          );
+                          setAutoRefreshCountdown(
+                            SwapsConfig.autoRefreshPeriodSec,
+                          );
+                        }
+                      }}
+                      rotate={loadingEstimate}
+                    />
+                  </View>
+                }
                 containerStyle={{
-                  maxWidth: '40%',
+                  maxWidth: '55%',
                 }}
                 disabled={true}
-              />
-              <Icon
-                name="refresh"
-                fillIconColor="black"
-                width={30}
-                height={30}
-                onClick={() => {
-                  calculateEstimate(
-                    amount,
-                    startToken!,
-                    endToken!,
-                    swapConfig!,
-                  );
-                  setAutoRefreshCountdown(SwapsConfig.autoRefreshPeriodSec);
-                }}
-                rotate={loadingEstimate}
               />
             </View>
 
@@ -491,10 +540,7 @@ const SwapTokens = ({
             {/* Advance Parameters */}
             <View>
               <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}
+                style={styles.flexRowAligned}
                 onPress={() =>
                   setIsAdvancedParametersOpen(!isAdvancedParametersOpen)
                 }>
@@ -510,20 +556,31 @@ const SwapTokens = ({
               {isAdvancedParametersOpen && (
                 <View
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
+                    marginTop: 8,
                   }}>
-                  <Text>{translate('swapTokens.swaps_slipperage')}</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginVertical: 4,
+                    }}>
+                    <Text>{translate('swapTokens.swaps_slipperage')}</Text>
+                    <CustomToolTip
+                      message={'swapTokens.swaps_slippage_definition'}
+                      height={250}
+                      width={250}
+                      iconHeight={25}
+                      iconWidth={25}
+                    />
+                  </View>
                   <OperationInput
                     placeholder={'0.000'}
                     keyboardType="decimal-pad"
                     textAlign="right"
                     value={slippage.toString()}
-                    onChangeText={(value) => setSlippage(parseFloat(value))}
-                    containerStyle={{
-                      maxWidth: '40%',
-                      marginLeft: 4,
-                    }}
+                    onChangeText={(value) =>
+                      setSlippage(value === '' ? 0 : parseFloat(value))
+                    }
                   />
                 </View>
               )}
@@ -577,6 +634,17 @@ const styles = StyleSheet.create({
   },
   send: {backgroundColor: '#68A0B4', marginBottom: 20},
   title: {fontWeight: 'bold', fontSize: 16},
+  flexRowBetween: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  flexColumnCenteredAligned: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 const mapStateToProps = (state: RootState) => {

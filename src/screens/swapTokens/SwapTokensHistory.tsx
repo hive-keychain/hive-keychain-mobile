@@ -1,21 +1,16 @@
-import {loadTokensMarket} from 'actions/hiveEngine';
 import Icon from 'components/hive/Icon';
+import TokenSwapHistoryItem from 'components/hive/TokenSwapHistoryItem';
 import Loader from 'components/ui/Loader';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Swap} from 'src/interfaces/swap-token.interface';
 import {RootState} from 'store';
 import {SwapsConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
-//TODO add styles to const styles
-const SwapTokensHistory = ({
-  loadTokensMarket,
-  activeAccount,
-  price,
-  tokenMarket,
-}: PropsFromRedux) => {
+
+const SwapTokensHistory = ({activeAccount}: PropsFromRedux) => {
   const [history, setHistory] = useState<Swap[]>([]);
   const [autoRefreshCountdown, setAutoRefreshCountdown] = useState<
     number | null
@@ -63,6 +58,15 @@ const SwapTokensHistory = ({
     setRefresh(false);
   };
 
+  const renderListItem = (index: number, historyItem: Swap) => {
+    return (
+      <TokenSwapHistoryItem
+        key={`item-swap-history-${index}`}
+        swap={historyItem}
+      />
+    );
+  };
+
   if (loading)
     return (
       <View style={styles.loader}>
@@ -74,14 +78,7 @@ const SwapTokensHistory = ({
       <View style={[styles.container, styles.paddingHorizontal]}>
         {!loading && (
           <>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                marginTop: 8,
-                marginBottom: 8,
-              }}>
+            <View style={[styles.flexRowCenteredEnd, styles.marginTopBottom]}>
               {!!autoRefreshCountdown && (
                 <>
                   <Text>
@@ -97,14 +94,16 @@ const SwapTokensHistory = ({
                 </>
               )}
             </View>
-            {history.length > 0 &&
-              history.map((item, index) => {
-                return (
-                  //TODO component bellow
-                  // <TokenSwapsHistoryItemComponent key={`item-${index}`} swap={item} />
-                  <Text key={`item-${index}`}>{item.amount}</Text>
-                );
-              })}
+            {history.length > 0 && (
+              <FlatList
+                data={history}
+                renderItem={(item) => renderListItem(item.index, item.item)}
+                style={{
+                  marginBottom: 28,
+                }}
+              />
+            )}
+
             {history.length === 0 && (
               <View
                 style={{
@@ -132,12 +131,10 @@ const SwapTokensHistory = ({
 
 const styles = StyleSheet.create({
   container: {width: '100%', flex: 1},
-  apr: {color: '#7E8C9A', fontSize: 14},
-  aprValue: {color: '#3BB26E', fontSize: 14},
-  withdrawingValue: {color: '#b8343f', fontSize: 14},
-  flexRowAligned: {
+  flexRowCenteredEnd: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   loader: {
     backgroundColor: 'transparent',
@@ -149,19 +146,17 @@ const styles = StyleSheet.create({
   paddingHorizontal: {
     paddingHorizontal: 10,
   },
-  send: {backgroundColor: '#68A0B4', marginBottom: 20},
-  title: {fontWeight: 'bold', fontSize: 16},
+  marginTopBottom: {
+    marginTop: 8,
+    marginBottom: 8,
+  },
 });
 
 const mapStateToProps = (state: RootState) => {
   return {
     activeAccount: state.activeAccount,
-    price: state.currencyPrices,
-    tokenMarket: state.tokensMarket,
   };
 };
-const connector = connect(mapStateToProps, {
-  loadTokensMarket,
-});
+const connector = connect(mapStateToProps, {});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(SwapTokensHistory);

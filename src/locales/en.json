@@ -730,6 +730,17 @@
     "swap_advanced_parameters": "Advanced parameters",
     "swaps_slipperage": "Slippage",
     "swap_refresh_countdown": "Refreshing in {{autoRefreshCountdown}}s",
-    "swap_no_history": "Your swap history is empty"
+    "swap_no_history": "Your swap history is empty",
+    "swap_min_hive_value_error": "Minimum value should be equivalent to 1 HIVE (currently {{value}} HIVE)",
+    "swap_copied_to_clipboard": "Copied to clipboard!",
+    "swap_status_pending": "Pending",
+    "swap_transfer_not_sent": "Transfer not sent",
+    "swap_status_completed": "Completed",
+    "swap_status_canceled_due_to_error": "Canceled",
+    "swap_status_refunded": "Refunded",
+    "swap_status_returned": "Returned",
+    "swap_status_started": "In progress",
+    "swap_last_update": "Last update: {{updatedAt}}",
+    "swaps_slippage_definition": "At each step of the swap, we check if the final result is superior to the estimation minus the slippage. If not, the swap is canceled and the funds are returned. Note that some swaps require several operations and your funds can be returned in a different token."
   }
 }

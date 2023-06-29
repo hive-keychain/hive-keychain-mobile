@@ -13,18 +13,24 @@ import {
   default as ArrowUpwardIcon,
   default as PowerUpIcon,
 } from 'src/assets/icons/svgs/arrow_upward.svg';
+import CancelIcon from 'src/assets/icons/svgs/cancel.svg';
+import CheckedIcon from 'src/assets/icons/svgs/check_circle.svg';
 import ServerUnavailable from 'src/assets/icons/svgs/cloud_off.svg';
+import ContentCopyIcon from 'src/assets/icons/svgs/content_copy.svg';
 import {
   default as ConvertIcon,
   default as CurrencyExchangeIcon,
 } from 'src/assets/icons/svgs/currency_exchange.svg';
 import DeleteIcon from 'src/assets/icons/svgs/delete_black.svg';
 import Engineering from 'src/assets/icons/svgs/engineering.svg';
+import ErrorIcon from 'src/assets/icons/svgs/error.svg';
 import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import ExpandMoreIcon from 'src/assets/icons/svgs/expand_more.svg';
 import HistoryIcon from 'src/assets/icons/svgs/history.svg';
 import InboxIcon from 'src/assets/icons/svgs/inbox.svg';
+import InfoIcon from 'src/assets/icons/svgs/info.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
+import PendingIcon from 'src/assets/icons/svgs/pending.svg';
 import ClaimIcon from 'src/assets/icons/svgs/redeem.svg';
 import RefreshIcon from 'src/assets/icons/svgs/refresh.svg';
 import SavingsIcon from 'src/assets/icons/svgs/savings.svg';
@@ -93,6 +99,18 @@ const getIconFilePath = (
       return <CurrencyExchangeIcon style={finalStyleOnIcon} {...props} />;
     case 'inbox':
       return <InboxIcon style={finalStyleOnIcon} {...props} />;
+    case 'pending':
+      return <PendingIcon style={finalStyleOnIcon} {...props} />;
+    case 'check_circle':
+      return <CheckedIcon style={finalStyleOnIcon} {...props} />;
+    case 'error':
+      return <ErrorIcon style={finalStyleOnIcon} {...props} />;
+    case 'cancel':
+      return <CancelIcon style={finalStyleOnIcon} {...props} />;
+    case 'content_copy':
+      return <ContentCopyIcon style={finalStyleOnIcon} {...props} />;
+    case 'info':
+      return <InfoIcon style={finalStyleOnIcon} {...props} />;
     default:
       return <TransferIcon style={finalStyleOnIcon} {...props} />;
   }
