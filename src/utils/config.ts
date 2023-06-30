@@ -110,14 +110,6 @@ export const BrowserConfig = {
         url: 'https://tribaldex.com/',
         categories: ['finance'],
       },
-      {
-        name: 'V4V.app',
-        description: 'Hive to Bitcoin Lightning Gateway.',
-        icon:
-          'https://v4v.app/site-logo/v4vapp-logo-shadows.svg',
-        url: 'https://v4v.app/',
-        categories: ['finance'],
-      },
       // {
       //   name: 'LeoFinance',
       //   description: 'Crypto & Finance Blogging Platform',
@@ -257,6 +249,14 @@ export const BrowserConfig = {
         icon: 'https://images.hive.blog/u/actifit/avatar',
         url: 'https://actifit.io/',
         categories: ['social'],
+      },
+     {
+        name: 'V4V.app',
+        description: 'Hive to Bitcoin Lightning Gateway.',
+        icon:
+          'https://v4v.app/site-logo/v4vapp-logo-shadows.svg',
+        url: 'https://v4v.app/',
+        categories: ['finance'],
       },
     ],
   },
