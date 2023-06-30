@@ -741,6 +741,8 @@
     "swap_status_returned": "Returned",
     "swap_status_started": "In progress",
     "swap_last_update": "Last update: {{updatedAt}}",
-    "swaps_slippage_definition": "At each step of the swap, we check if the final result is superior to the estimation minus the slippage. If not, the swap is canceled and the funds are returned. Note that some swaps require several operations and your funds can be returned in a different token."
+    "swaps_slippage_definition": "At each step of the swap, we check if the final result is superior to the estimation minus the slippage. If not, the swap is canceled and the funds are returned. Note that some swaps require several operations and your funds can be returned in a different token.",
+    "swap_layer_two_delayed": "Hive Engine is currently behind blocks. The swap might take longer than usual and has a bigger chance of aborting due to slippage.",
+    "swap_server_unavailable": "The swap server is currently unavailable, please try again later"
   }
 }

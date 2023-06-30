@@ -10,12 +10,15 @@ const get = async (url: string): Promise<any> => {
   try {
     return await BaseApi.get(buildUrl(url));
   } catch (err) {
-    if (err.message === 'Failed to fetch') {
+    if (
+      err.message === 'Failed to fetch' ||
+      err.message === 'Network request failed'
+    ) {
       throw {
         code: 500,
         message: err.message,
         reason: {
-          template: 'swap_server_unavailable',
+          template: 'swapTokens.swap_server_unavailable',
         },
       };
     }

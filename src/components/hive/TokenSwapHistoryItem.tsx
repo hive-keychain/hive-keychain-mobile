@@ -39,8 +39,8 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
         return translate('swapTokens.swap_status_completed');
       case SwapStatus.CANCELED_DUE_TO_ERROR:
         return translate('swapTokens.swap_status_canceled_due_to_error');
-      case SwapStatus.REFUNDED_CANNOT_COMPLETE:
-        return translate('swapTokens.swap_status_refunded');
+      // case SwapStatus.REFUNDED_CANNOT_COMPLETE:
+      //   return translate('swapTokens.swap_status_refunded'); //TODO clean up
       case SwapStatus.FUNDS_RETURNED:
         return translate('swapTokens.swap_status_returned');
       case SwapStatus.REFUNDED_SLIPPAGE:
@@ -58,7 +58,7 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
       case SwapStatus.COMPLETED:
         return 'check_circle';
       case SwapStatus.CANCELED_DUE_TO_ERROR:
-      case SwapStatus.REFUNDED_CANNOT_COMPLETE:
+      // case SwapStatus.REFUNDED_CANNOT_COMPLETE: //TODO clean up
       case SwapStatus.FUNDS_RETURNED:
       case SwapStatus.REFUNDED_SLIPPAGE:
         return 'error';

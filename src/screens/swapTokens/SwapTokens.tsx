@@ -44,7 +44,7 @@ const SwapTokens = ({
   const [loadingEstimate, setLoadingEstimate] = useState(false);
   const [slippage, setSlippage] = useState(5);
   const [amount, setAmount] = useState<string>('');
-
+  const [layerTwoDelayed, setLayerTwoDelayed] = useState(false);
   const [startToken, setStartToken] = useState<SelectOption>();
   const [endToken, setEndToken] = useState<SelectOption>();
   const [startTokenListOptions, setStartTokenListOptions] = useState<
@@ -123,8 +123,20 @@ const SwapTokens = ({
       ]);
       setUnderMaintenance(serverStatus.isMaintenanceOn);
       setSwapConfig(config);
+      if (
+        serverStatus.layerTwoDelayed &&
+        (!['HIVE', 'HBD'].includes(endToken?.value.symbol) ||
+          !['HIVE', 'HBD'].includes(startToken?.value.symbol))
+      ) {
+        setLayerTwoDelayed(true);
+        SimpleToast.show(
+          translate('swapTokens.swap_layer_two_delayed'),
+          SimpleToast.LONG,
+        );
+      }
       setSlippage(config.slippage.default);
     } catch (err) {
+      SimpleToast.show(translate(err.reason.template), SimpleToast.LONG);
       setServiceUnavailable(true);
     } finally {
       await tokenInitialization;
@@ -598,15 +610,29 @@ const SwapTokens = ({
           </>
         )}
         {underMaintenance && (
-          <View>
-            <Icon name={'engineering'} fillIconColor="red" />
-            <Text>{translate('swapTokens.swap_under_maintenance')}</Text>
+          <View style={styles.loader}>
+            <Icon
+              name={'engineering'}
+              fillIconColor="red"
+              width={70}
+              height={70}
+            />
+            <Text style={[styles.title, styles.marginTop]}>
+              {translate('swapTokens.swap_under_maintenance')}
+            </Text>
           </View>
         )}
         {serviceUnavailable && (
-          <View>
-            <Icon name={'cloud_off'} fillIconColor="red" />
-            <Text>{translate('common.service_unavailable_message')}</Text>
+          <View style={styles.loader}>
+            <Icon
+              name={'cloud_off'}
+              fillIconColor="red"
+              width={70}
+              height={70}
+            />
+            <Text style={[styles.title, styles.marginTop]}>
+              {translate('common.service_unavailable_message')}
+            </Text>
           </View>
         )}
       </View>
@@ -644,6 +670,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  marginTop: {
+    marginTop: 8,
   },
 });
 
