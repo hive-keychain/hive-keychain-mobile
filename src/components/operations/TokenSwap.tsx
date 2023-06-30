@@ -1,5 +1,4 @@
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import {SelectOption} from 'components/form/CustomSelector';
 import EllipticButton from 'components/form/EllipticButton';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
@@ -14,6 +13,7 @@ import {
 import {ScrollView} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
+import {SelectOption} from 'screens/swapTokens/SwapTokens';
 import {RootState} from 'store';
 import {withCommas} from 'utils/format';
 import {sanitizeUsername} from 'utils/hiveUtils';

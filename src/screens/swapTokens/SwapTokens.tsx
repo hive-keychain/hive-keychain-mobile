@@ -2,7 +2,6 @@ import {loadTokensMarket} from 'actions/hiveEngine';
 import {KeyTypes, Token} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CustomPicker from 'components/form/CustomPicker';
-import {SelectOption} from 'components/form/CustomSelector';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import TokenSwap from 'components/operations/TokenSwap';
@@ -30,6 +29,14 @@ import {
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
+
+export interface SelectOption {
+  label: string;
+  subLabel?: string;
+  value: any;
+  img?: string;
+  imgBackup?: string;
+}
 
 export const SVGICONPATHPREFIX = 'src/assets/icons/svgs/';
 
