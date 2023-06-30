@@ -2,6 +2,7 @@ import {loadTokensMarket} from 'actions/hiveEngine';
 import {KeyTypes, Token} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CustomPicker from 'components/form/CustomPicker';
+import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import TokenSwap from 'components/operations/TokenSwap';
@@ -11,7 +12,7 @@ import Separator from 'components/ui/Separator';
 import {IStep} from 'hive-keychain-commons';
 import {ThrottleSettings, throttle} from 'lodash';
 import React, {useEffect, useMemo, useState} from 'react';
-import {Button, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
@@ -446,8 +447,8 @@ const SwapTokens = ({
                   maxWidth: '55%',
                 }}
                 rightIcon={
-                  <Button
-                    title="MAX"
+                  <EllipticButton
+                    title={translate('common.max')}
                     onPress={() =>
                       setAmount(
                         startToken?.value.balance
@@ -455,6 +456,8 @@ const SwapTokens = ({
                           : '',
                       )
                     }
+                    style={styles.button}
+                    additionalTextStyle={{color: 'black'}}
                   />
                 }
               />
@@ -681,6 +684,17 @@ const styles = StyleSheet.create({
   },
   marginTop: {
     marginTop: 8,
+  },
+  button: {
+    marginHorizontal: 0,
+    width: '30%',
+    color: 'black',
+    backgroundColor: 'white',
+    height: 30,
+    minWidth: 40,
+    borderRadius: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

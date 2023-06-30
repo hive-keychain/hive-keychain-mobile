@@ -51,7 +51,8 @@
     "missing_key": "Please add your {{key}} key to perform this operation!",
     "need_positive_amount": "The amount needs to be greater than 0",
     "next": "Next",
-    "service_unavailable_message": "This service is temporarly unavailable. We are working on fixing the issue, sorry for the inconvenience."
+    "service_unavailable_message": "This service is temporarly unavailable. We are working on fixing the issue, sorry for the inconvenience.",
+    "max": "MAX"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
