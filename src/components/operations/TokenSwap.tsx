@@ -22,10 +22,6 @@ import {goBack, navigate} from 'utils/navigation';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
 import Operation from './Operation';
 
-//TODO just befire finishing this up, check:
-//  - what intefaces are available in /hive-keychain-commons & remove them from here + re-import using hive-key-chain-commons.
-// do this: I guess, updating the extension swap branch -> then make all those changes in the mobile. Will do that tomorrow then
-
 type TokenSwapOperationProps = {
   estimateId: string;
   startToken: SelectOption;

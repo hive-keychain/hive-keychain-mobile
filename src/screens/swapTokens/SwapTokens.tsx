@@ -9,6 +9,7 @@ import TokenSwap from 'components/operations/TokenSwap';
 import CustomToolTip from 'components/ui/CustomToolTip';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
+import {IStep} from 'hive-keychain-commons';
 import {ThrottleSettings, throttle} from 'lodash';
 import React, {useEffect, useMemo, useState} from 'react';
 import {Button, StyleSheet, Text, View} from 'react-native';
@@ -16,7 +17,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Icons} from 'src/enums/icons.enums';
-import {SwapConfig, SwapStep} from 'src/interfaces/swap-token.interface';
+import {SwapConfig} from 'src/interfaces/swap-token.interface';
 import {RootState} from 'store';
 import {SwapsConfig} from 'utils/config';
 import {BaseCurrencies} from 'utils/currency.utils';
@@ -53,7 +54,7 @@ const SwapTokens = ({
   const [endTokenListOptions, setEndTokenListOptions] = useState<
     SelectOption[]
   >([]);
-  const [estimate, setEstimate] = useState<SwapStep[]>();
+  const [estimate, setEstimate] = useState<IStep[]>();
   const [estimateValue, setEstimateValue] = useState<string | undefined>();
 
   const [autoRefreshCountdown, setAutoRefreshCountdown] = useState<
@@ -227,7 +228,7 @@ const SwapTokens = ({
       setLoadingEstimate(true);
       setEstimate(undefined);
       setEstimateValue(undefined);
-      const result: SwapStep[] = await SwapTokenUtils.getEstimate(
+      const result: IStep[] = await SwapTokenUtils.getEstimate(
         startToken?.value.symbol,
         endToken?.value.symbol,
         amount,

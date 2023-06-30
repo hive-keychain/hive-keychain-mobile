@@ -1,18 +1,18 @@
 import Clipboard from '@react-native-community/clipboard';
 import Icon from 'components/hive/Icon';
+import {ISwap, SwapStatus} from 'hive-keychain-commons';
 import moment from 'moment';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Tooltip} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Swap, SwapStatus} from 'src/interfaces/swap-token.interface';
 import {RootState} from 'store';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 
 interface Props {
-  swap: Swap;
+  swap: ISwap;
 }
 
 const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
@@ -27,7 +27,7 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
   };
 
   const getStatusMessage = (
-    status: Swap['status'],
+    status: ISwap['status'],
     transferInitiated: boolean,
   ) => {
     switch (status) {
@@ -39,8 +39,6 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
         return translate('swapTokens.swap_status_completed');
       case SwapStatus.CANCELED_DUE_TO_ERROR:
         return translate('swapTokens.swap_status_canceled_due_to_error');
-      // case SwapStatus.REFUNDED_CANNOT_COMPLETE:
-      //   return translate('swapTokens.swap_status_refunded'); //TODO clean up
       case SwapStatus.FUNDS_RETURNED:
         return translate('swapTokens.swap_status_returned');
       case SwapStatus.REFUNDED_SLIPPAGE:
@@ -50,7 +48,7 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
     }
   };
 
-  const getStatusIcon = (status: Swap['status']) => {
+  const getStatusIcon = (status: ISwap['status']) => {
     switch (status) {
       case SwapStatus.PENDING:
       case SwapStatus.STARTED:
@@ -58,7 +56,6 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
       case SwapStatus.COMPLETED:
         return 'check_circle';
       case SwapStatus.CANCELED_DUE_TO_ERROR:
-      // case SwapStatus.REFUNDED_CANNOT_COMPLETE: //TODO clean up
       case SwapStatus.FUNDS_RETURNED:
       case SwapStatus.REFUNDED_SLIPPAGE:
         return 'error';
@@ -82,7 +79,7 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
     }
   };
 
-  function getTooltipMessage(swap: Swap) {
+  function getTooltipMessage(swap: ISwap) {
     return `${getStatusMessage(swap.status, swap.transferInitiated)} \n ${
       [SwapStatus.PENDING, SwapStatus.STARTED].includes(swap.status)
         ? translate('swapTokens.swap_last_update', {
@@ -118,7 +115,12 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
             <Icon name={'power_up_down'} subType={'withdraw_vesting'} />
             <Text>
               {swap.status === SwapStatus.COMPLETED ? '' : <Text>~</Text>}
-              {swap.finalAmount} {swap.endToken}
+              {swap.received ??
+                withCommas(
+                  Number(swap.expectedAmountAfterFee).toString(),
+                  3,
+                )}{' '}
+              {swap.endToken}
             </Text>
           </View>
         </View>

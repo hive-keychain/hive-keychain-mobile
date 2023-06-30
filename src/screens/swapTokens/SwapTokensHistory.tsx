@@ -1,17 +1,17 @@
 import Icon from 'components/hive/Icon';
 import TokenSwapHistoryItem from 'components/hive/TokenSwapHistoryItem';
 import Loader from 'components/ui/Loader';
+import {ISwap} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Swap} from 'src/interfaces/swap-token.interface';
 import {RootState} from 'store';
 import {SwapsConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
 
 const SwapTokensHistory = ({activeAccount}: PropsFromRedux) => {
-  const [history, setHistory] = useState<Swap[]>([]);
+  const [history, setHistory] = useState<ISwap[]>([]);
   const [autoRefreshCountdown, setAutoRefreshCountdown] = useState<
     number | null
   >(null);
@@ -58,7 +58,7 @@ const SwapTokensHistory = ({activeAccount}: PropsFromRedux) => {
     setRefresh(false);
   };
 
-  const renderListItem = (index: number, historyItem: Swap) => {
+  const renderListItem = (index: number, historyItem: ISwap) => {
     return (
       <TokenSwapHistoryItem
         key={`item-swap-history-${index}`}
