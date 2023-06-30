@@ -22,7 +22,6 @@ export const tryConfirmTransaction = async (trxId: string) => {
       break;
     }
   }
-  console.log({result}); //TODO remove line
   var error = null;
   if (result && result.logs) {
     var logs = JSON.parse(result.logs);
