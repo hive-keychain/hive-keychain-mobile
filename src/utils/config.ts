@@ -242,6 +242,22 @@ export const BrowserConfig = {
         url: 'https://kryptogamers.com/',
         categories: ['gaming'],
       },
+       {
+        name: 'Actifit',
+        description:
+          'Your Move2Earn Companion - Rewarding Your Everyday Activity',
+        icon: 'https://images.hive.blog/u/actifit/avatar',
+        url: 'https://actifit.io/',
+        categories: ['social'],
+      },
+     {
+        name: 'V4V.app',
+        description: 'Hive to Bitcoin Lightning Gateway.',
+        icon:
+          'https://v4v.app/site-logo/v4vapp-logo-shadows.svg',
+        url: 'https://v4v.app/',
+        categories: ['finance'],
+      },
     ],
   },
 };
