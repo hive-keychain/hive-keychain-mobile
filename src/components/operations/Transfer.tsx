@@ -240,7 +240,10 @@ const Transfer = ({
         <ScrollView>
           <Separator height={30} />
           <Text style={styles.warning}>
-            {getTransferWarning(phishingAccounts, to, currency, !!memo).warning}
+            {
+              getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
+                .warning
+            }
           </Text>
           <Separator />
           <Text style={styles.title}>
@@ -252,7 +255,8 @@ const Transfer = ({
             {translate('wallet.operations.transfer.confirm.to')}
           </Text>
           <Text>{`@${to} ${
-            getTransferWarning(phishingAccounts, to, currency, !!memo).exchange
+            getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
+              .exchange
               ? '(exchange)'
               : ''
           }`}</Text>

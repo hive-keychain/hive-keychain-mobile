@@ -17,7 +17,8 @@
     "active": "Active",
     "memo": "Memo",
     "key_type": "{{type}} key",
-    "using_authorized_account": "Signing using {{authorizedAccount}}'s account"
+    "using_authorized_account": "Signing using {{authorizedAccount}}'s account",
+    "warning_private_key_in_memo": "Please do not send any sentitive information about your keys in a memo."
   },
   "common": {
     "import": "Import",
