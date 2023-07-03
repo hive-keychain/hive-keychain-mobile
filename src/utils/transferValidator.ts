@@ -1,7 +1,6 @@
-import {cryptoUtils} from '@hiveio/dhive';
 import api from 'api/keychain';
+import {getPrivateKeysMemoValidationWarning} from 'hive-keychain-commons';
 import {translate} from 'utils/localize';
-import {getPublicKeyFromPrivateKeyString} from './keyValidation';
 
 const getExchanges = () => [
   {account: 'bittrex', tokens: ['HIVE', 'HBD']},
@@ -50,7 +49,10 @@ export const getTransferWarning = (
 
   warning = getExchangeValidationWarning(account, currency, hasMemo);
 
-  if (memo) warning = getPrivateKeysMemoValidationWarning(memo);
+  if (memo)
+    warning = getPrivateKeysMemoValidationWarning(memo)
+      ? translate('keys.warning_private_key_in_memo')
+      : null;
 
   if (phishingAccounts.find((e) => e === account))
     warning = translate('wallet.operations.transfer.warning.phishing');
@@ -59,25 +61,6 @@ export const getTransferWarning = (
     warning,
     exchange: !warning && !!getExchanges().find((e) => e.account === account),
   };
-};
-
-const getPrivateKeysMemoValidationWarning = (memo: string): string | null => {
-  let memoTemp: string = memo.startsWith('#')
-    ? memo.substring(1, memo.length)
-    : memo;
-  let found: RegExpMatchArray | null;
-  found = memoTemp.match(/[\w\d]{51,52}/g);
-  if (found) {
-    for (const word of found) {
-      if (cryptoUtils.isWif(word) && word.length === 51) {
-        if (getPublicKeyFromPrivateKeyString(word))
-          return translate('keys.warning_private_key_in_memo');
-      } else if (word.startsWith('P') && word.length === 52) {
-        return translate('keys.warning_private_key_in_memo');
-      }
-    }
-  }
-  return null;
 };
 
 export const getPhishingAccounts = async () => {
