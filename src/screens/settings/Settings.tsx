@@ -10,13 +10,22 @@ import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {SettingsNavigation} from 'navigators/MainDrawer.types';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {CheckBox} from 'react-native-elements';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {ConnectedProps, connect} from 'react-redux';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState} from 'store';
+import AutomatedTasksUtils from 'utils/automatedTasks.utils';
+import {ClaimsConfig} from 'utils/config';
 import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-
+//TODO next steps to work in background tasks:
+//  - full check to see what error may bring changing rc from Manabar to RC type.
+//  - create a background/index.ts that will run after unlock app.
+//  - do we need to pass sendMessage to update the bg tasks as well?
+//    - follow same as extension from there.
 const Settings = ({
   setRpc,
   settings,
@@ -27,7 +36,58 @@ const Settings = ({
   removePreference,
   navigation,
 }: PropsFromRedux & {navigation: SettingsNavigation}) => {
+  const [claimRewards, setClaimRewards] = useState(false);
+  const [claimAccounts, setClaimAccounts] = useState(false);
+  const [claimSavings, setClaimSavings] = useState(false);
+  const [claimSavingsErrorMessage, setClaimSavingsErrorMessage] = useState<
+    string
+  >(undefined);
+  const [claimAccountErrorMessage, setClaimAccountErrorMessage] = useState<
+    string
+  >(undefined);
+  const [claimRewardsErrorMessage, setClaimRewardsErrorMessage] = useState<
+    string
+  >(undefined);
+
   useLockedPortrait(navigation);
+
+  useEffect(() => {
+    init();
+  }, [active]);
+
+  const init = async () => {
+    const values = await AutomatedTasksUtils.getClaims(active.name!);
+    setClaimRewards(values[KeychainStorageKeyEnum.CLAIM_REWARDS] ?? false);
+    setClaimAccounts(values[KeychainStorageKeyEnum.CLAIM_ACCOUNTS] ?? false);
+    setClaimSavings(values[KeychainStorageKeyEnum.CLAIM_SAVINGS] ?? false);
+    setClaimSavingsErrorMessage(
+      AutomatedTasksUtils.canClaimSavingsErrorMessage(active),
+    );
+    setClaimAccountErrorMessage(
+      AutomatedTasksUtils.canClaimAccountErrorMessage(active),
+    );
+    setClaimRewardsErrorMessage(
+      AutomatedTasksUtils.canClaimRewardsErrorMessage(active),
+    );
+  };
+
+  const saveClaims = async (
+    claimRewards: boolean,
+    claimAccounts: boolean,
+    claimSavings: boolean,
+  ) => {
+    setClaimAccounts(claimAccounts);
+    setClaimRewards(claimRewards);
+    setClaimSavings(claimSavings);
+
+    await AutomatedTasksUtils.saveClaims(
+      claimRewards,
+      claimAccounts,
+      claimSavings,
+      active.name!,
+    );
+  };
+
   const showPreferencesHandler = () => {
     const userPreference = preferences.find((e) => e.username === active.name);
     if (!userPreference || !userPreference.domains.length)
@@ -62,10 +122,33 @@ const Settings = ({
     return orderedRpcList;
   };
 
+  const isClaimedAccountDisabled =
+    active.rc.max_rc < ClaimsConfig.freeAccount.MIN_RC * 1.5;
+
+  const customDisabledComponent = (
+    children: JSX.Element,
+    disabled: boolean,
+    errorKeyMessage: string,
+  ) => {
+    console.log({disabled});
+    return (
+      <TouchableOpacity
+        disabled={disabled}
+        style={disabled ? styles.disabled : styles.enabled}>
+        <>
+          {children}
+          {disabled && (
+            <Text style={styles.warningText}>{translate(errorKeyMessage)}</Text>
+          )}
+        </>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <SafeArea>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
-      <View style={styles.view}>
+      <ScrollView style={styles.view}>
         <Text style={styles.title}>
           {translate('settings.settings.global')}
         </Text>
@@ -106,14 +189,79 @@ const Settings = ({
         </Text>
         <Separator />
         {showPreferencesHandler()}
-      </View>
+        <Separator />
+        {customDisabledComponent(
+          <>
+            <CheckBox
+              checked={claimRewards}
+              onPress={
+                claimRewardsErrorMessage
+                  ? () => {}
+                  : () => saveClaims(!claimRewards, claimAccounts, claimSavings)
+              }
+              title={translate('wallet.claim.enable_autoclaim_rewards')}
+              containerStyle={styles.checkbox}
+              checkedColor="black"
+            />
+            <Text style={[styles.hintText, styles.marginBottom]}>
+              {translate('wallet.claim.enable_autoclaim_rewards_info')}
+            </Text>
+          </>,
+          !!claimRewardsErrorMessage,
+          claimRewardsErrorMessage,
+        )}
+        {customDisabledComponent(
+          <>
+            <CheckBox
+              checked={claimAccounts && !isClaimedAccountDisabled}
+              onPress={
+                claimAccountErrorMessage || isClaimedAccountDisabled
+                  ? () => {}
+                  : () => saveClaims(claimRewards, !claimAccounts, claimSavings)
+              }
+              title={translate('wallet.claim.enable_autoclaim_accounts')}
+              containerStyle={styles.checkbox}
+              checkedColor="black"
+            />
+            <Text style={[styles.hintText, styles.marginBottom]}>
+              {translate('wallet.claim.enable_autoclaim_accounts_info', {
+                MIN_RC_PCT: ClaimsConfig.freeAccount.MIN_RC_PCT,
+              })}
+            </Text>
+          </>,
+          !!claimAccountErrorMessage || isClaimedAccountDisabled,
+          isClaimedAccountDisabled
+            ? 'toast.claims.insufficient_hp_claim_accounts'
+            : claimAccountErrorMessage,
+        )}
+        {customDisabledComponent(
+          <>
+            <CheckBox
+              checked={claimSavings}
+              onPress={
+                claimSavingsErrorMessage
+                  ? () => {}
+                  : () => saveClaims(claimRewards, claimAccounts, !claimSavings)
+              }
+              title={translate('wallet.claim.enable_autoclaim_savings')}
+              containerStyle={styles.checkbox}
+              checkedColor="black"
+            />
+            <Text style={[styles.hintText, styles.marginBottom]}>
+              {translate('wallet.claim.enable_autoclaim_savings_info')}
+            </Text>
+          </>,
+          !!claimSavingsErrorMessage,
+          claimSavingsErrorMessage,
+        )}
+      </ScrollView>
     </SafeArea>
   );
 };
 
 const styles = StyleSheet.create({
   separator: {borderBottomWidth: 1, paddingTop: 15},
-  view: {paddingHorizontal: 20, backgroundColor: 'white', height: '100%'},
+  view: {paddingHorizontal: 20, backgroundColor: 'white'},
   title: {
     color: '#404950',
     fontWeight: 'bold',
@@ -130,6 +278,34 @@ const styles = StyleSheet.create({
   disclaimer: {color: '#404950', marginVertical: 2},
   button: {backgroundColor: '#B9122F'},
   userSettings: {marginBottom: 0},
+  checkbox: {
+    backgroundColor: 'rgba(0,0,0,0)',
+    width: '100%',
+    padding: 0,
+    borderColor: 'rgba(0,0,0,0)',
+    marginLeft: 0,
+  },
+  hintText: {
+    fontStyle: 'italic',
+  },
+  marginBottom: {
+    marginBottom: 8,
+  },
+  disabled: {
+    backgroundColor: '#cccccc',
+    padding: 4,
+    borderRadius: 4,
+    marginBottom: 4,
+  },
+  enabled: {
+    backgroundColor: '#b5b3b300',
+    padding: 0,
+    borderRadius: 0,
+    marginBottom: 0,
+  },
+  warningText: {
+    color: 'red',
+  },
 });
 
 const mapStateToProps = (state: RootState) => ({

@@ -5,6 +5,7 @@ import {
   VestingDelegation,
 } from '@hiveio/dhive';
 import {Manabar} from '@hiveio/dhive/lib/chain/rc';
+import {RcDelegationsInfo} from '../interfaces/rc-delegation.interface';
 
 export interface ActionPayload<T> {
   readonly type: string;
@@ -236,10 +237,12 @@ export enum PubKeyTypes {
   memo = 'memoPubkey',
 }
 
+export type RC = Manabar & RcDelegationsInfo;
+
 export interface ActiveAccount {
   account: ExtendedAccount;
   keys: AccountKeys;
-  rc: Manabar;
+  rc: RC;
   name?: string;
 }
 
