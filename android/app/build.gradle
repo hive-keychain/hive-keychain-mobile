@@ -138,13 +138,8 @@ android {
         applicationId "com.mobilekeychain"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-<<<<<<< HEAD
-        versionCode 79
-        versionName "1.12.5"
-=======
-        versionCode 78
-        versionName "1.12.3"
->>>>>>> refactor/hive-authentication-2
+        versionCode 80
+        versionName "1.12.6"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
     }
