@@ -23,9 +23,7 @@ import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 //TODO next steps to work in background tasks:
 //  - full check to see what error may bring changing rc from Manabar to RC type.
-//  - create a background/index.ts that will run after unlock app.
-//  - do we need to pass sendMessage to update the bg tasks as well?
-//    - follow same as extension from there.
+
 const Settings = ({
   setRpc,
   settings,
@@ -130,7 +128,6 @@ const Settings = ({
     disabled: boolean,
     errorKeyMessage: string,
   ) => {
-    console.log({disabled});
     return (
       <TouchableOpacity
         disabled={disabled}

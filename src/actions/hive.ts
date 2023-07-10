@@ -1,6 +1,6 @@
 import {AppThunk} from 'src/hooks/redux';
+import AccountUtils from 'utils/account.utils';
 import {getClient} from 'utils/hive';
-import {HiveTxUtils} from 'utils/hive-tx.utils';
 import {
   getConversionRequests,
   getDelegatees,
@@ -58,42 +58,10 @@ export const loadAccount = (
 };
 
 const getAccountRC = (username: string): AppThunk => async (dispatch) => {
-  //TODO old way
-  // const rc = await getClient().rc.getRCMana(username);
-  //END old way
-
-  //TODO new WAY to move somewhere?? ask quentin
-  //Important //TODO:
-  //  check what is being affected by this & update/fix
-
-  // await AccountUtils.getRCMana(username) Implementation bellow
-  const result = await HiveTxUtils.getData('rc_api.find_rc_accounts', {
-    accounts: [username],
-  });
-
-  let manabar = result.rc_accounts[0].rc_manabar;
-  const max_mana = Number(result.rc_accounts[0].max_rc);
-
-  const delta: number = Date.now() / 1000 - manabar.last_update_time;
-  let current_mana = Number(manabar.current_mana) + (delta * max_mana) / 432000;
-  let percentage: number = +((current_mana / max_mana) * 100).toFixed(2);
-
-  if (!isFinite(percentage) || percentage < 0) {
-    percentage = 0;
-  } else if (percentage > 100) {
-    percentage = 100;
-  }
-
-  const rcTemp = {
-    ...result.rc_accounts[0],
-    percentage: percentage,
-  };
-  //END to move somewhere
-
-  //end test code
+  const rc = await AccountUtils.getRCMana(username);
   dispatch({
     type: ACTIVE_ACCOUNT_RC,
-    payload: rcTemp,
+    payload: rc,
   });
 };
 
