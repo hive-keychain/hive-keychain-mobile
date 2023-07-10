@@ -21,8 +21,8 @@ import AutomatedTasksUtils from 'utils/automatedTasks.utils';
 import {ClaimsConfig} from 'utils/config';
 import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-//TODO next steps to work in background tasks:
-//  - full check to see what error may bring changing rc from Manabar to RC type.
+//TODO :
+//  - test & clean up.
 
 const Settings = ({
   setRpc,
