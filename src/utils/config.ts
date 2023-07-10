@@ -12,6 +12,10 @@ export const HASConfig = {
   socket: 'wss://hive-auth.arcange.eu',
 };
 
+export const TransakConfig = {
+  apiKey: '716078e4-939c-445a-8c6d-534614cd31b1',
+};
+
 export type DApp = {
   name: string;
   description: string;
@@ -237,6 +241,22 @@ export const BrowserConfig = {
         icon: 'https://images.hive.blog/u/kryptogames/avatar',
         url: 'https://kryptogamers.com/',
         categories: ['gaming'],
+      },
+       {
+        name: 'Actifit',
+        description:
+          'Your Move2Earn Companion - Rewarding Your Everyday Activity',
+        icon: 'https://images.hive.blog/u/actifit/avatar',
+        url: 'https://actifit.io/',
+        categories: ['social'],
+      },
+     {
+        name: 'V4V.app',
+        description: 'Hive to Bitcoin Lightning Gateway.',
+        icon:
+          'https://v4v.app/site-logo/v4vapp-logo-shadows.svg',
+        url: 'https://v4v.app/',
+        categories: ['finance'],
       },
     ],
   },

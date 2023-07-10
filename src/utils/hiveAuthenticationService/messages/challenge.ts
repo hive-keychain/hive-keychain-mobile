@@ -1,9 +1,11 @@
+import {encodeMemo} from 'components/bridge';
 import Crypto from 'crypto-js';
 import {ModalComponent} from 'utils/modal.enum';
 import {goBack, navigate} from 'utils/navigation';
 import HAS from '..';
 import {HAS_Session} from '../has.types';
 import {getChallengeData} from '../helpers/challenge';
+import {getLeastDangerousKey} from '../helpers/keys';
 import {validatePayloadAndGetData} from '../helpers/sign';
 import {
   HAS_ChallengeDecryptedData,
@@ -29,7 +31,7 @@ export const processChallengeRequest = (
       session,
       has,
 
-      onForceCloseModal: () => {
+      onForceCloseModal: async () => {
         const challenge = Crypto.AES.encrypt(
           payload.uuid,
           session.auth_key,
@@ -39,6 +41,11 @@ export const processChallengeRequest = (
             cmd: 'challenge_nack',
             uuid: payload.uuid,
             data: challenge,
+            pok: await encodeMemo(
+              getLeastDangerousKey(session.account).value,
+              has.getServerKey(),
+              `#${payload.uuid}`,
+            ),
           }),
         );
         goBack();
@@ -66,6 +73,11 @@ const answerChallengeReq = async (
         cmd: 'challenge_ack',
         data: challengeData,
         uuid: payload.uuid,
+        pok: await encodeMemo(
+          getLeastDangerousKey(payload.account).value,
+          has.getServerKey(),
+          `#${payload.uuid}`,
+        ),
       }),
     );
     callback(true);

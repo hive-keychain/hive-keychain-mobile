@@ -7,7 +7,6 @@ import {
 import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import {WalletHistoryComponent} from 'components/hive/Wallet-history-component';
-import Transactions from 'components/hive/Transactions';
 import WhatsNewComponent from 'components/popups/whats-new/whats-new.component';
 import Survey from 'components/survey';
 import ScreenToggle from 'components/ui/ScreenToggle';
@@ -19,17 +18,17 @@ import {
   AppState,
   AppStateStatus,
   StyleSheet,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import Primary from 'screens/wallet/Primary';
 import Tokens from 'screens/wallet/Tokens';
 import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
-import {getVotingDollarsPerAccount, getVP} from 'utils/hiveUtils';
-import {getMainLocale, translate} from 'utils/localize';
+import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
+import {translate} from 'utils/localize';
 
 const Main = ({
   loadAccount,
@@ -44,7 +43,7 @@ const Main = ({
   hive_authentication_service,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const styles = getDimensionedStyles(useWindowDimensions());
- 
+
   const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();

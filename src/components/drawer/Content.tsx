@@ -4,11 +4,13 @@ import {
   DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import {lock} from 'actions/index';
+import {closeAllTabs, lock} from 'actions/index';
 import DrawerFooter from 'components/drawer/Footer';
 import DrawerHeader from 'components/drawer/Header';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
@@ -29,7 +31,6 @@ const HeaderContent = (props: Props) => {
   const [subMenuSelectedScreenName, setSubMenuSelectedScreenName] = useState(
     '',
   );
-
   const subMenuList = [
     {
       labelTranslationKey: 'navigation.manage',
@@ -51,6 +52,7 @@ const HeaderContent = (props: Props) => {
   );
 
   const handleSetMenuExpanded = () => {
+    if (isAccountMenuExpanded && subMenuSelectedScreenName.length) return;
     setIsAccountMenuExpanded(!isAccountMenuExpanded);
     if (!isAccountMenuExpanded) setSubMenuSelectedScreenName('');
   };
@@ -65,78 +67,92 @@ const HeaderContent = (props: Props) => {
     <DrawerContentScrollView
       {...props}
       contentContainerStyle={styles.contentContainer}>
-      <View style={{flex: 1, height: '100%'}}>
-        <DrawerHeader username={user.name} />
-        <DrawerItem
-          {...props}
-          label={translate('navigation.wallet')}
-          onPress={() => {
-            navigation.navigate('WALLET');
-          }}
-          style={itemStyle}
-          focused={newState.index === 0 && !isAccountMenuExpanded}
-        />
-        <DrawerItem
-          {...props}
-          label={translate('navigation.browser')}
-          onPress={() => {
-            navigation.navigate('BrowserScreen');
-          }}
-          focused={newState.index === 1 && !isAccountMenuExpanded}
-          style={itemStyle}
-        />
-
-        <DrawerItem
-          {...props}
-          label={translate('navigation.accounts')}
-          onPress={() => handleSetMenuExpanded()}
-          focused={isAccountMenuExpanded}
-          style={itemStyle}
-        />
-        {isAccountMenuExpanded &&
-          subMenuList.map((subMenu) => (
+      <ScrollView
+        style={{flex: 1, height: '100%'}}
+        contentContainerStyle={{
+          justifyContent: 'space-between',
+          height: '100%',
+        }}>
+        <>
+          <DrawerHeader username={user.name} />
+          <DrawerItem
+            {...props}
+            label={translate('navigation.wallet')}
+            onPress={() => {
+              navigation.navigate('WALLET');
+            }}
+            style={itemStyle}
+            focused={newState.index === 0 && !isAccountMenuExpanded}
+          />
+          <TouchableOpacity
+            onLongPress={() => {
+              props.closeAllTabs();
+              SimpleToast.show('Browser data was deleted');
+            }}>
             <DrawerItem
               {...props}
-              key={`${subMenu.screenName}-sub-item-accounts`}
-              label={`\t\t` + translate(subMenu.labelTranslationKey)}
+              label={translate('navigation.browser')}
               onPress={() => {
-                setSubMenuSelectedScreenName(subMenu.screenName);
-                navigation.navigate(subMenu.screenName);
+                navigation.navigate('BrowserScreen');
               }}
-              focused={
-                subMenuSelectedScreenName === subMenu.screenName &&
-                isAccountMenuExpanded
-              }
+              focused={newState.index === 1 && !isAccountMenuExpanded}
+              style={itemStyle}
             />
-          ))}
-        <DrawerItemList
-          state={{
-            ...newState,
-            index: isAccountMenuExpanded ? -1 : newState.index - 2,
-          }}
-          navigation={navigation}
-          itemStyle={itemStyle}
-          {...rest}
-        />
-        <DrawerItem
-          {...props}
-          label={translate('navigation.log_out')}
-          onPress={() => {
-            lock();
-            navigation.closeDrawer();
-          }}
-        />
+          </TouchableOpacity>
+
+          <DrawerItem
+            {...props}
+            label={translate('navigation.accounts')}
+            onPress={() => handleSetMenuExpanded()}
+            focused={isAccountMenuExpanded}
+            style={itemStyle}
+          />
+          {isAccountMenuExpanded &&
+            subMenuList.map((subMenu) => (
+              <DrawerItem
+                {...props}
+                style={[{paddingLeft: 20}]}
+                key={`${subMenu.screenName}-sub-item-accounts`}
+                label={translate(subMenu.labelTranslationKey)}
+                onPress={() => {
+                  setSubMenuSelectedScreenName(subMenu.screenName);
+                  navigation.navigate(subMenu.screenName);
+                }}
+                focused={
+                  subMenuSelectedScreenName === subMenu.screenName &&
+                  isAccountMenuExpanded
+                }
+              />
+            ))}
+          <DrawerItemList
+            state={{
+              ...newState,
+              index: isAccountMenuExpanded ? -1 : newState.index - 2,
+            }}
+            navigation={navigation}
+            itemStyle={itemStyle}
+            {...rest}
+          />
+          <DrawerItem
+            {...props}
+            label={translate('navigation.log_out')}
+            onPress={() => {
+              lock();
+              navigation.closeDrawer();
+            }}
+          />
+        </>
         <DrawerFooter user={user} />
-      </View>
+      </ScrollView>
     </DrawerContentScrollView>
   );
 };
-const styles = StyleSheet.create({contentContainer: {height: '100%'}});
+const styles = StyleSheet.create({contentContainer: {height: '100%', flex: 1}});
 const mapStateToProps = (state: RootState) => ({
   user: state.activeAccount,
 });
 
-const connector = connect(mapStateToProps, {lock});
+const connector = connect(mapStateToProps, {lock, closeAllTabs});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(HeaderContent);

@@ -21,11 +21,18 @@ class Bridge extends Component implements InnerProps {
 
   sendMessage(methodName: string, params: any[]) {
     const id = Math.random().toString(36).substr(2, 9); //just unique id
+    console.log(params);
+    const paramsJoined = params
+      .map((e) => e.replace(/\\/g, '\\\\'))
+      .join("','");
+    console.log(paramsJoined);
     const js = `
-        returnValue = window.${methodName}('${params.join("','")}');
+        returnValue = window.${methodName}('${paramsJoined}');
         returnObject = JSON.stringify({id: "${id}", data: returnValue});
         window.ReactNativeWebView.postMessage(returnObject);
     `;
+    console.log(js);
+
     this.webref.injectJavaScript(js);
 
     return new Promise((resolve, reject) => {
@@ -66,8 +73,32 @@ export const decodeMemo = (key: string, string: string) =>
 export const encodeMemo = (key: string, receiverKey: string, string: string) =>
   self.sendMessage('encodeMemo', [key, receiverKey, string]) as Promise<string>;
 
-export const signBuffer = (key: string, string: string) =>
-  self.sendMessage('signBuffer', [string, key]) as Promise<string>;
+export const signBuffer = (key: string, message: string) => {
+  let buf;
+  try {
+    const o = JSON.parse(message, (k, v) => {
+      if (
+        v !== null &&
+        typeof v === 'object' &&
+        'type' in v &&
+        v.type === 'Buffer' &&
+        'data' in v &&
+        Array.isArray(v.data)
+      ) {
+        return Buffer.from(v.data);
+      }
+      return v;
+    });
+    if (Buffer.isBuffer(o)) {
+      buf = o;
+    } else {
+      buf = message;
+    }
+  } catch (e) {
+    buf = message;
+  }
+  return self.sendMessage('signBuffer', [buf, key]) as Promise<string>;
+};
 
 export const signedCall = (
   key: string,

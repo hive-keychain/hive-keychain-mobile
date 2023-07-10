@@ -28,15 +28,15 @@ import {
   validateRequest,
 } from 'utils/keychain';
 import {RequestError, RequestSuccess} from 'utils/keychain.types';
-import {goBack as navigationGoBack, navigate} from 'utils/navigation';
+import {navigate, goBack as navigationGoBack} from 'utils/navigation';
 import {hasPreference} from 'utils/preferences';
 import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
-import {hive_keychain} from './bridges/HiveKeychainBridge';
-import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import Footer from './Footer';
 import HomeTab from './HomeTab';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
+import {hive_keychain} from './bridges/HiveKeychainBridge';
+import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import RequestErr from './requestOperations/components/RequestError';
 
 type Props = {
@@ -313,6 +313,7 @@ export default ({
             onMessage={onMessage}
             javaScriptEnabled
             allowsInlineMediaPlayback
+            allowsFullscreenVideo
             onLoadEnd={onLoadEnd}
             onLoadStart={onLoadStart}
             onLoadProgress={onLoadProgress}
