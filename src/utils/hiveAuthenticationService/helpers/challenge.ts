@@ -40,8 +40,8 @@ export const prepareRegistrationChallenge = async (
     const key = getLeastDangerousKey(username);
     if (key) {
       return {
-        key_type: key.type,
         challenge: await encodeMemo(key.value, serverKey, `#${message}`),
+        pok: await encodeMemo(key.value, serverKey, `#${message}`),
         name: username,
       };
     } else {
@@ -65,6 +65,11 @@ export const prepareRegistrationChallenge = async (
         JSON.stringify({
           cmd: 'auth_nack',
           uuid: session.uuid,
+          pok: await encodeMemo(
+            getLeastDangerousKey(session.account).value,
+            has.getServerKey(),
+            `#${session.uuid}`,
+          ),
         }),
       );
     }

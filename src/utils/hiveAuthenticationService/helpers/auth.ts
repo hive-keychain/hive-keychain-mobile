@@ -1,4 +1,5 @@
 import {addSessionToken} from 'actions/hiveAuthenticationService';
+import {encodeMemo} from 'components/bridge';
 import {SessionTime} from 'components/hive_authentication_service/Auth';
 import Crypto from 'crypto-js';
 import uuid from 'react-native-uuid';
@@ -7,6 +8,7 @@ import HAS from '..';
 import {HAS_Session} from '../has.types';
 import {HAS_AuthChallengeData, HAS_AuthPayload} from '../payloads.types';
 import {dAppChallenge, getChallengeData} from './challenge';
+import {getLeastDangerousKey} from './keys';
 
 export const answerAuthReq = async (
   has: HAS,
@@ -66,7 +68,17 @@ export const answerAuthReq = async (
       await sendAuth(has, payload, session, auth_ack_data);
     } else {
       //TODO: Discuss nack with arcange, why does it need challenge?
-      has.send(JSON.stringify({cmd: 'auth_nack', uuid: payload.uuid}));
+      has.send(
+        JSON.stringify({
+          cmd: 'auth_nack',
+          uuid: payload.uuid,
+          pok: await encodeMemo(
+            getLeastDangerousKey(session.account).value,
+            has.getServerKey(),
+            `#${payload.uuid}`,
+          ),
+        }),
+      );
     }
     callback();
     // remove expired tokens
@@ -110,6 +122,11 @@ export const sendAuth = async (
     JSON.stringify({
       cmd: 'auth_ack',
       uuid: payload.uuid,
+      pok: await encodeMemo(
+        getLeastDangerousKey(session.account).value,
+        has.getServerKey(),
+        `#${payload.uuid}`,
+      ),
       data,
     }),
   );

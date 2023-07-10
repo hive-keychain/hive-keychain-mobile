@@ -1,7 +1,9 @@
+import {encodeMemo} from 'components/bridge';
 import HAS from '..';
 import {HAS_SignPayload} from '../payloads.types';
+import {getLeastDangerousKey} from './keys';
 
-export const answerSuccessfulBroadcastReq = (
+export const answerSuccessfulBroadcastReq = async (
   has: HAS,
   payload: HAS_SignPayload,
   result: any,
@@ -13,6 +15,11 @@ export const answerSuccessfulBroadcastReq = (
         uuid: payload.uuid,
         broadcast: payload.decryptedData.broadcast,
         data: result.result.tx_id,
+        pok: await encodeMemo(
+          getLeastDangerousKey(payload.account).value,
+          has.getServerKey(),
+          `#${payload.uuid}`,
+        ),
       }),
     );
   } else {
@@ -20,7 +27,7 @@ export const answerSuccessfulBroadcastReq = (
   }
 };
 
-export const answerFailedBroadcastReq = (
+export const answerFailedBroadcastReq = async (
   has: HAS,
   payload: HAS_SignPayload,
   error?: string,
@@ -29,6 +36,11 @@ export const answerFailedBroadcastReq = (
     JSON.stringify({
       cmd: 'sign_nack',
       uuid: payload.uuid,
+      pok: await encodeMemo(
+        getLeastDangerousKey(payload.account).value,
+        has.getServerKey(),
+        `#${payload.uuid}`,
+      ),
       error: error || 'Request was canceled by the user.',
     }),
   );

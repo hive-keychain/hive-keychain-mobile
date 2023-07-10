@@ -1,11 +1,13 @@
 import {removeHASSession} from 'actions/hiveAuthenticationService';
 import assert from 'assert';
+import {encodeMemo} from 'components/bridge';
 import Crypto from 'crypto-js';
 import {store} from 'store';
 import {ModalComponent} from 'utils/modal.enum';
 import {goBack, navigate} from 'utils/navigation';
 import HAS from '..';
 import {answerAuthReq, sendAuth} from '../helpers/auth';
+import {getLeastDangerousKey} from '../helpers/keys';
 import {HAS_AuthDecrypted, HAS_AuthPayload} from '../payloads.types';
 
 export const processAuthenticationRequest = (
@@ -45,7 +47,7 @@ export const processAuthenticationRequest = (
           store.dispatch(removeHASSession(accountSession.uuid));
           goBack();
         },
-        onForceCloseModal: () => {
+        onForceCloseModal: async () => {
           const challenge = Crypto.AES.encrypt(
             payload.uuid,
             accountSession.auth_key,
@@ -55,6 +57,11 @@ export const processAuthenticationRequest = (
               cmd: 'auth_nack',
               uuid: payload.uuid,
               data: challenge,
+              pok: await encodeMemo(
+                getLeastDangerousKey(accountSession.account).value,
+                has.getServerKey(),
+                `#${payload.uuid}`,
+              ),
             }),
           );
           store.dispatch(removeHASSession(accountSession.uuid));
