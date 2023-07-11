@@ -16,7 +16,7 @@ const activeAccountReducer = (
   state: ActiveAccount = {
     account: {} as ExtendedAccount,
     keys: {} as AccountKeys,
-    rc: {} as RC, //TODO check the implications and see if you can update & fix
+    rc: {} as RC,
   },
   {type, payload}: ActionPayload<any>,
 ): ActiveAccount => {

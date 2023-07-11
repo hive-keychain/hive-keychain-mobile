@@ -72,51 +72,16 @@ const saveClaims = async (
   ]);
 };
 
-// const getAllClaimAccounts = async () => {
-//   return await LocalStorageUtils.getValueFromLocalStorage(
-//     LocalStorageKeyEnum.CLAIM_ACCOUNTS,
-//   );
-// };
-
-// const getAllClaimRewards = async () => {
-//   return await LocalStorageUtils.getValueFromLocalStorage(
-//     LocalStorageKeyEnum.CLAIM_REWARDS,
-//   );
-// };
-
-// const getAllClaimSavings = async () => {
-//   return await LocalStorageUtils.getValueFromLocalStorage(
-//     LocalStorageKeyEnum.CLAIM_SAVINGS,
-//   );
-// };
-
-// const initBackgroundClaims = async () => {
-//   let allRewards = await AutomatedTasksUtils.getAllClaimRewards();
-//   let allAccounts = await AutomatedTasksUtils.getAllClaimAccounts();
-//   let allSavings = await AutomatedTasksUtils.getAllClaimSavings();
-//   chrome.runtime.sendMessage({
-//     command: BackgroundCommand.UPDATE_CLAIMS,
-//     value: {
-//       claimRewards: allRewards,
-//       claimAccounts: allAccounts,
-//       claimSavings: allSavings,
-//     },
-//   });
-// };
-
 const updateClaim = async (
   username: string,
   enabled: boolean,
   claimType: KeychainStorageKeyEnum,
 ) => {
-  // let claims = await LocalStorageUtils.getValueFromLocalStorage(claimType);
-  //TODO ask quentin if this line is right or can be improved.
   let claims = JSON.parse(await AsyncStorage.getItem(claimType)) ?? {};
   claims = {
     ...claims,
     [username]: enabled,
   };
-  console.log('updated: ', {claims}); //TODO remove line
   await AsyncStorage.setItem(claimType, JSON.stringify(claims));
 };
 
@@ -149,10 +114,6 @@ const canClaimAccountErrorMessage = (
 const AutomatedTasksUtils = {
   getClaims,
   saveClaims,
-  // initBackgroundClaims,
-  // getAllClaimAccounts,
-  // getAllClaimRewards,
-  // getAllClaimSavings,
   updateClaim,
   canClaimSavingsErrorMessage,
   canClaimAccountErrorMessage,

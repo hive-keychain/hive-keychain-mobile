@@ -21,8 +21,6 @@ import AutomatedTasksUtils from 'utils/automatedTasks.utils';
 import {ClaimsConfig} from 'utils/config';
 import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-//TODO :
-//  - test & clean up.
 
 const Settings = ({
   setRpc,
@@ -91,20 +89,24 @@ const Settings = ({
     if (!userPreference || !userPreference.domains.length)
       return <Text>{translate('settings.settings.no_pref')}</Text>;
     return (
-      <FlatList
-        data={userPreference.domains}
-        renderItem={(preference) => {
-          return (
-            <CollapsibleSettings
-              username={active.name}
-              key={preference.item.domain}
-              index={preference.index}
-              domainPref={preference.item}
-              removePreference={removePreference}
-            />
-          );
-        }}
-      />
+      <ScrollView
+        horizontal={true}
+        contentContainerStyle={{width: '100%', height: '100%'}}>
+        <FlatList
+          data={userPreference.domains}
+          renderItem={(preference) => {
+            return (
+              <CollapsibleSettings
+                username={active.name}
+                key={preference.item.domain}
+                index={preference.index}
+                domainPref={preference.item}
+                removePreference={removePreference}
+              />
+            );
+          }}
+        />
+      </ScrollView>
     );
   };
 
@@ -145,7 +147,7 @@ const Settings = ({
   return (
     <SafeArea>
       <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
-      <ScrollView style={styles.view}>
+      <ScrollView style={styles.view} horizontal={false}>
         <Text style={styles.title}>
           {translate('settings.settings.global')}
         </Text>

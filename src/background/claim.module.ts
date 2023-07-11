@@ -12,14 +12,12 @@ import {SavingsUtils} from 'utils/savings.utils';
 import {ActiveAccountModule} from './active-account.module';
 
 const start = async () => {
-  //TODO question what if we check first on settings, then if .some activate timer else = null?
-  console.log(`Will autoclaim every ${ClaimsConfig.FREQUENCY}mn`); //TODO add Logger?
+  console.log(`Will autoclaim every ${ClaimsConfig.FREQUENCY}mn`);
   await alarmHandler();
   timeOutAlarmHandler;
 };
 
 const alarmHandler = async () => {
-  console.log('Trying to auto claim!'); //TODO remove line
   const mk = await AsyncStorage.getItem(KeychainStorageKeyEnum.__MK);
   const allClaims: {[key: string]: any} = {};
   (
@@ -31,7 +29,7 @@ const alarmHandler = async () => {
   ).forEach((item) => {
     allClaims[`${item[0]}`] = item[1] ? JSON.parse(item[1]) : false;
   });
-  console.log({allClaims, mk}); //TODO remove line
+
   const allClaimsAccounts = allClaims[KeychainStorageKeyEnum.CLAIM_REWARDS];
   const allClaimsRewards = allClaims[KeychainStorageKeyEnum.CLAIM_REWARDS];
   const allClaimsSavings = allClaims[KeychainStorageKeyEnum.CLAIM_SAVINGS];
@@ -59,7 +57,7 @@ const alarmHandler = async () => {
 
 const timeOutAlarmHandler = setInterval(
   alarmHandler,
-  ClaimsConfig.FREQUENCY * 1000,
+  ClaimsConfig.FREQUENCY * 1000 * 60,
 );
 
 const initClaimAccounts = async (
