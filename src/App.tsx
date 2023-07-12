@@ -13,7 +13,7 @@ import UnlockStack from 'navigators/Unlock';
 import React, {useEffect, useRef} from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 import Orientation from 'react-native-orientation-locker';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import Modal from 'screens/Modal';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
@@ -21,6 +21,7 @@ import {setRpc} from 'utils/hive';
 import {processQRCodeOp} from 'utils/hive-uri';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
+import {WidgetUtils} from 'utils/widget.utils';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 
 const Root = createStackNavigator<RootStackParam>();
@@ -37,6 +38,10 @@ const App = ({
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
 
   useEffect(() => {
+    //TODO test code
+    WidgetUtils.sendWidgetData('Test 1');
+    //end test code
+
     setupLinking();
     RNBootSplash.hide({fade: true});
     Orientation.lockToPortrait();

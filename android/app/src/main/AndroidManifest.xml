@@ -11,6 +11,21 @@
       android:icon="@mipmap/ic_launcher"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+
+      <!-- Receiver Element is Added to link the widget files to the Application -->
+      <receiver android:name=".NewAppWidget"
+          android:exported="false">
+        <intent-filter>
+          <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+        </intent-filter>
+
+        <meta-data
+            android:name="android.appwidget.provider"
+            android:resource="@xml/new_app_widget_info" />
+      </receiver>
+      <!-- Until Here -->
+
+
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
