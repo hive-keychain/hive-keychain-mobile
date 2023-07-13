@@ -7,7 +7,7 @@ import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {Keyboard, StyleSheet, Text} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {powerUp} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
@@ -65,7 +65,9 @@ const PowerUp = ({currency = 'HIVE', user, loadAccount}: Props) => {
           leftIcon={<AccountLogoDark />}
           autoCapitalize="none"
           value={to}
-          onChangeText={setTo}
+          onChangeText={(e) => {
+            setTo(e.trim());
+          }}
         />
         <Separator />
         <OperationInput
