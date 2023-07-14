@@ -1,33 +1,29 @@
 import {NativeModules} from 'react-native';
+import {getPrices} from './price';
 
 const SharedStorage = NativeModules.SharedStorage;
-const group = 'group.streak';
+// const group = 'group.streak';
 
-const {RNSharedWidget} = NativeModules;
-
-//TODO:
-//  1. Follow tuts:
-//    - https://www.youtube.com/watch?v=JlGFd6_QOlY
-//    - https://www.youtube.com/watch?v=xGQJg31TPtU
-//    - change the widget name related files & customize a bit better.
-//
-//  to make it dynamic and pass the data using widget.utils.ts
-//  2. after making work the widget, check if needed ->
-//                      - @types/react-native-shared-group-preferences
-//                      - react-native-shared-group-preferences
-//                      if not needed uninstall
-//  3. after finishing should we try to code the IOS as well o leave this to quentin???
-
-const sendWidgetData = async (text: string) => {
-  const value = `${text} Sample Value`;
+const sendWidgetData = async () => {
+  let data = {
+    HIVE: 'Loading...HIVE',
+    HBD: 'Loading...HBD',
+  };
   try {
-    // // iOS
-    // await SharedGroupPreferences.setItem('widgetKey', {text: value}, group);
-    // // Android
-    // SharedStorage.set(JSON.stringify({text: value}));
+    const prices = await getPrices();
+    if (prices && prices.hive && prices.hive_dollar) {
+      // Android send shared data
+      data['HIVE'] = `HIVE ${Number(prices.hive.usd).toFixed(
+        3,
+      )}$ / 24h: ${Number(prices.hive.usd_24h_change).toFixed(2)}%`;
+      data['HBD'] = `HBD ${Number(prices.hive_dollar.usd).toFixed(
+        3,
+      )}$ / 24h: ${Number(prices.hive_dollar.usd_24h_change).toFixed(2)}%`;
+    }
+    SharedStorage.set(JSON.stringify(data));
 
-    //new one
-    RNSharedWidget.setData('convertorMonex', value);
+    // IOS TODO
+    // await SharedGroupPreferences.setItem('widgetKey', {text: value}, group);
   } catch (error) {
     console.log('Error sending widget data: ', {error});
   }

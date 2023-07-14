@@ -39,7 +39,7 @@ const App = ({
 
   useEffect(() => {
     //TODO test code
-    WidgetUtils.sendWidgetData('Test 1');
+    WidgetUtils.sendWidgetData();
     //end test code
 
     setupLinking();

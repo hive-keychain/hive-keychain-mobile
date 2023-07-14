@@ -1,24 +1,94 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.AppWidgetSample.AppWidget.Container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09C"
+    android:background="#272424"
     android:padding="@dimen/widget_margin"
     android:theme="@style/Theme.AppWidgetSample.AppWidgetContainer">
 
-    <TextView
-        android:id="@+id/appwidget_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:background="#09C"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
-        android:textColor="#ffffff"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />
+    <LinearLayout
+        android:id="@+id/widget_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/keychain_logo_big"
+            android:layout_width="180dp"
+            android:layout_height="70dp"
+            android:background="#272424"
+            android:contentDescription="@string/my_image_description"
+            android:scaleType="fitCenter"
+            android:src="@drawable/keychain_logo"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/keychain_logo_mini"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#272424"
+            android:contentDescription="@string/my_image_description"
+            android:scaleType="fitCenter"
+            android:src="@drawable/keychain_logo_mini"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:orientation="horizontal"
+            android:gravity="center" >
+
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="match_parent"
+                android:background="#272424"
+                android:contentDescription="@string/my_image_description"
+                android:scaleType="fitCenter"
+                android:src="@drawable/hive_brands"
+                android:tint="#FF0000" />
+
+            <TextView
+                android:id="@+id/appwidget_text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/widget_margin"
+                android:contentDescription="@string/appwidget_text"
+                android:text="@string/appwidget_text"
+                android:textColor="#ffffff"
+                android:textSize="12sp"
+                android:textStyle="bold|italic" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:orientation="horizontal"
+        android:gravity="center" >
+
+        <ImageView
+            android:layout_width="26dp"
+            android:layout_height="match_parent"
+            android:background="#272424"
+            android:contentDescription="@string/my_image_description"
+            android:scaleType="fitCenter"
+            android:src="@drawable/hive_brands"
+            android:tint="#4CAF50" />
+        <TextView
+            android:id="@+id/appwidget_text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/appwidget_text"
+            android:text="@string/appwidget_text"
+            android:textColor="#ffffff"
+            android:textSize="12sp"
+            android:textStyle="bold|italic"
+            android:layout_marginLeft="@dimen/widget_margin" />
+    </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

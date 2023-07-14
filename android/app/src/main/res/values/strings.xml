@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Hive Keychain-beta</string>
-    <string name="appwidget_text">EXAMPLE</string>
+    <string name="appwidget_text">Loading Data</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
+    <string name="my_image_description">Hive Keychain Logo</string>
 </resources>
