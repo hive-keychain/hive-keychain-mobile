@@ -8,6 +8,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +54,11 @@ public class NewAppWidget extends AppWidgetProvider {
             String appString = sharedPref.getString("appData", "");
             JSONObject appData = new JSONObject(appString);
 
+            //Service for StackView
+            Intent serviceIntent = new Intent(context, AppWidgetService.class);
+            serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
+
             //Getting hive data from object
             JSONObject hiveData = appData.getJSONObject("hive");
             String hive_price_usd = "$" + hiveData.getString("usd");
@@ -94,7 +100,9 @@ public class NewAppWidget extends AppWidgetProvider {
             views.setTextViewText(R.id.appwidget_currency_name2, "HIVE DOLLAR");
             views.setTextViewText(R.id.appwidget_currency_value2, hive_dollar_price_usd);
             views.setTextViewText(R.id.appwidget_currency_change2, hive_dollar_price_usd_24h_change);
-            //TODO change logic, store all values + finish + continue.
+            //Add StackView into views
+            views.setRemoteAdapter(R.id.appwidget_stack_view, serviceIntent);
+            views.setEmptyView(R.id.appwidget_stack_view, R.id.appwidget_stack_empty_view);
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views);

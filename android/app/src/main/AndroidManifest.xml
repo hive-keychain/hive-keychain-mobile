@@ -71,6 +71,9 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
+      <service android:name=".AppWidgetService"
+        android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

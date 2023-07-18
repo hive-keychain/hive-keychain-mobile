@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.AppWidgetSample.AppWidget.Container"
@@ -6,12 +6,14 @@
     android:layout_height="match_parent"
     android:background="@drawable/shape"
     android:padding="@dimen/widget_margin"
-    android:theme="@style/Theme.AppWidgetSample.AppWidgetContainer">
+    android:theme="@style/Theme.AppWidgetSample.AppWidgetContainer"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
     
     <LinearLayout
         android:id="@+id/widget_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center">
 
@@ -253,4 +255,27 @@
 
     </LinearLayout>
 
-</RelativeLayout>
+    <!-- Init Testing adapter based widgets -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <StackView
+            android:id="@+id/appwidget_stack_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:loopViews="true" />
+
+        <TextView
+            android:id="@+id/appwidget_stack_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light_blue_50"
+            android:text="Empty"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textStyle="bold"/>
+
+    </FrameLayout>
+    <!-- End Testing adapter based widgets -->
+</LinearLayout>
