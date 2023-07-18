@@ -17,8 +17,6 @@
           android:exported="false">
         <intent-filter>
           <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-          <action android:name="com.mobilekeychain.NewAppWidget.ACTION_WIDGET_REFRESH" />
-          <action android:name="com.mobilekeychain.NewAppWidget.ACTION_WIDGET_LAUNCH_APP" />
         </intent-filter>
 
         <meta-data

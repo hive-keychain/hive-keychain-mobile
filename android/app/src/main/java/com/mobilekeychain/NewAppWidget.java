@@ -1,13 +1,14 @@
 package com.mobilekeychain;
 
 import static android.app.PendingIntent.FLAG_IMMUTABLE;
-
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactApplication;
@@ -28,6 +30,8 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
+
+import java.util.Arrays;
 
 /**
  * Implementation of App Widget functionality.
@@ -46,14 +50,51 @@ public class NewAppWidget extends AppWidgetProvider {
 
         try {
             SharedPreferences sharedPref = context.getSharedPreferences("DATA", Context.MODE_PRIVATE);
-            String appString = sharedPref.getString("appData", "{\"HIVE\":'Loading data',\"HBD\":'Loading data'}");
+            String appString = sharedPref.getString("appData", "");
             JSONObject appData = new JSONObject(appString);
 
-            // Construct the RemoteViews object
-//            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
-            views.setTextViewText(R.id.appwidget_currency_value, appData.getString("HIVE"));
-            //TODO change logic, store both values + finish + continue.
-//            views.setTextViewText(R.id.appwidget_text2, appData.getString("HBD"));
+            //Getting hive data from object
+            JSONObject hiveData = appData.getJSONObject("hive");
+            String hive_price_usd = "$" + hiveData.getString("usd");
+            String hive_price_usd_24h_change = hiveData.getString("usd_24h_change") + "%";
+            if(hive_price_usd_24h_change.contains("-")){
+                views.setTextColor(R.id.appwidget_currency_change1, ContextCompat.getColor(context, R.color.red));
+                views.setViewVisibility(R.id.appwidget_icon_direction_down1, View.VISIBLE);
+                views.setViewVisibility(R.id.appwidget_icon_direction_up1, View.GONE);
+            }else{
+                views.setTextColor(R.id.appwidget_currency_change1, ContextCompat.getColor(context, R.color.green));
+                views.setViewVisibility(R.id.appwidget_icon_direction_up1, View.VISIBLE);
+                views.setViewVisibility(R.id.appwidget_icon_direction_down1, View.GONE);
+            }
+            //END Getting hive data from object
+
+            //Getting hive_dollar data from object
+            JSONObject hiveDollarData = appData.getJSONObject("hive_dollar");
+            String hive_dollar_price_usd = "$" + hiveDollarData.getString("usd");
+            String hive_dollar_price_usd_24h_change = hiveDollarData.getString("usd_24h_change") + "%";
+            if(hive_dollar_price_usd_24h_change.contains("-")){
+                views.setTextColor(R.id.appwidget_currency_change2, ContextCompat.getColor(context, R.color.red));
+                views.setViewVisibility(R.id.appwidget_icon_direction_down2, View.VISIBLE);
+                views.setViewVisibility(R.id.appwidget_icon_direction_up2, View.GONE);
+            }else{
+                views.setTextColor(R.id.appwidget_currency_change2, ContextCompat.getColor(context, R.color.green));
+                views.setViewVisibility(R.id.appwidget_icon_direction_up2, View.VISIBLE);
+                views.setViewVisibility(R.id.appwidget_icon_direction_down2, View.GONE);
+            }
+            //END Getting hive data from object
+
+            Log.i("Init logs", "Logs bellow!!");
+            Log.i("appData", appData.toString());
+            Log.i("hiveData", hiveData.toString());
+            Log.i("hiveDollarData", hiveDollarData.toString());
+            //Setting views data
+            views.setTextViewText(R.id.appwidget_currency_name1, "HIVE");
+            views.setTextViewText(R.id.appwidget_currency_value1, hive_price_usd);
+            views.setTextViewText(R.id.appwidget_currency_change1, hive_price_usd_24h_change);
+            views.setTextViewText(R.id.appwidget_currency_name2, "HIVE DOLLAR");
+            views.setTextViewText(R.id.appwidget_currency_value2, hive_dollar_price_usd);
+            views.setTextViewText(R.id.appwidget_currency_change2, hive_dollar_price_usd_24h_change);
+            //TODO change logic, store all values + finish + continue.
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -67,21 +108,12 @@ public class NewAppWidget extends AppWidgetProvider {
         // There may be multiple widgets active, so update all of them
         // Perform this loop procedure for each widget that belongs to this
         // provider.
-        for (int i=0; i < appWidgetIds.length; i++) {
-            int appWidgetId = appWidgetIds[i];
-            // Create an Intent to launch ExampleActivity
-            Intent active = new Intent(context, MainActivity.class);
-            active.setAction(ACTION_WIDGET_LAUNCH_APP);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,active,FLAG_IMMUTABLE);
+        for (int appWidgetId : appWidgetIds) {
+            Intent intent = new Intent(context, MainActivity.class);
+            final int flag =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT;
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, flag);
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
             views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
-
-            active = new Intent(context, MainActivity.class);
-            active.setAction(ACTION_WIDGET_REFRESH);
-            pendingIntent = PendingIntent.getBroadcast(context,0,active,FLAG_IMMUTABLE);
-            views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
-            views.setOnClickPendingIntent(R.id.appwidget_button_refresh, pendingIntent);
-
             updateAppWidget(context, appWidgetManager,appWidgetId, views);
         }
 
@@ -95,6 +127,7 @@ public class NewAppWidget extends AppWidgetProvider {
     }
 
     public void onReceive(Context context, Intent intent) {
+        Log.i("intent: ", intent.toString()); //TODO remove line
         if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
             Log.i("onReceive", ACTION_WIDGET_REFRESH);
         } else if (intent.getAction().equals(ACTION_WIDGET_LAUNCH_APP)) {
