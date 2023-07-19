@@ -39,32 +39,29 @@ public class AppWidgetService extends RemoteViewsService {
                         AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-        @Override
-        public void onCreate() {
-            //connect to data source if needed
+        public void getData(){
             try {
                 SharedPreferences sharedPref = context.getSharedPreferences("DATA", Context.MODE_PRIVATE);
                 String appString = sharedPref.getString("appData", "");
                 currency_data = new JSONObject(appString);
-
-//                for(int i = 0; i<appData.names().length(); i++){
-//                    String key = appData.names().getString(i);
-//                    JSONObject value = appData.getJSONObject(appData.names().getString(i));
-//                    Log.v("DATA_CURRENCY", "key = " + key + " value = " + value.toString());
-//                    Log.v("DATA_CURRENCY",key + " " + value.getString("usd") + " " + value.getString("usd_24h_change"));
-//                    currency_list_values.add(new CurrencyData(key,value.getString("usd"), value.getString("usd_24h_change")));
-//                }
-//                Log.v("currency_list_values", currency_list_values[0]);
+                Log.i("currency_data", currency_data.toString()); //TODO to remove line
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+
+        @Override
+        public void onCreate() {
+            //connect to data source if needed
+            getData();
             //TODO remove line bellow as this is only tutorial's sample
             SystemClock.sleep(3000);
         }
 
         @Override
         public void onDataSetChanged() {
-
+            Log.i("onDataSetChanged", "so ask new data"); //TODO remove line
+            getData();
         }
 
         @Override
@@ -104,6 +101,7 @@ public class AppWidgetService extends RemoteViewsService {
                 SystemClock.sleep(500);
                 return views;
             } catch (JSONException e) {
+                Log.i("Error: getViewAt", e.getLocalizedMessage()); //TODO remove line
                 e.printStackTrace();
             }
             //TODO is this right thing to do here??

@@ -11,6 +11,21 @@ interface Prices {
 
 const sendWidgetData = async () => {
   const dataCurrencies: {[key: string]: Prices} = {};
+  //TODO remove testing method
+  const test = false;
+  if (test) {
+    dataCurrencies['test_keychain_coin'] = {
+      usd: '20.00',
+      usd_24h_change: '100',
+    };
+    dataCurrencies['test_keychain_coin2'] = {
+      usd: '10.00',
+      usd_24h_change: '8.34',
+    };
+    SharedStorage.set(JSON.stringify(dataCurrencies));
+    return;
+  }
+  //end testing
   try {
     const prices = await getPrices();
     if (prices && prices.hive && prices.hive_dollar) {

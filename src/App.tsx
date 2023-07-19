@@ -43,6 +43,7 @@ const App = ({
     const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
     let eventListener = eventEmitter.addListener('command_event', (event) => {
       console.log({event}); //TODO remove line + finish bellow.
+      handleEventListener(event);
     });
 
     // Removes the listener once unmounted
@@ -51,6 +52,18 @@ const App = ({
     };
   }, []);
   //end TODO
+
+  const handleEventListener = async (event: any) => {
+    console.log({handleEvent: event});
+    //{"event": {"currency": "update_values"}}
+    if (event && event.currency) {
+      console.log({command: event.currency});
+      const {currency: command} = event;
+      if (command === 'update_values') {
+        await WidgetUtils.sendWidgetData();
+      }
+    }
+  };
 
   useEffect(() => {
     //TODO test code
