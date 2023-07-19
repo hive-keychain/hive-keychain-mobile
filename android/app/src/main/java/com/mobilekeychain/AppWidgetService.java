@@ -62,6 +62,7 @@ public class AppWidgetService extends RemoteViewsService {
         public void onDataSetChanged() {
             Log.i("onDataSetChanged", "so ask new data"); //TODO remove line
             getData();
+            SystemClock.sleep(1500);
         }
 
         @Override
