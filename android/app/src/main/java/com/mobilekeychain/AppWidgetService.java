@@ -81,14 +81,13 @@ public class AppWidgetService extends RemoteViewsService {
         public RemoteViews getViewAt(int position) {
             try {
                 //extract data from JSONObject stored.
-                String currency_name = currency_data.names().getString(position);
+                String currency_name = currency_data.names().getString(position).replace("_", " ");
                 JSONObject valuesJsonObject = currency_data.getJSONObject(currency_data.names().getString(position));
-                String currency_value_usd = valuesJsonObject.getString("usd");
-                String currency_usd_24h_change_value = valuesJsonObject.getString("usd_24h_change");
+                String currency_value_usd = "$" + valuesJsonObject.getString("usd");
+                String currency_usd_24h_change_value = valuesJsonObject.getString("usd_24h_change") + "%";
                 RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.appwidget_item);
-                views.setTextViewText(R.id.appwidget_item_text, currency_name);
                 //set values for currency item
-                views.setTextViewText(R.id.appwidget_currency_name, currency_name);
+                views.setTextViewText(R.id.appwidget_currency_name, currency_name.toUpperCase());
                 views.setTextViewText(R.id.appwidget_currency_value_usd, currency_value_usd);
                 views.setTextViewText(R.id.appwidget_currency_usd_24h_change_value,currency_usd_24h_change_value);
                 //logic to change icons + color

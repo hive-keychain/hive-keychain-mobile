@@ -2,20 +2,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.AppWidgetSample.AppWidget.Container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="220dp"
+    android:layout_height="220dp"
     android:background="@drawable/shape"
-    android:padding="@dimen/widget_margin"
     android:theme="@style/Theme.AppWidgetSample.AppWidgetContainer"
     android:orientation="vertical"
-    android:gravity="center_horizontal">
+    android:gravity="center"
+    android:backgroundTint="@color/black">
     
     <LinearLayout
         android:id="@+id/widget_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingHorizontal="8dp">
 
         <!-- Logo & refresh section -->
         <LinearLayout
@@ -26,13 +27,12 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:background="#272424"
+                android:layout_width="128dp"
+                android:layout_height="20dp"
                 android:contentDescription="@string/my_image_description"
-                android:scaleType="fitCenter"
-                android:src="@drawable/hive_brands"
-                android:tint="#FF0000" />
+                android:scaleType="fitStart"
+                android:layout_gravity="start"
+                android:src="@drawable/keychain_logo" />
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -50,215 +50,14 @@
         </LinearLayout>
         <!-- end Logo & refresh section-->
 
-        <!-- Currency HIVE Item Ini-->
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <!-- Currency/Symbol & value section-->
-            <LinearLayout
-                android:layout_width="fill_parent"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="horizontal"
-                android:layout_height="24dp"
-                android:gravity="center_vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <TextView
-                        android:id="@+id/appwidget_currency_name1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@string/appwidget_text"
-                        android:text="Currency"
-                        android:textColor="#ffffff"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/appwidget_currency_value1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@string/appwidget_text"
-                        android:text="..."
-                        android:textColor="#ffffff"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="@dimen/widget_margin"/>
-                </LinearLayout>
-                <FrameLayout
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    ></FrameLayout>
-            </LinearLayout>
-            <!-- end Currency/Symbol section-->
-
-            <!-- Currency/Symbol 24h change & Keychain logo section -->
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:orientation="horizontal"
-                android:layout_height="24dp"
-                android:gravity="center_vertical">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:id="@+id/appwidget_currency_change1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@string/appwidget_text"
-                        android:text="0.0%"
-                        android:textColor="#4CAF50"
-                        android:textSize="14sp"
-                        android:textStyle="bold|italic" />
-
-                    <ImageView
-                        android:id="@+id/appwidget_icon_direction_up1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:src="@drawable/arrow_upward"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        android:tint="@color/green" />
-                    <ImageView
-                        android:id="@+id/appwidget_icon_direction_down1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:src="@drawable/arrow_downward"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        android:tint="@color/red" />
-                </LinearLayout>
-                <FrameLayout
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    ></FrameLayout>
-                <ImageView
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:background="#272424"
-                    android:contentDescription="@string/my_image_description"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/keychain_logo_mini" />
-            </LinearLayout>
-            <!-- end Currency/Symbol 24h change & Keychain logo section-->
-        </LinearLayout>
-        <!-- Currency Item End-->
-
-        <!-- Currency HBD Item Ini-->
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <!-- Currency/Symbol & value section-->
-            <LinearLayout
-                android:layout_width="fill_parent"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="horizontal"
-                android:layout_height="24dp"
-                android:gravity="center_vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <TextView
-                        android:id="@+id/appwidget_currency_name2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@string/appwidget_text"
-                        android:text="Currency"
-                        android:textColor="#ffffff"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:id="@+id/appwidget_currency_value2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@string/appwidget_text"
-                        android:text="..."
-                        android:textColor="#ffffff"
-                        android:textSize="22sp"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="@dimen/widget_margin"/>
-                </LinearLayout>
-                <FrameLayout
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    ></FrameLayout>
-            </LinearLayout>
-            <!-- end Currency/Symbol section-->
-
-            <!-- Currency/Symbol 24h change & Keychain logo section -->
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:orientation="horizontal"
-                android:layout_height="24dp"
-                android:gravity="center_vertical">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical">
-                    <TextView
-                        android:id="@+id/appwidget_currency_change2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@string/appwidget_text"
-                        android:text="0.0%"
-                        android:textColor="#4CAF50"
-                        android:textSize="14sp"
-                        android:textStyle="bold|italic" />
-
-                    <ImageView
-                        android:id="@+id/appwidget_icon_direction_up2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:src="@drawable/arrow_upward"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        android:tint="@color/green" />
-                    <ImageView
-                        android:id="@+id/appwidget_icon_direction_down2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:src="@drawable/arrow_downward"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        android:tint="@color/red" />
-                </LinearLayout>
-                <FrameLayout
-                    android:layout_height="fill_parent"
-                    android:layout_weight="1"
-                    android:layout_width="wrap_content"
-                    ></FrameLayout>
-                <ImageView
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:background="#272424"
-                    android:contentDescription="@string/my_image_description"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/keychain_logo_mini" />
-            </LinearLayout>
-            <!-- end Currency/Symbol 24h change & Keychain logo section-->
-        </LinearLayout>
-        <!-- Currency Item End-->
-
-
     </LinearLayout>
 
     <!-- Init Testing adapter based widgets -->
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center">
 
         <StackView
             android:id="@+id/appwidget_stack_view"
@@ -270,8 +69,9 @@
             android:id="@+id/appwidget_stack_empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/light_blue_50"
-            android:text="Empty"
+            android:background="@color/black"
+            android:text="Loading widget"
+            android:textColor="#FFFFFF"
             android:gravity="center"
             android:textSize="20dp"
             android:textStyle="bold"/>

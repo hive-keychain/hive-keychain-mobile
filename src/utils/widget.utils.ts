@@ -14,6 +14,8 @@ const sendWidgetData = async () => {
   try {
     const prices = await getPrices();
     if (prices && prices.hive && prices.hive_dollar) {
+      //Remove specific keys from price object to omit rendering in widget native.
+      delete prices.bitcoin;
       console.log({prices}); //TODO remove line
       Object.entries(prices).forEach(([key, data]) => {
         console.log({key, data});

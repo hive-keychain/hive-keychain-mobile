@@ -61,45 +61,15 @@ public class NewAppWidget extends AppWidgetProvider {
 
             //Getting hive data from object
             JSONObject hiveData = appData.getJSONObject("hive");
-            String hive_price_usd = "$" + hiveData.getString("usd");
-            String hive_price_usd_24h_change = hiveData.getString("usd_24h_change") + "%";
-            if(hive_price_usd_24h_change.contains("-")){
-                views.setTextColor(R.id.appwidget_currency_change1, ContextCompat.getColor(context, R.color.red));
-                views.setViewVisibility(R.id.appwidget_icon_direction_down1, View.VISIBLE);
-                views.setViewVisibility(R.id.appwidget_icon_direction_up1, View.GONE);
-            }else{
-                views.setTextColor(R.id.appwidget_currency_change1, ContextCompat.getColor(context, R.color.green));
-                views.setViewVisibility(R.id.appwidget_icon_direction_up1, View.VISIBLE);
-                views.setViewVisibility(R.id.appwidget_icon_direction_down1, View.GONE);
-            }
-            //END Getting hive data from object
-
             //Getting hive_dollar data from object
             JSONObject hiveDollarData = appData.getJSONObject("hive_dollar");
-            String hive_dollar_price_usd = "$" + hiveDollarData.getString("usd");
-            String hive_dollar_price_usd_24h_change = hiveDollarData.getString("usd_24h_change") + "%";
-            if(hive_dollar_price_usd_24h_change.contains("-")){
-                views.setTextColor(R.id.appwidget_currency_change2, ContextCompat.getColor(context, R.color.red));
-                views.setViewVisibility(R.id.appwidget_icon_direction_down2, View.VISIBLE);
-                views.setViewVisibility(R.id.appwidget_icon_direction_up2, View.GONE);
-            }else{
-                views.setTextColor(R.id.appwidget_currency_change2, ContextCompat.getColor(context, R.color.green));
-                views.setViewVisibility(R.id.appwidget_icon_direction_up2, View.VISIBLE);
-                views.setViewVisibility(R.id.appwidget_icon_direction_down2, View.GONE);
-            }
-            //END Getting hive data from object
 
+            //TODO clean up logs
             Log.i("Init logs", "Logs bellow!!");
             Log.i("appData", appData.toString());
             Log.i("hiveData", hiveData.toString());
             Log.i("hiveDollarData", hiveDollarData.toString());
-            //Setting views data
-            views.setTextViewText(R.id.appwidget_currency_name1, "HIVE");
-            views.setTextViewText(R.id.appwidget_currency_value1, hive_price_usd);
-            views.setTextViewText(R.id.appwidget_currency_change1, hive_price_usd_24h_change);
-            views.setTextViewText(R.id.appwidget_currency_name2, "HIVE DOLLAR");
-            views.setTextViewText(R.id.appwidget_currency_value2, hive_dollar_price_usd);
-            views.setTextViewText(R.id.appwidget_currency_change2, hive_dollar_price_usd_24h_change);
+
             //Add StackView into views
             views.setRemoteAdapter(R.id.appwidget_stack_view, serviceIntent);
             views.setEmptyView(R.id.appwidget_stack_view, R.id.appwidget_stack_empty_view);
