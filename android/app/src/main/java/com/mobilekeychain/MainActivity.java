@@ -45,7 +45,6 @@ public class MainActivity extends ReactActivity {
     super.onCreate(savedInstanceState); // or super.onCreate(null) with react-native-screens
     RNBootSplash.init(R.drawable.bootsplash, MainActivity.this); // display the generated bootsplash.xml drawable over our MainActivity
     context = getApplicationContext();
-    Toast.makeText(context, "Created app!!", Toast.LENGTH_LONG).show();
   }
 
   public static void sendReactEvent(ReactContext reactContext,
@@ -54,18 +53,5 @@ public class MainActivity extends ReactActivity {
     reactContext
             .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
             .emit(eventName, params);
-  }
-
-
-  public void refreshCurrencyData(View view) {
-    //TODO for now just send a message to RN app on each update iteration
-//        WritableMap params = Arguments.createMap();
-//        params.putString("currency", "update_values");
-//        AppWidgetProvider appWidgetProvider = new AppWidgetProvider();
-//        ReactApplication rnApp = (ReactApplication)  appWidgetProvider.c .context.getApplicationContext();
-//        ReactContext reactContext = rnApp.getReactNativeHost().getReactInstanceManager().getCurrentReactContext();
-//        MainActivity.sendReactEvent(reactContext,"command_event", params);
-    //end TODO
-//    Toast.makeText(context, "Clicked!", Toast.LENGTH_LONG).show();
   }
 }

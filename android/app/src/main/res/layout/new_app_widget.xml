@@ -2,8 +2,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.AppWidgetSample.AppWidget.Container"
-    android:layout_width="220dp"
-    android:layout_height="220dp"
+    android:layout_width="180dp"
+    android:layout_height="180dp"
     android:background="@drawable/shape"
     android:theme="@style/Theme.AppWidgetSample.AppWidgetContainer"
     android:orientation="vertical"
@@ -55,15 +55,17 @@
     <!-- Init Testing adapter based widgets -->
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="130dp"
         android:layout_marginTop="5dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:backgroundTint="@color/black">
 
         <StackView
             android:id="@+id/appwidget_stack_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:loopViews="true" />
+            android:loopViews="true"
+            android:backgroundTint="@color/black"/>
 
         <TextView
             android:id="@+id/appwidget_stack_empty_view"

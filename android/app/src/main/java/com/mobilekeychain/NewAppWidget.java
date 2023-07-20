@@ -40,21 +40,24 @@ import java.util.Arrays;
  */
 public class NewAppWidget extends AppWidgetProvider {
 
-    // our actions for our buttons
     public static String ACTION_WIDGET_REFRESH = "ActionReceiverRefresh";
     public static String ACTION_WIDGET_LAUNCH_APP = "ActionReceiverLunchApp";
 
-    private DeviceEventManagerModule.RCTDeviceEventEmitter nEmitter = null;
+    @Override
+    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
+        for (int appWidgetId : appWidgetIds) {
+            Intent intent = new Intent(context, MainActivity.class);
+            final int flag =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT;
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, flag);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
+            views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, RemoteViews views) {
-
-        try {
-            SharedPreferences sharedPref = context.getSharedPreferences("DATA", Context.MODE_PRIVATE);
-            String appString = sharedPref.getString("appData", "");
-            JSONObject appData = new JSONObject(appString);
-            Log.i("appData from RN", appData.toString()); //TODO remove line
+            //Code block using the refresh button as custom intent/broadcast
+            intent = new Intent(context, NewAppWidget.class);
+            intent.setAction(ACTION_WIDGET_REFRESH);
+            pendingIntent = PendingIntent.getBroadcast(context, 0, intent, flag);
+            views.setOnClickPendingIntent(R.id.appwidget_button_refresh, pendingIntent);
 
             //Service for StackView
             Intent serviceIntent = new Intent(context, AppWidgetService.class);
@@ -67,44 +70,15 @@ public class NewAppWidget extends AppWidgetProvider {
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
-        }catch (JSONException e) {
-            Log.i("Error: updateAppWidget", e.getLocalizedMessage()); //TODO remove line
-            e.printStackTrace();
-        }
-    }
-
-
-    @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Toast.makeText(context, "onUpdate called!!!", Toast.LENGTH_LONG).show(); //TODO delete line
-        for (int appWidgetId : appWidgetIds) {
-            Intent intent = new Intent(context, MainActivity.class);
-            final int flag =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT;
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, flag);
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
-            views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
-
-            //TODO test to add refresh intent
-            //Code block using the refresh button as intent/broadcast
-            intent = new Intent(context, NewAppWidget.class);
-            intent.setAction(ACTION_WIDGET_REFRESH);
-            pendingIntent = PendingIntent.getBroadcast(context, 0, intent, flag);
-            views.setOnClickPendingIntent(R.id.appwidget_button_refresh, pendingIntent);
-            //end test
-
-            updateAppWidget(context, appWidgetManager,appWidgetId, views);
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.appwidget_stack_view);
         }
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i("intent: onReceive", intent.toString()); //TODO remove line
-
-        //TODO bellow continue adding the refresh method to RN
         //check if gets the data.
         //last step: check what happens when emulator on but app on, what happens with the widget.
         if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
-            Log.i("onReceive: REFRESH", ACTION_WIDGET_REFRESH); //TODO remove line
             try{
                 WritableMap params = Arguments.createMap();
                 params.putString("currency", "update_values");
@@ -112,14 +86,13 @@ public class NewAppWidget extends AppWidgetProvider {
                 ReactContext reactContext = rnApp.getReactNativeHost().getReactInstanceManager().getCurrentReactContext();
                 MainActivity.sendReactEvent(reactContext,"command_event", params);
 
-                //TODO check if works to update after asking for new data on RN
+                int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                        AppWidgetManager.INVALID_APPWIDGET_ID);
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, NewAppWidget.class));
-                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.appwidget_stack_view);
-                //end test
+                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.appwidget_stack_view);
 
             } catch (Exception e) {
-                Log.i("Error: REFRESH data", e.getLocalizedMessage()); //TODO remove line
+                Log.i("Error: REFRESH data", e.getLocalizedMessage());
                 e.printStackTrace();
             }
 
@@ -133,41 +106,12 @@ public class NewAppWidget extends AppWidgetProvider {
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
         super.onEnabled(context);
-        Toast.makeText(context, "widget created!!!", Toast.LENGTH_LONG).show(); //TODO delete line
-
     }
 
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
         super.onEnabled(context);
-    }
-
-    @Override
-    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
-        Toast.makeText(context, "onAppWidgetOptionsChanged called!!!", Toast.LENGTH_LONG).show(); //TODO delete line
-
-////        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions); //TODO clean up
-//        RemoteViews views = new RemoteViews(context.getPackageName(),R.layout.new_app_widget);
-//
-//        int minWidth = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
-//        int maxWidth = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH);
-//        int minHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
-//        int maxHeight = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT);
-//
-//        //TODO cleanup code
-////        String dimensions = "Minwidth:" + minWidth + "|Maxwidth:" + maxWidth + "|Minheight:" + minHeight + "|Max height:" + maxHeight;
-////        Toast.makeText(context, dimensions, Toast.LENGTH_LONG).show();
-//
-//        if(maxHeight < 100){
-//            views.setViewVisibility(R.id.keychain_logo_mini, View.VISIBLE);
-//            views.setViewVisibility(R.id.keychain_logo_big, View.GONE);
-//        }else{
-//            views.setViewVisibility(R.id.keychain_logo_mini, View.GONE);
-//            views.setViewVisibility(R.id.keychain_logo_big, View.VISIBLE);
-//        }
-//
-//        appWidgetManager.updateAppWidget(appWidgetId,views);
     }
 }
 

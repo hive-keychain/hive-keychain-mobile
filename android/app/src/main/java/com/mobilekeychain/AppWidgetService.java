@@ -9,15 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-
 import androidx.core.content.ContextCompat;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Map;
 
 public class AppWidgetService extends RemoteViewsService {
     private JSONObject currency_data;
@@ -30,8 +24,6 @@ public class AppWidgetService extends RemoteViewsService {
     class AppWidgetItemFactory implements RemoteViewsFactory {
         private Context context;
         private  int appWidgetId;
-        private String[] exampleData = {"one", "two", "three"};
-        private ArrayList currencyValues;
 
         AppWidgetItemFactory(Context context, Intent intent){
                 this.context = context;
@@ -44,7 +36,6 @@ public class AppWidgetService extends RemoteViewsService {
                 SharedPreferences sharedPref = context.getSharedPreferences("DATA", Context.MODE_PRIVATE);
                 String appString = sharedPref.getString("appData", "");
                 currency_data = new JSONObject(appString);
-                Log.i("currency_data", currency_data.toString()); //TODO to remove line
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -54,15 +45,11 @@ public class AppWidgetService extends RemoteViewsService {
         public void onCreate() {
             //connect to data source if needed
             getData();
-            //TODO remove line bellow as this is only tutorial's sample
-            SystemClock.sleep(3000);
         }
 
         @Override
         public void onDataSetChanged() {
-            Log.i("onDataSetChanged", "so ask new data"); //TODO remove line
             getData();
-            SystemClock.sleep(1500);
         }
 
         @Override
@@ -72,18 +59,18 @@ public class AppWidgetService extends RemoteViewsService {
 
         @Override
         public int getCount() {
-            return currency_data.names().length();
+            return currency_data.length();
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.appwidget_item);
             try {
                 //extract data from JSONObject stored.
                 String currency_name = currency_data.names().getString(position).replace("_", " ");
                 JSONObject valuesJsonObject = currency_data.getJSONObject(currency_data.names().getString(position));
                 String currency_value_usd = "$" + valuesJsonObject.getString("usd");
                 String currency_usd_24h_change_value = valuesJsonObject.getString("usd_24h_change") + "%";
-                RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.appwidget_item);
                 //set values for currency item
                 views.setTextViewText(R.id.appwidget_currency_name, currency_name.toUpperCase());
                 views.setTextViewText(R.id.appwidget_currency_value_usd, currency_value_usd);
@@ -98,20 +85,20 @@ public class AppWidgetService extends RemoteViewsService {
                     views.setViewVisibility(R.id.appwidget_icon_direction_up, View.VISIBLE);
                     views.setViewVisibility(R.id.appwidget_icon_direction_down, View.GONE);
                 }
-                //TODO remove line bellow, this is only sample tutorial
                 SystemClock.sleep(500);
                 return views;
             } catch (JSONException e) {
-                Log.i("Error: getViewAt", e.getLocalizedMessage()); //TODO remove line
+                Log.i("Error: getViewAt", e.getLocalizedMessage());
                 e.printStackTrace();
             }
-            //TODO is this right thing to do here??
-            return null;
+            SystemClock.sleep(500);
+            return views;
         }
 
         @Override
         public RemoteViews getLoadingView() {
-            return null;
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.appwidget_loading_view);
+            return views;
         }
 
         @Override

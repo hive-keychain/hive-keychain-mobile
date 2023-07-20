@@ -7,11 +7,11 @@ import {forgetRequestedOperation} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
 import Bridge from 'components/bridge';
 import {getToggleElement} from 'hooks/toggle';
+import useWidgetNativeEvents from 'hooks/useWidgetNativeEvents';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
 import React, {useEffect, useRef} from 'react';
-import {NativeEventEmitter, NativeModules} from 'react-native';
 import RNBootSplash from 'react-native-bootsplash';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
@@ -38,38 +38,10 @@ const App = ({
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
 
-  //TODO test hook to listen to commands/messages from native
-  useEffect(() => {
-    const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
-    let eventListener = eventEmitter.addListener('command_event', (event) => {
-      console.log({event}); //TODO remove line + finish bellow.
-      handleEventListener(event);
-    });
-
-    // Removes the listener once unmounted
-    return () => {
-      eventListener.remove();
-    };
-  }, []);
-  //end TODO
-
-  const handleEventListener = async (event: any) => {
-    console.log({handleEvent: event});
-    //{"event": {"currency": "update_values"}}
-    if (event && event.currency) {
-      console.log({command: event.currency});
-      const {currency: command} = event;
-      if (command === 'update_values') {
-        await WidgetUtils.sendWidgetData();
-      }
-    }
-  };
+  useWidgetNativeEvents();
 
   useEffect(() => {
-    //TODO test code
     WidgetUtils.sendWidgetData();
-    //end test code
-
     setupLinking();
     RNBootSplash.hide({fade: true});
     Orientation.lockToPortrait();
