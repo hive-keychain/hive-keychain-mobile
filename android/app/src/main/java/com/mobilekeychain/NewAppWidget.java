@@ -70,6 +70,7 @@ public class NewAppWidget extends AppWidgetProvider {
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
+            // Instruct the widget manager that data may have changed, so update remove views.
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.appwidget_stack_view);
         }
     }

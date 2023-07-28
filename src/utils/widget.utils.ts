@@ -12,6 +12,8 @@ interface DataCurrency {
 }
 
 const sendWidgetData = async () => {
+  //TODO
+  // find a better way to add data as needed to send to android, i.e: ('currency' | 'Account Balance information'...etc);
   const dataCurrencies: DataCurrency = {};
   try {
     const prices = await getPrices();

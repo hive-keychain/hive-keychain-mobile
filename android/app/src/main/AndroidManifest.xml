@@ -12,20 +12,6 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme">
 
-      <!-- Receiver Element is Added to link the widget files to the Application -->
-      <receiver android:name=".NewAppWidget"
-          android:exported="false">
-        <intent-filter>
-          <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-          <action android:name="com.mobilekeychain.NewAppWidget.ACTION_WIDGET_REFRESH"/>
-        </intent-filter>
-        <meta-data
-            android:name="android.appwidget.provider"
-            android:resource="@xml/new_app_widget_info" />
-      </receiver>
-      <!-- Until Here -->
-
-
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -72,8 +58,32 @@
       </intent-filter>
     </activity>
 
+      <!-- Widget registration -->
+      <receiver android:name=".NewAppWidget"
+          android:exported="false">
+        <intent-filter>
+          <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+          <action android:name="com.mobilekeychain.NewAppWidget.ACTION_WIDGET_REFRESH"/>
+        </intent-filter>
+        <meta-data
+            android:name="android.appwidget.provider"
+            android:resource="@xml/new_app_widget_info" />
+      </receiver>
+      <receiver android:name=".WidgetHiveUsersProvider"
+          android:exported="false">
+        <intent-filter>
+          <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+          <action android:name="com.mobilekeychain.WidgetHiveUsersProvider.ACTION_WIDGET_APP_NAVIGATE_TO"/>
+        </intent-filter>
+        <meta-data android:name="android.appwidget.provider"
+            android:resource="@xml/widget_hive_users_info"/>
+      </receiver>
+      <!-- End Widget registration -->
+
+      <!-- Widget Services related-->
       <service android:name=".AppWidgetService"
         android:permission="android.permission.BIND_REMOTEVIEWS" />
+      <!-- End Widget Services related-->
     </application>
 
 </manifest>

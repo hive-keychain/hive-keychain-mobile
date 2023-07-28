@@ -7,7 +7,6 @@ import {forgetRequestedOperation} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
 import Bridge from 'components/bridge';
 import {getToggleElement} from 'hooks/toggle';
-import useWidgetNativeEvents from 'hooks/useWidgetNativeEvents';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
@@ -38,10 +37,8 @@ const App = ({
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
 
-  useWidgetNativeEvents();
-
   useEffect(() => {
-    WidgetUtils.sendWidgetData();
+    WidgetUtils.sendWidgetData(); //initialize widget data
     setupLinking();
     RNBootSplash.hide({fade: true});
     Orientation.lockToPortrait();
