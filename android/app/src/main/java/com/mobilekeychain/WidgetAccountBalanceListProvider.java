@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -15,7 +14,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 
-public class WidgetHiveUsersProvider extends AppWidgetProvider {
+public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
     public static String ACTION_WIDGET_APP_NAVIGATE_TO = "ActionReceiverAppNavigateTo";
 
     @Override
@@ -25,15 +24,15 @@ public class WidgetHiveUsersProvider extends AppWidgetProvider {
 //            Intent intent = new Intent(context, MainActivity.class);
 //            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,intent,flag);
 
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_hive_users);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_account_balance_list);
 //            views.setOnClickPendingIntent(R.id.widget_hive_users_button, pendingIntent);
 
             //Custom intent/broadcast registration
             //In app navigate to action.
-            Intent intent = new Intent(context, WidgetHiveUsersProvider.class);
+            Intent intent = new Intent(context, WidgetAccountBalanceListProvider.class);
             intent.setAction(ACTION_WIDGET_APP_NAVIGATE_TO);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, flag);
-            views.setOnClickPendingIntent(R.id.widget_hive_users_button, pendingIntent);
+            views.setOnClickPendingIntent(R.id.widget_account_balance_list_button_refresh, pendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }

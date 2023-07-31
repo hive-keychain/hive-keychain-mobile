@@ -29,7 +29,7 @@
                 android:layout_weight="1"/>
 
             <Button
-                android:id="@+id/widget_hive_users_button"
+                android:id="@+id/widget_account_balance_list_button_refresh"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:background="@drawable/settings"
