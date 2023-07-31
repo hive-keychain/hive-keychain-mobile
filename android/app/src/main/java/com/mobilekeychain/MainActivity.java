@@ -20,6 +20,15 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+//TODO very important:
+//  - rename all widgets to the following patterns:
+//      -> widget classes: Widget[nameIdentifier]Provider (will be .java)
+//      -> widget layout: widget_[name_identifier] (will be .xml)
+//      -> widget service: Widget[nameIdentifier]Service (will be .java)
+//      -> id's: widget_[name_identifier][component] (i.e: widget_account_balance_information_button)
+//  - rename: WidgetHiveUsersProvider as WidgetAccountBalanceInformationProvider + files, xmls, etc.
+//  - rename: NewAppWidget as WidgetCurrencyPriceListProvider = files, xmls, etc.
+
 public class MainActivity extends ReactActivity {
 
   private Context context;

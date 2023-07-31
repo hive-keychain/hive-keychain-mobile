@@ -1,27 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
+    android:layout_height="match_parent"
     android:background="@color/black"
     android:padding="12dp">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/keychain_logo"
-        android:backgroundTint="#25FFFFFF"
-        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
         android:orientation="vertical">
 
-        <!-- Logo & configure section -->
+        <!-- More vertical proposed -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="24dp"
-            android:layout_marginBottom="6dp"
             android:backgroundTint="#B90C0C"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_weight="1">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -29,158 +25,299 @@
                 android:layout_gravity="start"
                 android:text="\@theghost1980"
                 android:textColor="@color/white"
-                android:textSize="18dp" />
-
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"></FrameLayout>
+                android:textSize="@dimen/text_size_14_dp"
+                android:layout_weight="1"/>
 
             <Button
                 android:id="@+id/widget_hive_users_button"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:background="@drawable/settings"
                 android:backgroundTint="#FFF"
                 android:contentDescription="@string/my_image_description"
                 android:scaleType="fitCenter" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/hive_brands"
+                android:tint="@color/red"
+                android:layout_marginLeft="2dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_sample_100k"
+                android:textSize="@dimen/text_size_12_dp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="4dp"
+                android:gravity="end"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/hive_brands"
+                android:tint="@color/green"
+                android:layout_marginLeft="2dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_sample_100k"
+                android:textSize="@dimen/text_size_12_dp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="4dp"
+                android:gravity="end"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/icon_hp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_sample_100k"
+                android:textSize="@dimen/text_size_12_dp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="4dp"
+                android:gravity="end"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/savings"
+                android:tint="@color/green"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_sample_100k"
+                android:textSize="@dimen/text_size_12_dp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="4dp"
+                android:gravity="end"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/savings"
+                android:tint="@color/red"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_sample_100k"
+                android:textSize="@dimen/text_size_12_dp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="4dp"
+                android:gravity="end"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <!-- END More vertical proposed -->
+
+        <!-- Logo & configure section -->
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="24dp"-->
+        <!--            android:layout_marginBottom="6dp"-->
+        <!--            android:backgroundTint="#B90C0C"-->
+        <!--            android:gravity="center_vertical"-->
+        <!--            android:orientation="horizontal">-->
+
+        <!--            <TextView-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:layout_gravity="start"-->
+        <!--                android:text="\@theghost1980"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textSize="18dp" />-->
+
+        <!--            <FrameLayout-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="fill_parent"-->
+        <!--                android:layout_weight="1"></FrameLayout>-->
+
+        <!--            <Button-->
+        <!--                android:id="@+id/widget_hive_users_button"-->
+        <!--                android:layout_width="26dp"-->
+        <!--                android:layout_height="26dp"-->
+        <!--                android:background="@drawable/settings"-->
+        <!--                android:backgroundTint="#FFF"-->
+        <!--                android:contentDescription="@string/my_image_description"-->
+        <!--                android:scaleType="fitCenter" />-->
+        <!--        </LinearLayout>-->
         <!-- end Logo & refresh section-->
 
         <!-- Account Balance information section -->
 
         <!-- HBD/HIVE -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#B90C0C"
-            android:orientation="horizontal">
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:backgroundTint="#B90C0C"-->
+        <!--            android:orientation="horizontal">-->
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:gravity="center_vertical"-->
+        <!--                android:orientation="horizontal">-->
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginRight="4dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/hive_brands"
-                    android:tint="@color/red" />
+        <!--                <ImageView-->
+        <!--                    android:layout_width="20dp"-->
+        <!--                    android:layout_height="20dp"-->
+        <!--                    android:layout_marginRight="4dp"-->
+        <!--                    android:scaleType="centerInside"-->
+        <!--                    android:src="@drawable/hive_brands"-->
+        <!--                    android:tint="@color/red" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="1,000.00"
-                    android:textColor="@color/white"
-                    android:textSize="14dp" />
-            </LinearLayout>
+        <!--                <TextView-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    android:text="1,000.00"-->
+        <!--                    android:textColor="@color/white"-->
+        <!--                    android:textSize="14dp" />-->
+        <!--            </LinearLayout>-->
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1">
+        <!--            <FrameLayout-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="fill_parent"-->
+        <!--                android:layout_gravity="center"-->
+        <!--                android:layout_weight="1">-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+        <!--                <LinearLayout-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:gravity="center"-->
+        <!--                    android:orientation="horizontal">-->
 
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginRight="4dp"
-                        android:src="@drawable/hive_brands"
-                        android:tint="@color/green" />
+        <!--                    <ImageView-->
+        <!--                        android:layout_width="22dp"-->
+        <!--                        android:layout_height="22dp"-->
+        <!--                        android:layout_marginRight="4dp"-->
+        <!--                        android:src="@drawable/hive_brands"-->
+        <!--                        android:tint="@color/green" />-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="1,000.00"
-                        android:textColor="@color/white"
-                        android:textSize="14dp" />
-                </LinearLayout>
-            </FrameLayout>
+        <!--                    <TextView-->
+        <!--                        android:layout_width="wrap_content"-->
+        <!--                        android:layout_height="match_parent"-->
+        <!--                        android:text="1,000.00"-->
+        <!--                        android:textColor="@color/white"-->
+        <!--                        android:textSize="14dp" />-->
+        <!--                </LinearLayout>-->
+        <!--            </FrameLayout>-->
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:gravity="center"-->
+        <!--                android:orientation="horizontal">-->
 
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@drawable/icon_hp" />
+        <!--                <ImageView-->
+        <!--                    android:layout_width="22dp"-->
+        <!--                    android:layout_height="22dp"-->
+        <!--                    android:src="@drawable/icon_hp" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="1,000.00"
-                    android:textColor="@color/white"
-                    android:textSize="14dp" />
-            </LinearLayout>
-        </LinearLayout>
+        <!--                <TextView-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    android:text="1,000.00"-->
+        <!--                    android:textColor="@color/white"-->
+        <!--                    android:textSize="14dp" />-->
+        <!--            </LinearLayout>-->
+        <!--        </LinearLayout>-->
         <!-- end HBD/HIVE -->
 
         <!-- savings/HBD-HIVE -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#B90C0C"
-            android:orientation="horizontal">
+        <!--        <LinearLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:backgroundTint="#B90C0C"-->
+        <!--            android:orientation="horizontal">-->
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:gravity="center"-->
+        <!--                android:orientation="horizontal">-->
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginRight="4dp"
-                    android:src="@drawable/savings"
-                    android:tint="#EF7E7E" />
+        <!--                <ImageView-->
+        <!--                    android:layout_width="24dp"-->
+        <!--                    android:layout_height="24dp"-->
+        <!--                    android:layout_marginRight="4dp"-->
+        <!--                    android:src="@drawable/savings"-->
+        <!--                    android:tint="#EF7E7E" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="1,000 HIVE"
-                    android:textColor="@color/white"
-                    android:textSize="14dp" />
-            </LinearLayout>
+        <!--                <TextView-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    android:text="1,000 HIVE"-->
+        <!--                    android:textColor="@color/white"-->
+        <!--                    android:textSize="14dp" />-->
+        <!--            </LinearLayout>-->
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"></FrameLayout>
+        <!--            <FrameLayout-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="fill_parent"-->
+        <!--                android:layout_weight="1"></FrameLayout>-->
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:gravity="center"-->
+        <!--                android:orientation="horizontal">-->
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginRight="4dp"
-                    android:src="@drawable/savings"
-                    android:tint="#84E888" />
+        <!--                <ImageView-->
+        <!--                    android:layout_width="24dp"-->
+        <!--                    android:layout_height="24dp"-->
+        <!--                    android:layout_marginRight="4dp"-->
+        <!--                    android:src="@drawable/savings"-->
+        <!--                    android:tint="#84E888" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="1,000 HBD"
-                    android:textColor="@color/white"
-                    android:textSize="14dp" />
-            </LinearLayout>
-        </LinearLayout>
+        <!--                <TextView-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    android:text="1,000 HBD"-->
+        <!--                    android:textColor="@color/white"-->
+        <!--                    android:textSize="14dp" />-->
+        <!--            </LinearLayout>-->
+        <!--        </LinearLayout>-->
         <!-- end savings/HP-HIVE -->
 
         <!-- end Account Balance information section -->

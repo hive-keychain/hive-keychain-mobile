@@ -59,15 +59,15 @@
     </activity>
 
       <!-- Widget registration -->
-      <receiver android:name=".NewAppWidget"
+      <receiver android:name=".WidgetCurrencyListProvider"
           android:exported="false">
         <intent-filter>
           <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-          <action android:name="com.mobilekeychain.NewAppWidget.ACTION_WIDGET_REFRESH"/>
+          <action android:name="com.mobilekeychain.WidgetCurrencyListProvider.ACTION_WIDGET_REFRESH"/>
         </intent-filter>
         <meta-data
             android:name="android.appwidget.provider"
-            android:resource="@xml/new_app_widget_info" />
+            android:resource="@xml/widget_currency_list" />
       </receiver>
       <receiver android:name=".WidgetHiveUsersProvider"
           android:exported="false">
@@ -81,7 +81,7 @@
       <!-- End Widget registration -->
 
       <!-- Widget Services related-->
-      <service android:name=".AppWidgetService"
+      <service android:name=".WidgetCurrencyListService"
         android:permission="android.permission.BIND_REMOTEVIEWS" />
       <!-- End Widget Services related-->
     </application>

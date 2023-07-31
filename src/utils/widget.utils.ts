@@ -36,7 +36,7 @@ const sendWidgetData = async () => {
     console.log('Error sending widget data: ', {error});
     console.log('Error message: ', {msg: error.message});
     if (error && error.message) {
-      if (error.meesage === 'Network Error') {
+      if (error.message === 'Network Error') {
         const dataError: DataCurrency = {};
         dataError['error'] = {
           usd: 'Please active internet!',

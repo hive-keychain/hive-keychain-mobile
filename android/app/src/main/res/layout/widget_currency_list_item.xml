@@ -17,7 +17,7 @@
         android:layout_height="24dp"
         android:gravity="center_horizontal">
         <TextView
-            android:id="@+id/appwidget_currency_name"
+            android:id="@+id/widget_currency_list_item_currency_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:contentDescription="@string/appwidget_text"
@@ -32,7 +32,7 @@
         android:orientation="horizontal"
         android:gravity="center">
         <TextView
-            android:id="@+id/appwidget_currency_value_usd"
+            android:id="@+id/widget_currency_list_item_currency_value_usd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -57,7 +57,7 @@
             android:layout_height="match_parent"
             android:gravity="center">
             <TextView
-                android:id="@+id/appwidget_currency_usd_24h_change_value"
+                android:id="@+id/widget_currency_list_item_currency_usd_24h_change_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -68,7 +68,7 @@
                 android:textStyle="bold|italic" />
 
             <ImageView
-                android:id="@+id/appwidget_icon_direction_up"
+                android:id="@+id/widget_currency_list_item_icon_direction_up"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:src="@drawable/arrow_upward"
@@ -76,7 +76,7 @@
                 tools:visibility="visible"
                 android:tint="@color/green" />
             <ImageView
-                android:id="@+id/appwidget_icon_direction_down"
+                android:id="@+id/widget_currency_list_item_icon_direction_down"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:src="@drawable/arrow_downward"

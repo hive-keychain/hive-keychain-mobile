@@ -11,7 +11,7 @@
     android:backgroundTint="@color/black">
     
     <LinearLayout
-        android:id="@+id/widget_layout"
+        android:id="@+id/widget_currency_list_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -40,7 +40,7 @@
                 android:layout_weight="1"></FrameLayout>
 
             <Button
-                android:id="@+id/appwidget_button_refresh"
+                android:id="@+id/widget_currency_list_button_refresh"
                 android:layout_width="26dp"
                 android:layout_height="26dp"
                 android:background="@drawable/refresh"
@@ -61,14 +61,14 @@
         android:backgroundTint="@color/black">
 
         <StackView
-            android:id="@+id/appwidget_stack_view"
+            android:id="@+id/widget_currency_list_stack_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:loopViews="true"
             android:backgroundTint="@color/black"/>
 
         <TextView
-            android:id="@+id/appwidget_stack_empty_view"
+            android:id="@+id/widget_currency_list_stack_empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/black"

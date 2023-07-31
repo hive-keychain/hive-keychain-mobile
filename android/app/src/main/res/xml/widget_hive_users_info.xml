@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialLayout="@layout/widget_hive_users"
-    android:minHeight="40dp"
-    android:minWidth="110dp"
+    android:minHeight="110dp"
+    android:minWidth="80dp"
     android:minResizeWidth="80dp"
+    android:minResizeHeight="110dp"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="36000000"
     android:widgetCategory="home_screen">

@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AppWidgetService extends RemoteViewsService {
+public class WidgetCurrencyListService extends RemoteViewsService {
     private JSONObject currency_data;
 
     @Override
@@ -36,6 +36,7 @@ public class AppWidgetService extends RemoteViewsService {
                 SharedPreferences sharedPref = context.getSharedPreferences("DATA", Context.MODE_PRIVATE);
                 String appString = sharedPref.getString("appData", "");
                 currency_data = new JSONObject(appString);
+                Log.i("currency_data:", currency_data.toString()); //TODO remove line
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -64,7 +65,7 @@ public class AppWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.appwidget_item);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list_item);
             try {
                 //extract data from JSONObject stored.
                 String currency_name = currency_data.names().getString(position).replace("_", " ");
@@ -72,18 +73,18 @@ public class AppWidgetService extends RemoteViewsService {
                 String currency_value_usd = "$" + valuesJsonObject.getString("usd");
                 String currency_usd_24h_change_value = valuesJsonObject.getString("usd_24h_change") + "%";
                 //set values for currency item
-                views.setTextViewText(R.id.appwidget_currency_name, currency_name.toUpperCase());
-                views.setTextViewText(R.id.appwidget_currency_value_usd, currency_value_usd);
-                views.setTextViewText(R.id.appwidget_currency_usd_24h_change_value,currency_usd_24h_change_value);
+                views.setTextViewText(R.id.widget_currency_list_item_currency_name, currency_name.toUpperCase());
+                views.setTextViewText(R.id.widget_currency_list_item_currency_value_usd, currency_value_usd);
+                views.setTextViewText(R.id.widget_currency_list_item_currency_usd_24h_change_value,currency_usd_24h_change_value);
                 //logic to change icons + color
                 if(currency_usd_24h_change_value.contains("-")){
-                    views.setTextColor(R.id.appwidget_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.red));
-                    views.setViewVisibility(R.id.appwidget_icon_direction_down, View.VISIBLE);
-                    views.setViewVisibility(R.id.appwidget_icon_direction_up, View.GONE);
+                    views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.red));
+                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.VISIBLE);
+                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.GONE);
                 }else{
-                    views.setTextColor(R.id.appwidget_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.green));
-                    views.setViewVisibility(R.id.appwidget_icon_direction_up, View.VISIBLE);
-                    views.setViewVisibility(R.id.appwidget_icon_direction_down, View.GONE);
+                    views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.green));
+                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.VISIBLE);
+                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.GONE);
                 }
                 SystemClock.sleep(500);
                 return views;
@@ -97,7 +98,7 @@ public class AppWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getLoadingView() {
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.appwidget_loading_view);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list_loading_view);
             return views;
         }
 
