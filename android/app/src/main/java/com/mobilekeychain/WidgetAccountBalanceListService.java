@@ -9,12 +9,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+
 import androidx.core.content.ContextCompat;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class WidgetCurrencyListService extends RemoteViewsService {
-    private JSONObject currency_data;
+public class WidgetAccountBalanceListService extends RemoteViewsService {
+    private JSONObject accounts_data;
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -33,11 +35,11 @@ public class WidgetCurrencyListService extends RemoteViewsService {
 
         public void getData(){
             try {
-                //currency_list
+                //account_balance_list
                 SharedPreferences sharedPref = context.getSharedPreferences("DATA", Context.MODE_PRIVATE);
                 String appString = sharedPref.getString("appData", "");
                 JSONObject data = new JSONObject(appString);
-                currency_data = new JSONObject(data.getString("currency_list"));
+                accounts_data = new JSONObject(data.getString("account_balance_list"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -61,32 +63,25 @@ public class WidgetCurrencyListService extends RemoteViewsService {
 
         @Override
         public int getCount() {
-            return currency_data.length();
+            return accounts_data.length();
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list_item);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_account_balance_list_item);
             try {
                 //extract data from JSONObject stored.
-                String currency_name = currency_data.names().getString(position).replace("_", " ");
-                JSONObject valuesJsonObject = currency_data.getJSONObject(currency_data.names().getString(position));
-                String currency_value_usd = "$" + valuesJsonObject.getString("usd");
-                String currency_usd_24h_change_value = valuesJsonObject.getString("usd_24h_change") + "%";
-                //set values for currency item
-                views.setTextViewText(R.id.widget_currency_list_item_currency_name, currency_name.toUpperCase());
-                views.setTextViewText(R.id.widget_currency_list_item_currency_value_usd, currency_value_usd);
-                views.setTextViewText(R.id.widget_currency_list_item_currency_usd_24h_change_value,currency_usd_24h_change_value);
-                //logic to change icons + color
-                if(currency_usd_24h_change_value.contains("-")){
-                    views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.red));
-                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.VISIBLE);
-                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.GONE);
-                }else{
-                    views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.green));
-                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.VISIBLE);
-                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.GONE);
-                }
+                String account_name = "@" + accounts_data.names().getString(position).replace("_", " ");
+                JSONObject valuesJsonObject = accounts_data.getJSONObject(accounts_data.names().getString(position));
+                Log.i("account_name", account_name); //TODO delete
+                Log.i("valuesJsonObject", valuesJsonObject.toString()); //TODO delete
+                views.setTextViewText(R.id.widget_account_balance_list_item_account_name,  account_name);
+                views.setTextViewText(R.id.widget_account_balance_list_item_hbd, valuesJsonObject.getString("hbd"));
+                views.setTextViewText(R.id.widget_account_balance_list_item_hive, valuesJsonObject.getString("hive"));
+                views.setTextViewText(R.id.widget_account_balance_list_item_hive_power, valuesJsonObject.getString("hive_power"));
+                views.setTextViewText(R.id.widget_account_balance_list_item_hive_savings, valuesJsonObject.getString("hive_savings"));
+                views.setTextViewText(R.id.widget_account_balance_list_item_hbd_savings, valuesJsonObject.getString("hbd_savings"));
+//                views.setTextViewText(R.id.widget_account_balance_list_item_account_value, valuesJsonObject.getString("account_value")); //TODO...
                 SystemClock.sleep(500);
                 return views;
             } catch (JSONException e) {
@@ -99,7 +94,7 @@ public class WidgetCurrencyListService extends RemoteViewsService {
 
         @Override
         public RemoteViews getLoadingView() {
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list_loading_view);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_account_balance_list_loading_view);
             return views;
         }
 

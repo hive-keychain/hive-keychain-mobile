@@ -13,30 +13,4 @@ export default (eventReceived: any) => {
       eventListener.remove();
     };
   }, [eventReceived]);
-
-  // const handleEventListener = (event: any) => {
-  //   const mode = process.env.NODE_ENV;
-  //   // if (mode === 'development') {
-  //   //   console.log({event});
-  //   // }
-
-  //   if (event && Object.entries(event).length >= 1) {
-  //     return event;
-  //   }
-
-  //   // if (event && event.currency) {
-  //   //   const {currency: command} = event;
-  //   //   if (command === 'update_values') {
-  //   //     await WidgetUtils.sendWidgetData();
-  //   //   }
-  //   // }
-  //   // if (event & event.navigateTo) {
-  //   //   const {navigateTo} = event;
-  //   //   if (mode === 'development') {
-  //   //     console.log({navigateTo});
-  //   //   }
-  //   // }
-  // };
-  // console.log({eventReceived});
-  // return eventReceived;
 };

@@ -83,6 +83,8 @@
       <!-- Widget Services related-->
       <service android:name=".WidgetCurrencyListService"
         android:permission="android.permission.BIND_REMOTEVIEWS" />
+      <service android:name=".WidgetAccountBalanceListService"
+          android:permission="android.permission.BIND_REMOTEVIEWS" />
       <!-- End Widget Services related-->
     </application>
 

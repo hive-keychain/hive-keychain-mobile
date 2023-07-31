@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -21,20 +22,28 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         final int flag =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT;
         for (int appWidgetId : appWidgetIds) {
-//            Intent intent = new Intent(context, MainActivity.class);
-//            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,intent,flag);
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_account_balance_list);
-//            views.setOnClickPendingIntent(R.id.widget_hive_users_button, pendingIntent);
 
             //Custom intent/broadcast registration
             //In app navigate to action.
             Intent intent = new Intent(context, WidgetAccountBalanceListProvider.class);
             intent.setAction(ACTION_WIDGET_APP_NAVIGATE_TO);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, flag);
-            views.setOnClickPendingIntent(R.id.widget_account_balance_list_button_refresh, pendingIntent);
+            views.setOnClickPendingIntent(R.id.widget_account_balance_list_button_configure, pendingIntent);
+
+            //Service for StackView
+            Intent serviceIntent = new Intent(context, WidgetAccountBalanceListService.class);
+            serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
+
+            //Add StackView into views
+            views.setRemoteAdapter(R.id.widget_account_balance_list_stack_view, serviceIntent);
+            views.setEmptyView(R.id.widget_account_balance_list_stack_view, R.id.widget_account_balance_list_stack_empty_view);
 
             appWidgetManager.updateAppWidget(appWidgetId, views);
+            // Instruct the widget manager that data may have changed, so update remove views.
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_account_balance_list_stack_view);
         }
     }
 
@@ -50,14 +59,7 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
                 ReactContext reactContext = rnApp.getReactNativeHost().getReactInstanceManager().getCurrentReactContext();
                 MainActivity.sendReactEvent(reactContext,"command_event", params);
 
-//                int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-//                        AppWidgetManager.INVALID_APPWIDGET_ID);
-//                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-//                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.appwidget_stack_view);
-
                 // launch app.
-                //TODO here: for some reason this intent only works when the app is already running
-                //  it differs from how the layout in the other widget works, so let check about this...
                 //start activity
                 Intent i = new Intent();
                 i.setClassName(context.getPackageName(), "com.mobilekeychain.MainActivity");
