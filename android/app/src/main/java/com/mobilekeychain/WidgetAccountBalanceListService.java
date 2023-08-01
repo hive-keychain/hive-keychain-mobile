@@ -4,19 +4,30 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
-
-import androidx.core.content.ContextCompat;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class WidgetAccountBalanceListService extends RemoteViewsService {
     private JSONObject accounts_data;
+
+    //TIMER TEST //TODO
+    Handler mHandler = new Handler();
+
+    final Runnable r = new Runnable() {
+        public void run() {
+            Log.i("MESSAGE", "EACH 5 SEC");
+            //check data if > 1 active this, otherwise, remove this runnable.
+            //TODO how to manipulate the remote views...
+            mHandler.postDelayed(this, 5000);
+        }
+    };
+    //END
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -49,6 +60,10 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
         public void onCreate() {
             //connect to data source if needed
             getData();
+
+            //TIMER TEST //TODO
+            mHandler.postDelayed(r, 5000);
+            //END TIMER TEST //TODO
         }
 
         @Override
@@ -81,7 +96,7 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                 views.setTextViewText(R.id.widget_account_balance_list_item_hive_power, valuesJsonObject.getString("hive_power"));
                 views.setTextViewText(R.id.widget_account_balance_list_item_hive_savings, valuesJsonObject.getString("hive_savings"));
                 views.setTextViewText(R.id.widget_account_balance_list_item_hbd_savings, valuesJsonObject.getString("hbd_savings"));
-//                views.setTextViewText(R.id.widget_account_balance_list_item_account_value, valuesJsonObject.getString("account_value")); //TODO...
+                views.setTextViewText(R.id.widget_account_balance_list_item_account_value, valuesJsonObject.getString("account_value") + " USD"); //TODO...
                 SystemClock.sleep(500);
                 return views;
             } catch (JSONException e) {

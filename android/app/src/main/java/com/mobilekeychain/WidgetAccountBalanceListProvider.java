@@ -54,7 +54,8 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
             try{
                 // put new key into shared storage (send navigateTo command to app)
                 WritableMap params = Arguments.createMap();
-                params.putString("navigateTo", "WALLET");
+//                params.putString("navigateTo", "WALLET"); //TODO useful command in case navigation is needed at anytime
+                params.putString("configureWidgets", "true"); //TODO useful as  is the one making the configuration in app.
                 ReactApplication rnApp = (ReactApplication) context.getApplicationContext();
                 ReactContext reactContext = rnApp.getReactNativeHost().getReactInstanceManager().getCurrentReactContext();
                 MainActivity.sendReactEvent(reactContext,"command_event", params);

@@ -145,5 +145,29 @@
                 android:layout_weight="1"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="1">
+<!--            //TODO uncomment + assign new icon if needed-->
+<!--            <ImageView-->
+<!--                android:layout_width="20dp"-->
+<!--                android:layout_height="20dp"-->
+<!--                android:src="@drawable/savings"-->
+<!--                android:tint="@color/red"/>-->
+            <TextView
+                android:id="@+id/widget_account_balance_list_item_account_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_loading_number"
+                android:textSize="@dimen/text_size_12_dp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="4dp"
+                android:gravity="end"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
     </LinearLayout>
 </RelativeLayout>

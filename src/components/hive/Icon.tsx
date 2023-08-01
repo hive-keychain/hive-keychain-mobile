@@ -14,6 +14,7 @@ import LinkIcon from 'src/assets/icons/svgs/link.svg';
 import ClaimIcon from 'src/assets/icons/svgs/redeem.svg';
 import SavingsIcon from 'src/assets/icons/svgs/savings.svg';
 import TransferIcon from 'src/assets/icons/svgs/send.svg';
+import SettingsIcon from 'src/assets/icons/svgs/settings.svg';
 import DelegateIcon from 'src/assets/icons/svgs/swap_horiz.svg';
 
 const getIconFilePath = (
@@ -57,7 +58,9 @@ const getIconFilePath = (
     case 'add_circle_outline':
       return <AddCircleOutlineIcon style={styles.defaultIconContainer} />;
     case 'delete' || 'remove':
-      return <DeleteIcon style={style.defaultIconContainer} />;
+      return <DeleteIcon style={styles.defaultIconContainer} />;
+    case 'settings':
+      return <SettingsIcon style={finalStyleOnIcon} />;
     default:
       return <TransferIcon style={finalStyleOnIcon} />;
   }

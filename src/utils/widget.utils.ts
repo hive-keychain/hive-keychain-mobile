@@ -1,5 +1,9 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import {NativeModules} from 'react-native';
-import {getPrices} from './price';
+import {store} from 'store';
+import AccountUtils from './account.utils';
+import {toHP, withCommas} from './format';
+import {getAccountValue, getPrices} from './price';
 
 const SharedStorage = NativeModules.SharedStorage;
 interface Prices {
@@ -12,6 +16,10 @@ interface DataCurrency {
 }
 
 const sendWidgetData = async () => {
+  const accounts = store.getState().accounts;
+  console.log({accounts});
+
+  //currencies
   const dataCurrencies: DataCurrency = {};
   try {
     const prices = await getPrices();
@@ -27,59 +35,63 @@ const sendWidgetData = async () => {
         };
       });
     } else throw new Error('Hive data not present, please check!');
+
+    //accounts to show in widget
+    ///////////////////////
+    //TODO get value from async storage.
+    const accountsToShow = await AsyncStorage.getItem('account_balance_list');
+    //what //TODO if not set any account yet?
+    let dataAccounts: {[key: string]: any} = {};
+    if (accountsToShow) {
+      //TODO organize types & interfaces needed.
+      const finalAccountsToShow = JSON.parse(accountsToShow).filter(
+        (acc: any) => acc.show,
+      );
+      for (let i = 0; i < finalAccountsToShow.length; i++) {
+        const account = finalAccountsToShow[i];
+        const extendedAccount = (
+          await AccountUtils.getAccount(account.name)
+        )[0];
+        //TODO need to format data?? check
+        dataAccounts[`${account.name}`] = {
+          hive: withCommas(extendedAccount.balance as string, 2),
+          hbd: withCommas(extendedAccount.hbd_balance as string, 2),
+          hive_power: withCommas(
+            toHP(
+              extendedAccount.vesting_shares as string,
+              store.getState().globals,
+            ).toString(),
+            2,
+          ),
+          hive_savings: withCommas(
+            extendedAccount.savings_balance as string,
+            2,
+          ),
+          hbd_savings: withCommas(
+            extendedAccount.savings_hbd_balance as string,
+            2,
+          ),
+          account_value: getAccountValue(
+            extendedAccount,
+            prices,
+            store.getState().globals,
+          ),
+        };
+      }
+    }
+    ///////////////////////////
+
     const data = {
       currency_list: dataCurrencies,
-      account_balance_list: {
-        theghost1980: {
-          hive: '10,000.00',
-          hbd: '10,000.00',
-          hive_power: '10,000.00',
-          hive_savings: '10,000.00',
-          hbd_savings: '10,000.00',
-          account_value: '10.000,00',
-        },
-        pablo: {
-          hive: '110,000.00',
-          hbd: '110,000.00',
-          hive_power: '110,000.00',
-          hive_savings: '110,000.00',
-          hbd_savings: '110,000.00',
-          account_value: '110.000,00',
-        },
-        pedro: {
-          hive: '1,000.00',
-          hbd: '1,000.00',
-          hive_power: '1,000.00',
-          hive_savings: '1,000.00',
-          hbd_savings: '1,000.00',
-          account_value: '1.000,00',
-        },
-        juan: {
-          hive: '9,000.00',
-          hbd: '9,000.00',
-          hive_power: '9,000.00',
-          hive_savings: '9,000.00',
-          hbd_savings: '9,000.00',
-          account_value: '9.000,00',
-        },
-      },
+      account_balance_list: dataAccounts,
     };
+    console.log({data}); //TODO remove line
     SharedStorage.set(JSON.stringify(data));
     // IOS //TODO
     // await SharedGroupPreferences.setItem('widgetKey', {text: value}, group);
   } catch (error) {
     console.log('Error sending widget data: ', {error});
     console.log('Error message: ', {msg: error.message});
-    if (error && error.message) {
-      if (error.message === 'Network Error') {
-        const dataError: DataCurrency = {};
-        dataError['error'] = {
-          usd: 'Please active internet!',
-          usd_24h_change: '0.0',
-        };
-        SharedStorage.set(JSON.stringify(dataCurrencies));
-      }
-    }
   }
 };
 
