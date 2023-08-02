@@ -89,7 +89,7 @@ const Main = ({
       appState.current = nextAppState;
     };
     AppState.addEventListener('change', handler);
-
+    WidgetUtils.sendWidgetData(); //initialize widget data
     return () => {
       AppState.removeEventListener('change', handler);
     };

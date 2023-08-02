@@ -2,7 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@color/black"
+    android:orientation="vertical">
+
+    <!-- Init Testing adapter based widgets -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:layout_centerVertical="true">
+
+        <StackView
+            android:id="@+id/widget_account_balance_list_stack_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:loopViews="true"
+            android:backgroundTint="@color/black"/>
+
+        <TextView
+            android:id="@+id/widget_account_balance_list_stack_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:text="Loading widget"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:textStyle="bold"/>
+
+    </FrameLayout>
+    <!-- End Testing adapter based widgets -->
 
     <!-- Logo & refresh section -->
     <LinearLayout
@@ -10,7 +39,8 @@
         android:layout_height="wrap_content"
         android:backgroundTint="#B90C0C"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <ImageView
             android:layout_width="25dp"
@@ -37,32 +67,4 @@
     </LinearLayout>
     <!-- end Logo & refresh section-->
 
-    <!-- Init Testing adapter based widgets -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_centerInParent="true"
-        android:backgroundTint="@color/black">
-
-        <StackView
-            android:id="@+id/widget_account_balance_list_stack_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:loopViews="true"
-            android:backgroundTint="@color/black"/>
-
-        <TextView
-            android:id="@+id/widget_account_balance_list_stack_empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/black"
-            android:text="Loading widget"
-            android:textColor="#FFFFFF"
-            android:gravity="center"
-            android:textSize="20dp"
-            android:textStyle="bold"/>
-
-    </FrameLayout>
-    <!-- End Testing adapter based widgets -->
 </RelativeLayout>

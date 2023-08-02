@@ -9,6 +9,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class SharedStorage extends ReactContextBaseJavaModule {
     ReactApplicationContext context;
@@ -37,5 +38,22 @@ public class SharedStorage extends ReactContextBaseJavaModule {
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         getCurrentActivity().getApplicationContext().sendBroadcast(intent);
 
+    }
+
+    @ReactMethod
+    public void setCommand(String command) {
+        Log.i("Command from RN: ", command);
+        //TODO possible way to handle widget updates separately:
+        //  - add two separate widget_[class-provider]_update & invoke them when nedded
+        if(command.equals("update_widgets")){
+            //Update just WidgetAccountBalanceListProvider class
+            AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+            ComponentName widgetComponent = new ComponentName(context, WidgetAccountBalanceListProvider.class);
+            int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+            Intent update = new Intent();
+            update.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
+            update.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            context.sendBroadcast(update);
+        }
     }
 }

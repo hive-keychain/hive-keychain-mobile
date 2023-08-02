@@ -21,7 +21,6 @@ import {setRpc} from 'utils/hive';
 import {processQRCodeOp} from 'utils/hive-uri';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
-import {WidgetUtils} from 'utils/widget.utils';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 
 const Root = createStackNavigator<RootStackParam>();
@@ -38,7 +37,6 @@ const App = ({
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
 
   useEffect(() => {
-    WidgetUtils.sendWidgetData(); //initialize widget data
     setupLinking();
     RNBootSplash.hide({fade: true});
     Orientation.lockToPortrait();

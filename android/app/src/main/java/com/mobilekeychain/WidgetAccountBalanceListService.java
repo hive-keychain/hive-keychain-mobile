@@ -16,19 +16,6 @@ import org.json.JSONObject;
 public class WidgetAccountBalanceListService extends RemoteViewsService {
     private JSONObject accounts_data;
 
-    //TIMER TEST //TODO
-    Handler mHandler = new Handler();
-
-    final Runnable r = new Runnable() {
-        public void run() {
-            Log.i("MESSAGE", "EACH 5 SEC");
-            //check data if > 1 active this, otherwise, remove this runnable.
-            //TODO how to manipulate the remote views...
-            mHandler.postDelayed(this, 5000);
-        }
-    };
-    //END
-
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         return new AppWidgetItemFactory(getApplicationContext(), intent);
@@ -60,10 +47,6 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
         public void onCreate() {
             //connect to data source if needed
             getData();
-
-            //TIMER TEST //TODO
-            mHandler.postDelayed(r, 5000);
-            //END TIMER TEST //TODO
         }
 
         @Override

@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {NativeModules} from 'react-native';
-import {store} from 'store';
+import {RootState, store} from 'store';
 import AccountUtils from './account.utils';
 import {toHP, withCommas} from './format';
 import {getAccountValue, getPrices} from './price';
@@ -16,9 +16,6 @@ interface DataCurrency {
 }
 
 const sendWidgetData = async () => {
-  const accounts = store.getState().accounts;
-  console.log({accounts});
-
   //currencies
   const dataCurrencies: DataCurrency = {};
   try {
@@ -38,9 +35,7 @@ const sendWidgetData = async () => {
 
     //accounts to show in widget
     ///////////////////////
-    //TODO get value from async storage.
     const accountsToShow = await AsyncStorage.getItem('account_balance_list');
-    //what //TODO if not set any account yet?
     let dataAccounts: {[key: string]: any} = {};
     if (accountsToShow) {
       //TODO organize types & interfaces needed.
@@ -52,14 +47,13 @@ const sendWidgetData = async () => {
         const extendedAccount = (
           await AccountUtils.getAccount(account.name)
         )[0];
-        //TODO need to format data?? check
         dataAccounts[`${account.name}`] = {
           hive: withCommas(extendedAccount.balance as string, 2),
           hbd: withCommas(extendedAccount.hbd_balance as string, 2),
           hive_power: withCommas(
             toHP(
               extendedAccount.vesting_shares as string,
-              store.getState().globals,
+              (store.getState() as RootState).properties.globals,
             ).toString(),
             2,
           ),
@@ -71,10 +65,13 @@ const sendWidgetData = async () => {
             extendedAccount.savings_hbd_balance as string,
             2,
           ),
-          account_value: getAccountValue(
-            extendedAccount,
-            prices,
-            store.getState().globals,
+          account_value: withCommas(
+            getAccountValue(
+              extendedAccount,
+              prices,
+              (store.getState() as RootState).properties.globals,
+            ) as string,
+            2,
           ),
         };
       }
@@ -85,8 +82,8 @@ const sendWidgetData = async () => {
       currency_list: dataCurrencies,
       account_balance_list: dataAccounts,
     };
-    console.log({data}); //TODO remove line
     SharedStorage.set(JSON.stringify(data));
+    SharedStorage.setCommand('update_widgets');
     // IOS //TODO
     // await SharedGroupPreferences.setItem('widgetKey', {text: value}, group);
   } catch (error) {

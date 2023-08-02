@@ -17,6 +17,8 @@ import com.facebook.react.bridge.WritableMap;
 
 public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
     public static String ACTION_WIDGET_APP_NAVIGATE_TO = "ActionReceiverAppNavigateTo";
+    public static String ACTION_WIDGET_APP_UPDATE_WIDGET = "ActionReceiverAppUpdateWidget";
+
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -28,6 +30,10 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
             //Custom intent/broadcast registration
             //In app navigate to action.
             Intent intent = new Intent(context, WidgetAccountBalanceListProvider.class);
+            //TODO bellow cereate a new action ACTION_WIDGET_APP_CONFIGURE
+            //  - add is bellow
+            //  - change in onReceive
+            //  - register properly into manifest: <action android:name="com.mobilekeychain.WidgetAccountBalanceListProvider.ACTION_WIDGET_APP_NAVIGATE_TO"/>
             intent.setAction(ACTION_WIDGET_APP_NAVIGATE_TO);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, flag);
             views.setOnClickPendingIntent(R.id.widget_account_balance_list_button_configure, pendingIntent);
@@ -49,7 +55,7 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i("WidgetHiveUser  action:", intent.getAction().toString());
+        Log.i("WidgetABLP  action:", intent.getAction().toString());
         if (intent.getAction().equals(ACTION_WIDGET_APP_NAVIGATE_TO)) {
             try{
                 // put new key into shared storage (send navigateTo command to app)
@@ -71,6 +77,9 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
                 Log.i("Error: navigateTo data", e.getLocalizedMessage());
                 e.printStackTrace();
             }
+        }
+        if(intent.getAction().equals(ACTION_WIDGET_APP_UPDATE_WIDGET)){
+            Log.i("Intent Received", "Now I should update this widget");
         }
         super.onReceive(context, intent);
     }
