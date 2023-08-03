@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import {WidgetAccountBalanceToShow} from 'components/popups/widget-configuration/widget-configuration';
 import {NativeModules} from 'react-native';
 import {RootState, store} from 'store';
 import AccountUtils from './account.utils';
@@ -34,14 +35,12 @@ const sendWidgetData = async () => {
     } else throw new Error('Hive data not present, please check!');
 
     //accounts to show in widget
-    ///////////////////////
     const accountsToShow = await AsyncStorage.getItem('account_balance_list');
     let dataAccounts: {[key: string]: any} = {};
     if (accountsToShow) {
-      //TODO organize types & interfaces needed.
-      const finalAccountsToShow = JSON.parse(accountsToShow).filter(
-        (acc: any) => acc.show,
-      );
+      const finalAccountsToShow: WidgetAccountBalanceToShow[] = JSON.parse(
+        accountsToShow,
+      ).filter((acc: any) => acc.show);
       for (let i = 0; i < finalAccountsToShow.length; i++) {
         const account = finalAccountsToShow[i];
         const extendedAccount = (
@@ -76,8 +75,6 @@ const sendWidgetData = async () => {
         };
       }
     }
-    ///////////////////////////
-
     const data = {
       currency_list: dataCurrencies,
       account_balance_list: dataAccounts,

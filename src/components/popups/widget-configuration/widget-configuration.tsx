@@ -17,16 +17,19 @@ interface Props {
   setShow: any;
 }
 
+export interface WidgetAccountBalanceToShow {
+  name: string;
+  show: boolean;
+}
+
 const WidgetConfiguration = ({
   navigation,
   show,
   setShow,
   accounts,
-  properties,
-  prices,
 }: Props & PropsFromRedux): null => {
   const [accountsToShow, setAccountsToShow] = useState<
-    {name: string; show: boolean}[]
+    WidgetAccountBalanceToShow[]
   >(
     accounts.map((acc) => {
       return {name: acc.name, show: false};
@@ -43,23 +46,14 @@ const WidgetConfiguration = ({
       'account_balance_list',
     );
     if (accountsStoredToShow) {
-      console.log({accountsStoredToShow}); //TODO remove line
-      //TODO organize interfaces.
-      const accountsFound: {name: string; show: boolean}[] = JSON.parse(
+      const accountsFound: WidgetAccountBalanceToShow[] = JSON.parse(
         accountsStoredToShow,
       );
-      for (let i = 0; i < accountsFound.length; i++) {
-        const acc = accountsFound[i];
-        if (acc.show) {
-          console.log({acc}); //TODO remove line
-          toogleShowAccount(acc.name, true);
-        }
-      }
+      setAccountsToShow(accountsFound);
     }
   };
 
   useEffect(() => {
-    console.log('in widget-configuration', {show, accountsToShow}); //TODO remove line
     if (show) {
       navigate('ModalScreen', {
         name: 'Whats_new_popup',
@@ -67,7 +61,7 @@ const WidgetConfiguration = ({
         onForceCloseModal: handleClose,
       });
     }
-  }, [show, accountsToShow, loadingData]);
+  }, [show, loadingData, accountsToShow]);
 
   const handleClose = async () => {
     setShow(false);
@@ -77,18 +71,12 @@ const WidgetConfiguration = ({
   const toogleShowAccount = (accountName: string, value: boolean) => {
     const copyState = [...accountsToShow];
     const updated = copyState.find((acc) => acc.name === accountName);
-    console.log({updated}); //TODO remove line
     updated.show = value;
     setAccountsToShow(copyState);
   };
 
   const handleSaveWidgetConfiguration = async () => {
     setLoadingData(true);
-    //saving into async storage so it will be processed by utils later on.
-    console.log(
-      'about to save in async storage: ',
-      JSON.stringify(accountsToShow),
-    );
     await AsyncStorage.setItem(
       'account_balance_list',
       JSON.stringify(accountsToShow),
@@ -106,6 +94,7 @@ const WidgetConfiguration = ({
         onClose={handleClose}>
         <>
           <Text style={[styles.title, styles.marginTop]}>
+            {/* //TODO bellow add into locales tr */}
             Widget Account Balance Configuration
           </Text>
           <Text style={[styles.text, styles.centeredText]}>
@@ -172,9 +161,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state: RootState) => {
   return {
     user: state.activeAccount,
-    properties: state.properties,
     accounts: state.accounts,
-    prices: state.currencyPrices,
   };
 };
 

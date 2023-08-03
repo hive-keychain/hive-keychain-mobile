@@ -115,27 +115,22 @@ const Main = ({
   React.useEffect(() => {
     const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
     let eventListener = eventEmitter.addListener('command_event', (event) => {
-      // console.log('within hook ', {event, props: Object.values(event).length});
       if (event && Object.values(event).length >= 1) {
         setEventReceived(event);
       }
     });
-    console.log('within hook ', {eventReceived});
     if (eventReceived) {
       if (eventReceived.currency) {
         const {currency: command} = eventReceived;
-        console.log({command}); //TODO remove line
         if (command === 'update_values') {
           WidgetUtils.sendWidgetData();
         }
       } else if (eventReceived.navigateTo) {
         //Check if event needed
         const {navigateTo: route} = eventReceived;
-        console.log({route}); //TODO remove line
         navigation.navigate(route);
       } else if (eventReceived.configureWidgets) {
         const {configureWidgets} = eventReceived;
-        console.log({configureWidgets}); //TODO remove line
         setShowWidgetConfiguration(Boolean(configureWidgets));
       }
     }
