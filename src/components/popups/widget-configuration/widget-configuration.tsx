@@ -8,6 +8,7 @@ import {StyleSheet, Text} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
+import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {WidgetUtils} from 'utils/widget.utils';
 
@@ -89,16 +90,15 @@ const WidgetConfiguration = ({
   const renderContent = () => {
     return (
       <Operation
-        title="Widget Configuration"
+        title={translate('popup.widget_configuration.title')}
         logo={<Icon name="settings" />}
         onClose={handleClose}>
         <>
           <Text style={[styles.title, styles.marginTop]}>
-            {/* //TODO bellow add into locales tr */}
-            Widget Account Balance Configuration
+            {translate('popup.widget_configuration.sub_title')}
           </Text>
           <Text style={[styles.text, styles.centeredText]}>
-            Choose which accounts will be shown in the Widget.
+            {translate('popup.widget_configuration.intro')}
           </Text>
           {accountsToShow.map((accountToShow) => {
             return (

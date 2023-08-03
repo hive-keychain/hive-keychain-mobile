@@ -5,7 +5,6 @@
     android:background="@color/black"
     android:orientation="vertical">
 
-    <!-- Init Testing adapter based widgets -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +30,6 @@
             android:textStyle="bold"/>
 
     </FrameLayout>
-    <!-- End Testing adapter based widgets -->
 
     <!-- Logo & refresh section -->
     <LinearLayout
@@ -65,6 +63,5 @@
             android:contentDescription="@string/my_image_description"
             android:scaleType="fitCenter" />
     </LinearLayout>
-    <!-- end Logo & refresh section-->
 
 </RelativeLayout>

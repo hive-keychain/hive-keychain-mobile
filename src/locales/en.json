@@ -704,6 +704,11 @@
       "next": "Next",
       "previous": "Previous",
       "got_it": "Got it!"
+    },
+    "widget_configuration": {
+      "title": "Widget Configuration",
+      "sub_title": "Widget Account Balance Configuration",
+      "intro": "Choose which accounts will be shown in the Widget."
     }
   }
 }
