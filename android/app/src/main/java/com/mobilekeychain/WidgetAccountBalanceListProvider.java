@@ -16,8 +16,8 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 
 public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
-    public static String ACTION_WIDGET_APP_NAVIGATE_TO = "ActionReceiverAppNavigateTo";
-    public static String ACTION_WIDGET_APP_UPDATE_WIDGET = "ActionReceiverAppUpdateWidget";
+    public static String ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST = "ActionReceiverConfigureWidgetAccountBalanceList";
+    public static String ACTION_RECEIVER_UPDATE_WIDGET_ACCOUNT_BALANCE_LIST = "ActionReceiverUpdateWidgetAccountBalanceList";
 
 
     @Override
@@ -30,11 +30,7 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
             //Custom intent/broadcast registration
             //In app navigate to action.
             Intent intent = new Intent(context, WidgetAccountBalanceListProvider.class);
-            //TODO bellow cereate a new action ACTION_WIDGET_APP_CONFIGURE
-            //  - add is bellow
-            //  - change in onReceive
-            //  - register properly into manifest: <action android:name="com.mobilekeychain.WidgetAccountBalanceListProvider.ACTION_WIDGET_APP_NAVIGATE_TO"/>
-            intent.setAction(ACTION_WIDGET_APP_NAVIGATE_TO);
+            intent.setAction(ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, flag);
             views.setOnClickPendingIntent(R.id.widget_account_balance_list_button_configure, pendingIntent);
 
@@ -56,30 +52,45 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i("WidgetABLP  action:", intent.getAction().toString());
-        if (intent.getAction().equals(ACTION_WIDGET_APP_NAVIGATE_TO)) {
-            try{
-                // put new key into shared storage (send navigateTo command to app)
-                WritableMap params = Arguments.createMap();
+        //TODO uncomment & implement when needed.
+        // -> manifest <action android:name="com.mobilekeychain.WidgetAccountBalanceListProvider.ACTION_WIDGET_APP_NAVIGATE_TO"/>
+        //        if (intent.getAction().equals(ACTION_WIDGET_APP_NAVIGATE_TO)) {
+//            try{
+//                // put new key into shared storage (send navigateTo command to app)
+//                WritableMap params = Arguments.createMap();
 //                params.putString("navigateTo", "WALLET"); //TODO useful command in case navigation is needed at anytime
-                params.putString("configureWidgets", "true"); //TODO useful as  is the one making the configuration in app.
-                ReactApplication rnApp = (ReactApplication) context.getApplicationContext();
-                ReactContext reactContext = rnApp.getReactNativeHost().getReactInstanceManager().getCurrentReactContext();
-                MainActivity.sendReactEvent(reactContext,"command_event", params);
+//                ReactApplication rnApp = (ReactApplication) context.getApplicationContext();
+//                ReactContext reactContext = rnApp.getReactNativeHost().getReactInstanceManager().getCurrentReactContext();
+//                MainActivity.sendReactEvent(reactContext,"command_event", params);
+//
+//                // launch app.
+//                //start activity
+//                Intent i = new Intent();
+//                i.setClassName(context.getPackageName(), "com.mobilekeychain.MainActivity");
+//                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                context.startActivity(i);
+//
+//            } catch (Exception e) {
+//                Log.i("Error: navigateTo data", e.getLocalizedMessage());
+//                e.printStackTrace();
+//            }
+//        }
+        if(intent.getAction().equals(ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST)){
+            Log.i("Intent Received", "Calling configure widget popup in RN");
+            // put new key into shared storage (send navigateTo command to app)
+            WritableMap params = Arguments.createMap();
+            //params.putString("navigateTo", "WALLET"); //TODO useful command in case navigation is needed at anytime
+            params.putString("configureWidgets", "true"); //TODO useful as  is the one making the configuration in app.
+            ReactApplication rnApp = (ReactApplication) context.getApplicationContext();
+            ReactContext reactContext = rnApp.getReactNativeHost().getReactInstanceManager().getCurrentReactContext();
+            MainActivity.sendReactEvent(reactContext,"command_event", params);
 
-                // launch app.
-                //start activity
-                Intent i = new Intent();
-                i.setClassName(context.getPackageName(), "com.mobilekeychain.MainActivity");
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(i);
-
-            } catch (Exception e) {
-                Log.i("Error: navigateTo data", e.getLocalizedMessage());
-                e.printStackTrace();
-            }
-        }
-        if(intent.getAction().equals(ACTION_WIDGET_APP_UPDATE_WIDGET)){
-            Log.i("Intent Received", "Now I should update this widget");
+            // launch app.
+            //start activity
+            Intent i = new Intent();
+            i.setClassName(context.getPackageName(), "com.mobilekeychain.MainActivity");
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
         }
         super.onReceive(context, intent);
     }

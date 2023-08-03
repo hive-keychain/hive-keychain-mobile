@@ -73,7 +73,7 @@
           android:exported="false">
         <intent-filter>
           <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-          <action android:name="com.mobilekeychain.WidgetAccountBalanceListProvider.ACTION_WIDGET_APP_NAVIGATE_TO"/>
+          <action android:name="com.mobilekeychain.WidgetAccountBalanceListProvider.ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST"/>
         </intent-filter>
         <meta-data android:name="android.appwidget.provider"
             android:resource="@xml/widget_account_balance_list"/>

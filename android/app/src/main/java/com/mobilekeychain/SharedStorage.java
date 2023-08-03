@@ -10,6 +10,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.RemoteViews;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class SharedStorage extends ReactContextBaseJavaModule {
     ReactApplicationContext context;
@@ -25,7 +29,7 @@ public class SharedStorage extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void set(String message) {
+    public void setData(String message) {
         SharedPreferences.Editor editor = context.getSharedPreferences("DATA", Context.MODE_PRIVATE).edit();
         editor.putString("appData", message);
         editor.commit();
@@ -41,19 +45,28 @@ public class SharedStorage extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setCommand(String command) {
-        Log.i("Command from RN: ", command);
-        //TODO possible way to handle widget updates separately:
-        //  - add two separate widget_[class-provider]_update & invoke them when nedded
-        if(command.equals("update_widgets")){
-            //Update just WidgetAccountBalanceListProvider class
-            AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
-            ComponentName widgetComponent = new ComponentName(context, WidgetAccountBalanceListProvider.class);
-            int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
-            Intent update = new Intent();
-            update.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIds);
-            update.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            context.sendBroadcast(update);
+    public void setCommand(String command, String params){
+        Log.i("Command RN ", "C: " + command + " P: " + params);
+        Log.i("Command", command);
+        if(command.trim().equals("update_widgets")){
+            Log.i("To update", params);
+            //TODO add:
+            //  - all_widgets, maybe thsi can be used on the first app load.
+            //  - currency_list
+            //  important: to finish up
+                //  - check all TODOs
+                //  - clean up
+                //  - overall tests.
+                //  - marked PR as ready for review + ticket.
+            if(params.trim().equals("account_balance_list")) {
+                Log.i("Updating", params);
+                //Update just WidgetAccountBalanceListProvider class
+                AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+                ComponentName widgetComponent = new ComponentName(context, WidgetAccountBalanceListProvider.class);
+                int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+                widgetManager.notifyAppWidgetViewDataChanged(widgetIds, R.id.widget_account_balance_list_stack_view);
+            }
+            //TODO update currency_list.
         }
     }
 }

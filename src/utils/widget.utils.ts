@@ -79,8 +79,8 @@ const sendWidgetData = async () => {
       currency_list: dataCurrencies,
       account_balance_list: dataAccounts,
     };
-    SharedStorage.set(JSON.stringify(data));
-    SharedStorage.setCommand('update_widgets');
+    SharedStorage.setData(JSON.stringify(data));
+    SharedStorage.setCommand('update_widgets', 'account_balance_list');
     // IOS //TODO
     // await SharedGroupPreferences.setItem('widgetKey', {text: value}, group);
   } catch (error) {
