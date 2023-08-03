@@ -40,7 +40,7 @@ const WidgetConfiguration = ({
 
   useEffect(() => {
     init();
-  }, []);
+  }, [show]);
 
   const init = async () => {
     const accountsStoredToShow = await AsyncStorage.getItem(
@@ -50,7 +50,7 @@ const WidgetConfiguration = ({
       const accountsFound: WidgetAccountBalanceToShow[] = JSON.parse(
         accountsStoredToShow,
       );
-      setAccountsToShow(accountsFound);
+      if (show) setAccountsToShow(accountsFound);
     }
   };
 
