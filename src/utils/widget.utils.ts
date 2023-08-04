@@ -16,7 +16,16 @@ interface DataCurrency {
   [key: string]: Prices;
 }
 
-const sendWidgetData = async () => {
+export enum WidgetSharedDataCommand {
+  UPDATE_WIDGETS = 'update_widgets',
+}
+
+export type WidgetToUpdate =
+  | 'account_balance_list'
+  | 'all_widgets'
+  | 'currency_list';
+
+const sendWidgetData = async (toUpdateWidget: WidgetToUpdate) => {
   //currencies
   const dataCurrencies: DataCurrency = {};
   try {
@@ -80,7 +89,10 @@ const sendWidgetData = async () => {
       account_balance_list: dataAccounts,
     };
     SharedStorage.setData(JSON.stringify(data));
-    SharedStorage.setCommand('update_widgets', 'account_balance_list');
+    SharedStorage.setCommand(
+      WidgetSharedDataCommand.UPDATE_WIDGETS,
+      toUpdateWidget,
+    );
     // IOS //TODO
     // await SharedGroupPreferences.setItem('widgetKey', {text: value}, group);
   } catch (error) {

@@ -39,6 +39,7 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 JSONObject data = new JSONObject(appString);
                 currency_data = new JSONObject(data.getString("currency_list"));
             } catch (JSONException e) {
+                Log.e("Error: CL getData", e.getLocalizedMessage());
                 e.printStackTrace();
             }
         }
@@ -90,7 +91,7 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 SystemClock.sleep(500);
                 return views;
             } catch (JSONException e) {
-                Log.i("Error: getViewAt", e.getLocalizedMessage());
+                Log.e("Error: CL getViewAt", e.getLocalizedMessage());
                 e.printStackTrace();
             }
             SystemClock.sleep(500);

@@ -89,7 +89,7 @@ const Main = ({
       appState.current = nextAppState;
     };
     AppState.addEventListener('change', handler);
-    WidgetUtils.sendWidgetData(); //initialize widget data
+    WidgetUtils.sendWidgetData('all_widgets'); //initialize widget data update all.
     return () => {
       AppState.removeEventListener('change', handler);
     };
@@ -107,8 +107,6 @@ const Main = ({
     return null;
   }
 
-  ///////////////////////
-  //TODO later on move to useWidgetNativeEvent but -> return eventReceived.
   const [eventReceived, setEventReceived] = useState(null);
   const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
 
@@ -122,11 +120,11 @@ const Main = ({
     if (eventReceived) {
       if (eventReceived.currency) {
         const {currency: command} = eventReceived;
-        if (command === 'update_values') {
-          WidgetUtils.sendWidgetData();
+        if (command === 'update_values_currency_list') {
+          WidgetUtils.sendWidgetData('currency_list');
         }
       } else if (eventReceived.navigateTo) {
-        //Check if event needed
+        //IF implementation needed in the future
         const {navigateTo: route} = eventReceived;
         navigation.navigate(route);
       } else if (eventReceived.configureWidgets) {
@@ -138,8 +136,6 @@ const Main = ({
       eventListener.remove();
     };
   }, [eventReceived]);
-  // Until here to move
-  ///////////////////////
 
   return (
     <WalletPage>

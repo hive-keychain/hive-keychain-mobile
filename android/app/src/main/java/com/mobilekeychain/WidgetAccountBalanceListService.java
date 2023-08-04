@@ -39,6 +39,7 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                 JSONObject data = new JSONObject(appString);
                 accounts_data = new JSONObject(data.getString("account_balance_list"));
             } catch (JSONException e) {
+                Log.e("Error: ABL getData", e.getLocalizedMessage());
                 e.printStackTrace();
             }
         }
@@ -71,19 +72,17 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                 //extract data from JSONObject stored.
                 String account_name = "@" + accounts_data.names().getString(position).replace("_", " ");
                 JSONObject valuesJsonObject = accounts_data.getJSONObject(accounts_data.names().getString(position));
-                Log.i("account_name", account_name); //TODO delete
-                Log.i("valuesJsonObject", valuesJsonObject.toString()); //TODO delete
                 views.setTextViewText(R.id.widget_account_balance_list_item_account_name,  account_name);
                 views.setTextViewText(R.id.widget_account_balance_list_item_hbd, valuesJsonObject.getString("hbd"));
                 views.setTextViewText(R.id.widget_account_balance_list_item_hive, valuesJsonObject.getString("hive"));
                 views.setTextViewText(R.id.widget_account_balance_list_item_hive_power, valuesJsonObject.getString("hive_power"));
                 views.setTextViewText(R.id.widget_account_balance_list_item_hive_savings, valuesJsonObject.getString("hive_savings"));
                 views.setTextViewText(R.id.widget_account_balance_list_item_hbd_savings, valuesJsonObject.getString("hbd_savings"));
-                views.setTextViewText(R.id.widget_account_balance_list_item_account_value, valuesJsonObject.getString("account_value") + " USD"); //TODO...
+                views.setTextViewText(R.id.widget_account_balance_list_item_account_value, valuesJsonObject.getString("account_value") + " USD");
                 SystemClock.sleep(500);
                 return views;
             } catch (JSONException e) {
-                Log.i("Error: getViewAt", e.getLocalizedMessage());
+                Log.e("Error: ABL getViewAt", e.getLocalizedMessage());
                 e.printStackTrace();
             }
             SystemClock.sleep(500);

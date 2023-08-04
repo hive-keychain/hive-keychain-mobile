@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,40 +34,34 @@ public class SharedStorage extends ReactContextBaseJavaModule {
         SharedPreferences.Editor editor = context.getSharedPreferences("DATA", Context.MODE_PRIVATE).edit();
         editor.putString("appData", message);
         editor.commit();
-
-        //CHANGE TO THE NAME OF YOUR WIDGET
-        Intent intent = new Intent(getCurrentActivity().getApplicationContext(), WidgetCurrencyListProvider.class);
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        //CHANGE TO THE NAME OF YOUR WIDGET
-        int[] ids = AppWidgetManager.getInstance(getCurrentActivity().getApplicationContext()).getAppWidgetIds(new ComponentName(getCurrentActivity().getApplicationContext(), WidgetCurrencyListProvider.class));
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-        getCurrentActivity().getApplicationContext().sendBroadcast(intent);
-
     }
 
     @ReactMethod
     public void setCommand(String command, String params){
-        Log.i("Command RN ", "C: " + command + " P: " + params);
-        Log.i("Command", command);
         if(command.trim().equals("update_widgets")){
-            Log.i("To update", params);
-            //TODO add:
-            //  - all_widgets, maybe thsi can be used on the first app load.
-            //  - currency_list
-            //  important: to finish up
-                //  - check all TODOs
-                //  - clean up
-                //  - overall tests.
-                //  - marked PR as ready for review + ticket.
+            AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
             if(params.trim().equals("account_balance_list")) {
-                Log.i("Updating", params);
                 //Update just WidgetAccountBalanceListProvider class
-                AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
                 ComponentName widgetComponent = new ComponentName(context, WidgetAccountBalanceListProvider.class);
                 int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
                 widgetManager.notifyAppWidgetViewDataChanged(widgetIds, R.id.widget_account_balance_list_stack_view);
             }
-            //TODO update currency_list.
+            if(params.trim().equals("all_widgets")){
+                //Update all widgets
+                ComponentName widgetComponentCurrency = new ComponentName(context, WidgetCurrencyListProvider.class);
+                int[] widgetIdsCurrency = widgetManager.getAppWidgetIds(widgetComponentCurrency);
+                ComponentName widgetComponentAccount = new ComponentName(context, WidgetAccountBalanceListProvider.class);
+                int[] widgetIdsAccount = widgetManager.getAppWidgetIds(widgetComponentAccount);
+
+                widgetManager.notifyAppWidgetViewDataChanged(widgetIdsAccount, R.id.widget_account_balance_list_stack_view);
+                widgetManager.notifyAppWidgetViewDataChanged(widgetIdsCurrency, R.id.widget_currency_list_stack_view);
+            }
+            if(params.trim().equals("currency_list")){
+                //Update just WidgetCurrencyList class
+                ComponentName widgetComponent = new ComponentName(context, WidgetCurrencyListProvider.class);
+                int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
+                widgetManager.notifyAppWidgetViewDataChanged(widgetIds, R.id.widget_currency_list_stack_view);
+            }
         }
     }
 }

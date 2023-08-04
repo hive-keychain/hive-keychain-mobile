@@ -9,14 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/black"
-        android:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
 
         <StackView
             android:id="@+id/widget_account_balance_list_stack_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:loopViews="true"
-            android:backgroundTint="@color/black"/>
+            android:backgroundTint="@color/black"
+            android:layout_gravity="center"/>
 
         <TextView
             android:id="@+id/widget_account_balance_list_stack_empty_view"

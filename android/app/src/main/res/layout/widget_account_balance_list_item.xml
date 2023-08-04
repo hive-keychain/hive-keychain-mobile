@@ -3,12 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    android:padding="15dp">
+    android:padding="15dp"
+    android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -148,12 +150,6 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_weight="1">
-<!--            //TODO uncomment + assign new icon if needed-->
-<!--            <ImageView-->
-<!--                android:layout_width="20dp"-->
-<!--                android:layout_height="20dp"-->
-<!--                android:src="@drawable/savings"-->
-<!--                android:tint="@color/red"/>-->
             <TextView
                 android:id="@+id/widget_account_balance_list_item_account_value"
                 android:layout_width="wrap_content"

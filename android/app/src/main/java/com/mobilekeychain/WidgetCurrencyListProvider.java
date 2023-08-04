@@ -21,7 +21,6 @@ import com.facebook.react.bridge.WritableMap;
 public class WidgetCurrencyListProvider extends AppWidgetProvider {
 
     public static String ACTION_WIDGET_REFRESH = "ActionReceiverRefresh";
-    public static String ACTION_WIDGET_LAUNCH_APP = "ActionReceiverLunchApp";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -57,12 +56,10 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        //check if gets the data.
-        //last step: check what happens when emulator on but app on, what happens with the widget.
         if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
             try{
                 WritableMap params = Arguments.createMap();
-                params.putString("currency", "update_values");
+                params.putString("currency", "update_values_currency_list");
                 ReactApplication rnApp = (ReactApplication) context.getApplicationContext();
                 ReactContext reactContext = rnApp.getReactNativeHost().getReactInstanceManager().getCurrentReactContext();
                 MainActivity.sendReactEvent(reactContext,"command_event", params);
@@ -73,12 +70,10 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
                 appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_currency_list_stack_view);
 
             } catch (Exception e) {
-                Log.i("Error: REFRESH data", e.getLocalizedMessage());
+                Log.e("Error: REFRESH CL data", e.getLocalizedMessage());
                 e.printStackTrace();
             }
 
-        } else if (intent.getAction().equals(ACTION_WIDGET_LAUNCH_APP)) {
-            Log.i("onReceive", ACTION_WIDGET_LAUNCH_APP);
         }
         super.onReceive(context, intent);
     };

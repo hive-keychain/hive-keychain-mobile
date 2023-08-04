@@ -82,7 +82,7 @@ const WidgetConfiguration = ({
       'account_balance_list',
       JSON.stringify(accountsToShow),
     );
-    await WidgetUtils.sendWidgetData();
+    await WidgetUtils.sendWidgetData('account_balance_list');
     setLoadingData(false);
     handleClose();
   };
