@@ -89,7 +89,7 @@ const Main = ({
       appState.current = nextAppState;
     };
     AppState.addEventListener('change', handler);
-    WidgetUtils.sendWidgetData('all_widgets'); //initialize widget data update all.
+    WidgetUtils.sendWidgetData('account_balance_list'); //initialize just with current accounts
     return () => {
       AppState.removeEventListener('change', handler);
     };

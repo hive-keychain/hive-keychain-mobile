@@ -3,6 +3,7 @@ package com.mobilekeychain;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -58,16 +59,10 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
             try{
-                WritableMap params = Arguments.createMap();
-                params.putString("currency", "update_values_currency_list");
-                ReactApplication rnApp = (ReactApplication) context.getApplicationContext();
-                ReactContext reactContext = rnApp.getReactNativeHost().getReactInstanceManager().getCurrentReactContext();
-                MainActivity.sendReactEvent(reactContext,"command_event", params);
-
-                int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                        AppWidgetManager.INVALID_APPWIDGET_ID);
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_currency_list_stack_view);
+                AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+                ComponentName widgetComponentCurrency = new ComponentName(context, WidgetCurrencyListProvider.class);
+                int[] widgetIdsCurrency = widgetManager.getAppWidgetIds(widgetComponentCurrency);
+                widgetManager.notifyAppWidgetViewDataChanged(widgetIdsCurrency, R.id.widget_currency_list_stack_view);
 
             } catch (Exception e) {
                 Log.e("Error: REFRESH CL data", e.getLocalizedMessage());

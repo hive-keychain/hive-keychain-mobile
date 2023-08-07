@@ -228,6 +228,7 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation "androidx.work:work-runtime-ktx:2.7.0"
+    implementation 'com.android.volley:volley:1.2.1'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

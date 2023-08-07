@@ -1,20 +1,39 @@
 package com.mobilekeychain;
 
 import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import androidx.core.content.ContextCompat;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+
 public class WidgetCurrencyListService extends RemoteViewsService {
     private JSONObject currency_data;
+    private final String KEYCHAIN_PRICE_API_URL = "https://api.hive-keychain.com/hive/v2/price";
+    private static final List<String> not_showing_currency_list = Arrays.asList("bitcoin");
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -31,28 +50,44 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                         AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-        public void getData(){
-            try {
-                //currency_list
-                SharedPreferences sharedPref = context.getSharedPreferences("DATA", Context.MODE_PRIVATE);
-                String appString = sharedPref.getString("appData", "");
-                JSONObject data = new JSONObject(appString);
-                currency_data = new JSONObject(data.getString("currency_list"));
-            } catch (JSONException e) {
-                Log.e("Error: CL getData", e.getLocalizedMessage());
-                e.printStackTrace();
-            }
-        }
-
         @Override
-        public void onCreate() {
-            //connect to data source if needed
-            getData();
-        }
+        public void onCreate() {}
 
         @Override
         public void onDataSetChanged() {
-            getData();
+            //Fetching data as sync
+            RequestFuture<JSONObject> future = RequestFuture.newFuture();
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,KEYCHAIN_PRICE_API_URL, new JSONObject(), future, future);
+            Volley.newRequestQueue(context).add(request);
+            try {
+                JSONObject response = future.get(); // this will block
+                //removing currencies from array list
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    not_showing_currency_list.forEach((currency) -> {
+                        if(response.has(currency)){
+                            response.remove(currency);
+                        }
+                    });
+                }
+                currency_data = response;
+            } catch (InterruptedException e) {
+                // exception handling
+                Log.e("Fetch Int excep", e.getLocalizedMessage());
+            } catch (ExecutionException e) {
+                // exception handling
+                if(e.getLocalizedMessage().contains("Unable to resolve host")){
+                    currency_data = null; //reset as no internet
+                    //no internet data enabled
+                    RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list);
+                    views.setTextViewText(R.id.widget_currency_list_stack_empty_view, "Please enable internet & retry refresh");
+                    views.setTextViewTextSize(R.id.widget_currency_list_stack_empty_view,1,12);
+                    AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+                    ComponentName widgetComponentCurrency = new ComponentName(context, WidgetCurrencyListProvider.class);
+                    int[] widgetIdsCurrency = widgetManager.getAppWidgetIds(widgetComponentCurrency);
+                    widgetManager.updateAppWidget(widgetIdsCurrency,views);
+                }
+            }
+            //End fetching sync
         }
 
         @Override
@@ -62,7 +97,7 @@ public class WidgetCurrencyListService extends RemoteViewsService {
 
         @Override
         public int getCount() {
-            return currency_data.length();
+            return currency_data == null ? 0 : currency_data.length();
         }
 
         @Override
@@ -71,24 +106,26 @@ public class WidgetCurrencyListService extends RemoteViewsService {
             try {
                 //extract data from JSONObject stored.
                 String currency_name = currency_data.names().getString(position).replace("_", " ");
-                JSONObject valuesJsonObject = currency_data.getJSONObject(currency_data.names().getString(position));
-                String currency_value_usd = "$" + valuesJsonObject.getString("usd");
-                String currency_usd_24h_change_value = valuesJsonObject.getString("usd_24h_change") + "%";
-                //set values for currency item
-                views.setTextViewText(R.id.widget_currency_list_item_currency_name, currency_name.toUpperCase());
-                views.setTextViewText(R.id.widget_currency_list_item_currency_value_usd, currency_value_usd);
-                views.setTextViewText(R.id.widget_currency_list_item_currency_usd_24h_change_value,currency_usd_24h_change_value);
-                //logic to change icons + color
-                if(currency_usd_24h_change_value.contains("-")){
-                    views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.red));
-                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.VISIBLE);
-                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.GONE);
-                }else{
-                    views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.green));
-                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.VISIBLE);
-                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.GONE);
-                }
-                SystemClock.sleep(500);
+                    JSONObject valuesJsonObject = currency_data.getJSONObject(currency_data.names().getString(position));
+                    //formatting
+                    NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("en", "US"));
+                    String currency_value_usd = nf.format(valuesJsonObject.getDouble("usd"));
+                    String currency_usd_24h_change_value = String.format("%.2f", valuesJsonObject.getDouble("usd_24h_change")) + "%";
+                    //set values for currency item
+                    views.setTextViewText(R.id.widget_currency_list_item_currency_name, currency_name.toUpperCase());
+                    views.setTextViewText(R.id.widget_currency_list_item_currency_value_usd, currency_value_usd);
+                    views.setTextViewText(R.id.widget_currency_list_item_currency_usd_24h_change_value, currency_usd_24h_change_value);
+                    //logic to change icons + color
+                    if (currency_usd_24h_change_value.contains("-")) {
+                        views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.red));
+                        views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.VISIBLE);
+                        views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.GONE);
+                    } else {
+                        views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.green));
+                        views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.VISIBLE);
+                        views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.GONE);
+                    }
+                    SystemClock.sleep(500);
                 return views;
             } catch (JSONException e) {
                 Log.e("Error: CL getViewAt", e.getLocalizedMessage());
