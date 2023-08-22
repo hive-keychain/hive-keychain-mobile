@@ -52,6 +52,11 @@ const Settings = ({
   }, [active]);
 
   const init = async () => {
+    //TODO list over here important:
+    //  - And the error could show as a toast when pressing the disabled item
+    //TODO remove test block
+    console.log({fromEnv: process.env.DEV_CLAIM_FREQUENCY});
+    //end test block
     const values = await AutomatedTasksUtils.getClaims(active.name!);
     setClaimRewards(values[KeychainStorageKeyEnum.CLAIM_REWARDS] ?? false);
     setClaimAccounts(values[KeychainStorageKeyEnum.CLAIM_ACCOUNTS] ?? false);
@@ -182,13 +187,6 @@ const Settings = ({
           }}
         />
         <Separator />
-        <Text style={styles.subtitle}>
-          {' '}
-          {translate('settings.settings.whitelisted')}
-        </Text>
-        <Separator />
-        {showPreferencesHandler()}
-        <Separator />
         {customDisabledComponent(
           <>
             <CheckBox
@@ -201,8 +199,16 @@ const Settings = ({
               title={translate('wallet.claim.enable_autoclaim_rewards')}
               containerStyle={styles.checkbox}
               checkedColor="black"
+              textStyle={{
+                color: !!claimRewardsErrorMessage ? '#9f9f9f' : 'black',
+              }}
             />
-            <Text style={[styles.hintText, styles.marginBottom]}>
+            <Text
+              style={[
+                styles.hintText,
+                styles.marginBottom,
+                !!claimRewardsErrorMessage ? styles.disabledInfoText : null,
+              ]}>
               {translate('wallet.claim.enable_autoclaim_rewards_info')}
             </Text>
           </>,
@@ -221,8 +227,16 @@ const Settings = ({
               title={translate('wallet.claim.enable_autoclaim_accounts')}
               containerStyle={styles.checkbox}
               checkedColor="black"
+              textStyle={{
+                color: isClaimedAccountDisabled ? '#9f9f9f' : 'black',
+              }}
             />
-            <Text style={[styles.hintText, styles.marginBottom]}>
+            <Text
+              style={[
+                styles.hintText,
+                styles.marginBottom,
+                isClaimedAccountDisabled ? styles.disabledInfoText : null,
+              ]}>
               {translate('wallet.claim.enable_autoclaim_accounts_info', {
                 MIN_RC_PCT: ClaimsConfig.freeAccount.MIN_RC_PCT,
               })}
@@ -245,14 +259,30 @@ const Settings = ({
               title={translate('wallet.claim.enable_autoclaim_savings')}
               containerStyle={styles.checkbox}
               checkedColor="black"
+              textStyle={{
+                color: !!claimSavingsErrorMessage ? '#9f9f9f' : 'black',
+              }}
             />
-            <Text style={[styles.hintText, styles.marginBottom]}>
+            <Text
+              style={[
+                styles.hintText,
+                styles.marginBottom,
+                !!claimSavingsErrorMessage ? styles.disabledInfoText : null,
+              ]}>
               {translate('wallet.claim.enable_autoclaim_savings_info')}
             </Text>
           </>,
           !!claimSavingsErrorMessage,
           claimSavingsErrorMessage,
         )}
+        <Separator />
+        <Text style={styles.subtitle}>
+          {' '}
+          {translate('settings.settings.whitelisted')}
+        </Text>
+        <Separator />
+        {showPreferencesHandler()}
+        <Separator />
       </ScrollView>
     </SafeArea>
   );
@@ -291,10 +321,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   disabled: {
-    backgroundColor: '#cccccc',
     padding: 4,
     borderRadius: 4,
     marginBottom: 4,
+  },
+  disabledInfoText: {
+    color: '#9f9f9f',
   },
   enabled: {
     backgroundColor: '#b5b3b300',
