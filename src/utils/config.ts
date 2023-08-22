@@ -253,8 +253,7 @@ export const BrowserConfig = {
       {
         name: 'V4V.app',
         description: 'Hive to Bitcoin Lightning Gateway.',
-        icon:
-          'https://images.hive.blog/u/v4vapp/avatar',
+        icon: 'https://images.hive.blog/u/v4vapp/avatar',
         url: 'https://v4v.app/',
         categories: ['finance'],
       },

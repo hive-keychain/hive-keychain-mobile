@@ -199,7 +199,9 @@ const iterateClaimSavings = async (users: string[], mk: string) => {
           console.log('Error while claiming savings');
         }
       } else {
-        console.log(`Not time to claim yet for @${activeAccount?.name}`);
+        console.log(
+          `Not time to claim savings yet for @${activeAccount?.name}`,
+        );
       }
     }
   }
