@@ -166,7 +166,9 @@ const Transfer = ({
             leftIcon={<AccountLogoDark />}
             autoCapitalize="none"
             value={to}
-            onChangeText={setTo}
+            onChangeText={(e) => {
+              setTo(e.trim());
+            }}
           />
           <Separator />
           <OperationInput
