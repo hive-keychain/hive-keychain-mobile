@@ -14,6 +14,7 @@ import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState} from 'store';
@@ -52,11 +53,6 @@ const Settings = ({
   }, [active]);
 
   const init = async () => {
-    //TODO list over here important:
-    //  - And the error could show as a toast when pressing the disabled item
-    //TODO remove test block
-    console.log({fromEnv: process.env.DEV_CLAIM_FREQUENCY});
-    //end test block
     const values = await AutomatedTasksUtils.getClaims(active.name!);
     setClaimRewards(values[KeychainStorageKeyEnum.CLAIM_REWARDS] ?? false);
     setClaimAccounts(values[KeychainStorageKeyEnum.CLAIM_ACCOUNTS] ?? false);
@@ -137,14 +133,12 @@ const Settings = ({
   ) => {
     return (
       <TouchableOpacity
-        disabled={disabled}
-        style={disabled ? styles.disabled : styles.enabled}>
-        <>
-          {children}
-          {disabled && (
-            <Text style={styles.warningText}>{translate(errorKeyMessage)}</Text>
-          )}
-        </>
+        // disabled={disabled}
+        style={disabled ? styles.disabled : styles.enabled}
+        onPress={
+          errorKeyMessage ? () => Toast.show(translate(errorKeyMessage)) : null
+        }>
+        <>{children}</>
       </TouchableOpacity>
     );
   };
@@ -193,15 +187,15 @@ const Settings = ({
               checked={claimRewards}
               onPress={
                 claimRewardsErrorMessage
-                  ? () => {}
+                  ? null
                   : () => saveClaims(!claimRewards, claimAccounts, claimSavings)
               }
               title={translate('wallet.claim.enable_autoclaim_rewards')}
               containerStyle={styles.checkbox}
               checkedColor="black"
-              textStyle={{
-                color: !!claimRewardsErrorMessage ? '#9f9f9f' : 'black',
-              }}
+              textStyle={
+                !!claimRewardsErrorMessage ? styles.disabledInfoText : null
+              }
             />
             <Text
               style={[
@@ -221,15 +215,15 @@ const Settings = ({
               checked={claimAccounts && !isClaimedAccountDisabled}
               onPress={
                 claimAccountErrorMessage || isClaimedAccountDisabled
-                  ? () => {}
+                  ? null
                   : () => saveClaims(claimRewards, !claimAccounts, claimSavings)
               }
               title={translate('wallet.claim.enable_autoclaim_accounts')}
               containerStyle={styles.checkbox}
               checkedColor="black"
-              textStyle={{
-                color: isClaimedAccountDisabled ? '#9f9f9f' : 'black',
-              }}
+              textStyle={
+                isClaimedAccountDisabled ? styles.disabledInfoText : null
+              }
             />
             <Text
               style={[
@@ -253,15 +247,15 @@ const Settings = ({
               checked={claimSavings}
               onPress={
                 claimSavingsErrorMessage
-                  ? () => {}
+                  ? null
                   : () => saveClaims(claimRewards, claimAccounts, !claimSavings)
               }
               title={translate('wallet.claim.enable_autoclaim_savings')}
               containerStyle={styles.checkbox}
               checkedColor="black"
-              textStyle={{
-                color: !!claimSavingsErrorMessage ? '#9f9f9f' : 'black',
-              }}
+              textStyle={
+                !!claimSavingsErrorMessage ? styles.disabledInfoText : null
+              }
             />
             <Text
               style={[
@@ -333,9 +327,6 @@ const styles = StyleSheet.create({
     padding: 0,
     borderRadius: 0,
     marginBottom: 0,
-  },
-  warningText: {
-    color: 'red',
   },
 });
 
