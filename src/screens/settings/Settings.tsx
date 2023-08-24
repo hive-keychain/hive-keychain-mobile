@@ -49,8 +49,14 @@ const Settings = ({
   useLockedPortrait(navigation);
 
   useEffect(() => {
+    setClaimRewards(false);
+    setClaimAccounts(false);
+    setClaimSavings(false);
+    setClaimAccountErrorMessage(undefined);
+    setClaimSavingsErrorMessage(undefined);
+    setClaimRewardsErrorMessage(undefined);
     init();
-  }, [active]);
+  }, [active.name]);
 
   const init = async () => {
     const values = await AutomatedTasksUtils.getClaims(active.name!);
@@ -131,6 +137,7 @@ const Settings = ({
     disabled: boolean,
     errorKeyMessage: string,
   ) => {
+    console.log('disabled', disabled, errorKeyMessage);
     return (
       <TouchableOpacity
         // disabled={disabled}
@@ -222,14 +229,18 @@ const Settings = ({
               containerStyle={styles.checkbox}
               checkedColor="black"
               textStyle={
-                isClaimedAccountDisabled ? styles.disabledInfoText : null
+                isClaimedAccountDisabled || !!claimAccountErrorMessage
+                  ? styles.disabledInfoText
+                  : null
               }
             />
             <Text
               style={[
                 styles.hintText,
                 styles.marginBottom,
-                isClaimedAccountDisabled ? styles.disabledInfoText : null,
+                isClaimedAccountDisabled || !!claimAccountErrorMessage
+                  ? styles.disabledInfoText
+                  : null,
               ]}>
               {translate('wallet.claim.enable_autoclaim_accounts_info', {
                 MIN_RC_PCT: ClaimsConfig.freeAccount.MIN_RC_PCT,
