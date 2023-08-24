@@ -137,7 +137,6 @@ const Settings = ({
     disabled: boolean,
     errorKeyMessage: string,
   ) => {
-    console.log('disabled', disabled, errorKeyMessage);
     return (
       <TouchableOpacity
         // disabled={disabled}
