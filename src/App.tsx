@@ -23,6 +23,21 @@ import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 
+//TODO list:
+// - On ticker : if you scroll down to hbd and reload, it will bring you to an empty black screen on the widget, swiping brings you back to the right page.
+// - On portfolio :
+// - add HIVE HBD and HP assets names
+// - clicking the widget or the setting wheels only opens keychain if it's already opened, otherwise it crashes
+// - HBD savings should be after HIVE savings
+// - instead of xxx USD : $xxx
+// - change the implementation of account_balance:
+//    - the widget config, still call the app popup.
+//    - now the app just sends back the account names selected, i.e: {accounts: ['account1', 'account2',...]}
+//    - the widget grabs that data:
+//      - save in in asynstorage android.
+//      - make the requests in order to get the same data/calculations that was doing in the app.
+//      - so it will act as a self unit, just needing config 1st time widget creation with the app but no more.
+
 const Root = createStackNavigator<RootStackParam>();
 
 const App = ({
@@ -37,6 +52,14 @@ const App = ({
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
 
   useEffect(() => {
+    //TODO remove testing block
+    // AsyncStorage.removeItem(
+    //   WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
+    //   (error) => {
+    //     console.log({clearAccountBalanceList: error});
+    //   },
+    // );
+    //end block
     setupLinking();
     RNBootSplash.hide({fade: true});
     Orientation.lockToPortrait();

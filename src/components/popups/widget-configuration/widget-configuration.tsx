@@ -7,6 +7,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import {ConnectedProps, connect} from 'react-redux';
+import {WidgetAsyncStorageItem} from 'src/enums/widgets.enum';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -32,25 +33,39 @@ const WidgetConfiguration = ({
   const [accountsToShow, setAccountsToShow] = useState<
     WidgetAccountBalanceToShow[]
   >(
-    accounts.map((acc) => {
-      return {name: acc.name, show: false};
-    }),
+    // accounts.map((acc) => {
+    //   return {name: acc.name, show: false};
+    // }),
+    [],
   );
   const [loadingData, setLoadingData] = useState(false);
 
   useEffect(() => {
-    init();
-  }, [show]);
+    if (show) {
+      init();
+    }
+  }, [show, accounts]);
 
   const init = async () => {
+    //TODO important:
+    //  - test this:
+    //    - when no list in storage but added a new account.
+    //  - refactor widgetutils new methods.
+    //  - check what's happening in java side + update as single unit passing only account names to show.
+    let accountsFound: WidgetAccountBalanceToShow[] = [];
     const accountsStoredToShow = await AsyncStorage.getItem(
-      'account_balance_list',
+      WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
     );
+    console.log({accountsStoredToShow});
     if (accountsStoredToShow) {
-      const accountsFound: WidgetAccountBalanceToShow[] = JSON.parse(
-        accountsStoredToShow,
+      setAccountsToShow(JSON.parse(accountsStoredToShow));
+    } else if (accounts.length) {
+      await WidgetUtils.scanAccountsAndSave(accounts.map((acc) => acc.name));
+      setAccountsToShow(
+        accounts.map((acc) => {
+          return {name: acc.name, show: false};
+        }),
       );
-      if (show) setAccountsToShow(accountsFound);
     }
   };
 
@@ -79,7 +94,7 @@ const WidgetConfiguration = ({
   const handleSaveWidgetConfiguration = async () => {
     setLoadingData(true);
     await AsyncStorage.setItem(
-      'account_balance_list',
+      WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
       JSON.stringify(accountsToShow),
     );
     await WidgetUtils.sendWidgetData('account_balance_list');

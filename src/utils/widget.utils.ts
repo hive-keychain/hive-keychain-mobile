@@ -1,6 +1,10 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {WidgetAccountBalanceToShow} from 'components/popups/widget-configuration/widget-configuration';
 import {NativeModules} from 'react-native';
+import {
+  WidgetAsyncStorageItem,
+  WidgetSharedDataCommand,
+} from 'src/enums/widgets.enum';
 import {RootState, store} from 'store';
 import AccountUtils from './account.utils';
 import {toHP, withCommas} from './format';
@@ -14,10 +18,6 @@ interface Prices {
 
 interface DataCurrency {
   [key: string]: Prices;
-}
-
-export enum WidgetSharedDataCommand {
-  UPDATE_WIDGETS = 'update_widgets',
 }
 
 export type WidgetToUpdate =
@@ -89,6 +89,7 @@ const sendWidgetData = async (toUpdateWidget: WidgetToUpdate) => {
       // currency_list: dataCurrencies,
       account_balance_list: dataAccounts,
     };
+    console.log({aboutToSend: data}); //TODO remove
     SharedStorage.setData(JSON.stringify(data));
     SharedStorage.setCommand(
       WidgetSharedDataCommand.UPDATE_WIDGETS,
@@ -102,4 +103,79 @@ const sendWidgetData = async (toUpdateWidget: WidgetToUpdate) => {
   }
 };
 
-export const WidgetUtils = {sendWidgetData};
+const addAccountBalanceList = async (
+  username: string,
+  accountNames: string[],
+) => {
+  //TODO
+  //  - what about when updating the app?
+  //    - this case may be: no accountsStoredToShow but yes accounts > 1.
+  //    - so it should scan and add all present accounts.
+  const accountsStoredToShow = await AsyncStorage.getItem(
+    WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
+  );
+  if (accountsStoredToShow) {
+    const parsedAccounts: WidgetAccountBalanceToShow[] = JSON.parse(
+      accountsStoredToShow,
+    );
+    if (!parsedAccounts.find((acc) => acc.name === username)) {
+      parsedAccounts.push({name: username, show: false});
+      await AsyncStorage.setItem(
+        WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
+        JSON.stringify(parsedAccounts),
+      );
+    }
+  } else if (!accountsStoredToShow && accountNames.length > 1) {
+    //we must scan & save.
+    console.log('Found more accounts stored!');
+    await scanAccountsAndSave(accountNames);
+  } else {
+    await AsyncStorage.setItem(
+      WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
+      JSON.stringify([{name: username, show: false}]),
+    );
+  }
+};
+
+const scanAccountsAndSave = async (accountNames: string[]) => {
+  await AsyncStorage.setItem(
+    WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
+    JSON.stringify(
+      accountNames.map((account) => {
+        return {
+          name: account,
+          show: false,
+        };
+      }),
+    ),
+  );
+};
+
+const removeAccountBalanceList = async (username: string) => {
+  const accountsStoredToShow = await AsyncStorage.getItem(
+    WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
+  );
+  if (accountsStoredToShow) {
+    const parsedAccounts: WidgetAccountBalanceToShow[] = JSON.parse(
+      accountsStoredToShow,
+    );
+    if (parsedAccounts.find((acc) => acc.name === username)) {
+      await AsyncStorage.setItem(
+        WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
+        JSON.stringify(parsedAccounts.filter((acc) => acc.name !== username)),
+      );
+    }
+  }
+};
+
+const clearAccountBalanceList = async () => {
+  await AsyncStorage.removeItem(WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST);
+};
+
+export const WidgetUtils = {
+  sendWidgetData,
+  addAccountBalanceList,
+  removeAccountBalanceList,
+  clearAccountBalanceList,
+  scanAccountsAndSave,
+};
