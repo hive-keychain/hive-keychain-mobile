@@ -2,11 +2,10 @@ import {Asset} from '@hiveio/dhive';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {RootState, store} from 'store';
 import AccountUtils from 'utils/account.utils';
 import AutomatedTasksUtils from 'utils/automatedTasks.utils';
 import {ClaimsConfig} from 'utils/config';
-import {decryptToJson} from 'utils/encrypt';
-import {getFromKeychain} from 'utils/keychainStorage';
 import {RewardsUtils} from 'utils/rewards.utils';
 import {SavingsUtils} from 'utils/savings.utils';
 import {ActiveAccountModule} from './active-account.module';
@@ -18,7 +17,6 @@ const start = async () => {
 };
 
 const alarmHandler = async () => {
-  const mk = await AsyncStorage.getItem(KeychainStorageKeyEnum.__MK);
   const allClaims: {[key: string]: any} = {};
   (
     await AsyncStorage.multiGet([
@@ -37,21 +35,21 @@ const alarmHandler = async () => {
     allClaimsAccounts &&
     Object.values(allClaimsAccounts).some((claim) => claim === true)
   ) {
-    await initClaimAccounts(allClaimsAccounts, mk);
+    await initClaimAccounts(allClaimsAccounts);
   }
 
   if (
     allClaimsRewards &&
     Object.values(allClaimsRewards).some((claim) => claim === true)
   ) {
-    await initClaimRewards(allClaimsRewards, mk);
+    await initClaimRewards(allClaimsRewards);
   }
 
   if (
     allClaimsSavings &&
     Object.values(allClaimsSavings).some((claim) => claim === true)
   ) {
-    await initClaimSavings(allClaimsSavings, mk);
+    await initClaimSavings(allClaimsSavings);
   }
 };
 
@@ -60,20 +58,17 @@ const timeOutAlarmHandler = setInterval(
   ClaimsConfig.FREQUENCY * 1000 * 60,
 );
 
-const initClaimAccounts = async (
-  claimAccounts: {[x: string]: boolean},
-  mk: string,
-) => {
+const initClaimAccounts = async (claimAccounts: {[x: string]: boolean}) => {
   const users = Object.keys(claimAccounts).filter(
     (user) => claimAccounts[user] === true,
   );
-  await iterateClaimAccounts(users, mk);
+  await iterateClaimAccounts(users);
 };
 
-const iterateClaimAccounts = async (users: string[], mk: string) => {
+const iterateClaimAccounts = async (users: string[]) => {
   const userExtendedAccounts = await AccountUtils.getAccounts(users);
-  const accountsEncrypted = await getFromKeychain('accounts');
-  const localAccounts = decryptToJson(accountsEncrypted, mk)?.list;
+  const localAccounts = ((await store.getState()) as RootState).accounts;
+
   for (const userAccount of userExtendedAccounts) {
     const activeAccount = await ActiveAccountModule.createActiveAccount(
       userAccount,
@@ -99,20 +94,17 @@ const iterateClaimAccounts = async (users: string[], mk: string) => {
   }
 };
 
-const initClaimRewards = async (
-  claimRewards: {[x: string]: boolean},
-  mk: string,
-) => {
+const initClaimRewards = async (claimRewards: {[x: string]: boolean}) => {
   const users = Object.keys(claimRewards).filter(
     (user) => claimRewards[user] === true,
   );
-  await iterateClaimRewards(users, mk);
+  await iterateClaimRewards(users);
 };
 
-const iterateClaimRewards = async (users: string[], mk: string) => {
+const iterateClaimRewards = async (users: string[]) => {
   const userExtendedAccounts = await AccountUtils.getAccounts(users);
-  const accountsEncrypted = await getFromKeychain('accounts');
-  const localAccounts = decryptToJson(accountsEncrypted, mk)?.list;
+  const localAccounts = ((await store.getState()) as RootState).accounts;
+
   for (const userAccount of userExtendedAccounts) {
     const activeAccount = await ActiveAccountModule.createActiveAccount(
       userAccount,
@@ -141,20 +133,18 @@ const iterateClaimRewards = async (users: string[], mk: string) => {
   }
 };
 
-const initClaimSavings = async (
-  claimSavings: {[username: string]: boolean},
-  mk: string,
-) => {
+const initClaimSavings = async (claimSavings: {
+  [username: string]: boolean;
+}) => {
   const users = Object.keys(claimSavings).filter(
     (username) => claimSavings[username] === true,
   );
-  await iterateClaimSavings(users, mk);
+  await iterateClaimSavings(users);
 };
 
-const iterateClaimSavings = async (users: string[], mk: string) => {
+const iterateClaimSavings = async (users: string[]) => {
   const userExtendedAccounts = await AccountUtils.getAccounts(users);
-  const accountsEncrypted = await getFromKeychain('accounts');
-  const localAccounts = decryptToJson(accountsEncrypted, mk)?.list;
+  const localAccounts = ((await store.getState()) as RootState).accounts;
   for (const userAccount of userExtendedAccounts) {
     const activeAccount = await ActiveAccountModule.createActiveAccount(
       userAccount,

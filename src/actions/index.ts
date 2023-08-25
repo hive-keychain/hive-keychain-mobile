@@ -1,8 +1,6 @@
-import AsyncStorage from '@react-native-community/async-storage';
 import Toast from 'react-native-simple-toast';
 import BackGroundUtils from 'src/background';
 import {AppThunk} from 'src/hooks/redux';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {decryptToJson} from 'utils/encrypt';
 import {getFromKeychain} from 'utils/keychainStorage';
 import {translate} from 'utils/localize';
@@ -24,7 +22,6 @@ export const unlock = (
     const accountsEncrypted = await getFromKeychain('accounts');
     const accounts = decryptToJson(accountsEncrypted, mk);
     if (accounts && accounts.list) {
-      await AsyncStorage.setItem(KeychainStorageKeyEnum.__MK, mk);
       const unlock: ActionPayload<NullableString> = {type: UNLOCK, payload: mk};
       dispatch(unlock);
       const init: ActionPayload<AccountsPayload> = {
