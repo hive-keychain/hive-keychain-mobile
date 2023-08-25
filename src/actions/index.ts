@@ -1,4 +1,5 @@
 import Toast from 'react-native-simple-toast';
+import BackGroundUtils from 'src/background';
 import {AppThunk} from 'src/hooks/redux';
 import {decryptToJson} from 'utils/encrypt';
 import {getFromKeychain} from 'utils/keychainStorage';
@@ -28,6 +29,7 @@ export const unlock = (
         payload: {accounts: accounts.list},
       };
       dispatch(init);
+      BackGroundUtils.init();
     }
     if (getState().browser.shouldFocus) {
       navigate('BrowserScreen');

@@ -1,4 +1,5 @@
 import {AppThunk} from 'src/hooks/redux';
+import AccountUtils from 'utils/account.utils';
 import {getClient} from 'utils/hive';
 import {
   getConversionRequests,
@@ -28,6 +29,8 @@ import {
   GLOBAL_PROPS,
   INIT_TRANSACTIONS,
 } from './types';
+//TODO check on this
+//end check
 
 export const loadAccount = (
   name: string,
@@ -55,7 +58,7 @@ export const loadAccount = (
 };
 
 const getAccountRC = (username: string): AppThunk => async (dispatch) => {
-  const rc = await getClient().rc.getRCMana(username);
+  const rc = await AccountUtils.getRCMana(username);
   dispatch({
     type: ACTIVE_ACCOUNT_RC,
     payload: rc,

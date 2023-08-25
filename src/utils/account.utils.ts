@@ -1,5 +1,7 @@
-import {Account, AccountKeys} from 'actions/interfaces';
-import {getClient} from './hive';
+import {ClaimAccountOperation} from '@hiveio/dhive';
+import {Account, AccountKeys, ActiveAccount, RC} from 'actions/interfaces';
+import {ClaimsConfig} from './config';
+import {broadcast, getClient, getData} from './hive';
 import {translate} from './localize';
 
 const addAuthorizedAccount = async (
@@ -90,6 +92,62 @@ const getAccount = async (username: string) => {
   return getClient().database.getAccounts([username]);
 };
 
-const AccountUtils = {addAuthorizedAccount, doesAccountExist, getAccount};
+const getAccounts = async (usernames: string[]) => {
+  return getClient().database.getAccounts(usernames);
+};
+
+const getRCMana = async (username: string) => {
+  const result = await getData('rc_api.find_rc_accounts', {
+    accounts: [username],
+  });
+
+  let manabar = result.rc_accounts[0].rc_manabar;
+  const max_mana = Number(result.rc_accounts[0].max_rc);
+
+  const delta: number = Date.now() / 1000 - manabar.last_update_time;
+  let current_mana = Number(manabar.current_mana) + (delta * max_mana) / 432000;
+  let percentage: number = +((current_mana / max_mana) * 100).toFixed(2);
+
+  if (!isFinite(percentage) || percentage < 0) {
+    percentage = 0;
+  } else if (percentage > 100) {
+    percentage = 100;
+  }
+
+  return {
+    ...result.rc_accounts[0],
+    percentage: percentage,
+  };
+};
+
+const claimAccounts = async (rc: RC, activeAccount: ActiveAccount) => {
+  const freeAccountConfig = ClaimsConfig.freeAccount;
+  if (
+    activeAccount.rc.percentage > freeAccountConfig.MIN_RC_PCT &&
+    parseFloat(rc.rc_manabar.current_mana) > freeAccountConfig.MIN_RC
+  ) {
+    console.log(`Claiming free account for @${activeAccount.name}`);
+
+    return await broadcast(activeAccount.keys.active!, [
+      [
+        'claim_account',
+        {
+          creator: activeAccount.name,
+          extensions: [],
+          fee: '0.000 HIVE',
+        },
+      ] as ClaimAccountOperation,
+    ]);
+  } else console.log('Not enough RC% to claim account');
+};
+
+const AccountUtils = {
+  addAuthorizedAccount,
+  doesAccountExist,
+  getAccount,
+  getAccounts,
+  getRCMana,
+  claimAccounts,
+};
 
 export default AccountUtils;
