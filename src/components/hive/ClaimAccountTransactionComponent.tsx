@@ -14,7 +14,7 @@ import Icon from './Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: ClaimAccount; //TODO interface is empty.
+  transaction: ClaimAccount; //TODO quentin interface is empty.
   token?: boolean;
   locale: string;
   useIcon?: boolean;

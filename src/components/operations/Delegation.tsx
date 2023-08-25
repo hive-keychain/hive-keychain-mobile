@@ -7,7 +7,7 @@ import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {Keyboard, StyleSheet, Text} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {fromHP} from 'utils/format';
 import {delegate} from 'utils/hive';
@@ -82,7 +82,9 @@ const Delegation = ({
           leftIcon={<AccountLogoDark />}
           autoCapitalize="none"
           value={to}
-          onChangeText={setTo}
+          onChangeText={(e) => {
+            setTo(e.trim());
+          }}
         />
         <Separator />
         <OperationInput

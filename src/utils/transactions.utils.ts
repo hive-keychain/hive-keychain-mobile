@@ -80,166 +80,167 @@ const getAccountTransactions = async (
       limit,
       operationsBitmask,
     );
+    let transactions: Transaction[] = [];
+    for (const e of transactionsFromBlockchain) {
+      let specificTransaction = null;
+      switch (e[1].op[0]) {
+        case 'transfer': {
+          specificTransaction = e[1].op[1] as Transfer;
+          specificTransaction = (await decodeMemoIfNeeded(
+            specificTransaction,
+            memoKey,
+          )) as Transfer;
 
-    const transactions = transactionsFromBlockchain
-      .map((e) => {
-        let specificTransaction = null;
-        switch (e[1].op[0]) {
-          case 'transfer': {
-            specificTransaction = e[1].op[1] as Transfer;
-            specificTransaction = decodeMemoIfNeeded(
-              specificTransaction,
-              memoKey,
-            );
-            break;
-          }
-          case 'recurrent_transfer': {
-            specificTransaction = e[1].op[1] as RecurrentTransfer;
-            specificTransaction = decodeMemoIfNeeded(
-              specificTransaction,
-              memoKey,
-            );
-            break;
-          }
-          case 'fill_recurrent_transfer': {
-            const amtObj = e[1].op[1].amount;
-            const amt =
-              typeof amtObj === 'object'
-                ? parseFloat(amtObj.amount) / 100
-                : parseFloat(amtObj.split(' ')[0]);
-            const currency =
-              typeof amtObj === 'object'
-                ? getSymbol(amtObj.nai)
-                : amtObj.split(' ')[1];
-            let amount = `${amt} ${currency}`;
-
-            specificTransaction = e[1].op[1] as FillRecurrentTransfer;
-            specificTransaction.amount = amount;
-            specificTransaction.remainingExecutions =
-              e[1].op[1].remaining_executions;
-            specificTransaction = decodeMemoIfNeeded(
-              specificTransaction,
-              memoKey,
-            );
-            break;
-          }
-          case 'claim_reward_balance': {
-            specificTransaction = e[1].op[1] as ClaimReward;
-            specificTransaction.hbd = e[1].op[1].reward_hbd;
-            specificTransaction.hive = e[1].op[1].reward_hive;
-            specificTransaction.hp = `${toHP(
-              e[1].op[1].reward_vests,
-              globals,
-            ).toFixed(3)} HP`;
-            break;
-          }
-          case 'delegate_vesting_shares': {
-            specificTransaction = e[1].op[1] as Delegation;
-            specificTransaction.amount = `${toHP(
-              e[1].op[1].vesting_shares,
-              globals,
-            ).toFixed(3)} HP`;
-            break;
-          }
-          case 'transfer_to_vesting': {
-            specificTransaction = e[1].op[1] as PowerUp;
-            specificTransaction.type = 'power_up_down';
-            specificTransaction.subType = 'transfer_to_vesting';
-            break;
-          }
-          case 'withdraw_vesting': {
-            specificTransaction = e[1].op[1] as PowerDown;
-            specificTransaction.type = 'power_up_down';
-            specificTransaction.subType = 'withdraw_vesting';
-            specificTransaction.amount = `${toHP(
-              e[1].op[1].vesting_shares,
-              globals,
-            ).toFixed(3)} HP`;
-            break;
-          }
-          case 'interest': {
-            specificTransaction = e[1].op[1] as ReceivedInterests;
-            specificTransaction.type = 'savings';
-            specificTransaction.subType = 'interest';
-            break;
-          }
-          case 'transfer_to_savings': {
-            specificTransaction = e[1].op[1] as DepositSavings;
-            specificTransaction.type = 'savings';
-            specificTransaction.subType = 'transfer_to_savings';
-            break;
-          }
-          case 'transfer_from_savings': {
-            specificTransaction = e[1].op[1] as StartWithdrawSavings;
-            specificTransaction.type = 'savings';
-            specificTransaction.subType = 'transfer_from_savings';
-            break;
-          }
-          case 'fill_transfer_from_savings': {
-            specificTransaction = e[1].op[1] as WithdrawSavings;
-            specificTransaction.type = 'savings';
-            specificTransaction.subType = 'fill_transfer_from_savings';
-            break;
-          }
-          case 'claim_account': {
-            specificTransaction = e[1].op[1] as ClaimAccount;
-            break;
-          }
-          case 'convert': {
-            specificTransaction = e[1].op[1] as Convert;
-            specificTransaction.type = 'convert';
-            specificTransaction.subType = 'convert';
-            break;
-          }
-          case 'collateralized_convert': {
-            specificTransaction = e[1].op[1] as CollateralizedConvert;
-            specificTransaction.type = 'convert';
-            specificTransaction.subType = 'collateralized_convert';
-            break;
-          }
-          case 'fill_convert_request': {
-            specificTransaction = e[1].op[1] as FillConvert;
-            specificTransaction.type = 'convert';
-            specificTransaction.subType = 'fill_convert_request';
-            break;
-          }
-          case 'fill_collateralized_convert_request': {
-            specificTransaction = e[1].op[1] as FillCollateralizedConvert;
-            specificTransaction.type = 'convert';
-            specificTransaction.subType = 'fill_collateralized_convert_request';
-            break;
-          }
-          case 'create_claimed_account': {
-            specificTransaction = e[1].op[1] as CreateClaimedAccount;
-            break;
-          }
-          case 'account_create': {
-            specificTransaction = e[1].op[1] as CreateAccount;
-            break;
-          }
+          break;
         }
+        case 'recurrent_transfer': {
+          specificTransaction = e[1].op[1] as RecurrentTransfer;
+          specificTransaction = (await decodeMemoIfNeeded(
+            specificTransaction,
+            memoKey,
+          )) as RecurrentTransfer;
+          break;
+        }
+        case 'fill_recurrent_transfer': {
+          const amtObj = e[1].op[1].amount;
+          const amt =
+            typeof amtObj === 'object'
+              ? parseFloat(amtObj.amount) / 100
+              : parseFloat(amtObj.split(' ')[0]);
+          const currency =
+            typeof amtObj === 'object'
+              ? getSymbol(amtObj.nai)
+              : amtObj.split(' ')[1];
+          let amount = `${amt} ${currency}`;
 
-        const tr: Transaction = {
-          ...specificTransaction,
-          type: specificTransaction!.type ?? e[1].op[0],
-          timestamp: e[1].timestamp,
-          key: `${accountName}!${e[0]}`,
-          index: e[0],
-          txId: e[1].trx_id,
-          blockNumber: e[1].block,
-          url:
-            e[1].trx_id === '0000000000000000000000000000000000000000'
-              ? `https://hiveblocks.com/b/${e[1].block}#${e[1].trx_id}`
-              : `https://hiveblocks.com/tx/${e[1].trx_id}`,
-          last: false,
-          lastFetched: false,
-        };
-        return tr;
-      })
-      .sort(
-        (a, b) =>
-          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
-      );
+          specificTransaction = e[1].op[1] as FillRecurrentTransfer;
+          specificTransaction.amount = amount;
+          specificTransaction.remainingExecutions =
+            e[1].op[1].remaining_executions;
+          specificTransaction = (await decodeMemoIfNeeded(
+            specificTransaction,
+            memoKey,
+          )) as FillRecurrentTransfer;
+          break;
+        }
+        case 'claim_reward_balance': {
+          specificTransaction = e[1].op[1] as ClaimReward;
+          specificTransaction.hbd = e[1].op[1].reward_hbd;
+          specificTransaction.hive = e[1].op[1].reward_hive;
+          specificTransaction.hp = `${toHP(
+            e[1].op[1].reward_vests,
+            globals,
+          ).toFixed(3)} HP`;
+          break;
+        }
+        case 'delegate_vesting_shares': {
+          specificTransaction = e[1].op[1] as Delegation;
+          specificTransaction.amount = `${toHP(
+            e[1].op[1].vesting_shares,
+            globals,
+          ).toFixed(3)} HP`;
+          break;
+        }
+        case 'transfer_to_vesting': {
+          specificTransaction = e[1].op[1] as PowerUp;
+          specificTransaction.type = 'power_up_down';
+          specificTransaction.subType = 'transfer_to_vesting';
+          break;
+        }
+        case 'withdraw_vesting': {
+          specificTransaction = e[1].op[1] as PowerDown;
+          specificTransaction.type = 'power_up_down';
+          specificTransaction.subType = 'withdraw_vesting';
+          specificTransaction.amount = `${toHP(
+            e[1].op[1].vesting_shares,
+            globals,
+          ).toFixed(3)} HP`;
+          break;
+        }
+        case 'interest': {
+          specificTransaction = e[1].op[1] as ReceivedInterests;
+          specificTransaction.type = 'savings';
+          specificTransaction.subType = 'interest';
+          break;
+        }
+        case 'transfer_to_savings': {
+          specificTransaction = e[1].op[1] as DepositSavings;
+          specificTransaction.type = 'savings';
+          specificTransaction.subType = 'transfer_to_savings';
+          break;
+        }
+        case 'transfer_from_savings': {
+          specificTransaction = e[1].op[1] as StartWithdrawSavings;
+          specificTransaction.type = 'savings';
+          specificTransaction.subType = 'transfer_from_savings';
+          break;
+        }
+        case 'fill_transfer_from_savings': {
+          specificTransaction = e[1].op[1] as WithdrawSavings;
+          specificTransaction.type = 'savings';
+          specificTransaction.subType = 'fill_transfer_from_savings';
+          break;
+        }
+        case 'claim_account': {
+          specificTransaction = e[1].op[1] as ClaimAccount;
+          break;
+        }
+        case 'convert': {
+          specificTransaction = e[1].op[1] as Convert;
+          specificTransaction.type = 'convert';
+          specificTransaction.subType = 'convert';
+          break;
+        }
+        case 'collateralized_convert': {
+          specificTransaction = e[1].op[1] as CollateralizedConvert;
+          specificTransaction.type = 'convert';
+          specificTransaction.subType = 'collateralized_convert';
+          break;
+        }
+        case 'fill_convert_request': {
+          specificTransaction = e[1].op[1] as FillConvert;
+          specificTransaction.type = 'convert';
+          specificTransaction.subType = 'fill_convert_request';
+          break;
+        }
+        case 'fill_collateralized_convert_request': {
+          specificTransaction = e[1].op[1] as FillCollateralizedConvert;
+          specificTransaction.type = 'convert';
+          specificTransaction.subType = 'fill_collateralized_convert_request';
+          break;
+        }
+        case 'create_claimed_account': {
+          specificTransaction = e[1].op[1] as CreateClaimedAccount;
+          break;
+        }
+        case 'account_create': {
+          specificTransaction = e[1].op[1] as CreateAccount;
+          break;
+        }
+      }
+      const tr: Transaction = {
+        ...specificTransaction,
+        type: specificTransaction!.type ?? e[1].op[0],
+        timestamp: e[1].timestamp,
+        key: `${accountName}!${e[0]}`,
+        index: e[0],
+        txId: e[1].trx_id,
+        blockNumber: e[1].block,
+        url:
+          e[1].trx_id === '0000000000000000000000000000000000000000'
+            ? `https://hiveblocks.com/b/${e[1].block}#${e[1].trx_id}`
+            : `https://hiveblocks.com/tx/${e[1].trx_id}`,
+        last: false,
+        lastFetched: false,
+      };
+
+      transactions.push(tr);
+    }
+    transactions.sort(
+      (a, b) =>
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+    );
+
     if (start - NB_TRANSACTION_FETCHED < 0 && transactions.length > 1) {
       transactions[transactions.length - 1].last = true;
     }
@@ -266,20 +267,20 @@ const getAccountTransactions = async (
   }
 };
 
-const decodeMemoIfNeeded = (transfer: Transfer, memoKey: string) => {
+const decodeMemoIfNeeded = async (transfer: Transfer, memoKey: string) => {
   const {memo} = transfer;
   if (memo[0] === '#') {
     if (memoKey) {
-      decodeMemo(memoKey, memo)
-        .then((decoded) => {
-          transfer.memo = decoded;
-          return transfer;
-        })
-        .catch((e) => {
-          console.log('Error while decoding memo: ', e);
-        });
+      try {
+        const decoded = await decodeMemo(memoKey, memo);
+        transfer.memo = decoded;
+        return transfer;
+      } catch (e) {
+        return transfer;
+      }
     } else {
       transfer.memo = translate('wallet.add_memo');
+      return transfer;
     }
   }
   return transfer;
