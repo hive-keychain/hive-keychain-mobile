@@ -25,7 +25,7 @@ import {
 } from '@hiveio/dhive';
 import {Rpc} from 'actions/interfaces';
 import api from 'api/keychain';
-import hiveTx from 'hive-tx';
+import hiveTx, {call} from 'hive-tx';
 import {hiveEngine} from 'utils/config';
 import {
   KeychainKeyTypes,
@@ -550,6 +550,22 @@ export const broadcast = async (key: string, arr: Operation[]) => {
     console.log('hive-tx error', JSON.stringify(e));
     throw e;
   }
+};
+
+export const getData = async (
+  method: string,
+  params: any[] | object,
+  key?: string,
+) => {
+  const response = await call(method, params);
+  if (response?.result) {
+    return key ? response.result[key] : response.result;
+  } else
+    throw new Error(
+      `Error while retrieving data from ${method} : ${JSON.stringify(
+        response.error,
+      )}`,
+    );
 };
 
 export default hive;

@@ -3,7 +3,7 @@
   "version": "1.12.4",
   "private": true,
   "scripts": {
-    "android": "react-native run-android --variant devDebug --appIdSuffix dev",
+    "android": "react-native run-android --variant devDebug --appIdSuffix dev --main-activity com.zoontek.rnbootsplash.RNBootSplashActivity",
     "android-bundle": "rm -rf android/app/build/outputs/bundle/* && cd android && ./gradlew bundleRelease && cd ..",
     "android-release": "react-native run-android --variant=devRelease",
     "android-clean": "cd android && ./gradlew clean && cd ..",
