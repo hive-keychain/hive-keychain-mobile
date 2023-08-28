@@ -257,6 +257,13 @@ export const BrowserConfig = {
         url: 'https://v4v.app/',
         categories: ['finance'],
       },
+      {
+        name: 'Liketu',
+        description: 'Social image sharing on Hive',
+        icon: 'https://images.hive.blog/u/liketu/avatar',
+        url: 'https://m.liketu.com/',
+        categories: ['social'],
+      },
     ],
   },
 };
