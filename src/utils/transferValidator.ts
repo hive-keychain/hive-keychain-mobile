@@ -1,5 +1,7 @@
 import api from 'api/keychain';
+import {getPrivateKeysMemoValidationWarning} from 'hive-keychain-commons';
 import {translate} from 'utils/localize';
+
 const getExchanges = () => [
   {account: 'bittrex', tokens: ['HIVE', 'HBD']},
   {account: 'deepcrypto8', tokens: ['HIVE']},
@@ -20,7 +22,7 @@ const getExchangeValidationWarning = (
   account: string,
   currency: string,
   hasMemo: boolean,
-) => {
+): string | null => {
   const exchanges = getExchanges();
   const exchange = exchanges.find((e) => e.account === account);
   if (!exchange) {
@@ -42,13 +44,19 @@ export const getTransferWarning = (
   account: string,
   currency: string,
   hasMemo: boolean,
+  memo?: string,
 ) => {
   let warning = null;
-  if (phishingAccounts.find((e) => e === account)) {
+
+  warning = getExchangeValidationWarning(account, currency, hasMemo);
+
+  if (memo)
+    warning = getPrivateKeysMemoValidationWarning(memo)
+      ? translate('keys.warning_private_key_in_memo')
+      : null;
+
+  if (phishingAccounts.find((e) => e === account))
     warning = translate('wallet.operations.transfer.warning.phishing');
-  } else {
-    warning = getExchangeValidationWarning(account, currency, hasMemo);
-  }
 
   return {
     warning,
