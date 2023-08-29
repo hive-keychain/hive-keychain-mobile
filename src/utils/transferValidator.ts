@@ -3,6 +3,7 @@ import {translate} from 'utils/localize';
 const getExchanges = () => [
   {account: 'bittrex', tokens: ['HIVE', 'HBD']},
   {account: 'deepcrypto8', tokens: ['HIVE']},
+  {account: 'bdhivesteem', tokens: ['HIVE']},
   {account: 'binance-hot', tokens: []},
   {account: 'ionomy', tokens: ['HIVE', 'HBD']},
   {account: 'huobi-pro', tokens: ['HIVE']},
