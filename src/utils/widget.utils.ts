@@ -5,10 +5,6 @@ import {
   WidgetAsyncStorageItem,
   WidgetSharedDataCommand,
 } from 'src/enums/widgets.enum';
-import {RootState, store} from 'store';
-import AccountUtils from './account.utils';
-import {toHP, withCommas} from './format';
-import {getAccountValue, getPrices} from './price';
 
 const SharedStorage = NativeModules.SharedStorage;
 interface Prices {
@@ -26,11 +22,12 @@ export type WidgetToUpdate =
   | 'currency_list';
 
 const sendWidgetData = async (toUpdateWidget: WidgetToUpdate) => {
+  //TODO bellow cleanup
   //For now currencies not being invoked. Leaved if needed for future.
   //currencies
-  const dataCurrencies: DataCurrency = {};
+  // const dataCurrencies: DataCurrency = {};
   try {
-    const prices = await getPrices();
+    // const prices = await getPrices();
     // if (prices && prices.hive && prices.hive_dollar) {
     //   //Remove specific keys from price object to omit rendering in widget native.
     //   delete prices.bitcoin;
@@ -44,57 +41,68 @@ const sendWidgetData = async (toUpdateWidget: WidgetToUpdate) => {
     //   });
     // } else throw new Error('Hive data not present, please check!');
 
-    //accounts to show in widget
+    //accounts to widget
     const accountsToShow = await AsyncStorage.getItem('account_balance_list');
-    let dataAccounts: {[key: string]: any} = {};
+    // let dataAccounts: {[key: string]: any} = {};
     if (accountsToShow) {
-      const finalAccountsToShow: WidgetAccountBalanceToShow[] = JSON.parse(
-        accountsToShow,
-      ).filter((acc: any) => acc.show);
-      for (let i = 0; i < finalAccountsToShow.length; i++) {
-        const account = finalAccountsToShow[i];
-        const extendedAccount = (
-          await AccountUtils.getAccount(account.name)
-        )[0];
-        dataAccounts[`${account.name}`] = {
-          hive: withCommas(extendedAccount.balance as string, 2),
-          hbd: withCommas(extendedAccount.hbd_balance as string, 2),
-          hive_power: withCommas(
-            toHP(
-              extendedAccount.vesting_shares as string,
-              (store.getState() as RootState).properties.globals,
-            ).toString(),
-            2,
-          ),
-          hive_savings: withCommas(
-            extendedAccount.savings_balance as string,
-            2,
-          ),
-          hbd_savings: withCommas(
-            extendedAccount.savings_hbd_balance as string,
-            2,
-          ),
-          account_value: withCommas(
-            getAccountValue(
-              extendedAccount,
-              prices,
-              (store.getState() as RootState).properties.globals,
-            ) as string,
-            2,
-          ),
-        };
-      }
+      const data = JSON.stringify({
+        // currency_list: dataCurrencies,
+        account_balance_list: accountsToShow,
+      });
+      console.log({aboutToSend: data});
+      SharedStorage.setData(data);
+      SharedStorage.setCommand(
+        WidgetSharedDataCommand.UPDATE_WIDGETS,
+        toUpdateWidget,
+      );
+      // const finalAccountsToShow: WidgetAccountBalanceToShow[] = JSON.parse(
+      //   accountsToShow,
+      // ).filter((acc: any) => acc.show);
+      // for (let i = 0; i < finalAccountsToShow.length; i++) {
+      //   const account = finalAccountsToShow[i];
+      //   const extendedAccount = (
+      //     await AccountUtils.getAccount(account.name)
+      //   )[0];
+      //   dataAccounts[`${account.name}`] = {
+      //     hive: withCommas(extendedAccount.balance as string, 2),
+      //     hbd: withCommas(extendedAccount.hbd_balance as string, 2),
+      //     hive_power: withCommas(
+      //       toHP(
+      //         extendedAccount.vesting_shares as string,
+      //         (store.getState() as RootState).properties.globals,
+      //       ).toString(),
+      //       2,
+      //     ),
+      //     hive_savings: withCommas(
+      //       extendedAccount.savings_balance as string,
+      //       2,
+      //     ),
+      //     hbd_savings: withCommas(
+      //       extendedAccount.savings_hbd_balance as string,
+      //       2,
+      //     ),
+      //     account_value: withCommas(
+      //       getAccountValue(
+      //         extendedAccount,
+      //         prices,
+      //         (store.getState() as RootState).properties.globals,
+      //       ) as string,
+      //       2,
+      //     ),
+      //   };
+      // }
     }
-    const data = {
-      // currency_list: dataCurrencies,
-      account_balance_list: dataAccounts,
-    };
-    console.log({aboutToSend: data}); //TODO remove
-    SharedStorage.setData(JSON.stringify(data));
-    SharedStorage.setCommand(
-      WidgetSharedDataCommand.UPDATE_WIDGETS,
-      toUpdateWidget,
-    );
+    // const data = {
+    //   // currency_list: dataCurrencies,
+    //   account_balance_list: dataAccounts,
+    // };
+    // console.log({aboutToSend: data}); //TODO remove
+    // SharedStorage.setData(JSON.stringify(data));
+    // SharedStorage.setCommand(
+    //   WidgetSharedDataCommand.UPDATE_WIDGETS,
+    //   toUpdateWidget,
+    // );
+
     // IOS //TODO
     // await SharedGroupPreferences.setItem('widgetKey', {text: value}, group);
   } catch (error) {
@@ -127,7 +135,7 @@ const addAccountBalanceList = async (
     }
   } else if (!accountsStoredToShow && accountNames.length > 1) {
     //we must scan & save.
-    console.log('Found more accounts stored!');
+    console.log('Found more accounts, stored!');
     await scanAccountsAndSave(accountNames);
   } else {
     await AsyncStorage.setItem(

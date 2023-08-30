@@ -25,7 +25,7 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
+        Log.i("onUpdate WCL", "Called!!"); //TODO remove line
         for (int appWidgetId : appWidgetIds) {
             Intent intent = new Intent(context, MainActivity.class);
             final int flag =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT;
@@ -53,6 +53,8 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
             // Instruct the widget manager that data may have changed, so update remove views.
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_currency_list_stack_view);
         }
+        //TODO testing to see if this line bellow fix the update issue!
+        super.onUpdate(context,appWidgetManager,appWidgetIds);
     }
 
     @Override
@@ -63,6 +65,7 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
                 ComponentName widgetComponentCurrency = new ComponentName(context, WidgetCurrencyListProvider.class);
                 int[] widgetIdsCurrency = widgetManager.getAppWidgetIds(widgetComponentCurrency);
                 widgetManager.notifyAppWidgetViewDataChanged(widgetIdsCurrency, R.id.widget_currency_list_stack_view);
+                Log.i("Clicked", "Should Update!"); //TODO remove
 
             } catch (Exception e) {
                 Log.e("Error: REFRESH CL data", e.getLocalizedMessage());

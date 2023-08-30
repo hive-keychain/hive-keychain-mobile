@@ -55,6 +55,7 @@ public class WidgetCurrencyListService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
+            Log.i("ODSC Currencies", "Should Update!"); //TODO remove
             //Fetching data as sync
             RequestFuture<JSONObject> future = RequestFuture.newFuture();
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,KEYCHAIN_PRICE_API_URL, new JSONObject(), future, future);
@@ -102,6 +103,7 @@ public class WidgetCurrencyListService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
+            Log.i("GVA Currencies", "Should call!" + "pos: " + position); //TODO remove
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list_item);
             try {
                 //extract data from JSONObject stored.
@@ -125,14 +127,16 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                         views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.VISIBLE);
                         views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.GONE);
                     }
-                    SystemClock.sleep(500);
-                return views;
+                    //TODO commented bellow while fixing the update issue!
+//                    SystemClock.sleep(500);
             } catch (JSONException e) {
                 Log.e("Error: CL getViewAt", e.getLocalizedMessage());
                 e.printStackTrace();
             }
-            SystemClock.sleep(500);
+            SystemClock.sleep(800);
             return views;
+//            SystemClock.sleep(500);
+//            return views;
         }
 
         @Override
