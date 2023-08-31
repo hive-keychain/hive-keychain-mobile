@@ -20,16 +20,17 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        final int flag =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT;
+        Log.i("WABL appWidgetIds", appWidgetIds.toString());
+        final int flag = PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT;
         for (int appWidgetId : appWidgetIds) {
-
+//            final int flag =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT;
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_account_balance_list);
 
             //Custom intent/broadcast registration
-            Intent intent = new Intent(context, WidgetAccountBalanceListProvider.class);
-            intent.setAction(ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, flag);
-            views.setOnClickPendingIntent(R.id.widget_account_balance_list_button_configure, pendingIntent);
+            Intent configureIntent = new Intent(context, WidgetAccountBalanceListProvider.class);
+            configureIntent.setAction(ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST);
+            PendingIntent configurePendingIntent = PendingIntent.getBroadcast(context, 0, configureIntent, flag);
+            views.setOnClickPendingIntent(R.id.widget_account_balance_list_button_configure, configurePendingIntent);
 
             //Service for StackView
             Intent serviceIntent = new Intent(context, WidgetAccountBalanceListService.class);
@@ -44,10 +45,13 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
             // Instruct the widget manager that data may have changed, so update remove views.
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_account_balance_list_stack_view);
         }
+        //TODO testing to see if this line bellow fix the update issue!
+        super.onUpdate(context,appWidgetManager,appWidgetIds);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
         if(intent.getAction().equals(ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST)){
             // put new key into shared storage + send configureWidgets command to RN app)
             WritableMap params = Arguments.createMap();
@@ -62,6 +66,11 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
         }
-        super.onReceive(context, intent);
+    }
+
+    @Override
+    public void onEnabled(Context context) {
+        // Enter relevant functionality for when the first widget is created
+        super.onEnabled(context);
     }
 }

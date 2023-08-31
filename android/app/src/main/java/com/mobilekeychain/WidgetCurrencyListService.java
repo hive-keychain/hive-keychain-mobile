@@ -98,12 +98,15 @@ public class WidgetCurrencyListService extends RemoteViewsService {
 
         @Override
         public int getCount() {
+            String currencyDataLength = currency_data == null ? "null" : String.valueOf(currency_data.length());
+            Log.i("WCL service getCount", "count:" + currencyDataLength);
             return currency_data == null ? 0 : currency_data.length();
+
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
-            Log.i("GVA Currencies", "Should call!" + "pos: " + position); //TODO remove
+            Log.i("WCL getViewAt", "pos: " + position); //TODO remove
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list_item);
             try {
                 //extract data from JSONObject stored.

@@ -63,17 +63,12 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                         AppWidgetManager.INVALID_APPWIDGET_ID);
         }
 
-        public void getData(){
+        public void getSharedData(){
             try {
-                //account_balance_list
                 SharedPreferences sharedPref = context.getSharedPreferences("DATA", Context.MODE_PRIVATE);
                 String appString = sharedPref.getString("appData", "");
                 JSONObject data = new JSONObject(appString);
                 accounts_data_RN = new JSONArray(data.getString("account_balance_list"));
-                Log.i("getData, accs RN ", accounts_data_RN.toString()); //TODO remove line
-                //TODO cleanup
-                //Check what to fetch will finally set accountNamesToShow
-                //iterate and show
                 ArrayList<String> accountNamesToFind = new ArrayList<String>();
                 for (int i = 0; i < accounts_data_RN.length(); i++) {
                     try {
@@ -86,84 +81,13 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                         e.printStackTrace();
                     }
                 }
-                //TODO validate if at least 1 acc to find.
                 accountNamesToShow = accountNamesToFind;
-                Log.i("getData/accountNamesTo",accountNamesToFind.toString());
             } catch (JSONException e) {
                 Log.e("Error: ABL getData", e.getLocalizedMessage());
                 e.printStackTrace();
             }
         }
 
-        //TODO cleanup, testing get accounts
-        public void getHiveAccounts(ArrayList<String> accountNames) {
-
-            //TODO in RN: pass only the same object(stringify) as the actual Asyncstoraged.
-            //TODO here.
-            //  - getData from sharedStorage.
-            //  - !.show then skip, keep message of "open the app" as it is now.
-            //  - if any to show:
-            //      - get condenser_api.get_dynamic_global_properties as we need it to calculate bellow.
-            //      - then loop the array, create a new array with when show === true.
-            //          - get the account(s) data, using this new array + make the calculations
-            //              - for each account: hive, hbd, hive_power, hive_savings, hbd_savings, account_value, avatar(optional check in RN widget config popup, as it may consume more data in phone)
-            //          - present data as expected.
-            //  - handle network error if rpc or any other.
-            //  - try to refactor, using only one request that returns a JSONObject or empty, etc.
-            //////
-
-            try {
-                String json = String.format("{" +
-                        "\"jsonrpc\":\"2.0\"," +
-                        " \"method\":\"condenser_api.get_accounts\"," +
-                        " \"params\":[%s]," +
-                        " \"id\":1}",accountNames.toString());
-                Log.i("json", json);
-                final JSONObject jsonBody = new JSONObject(json);
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, RPC_NODE_URL, jsonBody, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("Response", response.toString());
-                        try {
-                            JSONArray extendedAccountList = new JSONArray(response.getString("result"));
-                            JSONObject accData = new JSONObject();
-                            Log.i("ExtAccountList", extendedAccountList.toString());
-                            for (int i = 0; i < extendedAccountList.length() ; i++) {
-                                //TODO missing account_value, hive_power(check RN widget utils.)
-                                JSONObject account_data = extendedAccountList.getJSONObject(i);
-                                Log.i("extended acc", account_data.toString());
-                                accData.put(account_data.getString("name"),
-                                        new JSONObject()
-                                                .put("hive", account_data.getString("balance"))
-                                                .put("hbd", account_data.getString("hbd_balance"))
-                                                .put("hive_savings", account_data.getString("savings_balance"))
-                                                .put("hbd_savings", account_data.getString("savings_hbd_balance"))
-                                                .put("hive_power", "1000 HP")
-                                                .put("account_value", "1,000.00")
-                                        );
-                            }
-                            Log.i("accData", accData.toString());
-                            accounts_data = accData;
-//                            Log.i("Finally accounts_data", accounts_data.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                });
-                Volley.newRequestQueue(context).add(jsonObjectRequest);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            //////
-        }
-        //end testing
-
-        //TODO somehow mahe it return the value: JSONObject || {}(if error or null)
         public void getDynamicGlobalProps(){
             try {
                 String URL = "https://api.hive.blog";
@@ -192,19 +116,17 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
 
         @Override
         public void onCreate() {
-            getDynamicGlobalProps();
-            getData();
+//            getDynamicGlobalProps();
+            getSharedData();
         }
 
         @Override
         public void onDataSetChanged() {
             Log.i("onDataSetChanged", "Executing!!!");
-            //TODo may need some kind of validation at first run?
-            getData();
+            getSharedData();
             Log.i("ODSC accountNamesT", accountNamesToShow.toString());
             if(accountNamesToShow.size() > 0){
                 //fetch extended accounts sync -> finally will set the final accounts_data.
-                //Fetching data as sync
                 String json = String.format("{" +
                         "\"jsonrpc\":\"2.0\"," +
                         " \"method\":\"condenser_api.get_accounts\"," +
@@ -218,16 +140,67 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                     JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,RPC_NODE_URL, jsonBody, future, future);
                     Volley.newRequestQueue(context).add(request);
                     try {
-                        JSONObject response = future.get(); // this will block
-                        //
-                        Log.i("Response", response.toString());
+                        JSONObject responseExtAccountList = future.get(); // this will block
+                        Log.i("Response ext accs:", responseExtAccountList.toString());
+
+                        //TODO testing block if doing the global request is valid here
                         try {
-                            JSONArray extendedAccountList = new JSONArray(response.getString("result"));
+                            final JSONObject jsonBodyGlobalProps = new JSONObject("{\"jsonrpc\":\"2.0\", \"method\":\"condenser_api.get_dynamic_global_properties\", \"params\":[], \"id\":1}");
+                            RequestFuture<JSONObject> futureGlobalProps = RequestFuture.newFuture();
+                            JsonObjectRequest requestGlobalProps = new JsonObjectRequest(Request.Method.POST, RPC_NODE_URL, jsonBodyGlobalProps, futureGlobalProps, futureGlobalProps);
+                            Volley.newRequestQueue(context).add(requestGlobalProps);
+                            try {
+                                JSONObject responseGlobalProps = futureGlobalProps.get(); // this will block
+                                Log.i("Response global props:", responseGlobalProps.toString());
+                                try {
+                                    JSONObject globalProps = new JSONObject(responseGlobalProps.getString("result"));
+                                    Log.i("globalProps", globalProps.toString());
+                                    //TODO here assign to global_props.
+                                    dynamic_global_properties = globalProps;
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            } catch (InterruptedException e) {
+                                // exception handling
+                                Log.e("Fetch Int excep", e.getLocalizedMessage());
+                            } catch (ExecutionException e) {
+                                // exception handling
+                                Log.e("ODSC exception ex", e.getLocalizedMessage());
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        //TODO END Testing block
+
+                        //calculations + construct the JSONObject as needed to show.
+                        try {
+                            JSONArray extendedAccountList = new JSONArray(responseExtAccountList.getString("result"));
                             JSONObject accData = new JSONObject();
                             Log.i("ExtAccountList", extendedAccountList.toString());
+                            Log.i("TODO important", "Use those props!!");
                             for (int i = 0; i < extendedAccountList.length() ; i++) {
                                 //TODO missing account_value, hive_power(check RN widget utils.)
                                 JSONObject account_data = extendedAccountList.getJSONObject(i);
+                                Double total_vesting_fund_hive = 0.0;
+                                Double total_vesting_shares = 0.0;
+                                Double hive_power = 0.0;
+                                Double vesting_shares_account = 0.0;
+                                if(dynamic_global_properties != null){
+                                    //TODO check if need to pass to str + split to get just the number + format as double???
+                                    String totalVestingFundHive = dynamic_global_properties.getString("total_vesting_fund_hive").split("\\s")[0];
+                                    String totalVestingShares = dynamic_global_properties.getString("total_vesting_shares").split("\\s")[0];
+                                    String vestingSharesAccount = account_data.getString("vesting_shares").split("\\s")[0];
+                                    Log.i("So:", totalVestingFundHive +" // " + totalVestingShares + " // " + vestingSharesAccount);
+                                    total_vesting_fund_hive = new Double(totalVestingFundHive);
+                                    total_vesting_shares = new Double(totalVestingShares);
+                                    vesting_shares_account = new Double(vestingSharesAccount);
+                                    hive_power = (vesting_shares_account * total_vesting_fund_hive) / total_vesting_shares;
+                                    Log.i("for acc:", account_data.getString("name") +"/hp: "+ hive_power);
+                                    //TODO bellow
+                                    // - format those values as currency I guess.
+                                    // - calculate also the missing account_value
+                                    // - add those new items into each accData JSONObject.
+                                }
                                 Log.i("extended acc", account_data.toString());
                                 accData.put(account_data.getString("name"),
                                         new JSONObject()
@@ -241,7 +214,6 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                             }
                             Log.i("accData", accData.toString());
                             accounts_data = accData;
-//                            Log.i("Finally accounts_data", accounts_data.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -270,20 +242,19 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
 
         @Override
         public int getCount() {
+            String accountsDataLength = accounts_data == null ? "null" : String.valueOf(accounts_data.length());
+            Log.i("WABL getCount", "count:" + accountsDataLength);
             return accounts_data != null ? accounts_data.length() : 0;
+
+
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
+            Log.i("WABL getViewAt", "running!");
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_account_balance_list_item);
             try {
-//                //TODO testing validation here
-//                if(accounts_data == null || accounts_data.length() < 1) return views;
-
-                //TODO validate data bellow!.
                 if(accounts_data == null) return views;
-                Log.i("Current Data: ", accounts_data.toString()); //TODO remove line
-                //extract data from JSONObject stored.
                 String account_name = "@" + accounts_data.names().getString(position).replace("_", " ");
                 JSONObject valuesJsonObject = accounts_data.getJSONObject(accounts_data.names().getString(position));
                 views.setTextViewText(R.id.widget_account_balance_list_item_account_name,  account_name);
@@ -293,14 +264,11 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                 views.setTextViewText(R.id.widget_account_balance_list_item_hive_savings, valuesJsonObject.getString("hive_savings"));
                 views.setTextViewText(R.id.widget_account_balance_list_item_hbd_savings, valuesJsonObject.getString("hbd_savings"));
                 views.setTextViewText(R.id.widget_account_balance_list_item_account_value, valuesJsonObject.getString("account_value") + " USD");
-                //TODO bellow commented to see if this is why sometimes do not update properly
-//                SystemClock.sleep(500);
                 return views;
             } catch (JSONException e) {
                 Log.e("Error: ABL getViewAt", e.getLocalizedMessage());
                 e.printStackTrace();
             }
-//            SystemClock.sleep(500);
             return views;
         }
 
