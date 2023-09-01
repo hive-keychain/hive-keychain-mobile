@@ -32,14 +32,12 @@ public class SharedStorage extends ReactContextBaseJavaModule {
     @ReactMethod
     public void setData(String message) {
         SharedPreferences.Editor editor = context.getSharedPreferences("DATA", Context.MODE_PRIVATE).edit();
-        Log.i("Message Received: ", message); //TODO remove line
         editor.putString("appData", message);
         editor.commit();
     }
 
     @ReactMethod
     public void setCommand(String command, String params){
-        Log.i("Command Received: ", command + "/" + params); //TODO remove line
         if(command.trim().equals("update_widgets")){
             AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
             if(params.trim().equals("account_balance_list")) {
@@ -47,7 +45,6 @@ public class SharedStorage extends ReactContextBaseJavaModule {
                 ComponentName widgetComponent = new ComponentName(context, WidgetAccountBalanceListProvider.class);
                 int[] widgetIds = widgetManager.getAppWidgetIds(widgetComponent);
                 widgetManager.notifyAppWidgetViewDataChanged(widgetIds, R.id.widget_account_balance_list_stack_view);
-                Log.i("To update sent", "it should update account_balance_list"); //TODO remove line
             }
             if(params.trim().equals("all_widgets")){
                 //Update all widgets

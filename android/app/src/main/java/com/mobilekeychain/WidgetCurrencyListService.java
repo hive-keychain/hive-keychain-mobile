@@ -55,7 +55,6 @@ public class WidgetCurrencyListService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
-            Log.i("ODSC Currencies", "Should Update!"); //TODO remove
             //Fetching data as sync
             RequestFuture<JSONObject> future = RequestFuture.newFuture();
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,KEYCHAIN_PRICE_API_URL, new JSONObject(), future, future);
@@ -75,6 +74,7 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 // exception handling
                 Log.e("Fetch Int excep", e.getLocalizedMessage());
             } catch (ExecutionException e) {
+                Log.e("WCL Execp:", e.getLocalizedMessage());
                 // exception handling
                 if(e.getLocalizedMessage().contains("Unable to resolve host")){
                     currency_data = null; //reset as no internet
@@ -98,15 +98,12 @@ public class WidgetCurrencyListService extends RemoteViewsService {
 
         @Override
         public int getCount() {
-            String currencyDataLength = currency_data == null ? "null" : String.valueOf(currency_data.length());
-            Log.i("WCL service getCount", "count:" + currencyDataLength);
             return currency_data == null ? 0 : currency_data.length();
 
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
-            Log.i("WCL getViewAt", "pos: " + position); //TODO remove
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list_item);
             try {
                 //extract data from JSONObject stored.
@@ -130,16 +127,11 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                         views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.VISIBLE);
                         views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.GONE);
                     }
-                    //TODO commented bellow while fixing the update issue!
-//                    SystemClock.sleep(500);
             } catch (JSONException e) {
                 Log.e("Error: CL getViewAt", e.getLocalizedMessage());
                 e.printStackTrace();
             }
-            SystemClock.sleep(800);
             return views;
-//            SystemClock.sleep(500);
-//            return views;
         }
 
         @Override

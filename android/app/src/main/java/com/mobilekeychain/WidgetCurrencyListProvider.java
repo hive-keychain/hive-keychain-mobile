@@ -26,14 +26,8 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Log.i("onUpdate WCL", "Called!!"); //TODO remove line
-        Log.i("WCL appWidgetIds", appWidgetIds.toString());
         final int flag = PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT;
         for (int appWidgetId : appWidgetIds) {
-//            Intent intent = new Intent(context, MainActivity.class);
-//            final int flag =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT;
-//            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-
             //Code block using the refresh button as custom intent/broadcast
             Intent refreshIntent = new Intent(context, WidgetCurrencyListProvider.class);
             refreshIntent.setAction(ACTION_WIDGET_REFRESH);
@@ -53,8 +47,8 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list);
             //refresh button
             views.setOnClickPendingIntent(R.id.widget_currency_list_button_refresh, refreshPendingIntent);
-            //open app layout
-            views.setOnClickPendingIntent(R.id.widget_currency_list_layout, openAppPendingIntent);
+            //open app logo image
+            views.setOnClickPendingIntent(R.id.image_view_logo_keychain, openAppPendingIntent);
             //Add StackView into views
             views.setRemoteAdapter(R.id.widget_currency_list_stack_view, serviceIntent);
             views.setEmptyView(R.id.widget_currency_list_stack_view, R.id.widget_currency_list_stack_empty_view);
@@ -64,13 +58,11 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
             // Instruct the widget manager that data may have changed, so update remove views.
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_currency_list_stack_view);
         }
-        //TODO testing to see if this line bellow fix the update issue!
         super.onUpdate(context,appWidgetManager,appWidgetIds);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        //TODO testing if moving the constructor first solve the update issue!
         super.onReceive(context, intent);
         if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
             try{
@@ -78,8 +70,6 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
                 ComponentName widgetComponentCurrency = new ComponentName(context, WidgetCurrencyListProvider.class);
                 int[] widgetIdsCurrency = widgetManager.getAppWidgetIds(widgetComponentCurrency);
                 widgetManager.notifyAppWidgetViewDataChanged(widgetIdsCurrency, R.id.widget_currency_list_stack_view);
-                Log.i("Clicked", "Should Update!" + widgetIdsCurrency); //TODO remove
-
             } catch (Exception e) {
                 Log.e("Error: REFRESH CL data", e.getLocalizedMessage());
                 e.printStackTrace();
@@ -87,7 +77,6 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
 
         }
         if(intent.getAction().equals(ACTION_WIDGET_LAUNCH_APP)){
-            Log.i("WCL onReceive", "launch app!");
             // launch app start activity
             Intent i = new Intent();
             i.setClassName(context.getPackageName(), "com.mobilekeychain.MainActivity");

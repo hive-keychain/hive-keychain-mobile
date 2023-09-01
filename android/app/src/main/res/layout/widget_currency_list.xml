@@ -8,7 +8,8 @@
     android:theme="@style/Theme.AppWidgetSample.AppWidgetContainer"
     android:orientation="vertical"
     android:gravity="center"
-    android:backgroundTint="@color/black">
+    android:backgroundTint="@color/black"
+    android:paddingTop="10dp">
     
     <LinearLayout
         android:id="@+id/widget_currency_list_layout"
@@ -27,6 +28,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/image_view_logo_keychain"
                 android:layout_width="128dp"
                 android:layout_height="20dp"
                 android:contentDescription="@string/my_image_description"

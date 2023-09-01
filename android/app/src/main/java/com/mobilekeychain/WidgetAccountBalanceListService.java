@@ -34,6 +34,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,10 +44,12 @@ import java.util.concurrent.ExecutionException;
 
 public class WidgetAccountBalanceListService extends RemoteViewsService {
     private JSONObject accounts_data;
+    private JSONObject currency_data;
     private JSONArray accounts_data_RN;
     private ArrayList<String> accountNamesToShow;
     private JSONObject dynamic_global_properties;
     private final String RPC_NODE_URL = "https://api.hive.blog";
+    private final String KEYCHAIN_PRICE_API_URL = "https://api.hive-keychain.com/hive/v2/price";
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -73,12 +76,12 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                 for (int i = 0; i < accounts_data_RN.length(); i++) {
                     try {
                         JSONObject account = accounts_data_RN.getJSONObject(i);
-                        Log.i("Account: ", account.toString());
                         if(account.getBoolean("show") == true){
                             accountNamesToFind.add(account.getString("name"));
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        Log.e("WABL JSON exec", e.getLocalizedMessage());
                     }
                 }
                 accountNamesToShow = accountNamesToFind;
@@ -88,43 +91,14 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
             }
         }
 
-        public void getDynamicGlobalProps(){
-            try {
-                String URL = "https://api.hive.blog";
-                final JSONObject jsonBody = new JSONObject("{\"jsonrpc\":\"2.0\", \"method\":\"condenser_api.get_dynamic_global_properties\", \"params\":[], \"id\":1}");
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URL, jsonBody, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("Response", "get_dynamic_global_properties" + "/" + response.toString());
-                            try {
-                                dynamic_global_properties = response.getJSONObject("result");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                });
-                Volley.newRequestQueue(context).add(jsonObjectRequest);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
         @Override
         public void onCreate() {
-//            getDynamicGlobalProps();
             getSharedData();
         }
 
         @Override
         public void onDataSetChanged() {
-            Log.i("onDataSetChanged", "Executing!!!");
             getSharedData();
-            Log.i("ODSC accountNamesT", accountNamesToShow.toString());
             if(accountNamesToShow.size() > 0){
                 //fetch extended accounts sync -> finally will set the final accounts_data.
                 String json = String.format("{" +
@@ -132,7 +106,6 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                         " \"method\":\"condenser_api.get_accounts\"," +
                         " \"params\":[%s]," +
                         " \"id\":1}",accountNamesToShow.toString());
-                Log.i("json", json);
                 final JSONObject jsonBody;
                 try {
                     jsonBody = new JSONObject(json);
@@ -141,9 +114,8 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                     Volley.newRequestQueue(context).add(request);
                     try {
                         JSONObject responseExtAccountList = future.get(); // this will block
-                        Log.i("Response ext accs:", responseExtAccountList.toString());
 
-                        //TODO testing block if doing the global request is valid here
+                        //Second Request, get global_props
                         try {
                             final JSONObject jsonBodyGlobalProps = new JSONObject("{\"jsonrpc\":\"2.0\", \"method\":\"condenser_api.get_dynamic_global_properties\", \"params\":[], \"id\":1}");
                             RequestFuture<JSONObject> futureGlobalProps = RequestFuture.newFuture();
@@ -151,88 +123,91 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                             Volley.newRequestQueue(context).add(requestGlobalProps);
                             try {
                                 JSONObject responseGlobalProps = futureGlobalProps.get(); // this will block
-                                Log.i("Response global props:", responseGlobalProps.toString());
+
                                 try {
                                     JSONObject globalProps = new JSONObject(responseGlobalProps.getString("result"));
-                                    Log.i("globalProps", globalProps.toString());
-                                    //TODO here assign to global_props.
                                     dynamic_global_properties = globalProps;
+                                    //Third request, prices.
+                                    RequestFuture<JSONObject> futureCurrencies = RequestFuture.newFuture();
+                                    JsonObjectRequest requestCurrencies = new JsonObjectRequest(Request.Method.GET,KEYCHAIN_PRICE_API_URL, new JSONObject(), futureCurrencies, futureCurrencies);
+                                    Volley.newRequestQueue(context).add(requestCurrencies);
+                                    try {
+                                        JSONObject responseCurrencies = futureCurrencies.get(); // this will block
+                                        currency_data = responseCurrencies;
+                                    } catch (InterruptedException e) {
+                                        // exception handling
+                                        Log.e("Int Excep currencies", e.getLocalizedMessage());
+                                    } catch (ExecutionException e) {
+                                        // exception handling
+                                        Log.e("Exec Excep currencies", e.getLocalizedMessage());
+                                    }
+                                    //END third request
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
+                                    Log.e("JSON Excep currencies", e.getLocalizedMessage());
                                 }
                             } catch (InterruptedException e) {
                                 // exception handling
-                                Log.e("Fetch Int excep", e.getLocalizedMessage());
+                                Log.e("Int Excep get_dynamic", e.getLocalizedMessage());
                             } catch (ExecutionException e) {
                                 // exception handling
-                                Log.e("ODSC exception ex", e.getLocalizedMessage());
+                                Log.e("Excep get_dynamic", e.getLocalizedMessage());
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            Log.e("JSON Excep get_dynamic", e.getLocalizedMessage());
                         }
-                        //TODO END Testing block
+                        //End Second Request, get global_props
 
                         //calculations + construct the JSONObject as needed to show.
                         try {
                             JSONArray extendedAccountList = new JSONArray(responseExtAccountList.getString("result"));
                             JSONObject accData = new JSONObject();
-                            Log.i("ExtAccountList", extendedAccountList.toString());
-                            Log.i("TODO important", "Use those props!!");
                             for (int i = 0; i < extendedAccountList.length() ; i++) {
-                                //TODO missing account_value, hive_power(check RN widget utils.)
                                 JSONObject account_data = extendedAccountList.getJSONObject(i);
-                                Double total_vesting_fund_hive = 0.0;
-                                Double total_vesting_shares = 0.0;
-                                Double hive_power = 0.0;
-                                Double vesting_shares_account = 0.0;
-                                if(dynamic_global_properties != null){
-                                    //TODO check if need to pass to str + split to get just the number + format as double???
-                                    String totalVestingFundHive = dynamic_global_properties.getString("total_vesting_fund_hive").split("\\s")[0];
-                                    String totalVestingShares = dynamic_global_properties.getString("total_vesting_shares").split("\\s")[0];
-                                    String vestingSharesAccount = account_data.getString("vesting_shares").split("\\s")[0];
-                                    Log.i("So:", totalVestingFundHive +" // " + totalVestingShares + " // " + vestingSharesAccount);
-                                    total_vesting_fund_hive = new Double(totalVestingFundHive);
-                                    total_vesting_shares = new Double(totalVestingShares);
-                                    vesting_shares_account = new Double(vestingSharesAccount);
-                                    hive_power = (vesting_shares_account * total_vesting_fund_hive) / total_vesting_shares;
-                                    Log.i("for acc:", account_data.getString("name") +"/hp: "+ hive_power);
-                                    //TODO bellow
-                                    // - format those values as currency I guess.
-                                    // - calculate also the missing account_value
-                                    // - add those new items into each accData JSONObject.
-                                }
-                                Log.i("extended acc", account_data.toString());
                                 accData.put(account_data.getString("name"),
                                         new JSONObject()
                                                 .put("hive", account_data.getString("balance"))
                                                 .put("hbd", account_data.getString("hbd_balance"))
-                                                .put("hive_savings", account_data.getString("savings_balance"))
-                                                .put("hbd_savings", account_data.getString("savings_hbd_balance"))
-                                                .put("hive_power", "1000 HP")
-                                                .put("account_value", "1,000.00")
+                                                .put("hive_savings", account_data.getString("savings_balance").split("\\s")[0])
+                                                .put("hbd_savings", account_data.getString("savings_hbd_balance").split("\\s")[0])
+                                                .put("hive_power", new DecimalFormat("0.00").format(Utils.toHp(account_data,dynamic_global_properties)))
+                                                .put("account_value", Utils.getAccountValue(account_data,currency_data,dynamic_global_properties))
                                 );
                             }
-                            Log.i("accData", accData.toString());
                             accounts_data = accData;
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            Log.e("JSON Excep calculations", e.getLocalizedMessage());
                         }
-                        //
+                        //end calculations
                     } catch (InterruptedException e) {
                         // exception handling
-                        Log.e("Fetch Int excep", e.getLocalizedMessage());
+                        Log.e("Int Excep get_accounts", e.getLocalizedMessage());
                     } catch (ExecutionException e) {
                         // exception handling
-                        Log.e("ODSC exception ex", e.getLocalizedMessage());
+                        Log.e("Excep get_accounts", e.getLocalizedMessage());
+                        if(e.getLocalizedMessage().contains("Unable to resolve host")){
+                            accounts_data = null; //reset as no internet
+                            //no internet data enabled
+                            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_account_balance_list);
+                            views.setTextViewText(R.id.widget_account_balance_list_stack_empty_view, "Please enable internet & retry refresh");
+                            views.setTextViewTextSize(R.id.widget_account_balance_list_stack_empty_view,1,12);
+                            AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+                            ComponentName widgetComponentAccountBalance = new ComponentName(context, WidgetAccountBalanceListProvider.class);
+                            int[] widgetIdsAccountBalance = widgetManager.getAppWidgetIds(widgetComponentAccountBalance);
+                            widgetManager.updateAppWidget(widgetIdsAccountBalance,views);
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    Log.e("JSON exc get_accounts", e.getLocalizedMessage());
                 }
                 //End fetching sync
             }else{
                 accounts_data = null;
             }
-            //TODO what if no data to show? reset?
         }
 
         @Override
@@ -242,8 +217,6 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
 
         @Override
         public int getCount() {
-            String accountsDataLength = accounts_data == null ? "null" : String.valueOf(accounts_data.length());
-            Log.i("WABL getCount", "count:" + accountsDataLength);
             return accounts_data != null ? accounts_data.length() : 0;
 
 
@@ -251,7 +224,6 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
-            Log.i("WABL getViewAt", "running!");
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_account_balance_list_item);
             try {
                 if(accounts_data == null) return views;
@@ -263,7 +235,7 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                 views.setTextViewText(R.id.widget_account_balance_list_item_hive_power, valuesJsonObject.getString("hive_power"));
                 views.setTextViewText(R.id.widget_account_balance_list_item_hive_savings, valuesJsonObject.getString("hive_savings"));
                 views.setTextViewText(R.id.widget_account_balance_list_item_hbd_savings, valuesJsonObject.getString("hbd_savings"));
-                views.setTextViewText(R.id.widget_account_balance_list_item_account_value, valuesJsonObject.getString("account_value") + " USD");
+                views.setTextViewText(R.id.widget_account_balance_list_item_account_value, valuesJsonObject.getString("account_value"));
                 return views;
             } catch (JSONException e) {
                 Log.e("Error: ABL getViewAt", e.getLocalizedMessage());

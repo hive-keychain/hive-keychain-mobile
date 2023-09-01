@@ -20,10 +20,8 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Log.i("WABL appWidgetIds", appWidgetIds.toString());
         final int flag = PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT;
         for (int appWidgetId : appWidgetIds) {
-//            final int flag =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE : PendingIntent.FLAG_UPDATE_CURRENT;
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_account_balance_list);
 
             //Custom intent/broadcast registration
@@ -45,7 +43,6 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
             // Instruct the widget manager that data may have changed, so update remove views.
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_account_balance_list_stack_view);
         }
-        //TODO testing to see if this line bellow fix the update issue!
         super.onUpdate(context,appWidgetManager,appWidgetIds);
     }
 
@@ -54,11 +51,17 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
         super.onReceive(context, intent);
         if(intent.getAction().equals(ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST)){
             // put new key into shared storage + send configureWidgets command to RN app)
-            WritableMap params = Arguments.createMap();
-            params.putString("configureWidgets", "true");
-            ReactApplication rnApp = (ReactApplication) context.getApplicationContext();
-            ReactContext reactContext = rnApp.getReactNativeHost().getReactInstanceManager().getCurrentReactContext();
-            MainActivity.sendReactEvent(reactContext,"command_event", params);
+            if(Utils.isAppRunning(context, context.getPackageName())) {
+                try {
+                    WritableMap params = Arguments.createMap();
+                    params.putString("configureWidgets", "true");
+                    ReactApplication rnApp = (ReactApplication) context.getApplicationContext();
+                    ReactContext reactContext = rnApp.getReactNativeHost().getReactInstanceManager().getCurrentReactContext();
+                    MainActivity.sendReactEvent(reactContext, "command_event", params);
+                } catch (Exception e){
+                    Log.e("Exception WABL config", e.getLocalizedMessage());
+                }
+            }
 
             // launch app start activity
             Intent i = new Intent();

@@ -32,12 +32,7 @@ const WidgetConfiguration = ({
 }: Props & PropsFromRedux): null => {
   const [accountsToShow, setAccountsToShow] = useState<
     WidgetAccountBalanceToShow[]
-  >(
-    // accounts.map((acc) => {
-    //   return {name: acc.name, show: false};
-    // }),
-    [],
-  );
+  >([]);
   const [loadingData, setLoadingData] = useState(false);
 
   useEffect(() => {
@@ -47,16 +42,10 @@ const WidgetConfiguration = ({
   }, [show, accounts]);
 
   const init = async () => {
-    //TODO important:
-    //  - test this:
-    //    - when no list in storage but added a new account.
-    //  - refactor widgetutils new methods.
-    //  - check what's happening in java side + update as single unit passing only account names to show.
-    let accountsFound: WidgetAccountBalanceToShow[] = [];
     const accountsStoredToShow = await AsyncStorage.getItem(
       WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
     );
-    console.log({accountsStoredToShow});
+
     if (accountsStoredToShow) {
       setAccountsToShow(JSON.parse(accountsStoredToShow));
     } else if (accounts.length) {

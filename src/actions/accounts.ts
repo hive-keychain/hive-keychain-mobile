@@ -45,12 +45,10 @@ export const addAccount = (
   const accounts = [...previousAccounts, {name, keys}];
   const encrypted = encryptJson({list: accounts}, mk);
 
-  //TODO cleanup
   await WidgetUtils.addAccountBalanceList(
     name,
     accounts.map((acc) => acc.name),
   );
-  //end for widgets
 
   await saveOnKeychain('accounts', encrypted);
   if (wallet) {

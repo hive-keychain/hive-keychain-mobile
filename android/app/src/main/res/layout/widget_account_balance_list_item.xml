@@ -25,7 +25,7 @@
                 android:layout_gravity="start"
                 android:text="loading..."
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_14_dp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_loading_number"
-                android:textSize="@dimen/text_size_12_dp"
+                android:textSize="11dp"
                 android:textColor="@color/white"
                 android:layout_marginLeft="4dp"
                 android:gravity="end"
@@ -69,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_loading_number"
-                android:textSize="@dimen/text_size_12_dp"
+                android:textSize="11dp"
                 android:textColor="@color/white"
                 android:layout_marginLeft="4dp"
                 android:gravity="end"
@@ -91,30 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_loading_number"
-                android:textSize="@dimen/text_size_12_dp"
-                android:textColor="@color/white"
-                android:layout_marginLeft="4dp"
-                android:gravity="end"
-                android:layout_weight="1"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_weight="1">
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/savings"
-                android:tint="@color/green"/>
-            <TextView
-                android:id="@+id/widget_account_balance_list_item_hive_savings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_loading_number"
-                android:textSize="@dimen/text_size_12_dp"
+                android:textSize="11dp"
                 android:textColor="@color/white"
                 android:layout_marginLeft="4dp"
                 android:gravity="end"
@@ -133,11 +110,34 @@
                 android:src="@drawable/savings"
                 android:tint="@color/red"/>
             <TextView
+                android:id="@+id/widget_account_balance_list_item_hive_savings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_loading_number"
+                android:textSize="11dp"
+                android:textColor="@color/white"
+                android:layout_marginLeft="4dp"
+                android:gravity="end"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/savings"
+                android:tint="@color/green"/>
+            <TextView
                 android:id="@+id/widget_account_balance_list_item_hbd_savings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/text_loading_number"
-                android:textSize="@dimen/text_size_12_dp"
+                android:textSize="11dp"
                 android:textColor="@color/white"
                 android:layout_marginLeft="4dp"
                 android:gravity="end"
