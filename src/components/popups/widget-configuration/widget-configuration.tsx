@@ -2,7 +2,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import OperationButton from 'components/form/EllipticButton';
 import Icon from 'components/hive/Icon';
 import Operation from 'components/operations/Operation';
-import {WalletNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {CheckBox} from 'react-native-elements';
@@ -10,13 +9,12 @@ import {ConnectedProps, connect} from 'react-redux';
 import {WidgetAsyncStorageItem} from 'src/enums/widgets.enum';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 import {WidgetUtils} from 'utils/widget.utils';
 
 interface Props {
-  navigation: WalletNavigation;
   show: boolean;
-  setShow: any;
+  setShow: (val: boolean) => void;
 }
 
 export interface WidgetAccountBalanceToShow {
@@ -25,7 +23,6 @@ export interface WidgetAccountBalanceToShow {
 }
 
 const WidgetConfiguration = ({
-  navigation,
   show,
   setShow,
   accounts,
@@ -70,7 +67,7 @@ const WidgetConfiguration = ({
 
   const handleClose = async () => {
     setShow(false);
-    navigation.goBack();
+    goBack();
   };
 
   const toogleShowAccount = (accountName: string, value: boolean) => {

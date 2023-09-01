@@ -177,7 +177,6 @@ const Main = ({
         <Survey navigation={navigation} />
         <WhatsNewComponent navigation={navigation} />
         <WidgetConfiguration
-          navigation={navigation}
           show={showWidgetConfiguration}
           setShow={setShowWidgetConfiguration}
         />
