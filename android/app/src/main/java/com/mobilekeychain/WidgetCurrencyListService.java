@@ -106,27 +106,29 @@ public class WidgetCurrencyListService extends RemoteViewsService {
         public RemoteViews getViewAt(int position) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list_item);
             try {
+                //validation
+                if(currency_data == null) return views;
                 //extract data from JSONObject stored.
                 String currency_name = currency_data.names().getString(position).replace("_", " ");
-                    JSONObject valuesJsonObject = currency_data.getJSONObject(currency_data.names().getString(position));
-                    //formatting
-                    NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("en", "US"));
-                    String currency_value_usd = nf.format(valuesJsonObject.getDouble("usd"));
-                    String currency_usd_24h_change_value = String.format("%.2f", valuesJsonObject.getDouble("usd_24h_change")) + "%";
-                    //set values for currency item
-                    views.setTextViewText(R.id.widget_currency_list_item_currency_name, currency_name.toUpperCase());
-                    views.setTextViewText(R.id.widget_currency_list_item_currency_value_usd, currency_value_usd);
-                    views.setTextViewText(R.id.widget_currency_list_item_currency_usd_24h_change_value, currency_usd_24h_change_value);
-                    //logic to change icons + color
-                    if (currency_usd_24h_change_value.contains("-")) {
-                        views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.red));
-                        views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.VISIBLE);
-                        views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.GONE);
-                    } else {
-                        views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.green));
-                        views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.VISIBLE);
-                        views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.GONE);
-                    }
+                JSONObject valuesJsonObject = currency_data.getJSONObject(currency_data.names().getString(position));
+                //formatting
+                NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("en", "US"));
+                String currency_value_usd = nf.format(valuesJsonObject.getDouble("usd"));
+                String currency_usd_24h_change_value = String.format("%.2f", valuesJsonObject.getDouble("usd_24h_change")) + "%";
+                //set values for currency item
+                views.setTextViewText(R.id.widget_currency_list_item_currency_name, currency_name.toUpperCase());
+                views.setTextViewText(R.id.widget_currency_list_item_currency_value_usd, currency_value_usd);
+                views.setTextViewText(R.id.widget_currency_list_item_currency_usd_24h_change_value, currency_usd_24h_change_value);
+                //logic to change icons + color
+                if (currency_usd_24h_change_value.contains("-")) {
+                    views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.red));
+                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.VISIBLE);
+                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.GONE);
+                } else {
+                    views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.green));
+                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_up, View.VISIBLE);
+                    views.setViewVisibility(R.id.widget_currency_list_item_icon_direction_down, View.GONE);
+                }
             } catch (JSONException e) {
                 Log.e("Error: CL getViewAt", e.getLocalizedMessage());
                 e.printStackTrace();
