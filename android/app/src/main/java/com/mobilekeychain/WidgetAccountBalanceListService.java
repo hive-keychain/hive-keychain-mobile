@@ -70,6 +70,7 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
             try {
                 SharedPreferences sharedPref = context.getSharedPreferences("DATA", Context.MODE_PRIVATE);
                 String appString = sharedPref.getString("appData", "");
+                if(appString.length() == 0) return;
                 JSONObject data = new JSONObject(appString);
                 accounts_data_RN = new JSONArray(data.getString("account_balance_list"));
                 ArrayList<String> accountNamesToFind = new ArrayList<String>();
@@ -99,7 +100,7 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
         @Override
         public void onDataSetChanged() {
             getSharedData();
-            if(accountNamesToShow.size() > 0){
+            if(accountNamesToShow != null && accountNamesToShow.size() > 0){
                 //fetch extended accounts sync -> finally will set the final accounts_data.
                 String json = String.format("{" +
                         "\"jsonrpc\":\"2.0\"," +
