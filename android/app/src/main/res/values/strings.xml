@@ -7,4 +7,6 @@
     <string name="text_sample_100k">100,000.00</string>
     <string name="text_loading_number">...</string>
     <string name="default_empty_list_text">Open Keychain</string>
+    <string name="widget_currency_list_receiver_label_name">Hive Ticker</string>
+    <string name="widget_account_balance_list_receiver_label_name">Keychain Portfolio</string>
 </resources>

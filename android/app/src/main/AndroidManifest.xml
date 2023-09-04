@@ -60,7 +60,8 @@
 
       <!-- Widget registration -->
       <receiver android:name=".WidgetCurrencyListProvider"
-          android:exported="false">
+          android:exported="false"
+          android:label="@string/widget_currency_list_receiver_label_name">
         <intent-filter>
           <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
           <action android:name="com.mobilekeychain.WidgetCurrencyListProvider.ACTION_WIDGET_REFRESH"/>
@@ -70,7 +71,8 @@
             android:resource="@xml/widget_currency_list" />
       </receiver>
       <receiver android:name=".WidgetAccountBalanceListProvider"
-          android:exported="false">
+          android:exported="false"
+          android:label="@string/widget_account_balance_list_receiver_label_name">
         <intent-filter>
           <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
         </intent-filter>
