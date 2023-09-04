@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -91,10 +92,11 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                 e.printStackTrace();
             }
         }
-
         @Override
         public void onCreate() {
             getSharedData();
+            //TODO testing bellow to no matter what fire the dataChanged, issue: calling twice getSharedData??
+//            onDataSetChanged();
         }
 
         @Override

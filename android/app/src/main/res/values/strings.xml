@@ -9,4 +9,10 @@
     <string name="default_empty_list_text">Open Keychain</string>
     <string name="widget_currency_list_receiver_label_name">Hive Ticker</string>
     <string name="widget_account_balance_list_receiver_label_name">Keychain Portfolio</string>
+    <string name="widget_sample_currency">$10,000.00</string>
+    <string name="widget_sample_number">10,000.00</string>
+    <string name="widget_sample_account">\@account_user</string>
+    <string name="widget_account_balance_list_available">Available Balance</string>
+    <string name="widget_account_balance_list_HIVE_label">HIVE</string>
+    <string name="widget_account_balance_list_HBD_label">HBD</string>
 </resources>

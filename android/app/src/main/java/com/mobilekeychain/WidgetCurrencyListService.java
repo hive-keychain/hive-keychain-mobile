@@ -5,12 +5,16 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import android.widget.Toast;
+
 import androidx.core.content.ContextCompat;
 
 import com.android.volley.Request;
@@ -51,7 +55,8 @@ public class WidgetCurrencyListService extends RemoteViewsService {
         }
 
         @Override
-        public void onCreate() {}
+        public void onCreate() {
+        }
 
         @Override
         public void onDataSetChanged() {
