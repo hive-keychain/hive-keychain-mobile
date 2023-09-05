@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:padding="15dp"
-    android:gravity="center">
+    android:layout_height="wrap_content"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,6 +15,7 @@
             android:backgroundTint="#B90C0C"
             android:orientation="horizontal"
             android:layout_marginBottom="5dp">
+
             <TextView
                 android:id="@+id/widget_account_balance_list_item_account_name"
                 android:layout_width="match_parent"
@@ -55,16 +54,16 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_marginBottom="5dp">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:layout_weight="0.3">
+                android:layout_weight="0.5">
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
@@ -89,9 +88,9 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:layout_weight="0.3">
+                android:layout_weight="0.5">
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
@@ -113,11 +112,6 @@
                     android:layout_marginLeft="4dp"
                     android:textColor="@color/black" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.3"></LinearLayout>
 
         </LinearLayout>
 

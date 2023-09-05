@@ -3,10 +3,10 @@
     android:initialLayout="@layout/widget_account_balance_list"
     android:previewImage="@drawable/widget_account_balance_list_preview"
     android:minHeight="100dp"
-    android:minWidth="80dp"
-    android:minResizeWidth="80dp"
+    android:minWidth="180dp"
+    android:minResizeWidth="180dp"
     android:minResizeHeight="100dp"
-    android:resizeMode="horizontal|vertical"
+    android:resizeMode="none"
     android:updatePeriodMillis="36000000"
     android:autoAdvanceViewId="@id/widget_account_balance_list_stack_view"
     android:widgetCategory="home_screen">

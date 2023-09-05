@@ -171,8 +171,8 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                                 JSONObject account_data = extendedAccountList.getJSONObject(i);
                                 accData.put(account_data.getString("name"),
                                         new JSONObject()
-                                                .put("hive", account_data.getString("balance"))
-                                                .put("hbd", account_data.getString("hbd_balance"))
+                                                .put("hive", account_data.getString("balance").split("\\s")[0])
+                                                .put("hbd", account_data.getString("hbd_balance").split("\\s")[0])
                                                 .put("hive_savings", account_data.getString("savings_balance").split("\\s")[0])
                                                 .put("hbd_savings", account_data.getString("savings_hbd_balance").split("\\s")[0])
                                                 .put("hive_power", new DecimalFormat("0.00").format(Utils.toHp(account_data,dynamic_global_properties)))

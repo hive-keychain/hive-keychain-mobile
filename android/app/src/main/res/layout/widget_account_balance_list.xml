@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true">
 
         <StackView
@@ -17,8 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:loopViews="true"
-            android:backgroundTint="@color/white"
-            android:layout_gravity="center"/>
+            android:backgroundTint="@color/white" />
 
         <TextView
             android:id="@+id/widget_account_balance_list_stack_empty_view"
@@ -33,37 +31,39 @@
 
     </FrameLayout>
 
+    <Button
+        android:id="@+id/widget_account_balance_list_button_configure"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/settings"
+        android:backgroundTint="@color/red"
+        android:contentDescription="@string/my_image_description"
+        android:scaleType="fitCenter" />
+
     <!-- Logo & refresh section -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#B90C0C"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="5dp">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:backgroundTint="#B90C0C"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:padding="5dp">-->
 
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:contentDescription="@string/my_image_description"
-            android:scaleType="fitStart"
-            android:layout_gravity="start"
-            android:src="@drawable/keychain_logo_mini"
-            android:padding="2dp"/>
+<!--        <ImageView-->
+<!--            android:layout_width="25dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:contentDescription="@string/my_image_description"-->
+<!--            android:scaleType="fitStart"-->
+<!--            android:src="@drawable/keychain_logo_mini"-->
+<!--            android:padding="2dp"/>-->
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"></FrameLayout>
-
-        <Button
-            android:id="@+id/widget_account_balance_list_button_configure"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/settings"
-            android:backgroundTint="@color/red"
-            android:contentDescription="@string/my_image_description"
-            android:scaleType="fitCenter" />
-    </LinearLayout>
+<!--        <Button-->
+<!--            android:id="@+id/widget_account_balance_list_button_configure"-->
+<!--            android:layout_width="20dp"-->
+<!--            android:layout_height="20dp"-->
+<!--            android:background="@drawable/settings"-->
+<!--            android:backgroundTint="@color/red"-->
+<!--            android:contentDescription="@string/my_image_description"-->
+<!--            android:scaleType="fitCenter" />-->
+<!--    </LinearLayout>-->
 
 </RelativeLayout>
