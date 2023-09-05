@@ -239,9 +239,13 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                 views.setTextViewText(R.id.widget_account_balance_list_item_hive_savings, valuesJsonObject.getString("hive_savings"));
                 views.setTextViewText(R.id.widget_account_balance_list_item_hbd_savings, valuesJsonObject.getString("hbd_savings"));
                 views.setTextViewText(R.id.widget_account_balance_list_item_account_value, valuesJsonObject.getString("account_value"));
+                Thread.sleep(600);
                 return views;
             } catch (JSONException e) {
                 Log.e("Error: ABL getViewAt", e.getLocalizedMessage());
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                Log.e("ErrInter:ABL/getViewAt", e.getLocalizedMessage());
                 e.printStackTrace();
             }
             return views;
