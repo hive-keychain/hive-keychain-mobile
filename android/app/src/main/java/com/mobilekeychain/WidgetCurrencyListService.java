@@ -5,6 +5,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -120,10 +124,54 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("en", "US"));
                 String currency_value_usd = nf.format(valuesJsonObject.getDouble("usd"));
                 String currency_usd_24h_change_value = String.format("%.2f", valuesJsonObject.getDouble("usd_24h_change")) + "%";
+                //validate & remove the -
+                String currency_change_no_minus = currency_usd_24h_change_value.contains("-") ? currency_usd_24h_change_value.split("\\-")[1] : currency_usd_24h_change_value;
                 //set values for currency item
                 views.setTextViewText(R.id.widget_currency_list_item_currency_name, currency_name.toUpperCase());
                 views.setTextViewText(R.id.widget_currency_list_item_currency_value_usd, currency_value_usd);
-                views.setTextViewText(R.id.widget_currency_list_item_currency_usd_24h_change_value, currency_usd_24h_change_value);
+                views.setTextViewText(R.id.widget_currency_list_item_currency_usd_24h_change_value, currency_change_no_minus);
+                //TODO important:
+                //  - find if possible to use the MPAndroidChart if not in widget -> remove implementation.
+                //TODO 24h_low, 24h_high should come from BE, for testing added.
+                // - keep working in this.
+                Float high_24h = 1.0f;
+                Float low_24h = 0.5f;
+                //canvas/chart
+                Float point_radius = 4f;
+                Integer bitmap_width = 200;
+                Integer bitmap_height = 100;
+                Bitmap bitmap = Bitmap.createBitmap(bitmap_width, bitmap_height, Bitmap.Config.ARGB_8888);
+                Canvas canvas_chart = new Canvas(bitmap);
+                //Background canvas color
+                canvas_chart.drawColor(getResources().getColor(R.color.light_blue_50));
+                Paint paint_chart = new Paint();
+                //line related
+                paint_chart.setAntiAlias(true);
+                paint_chart.setStrokeWidth(3f);
+                paint_chart.setColor(Color.BLACK);
+                paint_chart.setStyle(Paint.Style.STROKE);
+                //draw axis lines
+                canvas_chart.drawLine(0, 0, 0, bitmap_height, paint_chart);
+                canvas_chart.drawLine(0, bitmap_height, bitmap_width, bitmap_height, paint_chart);
+                //draw reference line at 1 using offset.
+                Float offset_x_axis_unity = Float.valueOf(bitmap_height /2);
+                paint_chart.setTextSize(10.0f);
+                canvas_chart.drawText("1", 5, offset_x_axis_unity - 10, paint_chart);
+                paint_chart.setColor(getResources().getColor(R.color.teal_700));
+                canvas_chart.drawLine(0,offset_x_axis_unity,bitmap_width,offset_x_axis_unity,paint_chart);
+                //Draw points
+                // high
+                paint_chart.setColor(getResources().getColor(R.color.green));
+                Float add_x_axis = 50.0f;
+                Float high_y_point = high_24h < 1.0f ? offset_x_axis_unity + (high_24h * offset_x_axis_unity) : (high_24h * offset_x_axis_unity) - offset_x_axis_unity;
+                Log.i("high_y_point", high_y_point.toString()); //TODO remove line
+                canvas_chart.drawCircle( high_24h * 10 + add_x_axis, high_y_point, point_radius, paint_chart);
+                //low
+                paint_chart.setColor(getResources().getColor(R.color.red));
+                Float low_y_point = low_24h < 1.0f ? offset_x_axis_unity + (low_24h * offset_x_axis_unity) : offset_x_axis_unity - (low_24h * offset_x_axis_unity);
+                Log.i("low_y_point", low_y_point.toString()); //TODO remove line
+                canvas_chart.drawCircle( add_x_axis * 3, low_y_point, point_radius, paint_chart);
+                views.setImageViewBitmap(R.id.widget_currency_list_chart, bitmap);
                 //logic to change icons + color
                 if (currency_usd_24h_change_value.contains("-")) {
                     views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.red));
@@ -136,6 +184,12 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 }
             } catch (JSONException e) {
                 Log.e("Error: CL getViewAt", e.getLocalizedMessage());
+                e.printStackTrace();
+            }
+            try {
+                Thread.sleep(600);
+            } catch (InterruptedException e) {
+                Log.e("ErrorWCL Int Excep", e.getLocalizedMessage());
                 e.printStackTrace();
             }
             return views;

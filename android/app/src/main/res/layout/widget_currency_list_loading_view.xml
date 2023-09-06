@@ -4,14 +4,14 @@
     android:layout_width="180dp"
     android:layout_height="140dp"
     android:gravity="center"
-    android:backgroundTint="@color/black">
+    android:backgroundTint="@color/white">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        android:background="@color/white"
         android:text="Loading"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/dark_gray"
         android:gravity="center"
         android:textSize="20dp"
         android:textStyle="bold"/>

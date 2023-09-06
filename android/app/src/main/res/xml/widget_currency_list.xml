@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider
-    android:minWidth="180dp"
-    android:minHeight="80dp"
+    android:minResizeHeight="80dp"
+    android:minResizeWidth="250dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialKeyguardLayout="@layout/widget_currency_list"
     android:initialLayout="@layout/widget_currency_list"
     android:previewImage="@drawable/widget_currency_list_preview"
-    android:resizeMode="none"
-    android:updatePeriodMillis="3600000"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen" />

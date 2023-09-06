@@ -8,7 +8,7 @@
     android:theme="@style/Theme.AppWidgetSample.AppWidgetContainer"
     android:orientation="vertical"
     android:gravity="center"
-    android:backgroundTint="@color/black"
+    android:backgroundTint="@color/white"
     android:paddingTop="10dp">
     
     <LinearLayout
@@ -22,19 +22,20 @@
         <!-- Logo & refresh section -->
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="24dp"
+            android:layout_height="15dp"
             android:backgroundTint="#B90C0C"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/image_view_logo_keychain"
-                android:layout_width="128dp"
-                android:layout_height="20dp"
+                android:layout_width="105dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
                 android:contentDescription="@string/my_image_description"
                 android:scaleType="fitStart"
-                android:layout_gravity="start"
-                android:src="@drawable/keychain_logo" />
+                android:src="@drawable/keychain_logo"
+                android:tint="@color/black" />
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -43,8 +44,8 @@
 
             <Button
                 android:id="@+id/widget_currency_list_button_refresh"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
+                android:layout_width="15dp"
+                android:layout_height="match_parent"
                 android:background="@drawable/refresh"
                 android:backgroundTint="#FE0000"
                 android:contentDescription="@string/my_image_description"
@@ -57,27 +58,26 @@
     <!-- Init Testing adapter based widgets -->
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:layout_marginTop="5dp"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:backgroundTint="@color/black">
+        android:backgroundTint="@color/white">
 
         <StackView
             android:id="@+id/widget_currency_list_stack_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:loopViews="true"
-            android:backgroundTint="@color/black"/>
+            android:backgroundTint="@color/white"/>
 
         <TextView
             android:id="@+id/widget_currency_list_stack_empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/black"
+            android:background="@color/white"
             android:text="Loading data..."
-            android:textColor="#FFFFFF"
+            android:textColor="@color/dark_gray"
             android:gravity="center"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:textStyle="bold"/>
 
     </FrameLayout>

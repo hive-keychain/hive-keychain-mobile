@@ -1,105 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Currency Item Ini-->
-<LinearLayout android:orientation="vertical"
-    android:layout_width="180dp"
-    android:layout_height="170dp"
+<RelativeLayout
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/shape"
     android:gravity="center_vertical"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:backgroundTint="@color/black">
+    android:backgroundTint="@color/white">
 
-    <!-- Currency/Symbol & value section-->
     <LinearLayout
-        android:layout_width="fill_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="8dp"
+        android:gravity="start">
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="24dp"
-        android:gravity="center_horizontal">
-        <TextView
-            android:id="@+id/widget_currency_list_item_currency_name"
+        android:layout_height="18dp"
+        android:gravity="center">
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:contentDescription="@string/appwidget_text"
-            android:text="Currency"
-            android:textColor="#ffffff"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/hive_brands"
+                android:tint="@color/red"
+                android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/widget_currency_list_item_currency_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="Currency name"
+                android:text="Currency"
+                android:textColor="@color/dark_gray"
+                android:autoSizeMinTextSize="7dp"
+                android:autoSizeMaxTextSize="12dp"
+                android:autoSizeStepGranularity="1dp"
+                android:autoSizeTextType="uniform"
+                android:textStyle="bold"
+                android:gravity="start"
+                android:layout_marginLeft="2dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/widget_currency_list_item_icon_direction_up"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/arrow_upward"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:tint="@color/green"
+                android:layout_gravity="center"/>
+            <ImageView
+                android:id="@+id/widget_currency_list_item_icon_direction_down"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/arrow_downward"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:tint="@color/red"
+                android:layout_gravity="center"/>
+            <TextView
+                android:id="@+id/widget_currency_list_item_currency_usd_24h_change_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="Currency change 24 hours"
+                android:text="0.0%"
+                android:textColor="#4CAF50"
+                android:textSize="12dp"
+                android:textStyle="bold"
+                android:layout_gravity="center"/>
+        </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="start"
+        android:layout_marginBottom="5dp">
         <TextView
             android:id="@+id/widget_currency_list_item_currency_value_usd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:contentDescription="@string/appwidget_text"
+            android:contentDescription="Currency value usd"
             android:text="..."
-            android:textColor="#ffffff"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_12_dp"
+            android:textStyle="bold"
+            android:layout_marginLeft="5dp"/>
     </LinearLayout>
 
-    <!-- end Currency/Symbol section-->
-
-    <!-- Currency/Symbol 24h change & Keychain logo section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="24dp"
+        android:layout_height="match_parent"
         android:gravity="center">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center">
-            <TextView
-                android:id="@+id/widget_currency_list_item_currency_usd_24h_change_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:contentDescription="@string/appwidget_text"
-                android:text="0.0%"
-                android:textColor="#4CAF50"
-                android:textSize="14sp"
-                android:textStyle="bold|italic" />
-
-            <ImageView
-                android:id="@+id/widget_currency_list_item_icon_direction_up"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:src="@drawable/arrow_upward"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:tint="@color/green" />
-            <ImageView
-                android:id="@+id/widget_currency_list_item_icon_direction_down"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:src="@drawable/arrow_downward"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:tint="@color/red" />
-        </LinearLayout>
-    </LinearLayout>
-    <!-- end Currency/Symbol 24h change & Keychain logo section-->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="28dp"
-        android:backgroundTint="#FFFFFF"
-        android:gravity="center"
-        android:layout_marginTop="10dp">
-
         <ImageView
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:src="@drawable/arrow_downward"
-            android:tint="#FFFFFF" />
+            android:id="@+id/widget_currency_list_chart"
+            android:contentDescription="24 hours change currency chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
     </LinearLayout>
-    <!-- Currency Item End-->
+
+    </LinearLayout>
     
-</LinearLayout>
+</RelativeLayout>
