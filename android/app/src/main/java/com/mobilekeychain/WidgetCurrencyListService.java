@@ -44,7 +44,9 @@ import java.util.concurrent.ExecutionException;
 
 public class WidgetCurrencyListService extends RemoteViewsService {
     private JSONObject currency_data;
+    private JSONObject currency_prices_history_data;
     private final String KEYCHAIN_PRICE_API_URL = "https://api.hive-keychain.com/hive/v2/price";
+    private final String KEYCHAIN_PRICE_HISTORY_API_URL = "https://api.hive-keychain.com/hive/v2/price-history";
     private static final List<String> not_showing_currency_list = Arrays.asList("bitcoin");
 
     @Override
@@ -83,6 +85,26 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                     });
                 }
                 currency_data = response;
+                //TODO add new request from https://api.hive-keychain.com/hive/v2/price-history
+                //Fetching data as sync
+                RequestFuture<JSONObject> futureHistoryPrices = RequestFuture.newFuture();
+                JsonObjectRequest requestHistoryPrices = new JsonObjectRequest(Request.Method.GET,KEYCHAIN_PRICE_HISTORY_API_URL, new JSONObject(), futureHistoryPrices, futureHistoryPrices);
+                Volley.newRequestQueue(context).add(requestHistoryPrices);
+                try {
+                    JSONObject responseHistoryPrices = futureHistoryPrices.get(); // this will block
+                    currency_prices_history_data = responseHistoryPrices;
+                    Log.i("responseHistoryPrices", responseHistoryPrices.toString());
+                    //TODO use this data.
+                    //end new request
+                } catch (InterruptedException e) {
+                    // exception handling
+                    Log.e("Fetch Int excep", e.getLocalizedMessage());
+                } catch (ExecutionException e) {
+                    Log.e("WCL Execp:", e.getLocalizedMessage());
+                    // exception handling
+                }
+                //End fetching sync
+                //end new request
             } catch (InterruptedException e) {
                 // exception handling
                 Log.e("Fetch Int excep", e.getLocalizedMessage());
@@ -134,8 +156,8 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 views.setTextViewText(R.id.widget_currency_list_item_currency_name, currency_name.toUpperCase());
                 views.setTextViewText(R.id.widget_currency_list_item_currency_value_usd, currency_value_usd);
                 views.setTextViewText(R.id.widget_currency_list_item_currency_usd_24h_change_value, currency_change_no_minus);
-                //TODO work bellow
 
+                //TODO bellow pass to its own function or class, should return the bitmap.
                 //definitions
                 Float bitmap_width = 200.0f;
                 Float bitmap_height = 100.0f;
@@ -172,9 +194,10 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 paint_chart.setStrokeWidth(3f);
                 paint_chart.setColor(Color.BLACK);
                 paint_chart.setStyle(Paint.Style.STROKE);
+
                 //draw axis lines
-                canvas_chart.drawLine(0, 0, 0, bitmap_height, paint_chart);
-                canvas_chart.drawLine(0, bitmap_height, bitmap_width, bitmap_height, paint_chart);
+//                canvas_chart.drawLine(0, 0, 0, bitmap_height, paint_chart);
+//                canvas_chart.drawLine(0, bitmap_height, bitmap_width, bitmap_height, paint_chart);
 
                 //TODO commented bellow as no need if range dynamic
                 //draw reference line at 1 using offset.
