@@ -31,11 +31,15 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 public class WidgetCurrencyListService extends RemoteViewsService {
@@ -130,18 +134,36 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 views.setTextViewText(R.id.widget_currency_list_item_currency_name, currency_name.toUpperCase());
                 views.setTextViewText(R.id.widget_currency_list_item_currency_value_usd, currency_value_usd);
                 views.setTextViewText(R.id.widget_currency_list_item_currency_usd_24h_change_value, currency_change_no_minus);
-                //TODO important:
-                //  - find if possible to use the MPAndroidChart if not in widget -> remove implementation.
-                //TODO 24h_low, 24h_high should come from BE, for testing added.
-                // - keep working in this.
+                //TODO work bellow
+
+                //definitions
+                Float bitmap_width = 200.0f;
+                Float bitmap_height = 100.0f;
                 Float high_24h = 1.0f;
                 Float low_24h = 0.5f;
+
+                //temp data array + calculations
+                List<Double> hive_prices_list = Arrays.asList(0.2739,0.2741,0.2741,0.2729,0.273,0.2732,0.2738,0.2734,0.2731,0.2738,0.2722,0.2725,0.2728,0.2729,0.2725,0.2729,0.2735,0.2783,0.2739,0.2778,0.2781,0.2755,0.2743,0.2738,0.2748,0.2744,0.2743,0.2746,0.2746,0.2744,0.2734,0.274,0.2743,0.2748,0.2748,0.2747,0.2775,0.2754,0.2754,0.275,0.2747,0.2747,0.2776,0.2748,0.2742,0.2743,0.2735,0.2739);
+                //take only 24 prices
+                hive_prices_list = hive_prices_list.subList(0,hive_prices_list.size()/2);
+                Log.i("new count::", String.valueOf(hive_prices_list.size()));
+
+                Double max_hive_price = Collections.max(hive_prices_list);
+                Double min_hive_price = Collections.min(hive_prices_list);
+                Integer count_hive_price_data = hive_prices_list.size();
+                Float step_in_px = bitmap_width/ count_hive_price_data;
+                Log.i("Range:", "max:" + max_hive_price + "/ min:" + min_hive_price);
+                Log.i("total count:", String.valueOf(count_hive_price_data));
+                Log.i("step px:", String.valueOf(step_in_px));
+
                 //canvas/chart
                 Float point_radius = 4f;
-                Integer bitmap_width = 200;
-                Integer bitmap_height = 100;
-                Bitmap bitmap = Bitmap.createBitmap(bitmap_width, bitmap_height, Bitmap.Config.ARGB_8888);
+                Bitmap bitmap = Bitmap.createBitmap(Math.round(bitmap_width), Math.round(bitmap_height), Bitmap.Config.ARGB_8888);
                 Canvas canvas_chart = new Canvas(bitmap);
+                //TODO important before drawing the canvas flip vertically
+//                canvas_chart.scale(-1f, 1f, bitmap_width, bitmap_height);
+                canvas_chart.scale(1f, -1f, bitmap_width* 0.5f, bitmap_height* 0.5f);
+
                 //Background canvas color
                 canvas_chart.drawColor(getResources().getColor(R.color.light_blue_50));
                 Paint paint_chart = new Paint();
@@ -153,24 +175,37 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 //draw axis lines
                 canvas_chart.drawLine(0, 0, 0, bitmap_height, paint_chart);
                 canvas_chart.drawLine(0, bitmap_height, bitmap_width, bitmap_height, paint_chart);
+
+                //TODO commented bellow as no need if range dynamic
                 //draw reference line at 1 using offset.
-                Float offset_x_axis_unity = Float.valueOf(bitmap_height /2);
-                paint_chart.setTextSize(10.0f);
-                canvas_chart.drawText("1", 5, offset_x_axis_unity - 10, paint_chart);
-                paint_chart.setColor(getResources().getColor(R.color.teal_700));
-                canvas_chart.drawLine(0,offset_x_axis_unity,bitmap_width,offset_x_axis_unity,paint_chart);
-                //Draw points
-                // high
-                paint_chart.setColor(getResources().getColor(R.color.green));
-                Float add_x_axis = 50.0f;
-                Float high_y_point = high_24h < 1.0f ? offset_x_axis_unity + (high_24h * offset_x_axis_unity) : (high_24h * offset_x_axis_unity) - offset_x_axis_unity;
-                Log.i("high_y_point", high_y_point.toString()); //TODO remove line
-                canvas_chart.drawCircle( high_24h * 10 + add_x_axis, high_y_point, point_radius, paint_chart);
-                //low
-                paint_chart.setColor(getResources().getColor(R.color.red));
-                Float low_y_point = low_24h < 1.0f ? offset_x_axis_unity + (low_24h * offset_x_axis_unity) : offset_x_axis_unity - (low_24h * offset_x_axis_unity);
-                Log.i("low_y_point", low_y_point.toString()); //TODO remove line
-                canvas_chart.drawCircle( add_x_axis * 3, low_y_point, point_radius, paint_chart);
+//                Float offset_x_axis_unity = Float.valueOf(bitmap_height /2);
+//                paint_chart.setTextSize(10.0f);
+//                canvas_chart.drawText("1", 5, offset_x_axis_unity - 10, paint_chart);
+//                paint_chart.setColor(getResources().getColor(R.color.teal_700));
+//                canvas_chart.drawLine(0,offset_x_axis_unity,bitmap_width,offset_x_axis_unity,paint_chart);
+
+                //Draw points loop for now reducing to 1 hour = 24 prices.
+                Float next_step = 0.0f;
+                Float count = 0.0f;
+                for (int i = 0; i < hive_prices_list.size(); i++) {
+                    Random rand = new Random();
+                    Double randomY = rand.nextDouble() * (max_hive_price - min_hive_price) + min_hive_price;
+                    BigDecimal roundedY = new BigDecimal(randomY).setScale(4, RoundingMode.HALF_UP);
+                    Float roundedData = new Float(String.valueOf(roundedY));
+                    //linear interpolation
+                    Float px = getScaledValue(roundedData, new Float(min_hive_price),new Float(max_hive_price),20.0f,80.0f);
+                    //end linear
+//                    Double px = 100 * ((randomY - min_hive_price) / max_hive_price);
+                    Log.i("roundedY", String.valueOf(roundedY));
+                    Log.i("Px translation", String.valueOf(px));
+                    //drawing points
+                    canvas_chart.drawCircle(next_step,px,2f,paint_chart);
+                    //drawing as bars
+                    canvas_chart.drawLine(next_step,0, next_step,px,paint_chart);
+                    next_step += step_in_px;
+                }
+
+                //set remote view
                 views.setImageViewBitmap(R.id.widget_currency_list_chart, bitmap);
                 //logic to change icons + color
                 if (currency_usd_24h_change_value.contains("-")) {
@@ -193,6 +228,12 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 e.printStackTrace();
             }
             return views;
+        }
+
+        public Float getScaledValue(float value, float sourceRangeMin, float sourceRangeMax, float targetRangeMin, float targetRangeMax) {
+            float targetRange = targetRangeMax - targetRangeMin;
+            float sourceRange = sourceRangeMax - sourceRangeMin;
+            return (value - sourceRangeMin) * targetRange / sourceRange + targetRangeMin;
         }
 
         @Override
