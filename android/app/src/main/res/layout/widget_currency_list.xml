@@ -35,7 +35,7 @@
                 android:contentDescription="@string/my_image_description"
                 android:scaleType="fitStart"
                 android:src="@drawable/keychain_logo"
-                android:tint="@color/black" />
+                android:tint="@color/black"/>
 
             <FrameLayout
                 android:layout_width="wrap_content"

@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -28,6 +29,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,9 +40,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class WidgetCurrencyListService extends RemoteViewsService {
     private JSONObject currency_data;
@@ -85,8 +90,8 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                     });
                 }
                 currency_data = response;
-                //TODO add new request from https://api.hive-keychain.com/hive/v2/price-history
-                //Fetching data as sync
+                Log.i("currency_data", currency_data.toString()); //TODO remove line
+                //2nd Fetching data as sync
                 RequestFuture<JSONObject> futureHistoryPrices = RequestFuture.newFuture();
                 JsonObjectRequest requestHistoryPrices = new JsonObjectRequest(Request.Method.GET,KEYCHAIN_PRICE_HISTORY_API_URL, new JSONObject(), futureHistoryPrices, futureHistoryPrices);
                 Volley.newRequestQueue(context).add(requestHistoryPrices);
@@ -133,12 +138,15 @@ public class WidgetCurrencyListService extends RemoteViewsService {
 
         @Override
         public int getCount() {
+            Integer data_count = currency_data == null ? 0 : currency_data.length();
+            Log.i("getCount:", String.valueOf(data_count));
             return currency_data == null ? 0 : currency_data.length();
 
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
+            Log.i("getViewAt position", String.valueOf(position)); //TODO remove line
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list_item);
             try {
                 //validation
@@ -161,14 +169,34 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 //definitions
                 Float bitmap_width = 200.0f;
                 Float bitmap_height = 100.0f;
-                Float high_24h = 1.0f;
-                Float low_24h = 0.5f;
 
-                //temp data array + calculations
-                List<Double> hive_prices_list = Arrays.asList(0.2739,0.2741,0.2741,0.2729,0.273,0.2732,0.2738,0.2734,0.2731,0.2738,0.2722,0.2725,0.2728,0.2729,0.2725,0.2729,0.2735,0.2783,0.2739,0.2778,0.2781,0.2755,0.2743,0.2738,0.2748,0.2744,0.2743,0.2746,0.2746,0.2744,0.2734,0.274,0.2743,0.2748,0.2748,0.2747,0.2775,0.2754,0.2754,0.275,0.2747,0.2747,0.2776,0.2748,0.2742,0.2743,0.2735,0.2739);
+                //Data fetched array + calculations
+                if(currency_name.contains("hive dollar")) currency_name = "hbd";
+                JSONArray prices_array = currency_prices_history_data.getJSONArray(currency_name);
+                //TODO important, convet to List or iterate the JSONArray itself
+                //TODO - compare visually with coin market cap to see it charts match
+                // - change from bar to chart, drawing lines between points.
+                // - as soon as all works as expected, refactor as much as possible.
+                // - add expection to handle when no history data, so you can draw in the canvas "Keychain API unresponsive, try later".
+//                List<Double> hive_prices_list = Arrays.asList(prices_array);
+                Log.i("prices_array", prices_array.toString());
+//                List<Double> hive_prices_list = Arrays.asList(0.2739,0.2741,0.2741,0.2729,0.273,0.2732,0.2738,0.2734,0.2731,0.2738,0.2722,0.2725,0.2728,0.2729,0.2725,0.2729,0.2735,0.2783,0.2739,0.2778,0.2781,0.2755,0.2743,0.2738,0.2748,0.2744,0.2743,0.2746,0.2746,0.2744,0.2734,0.274,0.2743,0.2748,0.2748,0.2747,0.2775,0.2754,0.2754,0.275,0.2747,0.2747,0.2776,0.2748,0.2742,0.2743,0.2735,0.2739);
+                List<Double> hive_prices_list = new ArrayList<Double>();
+
+                for (int i = 0; i < prices_array.length(); i++) {
+                    hive_prices_list.add(prices_array.getDouble(i));
+                }
+                Log.i("pricesArrayList", hive_prices_list.toString());
+
                 //take only 24 prices
-                hive_prices_list = hive_prices_list.subList(0,hive_prices_list.size()/2);
-                Log.i("new count::", String.valueOf(hive_prices_list.size()));
+                //TODO ask quentin how to test in several sdk versions this line bellow, as it will affect the #prices data.
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                    hive_prices_list = IntStream.range(0, hive_prices_list.size())
+//                            .filter(i -> !(i % 2 == 0))
+//                            .mapToObj(hive_prices_list::get)
+//                            .collect(Collectors.toList());
+//                }
+//                Log.i("new count:", currency_name +"//" + String.valueOf(hive_prices_list.size()));
 
                 Double max_hive_price = Collections.max(hive_prices_list);
                 Double min_hive_price = Collections.min(hive_prices_list);
@@ -187,12 +215,13 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 canvas_chart.scale(1f, -1f, bitmap_width* 0.5f, bitmap_height* 0.5f);
 
                 //Background canvas color
-                canvas_chart.drawColor(getResources().getColor(R.color.light_blue_50));
+//                canvas_chart.drawColor(getResources().getColor(R.color.light_blue_50));
+
                 Paint paint_chart = new Paint();
                 //line related
                 paint_chart.setAntiAlias(true);
-                paint_chart.setStrokeWidth(3f);
-                paint_chart.setColor(Color.BLACK);
+                paint_chart.setStrokeWidth(1f);
+                paint_chart.setColor(Color.RED);
                 paint_chart.setStyle(Paint.Style.STROKE);
 
                 //draw axis lines
@@ -209,24 +238,47 @@ public class WidgetCurrencyListService extends RemoteViewsService {
 
                 //Draw points loop for now reducing to 1 hour = 24 prices.
                 Float next_step = 0.0f;
-                Float count = 0.0f;
+                List<FloatPoint> pointList = new ArrayList<FloatPoint>();
                 for (int i = 0; i < hive_prices_list.size(); i++) {
-                    Random rand = new Random();
-                    Double randomY = rand.nextDouble() * (max_hive_price - min_hive_price) + min_hive_price;
-                    BigDecimal roundedY = new BigDecimal(randomY).setScale(4, RoundingMode.HALF_UP);
-                    Float roundedData = new Float(String.valueOf(roundedY));
+//                    Random rand = new Random();
+//                    Double randomY = rand.nextDouble() * (max_hive_price - min_hive_price) + min_hive_price;
+//                    BigDecimal roundedY = new BigDecimal(randomY).setScale(4, RoundingMode.HALF_UP);
+                    Float roundedData = new Float(String.valueOf(hive_prices_list.get(i)));
                     //linear interpolation
-                    Float px = getScaledValue(roundedData, new Float(min_hive_price),new Float(max_hive_price),20.0f,80.0f);
+                    Float px = getScaledValue(roundedData, new Float(min_hive_price),new Float(max_hive_price),10.0f,80.0f);
                     //end linear
-//                    Double px = 100 * ((randomY - min_hive_price) / max_hive_price);
-                    Log.i("roundedY", String.valueOf(roundedY));
-                    Log.i("Px translation", String.valueOf(px));
-                    //drawing points
-                    canvas_chart.drawCircle(next_step,px,2f,paint_chart);
-                    //drawing as bars
-                    canvas_chart.drawLine(next_step,0, next_step,px,paint_chart);
+//                    Log.i("initial price", String.valueOf(roundedData));
+//                    Log.i("Px translation", String.valueOf(px));
+
+                    //TODO commented drawing points
+//                    canvas_chart.drawCircle(next_step,px,1f,paint_chart);
+
+                    FloatPoint point = new FloatPoint(next_step,px);
+                    pointList.add(point);
+                    Log.i("point", point.toString());
+                    //TODO commented for now, drawing as bars, can be used to paint bellow each point. Like the design.
+                    //canvas_chart.drawLine(next_step,0, next_step,px,paint_chart);
                     next_step += step_in_px;
                 }
+
+                Log.i("To draw lines:", pointList.toString());
+                //TODO connecting lines bellow
+                //change lines color for testing
+                paint_chart.setColor(Color.RED);
+                paint_chart.setStyle(Paint.Style.STROKE);
+                ListIterator<FloatPoint> li = pointList.listIterator();
+                FloatPoint firstPoint  = li.next();
+                while (li.hasNext()) {
+                    if(li.hasNext()){
+                        FloatPoint secondPoint = li.next();
+                        canvas_chart.drawLine(firstPoint.getX(),firstPoint.getY(),secondPoint.getX(), secondPoint.getY(), paint_chart);
+                        firstPoint = secondPoint;
+                    }
+                }
+
+                //TODO just for testing drawText //TODO cleanup
+//                paint_chart.setTextSize(20.0f);
+//                canvas_chart.drawText(currency_name,10.0f,90.0f,paint_chart);
 
                 //set remote view
                 views.setImageViewBitmap(R.id.widget_currency_list_chart, bitmap);
@@ -243,6 +295,10 @@ public class WidgetCurrencyListService extends RemoteViewsService {
             } catch (JSONException e) {
                 Log.e("Error: CL getViewAt", e.getLocalizedMessage());
                 e.printStackTrace();
+                if(e.getLocalizedMessage().contains("No value for")){
+                    //Add error TODO: find a way to add this just for the specified graphic.
+                    //TODO finish
+                }
             }
             try {
                 Thread.sleep(600);
