@@ -1,11 +1,11 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import React from 'react';
-import AddAccountByKey from 'screens/addAccounts/AddAccountByKey';
-import ScanQR from 'screens/addAccounts/ScanQR';
-import CreateAccount from 'screens/CreateAccount';
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
+import CreateAccount from 'screens/hive/CreateAccount';
+import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
+import ScanQR from 'screens/hive/addAccounts/ScanQR';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
 import {SignupStackParamList} from './Signup.types';

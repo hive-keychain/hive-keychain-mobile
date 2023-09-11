@@ -1,8 +1,8 @@
-import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+import React from 'react';
 
-import Settings from 'screens/settings/Settings';
 import DrawerButton from 'components/ui/DrawerButton';
+import Settings from 'screens/hive/settings/Settings';
 import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator();

@@ -1,8 +1,8 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import DrawerButton from 'components/ui/DrawerButton';
 import React from 'react';
-import CreateAccountStepOne from 'screens/createAccounts/create-account-step-one/CreateAccountStepOne';
-import CreateAccountStepTwo from 'screens/createAccounts/create-account-step-two/CreateAccountStepTwo';
+import CreateAccountStepOne from 'screens/hive/createAccounts/create-account-step-one/CreateAccountStepOne';
+import CreateAccountStepTwo from 'screens/hive/createAccounts/create-account-step-two/CreateAccountStepTwo';
 import {translate} from 'utils/localize';
 import {CreateAccountFromWalletParamList} from './CreateAccount.types';
 

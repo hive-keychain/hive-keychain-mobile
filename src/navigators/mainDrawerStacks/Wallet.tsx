@@ -7,8 +7,8 @@ import HeaderQR from 'components/qr_code/HeaderQR';
 import DrawerButton from 'components/ui/DrawerButton';
 import React from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
-import Wallet from 'screens/wallet/Main';
-import WalletQRScanner from 'screens/wallet/WalletQRScanner';
+import Wallet from 'screens/hive/wallet/Main';
+import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
 import {Width} from 'utils/common.types';
 
 const Stack = createStackNavigator();
