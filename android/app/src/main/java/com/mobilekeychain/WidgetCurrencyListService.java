@@ -8,8 +8,11 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.Shader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -165,123 +168,13 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 views.setTextViewText(R.id.widget_currency_list_item_currency_value_usd, currency_value_usd);
                 views.setTextViewText(R.id.widget_currency_list_item_currency_usd_24h_change_value, currency_change_no_minus);
 
-                //TODO bellow pass to its own function or class, should return the bitmap.
-                //definitions
-                Float bitmap_width = 200.0f;
-                Float bitmap_height = 100.0f;
-
-                //Data fetched array + calculations
-                if(currency_name.contains("hive dollar")) currency_name = "hbd";
-                JSONArray prices_array = currency_prices_history_data.getJSONArray(currency_name);
-                //TODO important, convet to List or iterate the JSONArray itself
-                //TODO - compare visually with coin market cap to see it charts match
-                // - change from bar to chart, drawing lines between points.
-                // - as soon as all works as expected, refactor as much as possible.
-                // - add expection to handle when no history data, so you can draw in the canvas "Keychain API unresponsive, try later".
-//                List<Double> hive_prices_list = Arrays.asList(prices_array);
-                Log.i("prices_array", prices_array.toString());
-//                List<Double> hive_prices_list = Arrays.asList(0.2739,0.2741,0.2741,0.2729,0.273,0.2732,0.2738,0.2734,0.2731,0.2738,0.2722,0.2725,0.2728,0.2729,0.2725,0.2729,0.2735,0.2783,0.2739,0.2778,0.2781,0.2755,0.2743,0.2738,0.2748,0.2744,0.2743,0.2746,0.2746,0.2744,0.2734,0.274,0.2743,0.2748,0.2748,0.2747,0.2775,0.2754,0.2754,0.275,0.2747,0.2747,0.2776,0.2748,0.2742,0.2743,0.2735,0.2739);
-                List<Double> hive_prices_list = new ArrayList<Double>();
-
-                for (int i = 0; i < prices_array.length(); i++) {
-                    hive_prices_list.add(prices_array.getDouble(i));
-                }
-                Log.i("pricesArrayList", hive_prices_list.toString());
-
-                //take only 24 prices
-                //TODO ask quentin how to test in several sdk versions this line bellow, as it will affect the #prices data.
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                    hive_prices_list = IntStream.range(0, hive_prices_list.size())
-//                            .filter(i -> !(i % 2 == 0))
-//                            .mapToObj(hive_prices_list::get)
-//                            .collect(Collectors.toList());
-//                }
-//                Log.i("new count:", currency_name +"//" + String.valueOf(hive_prices_list.size()));
-
-                Double max_hive_price = Collections.max(hive_prices_list);
-                Double min_hive_price = Collections.min(hive_prices_list);
-                Integer count_hive_price_data = hive_prices_list.size();
-                Float step_in_px = bitmap_width/ count_hive_price_data;
-                Log.i("Range:", "max:" + max_hive_price + "/ min:" + min_hive_price);
-                Log.i("total count:", String.valueOf(count_hive_price_data));
-                Log.i("step px:", String.valueOf(step_in_px));
-
-                //canvas/chart
-                Float point_radius = 4f;
-                Bitmap bitmap = Bitmap.createBitmap(Math.round(bitmap_width), Math.round(bitmap_height), Bitmap.Config.ARGB_8888);
-                Canvas canvas_chart = new Canvas(bitmap);
-                //TODO important before drawing the canvas flip vertically
-//                canvas_chart.scale(-1f, 1f, bitmap_width, bitmap_height);
-                canvas_chart.scale(1f, -1f, bitmap_width* 0.5f, bitmap_height* 0.5f);
-
-                //Background canvas color
-//                canvas_chart.drawColor(getResources().getColor(R.color.light_blue_50));
-
-                Paint paint_chart = new Paint();
-                //line related
-                paint_chart.setAntiAlias(true);
-                paint_chart.setStrokeWidth(1f);
-                paint_chart.setColor(Color.RED);
-                paint_chart.setStyle(Paint.Style.STROKE);
-
-                //draw axis lines
-//                canvas_chart.drawLine(0, 0, 0, bitmap_height, paint_chart);
-//                canvas_chart.drawLine(0, bitmap_height, bitmap_width, bitmap_height, paint_chart);
-
-                //TODO commented bellow as no need if range dynamic
-                //draw reference line at 1 using offset.
-//                Float offset_x_axis_unity = Float.valueOf(bitmap_height /2);
-//                paint_chart.setTextSize(10.0f);
-//                canvas_chart.drawText("1", 5, offset_x_axis_unity - 10, paint_chart);
-//                paint_chart.setColor(getResources().getColor(R.color.teal_700));
-//                canvas_chart.drawLine(0,offset_x_axis_unity,bitmap_width,offset_x_axis_unity,paint_chart);
-
-                //Draw points loop for now reducing to 1 hour = 24 prices.
-                Float next_step = 0.0f;
-                List<FloatPoint> pointList = new ArrayList<FloatPoint>();
-                for (int i = 0; i < hive_prices_list.size(); i++) {
-//                    Random rand = new Random();
-//                    Double randomY = rand.nextDouble() * (max_hive_price - min_hive_price) + min_hive_price;
-//                    BigDecimal roundedY = new BigDecimal(randomY).setScale(4, RoundingMode.HALF_UP);
-                    Float roundedData = new Float(String.valueOf(hive_prices_list.get(i)));
-                    //linear interpolation
-                    Float px = getScaledValue(roundedData, new Float(min_hive_price),new Float(max_hive_price),10.0f,80.0f);
-                    //end linear
-//                    Log.i("initial price", String.valueOf(roundedData));
-//                    Log.i("Px translation", String.valueOf(px));
-
-                    //TODO commented drawing points
-//                    canvas_chart.drawCircle(next_step,px,1f,paint_chart);
-
-                    FloatPoint point = new FloatPoint(next_step,px);
-                    pointList.add(point);
-                    Log.i("point", point.toString());
-                    //TODO commented for now, drawing as bars, can be used to paint bellow each point. Like the design.
-                    //canvas_chart.drawLine(next_step,0, next_step,px,paint_chart);
-                    next_step += step_in_px;
-                }
-
-                Log.i("To draw lines:", pointList.toString());
-                //TODO connecting lines bellow
-                //change lines color for testing
-                paint_chart.setColor(Color.RED);
-                paint_chart.setStyle(Paint.Style.STROKE);
-                ListIterator<FloatPoint> li = pointList.listIterator();
-                FloatPoint firstPoint  = li.next();
-                while (li.hasNext()) {
-                    if(li.hasNext()){
-                        FloatPoint secondPoint = li.next();
-                        canvas_chart.drawLine(firstPoint.getX(),firstPoint.getY(),secondPoint.getX(), secondPoint.getY(), paint_chart);
-                        firstPoint = secondPoint;
-                    }
-                }
-
-                //TODO just for testing drawText //TODO cleanup
-//                paint_chart.setTextSize(20.0f);
-//                canvas_chart.drawText(currency_name,10.0f,90.0f,paint_chart);
-
+                //TODO important:
+                //  - when finishing the path implementation: check for all svg in both widgets + change.
+                //New Chart
+                String currency_tendency = currency_usd_24h_change_value.contains("-") ? "down" : "up";
+                Bitmap currency_chart = drawChart(200.0f,100.0f, currency_name,false,false, true, currency_tendency);
                 //set remote view
-                views.setImageViewBitmap(R.id.widget_currency_list_chart, bitmap);
+                views.setImageViewBitmap(R.id.widget_currency_list_chart, currency_chart);
                 //logic to change icons + color
                 if (currency_usd_24h_change_value.contains("-")) {
                     views.setTextColor(R.id.widget_currency_list_item_currency_usd_24h_change_value, ContextCompat.getColor(context, R.color.red));
@@ -295,10 +188,6 @@ public class WidgetCurrencyListService extends RemoteViewsService {
             } catch (JSONException e) {
                 Log.e("Error: CL getViewAt", e.getLocalizedMessage());
                 e.printStackTrace();
-                if(e.getLocalizedMessage().contains("No value for")){
-                    //Add error TODO: find a way to add this just for the specified graphic.
-                    //TODO finish
-                }
             }
             try {
                 Thread.sleep(600);
@@ -307,6 +196,113 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 e.printStackTrace();
             }
             return views;
+        }
+
+        public Bitmap drawChart(float bitmap_width, float bitmap_height, String currency_name, boolean drawPoints, boolean draw_as_bars, boolean drawExtraLines, String tendency) throws JSONException {
+            //Data fetched array + calculations
+            if(currency_name.contains("hive dollar")) currency_name = "hbd";
+            JSONArray prices_array = currency_prices_history_data.getJSONArray(currency_name);
+            List<Double> currency_prices_list = new ArrayList<Double>();
+            //extract double from JSONObject
+            for (int i = 0; i < prices_array.length(); i++) {
+                currency_prices_list.add(prices_array.getDouble(i));
+            }
+
+            Double max_currency_price = Collections.max(currency_prices_list);
+            Double min_currency_price = Collections.min(currency_prices_list);
+            Integer count_hive_price_data = currency_prices_list.size();
+            Float step_in_px = bitmap_width/ count_hive_price_data;
+
+            //canvas/chart
+            Float point_radius = 4f;
+            Bitmap bitmap = Bitmap.createBitmap(Math.round(bitmap_width), Math.round(bitmap_height), Bitmap.Config.ARGB_8888);
+            Canvas canvas_chart = new Canvas(bitmap);
+            //flip canvas vertically
+            canvas_chart.scale(1f, -1f, bitmap_width* 0.5f, bitmap_height* 0.5f);
+
+            //Draw points loop
+            Float next_step = 0.0f;
+            List<FloatPoint> pointList = new ArrayList<FloatPoint>();
+            Float sourceRangeMin = new Float(min_currency_price);
+            Float sourceRangeMax = new Float(max_currency_price);
+            Float targetRangeMin = 10.0f;
+            Float targetRangeMax = 80.0f;
+            //Settings line/paint related(color/width/style)
+            Paint paint_chart = new Paint();
+            paint_chart.setAntiAlias(true);
+            paint_chart.setStrokeWidth(2f);
+            Integer graph_color = Color.GREEN; //0xff00ff00
+            Integer graph_line_darker_color = Color.parseColor("#00b200");
+            if(tendency == "down") {
+                graph_color = Color.RED;
+                graph_line_darker_color = Color.parseColor("#b20000");
+            }
+
+            for (int i = 0; i < currency_prices_list.size(); i++) {
+                Float roundedData = new Float(String.valueOf(currency_prices_list.get(i)));
+                //normalization between 2 ranges.
+                Float px = getScaledValue(roundedData, sourceRangeMin, sourceRangeMax, targetRangeMin, targetRangeMax);
+                //optional
+                if(drawPoints) canvas_chart.drawCircle(next_step,px,1f,paint_chart);
+
+                FloatPoint point = new FloatPoint(next_step,px);
+                pointList.add(point);
+                //optional
+                if(draw_as_bars) canvas_chart.drawLine(next_step,0, next_step,px,paint_chart);
+                next_step += step_in_px;
+            }
+
+            ListIterator<FloatPoint> li = pointList.listIterator();
+            FloatPoint firstPoint  = li.next();
+            Path graph_path = new Path();
+            boolean init_path = true;
+            FloatPoint lastPoint = null;
+            if(drawExtraLines) paint_chart.setColor(graph_line_darker_color);
+            while (li.hasNext()) {
+                if(li.hasNext()){
+                    FloatPoint secondPoint = li.next();
+                    //bellow using bezier
+                    FloatPoint connection_point_1 = new FloatPoint((secondPoint.getX() + firstPoint.getX()) / 2f, firstPoint.getY());
+                    FloatPoint connection_point_2 = new FloatPoint((secondPoint.getX() + firstPoint.getX()) / 2f, secondPoint.getY());
+                    if(drawExtraLines) canvas_chart.drawLine(firstPoint.getX(),firstPoint.getY(),secondPoint.getX(), secondPoint.getY(), paint_chart);
+                    if(init_path){
+                        graph_path.moveTo(firstPoint.getX(),0);
+                        //next line no bezier
+//                        graph_path.lineTo(firstPoint.getX(),firstPoint.getY());
+
+                        //bellow using bezier
+                        graph_path.cubicTo(
+                                connection_point_1.getX(), connection_point_1.getY(), connection_point_2.getX(), connection_point_2.getY(),
+                                firstPoint.getX(), firstPoint.getY()
+                        );
+
+                        init_path = false;
+                    }else{
+                        //next line no bezier
+//                        graph_path.lineTo(secondPoint.getX(), secondPoint.getY());
+
+                        //bellow using bezier
+                        graph_path.cubicTo(
+                                connection_point_1.getX(), connection_point_1.getY(), connection_point_2.getX(), connection_point_2.getY(),
+                                secondPoint.getX(), secondPoint.getY()
+                        );
+                    }
+                    firstPoint = secondPoint;
+                    lastPoint = secondPoint;
+                }
+            }
+            //path
+            //set last path point
+            graph_path.lineTo(bitmap_width,0);
+            graph_path.lineTo(0,0);
+            graph_path.close();
+
+            //gradient
+            paint_chart.setShader(new LinearGradient(0f, 0f, 0f, bitmap_height /2, Color.TRANSPARENT, graph_color, Shader.TileMode.MIRROR));
+            paint_chart.setStyle(Paint.Style.FILL_AND_STROKE);
+            paint_chart.setColor(graph_color);
+            canvas_chart.drawPath(graph_path, paint_chart);
+            return bitmap;
         }
 
         public Float getScaledValue(float value, float sourceRangeMin, float sourceRangeMax, float targetRangeMin, float targetRangeMax) {
