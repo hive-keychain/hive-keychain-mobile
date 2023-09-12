@@ -3,7 +3,7 @@
 import {TextStyle} from 'react-native';
 import {Colors} from 'styles';
 
-// Usage : In stylesheet, you can compound several styles : {thisTextField:{...Text.mainHeader,Text.underlined }}
+// Usage : In stylesheet, you can compound several styles : {thisTextField:{...Typography.mainHeader,Typography.underlined }}
 
 // Convention : name typography settings by what they do
 
