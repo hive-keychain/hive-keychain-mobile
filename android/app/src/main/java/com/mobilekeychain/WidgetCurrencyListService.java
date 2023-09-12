@@ -93,7 +93,6 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                     });
                 }
                 currency_data = response;
-                Log.i("currency_data", currency_data.toString()); //TODO remove line
                 //2nd Fetching data as sync
                 RequestFuture<JSONObject> futureHistoryPrices = RequestFuture.newFuture();
                 JsonObjectRequest requestHistoryPrices = new JsonObjectRequest(Request.Method.GET,KEYCHAIN_PRICE_HISTORY_API_URL, new JSONObject(), futureHistoryPrices, futureHistoryPrices);
@@ -101,8 +100,6 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 try {
                     JSONObject responseHistoryPrices = futureHistoryPrices.get(); // this will block
                     currency_prices_history_data = responseHistoryPrices;
-                    Log.i("responseHistoryPrices", responseHistoryPrices.toString());
-                    //TODO use this data.
                     //end new request
                 } catch (InterruptedException e) {
                     // exception handling
@@ -141,15 +138,12 @@ public class WidgetCurrencyListService extends RemoteViewsService {
 
         @Override
         public int getCount() {
-            Integer data_count = currency_data == null ? 0 : currency_data.length();
-            Log.i("getCount:", String.valueOf(data_count));
             return currency_data == null ? 0 : currency_data.length();
 
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
-            Log.i("getViewAt position", String.valueOf(position)); //TODO remove line
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list_item);
             try {
                 //validation
@@ -167,12 +161,11 @@ public class WidgetCurrencyListService extends RemoteViewsService {
                 views.setTextViewText(R.id.widget_currency_list_item_currency_name, currency_name.toUpperCase());
                 views.setTextViewText(R.id.widget_currency_list_item_currency_value_usd, currency_value_usd);
                 views.setTextViewText(R.id.widget_currency_list_item_currency_usd_24h_change_value, currency_change_no_minus);
-
-                //TODO important:
-                //  - when finishing the path implementation: check for all svg in both widgets + change.
+                //set icon dynamically
+                views.setImageViewResource(R.id.widget_currency_list_currency_icon, !currency_name.contains("hive dollar") ? R.drawable.hive_icon : R.drawable.hbd_icon);
                 //New Chart
                 String currency_tendency = currency_usd_24h_change_value.contains("-") ? "down" : "up";
-                Bitmap currency_chart = drawChart(200.0f,100.0f, currency_name,false,false, true, currency_tendency);
+                Bitmap currency_chart = drawChart(250.0f,100.0f, currency_name,false,false, true, currency_tendency);
                 //set remote view
                 views.setImageViewBitmap(R.id.widget_currency_list_chart, currency_chart);
                 //logic to change icons + color

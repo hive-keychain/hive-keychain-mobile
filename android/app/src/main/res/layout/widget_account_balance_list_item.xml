@@ -58,161 +58,102 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <LinearLayout
+        <GridLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
-
+            android:layout_height="wrap_content">
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
+                android:layout_columnWeight="1">
 
                 <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/hive_brands"
-                    android:tint="@color/red" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:text="@string/widget_account_balance_list_HIVE_label"
-                    android:textColor="@color/black"
-                    android:textSize="11dp" />
-
-                <TextView
-                    android:id="@+id/widget_account_balance_list_item_hive"
-                    android:layout_width="fill_parent"
+                    android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_weight="1"
-                    android:text="@string/widget_sample_number"
-                    android:textColor="@color/black"
-                    android:textSize="11dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/hive_brands"
-                    android:tint="@color/green" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="4dp"
-                    android:text="@string/widget_account_balance_list_HBD_label"
-                    android:textColor="@color/black"
-                    android:textSize="11dp" />
-
-                <TextView
-                    android:id="@+id/widget_account_balance_list_item_hbd"
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="4dp"
-                    android:layout_weight="1"
-                    android:text="@string/widget_sample_number"
-                    android:textColor="@color/black"
-                    android:textSize="11dp" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/icon_hp" />
+                    android:src="@drawable/hive_power_icon" />
 
                 <TextView
                     android:id="@+id/widget_account_balance_list_item_hive_power"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="4dp"
-                    android:layout_weight="1"
                     android:text="@string/widget_sample_number"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:autoSizeTextType="uniform"/>
             </LinearLayout>
+        </GridLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:orientation="horizontal">
-
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout android:layout_columnWeight="1">
                 <ImageView
                     android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:src="@drawable/savings_icon"
-                    android:tint="@color/red" />
-
+                    android:src="@drawable/hive_icon"/>
                 <TextView
-                    android:id="@+id/widget_account_balance_list_item_hive_savings"
-                    android:layout_width="0dp"
+                    android:id="@+id/widget_account_balance_list_item_hive"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="4dp"
                     android:text="@string/widget_sample_number"
                     android:textColor="@color/black"
-                    android:layout_weight="1"
-                    android:textSize="11dp" />
+                    android:autoSizeTextType="uniform" />
             </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
+            <LinearLayout android:layout_columnWeight="1">
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/hbd_icon"/>
+            <TextView
+                android:id="@+id/widget_account_balance_list_item_hbd"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/widget_sample_number"
+                android:textColor="@color/black"
+                android:autoSizeTextType="uniform" />
+            </LinearLayout>
+        </GridLayout>
+        <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:orientation="horizontal">
+                android:layout_columnWeight="1">
 
                 <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/savings_icon"
+                    android:tint="@color/red"
+                    android:layout_margin="2dp"/>
+
+                <TextView
+                    android:id="@+id/widget_account_balance_list_item_hive_savings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/widget_sample_number"
+                    android:textColor="@color/black"
+                    android:autoSizeTextType="uniform"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_columnWeight="1">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_margin="2dp"
                     android:src="@drawable/savings_icon"
                     android:tint="@color/green" />
 
                 <TextView
                     android:id="@+id/widget_account_balance_list_item_hbd_savings"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="4dp"
-                    android:layout_weight="1"
                     android:text="@string/widget_sample_number"
                     android:textColor="@color/black"
-                    android:textSize="11dp" />
+                    android:autoSizeTextType="uniform"
+                    android:layout_weight="1"/>
             </LinearLayout>
 
-        </LinearLayout>
+        </GridLayout>
 
     </LinearLayout>
 

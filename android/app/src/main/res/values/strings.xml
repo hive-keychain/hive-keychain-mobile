@@ -14,6 +14,7 @@
     <string name="widget_sample_account">\@account_user</string>
     <string name="widget_account_balance_list_account_value">Account Value</string>
     <string name="widget_account_balance_list_HIVE_label">HIVE</string>
+    <string name="widget_account_balance_list_HP_label">HP</string>
     <string name="widget_account_balance_list_HBD_label">HBD</string>
     <string name="widget_account_balance_list_loading_text">Loading Account(s)</string>
 </resources>

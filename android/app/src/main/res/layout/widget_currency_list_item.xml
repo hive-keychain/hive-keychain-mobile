@@ -29,10 +29,10 @@
             android:gravity="center"
             android:layout_weight="1">
             <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:src="@drawable/hive_brands"
-                android:tint="@color/red"
+                android:id="@+id/widget_currency_list_currency_icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/hive_icon"
                 android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/widget_currency_list_item_currency_name"
@@ -47,12 +47,11 @@
                 android:autoSizeTextType="uniform"
                 android:textStyle="bold"
                 android:gravity="start"
-                android:layout_marginLeft="2dp"/>
+                android:layout_marginLeft="1dp"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="end"
             android:orientation="horizontal"
             android:layout_weight="1">
             <ImageView
@@ -75,14 +74,16 @@
                 android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/widget_currency_list_item_currency_usd_24h_change_value"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:contentDescription="Currency change 24 hours"
                 android:text="0.0%"
                 android:textColor="#4CAF50"
                 android:textSize="12dp"
                 android:textStyle="bold"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:autoSizeTextType="uniform"
+                android:layout_weight="1"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -110,12 +111,13 @@
         android:orientation="horizontal"
         android:layout_height="match_parent"
         android:gravity="center">
+<!--        //TODO important for chart: set a fixed width for the widget + try to set this imageView, to the same width. so it will look centered with the data line above-->
         <ImageView
             android:id="@+id/widget_currency_list_chart"
             android:contentDescription="24 hours change currency chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            />
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 
