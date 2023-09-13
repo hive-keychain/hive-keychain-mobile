@@ -1,4 +1,4 @@
-import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 
 // Define widely used colors throughout the App
 
@@ -13,9 +13,10 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 
 //TODO : Change primary, this was just put here as an example
 
-export const getColors = () => {
-  const {theme} = useThemeContext();
+export const getColors = (theme: Theme) => {
+  console.log({theme}); //TODO remove line
   return {
-    primary: theme === Theme.DARK ? '#000' : '#FFF',
+    primaryText: theme === Theme.LIGHT ? '#484848' : '#FFF',
+    secondaryText: theme === Theme.LIGHT ? '#212838' : '#FFF',
   };
 };

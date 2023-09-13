@@ -1,5 +1,4 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import InfoPIN from 'components/info_buttons/ForgotPin';
 import React from 'react';
 import Unlock from 'screens/Unlock';
 import {UnlockStackParamList} from './Unlock.types';
@@ -14,7 +13,8 @@ export default () => {
         component={Unlock}
         options={{
           title: '',
-          headerRight: () => <InfoPIN />,
+          //TODO bellow remove after refactoring if there is no footerRight option.
+          // headerRight: () => <InfoPIN />,
           headerTintColor: 'white',
           headerTransparent: true,
         }}

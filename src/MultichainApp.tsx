@@ -22,7 +22,7 @@ export default () => {
       AsyncStorage.getItem(KeychainStorageKeyEnum.ACTIVE_THEME),
       AsyncStorage.getItem(KeychainStorageKeyEnum.ACTIVE_CHAIN),
     ]);
-
+    console.log({activeTheme}); //TODO remove line
     setTheme(activeTheme ?? Theme.LIGHT);
     setChain(activeChain ?? Chain.HIVE);
 

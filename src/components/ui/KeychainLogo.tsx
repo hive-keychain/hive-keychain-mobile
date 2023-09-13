@@ -1,15 +1,20 @@
 import KeychainIcon from 'assets/keychain.svg';
+import KeychainLogoPowered from 'assets/new_UI/keychain_logo_powered.svg';
 import React from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
   width: number;
+  //TODO change the use of this temp var
+  using_new_ui?: boolean;
 }
 
-const KeychainLogo = ({style, width}: Props) => {
+const KeychainLogo = ({style, width, using_new_ui}: Props) => {
   const styles = getDimensionedStyles({width});
-  return (
+  return using_new_ui ? (
+    <KeychainLogoPowered />
+  ) : (
     <View style={[styles.blackCircle, style]}>
       <KeychainIcon {...styles.image} />
     </View>

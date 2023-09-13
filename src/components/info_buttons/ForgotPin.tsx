@@ -1,17 +1,20 @@
 import ForgotPIN from 'components/modals/ForgotPIN';
-import React from 'react';
+import React, {useContext} from 'react';
 import {
+  ScaledSize,
   StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import {Width} from 'utils/common.types';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
 export default () => {
-  const styles = getDimensionedStyles(useWindowDimensions());
+  const {theme} = useContext(ThemeContext);
+  const styles = getDimensionedStyles(useWindowDimensions(), theme);
   return (
     <TouchableOpacity
       onPress={() => {
@@ -22,11 +25,11 @@ export default () => {
   );
 };
 
-const getDimensionedStyles = ({width}: Width) =>
+const getDimensionedStyles = ({width}: ScaledSize, theme: Theme) =>
   StyleSheet.create({
     text: {
-      color: 'white',
+      color: getColors(theme).secondaryText,
       marginRight: width * 0.05,
-      fontWeight: 'bold',
+      fontWeight: '600',
     },
   });

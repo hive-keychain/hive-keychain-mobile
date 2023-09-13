@@ -1,7 +1,6 @@
 // Define widely used text styles throughout the App
 
 import {TextStyle} from 'react-native';
-import {Colors} from 'styles';
 
 // Usage : In stylesheet, you can compound several styles : {thisTextField:{...Typography.mainHeader,Typography.underlined }}
 
@@ -14,10 +13,11 @@ import {Colors} from 'styles';
 export const mainHeader: TextStyle = {
   fontSize: 12,
   fontWeight: 'bold',
+  // textDecorationColor: Colors.getColors().primaryText,
 };
 
 export const underlined: TextStyle = {
-  textDecorationColor: Colors.getColors().primary,
+  // textDecorationColor: Colors.getColors().primaryText,
   textDecorationStyle: 'solid',
   textDecorationLine: 'underline',
 };

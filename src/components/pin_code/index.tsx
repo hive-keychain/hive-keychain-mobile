@@ -9,6 +9,8 @@ import {StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-elements';
 import IntentLauncher from 'react-native-intent-launcher';
 import Toast from 'react-native-simple-toast';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
 import PinCompletionIndicator from './PinCompletionIndicator';
 import PinElement from './PinElement';
@@ -19,6 +21,7 @@ interface Props {
   confirm?: string;
   submit: (pin: string, callback?: (unsafe?: boolean) => void) => void;
   navigation: UnlockNavigation | SignupNavigation;
+  theme: Theme;
 }
 
 const PinCode = ({
@@ -28,7 +31,10 @@ const PinCode = ({
   confirm,
   submit,
   navigation,
+  theme,
 }: Props) => {
+  console.log('PinCode component', {theme}); //TODO remove line
+  const styles = getStyles(theme);
   interface PinItem {
     refNumber: number;
     number?: number;
@@ -131,7 +137,10 @@ const PinCode = ({
         {h4}
       </Text>
       <Separator height={30} />
-      <PinCompletionIndicator code={step === 0 ? code : confirmCode} />
+      <PinCompletionIndicator
+        code={step === 0 ? code : confirmCode}
+        theme={theme}
+      />
       <Separator height={50} />
       <View style={styles.container}>
         {config.map((row, i) => (
@@ -179,21 +188,26 @@ const PinCode = ({
   );
 };
 
-const styles = StyleSheet.create({
-  h4: {fontWeight: 'bold', fontSize: 18},
-  bgd: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  sub: {color: 'white'},
-  container: {
-    width: '80%',
-    marginLeft: '10%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  row: {display: 'flex', flexDirection: 'row'},
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    h4: {fontWeight: 'bold', fontSize: 18},
+    bgd: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    sub: {
+      color: getColors(theme).secondaryText,
+      opacity: 0.7,
+      fontWeight: '500',
+    },
+    container: {
+      width: '80%',
+      marginLeft: '10%',
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    row: {display: 'flex', flexDirection: 'row'},
+  });
 
 export default PinCode;
