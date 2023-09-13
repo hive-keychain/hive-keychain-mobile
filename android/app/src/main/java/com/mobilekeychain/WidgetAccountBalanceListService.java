@@ -238,11 +238,11 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                         String account_name = "@" + accounts_data.names().getString(position).replace("_", " ");
                 JSONObject valuesJsonObject = accounts_data.getJSONObject(accounts_data.names().getString(position));
                 views.setTextViewText(R.id.widget_account_balance_list_item_account_name,  account_name);
-                views.setTextViewText(R.id.widget_account_balance_list_item_hbd,  valuesJsonObject.getString("hbd") + " " + hbd_token_label);
-                views.setTextViewText(R.id.widget_account_balance_list_item_hive,  valuesJsonObject.getString("hive") + " " + hive_token_label);
-                views.setTextViewText(R.id.widget_account_balance_list_item_hive_power,  valuesJsonObject.getString("hive_power") + " " + hp_token_label);
-                views.setTextViewText(R.id.widget_account_balance_list_item_hive_savings,  valuesJsonObject.getString("hive_savings") + " " + hive_savings_token_label);
-                views.setTextViewText(R.id.widget_account_balance_list_item_hbd_savings, valuesJsonObject.getString("hbd_savings") + " " + hbd_savings_token_label);
+                views.setTextViewText(R.id.widget_account_balance_list_item_hbd,  Utils.withCommas(valuesJsonObject.getString("hbd")) + " " + hbd_token_label);
+                views.setTextViewText(R.id.widget_account_balance_list_item_hive,  Utils.withCommas(valuesJsonObject.getString("hive")) + " " + hive_token_label);
+                views.setTextViewText(R.id.widget_account_balance_list_item_hive_power,  Utils.withCommas(valuesJsonObject.getString("hive_power")) + " " + hp_token_label);
+                views.setTextViewText(R.id.widget_account_balance_list_item_hive_savings,  Utils.withCommas(valuesJsonObject.getString("hive_savings")) + " " + hive_savings_token_label);
+                views.setTextViewText(R.id.widget_account_balance_list_item_hbd_savings, Utils.withCommas(valuesJsonObject.getString("hbd_savings")) + " " + hbd_savings_token_label);
                 views.setTextViewText(R.id.widget_account_balance_list_item_account_value, valuesJsonObject.getString("account_value"));
                 Thread.sleep(600);
                 return views;

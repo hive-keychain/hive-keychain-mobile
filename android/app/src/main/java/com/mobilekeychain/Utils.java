@@ -13,6 +13,18 @@ import java.util.List;
 import java.util.Locale;
 
 public class Utils {
+    /**
+     * Returns a number with commas
+     * @param value - the number as string
+     * @return the number as string with 2 decimals, i.e: '12,000.00'
+     */
+    public static String withCommas(String value){
+        double amount = Double.parseDouble(value);
+        if(amount == 0) return "0";
+        DecimalFormat formatter = new DecimalFormat("###,###.##");
+        return formatter.format(amount);
+    }
+
     public static String toLocaleCurrency(Double amount){
         Locale locale = new Locale("en", "US");
         NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(locale);
