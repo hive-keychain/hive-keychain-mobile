@@ -12,8 +12,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:gravity="start"
-        android:orientation="vertical"
-        android:background="@drawable/frame_background_hexagons_in_gradient">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
