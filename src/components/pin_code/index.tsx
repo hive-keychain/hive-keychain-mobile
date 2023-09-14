@@ -203,11 +203,15 @@ const getStyles = (theme: Theme) =>
     },
     container: {
       width: '80%',
-      marginLeft: '10%',
+      // marginLeft: '10%', //TODO cleanup
       display: 'flex',
       flexDirection: 'column',
+      alignItems: 'center',
     },
-    row: {display: 'flex', flexDirection: 'row'},
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
   });
 
 export default PinCode;

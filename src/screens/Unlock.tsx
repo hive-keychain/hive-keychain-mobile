@@ -15,14 +15,14 @@ const Unlock = ({unlock, navigation}: UnlockScreenProps) => {
   const {width} = useWindowDimensions();
   const {theme} = useContext(ThemeContext);
   return (
-    <Background using_new_ui={true}>
+    <Background using_new_ui={true} theme={theme}>
       <>
         <Pincode
           navigation={navigation}
           title={translate('unlock.enterPIN')}
           submit={unlock}
           theme={theme}>
-          <KeychainLogo width={width / 4} using_new_ui={true} />
+          <KeychainLogo width={width / 4} using_new_ui={true} theme={theme} />
         </Pincode>
         <View style={styles.container}>
           <InfoPIN />

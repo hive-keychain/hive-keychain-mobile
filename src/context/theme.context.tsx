@@ -11,7 +11,7 @@ export type ThemeContextType = {
 };
 
 export const ThemeContext = createContext<ThemeContextType>({
-  theme: Theme.LIGHT,
+  theme: Theme.DARK,
   setTheme: (theme) => {
     console.log('no theme provider');
   },

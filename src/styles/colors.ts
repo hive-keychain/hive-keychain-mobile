@@ -18,5 +18,10 @@ export const getColors = (theme: Theme) => {
   return {
     primaryText: theme === Theme.LIGHT ? '#484848' : '#FFF',
     secondaryText: theme === Theme.LIGHT ? '#212838' : '#FFF',
+    primaryBackground: theme === Theme.LIGHT ? '#E5EDF5' : '#212838',
+    gradientShapes:
+      theme === Theme.LIGHT
+        ? ['rgba(33, 40, 56, 0.15)', 'rgba(33, 40, 56, 0.15)', '#212838']
+        : ['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.15)', '#FFF'],
   };
 };
