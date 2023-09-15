@@ -1,13 +1,20 @@
 import React from 'react';
-import {ImageBackground, StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {
+  ImageBackground,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+  useWindowDimensions,
+} from 'react-native';
+import ImageBgHexagonsDark from 'src/assets/new_UI/background_hexagons_dark.svg';
+import ImageBgHexagonsLight from 'src/assets/new_UI/background_hexagons_light.svg';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import SafeArea from './SafeArea';
 
 //TODO remove and its use
 const imageBgd = require('assets/background.png');
-
-const imageBgdHexagons = require('assets/new_UI/Frame_background_hexagons.png');
 
 interface BackgroundProps {
   style?: StyleProp<ViewStyle>;
@@ -19,22 +26,30 @@ interface BackgroundProps {
 }
 
 export default (props: BackgroundProps) => {
+  const imageBgProps = {
+    style: styles.bgSvgStyle,
+    width: useWindowDimensions().width,
+    height: useWindowDimensions().height / 2,
+  };
   return props.using_new_ui ? (
-    <ImageBackground
+    <View
       {...props}
-      source={imageBgdHexagons}
       style={[
         styles.imageBackground,
         props.style,
         {
           backgroundColor: getColors(props.theme).primaryBackground,
         },
-      ]}
-      imageStyle={styles.bgImageStyle}>
+      ]}>
+      {props.theme === Theme.LIGHT ? (
+        <ImageBgHexagonsLight {...imageBgProps} />
+      ) : (
+        <ImageBgHexagonsDark {...imageBgProps} />
+      )}
       <SafeArea style={[styles.container, props.containerStyle]}>
         {props.children}
       </SafeArea>
-    </ImageBackground>
+    </View>
   ) : (
     <ImageBackground
       {...props}
@@ -58,5 +73,12 @@ const styles = StyleSheet.create({
     height: '40%',
     bottom: 0,
     top: undefined,
+  },
+  bgSvgStyle: {
+    position: 'absolute',
+    bottom: -100,
+    left: 0,
+    top: undefined,
+    zIndex: -1,
   },
 });

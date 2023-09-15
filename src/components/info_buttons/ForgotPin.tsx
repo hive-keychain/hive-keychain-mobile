@@ -18,7 +18,11 @@ export default () => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigate('ModalScreen', {modalContent: <ForgotPIN />});
+        navigate('ModalScreen', {
+          modalContent: <ForgotPIN theme={theme} />,
+          //TODO bellow finish the use of this style.
+          modalContainerStyle: {color: 'red '},
+        });
       }}>
       <Text style={styles.text}>{translate('components.forgotPIN.title')}</Text>
     </TouchableOpacity>

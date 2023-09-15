@@ -403,8 +403,8 @@
     },
     "forgotPIN": {
       "title": "Forgot PIN?",
-      "text": "If you forgot your PIN, you can reset Keychain and clear your data but will have to enter all your keys again.",
-      "button": "Reset Keychain"
+      "text": "If you forgot your PIN, you can reset Keychain \n and clear your data but will have to enter all your keys again.",
+      "button": "Reset Key"
     },
     "pinCode": {
       "unsupportedBiometrics": {

@@ -13,12 +13,20 @@ import {Theme} from 'src/context/theme.context';
 
 //TODO : Change primary, this was just put here as an example
 
+//Colors
+export const NEUTRAL_WHITE_COLOR = '#FFF';
+export const PRIMARY_RED_COLOR = '#E31337';
+
+export const RED_SHADOW_COLOR = 'rgba(227, 19, 55, 1)';
+
 export const getColors = (theme: Theme) => {
   console.log({theme}); //TODO remove line
+
   return {
     primaryText: theme === Theme.LIGHT ? '#484848' : '#FFF',
     secondaryText: theme === Theme.LIGHT ? '#212838' : '#FFF',
     primaryBackground: theme === Theme.LIGHT ? '#E5EDF5' : '#212838',
+    contrastBackground: theme === Theme.LIGHT ? '#212838' : '#E5EDF5',
     gradientShapes:
       theme === Theme.LIGHT
         ? ['rgba(33, 40, 56, 0.15)', 'rgba(33, 40, 56, 0.15)', '#212838']

@@ -3,8 +3,10 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  StyleProp,
   StyleSheet,
   View,
+  ViewStyle,
 } from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
@@ -15,6 +17,7 @@ type Props = {
   boxBackgroundColor?: string;
   outsideClick: () => void;
   fixedHeight?: number;
+  containerStyle?: StyleProp<ViewStyle>; //TODO use them.
 };
 type InnerProps = {height: number; width: number};
 class CustomModal extends React.Component<Props, {}> implements InnerProps {
@@ -29,6 +32,7 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
     this.fixedHeight = props.fixedHeight;
   }
   render() {
+    console.log({stylesReceived: this.props.containerStyle}); //TODO remove & use
     let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
     let styles = StyleSheetFactory.getSheet({
       modalHeight: modalHeight,
@@ -109,6 +113,10 @@ class StyleSheetFactory {
         borderColor: 'white',
         borderStyle: 'solid',
         borderRadius: 10,
+        //TODO remove bellow just for findings
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+        //end remove
       },
       gradient: {
         width: '100%',
@@ -119,6 +127,10 @@ class StyleSheetFactory {
         padding: 0,
         paddingHorizontal: width * 0.05,
         paddingVertical: width * 0.05,
+        //TODO remove bellow just for findings
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+        //end remove
       },
     });
 

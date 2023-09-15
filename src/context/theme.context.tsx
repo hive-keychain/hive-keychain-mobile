@@ -1,4 +1,4 @@
-import {createContext, useContext} from 'react';
+import {Dispatch, SetStateAction, createContext, useContext} from 'react';
 
 export enum Theme {
   DARK = 'dark',
@@ -7,7 +7,7 @@ export enum Theme {
 
 export type ThemeContextType = {
   theme: Theme;
-  setTheme: (theme: Theme) => void;
+  setTheme: Dispatch<SetStateAction<Theme>>;
 };
 
 export const ThemeContext = createContext<ThemeContextType>({
