@@ -3,28 +3,31 @@ import Pincode from 'components/pin_code';
 import Background from 'components/ui/Background';
 import KeychainLogo from 'components/ui/KeychainLogo';
 import {SignupNavProp} from 'navigators/Signup.types';
-import React from 'react';
+import React, {useContext} from 'react';
 import {useWindowDimensions} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import {ThemeContext} from 'src/context/theme.context';
 import {translate} from 'utils/localize';
 
 type Props = PropsFromRedux & SignupNavProp;
 
 const Signup = ({signUp, navigation}: Props) => {
   const {width} = useWindowDimensions();
-
+  const {theme} = useContext(ThemeContext);
+  console.log('In Singup component!', {theme}); //TODO remove line
   const onSubmitSignup = (pwd: string) => {
     signUp(pwd);
   };
   return (
-    <Background>
+    <Background using_new_ui={true} theme={theme}>
       <Pincode
         signup
         navigation={navigation}
         title={translate('signup.choose')}
         confirm={translate('signup.confirm')}
-        submit={onSubmitSignup}>
-        <KeychainLogo width={width * 0.25} />
+        submit={onSubmitSignup}
+        theme={theme}>
+        <KeychainLogo width={width * 0.25} using_new_ui={true} theme={theme} />
       </Pincode>
     </Background>
   );

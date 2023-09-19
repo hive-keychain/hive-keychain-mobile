@@ -2,13 +2,16 @@ import ForgotPIN from 'components/modals/ForgotPIN';
 import React, {useContext} from 'react';
 import {
   ScaledSize,
+  StyleProp,
   StyleSheet,
   Text,
   TouchableOpacity,
+  ViewStyle,
   useWindowDimensions,
 } from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {FontPoppinsName, underlined} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
@@ -20,8 +23,15 @@ export default () => {
       onPress={() => {
         navigate('ModalScreen', {
           modalContent: <ForgotPIN theme={theme} />,
-          //TODO bellow finish the use of this style.
-          modalContainerStyle: {color: 'red '},
+          modalContainerStyle: {
+            backgroundColor: getColors(theme).primaryBackground,
+            borderColor: getColors(theme).cardBorderColor,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            borderWidth: 1,
+            borderRadius: 22,
+          } as StyleProp<ViewStyle>,
+          fixedHeight: 0.4,
         });
       }}>
       <Text style={styles.text}>{translate('components.forgotPIN.title')}</Text>
@@ -34,6 +44,7 @@ const getDimensionedStyles = ({width}: ScaledSize, theme: Theme) =>
     text: {
       color: getColors(theme).secondaryText,
       marginRight: width * 0.05,
-      fontWeight: '600',
+      fontFamily: FontPoppinsName.SEMI_BOLD,
+      ...underlined,
     },
   });

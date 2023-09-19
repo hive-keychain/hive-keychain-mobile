@@ -9,7 +9,6 @@ import {
   ViewStyle,
 } from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
-import LinearGradient from 'react-native-linear-gradient';
 import {Dimensions as Dim} from 'utils/common.types';
 
 type Props = {
@@ -32,7 +31,10 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
     this.fixedHeight = props.fixedHeight;
   }
   render() {
-    console.log({stylesReceived: this.props.containerStyle}); //TODO remove & use
+    console.log({
+      stylesReceived: this.props.containerStyle,
+      bottomHalf: this.props.bottomHalf,
+    }); //TODO remove & use
     let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
     let styles = StyleSheetFactory.getSheet({
       modalHeight: modalHeight,
@@ -54,14 +56,15 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
             style={
               this.fixedHeight ? styles.modalWrapperFixed : styles.modalWrapper
             }>
-            <View style={styles.modalContainer}>
-              <LinearGradient
+            <View style={[styles.modalContainer, this.props.containerStyle]}>
+              {/* //TODO clean up */}
+              {/* <LinearGradient
                 start={{x: 0, y: 0}}
                 end={{x: 0, y: 1}}
                 colors={['white', '#B9C9D6']}
-                style={styles.gradient}>
-                {this.props.children}
-              </LinearGradient>
+                style={styles.gradient}> */}
+              {this.props.children}
+              {/* </LinearGradient> */}
             </View>
           </View>
         </View>
@@ -114,8 +117,8 @@ class StyleSheetFactory {
         borderStyle: 'solid',
         borderRadius: 10,
         //TODO remove bellow just for findings
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
+        // borderBottomLeftRadius: 0,
+        // borderBottomRightRadius: 0,
         //end remove
       },
       gradient: {

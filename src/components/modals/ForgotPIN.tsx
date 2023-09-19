@@ -11,6 +11,7 @@ import {
   RED_SHADOW_COLOR,
 } from 'src/styles/colors';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
+import {getSpacing} from 'src/styles/spacing';
 import {Width} from 'utils/common.types';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
@@ -38,7 +39,7 @@ const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
         {translate('components.forgotPIN.title')}
       </Text>
       <Separator />
-      <Text style={[styles.text, styles.textCentered]}>
+      <Text style={[styles.text, styles.textCentered, styles.marginText]}>
         {capitalizedTextArray.join(' ')}
       </Text>
       <Separator height={height / 15} />
@@ -84,6 +85,9 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     },
     warningProceedButton: {
       backgroundColor: PRIMARY_RED_COLOR,
+    },
+    marginText: {
+      marginHorizontal: getSpacing(width).mainMarginHorizontal,
     },
   });
 

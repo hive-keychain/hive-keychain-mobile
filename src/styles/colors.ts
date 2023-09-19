@@ -21,7 +21,6 @@ export const RED_SHADOW_COLOR = 'rgba(227, 19, 55, 1)';
 
 export const getColors = (theme: Theme) => {
   console.log({theme}); //TODO remove line
-
   return {
     primaryText: theme === Theme.LIGHT ? '#484848' : '#FFF',
     secondaryText: theme === Theme.LIGHT ? '#212838' : '#FFF',
@@ -31,5 +30,6 @@ export const getColors = (theme: Theme) => {
       theme === Theme.LIGHT
         ? ['rgba(33, 40, 56, 0.15)', 'rgba(33, 40, 56, 0.15)', '#212838']
         : ['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.15)', '#FFF'],
+    cardBorderColor: theme === Theme.LIGHT ? '#EAEAEA' : '#364360',
   };
 };

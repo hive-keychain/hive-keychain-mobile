@@ -11,6 +11,7 @@ import IntentLauncher from 'react-native-intent-launcher';
 import Toast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {headline_1} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import PinCompletionIndicator from './PinCompletionIndicator';
 import PinElement from './PinElement';
@@ -21,7 +22,8 @@ interface Props {
   confirm?: string;
   submit: (pin: string, callback?: (unsafe?: boolean) => void) => void;
   navigation: UnlockNavigation | SignupNavigation;
-  theme: Theme;
+  //TODO after refactoring UI change to fixed param
+  theme?: Theme;
 }
 
 const PinCode = ({
@@ -33,7 +35,6 @@ const PinCode = ({
   navigation,
   theme,
 }: Props) => {
-  console.log('PinCode component', {theme}); //TODO remove line
   const styles = getStyles(theme);
   interface PinItem {
     refNumber: number;
@@ -133,9 +134,7 @@ const PinCode = ({
       <Separator />
       {children}
       <Separator />
-      <Text h4 style={styles.sub}>
-        {h4}
-      </Text>
+      <Text style={[styles.sub, headline_1]}>{h4}</Text>
       <Separator height={30} />
       <PinCompletionIndicator
         code={step === 0 ? code : confirmCode}
@@ -199,7 +198,6 @@ const getStyles = (theme: Theme) =>
     sub: {
       color: getColors(theme).secondaryText,
       opacity: 0.7,
-      fontWeight: '500',
     },
     container: {
       width: '80%',

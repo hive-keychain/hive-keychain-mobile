@@ -13,6 +13,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {FontPoppinsName, FontSize} from 'src/styles/typography';
 
 interface Props {
   number?: number;
@@ -46,6 +47,8 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
   const height = Math.round(Dimensions.get('window').width * dimensionReducer);
   style.height = height;
   style.borderRadius = height;
+  style.borderWidth = 1;
+  style.borderColor = 'red';
 
   const styles = getStyles(theme, Dimensions.get('window'), dimensionReducer);
   //TODO bellow
@@ -72,8 +75,7 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
   const renderWithGradients = (refNumber: number) => {
     return refNumber !== 10 && refNumber !== 12 ? (
       <LinearGradient
-        //TODO bellow find a way to switch using theme, maybe adding gradientShapes: theme ===...
-        style={{...styles.pinElements, ...style}}
+        style={styles.pinElements}
         start={{x: 1, y: 0.5}}
         end={{x: 1, y: 1.8}}
         colors={getColors(theme).gradientShapes}>
@@ -88,7 +90,7 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
     <TouchableOpacity
       disabled={refNumber === 10}
       onPress={() => onPressElement(number, back)}
-      style={{...styles.pinElements, ...style}}>
+      style={styles.pinElements}>
       {renderWithGradients(refNumber)}
     </TouchableOpacity>
   );
@@ -96,7 +98,7 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
 
 const getStyles = (
   theme: Theme,
-  {width}: ScaledSize,
+  {width, height}: ScaledSize,
   dimensionReducer: number,
 ) =>
   StyleSheet.create({
@@ -106,16 +108,21 @@ const getStyles = (
       justifyContent: 'center',
       alignItems: 'center',
       margin: 8,
-      //TODo cleanup
-      // borderColor: 'rgba(255, 255, 255, 1)',
-      // borderWidth: 1,
+      height: Math.round(width * dimensionReducer),
+      borderRadius: width * dimensionReducer,
+      borderColor: '#ffffff00',
     },
     number: {
+      flex: 0.7,
       color: getColors(theme).secondaryText,
-      fontSize: 32,
-      fontWeight: '900',
+      fontSize: FontSize.h2,
+      fontFamily: FontPoppinsName.BOLD,
     },
-    helper: {color: getColors(theme).secondaryText, fontSize: 12},
+    helper: {
+      color: getColors(theme).secondaryText,
+      fontSize: 12,
+      fontFamily: FontPoppinsName.SEMI_BOLD,
+    },
     backspace: {
       top: undefined,
       bottom: 0,

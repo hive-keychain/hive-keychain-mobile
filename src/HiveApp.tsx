@@ -59,6 +59,7 @@ const App = ({
   const renderNavigator = () => {
     if (!hasAccounts) {
       // No accounts, sign up process
+      console.log('SignupStack!'); //TODO remove line
       return <SignUpStack />;
     } else if (!auth.mk) {
       // has account but not authenticated yet -> Unlock
