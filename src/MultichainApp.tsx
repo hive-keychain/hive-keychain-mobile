@@ -22,13 +22,9 @@ export default () => {
       AsyncStorage.getItem(KeychainStorageKeyEnum.ACTIVE_THEME),
       AsyncStorage.getItem(KeychainStorageKeyEnum.ACTIVE_CHAIN),
     ]);
-    console.log('from storage', {activeTheme}); //TODO remove line
+
     setTheme(activeTheme ?? Theme.DARK);
-    //TODO remove bellow after settings properly the theme context.
-    // setTheme(Theme.DARK);
-
     setChain(activeChain ?? Chain.HIVE);
-
     setReady(true);
   };
 

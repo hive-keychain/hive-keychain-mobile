@@ -13,7 +13,7 @@ import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import SafeArea from './SafeArea';
 
-//TODO remove and its use
+//TODO after refactoring remove and its use
 const imageBgd = require('assets/background.png');
 
 interface BackgroundProps {

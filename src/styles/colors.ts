@@ -20,7 +20,6 @@ export const PRIMARY_RED_COLOR = '#E31337';
 export const RED_SHADOW_COLOR = 'rgba(227, 19, 55, 1)';
 
 export const getColors = (theme: Theme) => {
-  console.log({theme}); //TODO remove line
   return {
     primaryText: theme === Theme.LIGHT ? '#484848' : '#FFF',
     secondaryText: theme === Theme.LIGHT ? '#212838' : '#FFF',

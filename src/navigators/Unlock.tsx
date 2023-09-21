@@ -13,8 +13,6 @@ export default () => {
         component={Unlock}
         options={{
           title: '',
-          //TODO bellow remove after refactoring if there is no footerRight option.
-          // headerRight: () => <InfoPIN />,
           headerTintColor: 'white',
           headerTransparent: true,
         }}

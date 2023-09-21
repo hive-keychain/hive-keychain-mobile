@@ -14,7 +14,6 @@ type Props = PropsFromRedux & SignupNavProp;
 const Signup = ({signUp, navigation}: Props) => {
   const {width} = useWindowDimensions();
   const {theme} = useContext(ThemeContext);
-  console.log('In Singup component!', {theme}); //TODO remove line
   const onSubmitSignup = (pwd: string) => {
     signUp(pwd);
   };

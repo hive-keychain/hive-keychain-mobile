@@ -4,16 +4,15 @@ import React, {useContext} from 'react';
 import {
   Dimensions,
   ScaledSize,
-  StyleProp,
   StyleSheet,
   Text,
   TouchableOpacity,
-  ViewStyle,
+  View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {FontPoppinsName, FontSize} from 'src/styles/typography';
+import {headerH2Primary, title_primary_body_2} from 'src/styles/typography';
 
 interface Props {
   number?: number;
@@ -25,38 +24,12 @@ interface Props {
 
 export default ({number, refNumber, helper, back, onPressElement}: Props) => {
   const {theme} = useContext(ThemeContext);
-  const style: StyleProp<ViewStyle> = {};
   const dimensionReducer = 0.2;
-  //TODo bellow, cleanup
-  // if (refNumber > 3) {
-  //   style.borderTopWidth = 1;
-  // }
-  // if (refNumber < 10) {
-  //   style.borderBottomWidth = 1;
-  // }
-  if (refNumber === 10 || refNumber === 12) {
-    style.borderWidth = 0;
-  }
-  // if (refNumber % 3 !== 1) {
-  //   style.borderLeftWidth = 1;
-  // }
-  // style.height =
-  //   refNumber < 10
-  //     ? Math.round(Dimensions.get('window').width * 0.25)
-  //     : Math.round(Dimensions.get('window').width * 0.125);
-  const height = Math.round(Dimensions.get('window').width * dimensionReducer);
-  style.height = height;
-  style.borderRadius = height;
-  style.borderWidth = 1;
-  style.borderColor = 'red';
-
   const styles = getStyles(theme, Dimensions.get('window'), dimensionReducer);
-  //TODO bellow
-  //  - placed the backspace to the bottom rigth.
-  console.log({secondaryText: getColors(theme).secondaryText}); //TODO remove line
+
   const renderPinElements = () => {
     return (
-      <>
+      <View style={styles.pinElements}>
         {number || number === 0 ? (
           <Text style={styles.number}>{number}</Text>
         ) : null}
@@ -68,7 +41,7 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
             <BackspaceLight style={styles.backspace} />
           )
         ) : null}
-      </>
+      </View>
     );
   };
 
@@ -103,25 +76,26 @@ const getStyles = (
 ) =>
   StyleSheet.create({
     pinElements: {
-      width: width * dimensionReducer,
       display: 'flex',
       justifyContent: 'center',
+      alignContent: 'center',
       alignItems: 'center',
       margin: 8,
+      width: width * dimensionReducer,
       height: Math.round(width * dimensionReducer),
       borderRadius: width * dimensionReducer,
-      borderColor: '#ffffff00',
     },
     number: {
-      flex: 0.7,
+      flex: 0.65,
       color: getColors(theme).secondaryText,
-      fontSize: FontSize.h2,
-      fontFamily: FontPoppinsName.BOLD,
+      ...headerH2Primary,
+      includeFontPadding: false,
+      textAlign: 'center',
+      textAlignVertical: 'center',
     },
     helper: {
       color: getColors(theme).secondaryText,
-      fontSize: 12,
-      fontFamily: FontPoppinsName.SEMI_BOLD,
+      ...title_primary_body_2,
     },
     backspace: {
       top: undefined,

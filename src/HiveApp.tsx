@@ -39,6 +39,7 @@ const App = ({
   useEffect(() => {
     setupLinking();
     RNBootSplash.hide({fade: true});
+    console.log('RNBootSplash.hide'); //TODO remove line
     Orientation.lockToPortrait();
     return () => {
       clearLinkingListeners();
@@ -59,7 +60,6 @@ const App = ({
   const renderNavigator = () => {
     if (!hasAccounts) {
       // No accounts, sign up process
-      console.log('SignupStack!'); //TODO remove line
       return <SignUpStack />;
     } else if (!auth.mk) {
       // has account but not authenticated yet -> Unlock

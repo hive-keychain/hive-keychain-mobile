@@ -16,9 +16,13 @@ type Props = {
   boxBackgroundColor?: string;
   outsideClick: () => void;
   fixedHeight?: number;
-  containerStyle?: StyleProp<ViewStyle>; //TODO use them.
+  containerStyle?: StyleProp<ViewStyle>;
 };
 type InnerProps = {height: number; width: number};
+
+/**
+ * Note: fixedHeight(0 - 1 range, i.e: 0.3)
+ */
 class CustomModal extends React.Component<Props, {}> implements InnerProps {
   height;
   width;
@@ -31,10 +35,6 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
     this.fixedHeight = props.fixedHeight;
   }
   render() {
-    console.log({
-      stylesReceived: this.props.containerStyle,
-      bottomHalf: this.props.bottomHalf,
-    }); //TODO remove & use
     let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
     let styles = StyleSheetFactory.getSheet({
       modalHeight: modalHeight,
@@ -57,14 +57,7 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
               this.fixedHeight ? styles.modalWrapperFixed : styles.modalWrapper
             }>
             <View style={[styles.modalContainer, this.props.containerStyle]}>
-              {/* //TODO clean up */}
-              {/* <LinearGradient
-                start={{x: 0, y: 0}}
-                end={{x: 0, y: 1}}
-                colors={['white', '#B9C9D6']}
-                style={styles.gradient}> */}
               {this.props.children}
-              {/* </LinearGradient> */}
             </View>
           </View>
         </View>
@@ -80,7 +73,7 @@ class StyleSheetFactory {
     height,
     fixedHeight,
   }: Dim & {modalHeight: number; fixedHeight: number}) {
-    console.log(fixedHeight);
+    console.log(fixedHeight); //TODO cleanup
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
       mainContainer: {
@@ -116,10 +109,6 @@ class StyleSheetFactory {
         borderColor: 'white',
         borderStyle: 'solid',
         borderRadius: 10,
-        //TODO remove bellow just for findings
-        // borderBottomLeftRadius: 0,
-        // borderBottomRightRadius: 0,
-        //end remove
       },
       gradient: {
         width: '100%',
@@ -130,10 +119,6 @@ class StyleSheetFactory {
         padding: 0,
         paddingHorizontal: width * 0.05,
         paddingVertical: width * 0.05,
-        //TODO remove bellow just for findings
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-        //end remove
       },
     });
 

@@ -12,6 +12,11 @@ import {
 } from 'src/styles/colors';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {getSpacing} from 'src/styles/spacing';
+import {
+  body_primary_body_3,
+  button_link_primary_medium,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
 import {Width} from 'utils/common.types';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
@@ -62,23 +67,21 @@ const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
             RED_SHADOW_COLOR,
           ),
         ]}
+        additionalTextStyle={{...button_link_primary_medium}}
       />
     </View>
   );
 };
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
   StyleSheet.create({
-    //TODO cleanup unused styles
-    header: {color: 'white', marginRight: width * 0.05, fontWeight: 'bold'},
     h4: {
-      fontWeight: '600',
-      fontSize: 18,
+      ...headlines_primary_headline_2,
       color: getColors(theme).secondaryText,
     },
     text: {
       color: getColors(theme).secondaryText,
-      fontSize: 16,
-      fontWeight: '400',
+      ...body_primary_body_3,
+      lineHeight: 12 * 2,
     },
     textCentered: {
       textAlign: 'center',

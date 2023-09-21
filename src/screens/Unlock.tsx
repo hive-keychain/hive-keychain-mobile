@@ -12,8 +12,6 @@ import {translate} from 'utils/localize';
 
 type UnlockScreenProps = PropsFromRedux & UnlockNavigationProp;
 const Unlock = ({unlock, navigation}: UnlockScreenProps) => {
-  //TODO important from here to children & related components:
-  //  - add typography as function, same as getColor & use it.
   const {width} = useWindowDimensions();
   const {theme} = useContext(ThemeContext);
   return (
