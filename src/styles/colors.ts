@@ -16,6 +16,7 @@ import {Theme} from 'src/context/theme.context';
 //Colors
 export const NEUTRAL_WHITE_COLOR = '#FFF';
 export const PRIMARY_RED_COLOR = '#E31337';
+export const BRIGTHER_PRIMARY_RED = '#f52c4e';
 
 export const RED_SHADOW_COLOR = 'rgba(227, 19, 55, 1)';
 
@@ -31,5 +32,7 @@ export const getColors = (theme: Theme) => {
         : ['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.15)', '#FFF'],
     cardBorderColor: theme === Theme.LIGHT ? '#EAEAEA' : '#364360',
     borderContrast: theme === Theme.LIGHT ? '#212838' : '#FFF',
+    primaryRedShape:
+      theme === Theme.LIGHT ? BRIGTHER_PRIMARY_RED : PRIMARY_RED_COLOR,
   };
 };

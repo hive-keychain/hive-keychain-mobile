@@ -39,6 +39,16 @@ export const formatBalance = (balance: number) =>
 export const capitalize = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
+export const capitalizeSentence = (string: string) =>
+  string
+    .split(' ')
+    .map((word) => {
+      if (word.trim().length) {
+        return capitalize(word);
+      } else return word;
+    })
+    .join(' ');
+
 export const beautifyTransferError = (
   err: HiveErrorMessage,
   {currency, username, to}: {currency?: string; username?: string; to?: string},

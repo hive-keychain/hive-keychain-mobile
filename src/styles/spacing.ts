@@ -12,6 +12,7 @@
 export const getSpacing = (width = 0, height = 0) => {
   return {
     mainMarginHorizontal: 0.05 * width, //dynamic
+    mainmarginHorizontalExtra: 0.09 * width,
     mainFixedMargin: 100, //static
   };
 };

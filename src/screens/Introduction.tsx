@@ -1,3 +1,4 @@
+import BackgroundSquares from 'assets/new_UI/background_squares.svg';
 import KeychainLogoDark from 'assets/new_UI/keychain_logo_powered_dark_theme.svg';
 import KeychainLogoLight from 'assets/new_UI/keychain_logo_powered_light_theme.svg';
 import UserOnCoins from 'assets/new_UI/user_on_coins.svg';
@@ -19,9 +20,14 @@ import {
   PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {button_link_primary_medium} from 'src/styles/typography';
+import {getSpacing} from 'src/styles/spacing';
+import {
+  button_link_primary_medium,
+  title_primary_title_1,
+} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {hiveConfig} from 'utils/config';
+import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 
 const Introduction = ({navigation}: IntroductionNavProp) => {
@@ -31,14 +37,11 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
   return (
     <Background using_new_ui={true} theme={theme}>
       <>
-        <Separator height={height / 15} />
-        {/* //TODO add squares bg */}
-        <View
-          style={{
-            //TODO remove bellow
-            borderColor: 'red',
-            borderWidth: 1,
-          }}>
+        <Separator height={height * 0.06} />
+        <View>
+          <View style={styles.backgroundImage}>
+            <BackgroundSquares />
+          </View>
           {theme === Theme.LIGHT ? (
             <KeychainLogoLight {...styles.imageLogo} />
           ) : (
@@ -47,14 +50,14 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           <Separator height={height / 15} />
           <UserOnCoins {...styles.imageUser} />
         </View>
-        <Separator height={height * 0.01} />
-        {/* <GradientEllipse style={styles.gradient} dotColor="red"> */}
-        <Text style={styles.text}>{translate('intro.text')}</Text>
-        {/* </GradientEllipse> */}
-        {/* <GradientEllipse style={styles.gradient} dotColor="white"> */}
-        <Text style={styles.text}>{translate('intro.manage')}</Text>
-        {/* </GradientEllipse> */}
-        <Separator height={height * 0.01} />
+        <Separator height={height * 0.04} />
+        <Text style={styles.text}>
+          {capitalizeSentence(translate('intro.text'))}
+        </Text>
+        <Text style={styles.text}>
+          {capitalizeSentence(translate('intro.manage'))}
+        </Text>
+        <Separator height={height * 0.02} />
         <EllipticButton
           title={translate('intro.existingAccount')}
           onPress={() => {
@@ -63,7 +66,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           style={styles.outlineButton}
           additionalTextStyle={styles.textOutLineButton}
         />
-        <Separator height={height * 0.01} />
+        <Separator height={height * 0.02} />
         <EllipticButton
           title={translate('intro.createAccount')}
           onPress={() => {
@@ -75,9 +78,6 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
               },
             );
           }}
-          //TODO bellow find a better way:
-          //  - or create an elliptic button customizable
-          //  - or define functions as /styles.
           style={styles.warningProceedButton}
           additionalTextStyle={styles.textButtonFilled}
         />
@@ -92,21 +92,22 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       alignSelf: 'center',
     },
     imageUser: {
-      width: width * 0.6,
+      width: width * 0.4,
       alignSelf: 'center',
     },
-    gradient: {height: height / 10, marginTop: height / 20},
     text: {
-      color: 'white',
-      marginHorizontal: width * 0.05,
-      fontSize: 15,
-      textAlign: 'justify',
-      // flex: 1,
+      color: getColors(theme).secondaryText,
+      marginHorizontal: getSpacing(width).mainmarginHorizontalExtra,
+      ...title_primary_title_1,
+      textAlign: 'center',
+      alignSelf: 'stretch',
+      opacity: 0.7,
     },
     outlineButton: {
       borderColor: getColors(theme).borderContrast,
       borderWidth: 1,
       backgroundColor: '#00000000',
+      zIndex: 10,
     },
     textOutLineButton: {
       ...button_link_primary_medium,
@@ -120,6 +121,13 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       ...button_link_primary_medium,
       fontSize: 13,
       color: NEUTRAL_WHITE_COLOR,
+    },
+    backgroundImage: {
+      alignSelf: 'center',
+      position: 'absolute',
+      top: 0,
+      bottom: undefined,
+      zIndex: 1,
     },
   });
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ImageBackground,
+  ScaledSize,
   StyleProp,
   StyleSheet,
   View,
@@ -26,11 +27,7 @@ interface BackgroundProps {
 }
 
 export default (props: BackgroundProps) => {
-  const imageBgProps = {
-    style: styles.bgSvgStyle,
-    width: useWindowDimensions().width,
-    height: useWindowDimensions().height / 2,
-  };
+  const styles = getStyles(useWindowDimensions());
   return props.using_new_ui ? (
     <View
       {...props}
@@ -42,9 +39,9 @@ export default (props: BackgroundProps) => {
         },
       ]}>
       {props.theme === Theme.LIGHT ? (
-        <ImageBgHexagonsLight {...imageBgProps} />
+        <ImageBgHexagonsLight style={styles.bgSvgStyle} />
       ) : (
-        <ImageBgHexagonsDark {...imageBgProps} />
+        <ImageBgHexagonsDark style={styles.bgSvgStyle} />
       )}
       <SafeArea style={[styles.container, props.containerStyle]}>
         {props.children}
@@ -62,23 +59,26 @@ export default (props: BackgroundProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  imageBgd: {width: '100%', height: '100%'},
-  container: {flex: 1},
-  imageBackground: {
-    width: '100%',
-    height: '100%',
-  },
-  bgImageStyle: {
-    height: '40%',
-    bottom: 0,
-    top: undefined,
-  },
-  bgSvgStyle: {
-    position: 'absolute',
-    bottom: -100,
-    left: 0,
-    top: undefined,
-    zIndex: -1,
-  },
-});
+const getStyles = ({width, height}: ScaledSize) =>
+  StyleSheet.create({
+    imageBgd: {width: '100%', height: '100%'},
+    container: {flex: 1},
+    imageBackground: {
+      width: '100%',
+      height: '100%',
+    },
+    bgImageStyle: {
+      height: '40%',
+      bottom: 0,
+      top: undefined,
+    },
+    bgSvgStyle: {
+      position: 'absolute',
+      bottom: height >= 800 ? 50 : -100,
+      top: undefined,
+      zIndex: -1,
+      width: width * 1.2,
+      height: height / 2,
+      alignSelf: 'center',
+    },
+  });

@@ -24,8 +24,15 @@ interface Props {
 
 export default ({number, refNumber, helper, back, onPressElement}: Props) => {
   const {theme} = useContext(ThemeContext);
+  const [activeShape, setActiveshape] = React.useState(null);
+  const [pressed, setPressed] = React.useState(false);
   const dimensionReducer = 0.2;
-  const styles = getStyles(theme, Dimensions.get('window'), dimensionReducer);
+  const styles = getStyles(
+    theme,
+    Dimensions.get('window'),
+    dimensionReducer,
+    pressed,
+  );
 
   const renderPinElements = () => {
     return (
@@ -49,8 +56,8 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
     return refNumber !== 10 && refNumber !== 12 ? (
       <LinearGradient
         style={styles.pinElements}
-        start={{x: 1, y: 0.5}}
-        end={{x: 1, y: 1.8}}
+        start={{x: 1, y: 0.5}} //initially as {x: 1, y: 0.5}
+        end={{x: 1, y: 1.8}} //initially as {x: 1, y: 1.8}
         colors={getColors(theme).gradientShapes}>
         {renderPinElements()}
       </LinearGradient>
@@ -62,8 +69,20 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
   return (
     <TouchableOpacity
       disabled={refNumber === 10}
+      onPressIn={() => {
+        if (refNumber !== 10 && refNumber !== 12) {
+          setActiveshape(<View style={styles.pinElementPressed} />);
+          setPressed(true);
+        }
+      }}
+      onPressOut={() => {
+        setActiveshape(null);
+        setPressed(false);
+      }}
       onPress={() => onPressElement(number, back)}
-      style={styles.pinElements}>
+      style={styles.pinElements}
+      activeOpacity={1}>
+      {activeShape}
       {renderWithGradients(refNumber)}
     </TouchableOpacity>
   );
@@ -73,6 +92,7 @@ const getStyles = (
   theme: Theme,
   {width, height}: ScaledSize,
   dimensionReducer: number,
+  pressed: boolean,
 ) =>
   StyleSheet.create({
     pinElements: {
@@ -85,16 +105,24 @@ const getStyles = (
       height: Math.round(width * dimensionReducer),
       borderRadius: width * dimensionReducer,
     },
+    pinElementPressed: {
+      position: 'absolute',
+      width: width * dimensionReducer,
+      height: Math.round(width * dimensionReducer),
+      borderRadius: width * dimensionReducer,
+      backgroundColor: getColors(theme).primaryRedShape,
+      zIndex: -1,
+    },
     number: {
       flex: 0.65,
-      color: getColors(theme).secondaryText,
+      color: !pressed ? getColors(theme).secondaryText : '#FFF',
       ...headerH2Primary,
       includeFontPadding: false,
       textAlign: 'center',
       textAlignVertical: 'center',
     },
     helper: {
-      color: getColors(theme).secondaryText,
+      color: !pressed ? getColors(theme).secondaryText : '#FFF',
       ...title_primary_body_2,
     },
     backspace: {

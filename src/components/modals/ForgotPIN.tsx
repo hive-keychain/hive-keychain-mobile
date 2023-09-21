@@ -18,7 +18,7 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {Width} from 'utils/common.types';
-import {capitalize} from 'utils/format';
+import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 
@@ -29,13 +29,6 @@ interface Props {
 const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width}, theme);
-  const capitalizedTextArray = translate('components.forgotPIN.text')
-    .split(' ')
-    .map((word) => {
-      if (word.trim().length) {
-        return capitalize(word);
-      } else return word;
-    });
 
   return (
     <View>
@@ -45,7 +38,7 @@ const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
       </Text>
       <Separator />
       <Text style={[styles.text, styles.textCentered, styles.marginText]}>
-        {capitalizedTextArray.join(' ')}
+        {capitalizeSentence(translate('components.forgotPIN.text'))}
       </Text>
       <Separator height={height / 15} />
       <EllipticButton
