@@ -30,5 +30,6 @@ export const getColors = (theme: Theme) => {
         ? ['rgba(33, 40, 56, 0.15)', 'rgba(33, 40, 56, 0.15)', '#212838']
         : ['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.15)', '#FFF'],
     cardBorderColor: theme === Theme.LIGHT ? '#EAEAEA' : '#364360',
+    borderContrast: theme === Theme.LIGHT ? '#212838' : '#FFF',
   };
 };
