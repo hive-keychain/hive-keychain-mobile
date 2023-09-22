@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Theme, ThemeContext} from 'src/context/theme.context';
@@ -34,11 +35,18 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
     pressed,
   );
 
+  //TODO testing bellow, to improve
+  const fontResizedStyle =
+    useWindowDimensions().height <= 600
+      ? {fontSize: styles.number.fontSize * 0.7}
+      : {fontSize: styles.number.fontSize};
+  //end testing
+
   const renderPinElements = () => {
     return (
       <View style={styles.pinElements}>
         {number || number === 0 ? (
-          <Text style={styles.number}>{number}</Text>
+          <Text style={[styles.number, fontResizedStyle]}>{number}</Text>
         ) : null}
         {helper ? <Text style={styles.helper}>{helper}</Text> : null}
         {back ? (

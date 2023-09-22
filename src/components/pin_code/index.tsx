@@ -21,7 +21,7 @@ import {
   getColors,
 } from 'src/styles/colors';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
-import {getSpacing} from 'src/styles/spacing';
+import {getSpaceAdjustMultiplier, getSpacing} from 'src/styles/spacing';
 import {
   body_primary_body_3,
   button_link_primary_medium,
@@ -54,7 +54,9 @@ const PinCode = ({
   navigation,
   theme,
 }: Props) => {
-  const styles = getStyles(theme, useWindowDimensions());
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width});
+  const spaced = getSpaceAdjustMultiplier(width, height);
   interface PinItem {
     refNumber: number;
     number?: number;
@@ -211,16 +213,16 @@ const PinCode = ({
   }
   return (
     <View style={styles.bgd}>
-      <Separator />
+      <Separator height={height * spaced.spaceBase} />
       {children}
-      <Separator />
+      <Separator height={height * spaced.adjustMultiplier * 0.05} />
       <Text style={styles.sub}>{h4}</Text>
-      <Separator height={30} />
+      <Separator height={height * spaced.adjustMultiplier * 0.05} />
       <PinCompletionIndicator
         code={step === 0 ? code : confirmCode}
         theme={theme}
       />
-      <Separator height={50} />
+      <Separator height={height * spaced.adjustMultiplier * 0.05} />
       <View style={styles.container}>
         {config.map((row, i) => (
           <View key={i.toString()} style={styles.row}>

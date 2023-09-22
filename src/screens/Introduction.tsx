@@ -20,7 +20,7 @@ import {
   PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {getSpacing} from 'src/styles/spacing';
+import {getSpaceAdjustMultiplier, getSpacing} from 'src/styles/spacing';
 import {
   button_link_primary_medium,
   title_primary_title_1,
@@ -33,29 +33,34 @@ import {translate} from 'utils/localize';
 const Introduction = ({navigation}: IntroductionNavProp) => {
   const {height, width} = useWindowDimensions();
   const {theme} = useContext(ThemeContext);
-  const styles = getDimensionedStyles({height, width}, theme);
-  const spaceBase = 0.02;
-  const spaceMultiplier: number = height <= 800 ? 0.8 : 2;
-
+  // const spaceBase = 0.02;
+  // const adjustMultiplier: number = getSpaceMultiplier(width, height);
+  const spaced = getSpaceAdjustMultiplier(width, height);
+  const styles = getDimensionedStyles(
+    {height, width},
+    theme,
+    spaced.adjustMultiplier,
+  );
+  console.log({spaced, height}); //TODO remove
   return (
     <Background using_new_ui={true} theme={theme}>
       <View style={styles.flexBetween}>
         <View>
-          <Separator height={height * spaceBase * spaceMultiplier} />
+          <Separator height={height * spaced.multiplier} />
           {theme === Theme.LIGHT ? (
-            <View style={styles.centeredView}>
+            <View style={[styles.centeredView]}>
               <KeychainLogoLight {...styles.imageLogo} />
-              <Separator height={height * spaceBase * spaceMultiplier * 2} />
+              <Separator height={height * spaced.multiplier * 2} />
               <HiveImageSignupLight {...styles.imageHive} />
             </View>
           ) : (
-            <View style={styles.centeredView}>
+            <View style={[styles.centeredView]}>
               <KeychainLogoDark {...styles.imageLogo} />
-              <Separator height={height * spaceBase * spaceMultiplier * 2} />
+              <Separator height={height * spaced.multiplier * 2} />
               <HiveImageSignupDark {...styles.imageHive} />
             </View>
           )}
-          <Separator height={height * spaceBase * spaceMultiplier * 2} />
+          <Separator height={height * spaced.multiplier * 2} />
           <Text style={styles.text}>
             {capitalizeSentence(translate('intro.text'))}
           </Text>
@@ -64,7 +69,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           </Text>
         </View>
         <View>
-          <Separator height={height * spaceBase * spaceMultiplier} />
+          <Separator height={height * spaced.multiplier} />
           <EllipticButton
             title={translate('intro.existingAccount')}
             onPress={() => {
@@ -88,19 +93,24 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
             style={styles.warningProceedButton}
             additionalTextStyle={styles.textButtonFilled}
           />
-          <Separator height={height * spaceBase * spaceMultiplier} />
+          <Separator height={height * spaced.multiplier} />
         </View>
       </View>
     </Background>
   );
 };
-const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
+const getDimensionedStyles = (
+  {width, height}: Dimensions,
+  theme: Theme,
+  adjustMultiplier: number,
+) =>
   StyleSheet.create({
     imageLogo: {
-      width: '100%',
+      width: width * adjustMultiplier,
     },
     imageHive: {
-      width: width * 0.75,
+      width: width * 0.75 * adjustMultiplier,
+      height: width * 0.75 * adjustMultiplier,
     },
     text: {
       color: getColors(theme).secondaryText,

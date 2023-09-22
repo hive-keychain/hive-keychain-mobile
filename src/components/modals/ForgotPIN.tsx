@@ -11,7 +11,7 @@ import {
   RED_SHADOW_COLOR,
 } from 'src/styles/colors';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
-import {getSpacing} from 'src/styles/spacing';
+import {getSpaceAdjustMultiplier, getSpacing} from 'src/styles/spacing';
 import {
   body_primary_body_3,
   button_link_primary_medium,
@@ -29,10 +29,11 @@ interface Props {
 const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width}, theme);
+  const spaced = getSpaceAdjustMultiplier(width, height);
 
   return (
     <View>
-      <Separator height={height * 0.03} />
+      <Separator height={height * spaced.multiplier} />
       <Text style={[styles.h4, styles.textCentered]}>
         {translate('components.forgotPIN.title')}
       </Text>
@@ -40,7 +41,7 @@ const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
       <Text style={[styles.text, styles.textCentered, styles.marginText]}>
         {capitalizeSentence(translate('components.forgotPIN.text'))}
       </Text>
-      <Separator height={height / 15} />
+      <Separator height={height * spaced.multiplier} />
       <EllipticButton
         title={translate('components.forgotPIN.button')}
         onPress={() => {
