@@ -27,6 +27,7 @@ interface BackgroundProps {
 }
 
 export default (props: BackgroundProps) => {
+  console.log({h: useWindowDimensions().height}); //TODO remove line
   const styles = getStyles(useWindowDimensions());
   return props.using_new_ui ? (
     <View
@@ -67,18 +68,11 @@ const getStyles = ({width, height}: ScaledSize) =>
       width: '100%',
       height: '100%',
     },
-    bgImageStyle: {
-      height: '40%',
-      bottom: 0,
-      top: undefined,
-    },
     bgSvgStyle: {
       position: 'absolute',
-      bottom: height >= 800 ? 50 : -100,
-      top: undefined,
+      bottom: -100,
       zIndex: -1,
       width: width * 1.2,
-      height: height / 2,
       alignSelf: 'center',
     },
   });

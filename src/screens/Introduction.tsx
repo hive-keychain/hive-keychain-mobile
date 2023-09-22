@@ -1,7 +1,7 @@
-import BackgroundSquares from 'assets/new_UI/background_squares.svg';
+import HiveImageSignupDark from 'assets/new_UI/hive_logo_signup_dark.svg';
+import HiveImageSignupLight from 'assets/new_UI/hive_logo_signup_light.svg';
 import KeychainLogoDark from 'assets/new_UI/keychain_logo_powered_dark_theme.svg';
 import KeychainLogoLight from 'assets/new_UI/keychain_logo_powered_light_theme.svg';
-import UserOnCoins from 'assets/new_UI/user_on_coins.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
@@ -34,54 +34,63 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
   const {height, width} = useWindowDimensions();
   const {theme} = useContext(ThemeContext);
   const styles = getDimensionedStyles({height, width}, theme);
+  const spaceBase = 0.02;
+  const spaceMultiplier: number = height <= 800 ? 0.8 : 2;
+
   return (
     <Background using_new_ui={true} theme={theme}>
-      <>
-        <Separator height={height * 0.06} />
+      <View style={styles.flexBetween}>
         <View>
-          <View style={styles.backgroundImage}>
-            <BackgroundSquares />
-          </View>
+          <Separator height={height * spaceBase * spaceMultiplier} />
           {theme === Theme.LIGHT ? (
-            <KeychainLogoLight {...styles.imageLogo} />
+            <View style={styles.centeredView}>
+              <KeychainLogoLight {...styles.imageLogo} />
+              <Separator height={height * spaceBase * spaceMultiplier * 2} />
+              <HiveImageSignupLight {...styles.imageHive} />
+            </View>
           ) : (
-            <KeychainLogoDark {...styles.imageLogo} />
+            <View style={styles.centeredView}>
+              <KeychainLogoDark {...styles.imageLogo} />
+              <Separator height={height * spaceBase * spaceMultiplier * 2} />
+              <HiveImageSignupDark {...styles.imageHive} />
+            </View>
           )}
-          <Separator height={height / 15} />
-          <UserOnCoins {...styles.imageUser} />
+          <Separator height={height * spaceBase * spaceMultiplier * 2} />
+          <Text style={styles.text}>
+            {capitalizeSentence(translate('intro.text'))}
+          </Text>
+          <Text style={styles.text}>
+            {capitalizeSentence(translate('intro.manage'))}
+          </Text>
         </View>
-        <Separator height={height * 0.04} />
-        <Text style={styles.text}>
-          {capitalizeSentence(translate('intro.text'))}
-        </Text>
-        <Text style={styles.text}>
-          {capitalizeSentence(translate('intro.manage'))}
-        </Text>
-        <Separator height={height * 0.02} />
-        <EllipticButton
-          title={translate('intro.existingAccount')}
-          onPress={() => {
-            navigation.navigate('SignupScreen');
-          }}
-          style={styles.outlineButton}
-          additionalTextStyle={styles.textOutLineButton}
-        />
-        <Separator height={height * 0.02} />
-        <EllipticButton
-          title={translate('intro.createAccount')}
-          onPress={() => {
-            Linking.canOpenURL(hiveConfig.CREATE_ACCOUNT_URL).then(
-              (supported) => {
-                if (supported) {
-                  Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
-                }
-              },
-            );
-          }}
-          style={styles.warningProceedButton}
-          additionalTextStyle={styles.textButtonFilled}
-        />
-      </>
+        <View>
+          <Separator height={height * spaceBase * spaceMultiplier} />
+          <EllipticButton
+            title={translate('intro.existingAccount')}
+            onPress={() => {
+              navigation.navigate('SignupScreen');
+            }}
+            style={styles.outlineButton}
+            additionalTextStyle={styles.textOutLineButton}
+          />
+          <Separator height={height * 0.02} />
+          <EllipticButton
+            title={translate('intro.createAccount')}
+            onPress={() => {
+              Linking.canOpenURL(hiveConfig.CREATE_ACCOUNT_URL).then(
+                (supported) => {
+                  if (supported) {
+                    Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
+                  }
+                },
+              );
+            }}
+            style={styles.warningProceedButton}
+            additionalTextStyle={styles.textButtonFilled}
+          />
+          <Separator height={height * spaceBase * spaceMultiplier} />
+        </View>
+      </View>
     </Background>
   );
 };
@@ -89,11 +98,9 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     imageLogo: {
       width: '100%',
-      alignSelf: 'center',
     },
-    imageUser: {
-      width: width * 0.4,
-      alignSelf: 'center',
+    imageHive: {
+      width: width * 0.75,
     },
     text: {
       color: getColors(theme).secondaryText,
@@ -128,6 +135,15 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       top: 0,
       bottom: undefined,
       zIndex: 1,
+    },
+    centeredView: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignContent: 'center',
+    },
+    flexBetween: {
+      flex: 1,
+      justifyContent: 'space-between',
     },
   });
 
