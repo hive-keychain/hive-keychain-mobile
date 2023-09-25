@@ -5,7 +5,7 @@ import Background from 'components/ui/Background';
 import KeychainLogo from 'components/ui/KeychainLogo';
 import {UnlockNavigationProp} from 'navigators/Unlock.types';
 import React, {useContext} from 'react';
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {ThemeContext} from 'src/context/theme.context';
 import {translate} from 'utils/localize';
@@ -21,12 +21,11 @@ const Unlock = ({unlock, navigation}: UnlockScreenProps) => {
           navigation={navigation}
           title={translate('unlock.enterPIN')}
           submit={unlock}
-          theme={theme}>
+          theme={theme}
+          infoPin={<InfoPIN />}
+          infoPinContainerStyle={styles.infoPinContainer}>
           <KeychainLogo width={width / 4} using_new_ui={true} theme={theme} />
         </Pincode>
-        <View style={styles.container}>
-          <InfoPIN />
-        </View>
       </>
     </Background>
   );
@@ -39,14 +38,7 @@ const connector = connect(null, {
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const styles = StyleSheet.create({
-  container: {
-    width: '80%',
-    marginLeft: '10%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    marginTop: 4,
-  },
+  infoPinContainer: {width: '100%', alignSelf: 'flex-end', marginTop: 10},
 });
 
 export default connector(Unlock);

@@ -8,12 +8,15 @@ import {
   Text,
   TouchableOpacity,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {headerH2Primary, title_primary_body_2} from 'src/styles/typography';
+import {
+  getFontSizeSmallDevices,
+  headerH2Primary,
+  title_primary_body_2,
+} from 'src/styles/typography';
 
 interface Props {
   number?: number;
@@ -28,19 +31,16 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
   const [activeShape, setActiveshape] = React.useState(null);
   const [pressed, setPressed] = React.useState(false);
   const dimensionReducer = 0.2;
+  const {width, height}: ScaledSize = Dimensions.get('window');
   const styles = getStyles(
     theme,
     Dimensions.get('window'),
     dimensionReducer,
     pressed,
   );
-
-  //TODO testing bellow, to improve
-  const fontResizedStyle =
-    useWindowDimensions().height <= 600
-      ? {fontSize: styles.number.fontSize * 0.7}
-      : {fontSize: styles.number.fontSize};
-  //end testing
+  const fontResizedStyle = {
+    fontSize: getFontSizeSmallDevices(height, styles.number.fontSize),
+  };
 
   const renderPinElements = () => {
     return (

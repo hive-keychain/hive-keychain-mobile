@@ -43,7 +43,8 @@ const getDimensionedStyles = ({width}: ScaledSize, theme: Theme) =>
   StyleSheet.create({
     text: {
       color: getColors(theme).secondaryText,
-      marginRight: width * 0.05,
+      //TODO cleanup
+      // marginRight: width * 0.05,
       fontFamily: FontPoppinsName.SEMI_BOLD,
       ...underlined,
     },

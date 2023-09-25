@@ -116,3 +116,13 @@ export const underlined: TextStyle = {
   textDecorationStyle: 'solid',
   textDecorationLine: 'underline',
 };
+
+export const getFontSizeSmallDevices = (
+  height: number,
+  currentFontSize: number,
+  smallestScreenHeight = 600,
+) => {
+  return height <= smallestScreenHeight
+    ? currentFontSize * 0.7
+    : currentFontSize;
+};

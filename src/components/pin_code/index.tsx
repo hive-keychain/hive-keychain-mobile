@@ -1,5 +1,6 @@
 //import IntentLauncher from '@yz1311/react-native-intent-launcher';
 import EllipticButton from 'components/form/EllipticButton';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import {SignupNavigation} from 'navigators/Signup.types';
 import {UnlockNavigation} from 'navigators/Unlock.types';
@@ -36,6 +37,8 @@ import PinElement from './PinElement';
 
 interface Props {
   children: JSX.Element;
+  infoPin?: JSX.Element;
+  infoPinContainerStyle?: StyleProp<ViewStyle>;
   signup?: boolean;
   title: string;
   confirm?: string;
@@ -53,6 +56,8 @@ const PinCode = ({
   submit,
   navigation,
   theme,
+  infoPin,
+  infoPinContainerStyle,
 }: Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width});
@@ -213,28 +218,39 @@ const PinCode = ({
   }
   return (
     <View style={styles.bgd}>
-      <Separator height={height * spaced.spaceBase} />
-      {children}
-      <Separator height={height * spaced.adjustMultiplier * 0.05} />
-      <Text style={styles.sub}>{h4}</Text>
-      <Separator height={height * spaced.adjustMultiplier * 0.05} />
-      <PinCompletionIndicator
-        code={step === 0 ? code : confirmCode}
-        theme={theme}
+      <FocusAwareStatusBar
+        backgroundColor={getColors(theme).primaryBackground}
+        barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
       />
-      <Separator height={height * spaced.adjustMultiplier * 0.05} />
-      <View style={styles.container}>
-        {config.map((row, i) => (
-          <View key={i.toString()} style={styles.row}>
-            {row.map((elt, j: number) => (
-              <PinElement
-                key={j.toString()}
-                onPressElement={onPressElement}
-                {...elt}
-              />
-            ))}
-          </View>
-        ))}
+      <View style={[styles.centeredView]}>
+        <Separator height={height * spaced.spaceBase} />
+        {children}
+        {/* <Separator height={height * spaced.adjustMultiplier * 0.05} /> */}
+      </View>
+      <View>
+        <View style={styles.centeredView}>
+          <Text style={styles.sub}>{h4}</Text>
+          <Separator height={height * spaced.spaceBase} />
+          <PinCompletionIndicator
+            code={step === 0 ? code : confirmCode}
+            theme={theme}
+          />
+        </View>
+        <Separator height={height * spaced.adjustMultiplier * 0.02} />
+        <View style={styles.container}>
+          {config.map((row, i) => (
+            <View key={i.toString()} style={styles.row}>
+              {row.map((elt, j: number) => (
+                <PinElement
+                  key={j.toString()}
+                  onPressElement={onPressElement}
+                  {...elt}
+                />
+              ))}
+            </View>
+          ))}
+          {infoPin && <View style={infoPinContainerStyle}>{infoPin}</View>}
+        </View>
       </View>
     </View>
   );
@@ -250,7 +266,8 @@ const getStyles = (theme: Theme, {width}: Width) =>
     },
     bgd: {
       display: 'flex',
-      justifyContent: 'center',
+      flex: 1,
+      justifyContent: 'space-evenly',
       alignItems: 'center',
     },
     sub: {
@@ -276,6 +293,10 @@ const getStyles = (theme: Theme, {width}: Width) =>
       textAlign: 'center',
       marginHorizontal: getSpacing(width).mainMarginHorizontal,
       color: getColors(theme).secondaryText,
+    },
+    centeredView: {
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   });
 

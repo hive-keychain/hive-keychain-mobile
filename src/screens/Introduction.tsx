@@ -4,6 +4,7 @@ import KeychainLogoDark from 'assets/new_UI/keychain_logo_powered_dark_theme.svg
 import KeychainLogoLight from 'assets/new_UI/keychain_logo_powered_light_theme.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import {IntroductionNavProp} from 'navigators/Signup.types';
 import React, {useContext} from 'react';
@@ -44,58 +45,64 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
   console.log({spaced, height}); //TODO remove
   return (
     <Background using_new_ui={true} theme={theme}>
-      <View style={styles.flexBetween}>
-        <View>
-          <Separator height={height * spaced.multiplier} />
-          {theme === Theme.LIGHT ? (
-            <View style={[styles.centeredView]}>
-              <KeychainLogoLight {...styles.imageLogo} />
-              <Separator height={height * spaced.multiplier * 2} />
-              <HiveImageSignupLight {...styles.imageHive} />
-            </View>
-          ) : (
-            <View style={[styles.centeredView]}>
-              <KeychainLogoDark {...styles.imageLogo} />
-              <Separator height={height * spaced.multiplier * 2} />
-              <HiveImageSignupDark {...styles.imageHive} />
-            </View>
-          )}
-          <Separator height={height * spaced.multiplier * 2} />
-          <Text style={styles.text}>
-            {capitalizeSentence(translate('intro.text'))}
-          </Text>
-          <Text style={styles.text}>
-            {capitalizeSentence(translate('intro.manage'))}
-          </Text>
+      <>
+        <FocusAwareStatusBar
+          backgroundColor={getColors(theme).primaryBackground}
+          barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
+        />
+        <View style={styles.flexBetween}>
+          <View style={[{justifyContent: 'space-between', height: '70%'}]}>
+            {/* <Separator height={height * spaced.multiplier} /> */}
+            {theme === Theme.LIGHT ? (
+              <View style={[styles.centeredView]}>
+                <KeychainLogoLight {...styles.imageLogo} />
+                <Separator height={height * spaced.multiplier * 2} />
+                <HiveImageSignupLight {...styles.imageHive} />
+              </View>
+            ) : (
+              <View style={[styles.centeredView]}>
+                <KeychainLogoDark {...styles.imageLogo} />
+                <Separator height={height * spaced.multiplier * 2} />
+                <HiveImageSignupDark {...styles.imageHive} />
+              </View>
+            )}
+            {/* <Separator height={height * spaced.multiplier * 2} /> */}
+            <Text style={styles.text}>
+              {capitalizeSentence(translate('intro.text'))}
+            </Text>
+            <Text style={styles.text}>
+              {capitalizeSentence(translate('intro.manage'))}
+            </Text>
+          </View>
+          <View>
+            {/* <Separator height={height * spaced.multiplier} /> */}
+            <EllipticButton
+              title={translate('intro.existingAccount')}
+              onPress={() => {
+                navigation.navigate('SignupScreen');
+              }}
+              style={styles.outlineButton}
+              additionalTextStyle={styles.textOutLineButton}
+            />
+            <Separator height={height * 0.02} />
+            <EllipticButton
+              title={translate('intro.createAccount')}
+              onPress={() => {
+                Linking.canOpenURL(hiveConfig.CREATE_ACCOUNT_URL).then(
+                  (supported) => {
+                    if (supported) {
+                      Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
+                    }
+                  },
+                );
+              }}
+              style={styles.warningProceedButton}
+              additionalTextStyle={styles.textButtonFilled}
+            />
+            <Separator height={height * spaced.multiplier} />
+          </View>
         </View>
-        <View>
-          <Separator height={height * spaced.multiplier} />
-          <EllipticButton
-            title={translate('intro.existingAccount')}
-            onPress={() => {
-              navigation.navigate('SignupScreen');
-            }}
-            style={styles.outlineButton}
-            additionalTextStyle={styles.textOutLineButton}
-          />
-          <Separator height={height * 0.02} />
-          <EllipticButton
-            title={translate('intro.createAccount')}
-            onPress={() => {
-              Linking.canOpenURL(hiveConfig.CREATE_ACCOUNT_URL).then(
-                (supported) => {
-                  if (supported) {
-                    Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
-                  }
-                },
-              );
-            }}
-            style={styles.warningProceedButton}
-            additionalTextStyle={styles.textButtonFilled}
-          />
-          <Separator height={height * spaced.multiplier} />
-        </View>
-      </View>
+      </>
     </Background>
   );
 };
@@ -153,7 +160,7 @@ const getDimensionedStyles = (
     },
     flexBetween: {
       flex: 1,
-      justifyContent: 'space-between',
+      justifyContent: 'space-around',
     },
   });
 

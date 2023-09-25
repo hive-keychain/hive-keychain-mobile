@@ -23,8 +23,9 @@ const getDimensionedStyles = ({width}: ScaledSize, theme: Theme) =>
     container: {
       display: 'flex',
       flexDirection: 'row',
-      width: '50%',
-      justifyContent: 'space-between',
+      width: '60%',
+      justifyContent: 'space-evenly',
+      alignContent: 'center',
     },
     indicator: {
       backgroundColor: 'transparent',

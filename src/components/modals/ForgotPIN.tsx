@@ -11,10 +11,11 @@ import {
   RED_SHADOW_COLOR,
 } from 'src/styles/colors';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
-import {getSpaceAdjustMultiplier, getSpacing} from 'src/styles/spacing';
+import {getSpacing} from 'src/styles/spacing';
 import {
   body_primary_body_3,
   button_link_primary_medium,
+  getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {Width} from 'utils/common.types';
@@ -29,19 +30,29 @@ interface Props {
 const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width}, theme);
-  const spaced = getSpaceAdjustMultiplier(width, height);
 
   return (
-    <View>
-      <Separator height={height * spaced.multiplier} />
-      <Text style={[styles.h4, styles.textCentered]}>
-        {translate('components.forgotPIN.title')}
-      </Text>
-      <Separator />
-      <Text style={[styles.text, styles.textCentered, styles.marginText]}>
-        {capitalizeSentence(translate('components.forgotPIN.text'))}
-      </Text>
-      <Separator height={height * spaced.multiplier} />
+    <View style={styles.flexSpaceAround}>
+      <View>
+        <Text
+          style={[
+            styles.h4,
+            styles.textCentered,
+            {fontSize: getFontSizeSmallDevices(height, styles.h4.fontSize)},
+          ]}>
+          {translate('components.forgotPIN.title')}
+        </Text>
+        <Separator />
+        <Text
+          style={[
+            styles.text,
+            styles.textCentered,
+            styles.marginText,
+            {fontSize: getFontSizeSmallDevices(height, styles.text.fontSize)},
+          ]}>
+          {capitalizeSentence(translate('components.forgotPIN.text'))}
+        </Text>
+      </View>
       <EllipticButton
         title={translate('components.forgotPIN.button')}
         onPress={() => {
@@ -85,6 +96,10 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     },
     marginText: {
       marginHorizontal: getSpacing(width).mainMarginHorizontal,
+    },
+    flexSpaceAround: {
+      flex: 1,
+      justifyContent: 'space-around',
     },
   });
 
