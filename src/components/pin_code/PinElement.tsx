@@ -6,6 +6,7 @@ import {
   ScaledSize,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -38,17 +39,31 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
     dimensionReducer,
     pressed,
   );
-  const fontResizedStyle = {
-    fontSize: getFontSizeSmallDevices(height, styles.number.fontSize),
+  const fontResizedSize = (currentFontSize: number): TextStyle => {
+    return {fontSize: getFontSizeSmallDevices(height, currentFontSize)};
   };
 
   const renderPinElements = () => {
     return (
       <View style={styles.pinElements}>
         {number || number === 0 ? (
-          <Text style={[styles.number, fontResizedStyle]}>{number}</Text>
+          <Text
+            style={{
+              ...styles.number,
+              ...fontResizedSize(styles.number.fontSize),
+            }}>
+            {number}
+          </Text>
         ) : null}
-        {helper ? <Text style={styles.helper}>{helper}</Text> : null}
+        {helper ? (
+          <Text
+            style={{
+              ...styles.helper,
+              ...fontResizedSize(styles.helper.fontSize),
+            }}>
+            {helper}
+          </Text>
+        ) : null}
         {back ? (
           theme === Theme.DARK ? (
             <BackspaceDark style={styles.backspace} />
