@@ -1,7 +1,14 @@
+import BackgroundSquares from 'assets/new_UI/background_squares.svg';
+import Dots1Dark from 'assets/new_UI/dots_1_dark.svg';
+import Dots1Light from 'assets/new_UI/dots_1_light.svg';
+import Dots2Dark from 'assets/new_UI/dots_2_dark.svg';
+import Dots2Light from 'assets/new_UI/dots_2_light.svg';
+import Hand from 'assets/new_UI/hand_1.svg';
 import HiveImageSignupDark from 'assets/new_UI/hive_logo_signup_dark.svg';
 import HiveImageSignupLight from 'assets/new_UI/hive_logo_signup_light.svg';
 import KeychainLogoDark from 'assets/new_UI/keychain_logo_powered_dark_theme.svg';
 import KeychainLogoLight from 'assets/new_UI/keychain_logo_powered_light_theme.svg';
+import Person1 from 'assets/new_UI/person_1.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -24,6 +31,7 @@ import {
 import {getSpaceAdjustMultiplier, getSpacing} from 'src/styles/spacing';
 import {
   button_link_primary_medium,
+  headlines_primary_headline_2,
   title_primary_title_1,
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
@@ -34,15 +42,107 @@ import {translate} from 'utils/localize';
 const Introduction = ({navigation}: IntroductionNavProp) => {
   const {height, width} = useWindowDimensions();
   const {theme} = useContext(ThemeContext);
-  // const spaceBase = 0.02;
-  // const adjustMultiplier: number = getSpaceMultiplier(width, height);
   const spaced = getSpaceAdjustMultiplier(width, height);
   const styles = getDimensionedStyles(
     {height, width},
     theme,
     spaced.adjustMultiplier,
   );
-  console.log({spaced, height}); //TODO remove
+
+  const renderLogos = (hiveImage: boolean) => {
+    return theme === Theme.LIGHT ? (
+      <View style={[styles.centeredView]}>
+        <KeychainLogoLight {...styles.imageLogo} />
+        {hiveImage && (
+          <>
+            <Separator height={height * spaced.multiplier * 2} />
+            <HiveImageSignupLight {...styles.imageHive} />
+          </>
+        )}
+      </View>
+    ) : (
+      <View style={[styles.centeredView]}>
+        <KeychainLogoDark {...styles.imageLogo} />
+        {hiveImage && (
+          <>
+            <Separator height={height * spaced.multiplier * 2} />
+            <HiveImageSignupDark {...styles.imageHive} />
+          </>
+        )}
+      </View>
+    );
+  };
+
+  const [introductionStepList, setIntroductionStepList] = React.useState<
+    JSX.Element[]
+  >([
+    <>
+      <View style={[styles.centeredView, styles.flexAbsCentered]}>
+        <BackgroundSquares {...styles.backgroundSquares} />
+      </View>
+      <View style={[styles.centeredView, styles.flexBetween70]}>
+        {renderLogos(false)}
+        <Person1 {...styles.imageHive} />
+        {theme === Theme.DARK ? <Dots1Dark /> : <Dots1Light />}
+        <Text style={{...styles.text, ...headlines_primary_headline_2}}>
+          {capitalizeSentence(translate('intro.intro_text_1'))}
+        </Text>
+      </View>
+    </>,
+    <View style={[styles.centeredView, styles.flexBetween70]}>
+      {renderLogos(false)}
+      <Hand {...styles.imageHive} />
+      {theme === Theme.DARK ? <Dots2Dark /> : <Dots2Light />}
+      <Text style={{...styles.text, ...headlines_primary_headline_2}}>
+        {capitalizeSentence(translate('intro.intro_text_2'))}
+      </Text>
+    </View>,
+    <>
+      <View style={[styles.flexBetween70]}>
+        {renderLogos(true)}
+        <Text style={styles.text}>
+          {capitalizeSentence(translate('intro.text'))}
+        </Text>
+        <Text style={styles.text}>
+          {capitalizeSentence(translate('intro.manage'))}
+        </Text>
+      </View>
+      <View>
+        <EllipticButton
+          title={translate('intro.existingAccount')}
+          onPress={() => {
+            navigation.navigate('SignupScreen');
+          }}
+          style={styles.outlineButton}
+          additionalTextStyle={styles.textOutLineButton}
+        />
+        <Separator height={height * 0.02} />
+        <EllipticButton
+          title={translate('intro.createAccount')}
+          onPress={() => {
+            Linking.canOpenURL(hiveConfig.CREATE_ACCOUNT_URL).then(
+              (supported) => {
+                if (supported) {
+                  Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
+                }
+              },
+            );
+          }}
+          style={styles.warningProceedButton}
+          additionalTextStyle={styles.textButtonFilled}
+        />
+        <Separator height={height * spaced.multiplier} />
+      </View>
+    </>,
+  ]);
+  const [currentStep, setCurrentStep] = React.useState(0);
+
+  const handleNextStep = () => {
+    let step = currentStep;
+    step++;
+    if (introductionStepList[step]) setCurrentStep(step);
+  };
+
   return (
     <Background using_new_ui={true} theme={theme}>
       <>
@@ -51,56 +151,15 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
         />
         <View style={styles.flexBetween}>
-          <View style={[{justifyContent: 'space-between', height: '70%'}]}>
-            {/* <Separator height={height * spaced.multiplier} /> */}
-            {theme === Theme.LIGHT ? (
-              <View style={[styles.centeredView]}>
-                <KeychainLogoLight {...styles.imageLogo} />
-                <Separator height={height * spaced.multiplier * 2} />
-                <HiveImageSignupLight {...styles.imageHive} />
-              </View>
-            ) : (
-              <View style={[styles.centeredView]}>
-                <KeychainLogoDark {...styles.imageLogo} />
-                <Separator height={height * spaced.multiplier * 2} />
-                <HiveImageSignupDark {...styles.imageHive} />
-              </View>
-            )}
-            {/* <Separator height={height * spaced.multiplier * 2} /> */}
-            <Text style={styles.text}>
-              {capitalizeSentence(translate('intro.text'))}
-            </Text>
-            <Text style={styles.text}>
-              {capitalizeSentence(translate('intro.manage'))}
-            </Text>
-          </View>
-          <View>
-            {/* <Separator height={height * spaced.multiplier} /> */}
+          {introductionStepList[currentStep]}
+          {currentStep < introductionStepList.length - 1 && (
             <EllipticButton
-              title={translate('intro.existingAccount')}
-              onPress={() => {
-                navigation.navigate('SignupScreen');
-              }}
-              style={styles.outlineButton}
-              additionalTextStyle={styles.textOutLineButton}
-            />
-            <Separator height={height * 0.02} />
-            <EllipticButton
-              title={translate('intro.createAccount')}
-              onPress={() => {
-                Linking.canOpenURL(hiveConfig.CREATE_ACCOUNT_URL).then(
-                  (supported) => {
-                    if (supported) {
-                      Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
-                    }
-                  },
-                );
-              }}
+              title={translate('common.next')}
+              onPress={() => handleNextStep()}
               style={styles.warningProceedButton}
               additionalTextStyle={styles.textButtonFilled}
             />
-            <Separator height={height * spaced.multiplier} />
-          </View>
+          )}
         </View>
       </>
     </Background>
@@ -112,6 +171,10 @@ const getDimensionedStyles = (
   adjustMultiplier: number,
 ) =>
   StyleSheet.create({
+    backgroundSquares: {
+      width: width * 0.85,
+      bottom: undefined,
+    },
     imageLogo: {
       width: width * adjustMultiplier,
     },
@@ -161,6 +224,14 @@ const getDimensionedStyles = (
     flexBetween: {
       flex: 1,
       justifyContent: 'space-around',
+    },
+    flexBetween70: {justifyContent: 'space-between', height: '70%'},
+    flexAbsCentered: {
+      position: 'absolute',
+      top: -5,
+      bottom: undefined,
+      flex: 1,
+      alignSelf: 'center',
     },
   });
 
