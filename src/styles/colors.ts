@@ -28,6 +28,7 @@ export const getColors = (theme: Theme) => {
     secondaryText: theme === Theme.LIGHT ? '#212838' : '#FFF',
     primaryBackground: theme === Theme.LIGHT ? '#E5EDF5' : '#212838',
     contrastBackground: theme === Theme.LIGHT ? '#212838' : '#E5EDF5',
+    menuHamburguerBg: theme === Theme.LIGHT ? '#FFF' : '#212838',
     gradientShapes:
       theme === Theme.LIGHT
         ? ['rgba(33, 40, 56, 0.15)', 'rgba(33, 40, 56, 0.15)', '#212838']

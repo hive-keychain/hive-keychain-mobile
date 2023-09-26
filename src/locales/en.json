@@ -647,7 +647,8 @@
     }
   },
   "drawerFooter": {
-    "madeBy": "Made with ❤ by Keychain Team",
+    "madeBy_part_1": "Made with",
+    "madeBy_part_2": "love by Keychain team",
     "vote": "Vote @{{account}} for Witness",
     "thanks": "Thanks for your support ❤",
     "error30": "You already vote for 30 witnesses. You will need to unvote one to vote for a new one.",

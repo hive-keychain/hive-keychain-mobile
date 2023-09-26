@@ -48,7 +48,7 @@ const TokenHistoryItem = ({
   let iconNameSubType = '';
   const localePrefix = 'wallet.operations.tokens';
   let labelDataList: LabelDataType[];
-  console.log(transaction);
+  console.log(transaction); //TODO remove line
   const getLabelsComponents = () => {
     function returnWithList(labelDataList: any) {
       return (

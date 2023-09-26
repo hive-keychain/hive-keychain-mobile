@@ -79,7 +79,7 @@ const HeaderContent = (props: Props) => {
           height: '100%',
         }}>
         <>
-          <DrawerHeader username={user.name} />
+          <DrawerHeader theme={theme} username={user.name} />
           {/* //TODO remove item, made to change context */}
           <DrawerItem
             {...props}

@@ -4,8 +4,10 @@ import AboutStack from 'navigators/mainDrawerStacks/About';
 import BrowserStack from 'navigators/mainDrawerStacks/Browser';
 import SettingsStack from 'navigators/mainDrawerStacks/Settings';
 import WalletStack from 'navigators/mainDrawerStacks/Wallet';
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet} from 'react-native';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
 import {MainDrawerStackParam} from './MainDrawer.types';
 import AccountManagementStack from './mainDrawerStacks/AccountManagement';
@@ -16,14 +18,17 @@ import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 const Drawer = createDrawerNavigator<MainDrawerStackParam>();
 
 export default () => {
+  const {theme} = useContext(ThemeContext);
+  const styles = getStyles(theme);
+
   return (
     <Drawer.Navigator
       drawerStyle={styles.drawer}
       hideStatusBar
-      drawerPosition="right"
+      drawerPosition="left"
       drawerContentOptions={{
         activeTintColor: '#FFFFFF',
-        inactiveTintColor: '#FFFFFF',
+        inactiveTintColor: getColors(theme).secondaryText,
         activeBackgroundColor: '#A3112A',
         itemStyle: {marginHorizontal: 0, borderRadius: 0, paddingLeft: 10},
       }}
@@ -68,8 +73,14 @@ export default () => {
   );
 };
 
-const styles = StyleSheet.create({
-  drawer: {
-    backgroundColor: '#000000',
-  },
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    drawer: {
+      backgroundColor: getColors(theme).menuHamburguerBg,
+      borderTopRightRadius: 20,
+      borderBottomRightRadius: 20,
+      height: '95%',
+      bottom: 10,
+      top: undefined,
+    },
+  });
