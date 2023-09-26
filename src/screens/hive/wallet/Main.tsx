@@ -22,8 +22,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import Primary from 'screens/wallet/Primary';
-import Tokens from 'screens/wallet/Tokens';
+import Primary from 'screens/hive/wallet/Primary';
+import Tokens from 'screens/hive/wallet/Tokens';
 import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';

@@ -7,7 +7,7 @@ import {AppRegistry, StatusBar} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
-import App from 'src/App';
+import MultichainApp from 'src/MultichainApp';
 import {persistor, store} from 'store';
 import {name as appName} from './app.json';
 
@@ -24,7 +24,7 @@ const Root = () => {
         <Provider store={store}>
           <StatusBar backgroundColor="black" />
           <PersistGate persistor={persistor} onBeforeLift={onBeforeLift}>
-            {gateLifted ? <App /> : null}
+            {gateLifted ? <MultichainApp /> : null}
           </PersistGate>
         </Provider>
       </SafeAreaProvider>

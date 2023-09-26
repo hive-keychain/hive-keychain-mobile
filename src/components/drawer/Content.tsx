@@ -7,11 +7,12 @@ import {
 import {closeAllTabs, lock} from 'actions/index';
 import DrawerFooter from 'components/drawer/Footer';
 import DrawerHeader from 'components/drawer/Header';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
+import {Theme, ThemeContext} from 'src/context/theme.context';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 
@@ -63,6 +64,10 @@ const HeaderContent = (props: Props) => {
     }
   }, [newState.index]);
 
+  //TODO to remove bellow after refactoring UI
+  const {theme, setTheme} = useContext(ThemeContext);
+  //END to remove
+
   return (
     <DrawerContentScrollView
       {...props}
@@ -99,7 +104,6 @@ const HeaderContent = (props: Props) => {
               style={itemStyle}
             />
           </TouchableOpacity>
-
           <DrawerItem
             {...props}
             label={translate('navigation.accounts')}
@@ -141,6 +145,15 @@ const HeaderContent = (props: Props) => {
               navigation.closeDrawer();
             }}
           />
+          {/* //TODO remove item, made to change context */}
+          <DrawerItem
+            {...props}
+            label={`Toogle Theme : ${theme}`}
+            onPress={() =>
+              setTheme(theme === Theme.DARK ? Theme.LIGHT : Theme.DARK)
+            }
+          />
+          {/* //END remove */}
         </>
         <DrawerFooter user={user} />
       </ScrollView>

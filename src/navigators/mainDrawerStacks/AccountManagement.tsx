@@ -1,8 +1,8 @@
-import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+import React from 'react';
 
-import AccountManagement from 'screens/settings/AccountManagement';
 import DrawerButton from 'components/ui/DrawerButton';
+import AccountManagement from 'screens/hive/settings/AccountManagement';
 
 import {translate} from 'utils/localize';
 

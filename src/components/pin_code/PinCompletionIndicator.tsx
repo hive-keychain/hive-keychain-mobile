@@ -1,12 +1,15 @@
 import React from 'react';
-import {StyleSheet, useWindowDimensions, View} from 'react-native';
+import {ScaledSize, StyleSheet, useWindowDimensions, View} from 'react-native';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
 
-export default ({code}: {code: string[]}) => {
-  const styles = getDimensionedStyles(useWindowDimensions());
+export default ({code, theme}: {code: string[]; theme: Theme}) => {
+  const styles = getDimensionedStyles(useWindowDimensions(), theme);
   return (
     <View style={styles.container}>
       {Array.from(Array(6)).map((e, i) => {
-        const fill = i >= code.length ? 'transparent' : 'white';
+        const fill =
+          i >= code.length ? 'transparent' : getColors(theme).secondaryText;
         return (
           <View key={i} style={{...styles.indicator, backgroundColor: fill}} />
         );
@@ -15,20 +18,22 @@ export default ({code}: {code: string[]}) => {
   );
 };
 
-const getDimensionedStyles = ({width}: {width: number}) =>
+const getDimensionedStyles = ({width}: ScaledSize, theme: Theme) =>
   StyleSheet.create({
     container: {
       display: 'flex',
       flexDirection: 'row',
-      width: '50%',
-      justifyContent: 'space-between',
+      width: '60%',
+      justifyContent: 'space-evenly',
+      alignContent: 'center',
     },
     indicator: {
       backgroundColor: 'transparent',
       width: width / 20,
       height: width / 20,
       borderRadius: width / 40,
-      borderColor: 'white',
+      borderColor: getColors(theme).secondaryText,
       borderWidth: 1,
+      opacity: theme === Theme.LIGHT ? 0.7 : 1,
     },
   });

@@ -3,11 +3,12 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  StyleProp,
   StyleSheet,
   View,
+  ViewStyle,
 } from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
-import LinearGradient from 'react-native-linear-gradient';
 import {Dimensions as Dim} from 'utils/common.types';
 
 type Props = {
@@ -15,8 +16,13 @@ type Props = {
   boxBackgroundColor?: string;
   outsideClick: () => void;
   fixedHeight?: number;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 type InnerProps = {height: number; width: number};
+
+/**
+ * Note: fixedHeight(0 - 1 range, i.e: 0.3)
+ */
 class CustomModal extends React.Component<Props, {}> implements InnerProps {
   height;
   width;
@@ -50,14 +56,8 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
             style={
               this.fixedHeight ? styles.modalWrapperFixed : styles.modalWrapper
             }>
-            <View style={styles.modalContainer}>
-              <LinearGradient
-                start={{x: 0, y: 0}}
-                end={{x: 0, y: 1}}
-                colors={['white', '#B9C9D6']}
-                style={styles.gradient}>
-                {this.props.children}
-              </LinearGradient>
+            <View style={[styles.modalContainer, this.props.containerStyle]}>
+              {this.props.children}
             </View>
           </View>
         </View>
@@ -73,7 +73,6 @@ class StyleSheetFactory {
     height,
     fixedHeight,
   }: Dim & {modalHeight: number; fixedHeight: number}) {
-    console.log(fixedHeight);
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
       mainContainer: {
