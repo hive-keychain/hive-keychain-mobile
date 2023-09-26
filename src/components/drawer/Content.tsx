@@ -80,6 +80,15 @@ const HeaderContent = (props: Props) => {
         }}>
         <>
           <DrawerHeader username={user.name} />
+          {/* //TODO remove item, made to change context */}
+          <DrawerItem
+            {...props}
+            label={`Toogle Theme : ${theme}`}
+            onPress={() =>
+              setTheme(theme === Theme.DARK ? Theme.LIGHT : Theme.DARK)
+            }
+          />
+          {/* //END remove */}
           <DrawerItem
             {...props}
             label={translate('navigation.wallet')}
@@ -145,15 +154,6 @@ const HeaderContent = (props: Props) => {
               navigation.closeDrawer();
             }}
           />
-          {/* //TODO remove item, made to change context */}
-          <DrawerItem
-            {...props}
-            label={`Toogle Theme : ${theme}`}
-            onPress={() =>
-              setTheme(theme === Theme.DARK ? Theme.LIGHT : Theme.DARK)
-            }
-          />
-          {/* //END remove */}
         </>
         <DrawerFooter user={user} />
       </ScrollView>
