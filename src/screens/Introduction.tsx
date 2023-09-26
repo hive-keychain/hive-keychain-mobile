@@ -150,7 +150,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           backgroundColor={getColors(theme).primaryBackground}
           barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
         />
-        <View style={styles.flexBetween}>
+        <View style={styles.flexAround}>
           {introductionStepList[currentStep]}
           {currentStep < introductionStepList.length - 1 && (
             <EllipticButton
@@ -221,7 +221,7 @@ const getDimensionedStyles = (
       alignItems: 'center',
       alignContent: 'center',
     },
-    flexBetween: {
+    flexAround: {
       flex: 1,
       justifyContent: 'space-around',
     },

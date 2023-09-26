@@ -225,7 +225,6 @@ const PinCode = ({
       <View style={[styles.centeredView]}>
         <Separator height={height * spaced.spaceBase} />
         {children}
-        {/* <Separator height={height * spaced.adjustMultiplier * 0.05} /> */}
       </View>
       <View>
         <View style={styles.centeredView}>

@@ -73,7 +73,6 @@ class StyleSheetFactory {
     height,
     fixedHeight,
   }: Dim & {modalHeight: number; fixedHeight: number}) {
-    console.log(fixedHeight); //TODO cleanup
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
       mainContainer: {

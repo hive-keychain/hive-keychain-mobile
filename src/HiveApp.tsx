@@ -39,7 +39,6 @@ const App = ({
   useEffect(() => {
     setupLinking();
     RNBootSplash.hide({fade: true});
-    console.log('RNBootSplash.hide'); //TODO remove line
     Orientation.lockToPortrait();
     return () => {
       clearLinkingListeners();

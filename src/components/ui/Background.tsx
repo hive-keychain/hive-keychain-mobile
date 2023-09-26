@@ -27,7 +27,6 @@ interface BackgroundProps {
 }
 
 export default (props: BackgroundProps) => {
-  console.log({h: useWindowDimensions().height}); //TODO remove line
   const styles = getStyles(useWindowDimensions());
   return props.using_new_ui ? (
     <View
