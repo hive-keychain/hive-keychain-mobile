@@ -79,16 +79,7 @@ const HeaderContent = (props: Props) => {
           height: '100%',
         }}>
         <>
-          <DrawerHeader theme={theme} username={user.name} />
-          {/* //TODO remove item, made to change context */}
-          <DrawerItem
-            {...props}
-            label={`Toogle Theme : ${theme}`}
-            onPress={() =>
-              setTheme(theme === Theme.DARK ? Theme.LIGHT : Theme.DARK)
-            }
-          />
-          {/* //END remove */}
+          <DrawerHeader theme={theme} props={props} />
           <DrawerItem
             {...props}
             label={translate('navigation.wallet')}
@@ -113,6 +104,15 @@ const HeaderContent = (props: Props) => {
               style={itemStyle}
             />
           </TouchableOpacity>
+          {/* //TODO remove item, made to change context */}
+          <DrawerItem
+            {...props}
+            label={`Toogle Theme : ${theme}`}
+            onPress={() =>
+              setTheme(theme === Theme.DARK ? Theme.LIGHT : Theme.DARK)
+            }
+          />
+          {/* //END remove */}
           <DrawerItem
             {...props}
             label={translate('navigation.accounts')}
@@ -160,7 +160,9 @@ const HeaderContent = (props: Props) => {
     </DrawerContentScrollView>
   );
 };
-const styles = StyleSheet.create({contentContainer: {height: '100%', flex: 1}});
+const styles = StyleSheet.create({
+  contentContainer: {height: '100%', flex: 1, zIndex: 0},
+});
 const mapStateToProps = (state: RootState) => ({
   user: state.activeAccount,
 });

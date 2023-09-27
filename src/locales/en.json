@@ -648,7 +648,8 @@
   },
   "drawerFooter": {
     "madeBy_part_1": "Made with",
-    "madeBy_part_2": "love by Keychain team",
+    "madeBy_part_2": "by Keychain",
+    "madeBy_part_3": "team",
     "vote": "Vote @{{account}} for Witness",
     "thanks": "Thanks for your support ❤",
     "error30": "You already vote for 30 witnesses. You will need to unvote one to vote for a new one.",
@@ -722,5 +723,8 @@
       "previous": "Previous",
       "got_it": "Got it!"
     }
+  },
+  "multichain": {
+    "switch_chain": "Switch Chain"
   }
 }

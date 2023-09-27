@@ -1,36 +1,65 @@
+import {DrawerContentComponentProps} from '@react-navigation/drawer';
 import Heart from 'assets/new_UI/heart.svg';
+import ItemDropdown from 'components/form/ItemDropdown';
 import CloseButton from 'components/ui/CloseButton';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {chainItemList} from 'src/reference-data/chainDropdownlist';
 import {getColors} from 'src/styles/colors';
-import {headlines_primary_headline_2} from 'src/styles/typography';
+import {
+  body_primary_body_2,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
 import {Width} from 'utils/common.types';
 import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 
-export default ({username, theme}: {username: string; theme: Theme}) => {
+export default ({
+  theme,
+  props,
+}: {
+  theme: Theme;
+  props: DrawerContentComponentProps;
+}) => {
   const {width} = useWindowDimensions();
   const styles = getDimensionedStyles({width}, theme);
   return (
     <View style={styles.container}>
-      {/* <UserProfilePicture username={username} style={styles.image} />
-      <Text style={styles.username}>@{username}</Text> */}
-      <View style={{flexDirection: 'row'}}>
-        <CloseButton theme={theme} />
+      <View style={styles.topContainer}>
+        <CloseButton
+          theme={theme}
+          onPress={() => props.navigation.closeDrawer()}
+        />
         <Text style={styles.textHeader}>Menu</Text>
       </View>
-      <Text style={{textAlign: 'center'}}>
-        <Text style={[styles.textHeader, styles.textOpaque, {fontSize: 16}]}>
-          {capitalizeSentence(translate('drawerFooter.madeBy_part_1'))}
+      <View style={styles.middleContainer}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
+          <Text style={styles.textSubHeader}>
+            {capitalizeSentence(translate('drawerFooter.madeBy_part_1'))}
+          </Text>
+          <View style={{flexGrow: 1, alignItems: 'center'}}>
+            <Heart width={22} height={22} />
+          </View>
+          <Text style={[styles.textSubHeader]}>
+            {capitalizeSentence(translate('drawerFooter.madeBy_part_2'))}
+          </Text>
+        </View>
+        <Text style={[styles.textSubHeader, {textAlign: 'center'}]}>
+          {capitalizeSentence(translate('drawerFooter.madeBy_part_3'))}
         </Text>
-        <Heart width={18} height={18} />
-        <Text style={[styles.textHeader, styles.textOpaque, {fontSize: 16}]}>
-          {capitalizeSentence(translate('drawerFooter.madeBy_part_2'))}
+      </View>
+      <View style={styles.bottomContainer}>
+        <Text style={styles.textLabel}>
+          {translate('multichain.switch_chain')}
         </Text>
-      </Text>
-      <View>
-        <Text>Switch //TODO</Text>
+        <View style={{width: '55%'}}>
+          <ItemDropdown theme={theme} itemDropdownList={chainItemList} />
+        </View>
       </View>
     </View>
   );
@@ -41,19 +70,50 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     container: {
       display: 'flex',
       alignItems: 'center',
+      width: '90%',
+      marginTop: 8,
+      zIndex: 1,
+      marginLeft: 10,
     },
-    username: {color: 'white', fontSize: 20},
-    image: {
-      width: width / 5,
-      height: width / 5,
-      borderRadius: width / 10,
-      marginBottom: '3%',
+    topContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
+      justifyContent: 'space-between',
+      width: '65%',
+      alignSelf: 'flex-start',
+      marginBottom: 15,
+    },
+    middleContainer: {
+      width: '90%',
+      alignSelf: 'flex-start',
+      marginBottom: 15,
+    },
+    //TODO check on values & design to make it match.
+    bottomContainer: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 15,
     },
     textHeader: {
       color: getColors(theme).secondaryText,
       ...headlines_primary_headline_2,
     },
-    textOpaque: {
+    textSubHeader: {
+      color: getColors(theme).secondaryText,
+      ...headlines_primary_headline_2,
       opacity: 0.6,
+      fontSize: 15,
+    },
+    textLabel: {
+      color: getColors(theme).secondaryText,
+      ...headlines_primary_headline_2,
+      fontSize: 14,
+    },
+    pickerItemText: {
+      ...body_primary_body_2,
+      fontSize: 13,
     },
   });

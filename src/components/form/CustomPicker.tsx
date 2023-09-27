@@ -20,6 +20,7 @@ type Props = {
   dropdownIconColor?: string;
   labelCreator?: (obj: any) => string;
   iosTextStyle?: StyleProp<TextStyle>;
+  pickerItemTextStyle?: StyleProp<TextStyle>;
 };
 const CustomPicker = ({
   list,
@@ -31,6 +32,7 @@ const CustomPicker = ({
   labelCreator,
   dropdownIconColor,
   iosTextStyle,
+  pickerItemTextStyle,
 }: Props) => {
   const styles = getDimensionedStyles();
   switch (Platform.OS) {
@@ -67,6 +69,7 @@ const CustomPicker = ({
           {list.map((item, i) => {
             return (
               <Picker.Item
+                style={pickerItemTextStyle}
                 key={i}
                 label={`${prefix ? prefix : ''}${
                   labelCreator ? labelCreator(item) : item
