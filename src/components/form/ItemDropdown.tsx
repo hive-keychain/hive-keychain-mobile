@@ -106,7 +106,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       borderRadius: height / 2,
       borderWidth: 1,
       alignItems: 'center',
-      padding: 4,
+      padding: 8,
       borderColor: getColors(theme).cardBorderColorContrast,
     },
     dropdownContainer: {

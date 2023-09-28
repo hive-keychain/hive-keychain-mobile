@@ -34,16 +34,12 @@ export default ({
         <Text style={styles.textHeader}>Menu</Text>
       </View>
       <View style={styles.middleContainer}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
+        <View style={styles.flexRowCentered}>
           <Text style={styles.textSubHeader}>
             {capitalizeSentence(translate('drawerFooter.madeBy_part_1'))}
           </Text>
           <View style={{flexGrow: 1, alignItems: 'center'}}>
-            <Heart width={22} height={22} />
+            <Heart {...styles.heartIcon} />
           </View>
           <Text style={[styles.textSubHeader]}>
             {capitalizeSentence(translate('drawerFooter.madeBy_part_2'))}
@@ -53,11 +49,11 @@ export default ({
           {capitalizeSentence(translate('drawerFooter.madeBy_part_3'))}
         </Text>
       </View>
-      <View style={styles.bottomContainer}>
+      <View style={[styles.bottomContainer]}>
         <Text style={styles.textLabel}>
           {translate('multichain.switch_chain')}
         </Text>
-        <View style={{width: '55%'}}>
+        <View style={[{width: '55%'}]}>
           <ItemDropdown theme={theme} itemDropdownList={chainItemList} />
         </View>
       </View>
@@ -70,7 +66,7 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     container: {
       display: 'flex',
       alignItems: 'center',
-      width: '90%',
+      width: '95%',
       marginTop: 8,
       zIndex: 1,
       marginLeft: 10,
@@ -80,16 +76,15 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       alignItems: 'center',
       alignContent: 'center',
       justifyContent: 'space-between',
-      width: '65%',
+      width: '60%',
       alignSelf: 'flex-start',
       marginBottom: 15,
     },
     middleContainer: {
-      width: '90%',
+      width: '85%',
       alignSelf: 'flex-start',
       marginBottom: 15,
     },
-    //TODO check on values & design to make it match.
     bottomContainer: {
       width: '100%',
       flexDirection: 'row',
@@ -115,5 +110,13 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     pickerItemText: {
       ...body_primary_body_2,
       fontSize: 13,
+    },
+    heartIcon: {
+      width: 22,
+      height: 22,
+    },
+    flexRowCentered: {
+      flexDirection: 'row',
+      alignItems: 'center',
     },
   });
