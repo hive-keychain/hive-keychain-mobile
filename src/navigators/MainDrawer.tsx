@@ -79,6 +79,7 @@ const getStyles = (theme: Theme) =>
       backgroundColor: getColors(theme).menuHamburguerBg,
       borderTopRightRadius: 20,
       borderBottomRightRadius: 20,
+      width: '75%',
       height: '95%',
       bottom: 10,
       top: undefined,

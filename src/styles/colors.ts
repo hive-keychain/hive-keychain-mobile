@@ -21,6 +21,9 @@ export const INDICATOR_ACTIVE_COLOR = PRIMARY_RED_COLOR;
 export const INDICATOR_INACTIVE_COLOR = '#ffffffd4';
 
 export const RED_SHADOW_COLOR = 'rgba(227, 19, 55, 1)';
+export const BACKGROUNDITEMDARKISH = '#293144';
+export const BACKGROUNDLIGHTVARIANTLIGHTBLUE = '#E6EEF6';
+export const BACKGROUNDDARKBLUE = '#212838';
 
 export const getColors = (theme: Theme) => {
   return {

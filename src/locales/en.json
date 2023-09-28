@@ -485,17 +485,19 @@
     }
   },
   "navigation": {
-    "log_out": "LOG OUT",
-    "accounts": "ACCOUNTS",
+    "log_out": "Logout",
+    "accounts": "Accounts",
     "add_account": "ADD ACCOUNT",
     "add_account_by_auth": "AUTH. ACCOUNT",
     "manage": "MANAGE KEYS",
-    "settings": "SETTINGS",
-    "about": "ABOUT",
+    "settings": "User Preferences",
+    "about": "About Hive Keychain",
     "wallet": "WALLET",
     "browser": "BROWSER",
-    "governance": "GOVERNANCE",
-    "create_account": "CREATE ACCOUNT"
+    "governance": "Governance",
+    "create_account": "CREATE ACCOUNT",
+    "tokens": "Tokens",
+    "theme_setting": "Theme Setting"
   },
   "request": {
     "title": {
