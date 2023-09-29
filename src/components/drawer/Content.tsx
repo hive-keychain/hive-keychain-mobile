@@ -93,16 +93,13 @@ const HeaderContent = (props: Props) => {
           focused={newState.index === 0 && !isAccountMenuExpanded}
         /> */}
         <DrawerContentItem
-          {...props}
           labelTranslationKey="navigation.accounts"
           theme={theme}
-          //TODO bellow, add new stack to show submenus.
-          onPress={() => {}}
+          onPress={() => navigation.navigate('Accounts')}
           iconImage={<AccountsMenuIcon />}
           drawBottomLine
         />
         <DrawerContentItem
-          {...props}
           labelTranslationKey="navigation.settings"
           theme={theme}
           onPress={() => navigation.navigate('SettingsScreen')}
@@ -110,7 +107,6 @@ const HeaderContent = (props: Props) => {
           drawBottomLine
         />
         <DrawerContentItem
-          {...props}
           labelTranslationKey="navigation.tokens"
           theme={theme}
           //TODO add new tokens stack?? + screen in MainDrawer.
@@ -119,7 +115,6 @@ const HeaderContent = (props: Props) => {
           drawBottomLine
         />
         <DrawerContentItem
-          {...props}
           labelTranslationKey="navigation.governance"
           theme={theme}
           onPress={() => navigation.navigate('Governance')}
@@ -127,7 +122,6 @@ const HeaderContent = (props: Props) => {
           drawBottomLine
         />
         <DrawerContentItem
-          {...props}
           labelTranslationKey="navigation.theme_setting"
           theme={theme}
           onPress={() => {}}
@@ -148,7 +142,6 @@ const HeaderContent = (props: Props) => {
           drawBottomLine
         />
         <DrawerContentItem
-          {...props}
           labelTranslationKey="navigation.about"
           theme={theme}
           onPress={() => navigation.navigate('ABOUT')}
@@ -156,7 +149,6 @@ const HeaderContent = (props: Props) => {
           drawBottomLine
         />
         <DrawerContentItem
-          {...props}
           labelTranslationKey="navigation.log_out"
           theme={theme}
           onPress={() => {

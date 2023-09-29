@@ -53,7 +53,8 @@
     "delegate": "Delegate",
     "missing_key": "Please add your {{key}} key to perform this operation!",
     "need_positive_amount": "The amount needs to be greater than 0",
-    "next": "Next"
+    "next": "Next",
+    "account": "Account"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -487,15 +488,15 @@
   "navigation": {
     "log_out": "Logout",
     "accounts": "Accounts",
-    "add_account": "ADD ACCOUNT",
+    "add_account": "Add Accounts",
     "add_account_by_auth": "AUTH. ACCOUNT",
-    "manage": "MANAGE KEYS",
+    "manage": "Manage Keys",
     "settings": "User Preferences",
     "about": "About Hive Keychain",
     "wallet": "WALLET",
     "browser": "BROWSER",
     "governance": "Governance",
-    "create_account": "CREATE ACCOUNT",
+    "create_account": "Create Account",
     "tokens": "Tokens",
     "theme_setting": "Theme Setting"
   },

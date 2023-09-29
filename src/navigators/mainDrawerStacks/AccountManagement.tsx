@@ -18,7 +18,7 @@ export default () => {
           headerStyle: {
             backgroundColor: 'black',
           },
-          headerTitleAlign: 'left',
+          headerTitleAlign: 'center',
           title: translate('navigation.manage'),
           headerTintColor: 'white',
           headerRight: () => <DrawerButton navigation={navigation} />,

@@ -1,11 +1,12 @@
-import {DrawerContentComponentProps} from '@react-navigation/drawer';
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {
   ScaledSize,
+  StyleProp,
   StyleSheet,
   Text,
   View,
+  ViewProps,
   useWindowDimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -24,11 +25,11 @@ interface PropsDrawerContentItem {
   onPress: () => void;
   iconImage: JSX.Element;
   leftSideComponent?: JSX.Element;
-  useTouchableOpacity?: boolean;
   drawBottomLine?: boolean;
+  additionalContainerStyle?: StyleProp<ViewProps>;
 }
 
-type Props = PropsDrawerContentItem & DrawerContentComponentProps;
+type Props = PropsDrawerContentItem;
 
 const DrawerContentItem = (props: Props) => {
   const dimensions = useWindowDimensions();
@@ -36,26 +37,49 @@ const DrawerContentItem = (props: Props) => {
   const styles = getStyles(props.theme, dimensions);
 
   return (
-    <>
-      <View style={[styles.container]}>
-        <View style={styles.iconContainer}>{props.iconImage}</View>
-        <View style={styles.rowSpaceBetween}>
+    <View style={[styles.container, props.additionalContainerStyle]}>
+      <View style={styles.iconContainer}>{props.iconImage}</View>
+      <View
+        //TODO here pass all styles bellow!!!
+        style={[
+          {
+            width: '100%',
+            height: height * 0.09,
+            alignContent: 'center',
+            justifyContent: 'center',
+            flexShrink: 1,
+          },
+        ]}>
+        <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
           <TouchableOpacity onPress={() => props.onPress()}>
             <Text style={[styles.labelStyle]}>
               {translate(props.labelTranslationKey)}
             </Text>
           </TouchableOpacity>
-          {props.leftSideComponent}
+          {props.leftSideComponent && (
+            <View
+              style={[
+                {
+                  justifyContent: 'flex-end',
+                  alignContent: 'flex-end',
+                  alignItems: 'flex-end',
+                  flexGrow: 1,
+                  flex: 1,
+                },
+              ]}>
+              {props.leftSideComponent}
+            </View>
+          )}
         </View>
+        {props.drawBottomLine && (
+          <Separator
+            drawLine
+            height={0.5}
+            additionalLineStyle={styles.bottomLine}
+          />
+        )}
       </View>
-      {props.drawBottomLine && (
-        <Separator
-          drawLine
-          height={0.5}
-          additionalLineStyle={styles.bottomLine}
-        />
-      )}
-    </>
+    </View>
   );
 };
 
@@ -68,6 +92,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       paddingLeft: PADDINGLEFTMAINMENU,
       alignItems: 'center',
       height: height * 0.09,
+      width: '100%',
     },
     iconContainer: {
       justifyContent: 'center',
@@ -86,8 +111,10 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       marginLeft: 11,
     },
     bottomLine: {
-      borderColor: getColors(theme).cardBorderColorContrast,
-      left: 51,
+      position: 'absolute',
+      width: '97%',
+      bottom: -8,
+      borderColor: getColors(theme).lineSeparatorStroke,
     },
     rowSpaceBetween: {
       justifyContent: 'space-between',

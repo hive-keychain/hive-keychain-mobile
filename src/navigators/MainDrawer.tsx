@@ -11,6 +11,7 @@ import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
 import {MainDrawerStackParam} from './MainDrawer.types';
 import AccountManagementStack from './mainDrawerStacks/AccountManagement';
+import Accounts from './mainDrawerStacks/Accounts';
 import AddAccountStack from './mainDrawerStacks/AddAccount';
 import CreateAccount from './mainDrawerStacks/CreateAccount';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
@@ -24,7 +25,8 @@ export default () => {
   return (
     <Drawer.Navigator
       drawerStyle={styles.drawer}
-      hideStatusBar
+      //TODO set status bar accordingly to theme.
+      // hideStatusBar
       drawerPosition="left"
       drawerContentOptions={{
         activeTintColor: '#FFFFFF',
@@ -63,6 +65,11 @@ export default () => {
         }}
         component={AboutStack}
       />
+      {/* //TODO bellow, make a new screen that have a sub menu, to:
+      //  - addaccounts
+      //  - create accounts
+      //  - manage keys. */}
+      <Drawer.Screen name="Accounts" component={Accounts} />
       <Drawer.Screen
         name="AccountManagementScreen"
         component={AccountManagementStack}

@@ -24,6 +24,7 @@ export const RED_SHADOW_COLOR = 'rgba(227, 19, 55, 1)';
 export const BACKGROUNDITEMDARKISH = '#293144';
 export const BACKGROUNDLIGHTVARIANTLIGHTBLUE = '#E6EEF6';
 export const BACKGROUNDDARKBLUE = '#212838';
+export const LINESTROKESEPARATOR = '#EDF4FC';
 
 export const getColors = (theme: Theme) => {
   return {
@@ -42,5 +43,7 @@ export const getColors = (theme: Theme) => {
     primaryRedShape:
       theme === Theme.LIGHT ? BRIGTHER_PRIMARY_RED : PRIMARY_RED_COLOR,
     cardBgColor: theme === Theme.LIGHT ? '#E5EDF5' : '#293144',
+    cardBgLighter: theme === Theme.LIGHT ? '#FFF' : BACKGROUNDITEMDARKISH,
+    lineSeparatorStroke: theme === Theme.LIGHT ? '#EDF4FC' : '#364360',
   };
 };

@@ -61,7 +61,7 @@ const getStyles = (theme: Theme, value: boolean) =>
       backgroundColor: !value
         ? BACKGROUNDDARKBLUE
         : BACKGROUNDLIGHTVARIANTLIGHTBLUE,
-      width: '20%',
+      width: '65%',
       marginRight: 8,
       marginLeft: 10,
       borderWidth: 1,

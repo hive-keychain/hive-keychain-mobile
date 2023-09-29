@@ -101,24 +101,17 @@ export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
         <TouchableOpacity
           onPress={() => Linking.openURL(`https://peakd.com/@keychain`)}
           style={styles.footerIconContainer}>
-          {/* <View style={styles.footerIconContainer}> */}
           <HiveLogo style={styles.footerLogo} />
-          {/* </View> */}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => Linking.openURL(`https://discord.gg/tUHtyev2xF`)}
           style={styles.footerIconContainer}>
-          {/* <View style={styles.footerIconContainer}> */}
           <DiscordLogo style={styles.footerLogo} />
-          {/* </View> */}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => Linking.openURL(`https://www.threads.net/`)}
           style={styles.footerIconContainer}>
-          {/* <View style={styles.footerIconContainer}> */}
-          {/* //TODO add bellow threads profile link */}
           <ThreadsLogo width={20} style={styles.footerLogo} />
-          {/* </View> */}
         </TouchableOpacity>
       </View>
     </View>
