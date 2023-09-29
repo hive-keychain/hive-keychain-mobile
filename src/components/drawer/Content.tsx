@@ -9,8 +9,6 @@ import UserPrefMenuIcon from 'assets/new_UI/candle-2.svg';
 import ThemeMenuIcon from 'assets/new_UI/category.svg';
 import TokensMenuIcon from 'assets/new_UI/hive_red_alternative_logo.svg';
 import AboutMenuIcon from 'assets/new_UI/info-circle.svg';
-import BottomLineDark from 'assets/new_UI/line_dark.svg';
-import BottomLineLight from 'assets/new_UI/line_light.svg';
 import LogoutMenuIcon from 'assets/new_UI/logout.svg';
 import SwitchDarkIcon from 'assets/new_UI/moon.svg';
 import AccountsMenuIcon from 'assets/new_UI/profile.svg';
@@ -19,20 +17,11 @@ import DrawerFooter from 'components/drawer/Footer';
 import DrawerHeader from 'components/drawer/Header';
 import CustomSwitch from 'components/form/CustomSwitch';
 import React, {useContext, useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {RootState} from 'store';
 import DrawerContentItem from './drawer-content-item/DrawerContentItem';
-
-//TODO remove reference names
-//  about keychain    'info-circle.svg'
-//  accounts          'profile.svg'
-//  governance        'bank.svg'
-//  logout            'logout.svg'
-//  theme setting     'category.svg'
-//  user preferences  'candle-2.svg'
-//  tokens            'hive_red_alternative_logo.svg'
 
 type Props = PropsFromRedux & DrawerContentComponentProps;
 
@@ -42,9 +31,13 @@ const hiddenRoutesInMain = [
   'AccountManagementScreen',
   'WALLET',
   'BrowserScreen',
+  'Governance',
+  'SettingsScreen',
+  'ABOUT',
 ];
 
 const HeaderContent = (props: Props) => {
+  //TODO cleanup remove unused
   const {user, lock, navigation, itemStyle, state, ...rest} = props;
   const [isAccountMenuExpanded, setIsAccountMenuExpanded] = useState(false);
   const [subMenuSelectedScreenName, setSubMenuSelectedScreenName] = useState(
@@ -84,18 +77,6 @@ const HeaderContent = (props: Props) => {
 
   const {theme, setTheme} = useContext(ThemeContext);
 
-  const lineSVGProps = {
-    //TODO find which approach is better:
-    //  - or set the svg or draw the line.
-    //  - you must add this lines as relative to the "item label", so maybe it is better to code your own "DrawerItem" like.
-    lineSvgBottomDark: (
-      <View style={{alignSelf: 'flex-end'}}>
-        <BottomLineDark width={300} />
-      </View>
-    ),
-    lineSvgBottomLight: <BottomLineLight />,
-  };
-
   return (
     <DrawerContentScrollView
       {...props}
@@ -118,7 +99,7 @@ const HeaderContent = (props: Props) => {
           //TODO bellow, add new stack to show submenus.
           onPress={() => {}}
           iconImage={<AccountsMenuIcon />}
-          {...lineSVGProps}
+          drawBottomLine
         />
         <DrawerContentItem
           {...props}
@@ -126,16 +107,16 @@ const HeaderContent = (props: Props) => {
           theme={theme}
           onPress={() => navigation.navigate('SettingsScreen')}
           iconImage={<UserPrefMenuIcon />}
-          {...lineSVGProps}
+          drawBottomLine
         />
         <DrawerContentItem
           {...props}
           labelTranslationKey="navigation.tokens"
           theme={theme}
-          //TODO add new tockets stack?? + screen in MainDrawer.
+          //TODO add new tokens stack?? + screen in MainDrawer.
           onPress={() => {}}
           iconImage={<TokensMenuIcon />}
-          {...lineSVGProps}
+          drawBottomLine
         />
         <DrawerContentItem
           {...props}
@@ -143,7 +124,7 @@ const HeaderContent = (props: Props) => {
           theme={theme}
           onPress={() => navigation.navigate('Governance')}
           iconImage={<GovernanceMenuIcon />}
-          {...lineSVGProps}
+          drawBottomLine
         />
         <DrawerContentItem
           {...props}
@@ -164,7 +145,7 @@ const HeaderContent = (props: Props) => {
               }}
             />
           }
-          {...lineSVGProps}
+          drawBottomLine
         />
         <DrawerContentItem
           {...props}
@@ -172,7 +153,7 @@ const HeaderContent = (props: Props) => {
           theme={theme}
           onPress={() => navigation.navigate('ABOUT')}
           iconImage={<AboutMenuIcon />}
-          {...lineSVGProps}
+          drawBottomLine
         />
         <DrawerContentItem
           {...props}
@@ -185,6 +166,7 @@ const HeaderContent = (props: Props) => {
           iconImage={<LogoutMenuIcon />}
         />
 
+        {/* //TODO cleanup unused code */}
         {/* <TouchableOpacity
           onLongPress={() => {
             props.closeAllTabs();
@@ -235,7 +217,7 @@ const HeaderContent = (props: Props) => {
           itemStyle={itemStyle}
           {...rest}
         />
-        <DrawerFooter user={user} />
+        <DrawerFooter user={user} theme={theme} />
       </ScrollView>
     </DrawerContentScrollView>
   );

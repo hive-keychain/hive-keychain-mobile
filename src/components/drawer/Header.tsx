@@ -3,15 +3,21 @@ import Heart from 'assets/new_UI/heart.svg';
 import ItemDropdown from 'components/form/ItemDropdown';
 import CloseButton from 'components/ui/CloseButton';
 import React from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {
+  ScaledSize,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {chainItemList} from 'src/reference-data/chainDropdownlist';
 import {getColors} from 'src/styles/colors';
+import {PADDINGLEFTMAINMENU} from 'src/styles/spacing';
 import {
-  body_primary_body_2,
+  getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {Width} from 'utils/common.types';
 import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 
@@ -22,8 +28,7 @@ export default ({
   theme: Theme;
   props: DrawerContentComponentProps;
 }) => {
-  const {width} = useWindowDimensions();
-  const styles = getDimensionedStyles({width}, theme);
+  const styles = getDimensionedStyles(useWindowDimensions(), theme);
   return (
     <View style={styles.container}>
       <View style={styles.topContainer}>
@@ -38,7 +43,7 @@ export default ({
           <Text style={styles.textSubHeader}>
             {capitalizeSentence(translate('drawerFooter.madeBy_part_1'))}
           </Text>
-          <View style={{flexGrow: 1, alignItems: 'center'}}>
+          <View style={styles.heartContainer}>
             <Heart {...styles.heartIcon} />
           </View>
           <Text style={[styles.textSubHeader]}>
@@ -50,10 +55,12 @@ export default ({
         </Text>
       </View>
       <View style={[styles.bottomContainer]}>
-        <Text style={styles.textLabel}>
-          {translate('multichain.switch_chain')}
-        </Text>
-        <View style={[{width: '55%'}]}>
+        <View style={[{alignItems: 'center'}]}>
+          <Text style={[styles.textLabel]}>
+            {translate('multichain.switch_chain')}
+          </Text>
+        </View>
+        <View style={[styles.dropdownContainer]}>
           <ItemDropdown theme={theme} itemDropdownList={chainItemList} />
         </View>
       </View>
@@ -61,7 +68,7 @@ export default ({
   );
 };
 
-const getDimensionedStyles = ({width}: Width, theme: Theme) =>
+const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
   StyleSheet.create({
     container: {
       display: 'flex',
@@ -69,19 +76,19 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       width: '95%',
       marginTop: 8,
       zIndex: 1,
-      marginLeft: 20,
+      paddingLeft: PADDINGLEFTMAINMENU,
     },
     topContainer: {
       flexDirection: 'row',
       alignItems: 'center',
       alignContent: 'center',
       justifyContent: 'space-between',
-      width: '55%',
+      width: '50%',
       alignSelf: 'flex-start',
       marginBottom: 15,
     },
     middleContainer: {
-      width: '75%',
+      width: '70%',
       alignSelf: 'flex-start',
       marginBottom: 15,
     },
@@ -95,28 +102,32 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     textHeader: {
       color: getColors(theme).secondaryText,
       ...headlines_primary_headline_2,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        headlines_primary_headline_2.fontSize,
+      ),
     },
     textSubHeader: {
       color: getColors(theme).secondaryText,
       ...headlines_primary_headline_2,
       opacity: 0.6,
-      fontSize: 15,
+      fontSize: getFontSizeSmallDevices(height, 15),
     },
     textLabel: {
       color: getColors(theme).secondaryText,
       ...headlines_primary_headline_2,
-      fontSize: 14,
-    },
-    pickerItemText: {
-      ...body_primary_body_2,
-      fontSize: 13,
+      fontSize: getFontSizeSmallDevices(height, 14),
     },
     heartIcon: {
       width: 22,
       height: 22,
     },
+    heartContainer: {alignItems: 'center', paddingHorizontal: 6},
     flexRowCentered: {
       flexDirection: 'row',
       alignItems: 'center',
+    },
+    dropdownContainer: {
+      width: '52%',
     },
   });

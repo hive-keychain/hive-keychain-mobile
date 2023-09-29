@@ -11,6 +11,7 @@ export const generateBoxShadowStyle = (
   shadowRadius: number,
   elevation: number,
   shadowColorAndroid: string,
+  zIndex?: number,
 ) => {
   if (Platform.OS === 'ios') {
     return {
@@ -18,11 +19,13 @@ export const generateBoxShadowStyle = (
       shadowOffset: {width: xOffset, height: yOffset},
       shadowOpacity,
       shadowRadius,
+      zIndex,
     };
   } else if (Platform.OS === 'android') {
     return {
       elevation,
       shadowColor: shadowColorAndroid,
+      zIndex,
     };
   }
 };

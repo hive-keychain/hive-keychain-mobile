@@ -14,6 +14,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
+  getFontSizeSmallDevices,
   headlines_primary_headline_2,
   title_primary_body_2,
 } from 'src/styles/typography';
@@ -122,7 +123,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     },
     itemTextStyle: {
       ...title_primary_body_2,
-      fontSize: 13,
+      fontSize: getFontSizeSmallDevices(height, 13),
       color: getColors(theme).secondaryText,
       textAlignVertical: 'center',
       height: 20,
@@ -131,12 +132,14 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     expandedListContainer: {
       position: 'absolute',
       backgroundColor: getColors(theme).menuHamburguerBg,
-      width: '98%',
+      width: '90%',
       padding: 4,
       top: 40,
       left: 5,
       borderColor: getColors(theme).cardBorderColorContrast,
       borderWidth: 1,
+      borderBottomLeftRadius: width / 15,
+      borderBottomRightRadius: width / 15,
     },
     expandedListItemContainer: {
       backgroundColor: getColors(theme).menuHamburguerBg,

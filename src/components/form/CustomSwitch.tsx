@@ -1,11 +1,12 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
 import {
   BACKGROUNDDARKBLUE,
   BACKGROUNDITEMDARKISH,
   BACKGROUNDLIGHTVARIANTLIGHTBLUE,
+  getColors,
 } from 'src/styles/colors';
 
 interface Props {
@@ -16,6 +17,8 @@ interface Props {
   initalValue: boolean;
   valueTrue: any;
   valueFalse: any;
+  additionalContainerStyle?: StyleProp<ViewStyle>;
+  additionalIconContainerStyle?: StyleProp<ViewStyle>;
 }
 
 const CustomSwitch = ({
@@ -26,6 +29,8 @@ const CustomSwitch = ({
   valueFalse,
   valueTrue,
   initalValue,
+  additionalContainerStyle,
+  additionalIconContainerStyle,
 }: Props) => {
   const [value, setValue] = React.useState(initalValue);
   const styles = getStyles(theme, value);
@@ -36,9 +41,9 @@ const CustomSwitch = ({
   }, [value]);
 
   return (
-    <View style={[styles.container, justifyStyle]}>
+    <View style={[styles.container, justifyStyle, additionalContainerStyle]}>
       <TouchableOpacity
-        style={styles.iconContainer}
+        style={[styles.iconContainer, additionalIconContainerStyle]}
         onPress={() => setValue(!value)}>
         {value ? iconLeftSide : iconRightSide}
       </TouchableOpacity>
@@ -58,6 +63,9 @@ const getStyles = (theme: Theme, value: boolean) =>
         : BACKGROUNDLIGHTVARIANTLIGHTBLUE,
       width: '20%',
       marginRight: 8,
+      marginLeft: 10,
+      borderWidth: 1,
+      borderColor: getColors(theme).cardBorderColorContrast,
     },
     justifyStart: {
       justifyContent: 'flex-start',

@@ -11,6 +11,8 @@ import {getSpaceMultiplier} from './sizeAdjuster';
 
 //TODO : Change below, this was just put here as an example
 
+export const PADDINGLEFTMAINMENU = 12;
+
 export const getSpacing = (width = 0, height = 0) => {
   return {
     mainMarginHorizontal: 0.05 * width, //dynamic
