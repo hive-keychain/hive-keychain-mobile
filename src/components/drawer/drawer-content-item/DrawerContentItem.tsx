@@ -34,41 +34,20 @@ type Props = PropsDrawerContentItem;
 const DrawerContentItem = (props: Props) => {
   const dimensions = useWindowDimensions();
   const {height} = dimensions;
-  const styles = getStyles(props.theme, dimensions);
+  const styles = getStyles(props.theme, dimensions, !!props.leftSideComponent);
 
   return (
     <View style={[styles.container, props.additionalContainerStyle]}>
       <View style={styles.iconContainer}>{props.iconImage}</View>
-      <View
-        //TODO here pass all styles bellow!!!
-        style={[
-          {
-            width: '100%',
-            height: height * 0.09,
-            alignContent: 'center',
-            justifyContent: 'center',
-            flexShrink: 1,
-          },
-        ]}>
-        <View style={[{flexDirection: 'row', alignItems: 'center'}]}>
+      <View style={[styles.flexShrinkHeightFixed]}>
+        <View style={[styles.flexRowStart]}>
           <TouchableOpacity onPress={() => props.onPress()}>
             <Text style={[styles.labelStyle]}>
               {translate(props.labelTranslationKey)}
             </Text>
           </TouchableOpacity>
           {props.leftSideComponent && (
-            <View
-              style={[
-                {
-                  justifyContent: 'flex-end',
-                  alignContent: 'flex-end',
-                  alignItems: 'flex-end',
-                  flexGrow: 1,
-                  flex: 1,
-                },
-              ]}>
-              {props.leftSideComponent}
-            </View>
+            <View style={[styles.marginLeft25]}>{props.leftSideComponent}</View>
           )}
         </View>
         {props.drawBottomLine && (
@@ -85,14 +64,19 @@ const DrawerContentItem = (props: Props) => {
 
 export default DrawerContentItem;
 
-const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
+const getStyles = (
+  theme: Theme,
+  {width, height}: ScaledSize,
+  hasLeftComponent: boolean,
+) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',
       paddingLeft: PADDINGLEFTMAINMENU,
       alignItems: 'center',
-      height: height * 0.09,
-      width: '100%',
+      height: 41,
+      width: hasLeftComponent ? '95%' : '100%',
+      marginBottom: 20,
     },
     iconContainer: {
       justifyContent: 'center',
@@ -113,7 +97,8 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
     bottomLine: {
       position: 'absolute',
       width: '97%',
-      bottom: -8,
+      bottom: -22,
+      top: undefined,
       borderColor: getColors(theme).lineSeparatorStroke,
     },
     rowSpaceBetween: {
@@ -121,5 +106,20 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       flexDirection: 'row',
       flex: 1,
       alignItems: 'center',
+    },
+    marginLeft25: {
+      marginLeft: 25,
+    },
+    flexShrinkHeightFixed: {
+      width: '100%',
+      height: 41,
+      alignContent: 'center',
+      justifyContent: 'center',
+      flexShrink: 1,
+    },
+    flexRowStart: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
     },
   });

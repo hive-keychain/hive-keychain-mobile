@@ -44,6 +44,7 @@ const CustomSwitch = ({
     <View style={[styles.container, justifyStyle, additionalContainerStyle]}>
       <TouchableOpacity
         style={[styles.iconContainer, additionalIconContainerStyle]}
+        containerStyle={styles.touchableOpacityStyle}
         onPress={() => setValue(!value)}>
         {value ? iconLeftSide : iconRightSide}
       </TouchableOpacity>
@@ -61,9 +62,9 @@ const getStyles = (theme: Theme, value: boolean) =>
       backgroundColor: !value
         ? BACKGROUNDDARKBLUE
         : BACKGROUNDLIGHTVARIANTLIGHTBLUE,
-      width: '65%',
-      marginRight: 8,
-      marginLeft: 10,
+      width: 50,
+      marginRight: 10,
+      padding: 0.5,
       borderWidth: 1,
       borderColor: getColors(theme).cardBorderColorContrast,
     },
@@ -79,5 +80,8 @@ const getStyles = (theme: Theme, value: boolean) =>
       borderRadius: 100,
       marginLeft: 3,
       marginRight: 3,
+    },
+    touchableOpacityStyle: {
+      borderRadius: 100,
     },
   });

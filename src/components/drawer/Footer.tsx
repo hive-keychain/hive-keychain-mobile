@@ -122,8 +122,11 @@ const getStyles = (theme: Theme, {height}: ScaledSize) =>
   StyleSheet.create({
     footer: {
       width: '100%',
+      height: 130,
       alignItems: 'center',
       justifyContent: 'center',
+      bottom: 0,
+      top: undefined,
     },
     footerText: {
       ...button_link_primary_medium,
@@ -140,7 +143,7 @@ const getStyles = (theme: Theme, {height}: ScaledSize) =>
     },
     buttonText: {
       ...button_link_primary_medium,
-      fontSize: getFontSizeSmallDevices(height, 14),
+      fontSize: getFontSizeSmallDevices(height, 12),
     },
     footerIconContainer: {
       borderWidth: 1,

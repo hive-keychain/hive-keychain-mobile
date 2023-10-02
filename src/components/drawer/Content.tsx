@@ -34,6 +34,7 @@ const hiddenRoutesInMain = [
   'Governance',
   'SettingsScreen',
   'ABOUT',
+  'Accounts',
 ];
 
 const HeaderContent = (props: Props) => {
@@ -129,8 +130,8 @@ const HeaderContent = (props: Props) => {
           leftSideComponent={
             <CustomSwitch
               theme={theme}
-              iconLeftSide={<SwitchLightIcon />}
-              iconRightSide={<SwitchDarkIcon />}
+              iconLeftSide={<SwitchLightIcon width={24} height={24} />}
+              iconRightSide={<SwitchDarkIcon width={24} height={24} />}
               initalValue={theme === Theme.LIGHT}
               valueTrue={Theme.LIGHT}
               valueFalse={Theme.DARK}
@@ -209,8 +210,8 @@ const HeaderContent = (props: Props) => {
           itemStyle={itemStyle}
           {...rest}
         />
-        <DrawerFooter user={user} theme={theme} />
       </ScrollView>
+      <DrawerFooter user={user} theme={theme} />
     </DrawerContentScrollView>
   );
 };
