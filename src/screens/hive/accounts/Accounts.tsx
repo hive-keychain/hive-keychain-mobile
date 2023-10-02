@@ -6,6 +6,7 @@ import React, {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {navigate} from 'utils/navigation';
 
 const Accounts = () => {
   const {theme} = useContext(ThemeContext);
@@ -15,21 +16,21 @@ const Accounts = () => {
       <DrawerContentItem
         labelTranslationKey={'navigation.add_account'}
         theme={theme}
-        onPress={() => {}} //TODO add navigation
+        onPress={() => navigate('AddAccountStack')}
         iconImage={<AddAccountIcon />}
         drawBottomLine={true}
       />
       <DrawerContentItem
         labelTranslationKey={'navigation.create_account'}
         theme={theme}
-        onPress={() => {}} //TODO add navigation
+        onPress={() => navigate('CreateAccountScreen')}
         iconImage={<CreateAccountIcon />}
         drawBottomLine={true}
       />
       <DrawerContentItem
         labelTranslationKey={'navigation.manage'}
         theme={theme}
-        onPress={() => {}} //TODO add navigation
+        onPress={() => navigate('AccountManagementScreen')}
         iconImage={<ManageKeysIcon />}
         drawBottomLine={true}
       />

@@ -12,6 +12,7 @@ export type MainDrawerStackParam = {
   SettingsScreen: undefined;
   ABOUT: undefined;
   Governance: undefined;
+  Tokens: undefined;
 };
 
 export type BrowserNavigation = StackNavigationProp<

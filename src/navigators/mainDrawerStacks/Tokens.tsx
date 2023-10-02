@@ -5,7 +5,7 @@ import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import React, {useContext} from 'react';
-import Accounts from 'screens/hive/accounts/Accounts';
+import Tokens from 'screens/hive/wallet/Tokens';
 import {ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
@@ -19,8 +19,8 @@ export default () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Accounts"
-        component={Accounts}
+        name="Tokens"
+        component={() => <Tokens new_ui />}
         options={({navigation}) => ({
           headerStyle: {
             backgroundColor: getColors(theme).primaryBackground,
@@ -31,7 +31,7 @@ export default () => {
             color: getColors(theme).primaryText,
           },
           headerTitleAlign: 'center',
-          title: translate('common.account'),
+          title: translate('navigation.tokens'),
           headerTintColor: 'red',
           headerRight: () => (
             <CloseButton

@@ -35,6 +35,7 @@ const hiddenRoutesInMain = [
   'SettingsScreen',
   'ABOUT',
   'Accounts',
+  'Tokens',
 ];
 
 const HeaderContent = (props: Props) => {
@@ -110,8 +111,7 @@ const HeaderContent = (props: Props) => {
         <DrawerContentItem
           labelTranslationKey="navigation.tokens"
           theme={theme}
-          //TODO add new tokens stack?? + screen in MainDrawer.
-          onPress={() => {}}
+          onPress={() => navigation.navigate('Tokens')}
           iconImage={<TokensMenuIcon />}
           drawBottomLine
         />

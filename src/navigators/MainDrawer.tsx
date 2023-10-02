@@ -15,6 +15,7 @@ import Accounts from './mainDrawerStacks/Accounts';
 import AddAccountStack from './mainDrawerStacks/AddAccount';
 import CreateAccount from './mainDrawerStacks/CreateAccount';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
+import Tokens from './mainDrawerStacks/Tokens';
 
 const Drawer = createDrawerNavigator<MainDrawerStackParam>();
 
@@ -65,10 +66,6 @@ export default () => {
         }}
         component={AboutStack}
       />
-      {/* //TODO bellow, make a new screen that have a sub menu, to:
-      //  - addaccounts
-      //  - create accounts
-      //  - manage keys. */}
       <Drawer.Screen name="Accounts" component={Accounts} />
       <Drawer.Screen
         name="AccountManagementScreen"
@@ -76,6 +73,7 @@ export default () => {
       />
       <Drawer.Screen name="AddAccountStack" component={AddAccountStack} />
       <Drawer.Screen name="CreateAccountScreen" component={CreateAccount} />
+      <Drawer.Screen name="Tokens" component={Tokens} />
     </Drawer.Navigator>
   );
 };

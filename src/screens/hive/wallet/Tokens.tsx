@@ -11,6 +11,11 @@ import {logScreenView} from 'utils/analytics';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
 
+interface TokensProps {
+  //TODO remove this prop after refactoring UI & old code.
+  new_ui?: boolean;
+}
+
 const Tokens = ({
   user,
   loadTokens,
@@ -20,7 +25,8 @@ const Tokens = ({
   userTokens,
   prices,
   tokensMarket,
-}: PropsFromRedux) => {
+  new_ui,
+}: PropsFromRedux & TokensProps) => {
   useEffect(() => {
     loadTokens();
     loadTokensMarket();
@@ -79,7 +85,12 @@ const Tokens = ({
     }
   };
 
-  return (
+  return new_ui ? (
+    <View style={styles.container}>
+      <Text>TODO fill this up!</Text>
+    </View>
+  ) : (
+    //TODO OLD code
     <View style={styles.container}>
       <Separator />
       <HiveEngineAccountValue
@@ -91,6 +102,7 @@ const Tokens = ({
       {renderContent()}
     </View>
   );
+  //END OLD code
 };
 
 const styles = StyleSheet.create({
