@@ -1,6 +1,6 @@
 //TODO finish it using code bellow + modify
 import React from 'react';
-import {StyleProp, TouchableOpacity, ViewProps} from 'react-native';
+import {StyleProp, TouchableOpacity, ViewStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
   onPress: () => void;
   lightThemeIcon: JSX.Element;
   darkThemeIcon: JSX.Element;
-  additionalContainerStyle?: StyleProp<ViewProps>;
+  additionalContainerStyle?: StyleProp<ViewStyle>;
 };
 
 export default function CustomIconButton({

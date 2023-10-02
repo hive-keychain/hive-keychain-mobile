@@ -1,3 +1,5 @@
+export const hiveEngineWebsiteURL = 'https://hive-engine.com/';
+
 export const hiveEngine = {
   CHAIN_ID: 'ssc-mainnet-hive',
 };
@@ -99,7 +101,7 @@ export const BrowserConfig = {
         name: 'Hive-Engine',
         description: 'Create Tokens & Smart Contracts on Hive.',
         icon: 'https://avatars.githubusercontent.com/u/51540775?s=200&v=4',
-        url: 'https://hive-engine.com/',
+        url: hiveEngineWebsiteURL,
         categories: ['finance'],
       },
       {

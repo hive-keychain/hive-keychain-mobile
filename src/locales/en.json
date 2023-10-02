@@ -270,7 +270,8 @@
         "info_pegged_buy": {
           "part_1": "Bought",
           "amount": "{{amount}}"
-        }
+        },
+        "info": "View token information and choose which tokens to display. learn more about custom tokens on the HIVE blockchain at"
       },
       "buy_coins": {
         "title_hive": "HIVE",

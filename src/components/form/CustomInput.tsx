@@ -11,6 +11,7 @@ import {Width} from 'utils/common.types';
 type Props = InputProps & {
   textAlign?: string;
   containerStyle?: StyleProp<ViewStyle>;
+  additionalInputContainerStyle?: StyleProp<ViewStyle>;
   backgroundColor?: string;
   inputColor?: string;
 };
@@ -20,6 +21,7 @@ export default ({
   inputColor,
   textAlign,
   containerStyle,
+  additionalInputContainerStyle,
   ...props
 }: Props) => {
   const styles = getDimensionedStyles({
@@ -35,7 +37,10 @@ export default ({
       inputStyle={styles.input}
       leftIconContainerStyle={styles.leftIcon}
       rightIconContainerStyle={styles.rightIcon}
-      inputContainerStyle={styles.inputContainer}
+      inputContainerStyle={[
+        styles.inputContainer,
+        additionalInputContainerStyle,
+      ]}
       {...props}
     />
   );

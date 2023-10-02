@@ -25,6 +25,7 @@ export const BACKGROUNDITEMDARKISH = '#293144';
 export const BACKGROUNDLIGHTVARIANTLIGHTBLUE = '#E6EEF6';
 export const BACKGROUNDDARKBLUE = '#212838';
 export const LINESTROKESEPARATOR = '#EDF4FC';
+export const DARKBLUELIGHTER = '#364360';
 
 export const getColors = (theme: Theme) => {
   return {
