@@ -3,8 +3,8 @@ import HistoryIcon from 'assets/wallet/icon_history_green.svg';
 import Transfer from 'components/hive/Transfer';
 import Separator from 'components/ui/Separator';
 import React, {useEffect} from 'react';
-import {FlatList} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {FlatList, StyleProp, ViewStyle} from 'react-native';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {getMainLocale, translate} from 'utils/localize';
 import Balance from './Balance';
@@ -14,6 +14,7 @@ export type HistoryProps = {
   tokenBalance: string;
   tokenLogo: JSX.Element;
   currency: string;
+  additionalButtonStyle?: StyleProp<ViewStyle>;
 };
 type Props = PropsFromRedux & HistoryProps;
 const History = ({
@@ -23,6 +24,7 @@ const History = ({
   currency,
   history,
   loadTokenHistory,
+  additionalButtonStyle,
 }: Props) => {
   useEffect(() => {
     if (user.name) {

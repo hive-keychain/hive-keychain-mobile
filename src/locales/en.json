@@ -271,7 +271,11 @@
           "part_1": "Bought",
           "amount": "{{amount}}"
         },
-        "info": "View token information and choose which tokens to display. learn more about custom tokens on the HIVE blockchain at"
+        "info": "View token information and choose which tokens to display. learn more about custom tokens on the HIVE blockchain at",
+        "total_value": "Total Value",
+        "liquid_balance": "Liquid Balance",
+        "incoming": "Incoming Delegation",
+        "outgoing": "Outgoing Delegation"
       },
       "buy_coins": {
         "title_hive": "HIVE",

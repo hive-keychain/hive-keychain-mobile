@@ -2,7 +2,7 @@ import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
 import {StyleProp, ViewStyle} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import EllipticButton from './EllipticButton';

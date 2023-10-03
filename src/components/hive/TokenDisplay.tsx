@@ -1,17 +1,36 @@
-import {Currency} from 'actions/interfaces';
+import {Currency, Token} from 'actions/interfaces';
+import UnstakeIcon from 'assets/new_UI/3d_cube_down_arrow.svg';
+import StakeIcon from 'assets/new_UI/3d_cube_scan.svg';
+import ExpandMoreIconDark from 'assets/new_UI/dropdown_arrow_dark.svg';
+import ExpandMoreIconLight from 'assets/new_UI/dropdown_arrow_light.svg';
+import DelegationsIcon from 'assets/new_UI/receive_square.svg';
 import DelegationsList from 'components/operations/DelegationsList';
+import RoundButton from 'components/operations/OperationsButtons';
+import CustomIconButton from 'components/ui/CustomIconButton';
 import React from 'react';
 import {
+  Linking,
+  ScaledSize,
   StyleProp,
   StyleSheet,
   Text,
   TextStyle,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
-import {Width} from 'utils/common.types';
+import {Theme} from 'src/context/theme.context';
+import {TokenBalance} from 'src/interfaces/tokens.interface';
+import {BORDERWHITISH, getColors} from 'src/styles/colors';
+import {
+  body_primary_body_2,
+  button_link_primary_medium,
+  fields_primary_text_2,
+  getFontSizeSmallDevices,
+  title_secondary_body_3,
+} from 'src/styles/typography';
 import {formatBalance, signedNumber} from 'utils/format';
+import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
 type Props = {
@@ -19,6 +38,7 @@ type Props = {
   logo: JSX.Element;
   currency: string;
   value: number;
+  totalValue: number;
   secondaryCurrency?: string;
   secondaryValue?: number;
   color: string;
@@ -30,6 +50,12 @@ type Props = {
   bottomLeft?: JSX.Element;
   toggled: boolean;
   setToggle: () => void;
+  //TODO fixed after refactoring UI
+  using_new_ui?: boolean;
+  renderButtonOptions?: boolean;
+  theme: Theme;
+  tokenInfo: Token;
+  tokenBalance: TokenBalance;
 };
 
 const TokenDisplay = ({
@@ -48,13 +74,116 @@ const TokenDisplay = ({
   bottomLeft,
   toggled,
   setToggle,
+  using_new_ui,
+  renderButtonOptions,
+  theme,
+  tokenInfo,
+  totalValue,
+  tokenBalance,
 }: Props) => {
   const styles = getDimensionedStyles({
     color,
     ...useWindowDimensions(),
     change: price ? price.usd_24h_change! + '' : '0',
+    theme,
   });
-  return (
+  const tokenTotalValue = value ? formatBalance(totalValue) : 0;
+
+  const renderAsSquareButton = (
+    icon: JSX.Element,
+    label: string,
+    onPress: () => void,
+  ) => (
+    <RoundButton
+      size={22}
+      //TODO add open stake modal w full height, as design.
+      onPress={onPress}
+      backgroundColor="black"
+      content={
+        <View style={styles.innerButtonContainer}>
+          <View style={styles.iconButtonContainer}>{icon}</View>
+          <Text style={styles.textButton}>{label}</Text>
+        </View>
+      }
+      additionalButtonStyle={styles.squareButton}
+    />
+  );
+
+  return using_new_ui ? (
+    <View style={styles.container}>
+      <View style={styles.flexRowBetween}>
+        <View style={{flexDirection: 'row'}}>
+          <View style={styles.logo}>{logo}</View>
+          <View style={[styles.flexColumnCentered, styles.containerMarginLeft]}>
+            <Text style={styles.textSymbol}>{name}</Text>
+            <Text style={styles.textAmount}>
+              {value ? formatBalance(value) : 0}
+            </Text>
+          </View>
+        </View>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {renderButtonOptions && buttons}
+          <CustomIconButton
+            lightThemeIcon={<ExpandMoreIconLight />}
+            darkThemeIcon={<ExpandMoreIconDark />}
+            onPress={() => setToggle()}
+            theme={theme}
+            additionalContainerStyle={styles.expandMoreButton}
+          />
+        </View>
+      </View>
+      {toggled && (
+        <View style={styles.expandedItemContainer}>
+          <TouchableOpacity
+            onPress={() =>
+              Linking.openURL(`https://peakd.com/@${tokenInfo.issuer}`)
+            }>
+            <Text style={styles.textBodyItem}>@{tokenInfo.issuer}</Text>
+          </TouchableOpacity>
+          <Text style={styles.textBodyItem}>
+            {translate('wallet.operations.tokens.total_value')} : $
+            {tokenTotalValue} (${tokenTotalValue}/Token)
+          </Text>
+          <Text style={styles.textBodyItem}>
+            {translate('wallet.operations.tokens.liquid_balance')} :{' '}
+            {value ? formatBalance(value) : 0}
+          </Text>
+          <Text style={styles.textBodyItem}>
+            {translate('wallet.operations.tokens.incoming')} :{' '}
+            {tokenBalance.delegationsIn}
+          </Text>
+          <Text style={styles.textBodyItem}>
+            {translate('wallet.operations.tokens.outgoing')} :{' '}
+            {tokenBalance.delegationsOut}
+          </Text>
+          <View style={styles.buttonsContainer}>
+            {tokenInfo.stakingEnabled &&
+              //TODO finish bellow, render modal in full height as design
+              renderAsSquareButton(
+                <StakeIcon {...styles.iconButton} />,
+                translate('wallet.operations.token_stake.title'),
+                () => {},
+              )}
+            {tokenInfo.stakingEnabled &&
+              //TODO finish bellow, render modal in full height as design
+              renderAsSquareButton(
+                <UnstakeIcon {...styles.iconButton} />,
+                translate('wallet.operations.token_unstake.title'),
+                () => {},
+              )}
+            {tokenInfo.delegationEnabled &&
+              //TODO finish bellow, render modal in full height as design
+              renderAsSquareButton(
+                <DelegationsIcon {...styles.iconButton} />,
+                translate('wallet.operations.token_delegation.title'),
+                () => {},
+              )}
+          </View>
+        </View>
+      )}
+    </View>
+  ) : (
+    //TODO OLD UI to remove
     <TouchableOpacity style={styles.container} onPress={setToggle}>
       <View style={styles.main}>
         <View style={styles.left}>
@@ -91,6 +220,7 @@ const TokenDisplay = ({
       )}
     </TouchableOpacity>
   );
+  //END Old UI
 };
 
 const renderLeftBottom = (
@@ -141,18 +271,21 @@ const renderLeftBottom = (
 
 const getDimensionedStyles = ({
   width,
+  height,
   color,
   change,
-}: Width & {color: string; change: string}) =>
+  theme,
+}: ScaledSize & {color: string; change: string; theme: Theme}) =>
   StyleSheet.create({
+    //TODO after refactoring, update, cleanup
     container: {
       display: 'flex',
       flexDirection: 'column',
-      borderWidth: 2,
-      borderColor: color,
-      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: getColors(theme).cardBorderColor,
+      borderRadius: 20,
       width: '100%',
-      backgroundColor: 'white',
+      backgroundColor: getColors(theme).secondaryCardBgColor,
       paddingHorizontal: width * 0.05,
       paddingVertical: width * 0.03,
     },
@@ -193,6 +326,105 @@ const getDimensionedStyles = ({
     sixtyPercentLine: {width: '60%'},
     rowReverse: {flexDirection: 'row-reverse'},
     flex: {flex: 1, marginRight: 30},
+    //added //TODO remove comment
+    flexRowBetween: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    flexColumnCentered: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+    },
+    containerMarginLeft: {
+      marginLeft: 7,
+    },
+    expandMoreButton: {
+      width: 28,
+      height: 20,
+      backgroundColor: theme === Theme.LIGHT ? '#F1F1F1' : null,
+      borderRadius: 11,
+      alignItems: 'center',
+      marginLeft: 7,
+      borderColor: theme === Theme.DARK ? '#364360' : null,
+      borderWidth: theme === Theme.DARK ? 1 : 0,
+    },
+    textSymbol: {
+      ...button_link_primary_medium,
+      lineHeight: 22,
+      color: getColors(theme).tertiaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        button_link_primary_medium.fontSize,
+      ),
+    },
+    textAmount: {
+      color: getColors(theme).quaternaryText,
+      lineHeight: 17,
+      ...body_primary_body_2,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        button_link_primary_medium.fontSize,
+      ),
+    },
+    buttonsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginTop: 14,
+      marginBottom: 9,
+    },
+    innerButtonContainer: {flexDirection: 'row', alignItems: 'center'},
+    iconButton: {
+      width: 12,
+      height: 12,
+    },
+    iconButtonContainer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 30,
+      borderWidth: 1,
+      borderColor: BORDERWHITISH,
+      padding: 4,
+      marginRight: 3,
+    },
+    buttonContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderRadius: 6,
+      padding: 6,
+    },
+    squareButton: {
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: getColors(theme).cardBorderColorContrast,
+      borderWidth: 1,
+      borderRadius: 11,
+      width: '30%',
+      height: 'auto',
+      paddingHorizontal: 22,
+      paddingVertical: 15,
+      //TODO cleanup
+      // marginLeft: 7,
+    },
+    expandedItemContainer: {
+      marginTop: 10,
+    },
+    textBodyItem: {
+      ...fields_primary_text_2,
+      color: getColors(theme).secondaryText,
+      opacity: 0.7,
+      lineHeight: 14.7,
+    },
+    textButton: {
+      ...title_secondary_body_3,
+      color: getColors(theme).primaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        title_secondary_body_3.fontSize,
+      ),
+      letterSpacing: -0.4,
+    },
   });
 type Styles = ReturnType<typeof getDimensionedStyles>;
 

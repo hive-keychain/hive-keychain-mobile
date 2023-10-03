@@ -26,11 +26,14 @@ export const BACKGROUNDLIGHTVARIANTLIGHTBLUE = '#E6EEF6';
 export const BACKGROUNDDARKBLUE = '#212838';
 export const LINESTROKESEPARATOR = '#EDF4FC';
 export const DARKBLUELIGHTER = '#364360';
+export const BORDERWHITISH = '#EDEDED';
 
 export const getColors = (theme: Theme) => {
   return {
     primaryText: theme === Theme.LIGHT ? '#484848' : '#FFF',
     secondaryText: theme === Theme.LIGHT ? '#212838' : '#FFF',
+    tertiaryText: theme === Theme.LIGHT ? '#3D3D3D' : '#FFF',
+    quaternaryText: theme === Theme.LIGHT ? '#242424' : '#FFF',
     primaryBackground: theme === Theme.LIGHT ? '#E5EDF5' : '#212838',
     contrastBackground: theme === Theme.LIGHT ? '#212838' : '#E5EDF5',
     menuHamburguerBg: theme === Theme.LIGHT ? '#FFF' : '#212838',
@@ -44,6 +47,7 @@ export const getColors = (theme: Theme) => {
     primaryRedShape:
       theme === Theme.LIGHT ? BRIGTHER_PRIMARY_RED : PRIMARY_RED_COLOR,
     cardBgColor: theme === Theme.LIGHT ? '#E5EDF5' : '#293144',
+    secondaryCardBgColor: theme === Theme.LIGHT ? '#FFF' : '#293144',
     cardBgLighter: theme === Theme.LIGHT ? '#FFF' : BACKGROUNDITEMDARKISH,
     lineSeparatorStroke: theme === Theme.LIGHT ? '#EDF4FC' : '#364360',
   };

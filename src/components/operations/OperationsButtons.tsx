@@ -1,10 +1,12 @@
+import SendIcon from 'assets/new_UI/send.svg';
 import AddIconWhite from 'assets/wallet/icon_add_circle_outline_white.svg';
 import Conversion from 'assets/wallet/icon_convert.svg';
 import Delegate from 'assets/wallet/icon_delegate.svg';
 import Plus from 'assets/wallet/icon_deposit.svg';
-import HistoryIcon from 'assets/wallet/icon_history.svg';
+//TODO clean up
+// import HistoryIcon from 'assets/wallet/icon_history.svg';
+import HistoryIcon from 'assets/new_UI/back_time.svg';
 import Power from 'assets/wallet/icon_power.svg';
-import SendArrow from 'assets/wallet/icon_send.svg';
 import ShoppingCartIconWhite from 'assets/wallet/icon_shopping_cart_white.svg';
 import Minus from 'assets/wallet/icon_withdraw.svg';
 import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savings-withdrawal-page.component';
@@ -15,7 +17,13 @@ import PowerDown from 'components/operations/PowerDown';
 import PowerUp from 'components/operations/PowerUp';
 import Transfer from 'components/operations/Transfer';
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {navigate} from 'utils/navigation';
 import BuyCoinsComponent, {BuyCoinsprops} from './Buy-coins.component';
@@ -28,16 +36,20 @@ type RoundButtonProps = {
   content: JSX.Element;
   backgroundColor: string;
   onPress: () => void;
+  additionalButtonStyle?: StyleProp<ViewStyle>;
 };
 const RoundButton = ({
   size,
   content,
   backgroundColor,
   onPress,
+  additionalButtonStyle,
 }: RoundButtonProps) => {
   const styles = getStyleSheet(size, backgroundColor);
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.container, additionalButtonStyle]}
+      onPress={onPress}>
       <View style={styles.content}>{content}</View>
     </TouchableOpacity>
   );
@@ -48,12 +60,14 @@ type SendProps = {
   tokenBalance?: string;
   engine?: boolean;
   tokenLogo?: JSX.Element;
+  additionalButtonStyle?: StyleProp<ViewStyle>;
 };
 export const Send = ({
   currency,
   tokenBalance,
   engine,
   tokenLogo,
+  additionalButtonStyle,
 }: SendProps) => {
   return (
     <RoundButton
@@ -72,7 +86,8 @@ export const Send = ({
       }}
       size={36}
       backgroundColor="#77B9D1"
-      content={<SendArrow />}
+      content={<SendIcon />}
+      additionalButtonStyle={additionalButtonStyle}
     />
   );
 };
@@ -222,6 +237,7 @@ export const ShowHistory = (props: HistoryProps) => {
       size={36}
       backgroundColor="#69C1B3"
       content={<HistoryIcon />}
+      additionalButtonStyle={props.additionalButtonStyle}
     />
   );
 };
@@ -259,7 +275,11 @@ export const BuyCoins = (props: BuyCoinsprops) => {
   );
 };
 
-const getStyleSheet = (size: number, backgroundColor: string) =>
+const getStyleSheet = (
+  size: number,
+  backgroundColor: string,
+  marginLeft?: number,
+) =>
   StyleSheet.create({
     container: {
       width: size,
@@ -269,6 +289,7 @@ const getStyleSheet = (size: number, backgroundColor: string) =>
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      marginLeft: marginLeft,
     },
     content: {},
   });

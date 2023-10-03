@@ -52,6 +52,11 @@ export const getHiveEngineTokenValue = (
     : balance.symbol === 'SWAP.HIVE'
     ? 1
     : 0;
+  console.log({
+    symbol: balance.symbol,
+    price,
+    lastPrice: tokenMarket ? tokenMarket.lastPrice : 0,
+  }); //TODO remove line
   return parseFloat(balance.balance) * price;
 };
 
