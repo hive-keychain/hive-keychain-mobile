@@ -1,15 +1,15 @@
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {
+  Pressable,
   ScaledSize,
   StyleProp,
   StyleSheet,
   Text,
   View,
-  ViewProps,
+  ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {PADDINGLEFTMAINMENU} from 'src/styles/spacing';
@@ -26,7 +26,8 @@ interface PropsDrawerContentItem {
   iconImage: JSX.Element;
   leftSideComponent?: JSX.Element;
   drawBottomLine?: boolean;
-  additionalContainerStyle?: StyleProp<ViewProps>;
+  additionalContainerStyle?: StyleProp<ViewStyle>;
+  additionalPressedStyle?: StyleProp<ViewStyle>;
 }
 
 type Props = PropsDrawerContentItem;
@@ -41,11 +42,15 @@ const DrawerContentItem = (props: Props) => {
       <View style={styles.iconContainer}>{props.iconImage}</View>
       <View style={[styles.flexShrinkHeightFixed]}>
         <View style={[styles.flexRowStart]}>
-          <TouchableOpacity onPress={() => props.onPress()}>
+          <Pressable
+            style={({pressed}) =>
+              pressed ? props.additionalPressedStyle : null
+            }
+            onPress={() => props.onPress()}>
             <Text style={[styles.labelStyle]}>
               {translate(props.labelTranslationKey)}
             </Text>
-          </TouchableOpacity>
+          </Pressable>
           {props.leftSideComponent && (
             <View style={[styles.marginLeft25]}>{props.leftSideComponent}</View>
           )}

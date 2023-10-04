@@ -50,5 +50,6 @@ export const getColors = (theme: Theme) => {
     secondaryCardBgColor: theme === Theme.LIGHT ? '#FFF' : '#293144',
     cardBgLighter: theme === Theme.LIGHT ? '#FFF' : BACKGROUNDITEMDARKISH,
     lineSeparatorStroke: theme === Theme.LIGHT ? '#EDF4FC' : '#364360',
+    betterContrastStroke: theme === Theme.DARK ? '#FFF' : 'none',
   };
 };

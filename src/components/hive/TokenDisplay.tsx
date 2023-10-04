@@ -109,6 +109,8 @@ const TokenDisplay = ({
     />
   );
 
+  console.log({using_new_ui}); // TODO remove line
+
   return using_new_ui ? (
     <View style={styles.container}>
       <View style={styles.flexRowBetween}>

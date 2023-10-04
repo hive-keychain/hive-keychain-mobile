@@ -1,12 +1,9 @@
 import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
-import PreferencesIcon from 'assets/new_UI/candle-2.svg';
-import SearchIcon from 'assets/new_UI/search.svg';
-import SettingsIcon from 'assets/new_UI/setting.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import HiveEngineAccountValue from 'components/hive/HiveEngineAccountValue';
+import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
-import CustomIconButton from 'components/ui/CustomIconButton';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useContext, useEffect, useState} from 'react';
@@ -27,6 +24,7 @@ import {DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
   getFontSizeSmallDevices,
+  headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
@@ -134,7 +132,7 @@ const Tokens = ({
                 if (toggled === item._id) setToggled(null);
                 else setToggled(item._id);
               }}
-              using_new_ui={true}
+              using_new_ui={new_ui}
             />
           )}
         />
@@ -166,30 +164,23 @@ const Tokens = ({
         <View style={styles.searchBarContainer}>
           <CustomSearchBar
             theme={theme}
-            rightIcon={
-              <TouchableOpacity>
-                <SearchIcon />
-              </TouchableOpacity>
-            }
+            rightIcon={<Icon name={'search'} theme={theme} />}
             value={search}
             onChangeText={(text) => setSearch(text)}
             disabled={userTokens.loading === true}
           />
-          <CustomIconButton
+          <Icon
+            name={'settings'}
             theme={theme}
-            lightThemeIcon={<SettingsIcon {...styles.icon} />}
-            darkThemeIcon={<SettingsIcon {...styles.icon} />}
-            //TODO finish bellow
-            onPress={() => {}}
+            onClick={() => console.log('TODO settings onPress')}
             additionalContainerStyle={styles.iconButton}
           />
-          <CustomIconButton
+          <Icon
+            name={'candle'}
             theme={theme}
-            lightThemeIcon={<PreferencesIcon {...styles.icon} />}
-            darkThemeIcon={<PreferencesIcon {...styles.icon} />}
-            //TODO finish bellow
-            onPress={() => {}}
+            onClick={() => console.log('TODO candle onPress')}
             additionalContainerStyle={styles.iconButton}
+            additionalPressedStyle={{backgroundColor: 'gray'}}
           />
         </View>
         {renderContent()}
@@ -216,10 +207,14 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
     container: {flex: 1},
     flatlist: {paddingBottom: 20},
     no_tokens: {
-      fontWeight: 'bold',
-      color: 'black',
-      fontSize: 16,
+      color: getColors(theme).secondaryText,
       marginVertical: 20,
+      textAlign: 'center',
+      ...headlines_primary_headline_2,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        headlines_primary_headline_2.fontSize,
+      ),
     },
     //new UI related
     containerTokenScreen: {
