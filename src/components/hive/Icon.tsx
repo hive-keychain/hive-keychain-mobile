@@ -1,21 +1,14 @@
-import GovernanceMenuIconDark from 'assets/new_UI/bank-dark.svg';
-import GovernanceMenuIconLight from 'assets/new_UI/bank-light.svg';
-import UserPrefMenuIconDark from 'assets/new_UI/candle-dark.svg';
-import UserPrefMenuIconLight from 'assets/new_UI/candle-light.svg';
-import ThemeMenuIconDark from 'assets/new_UI/category-dark.svg';
-import ThemeMenuIconLight from 'assets/new_UI/category-light.svg';
-import TokensMenuIconDark from 'assets/new_UI/hive_red_alternative_logo-dark.svg';
-import TokensMenuIconLight from 'assets/new_UI/hive_red_alternative_logo-light.svg';
-import AboutMenuIconDark from 'assets/new_UI/info-circle-dark.svg';
-import AboutMenuIconLight from 'assets/new_UI/info-circle-light.svg';
-import LogoutMenuIconDark from 'assets/new_UI/logout-dark.svg';
-import LogoutMenuIconLight from 'assets/new_UI/logout-light.svg';
-import AccountsMenuIconDark from 'assets/new_UI/profile-dark.svg';
-import AccountsMenuIconLight from 'assets/new_UI/profile-light.svg';
-import SearchIconDark from 'assets/new_UI/search_dark.svg';
-import SearchIconLight from 'assets/new_UI/search_light.svg';
-import SettingsIconDark from 'assets/new_UI/setting-dark.svg';
-import SettingsIconLight from 'assets/new_UI/setting-light.svg';
+import BankIcon from 'assets/new_UI/bank.svg';
+import CandleIcon from 'assets/new_UI/candle.svg';
+import CategoryIcon from 'assets/new_UI/category.svg';
+import HiveAlternative from 'assets/new_UI/hive_alternative.svg';
+import ImportIcon from 'assets/new_UI/import.svg';
+import InfoCircleIcon from 'assets/new_UI/info-circle.svg';
+import LogoutIcon from 'assets/new_UI/logout.svg';
+import AccountsMenuIcon from 'assets/new_UI/profile.svg';
+import SearchIcon from 'assets/new_UI/search.svg';
+import Settings2Icon from 'assets/new_UI/setting-2.svg';
+import Settings4Icon from 'assets/new_UI/setting-4.svg';
 import React from 'react';
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import AddCircleOutlineIcon from 'src/assets/icons/svgs/add_circle_outline.svg';
@@ -27,13 +20,16 @@ import {
 import ConvertIcon from 'src/assets/icons/svgs/currency_exchange.svg';
 import DeleteIcon from 'src/assets/icons/svgs/delete_black.svg';
 import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
-import ExpandMoreIcon from 'src/assets/icons/svgs/expand_more.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
 import ClaimIcon from 'src/assets/icons/svgs/redeem.svg';
 import SavingsIcon from 'src/assets/icons/svgs/savings.svg';
 import TransferIcon from 'src/assets/icons/svgs/send.svg';
-import DelegateIcon from 'src/assets/icons/svgs/swap_horiz.svg';
+import ExpandMoreIcon from 'src/assets/new_UI/expand_more.svg';
+import ReceiveSquareIcon from 'src/assets/new_UI/receive_square.svg';
 import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+
+//TODO after refactoring check unused svgs/icons & delete.
 
 //TODO add icons as enum & type.
 
@@ -46,18 +42,6 @@ const getIconFilePath = (
   theme?: Theme,
 ) => {
   const finalStyleOnIcon = marginRight ? styles.defaultIconContainer : style;
-
-  const usingThemeOrNull = (
-    lightIcon: JSX.Element,
-    darkIcon: JSX.Element,
-    theme?: Theme,
-  ) => {
-    return theme
-      ? theme === Theme.LIGHT
-        ? {...lightIcon, ...style.finalStyleOnIcon}
-        : {...darkIcon, ...style.finalStyleOnIcon}
-      : null;
-  };
 
   switch (name) {
     case 'transfer':
@@ -77,7 +61,11 @@ const getIconFilePath = (
     case 'interest':
       return <ClaimIcon style={finalStyleOnIcon} />;
     case 'delegate_vesting_shares':
-      return <DelegateIcon style={finalStyleOnIcon} />;
+      return (
+        <ReceiveSquareIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
+      );
     case 'claim_account':
     case 'account_create':
     case 'create_claimed_account':
@@ -85,65 +73,82 @@ const getIconFilePath = (
     case 'convert':
       return <ConvertIcon style={finalStyleOnIcon} />;
     case 'expand_more':
-      return <ExpandMoreIcon style={styles.defaultIconContainer} />;
+      return (
+        <ExpandMoreIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).iconBW}]}
+        />
+      );
     case 'expand_less':
       return <ExpandLessIcon style={styles.defaultIconContainer} />;
     case 'arrow_upward':
       return <ArrowUpwardIcon style={styles.defaultIconContainer} />;
     case 'add_circle_outline':
       return <AddCircleOutlineIcon style={styles.defaultIconContainer} />;
-    case 'delete' || 'remove':
+    case 'delete':
       return <DeleteIcon style={style.defaultIconContainer} />;
     case 'candle':
-      return usingThemeOrNull(
-        <UserPrefMenuIconLight />,
-        <UserPrefMenuIconDark />,
-        theme,
+      return (
+        <CandleIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
       );
-    case 'accounts' || 'accounts_icon':
-      return usingThemeOrNull(
-        <AccountsMenuIconLight />,
-        <AccountsMenuIconDark />,
-        theme,
+    case 'accounts':
+      return (
+        <AccountsMenuIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
       );
     case 'tokens':
-      return usingThemeOrNull(
-        <TokensMenuIconLight />,
-        <TokensMenuIconDark />,
-        theme,
+      return (
+        <HiveAlternative
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
       );
     case 'governance':
-      return usingThemeOrNull(
-        <GovernanceMenuIconLight />,
-        <GovernanceMenuIconDark />,
-        theme,
+      return (
+        <BankIcon style={[finalStyleOnIcon, {color: getColors(theme).icon}]} />
       );
-    //TODO research about how to handle || in a switch case, seems not to take the or option.
-    case 'theme' || 'category':
-      return usingThemeOrNull(
-        <ThemeMenuIconLight />,
-        <ThemeMenuIconDark />,
-        theme,
+    case 'theme':
+      return (
+        <CategoryIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
       );
-    case 'info' || 'about':
-      return usingThemeOrNull(
-        <AboutMenuIconLight />,
-        <AboutMenuIconDark />,
-        theme,
+    case 'info':
+      return (
+        <InfoCircleIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
       );
-    case 'logout' || 'exit':
-      return usingThemeOrNull(
-        <LogoutMenuIconLight />,
-        <LogoutMenuIconDark />,
-        theme,
+    case 'logout':
+      return (
+        <LogoutIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
       );
     case 'search':
-      return usingThemeOrNull(<SearchIconLight />, <SearchIconDark />, theme);
-    case 'settings':
-      return usingThemeOrNull(
-        <SettingsIconLight />,
-        <SettingsIconDark />,
-        theme,
+      return (
+        <SearchIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
+      );
+    case 'settings-2':
+      return (
+        <Settings2Icon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
+      );
+    case 'settings-4':
+      return (
+        <Settings4Icon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
+      );
+    case 'import':
+      return (
+        <ImportIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
       );
     default:
       return <TransferIcon style={finalStyleOnIcon} />;
@@ -159,11 +164,12 @@ interface IconProps {
   theme?: Theme;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalPressedStyle?: StyleProp<ViewStyle>;
+  bgImage?: JSX.Element;
   // ariaLabel?: string;
 }
 
 const Icon = (props: IconProps) => {
-  const iconComponent = getIconFilePath(
+  let iconComponent: JSX.Element = getIconFilePath(
     props.name,
     props.subType,
     styles.defaultIcon,
@@ -173,6 +179,16 @@ const Icon = (props: IconProps) => {
   const styleProps = {
     style: [styles.defaultIconContainer, props.additionalContainerStyle],
   };
+
+  if (props.bgImage) {
+    iconComponent = (
+      <>
+        <View style={styles.bgIcon}>{props.bgImage}</View>
+        {iconComponent}
+      </>
+    );
+  }
+
   return props.onClick ? (
     <Pressable
       style={({pressed}) => [
@@ -189,12 +205,15 @@ const Icon = (props: IconProps) => {
 
 const styles = StyleSheet.create({
   defaultIcon: {
-    marginRight: 5,
+    // marginRight: 5,
   },
   defaultIconContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     alignContent: 'center',
+  },
+  bgIcon: {
+    position: 'absolute',
   },
 });
 

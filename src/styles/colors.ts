@@ -51,5 +51,7 @@ export const getColors = (theme: Theme) => {
     cardBgLighter: theme === Theme.LIGHT ? '#FFF' : BACKGROUNDITEMDARKISH,
     lineSeparatorStroke: theme === Theme.LIGHT ? '#EDF4FC' : '#364360',
     betterContrastStroke: theme === Theme.DARK ? '#FFF' : 'none',
+    icon: theme === Theme.LIGHT ? PRIMARY_RED_COLOR : '#FFF',
+    iconBW: theme === Theme.LIGHT ? '#1E1E1E' : '#FFF',
   };
 };

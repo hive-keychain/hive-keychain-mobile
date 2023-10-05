@@ -16,6 +16,7 @@ import AddAccountStack from './mainDrawerStacks/AddAccount';
 import CreateAccount from './mainDrawerStacks/CreateAccount';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 import Tokens from './mainDrawerStacks/Tokens';
+import TokensHistory from './mainDrawerStacks/TokensHistory';
 
 const Drawer = createDrawerNavigator<MainDrawerStackParam>();
 
@@ -74,6 +75,7 @@ export default () => {
       <Drawer.Screen name="AddAccountStack" component={AddAccountStack} />
       <Drawer.Screen name="CreateAccountScreen" component={CreateAccount} />
       <Drawer.Screen name="Tokens" component={Tokens} />
+      <Drawer.Screen name="TokensHistory" component={TokensHistory} />
     </Drawer.Navigator>
   );
 };

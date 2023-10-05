@@ -1,11 +1,9 @@
+import HistoryIcon from 'assets/new_UI/back_time.svg';
 import SendIcon from 'assets/new_UI/send.svg';
 import AddIconWhite from 'assets/wallet/icon_add_circle_outline_white.svg';
 import Conversion from 'assets/wallet/icon_convert.svg';
 import Delegate from 'assets/wallet/icon_delegate.svg';
 import Plus from 'assets/wallet/icon_deposit.svg';
-//TODO clean up
-// import HistoryIcon from 'assets/wallet/icon_history.svg';
-import HistoryIcon from 'assets/new_UI/back_time.svg';
 import Power from 'assets/wallet/icon_power.svg';
 import ShoppingCartIconWhite from 'assets/wallet/icon_shopping_cart_white.svg';
 import Minus from 'assets/wallet/icon_withdraw.svg';
@@ -24,12 +22,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import {Theme} from 'src/context/theme.context';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
+import {getColors} from 'src/styles/colors';
 import {navigate} from 'utils/navigation';
 import BuyCoinsComponent, {BuyCoinsprops} from './Buy-coins.component';
 import MoreTokenInfo, {MoreInfoTokenProps} from './MoreTokenInfo';
 import Savings, {SavingsOperations} from './Savings';
-import {TokensHistoryComponent} from './Tokens-history';
 
 type RoundButtonProps = {
   size: number;
@@ -61,6 +60,7 @@ type SendProps = {
   engine?: boolean;
   tokenLogo?: JSX.Element;
   additionalButtonStyle?: StyleProp<ViewStyle>;
+  theme: Theme;
 };
 export const Send = ({
   currency,
@@ -68,6 +68,7 @@ export const Send = ({
   engine,
   tokenLogo,
   additionalButtonStyle,
+  theme,
 }: SendProps) => {
   return (
     <RoundButton
@@ -82,11 +83,15 @@ export const Send = ({
               tokenLogo={tokenLogo}
             />
           ),
+          //TODO continue working on it.
+          modalContainerStyle: {
+            height: '100%',
+          } as StyleProp<ViewStyle>,
         });
       }}
       size={36}
       backgroundColor="#77B9D1"
-      content={<SendIcon />}
+      content={<SendIcon color={getColors(theme).icon} />}
       additionalButtonStyle={additionalButtonStyle}
     />
   );
@@ -228,15 +233,15 @@ export const ShowHistory = (props: HistoryProps) => {
   return (
     <RoundButton
       onPress={() => {
-        navigate('ModalScreen', {
-          name: 'EngineHistory',
-          modalContent: <TokensHistoryComponent {...props} />,
-          fixedHeight: 0.75,
-        });
+        //TODO change bellow to a stack screen instead.
+        //  - maybe add a general stack page that can be reused anytime.
+
+        //TODO bellow pass the needed props
+        navigate('TokensHistory');
       }}
       size={36}
       backgroundColor="#69C1B3"
-      content={<HistoryIcon />}
+      content={<HistoryIcon color={getColors(props.theme).icon} />}
       additionalButtonStyle={props.additionalButtonStyle}
     />
   );

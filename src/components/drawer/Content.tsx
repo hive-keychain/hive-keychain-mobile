@@ -30,6 +30,7 @@ const hiddenRoutesInMain = [
   'ABOUT',
   'Accounts',
   'Tokens',
+  'TokensHistory',
 ];
 
 const HeaderContent = (props: Props) => {

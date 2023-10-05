@@ -3,12 +3,13 @@ import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {ThemeContext} from 'src/context/theme.context';
 import {
-  CommentCurationTransaction,
   CURATIONS_REWARDS_TYPES,
+  CommentCurationTransaction,
   DelegationTokenTransaction,
   MiningLotteryTransaction,
   OperationsHiveEngine,
@@ -45,6 +46,7 @@ const TokensHistory = ({
   const [loading, setLoading] = useState(true);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
   const flatListRef = useRef();
+  const {theme} = useContext(ThemeContext);
 
   useEffect(() => {
     setLoading(true);
@@ -104,7 +106,11 @@ const TokensHistory = ({
 
   const renderItem = (transaction: TokenTransaction) => {
     return (
-      <TokenHistoryItemComponent transaction={transaction} useIcon={true} />
+      <TokenHistoryItemComponent
+        theme={theme}
+        transaction={transaction}
+        useIcon={true}
+      />
     );
   };
 
@@ -127,7 +133,6 @@ const TokensHistory = ({
               data={displayedTransactions}
               renderItem={(transaction) => renderItem(transaction.item)}
               keyExtractor={(transaction) => transaction._id}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
               onScroll={handleScroll}
             />
             <Separator />
@@ -201,7 +206,7 @@ const styles = StyleSheet.create({
   },
   container: {
     maxHeight: 500,
-    marginBottom: 30,
+    padding: 25,
   },
 });
 

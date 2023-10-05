@@ -1,3 +1,4 @@
+import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
 import CustomAmountLabel, {
   LabelDataType,
 } from 'components/form/CustomAmountLabel';
@@ -5,6 +6,7 @@ import Icon from 'components/hive/Icon';
 import moment from 'moment';
 import React, {useState} from 'react';
 import {
+  ScaledSize,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,6 +14,7 @@ import {
   View,
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {
   AuthorCurationTransaction,
@@ -28,13 +31,15 @@ import {
   UnStakeTokenDoneTransaction,
   UnStakeTokenStartTransaction,
 } from 'src/interfaces/tokens.interface';
+import {getColors} from 'src/styles/colors';
+import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
-import {Height} from 'utils/common.types';
 
 interface TokenHistoryItemProps {
   transaction: TokenTransaction;
   useIcon?: boolean;
   ariaLabel?: string;
+  theme: Theme;
 }
 
 const TokenHistoryItem = ({
@@ -42,19 +47,21 @@ const TokenHistoryItem = ({
   activeAccountName,
   useIcon,
   ariaLabel,
+  theme,
 }: TokenHistoryItemProps & PropsFromRedux) => {
   const [toggle, setToggle] = useState(false);
   let iconName = '';
   let iconNameSubType = '';
   const localePrefix = 'wallet.operations.tokens';
   let labelDataList: LabelDataType[];
-  console.log(transaction); //TODO remove line
+  console.log({transactionOp: transaction.operation}); //TODO remove line
   const getLabelsComponents = () => {
     function returnWithList(labelDataList: any) {
       return (
         <CustomAmountLabel
           list={labelDataList}
           translatePrefix={localePrefix}
+          theme={theme}
         />
       );
     }
@@ -108,7 +115,7 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.TOKENS_TRANSFER: {
         const t = transaction as TransferTokenTransaction;
-        iconName = 'transfer';
+        iconName = 'import';
         if (t.from === activeAccountName) {
           labelDataList = [
             {label: 'info_transfer_out.part_1'},
@@ -366,29 +373,44 @@ const TokenHistoryItem = ({
   const memo = getMemo();
   const date = moment(transaction.timestamp * 1000).format('L');
 
-  const styles = getDimensionedStyles({
-    ...useWindowDimensions(),
-  });
+  const styles = getDimensionedStyles(
+    {
+      ...useWindowDimensions(),
+    },
+    theme,
+  );
 
   return label ? (
     <View>
       <TouchableOpacity
+        disabled={!memo}
         style={styles.container}
         onPress={() => {
           setToggle(!toggle);
         }}>
         <View style={styles.main}>
           <View style={styles.rowContainerSpaced}>
-            <View style={[styles.row, styles.alignedContent]}>
-              {useIcon && <Icon name={iconName} subType={iconNameSubType} />}
-              <Text>{date}</Text>
+            <View style={[styles.row]}>
+              {useIcon && (
+                <Icon
+                  name={iconName}
+                  theme={theme}
+                  additionalContainerStyle={styles.iconContainer}
+                  bgImage={<BackgroundIconRed />}
+                />
+              )}
+              <View style={{width: 140}}>{label}</View>
+              <Text style={[{marginHorizontal: 15}, styles.text]}>{date}</Text>
             </View>
             <View>{memo && memo.length ? toggleExpandMoreIcon() : null}</View>
           </View>
-          {label}
+          {/* {label} */}
         </View>
-        {toggle && memo && memo.length ? <Text>{memo}</Text> : null}
+        {toggle && memo && memo.length ? (
+          <Text style={styles.text}>{memo}</Text>
+        ) : null}
       </TouchableOpacity>
+      {/* <View style={styles.separator} /> */}
     </View>
   ) : null;
 };
@@ -402,10 +424,15 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps, {});
 type PropsFromRedux = ConnectedProps<typeof connector> & TokenHistoryItemProps;
 
-const getDimensionedStyles = ({height}: Height) =>
+const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
   StyleSheet.create({
     container: {
-      padding: height * 0.01,
+      padding: 5,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      marginBottom: 9,
+      borderRadius: 20,
+      borderWidth: 1,
+      borderColor: getColors(theme).cardBorderColor,
     },
     main: {
       display: 'flex',
@@ -415,6 +442,9 @@ const getDimensionedStyles = ({height}: Height) =>
     row: {
       display: 'flex',
       flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
     },
     rowContainerSpaced: {
       display: 'flex',
@@ -426,6 +456,18 @@ const getDimensionedStyles = ({height}: Height) =>
     },
     alignedContent: {
       alignItems: 'center',
+    },
+    separator: {marginVertical: 3, borderBottomWidth: 1},
+    iconContainer: {
+      width: width / 9,
+      height: width / 8.5,
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignContent: 'center',
+    },
+    text: {
+      ...fields_primary_text_1,
+      color: getColors(theme).secondaryText,
     },
   });
 

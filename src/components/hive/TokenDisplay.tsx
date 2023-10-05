@@ -1,12 +1,9 @@
 import {Currency, Token} from 'actions/interfaces';
 import UnstakeIcon from 'assets/new_UI/3d_cube_down_arrow.svg';
 import StakeIcon from 'assets/new_UI/3d_cube_scan.svg';
-import ExpandMoreIconDark from 'assets/new_UI/dropdown_arrow_dark.svg';
-import ExpandMoreIconLight from 'assets/new_UI/dropdown_arrow_light.svg';
 import DelegationsIcon from 'assets/new_UI/receive_square.svg';
 import DelegationsList from 'components/operations/DelegationsList';
 import RoundButton from 'components/operations/OperationsButtons';
-import CustomIconButton from 'components/ui/CustomIconButton';
 import React from 'react';
 import {
   Linking,
@@ -32,6 +29,7 @@ import {
 import {formatBalance, signedNumber} from 'utils/format';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
+import Icon from './Icon';
 
 type Props = {
   name: string;
@@ -109,8 +107,6 @@ const TokenDisplay = ({
     />
   );
 
-  console.log({using_new_ui}); // TODO remove line
-
   return using_new_ui ? (
     <View style={styles.container}>
       <View style={styles.flexRowBetween}>
@@ -125,11 +121,10 @@ const TokenDisplay = ({
         </View>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {renderButtonOptions && buttons}
-          <CustomIconButton
-            lightThemeIcon={<ExpandMoreIconLight />}
-            darkThemeIcon={<ExpandMoreIconDark />}
-            onPress={() => setToggle()}
+          <Icon
+            name={'expand_more'}
             theme={theme}
+            onClick={() => setToggle()}
             additionalContainerStyle={styles.expandMoreButton}
           />
         </View>

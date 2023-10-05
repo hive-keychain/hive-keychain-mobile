@@ -14,7 +14,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
   const name = route.params?.name;
   const data = route.params?.data;
   const fixedHeight = route.params?.fixedHeight;
-  const containerStyle = route.params.modalContainerStyle;
+  const containerStyle = route.params?.modalContainerStyle;
   if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
   }

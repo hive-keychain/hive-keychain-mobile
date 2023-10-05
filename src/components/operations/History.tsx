@@ -5,6 +5,7 @@ import Separator from 'components/ui/Separator';
 import React, {useEffect} from 'react';
 import {FlatList, StyleProp, ViewStyle} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
 import {RootState} from 'store';
 import {getMainLocale, translate} from 'utils/localize';
 import Balance from './Balance';
@@ -15,6 +16,7 @@ export type HistoryProps = {
   tokenLogo: JSX.Element;
   currency: string;
   additionalButtonStyle?: StyleProp<ViewStyle>;
+  theme: Theme;
 };
 type Props = PropsFromRedux & HistoryProps;
 const History = ({
@@ -25,6 +27,7 @@ const History = ({
   history,
   loadTokenHistory,
   additionalButtonStyle,
+  theme,
 }: Props) => {
   useEffect(() => {
     if (user.name) {

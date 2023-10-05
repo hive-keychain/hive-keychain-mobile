@@ -84,6 +84,7 @@ const EngineTokenDisplay = ({
           tokenBalance={token.balance}
           tokenLogo={logo}
           additionalButtonStyle={styles.squareButton}
+          theme={theme}
         />,
         <Send
           key="send_token"
@@ -92,6 +93,7 @@ const EngineTokenDisplay = ({
           tokenBalance={token.balance}
           tokenLogo={logo}
           additionalButtonStyle={styles.squareButton}
+          theme={theme}
         />,
         //TODO cleanup
         // <ShowMoreTokenInfo

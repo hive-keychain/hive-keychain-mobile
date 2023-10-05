@@ -109,13 +109,6 @@ const Tokens = ({
         </View>
       );
     } else if (filteredUserTokenBalanceList?.length) {
-      //TODO clean up bellow
-      // const list = userTokens.list.sort((a, b) => {
-      //   return (
-      //     getHiveEngineTokenValue(b, tokensMarket) -
-      //     getHiveEngineTokenValue(a, tokensMarket)
-      //   );
-      // });
       return (
         <FlatList
           data={filteredUserTokenBalanceList}
@@ -170,17 +163,16 @@ const Tokens = ({
             disabled={userTokens.loading === true}
           />
           <Icon
-            name={'settings'}
+            name={'settings-2'}
             theme={theme}
             onClick={() => console.log('TODO settings onPress')}
             additionalContainerStyle={styles.iconButton}
           />
           <Icon
-            name={'candle'}
+            name={'settings-4'}
             theme={theme}
             onClick={() => console.log('TODO candle onPress')}
             additionalContainerStyle={styles.iconButton}
-            additionalPressedStyle={{backgroundColor: 'gray'}}
           />
         </View>
         {renderContent()}
