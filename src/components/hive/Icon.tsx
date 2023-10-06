@@ -1,3 +1,5 @@
+import ArrowUpIcon from 'assets/new_UI/arrow-up.svg';
+import BackTimeIcon from 'assets/new_UI/back_time.svg';
 import BankIcon from 'assets/new_UI/bank.svg';
 import CandleIcon from 'assets/new_UI/candle.svg';
 import CategoryIcon from 'assets/new_UI/category.svg';
@@ -150,6 +152,14 @@ const getIconFilePath = (
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
+    case 'back_time':
+      return (
+        <BackTimeIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
+      );
+    case 'arrow_up':
+      return <ArrowUpIcon style={[finalStyleOnIcon, {color: '#FFF'}]} />;
     default:
       return <TransferIcon style={finalStyleOnIcon} />;
   }

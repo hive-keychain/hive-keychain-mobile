@@ -43,6 +43,7 @@ export const getColors = (theme: Theme) => {
         : ['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.15)', '#FFF'],
     cardBorderColor: theme === Theme.LIGHT ? '#EAEAEA' : '#364360',
     cardBorderColorContrast: theme === Theme.LIGHT ? '#EAEAEA' : '#364360',
+    secondaryCardBorderColor: theme === Theme.LIGHT ? '#B4C0CF' : '#364360',
     borderContrast: theme === Theme.LIGHT ? '#212838' : '#FFF',
     primaryRedShape:
       theme === Theme.LIGHT ? BRIGTHER_PRIMARY_RED : PRIMARY_RED_COLOR,

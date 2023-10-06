@@ -1,6 +1,7 @@
 import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import HiveEngine from 'assets/wallet/hive_engine.png';
-import {Send, ShowHistory} from 'components/operations/OperationsButtons';
+import {Send} from 'components/operations/OperationsButtons';
+import {TokenHistoryProps} from 'components/operations/Tokens-history';
 import React, {useContext, useState} from 'react';
 import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
 import Image from 'react-native-fast-image';
@@ -8,6 +9,8 @@ import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {Width} from 'utils/common.types';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
+import {navigate} from 'utils/navigation';
+import Icon from './Icon';
 import TokenDisplay from './TokenDisplay';
 
 type Props = {
@@ -78,12 +81,26 @@ const EngineTokenDisplay = ({
         ),
       }}
       buttons={[
-        <ShowHistory
-          key="history_token"
-          currency={token.symbol}
-          tokenBalance={token.balance}
-          tokenLogo={logo}
-          additionalButtonStyle={styles.squareButton}
+        // <ShowHistory
+        //   key="history_token"
+        //   currency={token.symbol}
+        //   tokenBalance={token.balance}
+        //   tokenLogo={logo}
+        //   // additionalButtonStyle={styles.squareButton}
+        //   theme={theme}
+        // />
+        <Icon
+          key={`show-token-history-${token.symbol}`}
+          name={'back_time'}
+          onClick={() =>
+            navigate('TokensHistory', {
+              currency: token.symbol,
+              tokenBalance: token.balance,
+              tokenLogo: logo,
+              theme: theme,
+            } as TokenHistoryProps)
+          }
+          additionalContainerStyle={styles.squareButton}
           theme={theme}
         />,
         <Send
@@ -123,6 +140,7 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       borderWidth: 1,
       borderRadius: 11,
       marginLeft: 7,
+      padding: 8,
     },
   });
 

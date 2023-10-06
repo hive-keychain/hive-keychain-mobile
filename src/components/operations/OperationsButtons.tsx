@@ -10,7 +10,6 @@ import Minus from 'assets/wallet/icon_withdraw.svg';
 import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savings-withdrawal-page.component';
 import Convert from 'components/operations/Convert';
 import Delegation from 'components/operations/Delegation';
-import {HistoryProps} from 'components/operations/History';
 import PowerDown from 'components/operations/PowerDown';
 import PowerUp from 'components/operations/PowerUp';
 import Transfer from 'components/operations/Transfer';
@@ -29,6 +28,7 @@ import {navigate} from 'utils/navigation';
 import BuyCoinsComponent, {BuyCoinsprops} from './Buy-coins.component';
 import MoreTokenInfo, {MoreInfoTokenProps} from './MoreTokenInfo';
 import Savings, {SavingsOperations} from './Savings';
+import {TokenHistoryProps} from './Tokens-history';
 
 type RoundButtonProps = {
   size: number;
@@ -229,7 +229,7 @@ export const PendingSavingsWithdraw = ({
   );
 };
 
-export const ShowHistory = (props: HistoryProps) => {
+export const ShowHistory = (props: TokenHistoryProps) => {
   return (
     <RoundButton
       onPress={() => {
@@ -237,12 +237,12 @@ export const ShowHistory = (props: HistoryProps) => {
         //  - maybe add a general stack page that can be reused anytime.
 
         //TODO bellow pass the needed props
-        navigate('TokensHistory');
+        navigate('TokensHistory', {...props});
       }}
       size={36}
       backgroundColor="#69C1B3"
       content={<HistoryIcon color={getColors(props.theme).icon} />}
-      additionalButtonStyle={props.additionalButtonStyle}
+      // additionalButtonStyle={props.additionalButtonStyle}
     />
   );
 };

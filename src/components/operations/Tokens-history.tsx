@@ -3,10 +3,10 @@ import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {
   CURATIONS_REWARDS_TYPES,
   CommentCurationTransaction,
@@ -17,37 +17,44 @@ import {
   TokenTransaction,
   TransferTokenTransaction,
 } from 'src/interfaces/tokens.interface';
+import {getColors} from 'src/styles/colors';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {TokenTransactionUtils} from 'utils/token-transaction.utils';
 import ClearableInput from '../form/ClearableInput';
-import Operation from './Operation';
 import {TokenHistoryItemComponent} from './token-history-item';
 
 export type TokenHistoryProps = {
   tokenBalance: string;
   tokenLogo: JSX.Element;
   currency: string;
+  theme: Theme;
+  filter?: any; //TODO add &  use same filter types
 };
+
+//TODO important on histories & related pages: Add filter as the image in chat(the one used in wallet history, clickeable + float), notes bellow.
+// I think we should adapt this on all histories yes (hive and hive engine)
+// For Hive Engine, the filters would be different (stake /unstake instead of power up /down , no conversions or savings etc.)
+// And filters change depending on ops possible on the current token
 
 const TokensHistory = ({
   activeAccountName,
   currency,
   tokenHistory,
+  theme,
   loadTokenHistory,
   clearTokenHistory,
   tokenLogo,
+  filter,
 }: TokenHistoryProps & PropsFromRedux) => {
   const [displayedTransactions, setDisplayedTransactions] = useState<
     TokenTransaction[]
   >([]);
-
   const [filterValue, setFilterValue] = useState('');
   const [loading, setLoading] = useState(true);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
   const flatListRef = useRef();
-  const {theme} = useContext(ThemeContext);
-
+  console.log({filter}); //TODO remove line
   useEffect(() => {
     setLoading(true);
     loadTokenHistory(activeAccountName!, currency);
@@ -104,6 +111,8 @@ const TokensHistory = ({
     setDisplayedScrollToTop(innerScrollViewY >= 50);
   };
 
+  const styles = getStyles(theme);
+
   const renderItem = (transaction: TokenTransaction) => {
     return (
       <TokenHistoryItemComponent
@@ -115,54 +124,47 @@ const TokensHistory = ({
   };
 
   return (
-    <Operation
-      title={`${currency} ${translate('common.history').toUpperCase()}`}
-      logo={tokenLogo}>
-      <>
-        <View style={styles.flex}>
-          <View style={styles.container}>
-            <Separator />
-            <ClearableInput
-              loading={loading}
-              filterValue={filterValue}
-              setFilterValue={setFilterValue}
-            />
-            <Separator />
-            <FlatList
-              ref={flatListRef}
-              data={displayedTransactions}
-              renderItem={(transaction) => renderItem(transaction.item)}
-              keyExtractor={(transaction) => transaction._id}
-              onScroll={handleScroll}
-            />
-            <Separator />
+    <View style={styles.flex}>
+      <View style={styles.container}>
+        <Separator />
+        <ClearableInput
+          loading={loading}
+          filterValue={filterValue}
+          setFilterValue={setFilterValue}
+        />
+        <Separator />
+        <FlatList
+          ref={flatListRef}
+          data={displayedTransactions}
+          renderItem={(transaction) => renderItem(transaction.item)}
+          keyExtractor={(transaction) => transaction._id}
+          onScroll={handleScroll}
+          style={styles.listContainer}
+        />
+        <Separator />
+      </View>
+
+      {!loading &&
+        tokenHistory.length > 0 &&
+        displayedTransactions.length === 0 && (
+          <View style={[styles.flex, styles.verticallyCentered]}>
+            <Text style={styles.textBold}>
+              {translate('wallet.operations.history.no_transaction_or_clear')}
+            </Text>
           </View>
-
-          {!loading &&
-            tokenHistory.length > 0 &&
-            displayedTransactions.length === 0 && (
-              <View style={[styles.flex, styles.verticallyCentered]}>
-                <Text style={styles.textBold}>
-                  {translate(
-                    'wallet.operations.history.no_transaction_or_clear',
-                  )}
-                </Text>
-              </View>
-            )}
-          {loading && (
-            <View style={[styles.flex, styles.verticallyCentered]}>
-              <Loader animating={true} />
-            </View>
-          )}
-
-          {/* ScrollToTop Button */}
-          {!loading && displayScrollToTop && (
-            <BackToTopButton element={flatListRef} />
-          )}
-          {/* END ScrollToTop Button */}
+        )}
+      {loading && (
+        <View style={[styles.flex, styles.verticallyCentered]}>
+          <Loader animating={true} />
         </View>
-      </>
-    </Operation>
+      )}
+
+      {/* ScrollToTop Button */}
+      {!loading && displayScrollToTop && (
+        <BackToTopButton element={flatListRef} theme={theme} />
+      )}
+      {/* END ScrollToTop Button */}
+    </View>
   );
 };
 
@@ -180,34 +182,43 @@ const connector = connect(mapStateToProps, {
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const styles = StyleSheet.create({
-  flex: {
-    flex: 1,
-  },
-  verticallyCentered: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  separator: {marginVertical: 3, borderBottomWidth: 1},
-  logo: {justifyContent: 'center', alignItems: 'center'},
-  rowContainer: {
-    flexDirection: 'row',
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    marginLeft: 10,
-  },
-  marginBottom: {
-    marginBottom: 5,
-  },
-  textBold: {
-    fontWeight: 'bold',
-  },
-  container: {
-    maxHeight: 500,
-    padding: 25,
-  },
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    flex: {
+      flex: 1,
+    },
+    verticallyCentered: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    separator: {marginVertical: 3, borderBottomWidth: 1},
+    logo: {justifyContent: 'center', alignItems: 'center'},
+    rowContainer: {
+      flexDirection: 'row',
+    },
+    title: {
+      fontWeight: 'bold',
+      fontSize: 18,
+      marginLeft: 10,
+    },
+    marginBottom: {
+      marginBottom: 5,
+    },
+    textBold: {
+      fontWeight: 'bold',
+    },
+    container: {
+      //TODO cleanup & adjust
+      // maxHeight: 500,
+      // padding: 25,
+    },
+    listContainer: {
+      borderTopLeftRadius: 25,
+      borderTopRightRadius: 25,
+      paddingTop: 25,
+      paddingHorizontal: 25,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+    },
+  });
 
 export const TokensHistoryComponent = connector(TokensHistory);

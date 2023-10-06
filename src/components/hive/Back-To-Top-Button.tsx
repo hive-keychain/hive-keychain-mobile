@@ -1,10 +1,12 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Icons} from 'src/enums/icons.enums';
+import {Theme} from 'src/context/theme.context';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import Icon from './Icon';
 
 interface BackToTopButtonProps {
   element: any;
+  theme: Theme;
 }
 
 export const BackToTopButton = (props: BackToTopButtonProps) => {
@@ -21,7 +23,7 @@ export const BackToTopButton = (props: BackToTopButtonProps) => {
   return (
     <View style={styles.overlayButton}>
       <TouchableOpacity onPress={scrollToTop}>
-        <Icon name={Icons.ARROW_UPWARDS} />
+        <Icon name={'arrow_up'} theme={props.theme} />
       </TouchableOpacity>
     </View>
   );
@@ -35,8 +37,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 5,
     right: 5,
-    borderWidth: 1,
-    width: 25,
-    height: 25,
+    // borderWidth: 1,
+    width: 45,
+    height: 45,
+    backgroundColor: PRIMARY_RED_COLOR,
   },
 });

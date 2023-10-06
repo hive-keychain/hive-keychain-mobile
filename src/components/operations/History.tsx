@@ -7,7 +7,7 @@ import {FlatList, StyleProp, ViewStyle} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {RootState} from 'store';
-import {getMainLocale, translate} from 'utils/localize';
+import {getMainLocale} from 'utils/localize';
 import Balance from './Balance';
 import Operation from './Operation';
 
@@ -38,7 +38,10 @@ const History = ({
   return (
     <Operation
       logo={<HistoryIcon />}
-      title={translate('wallet.operations.history')}>
+      title={'Hi There'}
+      //TODO bellow check it out
+      // title={translate('wallet.operations.history')}
+    >
       <>
         <Separator height={40} />
         <Balance

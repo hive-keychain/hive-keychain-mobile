@@ -1,59 +1,57 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import React, {useContext} from 'react';
-import {Text, View} from 'react-native';
 import {ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 //TODO use import { translate } from 'utils/localize';
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import CloseButton from 'components/ui/CloseButton';
+import CustomFilterBox from 'components/form/CustomFilterBox';
+import {TokensHistoryComponent} from 'components/operations/Tokens-history';
 import CustomIconButton from 'components/ui/CustomIconButton';
+import {
+  RootStackParam,
+  TokensHistoryNavigationProps,
+} from 'navigators/Root.types';
+import {translate} from 'utils/localize';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParam>();
 
-export default () => {
+export default ({navigation, route}: TokensHistoryNavigationProps) => {
   const {theme} = useContext(ThemeContext);
-
+  const {currency} = route.params;
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="TokensHistory"
-        component={() => (
-          <View>
-            <Text>//TODO this page as component???</Text>
-          </View>
-        )}
-        options={({navigation}) => ({
+        component={() => <TokensHistoryComponent {...route.params} />}
+        options={() => ({
           headerStyle: {
             backgroundColor: getColors(theme).primaryBackground,
-            shadowColor: '#ff000000',
           },
           headerTitleStyle: {
             ...headlines_primary_headline_2,
             color: getColors(theme).primaryText,
           },
           headerTitleAlign: 'center',
-          //TODO add symbol name as props in navigation
-          title: 'TOKEN name HISTORY',
+          title: `${currency} ${translate('common.history').toUpperCase()}`,
           headerTintColor: 'red',
           headerRight: () => (
-            <CloseButton
+            <CustomFilterBox
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onClick={() => {}} //TODO must act
             />
           ),
           cardStyle: {
-            paddingHorizontal: 16,
             backgroundColor: getColors(theme).primaryBackground,
           },
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
+              additionalContainerStyle={{marginLeft: 16}}
             />
           ),
         })}
