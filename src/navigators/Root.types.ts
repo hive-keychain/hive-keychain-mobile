@@ -3,6 +3,15 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
 import {StyleProp, ViewStyle} from 'react-native';
 
+export type ModalPosition =
+  | 'flex-start'
+  | 'flex-end'
+  | 'center'
+  | 'space-between'
+  | 'space-around'
+  | 'space-evenly'
+  | undefined;
+
 export type RootStackParam = {
   Main: undefined;
   ModalScreen: {
@@ -13,6 +22,9 @@ export type RootStackParam = {
     centerModal?: boolean | undefined;
     fixedHeight?: number;
     modalContainerStyle?: StyleProp<ViewStyle>;
+    additionalWrapperFixedStyle?: StyleProp<ViewStyle>;
+    modalPosition?: ModalPosition;
+    renderButtonElement?: JSX.Element;
   };
   TokensHistory: TokenHistoryProps;
 };

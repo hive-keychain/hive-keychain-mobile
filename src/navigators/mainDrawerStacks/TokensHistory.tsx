@@ -6,13 +6,14 @@ import {headlines_primary_headline_2} from 'src/styles/typography';
 //TODO use import { translate } from 'utils/localize';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import CustomFilterBox from 'components/form/CustomFilterBox';
+import Icon from 'components/hive/Icon';
 import {TokensHistoryComponent} from 'components/operations/Tokens-history';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import {
   RootStackParam,
   TokensHistoryNavigationProps,
 } from 'navigators/Root.types';
+import {Text, View} from 'react-native';
 import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator<RootStackParam>();
@@ -37,9 +38,64 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
           title: `${currency} ${translate('common.history').toUpperCase()}`,
           headerTintColor: 'red',
           headerRight: () => (
-            <CustomFilterBox
+            // <CustomFilterBox
+            //   theme={theme}
+            //   onClick={() => {}} //TODO must act
+            // />
+            <Icon
+              name={'settings-4'}
               theme={theme}
-              onClick={() => {}} //TODO must act
+              onClick={() =>
+                navigation.navigate('ModalScreen', {
+                  name: 'FilterScreen',
+                  modalContent: (
+                    <View>
+                      <Text>TODO!!!</Text>
+                    </View>
+                  ),
+                  fixedHeight: 0.2,
+                  //TODO pass these styles bellow.
+                  additionalWrapperFixedStyle: {
+                    top: 50,
+                    bottom: undefined,
+                    left: undefined,
+                    right: 0,
+                  },
+                  modalPosition: undefined,
+                  modalContainerStyle: {width: '80%', alignSelf: 'flex-end'},
+                  renderButtonElement: (
+                    //TODO important to this icon, find a way to render the little arrow in top, as design.
+                    <Icon
+                      name="settings-4"
+                      theme={theme}
+                      additionalContainerStyle={{
+                        position: 'absolute',
+                        top: 10,
+                        bottom: undefined,
+                        right: 0,
+                        left: undefined,
+                        marginRight: 16,
+                        paddingHorizontal: 19,
+                        paddingVertical: 8,
+                        borderWidth: 1,
+                        borderColor: getColors(theme).secondaryCardBorderColor,
+                        backgroundColor: getColors(theme).secondaryCardBgColor,
+                        borderRadius: 26,
+                      }}
+                    />
+                  ),
+                })
+              }
+              //TODO pass styles bellow
+              additionalContainerStyle={{
+                marginRight: 16,
+                paddingHorizontal: 19,
+                paddingVertical: 8,
+                borderWidth: 1,
+                borderColor: getColors(theme).secondaryCardBorderColor,
+                backgroundColor: getColors(theme).secondaryCardBgColor,
+                borderRadius: 26,
+              }}
             />
           ),
           cardStyle: {

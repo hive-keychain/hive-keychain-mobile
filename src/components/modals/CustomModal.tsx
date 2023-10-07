@@ -1,3 +1,4 @@
+import {ModalPosition} from 'navigators/Root.types';
 import React from 'react';
 import {
   Dimensions,
@@ -17,6 +18,9 @@ type Props = {
   outsideClick: () => void;
   fixedHeight?: number;
   containerStyle?: StyleProp<ViewStyle>;
+  additionalWrapperFixedStyle?: StyleProp<ViewStyle>;
+  modalPosition?: ModalPosition;
+  buttonElement?: JSX.Element;
 };
 type InnerProps = {height: number; width: number};
 
@@ -41,21 +45,25 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
       height: this.height,
       width: this.width,
       fixedHeight: this.fixedHeight,
+      modalPosition: this.props.modalPosition,
     });
     return (
       <KeyboardAvoidingView
         style={styles.fullHeight}
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
-        <View style={styles.mainContainer}>
+        <View style={[styles.mainContainer]}>
           <TouchableWithoutFeedback
             style={{height: '100%'}}
             onPress={() => {
               this.props.outsideClick();
-            }}></TouchableWithoutFeedback>
+            }}>
+            {this.props.buttonElement}
+          </TouchableWithoutFeedback>
           <View
-            style={
-              this.fixedHeight ? styles.modalWrapperFixed : styles.modalWrapper
-            }>
+            style={[
+              this.fixedHeight ? styles.modalWrapperFixed : styles.modalWrapper,
+              this.props.additionalWrapperFixedStyle,
+            ]}>
             <View style={[styles.modalContainer, this.props.containerStyle]}>
               {this.props.children}
             </View>
@@ -72,13 +80,17 @@ class StyleSheetFactory {
     width,
     height,
     fixedHeight,
-  }: Dim & {modalHeight: number; fixedHeight: number}) {
+    modalPosition,
+  }: Dim & {
+    modalHeight: number;
+    fixedHeight: number;
+  } & {modalPosition: ModalPosition}) {
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
       mainContainer: {
         flex: 1,
         backgroundColor: 'transparent',
-        justifyContent: 'flex-end',
+        justifyContent: modalPosition ?? 'flex-end', //TODO testing initially as 'flex-end'
       },
       modalWrapper: {
         position: 'absolute',
@@ -99,6 +111,7 @@ class StyleSheetFactory {
         justifyContent: 'center',
         alignItems: 'center',
         height: fixedHeight * height,
+        width: '100%',
       },
       modalContainer: {
         backgroundColor: 'white',

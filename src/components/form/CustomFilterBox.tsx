@@ -15,6 +15,8 @@ interface Props {
   onClick: () => void;
 }
 
+//TODO decide if this component is needed at all
+
 const CustomFilterBox = ({theme, onClick}: Props) => {
   const [isOpen, setIsOpen] = React.useState(false);
 

@@ -15,6 +15,10 @@ export default ({navigation, route}: ModalNavigationProps) => {
   const data = route.params?.data;
   const fixedHeight = route.params?.fixedHeight;
   const containerStyle = route.params?.modalContainerStyle;
+  const wrapperFixedStyle = route.params?.additionalWrapperFixedStyle;
+  const modalPosition = route.params?.modalPosition;
+  const buttonElement = route.params?.renderButtonElement;
+
   if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
   }
@@ -47,7 +51,10 @@ export default ({navigation, route}: ModalNavigationProps) => {
       }
       fixedHeight={fixedHeight}
       bottomHalf={true}
-      containerStyle={containerStyle}>
+      containerStyle={containerStyle}
+      additionalWrapperFixedStyle={wrapperFixedStyle}
+      modalPosition={modalPosition}
+      buttonElement={buttonElement}>
       {route.params && !renderContent() && route.params!.modalContent}
       {renderContent()}
     </CustomModal>
