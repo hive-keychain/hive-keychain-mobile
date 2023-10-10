@@ -96,7 +96,6 @@ const CustomFilterBox = ({
   const styles = getStyles(theme, useWindowDimensions());
 
   useEffect(() => {
-    console.log({filter});
     setFilterOut(filter);
   }, [filter]);
 

@@ -1,16 +1,27 @@
 import {clearTokenHistory, loadTokenHistory} from 'actions/index';
 import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import Loader from 'components/ui/Loader';
-import Separator from 'components/ui/Separator';
+import {DEFAULT_FILTER_TOKENS} from 'navigators/mainDrawerStacks/TokensHistory';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {TokenTransaction} from 'src/interfaces/tokens.interface';
+import {
+  DelegateTokenTransaction,
+  OperationsHiveEngine,
+  TokenTransaction,
+  TransferTokenTransaction,
+} from 'src/interfaces/tokens.interface';
 import {getColors} from 'src/styles/colors';
+import {button_link_primary_medium} from 'src/styles/typography';
 import {WalletHistoryFilter} from 'src/types/wallet.history.types';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
+import {
+  IN_TOKENS_TRANSACTIONS,
+  OUT_TOKENS_TRANSACTIONS,
+  TokenTransactionUtils,
+} from 'utils/token-transaction.utils';
 import {TokenHistoryItemComponent} from './token-history-item';
 
 export type TokenHistoryProps = {
@@ -18,13 +29,8 @@ export type TokenHistoryProps = {
   tokenLogo: JSX.Element;
   currency: string;
   theme: Theme;
-  filter?: WalletHistoryFilter; //TODO add &  use same filter types
+  filter?: WalletHistoryFilter;
 };
-
-//TODO important on histories & related pages: Add filter as the image in chat(the one used in wallet history, clickeable + float), notes bellow.
-// I think we should adapt this on all histories yes (hive and hive engine)
-// For Hive Engine, the filters would be different (stake /unstake instead of power up /down , no conversions or savings etc.)
-// And filters change depending on ops possible on the current token
 
 const TokensHistory = ({
   activeAccountName,
@@ -39,11 +45,11 @@ const TokensHistory = ({
   const [displayedTransactions, setDisplayedTransactions] = useState<
     TokenTransaction[]
   >([]);
-  const [filterValue, setFilterValue] = useState('');
   const [loading, setLoading] = useState(true);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
   const flatListRef = useRef();
-  console.log({filter}); //TODO remove line
+  const filterTokens = filter ?? DEFAULT_FILTER_TOKENS;
+
   useEffect(() => {
     setLoading(true);
     loadTokenHistory(activeAccountName!, currency);
@@ -53,61 +59,55 @@ const TokensHistory = ({
   }, []);
 
   useEffect(() => {
-    if (tokenHistory.length > 0 && filter) {
+    if (tokenHistory.length > 0 && filterTokens) {
+      setLoading(true);
       const selectedTransactionTypes = Object.keys(
-        filter.selectedTransactionTypes,
-      ).filter((operation) => filter.selectedTransactionTypes[operation]);
+        filterTokens.selectedTransactionTypes,
+      ).filter((operation) => filterTokens.selectedTransactionTypes[operation]);
 
-      const filteredTokenHistory = tokenHistory.filter((item) => {
-        //TODO clean up OLD WAY
-        // return (
-        //   (CURATIONS_REWARDS_TYPES.includes(item.operation) &&
-        //     TokenTransactionUtils.filterCurationReward(
-        //       item as CommentCurationTransaction,
-        //       filterValue,
-        //     )) ||
-        //   (item.operation === OperationsHiveEngine.TOKENS_TRANSFER &&
-        //     TokenTransactionUtils.filterTransfer(
-        //       item as TransferTokenTransaction,
-        //       filterValue,
-        //     )) ||
-        //   (item.operation === OperationsHiveEngine.TOKEN_STAKE &&
-        //     TokenTransactionUtils.filterStake(
-        //       item as StakeTokenTransaction,
-        //       filterValue,
-        //     )) ||
-        //   (item.operation === OperationsHiveEngine.MINING_LOTTERY &&
-        //     TokenTransactionUtils.filterMiningLottery(
-        //       item as MiningLotteryTransaction,
-        //       filterValue,
-        //     )) ||
-        //   (item.operation === OperationsHiveEngine.TOKENS_DELEGATE &&
-        //     TokenTransactionUtils.filterDelegation(
-        //       item as DelegationTokenTransaction,
-        //       filterValue,
-        //     )) ||
-        //   item.amount.toLowerCase().includes(filterValue.toLowerCase()) ||
-        //   item.operation.toLowerCase().includes(filterValue.toLowerCase()) ||
-        //   (item.timestamp &&
-        //     moment(item.timestamp)
-        //       .format('L')
-        //       .includes(filterValue.toLowerCase()))
-        // );
-        //END OLD WAY
+      const isInOrOutSelected =
+        filterTokens.inSelected || filterTokens.outSelected;
 
-        //TODO CHECK NEW WAY
-        //TODO keep working on this...
+      let filteredTokenHistory = tokenHistory.filter((item) => {
         return (
           selectedTransactionTypes.includes(item.operation) ||
           selectedTransactionTypes.length === 0
         );
-        //END NEW WAY
       });
-      console.log({l: filteredTokenHistory.length}); //TODO remove line
+      if (isInOrOutSelected) {
+        if (filterTokens.inSelected) {
+          filteredTokenHistory = filteredTokenHistory.filter(
+            (item) =>
+              IN_TOKENS_TRANSACTIONS.includes(item.operation) ||
+              (item.operation === OperationsHiveEngine.TOKENS_TRANSFER &&
+                (item as TransferTokenTransaction).to === activeAccountName) ||
+              (item.operation === OperationsHiveEngine.TOKENS_DELEGATE &&
+                (item as DelegateTokenTransaction).delegatee ===
+                  activeAccountName),
+          );
+        }
+        if (filterTokens.outSelected) {
+          filteredTokenHistory = filteredTokenHistory.filter(
+            (item) =>
+              (OUT_TOKENS_TRANSACTIONS.includes(item.operation) &&
+                item.operation === OperationsHiveEngine.TOKENS_TRANSFER &&
+                (item as TransferTokenTransaction).to !== activeAccountName) ||
+              (item.operation === OperationsHiveEngine.TOKENS_DELEGATE &&
+                (item as DelegateTokenTransaction).delegator ===
+                  activeAccountName),
+          );
+        }
+      }
+      if (filterTokens.filterValue.trim().length > 0) {
+        filteredTokenHistory = TokenTransactionUtils.applyAllTokensFilters(
+          filteredTokenHistory,
+          filterTokens.filterValue,
+        );
+      }
       setDisplayedTransactions(filteredTokenHistory);
       setLoading(false);
     }
-  }, [tokenHistory, filter]);
+  }, [tokenHistory, filterTokens]);
 
   const handleScroll = (event: any) => {
     const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
@@ -128,25 +128,24 @@ const TokensHistory = ({
 
   return (
     <View style={styles.flex}>
-      <View style={styles.container}>
-        {/* //TODO bellow cleanup */}
-        {/* <Separator />
-        <ClearableInput
-          loading={loading}
-          filterValue={filterValue}
-          setFilterValue={setFilterValue}
-        /> */}
-        <Separator />
-        <FlatList
-          ref={flatListRef}
-          data={displayedTransactions}
-          renderItem={(transaction) => renderItem(transaction.item)}
-          keyExtractor={(transaction) => transaction._id}
-          onScroll={handleScroll}
-          style={styles.listContainer}
-        />
-        <Separator />
-      </View>
+      {loading && (
+        <View style={[styles.flex, styles.verticallyCentered]}>
+          <Loader animating={true} />
+        </View>
+      )}
+
+      {!loading && displayedTransactions.length > 0 && (
+        <View style={styles.container}>
+          <FlatList
+            ref={flatListRef}
+            data={displayedTransactions}
+            renderItem={(transaction) => renderItem(transaction.item)}
+            keyExtractor={(transaction) => transaction._id}
+            onScroll={handleScroll}
+            style={styles.listContainer}
+          />
+        </View>
+      )}
 
       {!loading &&
         tokenHistory.length > 0 &&
@@ -157,11 +156,6 @@ const TokensHistory = ({
             </Text>
           </View>
         )}
-      {loading && (
-        <View style={[styles.flex, styles.verticallyCentered]}>
-          <Loader animating={true} />
-        </View>
-      )}
 
       {/* ScrollToTop Button */}
       {!loading && displayScrollToTop && (
@@ -209,17 +203,16 @@ const getStyles = (theme: Theme) =>
       marginBottom: 5,
     },
     textBold: {
-      fontWeight: 'bold',
+      ...button_link_primary_medium,
     },
     container: {
-      //TODO cleanup & adjust
-      // maxHeight: 500,
-      // padding: 25,
-    },
-    listContainer: {
+      height: '100%',
       borderTopLeftRadius: 25,
       borderTopRightRadius: 25,
       paddingTop: 25,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+    },
+    listContainer: {
       paddingHorizontal: 25,
       backgroundColor: getColors(theme).secondaryCardBgColor,
     },
