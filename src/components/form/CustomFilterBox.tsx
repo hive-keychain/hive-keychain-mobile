@@ -20,17 +20,19 @@ import {
   fields_primary_text_2,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
+import {TokenHistoryFilter} from 'src/types/tokens.history.types';
 import {WalletHistoryFilter} from 'src/types/wallet.history.types';
 import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 import CustomSearchBar from './CustomSearchBar';
 import EllipticButton from './EllipticButton';
 
+export type FilterType = WalletHistoryFilter | TokenHistoryFilter;
 interface Props {
   theme: Theme;
   headerText: string;
-  defaultFilter: WalletHistoryFilter;
-  setFilterOut: (filter: WalletHistoryFilter) => void;
+  defaultFilter: FilterType;
+  setFilterOut: (filter: FilterType) => void;
 }
 
 const CustomFilterBox = ({
@@ -39,7 +41,7 @@ const CustomFilterBox = ({
   defaultFilter,
   setFilterOut,
 }: Props) => {
-  const [filter, setFilter] = useState<WalletHistoryFilter>(defaultFilter);
+  const [filter, setFilter] = useState<FilterType>(defaultFilter);
 
   const toggleFilterType = (transactionName: string) => {
     const newFilter = {...filter.selectedTransactionTypes};
@@ -76,7 +78,7 @@ const CustomFilterBox = ({
     updateFilter(newFilter);
   };
 
-  const updateFilter = (filter: WalletHistoryFilter) => {
+  const updateFilter = (filter: FilterType) => {
     setFilter(filter);
   };
 

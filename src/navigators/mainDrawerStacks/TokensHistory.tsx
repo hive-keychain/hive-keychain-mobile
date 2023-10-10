@@ -1,9 +1,4 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import React, {useContext} from 'react';
-import {Theme, ThemeContext} from 'src/context/theme.context';
-import {getColors} from 'src/styles/colors';
-import {headlines_primary_headline_2} from 'src/styles/typography';
-//TODO use import { translate } from 'utils/localize';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import CustomFilterBox from 'components/form/CustomFilterBox';
@@ -14,13 +9,17 @@ import {
   RootStackParam,
   TokensHistoryNavigationProps,
 } from 'navigators/Root.types';
+import React, {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {WalletHistoryFilter} from 'src/types/wallet.history.types';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {headlines_primary_headline_2} from 'src/styles/typography';
+import {TokenHistoryFilter} from 'src/types/tokens.history.types';
 import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator<RootStackParam>();
 
-export const DEFAULT_FILTER_TOKENS: WalletHistoryFilter = {
+export const DEFAULT_FILTER_TOKENS: TokenHistoryFilter = {
   filterValue: '',
   inSelected: false,
   outSelected: false,

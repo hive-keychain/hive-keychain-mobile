@@ -14,7 +14,7 @@ import {
 } from 'src/interfaces/tokens.interface';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_medium} from 'src/styles/typography';
-import {WalletHistoryFilter} from 'src/types/wallet.history.types';
+import {TokenHistoryFilter} from 'src/types/tokens.history.types';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {
@@ -29,7 +29,7 @@ export type TokenHistoryProps = {
   tokenLogo: JSX.Element;
   currency: string;
   theme: Theme;
-  filter?: WalletHistoryFilter;
+  filter?: TokenHistoryFilter;
 };
 
 const TokensHistory = ({
@@ -184,6 +184,7 @@ const getStyles = (theme: Theme) =>
   StyleSheet.create({
     flex: {
       flex: 1,
+      marginTop: 20,
     },
     verticallyCentered: {
       justifyContent: 'center',

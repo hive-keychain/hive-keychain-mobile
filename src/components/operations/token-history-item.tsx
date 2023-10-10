@@ -404,13 +404,11 @@ const TokenHistoryItem = ({
             </View>
             <View>{memo && memo.length ? toggleExpandMoreIcon() : null}</View>
           </View>
-          {/* {label} */}
         </View>
         {toggle && memo && memo.length ? (
-          <Text style={styles.text}>{memo}</Text>
+          <Text style={[styles.text, styles.padding]}>{memo}</Text>
         ) : null}
       </TouchableOpacity>
-      {/* <View style={styles.separator} /> */}
     </View>
   ) : null;
 };
@@ -468,6 +466,9 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
     text: {
       ...fields_primary_text_1,
       color: getColors(theme).secondaryText,
+    },
+    padding: {
+      padding: 8,
     },
   });
 
