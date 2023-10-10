@@ -1,11 +1,12 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 //TODO use import { translate } from 'utils/localize';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
+import CustomFilterBox from 'components/form/CustomFilterBox';
 import Icon from 'components/hive/Icon';
 import {TokensHistoryComponent} from 'components/operations/Tokens-history';
 import CustomIconButton from 'components/ui/CustomIconButton';
@@ -13,19 +14,45 @@ import {
   RootStackParam,
   TokensHistoryNavigationProps,
 } from 'navigators/Root.types';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
+import {WalletHistoryFilter} from 'src/types/wallet.history.types';
 import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator<RootStackParam>();
 
+const DEFAULT_FILTER_TOKENS: WalletHistoryFilter = {
+  filterValue: '',
+  inSelected: false,
+  outSelected: false,
+  selectedTransactionTypes: {
+    //TODO check if better use exact name as enum OperationsHIveEngine
+    comments_curationReward: false,
+    comments_authorReward: false,
+    mining_lottery: false,
+    tokens_transfer: false,
+    tokens_stake: false,
+    tokens_unstakeStart: false,
+    tokens_unstakeDone: false,
+    tokens_delegate: false,
+    tokens_undelegateStart: false,
+    tokens_undelegateDone: false,
+  },
+};
+
 export default ({navigation, route}: TokensHistoryNavigationProps) => {
   const {theme} = useContext(ThemeContext);
   const {currency} = route.params;
+  const [filter, setFilter] = useState<WalletHistoryFilter>(
+    DEFAULT_FILTER_TOKENS,
+  );
+
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="TokensHistory"
-        component={() => <TokensHistoryComponent {...route.params} />}
+        component={() => (
+          <TokensHistoryComponent filter={filter} {...route.params} />
+        )}
         options={() => ({
           headerStyle: {
             backgroundColor: getColors(theme).primaryBackground,
@@ -36,12 +63,7 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
           },
           headerTitleAlign: 'center',
           title: `${currency} ${translate('common.history').toUpperCase()}`,
-          headerTintColor: 'red',
           headerRight: () => (
-            // <CustomFilterBox
-            //   theme={theme}
-            //   onClick={() => {}} //TODO must act
-            // />
             <Icon
               name={'settings-4'}
               theme={theme}
@@ -49,40 +71,66 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
                 navigation.navigate('ModalScreen', {
                   name: 'FilterScreen',
                   modalContent: (
-                    <View>
-                      <Text>TODO!!!</Text>
-                    </View>
-                  ),
-                  fixedHeight: 0.2,
-                  //TODO pass these styles bellow.
-                  additionalWrapperFixedStyle: {
-                    top: 50,
-                    bottom: undefined,
-                    left: undefined,
-                    right: 0,
-                  },
-                  modalPosition: undefined,
-                  modalContainerStyle: {width: '80%', alignSelf: 'flex-end'},
-                  renderButtonElement: (
-                    //TODO important to this icon, find a way to render the little arrow in top, as design.
-                    <Icon
-                      name="settings-4"
+                    <CustomFilterBox
                       theme={theme}
-                      additionalContainerStyle={{
-                        position: 'absolute',
-                        top: 10,
-                        bottom: undefined,
-                        right: 0,
-                        left: undefined,
-                        marginRight: 16,
-                        paddingHorizontal: 19,
-                        paddingVertical: 8,
-                        borderWidth: 1,
-                        borderColor: getColors(theme).secondaryCardBorderColor,
-                        backgroundColor: getColors(theme).secondaryCardBgColor,
-                        borderRadius: 26,
+                      headerText={translate('wallet.filter.filter_title')}
+                      defaultFilter={filter}
+                      setFilterOut={(filter) => {
+                        setFilter(filter);
+                        navigation.setParams({filter: filter});
                       }}
                     />
+                  ),
+                  fixedHeight: 0.7,
+                  //TODO pass these styles bellow.
+                  additionalWrapperFixedStyle: {
+                    top: 55,
+                    bottom: undefined,
+                    left: undefined,
+                    right: 10,
+                  },
+                  modalPosition: undefined,
+                  modalContainerStyle: {
+                    width: '80%',
+                    alignSelf: 'flex-end',
+                    backgroundColor: 'none',
+                    borderWidth: 0,
+                  },
+                  renderButtonElement: (
+                    <View
+                      style={[
+                        {
+                          position: 'absolute',
+                          top: 10,
+                          bottom: undefined,
+                          right: 0,
+                          left: undefined,
+                          marginRight: 16,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        },
+                      ]}>
+                      <Icon
+                        name="settings-4"
+                        theme={theme}
+                        additionalContainerStyle={{
+                          paddingHorizontal: 19,
+                          paddingVertical: 8,
+                          borderWidth: 1,
+                          borderColor: getColors(theme)
+                            .secondaryCardBorderColor,
+                          backgroundColor: getColors(theme)
+                            .secondaryCardBgColor,
+                          borderRadius: 26,
+                          zIndex: 0,
+                        }}
+                      />
+                      <Icon
+                        theme={theme}
+                        name="polygon_down"
+                        additionalContainerStyle={{zIndex: 1}}
+                      />
+                    </View>
                   ),
                 })
               }

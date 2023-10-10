@@ -1,5 +1,5 @@
-import Icon from 'components/hive/Icon';
-import React from 'react';
+import Separator from 'components/ui/Separator';
+import React, {useEffect, useState} from 'react';
 import {
   ScaledSize,
   StyleSheet,
@@ -7,38 +7,182 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
-import {getColors} from 'src/styles/colors';
+import {
+  PRIMARY_RED_COLOR,
+  RED_SHADOW_COLOR,
+  getColors,
+} from 'src/styles/colors';
+import {generateBoxShadowStyle} from 'src/styles/shadow';
+import {
+  button_link_primary_medium,
+  fields_primary_text_2,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
+import {WalletHistoryFilter} from 'src/types/wallet.history.types';
+import {capitalizeSentence} from 'utils/format';
+import {translate} from 'utils/localize';
+import CustomSearchBar from './CustomSearchBar';
+import EllipticButton from './EllipticButton';
 
 interface Props {
   theme: Theme;
-  onClick: () => void;
+  headerText: string;
+  defaultFilter: WalletHistoryFilter;
+  setFilterOut: (filter: WalletHistoryFilter) => void;
 }
 
-//TODO decide if this component is needed at all
+const CustomFilterBox = ({
+  theme,
+  headerText,
+  defaultFilter,
+  setFilterOut,
+}: Props) => {
+  const [filter, setFilter] = useState<WalletHistoryFilter>(defaultFilter);
 
-const CustomFilterBox = ({theme, onClick}: Props) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const toggleFilterType = (transactionName: string) => {
+    const newFilter = {...filter.selectedTransactionTypes};
+    newFilter[transactionName] = !filter.selectedTransactionTypes[
+      transactionName
+    ];
+    updateFilter({
+      ...filter,
+      selectedTransactionTypes: newFilter,
+    });
+  };
+
+  const toggleFilterIn = () => {
+    const newFilter = {
+      ...filter,
+      inSelected: !filter.inSelected,
+    };
+    updateFilter(newFilter);
+  };
+
+  const toggleFilterOut = () => {
+    const newFilter = {
+      ...filter,
+      outSelected: !filter.outSelected,
+    };
+    updateFilter(newFilter);
+  };
+
+  const updateFilterValue = (value: string) => {
+    const newFilter = {
+      ...filter,
+      filterValue: value,
+    };
+    updateFilter(newFilter);
+  };
+
+  const updateFilter = (filter: WalletHistoryFilter) => {
+    setFilter(filter);
+  };
+
+  const getActiveTextStyleInOrOut = (selector: 'inSelected' | 'outSelected') =>
+    filter[selector] ? styles.activeTextFilter : null;
+
+  const getActiveContainerStyleInOrOut = (
+    selector: 'inSelected' | 'outSelected',
+  ) => (filter[selector] ? styles.activeFilterItem : null);
+
+  const getActiveFilterItemContainerStyle = (selected: string) =>
+    filter.selectedTransactionTypes[selected] ? styles.activeFilterItem : null;
+
+  const getActiveFilterItemTextStyle = (selected: string) =>
+    filter.selectedTransactionTypes[selected] ? styles.activeTextFilter : null;
 
   const styles = getStyles(theme, useWindowDimensions());
-  //TODO finish using CustomModal or make one using the same techinques.
+
+  useEffect(() => {
+    console.log({filter});
+    setFilterOut(filter);
+  }, [filter]);
+
   return (
-    <>
-      <Icon
-        name={'settings-4'}
-        theme={theme}
-        onClick={() => setIsOpen(!isOpen)}
-        //TODO pass styles bellow
-        additionalContainerStyle={styles.iconContainer}
-      />
-      {isOpen && (
-        <View style={styles.overlayContainer}>
-          <View style={styles.expandedContainer}>
-            <Text>TO finish</Text>
-          </View>
+    <View style={[styles.container]}>
+      <Text style={styles.headerText}>{headerText}</Text>
+      <View style={styles.itemContainer}>
+        <CustomSearchBar
+          theme={theme}
+          additionalContainerStyle={styles.searchBarContainer}
+          onChangeText={(text) => updateFilterValue(text)}
+          value={filter.filterValue}
+        />
+        <View style={styles.filterItemContainer}>
+          {Object.keys(filter.selectedTransactionTypes).map((filterKey) => {
+            return (
+              <TouchableOpacity
+                style={[
+                  styles.filterItem,
+                  getActiveFilterItemContainerStyle(filterKey),
+                ]}
+                key={`${filterKey}-tokens-filter`}
+                onPress={() => toggleFilterType(filterKey)}>
+                <Text
+                  style={[
+                    styles.filterItemText,
+                    getActiveFilterItemTextStyle(filterKey),
+                  ]}>
+                  {capitalizeSentence(filterKey.split('_').join(' '))}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
-      )}
-    </>
+      </View>
+      <Separator drawLine additionalLineStyle={styles.line} />
+      <View style={styles.inOutContainer}>
+        <TouchableOpacity
+          style={[
+            styles.filterItem,
+            getActiveContainerStyleInOrOut('inSelected'),
+          ]}
+          onPress={() => toggleFilterIn()}>
+          <Text
+            style={[
+              styles.filterItemText,
+              getActiveTextStyleInOrOut('inSelected'),
+            ]}>
+            {translate('wallet.filter.filter_in')}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.filterItem,
+            getActiveContainerStyleInOrOut('outSelected'),
+          ]}
+          onPress={() => toggleFilterOut()}>
+          <Text
+            style={[
+              styles.filterItemText,
+              getActiveTextStyleInOrOut('outSelected'),
+            ]}>
+            {translate('wallet.filter.filter_out')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <Separator height={10} />
+      <EllipticButton
+        title={translate('wallet.filter.clear_filters')}
+        onPress={() => setFilter(defaultFilter)}
+        //TODO important need testing in IOS
+        style={[
+          styles.warningProceedButton,
+          generateBoxShadowStyle(
+            0,
+            13,
+            RED_SHADOW_COLOR,
+            1,
+            25,
+            20,
+            RED_SHADOW_COLOR,
+          ),
+        ]}
+        additionalTextStyle={{...button_link_primary_medium}}
+      />
+    </View>
   );
 };
 
@@ -46,33 +190,72 @@ export default CustomFilterBox;
 
 const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
   StyleSheet.create({
-    iconContainer: {
-      marginRight: 16,
-      paddingHorizontal: 19,
-      paddingVertical: 8,
+    container: {
+      backgroundColor: getColors(theme).secondaryCardBgColor,
       borderWidth: 1,
-      borderColor: getColors(theme).secondaryCardBorderColor,
-      backgroundColor: getColors(theme).secondaryCardBgColor,
-      borderRadius: 26,
-      zIndex: 11,
-    },
-    expandedContainer: {
-      position: 'absolute',
-      backgroundColor: getColors(theme).secondaryCardBgColor,
-    },
-    overlayContainer: {
-      position: 'absolute',
-      width: width,
-      height: height,
-      opacity: 0.8,
+      borderRadius: 15.1,
       flex: 1,
-      backgroundColor: '#212838',
-      //   top: 0,
-      //   left: 0,
-      //   bottom: 0,
-      //   right: 0,
-      bottom: 0,
-      zIndex: 10,
+      justifyContent: 'space-evenly',
+    },
+    headerText: {
+      marginVertical: 8,
+      textAlign: 'center',
+      ...headlines_primary_headline_2,
+      color: getColors(theme).secondaryText,
+    },
+    searchBarContainer: {
+      borderWidth: 1,
+      borderRadius: 53,
+      width: '100%',
+      borderColor: getColors(theme).tertiaryCardBorderColor,
+      marginBottom: 10,
+    },
+    itemContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 18,
+    },
+    filterItemContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+    filterItem: {
+      borderColor: getColors(theme).tertiaryCardBorderColor,
+      borderWidth: 1,
+      borderRadius: 18.8,
+      marginRight: 6,
+      marginBottom: 3,
+      minWidth: 100,
+    },
+    filterItemText: {
+      textAlign: 'center',
+      padding: 10,
+      ...fields_primary_text_2,
+      lineHeight: 14.7,
+    },
+    line: {
+      height: 1,
+      borderEndWidth: 0.5,
+      borderBottomColor: getColors(theme).tertiaryCardBorderColor,
+      width: '88%',
       alignSelf: 'center',
+    },
+    inOutContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      paddingHorizontal: 18,
+    },
+    warningProceedButton: {
+      backgroundColor: PRIMARY_RED_COLOR,
+      width: '55%',
+      alignSelf: 'center',
+      height: 40,
+      marginVertical: 8,
+    },
+    activeFilterItem: {
+      backgroundColor: PRIMARY_RED_COLOR,
+    },
+    activeTextFilter: {
+      color: '#FFF',
     },
   });

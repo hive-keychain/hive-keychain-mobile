@@ -347,7 +347,8 @@
       "filter_in": "In",
       "filter_out": "Out",
       "filters_title": "Filters",
-      "clear_filters": "Clear"
+      "clear_filters": "Clear",
+      "filter_title": "Filter"
     }
   },
   "settings": {

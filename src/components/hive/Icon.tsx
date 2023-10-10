@@ -7,6 +7,7 @@ import HiveAlternative from 'assets/new_UI/hive_alternative.svg';
 import ImportIcon from 'assets/new_UI/import.svg';
 import InfoCircleIcon from 'assets/new_UI/info-circle.svg';
 import LogoutIcon from 'assets/new_UI/logout.svg';
+import PolygonDown from 'assets/new_UI/polygon_down.svg';
 import AccountsMenuIcon from 'assets/new_UI/profile.svg';
 import SearchIcon from 'assets/new_UI/search.svg';
 import Settings2Icon from 'assets/new_UI/setting-2.svg';
@@ -160,6 +161,15 @@ const getIconFilePath = (
       );
     case 'arrow_up':
       return <ArrowUpIcon style={[finalStyleOnIcon, {color: '#FFF'}]} />;
+    case 'polygon_down':
+      return (
+        <PolygonDown
+          style={[
+            finalStyleOnIcon,
+            {color: getColors(theme).secondaryCardBgColor},
+          ]}
+        />
+      );
     default:
       return <TransferIcon style={finalStyleOnIcon} />;
   }

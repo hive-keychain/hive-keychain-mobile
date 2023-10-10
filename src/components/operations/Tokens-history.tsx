@@ -2,26 +2,15 @@ import {clearTokenHistory, loadTokenHistory} from 'actions/index';
 import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import moment from 'moment';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {
-  CURATIONS_REWARDS_TYPES,
-  CommentCurationTransaction,
-  DelegationTokenTransaction,
-  MiningLotteryTransaction,
-  OperationsHiveEngine,
-  StakeTokenTransaction,
-  TokenTransaction,
-  TransferTokenTransaction,
-} from 'src/interfaces/tokens.interface';
+import {TokenTransaction} from 'src/interfaces/tokens.interface';
 import {getColors} from 'src/styles/colors';
+import {WalletHistoryFilter} from 'src/types/wallet.history.types';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {TokenTransactionUtils} from 'utils/token-transaction.utils';
-import ClearableInput from '../form/ClearableInput';
 import {TokenHistoryItemComponent} from './token-history-item';
 
 export type TokenHistoryProps = {
@@ -29,7 +18,7 @@ export type TokenHistoryProps = {
   tokenLogo: JSX.Element;
   currency: string;
   theme: Theme;
-  filter?: any; //TODO add &  use same filter types
+  filter?: WalletHistoryFilter; //TODO add &  use same filter types
 };
 
 //TODO important on histories & related pages: Add filter as the image in chat(the one used in wallet history, clickeable + float), notes bellow.
@@ -64,47 +53,61 @@ const TokensHistory = ({
   }, []);
 
   useEffect(() => {
-    if (tokenHistory.length > 0) {
-      setDisplayedTransactions(
-        tokenHistory.filter((item) => {
-          return (
-            (CURATIONS_REWARDS_TYPES.includes(item.operation) &&
-              TokenTransactionUtils.filterCurationReward(
-                item as CommentCurationTransaction,
-                filterValue,
-              )) ||
-            (item.operation === OperationsHiveEngine.TOKENS_TRANSFER &&
-              TokenTransactionUtils.filterTransfer(
-                item as TransferTokenTransaction,
-                filterValue,
-              )) ||
-            (item.operation === OperationsHiveEngine.TOKEN_STAKE &&
-              TokenTransactionUtils.filterStake(
-                item as StakeTokenTransaction,
-                filterValue,
-              )) ||
-            (item.operation === OperationsHiveEngine.MINING_LOTTERY &&
-              TokenTransactionUtils.filterMiningLottery(
-                item as MiningLotteryTransaction,
-                filterValue,
-              )) ||
-            (item.operation === OperationsHiveEngine.TOKENS_DELEGATE &&
-              TokenTransactionUtils.filterDelegation(
-                item as DelegationTokenTransaction,
-                filterValue,
-              )) ||
-            item.amount.toLowerCase().includes(filterValue.toLowerCase()) ||
-            item.operation.toLowerCase().includes(filterValue.toLowerCase()) ||
-            (item.timestamp &&
-              moment(item.timestamp)
-                .format('L')
-                .includes(filterValue.toLowerCase()))
-          );
-        }),
-      );
+    if (tokenHistory.length > 0 && filter) {
+      const selectedTransactionTypes = Object.keys(
+        filter.selectedTransactionTypes,
+      ).filter((operation) => filter.selectedTransactionTypes[operation]);
+
+      const filteredTokenHistory = tokenHistory.filter((item) => {
+        //TODO clean up OLD WAY
+        // return (
+        //   (CURATIONS_REWARDS_TYPES.includes(item.operation) &&
+        //     TokenTransactionUtils.filterCurationReward(
+        //       item as CommentCurationTransaction,
+        //       filterValue,
+        //     )) ||
+        //   (item.operation === OperationsHiveEngine.TOKENS_TRANSFER &&
+        //     TokenTransactionUtils.filterTransfer(
+        //       item as TransferTokenTransaction,
+        //       filterValue,
+        //     )) ||
+        //   (item.operation === OperationsHiveEngine.TOKEN_STAKE &&
+        //     TokenTransactionUtils.filterStake(
+        //       item as StakeTokenTransaction,
+        //       filterValue,
+        //     )) ||
+        //   (item.operation === OperationsHiveEngine.MINING_LOTTERY &&
+        //     TokenTransactionUtils.filterMiningLottery(
+        //       item as MiningLotteryTransaction,
+        //       filterValue,
+        //     )) ||
+        //   (item.operation === OperationsHiveEngine.TOKENS_DELEGATE &&
+        //     TokenTransactionUtils.filterDelegation(
+        //       item as DelegationTokenTransaction,
+        //       filterValue,
+        //     )) ||
+        //   item.amount.toLowerCase().includes(filterValue.toLowerCase()) ||
+        //   item.operation.toLowerCase().includes(filterValue.toLowerCase()) ||
+        //   (item.timestamp &&
+        //     moment(item.timestamp)
+        //       .format('L')
+        //       .includes(filterValue.toLowerCase()))
+        // );
+        //END OLD WAY
+
+        //TODO CHECK NEW WAY
+        //TODO keep working on this...
+        return (
+          selectedTransactionTypes.includes(item.operation) ||
+          selectedTransactionTypes.length === 0
+        );
+        //END NEW WAY
+      });
+      console.log({l: filteredTokenHistory.length}); //TODO remove line
+      setDisplayedTransactions(filteredTokenHistory);
       setLoading(false);
     }
-  }, [tokenHistory, filterValue]);
+  }, [tokenHistory, filter]);
 
   const handleScroll = (event: any) => {
     const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
@@ -126,12 +129,13 @@ const TokensHistory = ({
   return (
     <View style={styles.flex}>
       <View style={styles.container}>
-        <Separator />
+        {/* //TODO bellow cleanup */}
+        {/* <Separator />
         <ClearableInput
           loading={loading}
           filterValue={filterValue}
           setFilterValue={setFilterValue}
-        />
+        /> */}
         <Separator />
         <FlatList
           ref={flatListRef}
