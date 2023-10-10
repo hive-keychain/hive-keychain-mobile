@@ -67,3 +67,7 @@ export enum HiveURIActionTypes {
 //wallet filters
 export const UPDATE_WALLET_FILTER = 'UPDATE_WALLET_FILTER';
 export const CLEAR_WALLET_FILTERS = 'CLEAR_WALLET_FILTERS';
+
+//tokens filters
+export const UPDATE_TOKENS_FILTER = 'UPDATE_TOKENS_FILTER';
+export const CLEAR_TOKENS_FILTERS = 'CLEAN_TOKENS_FILTERS';

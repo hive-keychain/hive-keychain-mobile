@@ -1,7 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import CustomFilterBox from 'components/form/CustomFilterBox';
+import {CustomFilterBox} from 'components/form/CustomFilterBox';
 import Icon from 'components/hive/Icon';
 import {TokensHistoryComponent} from 'components/operations/Tokens-history';
 import CustomIconButton from 'components/ui/CustomIconButton';
@@ -14,28 +14,9 @@ import {StyleSheet, View} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
-import {TokenHistoryFilter} from 'src/types/tokens.history.types';
 import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator<RootStackParam>();
-
-export const DEFAULT_FILTER_TOKENS: TokenHistoryFilter = {
-  filterValue: '',
-  inSelected: false,
-  outSelected: false,
-  selectedTransactionTypes: {
-    comments_curationReward: false,
-    comments_authorReward: false,
-    mining_lottery: false,
-    tokens_transfer: false,
-    tokens_stake: false,
-    tokens_unstakeStart: false,
-    tokens_unstakeDone: false,
-    tokens_delegate: false,
-    tokens_undelegateStart: false,
-    tokens_undelegateDone: false,
-  },
-};
 
 export default ({navigation, route}: TokensHistoryNavigationProps) => {
   const {theme} = useContext(ThemeContext);
@@ -68,11 +49,7 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
                     <CustomFilterBox
                       theme={theme}
                       headerText={translate('wallet.filter.filter_title')}
-                      defaultFilter={DEFAULT_FILTER_TOKENS}
-                      setFilterOut={(filter) => {
-                        //TODO see if needed after using redux with tokens filter.
-                        navigation.setParams({filter: filter});
-                      }}
+                      usingFilter="tokens"
                     />
                   ),
                   fixedHeight: 0.7,

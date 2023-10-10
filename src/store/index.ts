@@ -15,6 +15,7 @@ const persistConfig = {
     'preferences',
     'hive_authentication_service',
     'walletFilters',
+    'tokensFilters',
   ],
   transforms,
 };
@@ -46,7 +47,7 @@ const getSafeState = () => {
   return state;
 };
 
-export {store, persistor, getSafeState};
+export {getSafeState, persistor, store};
 
 export type RootState = ReturnType<typeof store2.getState>;
 export type AppDispatch = typeof store.dispatch;

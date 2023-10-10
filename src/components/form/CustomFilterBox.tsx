@@ -1,5 +1,7 @@
+import {clearTokensFilters, updateTokensFilter} from 'actions/tokensFilters';
+import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
 import Separator from 'components/ui/Separator';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   ScaledSize,
   StyleSheet,
@@ -8,6 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {
   PRIMARY_RED_COLOR,
@@ -22,6 +25,7 @@ import {
 } from 'src/styles/typography';
 import {TokenHistoryFilter} from 'src/types/tokens.history.types';
 import {WalletHistoryFilter} from 'src/types/wallet.history.types';
+import {RootState} from 'store';
 import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 import CustomSearchBar from './CustomSearchBar';
@@ -31,27 +35,36 @@ export type FilterType = WalletHistoryFilter | TokenHistoryFilter;
 interface Props {
   theme: Theme;
   headerText: string;
-  defaultFilter: FilterType;
-  setFilterOut: (filter: FilterType) => void;
+  usingFilter: 'wallet' | 'tokens';
 }
 
-const CustomFilterBox = ({
+const FilterBox = ({
   theme,
   headerText,
-  defaultFilter,
-  setFilterOut,
-}: Props) => {
-  const [filter, setFilter] = useState<FilterType>(defaultFilter);
+  usingFilter,
+  updateTokensFilter,
+  updateWalletFilter,
+  clearTokensFilters,
+  clearWalletFilters,
+  walletFilters,
+  tokensFilter,
+}: Props & PropsFromRedux) => {
+  const filter = usingFilter === 'tokens' ? tokensFilter : walletFilters;
+
+  const updateFilterRedux = (newFilter: FilterType) => {
+    if (usingFilter === 'tokens') {
+      updateTokensFilter(newFilter);
+    } else if (usingFilter === 'wallet') {
+      updateWalletFilter(newFilter);
+    }
+  };
 
   const toggleFilterType = (transactionName: string) => {
     const newFilter = {...filter.selectedTransactionTypes};
     newFilter[transactionName] = !filter.selectedTransactionTypes[
       transactionName
     ];
-    updateFilter({
-      ...filter,
-      selectedTransactionTypes: newFilter,
-    });
+    updateFilterRedux({...filter, selectedTransactionTypes: newFilter});
   };
 
   const toggleFilterIn = () => {
@@ -59,7 +72,7 @@ const CustomFilterBox = ({
       ...filter,
       inSelected: !filter.inSelected,
     };
-    updateFilter(newFilter);
+    updateFilterRedux(newFilter);
   };
 
   const toggleFilterOut = () => {
@@ -67,7 +80,7 @@ const CustomFilterBox = ({
       ...filter,
       outSelected: !filter.outSelected,
     };
-    updateFilter(newFilter);
+    updateFilterRedux(newFilter);
   };
 
   const updateFilterValue = (value: string) => {
@@ -75,11 +88,7 @@ const CustomFilterBox = ({
       ...filter,
       filterValue: value,
     };
-    updateFilter(newFilter);
-  };
-
-  const updateFilter = (filter: FilterType) => {
-    setFilter(filter);
+    updateFilterRedux(newFilter);
   };
 
   const getActiveTextStyleInOrOut = (selector: 'inSelected' | 'outSelected') =>
@@ -95,11 +104,15 @@ const CustomFilterBox = ({
   const getActiveFilterItemTextStyle = (selected: string) =>
     filter.selectedTransactionTypes[selected] ? styles.activeTextFilter : null;
 
-  const styles = getStyles(theme, useWindowDimensions());
+  const handleClearFilter = () => {
+    if (usingFilter === 'tokens') {
+      clearTokensFilters();
+    } else {
+      clearWalletFilters();
+    }
+  };
 
-  useEffect(() => {
-    setFilterOut(filter);
-  }, [filter]);
+  const styles = getStyles(theme, useWindowDimensions());
 
   return (
     <View style={[styles.container]}>
@@ -167,7 +180,7 @@ const CustomFilterBox = ({
       <Separator height={10} />
       <EllipticButton
         title={translate('wallet.filter.clear_filters')}
-        onPress={() => setFilter(defaultFilter)}
+        onPress={() => handleClearFilter()}
         //TODO important need testing in IOS
         style={[
           styles.warningProceedButton,
@@ -187,7 +200,20 @@ const CustomFilterBox = ({
   );
 };
 
-export default CustomFilterBox;
+const mapStateToProps = (state: RootState) => {
+  return {
+    walletFilters: state.walletFilters,
+    tokensFilter: state.tokensFilters,
+  };
+};
+
+const connector = connect(mapStateToProps, {
+  updateTokensFilter,
+  updateWalletFilter,
+  clearWalletFilters,
+  clearTokensFilters,
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
   StyleSheet.create({
@@ -260,3 +286,5 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       color: '#FFF',
     },
   });
+
+export const CustomFilterBox = connector(FilterBox);

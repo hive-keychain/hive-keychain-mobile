@@ -1,7 +1,6 @@
 import {clearTokenHistory, loadTokenHistory} from 'actions/index';
 import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import Loader from 'components/ui/Loader';
-import {DEFAULT_FILTER_TOKENS} from 'navigators/mainDrawerStacks/TokensHistory';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
@@ -14,7 +13,6 @@ import {
 } from 'src/interfaces/tokens.interface';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_medium} from 'src/styles/typography';
-import {TokenHistoryFilter} from 'src/types/tokens.history.types';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {
@@ -29,7 +27,8 @@ export type TokenHistoryProps = {
   tokenLogo: JSX.Element;
   currency: string;
   theme: Theme;
-  filter?: TokenHistoryFilter;
+  //TODO cleanup
+  // filter?: TokenHistoryFilter;
 };
 
 const TokensHistory = ({
@@ -40,7 +39,7 @@ const TokensHistory = ({
   loadTokenHistory,
   clearTokenHistory,
   tokenLogo,
-  filter,
+  tokensFilter,
 }: TokenHistoryProps & PropsFromRedux) => {
   const [displayedTransactions, setDisplayedTransactions] = useState<
     TokenTransaction[]
@@ -48,7 +47,8 @@ const TokensHistory = ({
   const [loading, setLoading] = useState(true);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
   const flatListRef = useRef();
-  const filterTokens = filter ?? DEFAULT_FILTER_TOKENS;
+  //TODO cleanup
+  // const filterTokens = filter ?? DEFAULT_FILTER_TOKENS;
 
   useEffect(() => {
     setLoading(true);
@@ -59,14 +59,14 @@ const TokensHistory = ({
   }, []);
 
   useEffect(() => {
-    if (tokenHistory.length > 0 && filterTokens) {
+    if (tokenHistory.length > 0 && tokensFilter) {
       setLoading(true);
       const selectedTransactionTypes = Object.keys(
-        filterTokens.selectedTransactionTypes,
-      ).filter((operation) => filterTokens.selectedTransactionTypes[operation]);
+        tokensFilter.selectedTransactionTypes,
+      ).filter((operation) => tokensFilter.selectedTransactionTypes[operation]);
 
       const isInOrOutSelected =
-        filterTokens.inSelected || filterTokens.outSelected;
+        tokensFilter.inSelected || tokensFilter.outSelected;
 
       let filteredTokenHistory = tokenHistory.filter((item) => {
         return (
@@ -75,7 +75,7 @@ const TokensHistory = ({
         );
       });
       if (isInOrOutSelected) {
-        if (filterTokens.inSelected) {
+        if (tokensFilter.inSelected) {
           filteredTokenHistory = filteredTokenHistory.filter(
             (item) =>
               IN_TOKENS_TRANSACTIONS.includes(item.operation) ||
@@ -86,7 +86,7 @@ const TokensHistory = ({
                   activeAccountName),
           );
         }
-        if (filterTokens.outSelected) {
+        if (tokensFilter.outSelected) {
           filteredTokenHistory = filteredTokenHistory.filter(
             (item) =>
               (OUT_TOKENS_TRANSACTIONS.includes(item.operation) &&
@@ -98,16 +98,16 @@ const TokensHistory = ({
           );
         }
       }
-      if (filterTokens.filterValue.trim().length > 0) {
+      if (tokensFilter.filterValue.trim().length > 0) {
         filteredTokenHistory = TokenTransactionUtils.applyAllTokensFilters(
           filteredTokenHistory,
-          filterTokens.filterValue,
+          tokensFilter.filterValue,
         );
       }
       setDisplayedTransactions(filteredTokenHistory);
       setLoading(false);
     }
-  }, [tokenHistory, filterTokens]);
+  }, [tokenHistory, tokensFilter]);
 
   const handleScroll = (event: any) => {
     const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
@@ -171,6 +171,7 @@ const mapStateToProps = (state: RootState) => {
     activeAccountName: state.activeAccount?.name,
     userTokens: state.userTokens,
     tokenHistory: state.tokenHistory as TokenTransaction[],
+    tokensFilter: state.tokensFilters,
   };
 };
 

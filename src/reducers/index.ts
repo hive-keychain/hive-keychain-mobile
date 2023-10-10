@@ -15,6 +15,7 @@ import preferences from './preferences';
 import settings from './settings';
 import tokenHistory from './tokenHistory';
 import tokens from './tokens';
+import tokensFilters from './tokensFilters';
 import tokensMarket from './tokensMarket';
 import transactions from './transactions';
 import userTokens from './userTokens';
@@ -40,4 +41,5 @@ export default combineReducers({
   hive_authentication_service,
   hiveUri,
   walletFilters,
+  tokensFilters,
 });
