@@ -65,6 +65,7 @@ const getDimensionedStyles = ({width, height}: Dimensions) =>
       backgroundColor: '#E5EEF7',
       borderRadius: height / 30,
       marginVertical: height / 30,
+      alignItems: 'center',
     },
     subContainer: {
       width: '80%',
