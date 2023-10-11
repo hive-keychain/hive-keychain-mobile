@@ -288,9 +288,10 @@ export const SwapsConfig = {
   autoRefreshPeriodSec: 30,
   autoRefreshHistoryPeriodSec: 10,
   baseURL:
-    global.process.env.NODE_ENV === 'development'
-      ? 'http://10.0.1.5:5050'
-      : 'https://swap.hive-keychain.com',
+    // global.process.env.NODE_ENV === 'development'
+    //   ? 'http://10.0.1.5:5050'
+    //   :
+    'https://swap.hive-keychain.com',
 };
 
 export const ClaimsConfig = {

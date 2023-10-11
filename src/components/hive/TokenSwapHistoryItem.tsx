@@ -13,11 +13,13 @@ import {translate} from 'utils/localize';
 
 interface Props {
   swap: ISwap;
+  index: number;
 }
 
-const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
+const TokenSwapHistoryItem = ({swap, index}: PropsFromRedux & Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const styles = getStyles(index);
   const copyIdToCliplboard = (id: string) => {
     Clipboard.setString(id.toString());
     SimpleToast.show(
@@ -91,14 +93,7 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
 
   return (
     <View style={[styles.container, styles.paddingHorizontal]}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          backgroundColor: '#f2d9d6',
-          paddingVertical: 12,
-        }}>
+      <View style={styles.item}>
         <Icon
           name={!isOpen ? 'expand_more' : 'expand_less'}
           onClick={() => setIsOpen(!isOpen)}
@@ -169,7 +164,12 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
                       {step.endToken}
                     </Text>
                   </View>
-                  <Icon name={getStepIcon(step.status)} />
+                  <Icon
+                    name={getStepIcon(step.status)}
+                    width={20}
+                    height={20}
+                    style={{marginHorizontal: 10}}
+                  />
                 </View>
               ))}
             {!!swap.fee && (
@@ -210,9 +210,14 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
+                  justifyContent: 'center',
                 }}>
                 <Text>{getShortenedId(swap.id)}</Text>
+
                 <Icon
+                  width={20}
+                  height={20}
+                  style={{marginHorizontal: 10}}
                   name={'content_copy'}
                   onClick={() => copyIdToCliplboard(swap.id)}
                 />
@@ -225,28 +230,23 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {width: '100%', flex: 1, marginBottom: 8},
-  apr: {color: '#7E8C9A', fontSize: 14},
-  aprValue: {color: '#3BB26E', fontSize: 14},
-  withdrawingValue: {color: '#b8343f', fontSize: 14},
-  flexRowAligned: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  loader: {
-    backgroundColor: 'transparent',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-  },
-  paddingHorizontal: {
-    paddingHorizontal: 10,
-  },
-  send: {backgroundColor: '#68A0B4', marginBottom: 20},
-  title: {fontWeight: 'bold', fontSize: 16},
-});
+const getStyles = (index: number) =>
+  StyleSheet.create({
+    container: {
+      width: '100%',
+      flex: 1,
+      backgroundColor: index % 2 === 1 ? 'transparent' : '#E5EEF7',
+    },
+    paddingHorizontal: {
+      paddingHorizontal: 10,
+    },
+    item: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingVertical: 12,
+    },
+  });
 
 const mapStateToProps = (state: RootState) => {
   return {};

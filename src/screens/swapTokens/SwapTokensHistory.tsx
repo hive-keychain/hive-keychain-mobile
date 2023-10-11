@@ -62,6 +62,7 @@ const SwapTokensHistory = ({activeAccount}: PropsFromRedux) => {
     return (
       <TokenSwapHistoryItem
         key={`item-swap-history-${index}`}
+        index={index}
         swap={historyItem}
       />
     );
@@ -75,10 +76,15 @@ const SwapTokensHistory = ({activeAccount}: PropsFromRedux) => {
     );
   else
     return (
-      <View style={[styles.container, styles.paddingHorizontal]}>
+      <View style={styles.container}>
         {!loading && (
           <>
-            <View style={[styles.flexRowCenteredEnd, styles.marginTopBottom]}>
+            <View
+              style={[
+                styles.flexRowCenteredEnd,
+                styles.marginTopBottom,
+                styles.paddingHorizontal,
+              ]}>
               {!!autoRefreshCountdown && (
                 <>
                   <Text>
