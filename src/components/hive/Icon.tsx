@@ -3,11 +3,14 @@ import BackTimeIcon from 'assets/new_UI/back_time.svg';
 import BankIcon from 'assets/new_UI/bank.svg';
 import CandleIcon from 'assets/new_UI/candle.svg';
 import CategoryIcon from 'assets/new_UI/category.svg';
+import DoubleArrowIcon from 'assets/new_UI/double-arrow.svg';
+import EyeSlashIcon from 'assets/new_UI/eye-slash.svg';
 import HiveAlternative from 'assets/new_UI/hive_alternative.svg';
 import ImportIcon from 'assets/new_UI/import.svg';
 import InfoCircleIcon from 'assets/new_UI/info-circle.svg';
 import LogoutIcon from 'assets/new_UI/logout.svg';
 import PolygonDown from 'assets/new_UI/polygon_down.svg';
+import PowerUpDownIcon from 'assets/new_UI/power-up-down.svg';
 import AccountsMenuIcon from 'assets/new_UI/profile.svg';
 import SearchIcon from 'assets/new_UI/search.svg';
 import Settings2Icon from 'assets/new_UI/setting-2.svg';
@@ -15,20 +18,16 @@ import Settings4Icon from 'assets/new_UI/setting-4.svg';
 import React from 'react';
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import AddCircleOutlineIcon from 'src/assets/icons/svgs/add_circle_outline.svg';
-import PowerDownIcon from 'src/assets/icons/svgs/arrow_downward.svg';
-import {
-  default as ArrowUpwardIcon,
-  default as PowerUpIcon,
-} from 'src/assets/icons/svgs/arrow_upward.svg';
-import ConvertIcon from 'src/assets/icons/svgs/currency_exchange.svg';
+import {default as ArrowUpwardIcon} from 'src/assets/icons/svgs/arrow_upward.svg';
 import DeleteIcon from 'src/assets/icons/svgs/delete_black.svg';
 import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
-import ClaimIcon from 'src/assets/icons/svgs/redeem.svg';
-import SavingsIcon from 'src/assets/icons/svgs/savings.svg';
-import TransferIcon from 'src/assets/icons/svgs/send.svg';
+import ConvertIcon from 'src/assets/new_UI/convert.svg';
 import ExpandMoreIcon from 'src/assets/new_UI/expand_more.svg';
+import ClaimIcon from 'src/assets/new_UI/gift.svg';
 import ReceiveSquareIcon from 'src/assets/new_UI/receive_square.svg';
+import SavingsIcon from 'src/assets/new_UI/savings.svg';
+import TransferIcon from 'src/assets/new_UI/send.svg';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 
@@ -45,123 +44,153 @@ const getIconFilePath = (
   theme?: Theme,
 ) => {
   const finalStyleOnIcon = marginRight ? styles.defaultIconContainer : style;
-
-  switch (name) {
-    case 'transfer':
-    case 'recurrent_transfer':
-    case 'fill_recurrent_transfer':
-      return <TransferIcon style={finalStyleOnIcon} />;
-    case 'savings':
-      return <SavingsIcon style={finalStyleOnIcon} />;
-    case 'power_up_down':
-      switch (subType) {
-        case 'transfer_to_vesting':
-          return <PowerUpIcon style={finalStyleOnIcon} />;
-        case 'withdraw_vesting':
-          return <PowerDownIcon style={finalStyleOnIcon} />;
+  console.log({name}); //TODO remove line
+  switch (true) {
+    case name === 'transfer' ||
+      name === 'recurrent_transfer' ||
+      name === 'fill_recurrent_transfer':
+      return (
+        <TransferIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          width={30}
+          height={30}
+        />
+      );
+    case name === 'savings':
+      return (
+        <SavingsIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
+      );
+    case name === 'power_up_down':
+      switch (true) {
+        case subType === 'transfer_to_vesting':
+          return (
+            <PowerUpDownIcon
+              style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+            />
+          );
+        case subType === 'withdraw_vesting':
+          return (
+            <PowerUpDownIcon
+              style={[
+                finalStyleOnIcon,
+                {color: getColors(theme).icon},
+                styles.rotationUpDown,
+              ]}
+            />
+          );
       }
-    case 'claim_reward_balance':
-    case 'interest':
-      return <ClaimIcon style={finalStyleOnIcon} />;
-    case 'delegate_vesting_shares':
+    case name === 'claim_reward_balance':
+    case name === 'interest':
+      return (
+        <ClaimIcon style={[finalStyleOnIcon, {color: getColors(theme).icon}]} />
+      );
+    case name === 'delegate_vesting_shares':
       return (
         <ReceiveSquareIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
-    case 'claim_account':
-    case 'account_create':
-    case 'create_claimed_account':
+    case name === 'claim_account' ||
+      name === 'account_create' ||
+      name === 'create_claimed_account':
       return <LinkIcon style={finalStyleOnIcon} />;
-    case 'convert':
-      return <ConvertIcon style={finalStyleOnIcon} />;
-    case 'expand_more':
+    case name === 'convert':
+      return (
+        <ConvertIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          width={40}
+          height={40}
+        />
+      );
+    case name === 'expand_more':
       return (
         <ExpandMoreIcon
           style={[finalStyleOnIcon, {color: getColors(theme).iconBW}]}
         />
       );
-    case 'expand_less':
+    case name === 'expand_less':
       return <ExpandLessIcon style={styles.defaultIconContainer} />;
-    case 'arrow_upward':
+    case name === 'arrow_upward':
       return <ArrowUpwardIcon style={styles.defaultIconContainer} />;
-    case 'add_circle_outline':
+    case name === 'add_circle_outline':
       return <AddCircleOutlineIcon style={styles.defaultIconContainer} />;
-    case 'delete':
+    case name === 'delete':
       return <DeleteIcon style={style.defaultIconContainer} />;
-    case 'candle':
+    case name === 'candle':
       return (
         <CandleIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
-    case 'accounts':
+    case name === 'accounts':
       return (
         <AccountsMenuIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
-    case 'tokens':
+    case name === 'tokens':
       return (
         <HiveAlternative
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
-    case 'governance':
+    case name === 'governance':
       return (
         <BankIcon style={[finalStyleOnIcon, {color: getColors(theme).icon}]} />
       );
-    case 'theme':
+    case name === 'theme':
       return (
         <CategoryIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
-    case 'info':
+    case name === 'info':
       return (
         <InfoCircleIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
-    case 'logout':
+    case name === 'logout':
       return (
         <LogoutIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
-    case 'search':
+    case name === 'search':
       return (
         <SearchIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
-    case 'settings-2':
+    case name === 'settings-2':
       return (
         <Settings2Icon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
-    case 'settings-4':
+    case name === 'settings-4':
       return (
         <Settings4Icon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
-    case 'import':
+    case name === 'import':
       return (
         <ImportIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
-    case 'back_time':
+    case name === 'back_time':
       return (
         <BackTimeIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
         />
       );
-    case 'arrow_up':
+    case name === 'arrow_up':
       return <ArrowUpIcon style={[finalStyleOnIcon, {color: '#FFF'}]} />;
-    case 'polygon_down':
+    case name === 'polygon_down':
       return (
         <PolygonDown
           style={[
@@ -170,8 +199,20 @@ const getIconFilePath = (
           ]}
         />
       );
+    case name === 'double-arrow' || name === 'delegate':
+      return (
+        <DoubleArrowIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+        />
+      );
     default:
-      return <TransferIcon style={finalStyleOnIcon} />;
+      return (
+        <EyeSlashIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          width={20}
+          height={20}
+        />
+      );
   }
 };
 
@@ -234,6 +275,9 @@ const styles = StyleSheet.create({
   },
   bgIcon: {
     position: 'absolute',
+  },
+  rotationUpDown: {
+    transform: [{rotateY: '180deg'}],
   },
 });
 

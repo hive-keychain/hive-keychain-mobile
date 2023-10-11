@@ -115,7 +115,7 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.TOKENS_TRANSFER: {
         const t = transaction as TransferTokenTransaction;
-        iconName = 'import';
+        iconName = 'transfer';
         if (t.from === activeAccountName) {
           labelDataList = [
             {label: 'info_transfer_out.part_1'},
@@ -143,7 +143,7 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.TOKENS_DELEGATE: {
         const t = transaction as DelegateTokenTransaction;
-        iconName = 'delegate_vesting_shares';
+        iconName = 'delegate';
         if (t.delegator === activeAccountName) {
           labelDataList = [
             {label: 'info_delegation_out.part_1'},
@@ -402,7 +402,6 @@ const TokenHistoryItem = ({
               <View style={{width: 140}}>{label}</View>
               <Text style={[{marginHorizontal: 15}, styles.text]}>{date}</Text>
             </View>
-            <View>{memo && memo.length ? toggleExpandMoreIcon() : null}</View>
           </View>
         </View>
         {toggle && memo && memo.length ? (

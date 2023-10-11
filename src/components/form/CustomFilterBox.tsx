@@ -259,6 +259,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       padding: 10,
       ...fields_primary_text_2,
       lineHeight: 14.7,
+      color: getColors(theme).secondaryText,
     },
     line: {
       height: 1,
