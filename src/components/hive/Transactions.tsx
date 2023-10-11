@@ -3,10 +3,10 @@ import {ActiveAccount} from 'actions/interfaces';
 import Loader from 'components/ui/Loader';
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {getMainLocale, translate} from 'utils/localize';
-import {WalletHistoryItemComponent} from './WalletHistoryItemComponent';
+import WalletHistoryItemComponent from './WalletHistoryItemComponent';
 
 type Props = PropsFromRedux & {user: ActiveAccount};
 

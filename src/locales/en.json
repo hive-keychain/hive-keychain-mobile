@@ -17,7 +17,8 @@
     "active": "Active",
     "memo": "Memo",
     "key_type": "{{type}} key",
-    "using_authorized_account": "Signing using {{authorizedAccount}}'s account"
+    "using_authorized_account": "Signing using {{authorizedAccount}}'s account",
+    "warning_private_key_in_memo": "Please do not send any sentitive information about your keys in a memo."
   },
   "common": {
     "import": "Import",
@@ -69,7 +70,13 @@
       "info_claim_account": "Claimed account",
       "info_create_claimed_account": "Claimed account",
       "info_claim_rewards": "{{currency}} claimed",
-      "info_account_create": "Paid {{fee}} to create @{{new_account_name}}"
+      "info_account_create": "Paid {{fee}} to create @{{new_account_name}}",
+      "enable_autoclaim_rewards": "Claim Rewards",
+      "enable_autoclaim_accounts": "Claim Accounts",
+      "enable_autoclaim_savings": "Claim savings interest",
+      "enable_autoclaim_rewards_info": "Regularly claiming your rewards can increase your gains.",
+      "enable_autoclaim_accounts_info": "Claim a free account ticket when your RC is charged over {{MIN_RC_PCT}}%. Depending on your Hive Power, this might use up a big chunk of your RC.",
+      "enable_autoclaim_savings_info": "To claim your savings interest, Keychain will deposit or withdraw 0.001 HBD to/from your savings every 30 days"
     },
     "operations": {
       "history": {
@@ -468,7 +475,14 @@
     "account_name_not_valid": "Account name is not valid",
     "account_username_already_used": "Username is already used. Please pick a new one",
     "account_creation_not_enough_found": "You don't have enough HIVE to buy an account",
-    "copied_text": "Keys copied to clipboard!"
+    "copied_text": "Keys copied to clipboard!",
+    "claims": {
+      "need_active_key_for_claim_savings": "You need to add your active key to Keychain to claim savings",
+      "need_active_key_for_claim_accounts": "You need to add your active key to Keychain to claim accounts",
+      "need_posting_key_to_claim_rewards": "You need to add your posting key to Keychain to claim accounts",
+      "not_enough_rc_to_claim_account": "You don't have enough RC to claim an account.",
+      "insufficient_hp_claim_accounts": "Insufficient HP to claim accounts."
+    }
   },
   "navigation": {
     "log_out": "LOG OUT",

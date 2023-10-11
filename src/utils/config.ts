@@ -244,6 +244,28 @@ export const BrowserConfig = {
         url: 'https://kryptogamers.com/',
         categories: ['gaming'],
       },
+      {
+        name: 'Actifit',
+        description:
+          'Your Move2Earn Companion - Rewarding Your Everyday Activity',
+        icon: 'https://images.hive.blog/u/actifit/avatar',
+        url: 'https://actifit.io/',
+        categories: ['social'],
+      },
+      {
+        name: 'V4V.app',
+        description: 'Hive to Bitcoin Lightning Gateway.',
+        icon: 'https://images.hive.blog/u/v4vapp/avatar',
+        url: 'https://v4v.app/',
+        categories: ['finance'],
+      },
+      {
+        name: 'Liketu',
+        description: 'Social image sharing on Hive',
+        icon: 'https://images.hive.blog/u/liketu/avatar',
+        url: 'https://m.liketu.com/',
+        categories: ['social'],
+      },
     ],
   },
 };
@@ -269,4 +291,15 @@ export const SwapsConfig = {
     global.process.env.NODE_ENV === 'development'
       ? 'http://10.0.1.5:5050'
       : 'https://swap.hive-keychain.com',
+};
+
+export const ClaimsConfig = {
+  FREQUENCY: 10,
+  freeAccount: {
+    MIN_RC_PCT: 85,
+    MIN_RC: 9484331370472,
+  },
+  savings: {
+    delay: 30,
+  },
 };

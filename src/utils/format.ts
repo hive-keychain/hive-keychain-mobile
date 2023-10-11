@@ -114,3 +114,7 @@ export const addRandomToKeyString = (key: string, toFixed: number) => {
 export const removeHtmlTags = (str: string) => {
   return str.replace(/<(?:.|\n)*?>/gm, '');
 };
+
+export const getValFromString = (string: string): number => {
+  return parseFloat(string.split(' ')[0]);
+};
