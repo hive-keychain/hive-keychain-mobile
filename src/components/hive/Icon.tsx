@@ -35,6 +35,7 @@ import ClaimIcon from 'src/assets/icons/svgs/redeem.svg';
 import RefreshIcon from 'src/assets/icons/svgs/refresh.svg';
 import SavingsIcon from 'src/assets/icons/svgs/savings.svg';
 import TransferIcon from 'src/assets/icons/svgs/send.svg';
+import SettingsIcon from 'src/assets/icons/svgs/settings.svg';
 import DelegateIcon from 'src/assets/icons/svgs/swap_horiz.svg';
 import SwapIcon from 'src/assets/icons/svgs/swap_vert.svg';
 
@@ -84,7 +85,9 @@ const getIconFilePath = (
     case 'add_circle_outline':
       return <AddCircleOutlineIcon style={finalStyleOnIcon} {...props} />;
     case 'delete' || 'remove':
-      return <DeleteIcon style={finalStyleOnIcon} {...props} />;
+      return <DeleteIcon style={styles.defaultIconContainer} />;
+    case 'settings':
+      return <SettingsIcon style={finalStyleOnIcon} />;
     case 'cloud_off':
       return <ServerUnavailable style={finalStyleOnIcon} {...props} />;
     case 'engineering':

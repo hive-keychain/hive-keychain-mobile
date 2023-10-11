@@ -8,15 +8,18 @@ import UserPicker from 'components/form/UserPicker';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import {WalletHistoryComponent} from 'components/hive/Wallet-history-component';
 import WhatsNewComponent from 'components/popups/whats-new/whats-new.component';
+import WidgetConfiguration from 'components/popups/widget-configuration/widget-configuration';
 import Survey from 'components/survey';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
+  NativeEventEmitter,
+  NativeModules,
   StyleSheet,
   View,
   useWindowDimensions,
@@ -29,6 +32,7 @@ import {Width} from 'utils/common.types';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
+import {WidgetUtils} from 'utils/widget.utils';
 
 const Main = ({
   loadAccount,
@@ -85,7 +89,6 @@ const Main = ({
       appState.current = nextAppState;
     };
     AppState.addEventListener('change', handler);
-
     return () => {
       AppState.removeEventListener('change', handler);
     };
@@ -102,6 +105,36 @@ const Main = ({
   if (!user) {
     return null;
   }
+
+  const [eventReceived, setEventReceived] = useState(null);
+  const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
+
+  React.useEffect(() => {
+    const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
+    let eventListener = eventEmitter.addListener('command_event', (event) => {
+      if (event && Object.values(event).length >= 1) {
+        setEventReceived(event);
+      }
+    });
+    if (eventReceived) {
+      if (eventReceived.currency) {
+        const {currency: command} = eventReceived;
+        if (command === 'update_values_currency_list') {
+          WidgetUtils.sendWidgetData('currency_list');
+        }
+      } else if (eventReceived.navigateTo) {
+        //IF implementation needed in the future
+        const {navigateTo: route} = eventReceived;
+        navigation.navigate(route);
+      } else if (eventReceived.configureWidgets) {
+        const {configureWidgets} = eventReceived;
+        setShowWidgetConfiguration(Boolean(configureWidgets));
+      }
+    }
+    return () => {
+      eventListener.remove();
+    };
+  }, [eventReceived]);
 
   return (
     <WalletPage>
@@ -143,6 +176,10 @@ const Main = ({
         />
         <Survey navigation={navigation} />
         <WhatsNewComponent navigation={navigation} />
+        <WidgetConfiguration
+          show={showWidgetConfiguration}
+          setShow={setShowWidgetConfiguration}
+        />
       </>
     </WalletPage>
   );

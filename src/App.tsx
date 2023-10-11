@@ -13,7 +13,7 @@ import UnlockStack from 'navigators/Unlock';
 import React, {useEffect, useRef} from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 import Orientation from 'react-native-orientation-locker';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import Modal from 'screens/Modal';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
@@ -22,6 +22,10 @@ import {processQRCodeOp} from 'utils/hive-uri';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
+
+//TODO list:
+// - Fix the issue:
+//    - when the navigator is located at, i.e: governance, if the user goes to the widget to configure, the popup loads twice.
 
 const Root = createStackNavigator<RootStackParam>();
 
