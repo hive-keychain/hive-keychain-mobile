@@ -51,7 +51,9 @@
     "delegate": "Delegate",
     "missing_key": "Please add your {{key}} key to perform this operation!",
     "need_positive_amount": "The amount needs to be greater than 0",
-    "next": "Next"
+    "next": "Next",
+    "service_unavailable_message": "This service is temporarly unavailable. We are working on fixing the issue, sorry for the inconvenience.",
+    "max": "MAX"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -493,7 +495,9 @@
     "wallet": "WALLET",
     "browser": "BROWSER",
     "governance": "GOVERNANCE",
-    "create_account": "CREATE ACCOUNT"
+    "create_account": "CREATE ACCOUNT",
+    "swap_tokens": "SWAP TOKENS",
+    "swap_tokens_history": "SWAP TOKEN HISTORY"
   },
   "request": {
     "title": {
@@ -724,5 +728,42 @@
       "sub_title": "Widget Account Balance Configuration",
       "intro": "Choose which accounts will be shown in the Widget."
     }
+  },
+  "swapTokens": {
+    "swap_under_maintenance": "Keychain Swap is under maintenance, please try again later",
+    "swap_caption": "Keychain compares all the different providers to make sure you get your tokens at the best possible rate.",
+    "swap_fee": "Fee",
+    "swap_start_end_token_should_be_different": "Please choose two different tokens",
+    "swap_autorefresh": "Refreshing in {{autoRefreshCountdown}}s",
+    "swap_cannot_switch_tokens": "Cannot switch tokens because you don't have any {{symbol}}",
+    "swap": "Swap",
+    "swap_no_estimate_error": "You need an estimate to be able to process",
+    "swap_min_slippage_error": "The slippage should be at least {{min}}%",
+    "swap_token_confirm_title": "Confirm token swap",
+    "swap_token_confirm_message": "You are about to initiate a token swap using Keychain. You can track its status from the swap history screen.",
+    "swap_id": "Swap ID",
+    "swap_amount": "Swap Estimation",
+    "swap_slipperage": "Slippage",
+    "swap_slippage": "{{slippage}}% (for each step)",
+    "swap_sending_token_successful": "Your swap is on the way! Thank you for using our service!",
+    "swap_error_sending_token": "There was an error while sending tokens to @{{account}}.",
+    "swap_advanced_parameters": "Advanced parameters",
+    "swaps_slipperage": "Slippage",
+    "swap_refresh_countdown": "Refreshing in {{autoRefreshCountdown}}s",
+    "swap_no_history": "Your swap history is empty",
+    "swap_min_hive_value_error": "Minimum value should be equivalent to 1 HIVE (currently {{value}} HIVE)",
+    "swap_copied_to_clipboard": "Copied to clipboard!",
+    "swap_status_pending": "Pending",
+    "swap_transfer_not_sent": "Transfer not sent",
+    "swap_status_completed": "Completed",
+    "swap_status_canceled_due_to_error": "Canceled",
+    "swap_status_refunded": "Refunded",
+    "swap_status_returned": "Returned",
+    "swap_status_started": "In progress",
+    "swap_last_update": "Last update: {{updatedAt}}",
+    "swaps_slippage_definition": "At each step of the swap, we check if the final result is superior to the estimation minus the slippage. If not, the swap is canceled and the funds are returned. Note that some swaps require several operations and your funds can be returned in a different token.",
+    "swap_layer_two_delayed": "Hive Engine is currently behind blocks. The swap might take longer than usual and has a bigger chance of aborting due to slippage.",
+    "swap_server_unavailable": "The swap server is currently unavailable, please try again later",
+    "swap_not_enough_volume_error": "There is not enough volume on this token pair to perform this swap"
   }
 }

@@ -4,7 +4,7 @@ import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {Icons} from 'src/enums/icons.enums';
 import {Transaction} from 'src/interfaces/transaction.interface';
 import {RootState} from 'store';
@@ -309,10 +309,6 @@ const WallettHistory = ({
         <BackToTopButton element={flatListRef} />
       )}
       {/* END ScrollToTop Button */}
-
-      {/* //testing counter */}
-
-      {/* end testing */}
     </View>
   );
 };

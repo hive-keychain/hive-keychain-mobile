@@ -10,7 +10,7 @@ export default (props: InputProps) => {
       placeholderTextColor="#7E8C9A"
       backgroundColor="#ffffff"
       inputColor="#68A0B4"
-      containerStyle={styles.container}
+      containerStyle={props.containerStyle ?? styles.container}
     />
   );
 };

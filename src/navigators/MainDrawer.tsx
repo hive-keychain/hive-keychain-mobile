@@ -12,6 +12,7 @@ import AccountManagementStack from './mainDrawerStacks/AccountManagement';
 import AddAccountStack from './mainDrawerStacks/AddAccount';
 import CreateAccount from './mainDrawerStacks/CreateAccount';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
+import SwapTokenStack from './mainDrawerStacks/SwapTokenStack';
 
 const Drawer = createDrawerNavigator<MainDrawerStackParam>();
 
@@ -35,6 +36,13 @@ export default () => {
           title: translate('navigation.browser'),
         }}
         component={BrowserStack}
+      />
+      <Drawer.Screen
+        name="SwapTokens"
+        options={{
+          title: translate('navigation.swap_tokens'),
+        }}
+        component={SwapTokenStack}
       />
       <Drawer.Screen
         name="Governance"

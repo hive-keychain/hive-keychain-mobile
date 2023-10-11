@@ -17,8 +17,9 @@ import {
 } from 'components/operations/OperationsButtons';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
+import {ConnectedProps, connect} from 'react-redux';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {RootState} from 'store';
@@ -93,7 +94,7 @@ const Primary = ({
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Separator height={30} />
       <AccountValue
         account={user.account}
@@ -261,7 +262,8 @@ const Primary = ({
           <View style={{width: 20}}></View>,
         ]}
       />
-    </View>
+      <Separator height={10} />
+    </ScrollView>
   );
 };
 
