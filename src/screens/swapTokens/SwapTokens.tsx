@@ -22,11 +22,7 @@ import {RootState} from 'store';
 import {SwapsConfig} from 'utils/config';
 import {BaseCurrencies} from 'utils/currency.utils';
 import {withCommas} from 'utils/format';
-import {
-  getAllTokens,
-  getHiveEngineTokenPrice,
-  getTokenPrecision,
-} from 'utils/hiveEngine';
+import {getAllTokens, getTokenPrecision} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
@@ -367,33 +363,6 @@ const SwapTokens = ({
     });
   };
 
-  const getTokenUSDPrice = (
-    estimateValue: string | undefined,
-    symbol: string,
-  ) => {
-    if (!estimateValue) return '';
-    else {
-      let tokenPrice;
-      if (symbol === BaseCurrencies.HIVE.toUpperCase()) {
-        tokenPrice = price.hive.usd!;
-      } else if (symbol === BaseCurrencies.HBD.toUpperCase()) {
-        tokenPrice = price.hive_dollar.usd!;
-      } else {
-        tokenPrice =
-          getHiveEngineTokenPrice(
-            {
-              symbol,
-            },
-            tokenMarket,
-          ) * price.hive.usd!;
-      }
-      return `≈ $${withCommas(
-        Number.parseFloat(estimateValue) * tokenPrice + '',
-        2,
-      )}`;
-    }
-  };
-
   if (loading)
     return (
       <View style={styles.loader}>
@@ -405,7 +374,7 @@ const SwapTokens = ({
       <View style={[styles.container, styles.paddingHorizontal]}>
         {!loading && !underMaintenance && !serviceUnavailable && (
           <>
-            <Text style={{marginTop: 10}}>
+            <Text style={{marginTop: 20, fontSize: 16}}>
               {translate('swapTokens.swap_caption')}
             </Text>
             <View style={styles.flexRowBetween}>
@@ -414,6 +383,8 @@ const SwapTokens = ({
               </Text>
               <Icon
                 name={'history'}
+                height={20}
+                width={20}
                 fillIconColor="black"
                 onClick={() => navigate('SwapTokensHistoryScreen')}
               />
@@ -421,143 +392,148 @@ const SwapTokens = ({
 
             <Separator />
 
-            {/* Selector from */}
-            <View style={styles.flexRowAligned}>
-              {startTokenListOptions.length > 0 && (
-                <CustomPicker
-                  list={startTokenListOptions}
-                  selectedValue={startToken}
-                  labelCreator={(itemSelectOption: SelectOption) =>
-                    `${itemSelectOption.label}`
-                  }
-                  onSelected={(item: SelectOption) => setStartToken(item)}
-                  prompt=""
-                  style={{
-                    width: '40%',
-                  }}
-                />
-              )}
-              <OperationInput
-                placeholder={'0.000'}
-                keyboardType="decimal-pad"
-                textAlign="right"
-                value={amount}
-                onChangeText={setAmount}
-                containerStyle={{
-                  maxWidth: '55%',
-                }}
-                rightIcon={
-                  <EllipticButton
-                    title={translate('common.max')}
-                    onPress={() =>
-                      setAmount(
-                        startToken?.value.balance
-                          ? startToken?.value.balance
-                          : '',
-                      )
+            <View style={{maxHeight: 700}}>
+              <View style={styles.flexRowAligned}>
+                {startTokenListOptions.length > 0 && (
+                  <CustomPicker
+                    list={startTokenListOptions}
+                    selectedValue={startToken}
+                    labelCreator={(itemSelectOption: SelectOption) =>
+                      `${itemSelectOption.label}`
                     }
-                    style={styles.button}
-                    additionalTextStyle={{color: 'black'}}
+                    onSelected={(item: SelectOption) => setStartToken(item)}
+                    prompt=""
+                    style={{
+                      width: '35%',
+                    }}
                   />
-                }
-              />
-            </View>
-            <Text
-              onPress={() =>
-                setAmount(
-                  startToken?.value.balance ? startToken?.value.balance : '',
-                )
-              }>
-              available:
-              {startToken?.value.balance
-                ? withCommas(startToken?.value.balance)
-                : ''}
-            </Text>
-            {/* End Selector From */}
-
-            <Separator />
-
-            <View style={styles.flexColumnCenteredAligned}>
-              <Icon
-                name="swap_vert"
-                fillIconColor="black"
-                onClick={swapStartAndEnd}
-              />
-            </View>
-            <Separator />
-
-            {/* Selector To */}
-            <View style={styles.flexRowAligned}>
-              {endTokenListOptions.length > 0 && (
-                <CustomPicker
-                  list={endTokenListOptions}
-                  labelCreator={(itemSelectOption: SelectOption) =>
-                    `${itemSelectOption.label}`
-                  }
-                  selectedValue={endToken}
-                  onSelected={(item: SelectOption) => setEndToken(item)}
-                  prompt=""
-                  style={{
-                    width: '40%',
+                )}
+                <OperationInput
+                  placeholder={'0.000'}
+                  keyboardType="decimal-pad"
+                  textAlign="right"
+                  value={amount}
+                  onChangeText={setAmount}
+                  containerStyle={{
+                    maxWidth: '60%',
                   }}
-                />
-              )}
-              <OperationInput
-                placeholder={'0.000'}
-                keyboardType="decimal-pad"
-                textAlign="right"
-                value={estimateValue ? withCommas(estimateValue!) : ''}
-                onChangeText={setEstimateValue}
-                rightIcon={
-                  <View style={styles.flexRowAligned}>
-                    {estimateValue ? (
-                      <CustomToolTip
-                        message={getTokenUSDPrice(
-                          estimateValue,
-                          endToken?.value.symbol,
-                        )}
-                        width={100}
-                        skipTranslation
-                        iconHeight={20}
-                        iconWidth={20}
-                      />
-                    ) : null}
-                    <Icon
-                      name="refresh"
-                      fillIconColor="black"
-                      width={25}
-                      height={25}
-                      onClick={() => {
-                        if (amount && startToken && endToken) {
-                          calculateEstimate(
-                            amount,
-                            startToken!,
-                            endToken!,
-                            swapConfig!,
-                          );
-                          setAutoRefreshCountdown(
-                            SwapsConfig.autoRefreshPeriodSec,
-                          );
-                        }
-                      }}
-                      rotate={loadingEstimate}
+                  rightIcon={
+                    <EllipticButton
+                      title={translate('common.max')}
+                      onPress={() =>
+                        setAmount(
+                          startToken?.value.balance
+                            ? startToken?.value.balance
+                            : '',
+                        )
+                      }
+                      style={styles.button}
+                      additionalTextStyle={{color: 'black'}}
                     />
-                  </View>
-                }
-                containerStyle={{
-                  maxWidth: '55%',
-                }}
-                disabled={true}
-              />
-            </View>
-
-            {!!autoRefreshCountdown && (
-              <Text style={{textAlign: 'right'}}>
-                {translate('swapTokens.swap_autorefresh', {
-                  autoRefreshCountdown: autoRefreshCountdown.toString(),
-                })}
+                  }
+                />
+              </View>
+              <Text
+                style={{marginRight: 10, textAlign: 'right'}}
+                onPress={() =>
+                  setAmount(
+                    startToken?.value.balance ? startToken?.value.balance : '',
+                  )
+                }>
+                {translate('common.available')}:
+                {startToken?.value.balance
+                  ? withCommas(startToken?.value.balance)
+                  : ''}
               </Text>
-            )}
+              {/* End Selector From */}
+
+              <Separator />
+
+              <View style={styles.flexColumnCenteredAligned}>
+                <Icon
+                  name="swap_vert"
+                  fillIconColor="black"
+                  onClick={swapStartAndEnd}
+                />
+              </View>
+              <Separator />
+
+              {/* Selector To */}
+              <View style={styles.flexRowAligned}>
+                {endTokenListOptions.length > 0 && (
+                  <CustomPicker
+                    list={endTokenListOptions}
+                    labelCreator={(itemSelectOption: SelectOption) =>
+                      `${itemSelectOption.label}`
+                    }
+                    selectedValue={endToken}
+                    onSelected={(item: SelectOption) => setEndToken(item)}
+                    prompt=""
+                    style={{
+                      width: '35%',
+                    }}
+                  />
+                )}
+                <OperationInput
+                  placeholder={'0.000'}
+                  keyboardType="decimal-pad"
+                  textAlign="right"
+                  value={estimateValue ? withCommas(estimateValue!) : ''}
+                  onChangeText={setEstimateValue}
+                  rightIcon={
+                    <View style={styles.flexRowAligned}>
+                      {estimateValue ? (
+                        <CustomToolTip
+                          message={SwapTokenUtils.getTokenUSDPrice(
+                            estimateValue,
+                            endToken?.value.symbol,
+                            price,
+                            tokenMarket,
+                          )}
+                          width={100}
+                          skipTranslation
+                          iconHeight={20}
+                          iconWidth={20}
+                          color="white"
+                        />
+                      ) : null}
+                      <Icon
+                        name="refresh"
+                        fillIconColor="black"
+                        width={20}
+                        height={20}
+                        onClick={() => {
+                          if (amount && startToken && endToken) {
+                            calculateEstimate(
+                              amount,
+                              startToken!,
+                              endToken!,
+                              swapConfig!,
+                            );
+                            setAutoRefreshCountdown(
+                              SwapsConfig.autoRefreshPeriodSec,
+                            );
+                          }
+                        }}
+                        rotate={loadingEstimate}
+                      />
+                    </View>
+                  }
+                  containerStyle={{
+                    maxWidth: '60%',
+                  }}
+                  disabled={true}
+                />
+              </View>
+
+              {!!autoRefreshCountdown && (
+                <Text style={{textAlign: 'right'}}>
+                  {translate('swapTokens.swap_autorefresh', {
+                    autoRefreshCountdown: autoRefreshCountdown.toString(),
+                  })}
+                </Text>
+              )}
+            </View>
             {/* End Selector To */}
 
             {/* Advance Parameters */}
@@ -574,6 +550,8 @@ const SwapTokens = ({
                   name={
                     !isAdvancedParametersOpen ? 'expand_more' : 'expand_less'
                   }
+                  width={25}
+                  height={25}
                 />
               </TouchableOpacity>
               {isAdvancedParametersOpen && (
@@ -586,14 +564,16 @@ const SwapTokens = ({
                       flexDirection: 'row',
                       alignItems: 'center',
                       marginVertical: 4,
+                      marginBottom: 10,
                     }}>
-                    <Text>{translate('swapTokens.swaps_slipperage')}</Text>
+                    <Text>{translate('swapTokens.swaps_slipperage')} </Text>
                     <CustomToolTip
                       message={'swapTokens.swaps_slippage_definition'}
                       height={250}
                       width={250}
-                      iconHeight={25}
-                      iconWidth={25}
+                      iconHeight={20}
+                      iconWidth={20}
+                      color="white"
                     />
                   </View>
                   <OperationInput

@@ -1,3 +1,4 @@
+import Information from 'assets/addAccount/icon_info.svg';
 import React, {useRef} from 'react';
 import {
   Animated,
@@ -28,7 +29,6 @@ import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import ExpandMoreIcon from 'src/assets/icons/svgs/expand_more.svg';
 import HistoryIcon from 'src/assets/icons/svgs/history.svg';
 import InboxIcon from 'src/assets/icons/svgs/inbox.svg';
-import InfoIcon from 'src/assets/icons/svgs/info.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
 import PendingIcon from 'src/assets/icons/svgs/pending.svg';
 import ClaimIcon from 'src/assets/icons/svgs/redeem.svg';
@@ -113,7 +113,7 @@ const getIconFilePath = (
     case 'content_copy':
       return <ContentCopyIcon style={finalStyleOnIcon} {...props} />;
     case 'info':
-      return <InfoIcon style={finalStyleOnIcon} {...props} />;
+      return <Information style={finalStyleOnIcon} {...props} />;
     default:
       return <TransferIcon style={finalStyleOnIcon} {...props} />;
   }

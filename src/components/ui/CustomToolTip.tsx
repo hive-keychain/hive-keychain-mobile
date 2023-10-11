@@ -13,6 +13,7 @@ type Props = {
   height?: number;
   iconWidth?: number;
   iconHeight?: number;
+  color?: string;
 };
 
 const CustomToolTip = ({
@@ -24,6 +25,7 @@ const CustomToolTip = ({
   height,
   iconHeight,
   iconWidth,
+  color,
 }: Props) => {
   return (
     <Tooltip
@@ -34,6 +36,8 @@ const CustomToolTip = ({
       }
       width={width ?? 150}
       height={height ?? 40}
+      backgroundColor={color}
+      skipAndroidStatusBar={true}
       containerStyle={containerStyle}>
       <Icon name="info" width={iconWidth} height={iconHeight} />
     </Tooltip>

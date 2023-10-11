@@ -1,5 +1,6 @@
 import {Asset, ExtendedAccount} from '@hiveio/dhive';
-import {ActiveAccount} from 'actions/interfaces';
+import AsyncStorage from '@react-native-community/async-storage';
+import {ActiveAccount, CurrencyPrices, TokenMarket} from 'actions/interfaces';
 import hsc from 'api/hiveEngine';
 import {KeychainSwapApi} from 'api/keychain-swap';
 import {IStep, ISwap, SwapStatus} from 'hive-keychain-commons';
@@ -12,8 +13,7 @@ import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum'
 import {BaseCurrencies} from './currency.utils';
 import {withCommas} from './format';
 import {sendToken, transfer} from './hive';
-import {getTokenInfo} from './hiveEngine';
-import {getFromKeychain, saveOnKeychain} from './keychainStorage';
+import {getHiveEngineTokenPrice, getTokenInfo} from './hiveEngine';
 
 const getSwapTokenStartList = async (account: ExtendedAccount) => {
   let userTokenList: TokenBalance[] = await hsc.find('tokens', 'balances', {
@@ -164,13 +164,13 @@ const getConfig = async (): Promise<SwapConfig> => {
 };
 
 const saveLastUsed = async (from: string, to: string) => {
-  await saveOnKeychain(
+  await AsyncStorage.setItem(
     KeychainStorageKeyEnum.SWAP_LAST_USED_TOKENS,
     JSON.stringify({from, to}),
   );
 };
 const getLastUsed = async () => {
-  const lastUsed = await getFromKeychain(
+  const lastUsed = await AsyncStorage.getItem(
     KeychainStorageKeyEnum.SWAP_LAST_USED_TOKENS,
   );
   if (!lastUsed) return {from: null, to: null};
@@ -181,6 +181,35 @@ const setAsInitiated = async (swapId: ISwap['id']) => {
   const res = await KeychainSwapApi.post(`token-swap/${swapId}/confirm`, {});
   if (!res.result) {
     throw new Error(`Couldn't set as initiated`);
+  }
+};
+
+const getTokenUSDPrice = (
+  estimateValue: string | undefined,
+  symbol: string,
+  price: CurrencyPrices,
+  tokenMarket: TokenMarket[],
+) => {
+  if (!estimateValue) return '';
+  else {
+    let tokenPrice;
+    if (symbol === BaseCurrencies.HIVE.toUpperCase()) {
+      tokenPrice = price.hive.usd!;
+    } else if (symbol === BaseCurrencies.HBD.toUpperCase()) {
+      tokenPrice = price.hive_dollar.usd!;
+    } else {
+      tokenPrice =
+        getHiveEngineTokenPrice(
+          {
+            symbol,
+          },
+          tokenMarket,
+        ) * price.hive.usd!;
+    }
+    return `≈ $${withCommas(
+      Number.parseFloat(estimateValue) * tokenPrice + '',
+      2,
+    )}`;
   }
 };
 
@@ -197,4 +226,5 @@ export const SwapTokenUtils = {
   saveLastUsed,
   getLastUsed,
   setAsInitiated,
+  getTokenUSDPrice,
 };
