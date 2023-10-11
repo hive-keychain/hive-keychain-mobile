@@ -1,7 +1,6 @@
 import {Currency, Token} from 'actions/interfaces';
 import UnstakeIcon from 'assets/new_UI/3d_cube_down_arrow.svg';
 import StakeIcon from 'assets/new_UI/3d_cube_scan.svg';
-import DelegationsIcon from 'assets/new_UI/receive_square.svg';
 import DelegationsList from 'components/operations/DelegationsList';
 import RoundButton from 'components/operations/OperationsButtons';
 import React from 'react';
@@ -126,6 +125,8 @@ const TokenDisplay = ({
             theme={theme}
             onClick={() => setToggle()}
             additionalContainerStyle={styles.expandMoreButton}
+            width={12}
+            height={12}
           />
         </View>
       </View>
@@ -171,7 +172,13 @@ const TokenDisplay = ({
             {tokenInfo.delegationEnabled &&
               //TODO finish bellow, render modal in full height as design
               renderAsSquareButton(
-                <DelegationsIcon {...styles.iconButton} />,
+                // <DelegationsIcon {...styles.iconButton} />,
+                <Icon
+                  name="delegate_vesting_shares"
+                  theme={theme}
+                  width={10}
+                  height={10}
+                />,
                 translate('wallet.operations.token_delegation.title'),
                 () => {},
               )}

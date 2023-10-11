@@ -1,7 +1,10 @@
 import {DynamicGlobalProperties, ExtendedAccount} from '@hiveio/dhive';
 import React from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {FontPoppinsName, headerH2Primary} from 'src/styles/typography';
 import {Width} from 'utils/common.types';
 import {formatBalance, toHP} from 'utils/format';
 import {getCurrencyProperties} from 'utils/hiveReact';
@@ -16,6 +19,9 @@ type Props = {
   tokenBalance?: string;
   tokenLogo?: JSX.Element;
   setMax?: (value: string) => void;
+  //TODO make fix after refactoring.
+  using_new_ui?: boolean;
+  theme?: Theme;
 };
 
 const Balance = ({
@@ -27,6 +33,8 @@ const Balance = ({
   tokenBalance,
   tokenLogo,
   setMax,
+  using_new_ui,
+  theme,
 }: Props) => {
   let {color, value, logo} = getCurrencyProperties(currency, account);
   let parsedValue = parseFloat(value as string);
@@ -43,9 +51,27 @@ const Balance = ({
   }
   const styles = getDimensionedStyles({
     color,
+    theme,
     ...useWindowDimensions(),
   });
-  return (
+  return using_new_ui ? (
+    <TouchableOpacity
+      style={styles.clickeableContainer}
+      onPress={() => {
+        if (setMax) {
+          setMax(parsedValue.toFixed(3) + '');
+        }
+      }}>
+      <View style={styles.balanceContainer}>
+        <Text style={[styles.textBalance, styles.centeredText]}>
+          {formatBalance(parsedValue)} {` ${currency}`}
+        </Text>
+        <Text style={[styles.balanceText, styles.centeredText]}>
+          {translate('common.balance')}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  ) : (
     <TouchableOpacity
       style={styles.container}
       onPress={() => {
@@ -72,7 +98,11 @@ const Balance = ({
   );
 };
 
-const getDimensionedStyles = ({width, color}: Width & {color?: string}) =>
+const getDimensionedStyles = ({
+  width,
+  color,
+  theme,
+}: Width & {color?: string; theme: Theme}) =>
   StyleSheet.create({
     container: {
       display: 'flex',
@@ -103,6 +133,24 @@ const getDimensionedStyles = ({width, color}: Width & {color?: string}) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+    },
+    //TODO cleanup styles, delete unused
+    clickeableContainer: {},
+    balanceContainer: {},
+    textBalance: {
+      ...headerH2Primary,
+      color: getColors(theme).primaryText,
+      height: headerH2Primary.fontSize,
+      lineHeight: headerH2Primary.fontSize + 5,
+      textAlignVertical: 'auto',
+    },
+    centeredText: {
+      textAlign: 'center',
+    },
+    balanceText: {
+      color: getColors(theme).quinaryText,
+      fontFamily: FontPoppinsName.REGULAR,
+      fontSize: 20,
     },
   });
 

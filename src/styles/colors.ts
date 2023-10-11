@@ -34,6 +34,7 @@ export const getColors = (theme: Theme) => {
     secondaryText: theme === Theme.LIGHT ? '#212838' : '#FFF',
     tertiaryText: theme === Theme.LIGHT ? '#3D3D3D' : '#FFF',
     quaternaryText: theme === Theme.LIGHT ? '#242424' : '#FFF',
+    quinaryText: theme === Theme.LIGHT ? '#7F8288' : '#FFF',
     primaryBackground: theme === Theme.LIGHT ? '#E5EDF5' : '#212838',
     contrastBackground: theme === Theme.LIGHT ? '#212838' : '#E5EDF5',
     menuHamburguerBg: theme === Theme.LIGHT ? '#FFF' : '#212838',
@@ -55,5 +56,6 @@ export const getColors = (theme: Theme) => {
     betterContrastStroke: theme === Theme.DARK ? '#FFF' : 'none',
     icon: theme === Theme.LIGHT ? PRIMARY_RED_COLOR : '#FFF',
     iconBW: theme === Theme.LIGHT ? '#1E1E1E' : '#FFF',
+    secodaryIconBW: theme === Theme.LIGHT ? '#212838' : '#FFF',
   };
 };

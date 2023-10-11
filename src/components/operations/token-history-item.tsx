@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
 import {
   AuthorCurationTransaction,
   CommentCurationTransaction,
@@ -66,7 +65,7 @@ const TokenHistoryItem = ({
         />
       );
     }
-    console.log({op: transaction.operation}); //TODO remove line
+
     switch (transaction.operation) {
       case OperationsHiveEngine.COMMENT_AUTHOR_REWARD: {
         const t = transaction as AuthorCurationTransaction;
@@ -223,7 +222,6 @@ const TokenHistoryItem = ({
         const t = transaction as UndelegateTokenDoneTransaction;
         iconName = 'power_up_down';
         iconNameSubType = 'transfer_to_vesting';
-        console.log({t}); //TODO remove line
         if (t.delegator === activeAccountName) {
           labelDataList = [
             {
@@ -368,14 +366,6 @@ const TokenHistoryItem = ({
       default:
         return null;
     }
-  };
-
-  const toggleExpandMoreIcon = () => {
-    return toggle ? (
-      <Icon name={Icons.EXPAND_LESS} />
-    ) : (
-      <Icon name={Icons.EXPAND_MORE} />
-    );
   };
 
   const label = getLabelsComponents();

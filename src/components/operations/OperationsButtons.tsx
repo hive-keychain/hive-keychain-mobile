@@ -83,7 +83,6 @@ export const Send = ({
               tokenLogo={tokenLogo}
             />
           ),
-          //TODO continue working on it.
           modalContainerStyle: {
             height: '100%',
           } as StyleProp<ViewStyle>,

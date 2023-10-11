@@ -167,6 +167,9 @@
         "start_collateralized": "collateralized conversion"
       },
       "more_token_info": "{{currency}} information",
+      "tokens_transfer": {
+        "title": "Transfer Token"
+      },
       "token_stake": {
         "title": "Stake",
         "titled": "Staked",

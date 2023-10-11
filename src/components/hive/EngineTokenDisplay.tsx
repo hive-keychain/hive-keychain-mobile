@@ -1,12 +1,13 @@
 import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import HiveEngine from 'assets/wallet/hive_engine.png';
-import {Send} from 'components/operations/OperationsButtons';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
+import Transfer from 'components/operations/Transfer';
 import React, {useContext, useState} from 'react';
 import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
 import Image from 'react-native-fast-image';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {getBorderTest} from 'src/styles/test';
 import {Width} from 'utils/common.types';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {navigate} from 'utils/navigation';
@@ -81,14 +82,6 @@ const EngineTokenDisplay = ({
         ),
       }}
       buttons={[
-        // <ShowHistory
-        //   key="history_token"
-        //   currency={token.symbol}
-        //   tokenBalance={token.balance}
-        //   tokenLogo={logo}
-        //   // additionalButtonStyle={styles.squareButton}
-        //   theme={theme}
-        // />
         <Icon
           key={`show-token-history-${token.symbol}`}
           name={'back_time'}
@@ -103,23 +96,33 @@ const EngineTokenDisplay = ({
           additionalContainerStyle={styles.squareButton}
           theme={theme}
         />,
-        <Send
-          key="send_token"
-          currency={token.symbol}
-          engine
-          tokenBalance={token.balance}
-          tokenLogo={logo}
-          additionalButtonStyle={styles.squareButton}
+        <Icon
+          key={`show-token-transfer-${token.symbol}`}
+          name={'transfer'}
+          onClick={() => {
+            navigate('ModalScreen', {
+              name: 'TransferEngine',
+              modalContent: (
+                <Transfer
+                  currency={token.symbol}
+                  tokenBalance={token.balance}
+                  engine
+                  tokenLogo={logo}
+                />
+              ),
+              modalContainerStyle: [
+                styles.modalContainer,
+                getBorderTest('red'),
+              ],
+              additionalWrapperFixedStyle: {
+                height: '100%',
+              },
+              fixedHeight: 0.99,
+            });
+          }}
+          additionalContainerStyle={[styles.squareButton, styles.smallPadding]}
           theme={theme}
         />,
-        //TODO cleanup
-        // <ShowMoreTokenInfo
-        //   key={'more_info_token'}
-        //   tokenInfo={tokenInfo}
-        //   token={token}
-        //   tokenLogo={logo}
-        //   gobackAction={() => goBack()}
-        // />,
       ]}
       logo={logo}
       using_new_ui={using_new_ui}
@@ -141,6 +144,15 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       borderRadius: 11,
       marginLeft: 7,
       padding: 8,
+    },
+    smallPadding: {
+      padding: 3,
+    },
+    modalContainer: {
+      height: '100%',
+      paddingTop: 40,
+      backgroundColor: getColors(theme).primaryBackground,
+      borderWidth: 0,
     },
   });
 

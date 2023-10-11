@@ -6,19 +6,22 @@ import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CustomRadioGroup from 'components/form/CustomRadioGroup';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
+import Icon from 'components/hive/Icon';
 import OptionsToggle from 'components/ui/OptionsToggle';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Keyboard,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
 import {RootState} from 'store';
 import {beautifyTransferError} from 'utils/format';
 import {recurrentTransfer, sendToken, transfer} from 'utils/hive';
@@ -63,6 +66,7 @@ const Transfer = ({
   const [step, setStep] = useState(1);
   const [privacy, setPrivacy] = useState(PUBLIC);
   const [isRecurrent, setRecurrent] = useState(false);
+  const {theme} = useContext(ThemeContext);
 
   const sendTransfer = async () => {
     setLoading(true);
@@ -142,12 +146,16 @@ const Transfer = ({
   const {color} = getCurrencyProperties(currency);
   const {height} = useWindowDimensions();
 
-  const styles = getDimensionedStyles(color, height);
+  const styles = getDimensionedStyles(color, height, theme);
   if (step === 1) {
     return (
       <Operation
-        logo={<SendArrowBlue />}
-        title={translate('wallet.operations.transfer.title')}>
+        theme={theme}
+        logo={<Icon name="back" onClick={() => goBack()} />}
+        title={translate('wallet.operations.tokens_transfer.title')}
+        additionalHeaderContainerStyle={styles.header}>
+        {/* //TODO check if needed scrollView for lower screen devices */}
+        {/* //TODo keep working in here */}
         <ScrollView>
           <Separator />
           <Balance
@@ -159,84 +167,92 @@ const Transfer = ({
             setMax={(value: string) => {
               setAmount(value);
             }}
+            using_new_ui
+            theme={theme}
           />
           <Separator />
-          <OperationInput
-            placeholder={translate('common.username').toUpperCase()}
-            leftIcon={<AccountLogoDark />}
-            autoCapitalize="none"
-            value={to}
-            onChangeText={(e) => {
-              setTo(e.trim());
-            }}
-          />
-          <Separator />
-          <OperationInput
-            placeholder={'0.000'}
-            keyboardType="decimal-pad"
-            rightIcon={<Text style={styles.currency}>{currency}</Text>}
-            textAlign="right"
-            value={amount}
-            onChangeText={setAmount}
-          />
-          <Separator />
-          <OperationInput
-            placeholder={translate('wallet.operations.transfer.memo')}
-            value={memo}
-            onChangeText={setMemo}
-          />
-          <Separator />
-          <CustomRadioGroup
-            list={[PUBLIC, PRIVATE]}
-            selected={privacy}
-            onSelect={setPrivacy}
-          />
-          <Separator height={20} />
-          <OptionsToggle
-            title="Recurrent transfers"
-            toggled={isRecurrent}
-            callback={(toggled) => {
-              setRecurrent(toggled);
-            }}>
-            <Separator />
+          <View style={[styles.innerContainer]}>
+            <Separator height={35} />
             <OperationInput
-              placeholder={translate('wallet.operations.transfer.recurrence')}
-              value={recurrence}
-              onChangeText={setRecurrence}
-              keyboardType={'number-pad'}
-              rightIcon={<Text>Hours</Text>}
-              leftIcon={<Text>Every</Text>}
+              placeholder={translate('common.username').toUpperCase()}
+              leftIcon={<AccountLogoDark />}
+              autoCapitalize="none"
+              value={to}
+              onChangeText={(e) => {
+                setTo(e.trim());
+              }}
             />
             <Separator />
             <OperationInput
-              placeholder={translate('wallet.operations.transfer.executions')}
-              value={exec}
-              onChangeText={setExec}
-              keyboardType={'number-pad'}
-              rightIcon={<Text>times</Text>}
+              placeholder={'0.000'}
+              keyboardType="decimal-pad"
+              rightIcon={<Text style={styles.currency}>{currency}</Text>}
+              textAlign="right"
+              value={amount}
+              onChangeText={setAmount}
             />
-          </OptionsToggle>
-          <Separator height={20} />
-          <ActiveOperationButton
-            title={translate('common.send')}
-            onPress={() => {
-              if (!amount.length || !to.length) {
-                Toast.show(
-                  translate('wallet.operations.transfer.warning.missing_info'),
-                );
-              } else {
-                setStep(2);
-              }
-            }}
-            style={styles.send}
-            isLoading={loading}
-          />
+            <Separator />
+            <OperationInput
+              placeholder={translate('wallet.operations.transfer.memo')}
+              value={memo}
+              onChangeText={setMemo}
+            />
+            <Separator />
+            <CustomRadioGroup
+              list={[PUBLIC, PRIVATE]}
+              selected={privacy}
+              onSelect={setPrivacy}
+            />
+            <Separator height={20} />
+            <OptionsToggle
+              title="Recurrent transfers"
+              toggled={isRecurrent}
+              callback={(toggled) => {
+                setRecurrent(toggled);
+              }}>
+              <Separator />
+              <OperationInput
+                placeholder={translate('wallet.operations.transfer.recurrence')}
+                value={recurrence}
+                onChangeText={setRecurrence}
+                keyboardType={'number-pad'}
+                rightIcon={<Text>Hours</Text>}
+                leftIcon={<Text>Every</Text>}
+              />
+              <Separator />
+              <OperationInput
+                placeholder={translate('wallet.operations.transfer.executions')}
+                value={exec}
+                onChangeText={setExec}
+                keyboardType={'number-pad'}
+                rightIcon={<Text>times</Text>}
+              />
+            </OptionsToggle>
+            <Separator height={20} />
+            <ActiveOperationButton
+              title={translate('common.send')}
+              onPress={() => {
+                if (!amount.length || !to.length) {
+                  Toast.show(
+                    translate(
+                      'wallet.operations.transfer.warning.missing_info',
+                    ),
+                  );
+                } else {
+                  setStep(2);
+                }
+              }}
+              style={styles.send}
+              isLoading={loading}
+            />
+          </View>
         </ScrollView>
       </Operation>
     );
   } else {
     return (
       <Operation
+        theme={theme}
         logo={<SendArrowBlue />}
         title={translate('wallet.operations.transfer.title')}>
         <ScrollView>
@@ -315,7 +331,7 @@ const Transfer = ({
   }
 };
 
-const getDimensionedStyles = (color: string, width: number) =>
+const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
   StyleSheet.create({
     send: {backgroundColor: '#68A0B4'},
     confirm: {
@@ -331,6 +347,18 @@ const getDimensionedStyles = (color: string, width: number) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-around',
+    },
+    //TODO clean up, check & delete
+    header: {
+      paddingHorizontal: 16,
+    },
+    innerContainer: {
+      flex: 1,
+      borderTopLeftRadius: 40,
+      borderTopRightRadius: 40,
+      borderWidth: 1,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: theme === Theme.DARK ? '#364360' : null,
     },
   });
 const connector = connect(

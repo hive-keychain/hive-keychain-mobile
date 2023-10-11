@@ -1,3 +1,4 @@
+import ArrowLeftIcon from 'assets/new_UI/arrow-left.svg';
 import ArrowUpIcon from 'assets/new_UI/arrow-up.svg';
 import BackTimeIcon from 'assets/new_UI/back_time.svg';
 import BankIcon from 'assets/new_UI/bank.svg';
@@ -35,6 +36,13 @@ import {getColors} from 'src/styles/colors';
 
 //TODO add icons as enum & type.
 
+const smallerIconSizeNameList = [
+  'transfer',
+  'recurrent_transfer',
+  'fill_recurrent_transfer',
+  'convert',
+];
+
 const getIconFilePath = (
   name: string,
   subType: string,
@@ -42,9 +50,17 @@ const getIconFilePath = (
   marginRight?: boolean,
   //TODO after refactoring make fix bellow
   theme?: Theme,
+  width: number = 20,
+  height: number = 20,
 ) => {
   const finalStyleOnIcon = marginRight ? styles.defaultIconContainer : style;
-  console.log({name}); //TODO remove line
+  let dimensionsProps = {
+    width,
+    height,
+  };
+  if (smallerIconSizeNameList.includes(name)) {
+    dimensionsProps = {width: width * 1.5, height: height * 1.5};
+  }
   switch (true) {
     case name === 'transfer' ||
       name === 'recurrent_transfer' ||
@@ -52,14 +68,14 @@ const getIconFilePath = (
       return (
         <TransferIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
-          width={30}
-          height={30}
+          {...dimensionsProps}
         />
       );
     case name === 'savings':
       return (
         <SavingsIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'power_up_down':
@@ -68,6 +84,7 @@ const getIconFilePath = (
           return (
             <PowerUpDownIcon
               style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+              {...dimensionsProps}
             />
           );
         case subType === 'withdraw_vesting':
@@ -78,18 +95,23 @@ const getIconFilePath = (
                 {color: getColors(theme).icon},
                 styles.rotationUpDown,
               ]}
+              {...dimensionsProps}
             />
           );
       }
     case name === 'claim_reward_balance':
     case name === 'interest':
       return (
-        <ClaimIcon style={[finalStyleOnIcon, {color: getColors(theme).icon}]} />
+        <ClaimIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
       );
     case name === 'delegate_vesting_shares':
       return (
         <ReceiveSquareIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'claim_account' ||
@@ -100,96 +122,132 @@ const getIconFilePath = (
       return (
         <ConvertIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
-          width={40}
-          height={40}
+          {...dimensionsProps}
         />
       );
     case name === 'expand_more':
       return (
         <ExpandMoreIcon
           style={[finalStyleOnIcon, {color: getColors(theme).iconBW}]}
+          {...dimensionsProps}
         />
       );
     case name === 'expand_less':
-      return <ExpandLessIcon style={styles.defaultIconContainer} />;
+      return (
+        <ExpandLessIcon
+          style={styles.defaultIconContainer}
+          {...dimensionsProps}
+        />
+      );
     case name === 'arrow_upward':
-      return <ArrowUpwardIcon style={styles.defaultIconContainer} />;
+      return (
+        <ArrowUpwardIcon
+          style={styles.defaultIconContainer}
+          {...dimensionsProps}
+        />
+      );
     case name === 'add_circle_outline':
-      return <AddCircleOutlineIcon style={styles.defaultIconContainer} />;
+      return (
+        <AddCircleOutlineIcon
+          style={styles.defaultIconContainer}
+          {...dimensionsProps}
+        />
+      );
     case name === 'delete':
-      return <DeleteIcon style={style.defaultIconContainer} />;
+      return (
+        <DeleteIcon style={style.defaultIconContainer} {...dimensionsProps} />
+      );
     case name === 'candle':
       return (
         <CandleIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'accounts':
       return (
         <AccountsMenuIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'tokens':
       return (
         <HiveAlternative
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'governance':
       return (
-        <BankIcon style={[finalStyleOnIcon, {color: getColors(theme).icon}]} />
+        <BankIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
       );
     case name === 'theme':
       return (
         <CategoryIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'info':
       return (
         <InfoCircleIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'logout':
       return (
         <LogoutIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'search':
       return (
         <SearchIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'settings-2':
       return (
         <Settings2Icon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'settings-4':
       return (
         <Settings4Icon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'import':
       return (
         <ImportIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'back_time':
       return (
         <BackTimeIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
         />
       );
     case name === 'arrow_up':
-      return <ArrowUpIcon style={[finalStyleOnIcon, {color: '#FFF'}]} />;
+      return (
+        <ArrowUpIcon
+          style={[finalStyleOnIcon, {color: '#FFF'}]}
+          {...dimensionsProps}
+        />
+      );
     case name === 'polygon_down':
       return (
         <PolygonDown
@@ -197,20 +255,28 @@ const getIconFilePath = (
             finalStyleOnIcon,
             {color: getColors(theme).secondaryCardBgColor},
           ]}
+          {...dimensionsProps}
         />
       );
     case name === 'double-arrow' || name === 'delegate':
       return (
         <DoubleArrowIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'arrow_left' || name === 'back':
+      return (
+        <ArrowLeftIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
+          {...dimensionsProps}
         />
       );
     default:
       return (
         <EyeSlashIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
-          width={20}
-          height={20}
+          {...dimensionsProps}
         />
       );
   }
@@ -226,6 +292,8 @@ interface IconProps {
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalPressedStyle?: StyleProp<ViewStyle>;
   bgImage?: JSX.Element;
+  width?: number;
+  height?: number;
   // ariaLabel?: string;
 }
 
@@ -236,6 +304,8 @@ const Icon = (props: IconProps) => {
     styles.defaultIcon,
     props.marginRight,
     props.theme,
+    props.width,
+    props.height,
   );
   const styleProps = {
     style: [styles.defaultIconContainer, props.additionalContainerStyle],

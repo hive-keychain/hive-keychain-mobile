@@ -1,7 +1,10 @@
-import Close from 'assets/wallet/icon_close.svg';
+import CloseButton from 'components/ui/CloseButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {headlines_primary_headline_2} from 'src/styles/typography';
 import {goBack} from 'utils/navigation';
 
 type Props = {
@@ -9,50 +12,61 @@ type Props = {
   logo?: JSX.Element;
   title: string;
   onClose?: () => void;
+  //TODO make fix afte refactoring
+  theme?: Theme;
+  additionalHeaderContainerStyle?: StyleProp<ViewStyle>;
 };
-export default ({children, logo, title, onClose}: Props) => {
+export default ({
+  children,
+  logo,
+  title,
+  onClose,
+  theme,
+  additionalHeaderContainerStyle,
+}: Props) => {
+  const styles = getStyles(theme);
+
   return (
     <>
-      <FocusAwareStatusBar backgroundColor="#b4112A" />
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          {logo}
-          <Text style={styles.title}>{title.toUpperCase()}</Text>
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            if (onClose) {
-              onClose();
-            } else {
-              goBack();
-            }
-          }}>
-          <Close style={styles.close} width={15} height={15} />
-        </TouchableOpacity>
+      <FocusAwareStatusBar
+        backgroundColor={getColors(theme).primaryBackground}
+      />
+      <View style={[styles.header, additionalHeaderContainerStyle]}>
+        <View style={styles.headerLeft}>{logo}</View>
+        <Text style={styles.title}>{title}</Text>
+        <CloseButton
+          theme={theme}
+          onPress={() => (onClose ? onClose() : goBack())}
+        />
       </View>
       {children}
     </>
   );
 };
 
-const styles = StyleSheet.create({
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerLeft: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  close: {
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 18,
-    marginLeft: 20,
-    justifyContent: 'center',
-  },
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    header: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
+    },
+    headerLeft: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    close: {
+      alignItems: 'center',
+    },
+    title: {
+      //TODO cleanup
+      // fontSize: 18,
+      // marginLeft: 20,
+      alignSelf: 'center',
+      ...headlines_primary_headline_2,
+      color: getColors(theme).primaryText,
+    },
+  });
