@@ -54,7 +54,11 @@
     "missing_key": "Please add your {{key}} key to perform this operation!",
     "need_positive_amount": "The amount needs to be greater than 0",
     "next": "Next",
-    "account": "Account"
+    "account": "Account",
+    "unknown_data": {
+      "description": "Used when an operation didn't registered a field!",
+      "value": "Unknown"
+    }
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},

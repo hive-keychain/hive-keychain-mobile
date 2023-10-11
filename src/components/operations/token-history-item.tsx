@@ -34,6 +34,7 @@ import {
 import {getColors} from 'src/styles/colors';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
+import {translate} from 'utils/localize';
 
 interface TokenHistoryItemProps {
   transaction: TokenTransaction;
@@ -65,10 +66,11 @@ const TokenHistoryItem = ({
         />
       );
     }
-
+    console.log({op: transaction.operation}); //TODO remove line
     switch (transaction.operation) {
       case OperationsHiveEngine.COMMENT_AUTHOR_REWARD: {
         const t = transaction as AuthorCurationTransaction;
+        iconName = 'claim_reward_balance';
         labelDataList = [
           {label: 'info_author_reward.part_1'},
           {
@@ -84,6 +86,7 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.COMMENT_CURATION_REWARD: {
         const t = transaction as CommentCurationTransaction;
+        iconName = 'claim_reward_balance';
         labelDataList = [
           {label: 'info_comment_curation_reward.part_1'},
           {
@@ -218,7 +221,9 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.TOKEN_UNDELEGATE_DONE: {
         const t = transaction as UndelegateTokenDoneTransaction;
-        iconName = 'delegate_vesting_shares';
+        iconName = 'power_up_down';
+        iconNameSubType = 'transfer_to_vesting';
+        console.log({t}); //TODO remove line
         if (t.delegator === activeAccountName) {
           labelDataList = [
             {
@@ -238,7 +243,10 @@ const TokenHistoryItem = ({
           labelDataList = [
             {
               label: 'info_cancel_delegation_in.part_1',
-              data: {delegator: t.delegator},
+              data: {
+                delegator:
+                  t.delegator ?? translate('common.unknown_data.value'),
+              },
             },
             {
               label: 'info_cancel_delegation_in.amount',
@@ -246,7 +254,7 @@ const TokenHistoryItem = ({
               color: '#B9122F',
             },
             {
-              label: 'info_cancel_delegation_out.part_2',
+              label: 'info_cancel_delegation_in.part_2',
             },
           ];
         }
@@ -319,6 +327,7 @@ const TokenHistoryItem = ({
         return returnWithList(labelDataList);
       }
       case OperationsHiveEngine.TOKEN_ISSUE:
+        iconName = 'claim_reward_balance';
         labelDataList = [
           {label: 'info_issue.part_1'},
           {
@@ -394,6 +403,7 @@ const TokenHistoryItem = ({
               {useIcon && (
                 <Icon
                   name={iconName}
+                  subType={iconNameSubType}
                   theme={theme}
                   additionalContainerStyle={styles.iconContainer}
                   bgImage={<BackgroundIconRed />}

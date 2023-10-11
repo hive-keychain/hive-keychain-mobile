@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   rotationUpDown: {
-    transform: [{rotateY: '180deg'}],
+    transform: [{rotateX: '180deg'}],
   },
 });
 
