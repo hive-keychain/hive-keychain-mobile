@@ -34,6 +34,7 @@ type RadioProps = {
   selected: boolean;
   style?: StyleProp<ViewStyle>;
   radioStyle?: StyleProp<ViewStyle>;
+  additionalRadioStyleActive?: StyleProp<ViewStyle>;
 };
 
 export const RadioButton = ({
@@ -42,6 +43,7 @@ export const RadioButton = ({
   selected,
   style,
   radioStyle,
+  additionalRadioStyleActive,
 }: RadioProps) => (
   <TouchableOpacity
     style={[styles.radioButton, radioStyle]}
@@ -49,7 +51,11 @@ export const RadioButton = ({
       onSelect(label);
     }}>
     <View
-      style={[styles.button, selected ? styles.buttonActive : null, style]}
+      style={[
+        styles.button,
+        selected ? [styles.buttonActive, additionalRadioStyleActive] : null,
+        style,
+      ]}
     />
     <View style={styles.labelView}>
       <Text style={styles.label}>{label}</Text>

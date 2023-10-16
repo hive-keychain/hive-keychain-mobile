@@ -27,8 +27,6 @@ export type TokenHistoryProps = {
   tokenLogo: JSX.Element;
   currency: string;
   theme: Theme;
-  //TODO cleanup
-  // filter?: TokenHistoryFilter;
 };
 
 const TokensHistory = ({
@@ -47,8 +45,6 @@ const TokensHistory = ({
   const [loading, setLoading] = useState(true);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
   const flatListRef = useRef();
-  //TODO cleanup
-  // const filterTokens = filter ?? DEFAULT_FILTER_TOKENS;
 
   useEffect(() => {
     setLoading(true);

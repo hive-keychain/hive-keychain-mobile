@@ -31,6 +31,7 @@
     "private": "Private",
     "public": "Public",
     "amount": "amount",
+    "enter_amount": "enter amount",
     "memo": "memo",
     "send": "Send",
     "save": "Save",
@@ -58,7 +59,10 @@
     "unknown_data": {
       "description": "Used when an operation didn't registered a field!",
       "value": "Unknown"
-    }
+    },
+    "currency": "Currency",
+    "max": "Max",
+    "recurrent_transfer": "Recurrent transfer"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -118,6 +122,10 @@
         "memo": "MEMO (optional)",
         "executions": "Number of executions",
         "recurrence": "Recurrence Period",
+        "frecuency": "Frecuency",
+        "frecuency_minimum": "Frecuency(in hours). Minimum 24 hours",
+        "iterations": "Iteration",
+        "iterations_minimum": "Iterations. Minimum 2",
         "sent": "Sent",
         "received": "Received",
         "confirm": {

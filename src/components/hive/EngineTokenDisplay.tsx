@@ -1,13 +1,12 @@
 import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
-import Transfer from 'components/operations/Transfer';
+import {TransferOperationProps} from 'components/operations/Transfer';
 import React, {useContext, useState} from 'react';
 import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
 import Image from 'react-native-fast-image';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {getBorderTest} from 'src/styles/test';
 import {Width} from 'utils/common.types';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {navigate} from 'utils/navigation';
@@ -99,25 +98,22 @@ const EngineTokenDisplay = ({
         <Icon
           key={`show-token-transfer-${token.symbol}`}
           name={'transfer'}
+          //TODO bellow add these props.
+          // <Transfer
+          //         currency={token.symbol}
+          //         tokenBalance={token.balance}
+          //         engine
+          //         tokenLogo={logo}
+          //       />
           onClick={() => {
-            navigate('ModalScreen', {
-              name: 'TransferEngine',
-              modalContent: (
-                <Transfer
-                  currency={token.symbol}
-                  tokenBalance={token.balance}
-                  engine
-                  tokenLogo={logo}
-                />
-              ),
-              modalContainerStyle: [
-                styles.modalContainer,
-                getBorderTest('red'),
-              ],
-              additionalWrapperFixedStyle: {
-                height: '100%',
-              },
-              fixedHeight: 0.99,
+            navigate('Operation', {
+              operation: 'transfer',
+              props: {
+                currency: token.symbol,
+                tokenBalance: token.balance,
+                engine: true,
+                tokenLogo: logo,
+              } as TransferOperationProps,
             });
           }}
           additionalContainerStyle={[styles.squareButton, styles.smallPadding]}
@@ -134,6 +130,7 @@ const EngineTokenDisplay = ({
   );
 };
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
+  //TODO bellow removed unused styles
   StyleSheet.create({
     icon: {width: width / 12, height: width / 12},
     amount: {fontWeight: 'bold', fontSize: 15},
@@ -149,10 +146,11 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       padding: 3,
     },
     modalContainer: {
-      height: '100%',
-      paddingTop: 40,
+      flex: 1,
+      // paddingTop: 20,
       backgroundColor: getColors(theme).primaryBackground,
       borderWidth: 0,
+      borderRadius: 0,
     },
   });
 

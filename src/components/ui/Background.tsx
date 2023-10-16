@@ -24,6 +24,7 @@ interface BackgroundProps {
   using_new_ui?: boolean;
   //TODO after refactoring remove optional
   theme?: Theme;
+  additionalBgSvgImageStyle?: StyleProp<ViewStyle>;
 }
 
 export default (props: BackgroundProps) => {
@@ -39,9 +40,13 @@ export default (props: BackgroundProps) => {
         },
       ]}>
       {props.theme === Theme.LIGHT ? (
-        <ImageBgHexagonsLight style={styles.bgSvgStyle} />
+        <ImageBgHexagonsLight
+          style={[styles.bgSvgStyle, props.additionalBgSvgImageStyle]}
+        />
       ) : (
-        <ImageBgHexagonsDark style={styles.bgSvgStyle} />
+        <ImageBgHexagonsDark
+          style={[styles.bgSvgStyle, props.additionalBgSvgImageStyle]}
+        />
       )}
       <SafeArea style={[styles.container, props.containerStyle]}>
         {props.children}

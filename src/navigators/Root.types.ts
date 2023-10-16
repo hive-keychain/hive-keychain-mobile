@@ -1,6 +1,7 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
+import {TransferOperationProps} from 'components/operations/Transfer';
 import {StyleProp, ViewStyle} from 'react-native';
 
 export type ModalPosition =
@@ -27,6 +28,11 @@ export type RootStackParam = {
     renderButtonElement?: JSX.Element;
   };
   TokensHistory: TokenHistoryProps;
+  //TODO test adding bellow other types.
+  Operation: {
+    operation: 'transfer';
+    props: TransferOperationProps;
+  };
 };
 
 export type MainNavigation = StackNavigationProp<RootStackParam, 'Main'>;
@@ -55,4 +61,16 @@ export type TokensHistoryNavigationRoute = RouteProp<
 export type TokensHistoryNavigationProps = {
   navigation: TokensHistoryNavigation;
   route: TokensHistoryNavigationRoute;
+};
+
+export type OperationNavigation = StackNavigationProp<
+  RootStackParam,
+  'Operation'
+>;
+
+export type OperationNavigationRoute = RouteProp<RootStackParam, 'Operation'>;
+
+export type OperationNavigationProps = {
+  navigation: OperationNavigation;
+  route: OperationNavigationRoute;
 };

@@ -1,12 +1,12 @@
 import {loadAccount} from 'actions/index';
 import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
-import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
 import {encodeMemo} from 'components/bridge';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import CustomRadioGroup from 'components/form/CustomRadioGroup';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import Background from 'components/ui/Background';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import OptionsToggle from 'components/ui/OptionsToggle';
 import Separator from 'components/ui/Separator';
 import React, {useContext, useState} from 'react';
@@ -17,13 +17,23 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
+import {getHorizontalLineStyle} from 'src/styles/line';
+import {
+  button_link_primary_medium,
+  title_primary_body_2,
+} from 'src/styles/typography';
 import {RootState} from 'store';
-import {beautifyTransferError} from 'utils/format';
+import {
+  beautifyTransferError,
+  capitalize,
+  capitalizeSentence,
+} from 'utils/format';
 import {recurrentTransfer, sendToken, transfer} from 'utils/hive';
 import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {getCurrencyProperties} from 'utils/hiveReact';
@@ -38,10 +48,7 @@ import {getTransferWarning} from 'utils/transferValidator';
 import Balance from './Balance';
 import Operation from './Operation';
 
-const PUBLIC = translate('common.public').toUpperCase();
-const PRIVATE = translate('common.private').toUpperCase();
-
-type TransferOperationProps = {
+export type TransferOperationProps = {
   currency: string;
   engine: boolean;
   tokenBalance: string;
@@ -64,14 +71,14 @@ const Transfer = ({
   const [exec, setExec] = useState('');
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
-  const [privacy, setPrivacy] = useState(PUBLIC);
   const [isRecurrent, setRecurrent] = useState(false);
+  const [isMemoEncrypted, setIsMemoEncrypted] = useState<boolean>(false);
   const {theme} = useContext(ThemeContext);
 
   const sendTransfer = async () => {
     setLoading(true);
     let finalMemo = memo;
-    if (privacy === PRIVATE) {
+    if (isMemoEncrypted) {
       const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
       finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
     }
@@ -149,14 +156,12 @@ const Transfer = ({
   const styles = getDimensionedStyles(color, height, theme);
   if (step === 1) {
     return (
-      <Operation
+      <Background
+        using_new_ui
         theme={theme}
-        logo={<Icon name="back" onClick={() => goBack()} />}
-        title={translate('wallet.operations.tokens_transfer.title')}
-        additionalHeaderContainerStyle={styles.header}>
-        {/* //TODO check if needed scrollView for lower screen devices */}
-        {/* //TODo keep working in here */}
-        <ScrollView>
+        additionalBgSvgImageStyle={styles.backgroundSvgImage}>
+        <>
+          <FocusAwareStatusBar />
           <Separator />
           <Balance
             currency={currency}
@@ -171,85 +176,159 @@ const Transfer = ({
             theme={theme}
           />
           <Separator />
-          <View style={[styles.innerContainer]}>
-            <Separator height={35} />
-            <OperationInput
-              placeholder={translate('common.username').toUpperCase()}
-              leftIcon={<AccountLogoDark />}
-              autoCapitalize="none"
-              value={to}
-              onChangeText={(e) => {
-                setTo(e.trim());
-              }}
-            />
-            <Separator />
-            <OperationInput
-              placeholder={'0.000'}
-              keyboardType="decimal-pad"
-              rightIcon={<Text style={styles.currency}>{currency}</Text>}
-              textAlign="right"
-              value={amount}
-              onChangeText={setAmount}
-            />
-            <Separator />
-            <OperationInput
-              placeholder={translate('wallet.operations.transfer.memo')}
-              value={memo}
-              onChangeText={setMemo}
-            />
-            <Separator />
-            <CustomRadioGroup
-              list={[PUBLIC, PRIVATE]}
-              selected={privacy}
-              onSelect={setPrivacy}
-            />
-            <Separator height={20} />
-            <OptionsToggle
-              title="Recurrent transfers"
-              toggled={isRecurrent}
-              callback={(toggled) => {
-                setRecurrent(toggled);
-              }}>
-              <Separator />
+          <View style={styles.innerContainer}>
+            <ScrollView>
+              <Separator height={35} />
               <OperationInput
-                placeholder={translate('wallet.operations.transfer.recurrence')}
-                value={recurrence}
-                onChangeText={setRecurrence}
-                keyboardType={'number-pad'}
-                rightIcon={<Text>Hours</Text>}
-                leftIcon={<Text>Every</Text>}
+                labelInput={translate('common.username')}
+                placeholder={translate('common.username')}
+                leftIcon={<Icon name="at" theme={theme} />}
+                autoCapitalize="none"
+                value={to}
+                onChangeText={(e) => {
+                  setTo(e.trim());
+                }}
+                inputStyle={styles.text}
               />
               <Separator />
+              <View style={styles.flexRowBetween}>
+                <OperationInput
+                  labelInput={translate('common.currency')}
+                  placeholder={currency}
+                  value={currency}
+                  editable={false}
+                  additionalOuterContainerStyle={{
+                    width: '40%',
+                  }}
+                  inputStyle={styles.text}
+                  additionalInputContainerStyle={{
+                    marginHorizontal: 0,
+                  }}
+                />
+                <OperationInput
+                  labelInput={capitalize(translate('common.amount'))}
+                  placeholder={capitalizeSentence(
+                    translate('common.enter_amount'),
+                  )}
+                  value={amount}
+                  onChangeText={setAmount}
+                  additionalInputContainerStyle={{
+                    marginHorizontal: 0,
+                  }}
+                  additionalOuterContainerStyle={{
+                    width: '54%',
+                  }}
+                  inputStyle={styles.text}
+                  rightIcon={
+                    <View style={styles.flexRowCenter}>
+                      <Separator
+                        drawLine
+                        additionalLineStyle={getHorizontalLineStyle(
+                          theme,
+                          1,
+                          35,
+                          16,
+                        )}
+                      />
+                      <TouchableOpacity onPress={() => setAmount(tokenBalance)}>
+                        <Text style={styles.text}>
+                          {translate('common.max').toUpperCase()}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  }
+                />
+              </View>
+              <Separator />
               <OperationInput
-                placeholder={translate('wallet.operations.transfer.executions')}
-                value={exec}
-                onChangeText={setExec}
-                keyboardType={'number-pad'}
-                rightIcon={<Text>times</Text>}
-              />
-            </OptionsToggle>
-            <Separator height={20} />
-            <ActiveOperationButton
-              title={translate('common.send')}
-              onPress={() => {
-                if (!amount.length || !to.length) {
-                  Toast.show(
-                    translate(
-                      'wallet.operations.transfer.warning.missing_info',
-                    ),
-                  );
-                } else {
-                  setStep(2);
+                labelInput={capitalize(translate('common.memo'))}
+                placeholder={translate('wallet.operations.transfer.memo')}
+                value={memo}
+                onChangeText={setMemo}
+                inputStyle={styles.text}
+                rightIcon={
+                  <View style={styles.flexRowCenter}>
+                    <Separator
+                      drawLine
+                      additionalLineStyle={getHorizontalLineStyle(
+                        theme,
+                        1,
+                        35,
+                        16,
+                      )}
+                    />
+                    <Icon
+                      name={isMemoEncrypted ? 'encrypt' : 'decrypt'}
+                      theme={theme}
+                      onClick={() => setIsMemoEncrypted(!isMemoEncrypted)}
+                    />
+                  </View>
                 }
-              }}
-              style={styles.send}
-              isLoading={loading}
-            />
+              />
+              <Separator />
+              <OptionsToggle
+                theme={theme}
+                title={translate('common.recurrent_transfer')}
+                toggled={isRecurrent}
+                callback={(toggled) => {
+                  setRecurrent(toggled);
+                }}>
+                <Separator />
+                <OperationInput
+                  labelInput={translate('wallet.operations.transfer.frecuency')}
+                  labelExtraInfo={capitalizeSentence(
+                    translate('wallet.operations.transfer.frecuency_minimum'),
+                  )}
+                  placeholder={translate(
+                    'wallet.operations.transfer.frecuency',
+                  )}
+                  value={recurrence}
+                  onChangeText={setRecurrence}
+                  keyboardType={'number-pad'}
+                />
+                <Separator />
+                <OperationInput
+                  labelInput={translate(
+                    'wallet.operations.transfer.iterations',
+                  )}
+                  labelExtraInfo={capitalizeSentence(
+                    translate('wallet.operations.transfer.iterations_minimum'),
+                  )}
+                  placeholder={translate(
+                    'wallet.operations.transfer.iterations',
+                  )}
+                  value={exec}
+                  onChangeText={setExec}
+                  keyboardType={'number-pad'}
+                />
+              </OptionsToggle>
+              <Separator />
+            </ScrollView>
+            <View style={styles.operationButtonsContainer}>
+              <EllipticButton
+                title={translate('common.send')}
+                onPress={() => {
+                  if (!amount.length || !to.length) {
+                    Toast.show(
+                      translate(
+                        'wallet.operations.transfer.warning.missing_info',
+                      ),
+                    );
+                  } else {
+                    setStep(2);
+                  }
+                }}
+                //TODO important need testing in IOS
+                style={getButtonStyle(theme).warningStyleButton}
+                additionalTextStyle={{...button_link_primary_medium}}
+              />
+            </View>
           </View>
-        </ScrollView>
-      </Operation>
+        </>
+      </Background>
     );
   } else {
+    //TODO work in the step 2 trying to reuse
     return (
       <Operation
         theme={theme}
@@ -290,9 +369,7 @@ const Transfer = ({
               <Text style={styles.title}>
                 {translate('wallet.operations.transfer.confirm.memo')}
               </Text>
-              <Text>{`${memo} ${
-                privacy === PRIVATE ? '(encrypted)' : ''
-              }`}</Text>
+              <Text>{`${memo} ${isMemoEncrypted ? '(encrypted)' : ''}`}</Text>
             </>
           ) : null}
           <Separator />
@@ -333,7 +410,10 @@ const Transfer = ({
 
 const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
   StyleSheet.create({
-    send: {backgroundColor: '#68A0B4'},
+    send: {
+      backgroundColor: '#68A0B4',
+      width: '90%',
+    },
     confirm: {
       backgroundColor: '#68A0B4',
       width: width / 5,
@@ -358,7 +438,27 @@ const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
       borderTopRightRadius: 40,
       borderWidth: 1,
       backgroundColor: getColors(theme).secondaryCardBgColor,
-      borderColor: theme === Theme.DARK ? '#364360' : null,
+      borderColor: getColors(theme).cardBorderColorJustDark,
+      paddingHorizontal: 10,
+      justifyContent: 'space-between',
+    },
+    backgroundSvgImage: {
+      top: 0,
+      opacity: 0.9,
+    },
+    operationButtonsContainer: {alignItems: 'center', marginBottom: 20},
+    flexRowCenter: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
+    },
+    flexRowBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    text: {
+      ...title_primary_body_2,
+      color: getColors(theme).secondaryText,
     },
   });
 const connector = connect(

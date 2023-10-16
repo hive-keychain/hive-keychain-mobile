@@ -6,7 +6,7 @@ import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {goBack} from 'utils/navigation';
-
+//TODO after refactoring remove.
 type Props = {
   children: JSX.Element;
   logo?: JSX.Element;
@@ -28,9 +28,7 @@ export default ({
 
   return (
     <>
-      <FocusAwareStatusBar
-        backgroundColor={getColors(theme).primaryBackground}
-      />
+      <FocusAwareStatusBar />
       <View style={[styles.header, additionalHeaderContainerStyle]}>
         <View style={styles.headerLeft}>{logo}</View>
         <Text style={styles.title}>{title}</Text>
@@ -62,9 +60,6 @@ const getStyles = (theme: Theme) =>
       alignItems: 'center',
     },
     title: {
-      //TODO cleanup
-      // fontSize: 18,
-      // marginLeft: 20,
       alignSelf: 'center',
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,

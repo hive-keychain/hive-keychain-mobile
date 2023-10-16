@@ -64,6 +64,7 @@ const getDimensionedStyles = ({
       backgroundColor: backgroundColor || '#000000',
       borderRadius: 25,
       height: 50,
+      borderWidth: 1,
     },
     leftIcon: {height: 30, marginRight: 20},
     rightIcon: {height: 30, marginLeft: 20},

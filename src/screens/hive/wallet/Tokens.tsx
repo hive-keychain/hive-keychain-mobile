@@ -4,6 +4,7 @@ import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import HiveEngineAccountValue from 'components/hive/HiveEngineAccountValue';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useContext, useEffect, useState} from 'react';
@@ -140,6 +141,7 @@ const Tokens = ({
   return new_ui ? (
     <Background using_new_ui={true} theme={theme}>
       <View style={styles.containerTokenScreen}>
+        <FocusAwareStatusBar />
         <Separator />
         <View style={styles.containerInfoText}>
           <Text style={[styles.textInfo, styles.textJustified]}>
@@ -208,6 +210,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
         headlines_primary_headline_2.fontSize,
       ),
     },
+    //TODO cleanup
     //new UI related
     containerTokenScreen: {
       flex: 1,

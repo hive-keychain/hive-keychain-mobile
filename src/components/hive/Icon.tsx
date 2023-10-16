@@ -1,10 +1,13 @@
 import ArrowLeftIcon from 'assets/new_UI/arrow-left.svg';
 import ArrowUpIcon from 'assets/new_UI/arrow-up.svg';
+import AtIcon from 'assets/new_UI/at.svg';
 import BackTimeIcon from 'assets/new_UI/back_time.svg';
 import BankIcon from 'assets/new_UI/bank.svg';
 import CandleIcon from 'assets/new_UI/candle.svg';
 import CategoryIcon from 'assets/new_UI/category.svg';
+import DecryptIcon from 'assets/new_UI/decrypt.svg';
 import DoubleArrowIcon from 'assets/new_UI/double-arrow.svg';
+import EncryptIcon from 'assets/new_UI/encrypt.svg';
 import EyeSlashIcon from 'assets/new_UI/eye-slash.svg';
 import HiveAlternative from 'assets/new_UI/hive_alternative.svg';
 import ImportIcon from 'assets/new_UI/import.svg';
@@ -268,6 +271,27 @@ const getIconFilePath = (
     case name === 'arrow_left' || name === 'back':
       return (
         <ArrowLeftIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'at':
+      return (
+        <AtIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'encrypt':
+      return (
+        <EncryptIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'decrypt':
+      return (
+        <DecryptIcon
           style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
           {...dimensionsProps}
         />

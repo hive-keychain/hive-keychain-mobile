@@ -1,3 +1,4 @@
+import {StatusBarStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 
 // Define widely used colors throughout the App
@@ -42,10 +43,12 @@ export const getColors = (theme: Theme) => {
       theme === Theme.LIGHT
         ? ['rgba(33, 40, 56, 0.15)', 'rgba(33, 40, 56, 0.15)', '#212838']
         : ['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.15)', '#FFF'],
+    cardBorderColorJustDark: theme === Theme.DARK ? '#364360' : '#ffffff00',
     cardBorderColor: theme === Theme.LIGHT ? '#EAEAEA' : '#364360',
     cardBorderColorContrast: theme === Theme.LIGHT ? '#EAEAEA' : '#364360',
     secondaryCardBorderColor: theme === Theme.LIGHT ? '#B4C0CF' : '#364360',
     tertiaryCardBorderColor: theme === Theme.LIGHT ? '#C7C5DE' : '#364360',
+    quaternaryCardBorderColor: theme === Theme.LIGHT ? '#E1E8EF' : '#364360',
     borderContrast: theme === Theme.LIGHT ? '#212838' : '#FFF',
     primaryRedShape:
       theme === Theme.LIGHT ? BRIGTHER_PRIMARY_RED : PRIMARY_RED_COLOR,
@@ -57,5 +60,9 @@ export const getColors = (theme: Theme) => {
     icon: theme === Theme.LIGHT ? PRIMARY_RED_COLOR : '#FFF',
     iconBW: theme === Theme.LIGHT ? '#1E1E1E' : '#FFF',
     secodaryIconBW: theme === Theme.LIGHT ? '#212838' : '#FFF',
+    barStyle:
+      theme === Theme.DARK
+        ? 'light-content'
+        : ('dark-content' as StatusBarStyle),
   };
 };
