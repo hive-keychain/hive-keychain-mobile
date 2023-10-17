@@ -210,12 +210,14 @@ const SwapTokens = ({
         ? list.find((t) => t.value.symbol === lastUsed.from.symbol)
         : list[0],
     );
-    setStartTokenListOptions(list);
+    setStartTokenListOptions(list.sort());
     const endTokenToSet = lastUsed.to
       ? endList.find((t) => t.value.symbol === lastUsed.to.symbol)
       : endList[1];
     setEndToken(endTokenToSet);
-    setEndTokenListOptions(endList);
+    setEndTokenListOptions(
+      endList.sort((a, b) => (a.label < b.label ? -1 : 1)),
+    );
   };
 
   const calculateEstimate = async (
