@@ -13,6 +13,7 @@ import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import Transfer from 'components/operations/Transfer';
 import {OperationNavigationProps, RootStackParam} from 'navigators/Root.types';
+import {capitalize} from 'utils/format';
 
 const Stack = createStackNavigator<RootStackParam>();
 
@@ -39,7 +40,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerStyle: styles.header,
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
-          title: translate('navigation.tokens'),
+          title: `${capitalize(operation)} ${translate('navigation.tokens')}`,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (
@@ -48,7 +49,6 @@ export default ({navigation, route}: OperationNavigationProps) => {
               onPress={() => navigation.navigate('WALLET')}
             />
           ),
-          //   cardStyle: styles.cardStyle,
           headerLeft: () => (
             <CustomIconButton
               theme={theme}

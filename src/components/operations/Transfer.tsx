@@ -1,5 +1,5 @@
 import {loadAccount} from 'actions/index';
-import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
+import BigCheckSVG from 'assets/new_UI/Illustration.svg';
 import {encodeMemo} from 'components/bridge';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import EllipticButton from 'components/form/EllipticButton';
@@ -43,10 +43,10 @@ import {
   sanitizeUsername,
 } from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 import {getTransferWarning} from 'utils/transferValidator';
 import Balance from './Balance';
-import Operation from './Operation';
+import Confirmation from './Confirmation';
 
 export type TransferOperationProps = {
   currency: string;
@@ -113,39 +113,76 @@ const Transfer = ({
     });
   };
 
+  const renderModalResults = (message: string) =>
+    //TODO bellow work on this, show the modal, wait for user to click, unload the confirmation.
+    navigate('ModalScreen', {
+      name: 'OperationResult',
+      modalContent: (
+        <View style={styles.modalContainer}>
+          <BigCheckSVG />
+          <Text style={styles.text}>{message}</Text>
+        </View>
+      ),
+      fixedHeight: 0.4,
+      modalContainerStyle: styles.modalContainer,
+    });
+
   const onSend = async () => {
     Keyboard.dismiss();
     try {
       if (!engine) {
         await sendTransfer();
-        Toast.show(
+        //TODO change all Toasts bellow for modal as design!
+        // Toast.show(
+        //   translate(
+        //     isRecurrent
+        //       ? 'toast.recurrent_transfer_success'
+        //       : 'toast.transfer_success',
+        //   ),
+        //   Toast.LONG,
+        // );
+        renderModalResults(
           translate(
             isRecurrent
               ? 'toast.recurrent_transfer_success'
               : 'toast.transfer_success',
           ),
-          Toast.LONG,
         );
       } else {
         const {id} = await transferToken();
         const {confirmed} = await tryConfirmTransaction(id);
-        Toast.show(
-          confirmed
-            ? translate('toast.transfer_token_confirmed')
-            : translate('toast.transfer_token_unconfirmed'),
-          Toast.LONG,
+        // Toast.show(
+        //   confirmed
+        //     ? translate('toast.transfer_token_confirmed')
+        //     : translate('toast.transfer_token_unconfirmed'),
+        //   Toast.LONG,
+        // );
+        renderModalResults(
+          translate(
+            confirmed
+              ? translate('toast.transfer_token_confirmed')
+              : translate('toast.transfer_token_unconfirmed'),
+          ),
         );
       }
       loadAccount(user.account.name, true);
       goBack();
     } catch (e) {
-      Toast.show(
+      // Toast.show(
+      //   beautifyTransferError(e as any, {
+      //     to,
+      //     currency,
+      //     username: user.account.name,
+      //   }),
+      //   Toast.LONG,
+      // );
+      //TODO clean up
+      renderModalResults(
         beautifyTransferError(e as any, {
           to,
           currency,
           username: user.account.name,
         }),
-        Toast.LONG,
       );
       setLoading(false);
     }
@@ -154,6 +191,157 @@ const Transfer = ({
   const {height} = useWindowDimensions();
 
   const styles = getDimensionedStyles(color, height, theme);
+
+  const renderConfirmationChildrenTop = () => {
+    return (
+      <View style={styles.confirmationContainer}>
+        <Text style={[styles.text, styles.info]}>
+          {capitalizeSentence(
+            translate('wallet.operations.transfer.confirm.info'),
+          )}
+        </Text>
+        <Separator />
+        <Text style={[styles.text, styles.warning]}>
+          {
+            getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
+              .warning
+          }
+        </Text>
+        <Separator />
+        <View style={styles.justifyCenter}>
+          <View style={[styles.flexRowBetween, styles.width95]}>
+            <Text style={[styles.text, styles.title]}>
+              {translate('wallet.operations.transfer.confirm.from')}
+            </Text>
+            <Text
+              style={[
+                styles.text,
+                styles.textContent,
+              ]}>{`@${user.account.name}`}</Text>
+          </View>
+          <Separator
+            drawLine
+            height={0.5}
+            additionalLineStyle={styles.bottomLine}
+          />
+        </View>
+        <Separator />
+        <View style={styles.justifyCenter}>
+          <View style={[styles.flexRowBetween, styles.width95]}>
+            <Text style={[styles.text, styles.title]}>
+              {translate('wallet.operations.transfer.confirm.to')}
+            </Text>
+            <Text style={[styles.text, styles.textContent]}>{`@${to} ${
+              getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
+                .exchange
+                ? '(exchange)'
+                : ''
+            }`}</Text>
+          </View>
+          <Separator
+            drawLine
+            height={0.5}
+            additionalLineStyle={styles.bottomLine}
+          />
+        </View>
+        <Separator />
+        <View style={styles.justifyCenter}>
+          <View style={[styles.flexRowBetween, styles.width95]}>
+            <Text style={[styles.text, styles.title]}>
+              {translate('wallet.operations.transfer.confirm.amount')}
+            </Text>
+            <Text
+              style={[
+                styles.text,
+                styles.textContent,
+              ]}>{`${amount} ${currency}`}</Text>
+          </View>
+          <Separator
+            drawLine
+            height={0.5}
+            additionalLineStyle={styles.bottomLine}
+          />
+        </View>
+        {memo.length ? (
+          <>
+            <Separator />
+            <View style={styles.justifyCenter}>
+              <View style={[styles.flexRowBetween, styles.width95]}>
+                <Text style={[styles.text, styles.title]}>
+                  {translate('wallet.operations.transfer.confirm.memo')}
+                </Text>
+                <Text style={[styles.text, styles.textContent]}>{`${memo} ${
+                  isMemoEncrypted ? '(encrypted)' : ''
+                }`}</Text>
+              </View>
+              <Separator
+                drawLine
+                height={0.5}
+                additionalLineStyle={styles.bottomLine}
+              />
+            </View>
+          </>
+        ) : null}
+        <Separator />
+        {isRecurrent ? (
+          <>
+            <View style={styles.justifyCenter}>
+              <View style={[styles.flexRowBetween, styles.width95]}>
+                <Text style={[styles.text, styles.title]}>
+                  {translate('wallet.operations.transfer.confirm.recurrence')}
+                </Text>
+                <Text style={[styles.text, styles.textContent]}>
+                  {translate(
+                    'wallet.operations.transfer.confirm.recurrenceData',
+                    {
+                      exec,
+                      recurrence,
+                    },
+                  )}
+                </Text>
+              </View>
+              <Separator
+                drawLine
+                height={0.5}
+                additionalLineStyle={styles.bottomLine}
+              />
+            </View>
+          </>
+        ) : null}
+      </View>
+    );
+  };
+
+  const renderConfirmationChildrenBottom = () => {
+    return (
+      <View style={styles.operationButtonsContainer}>
+        <EllipticButton
+          title={translate('common.back')}
+          onPress={() => setStep(1)}
+          //TODO important need testing in IOS
+          style={[
+            getButtonStyle(theme).secondaryButton,
+            styles.operationButton,
+          ]}
+          additionalTextStyle={[
+            styles.operationButtonText,
+            styles.buttonTextColor,
+          ]}
+        />
+        <ActiveOperationButton
+          title={translate('common.confirm')}
+          onPress={onSend}
+          style={[
+            getButtonStyle(theme).warningStyleButton,
+            styles.operationButton,
+          ]}
+          additionalTextStyle={styles.operationButtonText}
+          isLoading={loading}
+        />
+      </View>
+    );
+  };
+
   if (step === 1) {
     return (
       <Background
@@ -206,6 +394,7 @@ const Transfer = ({
                   }}
                 />
                 <OperationInput
+                  keyboardType="decimal-pad"
                   labelInput={capitalize(translate('common.amount'))}
                   placeholder={capitalizeSentence(
                     translate('common.enter_amount'),
@@ -285,6 +474,7 @@ const Transfer = ({
                   value={recurrence}
                   onChangeText={setRecurrence}
                   keyboardType={'number-pad'}
+                  inputStyle={styles.text}
                 />
                 <Separator />
                 <OperationInput
@@ -300,6 +490,7 @@ const Transfer = ({
                   value={exec}
                   onChangeText={setExec}
                   keyboardType={'number-pad'}
+                  inputStyle={styles.text}
                 />
               </OptionsToggle>
               <Separator />
@@ -308,7 +499,13 @@ const Transfer = ({
               <EllipticButton
                 title={translate('common.send')}
                 onPress={() => {
-                  if (!amount.length || !to.length) {
+                  if (
+                    !amount.length ||
+                    !to.length ||
+                    (isRecurrent &&
+                      (exec.trim().length === 0 ||
+                        recurrence.trim().length === 0))
+                  ) {
                     Toast.show(
                       translate(
                         'wallet.operations.transfer.warning.missing_info',
@@ -328,110 +525,19 @@ const Transfer = ({
       </Background>
     );
   } else {
-    //TODO work in the step 2 trying to reuse
     return (
-      <Operation
-        theme={theme}
-        logo={<SendArrowBlue />}
-        title={translate('wallet.operations.transfer.title')}>
-        <ScrollView>
-          <Separator height={30} />
-          <Text style={styles.warning}>
-            {
-              getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
-                .warning
-            }
-          </Text>
-          <Separator />
-          <Text style={styles.title}>
-            {translate('wallet.operations.transfer.confirm.from')}
-          </Text>
-          <Text>{`@${user.account.name}`}</Text>
-          <Separator />
-          <Text style={styles.title}>
-            {translate('wallet.operations.transfer.confirm.to')}
-          </Text>
-          <Text>{`@${to} ${
-            getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
-              .exchange
-              ? '(exchange)'
-              : ''
-          }`}</Text>
-          <Separator />
-          <Text style={styles.title}>
-            {translate('wallet.operations.transfer.confirm.amount')}
-          </Text>
-          <Text>{`${amount} ${currency}`}</Text>
-
-          {memo.length ? (
-            <>
-              <Separator />
-              <Text style={styles.title}>
-                {translate('wallet.operations.transfer.confirm.memo')}
-              </Text>
-              <Text>{`${memo} ${isMemoEncrypted ? '(encrypted)' : ''}`}</Text>
-            </>
-          ) : null}
-          <Separator />
-          {isRecurrent ? (
-            <>
-              <Text style={styles.title}>
-                {translate('wallet.operations.transfer.confirm.recurrence')}
-              </Text>
-              <Text>
-                {translate(
-                  'wallet.operations.transfer.confirm.recurrenceData',
-                  {exec, recurrence},
-                )}
-              </Text>
-            </>
-          ) : null}
-          <Separator height={40} />
-          <View style={styles.buttonsContainer}>
-            <EllipticButton
-              title={translate('common.back')}
-              style={styles.back}
-              onPress={() => {
-                setStep(1);
-              }}
-            />
-            <ActiveOperationButton
-              title={translate('common.confirm')}
-              onPress={onSend}
-              style={styles.confirm}
-              isLoading={loading}
-            />
-          </View>
-        </ScrollView>
-      </Operation>
+      <Confirmation
+        childrenTop={renderConfirmationChildrenTop()}
+        childrenBottom={renderConfirmationChildrenBottom()}
+      />
     );
   }
 };
 
 const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
   StyleSheet.create({
-    send: {
-      backgroundColor: '#68A0B4',
-      width: '90%',
-    },
-    confirm: {
-      backgroundColor: '#68A0B4',
-      width: width / 5,
-      marginHorizontal: 0,
-    },
-    warning: {color: 'red', fontWeight: 'bold'},
-    back: {backgroundColor: '#7E8C9A', width: width / 5, marginHorizontal: 0},
-    currency: {fontWeight: 'bold', fontSize: 18, color},
-    title: {fontWeight: 'bold', fontSize: 16},
-    buttonsContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-    },
-    //TODO clean up, check & delete
-    header: {
-      paddingHorizontal: 16,
-    },
+    warning: {color: 'red'},
+    title: {fontSize: 16},
     innerContainer: {
       flex: 1,
       borderTopLeftRadius: 40,
@@ -443,10 +549,9 @@ const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
       justifyContent: 'space-between',
     },
     backgroundSvgImage: {
-      top: 0,
-      opacity: 0.9,
+      top: theme === Theme.LIGHT ? -30 : 0,
+      opacity: 1,
     },
-    operationButtonsContainer: {alignItems: 'center', marginBottom: 20},
     flexRowCenter: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -459,6 +564,51 @@ const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
     text: {
       ...title_primary_body_2,
       color: getColors(theme).secondaryText,
+    },
+    confirmationContainer: {
+      paddingHorizontal: 18,
+    },
+    info: {
+      opacity: 0.7,
+    },
+    textContent: {
+      fontSize: 14,
+      color: getColors(theme).senaryText,
+    },
+    bottomLine: {
+      width: '100%',
+      borderColor: getColors(theme).secondaryLineSeparatorStroke,
+      margin: 0,
+      marginTop: 12,
+    },
+    width95: {
+      width: '95%',
+    },
+    justifyCenter: {justifyContent: 'center', alignItems: 'center'},
+    operationButtonsContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginBottom: 20,
+      justifyContent: 'space-around',
+      width: '100%',
+    },
+    operationButton: {
+      width: '48%',
+      marginHorizontal: 0,
+    },
+    operationButtonText: {
+      ...button_link_primary_medium,
+    },
+    buttonTextColor: {
+      color: getColors(theme).secondaryText,
+    },
+    modalContainer: {
+      width: '100%',
+      alignSelf: 'flex-end',
+      backgroundColor: getColors(theme).cardBgColor,
+      borderWidth: 0,
+      borderTopLeftRadius: 22,
+      borderTopRightRadius: 22,
     },
   });
 const connector = connect(

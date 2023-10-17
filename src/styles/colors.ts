@@ -36,6 +36,10 @@ export const getColors = (theme: Theme) => {
     tertiaryText: theme === Theme.LIGHT ? '#3D3D3D' : '#FFF',
     quaternaryText: theme === Theme.LIGHT ? '#242424' : '#FFF',
     quinaryText: theme === Theme.LIGHT ? '#7F8288' : '#FFF',
+    senaryText:
+      theme === Theme.LIGHT
+        ? 'rgba(33, 40, 56, 0.80)'
+        : 'rgba(255, 255, 255, 0.80)',
     primaryBackground: theme === Theme.LIGHT ? '#E5EDF5' : '#212838',
     contrastBackground: theme === Theme.LIGHT ? '#212838' : '#E5EDF5',
     menuHamburguerBg: theme === Theme.LIGHT ? '#FFF' : '#212838',
@@ -56,6 +60,10 @@ export const getColors = (theme: Theme) => {
     secondaryCardBgColor: theme === Theme.LIGHT ? '#FFF' : '#293144',
     cardBgLighter: theme === Theme.LIGHT ? '#FFF' : BACKGROUNDITEMDARKISH,
     lineSeparatorStroke: theme === Theme.LIGHT ? '#EDF4FC' : '#364360',
+    secondaryLineSeparatorStroke:
+      theme === Theme.LIGHT
+        ? 'rgba(72, 72, 72, 0.20)'
+        : 'rgba(255, 255, 255, 0.20)',
     betterContrastStroke: theme === Theme.DARK ? '#FFF' : 'none',
     icon: theme === Theme.LIGHT ? PRIMARY_RED_COLOR : '#FFF',
     iconBW: theme === Theme.LIGHT ? '#1E1E1E' : '#FFF',

@@ -1,3 +1,5 @@
+import Cube3dRotate from 'assets/new_UI/3d-rotate.svg';
+import Cube3dScanIcon from 'assets/new_UI/3d_cube_scan.svg';
 import ArrowLeftIcon from 'assets/new_UI/arrow-left.svg';
 import ArrowUpIcon from 'assets/new_UI/arrow-up.svg';
 import AtIcon from 'assets/new_UI/at.svg';
@@ -292,6 +294,20 @@ const getIconFilePath = (
     case name === 'decrypt':
       return (
         <DecryptIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === '3d_cube':
+      return (
+        <Cube3dScanIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === '3d_cube_rotate':
+      return (
+        <Cube3dRotate
           style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
           {...dimensionsProps}
         />

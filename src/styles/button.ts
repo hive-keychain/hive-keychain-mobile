@@ -20,5 +20,10 @@ export const getButtonStyle = (theme: Theme) => {
         RED_SHADOW_COLOR,
       ),
     ],
+    secondaryButton: {
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderWidth: 1,
+      borderColor: getColors(theme).cardBorderColorJustDark,
+    } as StyleProp<ViewStyle>,
   };
 };

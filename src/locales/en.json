@@ -27,6 +27,7 @@
     "username": "Username",
     "authorized_username": "Auth. Account",
     "confirm": "Confirm",
+    "cancel": "Cancel",
     "privateKey": "Private Key",
     "private": "Private",
     "public": "Public",
@@ -129,6 +130,7 @@
         "sent": "Sent",
         "received": "Received",
         "confirm": {
+          "info": "Please Confirm Your Transfer.\nThis cannot be Undone",
           "from": "From",
           "to": "To",
           "amount": "Amount",

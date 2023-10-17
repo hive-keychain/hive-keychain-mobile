@@ -15,7 +15,7 @@ const Stack = createStackNavigator();
 
 export default () => {
   const {theme} = useContext(ThemeContext);
-
+  //TODO bellow, move styles bellow using getStyles
   return (
     <Stack.Navigator>
       <Stack.Screen

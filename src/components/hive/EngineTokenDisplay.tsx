@@ -98,13 +98,6 @@ const EngineTokenDisplay = ({
         <Icon
           key={`show-token-transfer-${token.symbol}`}
           name={'transfer'}
-          //TODO bellow add these props.
-          // <Transfer
-          //         currency={token.symbol}
-          //         tokenBalance={token.balance}
-          //         engine
-          //         tokenLogo={logo}
-          //       />
           onClick={() => {
             navigate('Operation', {
               operation: 'transfer',

@@ -13,8 +13,15 @@ type Props = {
   style: StyleProp<ViewStyle>;
   onPress: () => void;
   isLoading: boolean;
+  additionalTextStyle?: StyleProp<ViewStyle>;
 } & PropsFromRedux;
-const ActiveOperationButton = ({method, onPress, style, ...props}: Props) => {
+const ActiveOperationButton = ({
+  method,
+  onPress,
+  style,
+  additionalTextStyle,
+  ...props
+}: Props) => {
   const disabled = !props.user.keys[method || KeyTypes.active];
   return (
     <>
@@ -28,6 +35,7 @@ const ActiveOperationButton = ({method, onPress, style, ...props}: Props) => {
             onPress();
           }
         }}
+        additionalTextStyle={additionalTextStyle}
       />
     </>
   );

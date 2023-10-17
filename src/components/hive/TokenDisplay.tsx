@@ -1,6 +1,4 @@
 import {Currency, Token} from 'actions/interfaces';
-import UnstakeIcon from 'assets/new_UI/3d_cube_down_arrow.svg';
-import StakeIcon from 'assets/new_UI/3d_cube_scan.svg';
 import DelegationsList from 'components/operations/DelegationsList';
 import RoundButton from 'components/operations/OperationsButtons';
 import React from 'react';
@@ -93,7 +91,6 @@ const TokenDisplay = ({
   ) => (
     <RoundButton
       size={22}
-      //TODO add open stake modal w full height, as design.
       onPress={onPress}
       backgroundColor="black"
       content={
@@ -156,23 +153,27 @@ const TokenDisplay = ({
           </Text>
           <View style={styles.buttonsContainer}>
             {tokenInfo.stakingEnabled &&
-              //TODO finish bellow, render modal in full height as design
+              //TODO finish bellow, render using Operation stack / add icon's click
               renderAsSquareButton(
-                <StakeIcon {...styles.iconButton} />,
+                <Icon name="3d_cube" theme={theme} width={10} height={10} />,
                 translate('wallet.operations.token_stake.title'),
                 () => {},
               )}
             {tokenInfo.stakingEnabled &&
-              //TODO finish bellow, render modal in full height as design
+              //TODO finish bellow, render using Operation stack / add icon's click
               renderAsSquareButton(
-                <UnstakeIcon {...styles.iconButton} />,
+                <Icon
+                  name="3d_cube_rotate"
+                  theme={theme}
+                  width={12}
+                  height={12}
+                />,
                 translate('wallet.operations.token_unstake.title'),
                 () => {},
               )}
             {tokenInfo.delegationEnabled &&
-              //TODO finish bellow, render modal in full height as design
+              //TODO finish bellow, render using Operation stack / add icon's click
               renderAsSquareButton(
-                // <DelegationsIcon {...styles.iconButton} />,
                 <Icon
                   name="delegate_vesting_shares"
                   theme={theme}
