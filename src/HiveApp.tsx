@@ -104,7 +104,6 @@ const App = ({
         logScreenView(currentRouteName);
       }}>
       {renderRootNavigator()}
-      {/* //TODO bellow, add props as need in the future. */}
       <MessageModal capitalize />
       <Bridge />
     </NavigationContainer>

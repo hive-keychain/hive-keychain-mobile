@@ -2,6 +2,7 @@ import {Currency, Token} from 'actions/interfaces';
 import DelegationsList from 'components/operations/DelegationsList';
 import RoundButton from 'components/operations/OperationsButtons';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
+import {UnstakeTokenOperationProps} from 'components/operations/UnstakeToken';
 import React from 'react';
 import {
   Linking,
@@ -169,7 +170,6 @@ const TokenDisplay = ({
                   }),
               )}
             {tokenInfo.stakingEnabled &&
-              //TODO finish bellow, render using Operation stack / add icon's click
               renderAsSquareButton(
                 <Icon
                   name="3d_cube_rotate"
@@ -178,7 +178,16 @@ const TokenDisplay = ({
                   height={12}
                 />,
                 translate('wallet.operations.token_unstake.title'),
-                () => {},
+                () =>
+                  navigate('Operation', {
+                    operation: 'unstake',
+                    props: {
+                      currency: currency,
+                      balance: tokenBalance.balance,
+                      tokenLogo: logo,
+                      tokenInfo: tokenInfo,
+                    } as UnstakeTokenOperationProps,
+                  }),
               )}
             {tokenInfo.delegationEnabled &&
               //TODO finish bellow, render using Operation stack / add icon's click

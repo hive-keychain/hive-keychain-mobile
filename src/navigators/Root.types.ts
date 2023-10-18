@@ -3,6 +3,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
 import {TransferOperationProps} from 'components/operations/Transfer';
+import {UnstakeTokenOperationProps} from 'components/operations/UnstakeToken';
 import {StyleProp, ViewStyle} from 'react-native';
 
 export type ModalPosition =
@@ -31,8 +32,11 @@ export type RootStackParam = {
   TokensHistory: TokenHistoryProps;
   //TODO test adding bellow other types.
   Operation: {
-    operation: 'transfer' | 'stake';
-    props: TransferOperationProps | StakeTokenOperationProps;
+    operation: 'transfer' | 'stake' | 'unstake';
+    props:
+      | TransferOperationProps
+      | StakeTokenOperationProps
+      | UnstakeTokenOperationProps;
   };
 };
 

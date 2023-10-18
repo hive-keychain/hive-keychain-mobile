@@ -8,7 +8,7 @@ import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import IconBack from 'src/assets/Icon_arrow_back_black.svg';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
@@ -21,7 +21,7 @@ import BlockchainTransactionUtils from 'utils/tokens.utils';
 import Balance from './Balance';
 import Operation from './Operation';
 
-type Props = PropsFromRedux & {
+export interface DelegateTokenProps {
   currency: string;
   tokenLogo: JSX.Element;
   balance: string;
@@ -29,7 +29,9 @@ type Props = PropsFromRedux & {
   delegateAmount?: string;
   update?: boolean;
   gobackAction?: () => void;
-};
+}
+
+type Props = PropsFromRedux & DelegateTokenProps;
 
 const DelegateToken = ({
   currency,

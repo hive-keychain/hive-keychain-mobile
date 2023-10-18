@@ -15,6 +15,9 @@ import StakeToken, {
   StakeTokenOperationProps,
 } from 'components/operations/StakeToken';
 import Transfer, {TransferOperationProps} from 'components/operations/Transfer';
+import UnstakeToken, {
+  UnstakeTokenOperationProps,
+} from 'components/operations/UnstakeToken';
 import {OperationNavigationProps, RootStackParam} from 'navigators/Root.types';
 import {capitalize} from 'utils/format';
 
@@ -37,6 +40,10 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return `${capitalize(
           translate('wallet.operations.token_stake.staking'),
         )} ${translate('common.token')}`;
+      case 'unstake':
+        return `${capitalize(
+          translate('wallet.operations.token_unstake.unstaking'),
+        )} ${translate('common.token')}`;
     }
   };
 
@@ -46,6 +53,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return <Transfer {...(props as TransferOperationProps)} />;
       case 'stake':
         return <StakeToken {...(props as StakeTokenOperationProps)} />;
+      case 'unstake':
+        return <UnstakeToken {...(props as UnstakeTokenOperationProps)} />;
     }
   };
 

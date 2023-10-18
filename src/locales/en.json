@@ -192,8 +192,10 @@
       "token_unstake": {
         "title": "Unstake",
         "unstaking_token": "Unstaking {{currency}}",
+        "unstaking": "Unstaking",
         "cooldown_disclaimer": "Unstaking this token will take {{unstakingCooldown}} day",
-        "token_pending_unstake": "Pending unstaking"
+        "token_pending_unstake": "Pending unstaking",
+        "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient"
       },
       "token_delegation": {
         "title": "Delegate",

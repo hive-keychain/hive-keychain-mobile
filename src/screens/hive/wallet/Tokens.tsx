@@ -169,14 +169,15 @@ const Tokens = ({
           <Icon
             name={'settings-2'}
             theme={theme}
-            //Testing modal bellow, remove code //TODO
-            onClick={() => showModal(true, 'Sample Message!!!')}
+            onClick={() => console.log('TODO handle click settings tokens')}
             additionalContainerStyle={styles.iconButton}
           />
           <Icon
             name={'settings-4'}
             theme={theme}
-            onClick={() => console.log('TODO candle onPress')}
+            onClick={() =>
+              console.log('TODO handle onPress other tokens settings')
+            }
             additionalContainerStyle={styles.iconButton}
           />
         </View>
@@ -217,7 +218,6 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
     //new UI related
     containerTokenScreen: {
       flex: 1,
-      // paddingHorizontal: 15,
     },
     containerInfoText: {
       padding: 10,
