@@ -48,6 +48,10 @@ export const BROWSER_FOCUS = 'BROWSER_FOCUS';
 export const UPDATE_MANAGEMENT = 'UPDATE_MANAGEMENT';
 export const FETCH_SAVINGS_REQUESTS = 'FETCH_SAVINGS_REQUESTS';
 
+//message modal
+export const SHOW_MODAL = 'SHOW_MODAL';
+export const RESET_MODAL = 'RESET_MODAL';
+
 export enum HAS_ActionsTypes {
   REQUEST = 'HAS_REQUEST',
   REQUEST_TREATED = 'HAS_REQUEST_TREATED',

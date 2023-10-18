@@ -220,6 +220,11 @@ export interface Account {
   keys: AccountKeys;
 }
 
+export interface MessageModalPayload {
+  show: boolean;
+  message: string;
+}
+
 export interface AccountsPayload {
   account?: Account;
   accounts?: Account[];

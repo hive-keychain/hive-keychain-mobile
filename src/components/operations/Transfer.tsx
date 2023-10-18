@@ -1,5 +1,5 @@
 import {loadAccount} from 'actions/index';
-import BigCheckSVG from 'assets/new_UI/Illustration.svg';
+import {showModal} from 'actions/message';
 import {encodeMemo} from 'components/bridge';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import EllipticButton from 'components/form/EllipticButton';
@@ -43,7 +43,7 @@ import {
   sanitizeUsername,
 } from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {goBack} from 'utils/navigation';
 import {getTransferWarning} from 'utils/transferValidator';
 import Balance from './Balance';
 import Confirmation from './Confirmation';
@@ -63,6 +63,7 @@ const Transfer = ({
   tokenBalance,
   tokenLogo,
   phishingAccounts,
+  showModal,
 }: Props) => {
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
@@ -113,35 +114,13 @@ const Transfer = ({
     });
   };
 
-  const renderModalResults = (message: string) =>
-    //TODO bellow work on this, show the modal, wait for user to click, unload the confirmation.
-    navigate('ModalScreen', {
-      name: 'OperationResult',
-      modalContent: (
-        <View style={styles.modalContainer}>
-          <BigCheckSVG />
-          <Text style={styles.text}>{message}</Text>
-        </View>
-      ),
-      fixedHeight: 0.4,
-      modalContainerStyle: styles.modalContainer,
-    });
-
   const onSend = async () => {
     Keyboard.dismiss();
     try {
       if (!engine) {
         await sendTransfer();
-        //TODO change all Toasts bellow for modal as design!
-        // Toast.show(
-        //   translate(
-        //     isRecurrent
-        //       ? 'toast.recurrent_transfer_success'
-        //       : 'toast.transfer_success',
-        //   ),
-        //   Toast.LONG,
-        // );
-        renderModalResults(
+        showModal(
+          true,
           translate(
             isRecurrent
               ? 'toast.recurrent_transfer_success'
@@ -151,13 +130,8 @@ const Transfer = ({
       } else {
         const {id} = await transferToken();
         const {confirmed} = await tryConfirmTransaction(id);
-        // Toast.show(
-        //   confirmed
-        //     ? translate('toast.transfer_token_confirmed')
-        //     : translate('toast.transfer_token_unconfirmed'),
-        //   Toast.LONG,
-        // );
-        renderModalResults(
+        showModal(
+          true,
           translate(
             confirmed
               ? translate('toast.transfer_token_confirmed')
@@ -168,16 +142,8 @@ const Transfer = ({
       loadAccount(user.account.name, true);
       goBack();
     } catch (e) {
-      // Toast.show(
-      //   beautifyTransferError(e as any, {
-      //     to,
-      //     currency,
-      //     username: user.account.name,
-      //   }),
-      //   Toast.LONG,
-      // );
-      //TODO clean up
-      renderModalResults(
+      showModal(
+        true,
         beautifyTransferError(e as any, {
           to,
           currency,
@@ -611,6 +577,7 @@ const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
       borderTopRightRadius: 22,
     },
   });
+
 const connector = connect(
   (state: RootState) => {
     return {
@@ -618,7 +585,7 @@ const connector = connect(
       phishingAccounts: state.phishingAccounts,
     };
   },
-  {loadAccount},
+  {loadAccount, showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

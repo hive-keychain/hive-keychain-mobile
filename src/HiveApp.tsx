@@ -6,6 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {forgetRequestedOperation} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
 import Bridge from 'components/bridge';
+import {MessageModal} from 'components/modals/MessageModal';
 import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
@@ -103,6 +104,8 @@ const App = ({
         logScreenView(currentRouteName);
       }}>
       {renderRootNavigator()}
+      {/* //TODO bellow, add props as need in the future. */}
+      <MessageModal capitalize />
       <Bridge />
     </NavigationContainer>
   );

@@ -19,6 +19,8 @@ type Props = {
   fixedHeight?: number;
   containerStyle?: StyleProp<ViewStyle>;
   additionalWrapperFixedStyle?: StyleProp<ViewStyle>;
+  additionalMainContainerStyle?: StyleProp<ViewStyle>;
+  additionalClickeableAreaStyle?: StyleProp<ViewStyle>;
   modalPosition?: ModalPosition;
   buttonElement?: JSX.Element;
 };
@@ -51,9 +53,13 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
       <KeyboardAvoidingView
         style={styles.fullHeight}
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
-        <View style={[styles.mainContainer]}>
+        <View
+          style={[
+            styles.mainContainer,
+            this.props.additionalMainContainerStyle,
+          ]}>
           <TouchableWithoutFeedback
-            style={{height: '100%'}}
+            style={[{height: '100%'}, this.props.additionalClickeableAreaStyle]}
             onPress={() => {
               this.props.outsideClick();
             }}>
@@ -90,7 +96,7 @@ class StyleSheetFactory {
       mainContainer: {
         flex: 1,
         backgroundColor: 'transparent',
-        justifyContent: modalPosition ?? 'flex-end', //TODO testing initially as 'flex-end'
+        justifyContent: modalPosition ?? 'flex-end',
       },
       modalWrapper: {
         position: 'absolute',

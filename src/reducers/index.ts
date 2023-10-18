@@ -10,6 +10,7 @@ import properties from './globalProperties';
 import hiveUri from './hive-uri';
 import hive_authentication_service from './hiveAuthenticationService';
 import lastAccount from './lastAccount';
+import message from './message';
 import phishingAccounts from './phishing';
 import preferences from './preferences';
 import settings from './settings';
@@ -42,4 +43,5 @@ export default combineReducers({
   hiveUri,
   walletFilters,
   tokensFilters,
+  message,
 });
