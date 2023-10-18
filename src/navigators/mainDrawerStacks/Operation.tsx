@@ -11,7 +11,10 @@ import {translate} from 'utils/localize';
 //TODO use just icon + add the exported only version from figma
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import Transfer from 'components/operations/Transfer';
+import StakeToken, {
+  StakeTokenOperationProps,
+} from 'components/operations/StakeToken';
+import Transfer, {TransferOperationProps} from 'components/operations/Transfer';
 import {OperationNavigationProps, RootStackParam} from 'navigators/Root.types';
 import {capitalize} from 'utils/format';
 
@@ -22,12 +25,27 @@ export default ({navigation, route}: OperationNavigationProps) => {
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
 
-  console.log({p: route.params}); //TODO remove line
+  const getTitle = () => {
+    switch (operation) {
+      case 'transfer':
+        if ((props as TransferOperationProps).engine) {
+          return `${capitalize(operation)} ${translate('common.token')}`;
+        } else {
+          return `${capitalize(operation)}`;
+        }
+      case 'stake':
+        return `${capitalize(
+          translate('wallet.operations.token_stake.staking'),
+        )} ${translate('common.token')}`;
+    }
+  };
 
   const renderOperation = () => {
     switch (operation) {
       case 'transfer':
-        return <Transfer {...props} />;
+        return <Transfer {...(props as TransferOperationProps)} />;
+      case 'stake':
+        return <StakeToken {...(props as StakeTokenOperationProps)} />;
     }
   };
 
@@ -40,7 +58,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerStyle: styles.header,
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
-          title: `${capitalize(operation)} ${translate('navigation.tokens')}`,
+          title: getTitle(),
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (

@@ -1,13 +1,13 @@
 import {resetModal} from 'actions/message';
 import BigCheckSVG from 'assets/new_UI/Illustration.svg';
+import ErrorSvg from 'assets/new_UI/error-circle.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import React, {useContext} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
-import {getModalBaseStyle} from 'src/styles/modal';
 import {
   button_link_primary_medium,
   title_primary_title_1,
@@ -15,7 +15,6 @@ import {
 import {RootState} from 'store';
 import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
-import CustomModal from './CustomModal';
 
 interface Props {
   capitalize?: boolean;
@@ -30,32 +29,32 @@ const Message = ({
   const styles = getStyles(theme);
 
   return messageModal.show ? (
-    <CustomModal
-      containerStyle={[styles.modalContainer]}
-      boxBackgroundColor="#00000000"
-      //   //   modalPosition="center"
-      bottomHalf={true}
-      outsideClick={() => {}}
-      additionalClickeableAreaStyle={
-        getModalBaseStyle(theme).backgroundDarkStyle
-      }
-      fixedHeight={0.5}>
-      <View style={styles.modalContent}>
-        <BigCheckSVG style={styles.svgImage} />
-        <Text style={styles.text}>
-          {capitalize
-            ? capitalizeSentence(messageModal.message)
-            : messageModal.message}
-        </Text>
-        <EllipticButton
-          title={translate('common.close')}
-          onPress={() => resetModal()}
-          //TODO important need testing in IOS
-          style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-          additionalTextStyle={styles.buttonText}
-        />
+    <Modal visible={messageModal.show} transparent={true} animationType="fade">
+      <View style={[styles.mainContainer]}>
+        <TouchableOpacity style={{flex: 1}} onPress={() => resetModal()} />
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {messageModal.isError ? (
+              <ErrorSvg style={styles.svgImage} />
+            ) : (
+              <BigCheckSVG style={styles.svgImage} />
+            )}
+            <Text style={styles.text}>
+              {capitalize
+                ? capitalizeSentence(messageModal.message)
+                : messageModal.message}
+            </Text>
+            <EllipticButton
+              title={translate('common.close')}
+              onPress={() => resetModal()}
+              //TODO important need testing in IOS
+              style={[getButtonStyle(theme).warningStyleButton, styles.button]}
+              additionalTextStyle={styles.buttonText}
+            />
+          </View>
+        </View>
       </View>
-    </CustomModal>
+    </Modal>
   ) : null;
 };
 
@@ -72,8 +71,14 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
+    mainContainer: {
+      flex: 1,
+      justifyContent: 'flex-end',
+      backgroundColor: '#212838bc',
+    },
     modalContainer: {
       width: '100%',
+      height: '50%',
       backgroundColor: getColors(theme).cardBgColor,
       borderColor: getColors(theme).cardBorderColorContrast,
       borderWidth: 0,
@@ -87,7 +92,7 @@ const getStyles = (theme: Theme) =>
     },
     modalContent: {
       width: '100%',
-      height: '100%',
+      height: 300,
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: 14,

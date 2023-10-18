@@ -40,6 +40,7 @@ export const getColors = (theme: Theme) => {
       theme === Theme.LIGHT
         ? 'rgba(33, 40, 56, 0.80)'
         : 'rgba(255, 255, 255, 0.80)',
+    septenaryText: theme === Theme.LIGHT ? '#868D99' : '#FFF',
     primaryBackground: theme === Theme.LIGHT ? '#E5EDF5' : '#212838',
     contrastBackground: theme === Theme.LIGHT ? '#212838' : '#E5EDF5',
     menuHamburguerBg: theme === Theme.LIGHT ? '#FFF' : '#212838',

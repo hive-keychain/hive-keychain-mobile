@@ -5,8 +5,6 @@ import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
-import Background from 'components/ui/Background';
-import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import OptionsToggle from 'components/ui/OptionsToggle';
 import Separator from 'components/ui/Separator';
 import React, {useContext, useState} from 'react';
@@ -17,7 +15,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
@@ -46,7 +44,7 @@ import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 import {getTransferWarning} from 'utils/transferValidator';
 import Balance from './Balance';
-import Confirmation from './Confirmation';
+import OperationThemed from './OperationThemed';
 
 export type TransferOperationProps = {
   currency: string;
@@ -158,248 +156,70 @@ const Transfer = ({
 
   const styles = getDimensionedStyles(color, height, theme);
 
-  const renderConfirmationChildrenTop = () => {
-    return (
-      <View style={styles.confirmationContainer}>
-        <Text style={[styles.text, styles.info]}>
-          {capitalizeSentence(
-            translate('wallet.operations.transfer.confirm.info'),
-          )}
-        </Text>
-        <Separator />
-        <Text style={[styles.text, styles.warning]}>
-          {
-            getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
-              .warning
-          }
-        </Text>
-        <Separator />
-        <View style={styles.justifyCenter}>
-          <View style={[styles.flexRowBetween, styles.width95]}>
-            <Text style={[styles.text, styles.title]}>
-              {translate('wallet.operations.transfer.confirm.from')}
-            </Text>
-            <Text
-              style={[
-                styles.text,
-                styles.textContent,
-              ]}>{`@${user.account.name}`}</Text>
-          </View>
-          <Separator
-            drawLine
-            height={0.5}
-            additionalLineStyle={styles.bottomLine}
-          />
-        </View>
-        <Separator />
-        <View style={styles.justifyCenter}>
-          <View style={[styles.flexRowBetween, styles.width95]}>
-            <Text style={[styles.text, styles.title]}>
-              {translate('wallet.operations.transfer.confirm.to')}
-            </Text>
-            <Text style={[styles.text, styles.textContent]}>{`@${to} ${
-              getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
-                .exchange
-                ? '(exchange)'
-                : ''
-            }`}</Text>
-          </View>
-          <Separator
-            drawLine
-            height={0.5}
-            additionalLineStyle={styles.bottomLine}
-          />
-        </View>
-        <Separator />
-        <View style={styles.justifyCenter}>
-          <View style={[styles.flexRowBetween, styles.width95]}>
-            <Text style={[styles.text, styles.title]}>
-              {translate('wallet.operations.transfer.confirm.amount')}
-            </Text>
-            <Text
-              style={[
-                styles.text,
-                styles.textContent,
-              ]}>{`${amount} ${currency}`}</Text>
-          </View>
-          <Separator
-            drawLine
-            height={0.5}
-            additionalLineStyle={styles.bottomLine}
-          />
-        </View>
-        {memo.length ? (
-          <>
-            <Separator />
-            <View style={styles.justifyCenter}>
-              <View style={[styles.flexRowBetween, styles.width95]}>
-                <Text style={[styles.text, styles.title]}>
-                  {translate('wallet.operations.transfer.confirm.memo')}
-                </Text>
-                <Text style={[styles.text, styles.textContent]}>{`${memo} ${
-                  isMemoEncrypted ? '(encrypted)' : ''
-                }`}</Text>
-              </View>
-              <Separator
-                drawLine
-                height={0.5}
-                additionalLineStyle={styles.bottomLine}
-              />
-            </View>
-          </>
-        ) : null}
-        <Separator />
-        {isRecurrent ? (
-          <>
-            <View style={styles.justifyCenter}>
-              <View style={[styles.flexRowBetween, styles.width95]}>
-                <Text style={[styles.text, styles.title]}>
-                  {translate('wallet.operations.transfer.confirm.recurrence')}
-                </Text>
-                <Text style={[styles.text, styles.textContent]}>
-                  {translate(
-                    'wallet.operations.transfer.confirm.recurrenceData',
-                    {
-                      exec,
-                      recurrence,
-                    },
-                  )}
-                </Text>
-              </View>
-              <Separator
-                drawLine
-                height={0.5}
-                additionalLineStyle={styles.bottomLine}
-              />
-            </View>
-          </>
-        ) : null}
-      </View>
-    );
-  };
-
-  const renderConfirmationChildrenBottom = () => {
-    return (
-      <View style={styles.operationButtonsContainer}>
-        <EllipticButton
-          title={translate('common.back')}
-          onPress={() => setStep(1)}
-          //TODO important need testing in IOS
-          style={[
-            getButtonStyle(theme).secondaryButton,
-            styles.operationButton,
-          ]}
-          additionalTextStyle={[
-            styles.operationButtonText,
-            styles.buttonTextColor,
-          ]}
-        />
-        <ActiveOperationButton
-          title={translate('common.confirm')}
-          onPress={onSend}
-          style={[
-            getButtonStyle(theme).warningStyleButton,
-            styles.operationButton,
-          ]}
-          additionalTextStyle={styles.operationButtonText}
-          isLoading={loading}
-        />
-      </View>
-    );
-  };
-
   if (step === 1) {
     return (
-      <Background
-        using_new_ui
-        theme={theme}
-        additionalBgSvgImageStyle={styles.backgroundSvgImage}>
-        <>
-          <FocusAwareStatusBar />
-          <Separator />
-          <Balance
-            currency={currency}
-            account={user.account}
-            tokenBalance={tokenBalance}
-            tokenLogo={tokenLogo}
-            isHiveEngine={engine}
-            setMax={(value: string) => {
-              setAmount(value);
-            }}
-            using_new_ui
-            theme={theme}
-          />
-          <Separator />
-          <View style={styles.innerContainer}>
-            <ScrollView>
-              <Separator height={35} />
+      <OperationThemed
+        childrenTop={
+          <>
+            <Separator />
+            <Balance
+              currency={currency}
+              account={user.account}
+              tokenBalance={tokenBalance}
+              tokenLogo={tokenLogo}
+              isHiveEngine={engine}
+              setMax={(value: string) => {
+                setAmount(value);
+              }}
+              using_new_ui
+              theme={theme}
+            />
+            <Separator />
+          </>
+        }
+        childrenMiddle={
+          <>
+            <Separator height={35} />
+            <OperationInput
+              labelInput={translate('common.username')}
+              placeholder={translate('common.username')}
+              leftIcon={<Icon name="at" theme={theme} />}
+              autoCapitalize="none"
+              value={to}
+              onChangeText={(e) => {
+                setTo(e.trim());
+              }}
+              inputStyle={styles.text}
+            />
+            <Separator />
+            <View style={styles.flexRowBetween}>
               <OperationInput
-                labelInput={translate('common.username')}
-                placeholder={translate('common.username')}
-                leftIcon={<Icon name="at" theme={theme} />}
-                autoCapitalize="none"
-                value={to}
-                onChangeText={(e) => {
-                  setTo(e.trim());
+                labelInput={translate('common.currency')}
+                placeholder={currency}
+                value={currency}
+                editable={false}
+                additionalOuterContainerStyle={{
+                  width: '40%',
                 }}
                 inputStyle={styles.text}
+                additionalInputContainerStyle={{
+                  marginHorizontal: 0,
+                }}
               />
-              <Separator />
-              <View style={styles.flexRowBetween}>
-                <OperationInput
-                  labelInput={translate('common.currency')}
-                  placeholder={currency}
-                  value={currency}
-                  editable={false}
-                  additionalOuterContainerStyle={{
-                    width: '40%',
-                  }}
-                  inputStyle={styles.text}
-                  additionalInputContainerStyle={{
-                    marginHorizontal: 0,
-                  }}
-                />
-                <OperationInput
-                  keyboardType="decimal-pad"
-                  labelInput={capitalize(translate('common.amount'))}
-                  placeholder={capitalizeSentence(
-                    translate('common.enter_amount'),
-                  )}
-                  value={amount}
-                  onChangeText={setAmount}
-                  additionalInputContainerStyle={{
-                    marginHorizontal: 0,
-                  }}
-                  additionalOuterContainerStyle={{
-                    width: '54%',
-                  }}
-                  inputStyle={styles.text}
-                  rightIcon={
-                    <View style={styles.flexRowCenter}>
-                      <Separator
-                        drawLine
-                        additionalLineStyle={getHorizontalLineStyle(
-                          theme,
-                          1,
-                          35,
-                          16,
-                        )}
-                      />
-                      <TouchableOpacity onPress={() => setAmount(tokenBalance)}>
-                        <Text style={styles.text}>
-                          {translate('common.max').toUpperCase()}
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  }
-                />
-              </View>
-              <Separator />
               <OperationInput
-                labelInput={capitalize(translate('common.memo'))}
-                placeholder={translate('wallet.operations.transfer.memo')}
-                value={memo}
-                onChangeText={setMemo}
+                keyboardType="decimal-pad"
+                labelInput={capitalize(translate('common.amount'))}
+                placeholder={capitalizeSentence(
+                  translate('common.enter_amount'),
+                )}
+                value={amount}
+                onChangeText={setAmount}
+                additionalInputContainerStyle={{
+                  marginHorizontal: 0,
+                }}
+                additionalOuterContainerStyle={{
+                  width: '54%',
+                }}
                 inputStyle={styles.text}
                 rightIcon={
                   <View style={styles.flexRowCenter}>
@@ -412,89 +232,263 @@ const Transfer = ({
                         16,
                       )}
                     />
-                    <Icon
-                      name={isMemoEncrypted ? 'encrypt' : 'decrypt'}
-                      theme={theme}
-                      onClick={() => setIsMemoEncrypted(!isMemoEncrypted)}
-                    />
+                    <TouchableOpacity onPress={() => setAmount(tokenBalance)}>
+                      <Text style={styles.text}>
+                        {translate('common.max').toUpperCase()}
+                      </Text>
+                    </TouchableOpacity>
                   </View>
                 }
               />
-              <Separator />
-              <OptionsToggle
-                theme={theme}
-                title={translate('common.recurrent_transfer')}
-                toggled={isRecurrent}
-                callback={(toggled) => {
-                  setRecurrent(toggled);
-                }}>
-                <Separator />
-                <OperationInput
-                  labelInput={translate('wallet.operations.transfer.frecuency')}
-                  labelExtraInfo={capitalizeSentence(
-                    translate('wallet.operations.transfer.frecuency_minimum'),
-                  )}
-                  placeholder={translate(
-                    'wallet.operations.transfer.frecuency',
-                  )}
-                  value={recurrence}
-                  onChangeText={setRecurrence}
-                  keyboardType={'number-pad'}
-                  inputStyle={styles.text}
-                />
-                <Separator />
-                <OperationInput
-                  labelInput={translate(
-                    'wallet.operations.transfer.iterations',
-                  )}
-                  labelExtraInfo={capitalizeSentence(
-                    translate('wallet.operations.transfer.iterations_minimum'),
-                  )}
-                  placeholder={translate(
-                    'wallet.operations.transfer.iterations',
-                  )}
-                  value={exec}
-                  onChangeText={setExec}
-                  keyboardType={'number-pad'}
-                  inputStyle={styles.text}
-                />
-              </OptionsToggle>
-              <Separator />
-            </ScrollView>
-            <View style={styles.operationButtonsContainer}>
-              <EllipticButton
-                title={translate('common.send')}
-                onPress={() => {
-                  if (
-                    !amount.length ||
-                    !to.length ||
-                    (isRecurrent &&
-                      (exec.trim().length === 0 ||
-                        recurrence.trim().length === 0))
-                  ) {
-                    Toast.show(
-                      translate(
-                        'wallet.operations.transfer.warning.missing_info',
-                      ),
-                    );
-                  } else {
-                    setStep(2);
-                  }
-                }}
-                //TODO important need testing in IOS
-                style={getButtonStyle(theme).warningStyleButton}
-                additionalTextStyle={{...button_link_primary_medium}}
-              />
             </View>
+            <Separator />
+            <OperationInput
+              labelInput={capitalize(translate('common.memo'))}
+              placeholder={translate('wallet.operations.transfer.memo')}
+              value={memo}
+              onChangeText={setMemo}
+              inputStyle={styles.text}
+              rightIcon={
+                <View style={styles.flexRowCenter}>
+                  <Separator
+                    drawLine
+                    additionalLineStyle={getHorizontalLineStyle(
+                      theme,
+                      1,
+                      35,
+                      16,
+                    )}
+                  />
+                  <Icon
+                    name={isMemoEncrypted ? 'encrypt' : 'decrypt'}
+                    theme={theme}
+                    onClick={() => setIsMemoEncrypted(!isMemoEncrypted)}
+                  />
+                </View>
+              }
+            />
+            <Separator />
+            <OptionsToggle
+              theme={theme}
+              title={translate('common.recurrent_transfer')}
+              toggled={isRecurrent}
+              callback={(toggled) => {
+                setRecurrent(toggled);
+              }}>
+              <Separator />
+              <OperationInput
+                labelInput={translate('wallet.operations.transfer.frecuency')}
+                labelExtraInfo={capitalizeSentence(
+                  translate('wallet.operations.transfer.frecuency_minimum'),
+                )}
+                placeholder={translate('wallet.operations.transfer.frecuency')}
+                value={recurrence}
+                onChangeText={setRecurrence}
+                keyboardType={'number-pad'}
+                inputStyle={styles.text}
+              />
+              <Separator />
+              <OperationInput
+                labelInput={translate('wallet.operations.transfer.iterations')}
+                labelExtraInfo={capitalizeSentence(
+                  translate('wallet.operations.transfer.iterations_minimum'),
+                )}
+                placeholder={translate('wallet.operations.transfer.iterations')}
+                value={exec}
+                onChangeText={setExec}
+                keyboardType={'number-pad'}
+                inputStyle={styles.text}
+              />
+            </OptionsToggle>
+            <Separator />
+          </>
+        }
+        childrenBottom={
+          <View style={styles.operationButtonsContainer}>
+            <EllipticButton
+              title={translate('common.send')}
+              onPress={() => {
+                if (
+                  !amount.length ||
+                  !to.length ||
+                  (isRecurrent &&
+                    (exec.trim().length === 0 ||
+                      recurrence.trim().length === 0))
+                ) {
+                  Toast.show(
+                    translate(
+                      'wallet.operations.transfer.warning.missing_info',
+                    ),
+                  );
+                } else {
+                  setStep(2);
+                }
+              }}
+              //TODO important need testing in IOS
+              style={getButtonStyle(theme).warningStyleButton}
+              additionalTextStyle={{...button_link_primary_medium}}
+            />
           </View>
-        </>
-      </Background>
+        }
+      />
     );
   } else {
     return (
-      <Confirmation
-        childrenTop={renderConfirmationChildrenTop()}
-        childrenBottom={renderConfirmationChildrenBottom()}
+      <OperationThemed
+        childrenTop={<Separator height={50} />}
+        childrenMiddle={
+          <View style={styles.confirmationContainer}>
+            <Separator height={35} />
+            <Text style={[styles.text, styles.info]}>
+              {capitalizeSentence(
+                translate('wallet.operations.transfer.confirm.info'),
+              )}
+            </Text>
+            <Separator />
+            <Text style={[styles.text, styles.warning]}>
+              {
+                getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
+                  .warning
+              }
+            </Text>
+            <Separator />
+            <View style={styles.justifyCenter}>
+              <View style={[styles.flexRowBetween, styles.width95]}>
+                <Text style={[styles.text, styles.title]}>
+                  {translate('wallet.operations.transfer.confirm.from')}
+                </Text>
+                <Text
+                  style={[
+                    styles.text,
+                    styles.textContent,
+                  ]}>{`@${user.account.name}`}</Text>
+              </View>
+              <Separator
+                drawLine
+                height={0.5}
+                additionalLineStyle={styles.bottomLine}
+              />
+            </View>
+            <Separator />
+            <View style={styles.justifyCenter}>
+              <View style={[styles.flexRowBetween, styles.width95]}>
+                <Text style={[styles.text, styles.title]}>
+                  {translate('wallet.operations.transfer.confirm.to')}
+                </Text>
+                <Text style={[styles.text, styles.textContent]}>{`@${to} ${
+                  getTransferWarning(
+                    phishingAccounts,
+                    to,
+                    currency,
+                    !!memo,
+                    memo,
+                  ).exchange
+                    ? '(exchange)'
+                    : ''
+                }`}</Text>
+              </View>
+              <Separator
+                drawLine
+                height={0.5}
+                additionalLineStyle={styles.bottomLine}
+              />
+            </View>
+            <Separator />
+            <View style={styles.justifyCenter}>
+              <View style={[styles.flexRowBetween, styles.width95]}>
+                <Text style={[styles.text, styles.title]}>
+                  {translate('wallet.operations.transfer.confirm.amount')}
+                </Text>
+                <Text
+                  style={[
+                    styles.text,
+                    styles.textContent,
+                  ]}>{`${amount} ${currency}`}</Text>
+              </View>
+              <Separator
+                drawLine
+                height={0.5}
+                additionalLineStyle={styles.bottomLine}
+              />
+            </View>
+            {memo.length ? (
+              <>
+                <Separator />
+                <View style={styles.justifyCenter}>
+                  <View style={[styles.flexRowBetween, styles.width95]}>
+                    <Text style={[styles.text, styles.title]}>
+                      {translate('wallet.operations.transfer.confirm.memo')}
+                    </Text>
+                    <Text style={[styles.text, styles.textContent]}>{`${memo} ${
+                      isMemoEncrypted ? '(encrypted)' : ''
+                    }`}</Text>
+                  </View>
+                  <Separator
+                    drawLine
+                    height={0.5}
+                    additionalLineStyle={styles.bottomLine}
+                  />
+                </View>
+              </>
+            ) : null}
+            <Separator />
+            {isRecurrent ? (
+              <>
+                <View style={styles.justifyCenter}>
+                  <View style={[styles.flexRowBetween, styles.width95]}>
+                    <Text style={[styles.text, styles.title]}>
+                      {translate(
+                        'wallet.operations.transfer.confirm.recurrence',
+                      )}
+                    </Text>
+                    <Text style={[styles.text, styles.textContent]}>
+                      {translate(
+                        'wallet.operations.transfer.confirm.recurrenceData',
+                        {
+                          exec,
+                          recurrence,
+                        },
+                      )}
+                    </Text>
+                  </View>
+                  <Separator
+                    drawLine
+                    height={0.5}
+                    additionalLineStyle={styles.bottomLine}
+                  />
+                </View>
+              </>
+            ) : null}
+          </View>
+        }
+        childrenBottom={
+          <View style={styles.operationButtonsContainer}>
+            <EllipticButton
+              title={translate('common.back')}
+              onPress={() => setStep(1)}
+              //TODO important need testing in IOS
+              style={[
+                getButtonStyle(theme).secondaryButton,
+                styles.operationButton,
+              ]}
+              additionalTextStyle={[
+                styles.operationButtonText,
+                styles.buttonTextColor,
+              ]}
+            />
+            <ActiveOperationButton
+              title={translate('common.confirm')}
+              onPress={onSend}
+              style={[
+                getButtonStyle(theme).warningStyleButton,
+                styles.operationButton,
+              ]}
+              additionalTextStyle={styles.operationButtonText}
+              isLoading={loading}
+            />
+          </View>
+        }
+        renderBottomBg
       />
     );
   }
@@ -504,20 +498,6 @@ const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
   StyleSheet.create({
     warning: {color: 'red'},
     title: {fontSize: 16},
-    innerContainer: {
-      flex: 1,
-      borderTopLeftRadius: 40,
-      borderTopRightRadius: 40,
-      borderWidth: 1,
-      backgroundColor: getColors(theme).secondaryCardBgColor,
-      borderColor: getColors(theme).cardBorderColorJustDark,
-      paddingHorizontal: 10,
-      justifyContent: 'space-between',
-    },
-    backgroundSvgImage: {
-      top: theme === Theme.LIGHT ? -30 : 0,
-      opacity: 1,
-    },
     flexRowCenter: {
       flexDirection: 'row',
       alignItems: 'center',

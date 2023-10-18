@@ -1,4 +1,5 @@
 import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
+import {showModal} from 'actions/message';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import HiveEngineAccountValue from 'components/hive/HiveEngineAccountValue';
@@ -49,6 +50,7 @@ const Tokens = ({
   prices,
   tokensMarket,
   new_ui,
+  showModal,
 }: PropsFromRedux & TokensProps) => {
   const [
     filteredUserTokenBalanceList,
@@ -167,7 +169,8 @@ const Tokens = ({
           <Icon
             name={'settings-2'}
             theme={theme}
-            onClick={() => console.log('TODO settings onPress')}
+            //Testing modal bellow, remove code //TODO
+            onClick={() => showModal(true, 'Sample Message!!!')}
             additionalContainerStyle={styles.iconButton}
           />
           <Icon
@@ -269,6 +272,7 @@ const connector = connect(mapStateToProps, {
   loadTokens,
   loadUserTokens,
   loadTokensMarket,
+  showModal,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(Tokens);

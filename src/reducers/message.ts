@@ -4,10 +4,11 @@ import {RESET_MODAL, SHOW_MODAL} from 'actions/types';
 const INITIAL_STATE: MessageModalPayload = {
   show: false,
   message: '',
+  isError: false,
 };
 
 export default (
-  state: {show: boolean; message: string} = INITIAL_STATE,
+  state: {show: boolean; message: string; isError?: boolean} = INITIAL_STATE,
   {type, payload}: ActionPayload<MessageModalPayload>,
 ) => {
   switch (type) {

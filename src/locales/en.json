@@ -64,7 +64,8 @@
     },
     "currency": "Currency",
     "max": "Max",
-    "recurrent_transfer": "Recurrent transfer"
+    "recurrent_transfer": "Recurrent transfer",
+    "token": "Token"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -184,7 +185,9 @@
       "token_stake": {
         "title": "Stake",
         "titled": "Staked",
-        "staking_token": "Staking {{currency}}"
+        "staking": "Staking",
+        "staking_token": "Staking {{currency}}",
+        "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient"
       },
       "token_unstake": {
         "title": "Unstake",

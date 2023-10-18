@@ -1,18 +1,24 @@
 import Background from 'components/ui/Background';
 import {BackgroundHexagons} from 'components/ui/BackgroundHexagons';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import Separator from 'components/ui/Separator';
 import React, {useContext} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-//TODO remove component after working with operations.
-interface ConfirmationProps {
-  childrenTop: JSX.Element;
+
+interface OperationProps {
+  childrenTop?: JSX.Element;
+  childrenMiddle: JSX.Element;
   childrenBottom: JSX.Element;
+  renderBottomBg?: boolean;
 }
 
-const Confirmation = ({childrenBottom, childrenTop}: ConfirmationProps) => {
+const OperationThemed = ({
+  childrenBottom,
+  childrenTop,
+  childrenMiddle,
+  renderBottomBg,
+}: OperationProps) => {
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
 
@@ -23,13 +29,10 @@ const Confirmation = ({childrenBottom, childrenTop}: ConfirmationProps) => {
       additionalBgSvgImageStyle={styles.backgroundSvgImage}>
       <>
         <FocusAwareStatusBar />
-        <Separator height={50} />
+        {childrenTop}
         <View style={styles.contentContainer}>
-          <BackgroundHexagons theme={theme} />
-          <ScrollView>
-            <Separator height={35} />
-            {childrenTop}
-          </ScrollView>
+          {renderBottomBg && <BackgroundHexagons theme={theme} />}
+          <ScrollView>{childrenMiddle}</ScrollView>
           {childrenBottom}
         </View>
       </>
@@ -55,4 +58,4 @@ const getStyles = (theme: Theme) =>
     },
   });
 
-export default Confirmation;
+export default OperationThemed;

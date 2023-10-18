@@ -223,6 +223,7 @@ export interface Account {
 export interface MessageModalPayload {
   show: boolean;
   message: string;
+  isError?: boolean;
 }
 
 export interface AccountsPayload {

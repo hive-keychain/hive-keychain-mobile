@@ -69,8 +69,6 @@ const EngineTokenDisplay = ({
       color="black"
       amountStyle={styles.amount}
       value={parseFloat(token.balance)}
-      //TODO review this value & fix later on
-      //Quentin notes: Oh might be due to missing tokens. We used to get the first 1000 tokens, there are more now. Check on the extension dev branch, I fixed this issue recently, you can fix that on mobile dev and I'll push asap
       totalValue={getHiveEngineTokenValue(token, market)}
       toggled={toggled}
       setToggle={setToggle}
@@ -123,7 +121,7 @@ const EngineTokenDisplay = ({
   );
 };
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
-  //TODO bellow removed unused styles
+  //TODO bellow removed unused styles after refactoring
   StyleSheet.create({
     icon: {width: width / 12, height: width / 12},
     amount: {fontWeight: 'bold', fontSize: 15},

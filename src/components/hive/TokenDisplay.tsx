@@ -1,6 +1,7 @@
 import {Currency, Token} from 'actions/interfaces';
 import DelegationsList from 'components/operations/DelegationsList';
 import RoundButton from 'components/operations/OperationsButtons';
+import {StakeTokenOperationProps} from 'components/operations/StakeToken';
 import React from 'react';
 import {
   Linking,
@@ -157,7 +158,15 @@ const TokenDisplay = ({
               renderAsSquareButton(
                 <Icon name="3d_cube" theme={theme} width={10} height={10} />,
                 translate('wallet.operations.token_stake.title'),
-                () => {},
+                () =>
+                  navigate('Operation', {
+                    operation: 'stake',
+                    props: {
+                      currency: currency,
+                      balance: tokenBalance.balance,
+                      tokenLogo: logo,
+                    } as StakeTokenOperationProps,
+                  }),
               )}
             {tokenInfo.stakingEnabled &&
               //TODO finish bellow, render using Operation stack / add icon's click
