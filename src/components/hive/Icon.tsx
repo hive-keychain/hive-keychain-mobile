@@ -301,14 +301,14 @@ const getIconFilePath = (
     case name === '3d_cube':
       return (
         <Cube3dScanIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === '3d_cube_rotate':
       return (
         <Cube3dRotate
-          style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );

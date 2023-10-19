@@ -199,6 +199,7 @@
       },
       "token_delegation": {
         "title": "Delegate",
+        "delegating": "Delegating",
         "delegating_token": "Delegating {{currency}}",
         "cancel_delegation": "Cancelling Delegation {{currency}}",
         "title_confirm_cancel_delegation": "Please confirm you want to cancel a {{amount}} {{currency}} Token Delegation",
@@ -212,7 +213,8 @@
         "disclaimer_hbd": "Your HBD will take 3.5 days to get converted to approximately USD worth of HIVE tokens, based on its 3.5 days median price.",
         "fill_convert_request": "Filled conversion:",
         "start_convert": "conversion",
-        "start_collateralized_convert": "collateralized conversion"
+        "start_collateralized_convert": "collateralized conversion",
+        "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient."
       },
       "tokens": {
         "info_author_reward": {

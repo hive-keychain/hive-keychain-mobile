@@ -1,5 +1,6 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
 import {TransferOperationProps} from 'components/operations/Transfer';
@@ -32,11 +33,12 @@ export type RootStackParam = {
   TokensHistory: TokenHistoryProps;
   //TODO test adding bellow other types.
   Operation: {
-    operation: 'transfer' | 'stake' | 'unstake';
+    operation: 'transfer' | 'stake' | 'unstake' | 'delegate';
     props:
       | TransferOperationProps
       | StakeTokenOperationProps
-      | UnstakeTokenOperationProps;
+      | UnstakeTokenOperationProps
+      | DelegateTokenOperationProps;
   };
 };
 

@@ -11,6 +11,9 @@ import {translate} from 'utils/localize';
 //TODO use just icon + add the exported only version from figma
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
+import DelegateToken, {
+  DelegateTokenOperationProps,
+} from 'components/operations/DelegateToken';
 import StakeToken, {
   StakeTokenOperationProps,
 } from 'components/operations/StakeToken';
@@ -27,7 +30,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
   const {operation, props} = route.params;
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
-
+  console.log({operation, props}); //TODO remove line
   const getTitle = () => {
     switch (operation) {
       case 'transfer':
@@ -44,6 +47,10 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return `${capitalize(
           translate('wallet.operations.token_unstake.unstaking'),
         )} ${translate('common.token')}`;
+      case 'delegate':
+        return `${capitalize(
+          translate('wallet.operations.token_delegation.delegating'),
+        )} ${translate('common.token')}`;
     }
   };
 
@@ -55,6 +62,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return <StakeToken {...(props as StakeTokenOperationProps)} />;
       case 'unstake':
         return <UnstakeToken {...(props as UnstakeTokenOperationProps)} />;
+      case 'delegate':
+        return <DelegateToken {...(props as DelegateTokenOperationProps)} />;
     }
   };
 

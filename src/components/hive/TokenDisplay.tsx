@@ -1,4 +1,5 @@
 import {Currency, Token} from 'actions/interfaces';
+import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
 import DelegationsList from 'components/operations/DelegationsList';
 import RoundButton from 'components/operations/OperationsButtons';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
@@ -206,7 +207,6 @@ const TokenDisplay = ({
                   }),
               )}
             {tokenInfo.delegationEnabled &&
-              //TODO finish bellow, render using Operation stack / add icon's click
               renderAsSquareButton(
                 <Icon
                   name="delegate_vesting_shares"
@@ -215,7 +215,15 @@ const TokenDisplay = ({
                   height={10}
                 />,
                 translate('wallet.operations.token_delegation.title'),
-                () => {},
+                () =>
+                  navigate('Operation', {
+                    operation: 'delegate',
+                    props: {
+                      currency: currency,
+                      balance: tokenBalance.stake,
+                      tokenLogo: logo,
+                    } as DelegateTokenOperationProps,
+                  }),
               )}
           </View>
         </View>
