@@ -32,6 +32,7 @@ const hiddenRoutesInMain = [
   'Tokens',
   'TokensHistory',
   'Operation',
+  'GeneralStack',
 ];
 
 const HeaderContent = (props: Props) => {

@@ -11,6 +11,9 @@ import {translate} from 'utils/localize';
 //TODO use just icon + add the exported only version from figma
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
+import CancelTokenDelegation, {
+  CancelTokenDelegationOperationProps,
+} from 'components/operations/Cancel-token-delegation';
 import DelegateToken, {
   DelegateTokenOperationProps,
 } from 'components/operations/DelegateToken';
@@ -51,6 +54,10 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return `${capitalize(
           translate('wallet.operations.token_delegation.delegating'),
         )} ${translate('common.token')}`;
+      case 'cancel_delegation':
+        return `${capitalize(
+          translate('wallet.operations.token_delegation.cancelling_delegation'),
+        )} ${translate('common.token')}`;
     }
   };
 
@@ -64,6 +71,12 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return <UnstakeToken {...(props as UnstakeTokenOperationProps)} />;
       case 'delegate':
         return <DelegateToken {...(props as DelegateTokenOperationProps)} />;
+      case 'cancel_delegation':
+        return (
+          <CancelTokenDelegation
+            {...(props as CancelTokenDelegationOperationProps)}
+          />
+        );
     }
   };
 

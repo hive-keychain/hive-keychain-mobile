@@ -1,6 +1,7 @@
 import {Currency, Token} from 'actions/interfaces';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
 import DelegationsList from 'components/operations/DelegationsList';
+import IncomingOutGoingTokenDelegations from 'components/operations/IncomingOutGoingTokenDelegations';
 import RoundButton from 'components/operations/OperationsButtons';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
 import {UnstakeTokenOperationProps} from 'components/operations/UnstakeToken';
@@ -146,14 +147,70 @@ const TokenDisplay = ({
             {translate('wallet.operations.tokens.liquid_balance')} :{' '}
             {value ? formatBalance(value) : 0}
           </Text>
-          <Text style={styles.textBodyItem}>
-            {translate('wallet.operations.tokens.incoming')} :{' '}
-            {tokenBalance.delegationsIn}
-          </Text>
-          <Text style={styles.textBodyItem}>
-            {translate('wallet.operations.tokens.outgoing')} :{' '}
-            {tokenBalance.delegationsOut}
-          </Text>
+          {parseFloat(tokenBalance.delegationsIn) > 0 && (
+            <View style={styles.flexRowAligned}>
+              <Text style={styles.textBodyItem}>
+                {translate('wallet.operations.tokens.incoming')} :{' '}
+                {tokenBalance.delegationsIn}
+              </Text>
+              <Icon
+                name="logout"
+                theme={theme}
+                width={15}
+                height={15}
+                additionalContainerStyle={[
+                  styles.containerMarginLeft,
+                  styles.invertXAxis,
+                ]}
+                onClick={() =>
+                  navigate('GeneralStack', {
+                    titleScreen: 'Incoming',
+                    component: (
+                      <IncomingOutGoingTokenDelegations
+                        delegationType="incoming"
+                        total={tokenBalance.delegationsIn}
+                        token={tokenBalance}
+                        tokenLogo={logo}
+                        tokenInfo={tokenInfo}
+                      />
+                    ),
+                  })
+                }
+              />
+            </View>
+          )}
+          {parseFloat(tokenBalance.delegationsOut) > 0 && (
+            <View style={styles.flexRowAligned}>
+              <Text style={styles.textBodyItem}>
+                {translate('wallet.operations.tokens.outgoing')} :{' '}
+                {tokenBalance.delegationsOut}
+              </Text>
+              <Icon
+                name="logout"
+                theme={theme}
+                width={15}
+                height={15}
+                additionalContainerStyle={styles.containerMarginLeft}
+                //TODO finish connection to test:
+                //  1. outgoing/incoming
+                //  2. cancelTokenDelegation.
+                onClick={() =>
+                  navigate('GeneralStack', {
+                    titleScreen: 'Outgoing',
+                    component: (
+                      <IncomingOutGoingTokenDelegations
+                        delegationType="outgoing"
+                        total={tokenBalance.delegationsOut}
+                        token={tokenBalance}
+                        tokenLogo={logo}
+                        tokenInfo={tokenInfo}
+                      />
+                    ),
+                  })
+                }
+              />
+            </View>
+          )}
           {tokenInfo.stakingEnabled && tokenBalance.stake && (
             <Text style={styles.textBodyItem}>
               {translate('wallet.operations.tokens.total_staked')} :{' '}
@@ -379,6 +436,7 @@ const getDimensionedStyles = ({
       alignItems: 'center',
       justifyContent: 'space-between',
     },
+    flexRowAligned: {flexDirection: 'row', alignItems: 'center'},
     flexColumnCentered: {
       flexDirection: 'column',
       justifyContent: 'center',
@@ -471,6 +529,9 @@ const getDimensionedStyles = ({
         title_secondary_body_3.fontSize,
       ),
       letterSpacing: -0.4,
+    },
+    invertXAxis: {
+      transform: [{rotateY: '180deg'}],
     },
   });
 type Styles = ReturnType<typeof getDimensionedStyles>;

@@ -9,7 +9,7 @@ import {getColors} from 'src/styles/colors';
 interface OperationProps {
   childrenTop?: JSX.Element;
   childrenMiddle: JSX.Element;
-  childrenBottom: JSX.Element;
+  childrenBottom?: JSX.Element;
   renderBottomBg?: boolean;
 }
 

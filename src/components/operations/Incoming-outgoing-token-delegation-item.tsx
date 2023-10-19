@@ -1,4 +1,5 @@
 import {Token, TokenBalance} from 'actions/interfaces';
+import Icon from 'components/hive/Icon';
 import React, {useState} from 'react';
 import {
   StyleSheet,
@@ -8,6 +9,9 @@ import {
   View,
 } from 'react-native';
 import ClearIcon from 'src/assets/wallet/icon_delete_black.svg';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {title_primary_body_2} from 'src/styles/typography';
 import {TokenDelegation} from 'utils/hiveEngine';
 import {goBack, navigate} from 'utils/navigation';
 import CancelTokenDelegation from './Cancel-token-delegation';
@@ -20,6 +24,7 @@ type Props = {
   tokenLogo: JSX.Element;
   token: TokenBalance;
   tokenInfo: Token;
+  theme: Theme;
 };
 
 const IncomingOutGoingTokenDelegationItem = ({
@@ -28,6 +33,7 @@ const IncomingOutGoingTokenDelegationItem = ({
   tokenLogo,
   token,
   tokenInfo,
+  theme,
 }: Props) => {
   const [isOutGoingDelegation, setIsOutGoingDelegation] = useState(
     delegationType === 'outgoing',
@@ -40,6 +46,7 @@ const IncomingOutGoingTokenDelegationItem = ({
   };
 
   const navigateToModalScreen = () => {
+    //TODO check what to do/update bellow
     navigate('ModalScreen', {
       name: 'EngineTokenInfo',
       modalContent: (
@@ -54,6 +61,7 @@ const IncomingOutGoingTokenDelegationItem = ({
   };
 
   const handleCancelTokenDelegation = () => {
+    //TODO update bellow using Operation Stack...
     navigate('ModalScreen', {
       name: 'CancelDelegateToken',
       modalContent: (
@@ -87,6 +95,8 @@ const IncomingOutGoingTokenDelegationItem = ({
       ),
     });
   };
+
+  const styles = getStyles(theme);
 
   return (
     <View style={styles.container}>
@@ -129,8 +139,17 @@ const IncomingOutGoingTokenDelegationItem = ({
         </View>
       ) : (
         <View style={styles.delegationItemContainer}>
-          <Text>@{tokenDelegation.from}</Text>
-          <Text>
+          <View style={styles.flexRow}>
+            <Icon
+              name="at"
+              theme={theme}
+              width={15}
+              height={15}
+              additionalContainerStyle={styles.marginRight}
+            />
+            <Text style={styles.textItem}>{tokenDelegation.from}</Text>
+          </View>
+          <Text style={styles.textItem}>
             {tokenDelegation.quantity} {tokenDelegation.symbol}
           </Text>
         </View>
@@ -139,33 +158,48 @@ const IncomingOutGoingTokenDelegationItem = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  delegationItemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 6,
-    paddingHorizontal: 15,
-  },
-  customInputStyle: {
-    width: '40%',
-    borderWidth: 1,
-    marginTop: 4,
-    marginBottom: 4,
-    borderRadius: 8,
-    marginLeft: 4,
-    padding: 6,
-  },
-  buttonRowContainer: {
-    flexDirection: 'row',
-  },
-  smallButton: {
-    marginVertical: 3,
-    paddingVertical: 5,
-  },
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    delegationItemContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: 19,
+      paddingHorizontal: 15,
+      borderRadius: 66,
+      borderWidth: 1,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+    },
+    customInputStyle: {
+      width: '40%',
+      borderWidth: 1,
+      marginTop: 4,
+      marginBottom: 4,
+      borderRadius: 8,
+      marginLeft: 4,
+      padding: 6,
+    },
+    buttonRowContainer: {
+      flexDirection: 'row',
+    },
+    smallButton: {
+      marginVertical: 3,
+      paddingVertical: 5,
+    },
+    flexRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    textItem: {
+      color: getColors(theme).secondaryText,
+      ...title_primary_body_2,
+    },
+    marginRight: {
+      marginRight: 3,
+    },
+  });
 
 export default IncomingOutGoingTokenDelegationItem;

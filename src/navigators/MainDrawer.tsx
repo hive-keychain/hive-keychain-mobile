@@ -14,6 +14,7 @@ import AccountManagementStack from './mainDrawerStacks/AccountManagement';
 import Accounts from './mainDrawerStacks/Accounts';
 import AddAccountStack from './mainDrawerStacks/AddAccount';
 import CreateAccount from './mainDrawerStacks/CreateAccount';
+import GeneralStack from './mainDrawerStacks/GeneralStack';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 import Operation from './mainDrawerStacks/Operation';
 import Tokens from './mainDrawerStacks/Tokens';
@@ -78,6 +79,7 @@ export default () => {
       <Drawer.Screen name="Tokens" component={Tokens} />
       <Drawer.Screen name="TokensHistory" component={TokensHistory} />
       <Drawer.Screen name="Operation" component={Operation} />
+      <Drawer.Screen name="GeneralStack" component={GeneralStack} />
     </Drawer.Navigator>
   );
 };

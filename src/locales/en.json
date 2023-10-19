@@ -65,7 +65,8 @@
     "currency": "Currency",
     "max": "Max",
     "recurrent_transfer": "Recurrent transfer",
-    "token": "Token"
+    "token": "Token",
+    "total": "Total"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -202,6 +203,7 @@
         "delegating": "Delegating",
         "delegating_token": "Delegating {{currency}}",
         "cancel_delegation": "Cancelling Delegation {{currency}}",
+        "cancelling_delegation": "Cancelling Delegation",
         "title_confirm_cancel_delegation": "Please confirm you want to cancel a {{amount}} {{currency}} Token Delegation",
         "in": "Delegation in",
         "out": "Delegation out",

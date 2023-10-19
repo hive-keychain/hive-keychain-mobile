@@ -1,5 +1,6 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {CancelTokenDelegationOperationProps} from 'components/operations/Cancel-token-delegation';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
@@ -31,14 +32,23 @@ export type RootStackParam = {
     renderButtonElement?: JSX.Element;
   };
   TokensHistory: TokenHistoryProps;
-  //TODO test adding bellow other types.
   Operation: {
-    operation: 'transfer' | 'stake' | 'unstake' | 'delegate';
+    operation:
+      | 'transfer'
+      | 'stake'
+      | 'unstake'
+      | 'delegate'
+      | 'cancel_delegation';
     props:
       | TransferOperationProps
       | StakeTokenOperationProps
       | UnstakeTokenOperationProps
-      | DelegateTokenOperationProps;
+      | DelegateTokenOperationProps
+      | CancelTokenDelegationOperationProps;
+  };
+  GeneralStack: {
+    titleScreen: string;
+    component: JSX.Element; //TODO check what type is better
   };
 };
 
@@ -80,4 +90,19 @@ export type OperationNavigationRoute = RouteProp<RootStackParam, 'Operation'>;
 export type OperationNavigationProps = {
   navigation: OperationNavigation;
   route: OperationNavigationRoute;
+};
+
+export type GeneralStackNavigation = StackNavigationProp<
+  RootStackParam,
+  'GeneralStack'
+>;
+
+export type GeneralStackNavigationRoute = RouteProp<
+  RootStackParam,
+  'GeneralStack'
+>;
+
+export type GeneralStackNavigationProps = {
+  navigation: GeneralStackNavigation;
+  route: GeneralStackNavigationRoute;
 };
