@@ -1,5 +1,6 @@
 import {loadAccount, loadUserTokens} from 'actions/index';
 import {KeyTypes, Token} from 'actions/interfaces';
+import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Separator from 'components/ui/Separator';
@@ -47,6 +48,7 @@ const UnstakeToken = ({
   tokenInfo,
   loadUserTokens,
   gobackAction,
+  showModal,
 }: Props) => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
@@ -81,26 +83,24 @@ const UnstakeToken = ({
 
       if (confirmationResult && confirmationResult.confirmed) {
         if (confirmationResult.error) {
-          //TODO add showModal action.
-          Toast.show(
+          showModal(
+            true,
             translate('toast.hive_engine_error', {
               error: confirmationResult.error,
             }),
-            Toast.LONG,
+            true,
           );
         } else {
-          Toast.show(
-            translate('toast.token_unstake_success', {currency}),
-            Toast.LONG,
-          );
+          showModal(true, translate('toast.token_unstake_success', {currency}));
         }
       } else {
-        Toast.show(translate('toast.token_timeout'), Toast.LONG);
+        showModal(true, translate('toast.token_timeout'), true);
       }
     } else {
-      Toast.show(
+      showModal(
+        true,
         translate('toast.tokens_operation_failed', {tokenOperation: 'unstake'}),
-        Toast.LONG,
+        true,
       );
     }
 
@@ -113,7 +113,7 @@ const UnstakeToken = ({
   const {theme} = useContext(ThemeContext);
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, theme);
-  //TODO finish stake, then move to delegateToken & undelegateToken
+
   return (
     <OperationThemed
       childrenTop={
@@ -211,49 +211,6 @@ const UnstakeToken = ({
         />
       }
     />
-    // <Operation
-    //   logo={renderIconComponent()}
-    //   title={translate('wallet.operations.token_unstake.unstaking_token', {
-    //     currency,
-    //   })}>
-    //   <>
-    //     <Text>
-    //       {translate('wallet.operations.token_unstake.cooldown_disclaimer', {
-    //         unstakingCooldown: tokenInfo.unstakingCooldown,
-    //       })}
-    //       {tokenInfo.unstakingCooldown === 1 ? '' : 's'}
-    //     </Text>
-    //     <Separator />
-    //     <Balance
-    //       currency={currency}
-    //       account={user.account}
-    //       isHiveEngine
-    //       globalProperties={properties.globals}
-    //       setMax={(value: string) => {
-    //         setAmount(value);
-    //       }}
-    //       tokenLogo={tokenLogo}
-    //       tokenBalance={balance}
-    //     />
-    //     <Separator />
-    //     <OperationInput
-    //       placeholder={'0.000'}
-    //       keyboardType="decimal-pad"
-    //       rightIcon={<Text style={styles.currency}>{currency}</Text>}
-    //       textAlign="right"
-    //       value={amount}
-    //       onChangeText={setAmount}
-    //     />
-
-    //     <Separator height={40} />
-    //     <ActiveOperationButton
-    //       title={translate('common.unstake')}
-    //       onPress={onUnstakeToken}
-    //       style={styles.button}
-    //       isLoading={loading}
-    //     />
-    //   </>
-    // </Operation>
   );
 };
 
@@ -300,7 +257,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {loadAccount, loadUserTokens},
+  {loadAccount, loadUserTokens, showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

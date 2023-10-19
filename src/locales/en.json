@@ -298,7 +298,9 @@
         "total_value": "Total Value",
         "liquid_balance": "Liquid Balance",
         "incoming": "Incoming Delegation",
-        "outgoing": "Outgoing Delegation"
+        "outgoing": "Outgoing Delegation",
+        "total_staked": "Total Staked",
+        "pending_unstake": "Pending Unstake"
       },
       "buy_coins": {
         "title_hive": "HIVE",

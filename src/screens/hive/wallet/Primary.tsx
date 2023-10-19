@@ -17,8 +17,8 @@ import {
 } from 'components/operations/OperationsButtons';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {ConnectedProps, connect} from 'react-redux';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {RootState} from 'store';
@@ -101,7 +101,7 @@ const Primary = ({
         properties={properties}
       />
       <Separator height={30} />
-
+      {/* //TODO fix all bellow when not engine tokens */}
       <TokenDisplay
         color="#A3112A"
         name="HIVE"

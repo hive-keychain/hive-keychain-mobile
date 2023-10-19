@@ -153,9 +153,22 @@ const TokenDisplay = ({
             {translate('wallet.operations.tokens.outgoing')} :{' '}
             {tokenBalance.delegationsOut}
           </Text>
+          {tokenInfo.stakingEnabled && tokenBalance.stake && (
+            <Text style={styles.textBodyItem}>
+              {translate('wallet.operations.tokens.total_staked')} :{' '}
+              {tokenBalance.stake}
+            </Text>
+          )}
+          {tokenInfo.stakingEnabled &&
+            tokenBalance.pendingUnstake &&
+            parseFloat(tokenBalance.pendingUnstake) > 0 && (
+              <Text style={styles.textBodyItem}>
+                {translate('wallet.operations.tokens.pending_unstake')} :{' '}
+                {tokenBalance.pendingUnstake}
+              </Text>
+            )}
           <View style={styles.buttonsContainer}>
             {tokenInfo.stakingEnabled &&
-              //TODO finish bellow, render using Operation stack / add icon's click
               renderAsSquareButton(
                 <Icon name="3d_cube" theme={theme} width={10} height={10} />,
                 translate('wallet.operations.token_stake.title'),
@@ -183,7 +196,10 @@ const TokenDisplay = ({
                     operation: 'unstake',
                     props: {
                       currency: currency,
-                      balance: tokenBalance.balance,
+                      balance: (
+                        parseFloat(tokenBalance.stake) -
+                        parseFloat(tokenBalance.pendingUnstake)
+                      ).toString(),
                       tokenLogo: logo,
                       tokenInfo: tokenInfo,
                     } as UnstakeTokenOperationProps,
