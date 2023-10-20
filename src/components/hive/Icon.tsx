@@ -10,10 +10,15 @@ import CategoryIcon from 'assets/new_UI/category.svg';
 import DecryptIcon from 'assets/new_UI/decrypt.svg';
 import DoubleArrowIcon from 'assets/new_UI/double-arrow.svg';
 import EncryptIcon from 'assets/new_UI/encrypt.svg';
+import ExpandThinIcon from 'assets/new_UI/expand-thin.svg';
 import EyeSlashIcon from 'assets/new_UI/eye-slash.svg';
+import GiftDeleteIcon from 'assets/new_UI/gift-delete.svg';
 import HiveAlternative from 'assets/new_UI/hive_alternative.svg';
 import ImportIcon from 'assets/new_UI/import.svg';
 import InfoCircleIcon from 'assets/new_UI/info-circle.svg';
+import CloseCircleIcon from 'assets/new_UI/linear_close-circle.svg';
+import EditIcon from 'assets/new_UI/linear_edit-2.svg';
+import CheckIcon from 'assets/new_UI/linear_tick-circle.svg';
 import LogoutIcon from 'assets/new_UI/logout.svg';
 import PolygonDown from 'assets/new_UI/polygon_down.svg';
 import PowerUpDownIcon from 'assets/new_UI/power-up-down.svg';
@@ -308,6 +313,41 @@ const getIconFilePath = (
     case name === '3d_cube_rotate':
       return (
         <Cube3dRotate
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'gift_delete' || name === 'remove':
+      return (
+        <GiftDeleteIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'edit' || name === 'pencil':
+      return (
+        <EditIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'expand_thin':
+      return (
+        <ExpandThinIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'check':
+      return (
+        <CheckIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'close_circle':
+      return (
+        <CloseCircleIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
           {...dimensionsProps}
         />

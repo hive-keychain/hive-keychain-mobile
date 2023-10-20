@@ -15,8 +15,7 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 import BlockchainTransactionUtils from 'utils/tokens.utils';
-import Balance from './Balance';
-import Operation from './Operation';
+import OperationThemed from './OperationThemed';
 
 export interface CancelTokenDelegationOperationProps {
   currency: string;
@@ -67,6 +66,7 @@ const CancelDelegationToken = ({
 
       if (confirmationResult && confirmationResult.confirmed) {
         if (confirmationResult.error) {
+          //TODO add showModal
           Toast.show(
             translate('toast.hive_engine_error', {
               error: confirmationResult.error,
@@ -114,48 +114,76 @@ const CancelDelegationToken = ({
     );
   };
 
+  //TODO continue bellow, cleanup & fixes.
   return (
-    <Operation
-      logo={renderIconComponent()}
-      title={translate('wallet.operations.token_delegation.cancel_delegation', {
-        currency,
-      })}>
-      <>
-        <Text>
-          {translate(
-            'wallet.operations.token_delegation.title_confirm_cancel_delegation',
-            {amount: amount, currency: currency},
-          )}
-        </Text>
-        <Separator />
-        <Balance
-          currency={currency}
-          account={user.account}
-          isHiveEngine
-          tokenLogo={tokenLogo}
-          tokenBalance={amount}
-        />
+    <OperationThemed
+      childrenTop={<Separator height={20} />}
+      childrenMiddle={
+        <>
+          <Separator />
+          <Text>
+            {translate(
+              'wallet.operations.token_delegation.title_confirm_cancel_delegation',
+              {amount: amount, currency: currency},
+            )}
+          </Text>
+          <Separator />
 
-        <Separator />
+          <Text>@{from}</Text>
 
-        <Text>@{from}</Text>
-
-        <Separator height={40} />
-
+          <Separator height={40} />
+        </>
+      }
+      childrenBottom={
         <ActiveOperationButton
           title={translate('common.confirm')}
           onPress={onCancelDelegateToken}
           style={styles.button}
           isLoading={loading}
         />
-      </>
-    </Operation>
+      }
+    />
+    // <Operation
+    //   logo={renderIconComponent()}
+    //   title={translate('wallet.operations.token_delegation.cancel_delegation', {
+    //     currency,
+    //   })}>
+    //   <>
+    //     <Text>
+    //       {translate(
+    //         'wallet.operations.token_delegation.title_confirm_cancel_delegation',
+    //         {amount: amount, currency: currency},
+    //       )}
+    //     </Text>
+    //     <Separator />
+    //     <Balance
+    //       currency={currency}
+    //       account={user.account}
+    //       isHiveEngine
+    //       tokenLogo={tokenLogo}
+    //       tokenBalance={amount}
+    //     />
+
+    //     <Separator />
+
+    //     <Text>@{from}</Text>
+
+    //     <Separator height={40} />
+
+    //     <ActiveOperationButton
+    //       title={translate('common.confirm')}
+    //       onPress={onCancelDelegateToken}
+    //       style={styles.button}
+    //       isLoading={loading}
+    //     />
+    //   </>
+    // </Operation>
   );
 };
 
 const getDimensionedStyles = (color: string) =>
   StyleSheet.create({
-    button: {backgroundColor: '#68A0B4'},
+    button: {marginBottom: 20},
     currency: {fontWeight: 'bold', fontSize: 18, color},
     rowContainer: {
       flexDirection: 'row',

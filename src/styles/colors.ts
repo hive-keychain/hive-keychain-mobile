@@ -26,6 +26,7 @@ export const BACKGROUNDITEMDARKISH = '#293144';
 export const BACKGROUNDLIGHTVARIANTLIGHTBLUE = '#E6EEF6';
 export const BACKGROUNDDARKBLUE = '#212838';
 export const LINESTROKESEPARATOR = '#EDF4FC';
+export const SECONDLINESTROKESEPARATOR = '#EAEAEA';
 export const DARKBLUELIGHTER = '#364360';
 export const BORDERWHITISH = '#EDEDED';
 
@@ -54,6 +55,7 @@ export const getColors = (theme: Theme) => {
     secondaryCardBorderColor: theme === Theme.LIGHT ? '#B4C0CF' : '#364360',
     tertiaryCardBorderColor: theme === Theme.LIGHT ? '#C7C5DE' : '#364360',
     quaternaryCardBorderColor: theme === Theme.LIGHT ? '#E1E8EF' : '#364360',
+    quinaryCardBorderColor: theme === Theme.LIGHT ? BORDERWHITISH : '#FFF',
     borderContrast: theme === Theme.LIGHT ? '#212838' : '#FFF',
     primaryRedShape:
       theme === Theme.LIGHT ? BRIGTHER_PRIMARY_RED : PRIMARY_RED_COLOR,

@@ -20,7 +20,7 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
-import {getColors} from 'src/styles/colors';
+import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {
   button_link_primary_medium,
@@ -466,22 +466,21 @@ const Transfer = ({
             <EllipticButton
               title={translate('common.back')}
               onPress={() => setStep(1)}
-              //TODO important need testing in IOS
               style={[
-                getButtonStyle(theme).secondaryButton,
                 styles.operationButton,
+                styles.operationButtonConfirmation,
               ]}
               additionalTextStyle={[
                 styles.operationButtonText,
-                styles.buttonTextColor,
+                styles.buttonTextColorDark,
               ]}
             />
             <ActiveOperationButton
               title={translate('common.confirm')}
               onPress={onSend}
               style={[
-                getButtonStyle(theme).warningStyleButton,
                 styles.operationButton,
+                getButtonStyle(theme).warningStyleButton,
               ]}
               additionalTextStyle={styles.operationButtonText}
               isLoading={loading}
@@ -541,6 +540,12 @@ const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
     operationButton: {
       width: '48%',
       marginHorizontal: 0,
+    },
+    operationButtonConfirmation: {
+      backgroundColor: '#FFF',
+    },
+    buttonTextColorDark: {
+      color: BACKGROUNDDARKBLUE,
     },
     operationButtonText: {
       ...button_link_primary_medium,
