@@ -205,7 +205,7 @@ const getIconFilePath = (
     case name === 'info':
       return (
         <InfoCircleIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: getColors(theme).iconBW}]}
           {...dimensionsProps}
         />
       );

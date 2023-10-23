@@ -26,28 +26,7 @@ export default ({navigation, route}: GeneralStackNavigationProps) => {
   const {titleScreen, component} = route.params;
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
-  console.log({titleScreen}); //TODO remove line
-
-  //TODO cleanup
-  //   const renderOperation = () => {
-  //     switch (operation) {
-  //       case 'transfer':
-  //         return <Transfer {...(props as TransferOperationProps)} />;
-  //       case 'stake':
-  //         return <StakeToken {...(props as StakeTokenOperationProps)} />;
-  //       case 'unstake':
-  //         return <UnstakeToken {...(props as UnstakeTokenOperationProps)} />;
-  //       case 'delegate':
-  //         return <DelegateToken {...(props as DelegateTokenOperationProps)} />;
-  //       case 'cancel_delegation':
-  //         return (
-  //           <CancelTokenDelegation
-  //             {...(props as CancelTokenDelegationOperationProps)}
-  //           />
-  //         );
-  //     }
-  //   };
-
+  console.log({titleScreen}); //TODO remove line after refactoring
   return (
     <Stack.Navigator>
       <Stack.Screen

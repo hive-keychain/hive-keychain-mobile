@@ -17,20 +17,22 @@ export type ModalPosition =
   | 'space-evenly'
   | undefined;
 
+export interface ModalScreenProps {
+  modalContent?: JSX.Element;
+  onForceCloseModal?: () => void;
+  name: string;
+  data?: any;
+  centerModal?: boolean | undefined;
+  fixedHeight?: number;
+  modalContainerStyle?: StyleProp<ViewStyle>;
+  additionalWrapperFixedStyle?: StyleProp<ViewStyle>;
+  modalPosition?: ModalPosition;
+  renderButtonElement?: JSX.Element;
+}
+
 export type RootStackParam = {
   Main: undefined;
-  ModalScreen: {
-    modalContent?: JSX.Element;
-    onForceCloseModal?: () => void;
-    name: string;
-    data?: any;
-    centerModal?: boolean | undefined;
-    fixedHeight?: number;
-    modalContainerStyle?: StyleProp<ViewStyle>;
-    additionalWrapperFixedStyle?: StyleProp<ViewStyle>;
-    modalPosition?: ModalPosition;
-    renderButtonElement?: JSX.Element;
-  };
+  ModalScreen: ModalScreenProps;
   TokensHistory: TokenHistoryProps;
   Operation: {
     operation:
