@@ -27,6 +27,7 @@
     "username": "Username",
     "authorized_username": "Auth. Account",
     "confirm": "Confirm",
+    "added_account": "Account has been added successfully!",
     "cancel": "Cancel",
     "close": "Close",
     "privateKey": "Private Key",
@@ -69,7 +70,8 @@
     "total": "Total",
     "edit": "Edit",
     "delete": "Delete",
-    "to": "To"
+    "to": "To",
+    "use_authorized_account_instead": "Use Authorized Account instead"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},

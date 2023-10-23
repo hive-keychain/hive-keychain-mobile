@@ -18,6 +18,7 @@ import ImportIcon from 'assets/new_UI/import.svg';
 import InfoCircleIcon from 'assets/new_UI/info-circle.svg';
 import CloseCircleIcon from 'assets/new_UI/linear_close-circle.svg';
 import EditIcon from 'assets/new_UI/linear_edit-2.svg';
+import ScannerIcon from 'assets/new_UI/linear_scanner.svg';
 import CheckIcon from 'assets/new_UI/linear_tick-circle.svg';
 import LogoutIcon from 'assets/new_UI/logout.svg';
 import PolygonDown from 'assets/new_UI/polygon_down.svg';
@@ -348,6 +349,13 @@ const getIconFilePath = (
     case name === 'close_circle':
       return (
         <CloseCircleIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'scanner':
+      return (
+        <ScannerIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
           {...dimensionsProps}
         />

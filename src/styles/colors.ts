@@ -73,7 +73,7 @@ export const getColors = (theme: Theme) => {
     secodaryIconBW: theme === Theme.LIGHT ? '#212838' : '#FFF',
     barStyle:
       theme === Theme.DARK
-        ? 'light-content'
+        ? ('light-content' as StatusBarStyle)
         : ('dark-content' as StatusBarStyle),
   };
 };
