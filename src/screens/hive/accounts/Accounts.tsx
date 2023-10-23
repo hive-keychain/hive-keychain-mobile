@@ -3,7 +3,7 @@ import CreateAccountIcon from 'assets/new_UI/create_account.svg';
 import ManageKeysIcon from 'assets/new_UI/key.svg';
 import DrawerContentItem from 'components/drawer/drawer-content-item/DrawerContentItem';
 import React, {useContext} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {navigate} from 'utils/navigation';
@@ -13,6 +13,10 @@ const Accounts = () => {
   const styles = getStyles(theme);
   return (
     <View style={styles.container}>
+      <StatusBar
+        barStyle={getColors(theme).barStyle}
+        backgroundColor={getColors(theme).primaryBackground}
+      />
       <DrawerContentItem
         labelTranslationKey={'navigation.add_account'}
         theme={theme}

@@ -5,8 +5,9 @@ import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import React, {useContext} from 'react';
+import {StyleSheet} from 'react-native';
 import Accounts from 'screens/hive/accounts/Accounts';
-import {ThemeContext} from 'src/context/theme.context';
+import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
@@ -15,6 +16,7 @@ const Stack = createStackNavigator();
 
 export default () => {
   const {theme} = useContext(ThemeContext);
+  const styles = getStyles(theme);
   //TODO bellow, move styles bellow using getStyles
   return (
     <Stack.Navigator>
@@ -22,27 +24,17 @@ export default () => {
         name="Accounts"
         component={Accounts}
         options={({navigation}) => ({
-          headerStyle: {
-            backgroundColor: getColors(theme).primaryBackground,
-            shadowColor: '#ff000000',
-          },
-          headerTitleStyle: {
-            ...headlines_primary_headline_2,
-            color: getColors(theme).primaryText,
-          },
+          headerStyle: styles.header,
+          headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           title: translate('common.account'),
-          headerTintColor: 'red',
           headerRight: () => (
             <CloseButton
               theme={theme}
               onPress={() => navigation.navigate('WALLET')}
             />
           ),
-          cardStyle: {
-            paddingHorizontal: 16,
-            backgroundColor: getColors(theme).primaryBackground,
-          },
+          cardStyle: styles.card,
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
@@ -58,3 +50,18 @@ export default () => {
     </Stack.Navigator>
   );
 };
+
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    header: {
+      backgroundColor: getColors(theme).primaryBackground,
+    },
+    headerTitle: {
+      ...headlines_primary_headline_2,
+      color: getColors(theme).primaryText,
+    },
+    card: {
+      paddingHorizontal: 16,
+      backgroundColor: getColors(theme).primaryBackground,
+    },
+  });
