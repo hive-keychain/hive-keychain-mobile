@@ -1,7 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
-import DrawerButton from 'components/ui/DrawerButton';
 import React, {useContext} from 'react';
 import {StyleSheet} from 'react-native';
 import AddAccountByAuth from 'screens/hive/addAccounts/AddAccountByAuth';
@@ -88,7 +87,14 @@ export default () => {
               onClick={() => navigation.goBack()}
             />
           ),
-          headerRight: () => <DrawerButton navigation={navigation} />,
+          headerRight: () => (
+            <Icon
+              name="close_circle"
+              theme={theme}
+              onClick={() => navigation.navigate('WALLET')}
+              additionalContainerStyle={[styles.marginRight]}
+            />
+          ),
           title: translate('navigation.add_account_by_auth'),
           headerTitleAlign: 'center',
           headerStyle: styles.header,
@@ -114,4 +120,5 @@ const getStyles = (theme: Theme) =>
     },
     marginLeft: {marginLeft: 16},
     marginRight: {marginRight: 16},
+    closeButton: {width: 18, height: 18},
   });
