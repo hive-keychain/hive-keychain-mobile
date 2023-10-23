@@ -191,9 +191,6 @@ const TokenDisplay = ({
                 width={15}
                 height={15}
                 additionalContainerStyle={styles.containerMarginLeft}
-                //TODO finish connection to test:
-                //  1. outgoing/incoming
-                //  2. cancelTokenDelegation.
                 onClick={() =>
                   navigate('GeneralStack', {
                     titleScreen: 'Outgoing',
@@ -430,7 +427,6 @@ const getDimensionedStyles = ({
     sixtyPercentLine: {width: '60%'},
     rowReverse: {flexDirection: 'row-reverse'},
     flex: {flex: 1, marginRight: 30},
-    //added //TODO remove comment
     flexRowBetween: {
       flexDirection: 'row',
       alignItems: 'center',

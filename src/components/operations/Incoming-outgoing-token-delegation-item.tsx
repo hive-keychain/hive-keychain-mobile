@@ -18,11 +18,9 @@ import {
 } from 'src/styles/typography';
 import {TokenDelegation} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
-import CancelTokenDelegation, {
-  CancelTokenDelegationOperationProps,
-} from './Cancel-token-delegation';
-import MoreTokenInfo from './MoreTokenInfo';
+import {navigate} from 'utils/navigation';
+import {CancelTokenDelegationOperationProps} from './Cancel-token-delegation';
+import {DelegateTokenOperationProps} from './DelegateToken';
 
 type Props = {
   tokenDelegation: TokenDelegation;
@@ -47,79 +45,47 @@ const IncomingOutGoingTokenDelegationItem = ({
   const [editMode, setEditMode] = useState(false);
   const [amount, setAmount] = useState(tokenDelegation.quantity);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [cancelledSuccessfully, setCancelledSuccessfully] = useState(false);
 
   const updateAmount = (value: string) => {
     setAmount(value);
   };
 
-  const navigateToModalScreen = () => {
-    //TODO check what to do/update bellow
-    navigate('ModalScreen', {
-      name: 'EngineTokenInfo',
-      modalContent: (
-        <MoreTokenInfo
-          token={token}
-          tokenLogo={tokenLogo}
-          tokenInfo={tokenInfo}
-          gobackAction={() => goBack()}
-        />
-      ),
-    });
-  };
-
   const handleCancelTokenDelegation = () => {
-    //TODO update bellow using Operation Stack...
-    navigate('ModalScreen', {
-      name: 'CancelDelegateToken',
-      modalContent: (
-        <CancelTokenDelegation
-          currency={token.symbol}
-          tokenLogo={tokenLogo}
-          amount={tokenDelegation.quantity}
-          from={tokenDelegation.to}
-          gobackAction={navigateToModalScreen}
-        />
-      ),
+    navigate('Operation', {
+      operation: 'cancel_delegation',
+      props: {
+        currency: token.symbol,
+        amount: tokenDelegation.quantity,
+        engine: true,
+        tokenLogo: tokenLogo,
+        from: tokenDelegation.to,
+        setCancelledSuccessfully: (value) => setCancelledSuccessfully(value),
+      } as CancelTokenDelegationOperationProps,
     });
   };
 
   const handleUpdateDelegateToken = () => {
-    //OLD way
-    // if (parseFloat(amount) <= 0) return handleCancelTokenDelegation();
+    if (parseFloat(amount) <= 0) return handleCancelTokenDelegation();
 
-    // const availableBalance =
-    //   parseFloat(token.stake) - parseFloat(token.delegationsOut);
-    // navigate('ModalScreen', {
-    //   name: 'DelegateToken',
-    //   modalContent: (
-    //     <DelegateToken
-    //       currency={token.symbol}
-    //       tokenLogo={tokenLogo}
-    //       balance={availableBalance.toString()}
-    //       sendTo={tokenDelegation.to}
-    //       delegateAmount={amount}
-    //       update={true}
-    //     />
-    //   ),
-    // });
-    //end Oldway
-
-    //NEW Way //TODO cleanup
-    if (parseFloat(amount) <= 0) {
-      navigate('Operation', {
-        operation: 'cancel_delegation',
-        props: {
-          currency: token.symbol,
-          amount: tokenDelegation.quantity,
-          engine: true,
-          tokenLogo: tokenLogo,
-          from: tokenDelegation.to,
-        } as CancelTokenDelegationOperationProps,
-      });
-    }
+    const availableBalance =
+      parseFloat(token.stake) - parseFloat(token.pendingUndelegations);
+    navigate('Operation', {
+      operation: 'delegate',
+      props: {
+        currency: token.symbol,
+        balance: availableBalance.toString(),
+        delegateAmount: amount,
+        tokenLogo: tokenLogo,
+        sendTo: tokenDelegation.to,
+        update: true,
+      } as DelegateTokenOperationProps,
+    });
   };
 
   const styles = getStyles(theme);
+
+  if (cancelledSuccessfully) return null;
 
   return (
     <View
@@ -169,40 +135,11 @@ const IncomingOutGoingTokenDelegationItem = ({
                 </View>
               </View>
             )}
-
-            {/* //TODO finish to have same use for isEditMode. */}
-            {/* {!editMode ? (
-            <View style={styles.buttonRowContainer}>
-              <Icon
-                name="edit"
-                theme={theme}
-                onClick={() => setEditMode(!editMode)}
-                additionalContainerStyle={styles.roundButton}
-                {...styles.icon}
-              />
-              <Icon
-                name="gift_delete"
-                theme={theme}
-                onClick={() => handleCancelTokenDelegation()}
-                additionalContainerStyle={styles.roundButton}
-                {...styles.icon}
-              />
-            </View>
-          ) : (
-            <View style={styles.buttonRowContainer}>
-              <TouchableOpacity
-                style={styles.smallButton}
-                onPress={handleUpdateDelegateToken}>
-                <Text>OK</Text>
-              </TouchableOpacity>
-            </View>
-          )} */}
           </View>
           {isExpanded && (
             <>
               <Separator
                 drawLine
-                // height={0.5}
                 additionalLineStyle={getSeparatorLineStyle(theme, 0.5).itemLine}
               />
               <View style={styles.buttonRowContainer}>
@@ -290,10 +227,6 @@ const getStyles = (theme: Theme) =>
       justifyContent: 'center',
       marginBottom: 10,
     },
-    smallButton: {
-      marginVertical: 3,
-      paddingVertical: 5,
-    },
     flexRow: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -330,7 +263,6 @@ const getStyles = (theme: Theme) =>
     marginLeft: {
       marginLeft: 8,
     },
-    //TODO move to its own reusable component
     button: {
       flexDirection: 'row',
       alignItems: 'center',

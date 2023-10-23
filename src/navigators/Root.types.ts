@@ -48,7 +48,7 @@ export type RootStackParam = {
   };
   GeneralStack: {
     titleScreen: string;
-    component: JSX.Element; //TODO check what type is better
+    component: JSX.Element;
   };
 };
 

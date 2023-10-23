@@ -65,7 +65,6 @@ const IncomingOutGoingTokenDelegations = ({
   };
 
   const renderListItem = (tokenDelegation: TokenDelegation) => {
-    //TODO bellow update item to have 2 options, edit & delete using designs, then test them out.
     return (
       <IncomingOutGoingTokenDelegationItem
         tokenDelegation={tokenDelegation}
@@ -149,66 +148,12 @@ const IncomingOutGoingTokenDelegations = ({
         </>
       }
     />
-    // <Operation
-    //   logo={renderIconComponent()}
-    //   title={translate(`wallet.operations.token_delegation.${delegationType}`)}>
-    //   <>
-    //     {delegationType === 'outgoing' && (
-    //       <Text style={{marginTop: 5}}>
-    //         {translate(
-    //           'wallet.operations.token_delegation.undelegation_cooldown_disclaimer',
-    //           {
-    //             symbol: token.symbol,
-    //             undelegationCooldown: tokenInfo.undelegationCooldown,
-    //           },
-    //         )}
-    //       </Text>
-    //     )}
-    //     <Separator />
-    //     <Balance
-    //       currency={token.symbol}
-    //       account={user.account}
-    //       globalProperties={properties.globals}
-    //       isHiveEngine
-    //       tokenLogo={tokenLogo}
-    //       tokenBalance={total}
-    //       using_new_ui
-    //       theme={theme}
-    //     />
-    //     {loading && (
-    //       <View style={styles.flex}>
-    //         <Loader animating={true} />
-    //       </View>
-    //     )}
-    //     <Separator />
-    //     {!loading && delegationList.length > 0 && (
-    //       <FlatList
-    //         data={delegationList}
-    //         renderItem={(tokenDelegation) =>
-    //           renderListItem(tokenDelegation.item)
-    //         }
-    //         keyExtractor={(tokenDelegation) =>
-    //           tokenDelegation.created.toString()
-    //         }
-    //       />
-    //     )}
-    //   </>
-    // </Operation>
   );
 };
 
 const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
-    //TODO check & cleanup
     currency: {fontWeight: 'bold', fontSize: 18, color},
-    rowContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    goBackButton: {
-      margin: 7,
-    },
     flex: {
       flex: 1,
       justifyContent: 'center',

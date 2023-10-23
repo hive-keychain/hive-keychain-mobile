@@ -1,13 +1,21 @@
 import {loadAccount, loadUserTokens} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
-import Delegate from 'assets/wallet/icon_delegate_dark.svg';
+import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
-import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {Keyboard, StyleSheet, Text, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import IconBack from 'src/assets/Icon_arrow_back_black.svg';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getButtonStyle} from 'src/styles/button';
+import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
+import {
+  button_link_primary_medium,
+  fields_primary_text_1,
+  title_primary_title_1,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
 import {cancelDelegateToken} from 'utils/hive';
@@ -23,10 +31,11 @@ export interface CancelTokenDelegationOperationProps {
   from?: string;
   amount?: string;
   gobackAction?: () => void;
+  setCancelledSuccessfully?: (value: boolean) => void;
 }
 
 type Props = PropsFromRedux & CancelTokenDelegationOperationProps;
-//TODO to test, you need to make outgoingDelegations first, as the cancel icon is the one who call it
+
 const CancelDelegationToken = ({
   currency,
   user,
@@ -36,6 +45,8 @@ const CancelDelegationToken = ({
   amount,
   loadUserTokens,
   gobackAction,
+  showModal,
+  setCancelledSuccessfully,
 }: Props) => {
   const [loading, setLoading] = useState(false);
 
@@ -66,28 +77,30 @@ const CancelDelegationToken = ({
 
       if (confirmationResult && confirmationResult.confirmed) {
         if (confirmationResult.error) {
-          //TODO add showModal
-          Toast.show(
+          showModal(
+            true,
             translate('toast.hive_engine_error', {
               error: confirmationResult.error,
             }),
-            Toast.LONG,
+            true,
           );
         } else {
-          Toast.show(
+          setCancelledSuccessfully(true);
+          showModal(
+            true,
             translate('toast.token_cancel_delegation_sucess', {currency}),
-            Toast.LONG,
           );
         }
       } else {
-        Toast.show(translate('toast.token_timeout'), Toast.LONG);
+        showModal(true, translate('toast.token_timeout'), true);
       }
     } else {
-      Toast.show(
+      showModal(
+        true,
         translate('toast.tokens_operation_failed', {
           tokenOperation: 'cancel delegation',
         }),
-        Toast.LONG,
+        true,
       );
     }
 
@@ -97,101 +110,102 @@ const CancelDelegationToken = ({
     goBack();
   };
 
+  const {theme} = useContext(ThemeContext);
   const {color} = getCurrencyProperties(currency);
-  const styles = getDimensionedStyles(color);
+  const styles = getDimensionedStyles(color, theme);
 
-  const renderIconComponent = () => {
-    return gobackAction ? (
-      <View style={styles.rowContainer}>
-        <TouchableOpacity
-          onPress={() => gobackAction()}
-          style={styles.goBackButton}>
-          <IconBack />
-        </TouchableOpacity>
-      </View>
-    ) : (
-      <Delegate />
-    );
-  };
-
-  //TODO continue bellow, cleanup & fixes.
   return (
     <OperationThemed
       childrenTop={<Separator height={20} />}
       childrenMiddle={
         <>
-          <Separator />
-          <Text>
+          <Separator height={30} />
+          <Text style={styles.infoText}>
             {translate(
               'wallet.operations.token_delegation.title_confirm_cancel_delegation',
               {amount: amount, currency: currency},
             )}
           </Text>
-          <Separator />
+          <Separator height={20} />
 
-          <Text>@{from}</Text>
-
-          <Separator height={40} />
+          <View style={styles.cancelItem}>
+            <Text style={styles.text}>{translate('common.to')}</Text>
+            <Text style={styles.textValues}>@ {from}</Text>
+          </View>
         </>
       }
       childrenBottom={
-        <ActiveOperationButton
-          title={translate('common.confirm')}
-          onPress={onCancelDelegateToken}
-          style={styles.button}
-          isLoading={loading}
-        />
+        <View style={styles.operationButtonsContainer}>
+          <EllipticButton
+            title={translate('common.back')}
+            onPress={() => goBack()}
+            style={[styles.operationButton, styles.operationButtonConfirmation]}
+            additionalTextStyle={[
+              styles.operationButtonText,
+              styles.buttonTextColorDark,
+            ]}
+          />
+          <ActiveOperationButton
+            title={translate('common.confirm')}
+            onPress={onCancelDelegateToken}
+            style={[
+              styles.operationButton,
+              getButtonStyle(theme).warningStyleButton,
+            ]}
+            additionalTextStyle={styles.operationButtonText}
+            isLoading={loading}
+          />
+        </View>
       }
     />
-    // <Operation
-    //   logo={renderIconComponent()}
-    //   title={translate('wallet.operations.token_delegation.cancel_delegation', {
-    //     currency,
-    //   })}>
-    //   <>
-    //     <Text>
-    //       {translate(
-    //         'wallet.operations.token_delegation.title_confirm_cancel_delegation',
-    //         {amount: amount, currency: currency},
-    //       )}
-    //     </Text>
-    //     <Separator />
-    //     <Balance
-    //       currency={currency}
-    //       account={user.account}
-    //       isHiveEngine
-    //       tokenLogo={tokenLogo}
-    //       tokenBalance={amount}
-    //     />
-
-    //     <Separator />
-
-    //     <Text>@{from}</Text>
-
-    //     <Separator height={40} />
-
-    //     <ActiveOperationButton
-    //       title={translate('common.confirm')}
-    //       onPress={onCancelDelegateToken}
-    //       style={styles.button}
-    //       isLoading={loading}
-    //     />
-    //   </>
-    // </Operation>
   );
 };
 
-const getDimensionedStyles = (color: string) =>
+const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
-    button: {marginBottom: 20},
-    currency: {fontWeight: 'bold', fontSize: 18, color},
-    rowContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+    infoText: {
+      color: getColors(theme).septenaryText,
+      opacity: theme === Theme.DARK ? 0.6 : 1,
+      ...title_primary_title_1,
+      paddingHorizontal: 15,
     },
-    goBackButton: {
-      margin: 7,
+    cancelItem: {
+      flex: 1,
+      borderRadius: 66,
+      borderWidth: 1,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 15,
+      paddingVertical: 16,
+    },
+    text: {
+      color: getColors(theme).secondaryText,
+      ...title_primary_title_1,
+    },
+    textValues: {
+      ...fields_primary_text_1,
+      color: getColors(theme).secondaryText,
+    },
+    operationButtonsContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginBottom: 20,
+      justifyContent: 'space-around',
+      width: '100%',
+    },
+    operationButton: {
+      width: '48%',
+      marginHorizontal: 0,
+    },
+    operationButtonConfirmation: {
+      backgroundColor: '#FFF',
+    },
+    buttonTextColorDark: {
+      color: BACKGROUNDDARKBLUE,
+    },
+    operationButtonText: {
+      ...button_link_primary_medium,
     },
   });
 
@@ -201,7 +215,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {loadAccount, loadUserTokens},
+  {loadAccount, loadUserTokens, showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

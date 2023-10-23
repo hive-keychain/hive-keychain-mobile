@@ -68,7 +68,8 @@
     "token": "Token",
     "total": "Total",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "to": "To"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
