@@ -7,7 +7,7 @@ import UserPicker from 'components/form/UserPicker';
 import Background from 'components/ui/Background';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   StatusBar,
   StyleSheet,
@@ -17,6 +17,8 @@ import {
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
 import {RootState} from 'store';
 import {
   AccountCreationType,
@@ -44,7 +46,8 @@ const CreateAccountStepOne = ({
   const [accountName, setAccountName] = useState('');
   const [creationType, setCreationType] = useState<AccountCreationType>();
 
-  const styles = getDimensionedStyles({...useWindowDimensions()});
+  const {theme} = useContext(ThemeContext);
+  const styles = getDimensionedStyles({...useWindowDimensions()}, theme);
 
   useLockedPortrait(navigation);
 
@@ -122,7 +125,7 @@ const CreateAccountStepOne = ({
       return false;
     }
   };
-
+  //TODO important keep working on here, then move to manage Accounts.
   const goToNextPage = async () => {
     if (await validateAccountName()) {
       const account = await AccountUtils.getAccount(selectedAccount);
@@ -146,9 +149,12 @@ const CreateAccountStepOne = ({
   };
 
   return (
-    <Background>
+    <Background using_new_ui theme={theme}>
       <>
-        <StatusBar backgroundColor="black" />
+        <StatusBar
+          barStyle={getColors(theme).barStyle}
+          backgroundColor={getColors(theme).primaryBackground}
+        />
         <View style={styles.container}>
           <View style={styles.content}>
             {selectedAccount.length > 0 && accountOptions && (
@@ -199,7 +205,7 @@ const CreateAccountStepOne = ({
   );
 };
 
-const getDimensionedStyles = ({width, height}: Dimensions) =>
+const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     container: {
       height: height - 100,
