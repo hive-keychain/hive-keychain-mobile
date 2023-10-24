@@ -56,6 +56,7 @@ export const getColors = (theme: Theme) => {
     tertiaryCardBorderColor: theme === Theme.LIGHT ? '#C7C5DE' : '#364360',
     quaternaryCardBorderColor: theme === Theme.LIGHT ? '#E1E8EF' : '#364360',
     quinaryCardBorderColor: theme === Theme.LIGHT ? BORDERWHITISH : '#FFF',
+    senaryCardBorderColor: theme === Theme.LIGHT ? '#FFF' : '#344360',
     borderContrast: theme === Theme.LIGHT ? '#212838' : '#FFF',
     primaryRedShape:
       theme === Theme.LIGHT ? BRIGTHER_PRIMARY_RED : PRIMARY_RED_COLOR,

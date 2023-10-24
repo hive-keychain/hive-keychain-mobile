@@ -5,10 +5,9 @@ import {Account} from 'actions/interfaces';
 import OperationButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {CreateAccountFromWalletNavigationProps} from 'navigators/mainDrawerStacks/CreateAccount.types';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -19,6 +18,14 @@ import {
 import {CheckBox} from 'react-native-elements';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getButtonStyle} from 'src/styles/button';
+import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
+import {
+  body_primary_body_2,
+  button_link_primary_small,
+  fields_primary_text_2,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {
   AccountCreationType,
@@ -26,6 +33,7 @@ import {
   GeneratedKeys,
 } from 'utils/account-creation.utils';
 import {Dimensions} from 'utils/common.types';
+import {capitalizeSentence} from 'utils/format';
 import {KeychainKeyTypes} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {resetStackAndNavigate} from 'utils/navigation';
@@ -43,7 +51,8 @@ const CreateAccountStepTwo = ({
   route,
   addAccount,
 }: PropsFromRedux & CreateAccountFromWalletNavigationProps) => {
-  const styles = getDimensionedStyles({...useWindowDimensions()});
+  const {theme} = useContext(ThemeContext);
+  const styles = getDimensionedStyles({...useWindowDimensions()}, theme);
 
   useLockedPortrait(navigation);
 
@@ -115,7 +124,7 @@ const CreateAccountStepTwo = ({
   const wrapInHorizontalScrollView = (text: string) => {
     return (
       <ScrollView horizontal>
-        <Text style={styles.whiteText}>{text}</Text>
+        <Text style={[styles.text, styles.opacity]}>{text}</Text>
       </ScrollView>
     );
   };
@@ -126,43 +135,42 @@ const CreateAccountStepTwo = ({
   const renderKeys = () => {
     return (
       <View style={styles.marginHorizontal}>
-        <Text style={styles.whiteText}>Account name: @{accountName}</Text>
-        <Text
-          style={[
-            styles.whiteText,
-            styles.textCentered,
-          ]}>{`----- Master password: ----- `}</Text>
-        {wrapInHorizontalScrollView(`${masterKey}`)}
-        <Text
-          style={[
-            styles.whiteText,
-            styles.textCentered,
-          ]}>{`------------ Owner Key:---------`}</Text>
-        {wrapInHorizontalScrollView(`Private: ${generatedKeys.owner.private}`)}
-        {wrapInHorizontalScrollView(`Public: ${generatedKeys.owner.public}`)}
-        <Text
-          style={[
-            styles.whiteText,
-            styles.textCentered,
-          ]}>{`------------ Active Key:--------- `}</Text>
-        {wrapInHorizontalScrollView(`Private: ${generatedKeys.active.private}`)}
-        {wrapInHorizontalScrollView(`Public: ${generatedKeys.active.public}`)}
-        <Text
-          style={[
-            styles.whiteText,
-            styles.textCentered,
-          ]}>{`------------ Posting Key:--------`}</Text>
-        {wrapInHorizontalScrollView(
-          `Private: ${generatedKeys.posting.private}`,
-        )}
-        {wrapInHorizontalScrollView(`Public: ${generatedKeys.posting.public}`)}
-        <Text
-          style={[
-            styles.whiteText,
-            styles.textCentered,
-          ]}>{`------------ Memo Key:---------`}</Text>
-        {wrapInHorizontalScrollView(`Private: ${generatedKeys.memo.private}`)}
-        {wrapInHorizontalScrollView(`Public: ${generatedKeys.memo.public}`)}
+        <View style={styles.cardKey}>
+          <Text style={styles.title}>
+            Account name:{' '}
+            <Text style={[styles.text, styles.opacity]}>{accountName}</Text>
+          </Text>
+          <Text style={styles.title}>{translate('keys.master_password')}</Text>
+          {wrapInHorizontalScrollView(`${masterKey}`)}
+        </View>
+        <View style={styles.cardKey}>
+          <Text style={styles.title}>{translate('keys.owner_key')}</Text>
+          <Text style={styles.title}>{translate('keys.private')}</Text>
+          {wrapInHorizontalScrollView(`${generatedKeys.owner.private}`)}
+          <Text style={styles.title}>{translate('keys.public')}</Text>
+          {wrapInHorizontalScrollView(`${generatedKeys.owner.public}`)}
+        </View>
+        <View style={styles.cardKey}>
+          <Text style={styles.title}>{translate('keys.active_key')}</Text>
+          <Text style={styles.title}>{translate('keys.private')}</Text>
+          {wrapInHorizontalScrollView(`${generatedKeys.active.private}`)}
+          <Text style={styles.title}>{translate('keys.public')}</Text>
+          {wrapInHorizontalScrollView(`${generatedKeys.active.public}`)}
+        </View>
+        <View style={styles.cardKey}>
+          <Text style={styles.title}>{translate('keys.posting_key')}</Text>
+          <Text style={styles.title}>{translate('keys.private')}</Text>
+          {wrapInHorizontalScrollView(`${generatedKeys.posting.private}`)}
+          <Text style={styles.title}>{translate('keys.public')}</Text>
+          {wrapInHorizontalScrollView(`${generatedKeys.posting.public}`)}
+        </View>
+        <View style={styles.cardKey}>
+          <Text style={styles.title}>{translate('keys.memo_key')}</Text>
+          <Text style={styles.title}>{translate('keys.private')}</Text>
+          {wrapInHorizontalScrollView(`${generatedKeys.memo.private}`)}
+          <Text style={styles.title}>{translate('keys.public')}</Text>
+          {wrapInHorizontalScrollView(`${generatedKeys.memo.public}`)}
+        </View>
       </View>
     );
   };
@@ -247,62 +255,60 @@ const CreateAccountStepTwo = ({
         setLoading(false);
       }
     } else {
-      Toast.show('components.create_account.need_accept_terms_condition');
+      Toast.show(
+        translate('components.create_account.need_accept_terms_condition'),
+      );
       return;
     }
   };
 
   return (
-    <WalletPage>
-      <Background>
-        <>
-          <FocusAwareStatusBar
-            barStyle="light-content"
-            backgroundColor="black"
-          />
-          {keysTextVersion.length > 0 && (
-            <View style={styles.container}>
-              <ScrollView style={styles.keysContainer}>
-                {renderKeys()}
-              </ScrollView>
-              <View style={styles.checkboxesContainer}>
-                <CheckBox
-                  checked={paymentUnderstanding}
-                  onPress={() => setPaymentUnderstanding(!paymentUnderstanding)}
-                  title={getPaymentCheckboxLabel()}
-                  containerStyle={styles.checkbox}
-                  textStyle={styles.whiteText}
-                  checkedColor="white"
-                />
-                <CheckBox
-                  checked={safelyCopied}
-                  onPress={() => setSafelyCopied(!safelyCopied)}
-                  title={translate(
-                    'components.create_account.safely_copied_keys',
-                  )}
-                  containerStyle={styles.checkbox}
-                  textStyle={styles.whiteText}
-                  checkedColor="white"
-                />
-                <CheckBox
-                  checked={notPrimaryStorageUnderstanding}
-                  onPress={() =>
-                    setNotPrimaryStorageUnderstanding(
-                      !notPrimaryStorageUnderstanding,
-                    )
-                  }
-                  title={translate(
-                    'components.create_account.storage_understanding',
-                  )}
-                  containerStyle={styles.checkbox}
-                  textStyle={styles.whiteText}
-                  checkedColor="white"
-                />
-              </View>
+    <Background using_new_ui theme={theme}>
+      <>
+        <FocusAwareStatusBar />
+        {keysTextVersion.length > 0 && (
+          <View style={styles.container}>
+            <ScrollView style={styles.keysContainer}>{renderKeys()}</ScrollView>
+            <View style={styles.checkboxesContainer}>
+              <CheckBox
+                checked={paymentUnderstanding}
+                onPress={() => setPaymentUnderstanding(!paymentUnderstanding)}
+                title={getPaymentCheckboxLabel()}
+                containerStyle={styles.checkbox}
+                textStyle={styles.text}
+                checkedColor={getColors(theme).icon}
+              />
+              <CheckBox
+                checked={safelyCopied}
+                onPress={() => setSafelyCopied(!safelyCopied)}
+                title={translate(
+                  'components.create_account.safely_copied_keys',
+                )}
+                containerStyle={styles.checkbox}
+                textStyle={styles.text}
+                checkedColor={getColors(theme).icon}
+              />
+              <CheckBox
+                checked={notPrimaryStorageUnderstanding}
+                onPress={() =>
+                  setNotPrimaryStorageUnderstanding(
+                    !notPrimaryStorageUnderstanding,
+                  )
+                }
+                title={translate(
+                  'components.create_account.storage_understanding',
+                )}
+                containerStyle={styles.checkbox}
+                textStyle={styles.text}
+                checkedColor={getColors(theme).icon}
+              />
+            </View>
+            <View style={[styles.buttonsContainer, styles.buttonMarginTop]}>
               <OperationButton
-                style={[styles.button, styles.buttonMarginTop]}
+                style={[styles.button, styles.whiteBackground]}
                 title={translate('components.create_account.copy')}
                 onPress={() => copyAllKeys()}
+                additionalTextStyle={[styles.buttonText, styles.darkText]}
               />
               <OperationButton
                 isLoading={loading}
@@ -312,48 +318,45 @@ const CreateAccountStepTwo = ({
                   !paymentUnderstanding
                 }
                 style={[
+                  styles.button,
                   safelyCopied &&
                   notPrimaryStorageUnderstanding &&
                   paymentUnderstanding
-                    ? styles.button
+                    ? getButtonStyle(theme).warningStyleButton
                     : styles.buttonDisabled,
-                  styles.buttonMarginTop,
                 ]}
-                title={translate('components.create_account.create_account')}
+                title={capitalizeSentence(
+                  translate('components.create_account.create_account'),
+                )}
                 onPress={() => createAccount()}
+                additionalTextStyle={[styles.buttonText, styles.whiteText]}
               />
             </View>
-          )}
-        </>
-      </Background>
-    </WalletPage>
+          </View>
+        )}
+      </>
+    </Background>
   );
 };
 
-const getDimensionedStyles = ({width, height}: Dimensions) =>
+const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     container: {
       marginHorizontal: width * 0.06,
       flex: 1,
     },
     button: {
-      width: '100%',
+      width: '45%',
       marginHorizontal: 0,
     },
     buttonDisabled: {
       backgroundColor: 'gray',
-      width: '100%',
       marginHorizontal: 0,
     },
     keysContainer: {
       maxHeight: 250,
-      backgroundColor: 'rgba(0, 0, 0, 0.34)',
       overflow: 'hidden',
       marginTop: 20,
-    },
-    keysText: {
-      borderColor: 'white',
-      borderWidth: 1,
     },
     checkboxesContainer: {
       marginVertical: 10,
@@ -361,17 +364,50 @@ const getDimensionedStyles = ({width, height}: Dimensions) =>
     whiteText: {
       color: 'white',
     },
-    textCentered: {textAlign: 'center'},
     buttonMarginTop: {
       marginTop: 20,
     },
     checkbox: {
       backgroundColor: 'rgba(0,0,0,0)',
       width: '95%',
-      padding: 0,
-      borderColor: 'rgba(0,0,0,0)',
+      padding: 18,
+      borderColor: getColors(theme).senaryCardBorderColor,
+      borderRadius: 20,
     },
     marginHorizontal: {marginHorizontal: 10},
+    cardKey: {
+      borderWidth: 1,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+      borderRadius: 19,
+      padding: 10,
+      marginBottom: 8,
+    },
+    title: {
+      color: getColors(theme).secondaryText,
+      ...body_primary_body_2,
+    },
+    text: {
+      color: getColors(theme).secondaryText,
+      ...fields_primary_text_2,
+    },
+    opacity: {
+      opacity: 0.7,
+    },
+    buttonsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+    buttonText: {
+      ...button_link_primary_small,
+    },
+    whiteBackground: {
+      backgroundColor: '#fff',
+    },
+    darkText: {
+      color: BACKGROUNDDARKBLUE,
+    },
   });
 
 const connector = connect(

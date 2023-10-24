@@ -21,10 +21,6 @@ export default (props: InputProps & OperationInputProps) => {
   const renderCustomInput = () => (
     <CustomInput
       {...props}
-      //TODO check after refactoring to see if needed props bellow.
-      // placeholderTextColor={getColors(theme).secondaryText}
-      // backgroundColor="#ffffff"
-      // inputColor="#68A0B4"
       containerStyle={styles.container}
       additionalInputContainerStyle={props.additionalInputContainerStyle}
     />
