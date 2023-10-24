@@ -42,9 +42,7 @@ export default () => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() =>
-                (navigation as DrawerNavigationHelpers).openDrawer()
-              }
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
               additionalContainerStyle={styles.marginLeft}
@@ -63,9 +61,7 @@ export default () => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() =>
-                (navigation as DrawerNavigationHelpers).openDrawer()
-              }
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
               additionalContainerStyle={styles.marginLeft}

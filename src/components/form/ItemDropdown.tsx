@@ -30,11 +30,21 @@ type Props = {
   itemDropdownList: ItemDropdown[];
   theme: Theme;
   additionalContainerStyle?: StyleProp<ViewStyle>;
+  additionalContainerListStyle?: StyleProp<ViewStyle>;
+  additionalExpandedListItemContainerStyle?: StyleProp<ViewStyle>;
+  additionalSelectedItemContainerStyle?: StyleProp<ViewStyle>;
+  labelsToUppercase?: boolean;
+  onSelectedItem?: (item: ItemDropdown) => void;
 };
 const ItemDropdown = ({
   additionalContainerStyle,
   theme,
   itemDropdownList,
+  labelsToUppercase,
+  additionalContainerListStyle,
+  additionalExpandedListItemContainerStyle,
+  additionalSelectedItemContainerStyle,
+  onSelectedItem,
 }: Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
@@ -45,9 +55,14 @@ const ItemDropdown = ({
     return (
       <View
         key={`item-dropdown-list-${item.label}`}
-        style={[styles.selectedItemContainer]}>
+        style={[
+          styles.selectedItemContainer,
+          additionalSelectedItemContainerStyle,
+        ]}>
         {item.icon}
-        <Text style={styles.itemTextStyle}>{item.label.toUpperCase()}</Text>
+        <Text style={styles.itemTextStyle}>
+          {labelsToUppercase ? item.label.toUpperCase() : item.label}
+        </Text>
       </View>
     );
   };
@@ -55,6 +70,7 @@ const ItemDropdown = ({
   const handleSelectedItem = (item: ItemDropdown) => {
     setSelectedItem(item);
     setExpandList(false);
+    if (onSelectedItem) onSelectedItem(item);
   };
 
   return (
@@ -78,11 +94,15 @@ const ItemDropdown = ({
         </TouchableOpacity>
       </View>
       {expandList && (
-        <View style={styles.expandedListContainer}>
+        <View
+          style={[styles.expandedListContainer, additionalContainerListStyle]}>
           {itemDropdownList.map((item) => {
             return (
               <View
-                style={styles.expandedListItemContainer}
+                style={[
+                  styles.expandedListItemContainer,
+                  additionalExpandedListItemContainerStyle,
+                ]}
                 key={`item-dropddown-${item.label}`}>
                 <TouchableOpacity onPress={() => handleSelectedItem(item)}>
                   {renderItem(item)}
@@ -102,7 +122,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       width: '100%',
-      height: headlines_primary_headline_2.fontSize * 2,
+      height: headlines_primary_headline_2.fontSize * 3,
       justifyContent: 'space-between',
       borderRadius: height / 2,
       borderWidth: 1,

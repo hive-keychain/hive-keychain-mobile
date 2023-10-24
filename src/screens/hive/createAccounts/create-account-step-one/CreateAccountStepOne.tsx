@@ -1,10 +1,12 @@
 import {Asset} from '@hiveio/dhive';
 import {Account} from 'actions/interfaces';
-import UserLogo from 'assets/addAccount/icon_username.svg';
-import CustomInput from 'components/form/CustomInput';
 import OperationButton from 'components/form/EllipticButton';
-import UserPicker from 'components/form/UserPicker';
+import ItemDropdown from 'components/form/ItemDropdown';
+import OperationInput from 'components/form/OperationInput';
+import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
+import Separator from 'components/ui/Separator';
+import UserProfilePicture from 'components/ui/UserProfilePicture';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
 import React, {useContext, useEffect, useState} from 'react';
@@ -18,7 +20,13 @@ import {
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
+import {
+  FontPoppinsName,
+  body_primary_body_1,
+  button_link_primary_medium,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {
   AccountCreationType,
@@ -26,6 +34,7 @@ import {
 } from 'utils/account-creation.utils';
 import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
+import {capitalizeSentence} from 'utils/format';
 import {getAccountPrice} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -33,6 +42,7 @@ import {navigate} from 'utils/navigation';
 interface SelectOption {
   label: string;
   value: string;
+  icon: JSX.Element;
 }
 
 const CreateAccountStepOne = ({
@@ -45,6 +55,7 @@ const CreateAccountStepOne = ({
   const [price, setPrice] = useState(3);
   const [accountName, setAccountName] = useState('');
   const [creationType, setCreationType] = useState<AccountCreationType>();
+  const [isAvailableAccountName, setIsAvailableAccountName] = useState(false);
 
   const {theme} = useContext(ThemeContext);
   const styles = getDimensionedStyles({...useWindowDimensions()}, theme);
@@ -67,6 +78,19 @@ const CreateAccountStepOne = ({
     onSelectedAccountChange(selectedAccount);
   }, [selectedAccount]);
 
+  useEffect(() => {
+    if (accountName.trim().length > 3) {
+      checkAccountName();
+    }
+  }, [accountName]);
+
+  const checkAccountName = async () => {
+    const isAvailable = await AccountCreationUtils.checkAccountNameAvailable(
+      accountName,
+    );
+    setIsAvailableAccountName(isAvailable);
+  };
+
   const onSelectedAccountChange = async (username: string) => {
     const account = (await AccountUtils.getAccount(username)) as any;
     if (
@@ -86,8 +110,14 @@ const CreateAccountStepOne = ({
     const options = [];
     for (const account of accounts as Account[]) {
       options.push({
-        label: `@${account.name!}`,
+        label: `${account.name!}`,
         value: account.name!,
+        icon: (
+          <UserProfilePicture
+            style={styles.profilePicture}
+            username={account.name!}
+          />
+        ),
       });
     }
     setAccountOptions(options);
@@ -125,7 +155,7 @@ const CreateAccountStepOne = ({
       return false;
     }
   };
-  //TODO important keep working on here, then move to manage Accounts.
+
   const goToNextPage = async () => {
     if (await validateAccountName()) {
       const account = await AccountUtils.getAccount(selectedAccount);
@@ -158,46 +188,55 @@ const CreateAccountStepOne = ({
         <View style={styles.container}>
           <View style={styles.content}>
             {selectedAccount.length > 0 && accountOptions && (
-              <UserPicker
-                username={selectedAccount}
-                accounts={accountOptions.map((account) => account.value)}
-                onAccountSelected={onSelected}
+              <ItemDropdown
+                theme={theme}
+                itemDropdownList={accountOptions}
                 additionalContainerStyle={styles.additionalContainerStyle}
-                additionalPickerStyle={styles.additionalPickerStyle}
-                iosTextStyle={styles.additionalPickerStyle}
-                dropdownIconColor="white"
+                additionalContainerListStyle={
+                  styles.additionalContainerListStyle
+                }
+                additionalExpandedListItemContainerStyle={
+                  styles.additionalExpandedListItemContainer
+                }
+                additionalSelectedItemContainerStyle={
+                  styles.additionalSelectedItemContainerStyle
+                }
+                onSelectedItem={(account) => onSelected(account.value)}
               />
             )}
-            <Text
-              style={[
-                styles.text,
-                styles.marginVertical,
-                styles.uniqueFontSize,
-              ]}>
-              {translate('components.create_account.cost', {
-                price: getPriceLabel(),
-                account: selectedAccount,
-              })}
+            <Separator height={15} />
+            <Text style={[styles.text, styles.centeredText, styles.opacity]}>
+              {capitalizeSentence(
+                translate('components.create_account.cost', {
+                  price: getPriceLabel(),
+                  account: selectedAccount,
+                }),
+              )}
             </Text>
-            <CustomInput
-              autoCapitalize="none"
+            <Separator height={25} />
+            <OperationInput
+              labelInput={translate('common.username')}
               placeholder={translate(
                 'components.create_account.new_account_username',
               )}
-              leftIcon={<UserLogo />}
               value={accountName}
               onChangeText={setAccountName}
-              containerStyle={styles.marginVertical}
-              style={styles.uniqueFontSize}
+              inputStyle={[styles.text, styles.smallerText]}
+              leftIcon={<Icon name="at" theme={theme} />}
+              rightIcon={
+                isAvailableAccountName ? (
+                  <Icon name={'check'} theme={theme} />
+                ) : null
+              }
             />
-            <View style={styles.buttonContainer}>
-              <OperationButton
-                style={styles.button}
-                title={translate('common.next')}
-                onPress={() => goToNextPage()}
-                additionalTextStyle={styles.uniqueFontSize}
-              />
-            </View>
+          </View>
+          <View style={styles.buttonContainer}>
+            <OperationButton
+              title={translate('common.next')}
+              onPress={() => goToNextPage()}
+              style={[getButtonStyle(theme).warningStyleButton]}
+              additionalTextStyle={{...button_link_primary_medium}}
+            />
           </View>
         </View>
       </>
@@ -208,37 +247,56 @@ const CreateAccountStepOne = ({
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     container: {
-      height: height - 100,
-      marginHorizontal: width * 0.06,
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: 16,
     },
     content: {
       flex: 1,
-      marginVertical: height * 0.05,
-      height: '90%',
-      alignItems: 'center',
+      width: '100%',
+      marginTop: 30,
     },
     button: {
       width: '100%',
       height: height * 0.08,
     },
     buttonContainer: {
+      marginBottom: 25,
       width: '100%',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      height: '30%',
-      display: 'flex',
     },
-    text: {
-      color: 'white',
-      textAlign: 'center',
-    },
+    text: {color: getColors(theme).secondaryText, ...body_primary_body_1},
+    centeredText: {textAlign: 'center'},
     additionalPickerStyle: {
-      color: 'white',
+      color: getColors(theme).secondaryText,
+      fontFamily: FontPoppinsName.ITALIC,
     },
     additionalContainerStyle: {
-      backgroundColor: 'black',
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: getColors(theme).cardBorderColor,
       marginHorizontal: 0,
       width: '100%',
+      zIndex: 10,
+    },
+    additionalContainerListStyle: {
+      zIndex: 9,
+      width: '99.5%',
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: getColors(theme).cardBorderColor,
+      borderWidth: 1,
+      top: 20,
+      left: 1,
+      padding: 0,
+      paddingTop: 55,
+      paddingBottom: 10,
+    },
+    additionalExpandedListItemContainer: {
+      height: height * 0.05,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      paddingHorizontal: 10,
+    },
+    additionalSelectedItemContainerStyle: {
+      paddingHorizontal: 16,
     },
     marginVertical: {
       marginVertical: height / 30,
@@ -246,6 +304,17 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     uniqueFontSize: {
       fontSize: 17,
       fontWeight: 'bold',
+    },
+    opacity: {
+      opacity: 0.7,
+    },
+    smallerText: {
+      fontSize: 13,
+    },
+    profilePicture: {
+      width: 30,
+      height: 30,
+      borderRadius: 50,
     },
   });
 
