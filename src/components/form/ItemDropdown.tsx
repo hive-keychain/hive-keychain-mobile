@@ -6,11 +6,12 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
@@ -75,11 +76,12 @@ const ItemDropdown = ({
 
   return (
     <>
-      <View style={[styles.container, additionalContainerStyle]}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => setExpandList(!expandList)}
+        style={[styles.container, additionalContainerStyle]}>
         {renderItem(selectedItem)}
-        <TouchableOpacity
-          onPress={() => setExpandList(!expandList)}
-          style={[styles.dropdownContainer]}>
+        <View style={[styles.dropdownContainer]}>
           {theme === Theme.LIGHT ? (
             <ArrowDropDownLight
               {...styles.dropdownIcon}
@@ -91,8 +93,8 @@ const ItemDropdown = ({
               style={expandList ? styles.rotateSvg : null}
             />
           )}
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
       {expandList && (
         <View
           style={[styles.expandedListContainer, additionalContainerListStyle]}>

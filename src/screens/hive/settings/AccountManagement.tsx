@@ -1,18 +1,21 @@
 import {addKey, forgetAccount, forgetKey} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
-import UserPicker from 'components/form/UserPicker';
+import ItemDropdown from 'components/form/ItemDropdown';
 import Key from 'components/hive/Key';
+import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
+import UserProfilePicture from 'components/ui/UserProfilePicture';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {MainNavigation} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, ViewStyle} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import React, {useContext, useEffect, useState} from 'react';
+import {ScrollView, StyleSheet} from 'react-native';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
 import {RootState} from 'store';
-import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
 const AccountManagement = ({
@@ -34,77 +37,113 @@ const AccountManagement = ({
   }, [navigation, account.name]);
   if (!username) return null;
 
-  return (
-    <SafeArea style={styles.safeArea}>
-      <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
+  const {theme} = useContext(ThemeContext);
+  const styles = getStyles(theme);
 
-      <ScrollView>
-        <UserPicker
-          username={username}
-          accounts={accounts.map((acc) => acc.name)}
-          onAccountSelected={(name) => {
-            setUsername(name);
-          }}
-        />
-        {//@ts-ignore
-        translate('settings.keys.disclaimer').map((e, i) => (
-          //@ts-ignore
-          <Text key={i} style={styles[e.style_do_not_translate]}>
-            {e.text}
-          </Text>
-        ))}
-        <Separator height={20} />
-        <Key
-          type={KeyTypes.posting}
-          containerStyle={styles.keyOdd as ViewStyle}
-          account={accounts.find((e) => e.name === username)}
-          forgetKey={forgetKey}
-          navigation={navigation}
-        />
-        <Key
-          type={KeyTypes.active}
-          containerStyle={styles.keyEven as ViewStyle}
-          account={accounts.find((e) => e.name === username)}
-          forgetKey={forgetKey}
-          navigation={navigation}
-        />
-        <Key
-          type={KeyTypes.memo}
-          containerStyle={styles.keyOdd as ViewStyle}
-          account={accounts.find((e) => e.name === username)}
-          forgetKey={forgetKey}
-          navigation={navigation}
-        />
-        <Separator height={20} />
-        <EllipticButton
-          style={styles.button}
-          title="FORGET ACCOUNT"
-          onPress={() => {
-            if (username) {
-              forgetAccount(username);
-              navigate('WALLET');
-            }
-          }}
-        />
-        <Separator height={50} />
-      </ScrollView>
-    </SafeArea>
+  return (
+    <Background using_new_ui theme={theme}>
+      <SafeArea style={styles.safeArea}>
+        <FocusAwareStatusBar />
+
+        <ScrollView>
+          <ItemDropdown
+            theme={theme}
+            itemDropdownList={accounts.map((acc) => {
+              return {
+                label: acc.name,
+                value: acc.name,
+                icon: (
+                  <UserProfilePicture
+                    username={acc.name}
+                    style={styles.avatar}
+                  />
+                ),
+              };
+            })}
+            additionalContainerStyle={[styles.cardKey, styles.zIndexBase]}
+            additionalContainerListStyle={[
+              styles.itemListContainer,
+              styles.zIndexLower,
+            ]}
+            onSelectedItem={(item) => setUsername(item.value)}
+          />
+          <Separator height={20} />
+          <Key
+            type={KeyTypes.posting}
+            containerStyle={styles.cardKey}
+            account={accounts.find((e) => e.name === username)}
+            forgetKey={forgetKey}
+            navigation={navigation}
+          />
+          <Key
+            type={KeyTypes.active}
+            containerStyle={styles.cardKey}
+            account={accounts.find((e) => e.name === username)}
+            forgetKey={forgetKey}
+            navigation={navigation}
+          />
+          <Key
+            type={KeyTypes.memo}
+            containerStyle={styles.cardKey}
+            account={accounts.find((e) => e.name === username)}
+            forgetKey={forgetKey}
+            navigation={navigation}
+          />
+          <Separator height={20} />
+          <EllipticButton
+            style={styles.button}
+            title="FORGET ACCOUNT"
+            onPress={() => {
+              if (username) {
+                forgetAccount(username);
+                navigate('WALLET');
+              }
+            }}
+          />
+          <Separator height={50} />
+        </ScrollView>
+      </SafeArea>
+    </Background>
   );
 };
 
-const styles = StyleSheet.create({
-  disclaimer: {color: '#404950', marginVertical: 2, paddingHorizontal: 20},
-  important: {
-    color: '#A3112A',
-    fontWeight: 'bold',
-    marginVertical: 2,
-    paddingHorizontal: 20,
-  },
-  button: {backgroundColor: '#B9122F'},
-  keyOdd: {backgroundColor: '#E5EEF7', padding: 20},
-  keyEven: {backgroundColor: '#FFFFFF', padding: 20},
-  safeArea: {backgroundColor: 'white'},
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    disclaimer: {color: '#404950', marginVertical: 2, paddingHorizontal: 20},
+    important: {
+      color: '#A3112A',
+      fontWeight: 'bold',
+      marginVertical: 2,
+      paddingHorizontal: 20,
+    },
+    button: {backgroundColor: '#B9122F'},
+    keyOdd: {backgroundColor: '#E5EEF7', padding: 20},
+    keyEven: {backgroundColor: '#FFFFFF', padding: 20},
+    safeArea: {paddingHorizontal: 16},
+    cardKey: {
+      borderWidth: 1,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+      borderRadius: 19,
+      padding: 10,
+      marginBottom: 8,
+    },
+    itemListContainer: {
+      top: 20,
+      paddingTop: 50,
+      paddingBottom: 30,
+      width: '99%',
+      left: 1,
+      paddingHorizontal: 10,
+    },
+    zIndexBase: {
+      zIndex: 10,
+    },
+    zIndexLower: {
+      zIndex: 9,
+    },
+    avatar: {width: 30, height: 30, borderRadius: 50},
+  });
 
 const mapStateToProps = (state: RootState) => ({
   account: state.activeAccount,

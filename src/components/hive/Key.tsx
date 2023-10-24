@@ -8,16 +8,19 @@ import AddKey from 'components/modals/AddKey';
 import RoundButton from 'components/operations/OperationsButtons';
 import Separator from 'components/ui/Separator';
 import {MainNavigation} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
-import {StyleProp, StyleSheet, Text, View, ViewProps} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import Toast from 'react-native-simple-toast';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {button_link_primary_medium} from 'src/styles/typography';
 import {KeyUtils} from 'utils/key.utils';
 import {translate} from 'utils/localize';
 
 type Props = {
   type: KeyTypes;
   account: Account;
-  containerStyle: StyleProp<ViewProps>;
+  containerStyle: StyleProp<ViewStyle>;
   forgetKey: (username: string, key: KeyTypes) => void;
   navigation: MainNavigation;
 };
@@ -49,14 +52,17 @@ export default ({
     });
     return unsubscribe;
   }, [navigation]);
-
+  const {theme} = useContext(ThemeContext);
+  const styles = getStyles(theme);
+  //TODO keep working here!!!
   return (
     <View style={containerStyle}>
       <View style={styles.row}>
         <Text style={styles.keyAuthority}>
           {translate('keys.key_type', {
             type: translate(`keys.${type}`),
-          }).toUpperCase()}
+          })}
+          :
         </Text>
         {privateKey && (
           <RemoveKey
@@ -70,14 +76,12 @@ export default ({
       {privateKey ? (
         <>
           <View style={styles.row}>
-            <Text style={styles.keyType}>
-              {translate('common.public').toUpperCase()}
-            </Text>
+            <Text style={styles.keyType}>{translate('common.public')}</Text>
             {!isAuthorizedAccount && <CopyKey wif={publicKey} />}
           </View>
           <Separator height={5} />
 
-          <Text style={styles.key}>
+          <Text style={[styles.key, styles.opacity]}>
             {isAuthorizedAccount
               ? translate('keys.using_authorized_account', {
                   authorizedAccount: publicKey,
@@ -86,9 +90,7 @@ export default ({
           </Text>
           <Separator height={20} />
           <View style={styles.row}>
-            <Text style={styles.keyType}>
-              {translate('common.private').toUpperCase()}
-            </Text>
+            <Text style={styles.keyType}>{translate('common.private')}</Text>
             <View style={[styles.row, styles.privateActions]}>
               <ViewKey
                 isPKShown={isPKShown}
@@ -100,7 +102,8 @@ export default ({
             </View>
           </View>
           <Separator height={5} />
-          <Text style={isPKShown ? styles.key : styles.keyHidden}>
+          <Text
+            style={isPKShown ? [styles.key, styles.opacity] : styles.keyHidden}>
             {isPKShown ? privateKey : hidePrivateKey(privateKey)}
           </Text>
         </>
@@ -112,6 +115,7 @@ export default ({
             style={styles.addKey}
             onPress={() => {
               navigation.navigate('ModalScreen', {
+                name: 'AddKeyModal',
                 modalContent: <AddKey type={type} name={account.name} />,
               });
             }}
@@ -161,23 +165,42 @@ const ViewKey = ({toggle, isPKShown}: ViewKeyProps) => {
 
 const hidePrivateKey = (privateKey: string) => {
   let hiddenKey = '';
-  for (let i = 0; i < privateKey.length; i++) {
+  for (let i = 0; i < 15; i++) {
     hiddenKey += '\u25cf ';
   }
   return hiddenKey;
 };
 
-const styles = StyleSheet.create({
-  keyAuthority: {color: '#7E8C9A', fontSize: 20},
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  keyType: {color: '#404950', fontSize: 14},
-  key: {color: '#404950', fontSize: 10, lineHeight: 12},
-  keyHidden: {color: '#404950', fontSize: 5, lineHeight: 12},
-  privateActions: {width: '20%'},
-  addKey: {
-    backgroundColor: '#7E8C9A',
-  },
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    keyAuthority: {
+      color: getColors(theme).secondaryText,
+      ...button_link_primary_medium,
+    },
+    row: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    keyType: {
+      color: getColors(theme).secondaryText,
+      ...button_link_primary_medium,
+      fontSize: 13,
+    },
+    key: {
+      color: getColors(theme).secondaryText,
+      ...button_link_primary_medium,
+      fontSize: 12,
+    },
+    keyHidden: {
+      color: getColors(theme).iconBW,
+      fontSize: 25,
+      letterSpacing: -2,
+    },
+    privateActions: {width: '20%'},
+    addKey: {
+      backgroundColor: '#7E8C9A',
+    },
+    opacity: {
+      opacity: 0.7,
+    },
+  });
