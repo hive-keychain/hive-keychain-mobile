@@ -2,7 +2,7 @@ import {ActionPayload} from 'actions/interfaces';
 import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {DomainPreference, PreferencePayload} from 'reducers/preferences.types';
-
+//TODO keep working here
 type Props = {
   domainPref: DomainPreference;
   index: number;
@@ -20,7 +20,7 @@ const CollapsibleSettings = ({
   removePreference,
   username,
 }: Props) => {
-  const [isCollapsed, collapse] = useState(true);
+  const [isCollapsed, collapse] = useState(false);
   const styles = getStyles(index);
   const renderCollapsed = () => {
     if (isCollapsed) return false;

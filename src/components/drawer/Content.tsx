@@ -10,7 +10,7 @@ import DrawerFooter from 'components/drawer/Footer';
 import DrawerHeader from 'components/drawer/Header';
 import CustomSwitch from 'components/form/CustomSwitch';
 import Icon from 'components/hive/Icon';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
@@ -36,43 +36,11 @@ const hiddenRoutesInMain = [
 ];
 
 const HeaderContent = (props: Props) => {
-  //TODO cleanup remove unused
   const {user, lock, navigation, itemStyle, state, ...rest} = props;
-  const [isAccountMenuExpanded, setIsAccountMenuExpanded] = useState(false);
-  const [subMenuSelectedScreenName, setSubMenuSelectedScreenName] = useState(
-    '',
-  );
-  const subMenuList = [
-    {
-      labelTranslationKey: 'navigation.manage',
-      screenName: 'AccountManagementScreen',
-    },
-    {
-      labelTranslationKey: 'navigation.add_account',
-      screenName: 'AddAccountStack',
-    },
-    {
-      labelTranslationKey: 'navigation.create_account',
-      screenName: 'CreateAccountScreen',
-    },
-  ];
-
   const newState = {...state};
   newState.routes = newState.routes.filter(
     (route) => !hiddenRoutesInMain.includes(route.name),
   );
-
-  const handleSetMenuExpanded = () => {
-    if (isAccountMenuExpanded && subMenuSelectedScreenName.length) return;
-    setIsAccountMenuExpanded(!isAccountMenuExpanded);
-    if (!isAccountMenuExpanded) setSubMenuSelectedScreenName('');
-  };
-
-  useEffect(() => {
-    if (newState.index < 5 && isAccountMenuExpanded) {
-      setIsAccountMenuExpanded(false);
-    }
-  }, [newState.index]);
 
   const {theme, setTheme} = useContext(ThemeContext);
 
@@ -82,15 +50,6 @@ const HeaderContent = (props: Props) => {
       contentContainerStyle={styles.contentContainer}>
       <DrawerHeader theme={theme} props={props} />
       <ScrollView>
-        {/* <DrawerItem
-          {...props}
-          label={translate('navigation.wallet')}
-          onPress={() => {
-            navigation.navigate('WALLET');
-          }}
-          style={itemStyle}
-          focused={newState.index === 0 && !isAccountMenuExpanded}
-        /> */}
         <DrawerContentItem
           labelTranslationKey="navigation.accounts"
           theme={theme}
@@ -155,53 +114,17 @@ const HeaderContent = (props: Props) => {
           }}
           iconImage={<Icon name={'logout'} theme={theme} />}
         />
-
-        {/* //TODO cleanup unused code */}
-        {/* <TouchableOpacity
-          onLongPress={() => {
-            props.closeAllTabs();
-            SimpleToast.show('Browser data was deleted');
-          }}>
-          <DrawerItem
-            {...props}
-            label={translate('navigation.browser')}
-            onPress={() => {
-              navigation.navigate('BrowserScreen');
-            }}
-            focused={newState.index === 1 && !isAccountMenuExpanded}
-            style={itemStyle}
-          />
-        </TouchableOpacity>
-
-        <DrawerItem
-          {...props}
-          label={translate('navigation.accounts')}
-          onPress={() => handleSetMenuExpanded()}
-          focused={isAccountMenuExpanded}
-          style={itemStyle}
+        {/* //TODO remove bellow just added temporary to use data. */}
+        <DrawerContentItem
+          labelTranslationKey="navigation.browser"
+          theme={theme}
+          onPress={() => navigation.navigate('BrowserScreen')}
+          iconImage={<Icon name={'logout'} theme={theme} />}
         />
-        {isAccountMenuExpanded &&
-          subMenuList.map((subMenu) => (
-            <DrawerItem
-              {...props}
-              style={[{paddingLeft: 20}]}
-              key={`${subMenu.screenName}-sub-item-accounts`}
-              label={translate(subMenu.labelTranslationKey)}
-              onPress={() => {
-                setSubMenuSelectedScreenName(subMenu.screenName);
-                navigation.navigate(subMenu.screenName);
-              }}
-              focused={
-                subMenuSelectedScreenName === subMenu.screenName &&
-                isAccountMenuExpanded
-              }
-            />
-          ))} */}
 
         <DrawerItemList
           state={{
             ...newState,
-            index: isAccountMenuExpanded ? -1 : newState.index - 2,
           }}
           navigation={navigation}
           itemStyle={itemStyle}

@@ -1,19 +1,18 @@
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
+import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
+import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
+import {
+  GeneralStackNavigationProps,
+  RootStackParam,
+} from 'navigators/Root.types';
 import React, {useContext} from 'react';
 import {StyleSheet} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
-//TODO use just icon + add the exported only version from figma
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import {
-  GeneralStackNavigationProps,
-  RootStackParam,
-} from 'navigators/Root.types';
 
 const Stack = createStackNavigator<RootStackParam>();
 
@@ -26,7 +25,7 @@ export default ({navigation, route}: GeneralStackNavigationProps) => {
   const {titleScreen, component} = route.params;
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
-  console.log({titleScreen}); //TODO remove line after refactoring
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -74,9 +73,9 @@ const getStyles = (theme: Theme) =>
       backgroundColor: getColors(theme).primaryBackground,
     },
     headerRightContainer: {
-      marginRight: 10,
+      marginRight: 16,
     },
     headerLeftContainer: {
-      marginLeft: 10,
+      marginLeft: 16,
     },
   });
