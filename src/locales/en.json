@@ -78,7 +78,8 @@
     "edit": "Edit",
     "delete": "Delete",
     "to": "To",
-    "use_authorized_account_instead": "Use Authorized Account instead"
+    "use_authorized_account_instead": "Use Authorized Account instead",
+    "forget_account": "Forget Account"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -394,7 +395,8 @@
   },
   "settings": {
     "keys": {
-      "add": "ADD KEY",
+      "add": "Add Key",
+      "add_keyType": "Add {{type}} Key",
       "disclaimer": [
         {
           "text": "To receive funds, simply share your account name (displayed above) with the sender.",
@@ -482,6 +484,11 @@
       "create_account_successful": "Your account has been successfully created and added to your Keychain",
       "create_account_failed": "Your account creation has failed. Please try again later",
       "create_account_ticket": "{{tickets}} account creation ticket"
+    },
+    "copy_keys": {
+      "title": "Copy a Key",
+      "text1": "If you need to copy a public or private key. Just do a long press on top of the visible key",
+      "text2": "After a brief moment, the app will display a message letting you know that the key has been copied to the clipboard."
     }
   },
   "toast": {
@@ -501,7 +508,9 @@
     "keys": {
       "not_wanted_key": "This is not your {{type}} key!",
       "not_a_key": "This is not one of your private keys!",
-      "copied": "The key was copied to the clipboard!"
+      "copied": "The key was copied to the clipboard!",
+      "key_added": "Your {{type}} Key was Added successfully",
+      "key_removed": "Your {{type}} Key has been Removed!"
     },
     "error_add_account": "Something went wrong! Please verify your keys and your connection.",
     "savings_deposit_success": "You succesfully deposited {{amount}} to your savings.",

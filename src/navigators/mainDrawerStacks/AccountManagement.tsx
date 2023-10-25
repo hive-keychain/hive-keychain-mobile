@@ -2,7 +2,7 @@ import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/s
 import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import CloseButton from 'components/ui/CloseButton';
+import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import React, {useContext} from 'react';
 import {StyleSheet} from 'react-native';
@@ -28,10 +28,10 @@ export default () => {
           headerTitleAlign: 'center',
           title: translate('navigation.manage'),
           headerRight: () => (
-            <CloseButton
+            <MoreInformation
+              additionalButtonStyle={styles.marginRight}
+              type={Info.COPY_KEYS}
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
-              additionalContainerStyle={styles.marginRight}
             />
           ),
           headerLeft: () => (

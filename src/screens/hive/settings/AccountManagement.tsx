@@ -1,7 +1,9 @@
 import {addKey, forgetAccount, forgetKey} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
-import ItemDropdown from 'components/form/ItemDropdown';
+import ItemDropdown, {
+  ItemDropdownInterface,
+} from 'components/form/ItemDropdown';
 import Key from 'components/hive/Key';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -14,8 +16,11 @@ import React, {useContext, useEffect, useState} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
+import {button_link_primary_medium} from 'src/styles/typography';
 import {RootState} from 'store';
+import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
 const AccountManagement = ({
@@ -37,6 +42,15 @@ const AccountManagement = ({
   }, [navigation, account.name]);
   if (!username) return null;
 
+  const getItemDropDownSelected = (username: string): ItemDropdownInterface => {
+    const selected = accounts.filter((acc) => acc.name === username)[0];
+    return {
+      label: selected.name,
+      value: selected.name,
+      icon: <UserProfilePicture username={username} style={styles.avatar} />,
+    };
+  };
+
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
 
@@ -47,6 +61,7 @@ const AccountManagement = ({
 
         <ScrollView>
           <ItemDropdown
+            selected={getItemDropDownSelected(account.name!)}
             theme={theme}
             itemDropdownList={accounts.map((acc) => {
               return {
@@ -74,6 +89,7 @@ const AccountManagement = ({
             account={accounts.find((e) => e.name === username)}
             forgetKey={forgetKey}
             navigation={navigation}
+            theme={theme}
           />
           <Key
             type={KeyTypes.active}
@@ -81,6 +97,7 @@ const AccountManagement = ({
             account={accounts.find((e) => e.name === username)}
             forgetKey={forgetKey}
             navigation={navigation}
+            theme={theme}
           />
           <Key
             type={KeyTypes.memo}
@@ -88,19 +105,21 @@ const AccountManagement = ({
             account={accounts.find((e) => e.name === username)}
             forgetKey={forgetKey}
             navigation={navigation}
+            theme={theme}
           />
           <Separator height={20} />
           <EllipticButton
-            style={styles.button}
-            title="FORGET ACCOUNT"
+            style={getButtonStyle(theme).warningStyleButton}
+            title={translate('common.forget_account')}
             onPress={() => {
               if (username) {
                 forgetAccount(username);
                 navigate('WALLET');
               }
             }}
+            additionalTextStyle={styles.operationButtonText}
           />
-          <Separator height={50} />
+          <Separator height={25} />
         </ScrollView>
       </SafeArea>
     </Background>
@@ -109,23 +128,14 @@ const AccountManagement = ({
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
-    disclaimer: {color: '#404950', marginVertical: 2, paddingHorizontal: 20},
-    important: {
-      color: '#A3112A',
-      fontWeight: 'bold',
-      marginVertical: 2,
-      paddingHorizontal: 20,
-    },
-    button: {backgroundColor: '#B9122F'},
-    keyOdd: {backgroundColor: '#E5EEF7', padding: 20},
-    keyEven: {backgroundColor: '#FFFFFF', padding: 20},
     safeArea: {paddingHorizontal: 16},
     cardKey: {
       borderWidth: 1,
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
       borderRadius: 19,
-      padding: 10,
+      paddingHorizontal: 21,
+      paddingVertical: 15,
       marginBottom: 8,
     },
     itemListContainer: {
@@ -143,6 +153,9 @@ const getStyles = (theme: Theme) =>
       zIndex: 9,
     },
     avatar: {width: 30, height: 30, borderRadius: 50},
+    operationButtonText: {
+      ...button_link_primary_medium,
+    },
   });
 
 const mapStateToProps = (state: RootState) => ({

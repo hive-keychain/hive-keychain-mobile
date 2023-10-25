@@ -21,23 +21,25 @@ import {
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 
-export interface ItemDropdown {
+export interface ItemDropdownInterface {
   label: string;
   value: string;
   icon: JSX.Element;
 }
 
 type Props = {
-  itemDropdownList: ItemDropdown[];
+  selected?: ItemDropdownInterface;
+  itemDropdownList: ItemDropdownInterface[];
   theme: Theme;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalContainerListStyle?: StyleProp<ViewStyle>;
   additionalExpandedListItemContainerStyle?: StyleProp<ViewStyle>;
   additionalSelectedItemContainerStyle?: StyleProp<ViewStyle>;
   labelsToUppercase?: boolean;
-  onSelectedItem?: (item: ItemDropdown) => void;
+  onSelectedItem?: (item: ItemDropdownInterface) => void;
 };
 const ItemDropdown = ({
+  selected,
   additionalContainerStyle,
   theme,
   itemDropdownList,
@@ -49,10 +51,12 @@ const ItemDropdown = ({
 }: Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
-  const [selectedItem, setSelectedItem] = React.useState(itemDropdownList[0]);
+  const [selectedItem, setSelectedItem] = React.useState(
+    selected ?? itemDropdownList[0],
+  );
   const [expandList, setExpandList] = React.useState(false);
 
-  const renderItem = (item: ItemDropdown) => {
+  const renderItem = (item: ItemDropdownInterface) => {
     return (
       <View
         key={`item-dropdown-list-${item.label}`}
@@ -68,7 +72,7 @@ const ItemDropdown = ({
     );
   };
 
-  const handleSelectedItem = (item: ItemDropdown) => {
+  const handleSelectedItem = (item: ItemDropdownInterface) => {
     setSelectedItem(item);
     setExpandList(false);
     if (onSelectedItem) onSelectedItem(item);

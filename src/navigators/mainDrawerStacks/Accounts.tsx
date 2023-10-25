@@ -17,7 +17,7 @@ const Stack = createStackNavigator();
 export default () => {
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
-  //TODO bellow, move styles bellow using getStyles
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -55,6 +55,8 @@ const getStyles = (theme: Theme) =>
   StyleSheet.create({
     header: {
       backgroundColor: getColors(theme).primaryBackground,
+      elevation: 0,
+      borderWidth: 0,
     },
     headerTitle: {
       ...headlines_primary_headline_2,

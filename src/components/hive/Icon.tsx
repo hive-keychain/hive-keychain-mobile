@@ -18,6 +18,8 @@ import ImportIcon from 'assets/new_UI/import.svg';
 import InfoCircleIcon from 'assets/new_UI/info-circle.svg';
 import CloseCircleIcon from 'assets/new_UI/linear_close-circle.svg';
 import EditIcon from 'assets/new_UI/linear_edit-2.svg';
+import NotSeeIcon from 'assets/new_UI/linear_eye-slash.svg';
+import SeeIcon from 'assets/new_UI/linear_eye.svg';
 import ScannerIcon from 'assets/new_UI/linear_scanner.svg';
 import CheckIcon from 'assets/new_UI/linear_tick-circle.svg';
 import LogoutIcon from 'assets/new_UI/logout.svg';
@@ -356,6 +358,20 @@ const getIconFilePath = (
     case name === 'scanner':
       return (
         <ScannerIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'see':
+      return (
+        <SeeIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'not_see':
+      return (
+        <NotSeeIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
           {...dimensionsProps}
         />

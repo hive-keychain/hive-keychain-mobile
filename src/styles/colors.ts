@@ -57,12 +57,15 @@ export const getColors = (theme: Theme) => {
     quaternaryCardBorderColor: theme === Theme.LIGHT ? '#E1E8EF' : '#364360',
     quinaryCardBorderColor: theme === Theme.LIGHT ? BORDERWHITISH : '#FFF',
     senaryCardBorderColor: theme === Theme.LIGHT ? '#FFF' : '#344360',
+    septenaryCardBorderColor:
+      theme === Theme.LIGHT ? BACKGROUNDLIGHTVARIANTLIGHTBLUE : '#364360',
     borderContrast: theme === Theme.LIGHT ? '#212838' : '#FFF',
     primaryRedShape:
       theme === Theme.LIGHT ? BRIGTHER_PRIMARY_RED : PRIMARY_RED_COLOR,
     cardBgColor: theme === Theme.LIGHT ? '#E5EDF5' : '#293144',
     secondaryCardBgColor: theme === Theme.LIGHT ? '#FFF' : '#293144',
     cardBgLighter: theme === Theme.LIGHT ? '#FFF' : BACKGROUNDITEMDARKISH,
+    tertiaryCardBgColor: theme === Theme.LIGHT ? '#FAFCFD' : '#293144',
     lineSeparatorStroke: theme === Theme.LIGHT ? '#EDF4FC' : '#364360',
     secondaryLineSeparatorStroke:
       theme === Theme.LIGHT

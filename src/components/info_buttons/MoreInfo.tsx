@@ -1,4 +1,5 @@
 import Icon from 'components/hive/Icon';
+import CopyKeys from 'components/modals/CopyKeys';
 import InfoQR from 'components/modals/InfoQR';
 import InfoWalletQR from 'components/modals/InfoWalletQR';
 import MoreInformation from 'components/modals/MoreInformation';
@@ -19,6 +20,7 @@ export enum Info {
   KEYS = 'KEYS',
   QR_ACCOUNT = 'QR_ACCOUNT',
   QR_WALLET = 'QR_WALLET',
+  COPY_KEYS = 'COPY_KEYS',
 }
 export default ({
   type,
@@ -42,14 +44,15 @@ export default ({
     case Info.QR_WALLET:
       content = <InfoWalletQR />;
       break;
+    case Info.COPY_KEYS:
+      content = <CopyKeys />;
+      break;
   }
   return (
     <Icon
       name="info"
       theme={theme}
       additionalContainerStyle={additionalButtonStyle}
-      //TODO bellow adjust styles on each content
-      //TODO check if the container changes or stay as one style
       onClick={() =>
         navigate('ModalScreen', {
           modalContent: content,

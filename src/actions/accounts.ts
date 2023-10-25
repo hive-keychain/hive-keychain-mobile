@@ -2,8 +2,8 @@ import {loadAccount} from 'actions/hive';
 import Toast from 'react-native-simple-toast';
 import {AppThunk} from 'src/hooks/redux';
 import {encryptJson} from 'utils/encrypt';
-import {clearKeychain, saveOnKeychain} from 'utils/keychainStorage';
 import validateKeys from 'utils/keyValidation';
+import {clearKeychain, saveOnKeychain} from 'utils/keychainStorage';
 import {translate} from 'utils/localize';
 import {navigate, resetStackAndNavigate} from 'utils/navigation';
 import {
@@ -14,6 +14,7 @@ import {
   KeyTypes,
   PubKeyTypes,
 } from './interfaces';
+import {showModal} from './message';
 import {
   ADD_ACCOUNT,
   FORGET_ACCOUNT,
@@ -93,6 +94,7 @@ export const forgetKey = (username: string, key: KeyTypes): AppThunk => async (
       }
     }),
   );
+  dispatch(showModal(true, translate('toast.keys.key_removed', {type: key})));
 };
 
 export const addKey = (
@@ -102,9 +104,11 @@ export const addKey = (
 ): AppThunk => async (dispatch) => {
   const keys = await validateKeys(username, key);
   if (!keys) {
-    Toast.show(translate('toast.keys.not_a_key'));
+    dispatch(showModal(true, translate('toast.keys.not_a_key'), true));
   } else if (!keys[type]) {
-    Toast.show(translate('toast.keys.not_wanted_key', {type}));
+    dispatch(
+      showModal(true, translate('toast.keys.not_wanted_key', {type}), true),
+    );
   } else {
     dispatch(
       updateAccounts((account: Account) => {
@@ -115,6 +119,7 @@ export const addKey = (
         }
       }),
     );
+    dispatch(showModal(true, translate('toast.keys.key_added', {type})));
   }
 };
 
