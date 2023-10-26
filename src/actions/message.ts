@@ -1,6 +1,8 @@
 import {ActionPayload, MessageModalPayload} from './interfaces';
 import {RESET_MODAL, SHOW_MODAL} from './types';
-
+//TODO create enum to have different types of modal:
+//  - for now:
+//    - success, error.
 export const showModal = (
   show: boolean,
   message: string,

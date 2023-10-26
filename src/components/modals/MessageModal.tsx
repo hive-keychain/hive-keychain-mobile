@@ -19,7 +19,7 @@ import {translate} from 'utils/localize';
 interface Props {
   capitalize?: boolean;
 }
-
+//TODO add timer(default time 3000ms) to self hide only on success!
 const Message = ({
   messageModal,
   capitalize,

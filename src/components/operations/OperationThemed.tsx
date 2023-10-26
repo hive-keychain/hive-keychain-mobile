@@ -5,7 +5,7 @@ import React, {useContext} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-
+//TODO when finishing the UI refactor, check if can be merged with old one, check
 interface OperationProps {
   childrenTop?: JSX.Element;
   childrenMiddle: JSX.Element;

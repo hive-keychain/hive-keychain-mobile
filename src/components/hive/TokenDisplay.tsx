@@ -453,6 +453,7 @@ const getDimensionedStyles = ({
     textSymbol: {
       ...button_link_primary_medium,
       lineHeight: 22,
+      //TODO same as bellow todo
       color: getColors(theme).tertiaryText,
       fontSize: getFontSizeSmallDevices(
         height,
@@ -460,6 +461,7 @@ const getDimensionedStyles = ({
       ),
     },
     textAmount: {
+      //TODO name this bellow as totalDisplayTextAmount
       color: getColors(theme).quaternaryText,
       lineHeight: 17,
       ...body_primary_body_2,

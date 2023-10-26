@@ -31,6 +31,11 @@ export const DARKBLUELIGHTER = '#364360';
 export const BORDERWHITISH = '#EDEDED';
 
 export const getColors = (theme: Theme) => {
+  //TODO
+  // change those primaryText, secondaryText for a more descriptive and useful name(depending on use)
+  //  if they are not being used in many places follow:
+  //  - name them per use + location(component, stack)
+  //  - do the same for cards, just keeping the most used(primary,secondary)
   return {
     primaryText: theme === Theme.LIGHT ? '#484848' : '#FFF',
     secondaryText: theme === Theme.LIGHT ? '#212838' : '#FFF',
