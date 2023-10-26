@@ -2,7 +2,7 @@ import Background from 'components/ui/Background';
 import {BackgroundHexagons} from 'components/ui/BackgroundHexagons';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React, {useContext} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 //TODO when finishing the UI refactor, check if can be merged with old one, check
@@ -11,6 +11,7 @@ interface OperationProps {
   childrenMiddle: JSX.Element;
   childrenBottom?: JSX.Element;
   renderBottomBg?: boolean;
+  additionalContentContainerStyle?: StyleProp<ViewStyle>;
 }
 
 const OperationThemed = ({
@@ -18,6 +19,7 @@ const OperationThemed = ({
   childrenTop,
   childrenMiddle,
   renderBottomBg,
+  additionalContentContainerStyle,
 }: OperationProps) => {
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
@@ -30,7 +32,8 @@ const OperationThemed = ({
       <>
         <FocusAwareStatusBar />
         {childrenTop}
-        <View style={styles.contentContainer}>
+        <View
+          style={[styles.contentContainer, additionalContentContainerStyle]}>
           {renderBottomBg && <BackgroundHexagons theme={theme} />}
           <ScrollView>{childrenMiddle}</ScrollView>
           {childrenBottom}

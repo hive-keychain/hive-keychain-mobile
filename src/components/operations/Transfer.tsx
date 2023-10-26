@@ -119,22 +119,18 @@ const Transfer = ({
         await sendTransfer();
         showModal(
           true,
-          translate(
-            isRecurrent
-              ? 'toast.recurrent_transfer_success'
-              : 'toast.transfer_success',
-          ),
+          isRecurrent
+            ? 'toast.recurrent_transfer_success'
+            : 'toast.transfer_success',
         );
       } else {
         const {id} = await transferToken();
         const {confirmed} = await tryConfirmTransaction(id);
         showModal(
           true,
-          translate(
-            confirmed
-              ? translate('toast.transfer_token_confirmed')
-              : translate('toast.transfer_token_unconfirmed'),
-          ),
+          confirmed
+            ? 'toast.transfer_token_confirmed'
+            : 'toast.transfer_token_unconfirmed',
         );
       }
       loadAccount(user.account.name, true);
@@ -330,6 +326,7 @@ const Transfer = ({
             />
           </View>
         }
+        additionalContentContainerStyle={styles.paddingHorizontal}
       />
     );
   } else {
@@ -337,7 +334,7 @@ const Transfer = ({
       <OperationThemed
         childrenTop={<Separator height={50} />}
         childrenMiddle={
-          <View style={styles.confirmationContainer}>
+          <>
             <Separator height={35} />
             <Text style={[styles.text, styles.info]}>
               {capitalizeSentence(
@@ -459,7 +456,7 @@ const Transfer = ({
                 </View>
               </>
             ) : null}
-          </View>
+          </>
         }
         childrenBottom={
           <View style={styles.operationButtonsContainer}>
@@ -487,6 +484,7 @@ const Transfer = ({
             />
           </View>
         }
+        additionalContentContainerStyle={styles.paddingHorizontal}
         renderBottomBg
       />
     );
@@ -509,9 +507,6 @@ const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
     text: {
       ...title_primary_body_2,
       color: getColors(theme).secondaryText,
-    },
-    confirmationContainer: {
-      paddingHorizontal: 18,
     },
     info: {
       opacity: 0.7,
@@ -560,6 +555,9 @@ const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
       borderWidth: 0,
       borderTopLeftRadius: 22,
       borderTopRightRadius: 22,
+    },
+    paddingHorizontal: {
+      paddingHorizontal: 18,
     },
   });
 

@@ -2,7 +2,7 @@ import {resetModal} from 'actions/message';
 import BigCheckSVG from 'assets/new_UI/Illustration.svg';
 import ErrorSvg from 'assets/new_UI/error-circle.svg';
 import EllipticButton from 'components/form/EllipticButton';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
@@ -15,18 +15,39 @@ import {
 import {RootState} from 'store';
 import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
-
+//TODO important: check on every use of showModal and replace to get only the tr key.
+const DEFAULTHIDETIMEMS = 3000;
 interface Props {
   capitalize?: boolean;
+  notHideOnSuccess?: boolean;
 }
-//TODO add timer(default time 3000ms) to self hide only on success!
+
 const Message = ({
   messageModal,
   capitalize,
   resetModal,
+  notHideOnSuccess,
 }: Props & PropsFromRedux) => {
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
+
+  const handleReset = () => {
+    resetModal();
+  };
+
+  useEffect(() => {
+    if (!messageModal.show) return;
+    //TODO when adding types of modals, add the check here, if MODAL.SUCCESS
+    let timeout: undefined | NodeJS.Timeout;
+    if (!notHideOnSuccess) {
+      timeout = setTimeout(handleReset, DEFAULTHIDETIMEMS);
+    }
+    return () => {
+      if (timeout && !notHideOnSuccess) clearTimeout(timeout);
+    };
+  }, [notHideOnSuccess, messageModal.show]);
+
+  const message = translate(messageModal.messageKey);
 
   return messageModal.show ? (
     <Modal visible={messageModal.show} transparent={true} animationType="fade">
@@ -39,10 +60,8 @@ const Message = ({
             ) : (
               <BigCheckSVG style={styles.svgImage} />
             )}
-            <Text style={styles.text}>
-              {capitalize
-                ? capitalizeSentence(messageModal.message)
-                : messageModal.message}
+            <Text style={[styles.text, styles.marginVertical]}>
+              {capitalize ? capitalizeSentence(message) : message}
             </Text>
             <EllipticButton
               title={translate('common.close')}
@@ -92,7 +111,7 @@ const getStyles = (theme: Theme) =>
     },
     modalContent: {
       width: '100%',
-      height: 300,
+      maxHeight: 300,
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: 14,
@@ -104,13 +123,17 @@ const getStyles = (theme: Theme) =>
     button: {
       width: '60%',
       marginHorizontal: 0,
+      marginTop: 10,
       marginBottom: 25,
     },
     buttonText: {
       ...button_link_primary_medium,
     },
     svgImage: {
-      marginTop: 45,
+      marginTop: 15,
+    },
+    marginVertical: {
+      marginVertical: 10,
     },
   });
 

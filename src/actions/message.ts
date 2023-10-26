@@ -5,14 +5,14 @@ import {RESET_MODAL, SHOW_MODAL} from './types';
 //    - success, error.
 export const showModal = (
   show: boolean,
-  message: string,
+  messageKey: string,
   isError?: boolean,
 ): ActionPayload<MessageModalPayload> => {
   return {
     type: SHOW_MODAL,
     payload: {
       show,
-      message,
+      messageKey,
       isError,
     },
   };

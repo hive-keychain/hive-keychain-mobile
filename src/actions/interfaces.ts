@@ -222,7 +222,7 @@ export interface Account {
 
 export interface MessageModalPayload {
   show: boolean;
-  message: string;
+  messageKey: string;
   isError?: boolean;
 }
 
