@@ -1,6 +1,7 @@
 import DrawerContentItem from 'components/drawer/drawer-content-item/DrawerContentItem';
 import Icon from 'components/hive/Icon';
-import {GeneralStackProps} from 'navigators/Root.types';
+import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
+import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useContext} from 'react';
 import {StatusBar, StyleSheet, Text, View} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
@@ -12,6 +13,9 @@ import Operations from './Operations';
 const SettingsMenu = () => {
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
+
+  useBackButtonNavigation('WALLET');
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -26,10 +30,10 @@ const SettingsMenu = () => {
         //  2.  rpc nodes & make as design
         onPress={() =>
           //TODO change this GeneralStack name,
-          navigate('GeneralStack', {
+          navigate('TemplateStack', {
             titleScreen: translate('settings.settings.operations'),
             component: <Operations />,
-          } as GeneralStackProps)
+          } as TemplateStackProps)
         }
         iconImage={<Icon name="cpu" theme={theme} />}
         drawBottomLine={true}
@@ -39,14 +43,14 @@ const SettingsMenu = () => {
         theme={theme}
         //TODO idem as bellow
         onPress={() =>
-          navigate('GeneralStack', {
+          navigate('TemplateStack', {
             titleScreen: translate('settings.settings.rpc'),
             component: (
               <View>
                 <Text>TODO rpc bellow</Text>
               </View>
             ),
-          } as GeneralStackProps)
+          } as TemplateStackProps)
         }
         iconImage={<Icon name="rpc" theme={theme} />}
         drawBottomLine={true}

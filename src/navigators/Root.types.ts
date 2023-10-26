@@ -30,7 +30,7 @@ export interface ModalScreenProps {
   renderButtonElement?: JSX.Element;
 }
 
-export interface GeneralStackProps {
+export interface TemplateStackProps {
   titleScreen: string;
   component: JSX.Element;
 }
@@ -53,7 +53,7 @@ export type RootStackParam = {
       | DelegateTokenOperationProps
       | CancelTokenDelegationOperationProps;
   };
-  GeneralStack: GeneralStackProps;
+  TemplateStack: TemplateStackProps;
 };
 
 export type MainNavigation = StackNavigationProp<RootStackParam, 'Main'>;
@@ -96,17 +96,17 @@ export type OperationNavigationProps = {
   route: OperationNavigationRoute;
 };
 
-export type GeneralStackNavigation = StackNavigationProp<
+export type TemplateStackNavigation = StackNavigationProp<
   RootStackParam,
-  'GeneralStack'
+  'TemplateStack'
 >;
 
-export type GeneralStackNavigationRoute = RouteProp<
+export type TemplateStackNavigationRoute = RouteProp<
   RootStackParam,
-  'GeneralStack'
+  'TemplateStack'
 >;
 
-export type GeneralStackNavigationProps = {
-  navigation: GeneralStackNavigation;
-  route: GeneralStackNavigationRoute;
+export type TemplateStackNavigationProps = {
+  navigation: TemplateStackNavigation;
+  route: TemplateStackNavigationRoute;
 };

@@ -212,7 +212,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
         headlines_primary_headline_2.fontSize,
       ),
     },
-    //TODO cleanup
+    //TODO cleanup after refactoring UI
     //new UI related
     containerTokenScreen: {
       flex: 1,

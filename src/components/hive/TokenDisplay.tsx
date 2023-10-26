@@ -5,6 +5,7 @@ import IncomingOutGoingTokenDelegations from 'components/operations/IncomingOutG
 import RoundButton from 'components/operations/OperationsButtons';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
 import {UnstakeTokenOperationProps} from 'components/operations/UnstakeToken';
+import {TemplateStackProps} from 'navigators/Root.types';
 import React from 'react';
 import {
   Linking,
@@ -163,7 +164,7 @@ const TokenDisplay = ({
                   styles.invertXAxis,
                 ]}
                 onClick={() =>
-                  navigate('GeneralStack', {
+                  navigate('TemplateStack', {
                     titleScreen: 'Incoming',
                     component: (
                       <IncomingOutGoingTokenDelegations
@@ -174,7 +175,7 @@ const TokenDisplay = ({
                         tokenInfo={tokenInfo}
                       />
                     ),
-                  })
+                  } as TemplateStackProps)
                 }
               />
             </View>
@@ -192,7 +193,7 @@ const TokenDisplay = ({
                 height={15}
                 additionalContainerStyle={styles.containerMarginLeft}
                 onClick={() =>
-                  navigate('GeneralStack', {
+                  navigate('TemplateStack', {
                     titleScreen: 'Outgoing',
                     component: (
                       <IncomingOutGoingTokenDelegations
@@ -203,7 +204,7 @@ const TokenDisplay = ({
                         tokenInfo={tokenInfo}
                       />
                     ),
-                  })
+                  } as TemplateStackProps)
                 }
               />
             </View>

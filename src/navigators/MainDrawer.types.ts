@@ -15,7 +15,7 @@ export type MainDrawerStackParam = {
   Tokens: undefined;
   TokensHistory: undefined;
   Operation: undefined;
-  GeneralStack: undefined;
+  TemplateStack: undefined;
 };
 
 export type BrowserNavigation = StackNavigationProp<

@@ -5,8 +5,8 @@ import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import {
-  GeneralStackNavigationProps,
   RootStackParam,
+  TemplateStackNavigationProps,
 } from 'navigators/Root.types';
 import React, {useContext} from 'react';
 import {StyleSheet} from 'react-native';
@@ -21,7 +21,7 @@ const Stack = createStackNavigator<RootStackParam>();
  * @param titleScreen Title of the screen stack
  * @param component Child component(s) to render, passing its props.
  */
-export default ({navigation, route}: GeneralStackNavigationProps) => {
+export default ({navigation, route}: TemplateStackNavigationProps) => {
   const {titleScreen, component} = route.params;
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
@@ -29,7 +29,7 @@ export default ({navigation, route}: GeneralStackNavigationProps) => {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="GeneralStack"
+        name="TemplateStack"
         component={() => component}
         options={({navigation}) => ({
           headerStyle: styles.header,
