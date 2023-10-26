@@ -25,6 +25,7 @@ import {
 import {Text} from 'react-native-elements';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
@@ -59,12 +60,17 @@ const AddAccountByKey = ({
       if (keys) {
         const wallet = route.params ? route.params.wallet : false;
         addAccount(account, keys, wallet, false);
-        showModal(true, translate('common.added_account'));
+        showModal('common.added_account', MessageModalType.SUCCESS);
       } else {
-        showModal(true, translate('toast.error_add_account'), true);
+        showModal('toast.error_add_account', MessageModalType.ERROR);
       }
     } catch (e) {
-      showModal(true, (e as any).message || e, true);
+      showModal(
+        (e as any).message || JSON.stringify(e),
+        MessageModalType.ERROR,
+        undefined,
+        true,
+      );
     }
   };
   const {theme} = useContext(ThemeContext);

@@ -6,6 +6,7 @@ import React, {useContext, useEffect} from 'react';
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
@@ -15,7 +16,7 @@ import {
 import {RootState} from 'store';
 import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
-//TODO important: check on every use of showModal and replace to get only the tr key.
+
 const DEFAULTHIDETIMEMS = 3000;
 interface Props {
   capitalize?: boolean;
@@ -36,8 +37,7 @@ const Message = ({
   };
 
   useEffect(() => {
-    if (!messageModal.show) return;
-    //TODO when adding types of modals, add the check here, if MODAL.SUCCESS
+    if (messageModal.type !== MessageModalType.SUCCESS) return;
     let timeout: undefined | NodeJS.Timeout;
     if (!notHideOnSuccess) {
       timeout = setTimeout(handleReset, DEFAULTHIDETIMEMS);
@@ -45,21 +45,31 @@ const Message = ({
     return () => {
       if (timeout && !notHideOnSuccess) clearTimeout(timeout);
     };
-  }, [notHideOnSuccess, messageModal.show]);
+  }, [notHideOnSuccess, messageModal]);
 
-  const message = translate(messageModal.messageKey);
+  const message = messageModal.skipTranslation
+    ? messageModal.key
+    : translate(messageModal.key, messageModal.params);
 
-  return messageModal.show ? (
-    <Modal visible={messageModal.show} transparent={true} animationType="fade">
+  const renderIcon = () => {
+    switch (messageModal.type) {
+      case MessageModalType.SUCCESS:
+        return <BigCheckSVG style={styles.svgImage} />;
+      case MessageModalType.ERROR:
+        return <ErrorSvg style={styles.svgImage} />;
+    }
+  };
+
+  return (
+    <Modal
+      visible={messageModal.key.trim().length > 0}
+      transparent={true}
+      animationType="fade">
       <View style={[styles.mainContainer]}>
         <TouchableOpacity style={{flex: 1}} onPress={() => resetModal()} />
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {messageModal.isError ? (
-              <ErrorSvg style={styles.svgImage} />
-            ) : (
-              <BigCheckSVG style={styles.svgImage} />
-            )}
+            {renderIcon()}
             <Text style={[styles.text, styles.marginVertical]}>
               {capitalize ? capitalizeSentence(message) : message}
             </Text>
@@ -74,7 +84,7 @@ const Message = ({
         </View>
       </View>
     </Modal>
-  ) : null;
+  );
 };
 
 const mapStateToProps = (state: RootState) => {

@@ -19,6 +19,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -118,31 +119,33 @@ const Transfer = ({
       if (!engine) {
         await sendTransfer();
         showModal(
-          true,
           isRecurrent
             ? 'toast.recurrent_transfer_success'
             : 'toast.transfer_success',
+          MessageModalType.SUCCESS,
         );
       } else {
         const {id} = await transferToken();
         const {confirmed} = await tryConfirmTransaction(id);
         showModal(
-          true,
           confirmed
             ? 'toast.transfer_token_confirmed'
             : 'toast.transfer_token_unconfirmed',
+          MessageModalType.SUCCESS,
         );
       }
       loadAccount(user.account.name, true);
       goBack();
     } catch (e) {
       showModal(
-        true,
         beautifyTransferError(e as any, {
           to,
           currency,
           username: user.account.name,
         }),
+        MessageModalType.ERROR,
+        undefined,
+        true,
       );
       setLoading(false);
     }

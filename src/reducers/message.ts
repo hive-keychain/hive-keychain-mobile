@@ -1,10 +1,10 @@
 import {ActionPayload, MessageModalPayload} from 'actions/interfaces';
 import {RESET_MODAL, SHOW_MODAL} from 'actions/types';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 
 const INITIAL_STATE: MessageModalPayload = {
-  show: false,
-  messageKey: '',
-  isError: false,
+  key: '',
+  type: MessageModalType.SUCCESS,
 };
 
 export default (

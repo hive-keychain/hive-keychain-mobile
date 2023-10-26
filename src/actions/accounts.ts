@@ -1,5 +1,6 @@
 import {loadAccount} from 'actions/hive';
 import Toast from 'react-native-simple-toast';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {AppThunk} from 'src/hooks/redux';
 import {encryptJson} from 'utils/encrypt';
 import validateKeys from 'utils/keyValidation';
@@ -94,7 +95,9 @@ export const forgetKey = (username: string, key: KeyTypes): AppThunk => async (
       }
     }),
   );
-  dispatch(showModal(true, translate('toast.keys.key_removed', {type: key})));
+  dispatch(
+    showModal('toast.keys.key_removed', MessageModalType.SUCCESS, {type: key}),
+  );
 };
 
 export const addKey = (
@@ -104,10 +107,10 @@ export const addKey = (
 ): AppThunk => async (dispatch) => {
   const keys = await validateKeys(username, key);
   if (!keys) {
-    dispatch(showModal(true, translate('toast.keys.not_a_key'), true));
+    dispatch(showModal('toast.keys.not_a_key', MessageModalType.ERROR));
   } else if (!keys[type]) {
     dispatch(
-      showModal(true, translate('toast.keys.not_wanted_key', {type}), true),
+      showModal('toast.keys.not_wanted_key', MessageModalType.ERROR, {type}),
     );
   } else {
     dispatch(
@@ -119,7 +122,9 @@ export const addKey = (
         }
       }),
     );
-    dispatch(showModal(true, translate('toast.keys.key_added', {type})));
+    dispatch(
+      showModal('toast.keys.key_added', MessageModalType.SUCCESS, {type}),
+    );
   }
 };
 

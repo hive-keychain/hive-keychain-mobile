@@ -5,6 +5,7 @@ import {
   VestingDelegation,
 } from '@hiveio/dhive';
 import {Manabar} from '@hiveio/dhive/lib/chain/rc';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {RcDelegationsInfo} from '../interfaces/rc-delegation.interface';
 
 export interface ActionPayload<T> {
@@ -221,9 +222,10 @@ export interface Account {
 }
 
 export interface MessageModalPayload {
-  show: boolean;
-  messageKey: string;
-  isError?: boolean;
+  key: string;
+  type: MessageModalType;
+  params?: {};
+  skipTranslation?: boolean;
 }
 
 export interface AccountsPayload {

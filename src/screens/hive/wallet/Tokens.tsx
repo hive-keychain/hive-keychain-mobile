@@ -1,5 +1,4 @@
 import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
-import {showModal} from 'actions/message';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import HiveEngineAccountValue from 'components/hive/HiveEngineAccountValue';
@@ -50,7 +49,6 @@ const Tokens = ({
   prices,
   tokensMarket,
   new_ui,
-  showModal,
 }: PropsFromRedux & TokensProps) => {
   const [
     filteredUserTokenBalanceList,
@@ -272,7 +270,6 @@ const connector = connect(mapStateToProps, {
   loadTokens,
   loadUserTokens,
   loadTokensMarket,
-  showModal,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(Tokens);

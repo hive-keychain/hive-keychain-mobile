@@ -9,6 +9,7 @@ import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -82,25 +83,21 @@ const StakeToken = ({
 
       if (confirmationResult && confirmationResult.confirmed) {
         if (confirmationResult.error) {
-          showModal(
-            true,
-            translate('toast.hive_engine_error', {
-              error: confirmationResult.error,
-            }),
-            true,
-          );
+          showModal('toast.hive_engine_error', MessageModalType.ERROR, {
+            error: confirmationResult.error,
+          });
         } else {
-          showModal(true, translate('toast.token_stake_success', {currency}));
+          showModal('toast.token_stake_success', MessageModalType.SUCCESS, {
+            currency,
+          });
         }
       } else {
-        showModal(true, translate('toast.token_timeout'), true);
+        showModal('toast.token_timeout', MessageModalType.ERROR);
       }
     } else {
-      showModal(
-        true,
-        translate('toast.tokens_operation_failed', {tokenOperation: 'stake'}),
-        true,
-      );
+      showModal('toast.tokens_operation_failed', MessageModalType.ERROR, {
+        tokenOperation: 'stake',
+      });
     }
 
     setLoading(false);

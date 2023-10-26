@@ -1,19 +1,20 @@
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {ActionPayload, MessageModalPayload} from './interfaces';
 import {RESET_MODAL, SHOW_MODAL} from './types';
-//TODO create enum to have different types of modal:
-//  - for now:
-//    - success, error.
+
 export const showModal = (
-  show: boolean,
-  messageKey: string,
-  isError?: boolean,
+  key: string,
+  type: MessageModalType,
+  params?: {},
+  skipTranslation?: boolean,
 ): ActionPayload<MessageModalPayload> => {
   return {
     type: SHOW_MODAL,
     payload: {
-      show,
-      messageKey,
-      isError,
+      key,
+      type,
+      params,
+      skipTranslation,
     },
   };
 };
