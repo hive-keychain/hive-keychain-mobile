@@ -2,6 +2,8 @@ import {ActionPayload} from 'actions/interfaces';
 import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {DomainPreference, PreferencePayload} from 'reducers/preferences.types';
+import {Theme} from 'src/context/theme.context';
+import {getCardStyle} from 'src/styles/card';
 //TODO keep working here
 type Props = {
   domainPref: DomainPreference;
@@ -12,6 +14,7 @@ type Props = {
     domain: string,
     request: string,
   ) => ActionPayload<PreferencePayload>;
+  theme: Theme;
 };
 
 const CollapsibleSettings = ({
@@ -19,6 +22,7 @@ const CollapsibleSettings = ({
   index,
   removePreference,
   username,
+  theme,
 }: Props) => {
   const [isCollapsed, collapse] = useState(false);
   const styles = getStyles(index);
@@ -44,7 +48,7 @@ const CollapsibleSettings = ({
   return (
     <>
       <TouchableOpacity
-        style={styles.collapsible}
+        style={[styles.collapsible, getCardStyle(theme).defaultCardItem]}
         onPress={() => {
           collapse(!isCollapsed);
         }}>

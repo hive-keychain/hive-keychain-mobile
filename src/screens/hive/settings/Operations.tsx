@@ -38,6 +38,7 @@ const Operations = ({
               index={preference.index}
               domainPref={preference.item}
               removePreference={removePreference}
+              theme={theme}
             />
           );
         }}
