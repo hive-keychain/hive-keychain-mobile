@@ -12,8 +12,7 @@ import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
 import {Width} from 'utils/common.types';
 
 const Stack = createStackNavigator();
-//TODO as important note: each stackScreen must originate from a main stack.
-//  i.e: makes sense if the Operation stack screen is within this walletStack as it is originating from here.
+
 export default () => {
   const {width} = useWindowDimensions();
   const styles = getStyles({width});
@@ -26,10 +25,7 @@ export default () => {
           headerStyle: {
             backgroundColor: '#A3112A',
           },
-          // headerTitleAlign: 'left',
           title: '',
-          // title: translate('navigation.wallet'),
-          // headerTintColor: 'white',
           headerRight: () => (
             <View style={styles.containerRight}>
               <Claim />

@@ -29,7 +29,6 @@ const SettingsMenu = () => {
         //  1.  operations & makes as design
         //  2.  rpc nodes & make as design
         onPress={() =>
-          //TODO change this GeneralStack name,
           navigate('TemplateStack', {
             titleScreen: translate('settings.settings.operations'),
             component: <Operations />,

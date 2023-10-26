@@ -33,7 +33,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
   const {operation, props} = route.params;
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
-  console.log({operation, props}); //TODO remove line
+
   const getTitle = () => {
     switch (operation) {
       case 'transfer':

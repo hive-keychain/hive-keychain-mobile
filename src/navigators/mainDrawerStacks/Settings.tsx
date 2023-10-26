@@ -17,11 +17,7 @@ const Stack = createStackNavigator();
 export default () => {
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
-  //TODO research to rewrite or modify the back phone button function, so you can have the general stack or any other stack working as you want:
-  //- i.e: when in the stack "GeneralStack" if the user press back phone button, it must take to wallet.
-  // this will be done also for Operation
-  // NOTE: if the above doesnt work, then add the stack you need within it's category:
-  //  - i.e: each settings screen will be a stack, inside this one bellow. & remove generalStack.
+
   return (
     <Stack.Navigator>
       <Stack.Screen
