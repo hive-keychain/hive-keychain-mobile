@@ -29,8 +29,6 @@ import {
   GLOBAL_PROPS,
   INIT_TRANSACTIONS,
 } from './types';
-//TODO check on this
-//end check
 
 export const loadAccount = (
   name: string,

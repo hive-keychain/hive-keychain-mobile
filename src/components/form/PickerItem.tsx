@@ -11,6 +11,7 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
+import {Overlay} from 'react-native-elements';
 
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
@@ -21,28 +22,28 @@ import {
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 
-export interface ItemDropdownInterface {
+export interface PickerItemInterface {
   label: string;
   value: string;
   icon: JSX.Element;
 }
 
 type Props = {
-  selected?: ItemDropdownInterface;
-  itemDropdownList: ItemDropdownInterface[];
+  selected?: PickerItemInterface;
+  pickerItemList: PickerItemInterface[];
   theme: Theme;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalContainerListStyle?: StyleProp<ViewStyle>;
   additionalExpandedListItemContainerStyle?: StyleProp<ViewStyle>;
   additionalSelectedItemContainerStyle?: StyleProp<ViewStyle>;
   labelsToUppercase?: boolean;
-  onSelectedItem?: (item: ItemDropdownInterface) => void;
+  onSelectedItem?: (item: PickerItemInterface) => void;
 };
-const ItemDropdown = ({
+const PickerItem = ({
   selected,
   additionalContainerStyle,
   theme,
-  itemDropdownList,
+  pickerItemList,
   labelsToUppercase,
   additionalContainerListStyle,
   additionalExpandedListItemContainerStyle,
@@ -52,11 +53,11 @@ const ItemDropdown = ({
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
   const [selectedItem, setSelectedItem] = React.useState(
-    selected ?? itemDropdownList[0],
+    selected ?? pickerItemList[0],
   );
   const [expandList, setExpandList] = React.useState(false);
 
-  const renderItem = (item: ItemDropdownInterface) => {
+  const renderItem = (item: PickerItemInterface) => {
     return (
       <View
         key={`item-dropdown-list-${item.label}`}
@@ -72,7 +73,7 @@ const ItemDropdown = ({
     );
   };
 
-  const handleSelectedItem = (item: ItemDropdownInterface) => {
+  const handleSelectedItem = (item: PickerItemInterface) => {
     setSelectedItem(item);
     setExpandList(false);
     if (onSelectedItem) onSelectedItem(item);
@@ -99,10 +100,12 @@ const ItemDropdown = ({
           )}
         </View>
       </TouchableOpacity>
-      {expandList && (
+      <Overlay
+        isVisible={expandList}
+        onBackdropPress={() => setExpandList(!expandList)}>
         <View
           style={[styles.expandedListContainer, additionalContainerListStyle]}>
-          {itemDropdownList.map((item) => {
+          {pickerItemList.map((item) => {
             return (
               <View
                 style={[
@@ -117,7 +120,7 @@ const ItemDropdown = ({
             );
           })}
         </View>
-      )}
+      </Overlay>
     </>
   );
 };
@@ -135,6 +138,14 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       alignItems: 'center',
       padding: 8,
       borderColor: getColors(theme).cardBorderColorContrast,
+    },
+    overlayContainer: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'gray',
+      top: 0,
+      left: 0,
     },
     dropdownContainer: {
       justifyContent: 'center',
@@ -156,16 +167,10 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       marginLeft: 4,
     },
     expandedListContainer: {
-      position: 'absolute',
       backgroundColor: getColors(theme).menuHamburguerBg,
-      width: '90%',
-      padding: 4,
-      top: 40,
-      left: 5,
+      width: 200,
       borderColor: getColors(theme).cardBorderColorContrast,
       borderWidth: 1,
-      borderBottomLeftRadius: width / 15,
-      borderBottomRightRadius: width / 15,
     },
     expandedListItemContainer: {
       backgroundColor: getColors(theme).menuHamburguerBg,
@@ -181,4 +186,4 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     },
   });
 
-export default ItemDropdown;
+export default PickerItem;

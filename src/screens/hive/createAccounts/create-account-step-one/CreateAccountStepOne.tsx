@@ -1,8 +1,8 @@
 import {Asset} from '@hiveio/dhive';
 import {Account} from 'actions/interfaces';
 import OperationButton from 'components/form/EllipticButton';
-import ItemDropdown from 'components/form/ItemDropdown';
 import OperationInput from 'components/form/OperationInput';
+import PickerItem from 'components/form/PickerItem';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
@@ -188,9 +188,9 @@ const CreateAccountStepOne = ({
         <View style={styles.container}>
           <View style={styles.content}>
             {selectedAccount.length > 0 && accountOptions && (
-              <ItemDropdown
+              <PickerItem
                 theme={theme}
-                itemDropdownList={accountOptions}
+                pickerItemList={accountOptions}
                 additionalContainerStyle={styles.additionalContainerStyle}
                 additionalContainerListStyle={
                   styles.additionalContainerListStyle

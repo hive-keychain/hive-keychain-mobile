@@ -1,16 +1,22 @@
 import {loadAccount} from 'actions/hive';
 import {removePreference} from 'actions/preferences';
-import ItemDropdown from 'components/form/ItemDropdown';
+import CustomSearchBar from 'components/form/CustomSearchBar';
+import PickerItem, {PickerItemInterface} from 'components/form/PickerItem';
+import Icon from 'components/hive/Icon';
 import CollapsibleSettings from 'components/settings/CollapsibleSettings';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
+import {DomainPreference} from 'reducers/preferences.types';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
+import {body_primary_body_2, body_primary_body_3} from 'src/styles/typography';
 import {RootState} from 'store';
+import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 
 const Operations = ({
@@ -22,37 +28,64 @@ const Operations = ({
 }: PropsFromRedux) => {
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
+  const [domainList, setDomainList] = useState<DomainPreference[]>([]);
+  const [filteredDomains, setFilteredDomains] = useState<DomainPreference[]>(
+    [],
+  );
+  const [searchValue, setSearchValue] = useState('');
 
-  const showPreferencesHandler = () => {
+  useEffect(() => {
+    init();
+  }, [active]);
+
+  const init = () => {
     const userPreference = preferences.find((e) => e.username === active.name);
-    if (!userPreference || !userPreference.domains.length)
-      return <Text>{translate('settings.settings.no_pref')}</Text>;
-    return (
-      <FlatList
-        data={userPreference.domains}
-        renderItem={(preference) => {
-          return (
-            <CollapsibleSettings
-              username={active.name}
-              key={preference.item.domain}
-              index={preference.index}
-              domainPref={preference.item}
-              removePreference={removePreference}
-              theme={theme}
-            />
-          );
-        }}
-      />
+    setDomainList(
+      userPreference &&
+        userPreference.domains &&
+        userPreference.domains.length > 0
+        ? preferences.find((e) => e.username === active.name).domains
+        : [],
     );
+  };
+
+  useEffect(() => {
+    const newArray = [...domainList];
+    setFilteredDomains(
+      newArray.filter((domain) =>
+        domain.domain.toLowerCase().includes(searchValue.toLowerCase()),
+      ),
+    );
+  }, [searchValue, domainList]);
+
+  const getItemDropDownSelected = (username: string): PickerItemInterface => {
+    const selected = accounts.filter((acc) => acc.name === username)[0];
+    return {
+      label: selected.name,
+      value: selected.name,
+      icon: <UserProfilePicture username={username} style={styles.avatar} />,
+    };
   };
 
   return (
     <Background using_new_ui theme={theme}>
       <View style={styles.container}>
         <FocusAwareStatusBar />
-        <ItemDropdown
+        <Text
+          style={[
+            styles.text,
+            styles.opacity,
+            styles.marginVertical,
+            {...body_primary_body_3},
+            styles.paddingHorizontal,
+          ]}>
+          {capitalizeSentence(translate('settings.settings.operations_info'))}
+        </Text>
+        <PickerItem
           theme={theme}
-          itemDropdownList={accounts.map((acc) => {
+          selected={getItemDropDownSelected(active.name!)}
+          additionalContainerStyle={getCardStyle(theme).defaultCardItem}
+          pickerItemList={accounts.map((acc) => {
             return {
               label: acc.name,
               value: acc.name,
@@ -61,16 +94,40 @@ const Operations = ({
               ),
             };
           })}
-          additionalContainerStyle={[styles.cardKey, styles.zIndexBase]}
-          additionalContainerListStyle={[
-            styles.itemListContainer,
-            styles.zIndexLower,
-          ]}
           onSelectedItem={(item) => {
             loadAccount(item.value, true);
           }}
         />
-        {showPreferencesHandler()}
+        <CustomSearchBar
+          theme={theme}
+          additionalContainerStyle={[
+            getCardStyle(theme).defaultCardItem,
+            styles.searchBar,
+          ]}
+          rightIcon={<Icon name="search" theme={theme} />}
+          value={searchValue}
+          onChangeText={(text) => setSearchValue(text)}
+        />
+        <FlatList
+          data={filteredDomains}
+          renderItem={(preference) => {
+            return (
+              <CollapsibleSettings
+                username={active.name}
+                key={preference.item.domain}
+                index={preference.index}
+                domainPref={preference.item}
+                removePreference={removePreference}
+                theme={theme}
+              />
+            );
+          }}
+          ListEmptyComponent={
+            <Text style={[styles.text, styles.textNoPref]}>
+              {translate('settings.settings.no_pref')}
+            </Text>
+          }
+        />
       </View>
     </Background>
   );
@@ -80,27 +137,30 @@ const getStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {flex: 1, paddingHorizontal: 16},
     avatar: {width: 30, height: 30, borderRadius: 50},
-    cardKey: {
-      borderWidth: 1,
-      backgroundColor: getColors(theme).secondaryCardBgColor,
-      borderColor: getColors(theme).quaternaryCardBorderColor,
-      borderRadius: 19,
-      paddingHorizontal: 21,
-      paddingVertical: 15,
-      marginBottom: 8,
+    itemDropdown: {
+      paddingHorizontal: 18,
     },
-    zIndexBase: {
-      zIndex: 10,
+    text: {
+      color: getColors(theme).secondaryText,
+      ...body_primary_body_2,
+      fontSize: 15,
     },
-    zIndexLower: {
-      zIndex: 9,
+    textNoPref: {
+      textAlign: 'center',
+      marginTop: 20,
     },
-    itemListContainer: {
-      top: 20,
-      paddingTop: 50,
-      paddingBottom: 30,
-      width: '99%',
-      left: 18,
+    searchBar: {
+      borderRadius: 33,
+      marginVertical: 10,
+      width: '100%',
+    },
+    opacity: {
+      opacity: 0.7,
+    },
+    marginVertical: {
+      marginVertical: 15,
+    },
+    paddingHorizontal: {
       paddingHorizontal: 10,
     },
   });

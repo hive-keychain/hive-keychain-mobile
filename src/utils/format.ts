@@ -49,6 +49,10 @@ export const capitalizeSentence = (string: string) =>
     })
     .join(' ');
 
+export const wordsFromCamelCase = (sentence: string) => {
+  return sentence.split(/(?=[A-Z])/).join(' ');
+};
+
 export const beautifyTransferError = (
   err: HiveErrorMessage,
   {currency, username, to}: {currency?: string; username?: string; to?: string},

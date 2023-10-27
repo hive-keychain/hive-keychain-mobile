@@ -1,9 +1,7 @@
 import {addKey, forgetAccount, forgetKey} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
-import ItemDropdown, {
-  ItemDropdownInterface,
-} from 'components/form/ItemDropdown';
+import PickerItem, {PickerItemInterface} from 'components/form/PickerItem';
 import Key from 'components/hive/Key';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -42,7 +40,7 @@ const AccountManagement = ({
   }, [navigation, account.name]);
   if (!username) return null;
 
-  const getItemDropDownSelected = (username: string): ItemDropdownInterface => {
+  const getItemDropDownSelected = (username: string): PickerItemInterface => {
     const selected = accounts.filter((acc) => acc.name === username)[0];
     return {
       label: selected.name,
@@ -60,10 +58,10 @@ const AccountManagement = ({
         <FocusAwareStatusBar />
 
         <ScrollView>
-          <ItemDropdown
+          <PickerItem
             selected={getItemDropDownSelected(account.name!)}
             theme={theme}
-            itemDropdownList={accounts.map((acc) => {
+            pickerItemList={accounts.map((acc) => {
               return {
                 label: acc.name,
                 value: acc.name,

@@ -1,6 +1,6 @@
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
 import Heart from 'assets/new_UI/heart.svg';
-import ItemDropdown from 'components/form/ItemDropdown';
+import PickerItem from 'components/form/PickerItem';
 import CloseButton from 'components/ui/CloseButton';
 import React from 'react';
 import {
@@ -61,7 +61,7 @@ export default ({
           </Text>
         </View>
         <View style={[styles.dropdownContainer]}>
-          <ItemDropdown theme={theme} itemDropdownList={chainItemList} />
+          <PickerItem theme={theme} pickerItemList={chainItemList} />
         </View>
       </View>
     </View>

@@ -30,6 +30,7 @@
     "warning_private_key_in_memo": "Please do not send any sentitive information about your keys in a memo."
   },
   "common": {
+    "dapp_title": "dApp",
     "import": "Import",
     "username": "Username",
     "authorized_username": "Auth. Account",
@@ -426,7 +427,8 @@
         "Use 'DEFAULT' RPC to let Hive Keychain chose the best RPC node at a given time."
       ],
       "user": "User settings",
-      "operations": "Operations"
+      "operations": "Operations",
+      "operations_info": "For a better experience, you can whitelist non-active authority operation when dApps requested them. you won’t receive a confirmation prompt for opertions"
     }
   },
   "components": {
