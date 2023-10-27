@@ -428,7 +428,10 @@
       ],
       "user": "User settings",
       "operations": "Operations",
-      "operations_info": "For a better experience, you can whitelist non-active authority operation when dApps requested them. you won’t receive a confirmation prompt for opertions"
+      "operations_info": "For a better experience, you can whitelist non-active authority operation when dApps requested them. you won’t receive a confirmation prompt for opertions",
+      "switch_auto": "Switch Automatically",
+      "switch_auto_info": "Will always select the best RPC node for you",
+      "hive_rpc": "Hive RPC"
     }
   },
   "components": {

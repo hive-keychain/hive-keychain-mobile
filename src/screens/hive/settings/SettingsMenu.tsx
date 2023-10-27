@@ -3,12 +3,13 @@ import Icon from 'components/hive/Icon';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useContext} from 'react';
-import {StatusBar, StyleSheet, Text, View} from 'react-native';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import Operations from './Operations';
+import RpcNodes from './RpcNodes';
 
 const SettingsMenu = () => {
   const {theme} = useContext(ThemeContext);
@@ -44,11 +45,7 @@ const SettingsMenu = () => {
         onPress={() =>
           navigate('TemplateStack', {
             titleScreen: translate('settings.settings.rpc'),
-            component: (
-              <View>
-                <Text>TODO rpc bellow</Text>
-              </View>
-            ),
+            component: <RpcNodes />,
           } as TemplateStackProps)
         }
         iconImage={<Icon name="rpc" theme={theme} />}
