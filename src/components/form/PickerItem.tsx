@@ -25,7 +25,7 @@ import {Dimensions} from 'utils/common.types';
 export interface PickerItemInterface {
   label: string;
   value: string;
-  icon: JSX.Element;
+  icon?: JSX.Element;
 }
 
 type Props = {

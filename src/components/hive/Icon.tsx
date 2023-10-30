@@ -22,6 +22,7 @@ import EditIcon from 'assets/new_UI/linear_edit-2.svg';
 import NotSeeIcon from 'assets/new_UI/linear_eye-slash.svg';
 import SeeIcon from 'assets/new_UI/linear_eye.svg';
 import RPCNodeIcon from 'assets/new_UI/linear_hierarchy-square-3.svg';
+import RamIcon from 'assets/new_UI/linear_ram.svg';
 import ScannerIcon from 'assets/new_UI/linear_scanner.svg';
 import CheckIcon from 'assets/new_UI/linear_tick-circle.svg';
 import LogoutIcon from 'assets/new_UI/logout.svg';
@@ -388,6 +389,13 @@ const getIconFilePath = (
     case name === 'rpc':
       return (
         <RPCNodeIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'ram':
+      return (
+        <RamIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
           {...dimensionsProps}
         />
