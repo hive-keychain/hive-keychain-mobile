@@ -39,6 +39,7 @@ export const formatBalance = (balance: number) =>
 export const capitalize = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
+//TODO, remove this funcion bellow an it use.
 export const capitalizeSentence = (string: string) =>
   string
     .split(' ')

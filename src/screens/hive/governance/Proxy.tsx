@@ -2,12 +2,20 @@ import {loadAccount} from 'actions/hive';
 import {ActiveAccount} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CustomInput from 'components/form/CustomInput';
+import Icon from 'components/hive/Icon';
 import Loader from 'components/ui/Loader';
-import React, {useState} from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import Separator from 'components/ui/Separator';
+import React, {useContext, useState} from 'react';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getButtonStyle} from 'src/styles/button';
+import {getCardStyle} from 'src/styles/card';
+import {getColors} from 'src/styles/colors';
+import {title_primary_title_1} from 'src/styles/typography';
 import {Width} from 'utils/common.types';
+import {capitalizeSentence} from 'utils/format';
 import {setProxy} from 'utils/hive';
 import {translate} from 'utils/localize';
 
@@ -17,7 +25,8 @@ type Props = {
 
 const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
   const [proxyUsername, setProxyUsername] = useState('');
-  const styles = getDimensionedStyles(useWindowDimensions());
+  const {theme} = useContext(ThemeContext);
+  const styles = getDimensionedStyles(useWindowDimensions(), theme);
   const [loading, setLoading] = useState(false);
 
   const setAsProxy = async () => {
@@ -71,62 +80,73 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.text}>
-          {translate(
-            user.account.proxy.length > 0
-              ? 'governance.proxy.has_proxy'
-              : 'governance.proxy.proxy_def',
-          )}
-        </Text>
-
-        {user.account.proxy.length > 0 && (
-          <Text style={styles.text}>
-            {translate('governance.proxy.using_proxy', {
-              name: user.account.proxy,
-            })}
-          </Text>
+      {loading && (
+        <View style={styles.flexEnd}>
+          <Loader animating />
+        </View>
+      )}
+      <View style={styles.flewBewteen}>
+        {!loading && (
+          <View style={{flex: 1}}>
+            <Text style={[styles.text, styles.textOpaque]}>
+              {capitalizeSentence(
+                translate(
+                  user.account.proxy.length > 0
+                    ? 'governance.proxy.has_proxy'
+                    : 'governance.proxy.proxy_def',
+                ),
+              )}
+            </Text>
+            <Separator />
+            {user.account.proxy.length > 0 && (
+              <Text style={[styles.text, styles.textOpaque]}>
+                {capitalizeSentence(
+                  translate('governance.proxy.using_proxy', {
+                    name: user.account.proxy,
+                  }),
+                )}
+              </Text>
+            )}
+            <Separator />
+            {user.account.proxy.length === 0 && !loading && (
+              <CustomInput
+                value={proxyUsername}
+                onChangeText={setProxyUsername}
+                leftIcon={<Icon name="at" theme={theme} />}
+                placeholder={translate('governance.proxy.placeholder')}
+                autoCapitalize="none"
+                containerStyle={[
+                  getCardStyle(theme).defaultCardItem,
+                  styles.borderAligned,
+                ]}
+                inputStyle={[styles.text, {textAlignVertical: 'center'}]}
+                additionalInputContainerStyle={[styles.inputContainer]}
+              />
+            )}
+          </View>
         )}
-      </View>
-      {user.account.proxy.length === 0 && !loading && (
-        <View>
-          <CustomInput
-            value={proxyUsername}
-            onChangeText={setProxyUsername}
-            leftIcon={<Text>@</Text>}
-            placeholder={translate('governance.proxy.placeholder')}
-            inputColor="black"
-            backgroundColor="white"
-            containerStyle={styles.input}
-            autoCapitalize="none"
-          />
+        {user.account.proxy.length === 0 && !loading && (
           <ActiveOperationButton
             title={translate('governance.proxy.buttons.set')}
             onPress={() => setAsProxy()}
             isLoading={false}
-            style={styles.button}
+            style={[getButtonStyle(theme).warningStyleButton, styles.button]}
           />
-        </View>
-      )}
-      {user.account.proxy.length > 0 && !loading && (
-        <ActiveOperationButton
-          title={translate('governance.proxy.buttons.clear')}
-          onPress={() => removeProxy()}
-          isLoading={false}
-          style={styles.button}
-        />
-      )}
-      {loading && (
-        <View style={{flex: 1, justifyContent: 'center'}}>
-          <Loader animating />
-        </View>
-      )}
-      <View></View>
+        )}
+        {user.account.proxy.length > 0 && !loading && (
+          <ActiveOperationButton
+            title={translate('governance.proxy.buttons.clear')}
+            onPress={() => removeProxy()}
+            isLoading={false}
+            style={[getButtonStyle(theme).warningStyleButton, styles.button]}
+          />
+        )}
+      </View>
     </View>
   );
 };
 
-const getDimensionedStyles = ({width}: Width) =>
+const getDimensionedStyles = ({width}: Width, theme: Theme) =>
   StyleSheet.create({
     container: {
       width: '100%',
@@ -135,15 +155,40 @@ const getDimensionedStyles = ({width}: Width) =>
       paddingHorizontal: width * 0.05,
     },
     text: {
-      marginBottom: 10,
-      fontSize: 16,
-      lineHeight: 16,
       textAlignVertical: 'center',
+      ...title_primary_title_1,
+      color: getColors(theme).secondaryText,
+      fontSize: 14,
+    },
+    textOpaque: {
+      opacity: 0.7,
     },
     button: {
-      marginTop: 100,
+      marginBottom: 20,
     },
     input: {marginLeft: 0, marginVertical: 10, marginTop: 50},
+    borderAligned: {
+      borderRadius: 30,
+      alignSelf: 'center',
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+      marginLeft: 0,
+      paddingLeft: 0,
+    },
+    inputContainer: {
+      height: '100%',
+      width: '100%',
+      alignItems: 'center',
+      borderBottomWidth: 0,
+      alignContent: 'center',
+      justifyContent: 'center',
+      lineHeight: 22,
+    },
+    flewBewteen: {
+      flex: 1,
+      justifyContent: 'space-between',
+    },
+    flexEnd: {flex: 1, justifyContent: 'flex-end'},
   });
 
 const connector = connect(undefined, {
