@@ -5,14 +5,14 @@ import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import Proposal from './Proposal';
 import Proxy from './Proxy';
 import Witness from './Witness';
-
+//TODO work with mywitness part, should open if witness account detected as the extension does.
 const Governance = ({
   user,
   navigation,
