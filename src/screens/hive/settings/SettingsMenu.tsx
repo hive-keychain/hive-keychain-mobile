@@ -26,9 +26,6 @@ const SettingsMenu = () => {
       <DrawerContentItem
         labelTranslationKey={'settings.settings.operations'}
         theme={theme}
-        //TODO extract from important to use: import Settings from 'screens/hive/settings/Settings';
-        //  1.  operations & makes as design
-        //  2.  rpc nodes & make as design
         onPress={() =>
           navigate('TemplateStack', {
             titleScreen: translate('settings.settings.operations'),
@@ -41,7 +38,6 @@ const SettingsMenu = () => {
       <DrawerContentItem
         labelTranslationKey={'settings.settings.rpc'}
         theme={theme}
-        //TODO idem as bellow
         onPress={() =>
           navigate('TemplateStack', {
             titleScreen: translate('settings.settings.rpc'),
