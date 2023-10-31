@@ -37,9 +37,7 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
   const [customRPC, setCustomRPC] = useState<Rpc>(DEFAULT_CUSTOM_RPC);
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
-  const [switchRPCAuto, setSwitchRPCAuto] = useState(
-    (settings.rpc as string) === 'DEFAULT',
-  );
+  const [switchRPCAuto, setSwitchRPCAuto] = useState(false);
   const [rpcFullList, setRpcFullList] = useState<DropdownItem[]>([]);
   const [customRPCList, setCustomRPCList] = useState<Rpc[]>([]);
 
@@ -48,6 +46,11 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
   }, []);
 
   const init = async () => {
+    if (typeof settings.rpc === 'object') {
+      if (settings.rpc.uri === 'DEFAULT') setSwitchRPCAuto(true);
+    } else if (typeof settings.rpc === 'string') {
+      if (settings.rpc === 'DEFAULT') setSwitchRPCAuto(true);
+    }
     const customRPCs = await getCustomRpcs();
     setCustomRPCList(customRPCs);
     const rpcListDropdownList = rpcList.map((item) => {
@@ -67,7 +70,6 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
   };
 
   const handleAddCustomRPC = async () => {
-    //TODO add validation messages using showModal?
     if (ValidUrl.isWebUri(customRPC.uri)) {
       if (!rpcFullList.find((rpcLoaded) => rpcLoaded.value === customRPC.uri)) {
         await addCustomRpc(customRPC);
@@ -197,21 +199,21 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
           {!switchRPCAuto && renderRpcItem()}
           {showAddCustomRPC && renderAddCustomRPC()}
         </View>
-        <ActiveOperationButton
-          title={translate('common.save')}
-          //TODO finish bellow
-          onPress={handleAddCustomRPC}
-          style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-          isLoading={false}
-          additionalTextStyle={{...button_link_primary_medium}}
-        />
+        {!switchRPCAuto && (
+          <ActiveOperationButton
+            title={translate('common.save')}
+            onPress={handleAddCustomRPC}
+            style={[getButtonStyle(theme).warningStyleButton, styles.button]}
+            isLoading={false}
+            additionalTextStyle={{...button_link_primary_medium}}
+          />
+        )}
       </View>
     </Background>
   );
 };
 
 const getStyles = (theme: Theme) =>
-  //TODO bellow cleanup styles
   StyleSheet.create({
     container: {
       flex: 1,
@@ -221,23 +223,10 @@ const getStyles = (theme: Theme) =>
     flexOne: {
       flex: 1,
     },
-    avatar: {width: 30, height: 30, borderRadius: 50},
-    itemDropdown: {
-      paddingHorizontal: 18,
-    },
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,
       fontSize: 15,
-    },
-    textNoPref: {
-      textAlign: 'center',
-      marginTop: 20,
-    },
-    searchBar: {
-      borderRadius: 33,
-      marginVertical: 10,
-      width: '100%',
     },
     opacity: {
       opacity: 0.7,
@@ -279,14 +268,7 @@ const getStyles = (theme: Theme) =>
       width: '80%',
       minHeight: 50,
     },
-    flex100: {
-      width: '100%',
-    },
     flex85: {width: '85%'},
-    clickeableIcon: {
-      width: 12,
-      height: 12,
-    },
     addButton: {
       minHeight: 50,
       alignItems: 'center',
