@@ -1,11 +1,12 @@
-import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
+import {ThemeContext} from 'src/context/theme.context';
+import {getCardStyle} from 'src/styles/card';
 import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
@@ -17,6 +18,7 @@ const Governance = ({
   user,
   navigation,
 }: PropsFromRedux & {navigation: GovernanceNavigation}) => {
+  const {theme} = useContext(ThemeContext);
   const styles = getDimensionedStyles(useWindowDimensions());
 
   useLockedPortrait(navigation);
@@ -31,17 +33,21 @@ const Governance = ({
   return (
     <WalletPage>
       <>
-        <FocusAwareStatusBar barStyle="light-content" backgroundColor="black" />
         <ScreenToggle
+          theme={theme}
           style={styles.toggle}
+          additionalHeaderStyle={[
+            getCardStyle(theme).roundedCardItem,
+            styles.toogleHeader,
+          ]}
           menu={[
-            translate(`governance.menu.witnesses`),
+            translate(`governance.menu.witness`),
             translate(`governance.menu.proxy`),
             translate(`governance.menu.proposals`),
           ]}
-          toUpperCase
+          toUpperCase={false}
           components={[
-            <Witness user={user} focus={focus} />,
+            <Witness user={user} focus={focus} theme={theme} />,
             <Proxy user={user} />,
             <Proposal user={user} />,
           ]}
@@ -56,6 +62,10 @@ const getDimensionedStyles = ({width}: Width) =>
     toggle: {
       display: 'flex',
       flexDirection: 'row',
+    },
+    toogleHeader: {
+      width: '95%',
+      alignSelf: 'center',
     },
   });
 

@@ -5,13 +5,12 @@ import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum'
 export const getCustomRpcs = async (): Promise<Rpc[]> => {
   let customRpcs: Rpc[];
   const rawObject = await AsyncStorage.getItem(
-    KeychainStorageKeyEnum.CUSTOMRPCLIST,
+    KeychainStorageKeyEnum.CUSTOM_RPC_LIST,
   );
   if (rawObject) {
     try {
       customRpcs = JSON.parse(rawObject);
     } catch (error) {
-      //TODO ask quentin, how to handle bellow.
       console.log('Error getting custom RPCs');
     }
   }
@@ -23,7 +22,7 @@ export const addCustomRpc = async (rpc: Rpc): Promise<void> => {
   if (!savedCustomRpcList.find((savedRpc) => savedRpc.uri === rpc.uri)) {
     savedCustomRpcList.push(rpc);
     await AsyncStorage.setItem(
-      KeychainStorageKeyEnum.CUSTOMRPCLIST,
+      KeychainStorageKeyEnum.CUSTOM_RPC_LIST,
       JSON.stringify(savedCustomRpcList),
     );
   }
@@ -32,7 +31,7 @@ export const addCustomRpc = async (rpc: Rpc): Promise<void> => {
 export const deleteCustomRpc = async (rpcs: Rpc[], rpc: Rpc) => {
   const newRpcs = rpcs.filter((r) => rpc.uri !== r.uri);
   await AsyncStorage.setItem(
-    KeychainStorageKeyEnum.CUSTOMRPCLIST,
+    KeychainStorageKeyEnum.CUSTOM_RPC_LIST,
     JSON.stringify(newRpcs),
   );
 };

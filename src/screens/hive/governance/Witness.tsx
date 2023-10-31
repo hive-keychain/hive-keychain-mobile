@@ -1,27 +1,32 @@
 import {loadAccount} from 'actions/hive';
 import {ActiveAccount, Witness as WitnessInterface} from 'actions/interfaces';
+import {showModal} from 'actions/message';
 import keychain from 'api/keychain';
 import Vote from 'assets/governance/arrow_circle_up.svg';
-import Clear from 'assets/governance/clear.svg';
-import Open from 'assets/governance/open_in_new.svg';
 import CustomInput from 'components/form/CustomInput';
-import {RadioButton} from 'components/form/CustomRadioGroup';
+import Icon from 'components/hive/Icon';
 import Loader from 'components/ui/Loader';
+import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Linking,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {CheckBox} from 'react-native-elements';
 import {
   default as SimpleToast,
   default as Toast,
 } from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
+import {MessageModalType} from 'src/enums/messageModal.enums';
+import {getCardStyle} from 'src/styles/card';
+import {getColors} from 'src/styles/colors';
+import {title_primary_title_1} from 'src/styles/typography';
 import {Width} from 'utils/common.types';
 import {getClient, voteForWitness} from 'utils/hive';
 import {translate} from 'utils/localize';
@@ -32,9 +37,16 @@ const MAX_WITNESS_VOTE = 30;
 type Props = {
   user: ActiveAccount;
   focus: number;
+  theme: Theme;
 };
 
-const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
+const Witness = ({
+  user,
+  loadAccount,
+  focus,
+  theme,
+  showModal,
+}: PropsFromRedux & Props) => {
   const [displayVotedOnly, setDisplayVotedOnly] = useState(false);
   const [hideNonActive, setHideNonActive] = useState(true);
   const [remainingVotes, setRemainingVotes] = useState<string | number>('...');
@@ -44,11 +56,14 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
   );
   const [filterValue, setFilterValue] = useState('');
   const [votedWitnesses, setVotedWitnesses] = useState<string[]>([]);
+  const [isVotingUnvotingForWitness, setIsVotingUnvotingForWitness] = useState(
+    '',
+  );
 
   const [usingProxy, setUsingProxy] = useState<boolean>(false);
   const [hasError, setHasError] = useState(false);
   const [isLoading, setLoading] = useState(true);
-  const styles = getDimensionedStyles(useWindowDimensions());
+  const styles = getDimensionedStyles(useWindowDimensions(), theme);
 
   useEffect(() => {
     init();
@@ -120,6 +135,7 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
       return;
     }
     if (user.account.witness_votes.includes(witness.name)) {
+      setIsVotingUnvotingForWitness(witness.name);
       try {
         await voteForWitness(user.keys.active, {
           account: user.name,
@@ -127,82 +143,92 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
           approve: false,
         });
         loadAccount(user.name);
-        Toast.show(
-          translate('governance.witness.success.unvote_wit', {
+        showModal(
+          'governance.witness.success.unvote_wit',
+          MessageModalType.SUCCESS,
+          {
             name: witness.name,
-          }),
+          },
         );
       } catch (err) {
         console.log(err);
-        Toast.show(
-          translate('governance.witness.error.unvote_wit', {
+        showModal(
+          'governance.witness.error.unvote_wit',
+          MessageModalType.ERROR,
+          {
             name: witness.name,
-          }),
+          },
         );
+      } finally {
+        setIsVotingUnvotingForWitness('');
       }
     } else {
       try {
+        setIsVotingUnvotingForWitness(witness.name);
         await voteForWitness(user.keys.active, {
           account: user.name,
           witness: witness.name,
           approve: true,
         });
         loadAccount(user.name);
-        Toast.show(
-          translate('governance.witness.success.wit', {
-            name: witness.name,
-          }),
-        );
+        showModal('governance.witness.success.wit', MessageModalType.SUCCESS, {
+          name: witness.name,
+        });
       } catch (err) {
-        Toast.show(
-          translate('governance.witness.error.wit', {
-            name: witness.name,
-          }),
-        );
+        showModal('governance.witness.error.wit', MessageModalType.ERROR, {
+          name: witness.name,
+        });
+      } finally {
+        setIsVotingUnvotingForWitness('');
       }
     }
   };
 
   const renderWitnessItem = (witness: WitnessInterface, index: number) => {
+    const votingUnvoting =
+      isVotingUnvotingForWitness.trim().length > 0 &&
+      isVotingUnvotingForWitness === witness.name;
     return (
       <View
-        style={[styles.witnessItem, index % 2 === 0 ? styles.even : undefined]}
+        style={[getCardStyle(theme).defaultCardItem, styles.witnessItem]}
         key={`${witness.name}_${witness.rank}_${witness.active_rank}`}>
-        <View style={styles.rank}>
-          <Text style={styles.activeRank}>
-            {witness.active_rank ? witness.active_rank : '-'}{' '}
-          </Text>
-          {!hideNonActive &&
-            witness.active_rank?.toString() !== witness.rank && (
-              <Text style={styles.includingInactive}>({witness.rank})</Text>
-            )}
-        </View>
         <View style={styles.nameContainer}>
+          <Icon name="at" theme={theme} {...styles.iconBigger} />
           <Text
             style={[
+              styles.text,
+              styles.smallerText,
               styles.witnessName,
               witness.signing_key ===
               'STM1111111111111111111111111111111114T1Anm'
                 ? styles.inactive
                 : undefined,
             ]}>
-            @{witness.name}
+            {witness.name}
           </Text>
           {witness.url && ValidUrl.isWebUri(witness.url) ? (
             <View>
-              <Open
-                onPress={() => Linking.openURL(witness.url)}
-                fill="black"
-                width={16}
+              <Icon
+                name="open"
+                theme={theme}
+                onClick={() => Linking.openURL(witness.url)}
+                {...styles.iconBigger}
               />
             </View>
           ) : undefined}
         </View>
         <View style={styles.vote} />
-        <Vote
-          fill={votedWitnesses.includes(witness.name) ? 'black' : 'lightgrey'}
-          onPress={() => handleVotedButtonClick(witness)}
-        />
+        <View style={styles.voteButton}>
+          {!votingUnvoting && (
+            <Vote
+              fill={
+                votedWitnesses.includes(witness.name) ? 'black' : 'lightgrey'
+              }
+              onPress={() => handleVotedButtonClick(witness)}
+            />
+          )}
+          {votingUnvoting && <Loader size={'small'} animating />}
+        </View>
       </View>
     );
   };
@@ -216,9 +242,9 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
   else
     return (
       <View style={styles.container}>
-        <View style={styles.withPadding}>
+        <View style={styles.flex90}>
           {!usingProxy && (
-            <Text style={styles.text}>
+            <Text style={[styles.text, styles.withPadding]}>
               {translate('governance.witness.remaining_votes', {
                 remainingVotes,
               })}
@@ -231,57 +257,64 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
               })}
             </Text>
           )}
-          <Text style={styles.text}>
+          <Separator />
+          <Text style={[styles.text, styles.textOpaque]}>
             {translate('governance.witness.link_to_arcange', {
               proxy: user.account.proxy,
             })}
-            <Open
-              height={12}
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              onPress={() =>
+            <Icon
+              name="open"
+              theme={theme}
+              onClick={() =>
                 Linking.openURL('https://hive.arcange.eu/witnesses')
               }
-              fill="black"
+              {...styles.icon}
             />
           </Text>
-
-          <CustomInput
-            placeholder={translate('governance.witness.search_placeholder')}
-            inputColor="black"
-            backgroundColor="white"
-            containerStyle={{marginLeft: 0, marginVertical: 10}}
-            rightIcon={
-              filterValue.length ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    setFilterValue('');
-                  }}>
-                  <Clear width={16} />
-                </TouchableOpacity>
-              ) : undefined
-            }
-            autoCapitalize="none"
-            value={filterValue}
-            onChangeText={setFilterValue}
-          />
         </View>
+        <Separator />
+        <CustomInput
+          placeholder={translate('governance.witness.search_placeholder')}
+          inputStyle={[styles.text]}
+          rightIcon={<Icon theme={theme} name="search" />}
+          autoCapitalize="none"
+          value={filterValue}
+          onChangeText={setFilterValue}
+          containerStyle={[
+            getCardStyle(theme).defaultCardItem,
+            styles.borderAligned,
+          ]}
+          inputContainerStyle={styles.inputContainer}
+        />
+        <Separator height={15} />
         <View style={styles.switch}>
-          <RadioButton
-            label={translate('governance.witness.show_voted')}
-            selected={displayVotedOnly}
-            onSelect={() => {
+          <CheckBox
+            checked={displayVotedOnly}
+            onPress={() => {
               setDisplayVotedOnly(!displayVotedOnly);
             }}
+            title={
+              <Text
+                style={[styles.text, styles.smallerText, styles.textOpaque]}>
+                {translate('governance.witness.show_voted')}
+              </Text>
+            }
+            containerStyle={styles.checkbox}
+            checkedColor={getColors(theme).icon}
           />
-          <RadioButton
-            label={translate('governance.witness.hide_inactive')}
-            selected={hideNonActive}
-            onSelect={() => {
+          <CheckBox
+            checked={hideNonActive}
+            onPress={() => {
               setHideNonActive(!hideNonActive);
             }}
+            title={
+              <Text
+                style={[styles.text, styles.smallerText, styles.textOpaque]}>
+                {translate('governance.witness.hide_inactive')}
+              </Text>
+            }
+            containerStyle={styles.checkbox}
+            checkedColor={getColors(theme).icon}
           />
         </View>
         <FlatList
@@ -293,54 +326,32 @@ const Witness = ({user, loadAccount, focus}: PropsFromRedux & Props) => {
     );
 };
 
-const getDimensionedStyles = ({width}: Width) =>
+const getDimensionedStyles = ({width}: Width, theme: Theme) =>
   StyleSheet.create({
     container: {width: '100%', flex: 1, marginTop: 30},
     text: {
-      marginBottom: 10,
-      fontSize: 16,
       lineHeight: 16,
       textAlignVertical: 'center',
+      ...title_primary_title_1,
+      color: getColors(theme).secondaryText,
     },
     witnessItem: {
       flex: 1,
       flexDirection: 'row',
-      paddingVertical: 10,
-      paddingHorizontal: 20,
-      alignContent: 'flex-end',
-    },
-    rank: {
-      flexDirection: 'row',
-      height: '100%',
-      width: 44,
-      textVertical: 'center',
-      alignContent: 'center',
-      justifyContent: 'space-around',
-    },
-    activeRank: {
-      width: 20,
-      textAlign: 'center',
-      textAlignVertical: 'center',
-      fontSize: 12,
-      lineHeight: 20,
-    },
-    includingInactive: {
-      width: 24,
-      textAlign: 'center',
-      textAlignVertical: 'center',
-      fontSize: 10,
-      lineHeight: 20,
+      paddingVertical: 15,
+      paddingHorizontal: 15,
+      justifyContent: 'space-between',
+      borderRadius: 33,
     },
     inactive: {textDecorationLine: 'line-through'},
-    nameContainer: {flexDirection: 'row'},
+    nameContainer: {flexDirection: 'row', alignItems: 'center'},
     witnessName: {
-      marginLeft: 20,
-      paddingRight: 10,
       lineHeight: 20,
       textAlignVertical: 'center',
+      marginLeft: 10,
+      marginRight: 10,
     },
-    even: {backgroundColor: 'white'},
-    withPadding: {paddingHorizontal: width * 0.05},
+    withPadding: {paddingHorizontal: width * 0.02},
     vote: {flex: 1},
     switch: {
       width: '100%',
@@ -349,8 +360,51 @@ const getDimensionedStyles = ({width}: Width) =>
       marginTop: 10,
       marginBottom: 20,
     },
+    textOpaque: {
+      opacity: 0.7,
+    },
+    inputContainer: {
+      height: '100%',
+      width: '100%',
+      alignItems: 'center',
+      borderBottomWidth: 0,
+      borderEndWidth: 0,
+      alignContent: 'center',
+    },
+    flex90: {
+      width: '90%',
+      alignSelf: 'center',
+    },
+    icon: {
+      width: 12,
+      height: 12,
+    },
+    iconBigger: {
+      width: 18,
+      height: 18,
+    },
+    borderAligned: {
+      borderRadius: 30,
+      alignSelf: 'center',
+      marginBottom: 0,
+      padding: 0,
+    },
+    checkbox: {
+      backgroundColor: 'rgba(0,0,0,0)',
+      width: '45%',
+      padding: 15,
+      borderColor: getColors(theme).senaryCardBorderColor,
+      borderRadius: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    smallerText: {fontSize: 12},
+    voteButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
   });
 
-const connector = connect(undefined, {loadAccount});
+const connector = connect(undefined, {loadAccount, showModal});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(Witness);

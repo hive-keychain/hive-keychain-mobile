@@ -1,29 +1,45 @@
 import {setToggleElement} from 'hooks/toggle';
 import React, {useState} from 'react';
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {Theme} from 'src/context/theme.context';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {title_primary_title_1} from 'src/styles/typography';
 
 type Props = {
   components: JSX.Element[];
   menu: string[];
   toUpperCase: boolean;
   style?: StyleProp<ViewStyle>;
+  additionalHeaderStyle?: StyleProp<ViewStyle>;
+  theme: Theme;
 };
-const ScreenToggle = ({components, menu, toUpperCase, style}: Props) => {
+const ScreenToggle = ({
+  components,
+  menu,
+  toUpperCase,
+  style,
+  additionalHeaderStyle,
+  theme,
+}: Props) => {
   const [active, setActive] = useState(0);
-  const styles = getStyles(menu.length);
+  const styles = getStyles(menu.length, theme);
   return (
     <View style={[styles.wrapper]}>
-      <View style={[style, styles.header]}>
+      <View style={[style, styles.header, additionalHeaderStyle]}>
         {menu.map((menuItem, i) => (
           <View
             key={menuItem}
-            style={
+            style={[
+              styles.headerItemBase,
               i === active
                 ? [styles.headerElt, styles.headerActiveElt]
-                : styles.headerElt
-            }>
+                : styles.headerElt,
+            ]}>
             <Text
-              style={styles.headerText}
+              style={[
+                styles.headerText,
+                i === active ? styles.headerActiveText : styles.opaqueText,
+              ]}
               onPress={() => {
                 setActive(i);
                 setToggleElement(menuItem);
@@ -38,7 +54,7 @@ const ScreenToggle = ({components, menu, toUpperCase, style}: Props) => {
   );
 };
 
-const getStyles = (nb: number) =>
+const getStyles = (nb: number, theme: Theme) =>
   StyleSheet.create({
     wrapper: {
       display: 'flex',
@@ -50,20 +66,34 @@ const getStyles = (nb: number) =>
       display: 'flex',
       flexDirection: 'row',
       marginTop: 20,
-      justifyContent: 'center',
+      justifyContent: 'space-between',
     },
     headerElt: {
       width: `${Math.round(90 / nb)}%`,
     },
-    headerText: {textAlign: 'center', fontSize: 16, paddingBottom: 10},
+    headerText: {
+      ...title_primary_title_1,
+      color: getColors(theme).secondaryText,
+      textAlign: 'center',
+    },
+    headerActiveText: {
+      color: 'white',
+    },
+    opaqueText: {
+      opacity: 0.7,
+    },
     headerActiveElt: {
-      borderColor: '#E31337',
-      borderBottomWidth: 3,
+      backgroundColor: PRIMARY_RED_COLOR,
+      borderRadius: 26,
+      alignItems: 'center',
     },
     pane: {
       width: '100%',
-      backgroundColor: '#E5EEF7',
       flex: 1,
+    },
+    headerItemBase: {
+      paddingHorizontal: 10,
+      paddingVertical: 8,
     },
   });
 

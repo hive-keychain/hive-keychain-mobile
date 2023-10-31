@@ -729,7 +729,8 @@
     "menu": {
       "witnesses": "Witnesses",
       "proxy": "Proxy",
-      "proposals": "Proposals"
+      "proposals": "Proposals",
+      "witness": "Witness"
     },
     "witness": {
       "error": {
