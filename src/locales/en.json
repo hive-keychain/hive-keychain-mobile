@@ -80,7 +80,11 @@
     "delete": "Delete",
     "to": "To",
     "use_authorized_account_instead": "Use Authorized Account instead",
-    "forget_account": "Forget Account"
+    "forget_account": "Forget Account",
+    "ordinal_st_label": "st",
+    "ordinal_nd_label": "nd",
+    "ordinal_rd_label": "rd",
+    "ordinal_th_label": "th"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -730,7 +734,8 @@
       "witnesses": "Witnesses",
       "proxy": "Proxy",
       "proposals": "Proposals",
-      "witness": "Witness"
+      "witness": "Witness",
+      "my_witness": "My Witness"
     },
     "witness": {
       "error": {
@@ -750,6 +755,17 @@
       "search_placeholder": "Search",
       "show_voted": "Only voted for",
       "hide_inactive": "Hide inactive"
+    },
+    "my_witness": {
+      "info": "Info",
+      "param": "Param",
+      "rank": "Rank",
+      "information_amount_votes": "Amount of votes",
+      "information_votes": "Votes",
+      "information_blocks_missed": "Blocks Missed",
+      "information_last_block": "Last Block",
+      "information_price_feed": "Price Feed",
+      "information_version": "Version"
     },
     "proxy": {
       "has_proxy": "The proxy account makes governance decisions on your behalf. If you wish to vote for witnesses and proposals by yourself, you must first remove the proxy.",

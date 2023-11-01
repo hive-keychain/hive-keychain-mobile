@@ -39,7 +39,7 @@ export const formatBalance = (balance: number) =>
 export const capitalize = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 
-//TODO, remove this funcion bellow an it use.
+//TODO, remove this funcion bellow an its use after refactoring UI.
 export const capitalizeSentence = (string: string) =>
   string
     .split(' ')
@@ -132,4 +132,18 @@ export const removeHtmlTags = (str: string) => {
 
 export const getValFromString = (string: string): number => {
   return parseFloat(string.split(' ')[0]);
+};
+
+export const getOrdinalLabelTranslation = (active_rank: string) => {
+  const result = parseFloat(active_rank) % 10;
+  switch (result) {
+    case 1:
+      return 'common.ordinal_st_label';
+    case 2:
+      return 'common.ordinal_nd_label';
+    case 3:
+      return 'common.ordinal_rd_label';
+    default:
+      return 'common.ordinal_th_label';
+  }
 };

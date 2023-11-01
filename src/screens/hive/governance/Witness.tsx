@@ -57,7 +57,7 @@ const Witness = ({user, loadAccount, focus, theme}: PropsFromRedux & Props) => {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
-
+  //TODO bellow instead of loading this data here, just ask as a prop from Governance.tsx
   useEffect(() => {
     init();
   }, [focus]);

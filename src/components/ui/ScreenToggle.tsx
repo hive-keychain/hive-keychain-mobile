@@ -3,7 +3,10 @@ import React, {useState} from 'react';
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {title_primary_title_1} from 'src/styles/typography';
+import {
+  title_primary_body_2,
+  title_primary_title_1,
+} from 'src/styles/typography';
 
 type Props = {
   components: JSX.Element[];
@@ -23,6 +26,7 @@ const ScreenToggle = ({
 }: Props) => {
   const [active, setActive] = useState(0);
   const styles = getStyles(menu.length, theme);
+
   return (
     <View style={[styles.wrapper]}>
       <View style={[style, styles.header, additionalHeaderStyle]}>
@@ -39,6 +43,7 @@ const ScreenToggle = ({
               style={[
                 styles.headerText,
                 i === active ? styles.headerActiveText : styles.opaqueText,
+                menu.length >= 4 ? styles.smallerHeaderText : undefined,
               ]}
               onPress={() => {
                 setActive(i);
@@ -75,6 +80,10 @@ const getStyles = (nb: number, theme: Theme) =>
       ...title_primary_title_1,
       color: getColors(theme).secondaryText,
       textAlign: 'center',
+    },
+    smallerHeaderText: {
+      ...title_primary_body_2,
+      fontSize: 10,
     },
     headerActiveText: {
       color: 'white',
