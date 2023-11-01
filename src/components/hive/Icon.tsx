@@ -16,8 +16,10 @@ import GiftDeleteIcon from 'assets/new_UI/gift-delete.svg';
 import HiveAlternative from 'assets/new_UI/hive_alternative.svg';
 import ImportIcon from 'assets/new_UI/import.svg';
 import InfoCircleIcon from 'assets/new_UI/info-circle.svg';
+import ClockIcon from 'assets/new_UI/linear_clock.svg';
 import CloseCircleIcon from 'assets/new_UI/linear_close-circle.svg';
 import CpuIcon from 'assets/new_UI/linear_cpu-setting.svg';
+import MoneyIcon from 'assets/new_UI/linear_dollar-circle.svg';
 import EditIcon from 'assets/new_UI/linear_edit-2.svg';
 import ExternalLinkIcon from 'assets/new_UI/linear_export.svg';
 import NotSeeIcon from 'assets/new_UI/linear_eye-slash.svg';
@@ -261,7 +263,7 @@ const getIconFilePath = (
     case name === 'arrow_up':
       return (
         <ArrowUpIcon
-          style={[finalStyleOnIcon, {color: '#FFF'}]}
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
@@ -404,6 +406,20 @@ const getIconFilePath = (
     case name === 'open' || name === 'external_link':
       return (
         <ExternalLinkIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'money' || name === 'dollar':
+      return (
+        <MoneyIcon
+          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'clock':
+      return (
+        <ClockIcon
           style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
           {...dimensionsProps}
         />

@@ -1,9 +1,6 @@
 import {ActiveAccount} from 'actions/interfaces';
 import Vote from 'assets/governance/arrow_circle_up.svg';
-import Money from 'assets/governance/attach_money.svg';
-import ExpandLess from 'assets/governance/expand_less.svg';
-import ExpandMore from 'assets/governance/expand_more.svg';
-import Timelapse from 'assets/governance/timelapse.svg';
+import Loader from 'components/ui/Loader';
 import moment from 'moment';
 import React, {useState} from 'react';
 import {
@@ -17,10 +14,17 @@ import {
 import FastImage from 'react-native-fast-image';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
+import {Theme} from 'src/context/theme.context';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {
+  fields_primary_text_2,
+  title_primary_body_2,
+} from 'src/styles/typography';
 import {withCommas} from 'utils/format';
 import {updateProposalVote} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {Proposal} from 'utils/proposals';
+import Icon from './Icon';
 
 interface ProposalItemProps {
   user: ActiveAccount;
@@ -28,6 +32,7 @@ interface ProposalItemProps {
   displayingProxyVotes: boolean;
   onVoteUnvoteSuccessful: () => void;
   style: StyleProp<ViewStyle>;
+  theme: Theme;
 }
 
 const ProposalItem = ({
@@ -36,9 +41,14 @@ const ProposalItem = ({
   onVoteUnvoteSuccessful,
   displayingProxyVotes,
   style,
+  theme,
 }: ProposalItemProps) => {
   const [isExpandablePanelOpened, setExpandablePanelOpened] = useState(false);
   const [isPressVote, setIsPressVote] = useState(false);
+  const [
+    isVotingUnvotingForProposal,
+    setIsVotingUnvotingForProposal,
+  ] = useState('');
   const goTo = (link: Proposal['link']) => {
     Linking.openURL(link);
   };
@@ -56,6 +66,7 @@ const ProposalItem = ({
       Toast.show(translate('governance.proposal.error.using_proxy'));
       return;
     }
+    setIsVotingUnvotingForProposal(proposal.creator);
     if (proposal.voted) {
       if (
         await updateProposalVote(user.keys.active, {
@@ -85,7 +96,13 @@ const ProposalItem = ({
         Toast.show(translate('governance.proposal.error.vote'));
       }
     }
+    setIsVotingUnvotingForProposal('');
   };
+
+  const styles = getStyles(theme);
+  const isvoting =
+    isVotingUnvotingForProposal.trim().length > 0 &&
+    isVotingUnvotingForProposal === proposal.creator;
 
   return (
     <TouchableOpacity
@@ -101,13 +118,18 @@ const ProposalItem = ({
         <View style={styles.title}>
           <Text
             onLongPress={() => goTo(proposal.link)}
-            style={{fontWeight: '500'}}>
+            style={styles.textTitle}>
             #{proposal.id} - {proposal.subject}
           </Text>
         </View>
-        <View style={styles.expander}>
-          {isExpandablePanelOpened ? <ExpandLess /> : <ExpandMore />}
-        </View>
+        <Icon
+          theme={theme}
+          name="expand_thin"
+          {...styles.expander}
+          additionalContainerStyle={
+            isExpandablePanelOpened ? undefined : styles.rotate
+          }
+        />
       </View>
       <View style={styles.secondLine}>
         <View style={styles.user}>
@@ -121,28 +143,45 @@ const ProposalItem = ({
           </TouchableOpacity>
           <Text
             onLongPress={() => goToCreator(proposal.creator)}
-            style={styles.username}>
+            style={[styles.username, styles.textOpaque]}>
             {translate('governance.proposal.by', {name: proposal.creator})}
           </Text>
         </View>
-        <TouchableOpacity
-          onPressIn={() => {
-            setIsPressVote(true);
-            toggleSupport(proposal);
-          }}>
-          <Vote fill={proposal.voted ? 'black' : 'lightgrey'} />
-        </TouchableOpacity>
+        <View style={styles.voteButton}>
+          {!isvoting && (
+            <Vote
+              fill={proposal.voted ? PRIMARY_RED_COLOR : 'lightgrey'}
+              onPress={() => {
+                setIsPressVote(true);
+                toggleSupport(proposal);
+              }}
+            />
+          )}
+          {isvoting && <Loader size={'small'} animating />}
+        </View>
       </View>
       {isExpandablePanelOpened && (
         <View style={styles.expanded}>
           <View>
             <View style={styles.detail}>
-              <Vote style={styles.detailIcon} fill="black" height={18} />
-              <Text style={styles.detailText}>{proposal.totalVotes}</Text>
+              <Icon
+                theme={theme}
+                name="arrow_up"
+                additionalContainerStyle={styles.detailIcon}
+                {...styles.iconBigger}
+              />
+              <Text style={[styles.username, styles.detailText]}>
+                {proposal.totalVotes}
+              </Text>
             </View>
             <View style={styles.detail}>
-              <Timelapse style={styles.detailIcon} height={18} />
-              <Text style={styles.detailText}>
+              <Icon
+                theme={theme}
+                name="clock"
+                additionalContainerStyle={styles.detailIcon}
+                {...styles.icon}
+              />
+              <Text style={[styles.username, styles.detailText]}>
                 {translate('governance.proposal.remaining', {
                   days: withCommas(
                     proposal.endDate
@@ -154,15 +193,22 @@ const ProposalItem = ({
               </Text>
             </View>
             <View style={styles.detail}>
-              <Money style={styles.detailIcon} height={18} />
-              <Text style={styles.detailText}>
+              <Icon
+                theme={theme}
+                name="money"
+                additionalContainerStyle={styles.detailIcon}
+                {...styles.icon}
+              />
+              <Text style={[styles.username, styles.detailText]}>
                 {withCommas(proposal.dailyPay)}/
                 {translate('governance.proposal.day')}
               </Text>
             </View>
           </View>
           <View style={styles.status}>
-            <Text>{translate(`governance.proposal.${proposal.funded}`)}</Text>
+            <Text style={styles.textTitle}>
+              {translate(`governance.proposal.${proposal.funded}`)}
+            </Text>
           </View>
         </View>
       )}
@@ -170,42 +216,71 @@ const ProposalItem = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {paddingVertical: 10},
-  firstLine: {
-    flexDirection: 'row',
-    marginBottom: 10,
-    width: '100%',
-    justifyContent: 'space-between',
-  },
-  title: {width: '90%', fontWeight: 'bold'},
-  expander: {},
-  secondLine: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  user: {
-    flexDirection: 'row',
-    alignContent: 'center',
-  },
-  avatar: {width: 30, height: 30, borderRadius: 15, marginRight: 10},
-  expanded: {
-    marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  detail: {flexDirection: 'row', marginTop: 5},
-  detailIcon: {marginRight: 10},
-  detailText: {fontSize: 14},
-  status: {
-    paddingHorizontal: 20,
-    paddingVertical: 5,
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 5,
-  },
-  username: {textAlignVertical: 'center'},
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {paddingVertical: 10},
+    firstLine: {
+      flexDirection: 'row',
+      marginBottom: 10,
+      width: '100%',
+      justifyContent: 'space-between',
+    },
+    title: {
+      width: '90%',
+    },
+    textTitle: {
+      color: getColors(theme).secondaryText,
+      ...title_primary_body_2,
+    },
+    expander: {width: 12, height: 12},
+    secondLine: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    user: {
+      flexDirection: 'row',
+      alignContent: 'center',
+    },
+    avatar: {width: 30, height: 30, borderRadius: 15, marginRight: 10},
+    expanded: {
+      marginTop: 10,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    detail: {flexDirection: 'row', marginTop: 5, alignItems: 'center'},
+    detailIcon: {marginRight: 10},
+    detailText: {fontSize: 10},
+    status: {
+      paddingHorizontal: 20,
+      paddingVertical: 5,
+      borderColor: getColors(theme).cardBorderColor,
+      borderWidth: 1,
+      borderRadius: 5,
+    },
+    username: {
+      textAlignVertical: 'center',
+      color: getColors(theme).secondaryText,
+      ...fields_primary_text_2,
+    },
+    rotate: {
+      transform: [{rotateX: '180deg'}],
+    },
+    textOpaque: {
+      opacity: 0.7,
+    },
+    voteButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    icon: {
+      width: 20,
+      height: 20,
+    },
+    iconBigger: {
+      width: 22,
+      height: 22,
+    },
+  });
 
 export default ProposalItem;

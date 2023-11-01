@@ -2,15 +2,17 @@ import {loadAccount} from 'actions/index';
 import {ActiveAccount} from 'actions/interfaces';
 import ProposalItem from 'components/hive/ProposaItem';
 import Loader from 'components/ui/Loader';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {ThemeContext} from 'src/context/theme.context';
+import {getCardStyle} from 'src/styles/card';
 import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import ProposalUtils, {Proposal as ProposalInterface} from 'utils/proposals';
@@ -24,6 +26,7 @@ const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
   const [proposals, setProposals] = useState<ProposalInterface[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [displayingProxyVotes, setDisplayingProxyVotes] = useState(false);
+  const {theme} = useContext(ThemeContext);
   const styles = getDimensionedStyles(useWindowDimensions());
 
   useEffect(() => {
@@ -48,12 +51,8 @@ const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
   if (!isLoading)
     return (
       <View style={styles.container}>
-        <Text style={[styles.withPadding, styles.text]}>
-          The decentralized Hive Fund (DHF) gives funding to project proposals,
-          based on community votes.
-        </Text>
         {displayingProxyVotes && (
-          <Text style={[styles.withPadding, styles.text]}>
+          <Text style={[styles.text]}>
             {translate('governance.witness.has_proxy', {
               proxy: user.account.proxy,
             })}
@@ -67,8 +66,8 @@ const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
               <ProposalItem
                 user={user}
                 style={[
-                  styles.withPadding,
-                  index % 2 === 0 ? styles.even : undefined,
+                  getCardStyle(theme).defaultCardItem,
+                  styles.proposalItemContainer,
                 ]}
                 displayingProxyVotes={displayingProxyVotes}
                 key={proposal.proposalId}
@@ -76,6 +75,7 @@ const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
                 onVoteUnvoteSuccessful={() => {
                   loadAccount(user.name);
                 }}
+                theme={theme}
               />
             )}
           />
@@ -98,10 +98,10 @@ const getDimensionedStyles = ({width}: Width) =>
       marginTop: 30,
     },
 
-    withPadding: {
-      paddingHorizontal: 0.05 * width,
+    proposalItemContainer: {
+      marginBottom: 10,
+      borderRadius: 38,
     },
-    even: {backgroundColor: 'white'},
     text: {fontSize: 16, marginBottom: 20},
   });
 
