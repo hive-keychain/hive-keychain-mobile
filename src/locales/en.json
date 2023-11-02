@@ -742,7 +742,8 @@
         "retrieving_witness_ranking": "An error occured while retrieving the witness ranking. Please try again later.",
         "unvote_wit": "Error while unvoting @{{name}} as a witness.",
         "wit": "Error while voting for @{{name}} as a witness.",
-        "active": "To vote for a witness, you must first add your account active key"
+        "active": "To vote for a witness, you must first add your account active key",
+        "retrieving_witness_info": "An error occured while retrieving the witness information. Please try again later."
       },
       "success": {
         "unvote_wit": "Succesfully unvoted @{{name}} as a witness.",
@@ -765,7 +766,16 @@
       "information_blocks_missed": "Blocks Missed",
       "information_last_block": "Last Block",
       "information_price_feed": "Price Feed",
-      "information_version": "Version"
+      "information_version": "Version",
+      "information_updated": "Updated {{updatedAt}}",
+      "information_reward": "Rewards",
+      "information_reward_panel_last_week": "Last 7 Days",
+      "information_reward_panel_last_month": "Last 30 Days",
+      "information_signing_key": "Signing Key",
+      "information_maximum_block_size": "Block size",
+      "information_account_creation_fee": "Account creation fee",
+      "information_hbd_interest_rate": "Interest rate",
+      "disable_witness": "Disable witness"
     },
     "proxy": {
       "has_proxy": "The proxy account makes governance decisions on your behalf. If you wish to vote for witnesses and proposals by yourself, you must first remove the proxy.",

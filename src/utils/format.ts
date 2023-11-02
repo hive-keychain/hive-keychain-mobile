@@ -101,6 +101,7 @@ export const toFormattedHP = (
   vests: number,
   props?: DynamicGlobalProperties,
 ) => {
+  console.log({vests, t: typeof vests});
   return `${toHP(vests.toString(), props).toFixed(3)} HP`;
 };
 

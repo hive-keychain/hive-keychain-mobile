@@ -54,7 +54,7 @@ const Governance = ({
   const initWitnessRanking = async () => {
     try {
       const requestResult = await keychain.get('/hive/v2/witnesses-ranks');
-      if (requestResult.data !== '') {
+      if (requestResult.data !== '' || !!requestResult) {
         const ranking: WitnessInterface[] = requestResult.data;
         setRanking(ranking);
         const tempGovernanceComponents = {
@@ -68,7 +68,7 @@ const Governance = ({
               user={user}
               focus={focus}
               theme={theme}
-              witnessRanking={ranking}
+              ranking={ranking}
               rankingError={hasError}
             />,
             <Proxy user={user} />,
@@ -83,21 +83,17 @@ const Governance = ({
           tempGovernanceComponents.components.push(
             <MyWitness
               theme={theme}
-              witnessInfo={ranking.find(
-                (witness) => witness.name === user.name!,
-              )}
+              ranking={ranking.find((witness) => witness.name === user.name!)}
             />,
           );
           tempGovernanceComponents.menuLabels.push(
             translate(`governance.menu.my_witness`),
           );
-          setGovernanceComponents(tempGovernanceComponents);
         }
+        setGovernanceComponents(tempGovernanceComponents);
       } else {
-        Toast.show(
-          translate('governance.witness.error.retrieving_witness_ranking'),
-        );
         setHasError(true);
+        throw new Error('Witness-ranks data error');
       }
     } catch (error) {
       Toast.show(
@@ -111,7 +107,7 @@ const Governance = ({
     <WalletPage>
       <>
         {loading ? (
-          <View style={{flex: 1, justifyContent: 'center'}}>
+          <View style={styles.flexCentered}>
             <Loader animating size={'large'} />
           </View>
         ) : hasError || governanceComponents.components.length === 0 ? (

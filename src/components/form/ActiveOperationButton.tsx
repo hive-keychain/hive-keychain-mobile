@@ -14,15 +14,19 @@ type Props = {
   onPress: () => void;
   isLoading: boolean;
   additionalTextStyle?: StyleProp<ViewStyle>;
+  //TODO remove bellow after refactoring
+  byPassForTestings?: boolean;
 } & PropsFromRedux;
 const ActiveOperationButton = ({
   method,
   onPress,
   style,
   additionalTextStyle,
+  byPassForTestings,
   ...props
 }: Props) => {
-  const disabled = !props.user.keys[method || KeyTypes.active];
+  const disabled =
+    !props.user.keys[method || KeyTypes.active] && !byPassForTestings;
   return (
     <>
       <EllipticButton

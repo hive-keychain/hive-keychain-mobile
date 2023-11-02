@@ -29,29 +29,30 @@ import {capitalizeSentence} from 'utils/format';
 import {getClient, voteForWitness} from 'utils/hive';
 import {translate} from 'utils/localize';
 import ProxyUtils from 'utils/proxy';
+import {WITNESS_DISABLED_KEY} from 'utils/witness.utils';
 import * as ValidUrl from 'valid-url';
+
 const MAX_WITNESS_VOTE = 30;
 
 type Props = {
   user: ActiveAccount;
   focus: number;
   theme: Theme;
-  witnessRanking: WitnessInterface[];
+  ranking: WitnessInterface[];
   rankingError?: boolean;
 };
-//TODO test rankingError
+
 const Witness = ({
   user,
   loadAccount,
   focus,
   theme,
-  witnessRanking,
+  ranking,
   rankingError,
 }: PropsFromRedux & Props) => {
   const [displayVotedOnly, setDisplayVotedOnly] = useState(false);
   const [hideNonActive, setHideNonActive] = useState(true);
   const [remainingVotes, setRemainingVotes] = useState<string | number>('...');
-  const [ranking, setRanking] = useState<WitnessInterface[]>(witnessRanking);
   const [filteredRanking, setFilteredRanking] = useState<WitnessInterface[]>(
     [],
   );
@@ -62,10 +63,9 @@ const Witness = ({
   );
 
   const [usingProxy, setUsingProxy] = useState<boolean>(false);
-  const [hasError, setHasError] = useState(false);
-  // const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(true);
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
-  //TODO bellow instead of loading this data here, just ask as a prop from Governance.tsx
+
   useEffect(() => {
     init();
   }, [focus]);
@@ -73,15 +73,13 @@ const Witness = ({
   const init = async () => {
     let proxy = await ProxyUtils.findUserProxy(user.account);
     setUsingProxy(proxy !== null);
-
     setRemainingVotes(MAX_WITNESS_VOTE - user.account.witnesses_voted_for);
-    //TODO clean up
-    // initWitnessRanking();
     if (proxy) {
       initProxyVotes(proxy);
     } else {
       setVotedWitnesses(user.account.witness_votes);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -97,9 +95,7 @@ const Witness = ({
             witness.rank?.toLowerCase().includes(filterValue.toLowerCase())) &&
           ((displayVotedOnly && votedWitnesses.includes(witness.name)) ||
             !displayVotedOnly) &&
-          ((hideNonActive &&
-            witness.signing_key !==
-              'STM1111111111111111111111111111111114T1Anm') ||
+          ((hideNonActive && witness.signing_key !== WITNESS_DISABLED_KEY) ||
             !hideNonActive)
         );
       }),
@@ -110,22 +106,6 @@ const Witness = ({
     const hiveAccounts = await getClient().database.getAccounts([proxy]);
     setVotedWitnesses(hiveAccounts[0].witness_votes);
   };
-
-  //TODO clean up bellow
-  // const initWitnessRanking = async () => {
-  //   const requestResult = await keychain.get('/hive/v2/witnesses-ranks');
-  //   if (requestResult.data !== '') {
-  //     const ranking = requestResult.data;
-  //     setRanking(ranking);
-  //     setFilteredRanking(ranking);
-  //   } else {
-  //     Toast.show(
-  //       translate('governance.witness.error.retrieving_witness_ranking'),
-  //     );
-  //     setHasError(true);
-  //   }
-  //   setLoading(false);
-  // };
 
   const handleVotedButtonClick = async (witness: WitnessInterface) => {
     if (!user.keys.active) {
@@ -201,8 +181,7 @@ const Witness = ({
               styles.text,
               styles.smallerText,
               styles.witnessName,
-              witness.signing_key ===
-              'STM1111111111111111111111111111111114T1Anm'
+              witness.signing_key === WITNESS_DISABLED_KEY
                 ? styles.inactive
                 : undefined,
             ]}>
@@ -235,7 +214,7 @@ const Witness = ({
     );
   };
 
-  if (rankingError)
+  if (rankingError && !isLoading)
     return (
       <View style={{flex: 1, justifyContent: 'center'}}>
         <Text style={styles.text}>
@@ -243,7 +222,7 @@ const Witness = ({
         </Text>
       </View>
     );
-  else
+  else if (!isLoading && !rankingError)
     return (
       <View style={styles.container}>
         <View style={styles.flex90}>
@@ -332,11 +311,22 @@ const Witness = ({
         />
       </View>
     );
+  else
+    return (
+      <View style={styles.flexCentered}>
+        <Loader animating size={'large'} />
+      </View>
+    );
 };
 
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
   StyleSheet.create({
-    container: {width: '100%', flex: 1, marginTop: 30},
+    container: {
+      width: '100%',
+      flex: 1,
+      marginTop: 30,
+      justifyContent: 'center',
+    },
     text: {
       lineHeight: 16,
       textAlignVertical: 'center',
@@ -374,6 +364,7 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     flex90: {
       width: '90%',
       alignSelf: 'center',
+      justifyContent: 'center',
     },
     icon: {
       width: 12,
@@ -404,6 +395,7 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       paddingHorizontal: 0,
       paddingVertical: 0,
       marginLeft: 0,
+      marginRight: 0,
       paddingLeft: 0,
     },
     inputContainer: {
@@ -416,6 +408,7 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       lineHeight: 22,
       paddingHorizontal: 10,
     },
+    flexCentered: {flex: 1, justifyContent: 'center'},
   });
 
 const connector = connect(undefined, {loadAccount});

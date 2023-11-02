@@ -1,5 +1,6 @@
+import Icon from 'components/hive/Icon';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Linking, StyleSheet, Text, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
@@ -14,6 +15,7 @@ interface Props {
   value: string;
   theme: Theme;
   bottomValue?: string;
+  urlOnTitle?: string;
 }
 
 const MyWitnessDataBlock = ({
@@ -21,16 +23,31 @@ const MyWitnessDataBlock = ({
   value,
   bottomValue,
   theme,
+  urlOnTitle,
 }: Props) => {
   const styles = getStyles(theme);
   return (
     <View style={[getCardStyle(theme).defaultCardItem, styles.container]}>
-      <Text style={[styles.textBase, styles.textBold]}>
-        {translate(labelTranslationKey)}
+      <View style={styles.flexRow}>
+        <Text style={[styles.textBase, styles.textBold]}>
+          {translate(labelTranslationKey)}
+        </Text>
+        {urlOnTitle && (
+          <Icon
+            theme={theme}
+            name="external_link"
+            onClick={() => Linking.openURL(urlOnTitle)}
+            {...styles.icon}
+          />
+        )}
+      </View>
+      <Text style={[styles.textBase, styles.textOpaque, styles.smallerText]}>
+        {value}
       </Text>
-      <Text style={[styles.textBase, styles.textOpaque]}>{value}</Text>
       {bottomValue && (
-        <Text style={[styles.textBase, styles.textOpaque]}>{bottomValue}</Text>
+        <Text style={[styles.textBase, styles.textOpaque, styles.smallerText]}>
+          {bottomValue}
+        </Text>
       )}
     </View>
   );
@@ -42,6 +59,8 @@ const getStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       width: '50%',
+      paddingHorizontal: 16,
+      paddingVertical: 10,
     },
     textBold: {
       fontFamily: FontPoppinsName.BOLD,
@@ -52,5 +71,16 @@ const getStyles = (theme: Theme) =>
     },
     textOpaque: {
       opacity: 0.7,
+    },
+    smallerText: {
+      fontSize: 11,
+    },
+    flexRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    icon: {
+      width: 15,
+      height: 15,
     },
   });

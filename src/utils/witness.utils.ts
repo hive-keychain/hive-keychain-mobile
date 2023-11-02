@@ -29,15 +29,17 @@ export const getWitnessInfo = async (
     }),
   ]);
   resultFromBlockchain = resultFromBlockchain.witnesses[0];
-
+  console.log({resultFromAPI}); //TODO remove line
+  console.log({resultFromBlockchain}); //TODO remove line
+  console.log({lastMonthValue: resultFromAPI.data.lastMonthValue}); //TODO remove line
   const lastFeedUpdate = `${resultFromBlockchain.last_hbd_exchange_update}Z`;
 
   const witnessInfo: WitnessInfo = {
     username: resultFromBlockchain.owner,
-    votesCount: resultFromAPI.votes_count,
+    votesCount: resultFromAPI.data.votes_count,
     voteValueInHP: nFormatter(
       toHP(
-        (Number(resultFromAPI.votes) / 1000000).toString(),
+        (Number(resultFromAPI.data.votes) / 1000000).toString(),
         globalProperties.globals,
       ),
       3,
@@ -63,33 +65,33 @@ export const getWitnessInfo = async (
       hbdInterestRate: resultFromBlockchain.props.hbd_interest_rate / 100,
     },
     rewards: {
-      lastMonthValue: resultFromAPI.lastMonthValue,
+      lastMonthValue: resultFromAPI.data.lastMonthValue,
       lastMonthInHP: toFormattedHP(
-        resultFromAPI.lastMonthValue,
+        resultFromAPI.data.lastMonthValue,
         globalProperties.globals!,
       ),
       lastMonthInUSD: getUSDFromVests(
-        resultFromAPI.lastMonthValue,
+        resultFromAPI.data.lastMonthValue,
         globalProperties,
         currencyPrices,
       ),
-      lastWeekValue: resultFromAPI.lastWeekValue,
+      lastWeekValue: resultFromAPI.data.lastWeekValue,
       lastWeekInHP: toFormattedHP(
-        resultFromAPI.lastWeekValue,
+        resultFromAPI.data.lastWeekValue,
         globalProperties.globals!,
       ),
       lastWeekInUSD: getUSDFromVests(
-        resultFromAPI.lastWeekValue,
+        resultFromAPI.data.lastWeekValue,
         globalProperties,
         currencyPrices,
       ),
-      lastYearValue: resultFromAPI.lastYearValue,
+      lastYearValue: resultFromAPI.data.lastYearValue,
       lastYearInHP: toFormattedHP(
-        resultFromAPI.lastYearValue,
+        resultFromAPI.data.lastYearValue,
         globalProperties.globals!,
       ),
       lastYearInUSD: getUSDFromVests(
-        resultFromAPI.lastYearValue,
+        resultFromAPI.data.lastYearValue,
         globalProperties,
         currencyPrices,
       ),
