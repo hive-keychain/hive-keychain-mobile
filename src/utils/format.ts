@@ -1,4 +1,5 @@
-import {DynamicGlobalProperties} from '@hiveio/dhive';
+import {Asset, DynamicGlobalProperties} from '@hiveio/dhive';
+import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
 import {translate} from 'utils/localize';
 import {HiveErrorMessage} from './keychain.types';
 
@@ -12,6 +13,17 @@ export const toHP = (vests: string, props?: DynamicGlobalProperties) =>
     ? (parseFloat(vests) * parseFloat(props.total_vesting_fund_hive + '')) /
       parseFloat(props.total_vesting_shares + '')
     : 0;
+
+export const getUSDFromVests = (
+  vestAmount: Number,
+  globalProperties: GlobalProperties,
+  currencyPrices: CurrencyPrices,
+) => {
+  return (
+    toHP(vestAmount.toString(), globalProperties.globals!) *
+    currencyPrices.hive.usd!
+  ).toFixed(2);
+};
 
 export const fromHP = (hp: string, props: DynamicGlobalProperties) =>
   (parseFloat(hp) / parseFloat(props.total_vesting_fund_hive + '')) *
@@ -78,6 +90,22 @@ export const getSymbol = (nai: string) => {
   if (nai === '@@000000013') return 'HBD';
   if (nai === '@@000000021') return 'HIVE';
   if (nai === '@@000000037') return 'HP';
+};
+
+export const getAmountFromNai = (obj: any) => {
+  const res = fromNaiAndSymbol(obj);
+  return Asset.fromString(res).amount;
+};
+
+export const toFormattedHP = (
+  vests: number,
+  props?: DynamicGlobalProperties,
+) => {
+  return `${toHP(vests.toString(), props).toFixed(3)} HP`;
+};
+
+export const fromNaiAndSymbol = (obj: any) => {
+  return `${(obj.amount / 1000).toFixed(obj.precision)} ${getSymbol(obj.nai)}`;
 };
 
 export const nFormatter = (num: number, digits: number) => {

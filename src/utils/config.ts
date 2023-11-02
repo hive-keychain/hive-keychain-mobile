@@ -291,3 +291,7 @@ export const ClaimsConfig = {
     delay: 30,
   },
 };
+
+export const WitnessesConfig = {
+  feedWarningLimitInHours: 5,
+};

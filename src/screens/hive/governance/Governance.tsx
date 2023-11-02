@@ -6,11 +6,13 @@ import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {default as Toast} from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {ThemeContext} from 'src/context/theme.context';
+import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
+import {getColors} from 'src/styles/colors';
+import {title_primary_title_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
@@ -18,7 +20,6 @@ import MyWitness from './MyWitness';
 import Proposal from './Proposal';
 import Proxy from './Proxy';
 import Witness from './Witness';
-//TODO handle error
 
 interface GovernanceToScreenToogleProps {
   menuLabels: string[];
@@ -33,25 +34,14 @@ const Governance = ({
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
   const {theme} = useContext(ThemeContext);
-  const styles = getDimensionedStyles(useWindowDimensions());
+  const styles = getDimensionedStyles(useWindowDimensions(), theme);
 
   useLockedPortrait(navigation);
   const [focus, setFocus] = useState(Math.random());
 
   const [governanceComponents, setGovernanceComponents] = useState<
     GovernanceToScreenToogleProps
-  >({
-    menuLabels: [
-      translate(`governance.menu.witness`),
-      translate(`governance.menu.proxy`),
-      translate(`governance.menu.proposals`),
-    ],
-    components: [
-      <Witness user={user} focus={focus} theme={theme} />,
-      <Proxy user={user} />,
-      <Proposal user={user} />,
-    ],
-  });
+  >({menuLabels: [], components: []});
 
   useEffect(() => {
     initWitnessRanking();
@@ -62,32 +52,57 @@ const Governance = ({
   }, []);
 
   const initWitnessRanking = async () => {
-    const requestResult = await keychain.get('/hive/v2/witnesses-ranks');
-    if (requestResult.data !== '') {
-      const ranking: WitnessInterface[] = requestResult.data;
-      setRanking(ranking);
-      if (
-        ranking &&
-        ranking.length > 0 &&
-        ranking.find((witness) => witness.name === user.name!) !== undefined
-      ) {
-        const tempGovernanceComponents = governanceComponents;
-        tempGovernanceComponents.components.push(
-          <MyWitness
-            theme={theme}
-            witnessInfo={ranking.find((witness) => witness.name === user.name!)}
-          />,
+    try {
+      const requestResult = await keychain.get('/hive/v2/witnesses-ranks');
+      if (requestResult.data !== '') {
+        const ranking: WitnessInterface[] = requestResult.data;
+        setRanking(ranking);
+        const tempGovernanceComponents = {
+          menuLabels: [
+            translate(`governance.menu.witness`),
+            translate(`governance.menu.proxy`),
+            translate(`governance.menu.proposals`),
+          ],
+          components: [
+            <Witness
+              user={user}
+              focus={focus}
+              theme={theme}
+              witnessRanking={ranking}
+              rankingError={hasError}
+            />,
+            <Proxy user={user} />,
+            <Proposal user={user} />,
+          ],
+        };
+        if (
+          ranking &&
+          ranking.length > 0 &&
+          ranking.find((witness) => witness.name === user.name!) !== undefined
+        ) {
+          tempGovernanceComponents.components.push(
+            <MyWitness
+              theme={theme}
+              witnessInfo={ranking.find(
+                (witness) => witness.name === user.name!,
+              )}
+            />,
+          );
+          tempGovernanceComponents.menuLabels.push(
+            translate(`governance.menu.my_witness`),
+          );
+          setGovernanceComponents(tempGovernanceComponents);
+        }
+      } else {
+        Toast.show(
+          translate('governance.witness.error.retrieving_witness_ranking'),
         );
-        tempGovernanceComponents.menuLabels.push(
-          translate(`governance.menu.my_witness`),
-        );
-        setGovernanceComponents(tempGovernanceComponents);
+        setHasError(true);
       }
-    } else {
+    } catch (error) {
       Toast.show(
         translate('governance.witness.error.retrieving_witness_ranking'),
       );
-      setHasError(true);
     }
     setLoading(false);
   };
@@ -98,6 +113,12 @@ const Governance = ({
         {loading ? (
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Loader animating size={'large'} />
+          </View>
+        ) : hasError || governanceComponents.components.length === 0 ? (
+          <View style={styles.flexCentered}>
+            <Text style={styles.text}>
+              {translate('governance.witness.error.retrieving_witness_ranking')}
+            </Text>
           </View>
         ) : (
           <ScreenToggle
@@ -117,7 +138,7 @@ const Governance = ({
   );
 };
 
-const getDimensionedStyles = ({width}: Width) =>
+const getDimensionedStyles = ({width}: Width, theme: Theme) =>
   StyleSheet.create({
     toggle: {
       display: 'flex',
@@ -127,6 +148,14 @@ const getDimensionedStyles = ({width}: Width) =>
       width: '95%',
       alignSelf: 'center',
     },
+    text: {
+      lineHeight: 16,
+      textAlignVertical: 'center',
+      ...title_primary_title_1,
+      color: getColors(theme).secondaryText,
+      textAlign: 'center',
+    },
+    flexCentered: {flex: 1, justifyContent: 'center'},
   });
 
 const connector = connect((state: RootState) => {

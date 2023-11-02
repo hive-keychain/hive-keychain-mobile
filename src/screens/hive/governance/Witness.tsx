@@ -1,6 +1,5 @@
 import {loadAccount} from 'actions/hive';
 import {ActiveAccount, Witness as WitnessInterface} from 'actions/interfaces';
-import keychain from 'api/keychain';
 import Vote from 'assets/governance/arrow_circle_up.svg';
 import CustomInput from 'components/form/CustomInput';
 import Icon from 'components/hive/Icon';
@@ -37,13 +36,22 @@ type Props = {
   user: ActiveAccount;
   focus: number;
   theme: Theme;
+  witnessRanking: WitnessInterface[];
+  rankingError?: boolean;
 };
-
-const Witness = ({user, loadAccount, focus, theme}: PropsFromRedux & Props) => {
+//TODO test rankingError
+const Witness = ({
+  user,
+  loadAccount,
+  focus,
+  theme,
+  witnessRanking,
+  rankingError,
+}: PropsFromRedux & Props) => {
   const [displayVotedOnly, setDisplayVotedOnly] = useState(false);
   const [hideNonActive, setHideNonActive] = useState(true);
   const [remainingVotes, setRemainingVotes] = useState<string | number>('...');
-  const [ranking, setRanking] = useState<WitnessInterface[]>([]);
+  const [ranking, setRanking] = useState<WitnessInterface[]>(witnessRanking);
   const [filteredRanking, setFilteredRanking] = useState<WitnessInterface[]>(
     [],
   );
@@ -55,7 +63,7 @@ const Witness = ({user, loadAccount, focus, theme}: PropsFromRedux & Props) => {
 
   const [usingProxy, setUsingProxy] = useState<boolean>(false);
   const [hasError, setHasError] = useState(false);
-  const [isLoading, setLoading] = useState(true);
+  // const [isLoading, setLoading] = useState(true);
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   //TODO bellow instead of loading this data here, just ask as a prop from Governance.tsx
   useEffect(() => {
@@ -67,8 +75,8 @@ const Witness = ({user, loadAccount, focus, theme}: PropsFromRedux & Props) => {
     setUsingProxy(proxy !== null);
 
     setRemainingVotes(MAX_WITNESS_VOTE - user.account.witnesses_voted_for);
-
-    initWitnessRanking();
+    //TODO clean up
+    // initWitnessRanking();
     if (proxy) {
       initProxyVotes(proxy);
     } else {
@@ -103,20 +111,21 @@ const Witness = ({user, loadAccount, focus, theme}: PropsFromRedux & Props) => {
     setVotedWitnesses(hiveAccounts[0].witness_votes);
   };
 
-  const initWitnessRanking = async () => {
-    const requestResult = await keychain.get('/hive/v2/witnesses-ranks');
-    if (requestResult.data !== '') {
-      const ranking = requestResult.data;
-      setRanking(ranking);
-      setFilteredRanking(ranking);
-    } else {
-      Toast.show(
-        translate('governance.witness.error.retrieving_witness_ranking'),
-      );
-      setHasError(true);
-    }
-    setLoading(false);
-  };
+  //TODO clean up bellow
+  // const initWitnessRanking = async () => {
+  //   const requestResult = await keychain.get('/hive/v2/witnesses-ranks');
+  //   if (requestResult.data !== '') {
+  //     const ranking = requestResult.data;
+  //     setRanking(ranking);
+  //     setFilteredRanking(ranking);
+  //   } else {
+  //     Toast.show(
+  //       translate('governance.witness.error.retrieving_witness_ranking'),
+  //     );
+  //     setHasError(true);
+  //   }
+  //   setLoading(false);
+  // };
 
   const handleVotedButtonClick = async (witness: WitnessInterface) => {
     if (!user.keys.active) {
@@ -226,10 +235,12 @@ const Witness = ({user, loadAccount, focus, theme}: PropsFromRedux & Props) => {
     );
   };
 
-  if (isLoading)
+  if (rankingError)
     return (
       <View style={{flex: 1, justifyContent: 'center'}}>
-        <Loader animating />
+        <Text style={styles.text}>
+          {translate('governance.witness.error_retrieving_witness_ranking')}
+        </Text>
       </View>
     );
   else
