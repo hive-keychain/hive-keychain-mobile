@@ -59,7 +59,7 @@ const MyWitnessInformation = ({theme, witnessInfo}: Props) => {
         />
       </View>
       <Separator />
-      <View style={[getCardStyle(theme).defaultCardItem]}>
+      <View style={[getCardStyle(theme).defaultCardItem, styles.marginBottom]}>
         <Text style={[styles.textBase, styles.textBold, styles.textCentered]}>
           {translate('governance.my_witness.information_reward')}
         </Text>
@@ -118,6 +118,9 @@ const getStyles = (theme: Theme) =>
     smallText: {
       color: getColors(theme).secondaryText,
       ...fields_primary_text_2,
+    },
+    marginBottom: {
+      marginBottom: 15,
     },
   });
 

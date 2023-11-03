@@ -1,7 +1,15 @@
+import {WitnessUpdateOperation} from '@hiveio/dhive';
+import AsyncStorage from '@react-native-community/async-storage';
 import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
 import keychain from 'api/keychain';
 import moment from 'moment';
-import {WitnessInfo} from 'src/interfaces/witness.interface';
+import {Key} from 'src/interfaces/keys.interface';
+import {
+  LastSigningKeys,
+  WitnessInfo,
+  WitnessParamsForm,
+} from 'src/interfaces/witness.interface';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {WitnessesConfig} from './config';
 import {
   fromNaiAndSymbol,
@@ -11,7 +19,9 @@ import {
   toFormattedHP,
   toHP,
 } from './format';
-import {getClient} from './hive';
+import {broadcast, getClient} from './hive';
+
+export const MAX_WITNESS_VOTE = 30;
 
 export const WITNESS_DISABLED_KEY =
   'STM1111111111111111111111111111111114T1Anm';
@@ -29,9 +39,6 @@ export const getWitnessInfo = async (
     }),
   ]);
   resultFromBlockchain = resultFromBlockchain.witnesses[0];
-  console.log({resultFromAPI}); //TODO remove line
-  console.log({resultFromBlockchain}); //TODO remove line
-  console.log({lastMonthValue: resultFromAPI.data.lastMonthValue}); //TODO remove line
   const lastFeedUpdate = `${resultFromBlockchain.last_hbd_exchange_update}Z`;
 
   const witnessInfo: WitnessInfo = {
@@ -105,4 +112,53 @@ const wasUpdatedAfterThreshold = (updatedAt: moment.Moment) => {
   var hours = duration.asHours();
 
   return hours > WitnessesConfig.feedWarningLimitInHours;
+};
+
+export const saveLastSigningKeyForWitness = async (
+  username: string,
+  key: string,
+) => {
+  let result: LastSigningKeys = JSON.parse(
+    await AsyncStorage.getItem(KeychainStorageKeyEnum.WITNESS_LAST_SIGNING_KEY),
+  );
+  if (!result) {
+    result = {};
+  }
+  result[username] = key;
+  await AsyncStorage.setItem(
+    KeychainStorageKeyEnum.WITNESS_LAST_SIGNING_KEY,
+    JSON.stringify(result),
+  );
+};
+
+export const getLastSigningKeyForWitness = async (username: string) => {
+  const result: LastSigningKeys = JSON.parse(
+    await AsyncStorage.getItem(KeychainStorageKeyEnum.WITNESS_LAST_SIGNING_KEY),
+  );
+  return result ? result[username] : null;
+};
+
+export const updateWitnessParameters = async (
+  witnessAccountName: string,
+  witnessParamsForm: WitnessParamsForm,
+  activeKey: Key,
+) => {
+  return await broadcast(activeKey, [
+    [
+      'witness_update',
+      {
+        owner: witnessAccountName,
+        url: witnessParamsForm.url,
+        block_signing_key: witnessParamsForm.signingKey,
+        props: {
+          account_creation_fee: `${Number(
+            witnessParamsForm.accountCreationFee,
+          ).toFixed(3)} HIVE`,
+          maximum_block_size: Number(witnessParamsForm.maximumBlockSize),
+          hbd_interest_rate: Number(witnessParamsForm.hbdInterestRate) * 100,
+        },
+        fee: '0.000 HIVE',
+      },
+    ] as WitnessUpdateOperation,
+  ]);
 };

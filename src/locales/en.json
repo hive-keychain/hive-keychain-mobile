@@ -84,7 +84,8 @@
     "ordinal_st_label": "st",
     "ordinal_nd_label": "nd",
     "ordinal_rd_label": "rd",
-    "ordinal_th_label": "th"
+    "ordinal_th_label": "th",
+    "url": "URL"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -506,6 +507,7 @@
     }
   },
   "toast": {
+    "error_witness_account_update": "Error while updating witness account @{{account}}",
     "noMatch": "PIN codes do not match",
     "authFailed": "Authentication failed",
     "account_already": "You already registered this account",
@@ -775,7 +777,10 @@
       "information_maximum_block_size": "Block size",
       "information_account_creation_fee": "Account creation fee",
       "information_hbd_interest_rate": "Interest rate",
-      "disable_witness": "Disable witness"
+      "disable_witness": "Disable witness",
+      "enable_witness": "Enable witness",
+      "enable_disable_witness_confirmation_info": "You are about to {{mode}} @{{owner}} witness account. please confirm to proceed",
+      "success_witness_account_update": "Successfully updated witness account."
     },
     "proxy": {
       "has_proxy": "The proxy account makes governance decisions on your behalf. If you wish to vote for witnesses and proposals by yourself, you must first remove the proxy.",

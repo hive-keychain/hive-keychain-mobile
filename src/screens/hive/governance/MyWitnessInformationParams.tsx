@@ -19,20 +19,23 @@ import MyWitnessDataBlock from './MyWitnessDataBlock';
 interface Props {
   theme: Theme;
   witnessInfo: any;
+  setEditMode: () => void;
 }
 
-const MyWitnessInformationParams = ({theme, witnessInfo}: Props) => {
+const MyWitnessInformationParams = ({
+  theme,
+  witnessInfo,
+  setEditMode,
+}: Props) => {
   const styles = getStyles(theme);
   return (
     <>
-      <Separator height={10} />
       <Text style={[styles.textBase, styles.textBold]}>
         {translate('governance.my_witness.information_signing_key')}
       </Text>
       <Text style={[styles.textBase, styles.smallText, styles.textOpaque]}>
         {witnessInfo.signingKey}
       </Text>
-      <Separator />
       <View style={styles.flexRowWrapped}>
         <MyWitnessDataBlock
           theme={theme}
@@ -50,41 +53,43 @@ const MyWitnessInformationParams = ({theme, witnessInfo}: Props) => {
           value={`${witnessInfo.params.hbdInterestRate.toFixed(2)}%`}
         />
       </View>
-      <Separator />
-      <ActiveOperationButton
-        byPassForTestings
-        title={translate('common.edit')}
-        //TODO finish bellow
-        onPress={() => {}}
-        isLoading={false}
-        style={[getCardStyle(theme).defaultCardItem, styles.button]}
-      />
-      <Separator height={10} />
-      <ActiveOperationButton
-        byPassForTestings
-        title={translate('governance.my_witness.disable_witness')}
-        //TODO finish bellow
-        onPress={() => {
-          navigate('TemplateStack', {
-            titleScreen: translate('governance.my_witness.disable_witness'),
-            component: <DisableEnableMyWitness mode="disable" theme={theme} />,
-          } as TemplateStackProps);
-        }}
-        isLoading={false}
-        style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-      />
+      <Separator height={50} />
+      <View style={styles.marginBottom}>
+        <ActiveOperationButton
+          title={translate('common.edit')}
+          onPress={setEditMode}
+          isLoading={false}
+          style={[getCardStyle(theme).defaultCardItem, styles.button]}
+        />
+        <Separator height={10} />
+        <ActiveOperationButton
+          title={translate('governance.my_witness.disable_witness')}
+          onPress={() => {
+            navigate('TemplateStack', {
+              titleScreen: translate(
+                `governance.my_witness.${
+                  witnessInfo.isDisabled ? 'enable' : 'disable'
+                }_witness`,
+              ),
+              component: (
+                <DisableEnableMyWitness
+                  mode={witnessInfo.isDisabled ? 'enable' : 'disable'}
+                  theme={theme}
+                  witnessInfo={witnessInfo}
+                />
+              ),
+            } as TemplateStackProps);
+          }}
+          isLoading={false}
+          style={[getButtonStyle(theme).warningStyleButton, styles.button]}
+        />
+      </View>
     </>
   );
 };
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
-    flexBetween: {
-      height: '100%',
-      width: '100%',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
     flexRowWrapped: {
       flexDirection: 'row',
       flexWrap: 'wrap',
@@ -102,13 +107,13 @@ const getStyles = (theme: Theme) =>
     smallText: {
       fontSize: 11,
     },
-    buttonsContainer: {
-      width: '100%',
-    },
     button: {
       width: '90%',
       alignSelf: 'center',
       borderRadius: 48,
+    },
+    marginBottom: {
+      marginBottom: 15,
     },
   });
 

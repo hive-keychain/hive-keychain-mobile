@@ -33,3 +33,17 @@ export interface WitnessInfo {
     lastYearInUSD: string;
   };
 }
+
+export interface LastSigningKeys {
+  [username: string]: string;
+}
+
+export interface WitnessParamsForm {
+  accountCreationFee: number;
+  maximumBlockSize: number;
+  hbdInterestRate: number;
+  signingKey: string;
+  url: string;
+}
+
+export type WitnessFormField = keyof WitnessParamsForm;

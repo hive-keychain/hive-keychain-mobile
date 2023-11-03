@@ -29,10 +29,8 @@ import {capitalizeSentence} from 'utils/format';
 import {getClient, voteForWitness} from 'utils/hive';
 import {translate} from 'utils/localize';
 import ProxyUtils from 'utils/proxy';
-import {WITNESS_DISABLED_KEY} from 'utils/witness.utils';
+import {MAX_WITNESS_VOTE, WITNESS_DISABLED_KEY} from 'utils/witness.utils';
 import * as ValidUrl from 'valid-url';
-
-const MAX_WITNESS_VOTE = 30;
 
 type Props = {
   user: ActiveAccount;
