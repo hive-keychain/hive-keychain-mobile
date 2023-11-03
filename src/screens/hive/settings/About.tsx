@@ -1,23 +1,37 @@
 import Clipboard from '@react-native-community/clipboard';
+import AboutBGLight from 'assets/new_UI/about_background_light.svg';
+import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {AboutNavigation} from 'navigators/MainDrawer.types';
-import React, {useState} from 'react';
-import {Linking, StatusBar, StyleSheet, Text, View} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {Linking, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import VersionInfo from 'react-native-version-info';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {
+  body_primary_body_3,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
 import {getSafeState} from 'store';
 
 export default ({navigation}: {navigation: AboutNavigation}) => {
   useLockedPortrait(navigation);
   const [pressed, setPressed] = useState(0);
+  const {theme} = useContext(ThemeContext);
+  const styles = getStyles(theme);
   return (
-    <Background>
+    <Background using_new_ui theme={theme}>
       <>
-        <StatusBar backgroundColor="black" />
-        <Separator height={50} />
+        <View style={styles.extraBg}>
+          {theme === Theme.LIGHT ? <AboutBGLight /> : <AboutBGLight />}
+        </View>
+        <FocusAwareStatusBar />
+        <Separator height={30} />
         <View style={styles.container}>
           <TouchableOpacity
             onPress={() => {
@@ -31,38 +45,44 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
                 );
               }
             }}>
-            <Text style={styles.title}>
+            <Text style={[styles.textBase, styles.title, styles.textCentered]}>
               Keychain Mobile v{VersionInfo.appVersion} (Beta)
             </Text>
+            <Separator height={10} />
           </TouchableOpacity>
-          <Text style={styles.text}>
+          <Text style={[styles.textBase, styles.text]}>
             Hive Keychain for mobile is developed by the Keychain team and
-            founded through the Hive DAO.
+            founded through the <Text style={styles.highLigth}>Hive DAO</Text>.
           </Text>
           <Separator height={20} />
-          <Text style={styles.text}>
-            Process transactions and enjoy your favorite dApps on your mobile
-            device!
+          <Text style={[styles.textBase, styles.text]}>
+            Process transactions and enjoy your favorite dApps on your{' '}
+            <Text style={styles.highLigth}>Mobile Device!</Text>
           </Text>
           <Separator height={20} />
-          <Text style={styles.text}>
+          <Text style={[styles.textBase, styles.text]}>
             Should you encounter any issue, contact us on our{' '}
-            <Text
-              style={styles.link}
-              onPress={() => {
-                Linking.openURL('https://discord.gg/3EM6YfRrGv');
-              }}>
-              Discord server
-            </Text>{' '}
-            or on{' '}
-            <Text
-              style={styles.link}
-              onPress={() => {
-                Linking.openURL(
-                  'https://github.com/stoodkev/hive-keychain-mobile',
-                );
-              }}>
-              Github.
+            <Text style={styles.highLigth}>
+              Discord Server
+              <Icon
+                theme={theme}
+                name="external_link"
+                {...styles.link}
+                onClick={() => {
+                  Linking.openURL('https://discord.gg/3EM6YfRrGv');
+                }}
+              />{' '}
+              or on our Github
+              <Icon
+                theme={theme}
+                name="external_link"
+                {...styles.link}
+                onClick={() => {
+                  Linking.openURL(
+                    'https://github.com/stoodkev/hive-keychain-mobile',
+                  );
+                }}
+              />
             </Text>
           </Text>
         </View>
@@ -71,15 +91,32 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {marginVertical: 60, marginHorizontal: 20},
-  link: {color: 'lightgrey'},
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-    textAlign: 'center',
-    marginBottom: 40,
-  },
-  text: {color: 'white', fontSize: 16, textAlign: 'justify'},
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      marginVertical: 10,
+      paddingHorizontal: 20,
+      alignItems: 'center',
+    },
+    link: {width: 15, height: 15},
+    textBase: {
+      color: getColors(theme).secondaryText,
+      ...headlines_primary_headline_2,
+    },
+    title: {
+      fontSize: 16,
+    },
+    text: {
+      ...body_primary_body_3,
+      fontSize: 15,
+    },
+    textCentered: {
+      textAlign: 'center',
+    },
+    highLigth: {
+      color: getColors(theme).icon,
+    },
+    extraBg: {
+      position: 'absolute',
+    },
+  });

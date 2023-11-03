@@ -71,6 +71,7 @@ const getIconFilePath = (
   theme?: Theme,
   width: number = 20,
   height: number = 20,
+  color?: string,
 ) => {
   const finalStyleOnIcon = marginRight ? styles.defaultIconContainer : style;
   let dimensionsProps = {
@@ -86,14 +87,14 @@ const getIconFilePath = (
       name === 'fill_recurrent_transfer':
       return (
         <TransferIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'savings':
       return (
         <SavingsIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
@@ -102,7 +103,10 @@ const getIconFilePath = (
         case subType === 'transfer_to_vesting':
           return (
             <PowerUpDownIcon
-              style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+              style={[
+                finalStyleOnIcon,
+                {color: color ?? getColors(theme).icon},
+              ]}
               {...dimensionsProps}
             />
           );
@@ -111,7 +115,7 @@ const getIconFilePath = (
             <PowerUpDownIcon
               style={[
                 finalStyleOnIcon,
-                {color: getColors(theme).icon},
+                {color: color ?? getColors(theme).icon},
                 styles.rotationUpDown,
               ]}
               {...dimensionsProps}
@@ -122,14 +126,14 @@ const getIconFilePath = (
     case name === 'interest':
       return (
         <ClaimIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'delegate_vesting_shares':
       return (
         <ReceiveSquareIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
@@ -140,14 +144,14 @@ const getIconFilePath = (
     case name === 'convert':
       return (
         <ConvertIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'expand_more':
       return (
         <ExpandMoreIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).iconBW}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).iconBW}]}
           {...dimensionsProps}
         />
       );
@@ -179,91 +183,91 @@ const getIconFilePath = (
     case name === 'candle':
       return (
         <CandleIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'accounts':
       return (
         <AccountsMenuIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'tokens':
       return (
         <HiveAlternative
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'governance':
       return (
         <BankIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'theme':
       return (
         <CategoryIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'info':
       return (
         <InfoCircleIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).iconBW}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).iconBW}]}
           {...dimensionsProps}
         />
       );
     case name === 'logout':
       return (
         <LogoutIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'search':
       return (
         <SearchIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'settings-2':
       return (
         <Settings2Icon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'settings-4':
       return (
         <Settings4Icon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'import':
       return (
         <ImportIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'back_time':
       return (
         <BackTimeIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'arrow_up':
       return (
         <ArrowUpIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
@@ -272,7 +276,7 @@ const getIconFilePath = (
         <PolygonDown
           style={[
             finalStyleOnIcon,
-            {color: getColors(theme).secondaryCardBgColor},
+            {color: color ?? getColors(theme).secondaryCardBgColor},
           ]}
           {...dimensionsProps}
         />
@@ -280,154 +284,166 @@ const getIconFilePath = (
     case name === 'double-arrow' || name === 'delegate':
       return (
         <DoubleArrowIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'arrow_left' || name === 'back':
       return (
         <ArrowLeftIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
+          style={[
+            finalStyleOnIcon,
+            {color: color ?? getColors(theme).secodaryIconBW},
+          ]}
           {...dimensionsProps}
         />
       );
     case name === 'at':
       return (
         <AtIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
+          style={[
+            finalStyleOnIcon,
+            {color: color ?? getColors(theme).secodaryIconBW},
+          ]}
           {...dimensionsProps}
         />
       );
     case name === 'encrypt':
       return (
         <EncryptIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
+          style={[
+            finalStyleOnIcon,
+            {color: color ?? getColors(theme).secodaryIconBW},
+          ]}
           {...dimensionsProps}
         />
       );
     case name === 'decrypt':
       return (
         <DecryptIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).secodaryIconBW}]}
+          style={[
+            finalStyleOnIcon,
+            {color: color ?? getColors(theme).secodaryIconBW},
+          ]}
           {...dimensionsProps}
         />
       );
     case name === '3d_cube':
       return (
         <Cube3dScanIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === '3d_cube_rotate':
       return (
         <Cube3dRotate
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'gift_delete' || name === 'remove':
       return (
         <GiftDeleteIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'edit' || name === 'pencil':
       return (
         <EditIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'expand_thin':
       return (
         <ExpandThinIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'check':
       return (
         <CheckIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'close_circle':
       return (
         <CloseCircleIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'scanner':
       return (
         <ScannerIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'see':
       return (
         <SeeIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'not_see':
       return (
         <NotSeeIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'cpu':
       return (
         <CpuIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'rpc':
       return (
         <RPCNodeIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'ram':
       return (
         <RamIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'open' || name === 'external_link':
       return (
         <ExternalLinkIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'money' || name === 'dollar':
       return (
         <MoneyIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     case name === 'clock':
       return (
         <ClockIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
     default:
       return (
         <EyeSlashIcon
-          style={[finalStyleOnIcon, {color: getColors(theme).icon}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
@@ -446,6 +462,7 @@ interface IconProps {
   bgImage?: JSX.Element;
   width?: number;
   height?: number;
+  color?: string;
   // ariaLabel?: string;
 }
 
@@ -458,6 +475,7 @@ const Icon = (props: IconProps) => {
     props.theme,
     props.width,
     props.height,
+    props.color,
   );
   const styleProps = {
     style: [styles.defaultIconContainer, props.additionalContainerStyle],

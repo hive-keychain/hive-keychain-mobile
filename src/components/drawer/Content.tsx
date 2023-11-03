@@ -14,6 +14,7 @@ import React, {useContext} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
 import {RootState} from 'store';
 import DrawerContentItem from './drawer-content-item/DrawerContentItem';
 
@@ -102,7 +103,9 @@ const HeaderContent = (props: Props) => {
           labelTranslationKey="navigation.about"
           theme={theme}
           onPress={() => navigation.navigate('ABOUT')}
-          iconImage={<Icon name={'info'} theme={theme} />}
+          iconImage={
+            <Icon name={'info'} theme={theme} color={getColors(theme).icon} />
+          }
           drawBottomLine
         />
         <DrawerContentItem
