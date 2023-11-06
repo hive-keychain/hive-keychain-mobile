@@ -93,6 +93,9 @@
 		<string>Poppins-SemiBoldItalic.ttf</string>
 		<string>Poppins-Thin.ttf</string>
 		<string>Poppins-ThinItalic.ttf</string>
+		<string>JosefinSans-Bold.ttf</string>
+		<string>JosefinSans-Medium.ttf</string>
+		<string>JosefinSans-Regular.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash</string>

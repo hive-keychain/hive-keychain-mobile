@@ -17,6 +17,7 @@ import {Theme} from 'src/context/theme.context';
 //Colors
 export const NEUTRAL_WHITE_COLOR = '#FFF';
 export const PRIMARY_RED_COLOR = '#E31337';
+export const DARKER_RED_COLOR = '#A5112C';
 export const BRIGTHER_PRIMARY_RED = '#f52c4e';
 export const INDICATOR_ACTIVE_COLOR = PRIMARY_RED_COLOR;
 export const INDICATOR_INACTIVE_COLOR = '#ffffffd4';
@@ -29,6 +30,8 @@ export const LINESTROKESEPARATOR = '#EDF4FC';
 export const SECONDLINESTROKESEPARATOR = '#EAEAEA';
 export const DARKBLUELIGHTER = '#364360';
 export const BORDERWHITISH = '#EDEDED';
+export const GREENINFO = '#02B15A';
+export const OVERLAYICONBGCOLOR = 'rgba(255, 255, 255, 0.17)';
 
 export const getColors = (theme: Theme) => {
   //TODO
@@ -64,6 +67,7 @@ export const getColors = (theme: Theme) => {
     senaryCardBorderColor: theme === Theme.LIGHT ? '#FFF' : '#344360',
     septenaryCardBorderColor:
       theme === Theme.LIGHT ? BACKGROUNDLIGHTVARIANTLIGHTBLUE : '#364360',
+    walletUserPickerBorder: theme === Theme.LIGHT ? '#FFF' : '#364360',
     borderContrast: theme === Theme.LIGHT ? '#212838' : '#FFF',
     primaryRedShape:
       theme === Theme.LIGHT ? BRIGTHER_PRIMARY_RED : PRIMARY_RED_COLOR,

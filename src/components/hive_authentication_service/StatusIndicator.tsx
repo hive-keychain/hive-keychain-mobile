@@ -1,12 +1,13 @@
+import Icon from 'components/hive/Icon';
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
+import {GREENINFO, getColors} from 'src/styles/colors';
 import {RootState} from 'store';
-import {clearHAS, restartHASSockets} from 'utils/hiveAuthenticationService';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
-const LOGO_DARK = require('assets/has/logo-dark.png');
 
 //TODO: Use all connection statuses. This will be useful when different servers work with Hive Auth.
 export enum ConnectionStatus {
@@ -15,7 +16,12 @@ export enum ConnectionStatus {
   PARTIALLY_CONNECTED,
   CONNECTED,
 }
-const StatusIndicator = ({has}: PropsFromRedux) => {
+
+interface Props {
+  theme: Theme;
+}
+
+const StatusIndicator = ({has, theme}: PropsFromRedux & Props) => {
   let status = ConnectionStatus.VOID;
   if (has.instances.length) {
     const connected = has.instances.filter((e) => e.init && e.connected).length;
@@ -28,36 +34,29 @@ const StatusIndicator = ({has}: PropsFromRedux) => {
     }
   }
 
-  const styles = getStyles(status);
+  const styles = getStyles(status, theme);
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.hasContainer}
-        onPress={() => {
-          navigate('ModalScreen', {
-            name: ModalComponent.HAS_INFO,
-          });
-        }}>
-        <Image source={LOGO_DARK} style={{height: 30, width: 30}} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          if (status === ConnectionStatus.DISCONNECTED) {
-            restartHASSockets();
-          }
-        }}
-        onLongPress={() => {
-          clearHAS();
-        }}
-        style={styles.indicatorView}>
-        <Indicator status={status} />
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: ModalComponent.HAS_INFO,
+        });
+      }}>
+      <Icon theme={theme} name="logo_has" />
+    </TouchableOpacity>
   );
 };
 
-export const Indicator = ({status}: {status: ConnectionStatus}) => {
-  const styles = getStyles(status);
+export const Indicator = ({
+  status,
+  theme,
+}: {
+  status: ConnectionStatus;
+  theme: Theme;
+}) => {
+  const styles = getStyles(status, theme);
   return (
     <View
       style={
@@ -68,24 +67,19 @@ export const Indicator = ({status}: {status: ConnectionStatus}) => {
   );
 };
 
-const getStyles = (status: ConnectionStatus) =>
+const getStyles = (status: ConnectionStatus, theme: Theme) =>
   StyleSheet.create({
     container: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      width: 70,
-    },
-    hasContainer: {
-      width: 25,
-      height: 25,
-      justifyContent: 'center',
-    },
-    indicatorView: {
-      width: 25,
-      height: 25,
       justifyContent: 'center',
       alignItems: 'center',
+      width: 33,
+      height: 33,
+      borderRadius: 50,
+      borderWidth: 1,
+      borderColor: GREENINFO,
+      alignSelf: 'center',
+      marginRight: 8,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
     },
     indicatorShadow: {
       width: 20,

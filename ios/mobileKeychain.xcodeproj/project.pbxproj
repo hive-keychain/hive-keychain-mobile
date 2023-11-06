@@ -39,6 +39,9 @@
 		A8CBAFF1B0604BFA97259467 /* Poppins-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 285DB0BCBE054FD8981F7CFC /* Poppins-SemiBoldItalic.ttf */; };
 		C10BB55F6563453DBBA1A253 /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D2EEDD0C8304D61822E5218 /* Poppins-Thin.ttf */; };
 		F464F6030A3A4EBBB88D975B /* Poppins-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 656BC29F0376470B8329EA2E /* Poppins-ThinItalic.ttf */; };
+		203750BEBD2F42A6ADD34E61 /* JosefinSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5FC904F137AD4A9991F6680D /* JosefinSans-Bold.ttf */; };
+		31FDCF9CF88E4C149F7A7EAE /* JosefinSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8D0CDD9706E34E1794E032C6 /* JosefinSans-Medium.ttf */; };
+		F413D4F0421F427A8DC957F8 /* JosefinSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E20AA119AD5F424DAE6E2040 /* JosefinSans-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +120,9 @@
 		285DB0BCBE054FD8981F7CFC /* Poppins-SemiBoldItalic.ttf */ = {isa = PBXFileReference; name = "Poppins-SemiBoldItalic.ttf"; path = "../src/assets/fonts/Poppins-SemiBoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		6D2EEDD0C8304D61822E5218 /* Poppins-Thin.ttf */ = {isa = PBXFileReference; name = "Poppins-Thin.ttf"; path = "../src/assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		656BC29F0376470B8329EA2E /* Poppins-ThinItalic.ttf */ = {isa = PBXFileReference; name = "Poppins-ThinItalic.ttf"; path = "../src/assets/fonts/Poppins-ThinItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5FC904F137AD4A9991F6680D /* JosefinSans-Bold.ttf */ = {isa = PBXFileReference; name = "JosefinSans-Bold.ttf"; path = "../src/assets/fonts/JosefinSans-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8D0CDD9706E34E1794E032C6 /* JosefinSans-Medium.ttf */ = {isa = PBXFileReference; name = "JosefinSans-Medium.ttf"; path = "../src/assets/fonts/JosefinSans-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E20AA119AD5F424DAE6E2040 /* JosefinSans-Regular.ttf */ = {isa = PBXFileReference; name = "JosefinSans-Regular.ttf"; path = "../src/assets/fonts/JosefinSans-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,6 +241,9 @@
 				285DB0BCBE054FD8981F7CFC /* Poppins-SemiBoldItalic.ttf */,
 				6D2EEDD0C8304D61822E5218 /* Poppins-Thin.ttf */,
 				656BC29F0376470B8329EA2E /* Poppins-ThinItalic.ttf */,
+				5FC904F137AD4A9991F6680D /* JosefinSans-Bold.ttf */,
+				8D0CDD9706E34E1794E032C6 /* JosefinSans-Medium.ttf */,
+				E20AA119AD5F424DAE6E2040 /* JosefinSans-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -451,6 +460,9 @@
 				A8CBAFF1B0604BFA97259467 /* Poppins-SemiBoldItalic.ttf in Resources */,
 				C10BB55F6563453DBBA1A253 /* Poppins-Thin.ttf in Resources */,
 				F464F6030A3A4EBBB88D975B /* Poppins-ThinItalic.ttf in Resources */,
+				203750BEBD2F42A6ADD34E61 /* JosefinSans-Bold.ttf in Resources */,
+				31FDCF9CF88E4C149F7A7EAE /* JosefinSans-Medium.ttf in Resources */,
+				F413D4F0421F427A8DC957F8 /* JosefinSans-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

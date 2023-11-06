@@ -1,29 +1,59 @@
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {
+  fields_primary_text_2,
+  title_secondary_body_3,
+  title_secondary_title_2,
+} from 'src/styles/typography';
 import {Width} from 'utils/common.types';
+import Icon from './Icon';
 
 type Props = {
-  color: string;
+  IconBgcolor: string;
   percent: number;
   name: string;
+  theme: Theme;
+  iconName: string;
+  bgColor: string;
   secondary?: string;
 };
-const PercentageDisplay = ({color, percent, name, secondary}: Props) => {
+const PercentageDisplay = ({
+  IconBgcolor,
+  percent,
+  name,
+  secondary,
+  theme,
+  iconName,
+  bgColor,
+}: Props) => {
   const styles = getDimensionedStyles({
-    color,
+    IconBgcolor,
     percent,
+    theme,
+    bgColor,
     ...useWindowDimensions(),
   });
 
   return (
     <View style={styles.container}>
+      <Icon
+        theme={theme}
+        name={iconName}
+        additionalContainerStyle={styles.iconContainer}
+      />
       <View style={styles.textWrapper}>
-        <Text style={styles.name}>{name.toUpperCase()}</Text>
-        <Text style={styles.percent}>{`${percent.toFixed(0)} %`}</Text>
-        <Text style={styles.secondary}>{secondary}</Text>
-      </View>
-      <View style={styles.greyBar}>
-        <View style={styles.filler} />
+        <View style={{flexGrow: 1}}>
+          <Text style={styles.name}>{name}</Text>
+          <View style={[styles.textWrapper, styles.justifyBetween]}>
+            <Text style={styles.percent}>
+              {`${percent.toFixed(0)}`}
+              <Text style={[{...title_secondary_body_3}]}> %</Text>
+            </Text>
+            <Text style={styles.secondary}>{secondary}</Text>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -31,42 +61,62 @@ const PercentageDisplay = ({color, percent, name, secondary}: Props) => {
 
 const getDimensionedStyles = ({
   width,
-  color,
+  IconBgcolor,
   percent,
-}: Width & {color: string; percent: number}) =>
+  theme,
+  bgColor,
+}: Width & {
+  IconBgcolor: string;
+  percent: number;
+  theme: Theme;
+  bgColor: string;
+}) =>
+  //TODO cleanup styles
   StyleSheet.create({
     textWrapper: {
       display: 'flex',
       flexDirection: 'row',
-      width: '100%',
-      marginBottom: 10,
+      flexGrow: 1,
+    },
+    justifyBetween: {
+      justifyContent: 'space-between',
+      flexGrow: 1,
+      maxWidth: '90%',
     },
     name: {
-      color: '#7E8C9A',
-      fontSize: 14,
+      color: '#FFF',
+      opacity: 0.7,
+      ...title_secondary_body_3,
     },
-    percent: {color: 'black', fontWeight: 'bold'},
-    secondary: {
-      color: color,
-      fontWeight: 'bold',
-      textAlign: 'right',
-      flex: 1,
-      width: '100%',
-    },
+    percent: {color: '#FFF', ...title_secondary_title_2, lineHeight: 30},
     container: {
       display: 'flex',
-      flexDirection: 'column',
-      width: 0.42 * width,
+      flexDirection: 'row',
+      width: '48%',
+      borderColor: getColors(theme).cardBorderColorJustDark,
+      borderWidth: theme === Theme.DARK ? 1 : 0,
+      borderRadius: 13,
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+      backgroundColor: bgColor,
     },
     greyBar: {
       height: 2,
       width: 0.42 * width,
       backgroundColor: '#D7E9F8',
     },
-    filler: {
-      height: 2,
-      width: (width * 0.42 * percent) / 100,
-      backgroundColor: color,
+    iconContainer: {
+      backgroundColor: IconBgcolor,
+      borderRadius: 12,
+      padding: 6.49,
+      width: 33,
+      height: 33,
+      marginRight: 5,
+    },
+    secondary: {
+      color: '#FFF',
+      ...fields_primary_text_2,
+      textAlignVertical: 'bottom',
     },
   });
 

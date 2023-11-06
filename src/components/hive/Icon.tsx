@@ -27,7 +27,9 @@ import SeeIcon from 'assets/new_UI/linear_eye.svg';
 import RPCNodeIcon from 'assets/new_UI/linear_hierarchy-square-3.svg';
 import RamIcon from 'assets/new_UI/linear_ram.svg';
 import ScannerIcon from 'assets/new_UI/linear_scanner.svg';
+import SendSquareIcon from 'assets/new_UI/linear_send-square.svg';
 import CheckIcon from 'assets/new_UI/linear_tick-circle.svg';
+import HASIcon from 'assets/new_UI/logo_HAS.svg';
 import LogoutIcon from 'assets/new_UI/logout.svg';
 import PolygonDown from 'assets/new_UI/polygon_down.svg';
 import PowerUpDownIcon from 'assets/new_UI/power-up-down.svg';
@@ -35,6 +37,7 @@ import AccountsMenuIcon from 'assets/new_UI/profile.svg';
 import SearchIcon from 'assets/new_UI/search.svg';
 import Settings2Icon from 'assets/new_UI/setting-2.svg';
 import Settings4Icon from 'assets/new_UI/setting-4.svg';
+import SpeedometerIcon from 'assets/new_UI/speedometer.svg';
 import React from 'react';
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import AddCircleOutlineIcon from 'src/assets/icons/svgs/add_circle_outline.svg';
@@ -436,6 +439,22 @@ const getIconFilePath = (
     case name === 'clock':
       return (
         <ClockIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'logo_has':
+      return <HASIcon style={[finalStyleOnIcon]} {...dimensionsProps} />;
+    case name === 'send_square':
+      return (
+        <SendSquareIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'speedometer':
+      return (
+        <SpeedometerIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

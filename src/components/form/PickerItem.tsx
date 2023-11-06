@@ -38,6 +38,7 @@ type Props = {
   additionalSelectedItemContainerStyle?: StyleProp<ViewStyle>;
   labelsToUppercase?: boolean;
   onSelectedItem?: (item: PickerItemInterface) => void;
+  removeDropdownIcon?: boolean;
 };
 const PickerItem = ({
   selected,
@@ -49,6 +50,7 @@ const PickerItem = ({
   additionalExpandedListItemContainerStyle,
   additionalSelectedItemContainerStyle,
   onSelectedItem,
+  removeDropdownIcon,
 }: Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
@@ -86,21 +88,24 @@ const PickerItem = ({
         onPress={() => setExpandList(!expandList)}
         style={[styles.container, additionalContainerStyle]}>
         {renderItem(selectedItem)}
-        <View style={[styles.dropdownContainer]}>
-          {theme === Theme.LIGHT ? (
-            <ArrowDropDownLight
-              {...styles.dropdownIcon}
-              style={expandList ? styles.rotateSvg : null}
-            />
-          ) : (
-            <ArrowDropDownDark
-              {...styles.dropdownIcon}
-              style={expandList ? styles.rotateSvg : null}
-            />
-          )}
-        </View>
+        {!removeDropdownIcon && (
+          <View style={[styles.dropdownContainer]}>
+            {theme === Theme.LIGHT ? (
+              <ArrowDropDownLight
+                {...styles.dropdownIcon}
+                style={expandList ? styles.rotateSvg : null}
+              />
+            ) : (
+              <ArrowDropDownDark
+                {...styles.dropdownIcon}
+                style={expandList ? styles.rotateSvg : null}
+              />
+            )}
+          </View>
+        )}
       </TouchableOpacity>
       <Overlay
+        overlayStyle={{padding: 0}}
         isVisible={expandList}
         onBackdropPress={() => setExpandList(!expandList)}>
         <View
@@ -138,14 +143,6 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       alignItems: 'center',
       padding: 8,
       borderColor: getColors(theme).cardBorderColorContrast,
-    },
-    overlayContainer: {
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      backgroundColor: 'gray',
-      top: 0,
-      left: 0,
     },
     dropdownContainer: {
       justifyContent: 'center',

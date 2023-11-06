@@ -89,8 +89,8 @@
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
-    "rc": "Resources:",
-    "vp": "Voting:",
+    "rc": "Resource Credit",
+    "vp": "Voting Mana",
     "balance": "balance",
     "no_tokens": "No Hive Engine token found.",
     "no_transaction": "No recent transaction.",

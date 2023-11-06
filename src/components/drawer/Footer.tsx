@@ -32,6 +32,7 @@ import {translate} from 'utils/localize';
 
 export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
   const styles = getStyles(theme, useWindowDimensions());
+  //TODO ask quentin what to do here if nor condition meet?? as the button will disappear
   const showVoteForWitness = () => {
     if (
       !user.account.name ||
