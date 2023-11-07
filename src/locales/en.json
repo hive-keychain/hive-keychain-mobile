@@ -85,7 +85,8 @@
     "ordinal_nd_label": "nd",
     "ordinal_rd_label": "rd",
     "ordinal_th_label": "th",
-    "url": "URL"
+    "url": "URL",
+    "estimated_account_value": "Estimated Account Value"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -172,7 +173,7 @@
         "info_recurrent_transfer_in": "@{{other}} started transfer of {{amount}} (every {{recurrence}} hours - {{executions}} times)"
       },
       "powerup": {
-        "title": "Power up!",
+        "title": "Power up",
         "info_power_up": "Powered up"
       },
       "powerdown": {

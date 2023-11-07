@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {getColors} from 'src/styles/colors';
+import {DARKER_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   fields_primary_text_2,
   title_secondary_body_3,
@@ -71,7 +71,6 @@ const getDimensionedStyles = ({
   theme: Theme;
   bgColor: string;
 }) =>
-  //TODO cleanup styles
   StyleSheet.create({
     textWrapper: {
       display: 'flex',
@@ -94,16 +93,11 @@ const getDimensionedStyles = ({
       flexDirection: 'row',
       width: '48%',
       borderColor: getColors(theme).cardBorderColorJustDark,
-      borderWidth: theme === Theme.DARK ? 1 : 0,
+      borderWidth: theme === Theme.DARK && bgColor !== DARKER_RED_COLOR ? 1 : 0,
       borderRadius: 13,
       paddingHorizontal: 15,
       paddingVertical: 10,
       backgroundColor: bgColor,
-    },
-    greyBar: {
-      height: 2,
-      width: 0.42 * width,
-      backgroundColor: '#D7E9F8',
     },
     iconContainer: {
       backgroundColor: IconBgcolor,

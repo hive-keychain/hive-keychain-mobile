@@ -1,8 +1,9 @@
-import Hbd from 'assets/wallet/icon_hbd.svg';
-import Hive from 'assets/wallet/icon_hive.svg';
-import Hp from 'assets/wallet/icon_hp.svg';
+import CurrencySavingDark from 'assets/new_UI/currency-saving-dark.svg';
+import CurrencySavingLight from 'assets/new_UI/currency-saving-light.svg';
 import Savings from 'assets/wallet/icon_savings.svg';
-import AccountValue from 'components/hive/AccountValue';
+import CurrencyToken from 'components/hive/CurrencyToken';
+import Icon from 'components/hive/Icon';
+import IconHP from 'components/hive/IconHP';
 import TokenDisplay from 'components/hive/TokenDisplay';
 import {
   BuyCoins,
@@ -15,12 +16,22 @@ import {
   SendPowerUp,
   SendWithdraw,
 } from 'components/operations/OperationsButtons';
+import CustomIconButton from 'components/ui/CustomIconButton';
 import Separator from 'components/ui/Separator';
+import SquareButton from 'components/ui/SquareButton';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
+import {
+  DARKER_RED_COLOR,
+  HBDICONBGCOLOR,
+  HIVEICONBGCOLOR,
+  getColors,
+} from 'src/styles/colors';
+import {title_secondary_body_2} from 'src/styles/typography';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {signedNumber, toHP, withCommas} from 'utils/format';
@@ -35,12 +46,18 @@ enum Token {
   HP,
   SAVINGS,
 }
+
+interface Props {
+  theme: Theme;
+}
+
 const Primary = ({
   user,
   prices,
   properties,
   userSavingsWithdrawRequests,
-}: PropsFromRedux) => {
+  theme,
+}: PropsFromRedux & Props) => {
   const {width} = useWindowDimensions();
   const [toggled, setToggled] = useState(Token.NONE);
   const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
@@ -91,23 +108,106 @@ const Primary = ({
         ),
     );
   };
-
+  const styles = getStyles(theme);
+  //TODO bellow cleanup
   return (
     <View style={styles.container}>
-      <Separator height={30} />
+      <Separator height={20} />
+      {/* <Separator height={30} />
       <AccountValue
         account={user.account}
         prices={prices}
         properties={properties}
       />
-      <Separator height={30} />
+      <Separator height={30} /> */}
       {/* //TODO fix all bellow when not engine tokens */}
+      <CurrencyToken
+        theme={theme}
+        currencyName="HIVE"
+        value={parseFloat(user.account.balance as string)}
+        subValue={
+          parseFloat(user.account.savings_balance as string) > 0
+            ? (user.account.savings_balance as string).split(' ')[0]
+            : undefined
+        }
+        currencyLogo={
+          <Icon
+            theme={theme}
+            name="hive_currency_logo"
+            additionalContainerStyle={styles.hiveIconContainer}
+            {...styles.icon}
+          />
+        }
+        buttons={[
+          <SquareButton
+            onPress={() => {}}
+            icon={
+              <Icon
+                theme={theme}
+                name="transfer"
+                additionalContainerStyle={styles.roundedIcon}
+                {...styles.icon}
+              />
+            }
+            primaryLabel={translate('common.send')}
+          />,
+          <SquareButton
+            onPress={() => {}}
+            icon={
+              <Icon
+                theme={theme}
+                name="power_up"
+                additionalContainerStyle={styles.roundedIcon}
+                {...styles.icon}
+              />
+            }
+            primaryLabel={translate('wallet.operations.powerup.title')}
+          />,
+          <SquareButton
+            onPress={() => {}}
+            icon={
+              <CustomIconButton
+                theme={theme}
+                lightThemeIcon={<CurrencySavingLight />}
+                darkThemeIcon={<CurrencySavingDark />}
+                onPress={() => {}}
+                additionalContainerStyle={styles.roundedIcon}
+              />
+            }
+            primaryLabel={'HIVE'}
+            secondaryLabel={translate('common.savings')}
+          />,
+          <SquareButton
+            onPress={() => {}}
+            icon={
+              <Icon
+                theme={theme}
+                name="convert"
+                additionalContainerStyle={styles.roundedIcon}
+                {...styles.icon}
+              />
+            }
+            primaryLabel={translate('wallet.operations.convert.button')}
+          />,
+        ]}
+      />
       <TokenDisplay
+        renderButtonOptions
+        theme={theme}
+        using_new_ui
         color="#A3112A"
         name="HIVE"
         currency="HIVE"
         value={parseFloat(user.account.balance as string)}
-        logo={<Hive width={width / 15} />}
+        totalValue={parseFloat(user.account.balance as string)}
+        logo={
+          <Icon
+            theme={theme}
+            name="hive_currency_logo"
+            additionalContainerStyle={styles.hiveIconContainer}
+            {...styles.icon}
+          />
+        }
         price={prices.hive}
         toggled={toggled === Token.HIVE}
         setToggle={() => {
@@ -128,7 +228,7 @@ const Primary = ({
           </Text>
         }
         buttons={[
-          <Send key="send_hive" currency="HIVE" />,
+          <Send key="send_hive" currency="HIVE" theme={theme} />,
           <SendPowerUp key="pu" />,
           <SendConversion key="conversion" currency="HIVE" />,
           <BuyCoins
@@ -138,13 +238,23 @@ const Primary = ({
           />,
         ]}
       />
-      <Separator height={20} />
+      <Separator height={10} />
       <TokenDisplay
+        theme={theme}
+        using_new_ui
         color="#005C09"
         name="HIVE DOLLARS"
         currency="HBD"
         value={parseFloat(user.account.hbd_balance as string)}
-        logo={<Hbd width={width / 15} />}
+        totalValue={parseFloat(user.account.hbd_balance as string)}
+        logo={
+          <Icon
+            theme={theme}
+            name="hbd_currency_logo"
+            additionalContainerStyle={styles.hbdIconContainer}
+            {...styles.icon}
+          />
+        }
         price={prices.hive_dollar}
         toggled={toggled === Token.HBD}
         setToggle={() => {
@@ -167,7 +277,7 @@ const Primary = ({
           </Text>
         }
         buttons={[
-          <Send key="send_hbd" currency="HBD" />,
+          <Send key="send_hbd" currency="HBD" theme={theme} />,
           <SendConversion key="conversion" currency="HBD" />,
           <BuyCoins
             key="buy_coins"
@@ -176,12 +286,18 @@ const Primary = ({
           />,
         ]}
       />
-      <Separator height={20} />
+      <Separator height={10} />
       <TokenDisplay
+        theme={theme}
+        using_new_ui
         color="#AC4F00"
         name="HIVE POWER"
         currency="HP"
         value={toHP(user.account.vesting_shares as string, properties.globals)}
+        totalValue={toHP(
+          user.account.vesting_shares as string,
+          properties.globals,
+        )}
         incoming={toHP(
           user.account.received_vesting_shares as string,
           properties.globals,
@@ -190,7 +306,7 @@ const Primary = ({
           user.account.delegated_vesting_shares as string,
           properties.globals,
         )}
-        logo={<Hp width={width / 15} />}
+        logo={<IconHP theme={theme} />}
         toggled={toggled === Token.HP}
         setToggle={() => {
           setToggled(toggled === Token.HP ? Token.NONE : Token.HP);
@@ -201,12 +317,15 @@ const Primary = ({
           <View style={{width: 20}}></View>,
         ]}
       />
-      <Separator height={20} />
+      <Separator height={10} />
       <TokenDisplay
+        theme={theme}
+        using_new_ui
         color="#7E8C9A"
         name={translate('common.savings').toUpperCase()}
         currency="HIVE"
         value={parseFloat(user.account.savings_balance as string)}
+        totalValue={parseFloat(user.account.savings_balance as string)}
         secondaryCurrency="HBD"
         secondaryValue={parseFloat(user.account.savings_hbd_balance as string)}
         logo={<Savings width={width / 15} />}
@@ -265,16 +384,65 @@ const Primary = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {width: '100%', flex: 1},
-  apr: {color: '#7E8C9A', fontSize: 14},
-  aprValue: {color: '#3BB26E', fontSize: 14},
-  withdrawingValue: {color: '#b8343f', fontSize: 14},
-  flexRowAligned: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});
+const getStyles = (theme: Theme) =>
+  //TODO bellow cleanup styles
+  StyleSheet.create({
+    container: {width: '100%'},
+    apr: {color: '#7E8C9A', fontSize: 14},
+    aprValue: {color: '#3BB26E', fontSize: 14},
+    withdrawingValue: {color: '#b8343f', fontSize: 14},
+    flexRowAligned: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    icon: {
+      width: 20,
+      height: 20,
+    },
+    hiveIconContainer: {
+      borderRadius: 50,
+      padding: 5,
+      backgroundColor: HIVEICONBGCOLOR,
+    },
+    hbdIconContainer: {
+      borderRadius: 50,
+      padding: 5,
+      backgroundColor: HBDICONBGCOLOR,
+    },
+    squareButton: {
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: getColors(theme).cardBorderColorContrast,
+      borderWidth: 1,
+      borderRadius: 11,
+      width: '30%',
+      height: 'auto',
+      paddingHorizontal: 22,
+      paddingVertical: 15,
+    },
+    redBackground: {
+      backgroundColor: DARKER_RED_COLOR,
+    },
+    roundedIconContainer: {
+      borderWidth: 1,
+      borderColor: '#FFF',
+      borderRadius: 50,
+      padding: 1,
+      marginRight: 3,
+    },
+    roundedIcon: {
+      borderWidth: 1,
+      borderColor: getColors(theme).cardBorderColorContrast,
+      borderRadius: 50,
+      padding: 0,
+      marginRight: 3,
+    },
+    squareButtonTextWhite: {
+      color: '#FFF',
+      ...title_secondary_body_2,
+      fontSize: 9,
+    },
+    whiteText: {color: '#FFF'},
+  });
 
 const mapStateToProps = (state: RootState) => {
   return {

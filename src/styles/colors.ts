@@ -32,6 +32,8 @@ export const DARKBLUELIGHTER = '#364360';
 export const BORDERWHITISH = '#EDEDED';
 export const GREENINFO = '#02B15A';
 export const OVERLAYICONBGCOLOR = 'rgba(255, 255, 255, 0.17)';
+export const HIVEICONBGCOLOR = '#FDEBEE';
+export const HBDICONBGCOLOR = '#DFF6E1';
 
 export const getColors = (theme: Theme) => {
   //TODO
@@ -52,6 +54,7 @@ export const getColors = (theme: Theme) => {
     septenaryText: theme === Theme.LIGHT ? '#868D99' : '#FFF',
     primaryBackground: theme === Theme.LIGHT ? '#E5EDF5' : '#212838',
     contrastBackground: theme === Theme.LIGHT ? '#212838' : '#E5EDF5',
+    separatorBgColor: theme === Theme.LIGHT ? '#F7F8F9' : '#364360',
     menuHamburguerBg: theme === Theme.LIGHT ? '#FFF' : '#212838',
     gradientShapes:
       theme === Theme.LIGHT

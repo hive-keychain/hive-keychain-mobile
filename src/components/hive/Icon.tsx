@@ -13,6 +13,8 @@ import EncryptIcon from 'assets/new_UI/encrypt.svg';
 import ExpandThinIcon from 'assets/new_UI/expand-thin.svg';
 import EyeSlashIcon from 'assets/new_UI/eye-slash.svg';
 import GiftDeleteIcon from 'assets/new_UI/gift-delete.svg';
+import HBDCurrencyLogo from 'assets/new_UI/hbd-currency-logo.svg';
+import HiveCurrencyLogo from 'assets/new_UI/hive-currency-logo.svg';
 import HiveAlternative from 'assets/new_UI/hive_alternative.svg';
 import ImportIcon from 'assets/new_UI/import.svg';
 import InfoCircleIcon from 'assets/new_UI/info-circle.svg';
@@ -32,7 +34,9 @@ import CheckIcon from 'assets/new_UI/linear_tick-circle.svg';
 import HASIcon from 'assets/new_UI/logo_HAS.svg';
 import LogoutIcon from 'assets/new_UI/logout.svg';
 import PolygonDown from 'assets/new_UI/polygon_down.svg';
+import PowerIcon from 'assets/new_UI/power-icon.svg';
 import PowerUpDownIcon from 'assets/new_UI/power-up-down.svg';
+import PowerUpIcon from 'assets/new_UI/power-up.svg';
 import AccountsMenuIcon from 'assets/new_UI/profile.svg';
 import SearchIcon from 'assets/new_UI/search.svg';
 import Settings2Icon from 'assets/new_UI/setting-2.svg';
@@ -455,6 +459,23 @@ const getIconFilePath = (
     case name === 'speedometer':
       return (
         <SpeedometerIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'hive_currency_logo':
+      return (
+        <HiveCurrencyLogo style={[finalStyleOnIcon]} {...dimensionsProps} />
+      );
+    case name === 'hbd_currency_logo':
+      return (
+        <HBDCurrencyLogo style={[finalStyleOnIcon]} {...dimensionsProps} />
+      );
+    case name === 'power_icon':
+      return <PowerIcon style={[finalStyleOnIcon]} {...dimensionsProps} />;
+    case name === 'power_up':
+      return (
+        <PowerUpIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

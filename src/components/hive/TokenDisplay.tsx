@@ -54,8 +54,8 @@ type Props = {
   using_new_ui?: boolean;
   renderButtonOptions?: boolean;
   theme: Theme;
-  tokenInfo: Token;
-  tokenBalance: TokenBalance;
+  tokenInfo?: Token;
+  tokenBalance?: TokenBalance;
 };
 
 const TokenDisplay = ({
@@ -134,12 +134,14 @@ const TokenDisplay = ({
       </View>
       {toggled && (
         <View style={styles.expandedItemContainer}>
-          <TouchableOpacity
-            onPress={() =>
-              Linking.openURL(`https://peakd.com/@${tokenInfo.issuer}`)
-            }>
-            <Text style={styles.textBodyItem}>@{tokenInfo.issuer}</Text>
-          </TouchableOpacity>
+          {tokenInfo && (
+            <TouchableOpacity
+              onPress={() =>
+                Linking.openURL(`https://peakd.com/@${tokenInfo.issuer}`)
+              }>
+              <Text style={styles.textBodyItem}>@{tokenInfo.issuer}</Text>
+            </TouchableOpacity>
+          )}
           <Text style={styles.textBodyItem}>
             {translate('wallet.operations.tokens.total_value')} : $
             {tokenTotalValue} (${tokenTotalValue}/Token)
@@ -148,7 +150,7 @@ const TokenDisplay = ({
             {translate('wallet.operations.tokens.liquid_balance')} :{' '}
             {value ? formatBalance(value) : 0}
           </Text>
-          {parseFloat(tokenBalance.delegationsIn) > 0 && (
+          {tokenBalance && parseFloat(tokenBalance.delegationsIn) > 0 && (
             <View style={styles.flexRowAligned}>
               <Text style={styles.textBodyItem}>
                 {translate('wallet.operations.tokens.incoming')} :{' '}
@@ -180,7 +182,7 @@ const TokenDisplay = ({
               />
             </View>
           )}
-          {parseFloat(tokenBalance.delegationsOut) > 0 && (
+          {tokenBalance && parseFloat(tokenBalance.delegationsOut) > 0 && (
             <View style={styles.flexRowAligned}>
               <Text style={styles.textBodyItem}>
                 {translate('wallet.operations.tokens.outgoing')} :{' '}
@@ -209,13 +211,14 @@ const TokenDisplay = ({
               />
             </View>
           )}
-          {tokenInfo.stakingEnabled && tokenBalance.stake && (
+          {tokenInfo && tokenInfo.stakingEnabled && tokenBalance.stake && (
             <Text style={styles.textBodyItem}>
               {translate('wallet.operations.tokens.total_staked')} :{' '}
               {tokenBalance.stake}
             </Text>
           )}
-          {tokenInfo.stakingEnabled &&
+          {tokenInfo &&
+            tokenInfo.stakingEnabled &&
             tokenBalance.pendingUnstake &&
             parseFloat(tokenBalance.pendingUnstake) > 0 && (
               <Text style={styles.textBodyItem}>
@@ -223,64 +226,66 @@ const TokenDisplay = ({
                 {tokenBalance.pendingUnstake}
               </Text>
             )}
-          <View style={styles.buttonsContainer}>
-            {tokenInfo.stakingEnabled &&
-              renderAsSquareButton(
-                <Icon name="3d_cube" theme={theme} width={10} height={10} />,
-                translate('wallet.operations.token_stake.title'),
-                () =>
-                  navigate('Operation', {
-                    operation: 'stake',
-                    props: {
-                      currency: currency,
-                      balance: tokenBalance.balance,
-                      tokenLogo: logo,
-                    } as StakeTokenOperationProps,
-                  }),
-              )}
-            {tokenInfo.stakingEnabled &&
-              renderAsSquareButton(
-                <Icon
-                  name="3d_cube_rotate"
-                  theme={theme}
-                  width={12}
-                  height={12}
-                />,
-                translate('wallet.operations.token_unstake.title'),
-                () =>
-                  navigate('Operation', {
-                    operation: 'unstake',
-                    props: {
-                      currency: currency,
-                      balance: (
-                        parseFloat(tokenBalance.stake) -
-                        parseFloat(tokenBalance.pendingUnstake)
-                      ).toString(),
-                      tokenLogo: logo,
-                      tokenInfo: tokenInfo,
-                    } as UnstakeTokenOperationProps,
-                  }),
-              )}
-            {tokenInfo.delegationEnabled &&
-              renderAsSquareButton(
-                <Icon
-                  name="delegate_vesting_shares"
-                  theme={theme}
-                  width={10}
-                  height={10}
-                />,
-                translate('wallet.operations.token_delegation.title'),
-                () =>
-                  navigate('Operation', {
-                    operation: 'delegate',
-                    props: {
-                      currency: currency,
-                      balance: tokenBalance.stake,
-                      tokenLogo: logo,
-                    } as DelegateTokenOperationProps,
-                  }),
-              )}
-          </View>
+          {tokenInfo && (
+            <View style={styles.buttonsContainer}>
+              {tokenInfo.stakingEnabled &&
+                renderAsSquareButton(
+                  <Icon name="3d_cube" theme={theme} width={10} height={10} />,
+                  translate('wallet.operations.token_stake.title'),
+                  () =>
+                    navigate('Operation', {
+                      operation: 'stake',
+                      props: {
+                        currency: currency,
+                        balance: tokenBalance.balance,
+                        tokenLogo: logo,
+                      } as StakeTokenOperationProps,
+                    }),
+                )}
+              {tokenInfo.stakingEnabled &&
+                renderAsSquareButton(
+                  <Icon
+                    name="3d_cube_rotate"
+                    theme={theme}
+                    width={12}
+                    height={12}
+                  />,
+                  translate('wallet.operations.token_unstake.title'),
+                  () =>
+                    navigate('Operation', {
+                      operation: 'unstake',
+                      props: {
+                        currency: currency,
+                        balance: (
+                          parseFloat(tokenBalance.stake) -
+                          parseFloat(tokenBalance.pendingUnstake)
+                        ).toString(),
+                        tokenLogo: logo,
+                        tokenInfo: tokenInfo,
+                      } as UnstakeTokenOperationProps,
+                    }),
+                )}
+              {tokenInfo.delegationEnabled &&
+                renderAsSquareButton(
+                  <Icon
+                    name="delegate_vesting_shares"
+                    theme={theme}
+                    width={10}
+                    height={10}
+                  />,
+                  translate('wallet.operations.token_delegation.title'),
+                  () =>
+                    navigate('Operation', {
+                      operation: 'delegate',
+                      props: {
+                        currency: currency,
+                        balance: tokenBalance.stake,
+                        tokenLogo: logo,
+                      } as DelegateTokenOperationProps,
+                    }),
+                )}
+            </View>
+          )}
         </View>
       )}
     </View>
@@ -508,8 +513,6 @@ const getDimensionedStyles = ({
       height: 'auto',
       paddingHorizontal: 22,
       paddingVertical: 15,
-      //TODO cleanup
-      // marginLeft: 7,
     },
     expandedItemContainer: {
       marginTop: 10,

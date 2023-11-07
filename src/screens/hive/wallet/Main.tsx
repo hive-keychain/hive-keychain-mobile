@@ -4,34 +4,40 @@ import {
   loadPrices,
   loadProperties,
 } from 'actions/hive';
+import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
 import PickerItem, {PickerItemInterface} from 'components/form/PickerItem';
+import AccountValue from 'components/hive/AccountValue';
+import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
-import {WalletHistoryComponent} from 'components/hive/Wallet-history-component';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
 import WhatsNewComponent from 'components/popups/whats-new/whats-new.component';
 import Survey from 'components/survey';
+import {BackgroundHexagons} from 'components/ui/BackgroundHexagons';
 import DrawerButton from 'components/ui/DrawerButton';
-import ScreenToggle from 'components/ui/ScreenToggle';
+import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
-import React, {useContext, useEffect, useRef} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
+  FlatList,
+  ScrollView,
   StyleSheet,
   View,
   useWindowDimensions,
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import Primary from 'screens/hive/wallet/Primary';
-import Tokens from 'screens/hive/wallet/Tokens';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {TokenBalance} from 'src/interfaces/tokens.interface';
+import {getCardStyle} from 'src/styles/card';
 import {
-  BACKGROUNDDARKBLUE,
+  BACKGROUNDITEMDARKISH,
   DARKER_RED_COLOR,
   OVERLAYICONBGCOLOR,
   getColors,
@@ -39,9 +45,12 @@ import {
 import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
+import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-
+//TODO very important bellow:
+//  1. add a new method, following the same as the extension to get userTokens, first test is a local using hooks here.
+//  2. if works faster, then implement a new action, reducer, etc.
 const Main = ({
   loadAccount,
   loadProperties,
@@ -53,9 +62,47 @@ const Main = ({
   lastAccount,
   navigation,
   hive_authentication_service,
+  prices,
+  tokens,
+  userTokens,
+  tokensMarket,
+  loadTokens,
+  loadTokensMarket,
+  loadUserTokens,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useContext(ThemeContext);
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
+  const [
+    orderedUserTokenBalanceList,
+    setOrderedUserTokenBalanceList,
+  ] = useState<TokenBalance[]>([]);
+  const [toggled, setToggled] = useState<number>(null);
+  const [loadingUserTokens, setLoadingUserTokens] = useState(true);
+
+  useEffect(() => {
+    loadTokens();
+    loadTokensMarket();
+  }, [loadTokens, loadTokensMarket]);
+
+  useEffect(() => {
+    if (!userTokens.loading) {
+      const list = userTokens.list.sort((a, b) => {
+        return (
+          getHiveEngineTokenValue(b, tokensMarket) -
+          getHiveEngineTokenValue(a, tokensMarket)
+        );
+      });
+      setOrderedUserTokenBalanceList(list);
+      setLoadingUserTokens(false);
+    }
+  }, [userTokens]);
+
+  useEffect(() => {
+    if (user.name) {
+      setLoadingUserTokens(true);
+      loadUserTokens(user.name);
+    }
+  }, [loadUserTokens, user.name]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
@@ -127,9 +174,9 @@ const Main = ({
 
   return (
     <WalletPage>
-      <>
+      <ScrollView style={{flex: 1}}>
         <View style={styles.headerMenu}>
-          <DrawerButton navigation={navigation} theme={theme} />
+          <DrawerButton navigation={navigation as any} theme={theme} />
           <View style={styles.innerHeader}>
             <StatusIndicator theme={theme} />
             <Claim theme={theme} />
@@ -160,19 +207,12 @@ const Main = ({
         <Separator />
         <View style={styles.rowWrapper}>
           <PercentageDisplay
-            name={translate('wallet.rc')}
-            percent={user.rc.percentage || 100}
-            IconBgcolor={OVERLAYICONBGCOLOR}
-            theme={theme}
-            iconName="send_square"
-            bgColor={BACKGROUNDDARKBLUE}
-          />
-          <PercentageDisplay
-            iconName="speedometer"
-            bgColor={DARKER_RED_COLOR}
             name={translate('wallet.vp')}
             percent={getVP(user.account) || 100}
             IconBgcolor={OVERLAYICONBGCOLOR}
+            theme={theme}
+            iconName="send_square"
+            bgColor={BACKGROUNDITEMDARKISH}
             secondary={`$${
               getVotingDollarsPerAccount(
                 100,
@@ -181,11 +221,65 @@ const Main = ({
                 false,
               ) || '0'
             }`}
+          />
+          <PercentageDisplay
+            iconName="speedometer"
+            bgColor={DARKER_RED_COLOR}
+            name={translate('wallet.rc')}
+            percent={user.rc.percentage || 100}
+            IconBgcolor={OVERLAYICONBGCOLOR}
             theme={theme}
           />
         </View>
         <Separator />
-        <ScreenToggle
+        <BackgroundHexagons additionalSvgStyle={styles.extraBg} theme={theme} />
+        <AccountValue
+          account={user.account}
+          prices={prices}
+          properties={properties}
+          theme={theme}
+          title={translate('common.estimated_account_value')}
+        />
+        <Separator />
+        <View
+          style={[
+            getCardStyle(theme).roundedCardItem,
+            styles.fullListContainer,
+          ]}>
+          <Primary theme={theme} />
+          <Separator height={10} />
+          <View style={styles.separatorContainer} />
+          <Separator height={10} />
+
+          {!loadingUserTokens && (
+            <FlatList
+              data={orderedUserTokenBalanceList}
+              contentContainerStyle={styles.flatlist}
+              keyExtractor={(item) => item._id.toString()}
+              ItemSeparatorComponent={() => <Separator height={10} />}
+              renderItem={({item}) => (
+                <EngineTokenDisplay
+                  token={item}
+                  tokensList={tokens}
+                  market={tokensMarket}
+                  toggled={toggled === item._id}
+                  setToggle={() => {
+                    if (toggled === item._id) setToggled(null);
+                    else setToggled(item._id);
+                  }}
+                  using_new_ui
+                />
+              )}
+            />
+          )}
+
+          {loadingUserTokens && (
+            <View style={{height: 40}}>
+              <Loader size={'small'} animating />
+            </View>
+          )}
+        </View>
+        {/* <ScreenToggle
           theme={theme}
           style={styles.toggle}
           menu={[
@@ -195,10 +289,10 @@ const Main = ({
           ]}
           toUpperCase
           components={[<Primary />, <WalletHistoryComponent />, <Tokens />]}
-        />
+        /> */}
         <Survey navigation={navigation} />
         <WhatsNewComponent navigation={navigation} />
-      </>
+      </ScrollView>
     </WalletPage>
   );
 };
@@ -237,6 +331,25 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       paddingRight: 15,
     },
     innerHeader: {flexDirection: 'row', height: 44, alignItems: 'center'},
+    extraBg: {
+      top: 110,
+      opacity: 0.7,
+    },
+    fullListContainer: {
+      flexGrow: 1,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+      paddingHorizontal: 15,
+    },
+    separatorContainer: {
+      borderWidth: 1,
+      borderColor: getColors(theme).cardBorderColor,
+      height: 5,
+      backgroundColor: getColors(theme).separatorBgColor,
+    },
+    flatlist: {
+      paddingBottom: 20,
+    },
   });
 
 const connector = connect(
@@ -247,6 +360,10 @@ const connector = connect(
       accounts: state.accounts,
       lastAccount: state.lastAccount.name,
       hive_authentication_service: state.hive_authentication_service,
+      prices: state.currencyPrices,
+      tokens: state.tokens,
+      userTokens: state.userTokens,
+      tokensMarket: state.tokensMarket,
     };
   },
   {
@@ -254,6 +371,9 @@ const connector = connect(
     loadProperties,
     loadPrices,
     fetchPhishingAccounts,
+    loadTokens,
+    loadUserTokens,
+    loadTokensMarket,
   },
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
