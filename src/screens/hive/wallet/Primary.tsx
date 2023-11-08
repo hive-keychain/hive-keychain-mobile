@@ -16,6 +16,8 @@ import {
   SendPowerUp,
   SendWithdraw,
 } from 'components/operations/OperationsButtons';
+import {PowerUpOperationProps} from 'components/operations/PowerUp';
+import {TransferOperationProps} from 'components/operations/Transfer';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import Separator from 'components/ui/Separator';
 import SquareButton from 'components/ui/SquareButton';
@@ -37,6 +39,7 @@ import {logScreenView} from 'utils/analytics';
 import {signedNumber, toHP, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 import {SavingsUtils} from 'utils/savings.utils';
 
 enum Token {
@@ -140,7 +143,17 @@ const Primary = ({
         }
         buttons={[
           <SquareButton
-            onPress={() => {}}
+            onPress={() => {
+              navigate('Operation', {
+                operation: 'transfer',
+                props: {
+                  currency: 'HIVE',
+                  tokenBalance: user.account.balance as string,
+                  engine: false,
+                  tokenLogo: <></>,
+                } as TransferOperationProps,
+              });
+            }}
             icon={
               <Icon
                 theme={theme}
@@ -152,7 +165,14 @@ const Primary = ({
             primaryLabel={translate('common.send')}
           />,
           <SquareButton
-            onPress={() => {}}
+            onPress={() => {
+              navigate('Operation', {
+                operation: 'power_up',
+                props: {
+                  currency: 'HIVE',
+                } as PowerUpOperationProps,
+              });
+            }}
             icon={
               <Icon
                 theme={theme}

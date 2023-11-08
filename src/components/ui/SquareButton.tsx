@@ -19,6 +19,10 @@ interface Props {
   secondaryLabel?: string;
   additionalButtonContainerStyle?: StyleProp<ViewStyle>;
   additionalSquareButtonText?: StyleProp<TextStyle>;
+  additionalPrimaryLabelStyle?: StyleProp<TextStyle>;
+  additionalSecondaryLabelStyle?: StyleProp<TextStyle>;
+  marginRight?: number;
+  marginBottom?: number;
 }
 
 const SquareButton = ({
@@ -28,9 +32,13 @@ const SquareButton = ({
   additionalButtonContainerStyle,
   additionalSquareButtonText,
   onPress,
+  marginRight = 5,
+  marginBottom = 5,
+  additionalPrimaryLabelStyle,
+  additionalSecondaryLabelStyle,
 }: Props) => {
   const {theme} = useContext(ThemeContext);
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, marginRight, marginBottom);
   return (
     <TouchableOpacity
       key={`square-button-${primaryLabel}`}
@@ -39,11 +47,21 @@ const SquareButton = ({
       <View style={styles.flexRowAligned}>
         {icon}
         <View>
-          <Text style={[styles.squareButtonText, additionalSquareButtonText]}>
+          <Text
+            style={[
+              styles.squareButtonText,
+              additionalSquareButtonText,
+              additionalPrimaryLabelStyle,
+            ]}>
             {primaryLabel}
           </Text>
           {secondaryLabel && (
-            <Text style={[styles.squareButtonText, additionalSquareButtonText]}>
+            <Text
+              style={[
+                styles.squareButtonText,
+                additionalSquareButtonText,
+                additionalSecondaryLabelStyle,
+              ]}>
               {secondaryLabel}
             </Text>
           )}
@@ -53,21 +71,24 @@ const SquareButton = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, marginRight: number, marginBottom: number) =>
   StyleSheet.create({
     squareButton: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).cardBorderColorContrast,
       borderWidth: 1,
       borderRadius: 11,
-      width: '30%',
+      maxWidth: 200,
       height: 'auto',
       paddingHorizontal: 22,
       paddingVertical: 15,
+      marginRight: marginRight ?? 0,
+      marginBottom: marginBottom ?? 0,
     },
     flexRowAligned: {
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'center',
     },
     squareButtonText: {
       color: getColors(theme).secondaryText,

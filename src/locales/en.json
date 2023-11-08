@@ -86,7 +86,8 @@
     "ordinal_rd_label": "rd",
     "ordinal_th_label": "th",
     "url": "URL",
-    "estimated_account_value": "Estimated Account Value"
+    "estimated_account_value": "Estimated Account Value",
+    "current": "Current"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -174,7 +175,8 @@
       },
       "powerup": {
         "title": "Power up",
-        "info_power_up": "Powered up"
+        "info_power_up": "Powered up",
+        "info_text": "Power Up HIVE to transform it in HIVE power"
       },
       "powerdown": {
         "title": "Power down",

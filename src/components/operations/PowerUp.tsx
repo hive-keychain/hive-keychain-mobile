@@ -1,25 +1,42 @@
 import {loadAccount} from 'actions/index';
-import Hp from 'assets/wallet/icon_hp.svg';
-import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
+import Icon from 'components/hive/Icon';
+import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
-import {Keyboard, StyleSheet, Text} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getButtonStyle} from 'src/styles/button';
+import {getColors} from 'src/styles/colors';
+import {getHorizontalLineStyle} from 'src/styles/line';
+import {
+  button_link_primary_medium,
+  title_primary_body_2,
+} from 'src/styles/typography';
 import {RootState} from 'store';
+import {capitalize, toHP} from 'utils/format';
 import {powerUp} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
-import Balance from './Balance';
-import Operation from './Operation';
+import OperationThemed from './OperationThemed';
 
-type Props = PropsFromRedux & {currency?: string};
+export interface PowerUpOperationProps {
+  currency?: string;
+}
 
-const PowerUp = ({currency = 'HIVE', user, loadAccount}: Props) => {
+type Props = PropsFromRedux & PowerUpOperationProps;
+
+const PowerUp = ({
+  currency = 'HIVE',
+  user,
+  loadAccount,
+  globalProperties,
+}: Props) => {
   const [to, setTo] = useState(user.account.name);
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
@@ -43,64 +60,153 @@ const PowerUp = ({currency = 'HIVE', user, loadAccount}: Props) => {
       setLoading(false);
     }
   };
+  const {theme} = useContext(ThemeContext);
   const {color} = getCurrencyProperties(currency);
-  const styles = getDimensionedStyles(color);
+  const styles = getDimensionedStyles(color, theme);
+  const availableHpAmount = getCurrencyProperties(currency, user.account)
+    .value as string;
+  //TODO bellow cleanup
   return (
-    <Operation
-      logo={<Hp />}
-      title={translate('wallet.operations.powerup.title')}>
-      <>
-        <Separator />
-        <Balance
-          currency={currency}
-          account={user.account}
-          setMax={(value: string) => {
-            setAmount(value);
-          }}
-        />
-
-        <Separator />
-        <OperationInput
-          placeholder={translate('common.username').toUpperCase()}
-          leftIcon={<AccountLogoDark />}
-          autoCapitalize="none"
-          value={to}
-          onChangeText={(e) => {
-            setTo(e.trim());
-          }}
-        />
-        <Separator />
-        <OperationInput
-          placeholder={'0.000'}
-          keyboardType="decimal-pad"
-          rightIcon={<Text style={styles.currency}>{currency}</Text>}
-          textAlign="right"
-          value={amount}
-          onChangeText={setAmount}
-        />
-
-        <Separator height={40} />
+    <OperationThemed
+      childrenTop={
+        <>
+          <Separator />
+          <CurrentAvailableBalance
+            theme={theme}
+            currentValue={`${toHP(
+              user.account.vesting_shares + '',
+              globalProperties,
+            ).toFixed(3)} HP`}
+            availableValue={availableHpAmount}
+            additionalContainerStyle={styles.currentAvailableBalances}
+            setMaxAvailable={(value) => setAmount(value)}
+          />
+          <Separator height={25} />
+          {/* <Balance
+            currency={currency}
+            account={user.account}
+            setMax={(value: string) => {
+              setAmount(value);
+            }}
+          /> */}
+        </>
+      }
+      childrenMiddle={
+        <>
+          <Separator height={35} />
+          <Text style={styles.infoText}>
+            {translate('wallet.operations.powerup.info_text')}
+          </Text>
+          <Separator />
+          <OperationInput
+            labelInput={translate('common.username')}
+            placeholder={translate('common.username')}
+            leftIcon={<Icon theme={theme} name="at" />}
+            inputStyle={styles.text}
+            value={to}
+            onChangeText={(e) => {
+              setTo(e.trim());
+            }}
+          />
+          <Separator />
+          <View style={styles.flexRowBetween}>
+            <OperationInput
+              labelInput={translate('common.currency')}
+              placeholder={currency}
+              value={currency}
+              editable={false}
+              additionalOuterContainerStyle={{
+                width: '40%',
+              }}
+              inputStyle={styles.text}
+              additionalInputContainerStyle={{
+                marginHorizontal: 0,
+              }}
+            />
+            <OperationInput
+              labelInput={capitalize(translate('common.amount'))}
+              placeholder={'0.000'}
+              keyboardType="decimal-pad"
+              textAlign="right"
+              value={amount}
+              inputStyle={styles.text}
+              onChangeText={setAmount}
+              additionalInputContainerStyle={{
+                marginHorizontal: 0,
+              }}
+              additionalOuterContainerStyle={{
+                width: '54%',
+              }}
+              rightIcon={
+                <View style={styles.flexRowCenter}>
+                  <Separator
+                    drawLine
+                    additionalLineStyle={getHorizontalLineStyle(
+                      theme,
+                      1,
+                      35,
+                      16,
+                    )}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setAmount(availableHpAmount.split(' ')[0])}>
+                    <Text style={styles.text}>
+                      {translate('common.max').toUpperCase()}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              }
+            />
+          </View>
+        </>
+      }
+      childrenBottom={
         <ActiveOperationButton
-          title={translate('common.send')}
+          title={translate('wallet.operations.powerup.title')}
           onPress={onPowerUp}
-          style={styles.button}
+          style={[getButtonStyle(theme).warningStyleButton, styles.button]}
           isLoading={loading}
+          additionalTextStyle={{...button_link_primary_medium}}
         />
-      </>
-    </Operation>
+      }
+    />
   );
 };
 
-const getDimensionedStyles = (color: string) =>
+const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
-    button: {backgroundColor: '#68A0B4'},
+    button: {marginBottom: 20},
     currency: {fontWeight: 'bold', fontSize: 18, color},
+    currentAvailableBalances: {
+      paddingHorizontal: 15,
+    },
+    infoText: {
+      color: getColors(theme).secondaryText,
+      ...button_link_primary_medium,
+      opacity: 0.6,
+      textAlign: 'center',
+    },
+    text: {
+      ...title_primary_body_2,
+      color: getColors(theme).secondaryText,
+    },
+    flexRowBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    flexRowCenter: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
+    },
   });
 
 const connector = connect(
   (state: RootState) => {
     return {
       user: state.activeAccount,
+      globalProperties: state.properties.globals,
     };
   },
   {loadAccount},

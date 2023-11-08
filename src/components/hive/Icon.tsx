@@ -23,6 +23,7 @@ import CloseCircleIcon from 'assets/new_UI/linear_close-circle.svg';
 import CpuIcon from 'assets/new_UI/linear_cpu-setting.svg';
 import MoneyIcon from 'assets/new_UI/linear_dollar-circle.svg';
 import EditIcon from 'assets/new_UI/linear_edit-2.svg';
+import EmptyWalletIcon from 'assets/new_UI/linear_empty-wallet.svg';
 import ExternalLinkIcon from 'assets/new_UI/linear_export.svg';
 import NotSeeIcon from 'assets/new_UI/linear_eye-slash.svg';
 import SeeIcon from 'assets/new_UI/linear_eye.svg';
@@ -476,6 +477,13 @@ const getIconFilePath = (
     case name === 'power_up':
       return (
         <PowerUpIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'empty_wallet':
+      return (
+        <EmptyWalletIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

@@ -17,6 +17,7 @@ import CancelTokenDelegation, {
 import DelegateToken, {
   DelegateTokenOperationProps,
 } from 'components/operations/DelegateToken';
+import PowerUp, {PowerUpOperationProps} from 'components/operations/PowerUp';
 import StakeToken, {
   StakeTokenOperationProps,
 } from 'components/operations/StakeToken';
@@ -58,6 +59,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return `${capitalize(
           translate('wallet.operations.token_delegation.cancelling_delegation'),
         )} ${translate('common.token')}`;
+      case 'power_up':
+        return translate('wallet.operations.powerup.title');
     }
   };
 
@@ -77,6 +80,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
             {...(props as CancelTokenDelegationOperationProps)}
           />
         );
+      case 'power_up':
+        return <PowerUp {...(props as PowerUpOperationProps)} />;
     }
   };
 
