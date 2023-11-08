@@ -18,6 +18,7 @@ import DelegateToken, {
   DelegateTokenOperationProps,
 } from 'components/operations/DelegateToken';
 import PowerUp, {PowerUpOperationProps} from 'components/operations/PowerUp';
+import Savings, {SavingOperationProps} from 'components/operations/Savings';
 import StakeToken, {
   StakeTokenOperationProps,
 } from 'components/operations/StakeToken';
@@ -61,6 +62,10 @@ export default ({navigation, route}: OperationNavigationProps) => {
         )} ${translate('common.token')}`;
       case 'power_up':
         return translate('wallet.operations.powerup.title');
+      case 'savings':
+        return translate(`wallet.operations.savings.currency_savings_title`, {
+          currency: (props as SavingOperationProps).currency,
+        });
     }
   };
 
@@ -82,6 +87,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         );
       case 'power_up':
         return <PowerUp {...(props as PowerUpOperationProps)} />;
+      case 'savings':
+        return <Savings {...(props as SavingOperationProps)} />;
     }
   };
 

@@ -65,7 +65,7 @@ const PowerUp = ({
   const styles = getDimensionedStyles(color, theme);
   const availableHpAmount = getCurrencyProperties(currency, user.account)
     .value as string;
-  //TODO bellow cleanup
+
   return (
     <OperationThemed
       childrenTop={
@@ -82,13 +82,6 @@ const PowerUp = ({
             setMaxAvailable={(value) => setAmount(value)}
           />
           <Separator height={25} />
-          {/* <Balance
-            currency={currency}
-            account={user.account}
-            setMax={(value: string) => {
-              setAmount(value);
-            }}
-          /> */}
         </>
       }
       childrenMiddle={
@@ -176,7 +169,6 @@ const PowerUp = ({
 const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
     button: {marginBottom: 20},
-    currency: {fontWeight: 'bold', fontSize: 18, color},
     currentAvailableBalances: {
       paddingHorizontal: 15,
     },

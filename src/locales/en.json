@@ -87,7 +87,8 @@
     "ordinal_th_label": "th",
     "url": "URL",
     "estimated_account_value": "Estimated Account Value",
-    "current": "Current"
+    "current": "Current",
+    "operation_type": "Operation Type"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -140,7 +141,9 @@
           "cancelled": {
             "success": "Savings withdrawal cancelled succesfully"
           }
-        }
+        },
+        "savings_action": "{{operation}}ing",
+        "currency_savings_title": "{{currency}} Savings"
       },
       "transfer": {
         "title": "Transfer funds",

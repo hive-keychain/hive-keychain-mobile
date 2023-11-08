@@ -1,32 +1,23 @@
-import CurrencySavingDark from 'assets/new_UI/currency-saving-dark.svg';
-import CurrencySavingLight from 'assets/new_UI/currency-saving-light.svg';
 import Savings from 'assets/wallet/icon_savings.svg';
 import CurrencyToken from 'components/hive/CurrencyToken';
 import Icon from 'components/hive/Icon';
 import IconHP from 'components/hive/IconHP';
 import TokenDisplay from 'components/hive/TokenDisplay';
 import {
-  BuyCoins,
   PendingSavingsWithdraw,
-  Send,
-  SendConversion,
   SendDelegation,
   SendDeposit,
   SendPowerDown,
-  SendPowerUp,
   SendWithdraw,
 } from 'components/operations/OperationsButtons';
-import {PowerUpOperationProps} from 'components/operations/PowerUp';
-import {TransferOperationProps} from 'components/operations/Transfer';
-import CustomIconButton from 'components/ui/CustomIconButton';
 import Separator from 'components/ui/Separator';
-import SquareButton from 'components/ui/SquareButton';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {BuyCoinType} from 'src/enums/operations.enum';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
+import {getHBDButtonList} from 'src/reference-data/hbdOperationButtonList';
+import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
 import {
   DARKER_RED_COLOR,
   HBDICONBGCOLOR,
@@ -36,10 +27,9 @@ import {
 import {title_secondary_body_2} from 'src/styles/typography';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
-import {signedNumber, toHP, withCommas} from 'utils/format';
+import {toHP, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
 import {SavingsUtils} from 'utils/savings.utils';
 
 enum Token {
@@ -141,77 +131,9 @@ const Primary = ({
             {...styles.icon}
           />
         }
-        buttons={[
-          <SquareButton
-            onPress={() => {
-              navigate('Operation', {
-                operation: 'transfer',
-                props: {
-                  currency: 'HIVE',
-                  tokenBalance: user.account.balance as string,
-                  engine: false,
-                  tokenLogo: <></>,
-                } as TransferOperationProps,
-              });
-            }}
-            icon={
-              <Icon
-                theme={theme}
-                name="transfer"
-                additionalContainerStyle={styles.roundedIcon}
-                {...styles.icon}
-              />
-            }
-            primaryLabel={translate('common.send')}
-          />,
-          <SquareButton
-            onPress={() => {
-              navigate('Operation', {
-                operation: 'power_up',
-                props: {
-                  currency: 'HIVE',
-                } as PowerUpOperationProps,
-              });
-            }}
-            icon={
-              <Icon
-                theme={theme}
-                name="power_up"
-                additionalContainerStyle={styles.roundedIcon}
-                {...styles.icon}
-              />
-            }
-            primaryLabel={translate('wallet.operations.powerup.title')}
-          />,
-          <SquareButton
-            onPress={() => {}}
-            icon={
-              <CustomIconButton
-                theme={theme}
-                lightThemeIcon={<CurrencySavingLight />}
-                darkThemeIcon={<CurrencySavingDark />}
-                onPress={() => {}}
-                additionalContainerStyle={styles.roundedIcon}
-              />
-            }
-            primaryLabel={'HIVE'}
-            secondaryLabel={translate('common.savings')}
-          />,
-          <SquareButton
-            onPress={() => {}}
-            icon={
-              <Icon
-                theme={theme}
-                name="convert"
-                additionalContainerStyle={styles.roundedIcon}
-                {...styles.icon}
-              />
-            }
-            primaryLabel={translate('wallet.operations.convert.button')}
-          />,
-        ]}
+        buttons={getHiveButtonList(user, theme)}
       />
-      <TokenDisplay
+      {/* <TokenDisplay
         renderButtonOptions
         theme={theme}
         using_new_ui
@@ -257,9 +179,28 @@ const Primary = ({
             iconColor={'#dd2e4b'}
           />,
         ]}
-      />
+      /> */}
       <Separator height={10} />
-      <TokenDisplay
+      <CurrencyToken
+        theme={theme}
+        currencyName="HBD"
+        value={parseFloat(user.account.hbd_balance as string)}
+        subValue={
+          parseFloat(user.account.savings_hbd_balance as string) > 0
+            ? (user.account.savings_hbd_balance as string).split(' ')[0]
+            : undefined
+        }
+        currencyLogo={
+          <Icon
+            theme={theme}
+            name="hbd_currency_logo"
+            additionalContainerStyle={styles.hiveIconContainer}
+            {...styles.icon}
+          />
+        }
+        buttons={getHBDButtonList(user, theme)}
+      />
+      {/* <TokenDisplay
         theme={theme}
         using_new_ui
         color="#005C09"
@@ -305,7 +246,7 @@ const Primary = ({
             iconColor={'#3BB26E'}
           />,
         ]}
-      />
+      /> */}
       <Separator height={10} />
       <TokenDisplay
         theme={theme}
