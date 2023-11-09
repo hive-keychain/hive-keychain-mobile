@@ -14,6 +14,7 @@ import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import CancelTokenDelegation, {
   CancelTokenDelegationOperationProps,
 } from 'components/operations/Cancel-token-delegation';
+import Convert, {ConvertOperationProps} from 'components/operations/Convert';
 import DelegateToken, {
   DelegateTokenOperationProps,
 } from 'components/operations/DelegateToken';
@@ -66,6 +67,10 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return translate(`wallet.operations.savings.currency_savings_title`, {
           currency: (props as SavingOperationProps).currency,
         });
+      case 'convert':
+        return `${translate('wallet.operations.convert.button')} ${
+          (props as ConvertOperationProps).currency
+        }`;
     }
   };
 
@@ -89,6 +94,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return <PowerUp {...(props as PowerUpOperationProps)} />;
       case 'savings':
         return <Savings {...(props as SavingOperationProps)} />;
+      case 'convert':
+        return <Convert {...(props as ConvertOperationProps)} />;
     }
   };
 

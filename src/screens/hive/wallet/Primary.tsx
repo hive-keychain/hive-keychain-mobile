@@ -17,6 +17,7 @@ import {HIVEICONBGCOLOR} from 'src/styles/colors';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {toHP} from 'utils/format';
+import {getCurrency} from 'utils/hive';
 
 enum Token {
   NONE,
@@ -45,7 +46,7 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
       <Separator height={20} />
       <CurrencyToken
         theme={theme}
-        currencyName="HIVE"
+        currencyName={getCurrency('HIVE')}
         value={parseFloat(user.account.balance as string)}
         subValue={
           parseFloat(user.account.savings_balance as string) > 0
@@ -65,7 +66,7 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
       <Separator height={10} />
       <CurrencyToken
         theme={theme}
-        currencyName="HBD"
+        currencyName={getCurrency('HBD')}
         value={parseFloat(user.account.hbd_balance as string)}
         subValue={
           parseFloat(user.account.savings_hbd_balance as string) > 0
@@ -88,7 +89,7 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
         using_new_ui
         color="#AC4F00"
         name="HIVE POWER"
-        currency="HP"
+        currency={getCurrency('HP')}
         value={toHP(user.account.vesting_shares as string, properties.globals)}
         totalValue={toHP(
           user.account.vesting_shares as string,

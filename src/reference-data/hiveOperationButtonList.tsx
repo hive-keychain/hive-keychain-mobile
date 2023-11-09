@@ -2,6 +2,7 @@ import {ActiveAccount} from 'actions/interfaces';
 import CurrencySavingDark from 'assets/new_UI/currency-saving-dark.svg';
 import CurrencySavingLight from 'assets/new_UI/currency-saving-light.svg';
 import Icon from 'components/hive/Icon';
+import {ConvertOperationProps} from 'components/operations/Convert';
 import {PowerUpOperationProps} from 'components/operations/PowerUp';
 import {
   SavingOperationProps,
@@ -13,6 +14,7 @@ import SquareButton from 'components/ui/SquareButton';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
@@ -87,7 +89,14 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
     />,
     <SquareButton
       key={'square-button-convert-hive'}
-      onPress={() => {}}
+      onPress={() => {
+        navigate('Operation', {
+          operation: 'convert',
+          props: {
+            currency: getCurrency('HIVE'),
+          } as ConvertOperationProps,
+        });
+      }}
       icon={
         <Icon
           theme={theme}

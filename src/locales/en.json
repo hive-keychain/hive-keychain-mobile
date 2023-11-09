@@ -41,6 +41,7 @@
     "privateKey": "Private Key",
     "private": "Private",
     "public": "Public",
+    "pending": "Pending",
     "amount": "amount",
     "enter_amount": "enter amount",
     "memo": "memo",
