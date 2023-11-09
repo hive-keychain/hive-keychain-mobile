@@ -1,32 +1,40 @@
 import {loadAccount} from 'actions/index';
-import CustomPicker from 'components/form/CustomPicker';
-import CancelPendingSavingsWithdrawalItem from 'components/operations/Cancel-pending-savings-withdrawal-item';
-import Operation from 'components/operations/Operation';
+import OperationThemed from 'components/operations/OperationThemed';
+import {SavingsOperations} from 'components/operations/Savings';
+import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   FlatList,
+  Keyboard,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {connect, ConnectedProps} from 'react-redux';
+import Toast from 'react-native-simple-toast';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, ThemeContext} from 'src/context/theme.context';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
+import {getCardStyle} from 'src/styles/card';
+import {getColors} from 'src/styles/colors';
+import {button_link_primary_medium} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {withCommas} from 'utils/format';
+import {cancelPendingSavings} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import {goBack} from 'utils/navigation';
 import Icon from './Icon';
 
 type Props = PropsFromRedux & {
   currency: string;
   operation: SavingsOperations;
   currentWithdrawingList: SavingsWithdrawal[];
+  onUpdate: (list: SavingsWithdrawal[]) => void;
 };
 const PendingSavingsWithdrawalPageComponent = ({
   user,
@@ -34,107 +42,131 @@ const PendingSavingsWithdrawalPageComponent = ({
   currency: c,
   operation,
   currentWithdrawingList,
+  onUpdate,
 }: Props) => {
   const [currency, setCurrency] = useState(c);
+  const [toCancelSaving, setToCancelSaving] = useState<SavingsWithdrawal>();
+  const [loading, setLoading] = useState(false);
+  const {theme} = useContext(ThemeContext);
   const {color} = getCurrencyProperties(currency);
-  const styles = getDimensionedStyles(color, useWindowDimensions());
+  const styles = getDimensionedStyles(color, useWindowDimensions(), theme);
+
+  const onCancelPendingSavings = async () => {
+    setLoading(true);
+    Keyboard.dismiss();
+
+    try {
+      await cancelPendingSavings(user.keys.active!, {
+        from: user.name!,
+        request_id: toCancelSaving.request_id,
+      });
+      loadAccount(user.account.name, true);
+      const newList = [...currentWithdrawingList];
+      onUpdate(newList.filter((item) => item.id !== toCancelSaving.id));
+      Toast.show(
+        translate(
+          'wallet.operations.savings.pending_withdraw.cancelled.success',
+        ),
+        Toast.LONG,
+      );
+    } catch (e) {
+      Toast.show(`Error: ${(e as any).message}`, Toast.LONG);
+    } finally {
+      setLoading(false);
+      setToCancelSaving(undefined);
+      goBack();
+    }
+  };
 
   const renderListItem = (item: SavingsWithdrawal) => {
     const cancelSavingWithDraw = () => {
-      navigate('ModalScreen', {
-        name: 'CancelPendingSavingsWithdrawalItem',
-        modalContent: (
-          <CancelPendingSavingsWithdrawalItem
-            item={item}
-            itemList={currentWithdrawingList}
-          />
-        ),
-      });
+      setToCancelSaving(item);
     };
 
     return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignContent: 'center',
-        }}>
-        <Text>{`${withCommas(item.amount)} ${currency}`}</Text>
-        <Text>{`On ${moment(item.complete).format('L')}`}</Text>
-        <TouchableOpacity onPress={cancelSavingWithDraw}>
-          <Icon name="delete" />
-        </TouchableOpacity>
+      <View style={[getCardStyle(theme).defaultCardItem]}>
+        <View style={styles.flexRow}>
+          <Text style={[styles.textBase, styles.smallerText]}>{`${withCommas(
+            item.amount,
+          )} ${currency}`}</Text>
+          <Text style={[styles.textBase, styles.smallerText]}>{`On ${moment(
+            item.complete,
+          ).format('L')}`}</Text>
+          <TouchableOpacity onPress={cancelSavingWithDraw}>
+            <Icon name="remove" theme={theme} />
+          </TouchableOpacity>
+        </View>
+        {toCancelSaving && toCancelSaving.id === item.id && (
+          <ConfirmationInItem
+            theme={theme}
+            titleKey="wallet.operations.savings.pending_withdraw.cancel_confirm_disclaimer"
+            onCancel={() => setToCancelSaving(undefined)}
+            onConfirm={onCancelPendingSavings}
+            isLoading={loading}
+          />
+        )}
       </View>
     );
   };
 
   return (
-    <Operation
-      logo={<Icon name="savings" />}
-      title={translate(
-        'wallet.operations.savings.pending_withdraw.title_page',
-      )}>
-      <>
-        <View style={styles.container}>
-          <CustomPicker
-            list={['HIVE', 'HBD']}
-            selectedValue={currency}
-            onSelected={setCurrency}
-            prompt={translate('wallet.operations.savings.prompt')}
-            style={styles.picker}
-            dropdownIconColor="white"
-            iosTextStyle={styles.iosPickerText}
+    <OperationThemed
+      additionalContentContainerStyle={styles.contentContainer}
+      childrenMiddle={
+        <>
+          <Separator />
+          <Text style={[styles.disclaimer, styles.textBase, styles.opaque]}>
+            {translate(
+              'wallet.operations.savings.pending_withdraw.pending_disclaimer',
+              {currency},
+            )}
+          </Text>
+          <Separator
+            drawLine
+            height={10}
+            additionalLineStyle={styles.bottomLine}
           />
-        </View>
-        <Text style={styles.disclaimer}>
-          {translate(
-            'wallet.operations.savings.pending_withdraw.pending_disclaimer',
-            {currency},
-          )}
-        </Text>
-        <Separator />
-        <FlatList
-          data={currentWithdrawingList.filter(
-            (currentWithdrawItem) =>
-              currentWithdrawItem.amount.split(' ')[1] === currency,
-          )}
-          keyExtractor={(listItem) => listItem.request_id.toString()}
-          renderItem={(withdraw) => renderListItem(withdraw.item)}
-          style={styles.containerMaxHeight}
-          ListEmptyComponent={() => {
-            return (
-              <View style={[styles.containerCentered, styles.marginTop]}>
-                <Text style={styles.boldText}>
-                  {translate(
-                    'wallet.operations.savings.pending_withdraw.no_pending_withdrawals',
-                    {currency},
-                  )}
-                </Text>
-              </View>
-            );
-          }}
-        />
-        <Separator />
-      </>
-    </Operation>
+          <FlatList
+            data={currentWithdrawingList.filter(
+              (currentWithdrawItem) =>
+                currentWithdrawItem.amount.split(' ')[1] === currency,
+            )}
+            keyExtractor={(listItem) => listItem.request_id.toString()}
+            renderItem={(withdraw) => renderListItem(withdraw.item)}
+            style={styles.containerMaxHeight}
+            ListEmptyComponent={() => {
+              return (
+                <View style={[styles.containerCentered, styles.marginTop]}>
+                  <Text style={[styles.textBase]}>
+                    {translate(
+                      'wallet.operations.savings.pending_withdraw.no_pending_withdrawals',
+                      {currency},
+                    )}
+                  </Text>
+                </View>
+              );
+            }}
+          />
+        </>
+      }
+    />
   );
 };
 
-const getDimensionedStyles = (color: string, {width, height}: Dimensions) =>
+const getDimensionedStyles = (
+  color: string,
+  {width, height}: Dimensions,
+  theme: Theme,
+) =>
+  //TODO bellow cleanup styles
   StyleSheet.create({
-    button: {backgroundColor: '#68A0B4'},
-    currency: {fontWeight: 'bold', fontSize: 18, color},
-    disclaimer: {textAlign: 'justify'},
-    container: {
-      display: 'flex',
-      flexDirection: 'row',
-      backgroundColor: '#7E8C9A',
-      borderRadius: height / 30,
-      marginVertical: height / 30,
-      alignContent: 'center',
-      justifyContent: 'center',
-      minHeight: 50,
+    disclaimer: {textAlign: 'center'},
+    textBase: {
+      color: getColors(theme).secondaryText,
+      ...button_link_primary_medium,
+    },
+    smallerText: {
+      fontSize: 13,
     },
     containerCentered: {
       flex: 1,
@@ -144,24 +176,22 @@ const getDimensionedStyles = (color: string, {width, height}: Dimensions) =>
     containerMaxHeight: {
       maxHeight: 200,
     },
-    picker: {
-      width: '80%',
-      color: 'white',
-      alignContent: 'center',
-    },
-    iosPickerText: {color: 'white'},
     marginTop: {
       marginTop: 30,
     },
-    boldText: {
-      fontWeight: 'bold',
+    contentContainer: {marginTop: 50, paddingHorizontal: 15},
+    opaque: {opacity: 0.7},
+    flexRow: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignContent: 'center',
+    },
+    bottomLine: {
+      borderColor: getColors(theme).lineSeparatorStroke,
+      marginBottom: 20,
     },
   });
-
-export enum SavingsOperations {
-  deposit = 'deposit',
-  withdraw = 'withdraw',
-}
 
 const connector = connect(
   (state: RootState) => {

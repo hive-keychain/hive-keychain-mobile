@@ -18,8 +18,6 @@ interface Props {
   additionalContainerStyle?: StyleProp<ViewStyle>;
   setMaxAvailable?: (value: string) => void;
 }
-//TODO here, in order to improve it, find a way to auto select current/available depending on operation
-//  or better said: study & improve, maybe just by clicking on current/available, so it will auto set amount.
 
 const CurrentAvailableBalance = ({
   theme,
@@ -47,7 +45,7 @@ const CurrentAvailableBalance = ({
         }
         primaryLabel={translate('common.current')}
         secondaryLabel={currentValue}
-        onPress={() => {}}
+        onPress={() => handleSetMaxAvailable(currentValue.split(' ')[0])}
         additionalButtonContainerStyle={[
           styles.buttonContainer,
           styles.backgroundColorDarkBlue,

@@ -142,7 +142,7 @@
             "success": "Savings withdrawal cancelled succesfully"
           }
         },
-        "savings_action": "{{operation}}ing",
+        "pending": "Withdrawing",
         "currency_savings_title": "{{currency}} Savings"
       },
       "transfer": {

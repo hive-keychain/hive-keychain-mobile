@@ -20,6 +20,7 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
   const styles = getStyles(theme);
   return [
     <SquareButton
+      key={'square-button-transfer-hive'}
       onPress={() => {
         navigate('Operation', {
           operation: 'transfer',
@@ -42,6 +43,7 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
       primaryLabel={translate('common.send')}
     />,
     <SquareButton
+      key={'square-button-power_up-hive'}
       onPress={() => {
         navigate('Operation', {
           operation: 'power_up',
@@ -55,12 +57,13 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
           theme={theme}
           name="power_up"
           additionalContainerStyle={styles.roundedIcon}
-          {...styles.icon}
+          {...styles.biggerIcon}
         />
       }
       primaryLabel={translate('wallet.operations.powerup.title')}
     />,
     <SquareButton
+      key={'square-button-savings-hive'}
       onPress={() => {
         navigate('Operation', {
           operation: 'savings',
@@ -73,8 +76,8 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
       icon={
         <CustomIconButton
           theme={theme}
-          lightThemeIcon={<CurrencySavingLight />}
-          darkThemeIcon={<CurrencySavingDark />}
+          lightThemeIcon={<CurrencySavingLight {...styles.biggerIcon} />}
+          darkThemeIcon={<CurrencySavingDark {...styles.biggerIcon} />}
           onPress={() => {}}
           additionalContainerStyle={styles.roundedIcon}
         />
@@ -83,6 +86,7 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
       secondaryLabel={translate('common.savings')}
     />,
     <SquareButton
+      key={'square-button-convert-hive'}
       onPress={() => {}}
       icon={
         <Icon
@@ -109,6 +113,10 @@ const getStyles = (theme: Theme) => {
       borderRadius: 50,
       padding: 0,
       marginRight: 3,
+    },
+    biggerIcon: {
+      width: 30,
+      height: 30,
     },
   };
 };

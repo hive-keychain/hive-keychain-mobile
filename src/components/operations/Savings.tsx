@@ -3,9 +3,11 @@ import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import PickerItem, {PickerItemInterface} from 'components/form/PickerItem';
 import Icon from 'components/hive/Icon';
+import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savings-withdrawal-page.component';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
-import React, {useContext, useState} from 'react';
+import {TemplateStackProps} from 'navigators/Root.types';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   Keyboard,
   StyleSheet,
@@ -17,10 +19,12 @@ import {
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
+import {getRotateStyle} from 'src/styles/transform';
 import {
   FontJosefineSansName,
   button_link_primary_medium,
@@ -32,7 +36,8 @@ import {capitalize} from 'utils/format';
 import {depositToSavings, withdrawFromSavings} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
+import {SavingsUtils} from 'utils/savings.utils';
 import OperationThemed from './OperationThemed';
 
 export enum SavingsOperations {
@@ -45,8 +50,21 @@ export interface SavingOperationProps {
 }
 
 type Props = PropsFromRedux & SavingOperationProps;
-const Convert = ({user, loadAccount, currency: c, operation}: Props) => {
+const Convert = ({
+  user,
+  loadAccount,
+  currency: c,
+  operation,
+  userSavingsWithdrawRequests,
+}: Props) => {
   const [to, setTo] = useState(user.name!);
+  const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
+    SavingsWithdrawal[]
+  >([]);
+  const [
+    totalPendingSavingsWithdrawals,
+    setTotalPendingSavingsWithdrawals,
+  ] = useState(0);
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [currency, setCurrency] = useState(c);
@@ -62,7 +80,7 @@ const Convert = ({user, loadAccount, currency: c, operation}: Props) => {
         <Icon
           theme={theme}
           name="send_square"
-          additionalContainerStyle={styles.rotateicon}
+          additionalContainerStyle={getRotateStyle('180')}
         />
       ),
       value: SavingsOperations.deposit,
@@ -80,6 +98,40 @@ const Convert = ({user, loadAccount, currency: c, operation}: Props) => {
       : user.account.savings_hbd_balance;
   const availableBalance =
     currency === 'HIVE' ? user.account.balance : user.account.hbd_balance;
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  const init = async () => {
+    if (userSavingsWithdrawRequests > 0) {
+      const pendingSavingsWithdrawalsList: SavingsWithdrawal[] = await SavingsUtils.getSavingsWitdrawFrom(
+        user.name!,
+      );
+      setCurrentWithdrawingList(pendingSavingsWithdrawalsList);
+      if (pendingSavingsWithdrawalsList.length > 0) {
+        updateTotalSavingWithdrawals(pendingSavingsWithdrawalsList);
+      }
+    }
+  };
+
+  const updateTotalSavingWithdrawals = (
+    pendingSavingsWithdrawalsList: SavingsWithdrawal[],
+  ) => {
+    setTotalPendingSavingsWithdrawals(
+      pendingSavingsWithdrawalsList
+        .filter((current) => current.amount.split(' ')[1] === c)
+        .reduce(
+          (acc, current) => acc + parseFloat(current.amount.split(' ')[0]),
+          0,
+        ),
+    );
+  };
+
+  const onHandleUpdate = (list: SavingsWithdrawal[]) => {
+    setCurrentWithdrawingList(list);
+    updateTotalSavingWithdrawals(list);
+  };
 
   const onSavings = async () => {
     Keyboard.dismiss();
@@ -126,6 +178,12 @@ const Convert = ({user, loadAccount, currency: c, operation}: Props) => {
     }
   };
 
+  const handleSetMax = () => {
+    if (operationType === SavingsOperations.deposit) {
+      setAmount((availableBalance as string).split(' ')[0]);
+    } else setAmount((currentBalance as string).split(' ')[0]);
+  };
+
   return (
     <OperationThemed
       additionalContentContainerStyle={{paddingHorizontal: 20}}
@@ -140,22 +198,44 @@ const Convert = ({user, loadAccount, currency: c, operation}: Props) => {
             setMaxAvailable={(value) => setAmount(value)}
           />
           <Separator />
-          <View
-            style={[getCardStyle(theme).defaultCardItem, styles.displayAction]}>
-            <Text style={[styles.textBase, styles.josefineFont, styles.opaque]}>
-              {capitalize(
-                translate(`wallet.operations.savings.savings_action`, {
-                  operation: operationType,
-                }),
-              )}
-            </Text>
-            <Text style={[styles.textBase, styles.title, styles.josefineFont]}>
-              {parseFloat(amount) === 0 || amount.trim().length === 0
-                ? '0.000'
-                : amount}{' '}
-              {currency}
-            </Text>
-          </View>
+          {totalPendingSavingsWithdrawals > 0 && (
+            <TouchableOpacity
+              onPress={() => {
+                navigate('TemplateStack', {
+                  titleScreen: capitalize(
+                    translate(`wallet.operations.savings.pending`),
+                  ),
+                  component: (
+                    <PendingSavingsWithdrawalPageComponent
+                      currency={c}
+                      operation={operationType}
+                      currentWithdrawingList={currentWithdrawingList}
+                      onUpdate={onHandleUpdate}
+                    />
+                  ),
+                } as TemplateStackProps);
+              }}
+              style={[
+                getCardStyle(theme).defaultCardItem,
+                styles.displayAction,
+              ]}>
+              <View>
+                <Text
+                  style={[styles.textBase, styles.josefineFont, styles.opaque]}>
+                  {capitalize(translate(`wallet.operations.savings.pending`))}
+                </Text>
+                <Text
+                  style={[styles.textBase, styles.title, styles.josefineFont]}>
+                  {totalPendingSavingsWithdrawals} {currency}
+                </Text>
+              </View>
+              <Icon
+                theme={theme}
+                name="expand_thin"
+                additionalContainerStyle={getRotateStyle('90')}
+              />
+            </TouchableOpacity>
+          )}
           <Separator height={25} />
         </>
       }
@@ -236,10 +316,7 @@ const Convert = ({user, loadAccount, currency: c, operation}: Props) => {
                       16,
                     )}
                   />
-                  <TouchableOpacity
-                    onPress={() =>
-                      setAmount((availableBalance as string).split(' ')[0])
-                    }>
+                  <TouchableOpacity onPress={() => handleSetMax()}>
                     <Text style={[styles.textBase, styles.redText]}>
                       {translate('common.max').toUpperCase()}
                     </Text>
@@ -253,7 +330,9 @@ const Convert = ({user, loadAccount, currency: c, operation}: Props) => {
       childrenBottom={
         <>
           <ActiveOperationButton
-            title={translate(`wallet.operations.savings.${operation}_button`)}
+            title={translate(
+              `wallet.operations.savings.${operationType}_button`,
+            )}
             onPress={onSavings}
             style={[getButtonStyle(theme).warningStyleButton]}
             isLoading={loading}
@@ -281,6 +360,8 @@ const getDimensionedStyles = (
       borderRadius: 26,
       paddingHorizontal: 21,
       paddingVertical: 13,
+      justifyContent: 'space-between',
+      flexDirection: 'row',
     },
     textBase: {
       ...title_primary_body_2,
@@ -294,13 +375,6 @@ const getDimensionedStyles = (
     },
     opaque: {
       opacity: 0.7,
-    },
-    rotateicon: {
-      transform: [
-        {
-          rotateX: '180deg',
-        },
-      ],
     },
     operationPicker: {
       paddingHorizontal: 20,
@@ -326,6 +400,8 @@ const connector = connect(
   (state: RootState) => {
     return {
       user: state.activeAccount,
+      userSavingsWithdrawRequests:
+        state.activeAccount.account.savings_withdraw_requests,
     };
   },
   {

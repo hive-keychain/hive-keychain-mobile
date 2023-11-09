@@ -8,7 +8,7 @@ import moment from 'moment';
 import React, {useState} from 'react';
 import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import IconBack from 'src/assets/Icon_arrow_back_black.svg';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {RootState} from 'store';
@@ -16,7 +16,7 @@ import {cancelPendingSavings} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
 import Operation from './Operation';
-
+//TODO check if component needed at all after refactoring UI
 type Props = PropsFromRedux & {
   item: SavingsWithdrawal;
   itemList: SavingsWithdrawal[];
@@ -66,6 +66,7 @@ const CancelPendingSavingsWithdrawalItem = ({
           operation={SavingsOperations.deposit}
           currency={'HBD'}
           currentWithdrawingList={itemList}
+          onUpdate={() => {}}
         />
       ),
     });

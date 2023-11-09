@@ -201,7 +201,7 @@ export const SendDeposit = ({currency}: {currency: string}) => {
     />
   );
 };
-
+//TODO important on this file: check what's needed & cleanup
 export const PendingSavingsWithdraw = ({
   currentWithdrawingList,
   children,
@@ -219,6 +219,7 @@ export const PendingSavingsWithdraw = ({
               operation={SavingsOperations.deposit}
               currency={'HBD'}
               currentWithdrawingList={currentWithdrawingList}
+              onUpdate={() => {}}
             />
           ),
         });

@@ -19,6 +19,7 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
   const styles = getStyles(theme);
   return [
     <SquareButton
+      key={'square-button-transfer-hbd'}
       onPress={() => {
         navigate('Operation', {
           operation: 'transfer',
@@ -41,6 +42,7 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
       primaryLabel={translate('common.send')}
     />,
     <SquareButton
+      key={'square-button-savings-hbd'}
       onPress={() => {
         navigate('Operation', {
           operation: 'savings',
@@ -53,8 +55,8 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
       icon={
         <CustomIconButton
           theme={theme}
-          lightThemeIcon={<CurrencySavingLight />}
-          darkThemeIcon={<CurrencySavingDark />}
+          lightThemeIcon={<CurrencySavingLight {...styles.biggerIcon} />}
+          darkThemeIcon={<CurrencySavingDark {...styles.biggerIcon} />}
           onPress={() => {}}
           additionalContainerStyle={styles.roundedIcon}
         />
@@ -63,6 +65,7 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
       secondaryLabel={translate('common.savings')}
     />,
     <SquareButton
+      key={'square-button-convert-hbd'}
       //TODO to test
       onPress={() => {}}
       icon={
@@ -83,6 +86,10 @@ const getStyles = (theme: Theme) => {
     icon: {
       width: 20,
       height: 20,
+    },
+    biggerIcon: {
+      width: 30,
+      height: 30,
     },
     roundedIcon: {
       borderWidth: 1,

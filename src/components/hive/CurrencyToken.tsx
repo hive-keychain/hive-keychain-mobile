@@ -39,7 +39,7 @@ const CurrencyToken = ({
 
   const styles = getStyles(theme, useWindowDimensions().height);
   return (
-    <View style={styles.container}>
+    <View style={styles.container} key={`currency-token-${currencyName}`}>
       <TouchableOpacity
         onPress={() => setIsExpanded(!isExpanded)}
         style={styles.rowContainer}>
@@ -83,7 +83,6 @@ const CurrencyToken = ({
 };
 
 const getStyles = (theme: Theme, height: number) =>
-  //TODO bellow cleanup
   StyleSheet.create({
     container: {
       display: 'flex',

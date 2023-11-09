@@ -344,8 +344,9 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     separatorContainer: {
       borderWidth: 1,
       borderColor: getColors(theme).cardBorderColor,
-      height: 5,
+      height: 1,
       backgroundColor: getColors(theme).separatorBgColor,
+      marginBottom: 10,
     },
     flatlist: {
       paddingBottom: 20,
