@@ -3,6 +3,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {CancelTokenDelegationOperationProps} from 'components/operations/Cancel-token-delegation';
 import {ConvertOperationProps} from 'components/operations/Convert';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
+import {DelegationOperationProps} from 'components/operations/Delegation';
 import {PowerUpOperationProps} from 'components/operations/PowerUp';
 import {SavingOperationProps} from 'components/operations/Savings';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
@@ -51,7 +52,8 @@ export type RootStackParam = {
       | 'cancel_delegation'
       | 'power_up'
       | 'savings'
-      | 'convert';
+      | 'convert'
+      | 'delegateHP';
     props:
       | TransferOperationProps
       | StakeTokenOperationProps
@@ -60,7 +62,8 @@ export type RootStackParam = {
       | CancelTokenDelegationOperationProps
       | PowerUpOperationProps
       | SavingOperationProps
-      | ConvertOperationProps;
+      | ConvertOperationProps
+      | DelegationOperationProps;
   };
   TemplateStack: TemplateStackProps;
 };

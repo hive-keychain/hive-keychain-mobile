@@ -144,7 +144,7 @@ export const SendDelegation = () => {
   );
 };
 
-export const SendConversion = ({currency}: {currency: string}) => {
+export const SendConversion = ({currency}: {currency: 'HBD' | 'HIVE'}) => {
   return (
     <RoundButton
       onPress={() => {

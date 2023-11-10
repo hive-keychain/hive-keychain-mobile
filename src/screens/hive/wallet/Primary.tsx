@@ -13,6 +13,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {getHBDButtonList} from 'src/reference-data/hbdOperationButtonList';
 import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
+import {getHPButtonList} from 'src/reference-data/hpOperationButtonList';
 import {HIVEICONBGCOLOR} from 'src/styles/colors';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
@@ -84,6 +85,15 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
         buttons={getHBDButtonList(user, theme)}
       />
       <Separator height={10} />
+      <CurrencyToken
+        theme={theme}
+        currencyName={getCurrency('HP')}
+        value={toHP(user.account.vesting_shares as string, properties.globals)}
+        currencyLogo={
+          <IconHP theme={theme} additionalContainerStyle={{marginTop: 8}} />
+        }
+        buttons={getHPButtonList(theme, user.name!)}
+      />
       <TokenDisplay
         theme={theme}
         using_new_ui

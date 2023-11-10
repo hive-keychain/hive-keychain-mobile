@@ -18,6 +18,9 @@ import Convert, {ConvertOperationProps} from 'components/operations/Convert';
 import DelegateToken, {
   DelegateTokenOperationProps,
 } from 'components/operations/DelegateToken';
+import Delegation, {
+  DelegationOperationProps,
+} from 'components/operations/Delegation';
 import PowerUp, {PowerUpOperationProps} from 'components/operations/PowerUp';
 import Savings, {SavingOperationProps} from 'components/operations/Savings';
 import StakeToken, {
@@ -71,6 +74,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return `${translate('wallet.operations.convert.button')} ${
           (props as ConvertOperationProps).currency
         }`;
+      case 'delegateHP':
+        return translate('wallet.operations.delegation.title_delegation');
     }
   };
 
@@ -96,6 +101,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return <Savings {...(props as SavingOperationProps)} />;
       case 'convert':
         return <Convert {...(props as ConvertOperationProps)} />;
+      case 'delegateHP':
+        return <Delegation {...(props as DelegationOperationProps)} />;
     }
   };
 

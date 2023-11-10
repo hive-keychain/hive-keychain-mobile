@@ -3,22 +3,42 @@ import Delegate from 'assets/wallet/icon_delegate_dark.svg';
 import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
+import Icon from 'components/hive/Icon';
+import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
-import {Keyboard, StyleSheet, Text} from 'react-native';
+import {TemplateStackProps} from 'navigators/Root.types';
+import React, {useContext, useState} from 'react';
+import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getButtonStyle} from 'src/styles/button';
+import {getCardStyle} from 'src/styles/card';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getHorizontalLineStyle} from 'src/styles/line';
+import {
+  FontJosefineSansName,
+  button_link_primary_medium,
+  title_primary_body_2,
+} from 'src/styles/typography';
 import {RootState} from 'store';
-import {fromHP} from 'utils/format';
-import {delegate} from 'utils/hive';
+import {capitalize, fromHP, toHP} from 'utils/format';
+import {delegate, getCurrency} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 import Balance from './Balance';
+import DelegationsList from './DelegationsList';
 import Operation from './Operation';
+import OperationThemed from './OperationThemed';
 
-type Props = PropsFromRedux & {currency?: string; delegatee?: string};
+export interface DelegationOperationProps {
+  currency?: string;
+  delegatee?: string;
+}
+
+type Props = PropsFromRedux & DelegationOperationProps;
 
 const Delegation = ({
   currency = 'HP',
@@ -58,8 +78,172 @@ const Delegation = ({
       setLoading(false);
     }
   };
+  const {theme} = useContext(ThemeContext);
   const {color} = getCurrencyProperties(currency);
-  const styles = getDimensionedStyles(color);
+  const styles = getDimensionedStyles(color, theme);
+
+  const totalHpIncoming = `+${toHP(
+    user.account.received_vesting_shares as string,
+    properties.globals,
+  )
+    .toFixed(3)
+    .toString()} ${getCurrency('HP')}`;
+
+  const totalHpOutgoing = `-${toHP(
+    user.account.delegated_vesting_shares as string,
+    properties.globals,
+  )
+    .toFixed(3)
+    .toString()} ${getCurrency('HP')}`;
+
+  const onHandleNavigateToDelegations = (type: 'incoming' | 'outgoing') => {
+    navigate('TemplateStack', {
+      titleScreen: translate(`common.${type}`),
+      component: <DelegationsList type={type} theme={theme} />,
+    } as TemplateStackProps);
+  };
+
+  return (
+    <OperationThemed
+      childrenTop={
+        <>
+          <Separator />
+          <CurrentAvailableBalance
+            theme={theme}
+            currentValue={totalHpIncoming}
+            availableValue={totalHpOutgoing}
+            additionalContainerStyle={styles.currentAvailableBalances}
+            setMaxAvailable={(value) => setAmount(value)}
+            leftLabelTranslationKey="wallet.operations.delegation.total_incoming"
+            rightLabelTranslationKey="wallet.operations.delegation.total_outgoing"
+            onleftClick={() => onHandleNavigateToDelegations('incoming')}
+            onRightClick={() => onHandleNavigateToDelegations('outgoing')}
+          />
+          <Separator />
+          <TouchableOpacity
+            onPress={() =>
+              setAmount(
+                toHP(user.account.vesting_shares as string, properties.globals)
+                  .toFixed(3)
+                  .toString(),
+              )
+            }
+            style={[
+              getCardStyle(theme, 30).defaultCardItem,
+              {marginHorizontal: 15, paddingVertical: 10},
+            ]}>
+            <View>
+              <Text
+                style={[styles.textBase, styles.josefineFont, styles.opaque]}>
+                {capitalize(translate(`common.available`))}
+              </Text>
+              <Text
+                style={[styles.textBase, styles.title, styles.josefineFont]}>
+                {`${toHP(
+                  user.account.vesting_shares as string,
+                  properties.globals,
+                )
+                  .toFixed(3)
+                  .toString()} ${getCurrency('HP')}`}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <Separator />
+        </>
+      }
+      childrenMiddle={
+        <>
+          <Separator height={30} />
+          <Text style={[styles.textBase, styles.opaque, styles.disclaimer]}>
+            {translate('wallet.operations.delegation.delegation_disclaimer')}
+          </Text>
+          <Separator />
+          <OperationInput
+            labelInput={translate('common.username')}
+            placeholder={translate('common.username')}
+            leftIcon={<Icon theme={theme} name="at" />}
+            inputStyle={[styles.textBase, styles.paddingLeft]}
+            value={to}
+            onChangeText={(e) => {
+              setTo(e.trim());
+            }}
+          />
+          <Separator />
+          <View style={styles.flexRowBetween}>
+            <OperationInput
+              labelInput={translate('common.currency')}
+              placeholder={currency}
+              value={currency}
+              editable={false}
+              additionalOuterContainerStyle={{
+                width: '40%',
+              }}
+              inputStyle={styles.textBase}
+              additionalInputContainerStyle={{
+                marginHorizontal: 0,
+              }}
+            />
+            <OperationInput
+              labelInput={capitalize(translate('common.amount'))}
+              placeholder={'0.000'}
+              keyboardType="decimal-pad"
+              textAlign="right"
+              value={amount}
+              inputStyle={[styles.textBase, styles.paddingLeft]}
+              onChangeText={setAmount}
+              additionalInputContainerStyle={{
+                marginHorizontal: 0,
+              }}
+              additionalOuterContainerStyle={{
+                width: '54%',
+              }}
+              rightIcon={
+                <View style={styles.flexRowCenter}>
+                  <Separator
+                    drawLine
+                    additionalLineStyle={getHorizontalLineStyle(
+                      theme,
+                      1,
+                      35,
+                      16,
+                    )}
+                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      setAmount(
+                        toHP(
+                          user.account.vesting_shares as string,
+                          properties.globals,
+                        )
+                          .toFixed(5)
+                          .toString(),
+                      )
+                    }>
+                    <Text style={[styles.textBase, styles.redText]}>
+                      {translate('common.max').toUpperCase()}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              }
+            />
+          </View>
+        </>
+      }
+      childrenBottom={
+        <>
+          <ActiveOperationButton
+            title={translate('common.send')}
+            onPress={onDelegate}
+            style={[getButtonStyle(theme).warningStyleButton]}
+            isLoading={loading}
+            additionalTextStyle={{...button_link_primary_medium}}
+          />
+          <Separator />
+        </>
+      }
+    />
+  );
+  //TODO important bellow cleanup styles & removed unused
   return (
     <Operation
       logo={<Delegate />}
@@ -108,10 +292,45 @@ const Delegation = ({
   );
 };
 
-const getDimensionedStyles = (color: string) =>
+const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
     button: {backgroundColor: '#68A0B4'},
     currency: {fontWeight: 'bold', fontSize: 18, color},
+    currentAvailableBalances: {
+      paddingHorizontal: 15,
+    },
+    textBase: {
+      ...title_primary_body_2,
+      color: getColors(theme).secondaryText,
+    },
+    opaque: {
+      opacity: 0.7,
+    },
+    textCentered: {textAlign: 'center'},
+    disclaimer: {
+      fontSize: 14,
+      paddingHorizontal: 8,
+    },
+    paddingLeft: {
+      paddingLeft: 10,
+    },
+    flexRowCenter: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
+    },
+    flexRowBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    redText: {color: PRIMARY_RED_COLOR},
+    josefineFont: {
+      fontFamily: FontJosefineSansName.MEDIUM,
+    },
+    title: {
+      fontSize: 15,
+    },
   });
 
 const connector = connect(

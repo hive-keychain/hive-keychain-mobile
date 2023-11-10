@@ -6,7 +6,8 @@ import {
   Rpc,
 } from 'actions/interfaces';
 import api from 'api/keychain';
-import {getClient} from './hive';
+import {PendingOutgoingUndelegation} from 'src/interfaces/delegations.interface';
+import {getClient, getData} from './hive';
 
 const HIVE_VOTING_MANA_REGENERATION_SECONDS = 432000;
 const HIVE_100_PERCENT = 10000;
@@ -111,6 +112,22 @@ export const getDelegators = async (name: string) => {
   return ((await api.get(`/hive/delegators/${name}`)).data as Delegator[])
     .filter((e) => e.vesting_shares !== 0)
     .sort((a, b) => b.vesting_shares - a.vesting_shares);
+};
+
+export const getPendingOutgoingUndelegation = async (name: string) => {
+  const pendingDelegations = await getData(
+    'database_api.find_vesting_delegation_expirations',
+    {account: name},
+    'delegations',
+  );
+  return pendingDelegations.map((pendingUndelegation: any) => {
+    return {
+      delegator: pendingUndelegation.delegator,
+      expiration_date: pendingUndelegation.expiration,
+      vesting_shares:
+        parseInt(pendingUndelegation.vesting_shares.amount) / 1000000,
+    } as PendingOutgoingUndelegation;
+  });
 };
 
 export const getDelegatees = async (name: string) => {

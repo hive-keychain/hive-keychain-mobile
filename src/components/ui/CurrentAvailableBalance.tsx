@@ -17,6 +17,10 @@ interface Props {
   availableValue: string;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   setMaxAvailable?: (value: string) => void;
+  leftLabelTranslationKey?: string;
+  rightLabelTranslationKey?: string;
+  onleftClick?: () => void;
+  onRightClick?: () => void;
 }
 
 const CurrentAvailableBalance = ({
@@ -25,11 +29,28 @@ const CurrentAvailableBalance = ({
   availableValue,
   additionalContainerStyle,
   setMaxAvailable,
+  leftLabelTranslationKey,
+  rightLabelTranslationKey,
+  onleftClick,
+  onRightClick,
 }: Props) => {
   const styles = getStyles(theme);
 
-  const handleSetMaxAvailable = (value: string) => {
-    if (setMaxAvailable) setMaxAvailable(value);
+  const leftLabel = leftLabelTranslationKey
+    ? translate(leftLabelTranslationKey)
+    : translate('common.current');
+  const rightLabel = rightLabelTranslationKey
+    ? translate(rightLabelTranslationKey)
+    : translate('common.available');
+
+  const handleClick = (value: string, side: 'left' | 'right') => {
+    if (side === 'left' && onleftClick) {
+      onleftClick();
+    } else if (side === 'right' && onRightClick) {
+      onRightClick();
+    } else {
+      if (setMaxAvailable) setMaxAvailable(value);
+    }
   };
 
   return (
@@ -43,9 +64,9 @@ const CurrentAvailableBalance = ({
             additionalContainerStyle={styles.icon}
           />
         }
-        primaryLabel={translate('common.current')}
+        primaryLabel={leftLabel}
         secondaryLabel={currentValue}
-        onPress={() => handleSetMaxAvailable(currentValue.split(' ')[0])}
+        onPress={() => handleClick(currentValue.split(' ')[0], 'left')}
         additionalButtonContainerStyle={[
           styles.buttonContainer,
           styles.backgroundColorDarkBlue,
@@ -63,9 +84,9 @@ const CurrentAvailableBalance = ({
             additionalContainerStyle={styles.icon}
           />
         }
-        primaryLabel={translate('common.available')}
+        primaryLabel={rightLabel}
         secondaryLabel={availableValue}
-        onPress={() => handleSetMaxAvailable(availableValue.split(' ')[0])}
+        onPress={() => handleClick(availableValue.split(' ')[0], 'right')}
         additionalButtonContainerStyle={[
           styles.buttonContainer,
           styles.backgroundColorRed,

@@ -65,6 +65,7 @@ const CurrencyToken = ({
             <Icon
               key={`show-token-history-${currencyName}`}
               name={'back_time'}
+              //TODO complete bellow important!
               onClick={() => {}}
               additionalContainerStyle={styles.squareButton}
               theme={theme}

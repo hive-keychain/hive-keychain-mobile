@@ -89,7 +89,9 @@
     "url": "URL",
     "estimated_account_value": "Estimated Account Value",
     "current": "Current",
-    "operation_type": "Operation Type"
+    "operation_type": "Operation Type",
+    "incoming": "Incoming",
+    "outgoing": "Outgoing"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -193,7 +195,14 @@
         "outgoing": "Outgoing Delegations",
         "info_delegation_out": "to @{{delegatee}}",
         "cancelled_delegation": "Cancelled delegation to @{{delegatee}}",
-        "info_delegation_in": "@{{delegator}} delegated"
+        "info_delegation_in": "@{{delegator}} delegated",
+        "title_button": "HP Delegations",
+        "title_delegation": "Delegation",
+        "total_incoming": "Total Incoming",
+        "total_outgoing": "Total Outgoing",
+        "delegation_disclaimer": "You may delegate your Hive Power (HP) to another user. Click on the Outgoing amount to review or make change",
+        "outgoing_disclaimer": "After being canceled, delegations take 5 days to return to your available Hive Power balance",
+        "pending_undelegations": "Pending Undelegations"
       },
       "convert": {
         "title": "Convert to {{to}}",
