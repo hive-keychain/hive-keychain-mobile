@@ -167,10 +167,11 @@ export const fetchPhishingAccounts = (): AppThunk => async (dispatch) => {
   });
 };
 
-export const fetchConversionRequests = (name: string): AppThunk => async (
-  dispatch,
-) => {
-  const conversions = await getConversionRequests(name);
+export const fetchConversionRequests = (
+  name: string,
+  filterResults?: 'HBD' | 'HIVE',
+): AppThunk => async (dispatch) => {
+  const conversions = await getConversionRequests(name, filterResults);
   dispatch({
     type: FETCH_CONVERSION_REQUESTS,
     payload: conversions,

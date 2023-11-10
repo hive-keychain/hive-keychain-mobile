@@ -203,7 +203,9 @@
         "fill_convert_request": "Filled conversion:",
         "started_a": "Started a",
         "start_convert": "conversion",
-        "start_collateralized": "collateralized conversion"
+        "start_collateralized": "collateralized conversion",
+        "pending": "Pending",
+        "no_pending": "No pending {{currency}} convertions to show."
       },
       "more_token_info": "{{currency}} information",
       "tokens_transfer": {

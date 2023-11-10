@@ -122,13 +122,15 @@ export const getDelegatees = async (name: string) => {
     );
 };
 
-export const getConversionRequests = async (name: string) => {
+export const getConversionRequests = async (
+  name: string,
+  filterResults?: 'HBD' | 'HIVE',
+) => {
   const [hbdConversions, hiveConversions] = await Promise.all([
     getClient().database.call('get_conversion_requests', [name]),
     getClient().database.call('get_collateralized_conversion_requests', [name]),
   ]);
-
-  return [
+  const result = [
     ...hiveConversions.map((e: CollateralizedConversion) => ({
       amount: e.collateral_amount,
       conversion_date: e.conversion_date,
@@ -143,6 +145,9 @@ export const getConversionRequests = async (name: string) => {
       new Date(a.conversion_date).getTime() -
       new Date(b.conversion_date).getTime(),
   );
+  return filterResults
+    ? result.filter((item) => item.amount.split(' ')[1] === filterResults)
+    : result;
 };
 
 export const getSavingsRequests = async (name: string) => {
