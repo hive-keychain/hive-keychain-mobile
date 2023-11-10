@@ -34,7 +34,7 @@
     "@react-navigation/native": "^5.9.8",
     "@react-navigation/stack": "^5.14.9",
     "assert": "^2.0.0",
-    "axios": "^0.21.2",
+    "axios": "^1.6.0",
     "crypto-js": "^3.3.0",
     "fuse.js": "^6.4.6",
     "hive-keychain-commons": "github:hive-keychain/hive-keychain-commons",
