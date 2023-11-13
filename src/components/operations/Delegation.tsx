@@ -92,21 +92,20 @@ const Delegation = ({
     .toFixed(3)
     .toString()} ${getCurrency('HP')}`;
 
+  const totalHp = toHP(
+    user.account.vesting_shares as string,
+    properties.globals,
+  );
+  const totalOutgoing = toHP(
+    user.account.delegated_vesting_shares as string,
+    properties.globals,
+  );
+  const available = Math.max(totalHp - totalOutgoing - 5, 0).toFixed(4);
+
   const onHandleNavigateToDelegations = (type: 'incoming' | 'outgoing') => {
     navigate('TemplateStack', {
       titleScreen: translate(`common.${type}`),
-      component: (
-        <DelegationsList
-          type={type}
-          theme={theme}
-          availableHP={toHP(
-            user.account.vesting_shares as string,
-            properties.globals,
-          )
-            .toFixed(3)
-            .toString()}
-        />
-      ),
+      component: <DelegationsList type={type} theme={theme} />,
     } as TemplateStackProps);
   };
 
@@ -128,13 +127,7 @@ const Delegation = ({
           />
           <Separator />
           <TouchableOpacity
-            onPress={() =>
-              setAmount(
-                toHP(user.account.vesting_shares as string, properties.globals)
-                  .toFixed(3)
-                  .toString(),
-              )
-            }
+            onPress={() => setAmount(available.toString())}
             style={[
               getCardStyle(theme, 30).defaultCardItem,
               {marginHorizontal: 15, paddingVertical: 10},
@@ -146,12 +139,7 @@ const Delegation = ({
               </Text>
               <Text
                 style={[styles.textBase, styles.title, styles.josefineFont]}>
-                {`${toHP(
-                  user.account.vesting_shares as string,
-                  properties.globals,
-                )
-                  .toFixed(3)
-                  .toString()} ${getCurrency('HP')}`}
+                {`${available.toString()} ${getCurrency('HP')}`}
               </Text>
             </View>
           </TouchableOpacity>

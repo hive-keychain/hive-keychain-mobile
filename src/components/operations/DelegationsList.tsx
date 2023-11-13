@@ -42,7 +42,6 @@ import OperationThemed from './OperationThemed';
 interface DelegationListProps {
   type: 'incoming' | 'outgoing';
   theme: Theme;
-  availableHP: string;
 }
 
 type Props = PropsFromRedux & DelegationListProps;
@@ -55,7 +54,6 @@ const DelegationsList = ({
   type,
   properties,
   theme,
-  availableHP,
 }: Props) => {
   const [totalDelegationsAmount, setTotalDelegationsAmount] = useState<number>(
     0,
@@ -72,6 +70,7 @@ const DelegationsList = ({
     showCancelConfirmationDelegation,
     setShowCancelConfirmationDelegation,
   ] = useState(false);
+  const [available, setAvailable] = useState<string | number>('...');
   const [editedAmountDelegation, setEditedAmountDelegation] = useState('');
   const [editMode, setEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -91,13 +90,17 @@ const DelegationsList = ({
     const pendingOutgoingList = await getPendingOutgoingUndelegation(user.name);
     if (pendingOutgoingList.length > 0) {
       setPendingList(pendingOutgoingList);
-      setTotalPendingOutgoingUndelegation(
-        pendingOutgoingList.reduce(
-          (acc: number, current: any) =>
-            acc + toHP(current.vesting_shares + '', properties.globals),
-          0,
-        ),
+      const totalOutgoing = pendingOutgoingList.reduce(
+        (acc: number, current: any) =>
+          acc + toHP(current.vesting_shares + '', properties.globals),
+        0,
       );
+      setTotalPendingOutgoingUndelegation(totalOutgoing);
+      const totalHp = toHP(
+        user.account.vesting_shares as string,
+        properties.globals,
+      );
+      setAvailable(Math.max(totalHp - Number(totalOutgoing) - 5, 0).toFixed(4));
     }
   };
 
@@ -266,7 +269,9 @@ const DelegationsList = ({
                       )}
                     />
                     <TouchableOpacity
-                      onPress={() => setEditedAmountDelegation(availableHP)}>
+                      onPress={() =>
+                        setEditedAmountDelegation(available.toString())
+                      }>
                       <Text style={[styles.textBase, styles.redText]}>
                         {translate('common.max').toUpperCase()}
                       </Text>
