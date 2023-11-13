@@ -16,7 +16,9 @@ import {
 } from 'src/styles/typography';
 import {formatBalance} from 'utils/format';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 import Icon from './Icon';
+import {WalletHistoryComponentProps} from './Wallet-history-component';
 
 interface Props {
   theme: Theme;
@@ -65,8 +67,14 @@ const CurrencyToken = ({
             <Icon
               key={`show-token-history-${currencyName}`}
               name={'back_time'}
-              //TODO complete bellow important!
-              onClick={() => {}}
+              onClick={() =>
+                navigate('WALLET', {
+                  screen: 'WalletHistoryScreen',
+                  params: {
+                    currency: currencyName.toLowerCase(),
+                  } as WalletHistoryComponentProps,
+                })
+              }
               additionalContainerStyle={styles.squareButton}
               theme={theme}
             />

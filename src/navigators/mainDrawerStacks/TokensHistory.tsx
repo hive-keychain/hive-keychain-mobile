@@ -22,7 +22,7 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
   const {theme} = useContext(ThemeContext);
   const {currency} = route.params;
   const styles = getStyles(theme);
-  //TODO bellow move styles to bellow & check!
+
   return (
     <Stack.Navigator>
       <Stack.Screen

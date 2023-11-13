@@ -7,8 +7,11 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import {Icons} from 'src/enums/icons.enums';
+import {Theme} from 'src/context/theme.context';
 import {Transfer as TransferInterface} from 'src/interfaces/transaction.interface';
+import {getCardStyle} from 'src/styles/card';
+import {getColors} from 'src/styles/colors';
+import {fields_primary_text_1} from 'src/styles/typography';
 import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
@@ -17,9 +20,10 @@ import Icon from './Icon';
 type Props = {
   user: ActiveAccount;
   transaction: TransferInterface;
-  token?: boolean;
   locale: string;
   useIcon: boolean;
+  theme: Theme;
+  token?: boolean;
 };
 const Transfer = ({
   transaction,
@@ -27,6 +31,7 @@ const Transfer = ({
   locale,
   token = false,
   useIcon,
+  theme,
 }: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
@@ -54,52 +59,66 @@ const Transfer = ({
 
   const toggleExpandMoreIcon = () => {
     return toggle ? (
-      <Icon name={Icons.EXPAND_LESS} />
+      <Icon name="expand_thin" theme={theme} />
     ) : (
-      <Icon name={Icons.EXPAND_MORE} />
+      <Icon name="expand_thin" theme={theme} />
     );
   };
 
   const styles = getDimensionedStyles({
     ...useWindowDimensions(),
     color,
+    theme,
   });
 
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={[getCardStyle(theme).defaultCardItem, styles.container]}
       onPress={() => {
         setToggle(!toggle);
       }}>
       <View style={styles.main}>
         <View style={[styles.row, styles.alignedContent]}>
           {useIcon && <Icon name={transaction.type} />}
-          <Text>{date}</Text>
+          <Text style={styles.textBase}>{date}</Text>
         </View>
         <View style={styles.rowContainer}>
           <View style={styles.row}>
-            <Text style={styles.username}>{`${operationDetails.action} `}</Text>
-            <Text style={styles.amount}>{`${direction} ${withCommas(amount)} ${
+            <Text
+              style={[
+                styles.textBase,
+                styles.username,
+              ]}>{`${operationDetails.action} `}</Text>
+            <Text
+              style={[
+                styles.textBase,
+                styles.amount,
+              ]}>{`${direction} ${withCommas(amount)} ${
               amount.split(' ')[1]
             }`}</Text>
-            <Text style={styles.username}>
+            <Text style={[styles.textBase, styles.username]}>
               {` ${operationDetails.actionFromTo} `} {`@${other}`}
             </Text>
           </View>
           <View>{memo && memo.length ? toggleExpandMoreIcon() : null}</View>
         </View>
       </View>
-      {toggle && memo && memo.length ? <Text>{memo}</Text> : null}
+      {toggle && memo && memo.length ? (
+        <Text style={styles.textBase}>{memo}</Text>
+      ) : null}
     </TouchableOpacity>
   );
 };
 
-const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
+const getDimensionedStyles = ({
+  height,
+  color,
+  theme,
+}: Height & {color: string; theme: Theme}) =>
+  //TODO clean up styles & adjust as design
   StyleSheet.create({
     container: {
-      borderBottomWidth: 1,
-      borderColor: 'black',
-      padding: height * 0.01,
+      borderRadius: 20,
     },
     main: {
       display: 'flex',
@@ -118,6 +137,10 @@ const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
     },
     alignedContent: {
       alignItems: 'center',
+    },
+    textBase: {
+      color: getColors(theme).secondaryText,
+      ...fields_primary_text_1,
     },
   });
 

@@ -1,5 +1,6 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {WalletHistoryComponentProps} from 'components/hive/Wallet-history-component';
 import {CancelTokenDelegationOperationProps} from 'components/operations/Cancel-token-delegation';
 import {ConvertOperationProps} from 'components/operations/Convert';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
@@ -66,6 +67,7 @@ export type RootStackParam = {
       | DelegationOperationProps;
   };
   TemplateStack: TemplateStackProps;
+  WalletHistory: WalletHistoryComponentProps;
 };
 
 export type MainNavigation = StackNavigationProp<RootStackParam, 'Main'>;

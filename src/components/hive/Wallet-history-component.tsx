@@ -2,9 +2,10 @@ import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
 import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, ThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {Transaction} from 'src/interfaces/transaction.interface';
 import {RootState} from 'store';
@@ -14,9 +15,9 @@ import TransactionUtils, {
   MINIMUM_FETCHED_TRANSACTIONS,
   NB_TRANSACTION_FETCHED,
 } from 'utils/transactions.utils';
+import {WalletHistoryUtils} from 'utils/walletHistoryUtils';
 import {BackToTopButton} from './Back-To-Top-Button';
 import Icon from './Icon';
-import WalletHistoryFilterPanel from './Wallet-history-filter-panel';
 import WalletHistoryItemComponent from './WalletHistoryItemComponent';
 
 type FilterTransactionTypes = {
@@ -45,6 +46,10 @@ type WalletHistoryFilter = {
   selectedTransactionTypes: FilterTransactionTypes;
 };
 
+export interface WalletHistoryComponentProps {
+  currency?: string;
+}
+
 const WallettHistory = ({
   transactions,
   activeAccount,
@@ -52,7 +57,9 @@ const WallettHistory = ({
   walletFilters,
   updateWalletFilter,
   clearUserTransactions,
-}: PropsFromRedux) => {
+  currency,
+}: PropsFromRedux & WalletHistoryComponentProps) => {
+  console.log('fomr params: ', {currency}); //TODO remove line
   let lastOperationFetched = -1;
 
   const [displayedTransactions, setDisplayedTransactions] = useState<
@@ -93,6 +100,12 @@ const WallettHistory = ({
     }
   }, [activeAccount.name]);
 
+  //TODO test if bellow works
+  // useEffect(() => {
+  //   console.log('Walletfilters been set!, should filter!'); //TODO remove line
+  // }, [walletFilters]);
+  //end Test
+
   const finalizeDisplayedList = (list: Transaction[]) => {
     setDisplayedTransactions(list);
     setLoading(false);
@@ -106,10 +119,12 @@ const WallettHistory = ({
     );
 
     fetchAccountTransactions(activeAccount.name!, lastOperationFetched);
-    if (childRef.current) {
-      //@ts-ignore
-      childRef.current.initFiltersNow();
-    }
+    //TODO bellow, cleanup unused code + mark wallet-history-filter-panel as "//TODO check if needed after refactoring UI"
+    // if (childRef.current) {
+    //   //@ts-ignore
+    //   childRef.current.initFiltersNow();
+    // }
+    // filterTransactions();
   };
 
   useEffect(() => {
@@ -129,11 +144,13 @@ const WallettHistory = ({
         );
       } else {
         setTimeout(() => {
-          if (childRef.current) {
-            //@ts-ignore
-            childRef.current.filterNow();
-            setFilteringCounter((prevCount: number) => prevCount + 1);
-          }
+          // if (childRef.current) {
+          //   //@ts-ignore
+          //   childRef.current.filterNow();
+          //   setFilteringCounter((prevCount: number) => prevCount + 1);
+          // }
+          setFilteringCounter((prevCount: number) => prevCount + 1);
+          filterTransactions();
         }, 0);
 
         setLastTransactionIndex(
@@ -141,7 +158,32 @@ const WallettHistory = ({
         );
       }
     }
-  }, [transactions]);
+    //TODO testing if needed bellow as dependency walletFilters to filter on each change!
+  }, [transactions, walletFilters]);
+
+  const filterTransactions = () => {
+    let walletFiltersTemp = walletFilters;
+    if (currency) walletFilters.filterValue = currency;
+    let filteredTransactions = WalletHistoryUtils.applyAllFilters(
+      transactions.list,
+      walletFiltersTemp,
+      activeAccount,
+    );
+    if (
+      (filteredTransactions.length >= MINIMUM_FETCHED_TRANSACTIONS &&
+        filteredTransactions.length >= previousTransactionLength + 1) ||
+      transactions.list.some((t) => t.last) ||
+      transactions.lastUsedStart === 0
+    ) {
+      finalizeDisplayedList(filteredTransactions);
+    } else {
+      setBottomLoader(true);
+      fetchAccountTransactions(
+        activeAccount.name!,
+        transactions.lastUsedStart - NB_TRANSACTION_FETCHED,
+      );
+    }
+  };
 
   const forceResetFilters = () => {
     if (childRef.current) {
@@ -151,12 +193,16 @@ const WallettHistory = ({
     }
   };
 
+  const {theme} = useContext(ThemeContext);
+  const styles = getStyles(theme);
+
   const renderListItem = (transaction: Transaction) => {
     return (
       <WalletHistoryItemComponent
         transaction={transaction}
         user={activeAccount}
         locale={locale}
+        theme={theme}
       />
     );
   };
@@ -186,9 +232,9 @@ const WallettHistory = ({
 
   return (
     <View style={styles.flex}>
-      <WalletHistoryFilterPanel
+      {/* <WalletHistoryFilterPanel
         ref={childRef}
-        DEFAULT_WALLET_FILTER={DEFAULT_FILTER}
+        DEFAULT_WALLET_FILTER={walletFilters}
         transactions={transactions}
         flatListRef={flatListRef}
         activeAccount={activeAccount}
@@ -206,7 +252,7 @@ const WallettHistory = ({
         toggleFilter={toggleFilter}
         setLoading={setLoading}
         displayedTransactions={displayedTransactions}
-      />
+      /> */}
 
       {!loading && displayedTransactions.length > 0 && (
         <View style={styles.viewContainer}>
@@ -306,7 +352,7 @@ const WallettHistory = ({
 
       {/* ScrollToTop Button */}
       {!loading && displayScrollToTop && (
-        <BackToTopButton element={flatListRef} />
+        <BackToTopButton theme={theme} element={flatListRef} />
       )}
       {/* END ScrollToTop Button */}
 
@@ -333,41 +379,42 @@ const connector = connect(mapStateToProps, {
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const styles = StyleSheet.create({
-  renderTransactions: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  flex: {flex: 1},
-  transactionsList: {
-    marginBottom: 33,
-  },
-  transactionListFilterOpened: {
-    maxHeight: 230,
-  },
-  centeredContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 8,
-  },
-  viewContainer: {
-    height: '90%',
-  },
-  loadMorePanel: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 8,
-  },
-  centered: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  alertText: {
-    marginTop: 30,
-    fontWeight: 'bold',
-    marginBottom: 80,
-  },
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    renderTransactions: {
+      flex: 1,
+      justifyContent: 'center',
+    },
+    flex: {flex: 1},
+    transactionsList: {
+      marginBottom: 33,
+    },
+    transactionListFilterOpened: {
+      maxHeight: 230,
+    },
+    centeredContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginVertical: 8,
+    },
+    viewContainer: {
+      height: '90%',
+    },
+    loadMorePanel: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginVertical: 8,
+    },
+    centered: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    alertText: {
+      marginTop: 30,
+      fontWeight: 'bold',
+      marginBottom: 80,
+    },
+  });
 
 export const WalletHistoryComponent = connector(WallettHistory);

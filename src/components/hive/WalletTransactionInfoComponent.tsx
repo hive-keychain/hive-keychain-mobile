@@ -2,6 +2,7 @@ import {ActiveAccount} from 'actions/interfaces';
 import React from 'react';
 import {View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
 import {
   ClaimAccount,
   ClaimReward,
@@ -45,8 +46,9 @@ import WithdrawSavingsTransactionComponent from './WithdrawSavingsTransactionCom
 type Props = {
   user: ActiveAccount;
   transaction: Transaction;
-  token?: boolean;
   locale: string;
+  theme: Theme;
+  token?: boolean;
 };
 
 const WalletTransactionInfo = ({
@@ -54,6 +56,7 @@ const WalletTransactionInfo = ({
   user,
   locale,
   token = false,
+  theme,
 }: Props & PropsFromRedux) => {
   const getTransactionContent = () => {
     switch (transaction.type) {
@@ -64,6 +67,7 @@ const WalletTransactionInfo = ({
             user={user}
             locale={locale}
             useIcon={true}
+            theme={theme}
           />
         );
 

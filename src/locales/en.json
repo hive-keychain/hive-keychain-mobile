@@ -590,7 +590,8 @@
     "governance": "Governance",
     "create_account": "Create Account",
     "tokens": "Tokens",
-    "theme_setting": "Theme Setting"
+    "theme_setting": "Theme Setting",
+    "wallet_history": "Wallet History"
   },
   "request": {
     "title": {
