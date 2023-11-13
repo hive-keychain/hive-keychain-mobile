@@ -80,7 +80,9 @@ const DelegationTransactionComponent = ({
             </>
           ) : (
             <>
-              <Text>Delegated</Text>
+              <Text>
+                {translate('wallet.operations.delegation.title_delegated')}
+              </Text>
               <Text style={{color: color}}>
                 {' '}
                 {formattedAmount} {amount.split(' ')[1]}{' '}

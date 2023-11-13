@@ -1,7 +1,7 @@
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import EllipticButton from 'components/form/EllipticButton';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, TextStyle, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
@@ -15,6 +15,7 @@ interface Props {
   onConfirm: () => void;
   onCancel: () => void;
   isLoading: boolean;
+  additionalConfirmTextStyle?: StyleProp<TextStyle>;
 }
 
 const ConfirmationInItem = ({
@@ -23,6 +24,7 @@ const ConfirmationInItem = ({
   onConfirm,
   onCancel,
   isLoading,
+  additionalConfirmTextStyle,
 }: Props) => {
   const styles = getStyles(theme);
   return (
@@ -43,7 +45,7 @@ const ConfirmationInItem = ({
           title={translate('common.confirm')}
           onPress={onConfirm}
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-          additionalTextStyle={styles.textBase}
+          additionalTextStyle={[styles.textBase, additionalConfirmTextStyle]}
           isLoading={isLoading}
         />
       </View>

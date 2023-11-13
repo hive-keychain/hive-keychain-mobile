@@ -1,6 +1,4 @@
 import {loadAccount} from 'actions/index';
-import Delegate from 'assets/wallet/icon_delegate_dark.svg';
-import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -28,9 +26,7 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
-import Balance from './Balance';
 import DelegationsList from './DelegationsList';
-import Operation from './Operation';
 import OperationThemed from './OperationThemed';
 
 export interface DelegationOperationProps {
@@ -53,7 +49,6 @@ const Delegation = ({
 
   const onDelegate = async () => {
     setLoading(true);
-
     Keyboard.dismiss();
     try {
       const delegation = await delegate(user.keys.active, {
@@ -78,6 +73,7 @@ const Delegation = ({
       setLoading(false);
     }
   };
+
   const {theme} = useContext(ThemeContext);
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, theme);
@@ -99,7 +95,18 @@ const Delegation = ({
   const onHandleNavigateToDelegations = (type: 'incoming' | 'outgoing') => {
     navigate('TemplateStack', {
       titleScreen: translate(`common.${type}`),
-      component: <DelegationsList type={type} theme={theme} />,
+      component: (
+        <DelegationsList
+          type={type}
+          theme={theme}
+          availableHP={toHP(
+            user.account.vesting_shares as string,
+            properties.globals,
+          )
+            .toFixed(3)
+            .toString()}
+        />
+      ),
     } as TemplateStackProps);
   };
 
@@ -243,59 +250,10 @@ const Delegation = ({
       }
     />
   );
-  //TODO important bellow cleanup styles & removed unused
-  return (
-    <Operation
-      logo={<Delegate />}
-      title={translate('wallet.operations.delegation.title')}>
-      <>
-        <Separator />
-        <Balance
-          currency={currency}
-          account={user.account}
-          pd
-          globalProperties={properties.globals}
-          setMax={(value: string) => {
-            setAmount(value);
-          }}
-        />
-
-        <Separator />
-        <OperationInput
-          placeholder={translate('common.username').toUpperCase()}
-          leftIcon={<AccountLogoDark />}
-          autoCapitalize="none"
-          value={to}
-          onChangeText={(e) => {
-            setTo(e.trim());
-          }}
-        />
-        <Separator />
-        <OperationInput
-          placeholder={'0.000'}
-          keyboardType="decimal-pad"
-          rightIcon={<Text style={styles.currency}>{currency}</Text>}
-          textAlign="right"
-          value={amount}
-          onChangeText={setAmount}
-        />
-
-        <Separator height={40} />
-        <ActiveOperationButton
-          title={translate('common.send')}
-          onPress={onDelegate}
-          style={styles.button}
-          isLoading={loading}
-        />
-      </>
-    </Operation>
-  );
 };
 
 const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
-    button: {backgroundColor: '#68A0B4'},
-    currency: {fontWeight: 'bold', fontSize: 18, color},
     currentAvailableBalances: {
       paddingHorizontal: 15,
     },

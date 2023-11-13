@@ -198,11 +198,13 @@
         "info_delegation_in": "@{{delegator}} delegated",
         "title_button": "HP Delegations",
         "title_delegation": "Delegation",
+        "title_delegated": "Delegated",
         "total_incoming": "Total Incoming",
         "total_outgoing": "Total Outgoing",
         "delegation_disclaimer": "You may delegate your Hive Power (HP) to another user. Click on the Outgoing amount to review or make change",
         "outgoing_disclaimer": "After being canceled, delegations take 5 days to return to your available Hive Power balance",
-        "pending_undelegations": "Pending Undelegations"
+        "pending_undelegations": "Pending Undelegations",
+        "confirm_cancel_delegation": "Confirm you want to cancel this delegation?"
       },
       "convert": {
         "title": "Convert to {{to}}",

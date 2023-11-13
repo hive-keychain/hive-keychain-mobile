@@ -158,7 +158,6 @@ const getDimensionedStyles = (
   {width, height}: Dimensions,
   theme: Theme,
 ) =>
-  //TODO bellow cleanup styles
   StyleSheet.create({
     disclaimer: {textAlign: 'center'},
     textBase: {
