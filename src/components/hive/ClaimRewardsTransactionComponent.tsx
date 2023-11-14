@@ -1,14 +1,9 @@
 import {ActiveAccount} from 'actions/interfaces';
+import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
+import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import {Theme} from 'src/context/theme.context';
 import {ClaimReward} from 'src/interfaces/transaction.interface';
-import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
@@ -16,8 +11,9 @@ import Icon from './Icon';
 type Props = {
   user: ActiveAccount;
   transaction: ClaimReward;
-  token?: boolean;
   locale: string;
+  theme: Theme;
+  token?: boolean;
   useIcon?: boolean;
 };
 
@@ -27,11 +23,10 @@ const ClaimRewardTransactionComponent = ({
   locale,
   token = false,
   useIcon,
+  theme,
 }: Props) => {
   const [toggle, setToggle] = useState(false);
-  const username = user.name;
   const {timestamp, hbd, hp, hive} = transaction;
-  const color = '#3BB26E';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -44,84 +39,45 @@ const ClaimRewardTransactionComponent = ({
     return Number(amount.split(' ')[0]) <= 0;
   };
 
-  const styles = getDimensionedStyles({
-    ...useWindowDimensions(),
-    color,
-  });
+  const isHBD = hbd && !isZeroAmount(hbd);
+  const isHP = hp && !isZeroAmount(hp);
+  const isHIVE = hive && !isZeroAmount(hive);
+
+  const line1 =
+    `${
+      isHBD
+        ? `${withCommas(hbd)} ${translate('wallet.claim.info_claim_rewards', {
+            currency: 'HBD',
+          })}${isHP ? '\n' : ''}`
+        : ''
+    }` +
+    `${
+      isHP
+        ? `${withCommas(hp)} ${translate('wallet.claim.info_claim_rewards', {
+            currency: 'HP',
+          })}${isHIVE ? '\n' : ''}`
+        : ''
+    }` +
+    `${
+      isHIVE
+        ? `${withCommas(hive)} ${translate('wallet.claim.info_claim_rewards', {
+            currency: 'HIVE',
+          })}`
+        : ''
+    }`;
 
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        setToggle(!toggle);
-      }}>
-      <View style={styles.main}>
-        <View style={[styles.row, styles.alignedContent]}>
-          {useIcon && <Icon name={transaction.type} />}
-          <Text>{date}</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          {hbd && !isZeroAmount(hbd) && (
-            <Text style={styles.username}>
-              <Text style={{color}}>{withCommas(hbd)} </Text>
-              <Text>
-                {translate('wallet.claim.info_claim_rewards', {
-                  currency: 'HBD',
-                })}
-              </Text>
-            </Text>
-          )}
-          {hp && !isZeroAmount(hp) && (
-            <Text style={styles.username}>
-              <Text style={{color}}> {withCommas(hp)} </Text>
-              <Text>
-                {translate('wallet.claim.info_claim_rewards', {
-                  currency: 'HP',
-                })}
-              </Text>
-            </Text>
-          )}
-          {hive && !isZeroAmount(hive) && (
-            <Text style={styles.username}>
-              <Text style={{color}}>{withCommas(hive)} </Text>
-              <Text>
-                {translate('wallet.claim.info_claim_rewards', {
-                  currency: 'HIVE',
-                })}
-              </Text>
-            </Text>
-          )}
-        </View>
-      </View>
-    </TouchableOpacity>
+    <ItemCardExpandable
+      theme={theme}
+      toggle={toggle}
+      setToggle={() => setToggle(!toggle)}
+      textLine1={line1}
+      date={date}
+      icon={
+        <Icon name={'interest'} theme={theme} bgImage={<BackgroundIconRed />} />
+      }
+    />
   );
 };
-
-const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
-  StyleSheet.create({
-    container: {
-      borderBottomWidth: 1,
-      borderColor: 'black',
-      padding: height * 0.01,
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    username: {},
-    amount: {color},
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    rowContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-    },
-    alignedContent: {
-      alignItems: 'center',
-    },
-  });
 
 export default ClaimRewardTransactionComponent;

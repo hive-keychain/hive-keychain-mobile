@@ -182,6 +182,7 @@ const getIconFilePath = (
         <AddCircleOutlineIcon
           style={styles.defaultIconContainer}
           {...dimensionsProps}
+          fill={getColors(theme).iconBW}
         />
       );
     case name === 'delete':

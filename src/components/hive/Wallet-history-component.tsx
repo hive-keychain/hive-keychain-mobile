@@ -9,6 +9,8 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {Transaction} from 'src/interfaces/transaction.interface';
+import {getColors} from 'src/styles/colors';
+import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import ArrayUtils from 'utils/array.utils';
 import {getMainLocale, translate} from 'utils/localize';
@@ -290,7 +292,7 @@ const WallettHistory = ({
                       <TouchableOpacity
                         style={styles.loadMorePanel}
                         onPress={() => tryToLoadMore()}>
-                        <Text>
+                        <Text style={styles.textBase}>
                           {translate('wallet.operations.history.load_more')}
                         </Text>
                         <Icon name={Icons.ADD_CIRCLE} />
@@ -319,7 +321,7 @@ const WallettHistory = ({
               {flex: 1},
               {justifyContent: 'center', alignItems: 'center'},
             ]}>
-            <Text>
+            <Text style={styles.textBase}>
               {translate(
                 'wallet.operations.history.list_is_empty_try_clear_filter',
               )}
@@ -337,7 +339,7 @@ const WallettHistory = ({
             <TouchableOpacity
               style={styles.centered}
               onPress={forceResetFilters}>
-              <Text style={styles.alertText}>
+              <Text style={[styles.textBase, styles.alertText]}>
                 {translate('wallet.operations.history.reset_filters')}
               </Text>
             </TouchableOpacity>
@@ -409,6 +411,10 @@ const getStyles = (theme: Theme) =>
       marginTop: 30,
       fontWeight: 'bold',
       marginBottom: 80,
+    },
+    textBase: {
+      color: getColors(theme).secondaryText,
+      ...fields_primary_text_1,
     },
   });
 
