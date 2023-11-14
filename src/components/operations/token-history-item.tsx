@@ -399,7 +399,7 @@ const TokenHistoryItem = ({
                   bgImage={<BackgroundIconRed />}
                 />
               )}
-              <View style={{width: 140}}>{label}</View>
+              <View style={styles.width140}>{label}</View>
               <Text style={[{marginHorizontal: 15}, styles.text]}>{date}</Text>
             </View>
           </View>
@@ -469,6 +469,7 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
     padding: {
       padding: 8,
     },
+    width140: {width: 140},
   });
 
 export const TokenHistoryItemComponent = connector(TokenHistoryItem);

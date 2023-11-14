@@ -1,5 +1,6 @@
 import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
 import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useContext, useEffect, useRef, useState} from 'react';
@@ -232,6 +233,7 @@ const WallettHistory = ({
 
   return (
     <View style={styles.flex}>
+      <FocusAwareStatusBar />
       {/* <WalletHistoryFilterPanel
         ref={childRef}
         DEFAULT_WALLET_FILTER={walletFilters}
@@ -263,11 +265,7 @@ const WallettHistory = ({
             onEndReachedThreshold={0.5}
             renderItem={(transaction) => renderListItem(transaction.item)}
             keyExtractor={(transaction) => transaction.key}
-            style={
-              isFilterOpened
-                ? [styles.transactionsList, styles.transactionListFilterOpened]
-                : styles.transactionsList
-            }
+            style={styles.transactionsList}
             onScroll={handleScroll}
             onEndReached={() => {
               if (
@@ -387,10 +385,7 @@ const getStyles = (theme: Theme) =>
     },
     flex: {flex: 1},
     transactionsList: {
-      marginBottom: 33,
-    },
-    transactionListFilterOpened: {
-      maxHeight: 230,
+      marginBottom: 10,
     },
     centeredContainer: {
       justifyContent: 'center',
@@ -398,7 +393,7 @@ const getStyles = (theme: Theme) =>
       marginVertical: 8,
     },
     viewContainer: {
-      height: '90%',
+      height: '100%',
     },
     loadMorePanel: {
       flexDirection: 'row',

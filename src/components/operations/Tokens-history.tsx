@@ -1,5 +1,6 @@
 import {clearTokenHistory, loadTokenHistory} from 'actions/index';
 import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
@@ -124,6 +125,7 @@ const TokensHistory = ({
 
   return (
     <View style={styles.flex}>
+      <FocusAwareStatusBar />
       {loading && (
         <View style={[styles.flex, styles.verticallyCentered]}>
           <Loader animating={true} />

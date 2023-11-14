@@ -50,7 +50,7 @@ type Props = {
   theme: Theme;
   token?: boolean;
 };
-
+//TODO style each tr & operation.
 const WalletTransactionInfo = ({
   transaction,
   user,
