@@ -1,23 +1,20 @@
 import {ActiveAccount} from 'actions/interfaces';
+import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
+import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import {Theme} from 'src/context/theme.context';
 import {ReceivedInterests} from 'src/interfaces/transaction.interface';
-import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
+import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
 type Props = {
   user: ActiveAccount;
   transaction: ReceivedInterests;
-  token?: boolean;
   locale: string;
+  theme: Theme;
+  token?: boolean;
   useIcon?: boolean;
 };
 const ReceivedInterestTransactionComponent = ({
@@ -26,10 +23,9 @@ const ReceivedInterestTransactionComponent = ({
   locale,
   token = false,
   useIcon,
+  theme,
 }: Props) => {
-  const username = user.name;
   const {timestamp, interest} = transaction;
-  const color = '#3BB26E';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -38,57 +34,27 @@ const ReceivedInterestTransactionComponent = ({
     day: '2-digit',
   });
 
-  const styles = getDimensionedStyles({
-    ...useWindowDimensions(),
-    color,
-  });
-
   return (
-    <TouchableOpacity style={styles.container}>
-      <View style={styles.main}>
-        <View style={[styles.row, styles.alignedContent]}>
-          {useIcon && <Icon name={transaction.type} />}
-          <Text>{date}</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          <Text>Received </Text>
-          <Text style={{color: color}}>
-            {withCommas(interest)} {'HBD'}{' '}
-          </Text>
-          <Text style={styles.username}>
-            {translate('wallet.operations.savings.info_received_interests')}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
+    <ItemCardExpandable
+      theme={theme}
+      toggle={true}
+      setToggle={() => {}}
+      icon={
+        useIcon ? (
+          <Icon
+            name={'savings'}
+            theme={theme}
+            bgImage={<BackgroundIconRed />}
+          />
+        ) : null
+      }
+      date={date}
+      textLine1={`${translate('common.received')} ${withCommas(
+        interest,
+      )} ${getCurrency('HBD')}`}
+      textLine2={translate('wallet.operations.savings.info_received_interests')}
+    />
   );
 };
-
-const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
-  StyleSheet.create({
-    container: {
-      borderBottomWidth: 1,
-      borderColor: 'black',
-      padding: height * 0.01,
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    left: {display: 'flex', flexDirection: 'row'},
-    username: {},
-    amount: {color},
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    rowContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    alignedContent: {
-      alignItems: 'center',
-    },
-  });
 
 export default ReceivedInterestTransactionComponent;
