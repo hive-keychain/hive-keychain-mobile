@@ -91,7 +91,9 @@
     "current": "Current",
     "operation_type": "Operation Type",
     "incoming": "Incoming",
-    "outgoing": "Outgoing"
+    "outgoing": "Outgoing",
+    "received": "Received",
+    "sent": "Sent"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
