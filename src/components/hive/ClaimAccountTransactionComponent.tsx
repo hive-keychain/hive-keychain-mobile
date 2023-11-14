@@ -1,22 +1,18 @@
 import {ActiveAccount} from 'actions/interfaces';
+import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
+import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import {Theme} from 'src/context/theme.context';
 import {ClaimAccount} from 'src/interfaces/transaction.interface';
-import {Height} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: ClaimAccount; //TODO quentin interface is empty.
-  token?: boolean;
+  transaction: ClaimAccount;
   locale: string;
+  theme: Theme;
+  token?: boolean;
   useIcon?: boolean;
 };
 const ClaimAccountTransactionComponent = ({
@@ -25,11 +21,10 @@ const ClaimAccountTransactionComponent = ({
   locale,
   token = false,
   useIcon,
+  theme,
 }: Props) => {
   const [toggle, setToggle] = useState(false);
-  const username = user.name;
   const {timestamp} = transaction;
-  const color = '#3BB26E';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -38,56 +33,24 @@ const ClaimAccountTransactionComponent = ({
     day: '2-digit',
   });
 
-  const styles = getDimensionedStyles({
-    ...useWindowDimensions(),
-    color,
-  });
-
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        setToggle(!toggle);
-      }}>
-      <View style={styles.main}>
-        <View style={[styles.row, styles.alignedContent]}>
-          {useIcon && <Icon name={transaction.type} />}
-          <Text>{date}</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          <Text style={styles.username}>
-            {translate('wallet.claim.info_create_claimed_account')}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
+    <ItemCardExpandable
+      theme={theme}
+      toggle={toggle}
+      setToggle={() => setToggle(!toggle)}
+      icon={
+        useIcon ? (
+          <Icon
+            name={'accounts'}
+            theme={theme}
+            bgImage={<BackgroundIconRed />}
+          />
+        ) : null
+      }
+      textLine1={translate('wallet.claim.info_create_claimed_account')}
+      date={date}
+    />
   );
 };
-
-const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
-  StyleSheet.create({
-    container: {
-      borderBottomWidth: 1,
-      borderColor: 'black',
-      padding: height * 0.01,
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    username: {},
-    amount: {color},
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    rowContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    alignedContent: {
-      alignItems: 'center',
-    },
-  });
 
 export default ClaimAccountTransactionComponent;

@@ -29,14 +29,10 @@ export default () => {
   return (
     <Drawer.Navigator
       drawerStyle={styles.drawer}
-      //TODO set status bar accordingly to theme.
-      // hideStatusBar
       drawerPosition="left"
       drawerContentOptions={{
-        activeTintColor: '#FFFFFF',
         inactiveTintColor: getColors(theme).secondaryText,
-        activeBackgroundColor: '#A3112A',
-        itemStyle: {marginHorizontal: 0, borderRadius: 0, paddingLeft: 10},
+        itemStyle: styles.item,
       }}
       drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen name="WALLET" component={WalletStack} />
@@ -95,4 +91,5 @@ const getStyles = (theme: Theme) =>
       bottom: 10,
       top: undefined,
     },
+    item: {marginHorizontal: 0, borderRadius: 0, paddingLeft: 10},
   });

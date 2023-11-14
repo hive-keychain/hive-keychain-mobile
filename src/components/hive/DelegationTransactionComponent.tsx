@@ -61,7 +61,13 @@ const DelegationTransactionComponent = ({
       toggle={toggle}
       setToggle={() => setToggle(!toggle)}
       icon={
-        <Icon name={'delegate'} theme={theme} bgImage={<BackgroundIconRed />} />
+        useIcon ? (
+          <Icon
+            name={'delegate'}
+            theme={theme}
+            bgImage={<BackgroundIconRed />}
+          />
+        ) : null
       }
       textLine1={isCancellation ? cancellationText : delegationText}
       date={date}

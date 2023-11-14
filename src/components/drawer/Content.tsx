@@ -10,6 +10,7 @@ import DrawerFooter from 'components/drawer/Footer';
 import DrawerHeader from 'components/drawer/Header';
 import CustomSwitch from 'components/form/CustomSwitch';
 import Icon from 'components/hive/Icon';
+import {WalletHistoryComponentProps} from 'components/hive/Wallet-history-component';
 import React, {useContext} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
@@ -119,11 +120,25 @@ const HeaderContent = (props: Props) => {
         />
         {/* //TODO remove bellow just added temporary to use data. */}
         <DrawerContentItem
+          labelTranslationKey="common.history"
+          theme={theme}
+          onPress={() =>
+            navigation.navigate('WALLET', {
+              screen: 'WalletHistoryScreen',
+              params: {
+                currency: '',
+              } as WalletHistoryComponentProps,
+            })
+          }
+          iconImage={<Icon name={'lost-icon-on-pourpose'} theme={theme} />}
+        />
+        <DrawerContentItem
           labelTranslationKey="navigation.browser"
           theme={theme}
           onPress={() => navigation.navigate('BrowserScreen')}
           iconImage={<Icon name={'logout'} theme={theme} />}
         />
+        {/* //TODO until here temporary */}
 
         <DrawerItemList
           state={{
