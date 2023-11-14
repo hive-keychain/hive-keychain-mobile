@@ -78,6 +78,7 @@ const WalletTransactionInfo = ({
             user={user}
             locale={locale}
             useIcon={true}
+            theme={theme}
           />
         );
 

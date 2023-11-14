@@ -174,6 +174,7 @@
           "exchange_memo": "Make sure you add a memo when transfering to an exchange account.",
           "missing_info": "Please fill the username and amount to proceed"
         },
+        "started_recurrent_transfer": "Started recurrent transfer of",
         "fill_recurrent_transfer_out": "to @{{other}} ({{remainingExecutions}} remaining)",
         "fill_recurrent_transfer_in": "from @{{other}} ({{remainingExecutions}} remaining)",
         "start_recurrent_transfer_out": "to @{{other} (every {{recurrence}} hours - {{executions}} times)",

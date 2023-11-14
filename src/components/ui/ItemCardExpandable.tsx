@@ -21,6 +21,7 @@ interface Props {
   textLine1: string;
   textLine2: string;
   date: string;
+  textLine3?: string;
   memo?: string;
   icon?: JSX.Element;
 }
@@ -34,6 +35,7 @@ const ItemCardExpandable = ({
   textLine2,
   date,
   memo,
+  textLine3,
 }: Props) => {
   const styles = getStyles(theme, useWindowDimensions());
   return (
@@ -44,9 +46,14 @@ const ItemCardExpandable = ({
         <View style={styles.rowContainerSpaced}>
           <View style={[styles.row]}>
             {icon && <View style={styles.iconContainer}>{icon}</View>}
-            <View style={[{flexWrap: 'wrap'}, styles.width140]}>
+            <View
+              style={[
+                {flexWrap: 'wrap', flexDirection: 'row'},
+                styles.width140,
+              ]}>
               <Text style={[styles.textBase]}>{textLine1}</Text>
               <Text style={[styles.textBase]}>{textLine2}</Text>
+              {textLine3 && <Text style={[styles.textBase]}>{textLine3}</Text>}
             </View>
             <Text style={styles.textBase}>{date}</Text>
             <View>
