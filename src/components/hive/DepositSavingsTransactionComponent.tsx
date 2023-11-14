@@ -1,23 +1,20 @@
 import {ActiveAccount} from 'actions/interfaces';
-import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
+import ItemCardExpandable from 'components/ui/ItemCardExpandable';
+import React from 'react';
+import {Theme} from 'src/context/theme.context';
 import {DepositSavings} from 'src/interfaces/transaction.interface';
-import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
+import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
 type Props = {
   user: ActiveAccount;
   transaction: DepositSavings;
-  token?: boolean;
   locale: string;
+  theme: Theme;
+  token?: boolean;
   useIcon?: boolean;
 };
 const DepositSavingsTransactionComponent = ({
@@ -26,11 +23,9 @@ const DepositSavingsTransactionComponent = ({
   locale,
   token = false,
   useIcon,
+  theme,
 }: Props) => {
-  const [toggle, setToggle] = useState(false);
-  const username = user.name;
   const {timestamp, amount, to, from} = transaction;
-  const color = '#3BB26E';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -39,63 +34,29 @@ const DepositSavingsTransactionComponent = ({
     day: '2-digit',
   });
 
-  const styles = getDimensionedStyles({
-    ...useWindowDimensions(),
-    color,
-  });
-
   const formattedAmount = withCommas(amount);
 
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        setToggle(!toggle);
-      }}>
-      <View style={styles.main}>
-        <View style={[styles.row, styles.alignedContent]}>
-          {useIcon && <Icon name={transaction.type} />}
-          <Text>{date}</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          <Text>Deposit of</Text>
-          <Text style={{color: color}}>
-            {' '}
-            {formattedAmount} {'HBD'}{' '}
-          </Text>
-          <Text style={styles.username}>
-            {translate('wallet.operations.savings.info_deposit_savings')}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
+    <ItemCardExpandable
+      theme={theme}
+      toggle
+      setToggle={() => {}}
+      icon={
+        useIcon ? (
+          <Icon
+            name={'savings'}
+            theme={theme}
+            bgImage={<BackgroundIconRed />}
+          />
+        ) : null
+      }
+      textLine1={`${translate(
+        'wallet.operations.savings.deposit_of',
+      )} ${formattedAmount} ${getCurrency('HBD')}`}
+      textLine2={translate('wallet.operations.savings.info_deposit_savings')}
+      date={date}
+    />
   );
 };
-
-const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
-  StyleSheet.create({
-    container: {
-      borderBottomWidth: 1,
-      borderColor: 'black',
-      padding: height * 0.01,
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    username: {},
-    amount: {color},
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    rowContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    alignedContent: {
-      alignItems: 'center',
-    },
-  });
 
 export default DepositSavingsTransactionComponent;

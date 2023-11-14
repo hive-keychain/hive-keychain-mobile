@@ -148,7 +148,8 @@
           }
         },
         "pending": "Withdrawing",
-        "currency_savings_title": "{{currency}} Savings"
+        "currency_savings_title": "{{currency}} Savings",
+        "deposit_of": "Deposit of"
       },
       "transfer": {
         "title": "Transfer funds",
