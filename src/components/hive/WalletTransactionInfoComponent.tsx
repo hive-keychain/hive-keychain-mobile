@@ -155,6 +155,7 @@ const WalletTransactionInfo = ({
                 user={user}
                 locale={locale}
                 useIcon={true}
+                theme={theme}
               />
             );
           case 'fill_transfer_from_savings':
