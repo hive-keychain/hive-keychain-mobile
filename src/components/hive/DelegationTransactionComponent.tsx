@@ -1,14 +1,9 @@
 import {ActiveAccount} from 'actions/interfaces';
+import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
+import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import {Theme} from 'src/context/theme.context';
 import {Delegation} from 'src/interfaces/transaction.interface';
-import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
@@ -16,8 +11,9 @@ import Icon from './Icon';
 type Props = {
   user: ActiveAccount;
   transaction: Delegation;
-  token?: boolean;
   locale: string;
+  theme: Theme;
+  token?: boolean;
   useIcon?: boolean;
 };
 
@@ -27,12 +23,12 @@ const DelegationTransactionComponent = ({
   locale,
   token = false,
   useIcon,
+  theme,
 }: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
   const {timestamp, amount, delegatee, delegator} = transaction as Delegation;
   const direction = delegator === username ? '-' : '+';
-  const color = direction === '+' ? '#3BB26E' : '#B9122F';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -41,89 +37,37 @@ const DelegationTransactionComponent = ({
     day: '2-digit',
   });
 
-  const styles = getDimensionedStyles({
-    ...useWindowDimensions(),
-    color,
-  });
-
   const formattedAmount = withCommas(amount);
+  const isCancellation = parseFloat(formattedAmount) === 0;
+  const finalAmount = `${formattedAmount} ${amount.split(' ')[1]}`;
+  const cancellationText = `${translate(
+    'wallet.operations.delegation.cancelled_delegation',
+    {
+      delegatee,
+    },
+  )}`;
+  const delegationText =
+    direction === '+'
+      ? `${translate('wallet.operations.delegation.info_delegation_in', {
+          delegator: delegator,
+        })} ${finalAmount}`
+      : `${translate('wallet.operations.delegation.info_delegation_out', {
+          delegatee,
+        })} ${finalAmount}`;
 
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        setToggle(!toggle);
-      }}>
-      <View style={styles.main}>
-        <View style={[styles.row, styles.alignedContent]}>
-          {useIcon && <Icon name={transaction.type} />}
-          <Text>{date}</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          {parseFloat(formattedAmount) === 0 ? (
-            <Text>
-              {translate('wallet.operations.delegation.cancelled_delegation', {
-                delegatee,
-              })}
-            </Text>
-          ) : direction === '+' ? (
-            <>
-              <Text>
-                {translate('wallet.operations.delegation.info_delegation_in', {
-                  delegator: delegator,
-                })}
-              </Text>
-              <Text style={{color: color}}>
-                {' '}
-                {formattedAmount} {amount.split(' ')[1]}{' '}
-              </Text>
-            </>
-          ) : (
-            <>
-              <Text>
-                {translate('wallet.operations.delegation.title_delegated')}
-              </Text>
-              <Text style={{color: color}}>
-                {' '}
-                {formattedAmount} {amount.split(' ')[1]}{' '}
-              </Text>
-              <Text>
-                {translate('wallet.operations.delegation.info_delegation_out', {
-                  delegatee,
-                })}
-              </Text>
-            </>
-          )}
-        </View>
-      </View>
-    </TouchableOpacity>
+    <ItemCardExpandable
+      theme={theme}
+      toggle={toggle}
+      setToggle={() => setToggle(!toggle)}
+      icon={
+        <Icon name={'delegate'} theme={theme} bgImage={<BackgroundIconRed />} />
+      }
+      textLine1={isCancellation ? cancellationText : delegationText}
+      date={date}
+      memo={undefined}
+    />
   );
 };
-
-const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
-  StyleSheet.create({
-    container: {
-      borderBottomWidth: 1,
-      borderColor: 'black',
-      padding: height * 0.01,
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    username: {},
-    amount: {color},
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    rowContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    alignedContent: {
-      alignItems: 'center',
-    },
-  });
 
 export default DelegationTransactionComponent;

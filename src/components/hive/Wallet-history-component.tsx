@@ -295,7 +295,7 @@ const WallettHistory = ({
                         <Text style={styles.textBase}>
                           {translate('wallet.operations.history.load_more')}
                         </Text>
-                        <Icon name={Icons.ADD_CIRCLE} />
+                        <Icon name={Icons.ADD_CIRCLE} theme={theme} />
                       </TouchableOpacity>
                     )}
                   {/* BOTTOM LOADER */}
