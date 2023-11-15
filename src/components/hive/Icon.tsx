@@ -146,9 +146,9 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === 'claim_account' || name === 'create_claimed_account':
+    case name === 'claim_account':
       return <LinkIcon style={finalStyleOnIcon} />;
-    case name === 'account_create':
+    case name === 'account_create' || name === 'create_claimed_account':
       return (
         <AddAccountIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
