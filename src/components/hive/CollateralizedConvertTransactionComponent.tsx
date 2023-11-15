@@ -1,14 +1,9 @@
 import {ActiveAccount} from 'actions/interfaces';
-import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
+import ItemCardExpandable from 'components/ui/ItemCardExpandable';
+import React from 'react';
+import {Theme} from 'src/context/theme.context';
 import {CollateralizedConvert} from 'src/interfaces/transaction.interface';
-import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
@@ -16,8 +11,9 @@ import Icon from './Icon';
 type Props = {
   user: ActiveAccount;
   transaction: CollateralizedConvert;
-  token?: boolean;
   locale: string;
+  theme: Theme;
+  token?: boolean;
   useIcon?: boolean;
 };
 const CollateralizedConvertTransactionComponent = ({
@@ -26,11 +22,9 @@ const CollateralizedConvertTransactionComponent = ({
   locale,
   token = false,
   useIcon,
+  theme,
 }: Props) => {
-  const [toggle, setToggle] = useState(false);
-  const username = user.name;
   const {timestamp, amount} = transaction;
-  const color = '#B9122F';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -39,63 +33,29 @@ const CollateralizedConvertTransactionComponent = ({
     day: '2-digit',
   });
 
-  const styles = getDimensionedStyles({
-    ...useWindowDimensions(),
-    color,
-  });
-
   const formattedAmount = withCommas(amount);
 
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        setToggle(!toggle);
-      }}>
-      <View style={styles.main}>
-        <View style={[styles.row, styles.alignedContent]}>
-          {useIcon && <Icon name={transaction.type} />}
-          <Text>{date}</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          <Text>{translate('wallet.operations.convert.started_a')}</Text>
-          <Text style={{color}}>
-            {' '}
-            {formattedAmount} {amount.split(' ')[1]}{' '}
-          </Text>
-          <Text style={styles.username}>
-            {translate('wallet.operations.convert.start_collateralized')}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
+    <ItemCardExpandable
+      theme={theme}
+      toggle
+      setToggle={() => {}}
+      icon={
+        useIcon ? (
+          <Icon
+            name={transaction.type}
+            subType={transaction.subType}
+            theme={theme}
+            bgImage={<BackgroundIconRed />}
+          />
+        ) : null
+      }
+      date={date}
+      textLine1={translate('wallet.operations.convert.started_a')}
+      textLine2={` ${formattedAmount} ${amount.split(' ')[1]}`}
+      textLine3={translate('wallet.operations.convert.start_collateralized')}
+    />
   );
 };
-
-const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
-  StyleSheet.create({
-    container: {
-      borderBottomWidth: 1,
-      borderColor: 'black',
-      padding: height * 0.01,
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    username: {},
-    amount: {color},
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    rowContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    alignedContent: {
-      alignItems: 'center',
-    },
-  });
 
 export default CollateralizedConvertTransactionComponent;

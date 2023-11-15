@@ -214,6 +214,7 @@ const WalletTransactionInfo = ({
                 user={user}
                 locale={locale}
                 useIcon={true}
+                theme={theme}
               />
             );
           case 'fill_convert_request':
