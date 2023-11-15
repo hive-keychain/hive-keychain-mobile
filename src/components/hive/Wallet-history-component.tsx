@@ -62,7 +62,6 @@ const WallettHistory = ({
   clearUserTransactions,
   currency,
 }: PropsFromRedux & WalletHistoryComponentProps) => {
-  console.log('fomr params: ', {currency}); //TODO remove line
   let lastOperationFetched = -1;
 
   const [displayedTransactions, setDisplayedTransactions] = useState<
@@ -103,12 +102,6 @@ const WallettHistory = ({
     }
   }, [activeAccount.name]);
 
-  //TODO test if bellow works
-  // useEffect(() => {
-  //   console.log('Walletfilters been set!, should filter!'); //TODO remove line
-  // }, [walletFilters]);
-  //end Test
-
   const finalizeDisplayedList = (list: Transaction[]) => {
     setDisplayedTransactions(list);
     setLoading(false);
@@ -122,12 +115,6 @@ const WallettHistory = ({
     );
 
     fetchAccountTransactions(activeAccount.name!, lastOperationFetched);
-    //TODO bellow, cleanup unused code + mark wallet-history-filter-panel as "//TODO check if needed after refactoring UI"
-    // if (childRef.current) {
-    //   //@ts-ignore
-    //   childRef.current.initFiltersNow();
-    // }
-    // filterTransactions();
   };
 
   useEffect(() => {
@@ -147,11 +134,6 @@ const WallettHistory = ({
         );
       } else {
         setTimeout(() => {
-          // if (childRef.current) {
-          //   //@ts-ignore
-          //   childRef.current.filterNow();
-          //   setFilteringCounter((prevCount: number) => prevCount + 1);
-          // }
           setFilteringCounter((prevCount: number) => prevCount + 1);
           filterTransactions();
         }, 0);
@@ -161,7 +143,6 @@ const WallettHistory = ({
         );
       }
     }
-    //TODO testing if needed bellow as dependency walletFilters to filter on each change!
   }, [transactions, walletFilters]);
 
   const filterTransactions = () => {
@@ -189,11 +170,14 @@ const WallettHistory = ({
   };
 
   const forceResetFilters = () => {
-    if (childRef.current) {
-      setFilteringCounter(0);
-      //@ts-ignore
-      childRef.current.forceResetFilters();
-    }
+    //TODO cleanup afte refactoring UI
+    // if (childRef.current) {
+    //   setFilteringCounter(0);
+    //   //@ts-ignore
+    //   childRef.current.forceResetFilters();
+    // }
+    setFilteringCounter(0);
+    clearWalletFilters();
   };
 
   const {theme} = useContext(ThemeContext);
