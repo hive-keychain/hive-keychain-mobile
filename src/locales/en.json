@@ -31,6 +31,7 @@
   },
   "common": {
     "started_a": "Started a",
+    "initiated_a": "Initiated a",
     "dapp_title": "dApp",
     "import": "Import",
     "username": "Username",

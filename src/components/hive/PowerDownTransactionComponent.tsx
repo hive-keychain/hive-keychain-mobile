@@ -1,14 +1,9 @@
 import {ActiveAccount} from 'actions/interfaces';
-import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
+import ItemCardExpandable from 'components/ui/ItemCardExpandable';
+import React from 'react';
+import {Theme} from 'src/context/theme.context';
 import {PowerDown} from 'src/interfaces/transaction.interface';
-import {Height} from 'utils/common.types';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
@@ -16,9 +11,10 @@ import Icon from './Icon';
 type Props = {
   user: ActiveAccount;
   transaction: PowerDown;
-  token?: boolean;
   locale: string;
+  theme: Theme;
   useIcon?: boolean;
+  token?: boolean;
 };
 
 const PowerDownTransactionComponent = ({
@@ -27,11 +23,9 @@ const PowerDownTransactionComponent = ({
   locale,
   token = false,
   useIcon,
+  theme,
 }: Props) => {
-  const [toggle, setToggle] = useState(false);
-  const username = user.name;
   const {timestamp, amount} = transaction;
-  const color = '#B9122F';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -40,73 +34,37 @@ const PowerDownTransactionComponent = ({
     day: '2-digit',
   });
 
-  const styles = getDimensionedStyles({
-    ...useWindowDimensions(),
-    color,
-  });
-
   const formattedAmount = withCommas(amount);
+  const isCancellation = parseFloat(formattedAmount) === 0;
+  const text = isCancellation
+    ? `${translate('wallet.operations.powerdown.cancelled_power_down')}`
+    : `${translate('common.initiated_a')} ${formattedAmount} ${
+        amount.split(' ')[1]
+      }`;
+  const text2 = isCancellation
+    ? undefined
+    : `${translate('wallet.operations.powerdown.info_power_down')}`;
 
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        setToggle(!toggle);
-      }}>
-      <View style={styles.main}>
-        <View style={[styles.row, styles.alignedContent]}>
-          {useIcon && (
-            <Icon name={transaction.type} subType={transaction.subType} />
-          )}
-          <Text>{date}</Text>
-        </View>
-        <View style={styles.rowContainer}>
-          {parseFloat(formattedAmount) === 0 ? (
-            <Text>
-              {translate('wallet.operations.powerdown.cancelled_power_down')}
-            </Text>
-          ) : (
-            <>
-              <Text>Initiated a</Text>
-              <Text style={{color}}>
-                {' '}
-                {formattedAmount} {amount.split(' ')[1]}{' '}
-              </Text>
-              <Text>
-                {translate('wallet.operations.powerdown.info_power_down')}
-              </Text>
-            </>
-          )}
-        </View>
-      </View>
-    </TouchableOpacity>
+    <ItemCardExpandable
+      toggle
+      setToggle={() => {}}
+      theme={theme}
+      textLine1={text}
+      textLine2={text2}
+      date={date}
+      icon={
+        useIcon ? (
+          <Icon
+            name={transaction.type}
+            subType={transaction.subType}
+            theme={theme}
+            bgImage={<BackgroundIconRed />}
+          />
+        ) : null
+      }
+    />
   );
 };
-
-const getDimensionedStyles = ({height, color}: Height & {color: string}) =>
-  StyleSheet.create({
-    container: {
-      borderBottomWidth: 1,
-      borderColor: 'black',
-      padding: height * 0.01,
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    username: {},
-    amount: {color},
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    rowContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    alignedContent: {
-      alignItems: 'center',
-    },
-  });
 
 export default PowerDownTransactionComponent;

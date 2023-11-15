@@ -179,6 +179,7 @@ const WalletTransactionInfo = ({
                 user={user}
                 locale={locale}
                 useIcon={true}
+                theme={theme}
               />
             );
           case 'transfer_to_vesting':
