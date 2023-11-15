@@ -1,5 +1,6 @@
 import Cube3dRotate from 'assets/new_UI/3d-rotate.svg';
 import Cube3dScanIcon from 'assets/new_UI/3d_cube_scan.svg';
+import AddAccountIcon from 'assets/new_UI/add_account.svg';
 import ArrowLeftIcon from 'assets/new_UI/arrow-left.svg';
 import ArrowUpIcon from 'assets/new_UI/arrow-up.svg';
 import AtIcon from 'assets/new_UI/at.svg';
@@ -145,10 +146,15 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === 'claim_account' ||
-      name === 'account_create' ||
-      name === 'create_claimed_account':
+    case name === 'claim_account' || name === 'create_claimed_account':
       return <LinkIcon style={finalStyleOnIcon} />;
+    case name === 'account_create':
+      return (
+        <AddAccountIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
     case name === 'convert':
       return (
         <ConvertIcon

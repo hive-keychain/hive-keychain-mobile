@@ -16,6 +16,9 @@ export const DEFAULT_WALLET_FILTER: WalletHistoryFilter = {
     savings: false,
     power_up_down: false,
     convert: false,
+    //TODO bellow ask quentin if shall we leave new filters or not
+    account_create: false,
+    create_claimed_account: false,
   },
 };
 
