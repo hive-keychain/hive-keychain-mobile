@@ -22,6 +22,9 @@ import Delegation, {
   DelegationOperationProps,
 } from 'components/operations/Delegation';
 import PowerUp, {PowerUpOperationProps} from 'components/operations/PowerUp';
+import RCDelegation, {
+  RCDelegationOperationProps,
+} from 'components/operations/RCDelegation';
 import Savings, {SavingOperationProps} from 'components/operations/Savings';
 import StakeToken, {
   StakeTokenOperationProps,
@@ -76,6 +79,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         }`;
       case 'delegateHP':
         return translate('wallet.operations.delegation.title_delegation');
+      case 'delegateRC':
+        return translate('wallet.operations.rc_delegation.title');
     }
   };
 
@@ -103,6 +108,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return <Convert {...(props as ConvertOperationProps)} />;
       case 'delegateHP':
         return <Delegation {...(props as DelegationOperationProps)} />;
+      case 'delegateRC':
+        return <RCDelegation {...(props as RCDelegationOperationProps)} />;
     }
   };
 

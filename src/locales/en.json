@@ -213,6 +213,10 @@
         "pending_undelegations": "Pending Undelegations",
         "confirm_cancel_delegation": "Confirm you want to cancel this delegation?"
       },
+      "rc_delegation": {
+        "title_button": "RC Delegations",
+        "title": "RC Delegation"
+      },
       "convert": {
         "title": "Convert to {{to}}",
         "button": "Convert",

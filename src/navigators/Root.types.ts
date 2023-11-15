@@ -6,6 +6,7 @@ import {ConvertOperationProps} from 'components/operations/Convert';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
 import {DelegationOperationProps} from 'components/operations/Delegation';
 import {PowerUpOperationProps} from 'components/operations/PowerUp';
+import {RCDelegationOperationProps} from 'components/operations/RCDelegation';
 import {SavingOperationProps} from 'components/operations/Savings';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
@@ -54,7 +55,8 @@ export type RootStackParam = {
       | 'power_up'
       | 'savings'
       | 'convert'
-      | 'delegateHP';
+      | 'delegateHP'
+      | 'delegateRC';
     props:
       | TransferOperationProps
       | StakeTokenOperationProps
@@ -64,7 +66,8 @@ export type RootStackParam = {
       | PowerUpOperationProps
       | SavingOperationProps
       | ConvertOperationProps
-      | DelegationOperationProps;
+      | DelegationOperationProps
+      | RCDelegationOperationProps;
   };
   TemplateStack: TemplateStackProps;
   WalletHistory: WalletHistoryComponentProps;
