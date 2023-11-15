@@ -215,7 +215,12 @@
       },
       "rc_delegation": {
         "title_button": "RC Delegations",
-        "title": "RC Delegation"
+        "title": "RC Delegation",
+        "total_incoming": "Total Incoming",
+        "total_outgoing": "Total Outgoing",
+        "giga_rc": "G RC",
+        "disclaimer": "You may delegate your Hive Power (HP) to another user. Click on the Outgoing amount to review or make change",
+        "delegate_to_user": "Delegate to user"
       },
       "convert": {
         "title": "Convert to {{to}}",

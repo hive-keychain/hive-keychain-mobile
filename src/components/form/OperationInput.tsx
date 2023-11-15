@@ -1,5 +1,12 @@
 import React, {useContext} from 'react';
-import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {InputProps} from 'react-native-elements';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
@@ -9,9 +16,12 @@ import CustomInput from './CustomInput';
 interface OperationInputProps {
   labelInput?: string;
   labelExtraInfo?: string;
+  labelBottomExtraInfo?: string;
   additionalOuterContainerStyle?: StyleProp<ViewStyle>;
   additionalLabelStyle?: StyleProp<ViewStyle>;
   additionalInputContainerStyle?: StyleProp<ViewStyle>;
+  additionalBottomLabelContainerStyle?: StyleProp<ViewStyle>;
+  additionalBottomLabelTextStyle?: StyleProp<TextStyle>;
 }
 
 export default (props: InputProps & OperationInputProps) => {
@@ -44,6 +54,13 @@ export default (props: InputProps & OperationInputProps) => {
         )}
       </View>
       {renderCustomInput()}
+      {props.labelBottomExtraInfo && (
+        <View style={props.additionalBottomLabelContainerStyle}>
+          <Text style={props.additionalBottomLabelTextStyle}>
+            {props.labelBottomExtraInfo}
+          </Text>
+        </View>
+      )}
     </View>
   ) : (
     renderCustomInput()
