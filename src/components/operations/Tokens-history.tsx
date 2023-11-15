@@ -149,7 +149,7 @@ const TokensHistory = ({
         tokenHistory.length > 0 &&
         displayedTransactions.length === 0 && (
           <View style={[styles.flex, styles.verticallyCentered]}>
-            <Text style={styles.textBold}>
+            <Text style={[styles.textBase, styles.textBold]}>
               {translate('wallet.operations.history.no_transaction_or_clear')}
             </Text>
           </View>
@@ -215,6 +215,9 @@ const getStyles = (theme: Theme) =>
     listContainer: {
       paddingHorizontal: 25,
       backgroundColor: getColors(theme).secondaryCardBgColor,
+    },
+    textBase: {
+      color: getColors(theme).secondaryText,
     },
   });
 

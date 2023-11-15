@@ -314,7 +314,14 @@ const TokenDisplay = ({
         <View style={[styles.row, styles.toggle]}>
           {bottomLeft
             ? bottomLeft
-            : renderLeftBottom(styles, price, currency, incoming, outgoing)}
+            : renderLeftBottom(
+                styles,
+                price,
+                currency,
+                theme,
+                incoming,
+                outgoing,
+              )}
           <View
             style={[
               styles.row,
@@ -334,6 +341,7 @@ const renderLeftBottom = (
   styles: Styles,
   price: Currency,
   currency: string,
+  theme: Theme,
   incoming?: number,
   outgoing?: number,
 ) => {
@@ -353,7 +361,7 @@ const renderLeftBottom = (
           <TouchableOpacity
             onPress={() => {
               navigate('ModalScreen', {
-                modalContent: <DelegationsList type="incoming" />,
+                modalContent: <DelegationsList theme={theme} type="incoming" />,
               });
             }}>
             <Text style={styles.green}>{`+ ${formatBalance(
@@ -365,7 +373,7 @@ const renderLeftBottom = (
           <TouchableOpacity
             onPress={() => {
               navigate('ModalScreen', {
-                modalContent: <DelegationsList type="outgoing" />,
+                modalContent: <DelegationsList theme={theme} type="outgoing" />,
               });
             }}>
             <Text style={styles.red}>{`- ${formatBalance(outgoing!)} HP`}</Text>

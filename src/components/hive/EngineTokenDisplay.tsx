@@ -1,12 +1,15 @@
 import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
+import {clearTokensFilters} from 'actions/tokensFilters';
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
 import {TransferOperationProps} from 'components/operations/Transfer';
 import React, {useContext, useState} from 'react';
 import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
 import Image from 'react-native-fast-image';
+import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {navigate} from 'utils/navigation';
@@ -29,7 +32,8 @@ const EngineTokenDisplay = ({
   toggled,
   setToggle,
   using_new_ui,
-}: Props) => {
+  clearTokensFilters,
+}: Props & PropsFromRedux) => {
   const {theme} = useContext(ThemeContext);
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   const [hasError, setHasError] = useState(false);
@@ -62,6 +66,17 @@ const EngineTokenDisplay = ({
       }}
     />
   );
+
+  const onHandleGoToTokenHistory = () => {
+    clearTokensFilters();
+    navigate('TokensHistory', {
+      currency: token.symbol,
+      tokenBalance: token.balance,
+      tokenLogo: logo,
+      theme: theme,
+    } as TokenHistoryProps);
+  };
+
   return (
     <TokenDisplay
       name={tokenInfo.name}
@@ -82,14 +97,7 @@ const EngineTokenDisplay = ({
         <Icon
           key={`show-token-history-${token.symbol}`}
           name={'back_time'}
-          onClick={() =>
-            navigate('TokensHistory', {
-              currency: token.symbol,
-              tokenBalance: token.balance,
-              tokenLogo: logo,
-              theme: theme,
-            } as TokenHistoryProps)
-          }
+          onClick={onHandleGoToTokenHistory}
           additionalContainerStyle={styles.squareButton}
           theme={theme}
         />,
@@ -120,6 +128,7 @@ const EngineTokenDisplay = ({
     />
   );
 };
+
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
   //TODO bellow removed unused styles after refactoring
   StyleSheet.create({
@@ -138,11 +147,19 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     },
     modalContainer: {
       flex: 1,
-      // paddingTop: 20,
       backgroundColor: getColors(theme).primaryBackground,
       borderWidth: 0,
       borderRadius: 0,
     },
   });
 
-export default EngineTokenDisplay;
+const mapStateToProps = (state: RootState) => {
+  return {};
+};
+
+const connector = connect(mapStateToProps, {
+  clearTokensFilters,
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(EngineTokenDisplay);

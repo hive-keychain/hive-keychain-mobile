@@ -1,3 +1,4 @@
+import {clearWalletFilters} from 'actions/walletFilters';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {
@@ -7,6 +8,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
@@ -14,6 +16,7 @@ import {
   button_link_primary_medium,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
+import {RootState} from 'store';
 import {formatBalance} from 'utils/format';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -36,10 +39,22 @@ const CurrencyToken = ({
   value,
   subValue,
   buttons,
-}: Props) => {
+  clearWalletFilters,
+}: Props & PropsFromRedux) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const styles = getStyles(theme, useWindowDimensions().height);
+
+  const onHandleGoToWalletHistory = () => {
+    clearWalletFilters();
+    navigate('WALLET', {
+      screen: 'WalletHistoryScreen',
+      params: {
+        currency: currencyName.toLowerCase(),
+      } as WalletHistoryComponentProps,
+    });
+  };
+
   return (
     <View style={styles.container} key={`currency-token-${currencyName}`}>
       <TouchableOpacity
@@ -67,14 +82,7 @@ const CurrencyToken = ({
             <Icon
               key={`show-token-history-${currencyName}`}
               name={'back_time'}
-              onClick={() =>
-                navigate('WALLET', {
-                  screen: 'WalletHistoryScreen',
-                  params: {
-                    currency: currencyName.toLowerCase(),
-                  } as WalletHistoryComponentProps,
-                })
-              }
+              onClick={onHandleGoToWalletHistory}
               additionalContainerStyle={styles.squareButton}
               theme={theme}
             />
@@ -158,4 +166,13 @@ const getStyles = (theme: Theme, height: number) =>
     },
   });
 
-export default CurrencyToken;
+const mapStateToProps = (state: RootState) => {
+  return {};
+};
+
+const connector = connect(mapStateToProps, {
+  clearWalletFilters,
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(CurrencyToken);
