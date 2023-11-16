@@ -66,6 +66,7 @@
     "stake": "Stake",
     "unstake": "Unstake",
     "delegate": "Delegate",
+    "deleg": "Deleg.",
     "missing_key": "Please add your {{key}} key to perform this operation!",
     "need_positive_amount": "The amount needs to be greater than 0",
     "next": "Next",
@@ -106,6 +107,7 @@
     "no_transaction": "No recent transaction.",
     "add_memo": "Please add your memo key to decrypt this message.",
     "add_active": "Please add your active key to perform this operation.",
+    "add_posting": "Please add your posting key to perform this operation.",
     "claim": {
       "success": "Successfully claimed {{rewards}}!",
       "error_posting": "Please add your posting key to be able to claim rewards!",
@@ -220,7 +222,17 @@
         "total_outgoing": "Total Outgoing",
         "giga_rc": "G RC",
         "disclaimer": "You may delegate your Hive Power (HP) to another user. Click on the Outgoing amount to review or make change",
-        "delegate_to_user": "Delegate to user"
+        "delegate_to_user": "Delegate to user",
+        "warning": {
+          "no_username_or_amount": "Please fill valid username and amount to proceed"
+        },
+        "success": {
+          "rc_delegation_successful": "You successfully delegated RC to {{to}}",
+          "cancel_rc_delegation_successful": "You successfully canceled your delegation to {{to}}"
+        },
+        "failed": {
+          "rc_delegation_failed": "Rc Delegation failed"
+        }
       },
       "convert": {
         "title": "Convert to {{to}}",

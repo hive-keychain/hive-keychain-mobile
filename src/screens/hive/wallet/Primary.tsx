@@ -19,6 +19,7 @@ import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {toHP} from 'utils/format';
 import {getCurrency} from 'utils/hive';
+import {translate} from 'utils/localize';
 
 enum Token {
   NONE,
@@ -35,10 +36,30 @@ interface Props {
 const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
   const {width} = useWindowDimensions();
   const [toggled, setToggled] = useState(Token.NONE);
+  const [delegationAmount, setDelegationAmount] = useState<string | number>(
+    '...',
+  );
 
   useEffect(() => {
     logScreenView('WalletScreen');
   }, []);
+
+  useEffect(() => {
+    if (user && Object.keys(user.account).length > 0) {
+      const delegatedVestingShares = parseFloat(
+        user.account.delegated_vesting_shares.toString().replace(' VESTS', ''),
+      );
+      const receivedVestingShares = parseFloat(
+        user.account.received_vesting_shares.toString().replace(' VESTS', ''),
+      );
+      const delegationVestingShares = (
+        receivedVestingShares - delegatedVestingShares
+      ).toFixed(3);
+
+      const delegation = toHP(delegationVestingShares, properties.globals);
+      setDelegationAmount(delegation.toFixed(3));
+    }
+  }, [user.name]);
 
   const styles = getStyles();
 
@@ -89,6 +110,8 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
         theme={theme}
         currencyName={getCurrency('HP')}
         value={toHP(user.account.vesting_shares as string, properties.globals)}
+        subValue={delegationAmount as string}
+        subValueShortDescription={translate('common.deleg')}
         currencyLogo={
           <IconHP theme={theme} additionalContainerStyle={{marginTop: 8}} />
         }

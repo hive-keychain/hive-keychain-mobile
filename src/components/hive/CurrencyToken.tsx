@@ -28,6 +28,7 @@ interface Props {
   currencyName: string;
   value: number;
   subValue?: string;
+  subValueShortDescription?: string;
   currencyLogo: JSX.Element;
   buttons: JSX.Element[];
 }
@@ -40,6 +41,7 @@ const CurrencyToken = ({
   subValue,
   buttons,
   clearWalletFilters,
+  subValueShortDescription,
 }: Props & PropsFromRedux) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -74,7 +76,8 @@ const CurrencyToken = ({
             {subValue && (
               <Text
                 style={[styles.textAmount, styles.opaque, styles.alignedRitgh]}>
-                + {subValue} ({translate('common.savings')})
+                + {subValue} (
+                {subValueShortDescription ?? translate('common.savings')})
               </Text>
             )}
           </View>

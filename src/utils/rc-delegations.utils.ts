@@ -2,7 +2,6 @@ import {Asset} from '@hiveio/dhive';
 import {GlobalProperties} from 'actions/interfaces';
 import {Key} from 'src/interfaces/keys.interface';
 import {RcDelegation} from 'src/interfaces/rc-delegation.interface';
-import {hiveEngine} from './config';
 import {broadcastJson, getData} from './hive';
 
 const GIGA = 1000000000;
@@ -40,7 +39,7 @@ const sendDelegation = async (
   username: string,
   postingKey: Key,
 ) => {
-  return await broadcastJson(postingKey, username, hiveEngine.CHAIN_ID, false, [
+  return await broadcastJson(postingKey, username, 'rc', false, [
     'delegate_rc',
     {
       from: username,
@@ -49,7 +48,7 @@ const sendDelegation = async (
     },
   ]);
 };
-//TODO in this file cleanup unused code
+//TODO in this file cleanup unused code after refactoring
 /* istanbul ignore next */
 // const getRcDelegationOperation = (
 //   delegatee: string,

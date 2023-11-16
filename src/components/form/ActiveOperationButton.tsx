@@ -34,7 +34,10 @@ const ActiveOperationButton = ({
         style={[style, disabled ? {backgroundColor: '#AAA'} : undefined]}
         onPress={() => {
           if (disabled) {
-            SimpleToast.show(translate('wallet.add_active'), SimpleToast.LONG);
+            SimpleToast.show(
+              translate(`wallet.add_${method || KeyTypes.active}`),
+              SimpleToast.LONG,
+            );
           } else {
             onPress();
           }

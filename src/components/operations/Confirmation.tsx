@@ -7,12 +7,17 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 //TODO remove component after working with operations.
-interface ConfirmationProps {
+export interface ConfirmationOperationProps {
+  titleOperationTrKey: string;
   childrenTop: JSX.Element;
   childrenBottom: JSX.Element;
 }
 
-const Confirmation = ({childrenBottom, childrenTop}: ConfirmationProps) => {
+const Confirmation = ({
+  titleOperationTrKey,
+  childrenBottom,
+  childrenTop,
+}: ConfirmationOperationProps) => {
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
 
