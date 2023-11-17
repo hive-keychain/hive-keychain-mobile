@@ -34,6 +34,7 @@
     "initiated_a": "Initiated a",
     "dapp_title": "dApp",
     "import": "Import",
+    "value": "Value",
     "username": "Username",
     "authorized_username": "Auth. Account",
     "confirm": "Confirm",
@@ -232,7 +233,10 @@
         },
         "failed": {
           "rc_delegation_failed": "Rc Delegation failed"
-        }
+        },
+        "confirmation": "Please confirm your RC delegation.",
+        "confirmation_cancel": "Please confirm you RC delegation cancellation.",
+        "confirm_cancel_rc_delegation": "Confirm you want to cancel this RC delegation?"
       },
       "convert": {
         "title": "Convert to {{to}}",

@@ -14,9 +14,6 @@ import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import CancelTokenDelegation, {
   CancelTokenDelegationOperationProps,
 } from 'components/operations/Cancel-token-delegation';
-import Confirmation, {
-  ConfirmationOperationProps,
-} from 'components/operations/Confirmation';
 import Convert, {ConvertOperationProps} from 'components/operations/Convert';
 import DelegateToken, {
   DelegateTokenOperationProps,
@@ -84,10 +81,6 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return translate('wallet.operations.delegation.title_delegation');
       case 'delegateRC':
         return translate('wallet.operations.rc_delegation.title');
-      case 'confirmation':
-        return `${translate(
-          (props as ConfirmationOperationProps).titleOperationTrKey,
-        )}`;
     }
   };
 
@@ -117,9 +110,6 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return <Delegation {...(props as DelegationOperationProps)} />;
       case 'delegateRC':
         return <RCDelegation {...(props as RCDelegationOperationProps)} />;
-      //TODO bellow move confirmation to its own stack.
-      case 'confirmation':
-        return <Confirmation {...(props as ConfirmationOperationProps)} />;
     }
   };
 

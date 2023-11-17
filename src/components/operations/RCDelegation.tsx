@@ -1,10 +1,12 @@
 import {loadAccount} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
+import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
@@ -13,7 +15,11 @@ import {Theme, ThemeContext} from 'src/context/theme.context';
 import {RCDelegationValue} from 'src/interfaces/rc-delegation.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {
+  BACKGROUNDDARKBLUE,
+  PRIMARY_RED_COLOR,
+  getColors,
+} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {
   FontJosefineSansName,
@@ -27,7 +33,7 @@ import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
 import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
-import {ConfirmationOperationProps} from './Confirmation';
+import IncomingOutGoingRCDelegations from './IncomingOutGoingRCDelegations';
 import OperationThemed from './OperationThemed';
 
 export interface RCDelegationOperationProps {
@@ -51,19 +57,17 @@ const RCDelegation = ({
     DEFAULT_VALUE,
   );
   const [available, setAvailable] = useState<RCDelegationValue>(DEFAULT_VALUE);
+  const [isCancel, setIsCancel] = useState<boolean>(false);
   const [amount, setAmount] = useState('');
   const [equivalentHPAmount, setEquivalentHPAmount] = useState<
     string | undefined
   >();
   const [to, setTo] = useState('');
   const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState(1);
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
-  //TODO keep working here:
-  //  - add incomming + operations
-  //  - add outgoing + operations
-  //  - add buttonRenderComponent to set amounts.
-  //  - add onDelegate
+
   useEffect(() => {
     init();
   }, []);
@@ -73,11 +77,13 @@ const RCDelegation = ({
       setEquivalentHPAmount(
         withCommas(RcDelegationsUtils.gigaRcToHp(amount, properties)),
       );
-    } else setEquivalentHPAmount(undefined);
+    } else {
+      setEquivalentHPAmount(undefined);
+      setIsCancel(true);
+    }
   }, [amount]);
 
   const init = async () => {
-    console.log({rc: user.rc}); //TODO remove line
     setTotalIncoming({
       hpValue: RcDelegationsUtils.rcToHp(
         user.rc.received_delegated_rc.toString(),
@@ -112,33 +118,23 @@ const RCDelegation = ({
   };
 
   const onHandleNavigateToRCDelegations = (type: 'incoming' | 'outgoing') => {
-    //TODO
+    if (type === 'incoming') return;
+    navigate('TemplateStack', {
+      titleScreen: capitalize(type),
+      component: (
+        <IncomingOutGoingRCDelegations
+          type={type}
+          total={totalOutgoing}
+          available={available}
+        />
+      ),
+    } as TemplateStackProps);
   };
 
   const handleConfirmation = () => {
-    navigate('Operation', {
-      operation: 'confirmation',
-      props: {
-        titleOperationTrKey: 'wallet.operations.rc_delegation.title',
-        childrenTop: (
-          <>
-            <View>
-              <Text>TODO</Text>
-            </View>
-          </>
-        ),
-        childrenBottom: (
-          <>
-            <View>
-              <Text>TODO</Text>
-            </View>
-          </>
-        ),
-      } as ConfirmationOperationProps,
-    });
+    setStep(2);
   };
 
-  //TODO bellow chain & use
   const onRCDelegate = async () => {
     if (
       amount.trim().length === 0 ||
@@ -152,7 +148,6 @@ const RCDelegation = ({
         SimpleToast.LONG,
       );
     }
-    const isCancel = Number(amount) === 0;
 
     try {
       setLoading(true);
@@ -199,7 +194,7 @@ const RCDelegation = ({
     }
   };
 
-  return (
+  return step === 1 ? (
     <OperationThemed
       childrenTop={
         <>
@@ -312,8 +307,7 @@ const RCDelegation = ({
                     )}
                   />
                   <TouchableOpacity
-                    //TODO bellow
-                    onPress={() => {}}>
+                    onPress={() => setAmount(available.gigaRcValue)}>
                     <Text style={[styles.textBase, styles.redText]}>
                       {translate('common.max').toUpperCase()}
                     </Text>
@@ -353,6 +347,69 @@ const RCDelegation = ({
           />
           <Separator height={15} />
         </>
+      }
+    />
+  ) : (
+    <OperationThemed
+      childrenTop={
+        <>
+          <Separator height={40} />
+        </>
+      }
+      childrenMiddle={
+        <>
+          <Separator height={25} />
+          <Text style={[styles.textBase, styles.textCentered]}>
+            {translate(
+              `wallet.operations.rc_delegation.${
+                isCancel ? 'confirmation_cancel' : 'confirmation'
+              }`,
+            )}
+          </Text>
+          <Separator height={25} />
+          <View
+            style={[getCardStyle(theme).defaultCardItem, styles.marginPadding]}>
+            <View style={styles.flexRow}>
+              <Text style={[styles.textBase]}>{translate('common.to')}</Text>
+              <Text style={[styles.textBase, styles.opaque]}>{`@${to}`}</Text>
+            </View>
+            <View style={styles.flexRow}>
+              <Text style={[styles.textBase]}>{translate('common.value')}</Text>
+              <Text
+                style={[
+                  styles.textBase,
+                  styles.opaque,
+                ]}>{`${amount} ${translate(
+                'wallet.operations.rc_delegation.giga_rc',
+              )} (≈ ${
+                equivalentHPAmount ? equivalentHPAmount : '0'
+              } ${getCurrency('HP')})`}</Text>
+            </View>
+          </View>
+        </>
+      }
+      childrenBottom={
+        <View style={styles.operationButtonsContainer}>
+          <EllipticButton
+            title={translate('common.back')}
+            onPress={() => setStep(1)}
+            style={[styles.operationButton, styles.operationButtonConfirmation]}
+            additionalTextStyle={[
+              styles.operationButtonText,
+              styles.buttonTextColorDark,
+            ]}
+          />
+          <ActiveOperationButton
+            title={translate('common.confirm')}
+            onPress={onRCDelegate}
+            style={[
+              styles.operationButton,
+              getButtonStyle(theme).warningStyleButton,
+            ]}
+            additionalTextStyle={styles.operationButtonText}
+            isLoading={loading}
+          />
+        </View>
       }
     />
   );
@@ -407,6 +464,30 @@ const getStyles = (theme: Theme) =>
       marginTop: 10,
     },
     button: {width: 60, justifyContent: 'center', alignItems: 'center'},
+    operationButtonsContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginBottom: 20,
+      justifyContent: 'space-around',
+      width: '100%',
+    },
+    operationButton: {
+      width: '48%',
+      marginHorizontal: 0,
+    },
+    operationButtonConfirmation: {
+      backgroundColor: '#FFF',
+    },
+    buttonTextColorDark: {
+      color: BACKGROUNDDARKBLUE,
+    },
+    operationButtonText: {
+      ...button_link_primary_medium,
+    },
+    buttonTextColor: {
+      color: getColors(theme).secondaryText,
+    },
+    textCentered: {textAlign: 'center'},
   });
 
 const connector = connect(

@@ -13,6 +13,7 @@ const getAllOutgoingDelegations = async (
     start: [username, ''],
     limit: 1000,
   });
+  console.log({result}); //TODO remove line
   let list = result
     ? result.rc_direct_delegations.map((delegation: any) => {
         return {

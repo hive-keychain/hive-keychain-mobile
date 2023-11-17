@@ -2,7 +2,6 @@ import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {WalletHistoryComponentProps} from 'components/hive/Wallet-history-component';
 import {CancelTokenDelegationOperationProps} from 'components/operations/Cancel-token-delegation';
-import {ConfirmationOperationProps} from 'components/operations/Confirmation';
 import {ConvertOperationProps} from 'components/operations/Convert';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
 import {DelegationOperationProps} from 'components/operations/Delegation';
@@ -57,8 +56,7 @@ export type RootStackParam = {
       | 'savings'
       | 'convert'
       | 'delegateHP'
-      | 'delegateRC'
-      | 'confirmation';
+      | 'delegateRC';
     props:
       | TransferOperationProps
       | StakeTokenOperationProps
@@ -69,8 +67,7 @@ export type RootStackParam = {
       | SavingOperationProps
       | ConvertOperationProps
       | DelegationOperationProps
-      | RCDelegationOperationProps
-      | ConfirmationOperationProps;
+      | RCDelegationOperationProps;
   };
   TemplateStack: TemplateStackProps;
   WalletHistory: WalletHistoryComponentProps;
