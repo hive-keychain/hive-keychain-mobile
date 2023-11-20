@@ -4,7 +4,7 @@ import Icon from 'components/hive/Icon';
 import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
@@ -23,6 +23,7 @@ import {
   title_secondary_body_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import {capitalize, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
@@ -52,13 +53,35 @@ const IncomingOutgoingRcDelegationItem = ({
     showCancelConfirmationRCDelegation,
     setShowCancelConfirmationRCDelegation,
   ] = useState(false);
+  const [equivalentHPAmount, setEquivalentHPAmount] = useState<
+    string | undefined
+  >();
 
   const styles = getStyles(theme);
 
   const onHandleSelectedItem = (item: RcDelegation) => {
     setSelectedItem(selectedItem ? undefined : item);
-    setEditedAmountDelegation(selectedItem ? '' : item.value);
+    setEditedAmountDelegation(
+      selectedItem
+        ? ''
+        : RcDelegationsUtils.rcToGigaRc(Number(item.value)).toString(),
+    );
   };
+
+  useEffect(() => {
+    if (
+      editedAmountDelegation.trim().length > 0 &&
+      parseFloat(editedAmountDelegation) > 0
+    ) {
+      setEquivalentHPAmount(
+        withCommas(
+          RcDelegationsUtils.gigaRcToHp(editedAmountDelegation, properties),
+        ),
+      );
+    } else {
+      setEquivalentHPAmount(undefined);
+    }
+  }, [editedAmountDelegation]);
 
   const hpValue = RcDelegationsUtils.gigaRcToHp(
     RcDelegationsUtils.rcToGigaRc(Number(item.value)),
@@ -68,14 +91,16 @@ const IncomingOutgoingRcDelegationItem = ({
   const isItemSelected =
     selectedItem && selectedItem.delegatee === item.delegatee;
 
-  const onRCDelegate = async () => {
-    const isCancel = Number(editedAmountDelegation) === 0;
+  const onRCDelegate = async (isCancelling?: boolean) => {
+    let amount = isCancelling ? '0.000' : editedAmountDelegation;
+    const isCancel = Number(amount) === 0;
+
     try {
       setIsLoading(true);
       let success: any;
 
       success = await RcDelegationsUtils.sendDelegation(
-        RcDelegationsUtils.gigaRcToRc(parseFloat(editedAmountDelegation)),
+        RcDelegationsUtils.gigaRcToRc(parseFloat(amount)),
         item.delegatee,
         user.name!,
         user.keys.posting!,
@@ -114,8 +139,6 @@ const IncomingOutgoingRcDelegationItem = ({
       setIsLoading(false);
     }
   };
-
-  //TODO fix editedAmount & add equivalent HP as  well..
 
   return (
     <View style={[getCardStyle(theme, 28).defaultCardItem]}>
@@ -190,7 +213,7 @@ const IncomingOutgoingRcDelegationItem = ({
         <ConfirmationInItem
           theme={theme}
           titleKey="wallet.operations.rc_delegation.confirm_cancel_rc_delegation"
-          onConfirm={onRCDelegate}
+          onConfirm={() => onRCDelegate(true)}
           onCancel={() => setShowCancelConfirmationRCDelegation(false)}
           isLoading={isLoading}
           additionalConfirmTextStyle={styles.whiteText}
@@ -200,45 +223,76 @@ const IncomingOutgoingRcDelegationItem = ({
         isItemSelected &&
         !showCancelConfirmationRCDelegation &&
         !isLoading && (
-          <View style={[{alignItems: 'center'}, styles.margins]}>
-            <OperationInput
-              placeholder={'0.000'}
-              keyboardType="decimal-pad"
-              textAlign="right"
-              value={editedAmountDelegation}
-              inputStyle={[styles.textBase, styles.paddingLeft]}
-              onChangeText={setEditedAmountDelegation}
-              additionalInputContainerStyle={{
-                paddingVertical: 10,
-              }}
-              additionalOuterContainerStyle={{
-                width: '54%',
-              }}
-              rightIcon={
-                <View style={styles.flexRowCenter}>
-                  <Separator
-                    drawLine
-                    additionalLineStyle={getHorizontalLineStyle(
-                      theme,
-                      1,
-                      35,
-                      16,
-                    )}
-                  />
-                  <TouchableOpacity
-                    onPress={() =>
-                      setEditedAmountDelegation(
-                        available.gigaRcValue.toString(),
-                      )
-                    }>
-                    <Text style={[styles.textBase, styles.redText]}>
-                      {translate('common.max').toUpperCase()}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              }
-            />
-            <View style={[styles.flexRowCenter, styles.marginTop]}>
+          <View>
+            <View style={styles.flexRow}>
+              <OperationInput
+                labelInput={translate('common.currency')}
+                placeholder={translate(
+                  'wallet.operations.rc_delegation.giga_rc',
+                )}
+                value={translate('wallet.operations.rc_delegation.giga_rc')}
+                editable={false}
+                additionalOuterContainerStyle={{
+                  width: '40%',
+                }}
+                inputStyle={styles.textBase}
+                additionalInputContainerStyle={{
+                  marginHorizontal: 0,
+                }}
+              />
+              <OperationInput
+                labelInput={capitalize(translate('common.amount'))}
+                labelBottomExtraInfo={
+                  equivalentHPAmount
+                    ? `(≈ ${equivalentHPAmount} ${getCurrency('HP')})`
+                    : undefined
+                }
+                placeholder={'0.000'}
+                keyboardType="decimal-pad"
+                textAlign="right"
+                value={editedAmountDelegation}
+                inputStyle={[styles.textBase, styles.paddingLeft]}
+                additionalBottomLabelTextStyle={[
+                  styles.textBase,
+                  styles.italic,
+                  styles.redText,
+                ]}
+                onChangeText={setEditedAmountDelegation}
+                additionalInputContainerStyle={{
+                  marginHorizontal: 0,
+                }}
+                additionalOuterContainerStyle={{
+                  width: '54%',
+                }}
+                rightIcon={
+                  <View style={styles.flexRowCenter}>
+                    <Separator
+                      drawLine
+                      additionalLineStyle={getHorizontalLineStyle(
+                        theme,
+                        1,
+                        35,
+                        16,
+                      )}
+                    />
+                    <TouchableOpacity
+                      onPress={() =>
+                        setEditedAmountDelegation(available.gigaRcValue)
+                      }>
+                      <Text style={[styles.textBase, styles.redText]}>
+                        {translate('common.max').toUpperCase()}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                }
+              />
+            </View>
+            <View
+              style={[
+                styles.flexRowCenter,
+                styles.marginTop,
+                {justifyContent: 'center'},
+              ]}>
               <Icon
                 name="check"
                 theme={theme}
@@ -265,7 +319,6 @@ const IncomingOutgoingRcDelegationItem = ({
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
-    //TODO check & cleanup
     container: {
       display: 'flex',
       flexDirection: 'row',

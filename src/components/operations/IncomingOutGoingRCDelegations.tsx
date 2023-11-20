@@ -39,7 +39,7 @@ const IncomingOutGoingRCDelegations = ({
 
   useEffect(() => {
     init();
-  }, []);
+  }, [user.name!]);
 
   const init = async () => {
     if (type === 'outgoing') {

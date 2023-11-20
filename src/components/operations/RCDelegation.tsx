@@ -37,7 +37,7 @@ import IncomingOutGoingRCDelegations from './IncomingOutGoingRCDelegations';
 import OperationThemed from './OperationThemed';
 
 export interface RCDelegationOperationProps {
-  //TODO fill bellow
+  //TODO fill when needed.
 }
 
 const DEFAULT_VALUE: RCDelegationValue = {
@@ -70,14 +70,14 @@ const RCDelegation = ({
 
   useEffect(() => {
     init();
-  }, []);
+  }, [user.name!]);
 
   useEffect(() => {
     if (amount.trim().length > 0 && parseFloat(amount) > 0) {
       setEquivalentHPAmount(
         withCommas(RcDelegationsUtils.gigaRcToHp(amount, properties)),
       );
-    } else {
+    } else if (parseFloat(amount) === 0) {
       setEquivalentHPAmount(undefined);
       setIsCancel(true);
     }
@@ -159,6 +159,7 @@ const RCDelegation = ({
         user.name!,
         user.keys.posting!,
       );
+
       if (success) {
         loadAccount(user.name!);
         goBack();
