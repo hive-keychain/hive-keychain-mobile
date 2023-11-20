@@ -1,11 +1,6 @@
 import CurrencyToken from 'components/hive/CurrencyToken';
 import Icon from 'components/hive/Icon';
 import IconHP from 'components/hive/IconHP';
-import TokenDisplay from 'components/hive/TokenDisplay';
-import {
-  SendDelegation,
-  SendPowerDown,
-} from 'components/operations/OperationsButtons';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
@@ -116,36 +111,6 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
           <IconHP theme={theme} additionalContainerStyle={{marginTop: 8}} />
         }
         buttons={getHPButtonList(theme, user.name!)}
-      />
-      <TokenDisplay
-        theme={theme}
-        using_new_ui
-        color="#AC4F00"
-        name="HIVE POWER"
-        currency={getCurrency('HP')}
-        value={toHP(user.account.vesting_shares as string, properties.globals)}
-        totalValue={toHP(
-          user.account.vesting_shares as string,
-          properties.globals,
-        )}
-        incoming={toHP(
-          user.account.received_vesting_shares as string,
-          properties.globals,
-        )}
-        outgoing={toHP(
-          user.account.delegated_vesting_shares as string,
-          properties.globals,
-        )}
-        logo={<IconHP theme={theme} />}
-        toggled={toggled === Token.HP}
-        setToggle={() => {
-          setToggled(toggled === Token.HP ? Token.NONE : Token.HP);
-        }}
-        buttons={[
-          <SendDelegation key="del" />,
-          <SendPowerDown key="pd" />,
-          <View style={{width: 20}}></View>,
-        ]}
       />
       <Separator height={10} />
     </View>

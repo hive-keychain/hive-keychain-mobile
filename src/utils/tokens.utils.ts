@@ -1,4 +1,5 @@
-import hsc from 'api/hiveEngine';
+import hsc, {hiveEngineGet} from 'api/hiveEngine';
+import {TokenBalance} from 'src/interfaces/tokens.interface';
 
 export interface TransactionConfirmationResult {
   confirmed: boolean;
@@ -46,6 +47,17 @@ const delayRefresh = async (): Promise<void> => {
     setTimeout(() => {
       fulfill();
     }, delay);
+  });
+};
+//TODO added to discuss with quentin
+export const getUserBalance = (account: string) => {
+  return hiveEngineGet<TokenBalance[]>({
+    contract: 'tokens',
+    table: 'balances',
+    query: {account: account},
+    indexes: [],
+    limit: 1000,
+    offset: 0,
   });
 };
 

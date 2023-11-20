@@ -26,11 +26,11 @@ import {
   AppState,
   AppStateStatus,
   FlatList,
-  ScrollView,
   StyleSheet,
   View,
   useWindowDimensions,
 } from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import {ConnectedProps, connect} from 'react-redux';
 import Primary from 'screens/hive/wallet/Primary';
 import {Theme, ThemeContext} from 'src/context/theme.context';
@@ -174,7 +174,7 @@ const Main = ({
 
   return (
     <WalletPage>
-      <ScrollView style={{flex: 1}}>
+      <ScrollView>
         <View style={styles.headerMenu}>
           <DrawerButton navigation={navigation as any} theme={theme} />
           <View style={styles.innerHeader}>
@@ -251,7 +251,7 @@ const Main = ({
           <View style={styles.separatorContainer} />
           <Separator height={10} />
 
-          {!loadingUserTokens && (
+          {!loadingUserTokens && orderedUserTokenBalanceList.length > 0 && (
             <FlatList
               data={orderedUserTokenBalanceList}
               contentContainerStyle={styles.flatlist}
@@ -279,17 +279,6 @@ const Main = ({
             </View>
           )}
         </View>
-        {/* <ScreenToggle
-          theme={theme}
-          style={styles.toggle}
-          menu={[
-            translate(`wallet.menu.hive`),
-            translate(`wallet.menu.history`),
-            translate(`wallet.menu.tokens`),
-          ]}
-          toUpperCase
-          components={[<Primary />, <WalletHistoryComponent />, <Tokens />]}
-        /> */}
         <Survey navigation={navigation} />
         <WhatsNewComponent navigation={navigation} />
       </ScrollView>

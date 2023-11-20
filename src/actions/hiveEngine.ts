@@ -9,6 +9,7 @@ import {
 } from 'src/interfaces/tokens.interface';
 import {RootState, store} from 'store';
 import {decodeMemoIfNeeded} from 'utils/hiveEngine';
+import {getUserBalance} from 'utils/tokens.utils';
 import {ActionPayload} from './interfaces';
 import {
   CLEAR_TOKEN_HISTORY,
@@ -42,15 +43,19 @@ export const loadUserTokens = (account: string): AppThunk => async (
     dispatch({
       type: CLEAR_USER_TOKENS,
     });
-    let tokensBalance: TokenBalance[] = await hsc.find('tokens', 'balances', {
+    //TODO cleanup after refactoring UI
+    // let tokensBalance: TokenBalance[] = await hsc.find('tokens', 'balances', {
+    //   account,
+    // });
+    let alternativeTokensBalance: TokenBalance[] = await getUserBalance(
       account,
-    });
-    tokensBalance = tokensBalance
+    );
+    alternativeTokensBalance = alternativeTokensBalance
       .filter((t) => parseFloat(t.balance) !== 0)
       .sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
     const action: ActionPayload<TokenBalance[]> = {
       type: LOAD_USER_TOKENS,
-      payload: tokensBalance,
+      payload: alternativeTokensBalance,
     };
     dispatch(action);
   } catch (e) {

@@ -132,7 +132,7 @@ const EngineTokenDisplay = ({
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
   //TODO bellow removed unused styles after refactoring
   StyleSheet.create({
-    icon: {width: width / 12, height: width / 12},
+    icon: {width: width / 15, height: width / 15},
     amount: {fontWeight: 'bold', fontSize: 15},
     squareButton: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
