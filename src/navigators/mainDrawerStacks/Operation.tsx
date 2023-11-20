@@ -21,6 +21,9 @@ import DelegateToken, {
 import Delegation, {
   DelegationOperationProps,
 } from 'components/operations/Delegation';
+import PowerDown, {
+  PowerDownOperationProps,
+} from 'components/operations/PowerDown';
 import PowerUp, {PowerUpOperationProps} from 'components/operations/PowerUp';
 import RCDelegation, {
   RCDelegationOperationProps,
@@ -81,6 +84,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return translate('wallet.operations.delegation.title_delegation');
       case 'delegateRC':
         return translate('wallet.operations.rc_delegation.title');
+      case 'power_down':
+        return translate('wallet.operations.powerdown.title');
     }
   };
 
@@ -110,6 +115,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return <Delegation {...(props as DelegationOperationProps)} />;
       case 'delegateRC':
         return <RCDelegation {...(props as RCDelegationOperationProps)} />;
+      case 'power_down':
+        return <PowerDown {...(props as PowerDownOperationProps)} />;
     }
   };
 

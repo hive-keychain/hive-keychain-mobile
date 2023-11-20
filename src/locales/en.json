@@ -197,7 +197,12 @@
       "powerdown": {
         "title": "Power down",
         "info_power_down": "power down",
-        "cancelled_power_down": "Cancelled a power down"
+        "cancelled_power_down": "Cancelled a power down",
+        "powering_down": "Powering down",
+        "next_power_down": "Next power down",
+        "powerdown_text": "Power Down your Hive Power to get liquid HIVE. The entire Power Down process will take 13 weeks.",
+        "confirm_cancel": "Please confirm that you want to cancel your power down.",
+        "confirm_power_down": "Please confirm your power down."
       },
       "delegation": {
         "title": "Delegate Hive Power",

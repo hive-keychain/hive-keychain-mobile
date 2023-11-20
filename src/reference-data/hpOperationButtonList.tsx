@@ -1,8 +1,11 @@
 import HPIconLight from 'assets/new_UI/hp-icon-light.svg';
 import HPIconDark from 'assets/new_UI/hp_icon_dark.svg';
+import PowerDownDark from 'assets/new_UI/power-down-dark.svg';
+import PowerDownLight from 'assets/new_UI/power-down-light.svg';
 import RPDelegationDark from 'assets/new_UI/rc-delegation-dark.svg';
 import RCDelegationLight from 'assets/new_UI/rc-delegation-light.svg';
 import {DelegationOperationProps} from 'components/operations/Delegation';
+import {PowerDownOperationProps} from 'components/operations/PowerDown';
 import {RCDelegationOperationProps} from 'components/operations/RCDelegation';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import SquareButton from 'components/ui/SquareButton';
@@ -56,6 +59,25 @@ export const getHPButtonList = (theme: Theme, delegatee: string) => {
         />
       }
       primaryLabel={translate('wallet.operations.rc_delegation.title_button')}
+    />,
+    <SquareButton
+      key={'square-button-power-down'}
+      onPress={() => {
+        navigate('Operation', {
+          operation: 'power_down',
+          props: {currency: getCurrency('HP')} as PowerDownOperationProps,
+        });
+      }}
+      icon={
+        <CustomIconButton
+          theme={theme}
+          lightThemeIcon={<PowerDownLight {...styles.icon} />}
+          darkThemeIcon={<PowerDownDark {...styles.icon} />}
+          onPress={() => {}}
+          additionalContainerStyle={styles.marginRight}
+        />
+      }
+      primaryLabel={translate('wallet.operations.powerdown.title')}
     />,
   ];
 };
