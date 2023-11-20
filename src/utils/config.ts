@@ -112,13 +112,13 @@ export const BrowserConfig = {
         url: 'https://tribaldex.com/',
         categories: ['finance'],
       },
-      // {
-      //   name: 'LeoFinance',
-      //   description: 'Crypto & Finance Blogging Platform',
-      //   icon: 'https://images.hive.blog/u/steem.leo/avatar',
-      //   url: 'https://leofinance.io/',
-      //   categories: ['social', 'finance'],
-      // }, //Dont support keychain login for now
+      {
+        name: 'InLeo',
+        description: 'Crypto & Finance Blogging Platform',
+        icon: 'https://images.hive.blog/u/leofinance/avatar',
+        url: 'https://inleo.io/',
+        categories: ['social', 'finance'],
+      },
       {
         name: 'NFT Showroom',
         description: 'Digital Art Marketplace',
