@@ -97,7 +97,8 @@
     "incoming": "Incoming",
     "outgoing": "Outgoing",
     "received": "Received",
-    "sent": "Sent"
+    "sent": "Sent",
+    "invalid_url": "Please use a valid URL"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -497,7 +498,12 @@
       "add_rpc_title": "Add Your RPC node here",
       "rpc_node": "RPC Node",
       "testnet": "TESTNET",
-      "set_as_active": "Set new RPC node as active"
+      "set_as_active": "Set new RPC node as active",
+      "new_HE_rpc": "New HE RPC",
+      "new_account_history_rpc": "New account history RPC",
+      "hive_engine_rpc": "Hive-Engine RPC",
+      "hive_engine_account_history_api": "Hive-Engine account history API",
+      "rpc_node_already_exists": "RPC node already exists! Please choose another one"
     }
   },
   "components": {

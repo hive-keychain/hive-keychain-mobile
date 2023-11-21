@@ -1,6 +1,5 @@
 import {setRpc} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CustomDropdown, {DropdownItem} from 'components/form/CustomDropdown';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -8,44 +7,68 @@ import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {CheckBox} from 'react-native-elements';
+import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
-import {getButtonStyle} from 'src/styles/button';
+import {
+  DefaultAccountHistoryApis,
+  DefaultHiveEngineRpcs,
+} from 'src/interfaces/hive-engine-rpc.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {
-  body_primary_body_2,
-  button_link_primary_medium,
-} from 'src/styles/typography';
+import {body_primary_body_2} from 'src/styles/typography';
 import {RootState} from 'store';
 import {capitalizeSentence} from 'utils/format';
 import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {addCustomRpc, deleteCustomRpc, getCustomRpcs} from 'utils/rpc.utils';
 import * as ValidUrl from 'valid-url';
+import AddCustomRPC from './AddCustomRPC';
 
 const DEFAULT_CUSTOM_RPC = {
   uri: '',
   testnet: false,
 };
-
+//TODO important here:
+//  1. add HE rpc nodes selection(as the one we have), user can add custom ones
+//  2. also for the hsitory api. history api
 const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
+  //Hive RPC
   const [showAddCustomRPC, setShowAddCustomRPC] = useState(false);
   const [customRPCSetActive, setCustomRPCSetActive] = useState<boolean>(false);
   const [customRPC, setCustomRPC] = useState<Rpc>(DEFAULT_CUSTOM_RPC);
-  const {theme} = useContext(ThemeContext);
-  const styles = getStyles(theme);
   const [switchRPCAuto, setSwitchRPCAuto] = useState(false);
   const [rpcFullList, setRpcFullList] = useState<DropdownItem[]>([]);
   const [customRPCList, setCustomRPCList] = useState<Rpc[]>([]);
+
+  //Hive Engine RPC
+  const [hiveEngineRPCList, setHiveEngineRPCList] = useState<DropdownItem[]>(
+    [],
+  );
+
+  //Hive Engine account history
+  const [accountHistoryAPIList, setAccountHistoryAPIList] = useState<
+    DropdownItem[]
+  >([]);
+
+  const {theme} = useContext(ThemeContext);
+  const styles = getStyles(theme);
 
   useEffect(() => {
     init();
   }, []);
 
   const init = async () => {
+    //TODO bellow important: use Asyncstorage to set/edit/remove the custom/defaults
+    //init Hive RPCs
     if (typeof settings.rpc === 'object') {
       if (settings.rpc.uri === 'DEFAULT') setSwitchRPCAuto(true);
     } else if (typeof settings.rpc === 'string') {
@@ -59,8 +82,31 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
     const customRPCsDropdownList = customRPCs.map((item) => {
       return {value: item.uri, removable: true} as DropdownItem;
     });
-    const fullList = [...rpcListDropdownList, ...customRPCsDropdownList];
-    setRpcFullList(fullList);
+    setRpcFullList([...rpcListDropdownList, ...customRPCsDropdownList]);
+
+    //Init Hive Engine RPCs
+    const tempHiveEngineRpc = [...DefaultHiveEngineRpcs];
+    //TODO here load custom from asyncstorage & merge.
+    setHiveEngineRPCList(
+      tempHiveEngineRpc.map((item) => {
+        return {
+          value: item,
+          removable: false,
+        } as DropdownItem;
+      }),
+    );
+
+    //Init Account History API
+    const tempAccountHistoryAPI = [...DefaultAccountHistoryApis];
+    //TODO here load custom from asyncstorage & merge.
+    setAccountHistoryAPIList(
+      tempAccountHistoryAPI.map((item) => {
+        return {
+          value: item,
+          removable: false,
+        } as DropdownItem;
+      }),
+    );
   };
 
   const handleSetCustomRPC = (value: string | boolean, key: keyof Rpc) => {
@@ -80,7 +126,14 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
         setCustomRPCSetActive(false);
         setShowAddCustomRPC(false);
         setCustomRPC(DEFAULT_CUSTOM_RPC);
+      } else {
+        SimpleToast.show(
+          translate('settings.settings.rpc_node_already_exists'),
+          SimpleToast.LONG,
+        );
       }
+    } else {
+      SimpleToast.show(translate('common.invalid_url'), SimpleToast.LONG);
     }
   };
 
@@ -94,25 +147,28 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
 
   const renderRpcItem = () => {
     return (
-      <View style={styles.rpcItemContainer}>
-        <CustomDropdown
-          theme={theme}
-          list={rpcFullList}
-          selected={
-            typeof settings.rpc === 'object' ? settings.rpc.uri : settings.rpc
-          }
-          onSelected={(item) => {
-            setRpc(item);
-          }}
-          onRemove={(item) => handleOnRemoveCustomRPC(item)}
-          additionalContainerStyle={styles.flex85}
-        />
-        <TouchableOpacity
-          style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
-          onPress={() => setShowAddCustomRPC(!showAddCustomRPC)}>
-          <Text style={styles.text}>{showAddCustomRPC ? 'x' : '+'}</Text>
-        </TouchableOpacity>
-      </View>
+      <>
+        <View style={styles.rpcItemContainer}>
+          <CustomDropdown
+            theme={theme}
+            list={rpcFullList}
+            selected={
+              typeof settings.rpc === 'object' ? settings.rpc.uri : settings.rpc
+            }
+            onSelected={(item) => {
+              setRpc(item);
+            }}
+            onRemove={(item) => handleOnRemoveCustomRPC(item)}
+            additionalContainerStyle={styles.flex85}
+          />
+          <TouchableOpacity
+            style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
+            onPress={() => setShowAddCustomRPC(!showAddCustomRPC)}>
+            <Text style={styles.text}>{showAddCustomRPC ? 'x' : '+'}</Text>
+          </TouchableOpacity>
+        </View>
+        {showAddCustomRPC && renderAddCustomRPC()}
+      </>
     );
   };
 
@@ -123,7 +179,7 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
           <Text style={styles.text}>
             {translate('settings.settings.add_rpc_title')}
           </Text>
-          <Icon theme={theme} name="ram" />
+          <Icon theme={theme} name="ram" onClick={handleAddCustomRPC} />
         </View>
         <Separator
           drawLine
@@ -159,9 +215,9 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
 
   return (
     <Background using_new_ui theme={theme}>
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <FocusAwareStatusBar />
-        <View style={styles.flexOne}>
+        <View>
           <Separator height={10} />
           {//@ts-ignore
           translate('settings.settings.disclaimer').map((disclaimer, i) => (
@@ -197,26 +253,47 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
           </View>
           <Separator />
           {!switchRPCAuto && renderRpcItem()}
-          {showAddCustomRPC && renderAddCustomRPC()}
         </View>
-        {!switchRPCAuto && (
-          <ActiveOperationButton
-            title={translate('common.save')}
-            onPress={handleAddCustomRPC}
-            style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-            isLoading={false}
-            additionalTextStyle={{...button_link_primary_medium}}
+        {hiveEngineRPCList.length > 0 && (
+          <AddCustomRPC
+            theme={theme}
+            rpcList={hiveEngineRPCList}
+            title={translate('settings.settings.hive_engine_rpc')}
+            placeHolderInput={translate('settings.settings.new_HE_rpc')}
+            onChangeInput={(text) => {}}
+            checkBoxTitle={translate('settings.settings.set_as_active')}
+            onHandleSave={() => {}}
+            onChangeCheckBox={() => {}}
+            checkedValue={false}
           />
         )}
-      </View>
+        {accountHistoryAPIList.length > 0 && (
+          <AddCustomRPC
+            theme={theme}
+            rpcList={accountHistoryAPIList}
+            title={translate(
+              'settings.settings.hive_engine_account_history_api',
+            )}
+            placeHolderInput={translate(
+              'settings.settings.new_account_history_rpc',
+            )}
+            onChangeInput={(text) => {}}
+            checkBoxTitle={translate('settings.settings.set_as_active')}
+            onHandleSave={() => {}}
+            onChangeCheckBox={() => {}}
+            checkedValue={false}
+          />
+        )}
+      </ScrollView>
     </Background>
   );
 };
 
+//TODO bellow check & cleanup styles
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
-      flex: 1,
+      flexGrow: 1,
       paddingHorizontal: 16,
       alignItems: 'center',
     },

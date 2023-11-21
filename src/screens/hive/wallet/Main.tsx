@@ -48,9 +48,7 @@ import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-//TODO
-//  - follow same loading
-//  - check & fix hive auth(modal seems lack stylying)
+
 const Main = ({
   loadAccount,
   loadProperties,

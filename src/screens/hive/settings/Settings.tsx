@@ -28,9 +28,7 @@ import AutomatedTasksUtils from 'utils/automatedTasks.utils';
 import {ClaimsConfig} from 'utils/config';
 import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-//TODO important here:
-//  1. add HE rpc nodes selection(as the one we have), user can add custom ones
-//  2. also for the hsitory api. history api
+//TODO afte refactoring UI, delete if not needed
 const Settings = ({
   setRpc,
   settings,
