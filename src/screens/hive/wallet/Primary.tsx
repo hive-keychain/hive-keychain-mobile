@@ -9,7 +9,7 @@ import {Theme} from 'src/context/theme.context';
 import {getHBDButtonList} from 'src/reference-data/hbdOperationButtonList';
 import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
 import {getHPButtonList} from 'src/reference-data/hpOperationButtonList';
-import {HIVEICONBGCOLOR} from 'src/styles/colors';
+import {HBDICONBGCOLOR, HIVEICONBGCOLOR} from 'src/styles/colors';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {toHP} from 'utils/format';
@@ -94,7 +94,10 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
           <Icon
             theme={theme}
             name="hbd_currency_logo"
-            additionalContainerStyle={styles.hiveIconContainer}
+            additionalContainerStyle={[
+              styles.hiveIconContainer,
+              styles.hbdIconBgColor,
+            ]}
             {...styles.icon}
           />
         }
@@ -128,6 +131,9 @@ const getStyles = () =>
       borderRadius: 50,
       padding: 5,
       backgroundColor: HIVEICONBGCOLOR,
+    },
+    hbdIconBgColor: {
+      backgroundColor: HBDICONBGCOLOR,
     },
   });
 

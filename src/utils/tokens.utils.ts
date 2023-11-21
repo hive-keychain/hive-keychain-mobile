@@ -1,5 +1,5 @@
+import {TokenBalance} from 'actions/interfaces';
 import hsc, {hiveEngineGet} from 'api/hiveEngine';
-import {TokenBalance} from 'src/interfaces/tokens.interface';
 
 export interface TransactionConfirmationResult {
   confirmed: boolean;
@@ -49,7 +49,7 @@ const delayRefresh = async (): Promise<void> => {
     }, delay);
   });
 };
-//TODO added to discuss with quentin
+
 export const getUserBalance = (account: string) => {
   return hiveEngineGet<TokenBalance[]>({
     contract: 'tokens',
@@ -66,5 +66,3 @@ const BlockchainTransactionUtils = {
   delayRefresh,
   getDelayedTransactionInfo,
 };
-
-export default BlockchainTransactionUtils;

@@ -2,8 +2,6 @@ import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/s
 import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import KeychainLogoDark from 'assets/new_UI/keychain_logo_powered_dark_theme.svg';
-import KeychainLogoLight from 'assets/new_UI/keychain_logo_powered_light_theme.svg';
 import {CustomFilterBox} from 'components/form/CustomFilterBox';
 import Icon from 'components/hive/Icon';
 import {WalletHistoryComponent} from 'components/hive/Wallet-history-component';
@@ -34,19 +32,7 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.headerStyle,
           title: '',
-          header: () => {
-            return (
-              <View style={[styles.headerStyle]}>
-                <View style={styles.firstRowContainer}>
-                  {theme === Theme.LIGHT ? (
-                    <KeychainLogoLight {...styles.logo} />
-                  ) : (
-                    <KeychainLogoDark {...styles.logo} />
-                  )}
-                </View>
-              </View>
-            );
-          },
+          headerTransparent: true,
         })}
       />
       <Stack.Screen

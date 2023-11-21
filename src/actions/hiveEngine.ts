@@ -43,23 +43,18 @@ export const loadUserTokens = (account: string): AppThunk => async (
     dispatch({
       type: CLEAR_USER_TOKENS,
     });
-    //TODO cleanup after refactoring UI
-    // let tokensBalance: TokenBalance[] = await hsc.find('tokens', 'balances', {
-    //   account,
-    // });
-    let alternativeTokensBalance: TokenBalance[] = await getUserBalance(
-      account,
-    );
-    alternativeTokensBalance = alternativeTokensBalance
+
+    let tokensBalance: TokenBalance[] = await getUserBalance(account);
+    tokensBalance = tokensBalance
       .filter((t) => parseFloat(t.balance) !== 0)
       .sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
     const action: ActionPayload<TokenBalance[]> = {
       type: LOAD_USER_TOKENS,
-      payload: alternativeTokensBalance,
+      payload: tokensBalance,
     };
     dispatch(action);
   } catch (e) {
-    console.log(e);
+    console.log('loadUserTokens Error: ', e);
   }
 };
 

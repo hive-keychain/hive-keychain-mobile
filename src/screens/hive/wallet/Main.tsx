@@ -48,9 +48,9 @@ import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-//TODO very important bellow:
-//  1. add a new method, following the same as the extension to get userTokens, first test is a local using hooks here.
-//  2. if works faster, then implement a new action, reducer, etc.
+//TODO
+//  - follow same loading
+//  - check & fix hive auth(modal seems lack stylying)
 const Main = ({
   loadAccount,
   loadProperties,
@@ -102,7 +102,7 @@ const Main = ({
       setLoadingUserTokens(true);
       loadUserTokens(user.name);
     }
-  }, [loadUserTokens, user.name]);
+  }, [loadUserTokens, user.name!]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
@@ -174,114 +174,121 @@ const Main = ({
 
   return (
     <WalletPage>
-      <ScrollView>
-        <View style={styles.headerMenu}>
-          <DrawerButton navigation={navigation as any} theme={theme} />
-          <View style={styles.innerHeader}>
-            <StatusIndicator theme={theme} />
-            <Claim theme={theme} />
-            <PickerItem
-              selected={getItemDropDownSelected(user.name)}
+      {Object.keys(user.account).length > 0 ? (
+        <ScrollView>
+          <View style={styles.headerMenu}>
+            <DrawerButton navigation={navigation as any} theme={theme} />
+            <View style={styles.innerHeader}>
+              <StatusIndicator theme={theme} />
+              <Claim theme={theme} />
+              <PickerItem
+                selected={getItemDropDownSelected(user.name)}
+                theme={theme}
+                pickerItemList={accounts.map((acc) => {
+                  return {
+                    label: acc.name,
+                    value: acc.name,
+                    icon: (
+                      <UserProfilePicture
+                        username={acc.name}
+                        style={styles.avatar}
+                      />
+                    ),
+                  };
+                })}
+                additionalContainerStyle={styles.userPicker}
+                additionalExpandedListItemContainerStyle={{
+                  padding: 10,
+                }}
+                removeDropdownIcon
+                onSelectedItem={(item) => loadAccount(item.value)}
+              />
+            </View>
+          </View>
+          <Separator />
+          <View style={styles.rowWrapper}>
+            <PercentageDisplay
+              name={translate('wallet.vp')}
+              percent={getVP(user.account) || 100}
+              IconBgcolor={OVERLAYICONBGCOLOR}
               theme={theme}
-              pickerItemList={accounts.map((acc) => {
-                return {
-                  label: acc.name,
-                  value: acc.name,
-                  icon: (
-                    <UserProfilePicture
-                      username={acc.name}
-                      style={styles.avatar}
-                    />
-                  ),
-                };
-              })}
-              additionalContainerStyle={styles.userPicker}
-              additionalExpandedListItemContainerStyle={{
-                padding: 10,
-              }}
-              removeDropdownIcon
-              onSelectedItem={(item) => loadAccount(item.value)}
+              iconName="send_square"
+              bgColor={BACKGROUNDITEMDARKISH}
+              secondary={`$${
+                getVotingDollarsPerAccount(
+                  100,
+                  properties,
+                  user.account,
+                  false,
+                ) || '0'
+              }`}
+            />
+            <PercentageDisplay
+              iconName="speedometer"
+              bgColor={DARKER_RED_COLOR}
+              name={translate('wallet.rc')}
+              percent={user.rc.percentage || 100}
+              IconBgcolor={OVERLAYICONBGCOLOR}
+              theme={theme}
             />
           </View>
-        </View>
-        <Separator />
-        <View style={styles.rowWrapper}>
-          <PercentageDisplay
-            name={translate('wallet.vp')}
-            percent={getVP(user.account) || 100}
-            IconBgcolor={OVERLAYICONBGCOLOR}
-            theme={theme}
-            iconName="send_square"
-            bgColor={BACKGROUNDITEMDARKISH}
-            secondary={`$${
-              getVotingDollarsPerAccount(
-                100,
-                properties,
-                user.account,
-                false,
-              ) || '0'
-            }`}
-          />
-          <PercentageDisplay
-            iconName="speedometer"
-            bgColor={DARKER_RED_COLOR}
-            name={translate('wallet.rc')}
-            percent={user.rc.percentage || 100}
-            IconBgcolor={OVERLAYICONBGCOLOR}
+          <Separator />
+          <BackgroundHexagons
+            additionalSvgStyle={styles.extraBg}
             theme={theme}
           />
-        </View>
-        <Separator />
-        <BackgroundHexagons additionalSvgStyle={styles.extraBg} theme={theme} />
-        <AccountValue
-          account={user.account}
-          prices={prices}
-          properties={properties}
-          theme={theme}
-          title={translate('common.estimated_account_value')}
-        />
-        <Separator />
-        <View
-          style={[
-            getCardStyle(theme).roundedCardItem,
-            styles.fullListContainer,
-          ]}>
-          <Primary theme={theme} />
-          <Separator height={10} />
-          <View style={styles.separatorContainer} />
-          <Separator height={10} />
+          <AccountValue
+            account={user.account}
+            prices={prices}
+            properties={properties}
+            theme={theme}
+            title={translate('common.estimated_account_value')}
+          />
+          <Separator />
+          <View
+            style={[
+              getCardStyle(theme).roundedCardItem,
+              styles.fullListContainer,
+            ]}>
+            <Primary theme={theme} />
+            <Separator height={10} />
+            <View style={styles.separatorContainer} />
+            <Separator height={10} />
 
-          {!loadingUserTokens && orderedUserTokenBalanceList.length > 0 && (
-            <FlatList
-              data={orderedUserTokenBalanceList}
-              contentContainerStyle={styles.flatlist}
-              keyExtractor={(item) => item._id.toString()}
-              ItemSeparatorComponent={() => <Separator height={10} />}
-              renderItem={({item}) => (
-                <EngineTokenDisplay
-                  token={item}
-                  tokensList={tokens}
-                  market={tokensMarket}
-                  toggled={toggled === item._id}
-                  setToggle={() => {
-                    if (toggled === item._id) setToggled(null);
-                    else setToggled(item._id);
-                  }}
-                  using_new_ui
-                />
-              )}
-            />
-          )}
+            {!loadingUserTokens && orderedUserTokenBalanceList.length > 0 && (
+              <FlatList
+                data={orderedUserTokenBalanceList}
+                contentContainerStyle={styles.flatlist}
+                keyExtractor={(item) => item._id.toString()}
+                ItemSeparatorComponent={() => <Separator height={10} />}
+                renderItem={({item}) => (
+                  <EngineTokenDisplay
+                    token={item}
+                    tokensList={tokens}
+                    market={tokensMarket}
+                    toggled={toggled === item._id}
+                    setToggle={() => {
+                      if (toggled === item._id) setToggled(null);
+                      else setToggled(item._id);
+                    }}
+                    using_new_ui
+                  />
+                )}
+              />
+            )}
 
-          {loadingUserTokens && (
-            <View style={{height: 40}}>
-              <Loader size={'small'} animating />
-            </View>
-          )}
-        </View>
-        <Survey navigation={navigation} />
-        <WhatsNewComponent navigation={navigation} />
-      </ScrollView>
+            {loadingUserTokens && (
+              <View style={{height: 40}}>
+                <Loader size={'small'} animating />
+              </View>
+            )}
+          </View>
+          <Survey navigation={navigation} />
+          <WhatsNewComponent navigation={navigation} />
+        </ScrollView>
+      ) : (
+        <Loader new_ui_loader />
+      )}
     </WalletPage>
   );
 };

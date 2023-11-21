@@ -4,6 +4,7 @@ import DelegationsList from 'components/operations/DelegationsList';
 import IncomingOutGoingTokenDelegations from 'components/operations/IncomingOutGoingTokenDelegations';
 import RoundButton from 'components/operations/OperationsButtons';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
+import {TransferOperationProps} from 'components/operations/Transfer';
 import {UnstakeTokenOperationProps} from 'components/operations/UnstakeToken';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React from 'react';
@@ -45,11 +46,12 @@ type Props = {
   price?: Currency;
   incoming?: number;
   outgoing?: number;
-  buttons: JSX.Element[];
+  buttons?: JSX.Element[];
   amountStyle?: StyleProp<TextStyle>;
   bottomLeft?: JSX.Element;
   toggled: boolean;
   setToggle: () => void;
+  onHandleGoToTokenHistory: () => void;
   //TODO fixed after refactoring UI
   using_new_ui?: boolean;
   renderButtonOptions?: boolean;
@@ -80,6 +82,7 @@ const TokenDisplay = ({
   tokenInfo,
   totalValue,
   tokenBalance,
+  onHandleGoToTokenHistory,
 }: Props) => {
   const styles = getDimensionedStyles({
     color,
@@ -108,28 +111,115 @@ const TokenDisplay = ({
     />
   );
 
+  const onTransfer = () => {
+    navigate('Operation', {
+      operation: 'transfer',
+      props: {
+        currency: currency,
+        tokenBalance: tokenBalance.balance,
+        engine: true,
+        tokenLogo: logo,
+      } as TransferOperationProps,
+    });
+  };
+
+  const onGoToIncoming = () =>
+    navigate('TemplateStack', {
+      titleScreen: 'Incoming',
+      component: (
+        <IncomingOutGoingTokenDelegations
+          delegationType="incoming"
+          total={tokenBalance.delegationsIn}
+          token={tokenBalance}
+          tokenLogo={logo}
+          tokenInfo={tokenInfo}
+        />
+      ),
+    } as TemplateStackProps);
+
+  const onGoToOutgoing = () =>
+    navigate('TemplateStack', {
+      titleScreen: 'Outgoing',
+      component: (
+        <IncomingOutGoingTokenDelegations
+          delegationType="outgoing"
+          total={tokenBalance.delegationsOut}
+          token={tokenBalance}
+          tokenLogo={logo}
+          tokenInfo={tokenInfo}
+        />
+      ),
+    } as TemplateStackProps);
+
+  const onGoToStake = () =>
+    navigate('Operation', {
+      operation: 'stake',
+      props: {
+        currency: currency,
+        balance: tokenBalance.balance,
+        tokenLogo: logo,
+      } as StakeTokenOperationProps,
+    });
+
+  const onGoToUnstake = () =>
+    navigate('Operation', {
+      operation: 'unstake',
+      props: {
+        currency: currency,
+        balance: (
+          parseFloat(tokenBalance.stake) -
+          parseFloat(tokenBalance.pendingUnstake)
+        ).toString(),
+        tokenLogo: logo,
+        tokenInfo: tokenInfo,
+      } as UnstakeTokenOperationProps,
+    });
+
+  const onGoToDelegate = () =>
+    navigate('Operation', {
+      operation: 'delegate',
+      props: {
+        currency: currency,
+        balance: tokenBalance.stake,
+        tokenLogo: logo,
+      } as DelegateTokenOperationProps,
+    });
+
+  //TODO bellow cleanup unused
   return using_new_ui ? (
-    <View style={styles.container}>
+    <TouchableOpacity onPress={() => setToggle()} style={styles.container}>
       <View style={styles.flexRowBetween}>
         <View style={{flexDirection: 'row'}}>
           <View style={styles.logo}>{logo}</View>
           <View style={[styles.flexColumnCentered, styles.containerMarginLeft]}>
             <Text style={styles.textSymbol}>{name}</Text>
-            <Text style={styles.textAmount}>
-              {value ? formatBalance(value) : 0}
-            </Text>
           </View>
         </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View
+          style={[
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              width: 'auto',
+              justifyContent: 'flex-end',
+            },
+          ]}>
           {renderButtonOptions && buttons}
-          <Icon
-            name={'expand_more'}
-            theme={theme}
-            onClick={() => setToggle()}
-            additionalContainerStyle={styles.expandMoreButton}
-            width={12}
-            height={12}
-          />
+          <Text style={styles.textAmount}>
+            {value ? formatBalance(value) : 0}
+          </Text>
+          {toggled && (
+            <Icon
+              key={`show-token-history-${currency}`}
+              name={'back_time'}
+              onClick={onHandleGoToTokenHistory}
+              additionalContainerStyle={[
+                styles.squareButton,
+                styles.containerMarginLeft,
+              ]}
+              theme={theme}
+            />
+          )}
         </View>
       </View>
       {toggled && (
@@ -165,20 +255,7 @@ const TokenDisplay = ({
                   styles.containerMarginLeft,
                   styles.invertXAxis,
                 ]}
-                onClick={() =>
-                  navigate('TemplateStack', {
-                    titleScreen: 'Incoming',
-                    component: (
-                      <IncomingOutGoingTokenDelegations
-                        delegationType="incoming"
-                        total={tokenBalance.delegationsIn}
-                        token={tokenBalance}
-                        tokenLogo={logo}
-                        tokenInfo={tokenInfo}
-                      />
-                    ),
-                  } as TemplateStackProps)
-                }
+                onClick={onGoToIncoming}
               />
             </View>
           )}
@@ -194,20 +271,7 @@ const TokenDisplay = ({
                 width={15}
                 height={15}
                 additionalContainerStyle={styles.containerMarginLeft}
-                onClick={() =>
-                  navigate('TemplateStack', {
-                    titleScreen: 'Outgoing',
-                    component: (
-                      <IncomingOutGoingTokenDelegations
-                        delegationType="outgoing"
-                        total={tokenBalance.delegationsOut}
-                        token={tokenBalance}
-                        tokenLogo={logo}
-                        tokenInfo={tokenInfo}
-                      />
-                    ),
-                  } as TemplateStackProps)
-                }
+                onClick={onGoToOutgoing}
               />
             </View>
           )}
@@ -226,69 +290,45 @@ const TokenDisplay = ({
                 {tokenBalance.pendingUnstake}
               </Text>
             )}
-          {tokenInfo && (
-            <View style={styles.buttonsContainer}>
-              {tokenInfo.stakingEnabled &&
-                renderAsSquareButton(
-                  <Icon name="3d_cube" theme={theme} width={10} height={10} />,
-                  translate('wallet.operations.token_stake.title'),
-                  () =>
-                    navigate('Operation', {
-                      operation: 'stake',
-                      props: {
-                        currency: currency,
-                        balance: tokenBalance.balance,
-                        tokenLogo: logo,
-                      } as StakeTokenOperationProps,
-                    }),
-                )}
-              {tokenInfo.stakingEnabled &&
-                renderAsSquareButton(
-                  <Icon
-                    name="3d_cube_rotate"
-                    theme={theme}
-                    width={12}
-                    height={12}
-                  />,
-                  translate('wallet.operations.token_unstake.title'),
-                  () =>
-                    navigate('Operation', {
-                      operation: 'unstake',
-                      props: {
-                        currency: currency,
-                        balance: (
-                          parseFloat(tokenBalance.stake) -
-                          parseFloat(tokenBalance.pendingUnstake)
-                        ).toString(),
-                        tokenLogo: logo,
-                        tokenInfo: tokenInfo,
-                      } as UnstakeTokenOperationProps,
-                    }),
-                )}
-              {tokenInfo.delegationEnabled &&
-                renderAsSquareButton(
-                  <Icon
-                    name="delegate_vesting_shares"
-                    theme={theme}
-                    width={10}
-                    height={10}
-                  />,
-                  translate('wallet.operations.token_delegation.title'),
-                  () =>
-                    navigate('Operation', {
-                      operation: 'delegate',
-                      props: {
-                        currency: currency,
-                        balance: tokenBalance.stake,
-                        tokenLogo: logo,
-                      } as DelegateTokenOperationProps,
-                    }),
-                )}
-            </View>
-          )}
+          <View style={styles.buttonsContainer}>
+            {renderAsSquareButton(
+              <Icon theme={theme} name="transfer" width={10} height={10} />,
+              translate('common.send'),
+              onTransfer,
+            )}
+            {tokenInfo &&
+              tokenInfo.stakingEnabled &&
+              renderAsSquareButton(
+                <Icon name="3d_cube" theme={theme} width={10} height={10} />,
+                translate('wallet.operations.token_stake.title'),
+                onGoToStake,
+              )}
+            {tokenInfo.stakingEnabled &&
+              renderAsSquareButton(
+                <Icon
+                  name="3d_cube_rotate"
+                  theme={theme}
+                  width={12}
+                  height={12}
+                />,
+                translate('wallet.operations.token_unstake.title'),
+                onGoToUnstake,
+              )}
+            {tokenInfo.delegationEnabled &&
+              renderAsSquareButton(
+                <Icon
+                  name="delegate_vesting_shares"
+                  theme={theme}
+                  width={10}
+                  height={10}
+                />,
+                translate('wallet.operations.token_delegation.title'),
+                onGoToDelegate,
+              )}
+          </View>
         </View>
       )}
-    </View>
+    </TouchableOpacity>
   ) : (
     //TODO OLD UI to remove
     <TouchableOpacity style={styles.container} onPress={setToggle}>
@@ -486,8 +526,9 @@ const getDimensionedStyles = ({
     },
     buttonsContainer: {
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexWrap: 'wrap',
       alignItems: 'center',
+      justifyContent: 'center',
       marginTop: 14,
       marginBottom: 9,
     },

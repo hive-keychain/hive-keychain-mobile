@@ -2,7 +2,6 @@ import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import {clearTokensFilters} from 'actions/tokensFilters';
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
-import {TransferOperationProps} from 'components/operations/Transfer';
 import React, {useContext, useState} from 'react';
 import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
 import Image from 'react-native-fast-image';
@@ -13,7 +12,6 @@ import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {navigate} from 'utils/navigation';
-import Icon from './Icon';
 import TokenDisplay from './TokenDisplay';
 
 type Props = {
@@ -93,38 +91,13 @@ const EngineTokenDisplay = ({
           tokenMarket ? tokenMarket.priceChangePercent : '0',
         ),
       }}
-      buttons={[
-        <Icon
-          key={`show-token-history-${token.symbol}`}
-          name={'back_time'}
-          onClick={onHandleGoToTokenHistory}
-          additionalContainerStyle={styles.squareButton}
-          theme={theme}
-        />,
-        <Icon
-          key={`show-token-transfer-${token.symbol}`}
-          name={'transfer'}
-          onClick={() => {
-            navigate('Operation', {
-              operation: 'transfer',
-              props: {
-                currency: token.symbol,
-                tokenBalance: token.balance,
-                engine: true,
-                tokenLogo: logo,
-              } as TransferOperationProps,
-            });
-          }}
-          additionalContainerStyle={[styles.squareButton, styles.smallPadding]}
-          theme={theme}
-        />,
-      ]}
       logo={logo}
       using_new_ui={using_new_ui}
-      renderButtonOptions={true}
+      renderButtonOptions={false}
       theme={theme}
       tokenInfo={tokenInfo}
       tokenBalance={token}
+      onHandleGoToTokenHistory={onHandleGoToTokenHistory}
     />
   );
 };
