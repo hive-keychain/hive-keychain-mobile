@@ -26,6 +26,8 @@ import {
   AppState,
   AppStateStatus,
   FlatList,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   StyleSheet,
   View,
   useWindowDimensions,
@@ -48,6 +50,7 @@ import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
+import FloatingBar from './FloatingBar';
 
 const Main = ({
   loadAccount,
@@ -76,6 +79,7 @@ const Main = ({
   ] = useState<TokenBalance[]>([]);
   const [toggled, setToggled] = useState<number>(null);
   const [loadingUserTokens, setLoadingUserTokens] = useState(true);
+  const [showFLoatingBar, setShowFLoatingBar] = useState(true);
 
   useEffect(() => {
     loadTokens();
@@ -170,120 +174,128 @@ const Main = ({
     };
   };
 
+  const onHandleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    console.log('scrolling', {offSet: event.nativeEvent.contentOffset}); //TODO remove line
+    setShowFLoatingBar(event.nativeEvent.contentOffset.y === 0);
+  };
+
   return (
     <WalletPage>
       {Object.keys(user.account).length > 0 ? (
-        <ScrollView>
-          <View style={styles.headerMenu}>
-            <DrawerButton navigation={navigation as any} theme={theme} />
-            <View style={styles.innerHeader}>
-              <StatusIndicator theme={theme} />
-              <Claim theme={theme} />
-              <PickerItem
-                selected={getItemDropDownSelected(user.name)}
+        <>
+          <ScrollView onScroll={onHandleScroll}>
+            <View style={styles.headerMenu}>
+              <DrawerButton navigation={navigation as any} theme={theme} />
+              <View style={styles.innerHeader}>
+                <StatusIndicator theme={theme} />
+                <Claim theme={theme} />
+                <PickerItem
+                  selected={getItemDropDownSelected(user.name)}
+                  theme={theme}
+                  pickerItemList={accounts.map((acc) => {
+                    return {
+                      label: acc.name,
+                      value: acc.name,
+                      icon: (
+                        <UserProfilePicture
+                          username={acc.name}
+                          style={styles.avatar}
+                        />
+                      ),
+                    };
+                  })}
+                  additionalContainerStyle={styles.userPicker}
+                  additionalExpandedListItemContainerStyle={{
+                    padding: 10,
+                  }}
+                  removeDropdownIcon
+                  onSelectedItem={(item) => loadAccount(item.value)}
+                />
+              </View>
+            </View>
+            <Separator />
+            <View style={styles.rowWrapper}>
+              <PercentageDisplay
+                name={translate('wallet.vp')}
+                percent={getVP(user.account) || 100}
+                IconBgcolor={OVERLAYICONBGCOLOR}
                 theme={theme}
-                pickerItemList={accounts.map((acc) => {
-                  return {
-                    label: acc.name,
-                    value: acc.name,
-                    icon: (
-                      <UserProfilePicture
-                        username={acc.name}
-                        style={styles.avatar}
-                      />
-                    ),
-                  };
-                })}
-                additionalContainerStyle={styles.userPicker}
-                additionalExpandedListItemContainerStyle={{
-                  padding: 10,
-                }}
-                removeDropdownIcon
-                onSelectedItem={(item) => loadAccount(item.value)}
+                iconName="send_square"
+                bgColor={BACKGROUNDITEMDARKISH}
+                secondary={`$${
+                  getVotingDollarsPerAccount(
+                    100,
+                    properties,
+                    user.account,
+                    false,
+                  ) || '0'
+                }`}
+              />
+              <PercentageDisplay
+                iconName="speedometer"
+                bgColor={DARKER_RED_COLOR}
+                name={translate('wallet.rc')}
+                percent={user.rc.percentage || 100}
+                IconBgcolor={OVERLAYICONBGCOLOR}
+                theme={theme}
               />
             </View>
-          </View>
-          <Separator />
-          <View style={styles.rowWrapper}>
-            <PercentageDisplay
-              name={translate('wallet.vp')}
-              percent={getVP(user.account) || 100}
-              IconBgcolor={OVERLAYICONBGCOLOR}
-              theme={theme}
-              iconName="send_square"
-              bgColor={BACKGROUNDITEMDARKISH}
-              secondary={`$${
-                getVotingDollarsPerAccount(
-                  100,
-                  properties,
-                  user.account,
-                  false,
-                ) || '0'
-              }`}
-            />
-            <PercentageDisplay
-              iconName="speedometer"
-              bgColor={DARKER_RED_COLOR}
-              name={translate('wallet.rc')}
-              percent={user.rc.percentage || 100}
-              IconBgcolor={OVERLAYICONBGCOLOR}
+            <Separator />
+            <BackgroundHexagons
+              additionalSvgStyle={styles.extraBg}
               theme={theme}
             />
-          </View>
-          <Separator />
-          <BackgroundHexagons
-            additionalSvgStyle={styles.extraBg}
-            theme={theme}
-          />
-          <AccountValue
-            account={user.account}
-            prices={prices}
-            properties={properties}
-            theme={theme}
-            title={translate('common.estimated_account_value')}
-          />
-          <Separator />
-          <View
-            style={[
-              getCardStyle(theme).roundedCardItem,
-              styles.fullListContainer,
-            ]}>
-            <Primary theme={theme} />
-            <Separator height={10} />
-            <View style={styles.separatorContainer} />
-            <Separator height={10} />
+            <AccountValue
+              account={user.account}
+              prices={prices}
+              properties={properties}
+              theme={theme}
+              title={translate('common.estimated_account_value')}
+            />
+            <Separator />
+            <View
+              style={[
+                getCardStyle(theme).roundedCardItem,
+                styles.fullListContainer,
+              ]}>
+              <Primary theme={theme} />
+              <Separator height={10} />
+              <View style={styles.separatorContainer} />
+              <Separator height={10} />
 
-            {!loadingUserTokens && orderedUserTokenBalanceList.length > 0 && (
-              <FlatList
-                data={orderedUserTokenBalanceList}
-                contentContainerStyle={styles.flatlist}
-                keyExtractor={(item) => item._id.toString()}
-                ItemSeparatorComponent={() => <Separator height={10} />}
-                renderItem={({item}) => (
-                  <EngineTokenDisplay
-                    token={item}
-                    tokensList={tokens}
-                    market={tokensMarket}
-                    toggled={toggled === item._id}
-                    setToggle={() => {
-                      if (toggled === item._id) setToggled(null);
-                      else setToggled(item._id);
-                    }}
-                    using_new_ui
-                  />
-                )}
-              />
-            )}
+              {!loadingUserTokens && orderedUserTokenBalanceList.length > 0 && (
+                <FlatList
+                  data={orderedUserTokenBalanceList}
+                  contentContainerStyle={styles.flatlist}
+                  keyExtractor={(item) => item._id.toString()}
+                  ItemSeparatorComponent={() => <Separator height={10} />}
+                  renderItem={({item}) => (
+                    <EngineTokenDisplay
+                      token={item}
+                      tokensList={tokens}
+                      market={tokensMarket}
+                      toggled={toggled === item._id}
+                      setToggle={() => {
+                        if (toggled === item._id) setToggled(null);
+                        else setToggled(item._id);
+                      }}
+                      using_new_ui
+                    />
+                  )}
+                />
+              )}
 
-            {loadingUserTokens && (
-              <View style={{height: 40}}>
-                <Loader size={'small'} animating />
-              </View>
-            )}
-          </View>
-          <Survey navigation={navigation} />
-          <WhatsNewComponent navigation={navigation} />
-        </ScrollView>
+              {loadingUserTokens && (
+                <View style={{height: 40}}>
+                  <Loader size={'small'} animating />
+                </View>
+              )}
+            </View>
+            <Survey navigation={navigation} />
+            <WhatsNewComponent navigation={navigation} />
+          </ScrollView>
+          <FloatingBar show={showFLoatingBar} />
+        </>
       ) : (
         <Loader new_ui_loader />
       )}
@@ -330,7 +342,7 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       opacity: 0.7,
     },
     fullListContainer: {
-      flexGrow: 1,
+      flexGrow: 2,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
       paddingHorizontal: 15,

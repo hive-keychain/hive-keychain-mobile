@@ -28,11 +28,14 @@ import EmptyWalletIcon from 'assets/new_UI/linear_empty-wallet.svg';
 import ExternalLinkIcon from 'assets/new_UI/linear_export.svg';
 import NotSeeIcon from 'assets/new_UI/linear_eye-slash.svg';
 import SeeIcon from 'assets/new_UI/linear_eye.svg';
+import GlobalIcon from 'assets/new_UI/linear_global.svg';
 import RPCNodeIcon from 'assets/new_UI/linear_hierarchy-square-3.svg';
 import RamIcon from 'assets/new_UI/linear_ram.svg';
+import RepeatMusicIcon from 'assets/new_UI/linear_repeate-music.svg';
 import ScannerIcon from 'assets/new_UI/linear_scanner.svg';
 import SendSquareIcon from 'assets/new_UI/linear_send-square.svg';
 import CheckIcon from 'assets/new_UI/linear_tick-circle.svg';
+import WalletAddIcon from 'assets/new_UI/linear_wallet-add.svg';
 import HASIcon from 'assets/new_UI/logo_HAS.svg';
 import LogoutIcon from 'assets/new_UI/logout.svg';
 import PolygonDown from 'assets/new_UI/polygon_down.svg';
@@ -491,6 +494,27 @@ const getIconFilePath = (
     case name === 'empty_wallet':
       return (
         <EmptyWalletIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'wallet_add':
+      return (
+        <WalletAddIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'global':
+      return (
+        <GlobalIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'repeate_music' || name === 'swap':
+      return (
+        <RepeatMusicIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

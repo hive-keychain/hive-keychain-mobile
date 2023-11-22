@@ -20,5 +20,14 @@ export const getCardStyle = (theme: Theme, borderRadius?: number) => {
       padding: 4,
       backgroundColor: getColors(theme).secondaryCardBgColor,
     } as StyleProp<ViewStyle>,
+    floatingBar: {
+      borderRadius: 22,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+      borderWidth: 1,
+      padding: 10,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+    } as StyleProp<ViewStyle>,
   };
 };

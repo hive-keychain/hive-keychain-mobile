@@ -636,7 +636,13 @@
     "create_account": "Create Account",
     "tokens": "Tokens",
     "theme_setting": "Theme Setting",
-    "wallet_history": "Wallet History"
+    "wallet_history": "Wallet History",
+    "floating_bar": {
+      "ecosystem": "Ecosystem",
+      "browser": "Browser",
+      "buy": "Buy",
+      "swap": "Swap"
+    }
   },
   "request": {
     "title": {
