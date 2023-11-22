@@ -1,6 +1,7 @@
 const SSC = require('sscjs');
 import axios from 'axios';
 import {TokenRequestParams} from 'src/interfaces/token-request-params.interface';
+import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 
 export default new SSC('https://engine.rishipanthee.com');
 
@@ -8,16 +9,10 @@ export const hiveEngineAPI = axios.create({
   baseURL: 'https://history.hive-engine.com/',
 });
 
-let rpc = 'https://engine.rishipanthee.com';
-
-const getHiveEngineApi = () => {
-  return rpc;
-};
-
 export const hiveEngineGet = async <T>(
   params: TokenRequestParams,
 ): Promise<T> => {
-  const url = `${getHiveEngineApi()}/contracts`;
+  const url = `${HiveEngineConfigUtils.getApi()}/contracts`;
   return new Promise((resolve, reject) => {
     fetch(url, {
       method: 'POST',

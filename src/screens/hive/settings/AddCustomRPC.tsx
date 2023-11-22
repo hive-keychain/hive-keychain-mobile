@@ -2,7 +2,7 @@ import CustomDropdown, {DropdownItem} from 'components/form/CustomDropdown';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
@@ -14,27 +14,38 @@ import {translate} from 'utils/localize';
 interface Props {
   theme: Theme;
   rpcList: DropdownItem[];
+  selectedRPC: string;
   title: string;
   placeHolderInput: string;
   checkBoxTitle: string;
   onHandleSave: () => void;
+  input: string;
   onChangeInput: (text: string) => void;
   checkedValue: boolean;
   onChangeCheckBox: () => void;
+  addNewRpc: boolean;
+  setAddNewRpc: () => void;
+  onRemoveDropdownItem: (item: string) => void;
+  onSelectedDropdown: (item: string) => void;
 }
 
 const AddCustomRPC = ({
   theme,
   rpcList,
+  selectedRPC,
   title,
   placeHolderInput,
   checkBoxTitle,
   onHandleSave,
+  input,
   onChangeInput,
   checkedValue,
   onChangeCheckBox,
+  addNewRpc,
+  setAddNewRpc,
+  onRemoveDropdownItem,
+  onSelectedDropdown,
 }: Props) => {
-  const [addNewRpc, setAddNewRpc] = useState(false);
   const styles = getStyles(theme);
   return (
     <View>
@@ -43,14 +54,15 @@ const AddCustomRPC = ({
         <CustomDropdown
           theme={theme}
           list={rpcList}
-          selected={rpcList[0].value}
-          onSelected={(item) => {}}
-          onRemove={(item) => {}}
+          selected={selectedRPC ?? rpcList[0].value}
+          onSelected={onSelectedDropdown}
+          onRemove={onRemoveDropdownItem}
           additionalContainerStyle={styles.flex85}
+          keyExtractor="label"
         />
         <TouchableOpacity
           style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
-          onPress={() => setAddNewRpc(!addNewRpc)}>
+          onPress={setAddNewRpc}>
           <Text style={styles.text}>{addNewRpc ? 'x' : '+'}</Text>
         </TouchableOpacity>
       </View>
@@ -69,7 +81,7 @@ const AddCustomRPC = ({
           />
           <OperationInput
             placeholder={placeHolderInput}
-            value={''}
+            value={input}
             additionalInputContainerStyle={styles.input}
             inputStyle={styles.text}
             onChangeText={onChangeInput}

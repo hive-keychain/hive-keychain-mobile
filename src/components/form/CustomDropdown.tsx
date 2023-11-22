@@ -16,6 +16,7 @@ import {title_primary_body_2} from 'src/styles/typography';
 
 export interface DropdownItem {
   value: string;
+  label?: string;
   removable?: boolean;
 }
 
@@ -26,6 +27,7 @@ interface Props {
   onSelected: (item: string) => void;
   onRemove?: (item: string) => void;
   additionalContainerStyle?: StyleProp<ViewStyle>;
+  keyExtractor?: keyof DropdownItem;
 }
 
 const CustomDropdown = ({
@@ -35,10 +37,11 @@ const CustomDropdown = ({
   selected,
   onSelected,
   onRemove,
+  keyExtractor,
 }: Props) => {
   const [isListExpanded, setIsListExpanded] = useState(false);
   const styles = getStyles(theme);
-
+  //TODO check if need to fix using label, instead of .value
   return (
     <View style={[styles.container, additionalContainerStyle]}>
       <View
@@ -62,21 +65,26 @@ const CustomDropdown = ({
           <ScrollView>
             {list.map((item) => {
               return (
-                <View style={styles.dropdownItemContainer}>
+                <View
+                  style={styles.dropdownItemContainer}
+                  key={
+                    keyExtractor
+                      ? `dropdown-${item[keyExtractor]}`
+                      : `dropdown-item-${item.value}`
+                  }>
                   <TouchableOpacity
-                    key={`dropdown-item-${item.value}`}
                     onPress={() => onSelected(item.value)}
                     style={[
-                      item.value === selected
+                      item.label === selected
                         ? styles.itemSelectedInList
                         : undefined,
                     ]}>
                     <Text
                       style={[
                         styles.text,
-                        item.value === selected ? styles.whiteText : undefined,
+                        item.label === selected ? styles.whiteText : undefined,
                       ]}>
-                      {item.value}
+                      {item.label ?? item.value}
                     </Text>
                   </TouchableOpacity>
                   {item.removable && (

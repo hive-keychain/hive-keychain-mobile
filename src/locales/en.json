@@ -618,7 +618,9 @@
       "need_posting_key_to_claim_rewards": "You need to add your posting key to Keychain to claim accounts",
       "not_enough_rc_to_claim_account": "You don't have enough RC to claim an account.",
       "insufficient_hp_claim_accounts": "Insufficient HP to claim accounts."
-    }
+    },
+    "rpc_node_added_success": "RPC added succesfully",
+    "rpc_node_removed_success": "RPC removed succesfully"
   },
   "navigation": {
     "log_out": "Logout",
