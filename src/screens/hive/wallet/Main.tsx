@@ -1,3 +1,4 @@
+import {showFloatingBar} from 'actions/floatingBar';
 import {
   fetchPhishingAccounts,
   loadAccount,
@@ -50,7 +51,6 @@ import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import FloatingBar from './FloatingBar';
 
 const Main = ({
   loadAccount,
@@ -70,6 +70,7 @@ const Main = ({
   loadTokens,
   loadTokensMarket,
   loadUserTokens,
+  showFloatingBar,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useContext(ThemeContext);
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
@@ -79,7 +80,7 @@ const Main = ({
   ] = useState<TokenBalance[]>([]);
   const [toggled, setToggled] = useState<number>(null);
   const [loadingUserTokens, setLoadingUserTokens] = useState(true);
-  const [showFLoatingBar, setShowFLoatingBar] = useState(true);
+  const [isLoadingAccount, setIsLoadingAccount] = useState(true);
 
   useEffect(() => {
     loadTokens();
@@ -104,7 +105,13 @@ const Main = ({
       setLoadingUserTokens(true);
       loadUserTokens(user.name);
     }
-  }, [loadUserTokens, user.name!]);
+    if (Object.keys(user.account).length > 0) {
+      setTimeout(() => {
+        setIsLoadingAccount(false);
+        showFloatingBar(true);
+      }, 1000);
+    }
+  }, [loadUserTokens, user.name!, user.account]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
@@ -174,14 +181,15 @@ const Main = ({
     };
   };
 
+  //TODO floatingBar moved to HiveApp
+  //TODo check if code needed at all
   const onHandleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    console.log('scrolling', {offSet: event.nativeEvent.contentOffset}); //TODO remove line
-    setShowFLoatingBar(event.nativeEvent.contentOffset.y === 0);
+    showFloatingBar(event.nativeEvent.contentOffset.y === 0);
   };
 
   return (
     <WalletPage>
-      {Object.keys(user.account).length > 0 ? (
+      {!isLoadingAccount ? (
         <>
           <ScrollView onScroll={onHandleScroll}>
             <View style={styles.headerMenu}>
@@ -294,7 +302,6 @@ const Main = ({
             <Survey navigation={navigation} />
             <WhatsNewComponent navigation={navigation} />
           </ScrollView>
-          <FloatingBar show={showFLoatingBar} />
         </>
       ) : (
         <Loader new_ui_loader />
@@ -381,6 +388,7 @@ const connector = connect(
     loadTokens,
     loadUserTokens,
     loadTokensMarket,
+    showFloatingBar,
   },
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;

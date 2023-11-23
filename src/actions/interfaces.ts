@@ -228,6 +228,10 @@ export interface MessageModalPayload {
   skipTranslation?: boolean;
 }
 
+export interface FloatingBarPayload {
+  show: boolean;
+}
+
 export interface AccountsPayload {
   account?: Account;
   accounts?: Account[];

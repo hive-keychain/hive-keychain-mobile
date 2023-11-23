@@ -6,6 +6,7 @@ import browser from './browser';
 import conversions from './conversions';
 import currencyPrices from './currencyPrices';
 import delegations from './delegations';
+import floatingBar from './floatingBar';
 import properties from './globalProperties';
 import hiveUri from './hive-uri';
 import hive_authentication_service from './hiveAuthenticationService';
@@ -44,4 +45,5 @@ export default combineReducers({
   walletFilters,
   tokensFilters,
   message,
+  floatingBar,
 });

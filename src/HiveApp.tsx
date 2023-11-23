@@ -16,6 +16,7 @@ import RNBootSplash from 'react-native-bootsplash';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
 import Modal from 'screens/Modal';
+import {FloatingBar} from 'screens/hive/wallet/FloatingBar';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {setRpc} from 'utils/hive';
@@ -105,6 +106,7 @@ const App = ({
       }}>
       {renderRootNavigator()}
       <MessageModal capitalize />
+      <FloatingBar />
       <Bridge />
     </NavigationContainer>
   );

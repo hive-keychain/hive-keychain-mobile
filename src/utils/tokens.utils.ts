@@ -61,7 +61,7 @@ export const getUserBalance = (account: string) => {
   });
 };
 
-const BlockchainTransactionUtils = {
+export const BlockchainTransactionUtils = {
   tryConfirmTransaction,
   delayRefresh,
   getDelayedTransactionInfo,
