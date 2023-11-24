@@ -328,6 +328,9 @@ export default ({
           />
         </View>
       </View>
+      {/* //TODO keep working here. 2 ideas:
+      //  1. we use redux to handle those: 'goBack' 'addTab' etc. actions, which may complicate things.
+      //  2. somehow we pass those bellow as props and process them inside FloatingBar */}
       {active && orientation === 'PORTRAIT' && (
         <Footer
           canGoBack={canGoBack}

@@ -19,6 +19,9 @@ import HiveCurrencyLogo from 'assets/new_UI/hive-currency-logo.svg';
 import HiveAlternative from 'assets/new_UI/hive_alternative.svg';
 import ImportIcon from 'assets/new_UI/import.svg';
 import InfoCircleIcon from 'assets/new_UI/info-circle.svg';
+import AddBrowser from 'assets/new_UI/linear_add-browser.svg';
+import ArrowLeftBrowser from 'assets/new_UI/linear_arrow-left-browser.svg';
+import ArrowRightBrowser from 'assets/new_UI/linear_arrow-right-browser.svg';
 import ClockIcon from 'assets/new_UI/linear_clock.svg';
 import CloseCircleIcon from 'assets/new_UI/linear_close-circle.svg';
 import CpuIcon from 'assets/new_UI/linear_cpu-setting.svg';
@@ -32,6 +35,7 @@ import GlobalIcon from 'assets/new_UI/linear_global.svg';
 import RPCNodeIcon from 'assets/new_UI/linear_hierarchy-square-3.svg';
 import RamIcon from 'assets/new_UI/linear_ram.svg';
 import RepeatMusicIcon from 'assets/new_UI/linear_repeate-music.svg';
+import RotateRightBrowserIcon from 'assets/new_UI/linear_rotate-right-browser.svg';
 import ScannerIcon from 'assets/new_UI/linear_scanner.svg';
 import SendSquareIcon from 'assets/new_UI/linear_send-square.svg';
 import CheckIcon from 'assets/new_UI/linear_tick-circle.svg';
@@ -313,6 +317,34 @@ const getIconFilePath = (
             finalStyleOnIcon,
             {color: color ?? getColors(theme).secodaryIconBW},
           ]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'arrow_left_browser':
+      return (
+        <ArrowLeftBrowser
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'arrow_right_browser':
+      return (
+        <ArrowRightBrowser
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'add_browser':
+      return (
+        <AddBrowser
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'rotate_right_browser':
+      return (
+        <RotateRightBrowserIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );

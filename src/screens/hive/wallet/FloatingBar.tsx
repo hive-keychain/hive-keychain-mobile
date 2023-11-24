@@ -1,11 +1,16 @@
 import {NavigationContainerRef} from '@react-navigation/native';
 import Icon from 'components/hive/Icon';
 import React, {useContext, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {
+  BACKGROUNDITEMDARKISH,
+  HIVEICONBGCOLOR,
+  PRIMARY_RED_COLOR,
+  getColors,
+} from 'src/styles/colors';
 import {body_primary_body_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
@@ -34,6 +39,7 @@ const Floating = ({
   isDrawerOpen,
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
+  const [showBrowserBar, setShowBrowserBar] = useState(false);
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
 
@@ -48,6 +54,9 @@ const Floating = ({
 
   const getActiveStyle = (link: FloatingBarLink) =>
     activeLink === link ? styles.active : undefined;
+
+  const getActiveIconColor = (link: FloatingBarLink) =>
+    activeLink === link ? '#FFF' : undefined;
 
   const onHandlePressButton = (link: FloatingBarLink) => {
     setActiveLink(link);
@@ -69,62 +78,139 @@ const Floating = ({
     return navigate(screen);
   };
 
-  return show && !isLoadingScreen && !isDrawerOpen && isScreenFound ? (
-    <View style={[getCardStyle(theme).floatingBar, styles.container]}>
-      <View style={[styles.itemContainer, getActiveStyle('ecosystem')]}>
-        <Icon
-          theme={theme}
-          name="wallet_add"
-          {...styles.icon}
-          onClick={() => onHandlePressButton('ecosystem')}
-        />
-        {showTags && (
-          <Text style={[styles.textBase, styles.marginTop]}>
-            {translate('navigation.floating_bar.ecosystem')}
-          </Text>
+  const onHandleCanSwith = () => {
+    if (currentRouteName === 'BrowserScreen') {
+      setShowBrowserBar(!showBrowserBar);
+    }
+  };
+
+  const handleClickBrowserNav = (
+    type: 'back' | 'forward' | 'add_new' | 'refresh' | 'Go_tabs',
+  ) => {
+    console.log('TODO, handle each: ', {type});
+  };
+
+  const renderNavigationBar = () => {
+    return (
+      <TouchableOpacity
+        activeOpacity={1}
+        onLongPress={onHandleCanSwith}
+        style={[getCardStyle(theme).floatingBar, styles.container]}>
+        {!showBrowserBar && (
+          <>
+            <View style={[styles.itemContainer, getActiveStyle('ecosystem')]}>
+              <Icon
+                theme={theme}
+                name="wallet_add"
+                color={getActiveIconColor('ecosystem')}
+                {...styles.icon}
+                onClick={() => onHandlePressButton('ecosystem')}
+              />
+              {showTags && (
+                <Text style={[styles.textBase, styles.marginTop]}>
+                  {translate('navigation.floating_bar.ecosystem')}
+                </Text>
+              )}
+            </View>
+            <View style={[styles.itemContainer, getActiveStyle('browser')]}>
+              <Icon
+                theme={theme}
+                color={getActiveIconColor('browser')}
+                name="global"
+                {...styles.icon}
+                onClick={() => onHandlePressButton('browser')}
+              />
+              {showTags && (
+                <Text style={[styles.textBase, styles.marginTop]}>
+                  {translate('navigation.floating_bar.browser')}
+                </Text>
+              )}
+            </View>
+            <View style={[styles.itemContainer, getActiveStyle('buy')]}>
+              <Icon
+                theme={theme}
+                name="scanner"
+                color={getActiveIconColor('buy')}
+                {...styles.icon}
+                onClick={() => onHandlePressButton('buy')}
+              />
+              {showTags && (
+                <Text style={[styles.textBase, styles.marginTop]}>
+                  {translate('navigation.floating_bar.buy')}
+                </Text>
+              )}
+            </View>
+            <View style={[styles.itemContainer, getActiveStyle('swap')]}>
+              <Icon
+                theme={theme}
+                color={getActiveIconColor('swap')}
+                name="swap"
+                {...styles.icon}
+                onClick={() => onHandlePressButton('swap')}
+              />
+              {showTags && (
+                <Text style={[styles.textBase, styles.marginTop]}>
+                  {translate('navigation.floating_bar.swap')}
+                </Text>
+              )}
+            </View>
+          </>
         )}
-      </View>
-      <View style={[styles.itemContainer, getActiveStyle('browser')]}>
-        <Icon
-          theme={theme}
-          name="global"
-          {...styles.icon}
-          onClick={() => onHandlePressButton('browser')}
-        />
-        {showTags && (
-          <Text style={[styles.textBase, styles.marginTop]}>
-            {translate('navigation.floating_bar.browser')}
-          </Text>
+        {showBrowserBar && (
+          <>
+            <Icon
+              theme={theme}
+              name="arrow_left_browser"
+              additionalContainerStyle={styles.browserNavContainer}
+              {...styles.icon}
+              onClick={() => handleClickBrowserNav('back')}
+            />
+            <Icon
+              theme={theme}
+              name="arrow_right_browser"
+              additionalContainerStyle={styles.browserNavContainer}
+              {...styles.icon}
+              onClick={() => handleClickBrowserNav('forward')}
+            />
+            <Icon
+              theme={theme}
+              name="add_browser"
+              additionalContainerStyle={[
+                styles.browserNavContainer,
+                styles.circleContainer,
+              ]}
+              onClick={() => handleClickBrowserNav('add_new')}
+              width={35}
+              height={35}
+            />
+            <Icon
+              theme={theme}
+              name="rotate_right_browser"
+              additionalContainerStyle={styles.browserNavContainer}
+              onClick={() => handleClickBrowserNav('refresh')}
+              {...styles.icon}
+            />
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => handleClickBrowserNav('Go_tabs')}
+              style={styles.tabsIndicator}>
+              <Text
+                style={[
+                  styles.textBase,
+                  theme === Theme.LIGHT ? styles.redColor : undefined,
+                ]}>
+                1
+              </Text>
+            </TouchableOpacity>
+          </>
         )}
-      </View>
-      <View style={[styles.itemContainer, getActiveStyle('buy')]}>
-        <Icon
-          theme={theme}
-          name="scanner"
-          {...styles.icon}
-          onClick={() => onHandlePressButton('buy')}
-        />
-        {showTags && (
-          <Text style={[styles.textBase, styles.marginTop]}>
-            {translate('navigation.floating_bar.buy')}
-          </Text>
-        )}
-      </View>
-      <View style={[styles.itemContainer, getActiveStyle('swap')]}>
-        <Icon
-          theme={theme}
-          name="swap"
-          {...styles.icon}
-          onClick={() => onHandlePressButton('swap')}
-        />
-        {showTags && (
-          <Text style={[styles.textBase, styles.marginTop]}>
-            {translate('navigation.floating_bar.swap')}
-          </Text>
-        )}
-      </View>
-    </View>
-  ) : null;
+      </TouchableOpacity>
+    );
+  };
+
+  return show && !isLoadingScreen && !isDrawerOpen && isScreenFound
+    ? renderNavigationBar()
+    : null;
 };
 
 const getStyles = (theme: Theme) =>
@@ -138,6 +224,7 @@ const getStyles = (theme: Theme) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       paddingBottom: 0,
+      alignItems: 'center',
     },
     textBase: {
       ...body_primary_body_1,
@@ -160,6 +247,27 @@ const getStyles = (theme: Theme) =>
       borderTopLeftRadius: 22,
       backgroundColor: PRIMARY_RED_COLOR,
       paddingVertical: 8,
+    },
+    tabsIndicator: {
+      borderColor: getColors(theme).icon,
+      borderWidth: 2,
+      width: 28,
+      height: 28,
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    browserNavContainer: {
+      padding: 10,
+    },
+    circleContainer: {
+      padding: 4,
+      borderRadius: 50,
+      backgroundColor:
+        theme === Theme.LIGHT ? HIVEICONBGCOLOR : BACKGROUNDITEMDARKISH,
+    },
+    redColor: {
+      color: PRIMARY_RED_COLOR,
     },
   });
 
