@@ -40,7 +40,10 @@ const DEFAULT_CUSTOM_RPC = {
 export const DEFAULT_HE_RPC_NODE = 'https://engine.rishipanthee.com';
 export const DEFAULT_ACCOUNT_HISTORY_RPC_NODE =
   'https://history.hive-engine.com';
-
+//TODO very imporant while refactoring.
+//  - save CURRENT_HE_RPC & CURRENT_ACCOUNT_HISTORY_API_RPC in Async.
+//  - they must be loaded from init of app
+//  - then loaded in here as usual.
 const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
   //Hive RPC
   const [showAddCustomRPC, setShowAddCustomRPC] = useState(false);

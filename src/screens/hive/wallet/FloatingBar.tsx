@@ -1,3 +1,4 @@
+import {NavigationContainerRef} from '@react-navigation/native';
 import Icon from 'components/hive/Icon';
 import React, {useContext, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
@@ -14,6 +15,7 @@ const ScreensComponentAllowanceList = ['BrowserScreen', 'WalletScreen'];
 
 export type FloatingBarLink = 'ecosystem' | 'browser' | 'buy' | 'swap';
 interface Props {
+  navigationRef: React.MutableRefObject<NavigationContainerRef>;
   showTags?: boolean;
 }
 //TODO
@@ -24,11 +26,25 @@ interface Props {
 //      -> Just in the browser can be switch(proposing a button here) for a browser bar.
 //    -> Swap/Buy mainscreen(which will be a tab) //TODO
 
-const Floating = ({show, showTags}: Props & PropsFromRedux) => {
-  const [currentScreen, setCurrentScreen] = useState('');
+const Floating = ({
+  show,
+  showTags,
+  isLoadingScreen,
+  navigationRef,
+  isDrawerOpen,
+}: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
+
+  let currentRouteName = navigationRef.current?.getCurrentRoute().name;
+
+  let isScreenFound = undefined;
+  if (currentRouteName) {
+    isScreenFound = ScreensComponentAllowanceList.find(
+      (screenName) => screenName === currentRouteName,
+    );
+  }
 
   const getActiveStyle = (link: FloatingBarLink) =>
     activeLink === link ? styles.active : undefined;
@@ -53,13 +69,7 @@ const Floating = ({show, showTags}: Props & PropsFromRedux) => {
     return navigate(screen);
   };
 
-  //TODO bellow add
-  // &&
-  //   ScreensComponentAllowanceList.find(
-  //     (screenName) => screenName === currentRouteName,
-  //   )
-
-  return show ? (
+  return show && !isLoadingScreen && !isDrawerOpen && isScreenFound ? (
     <View style={[getCardStyle(theme).floatingBar, styles.container]}>
       <View style={[styles.itemContainer, getActiveStyle('ecosystem')]}>
         <Icon
@@ -156,6 +166,8 @@ const getStyles = (theme: Theme) =>
 const connector = connect((state: RootState) => {
   return {
     show: state.floatingBar.show,
+    isLoadingScreen: state.floatingBar.isLoadingScreen,
+    isDrawerOpen: state.floatingBar.isDrawerOpened,
   };
 }, {});
 type PropsFromRedux = ConnectedProps<typeof connector>;

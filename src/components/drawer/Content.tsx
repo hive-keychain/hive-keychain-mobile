@@ -43,7 +43,6 @@ const HeaderContent = (props: Props) => {
   newState.routes = newState.routes.filter(
     (route) => !hiddenRoutesInMain.includes(route.name),
   );
-
   const {theme, setTheme} = useContext(ThemeContext);
 
   return (

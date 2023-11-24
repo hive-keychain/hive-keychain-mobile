@@ -11,6 +11,7 @@ import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 
 const Stack = createStackNavigator();
 
@@ -29,10 +30,7 @@ export default () => {
           headerTitleAlign: 'center',
           title: translate('common.account'),
           headerRight: () => (
-            <CloseButton
-              theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
-            />
+            <CloseButton theme={theme} onPress={() => navigate('WALLET')} />
           ),
           cardStyle: styles.card,
           headerLeft: () => (

@@ -1,4 +1,9 @@
-import {showFloatingBar} from 'actions/floatingBar';
+import {useIsDrawerOpen} from '@react-navigation/drawer';
+import {
+  setIsDrawerOpen,
+  setisLoadingScreen,
+  showFloatingBar,
+} from 'actions/floatingBar';
 import {
   fetchPhishingAccounts,
   loadAccount,
@@ -71,6 +76,8 @@ const Main = ({
   loadTokensMarket,
   loadUserTokens,
   showFloatingBar,
+  setIsDrawerOpen,
+  setisLoadingScreen,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useContext(ThemeContext);
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
@@ -86,6 +93,12 @@ const Main = ({
     loadTokens();
     loadTokensMarket();
   }, [loadTokens, loadTokensMarket]);
+
+  const isDrawerOpen = useIsDrawerOpen();
+  useEffect(() => {
+    console.log({isDrawerOpen}); //TODO remove line
+    setIsDrawerOpen(isDrawerOpen);
+  }, [isDrawerOpen]);
 
   useEffect(() => {
     if (!userTokens.loading) {
@@ -109,6 +122,7 @@ const Main = ({
       setTimeout(() => {
         setIsLoadingAccount(false);
         showFloatingBar(true);
+        setisLoadingScreen(false);
       }, 1000);
     }
   }, [loadUserTokens, user.name!, user.account]);
@@ -181,8 +195,6 @@ const Main = ({
     };
   };
 
-  //TODO floatingBar moved to HiveApp
-  //TODo check if code needed at all
   const onHandleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     showFloatingBar(event.nativeEvent.contentOffset.y === 0);
   };
@@ -389,6 +401,8 @@ const connector = connect(
     loadUserTokens,
     loadTokensMarket,
     showFloatingBar,
+    setIsDrawerOpen,
+    setisLoadingScreen,
   },
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;

@@ -9,6 +9,8 @@ import {RootState} from 'store';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
 
+//TODO fix styles & usability of this
+//TODO: add functionality to the 'clear all buttons' as "It deletes all hiveAuth sessions"
 //TODO: Use all connection statuses. This will be useful when different servers work with Hive Auth.
 export enum ConnectionStatus {
   VOID,

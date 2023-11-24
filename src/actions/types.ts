@@ -52,7 +52,10 @@ export const FETCH_SAVINGS_REQUESTS = 'FETCH_SAVINGS_REQUESTS';
 export const SHOW_MODAL = 'SHOW_MODAL';
 export const RESET_MODAL = 'RESET_MODAL';
 
+//floating bar
 export const SHOW_FLOATING_BAR = 'SHOW_FLOATING_BAR';
+export const SET_IS_LOADING_SCREEN = 'SET_IS_LOADING_FLOATING_BAR';
+export const SET_IS_DRAWER_OPEN = 'SET_IS_DRAWER_OPEN';
 export const HIDE_FLOATING_BAR = 'HIDE_FLOATING_BAR';
 
 export enum HAS_ActionsTypes {

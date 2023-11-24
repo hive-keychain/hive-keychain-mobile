@@ -230,6 +230,8 @@ export interface MessageModalPayload {
 
 export interface FloatingBarPayload {
   show: boolean;
+  isLoadingScreen: boolean;
+  isDrawerOpened: boolean;
 }
 
 export interface AccountsPayload {

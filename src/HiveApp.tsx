@@ -3,6 +3,7 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {showFloatingBar} from 'actions/floatingBar';
 import {forgetRequestedOperation} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
 import Bridge from 'components/bridge';
@@ -34,6 +35,7 @@ const App = ({
   accounts,
   requestedOp,
   forgetRequestedOperation,
+  showFloatingBar,
 }: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
@@ -106,7 +108,7 @@ const App = ({
       }}>
       {renderRootNavigator()}
       <MessageModal capitalize />
-      <FloatingBar />
+      <FloatingBar navigationRef={navigationRef} />
       <Bridge />
     </NavigationContainer>
   );
@@ -122,7 +124,10 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps, {forgetRequestedOperation});
+const connector = connect(mapStateToProps, {
+  forgetRequestedOperation,
+  showFloatingBar,
+});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(App);
