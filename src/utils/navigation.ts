@@ -9,8 +9,10 @@ export const setNavigator = (nav: NavigationContainerRef | null) => {
 };
 
 export const navigate = (routeName: string, params?: object) => {
-  if (navigator)
+  if (navigator) {
     navigator.dispatch(NavigationActions.navigate({routeName, params}));
+    console.log('navigator: ', {routeName}); //TODO remove line
+  }
 };
 
 export const goBack = () => {

@@ -12,7 +12,7 @@ import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
@@ -39,6 +39,7 @@ const App = ({
 }: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
+  const [currentRouteName, setCurrentRouteName] = useState('');
 
   useEffect(() => {
     setupLinking();
@@ -97,6 +98,7 @@ const App = ({
       }}
       onStateChange={async (state) => {
         let currentRouteName = navigationRef.current.getCurrentRoute().name;
+        setCurrentRouteName(currentRouteName);
         const p = navigationRef.current.getCurrentRoute().params;
         if (currentRouteName === 'WalletScreen') {
           currentRouteName = getToggleElement() || 'WalletScreen';
@@ -108,7 +110,7 @@ const App = ({
       }}>
       {renderRootNavigator()}
       <MessageModal capitalize />
-      <FloatingBar navigationRef={navigationRef} />
+      <FloatingBar currentRouteName={currentRouteName} />
       <Bridge />
     </NavigationContainer>
   );

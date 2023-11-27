@@ -78,6 +78,7 @@ const Main = ({
   showFloatingBar,
   setIsDrawerOpen,
   setisLoadingScreen,
+  isAppReady,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useContext(ThemeContext);
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
@@ -87,7 +88,6 @@ const Main = ({
   ] = useState<TokenBalance[]>([]);
   const [toggled, setToggled] = useState<number>(null);
   const [loadingUserTokens, setLoadingUserTokens] = useState(true);
-  const [isLoadingAccount, setIsLoadingAccount] = useState(true);
 
   useEffect(() => {
     loadTokens();
@@ -96,7 +96,6 @@ const Main = ({
 
   const isDrawerOpen = useIsDrawerOpen();
   useEffect(() => {
-    console.log({isDrawerOpen}); //TODO remove line
     setIsDrawerOpen(isDrawerOpen);
   }, [isDrawerOpen]);
 
@@ -114,18 +113,13 @@ const Main = ({
   }, [userTokens]);
 
   useEffect(() => {
-    if (user.name) {
+    if (isAppReady) {
       setLoadingUserTokens(true);
       loadUserTokens(user.name);
+      showFloatingBar(true);
+      setisLoadingScreen(false);
     }
-    if (Object.keys(user.account).length > 0) {
-      setTimeout(() => {
-        setIsLoadingAccount(false);
-        showFloatingBar(true);
-        setisLoadingScreen(false);
-      }, 1000);
-    }
-  }, [loadUserTokens, user.name!, user.account]);
+  }, [isAppReady]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
@@ -201,7 +195,7 @@ const Main = ({
 
   return (
     <WalletPage>
-      {!isLoadingAccount ? (
+      {isAppReady ? (
         <>
           <ScrollView onScroll={onHandleScroll}>
             <View style={styles.headerMenu}>
@@ -390,6 +384,10 @@ const connector = connect(
       tokens: state.tokens,
       userTokens: state.userTokens,
       tokensMarket: state.tokensMarket,
+      isAppReady:
+        state.properties.globals &&
+        Object.keys(state.properties.globals).length > 0 &&
+        Object.keys(state.activeAccount.account).length > 0,
     };
   },
   {

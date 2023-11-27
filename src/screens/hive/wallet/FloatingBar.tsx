@@ -1,7 +1,6 @@
-import {NavigationContainerRef} from '@react-navigation/native';
 import Icon from 'components/hive/Icon';
-import React, {useContext, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
@@ -16,11 +15,11 @@ import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
-const ScreensComponentAllowanceList = ['BrowserScreen', 'WalletScreen'];
+const ScreensComponentAllowanceList = ['WalletScreen'];
 
 export type FloatingBarLink = 'ecosystem' | 'browser' | 'buy' | 'swap';
 interface Props {
-  navigationRef: React.MutableRefObject<NavigationContainerRef>;
+  currentRouteName: string;
   showTags?: boolean;
 }
 //TODO
@@ -31,26 +30,37 @@ interface Props {
 //      -> Just in the browser can be switch(proposing a button here) for a browser bar.
 //    -> Swap/Buy mainscreen(which will be a tab) //TODO
 
+//TODO important:
+//  - remove browserBar from here. Browser bar only exists in the browser as it is now but styled.
+//  - floatingBar keep working as usual but with a special condition to be rendered when in browser.
+//  - add the extra button(wallet_add) into the browser bar. keeping the height as short as possible,
+//  - so that button will fire:
+//    1. hide browser bar.
+//    2. show floatingBar.
+
 const Floating = ({
   show,
   showTags,
   isLoadingScreen,
-  navigationRef,
+  currentRouteName,
   isDrawerOpen,
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
-  const [showBrowserBar, setShowBrowserBar] = useState(false);
+  const [isScreenAllowed, setIsScreenAllowed] = useState(false);
+  const [showInBrowserScreen, setShowInBrowserScreen] = useState(false);
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
 
-  let currentRouteName = navigationRef.current?.getCurrentRoute().name;
-
-  let isScreenFound = undefined;
-  if (currentRouteName) {
-    isScreenFound = ScreensComponentAllowanceList.find(
-      (screenName) => screenName === currentRouteName,
-    );
-  }
+  useEffect(() => {
+    if (currentRouteName) {
+      console.log('in FB: ', {currentRouteName}); //TODO remove line
+      setIsScreenAllowed(
+        ScreensComponentAllowanceList.find(
+          (screenName) => screenName === currentRouteName,
+        ) !== undefined,
+      );
+    }
+  }, [currentRouteName]);
 
   const getActiveStyle = (link: FloatingBarLink) =>
     activeLink === link ? styles.active : undefined;
@@ -78,11 +88,12 @@ const Floating = ({
     return navigate(screen);
   };
 
-  const onHandleCanSwith = () => {
-    if (currentRouteName === 'BrowserScreen') {
-      setShowBrowserBar(!showBrowserBar);
-    }
-  };
+  //TODO this will be redux action.
+  // const onHandleCanSwith = () => {
+  //   if (currentRouteName === 'BrowserScreen') {
+  //     setShowBrowserBar(!showBrowserBar);
+  //   }
+  // };
 
   const handleClickBrowserNav = (
     type: 'back' | 'forward' | 'add_new' | 'refresh' | 'Go_tabs',
@@ -90,125 +101,119 @@ const Floating = ({
     console.log('TODO, handle each: ', {type});
   };
 
+  //TODO move code & styles to browserBar
+  // <>
+  //           <Icon
+  //             theme={theme}
+  //             name="arrow_left_browser"
+  //             additionalContainerStyle={styles.browserNavContainer}
+  //             {...styles.icon}
+  //             onClick={() => handleClickBrowserNav('back')}
+  //           />
+  //           <Icon
+  //             theme={theme}
+  //             name="arrow_right_browser"
+  //             additionalContainerStyle={styles.browserNavContainer}
+  //             {...styles.icon}
+  //             onClick={() => handleClickBrowserNav('forward')}
+  //           />
+  //           <Icon
+  //             theme={theme}
+  //             name="add_browser"
+  //             additionalContainerStyle={[
+  //               styles.browserNavContainer,
+  //               styles.circleContainer,
+  //             ]}
+  //             onClick={() => handleClickBrowserNav('add_new')}
+  //             width={35}
+  //             height={35}
+  //           />
+  //           <Icon
+  //             theme={theme}
+  //             name="rotate_right_browser"
+  //             additionalContainerStyle={styles.browserNavContainer}
+  //             onClick={() => handleClickBrowserNav('refresh')}
+  //             {...styles.icon}
+  //           />
+  //           <TouchableOpacity
+  //             activeOpacity={1}
+  //             onPress={() => handleClickBrowserNav('Go_tabs')}
+  //             style={styles.tabsIndicator}>
+  //             <Text
+  //               style={[
+  //                 styles.textBase,
+  //                 theme === Theme.LIGHT ? styles.redColor : undefined,
+  //               ]}>
+  //               1
+  //             </Text>
+  //           </TouchableOpacity>
+  //         </>
+  //end move code
+
   const renderNavigationBar = () => {
     return (
-      <TouchableOpacity
-        activeOpacity={1}
-        onLongPress={onHandleCanSwith}
-        style={[getCardStyle(theme).floatingBar, styles.container]}>
-        {!showBrowserBar && (
-          <>
-            <View style={[styles.itemContainer, getActiveStyle('ecosystem')]}>
-              <Icon
-                theme={theme}
-                name="wallet_add"
-                color={getActiveIconColor('ecosystem')}
-                {...styles.icon}
-                onClick={() => onHandlePressButton('ecosystem')}
-              />
-              {showTags && (
-                <Text style={[styles.textBase, styles.marginTop]}>
-                  {translate('navigation.floating_bar.ecosystem')}
-                </Text>
-              )}
-            </View>
-            <View style={[styles.itemContainer, getActiveStyle('browser')]}>
-              <Icon
-                theme={theme}
-                color={getActiveIconColor('browser')}
-                name="global"
-                {...styles.icon}
-                onClick={() => onHandlePressButton('browser')}
-              />
-              {showTags && (
-                <Text style={[styles.textBase, styles.marginTop]}>
-                  {translate('navigation.floating_bar.browser')}
-                </Text>
-              )}
-            </View>
-            <View style={[styles.itemContainer, getActiveStyle('buy')]}>
-              <Icon
-                theme={theme}
-                name="scanner"
-                color={getActiveIconColor('buy')}
-                {...styles.icon}
-                onClick={() => onHandlePressButton('buy')}
-              />
-              {showTags && (
-                <Text style={[styles.textBase, styles.marginTop]}>
-                  {translate('navigation.floating_bar.buy')}
-                </Text>
-              )}
-            </View>
-            <View style={[styles.itemContainer, getActiveStyle('swap')]}>
-              <Icon
-                theme={theme}
-                color={getActiveIconColor('swap')}
-                name="swap"
-                {...styles.icon}
-                onClick={() => onHandlePressButton('swap')}
-              />
-              {showTags && (
-                <Text style={[styles.textBase, styles.marginTop]}>
-                  {translate('navigation.floating_bar.swap')}
-                </Text>
-              )}
-            </View>
-          </>
-        )}
-        {showBrowserBar && (
-          <>
-            <Icon
-              theme={theme}
-              name="arrow_left_browser"
-              additionalContainerStyle={styles.browserNavContainer}
-              {...styles.icon}
-              onClick={() => handleClickBrowserNav('back')}
-            />
-            <Icon
-              theme={theme}
-              name="arrow_right_browser"
-              additionalContainerStyle={styles.browserNavContainer}
-              {...styles.icon}
-              onClick={() => handleClickBrowserNav('forward')}
-            />
-            <Icon
-              theme={theme}
-              name="add_browser"
-              additionalContainerStyle={[
-                styles.browserNavContainer,
-                styles.circleContainer,
-              ]}
-              onClick={() => handleClickBrowserNav('add_new')}
-              width={35}
-              height={35}
-            />
-            <Icon
-              theme={theme}
-              name="rotate_right_browser"
-              additionalContainerStyle={styles.browserNavContainer}
-              onClick={() => handleClickBrowserNav('refresh')}
-              {...styles.icon}
-            />
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={() => handleClickBrowserNav('Go_tabs')}
-              style={styles.tabsIndicator}>
-              <Text
-                style={[
-                  styles.textBase,
-                  theme === Theme.LIGHT ? styles.redColor : undefined,
-                ]}>
-                1
-              </Text>
-            </TouchableOpacity>
-          </>
-        )}
-      </TouchableOpacity>
+      <View style={[getCardStyle(theme).floatingBar, styles.container]}>
+        <View style={[styles.itemContainer, getActiveStyle('ecosystem')]}>
+          <Icon
+            theme={theme}
+            name="wallet_add"
+            color={getActiveIconColor('ecosystem')}
+            {...styles.icon}
+            onClick={() => onHandlePressButton('ecosystem')}
+          />
+          {showTags && (
+            <Text style={[styles.textBase, styles.marginTop]}>
+              {translate('navigation.floating_bar.ecosystem')}
+            </Text>
+          )}
+        </View>
+        <View style={[styles.itemContainer, getActiveStyle('browser')]}>
+          <Icon
+            theme={theme}
+            color={getActiveIconColor('browser')}
+            name="global"
+            {...styles.icon}
+            onClick={() => onHandlePressButton('browser')}
+          />
+          {showTags && (
+            <Text style={[styles.textBase, styles.marginTop]}>
+              {translate('navigation.floating_bar.browser')}
+            </Text>
+          )}
+        </View>
+        <View style={[styles.itemContainer, getActiveStyle('buy')]}>
+          <Icon
+            theme={theme}
+            name="scanner"
+            color={getActiveIconColor('buy')}
+            {...styles.icon}
+            onClick={() => onHandlePressButton('buy')}
+          />
+          {showTags && (
+            <Text style={[styles.textBase, styles.marginTop]}>
+              {translate('navigation.floating_bar.buy')}
+            </Text>
+          )}
+        </View>
+        <View style={[styles.itemContainer, getActiveStyle('swap')]}>
+          <Icon
+            theme={theme}
+            color={getActiveIconColor('swap')}
+            name="swap"
+            {...styles.icon}
+            onClick={() => onHandlePressButton('swap')}
+          />
+          {showTags && (
+            <Text style={[styles.textBase, styles.marginTop]}>
+              {translate('navigation.floating_bar.swap')}
+            </Text>
+          )}
+        </View>
+      </View>
     );
   };
 
-  return show && !isLoadingScreen && !isDrawerOpen && isScreenFound
+  return show && !isLoadingScreen && !isDrawerOpen && isScreenAllowed
     ? renderNavigationBar()
     : null;
 };
