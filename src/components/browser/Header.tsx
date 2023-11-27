@@ -6,14 +6,23 @@ import {
   Page,
   TabFields,
 } from 'actions/interfaces';
-import Home from 'assets/browser/home.svg';
 import Favorite from 'assets/browser/icon_favorite.svg';
 import NotFavorite from 'assets/browser/icon_favorite_default.svg';
+import KeychainForHiveDark from 'assets/new_UI/keychain-for-hive-dark.svg';
+import KeychainForHiveLight from 'assets/new_UI/keychain-for-hive-light.svg';
+import CustomSearchBar from 'components/form/CustomSearchBar';
+import Icon from 'components/hive/Icon';
+import CustomIconButton from 'components/ui/CustomIconButton';
 import DrawerButton from 'components/ui/DrawerButton';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import GestureRecognizer from 'react-native-swipe-gestures';
+import {Theme} from 'src/context/theme.context';
+import {getCardStyle} from 'src/styles/card';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {body_primary_body_1} from 'src/styles/typography';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import {translate} from 'utils/localize';
@@ -27,6 +36,8 @@ type Props = {
   swipeToTab: (right: boolean) => void;
   landscape: boolean;
   navigation: DrawerNavigationProp<any>;
+  theme: Theme;
+  activeTabs: number;
 };
 
 const BrowserHeader = ({
@@ -38,14 +49,17 @@ const BrowserHeader = ({
   removeFromFavorites,
   swipeToTab,
   landscape,
+  theme,
+  activeTabs,
 }: Props) => {
   const {HEADER_HEIGHT} = BrowserConfig;
   const insets = useSafeAreaInsets();
-  const styles = getStyles(HEADER_HEIGHT, insets, landscape);
+  const styles = getStyles(HEADER_HEIGHT, insets, landscape, theme);
 
   const goHome = () => {
     updateTab(activeTab, {url: BrowserConfig.HOMEPAGE_URL});
   };
+
   if (
     tabs &&
     activeTab &&
@@ -54,26 +68,28 @@ const BrowserHeader = ({
   ) {
     const active = tabs.find((e) => e.id === activeTab);
     const activeUrl = active.url;
+
     const renderFavoritesButton = () => {
       if (activeUrl === BrowserConfig.HOMEPAGE_URL) return null;
       return favorites.find((e) => e.url === activeUrl) ? (
         <TouchableOpacity
-          style={[styles.icon]}
+          style={[getCardStyle(theme, 50).defaultCardItem, {marginLeft: 8}]}
           onPress={() => {
             removeFromFavorites(activeUrl);
           }}>
-          <Favorite width={17} height={16} color="#E5E5E5" />
+          <Favorite width={17} height={16} color={getColors(theme).icon} />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
-          style={[styles.icon]}
+          style={[getCardStyle(theme, 50).defaultCardItem, {marginLeft: 8}]}
           onPress={() => {
             addToFavorites(active);
           }}>
-          <NotFavorite width={17} height={16} color="#E5E5E5" />
+          <NotFavorite width={17} height={16} color={getColors(theme).icon} />
         </TouchableOpacity>
       );
     };
+
     return (
       <GestureRecognizer
         style={styles.container}
@@ -83,76 +99,117 @@ const BrowserHeader = ({
         onSwipeRight={() => {
           swipeToTab(true);
         }}>
+        <FocusAwareStatusBar />
         <View style={styles.topBar}>
-          <TouchableOpacity style={styles.icon} onPress={goHome}>
-            <Home width={17} height={16} color="#E5E5E5" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.textContainer}
-            onPress={() => {
-              startSearch(true);
-            }}>
-            <Text
-              style={
-                activeUrl !== BrowserConfig.HOMEPAGE_URL
-                  ? styles.url
-                  : styles.search
+          <View
+            style={[
+              styles.flexRowBetween,
+              styles.paddingHorizontal,
+              styles.paddingBottom,
+            ]}>
+            <CustomIconButton
+              theme={theme}
+              lightThemeIcon={<KeychainForHiveLight />}
+              darkThemeIcon={<KeychainForHiveDark />}
+              onPress={goHome}
+            />
+            <TouchableOpacity
+              activeOpacity={1}
+              //TODO bellow ask quentin
+              onPress={() => {}}
+              style={styles.tabsIndicator}>
+              <Text
+                style={[
+                  styles.textBase,
+                  theme === Theme.LIGHT ? styles.redColor : undefined,
+                ]}>
+                {activeTabs}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.flexRowCentered}>
+            <CustomSearchBar
+              theme={theme}
+              rightIcon={
+                <Icon
+                  name={'search'}
+                  theme={theme}
+                  onClick={() => startSearch(true)}
+                />
               }
-              numberOfLines={1}>
-              {activeUrl !== BrowserConfig.HOMEPAGE_URL
-                ? urlTransformer(activeUrl).hostname +
-                  urlTransformer(activeUrl).pathname
-                : translate('browser.search')}
-            </Text>
-          </TouchableOpacity>
-          {renderFavoritesButton()}
+              value={
+                activeUrl !== BrowserConfig.HOMEPAGE_URL
+                  ? urlTransformer(activeUrl).hostname +
+                    urlTransformer(activeUrl).pathname
+                  : translate('browser.search')
+              }
+              onChangeText={(text) => {}}
+            />
+            {renderFavoritesButton()}
+          </View>
         </View>
-
-        <DrawerButton navigation={navigation} />
       </GestureRecognizer>
     );
   } else {
     return (
       <View style={styles.container}>
         <Text style={styles.browser}>{translate('navigation.browser')}</Text>
-        <DrawerButton navigation={navigation} />
+        <DrawerButton navigation={navigation} theme={theme} />
       </View>
     );
   }
 };
 
-const getStyles = (height: number, insets: EdgeInsets, landscape: boolean) =>
+const getStyles = (
+  height: number,
+  insets: EdgeInsets,
+  landscape: boolean,
+  theme: Theme,
+) =>
   StyleSheet.create({
     container: {
-      height: height + insets.top,
-      backgroundColor: 'black',
       width: '100%',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingTop: insets.top,
-      paddingLeft: 20,
-      paddingBottom: 7,
     },
     topBar: {
-      height: 32,
-      backgroundColor: '#535353',
       borderRadius: 6,
-      flex: 1,
-      flexDirection: 'row',
       alignItems: 'center',
+      paddingTop: 25,
     },
-    textContainer: {
-      lineHeight: 32,
-      flex: 1,
-      flexDirection: 'row',
-      alignItems: 'center',
+    paddingHorizontal: {
+      paddingHorizontal: 15,
     },
-    url: {color: 'white', fontSize: 18, flex: 1},
-    search: {fontSize: 18, flex: 1, color: '#E5E5E5', fontStyle: 'italic'},
+    paddingBottom: {paddingBottom: 15},
     browser: {color: 'white', fontSize: 18, fontWeight: 'bold'},
-    icon: {paddingHorizontal: 10},
-    drawerButton: {alignSelf: 'center'},
+    flexRowBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+    flexRowCentered: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
+    tabsIndicator: {
+      borderColor: getColors(theme).icon,
+      borderWidth: 2,
+      width: 28,
+      height: 28,
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    textBase: {
+      ...body_primary_body_1,
+      color: getColors(theme).secondaryText,
+    },
+    redColor: {
+      color: PRIMARY_RED_COLOR,
+    },
+    flexContainer: {
+      width: '90%',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   });
 
 export default BrowserHeader;

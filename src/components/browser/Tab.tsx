@@ -18,6 +18,7 @@ import {
   WebViewProgressEvent,
 } from 'react-native-webview/lib/WebViewTypes';
 import {UserPreference} from 'reducers/preferences.types';
+import {Theme} from 'src/context/theme.context';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import {
@@ -62,6 +63,7 @@ type Props = {
   tabsNumber: number;
   orientation: string;
   isUrlModalOpen: boolean;
+  theme: Theme;
 };
 
 export default ({
@@ -80,6 +82,7 @@ export default ({
   tabsNumber,
   orientation,
   isUrlModalOpen,
+  theme,
 }: Props) => {
   const tabData = {url, id, icon, name};
   const tabRef: MutableRefObject<WebView> = useRef(null);
@@ -288,6 +291,7 @@ export default ({
             updateTabUrl={updateTabUrl}
             homeRef={homeRef}
             accounts={accounts}
+            theme={theme}
           />
         ) : null}
         <View
@@ -328,9 +332,6 @@ export default ({
           />
         </View>
       </View>
-      {/* //TODO keep working here. 2 ideas:
-      //  1. we use redux to handle those: 'goBack' 'addTab' etc. actions, which may complicate things.
-      //  2. somehow we pass those bellow as props and process them inside FloatingBar */}
       {active && orientation === 'PORTRAIT' && (
         <Footer
           canGoBack={canGoBack}
@@ -354,6 +355,7 @@ export default ({
           }}
           height={FOOTER_HEIGHT}
           tabs={tabsNumber}
+          theme={theme}
         />
       )}
     </View>

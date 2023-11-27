@@ -62,9 +62,6 @@ const getStyles = (theme: Theme) =>
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,
     },
-    cardStyle: {
-      backgroundColor: getColors(theme).primaryBackground,
-    },
     headerRightContainer: {
       marginRight: 16,
     },

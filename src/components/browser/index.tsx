@@ -12,11 +12,16 @@ import Orientation, {OrientationType} from 'react-native-orientation-locker';
 import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
+import {Theme} from 'src/context/theme.context';
 import {BrowserConfig} from 'utils/config';
 import Header from './Header';
 import Tab from './Tab';
 import TabsManagement from './tabsManagement';
 import UrlModal from './urlModal';
+
+interface Props {
+  theme: Theme;
+}
 
 const Browser = ({
   accounts,
@@ -35,7 +40,9 @@ const Browser = ({
   navigation,
   setBrowserFocus,
   showManagementScreen,
-}: BrowserPropsFromRedux & BrowserNavigationProps) => {
+  showFloatingBar,
+  theme,
+}: BrowserPropsFromRedux & BrowserNavigationProps & Props) => {
   const {showManagement, activeTab, tabs, history, favorites} = browser;
   const currentActiveTabData = tabs.find((t) => t.id === activeTab);
   const url = currentActiveTabData
@@ -79,6 +86,9 @@ const Browser = ({
         setDeviceOrientation(orientation);
       }
     });
+    //TODO bellow use it but in another place
+    // showFloatingBar(false);
+
     return () => {
       Orientation.removeAllListeners();
     };
@@ -187,6 +197,8 @@ const Browser = ({
           removeFromFavorites={removeFromFavorites}
           swipeToTab={swipeToTab}
           landscape={orientation.startsWith('LANDSCAPE')}
+          theme={theme}
+          activeTabs={browser.tabs.length}
         />
         <TabsManagement
           tabs={tabs}
@@ -216,6 +228,7 @@ const Browser = ({
             tabsNumber={browser.tabs.length}
             orientation={orientation}
             isUrlModalOpen={isVisible}
+            theme={theme}
           />
         ))}
         <UrlModal
@@ -233,7 +246,7 @@ const Browser = ({
 };
 
 const styles = StyleSheet.create({
-  container: {flexGrow: 1},
+  container: {width: '100%', height: '100%'},
 });
 
 export default Browser;

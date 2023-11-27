@@ -1,3 +1,4 @@
+import {showFloatingBar} from 'actions/floatingBar';
 import Icon from 'components/hive/Icon';
 import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
@@ -44,6 +45,7 @@ const Floating = ({
   isLoadingScreen,
   currentRouteName,
   isDrawerOpen,
+  showFloatingBar,
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const [isScreenAllowed, setIsScreenAllowed] = useState(false);
@@ -54,11 +56,23 @@ const Floating = ({
   useEffect(() => {
     if (currentRouteName) {
       console.log('in FB: ', {currentRouteName}); //TODO remove line
-      setIsScreenAllowed(
+      const isAllowed =
         ScreensComponentAllowanceList.find(
           (screenName) => screenName === currentRouteName,
-        ) !== undefined,
-      );
+        ) !== undefined;
+      setIsScreenAllowed(isAllowed);
+      if (isAllowed) {
+        switch (true) {
+          case currentRouteName === 'WALLET' ||
+            currentRouteName === 'WalletScreen':
+            setActiveLink('ecosystem');
+            break;
+          case currentRouteName === 'BrowserScreen':
+            setActiveLink('browser');
+            break;
+          //TODO bellow buy & swap as stacks.
+        }
+      }
     }
   }, [currentRouteName]);
 
@@ -76,6 +90,7 @@ const Floating = ({
         screen = 'WALLET';
         break;
       case 'browser':
+        showFloatingBar(false);
         screen = 'BrowserScreen';
         break;
       case 'buy':
@@ -218,6 +233,7 @@ const Floating = ({
     : null;
 };
 
+//TODO cleanup unused styles
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
@@ -276,13 +292,16 @@ const getStyles = (theme: Theme) =>
     },
   });
 
-const connector = connect((state: RootState) => {
-  return {
-    show: state.floatingBar.show,
-    isLoadingScreen: state.floatingBar.isLoadingScreen,
-    isDrawerOpen: state.floatingBar.isDrawerOpened,
-  };
-}, {});
+const connector = connect(
+  (state: RootState) => {
+    return {
+      show: state.floatingBar.show,
+      isLoadingScreen: state.floatingBar.isLoadingScreen,
+      isDrawerOpen: state.floatingBar.isDrawerOpened,
+    };
+  },
+  {showFloatingBar},
+);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export const FloatingBar = connector(Floating);

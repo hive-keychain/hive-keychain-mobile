@@ -1,8 +1,9 @@
 import {Account, Page} from 'actions/interfaces';
-import KeychainLogo from 'components/ui/KeychainLogo';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import React, {MutableRefObject} from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {Theme} from 'src/context/theme.context';
+import {getCardStyle} from 'src/styles/card';
 import {translate} from 'utils/localize';
 import Explore from './Explore';
 import Favorites from './Favorites';
@@ -14,6 +15,7 @@ type Props = {
   updateTabUrl: (link: string) => void;
   homeRef: MutableRefObject<View>;
   accounts: Account[];
+  theme: Theme;
 };
 const NewTab = ({
   history,
@@ -21,55 +23,48 @@ const NewTab = ({
   updateTabUrl,
   homeRef,
   accounts,
+  theme,
 }: Props) => {
-  const styles = getStyles(useWindowDimensions().width);
-
   return (
     <View style={styles.container} ref={homeRef} collapsable={false}>
-      <View style={styles.titleContainer}>
-        <KeychainLogo width={45} />
-        <Text style={styles.title}>
-          KEYCHAIN <Text style={styles.home}>HOME</Text>
-        </Text>
-      </View>
       <ScreenToggle
+        theme={theme}
         menu={[
-          translate('browser.home.menu.explore'),
-          translate('browser.home.menu.history'),
-          translate('browser.home.menu.favorites'),
+          translate('browser.home.menu.ecosystem'),
+          translate('browser.home.menu.recent'),
+          translate('browser.home.menu.favorite'),
         ]}
         components={[
-          <Explore updateTabUrl={updateTabUrl} accounts={accounts} />,
+          <Explore
+            updateTabUrl={updateTabUrl}
+            accounts={accounts}
+            theme={theme}
+          />,
           <History history={history} updateTabUrl={updateTabUrl} />,
           <Favorites favorites={favorites} updateTabUrl={updateTabUrl} />,
         ]}
-        toUpperCase
+        toUpperCase={false}
         style={styles.sub}
+        additionalHeaderStyle={[
+          getCardStyle(theme).defaultCardItem,
+          styles.headerToogler,
+        ]}
       />
     </View>
   );
 };
 
-const getStyles = (width: number) =>
-  StyleSheet.create({
-    container: {flex: 1},
-    titleContainer: {
-      flexDirection: 'row',
-      alignContent: 'center',
-      justifyContent: 'center',
-      marginVertical: '3%',
-      height: 45,
-    },
-    title: {
-      marginLeft: '5%',
-      color: '#E31337',
-      textTransform: 'uppercase',
-      fontSize: 26,
-      lineHeight: 45,
-      fontWeight: 'bold',
-    },
-    home: {color: 'black'},
-    sub: {height: 40},
-  });
+const styles = StyleSheet.create({
+  container: {flex: 1},
+  sub: {height: 40},
+  headerToogler: {
+    paddingHorizontal: 2,
+    height: 'auto',
+    marginBottom: 0,
+    paddingVertical: 4,
+    width: '90%',
+    alignSelf: 'center',
+  },
+});
 
 export default NewTab;

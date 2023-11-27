@@ -778,9 +778,9 @@
     "home": {
       "title": "HOME",
       "menu": {
-        "explore": "EXPLORE",
-        "history": " HISTORY",
-        "favorites": "FAVORITES"
+        "ecosystem": "Ecosystem",
+        "recent": "Recent",
+        "favorite": "Favorite"
       },
       "categories": {
         "finance": "Finance",
@@ -790,7 +790,11 @@
         "video": "Video",
         "tool": "Tool"
       },
-      "nothing": "Nothing to show."
+      "nothing": "Nothing to show.",
+      "cant_see_dapps": {
+        "part_1": "Can't see your favorite Hive dApp in here?",
+        "part_2": "Contact us on "
+      }
     }
   },
   "drawerFooter": {
