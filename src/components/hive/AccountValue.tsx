@@ -30,7 +30,6 @@ const AccountValue = ({prices, account, properties, theme, title}: Props) => {
     <TouchableOpacity
       onLongPress={() => {
         if (account.name === 'stoodkev') {
-          //TODO quentin check if needed bellow
           //@ts-ignore
           //throw new Error('test error');
           user.crash.test();

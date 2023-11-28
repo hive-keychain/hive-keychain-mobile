@@ -53,8 +53,6 @@ const Footer = ({
   const insets = useSafeAreaInsets();
   const styles = getStyles(height, insets, theme);
 
-  console.log({show}); //TODO remove line
-
   useFocusEffect(
     React.useCallback(() => {
       const backAction = () => {
@@ -125,11 +123,10 @@ const Footer = ({
     </View>
   ) : null;
 };
-//TODO clear styles & unused
+
 const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
   StyleSheet.create({
     icon: {width: 20, height: 20},
-    disabled: {color: 'darkgrey'},
     footer: {
       height: height || 40,
       paddingBottom: insets.bottom,
@@ -149,11 +146,6 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
       borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',
-    },
-    text: {
-      flex: 2,
-      textAlign: 'center',
-      color: '#838383',
     },
     circleContainer: {
       padding: 2,
