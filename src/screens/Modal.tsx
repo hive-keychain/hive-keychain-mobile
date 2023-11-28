@@ -27,7 +27,11 @@ export default ({navigation, route}: ModalNavigationProps) => {
     onForceCloseModal = data.onForceCloseModal;
   }
 
-  if (name && name.toLowerCase().includes('operation')) {
+  if (
+    name &&
+    (name.toLowerCase().includes('operation') ||
+      name.includes(ModalComponent.HAS_INFO))
+  ) {
     containerStyle = {
       borderWidth: 1,
       backgroundColor: getColors(theme).secondaryCardBgColor,
@@ -37,6 +41,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
   }
 
   const renderContent = () => {
+    console.log({name}); //TODO remove line
     switch (name) {
       case ModalComponent.HAS_AUTH:
         return <HASAuthRequest data={data as any} navigation={navigation} />;

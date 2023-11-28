@@ -1,6 +1,6 @@
 import Icon from 'components/hive/Icon';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
@@ -21,9 +21,14 @@ export enum ConnectionStatus {
 
 interface Props {
   theme: Theme;
+  additionalContainerStyle?: StyleProp<ViewStyle>;
 }
 
-const StatusIndicator = ({has, theme}: PropsFromRedux & Props) => {
+const StatusIndicator = ({
+  has,
+  theme,
+  additionalContainerStyle,
+}: PropsFromRedux & Props) => {
   let status = ConnectionStatus.VOID;
   if (has.instances.length) {
     const connected = has.instances.filter((e) => e.init && e.connected).length;
@@ -40,7 +45,7 @@ const StatusIndicator = ({has, theme}: PropsFromRedux & Props) => {
 
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={[styles.container, additionalContainerStyle]}
       onPress={() => {
         navigate('ModalScreen', {
           name: ModalComponent.HAS_INFO,
@@ -60,12 +65,14 @@ export const Indicator = ({
 }) => {
   const styles = getStyles(status, theme);
   return (
-    <View
-      style={
-        status === ConnectionStatus.CONNECTED ? styles.indicatorShadow : null
-      }>
-      <View style={styles.indicator}></View>
+    // <View
+    //   style={
+    //     status === ConnectionStatus.CONNECTED ? styles.indicatorShadow : null
+    //   }>
+    <View style={styles.indicator}>
+      <Icon theme={theme} name="logo_has" width={15} height={15} />
     </View>
+    // </View>
   );
 };
 
@@ -83,20 +90,21 @@ const getStyles = (status: ConnectionStatus, theme: Theme) =>
       marginRight: 8,
       backgroundColor: getColors(theme).secondaryCardBgColor,
     },
-    indicatorShadow: {
-      width: 20,
-      height: 20,
-      borderRadius: 10,
-      borderColor: getStatusColor(status),
-      borderWidth: 2,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
+    // indicatorShadow: {
+    //   width: 20,
+    //   height: 20,
+    //   borderRadius: 10,
+    //   borderColor: getStatusColor(status),
+    //   borderWidth: 2,
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
+    // },
     indicator: {
-      backgroundColor: getStatusColor(status),
-      width: 12,
-      height: 12,
-      borderRadius: 6,
+      borderColor: getStatusColor(status),
+      padding: 4,
+      borderRadius: 50,
+      borderWidth: 2,
+      backgroundColor: '#FFF',
     },
   });
 

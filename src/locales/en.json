@@ -98,7 +98,8 @@
     "outgoing": "Outgoing",
     "received": "Received",
     "sent": "Sent",
-    "invalid_url": "Please use a valid URL"
+    "invalid_url": "Please use a valid URL",
+    "clear_all": "Clear all"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
