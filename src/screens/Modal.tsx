@@ -5,16 +5,20 @@ import HASError from 'components/hive_authentication_service/Error';
 import HASInfo from 'components/hive_authentication_service/Info';
 import CustomModal from 'components/modals/CustomModal';
 import {ModalNavigationProps} from 'navigators/Root.types';
-import React from 'react';
+import React, {useContext} from 'react';
+import {StyleProp, ViewStyle} from 'react-native';
+import {ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
 import {HAS_BroadcastModalPayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {ModalComponent} from 'utils/modal.enum';
 
 export default ({navigation, route}: ModalNavigationProps) => {
+  const {theme} = useContext(ThemeContext);
   let onForceCloseModal = route.params ? route.params!.onForceCloseModal : null;
   const name = route.params?.name;
   const data = route.params?.data;
   const fixedHeight = route.params?.fixedHeight;
-  const containerStyle = route.params?.modalContainerStyle;
+  let containerStyle = route.params?.modalContainerStyle;
   const wrapperFixedStyle = route.params?.additionalWrapperFixedStyle;
   const modalPosition = route.params?.modalPosition;
   const buttonElement = route.params?.renderButtonElement;
@@ -22,6 +26,16 @@ export default ({navigation, route}: ModalNavigationProps) => {
   if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
   }
+
+  if (name && name.toLowerCase().includes('operation')) {
+    containerStyle = {
+      borderWidth: 1,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+      padding: 10,
+    } as StyleProp<ViewStyle>;
+  }
+
   const renderContent = () => {
     switch (name) {
       case ModalComponent.HAS_AUTH:

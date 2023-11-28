@@ -3,6 +3,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -35,6 +36,8 @@ type RadioProps = {
   style?: StyleProp<ViewStyle>;
   radioStyle?: StyleProp<ViewStyle>;
   additionalRadioStyleActive?: StyleProp<ViewStyle>;
+  additionalRadioStyleInactive?: StyleProp<ViewStyle>;
+  additionalRadioLabelStyle?: StyleProp<TextStyle>;
 };
 
 export const RadioButton = ({
@@ -44,6 +47,8 @@ export const RadioButton = ({
   style,
   radioStyle,
   additionalRadioStyleActive,
+  additionalRadioLabelStyle,
+  additionalRadioStyleInactive,
 }: RadioProps) => (
   <TouchableOpacity
     style={[styles.radioButton, radioStyle]}
@@ -53,12 +58,13 @@ export const RadioButton = ({
     <View
       style={[
         styles.button,
+        additionalRadioStyleInactive,
         selected ? [styles.buttonActive, additionalRadioStyleActive] : null,
         style,
       ]}
     />
     <View style={styles.labelView}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, additionalRadioLabelStyle]}>{label}</Text>
     </View>
   </TouchableOpacity>
 );

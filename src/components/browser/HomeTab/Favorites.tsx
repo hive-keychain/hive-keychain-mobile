@@ -1,15 +1,17 @@
 import {Page} from 'actions/interfaces';
 import React from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {Theme} from 'src/context/theme.context';
 import {translate} from 'utils/localize';
 import HistoryItem from '../urlModal/HistoryItem';
 
 type Props = {
   favorites: Page[];
   updateTabUrl: (link: string) => void;
+  theme: Theme;
 };
 
-export default ({favorites, updateTabUrl}: Props) => {
+export default ({favorites, updateTabUrl, theme}: Props) => {
   return (
     <View style={styles.container}>
       {favorites.length ? (
@@ -23,6 +25,7 @@ export default ({favorites, updateTabUrl}: Props) => {
               onSubmit={(e) => {
                 updateTabUrl(e);
               }}
+              theme={theme}
             />
           )}
         />
@@ -38,6 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginTop: 30,
     flex: 1,
+    paddingHorizontal: 20,
   },
   text: {alignSelf: 'center'},
 });

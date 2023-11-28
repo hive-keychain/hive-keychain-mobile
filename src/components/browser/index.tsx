@@ -86,8 +86,6 @@ const Browser = ({
         setDeviceOrientation(orientation);
       }
     });
-    //TODO bellow use it but in another place
-    // showFloatingBar(false);
 
     return () => {
       Orientation.removeAllListeners();
@@ -209,6 +207,7 @@ const Browser = ({
           onAddTab={onAddTab}
           onQuitManagement={onQuitManagement}
           show={showManagement}
+          theme={theme}
         />
         {tabs.map((tab) => (
           <Tab
@@ -239,6 +238,7 @@ const Browser = ({
           url={searchUrl}
           setUrl={setSearchUrl}
           clearHistory={clearHistory}
+          theme={theme}
         />
       </KeyboardAvoidingView>
     </>

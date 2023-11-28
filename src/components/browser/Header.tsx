@@ -6,25 +6,27 @@ import {
   Page,
   TabFields,
 } from 'actions/interfaces';
-import Favorite from 'assets/browser/icon_favorite.svg';
-import NotFavorite from 'assets/browser/icon_favorite_default.svg';
+import HeartIcon from 'assets/new_UI/heart.svg';
 import KeychainForHiveDark from 'assets/new_UI/keychain-for-hive-dark.svg';
 import KeychainForHiveLight from 'assets/new_UI/keychain-for-hive-light.svg';
+import NotFavoriteIcon from 'assets/new_UI/linear_heart_empty.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import Icon from 'components/hive/Icon';
 import CustomIconButton from 'components/ui/CustomIconButton';
-import DrawerButton from 'components/ui/DrawerButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import GestureRecognizer from 'react-native-swipe-gestures';
+import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {body_primary_body_1} from 'src/styles/typography';
+import {RootState} from 'store';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
+import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
 
 type Props = {
@@ -51,7 +53,8 @@ const BrowserHeader = ({
   landscape,
   theme,
   activeTabs,
-}: Props) => {
+  show,
+}: Props & PropsFromRedux) => {
   const {HEADER_HEIGHT} = BrowserConfig;
   const insets = useSafeAreaInsets();
   const styles = getStyles(HEADER_HEIGHT, insets, landscape, theme);
@@ -77,7 +80,7 @@ const BrowserHeader = ({
           onPress={() => {
             removeFromFavorites(activeUrl);
           }}>
-          <Favorite width={17} height={16} color={getColors(theme).icon} />
+          <HeartIcon width={17} height={16} color={getColors(theme).icon} />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
@@ -85,14 +88,18 @@ const BrowserHeader = ({
           onPress={() => {
             addToFavorites(active);
           }}>
-          <NotFavorite width={17} height={16} color={getColors(theme).icon} />
+          <NotFavoriteIcon
+            width={17}
+            height={16}
+            color={getColors(theme).icon}
+          />
         </TouchableOpacity>
       );
     };
 
     return (
       <GestureRecognizer
-        style={styles.container}
+        style={{width: '100%'}}
         onSwipeLeft={() => {
           swipeToTab(false);
         }}
@@ -101,32 +108,34 @@ const BrowserHeader = ({
         }}>
         <FocusAwareStatusBar />
         <View style={styles.topBar}>
-          <View
-            style={[
-              styles.flexRowBetween,
-              styles.paddingHorizontal,
-              styles.paddingBottom,
-            ]}>
-            <CustomIconButton
-              theme={theme}
-              lightThemeIcon={<KeychainForHiveLight />}
-              darkThemeIcon={<KeychainForHiveDark />}
-              onPress={goHome}
-            />
-            <TouchableOpacity
-              activeOpacity={1}
-              //TODO bellow ask quentin
-              onPress={() => {}}
-              style={styles.tabsIndicator}>
-              <Text
-                style={[
-                  styles.textBase,
-                  theme === Theme.LIGHT ? styles.redColor : undefined,
-                ]}>
-                {activeTabs}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {show && (
+            <View
+              style={[
+                styles.flexRowBetween,
+                styles.paddingHorizontal,
+                styles.paddingBottom,
+              ]}>
+              <CustomIconButton
+                theme={theme}
+                lightThemeIcon={<KeychainForHiveLight />}
+                darkThemeIcon={<KeychainForHiveDark />}
+                onPress={goHome}
+              />
+              <TouchableOpacity
+                activeOpacity={1}
+                //TODO bellow ask quentin if needed at all
+                onPress={() => {}}
+                style={styles.tabsIndicator}>
+                <Text
+                  style={[
+                    styles.textBase,
+                    theme === Theme.LIGHT ? styles.redColor : undefined,
+                  ]}>
+                  {activeTabs}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
           <View style={styles.flexRowCentered}>
             <CustomSearchBar
               theme={theme}
@@ -153,8 +162,9 @@ const BrowserHeader = ({
   } else {
     return (
       <View style={styles.container}>
-        <Text style={styles.browser}>{translate('navigation.browser')}</Text>
-        <DrawerButton navigation={navigation} theme={theme} />
+        <Text style={[styles.textBase, styles.browser]}>
+          {capitalize(translate('navigation.browser'))}
+        </Text>
       </View>
     );
   }
@@ -169,17 +179,19 @@ const getStyles = (
   StyleSheet.create({
     container: {
       width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     topBar: {
       borderRadius: 6,
       alignItems: 'center',
-      paddingTop: 25,
+      paddingTop: 20,
     },
     paddingHorizontal: {
       paddingHorizontal: 15,
     },
     paddingBottom: {paddingBottom: 15},
-    browser: {color: 'white', fontSize: 18, fontWeight: 'bold'},
+    browser: {fontSize: 16, marginVertical: 10},
     flexRowBetween: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -212,4 +224,12 @@ const getStyles = (
     },
   });
 
-export default BrowserHeader;
+const mapStateToProps = (state: RootState) => {
+  return {
+    show: state.floatingBar.show,
+  };
+};
+const connector = connect(mapStateToProps, {});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(BrowserHeader);

@@ -795,7 +795,8 @@
         "part_1": "Can't see your favorite Hive dApp in here?",
         "part_2": "Contact us on "
       }
-    }
+    },
+    "switch_tabs_tip": "Switch between tabs by swiping left or right on the url bar."
   },
   "drawerFooter": {
     "madeBy_part_1": "Made with",

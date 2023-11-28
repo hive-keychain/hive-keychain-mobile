@@ -1,4 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native';
+import {showFloatingBar} from 'actions/floatingBar';
 import Icon from 'components/hive/Icon';
 import React from 'react';
 import {
@@ -10,6 +11,7 @@ import {
 } from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
+import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {
   BACKGROUNDITEMDARKISH,
@@ -18,6 +20,7 @@ import {
   getColors,
 } from 'src/styles/colors';
 import {body_primary_body_2} from 'src/styles/typography';
+import {RootState} from 'store';
 
 type Props = {
   canGoBack: boolean;
@@ -44,9 +47,13 @@ const Footer = ({
   tabs,
   clearCache,
   theme,
-}: Props) => {
+  showFloatingBar,
+  show,
+}: Props & PropsFromRedux) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(height, insets, theme);
+
+  console.log({show}); //TODO remove line
 
   useFocusEffect(
     React.useCallback(() => {
@@ -64,20 +71,20 @@ const Footer = ({
     }, [canGoBack]),
   );
 
-  return (
+  return !show ? (
     <View style={styles.footer}>
       <Icon
         theme={theme}
         name="arrow_left_browser"
         {...styles.icon}
-        color={canGoBack ? getColors(theme).icon : '#555'}
+        color={canGoBack ? getColors(theme).icon : '#854343'}
         onClick={goBack}
       />
       <Icon
         theme={theme}
         name="arrow_right_browser"
         {...styles.icon}
-        color={canGoForward ? getColors(theme).icon : '#555'}
+        color={canGoForward ? getColors(theme).icon : '#854343'}
         onClick={goForward}
       />
       <Icon
@@ -85,8 +92,6 @@ const Footer = ({
         name="add_browser"
         additionalContainerStyle={[styles.circleContainer]}
         onClick={addTab}
-        // width={35}
-        // height={35}
         {...styles.icon}
       />
       <Icon
@@ -111,8 +116,14 @@ const Footer = ({
           </Text>
         </View>
       </TouchableOpacity>
+      <Icon
+        theme={theme}
+        name="wallet_add"
+        {...styles.icon}
+        onClick={() => showFloatingBar(true)}
+      />
     </View>
-  );
+  ) : null;
 };
 //TODO clear styles & unused
 const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
@@ -133,8 +144,8 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
     manage: {
       borderColor: getColors(theme).icon,
       borderWidth: 1,
-      width: 28,
-      height: 28,
+      width: 25,
+      height: 25,
       borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',
@@ -151,7 +162,7 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
         theme === Theme.LIGHT ? HIVEICONBGCOLOR : BACKGROUNDITEMDARKISH,
       width: 30,
       height: 30,
-      borderColor: getColors(theme).borderContrast,
+      borderColor: getColors(theme).icon,
       borderWidth: 1,
     },
     textBase: {
@@ -163,4 +174,14 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
     },
   });
 
-export default Footer;
+const mapStateToProps = (state: RootState) => {
+  return {
+    show: state.floatingBar.show,
+  };
+};
+const connector = connect(mapStateToProps, {
+  showFloatingBar,
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(Footer);

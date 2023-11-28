@@ -15,6 +15,7 @@ import ExpandThinIcon from 'assets/new_UI/expand-thin.svg';
 import EyeSlashIcon from 'assets/new_UI/eye-slash.svg';
 import GiftDeleteIcon from 'assets/new_UI/gift-delete.svg';
 import HBDCurrencyLogo from 'assets/new_UI/hbd-currency-logo.svg';
+import HeartIcon from 'assets/new_UI/heart.svg';
 import HiveCurrencyLogo from 'assets/new_UI/hive-currency-logo.svg';
 import HiveAlternative from 'assets/new_UI/hive_alternative.svg';
 import ImportIcon from 'assets/new_UI/import.svg';
@@ -24,6 +25,7 @@ import ArrowLeftBrowser from 'assets/new_UI/linear_arrow-left-browser.svg';
 import ArrowRightBrowser from 'assets/new_UI/linear_arrow-right-browser.svg';
 import ClockIcon from 'assets/new_UI/linear_clock.svg';
 import CloseCircleIcon from 'assets/new_UI/linear_close-circle.svg';
+import CopyIcon from 'assets/new_UI/linear_copy.svg';
 import CpuIcon from 'assets/new_UI/linear_cpu-setting.svg';
 import MoneyIcon from 'assets/new_UI/linear_dollar-circle.svg';
 import EditIcon from 'assets/new_UI/linear_edit-2.svg';
@@ -38,6 +40,7 @@ import RepeatMusicIcon from 'assets/new_UI/linear_repeate-music.svg';
 import RotateRightBrowserIcon from 'assets/new_UI/linear_rotate-right-browser.svg';
 import ScannerIcon from 'assets/new_UI/linear_scanner.svg';
 import SendSquareIcon from 'assets/new_UI/linear_send-square.svg';
+import ShareIcon from 'assets/new_UI/linear_share.svg';
 import CheckIcon from 'assets/new_UI/linear_tick-circle.svg';
 import WalletAddIcon from 'assets/new_UI/linear_wallet-add.svg';
 import HASIcon from 'assets/new_UI/logo_HAS.svg';
@@ -88,6 +91,7 @@ const getIconFilePath = (
   width: number = 20,
   height: number = 20,
   color?: string,
+  fill?: string,
 ) => {
   const finalStyleOnIcon = marginRight ? styles.defaultIconContainer : style;
   let dimensionsProps = {
@@ -551,6 +555,28 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
+    case name === 'share':
+      return (
+        <ShareIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'copy':
+      return (
+        <CopyIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'heart' || name === 'favorite':
+      return (
+        <HeartIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          fill={fill ?? undefined}
+          {...dimensionsProps}
+        />
+      );
     default:
       return (
         <EyeSlashIcon
@@ -575,6 +601,7 @@ interface IconProps {
   width?: number;
   height?: number;
   color?: string;
+  fill?: string;
   // ariaLabel?: string;
 }
 
@@ -588,6 +615,7 @@ const Icon = (props: IconProps) => {
     props.width,
     props.height,
     props.color,
+    props.fill,
   );
   const styleProps = {
     style: [styles.defaultIconContainer, props.additionalContainerStyle],

@@ -9,6 +9,11 @@ import {
   View,
 } from 'react-native';
 import Image from 'react-native-fast-image';
+import {Theme} from 'src/context/theme.context';
+import {getCardStyle} from 'src/styles/card';
+import {BORDERWHITISH, DARKBLUELIGHTER, getColors} from 'src/styles/colors';
+import {title_primary_body_2} from 'src/styles/typography';
+import {translate} from 'utils/localize';
 import TabsManagementBottomBar from './BottomBar';
 
 //TODO: put in config
@@ -29,6 +34,7 @@ type Props = {
   ) => void;
   activeTab: number;
   show: boolean;
+  theme: Theme;
 };
 export default ({
   tabs,
@@ -39,18 +45,22 @@ export default ({
   onQuitManagement,
   activeTab,
   show,
+  theme,
 }: Props) => {
+  const styles = getStyles(theme);
+
   return (
     <View style={[styles.container, show ? null : styles.hide]}>
       <ScrollView>
-        <Text style={styles.tip}>
-          Switch between tabs by swiping left or right on the url bar.
+        <Text style={[styles.textBase, styles.tip]}>
+          {translate('browser.switch_tabs_tip')}
         </Text>
         <View style={styles.subcontainer}>
           {tabs.map(({icon, image, name, id}) => (
             <TouchableOpacity
               key={id}
               style={[
+                getCardStyle(theme).defaultCardItem,
                 styles.tabWrapper,
                 id === activeTab ? styles.activeTab : null,
               ]}
@@ -60,7 +70,9 @@ export default ({
               <View style={styles.titleContainer}>
                 <View style={styles.nameContainer}>
                   <Image style={styles.icon} source={{uri: icon}} />
-                  <Text style={styles.name} numberOfLines={1}>
+                  <Text
+                    style={[styles.textBase, styles.name, styles.contrastColor]}
+                    numberOfLines={1}>
                     {name}
                   </Text>
                 </View>
@@ -69,7 +81,14 @@ export default ({
                   onPress={() => {
                     onCloseTab(id);
                   }}>
-                  <Text style={styles.close}>X</Text>
+                  <Text
+                    style={[
+                      styles.close,
+                      styles.textBase,
+                      styles.contrastColor,
+                    ]}>
+                    x
+                  </Text>
                 </TouchableOpacity>
               </View>
               <Image style={styles.screenshot} source={{uri: image}} />
@@ -84,62 +103,75 @@ export default ({
         }}
         onQuitManagement={onQuitManagement}
         showSideButtons={!!activeTab}
+        theme={theme}
       />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  tip: {
-    color: '#000',
-    fontSize: 14,
-    fontStyle: 'italic',
-    margin: 10,
-    textAlign: 'justify',
-  },
-  container: {flex: 1, backgroundColor: 'white'},
-  subcontainer: {flex: 1, flexDirection: 'row', flexWrap: 'wrap'},
-  hide: {display: 'none'},
-  tabWrapper: {
-    width: THUMB_WIDTH,
-    height: THUMB_HEIGHT,
-    margin,
-    borderRadius: 20,
-    overflow: 'hidden',
-    borderColor: 'darkgrey',
-    borderWidth: 3,
-  },
-  titleContainer: {
-    height: 40,
-    backgroundColor: 'black',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 8,
-    justifyContent: 'space-between',
-  },
-  activeTab: {
-    borderColor: '#A3112A',
-  },
-  nameContainer: {flexDirection: 'row', maxWidth: '80%', alignItems: 'center'},
-  screenshot: {
-    flex: 1,
-    resizeMode: 'cover',
-  },
-  icon: {width: 16, height: 16},
-  name: {
-    fontSize: 16,
-    color: 'white',
-    textAlign: 'center',
-    flex: 1,
-    marginHorizontal: 10,
-  },
-  close: {color: 'white', fontWeight: 'bold', fontSize: 18},
-  closeView: {
-    minWidth: 30,
-    height: '100%',
-    padding: 0,
-    margin: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    tip: {
+      fontSize: 14,
+      marginTop: 15,
+      textAlign: 'center',
+      paddingHorizontal: 10,
+    },
+    container: {
+      flex: 1,
+      backgroundColor: getColors(theme).primaryBackground,
+    },
+    subcontainer: {flex: 1, flexDirection: 'row', flexWrap: 'wrap'},
+    hide: {display: 'none'},
+    tabWrapper: {
+      width: THUMB_WIDTH,
+      height: THUMB_HEIGHT,
+      margin,
+      overflow: 'hidden',
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+    },
+    contrastColor: {
+      color: theme === Theme.LIGHT ? BORDERWHITISH : DARKBLUELIGHTER,
+    },
+    titleContainer: {
+      height: 40,
+      backgroundColor: theme === Theme.LIGHT ? DARKBLUELIGHTER : BORDERWHITISH,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 8,
+      justifyContent: 'space-between',
+    },
+    activeTab: {
+      borderColor: '#A3112A',
+    },
+    nameContainer: {
+      flexDirection: 'row',
+      maxWidth: '80%',
+      alignItems: 'center',
+    },
+    screenshot: {
+      flex: 1,
+      resizeMode: 'cover',
+    },
+    icon: {width: 16, height: 16},
+    name: {
+      fontSize: 16,
+      textAlign: 'center',
+      flex: 1,
+      marginHorizontal: 10,
+    },
+    close: {color: 'white', fontWeight: 'bold', fontSize: 18},
+    closeView: {
+      minWidth: 30,
+      height: '100%',
+      padding: 0,
+      margin: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    textBase: {
+      color: getColors(theme).secondaryText,
+      ...title_primary_body_2,
+    },
+  });

@@ -2,10 +2,14 @@ import {KeyTypes} from 'actions/interfaces';
 import {addPreference} from 'actions/preferences';
 import {RadioButton} from 'components/form/CustomRadioGroup';
 import OperationButton from 'components/form/EllipticButton';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getButtonStyle} from 'src/styles/button';
+import {getColors} from 'src/styles/colors';
+import {body_primary_body_1, title_primary_body_2} from 'src/styles/typography';
 import {urlTransformer} from 'utils/browser';
 import {beautifyErrorMessage} from 'utils/keychain';
 import {
@@ -59,15 +63,17 @@ const RequestOperation = ({
   selectedUsername,
   has,
 }: Props) => {
+  const {theme} = useContext(ThemeContext);
   const {request_id, ...data} = request;
   const [loading, setLoading] = useState(false);
   const [keep, setKeep] = useState(false);
   let {domain, type, username} = data;
   domain = has ? domain : urlTransformer(domain).hostname;
+  const styles = getStyles(theme);
 
   const renderRequestSummary = () => (
-    <ScrollView>
-      <RequestMessage message={message} />
+    <ScrollView style={styles.container}>
+      <RequestMessage message={message} additionalTextStyle={styles.text} />
       {children}
       {method !== KeyTypes.active &&
       type !== KeychainRequestTypes.addAccount ? (
@@ -83,13 +89,17 @@ const RequestOperation = ({
             onSelect={() => {
               setKeep(!keep);
             }}
+            additionalRadioLabelStyle={[styles.textBase, styles.smallerText]}
+            additionalRadioStyleActive={styles.redColor}
+            additionalRadioStyleInactive={{borderColor: getColors(theme).icon}}
           />
         </View>
       ) : (
         <></>
       )}
       <OperationButton
-        style={styles.button}
+        style={[getButtonStyle(theme).warningStyleButton, styles.button]}
+        additionalTextStyle={styles.textBase}
         title={translate('request.confirm')}
         isLoading={loading}
         onPress={async () => {
@@ -134,11 +144,26 @@ const RequestOperation = ({
   return renderRequestSummary();
 };
 
-const styles = StyleSheet.create({
-  button: {marginTop: 40},
-  keep: {marginTop: 40, flexDirection: 'row'},
-  radio: {marginLeft: 0},
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    button: {marginTop: 40, marginBottom: 20},
+    keep: {marginTop: 40, flexDirection: 'row'},
+    radio: {marginLeft: 0},
+    textBase: {color: '#FFF', ...body_primary_body_1},
+    text: {
+      color: getColors(theme).secondaryText,
+      ...title_primary_body_2,
+    },
+    container: {
+      paddingHorizontal: 15,
+    },
+    smallerText: {
+      fontSize: 12,
+    },
+    redColor: {
+      backgroundColor: getColors(theme).icon,
+    },
+  });
 const connector = connect(null, {addPreference});
 type TypesFromRedux = ConnectedProps<typeof connector>;
 export default connector(RequestOperation);

@@ -1,22 +1,17 @@
 import {showFloatingBar} from 'actions/floatingBar';
 import Icon from 'components/hive/Icon';
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
-import {
-  BACKGROUNDITEMDARKISH,
-  HIVEICONBGCOLOR,
-  PRIMARY_RED_COLOR,
-  getColors,
-} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {body_primary_body_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
-const ScreensComponentAllowanceList = ['WalletScreen'];
+const ScreensComponentAllowanceList = ['WalletScreen', 'BrowserScreen'];
 
 export type FloatingBarLink = 'ecosystem' | 'browser' | 'buy' | 'swap';
 interface Props {
@@ -30,14 +25,6 @@ interface Props {
 //    -> Browser: src/components/browser/index.tsx
 //      -> Just in the browser can be switch(proposing a button here) for a browser bar.
 //    -> Swap/Buy mainscreen(which will be a tab) //TODO
-
-//TODO important:
-//  - remove browserBar from here. Browser bar only exists in the browser as it is now but styled.
-//  - floatingBar keep working as usual but with a special condition to be rendered when in browser.
-//  - add the extra button(wallet_add) into the browser bar. keeping the height as short as possible,
-//  - so that button will fire:
-//    1. hide browser bar.
-//    2. show floatingBar.
 
 const Floating = ({
   show,
@@ -103,71 +90,18 @@ const Floating = ({
     return navigate(screen);
   };
 
-  //TODO this will be redux action.
-  // const onHandleCanSwith = () => {
-  //   if (currentRouteName === 'BrowserScreen') {
-  //     setShowBrowserBar(!showBrowserBar);
-  //   }
-  // };
-
-  const handleClickBrowserNav = (
-    type: 'back' | 'forward' | 'add_new' | 'refresh' | 'Go_tabs',
-  ) => {
-    console.log('TODO, handle each: ', {type});
+  const onHandleLongPress = () => {
+    if (currentRouteName === 'BrowserScreen') {
+      showFloatingBar(false);
+    }
   };
-
-  //TODO move code & styles to browserBar
-  // <>
-  //           <Icon
-  //             theme={theme}
-  //             name="arrow_left_browser"
-  //             additionalContainerStyle={styles.browserNavContainer}
-  //             {...styles.icon}
-  //             onClick={() => handleClickBrowserNav('back')}
-  //           />
-  //           <Icon
-  //             theme={theme}
-  //             name="arrow_right_browser"
-  //             additionalContainerStyle={styles.browserNavContainer}
-  //             {...styles.icon}
-  //             onClick={() => handleClickBrowserNav('forward')}
-  //           />
-  //           <Icon
-  //             theme={theme}
-  //             name="add_browser"
-  //             additionalContainerStyle={[
-  //               styles.browserNavContainer,
-  //               styles.circleContainer,
-  //             ]}
-  //             onClick={() => handleClickBrowserNav('add_new')}
-  //             width={35}
-  //             height={35}
-  //           />
-  //           <Icon
-  //             theme={theme}
-  //             name="rotate_right_browser"
-  //             additionalContainerStyle={styles.browserNavContainer}
-  //             onClick={() => handleClickBrowserNav('refresh')}
-  //             {...styles.icon}
-  //           />
-  //           <TouchableOpacity
-  //             activeOpacity={1}
-  //             onPress={() => handleClickBrowserNav('Go_tabs')}
-  //             style={styles.tabsIndicator}>
-  //             <Text
-  //               style={[
-  //                 styles.textBase,
-  //                 theme === Theme.LIGHT ? styles.redColor : undefined,
-  //               ]}>
-  //               1
-  //             </Text>
-  //           </TouchableOpacity>
-  //         </>
-  //end move code
 
   const renderNavigationBar = () => {
     return (
-      <View style={[getCardStyle(theme).floatingBar, styles.container]}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onLongPress={onHandleLongPress}
+        style={[getCardStyle(theme).floatingBar, styles.container]}>
         <View style={[styles.itemContainer, getActiveStyle('ecosystem')]}>
           <Icon
             theme={theme}
@@ -224,7 +158,7 @@ const Floating = ({
             </Text>
           )}
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -233,7 +167,6 @@ const Floating = ({
     : null;
 };
 
-//TODO cleanup unused styles
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
@@ -268,27 +201,6 @@ const getStyles = (theme: Theme) =>
       borderTopLeftRadius: 22,
       backgroundColor: PRIMARY_RED_COLOR,
       paddingVertical: 8,
-    },
-    tabsIndicator: {
-      borderColor: getColors(theme).icon,
-      borderWidth: 2,
-      width: 28,
-      height: 28,
-      borderRadius: 10,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    browserNavContainer: {
-      padding: 10,
-    },
-    circleContainer: {
-      padding: 4,
-      borderRadius: 50,
-      backgroundColor:
-        theme === Theme.LIGHT ? HIVEICONBGCOLOR : BACKGROUNDITEMDARKISH,
-    },
-    redColor: {
-      color: PRIMARY_RED_COLOR,
     },
   });
 

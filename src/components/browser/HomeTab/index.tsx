@@ -40,8 +40,16 @@ const NewTab = ({
             accounts={accounts}
             theme={theme}
           />,
-          <History history={history} updateTabUrl={updateTabUrl} />,
-          <Favorites favorites={favorites} updateTabUrl={updateTabUrl} />,
+          <History
+            history={history}
+            updateTabUrl={updateTabUrl}
+            theme={theme}
+          />,
+          <Favorites
+            favorites={favorites}
+            updateTabUrl={updateTabUrl}
+            theme={theme}
+          />,
         ]}
         toUpperCase={false}
         style={styles.sub}

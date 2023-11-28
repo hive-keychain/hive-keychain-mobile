@@ -1,25 +1,41 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {title_primary_body_2} from 'src/styles/typography';
 
 type Props = {
   title: string;
   content: string;
 };
 export default ({title, content}: Props) => {
+  const {theme} = useContext(ThemeContext);
+  const styles = getStyles(theme);
   return (
     <View style={styles.container}>
-      {getTitle({title})}
-      <Text style={styles.content}>{content}</Text>
+      {getTitle({title, theme})}
+      <Text style={[styles.textBase, styles.content, styles.opaque]}>
+        {content}
+      </Text>
     </View>
   );
 };
 
-export const getTitle = ({title}: {title: string}) => {
-  return <Text style={styles.title}>{title}</Text>;
+export const getTitle = ({title, theme}: {title: string; theme: Theme}) => {
+  const styles = getStyles(theme);
+  return <Text style={[styles.textBase, styles.title]}>{title}</Text>;
 };
 
-const styles = StyleSheet.create({
-  container: {paddingVertical: 5},
-  title: {fontSize: 16, fontWeight: 'bold'},
-  content: {fontSize: 16},
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {paddingVertical: 5},
+    title: {fontSize: 14, fontWeight: 'bold'},
+    content: {fontSize: 14},
+    textBase: {
+      color: getColors(theme).secondaryText,
+      ...title_primary_body_2,
+    },
+    opaque: {
+      opacity: 0.8,
+    },
+  });
