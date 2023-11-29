@@ -4,8 +4,8 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {GREENINFO, getColors} from 'src/styles/colors';
 import {RootState} from 'store';
+import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
 
@@ -30,6 +30,7 @@ const StatusIndicator = ({
   additionalContainerStyle,
 }: PropsFromRedux & Props) => {
   let status = ConnectionStatus.VOID;
+  console.log({instancesL: has.instances.length}); //TODO remove line
   if (has.instances.length) {
     const connected = has.instances.filter((e) => e.init && e.connected).length;
     if (connected === 0) {
@@ -39,19 +40,25 @@ const StatusIndicator = ({
     } else {
       status = ConnectionStatus.PARTIALLY_CONNECTED;
     }
+    console.log({status}); //TODO remove line
   }
 
   const styles = getStyles(status, theme);
 
   return (
     <TouchableOpacity
-      style={[styles.container, additionalContainerStyle]}
-      onPress={() => {
+      style={styles.container}
+      onLongPress={() => {
         navigate('ModalScreen', {
           name: ModalComponent.HAS_INFO,
         });
+      }}
+      onPress={() => {
+        if (status === ConnectionStatus.DISCONNECTED) {
+          restartHASSockets();
+        }
       }}>
-      <Icon theme={theme} name="logo_has" />
+      <Indicator theme={theme} status={status} />
     </TouchableOpacity>
   );
 };
@@ -65,40 +72,17 @@ export const Indicator = ({
 }) => {
   const styles = getStyles(status, theme);
   return (
-    // <View
-    //   style={
-    //     status === ConnectionStatus.CONNECTED ? styles.indicatorShadow : null
-    //   }>
     <View style={styles.indicator}>
       <Icon theme={theme} name="logo_has" width={15} height={15} />
     </View>
-    // </View>
   );
 };
 
 const getStyles = (status: ConnectionStatus, theme: Theme) =>
   StyleSheet.create({
     container: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: 33,
-      height: 33,
-      borderRadius: 50,
-      borderWidth: 1,
-      borderColor: GREENINFO,
-      alignSelf: 'center',
       marginRight: 8,
-      backgroundColor: getColors(theme).secondaryCardBgColor,
     },
-    // indicatorShadow: {
-    //   width: 20,
-    //   height: 20,
-    //   borderRadius: 10,
-    //   borderColor: getStatusColor(status),
-    //   borderWidth: 2,
-    //   justifyContent: 'center',
-    //   alignItems: 'center',
-    // },
     indicator: {
       borderColor: getStatusColor(status),
       padding: 4,

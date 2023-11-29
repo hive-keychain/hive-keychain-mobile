@@ -13,7 +13,6 @@ import {
 import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
 import PickerItem, {PickerItemInterface} from 'components/form/PickerItem';
 import AccountValue from 'components/hive/AccountValue';
-import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
@@ -31,7 +30,6 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
-  FlatList,
   NativeScrollEvent,
   NativeSyntheticEvent,
   StyleSheet,
@@ -277,7 +275,8 @@ const Main = ({
               <View style={styles.separatorContainer} />
               <Separator height={10} />
 
-              {!loadingUserTokens && orderedUserTokenBalanceList.length > 0 && (
+              {/* //TODO uncomment as this needs improvement. It slows the app */}
+              {/* {!loadingUserTokens && orderedUserTokenBalanceList.length > 0 && (
                 <FlatList
                   data={orderedUserTokenBalanceList}
                   contentContainerStyle={styles.flatlist}
@@ -303,7 +302,8 @@ const Main = ({
                 <View style={{height: 40}}>
                   <Loader size={'small'} animating />
                 </View>
-              )}
+              )} */}
+              {/* //END TODO uncomment as this needs improvement. It slows the app */}
             </View>
             <Survey navigation={navigation} />
             <WhatsNewComponent navigation={navigation} />

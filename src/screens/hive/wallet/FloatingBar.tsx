@@ -1,7 +1,7 @@
 import {showFloatingBar} from 'actions/floatingBar';
 import Icon from 'components/hive/Icon';
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
@@ -13,18 +13,15 @@ import {navigate} from 'utils/navigation';
 
 const ScreensComponentAllowanceList = ['WalletScreen', 'BrowserScreen'];
 
-export type FloatingBarLink = 'ecosystem' | 'browser' | 'buy' | 'swap';
+export type FloatingBarLink = 'ecosystem' | 'browser' | 'scan_qr' | 'swap_buy';
 interface Props {
   currentRouteName: string;
   showTags?: boolean;
 }
 //TODO
-//  Info:
-//  Components to show floatingBar & pass current_route:
-//    -> Wallet: src/screens/hive/wallet/Main.tsx.
-//    -> Browser: src/components/browser/index.tsx
-//      -> Just in the browser can be switch(proposing a button here) for a browser bar.
-//    -> Swap/Buy mainscreen(which will be a tab) //TODO
+//  Important changes related to floatingBar & browser bar.
+//      1.1. Add the home left button within the searchBar, as design but when not in HOME.
+//    4. Create Swap/Buy mainscreen(which will be a tabs container as governance) //TODO
 
 const Floating = ({
   show,
@@ -36,7 +33,6 @@ const Floating = ({
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const [isScreenAllowed, setIsScreenAllowed] = useState(false);
-  const [showInBrowserScreen, setShowInBrowserScreen] = useState(false);
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
 
@@ -80,28 +76,20 @@ const Floating = ({
         showFloatingBar(false);
         screen = 'BrowserScreen';
         break;
-      case 'buy':
-        //TODO buy as stack using templateStack.
-        return console.log('TODO buy as stack & style!!');
-      case 'swap':
+      case 'scan_qr':
+        showFloatingBar(false);
+        screen = 'ScanQRFromWalletScreen';
+        return navigate('ScanQRFromWalletScreen', {wallet: true});
+      case 'swap_buy':
         //TODO swaps as stack using templateStack.
         return console.log('TODO swap as stack & style!!');
     }
     return navigate(screen);
   };
 
-  const onHandleLongPress = () => {
-    if (currentRouteName === 'BrowserScreen') {
-      showFloatingBar(false);
-    }
-  };
-
   const renderNavigationBar = () => {
     return (
-      <TouchableOpacity
-        activeOpacity={1}
-        onLongPress={onHandleLongPress}
-        style={[getCardStyle(theme).floatingBar, styles.container]}>
+      <View style={[getCardStyle(theme).floatingBar, styles.container]}>
         <View style={[styles.itemContainer, getActiveStyle('ecosystem')]}>
           <Icon
             theme={theme}
@@ -130,13 +118,13 @@ const Floating = ({
             </Text>
           )}
         </View>
-        <View style={[styles.itemContainer, getActiveStyle('buy')]}>
+        <View style={[styles.itemContainer, getActiveStyle('scan_qr')]}>
           <Icon
             theme={theme}
             name="scanner"
-            color={getActiveIconColor('buy')}
+            color={getActiveIconColor('scan_qr')}
             {...styles.icon}
-            onClick={() => onHandlePressButton('buy')}
+            onClick={() => onHandlePressButton('scan_qr')}
           />
           {showTags && (
             <Text style={[styles.textBase, styles.marginTop]}>
@@ -144,13 +132,13 @@ const Floating = ({
             </Text>
           )}
         </View>
-        <View style={[styles.itemContainer, getActiveStyle('swap')]}>
+        <View style={[styles.itemContainer, getActiveStyle('swap_buy')]}>
           <Icon
             theme={theme}
-            color={getActiveIconColor('swap')}
+            color={getActiveIconColor('swap_buy')}
             name="swap"
             {...styles.icon}
-            onClick={() => onHandlePressButton('swap')}
+            onClick={() => onHandlePressButton('swap_buy')}
           />
           {showTags && (
             <Text style={[styles.textBase, styles.marginTop]}>
@@ -158,7 +146,7 @@ const Floating = ({
             </Text>
           )}
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
 

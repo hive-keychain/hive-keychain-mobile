@@ -12,6 +12,7 @@ import {
   body_primary_body_2,
   title_primary_body_2,
 } from 'src/styles/typography';
+import {clearHAS} from 'utils/hiveAuthenticationService';
 import {translate} from 'utils/localize';
 import StatusIndicator, {ConnectionStatus, Indicator} from './StatusIndicator';
 const TitleDarkPNG = require('assets/new_UI/has_title_dark.png');
@@ -70,8 +71,9 @@ const HASInfo = () => {
         <Separator height={15} />
         <EllipticButton
           title={translate('common.clear_all')}
-          //TODO finish bellow
-          onPress={() => {}}
+          onPress={() => {
+            clearHAS();
+          }}
           style={getButtonStyle(theme).warningStyleButton}
           additionalTextStyle={{...body_primary_body_2}}
         />

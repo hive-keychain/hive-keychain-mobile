@@ -1,5 +1,4 @@
 import {useFocusEffect} from '@react-navigation/native';
-import {showFloatingBar} from 'actions/floatingBar';
 import Icon from 'components/hive/Icon';
 import React from 'react';
 import {
@@ -21,6 +20,7 @@ import {
 } from 'src/styles/colors';
 import {body_primary_body_2} from 'src/styles/typography';
 import {RootState} from 'store';
+import {navigate} from 'utils/navigation';
 
 type Props = {
   canGoBack: boolean;
@@ -47,7 +47,6 @@ const Footer = ({
   tabs,
   clearCache,
   theme,
-  showFloatingBar,
   show,
 }: Props & PropsFromRedux) => {
   const insets = useSafeAreaInsets();
@@ -118,7 +117,7 @@ const Footer = ({
         theme={theme}
         name="wallet_add"
         {...styles.icon}
-        onClick={() => showFloatingBar(true)}
+        onClick={() => navigate('WALLET')}
       />
     </View>
   ) : null;
@@ -171,9 +170,7 @@ const mapStateToProps = (state: RootState) => {
     show: state.floatingBar.show,
   };
 };
-const connector = connect(mapStateToProps, {
-  showFloatingBar,
-});
+const connector = connect(mapStateToProps, {});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(Footer);
