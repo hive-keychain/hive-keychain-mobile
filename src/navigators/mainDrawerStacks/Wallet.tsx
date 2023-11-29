@@ -16,6 +16,7 @@ import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
+import {goBack} from 'utils/navigation';
 
 const Stack = createStackNavigator();
 
@@ -38,12 +39,28 @@ export default () => {
       <Stack.Screen
         name="ScanQRFromWalletScreen"
         options={{
-          headerStyle: {backgroundColor: 'black'},
-          headerTintColor: 'white',
-          title: '',
+          headerStyle: styles.header,
+          headerTitleStyle: styles.headerTitle,
+          headerTitleAlign: 'center',
+          title: translate('components.infoWalletQR.title'),
           headerRight: () => {
-            return <MoreInformation type={Info.QR_WALLET} />;
+            return (
+              <MoreInformation
+                theme={theme}
+                type={Info.QR_WALLET}
+                additionalButtonStyle={styles.marginRight}
+              />
+            );
           },
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+              additionalContainerStyle={styles.marginLeft}
+            />
+          ),
         }}
         component={WalletQRScanner}
       />
@@ -182,5 +199,8 @@ const getStyles = ({width}: Width, theme: Theme) =>
     },
     marginRight: {
       marginRight: 16,
+    },
+    marginLeft: {
+      marginLeft: 16,
     },
   });

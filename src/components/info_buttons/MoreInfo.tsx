@@ -53,6 +53,8 @@ export default ({
       name="info"
       theme={theme}
       additionalContainerStyle={additionalButtonStyle}
+      width={25}
+      height={25}
       onClick={() =>
         navigate('ModalScreen', {
           modalContent: content,

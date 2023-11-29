@@ -216,7 +216,7 @@ const WallettHistory = ({
     )
       return;
   };
-
+  //TODO cleanup unused
   return (
     <View style={styles.flex}>
       <FocusAwareStatusBar />

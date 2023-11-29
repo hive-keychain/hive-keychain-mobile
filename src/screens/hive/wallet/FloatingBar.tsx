@@ -1,5 +1,7 @@
 import {showFloatingBar} from 'actions/floatingBar';
 import Icon from 'components/hive/Icon';
+import SwapBuy from 'components/hive/SwapBuy';
+import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
@@ -53,7 +55,6 @@ const Floating = ({
           case currentRouteName === 'BrowserScreen':
             setActiveLink('browser');
             break;
-          //TODO bellow buy & swap as stacks.
         }
       }
     }
@@ -81,8 +82,10 @@ const Floating = ({
         screen = 'ScanQRFromWalletScreen';
         return navigate('ScanQRFromWalletScreen', {wallet: true});
       case 'swap_buy':
-        //TODO swaps as stack using templateStack.
-        return console.log('TODO swap as stack & style!!');
+        return navigate('TemplateStack', {
+          titleScreen: translate('navigation.swap_buy'),
+          component: <SwapBuy />,
+        } as TemplateStackProps);
     }
     return navigate(screen);
   };

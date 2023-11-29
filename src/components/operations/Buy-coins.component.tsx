@@ -1,24 +1,24 @@
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import AssetImage from 'components/ui/AssetImage';
 import Separator from 'components/ui/Separator';
-import React, {useRef, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {
   FlatList,
   Linking,
   StyleSheet,
-  Switch,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
-import ShoppingCartIconBlack from 'src/assets/wallet/icon_shopping_cart_black.svg';
+import {ConnectedProps, connect} from 'react-redux';
+import {ThemeContext} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {BuyCoinsListItem} from 'src/reference-data/buy-coins-list-item.list';
+import {getCardStyle} from 'src/styles/card';
 import {RootState} from 'store';
-import ArrayUtils from 'utils/array.utils';
+import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
-import Operation from './Operation';
 
 export type BuyCoinsprops = {
   currency: BuyCoinType;
@@ -27,10 +27,36 @@ export type BuyCoinsprops = {
 type Props = PropsFromRedux & BuyCoinsprops;
 
 const BuyCoinsComponent = ({user, currency}: Props) => {
+  const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
   const flatListRef = useRef();
-  const [isEnabled, setIsEnabled] = useState(
-    currency === BuyCoinType.BUY_HDB ? true : false,
-  );
+
+  const renderListItem = (item: any) => {
+    const handleOnClick = () => {
+      Linking.openURL(item.link);
+    };
+    return (
+      <View
+        style={[getCardStyle(theme).defaultCardItem, styles.marginVertical]}>
+        <View>
+          <AssetImage nameImage={item.image.split('.')[0]} />
+          <Text>{capitalize(item.image.split('.')[0])}</Text>
+        </View>
+        <Text style={styles.marginHorizontal}>
+          {translate(`wallet.operations.buy_coins.${item.description}`)}
+        </Text>
+        <Separator height={25} />
+        <View style={styles.centeredView}>
+          <ActiveOperationButton
+            title={translate('wallet.operations.buy_coins.title_buy')}
+            isLoading={false}
+            onPress={handleOnClick}
+            style={styles.buyButton}
+          />
+        </View>
+        <Separator height={15} drawLine={true} />
+      </View>
+    );
+  };
 
   const renderItems = (item: any) => {
     const handleOnClick = () => {
@@ -44,8 +70,9 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
         </View>
       );
     } else if (item.name) {
+      //TODO keep working bellow, make new svg based on name or try to load svg.
       return (
-        <View>
+        <View style={getCardStyle(theme).defaultCardItem}>
           <AssetImage
             containerStyles={{
               borderRadius: 0,
@@ -85,64 +112,60 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
     }
   };
 
-  const scrollToTop = () => {
-    if (flatListRef && flatListRef.current) {
-      (flatListRef.current as FlatList).scrollToIndex({
-        animated: true,
-        index: 0,
-      });
-    }
+  const onHandleScroll = (event: any) => {
+    const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
+    setDisplayedScrollToTop(innerScrollViewY >= 50);
   };
 
+  const {theme} = useContext(ThemeContext);
   const {height} = useWindowDimensions();
 
   const styles = getDimensionedStyles(height);
 
   return (
-    <Operation
-      logo={<ShoppingCartIconBlack />}
-      title={translate('wallet.operations.buy_coins.title_buy')}>
-      <>
-        <Separator />
-        <View>
-          <View style={styles.rowContainer}>
-            <Text style={styles.switchText}>
-              {translate('wallet.operations.buy_coins.title_hive')}
-            </Text>
-            <Switch
-              trackColor={{false: '#767577', true: '#cbcacb'}}
-              thumbColor={isEnabled ? '#77B9D1' : '#f4f3f4'}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={(value: boolean) => {
-                setIsEnabled(value);
-                scrollToTop();
-              }}
-              value={isEnabled}
-            />
-            <Text style={styles.switchText}>
-              {translate('wallet.operations.buy_coins.title_hbd')}
-            </Text>
-          </View>
-
-          {/* Flatlist one list */}
-          <FlatList
-            ref={flatListRef}
-            data={ArrayUtils.mergeWithoutDuplicate(
-              BuyCoinsListItem(
-                isEnabled ? BuyCoinType.BUY_HDB : BuyCoinType.BUY_HIVE,
-                user.name,
-              ).list,
-              BuyCoinsListItem(
-                isEnabled ? BuyCoinType.BUY_HDB : BuyCoinType.BUY_HIVE,
-                user.name,
-              ).exchanges,
-            )}
-            renderItem={(item) => renderItems(item.item)}
-            style={{maxHeight: '90%'}}
+    <>
+      <Separator />
+      <View style={styles.marginHorizontal}>
+        {/* <View style={styles.rowContainer}>
+          <Text style={styles.switchText}>
+            {translate('wallet.operations.buy_coins.title_hive')}
+          </Text>
+          <Switch
+            trackColor={{false: '#767577', true: '#cbcacb'}}
+            thumbColor={isEnabled ? '#77B9D1' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={(value: boolean) => {
+              setIsEnabled(value);
+              scrollToTop();
+            }}
+            value={isEnabled}
           />
-        </View>
-      </>
-    </Operation>
+          <Text style={styles.switchText}>
+            {translate('wallet.operations.buy_coins.title_hbd')}
+          </Text>
+        </View> */}
+
+        {/* Flatlist one list */}
+        {/* <FlatList
+          ref={flatListRef}
+          data={ArrayUtils.mergeWithoutDuplicate(
+            BuyCoinsListItem(currency, user.name).list,
+            BuyCoinsListItem(currency, user.name).exchanges,
+          )}
+          renderItem={(item) => renderItems(item.item)}
+          onScroll={onHandleScroll}
+          // style={{maxHeight: '90%'}}
+        /> */}
+
+        <FlatList
+          data={BuyCoinsListItem(currency, user.name!).list}
+          renderItem={(item) => renderListItem(item.item)}
+        />
+      </View>
+      {displayScrollToTop && (
+        <BackToTopButton theme={theme} element={flatListRef} />
+      )}
+    </>
   );
 };
 const connector = connect((state: RootState) => {
@@ -178,6 +201,13 @@ const getDimensionedStyles = (width: number) =>
     titleText: {
       fontWeight: 'bold',
       fontSize: 24,
+    },
+    marginVertical: {
+      marginVertical: 5,
+    },
+    assetImage: {
+      borderWidth: 1,
+      flexShrink: 1,
     },
   });
 
