@@ -1,14 +1,5 @@
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import CloseButton from 'components/ui/CloseButton';
-import CustomIconButton from 'components/ui/CustomIconButton';
-import React, {useContext} from 'react';
-import {StyleSheet} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
-import {getColors} from 'src/styles/colors';
-import {headlines_primary_headline_2} from 'src/styles/typography';
-import {translate} from 'utils/localize';
-//TODO use just icon + add the exported only version from figma
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import CancelTokenDelegation, {
@@ -36,8 +27,16 @@ import Transfer, {TransferOperationProps} from 'components/operations/Transfer';
 import UnstakeToken, {
   UnstakeTokenOperationProps,
 } from 'components/operations/UnstakeToken';
+import CloseButton from 'components/ui/CloseButton';
+import CustomIconButton from 'components/ui/CustomIconButton';
 import {OperationNavigationProps, RootStackParam} from 'navigators/Root.types';
+import React, {useContext} from 'react';
+import {StyleSheet} from 'react-native';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {headlines_primary_headline_2} from 'src/styles/typography';
 import {capitalize} from 'utils/format';
+import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator<RootStackParam>();
 

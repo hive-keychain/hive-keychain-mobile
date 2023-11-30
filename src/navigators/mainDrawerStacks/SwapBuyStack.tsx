@@ -10,7 +10,6 @@ import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
 
 const Stack = createStackNavigator();
 
@@ -23,7 +22,7 @@ export default () => {
       <Stack.Screen
         name="SwapBuyStack"
         component={SwapBuy}
-        options={() => ({
+        options={({navigation}) => ({
           headerStyle: styles.headerStyle,
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
@@ -33,7 +32,7 @@ export default () => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => goBack()}
+              onPress={() => navigation.goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
               additionalContainerStyle={styles.marginLeft}
@@ -42,7 +41,7 @@ export default () => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigate('WALLET', {screen: 'WalletScreen'})}
+              onPress={() => navigation.navigate('WALLET')}
               additionalContainerStyle={styles.marginRight}
             />
           ),

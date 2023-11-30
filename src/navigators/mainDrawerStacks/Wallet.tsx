@@ -16,7 +16,6 @@ import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
 
 const Stack = createStackNavigator();
 
@@ -38,7 +37,7 @@ export default () => {
       />
       <Stack.Screen
         name="ScanQRFromWalletScreen"
-        options={{
+        options={({navigation}) => ({
           headerStyle: styles.header,
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
@@ -55,13 +54,21 @@ export default () => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => goBack()}
+              onPress={() => {
+                const nav = navigation as DrawerNavigationHelpers;
+                // console.log({can: nav.canGoBack()}); //TODO remove line
+                if (nav.canGoBack()) {
+                  nav.goBack();
+                } else {
+                  nav.navigate('WALLET', {screen: 'WalletScreen'});
+                }
+              }}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
               additionalContainerStyle={styles.marginLeft}
             />
           ),
-        }}
+        })}
         component={WalletQRScanner}
       />
       <Stack.Screen
@@ -123,36 +130,12 @@ export default () => {
 };
 
 const getStyles = ({width}: Width, theme: Theme) =>
-  //TODO cleanup bellow
   StyleSheet.create({
     headerStyle: {
       height: 'auto',
       backgroundColor: getColors(theme).primaryBackground,
       borderWidth: 0,
       elevation: 0,
-    },
-    left: {marginHorizontal: 0.05 * width},
-    containerRight: {flexDirection: 'row', width: '60%', marginTop: 13},
-    flexRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    spacebetween: {justifyContent: 'space-between'},
-    qr: {marginLeft: 12},
-    containerLeft: {
-      flexDirection: 'column',
-      width: '100%',
-      height: 'auto',
-      marginTop: 13,
-    },
-    logo: {
-      width: 100,
-    },
-    firstRowContainer: {
-      marginLeft: 10,
-    },
-    userPicker: {
-      width: '60%',
     },
     header: {
       backgroundColor: getColors(theme).primaryBackground,

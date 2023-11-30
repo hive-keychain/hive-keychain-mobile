@@ -20,7 +20,7 @@ import {
 } from 'src/styles/colors';
 import {body_primary_body_2} from 'src/styles/typography';
 import {RootState} from 'store';
-import {navigate} from 'utils/navigation';
+import {resetStackAndNavigate} from 'utils/navigation';
 
 type Props = {
   canGoBack: boolean;
@@ -47,7 +47,6 @@ const Footer = ({
   tabs,
   clearCache,
   theme,
-  show,
 }: Props & PropsFromRedux) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(height, insets, theme);
@@ -68,7 +67,7 @@ const Footer = ({
     }, [canGoBack]),
   );
 
-  return !show ? (
+  return (
     <View style={styles.footer}>
       <Icon
         theme={theme}
@@ -117,10 +116,10 @@ const Footer = ({
         theme={theme}
         name="wallet_add"
         {...styles.icon}
-        onClick={() => navigate('WALLET')}
+        onClick={() => resetStackAndNavigate('WALLET')}
       />
     </View>
-  ) : null;
+  );
 };
 
 const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
@@ -166,9 +165,7 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
   });
 
 const mapStateToProps = (state: RootState) => {
-  return {
-    show: state.floatingBar.show,
-  };
+  return {};
 };
 const connector = connect(mapStateToProps, {});
 type PropsFromRedux = ConnectedProps<typeof connector>;

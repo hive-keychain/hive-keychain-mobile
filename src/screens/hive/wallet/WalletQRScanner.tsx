@@ -1,4 +1,5 @@
 import QRCode from 'components/qr_code';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
 import {BarCodeReadEvent} from 'react-native-camera';
 import {handleUrl} from 'utils/linking';
@@ -11,7 +12,12 @@ const WalletQRScanner = () => {
       console.log(e, data);
     }
   };
-  return <QRCode onSuccess={onSuccess} />;
+  return (
+    <>
+      <FocusAwareStatusBar />
+      <QRCode onSuccess={onSuccess} />
+    </>
+  );
 };
 
 export default WalletQRScanner;

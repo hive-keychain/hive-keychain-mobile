@@ -11,11 +11,7 @@ import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
-const ScreensComponentAllowanceList = [
-  'WalletScreen',
-  'BrowserScreen',
-  'SwapBuyStack',
-];
+const ScreensComponentAllowanceList = ['WalletScreen', 'SwapBuyStack'];
 
 export type FloatingBarLink = 'ecosystem' | 'browser' | 'scan_qr' | 'swap_buy';
 interface Props {
@@ -46,7 +42,6 @@ const Floating = ({
         ScreensComponentAllowanceList.find(
           (screenName) => screenName === currentRouteName,
         ) !== undefined;
-      console.log('in FB: ', {currentRouteName, isAllowed}); //TODO remove line
       setIsScreenAllowed(isAllowed);
       if (isAllowed) {
         switch (true) {
@@ -72,26 +67,32 @@ const Floating = ({
     activeLink === link ? '#FFF' : undefined;
 
   const onHandlePressButton = (link: FloatingBarLink) => {
+    console.log('pressed', {link});
     setActiveLink(link);
     let screen = '';
+    let nestedScreenOrParams;
     switch (link) {
       case 'ecosystem':
         screen = 'WALLET';
+        nestedScreenOrParams = {
+          screen: 'WalletScreen',
+        };
         break;
       case 'browser':
-        showFloatingBar(false);
         screen = 'BrowserScreen';
         break;
       case 'scan_qr':
-        screen = 'ScanQRFromWalletScreen';
-        return navigate('WALLET', {
-          screen: screen,
+        screen = 'WALLET';
+        nestedScreenOrParams = {
+          screen: 'ScanQRFromWalletScreen',
           params: {wallet: true},
-        });
+        };
+        break;
       case 'swap_buy':
-        return navigate('SwapBuyStack');
+        screen = 'SwapBuyStack';
+        break;
     }
-    return navigate(screen);
+    return navigate(screen, nestedScreenOrParams);
   };
 
   const renderNavigationBar = () => {
