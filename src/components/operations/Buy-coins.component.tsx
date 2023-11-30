@@ -3,7 +3,7 @@ import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import AssetImage from 'components/ui/AssetImage';
 import Separator from 'components/ui/Separator';
-import React, {useContext, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   Linking,
   ScrollView,
@@ -36,6 +36,10 @@ type Props = PropsFromRedux & BuyCoinsprops;
 const BuyCoinsComponent = ({user, currency, showFloatingBar}: Props) => {
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
   const scrollViewRef = useRef();
+
+  useEffect(() => {
+    showFloatingBar(true);
+  }, []);
 
   const renderListItem = (item: any) => {
     const handleOnClick = () => {
