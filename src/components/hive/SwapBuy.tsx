@@ -58,6 +58,7 @@ const getStyles = (theme: Theme) =>
     container: {
       flex: 1,
       backgroundColor: getColors(theme).primaryBackground,
+      paddingTop: 20,
     },
     text: {
       color: getColors(theme).secondaryText,

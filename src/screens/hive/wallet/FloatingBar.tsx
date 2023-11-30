@@ -1,7 +1,5 @@
 import {showFloatingBar} from 'actions/floatingBar';
 import Icon from 'components/hive/Icon';
-import SwapBuy from 'components/hive/SwapBuy';
-import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
@@ -13,7 +11,11 @@ import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
-const ScreensComponentAllowanceList = ['WalletScreen', 'BrowserScreen'];
+const ScreensComponentAllowanceList = [
+  'WalletScreen',
+  'BrowserScreen',
+  'SwapBuyStack',
+];
 
 export type FloatingBarLink = 'ecosystem' | 'browser' | 'scan_qr' | 'swap_buy';
 interface Props {
@@ -40,11 +42,11 @@ const Floating = ({
 
   useEffect(() => {
     if (currentRouteName) {
-      console.log('in FB: ', {currentRouteName}); //TODO remove line
       const isAllowed =
         ScreensComponentAllowanceList.find(
           (screenName) => screenName === currentRouteName,
         ) !== undefined;
+      console.log('in FB: ', {currentRouteName, isAllowed}); //TODO remove line
       setIsScreenAllowed(isAllowed);
       if (isAllowed) {
         switch (true) {
@@ -54,6 +56,9 @@ const Floating = ({
             break;
           case currentRouteName === 'BrowserScreen':
             setActiveLink('browser');
+            break;
+          case currentRouteName === 'SwapBuyStack':
+            setActiveLink('swap_buy');
             break;
         }
       }
@@ -78,14 +83,13 @@ const Floating = ({
         screen = 'BrowserScreen';
         break;
       case 'scan_qr':
-        showFloatingBar(false);
         screen = 'ScanQRFromWalletScreen';
-        return navigate('ScanQRFromWalletScreen', {wallet: true});
+        return navigate('WALLET', {
+          screen: screen,
+          params: {wallet: true},
+        });
       case 'swap_buy':
-        return navigate('TemplateStack', {
-          titleScreen: translate('navigation.swap_buy'),
-          component: <SwapBuy />,
-        } as TemplateStackProps);
+        return navigate('SwapBuyStack');
     }
     return navigate(screen);
   };

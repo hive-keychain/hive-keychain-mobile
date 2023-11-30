@@ -18,6 +18,7 @@ import SvgContainer, {
 interface AssetImageprops {
   onClick?: () => void;
   nameImage: string;
+
   containerStyles?: ContainerStylesProps;
 }
 

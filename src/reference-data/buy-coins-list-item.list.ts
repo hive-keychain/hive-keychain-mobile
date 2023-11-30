@@ -1,7 +1,7 @@
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {TransakConfig} from 'utils/config';
 
-export const BuyCoinsListItem = (type: BuyCoinType, username: string) => {
+export const getBuyCoinsListItem = (type: BuyCoinType, username: string) => {
   switch (type) {
     case BuyCoinType.BUY_HIVE:
       return {

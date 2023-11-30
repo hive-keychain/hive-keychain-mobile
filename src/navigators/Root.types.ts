@@ -74,6 +74,7 @@ export type RootStackParam = {
   };
   TemplateStack: TemplateStackProps;
   WalletHistory: WalletHistoryComponentProps;
+  SwapBuyStack: undefined;
 };
 
 export type MainNavigation = StackNavigationProp<RootStackParam, 'Main'>;

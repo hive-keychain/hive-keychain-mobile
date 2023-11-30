@@ -14,7 +14,7 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {ThemeContext} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
-import {BuyCoinsListItem} from 'src/reference-data/buy-coins-list-item.list';
+import {getBuyCoinsListItem} from 'src/reference-data/buy-coins-list-item.list';
 import {getCardStyle} from 'src/styles/card';
 import {RootState} from 'store';
 import {capitalize} from 'utils/format';
@@ -158,7 +158,7 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
         /> */}
 
         <FlatList
-          data={BuyCoinsListItem(currency, user.name!).list}
+          data={getBuyCoinsListItem(currency, user.name!).list}
           renderItem={(item) => renderListItem(item.item)}
         />
       </View>

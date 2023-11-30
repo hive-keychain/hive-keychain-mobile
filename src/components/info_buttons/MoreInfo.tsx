@@ -42,7 +42,7 @@ export default ({
       content = <InfoQR />;
       break;
     case Info.QR_WALLET:
-      content = <InfoWalletQR />;
+      content = <InfoWalletQR theme={theme} />;
       break;
     case Info.COPY_KEYS:
       content = <CopyKeys />;
