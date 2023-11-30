@@ -7,15 +7,20 @@ import Icon from './Icon';
 interface BackToTopButtonProps {
   element: any;
   theme: Theme;
+  isScrollView?: boolean;
 }
 
 export const BackToTopButton = (props: BackToTopButtonProps) => {
   const scrollToTop = () => {
     if (props.element && props.element.current) {
       try {
-        props.element.current.scrollToIndex({animated: false, index: 0});
+        if (!props.isScrollView) {
+          props.element.current.scrollToIndex({animated: false, index: 0});
+        } else {
+          props.element.current.scrollTo({x: 0, y: 0, animated: true});
+        }
       } catch (error) {
-        //In case the list has no element TODO finish testing.
+        console.log('Error scrolling list: ', {error});
       }
     }
   };

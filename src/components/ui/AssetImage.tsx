@@ -8,8 +8,8 @@ import HuobiSVG from 'src/assets/images/huobi.svg';
 import IonomySVG from 'src/assets/images/ionomy.svg';
 import MexcSVG from 'src/assets/images/mexc.svg';
 import ProbitSVG from 'src/assets/images/probit.svg';
-import TransakSVG from 'src/assets/images/transak.svg';
 import UpbitSVG from 'src/assets/images/upbit.svg';
+import TransakSVG from 'src/assets/new_UI/transak-logo-rounded.svg';
 import SvgContainer, {
   ContainerStylesProps,
   contentSVGProps,
@@ -18,7 +18,7 @@ import SvgContainer, {
 interface AssetImageprops {
   onClick?: () => void;
   nameImage: string;
-
+  withoutSVGContainer?: boolean;
   containerStyles?: ContainerStylesProps;
 }
 
@@ -26,26 +26,33 @@ const AssetImage = (props: AssetImageprops) => {
   const getImageFilePath = (fileName: string) => {
     switch (fileName) {
       case 'binance':
-        return (
+        return props.withoutSVGContainer ? (
+          <BinanceSVG {...contentSVGProps} />
+        ) : (
           <SvgContainer
             containerStyles={props.containerStyles}
             svgFile={<BinanceSVG {...contentSVGProps} />}
           />
         );
       case 'blocktrades':
-        return (
+        return props.withoutSVGContainer ? (
+          <BlocktradesSVG {...contentSVGProps} />
+        ) : (
           <SvgContainer
             containerStyles={props.containerStyles}
             svgFile={<BlocktradesSVG {...contentSVGProps} />}
           />
         );
       case 'transak':
-        return (
+        return props.withoutSVGContainer ? (
+          <TransakSVG {...contentSVGProps} />
+        ) : (
           <SvgContainer
             containerStyles={props.containerStyles}
             svgFile={<TransakSVG {...contentSVGProps} />}
           />
         );
+      //TODO complete bellow if needed
       case 'upbit':
         return (
           <SvgContainer

@@ -1,6 +1,6 @@
 import {ExtendedAccount} from '@hiveio/dhive';
 import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
@@ -17,6 +17,8 @@ type Props = {
   theme: Theme;
 };
 const AccountValue = ({prices, account, properties, theme, title}: Props) => {
+  const [hideValue, setHideValue] = useState(false);
+
   let accountValue = '...';
   if (prices.bitcoin && account && properties.globals) {
     accountValue = getAccountValue(account, prices, properties.globals) + '';
@@ -25,10 +27,12 @@ const AccountValue = ({prices, account, properties, theme, title}: Props) => {
       : `$ ${withCommas(accountValue, 2)}`;
   }
   const styles = getStyles(theme);
+  const regexp = new RegExp(/\d/, 'ig');
 
   return (
     <TouchableOpacity
       onLongPress={() => {
+        setHideValue(!hideValue);
         if (account.name === 'stoodkev') {
           //@ts-ignore
           //throw new Error('test error');
@@ -38,7 +42,9 @@ const AccountValue = ({prices, account, properties, theme, title}: Props) => {
       <Text style={[styles.title, styles.textBase, styles.textCentered]}>
         {title}
       </Text>
-      <Text style={[styles.accountValue, styles.textBase]}>{accountValue}</Text>
+      <Text style={[styles.accountValue, styles.textBase]}>
+        {hideValue ? accountValue.replace(regexp, '*') : accountValue}
+      </Text>
     </TouchableOpacity>
   );
 };

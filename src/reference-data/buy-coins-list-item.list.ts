@@ -20,9 +20,6 @@ export const getBuyCoinsListItem = (type: BuyCoinType, username: string) => {
           // },
         ],
         exchanges: [
-          {
-            titleKey: 'wallet.operations.buy_coins.title_exchanges',
-          },
           // {
           //   image: 'bittrex.png',
           //   link: 'https://global.bittrex.com/Market/Index?MarketName=BTC-HIVE',
@@ -74,9 +71,6 @@ export const getBuyCoinsListItem = (type: BuyCoinType, username: string) => {
           // },
         ],
         exchanges: [
-          {
-            titleKey: 'wallet.operations.buy_coins.title_exchanges',
-          },
           // {
           //   image: 'bittrex.png',
           //   link: 'https://global.bittrex.com/Market/Index?MarketName=BTC-HIVE',
