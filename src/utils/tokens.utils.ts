@@ -1,5 +1,6 @@
 import {TokenBalance} from 'actions/interfaces';
 import hsc, {hiveEngineGet} from 'api/hiveEngine';
+import {Token} from 'src/interfaces/tokens.interface';
 
 export interface TransactionConfirmationResult {
   confirmed: boolean;
@@ -58,6 +59,35 @@ export const getUserBalance = (account: string) => {
     indexes: [],
     limit: 1000,
     offset: 0,
+  });
+};
+
+export const getAllTokens = async (): Promise<Token[]> => {
+  let tokens = [];
+  let offset = 0;
+  do {
+    const newTokens = await getTokens(offset);
+    tokens.push(...newTokens);
+    offset += 1000;
+  } while (tokens.length % 1000 === 0);
+  return tokens;
+};
+
+const getTokens = async (offset: number) => {
+  return (
+    await hiveEngineGet<any[]>({
+      contract: 'tokens',
+      table: 'tokens',
+      query: {},
+      limit: 1000,
+      offset: offset,
+      indexes: [],
+    })
+  ).map((t: any) => {
+    return {
+      ...t,
+      metadata: JSON.parse(t.metadata),
+    };
   });
 };
 

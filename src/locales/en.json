@@ -99,7 +99,8 @@
     "received": "Received",
     "sent": "Sent",
     "invalid_url": "Please use a valid URL",
-    "clear_all": "Clear all"
+    "clear_all": "Clear all",
+    "select": "Select"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -393,7 +394,11 @@
         "title_exchanges": "Exchanges"
       },
       "swap": {
-        "title": "SWAP"
+        "title": "SWAP",
+        "disclaimer": "Keychain compares all the different providers to make sure you get your tokens at the best rate possible",
+        "swap_fee_title": "Fee",
+        "swap_under_maintenance": "Keychain Swap is under maintenance, please try again later",
+        "service_unavailable_message": "This service is temporarly unavailable. We are working on fixing the issue, sorry for the inconvenience."
       }
     },
     "has": {

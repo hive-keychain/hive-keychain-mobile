@@ -36,6 +36,7 @@ import SeeIcon from 'assets/new_UI/linear_eye.svg';
 import GlobalIcon from 'assets/new_UI/linear_global.svg';
 import RPCNodeIcon from 'assets/new_UI/linear_hierarchy-square-3.svg';
 import RamIcon from 'assets/new_UI/linear_ram.svg';
+import RepeatIcon from 'assets/new_UI/linear_repeat.svg';
 import RepeatMusicIcon from 'assets/new_UI/linear_repeate-music.svg';
 import RotateRightBrowserIcon from 'assets/new_UI/linear_rotate-right-browser.svg';
 import ScannerIcon from 'assets/new_UI/linear_scanner.svg';
@@ -574,6 +575,13 @@ const getIconFilePath = (
         <HeartIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           fill={fill ?? undefined}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'repeat':
+      return (
+        <RepeatIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );

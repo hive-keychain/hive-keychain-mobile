@@ -12,6 +12,7 @@ interface OperationProps {
   childrenBottom?: JSX.Element;
   renderBottomBg?: boolean;
   additionalContentContainerStyle?: StyleProp<ViewStyle>;
+  additionalSVGOpacity?: number;
 }
 
 const OperationThemed = ({
@@ -20,9 +21,10 @@ const OperationThemed = ({
   childrenMiddle,
   renderBottomBg,
   additionalContentContainerStyle,
+  additionalSVGOpacity,
 }: OperationProps) => {
   const {theme} = useContext(ThemeContext);
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, additionalSVGOpacity);
 
   return (
     <Background
@@ -43,11 +45,11 @@ const OperationThemed = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, customOpacity?: number) =>
   StyleSheet.create({
     backgroundSvgImage: {
       top: theme === Theme.LIGHT ? -80 : 0,
-      opacity: 1,
+      opacity: customOpacity ?? 1,
     },
     contentContainer: {
       flex: 1,

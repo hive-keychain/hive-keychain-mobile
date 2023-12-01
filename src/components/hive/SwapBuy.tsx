@@ -24,7 +24,7 @@ const SwapBuy = () => {
       translate('wallet.operations.buy_coins.title_hbd'),
     ],
     components: [
-      <Swap />,
+      <Swap theme={theme} />,
       <BuyCoinsComponent currency={BuyCoinType.BUY_HIVE} iconColor="black" />,
       <BuyCoinsComponent currency={BuyCoinType.BUY_HDB} iconColor="black" />,
     ],
@@ -70,5 +70,6 @@ const getStyles = (theme: Theme) =>
     toogleHeader: {
       width: '95%',
       alignSelf: 'center',
+      zIndex: 10,
     },
   });
