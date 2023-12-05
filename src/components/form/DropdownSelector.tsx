@@ -1,4 +1,7 @@
 import Icon from 'components/hive/Icon';
+import {OptionItem} from 'components/operations/Swap';
+import Loader from 'components/ui/Loader';
+import PreloadedImage from 'components/ui/PreloadedImage';
 import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
@@ -8,7 +11,9 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from 'react-native';
+import {Overlay} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
@@ -18,9 +23,10 @@ import CustomSearchBar from './CustomSearchBar';
 
 interface Props {
   theme: Theme;
-  list: string[];
-  onSelectedItem: (item: string) => void;
+  list: OptionItem[];
+  onSelectedItem: (item: OptionItem) => void;
   labelTranslationKey?: string;
+  titleTranslationKey?: string;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   searchOption?: boolean;
 }
@@ -32,25 +38,28 @@ const DropdownSelector = ({
   additionalContainerStyle,
   searchOption,
   onSelectedItem,
+  titleTranslationKey,
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [dropdownList, setDropdownList] = useState<string[]>(list);
+  const [dropdownList, setDropdownList] = useState<OptionItem[]>(list);
   const [searchValue, setSearchValue] = useState('');
-  const [filteredDropdownList, setFilteredDropdownList] = useState<string[]>(
-    list,
-  );
-  const [selectedItem, setSelectedItem] = useState(dropdownList[0]);
+  const [filteredDropdownList, setFilteredDropdownList] = useState<
+    OptionItem[]
+  >(list);
+  const [selectedItem, setSelectedItem] = useState<OptionItem>(dropdownList[0]);
+  const [isFiltering, setIsFiltering] = useState(false);
 
-  if (isExpanded) {
-    console.log({l: list.length}); //TODO remove line
-  }
+  useEffect(() => {
+    setIsFiltering(false);
+  }, [filteredDropdownList]);
 
   useEffect(() => {
     if (searchValue.trim().length > 0) {
-      const tempList = [...filteredDropdownList];
+      setIsFiltering(true);
+      const tempList = [...dropdownList];
       setFilteredDropdownList(
         tempList.filter((item) =>
-          item.toLowerCase().includes(searchValue.toLowerCase()),
+          item.label.toLowerCase().includes(searchValue.toLowerCase()),
         ),
       );
     } else {
@@ -58,13 +67,13 @@ const DropdownSelector = ({
     }
   }, [searchValue]);
 
-  const onHandleSelectedItem = (item: string) => {
+  const onHandleSelectedItem = (item: OptionItem) => {
     setSelectedItem(item);
     onSelectedItem(item);
     setIsExpanded(false);
   };
 
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().width);
 
   return (
     <View style={[styles.container, additionalContainerStyle]}>
@@ -74,7 +83,7 @@ const DropdownSelector = ({
         )}
         <View style={styles.dropdownContainer}>
           <Text style={[styles.textBase, styles.smallerText]}>
-            {selectedItem}
+            {selectedItem.label}
           </Text>
           <Icon
             theme={theme}
@@ -87,44 +96,74 @@ const DropdownSelector = ({
           />
         </View>
         {isExpanded && (
-          <ScrollView style={styles.dropdownlist}>
-            {searchOption && (
-              <CustomSearchBar
-                theme={theme}
-                value={searchValue}
-                onChangeText={(text) => setSearchValue(text)}
-              />
-            )}
-            {filteredDropdownList.map((item, index) => {
-              const isLastItem = index === dropdownList.length - 1;
-              return (
-                <TouchableOpacity
-                  activeOpacity={1}
-                  key={`${item}-currency-selector-swap`}
-                  onPress={() => onHandleSelectedItem(item)}>
-                  <Text
-                    style={[
-                      styles.textBase,
-                      styles.smallerText,
-                      styles.marginLeft,
-                      isLastItem ? {marginBottom: 10} : undefined,
-                    ]}>
-                    {item}
+          <Overlay
+            style={styles.overlay}
+            isVisible={isExpanded}
+            onBackdropPress={() => setIsExpanded(!isExpanded)}>
+            <View style={styles.container}>
+              {titleTranslationKey && (
+                <Text style={[styles.textBase, styles.smallerText]}>
+                  {translate(titleTranslationKey)}
+                </Text>
+              )}
+              {searchOption && (
+                <CustomSearchBar
+                  theme={theme}
+                  value={searchValue}
+                  onChangeText={(text) => setSearchValue(text)}
+                  additionalContainerStyle={styles.searchContainer}
+                />
+              )}
+              <ScrollView style={styles.dropdownlist}>
+                {!isFiltering &&
+                  filteredDropdownList.map((item, index) => {
+                    const isLastItem =
+                      index === filteredDropdownList.length - 1;
+                    console.log({img: item.img}); //TODO remove line
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={1}
+                        key={`${item.label}-currency-selector-swap`}
+                        onPress={() => onHandleSelectedItem(item)}
+                        style={styles.dropdownItem}>
+                        {item.img && (
+                          <PreloadedImage
+                            uri={item.img}
+                            symbol={item.value.symbol}
+                          />
+                        )}
+                        <Text
+                          style={[
+                            styles.textBase,
+                            styles.smallerText,
+                            styles.marginLeft,
+                            isLastItem ? {marginBottom: 10} : undefined,
+                          ]}>
+                          {item.label}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                {!isFiltering && filteredDropdownList.length === 0 && (
+                  <Text style={[styles.textBase, styles.smallerText]}>
+                    {translate('wallet.operations.swap.no_tokens_found')}
                   </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
+                )}
+                {isFiltering && <Loader animating size={'small'} />}
+              </ScrollView>
+            </View>
+          </Overlay>
         )}
       </View>
     </View>
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     container: {
       width: '100%',
+      maxHeight: 220,
     },
     dropdownContainer: {
       width: '100%',
@@ -151,20 +190,36 @@ const getStyles = (theme: Theme) =>
       height: 15,
     },
     dropdownlist: {
-      position: 'absolute',
-      borderRadius: 20,
-      backgroundColor: getColors(theme).secondaryCardBgColor,
-      borderColor: getColors(theme).quaternaryCardBorderColor,
-      borderWidth: 1,
-      top: 80,
-      width: '100%',
-      height: 80,
+      width: width * 0.5,
+      maxHeight: 200,
       alignSelf: 'center',
-      overflow: 'hidden',
       zIndex: 30,
     },
     marginLeft: {
       marginLeft: 20,
+    },
+    overlay: {
+      borderRadius: 20,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+      borderWidth: 1,
+    },
+    searchContainer: {
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+      borderWidth: 1,
+      width: 'auto',
+      height: 40,
+      marginBottom: 8,
+    },
+    dropdownItem: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    itemImg: {
+      width: 20,
+      height: 20,
+      backgroundColor: '#FFF',
+      borderRadius: 50,
     },
   });
 

@@ -17,6 +17,7 @@ import {Token} from 'src/interfaces/tokens.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
+import {getBorderTest} from 'src/styles/test';
 import {getRotateStyle} from 'src/styles/transform';
 import {
   body_primary_body_1,
@@ -126,14 +127,13 @@ const Swap = ({
         img =
           tokenInfo.metadata.icon && tokenInfo.metadata.icon.length > 0
             ? tokenInfo.metadata.icon
-            : '/assets/images/wallet/hive-engine.svg';
-        imgBackup = '/assets/images/wallet/hive-engine.svg';
+            : 'src/assets/new_UI/hive-currency-logo.svg';
+        imgBackup = 'src/assets/new_UI/hive-engine.svg';
       } else {
-        //TODO fix all this part bellow!
         img =
           token.symbol === getCurrency('HIVE')
-            ? `/assets/images/wallet/HIVE-logo.svg`
-            : `/assets/images/wallet/HBD-logo.svg`;
+            ? 'src/assets/new_UI/hive-currency-logo.svg'
+            : 'src/assets/new_UI/hbd-currency-logo.svg';
       }
       return {
         value: token,
@@ -146,23 +146,25 @@ const Swap = ({
       {
         value: {symbol: getCurrency('HIVE'), precision: 3},
         label: getCurrency('HIVE'),
-        img: `/assets/images/wallet/HIVE-logo.svg`,
+        img: 'will_throw_error',
       },
       {
         value: {symbol: getCurrency('HBD'), precision: 3},
         label: getCurrency('HBD'),
-        img: `/assets/images/wallet/HBD-logo.svg`,
+        img: 'will_throw_error',
       },
       ...allTokens
         .filter((token: Token) => token.precision !== 0) // Remove token that doesn't allow decimals
         .map((token: Token) => {
           let img = '';
-          img = token.metadata.icon ?? '/assets/images/wallet/hive-engine.svg';
+          img =
+            token.metadata.icon && token.metadata.icon.trim().length > 0
+              ? token.metadata.icon
+              : 'will_throw_error';
           return {
             value: token,
             label: token.symbol,
             img: img,
-            imgBackup: '/assets/images/wallet/hive-engine.svg',
           };
         }),
     ];
@@ -210,12 +212,18 @@ const Swap = ({
             </View>
           }
           childrenMiddle={
-            <View style={styles.marginHorizontal}>
+            <View
+              style={[
+                styles.marginHorizontal,
+                getBorderTest('blue'),
+                {zIndex: 20},
+              ]}>
               <Separator height={35} />
               <View style={styles.flexRowbetween}>
                 <DropdownSelector
                   theme={theme}
-                  list={startTokenListOptions.map((item) => item.label)}
+                  list={startTokenListOptions}
+                  titleTranslationKey="wallet.operations.swap.select_title_from"
                   labelTranslationKey="common.select"
                   additionalContainerStyle={styles.currencySelector}
                   searchOption
@@ -262,11 +270,13 @@ const Swap = ({
               <View style={styles.flexRowbetween}>
                 <DropdownSelector
                   theme={theme}
-                  list={endTokenListOptions.map((item) => item.label)}
+                  list={endTokenListOptions}
+                  titleTranslationKey="wallet.operations.swap.select_title_to"
                   labelTranslationKey="common.select"
                   additionalContainerStyle={styles.currencySelector}
                   //TODO finish bellow
                   onSelectedItem={(item) => console.log('TODO with: ', {item})}
+                  searchOption
                 />
                 <OperationInput
                   keyboardType="decimal-pad"
@@ -349,7 +359,7 @@ const Swap = ({
             </View>
           }
           childrenBottom={
-            <>
+            <View style={getBorderTest('red')}>
               <ActiveOperationButton
                 title={translate('wallet.operations.swap.title')}
                 //TODO finish bellow
@@ -361,7 +371,7 @@ const Swap = ({
                 isLoading={loadingSwap}
                 additionalTextStyle={{...button_link_primary_medium}}
               />
-            </>
+            </View>
           }
         />
       )}
