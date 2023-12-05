@@ -1,3 +1,4 @@
+import Icon from 'components/hive/Icon';
 import React, {useContext} from 'react';
 import {
   StyleProp,
@@ -14,6 +15,7 @@ import {FontPoppinsName, body_primary_body_1} from 'src/styles/typography';
 import CustomInput from './CustomInput';
 
 interface OperationInputProps {
+  infoIconAction?: () => void;
   labelInput?: string;
   labelExtraInfo?: string;
   labelBottomExtraInfo?: string;
@@ -42,6 +44,14 @@ export default (props: InputProps & OperationInputProps) => {
         <Text style={[styles.labelStyle, props.additionalLabelStyle]}>
           {props.labelInput}
         </Text>
+        {props.infoIconAction && (
+          <Icon
+            theme={theme}
+            name="info"
+            onClick={props.infoIconAction}
+            additionalContainerStyle={styles.marginLeft}
+          />
+        )}
         {props.labelExtraInfo && (
           <Text
             style={[
@@ -92,5 +102,8 @@ const getStyles = (theme: Theme) =>
       marginLeft: 10,
       fontFamily: FontPoppinsName.ITALIC,
       fontSize: 13,
+    },
+    marginLeft: {
+      marginLeft: 8,
     },
   });

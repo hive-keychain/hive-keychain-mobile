@@ -1,10 +1,11 @@
 import Icon from 'components/hive/Icon';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
   StyleProp,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native';
@@ -13,12 +14,15 @@ import {getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
 import {body_primary_body_1} from 'src/styles/typography';
 import {translate} from 'utils/localize';
+import CustomSearchBar from './CustomSearchBar';
 
 interface Props {
   theme: Theme;
   list: string[];
+  onSelectedItem: (item: string) => void;
   labelTranslationKey?: string;
   additionalContainerStyle?: StyleProp<ViewStyle>;
+  searchOption?: boolean;
 }
 
 const DropdownSelector = ({
@@ -26,14 +30,41 @@ const DropdownSelector = ({
   list,
   labelTranslationKey,
   additionalContainerStyle,
+  searchOption,
+  onSelectedItem,
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [dropdownList, setDropdownList] = useState<string[]>(list);
-  const styles = getStyles(theme);
+  const [searchValue, setSearchValue] = useState('');
+  const [filteredDropdownList, setFilteredDropdownList] = useState<string[]>(
+    list,
+  );
+  const [selectedItem, setSelectedItem] = useState(dropdownList[0]);
 
   if (isExpanded) {
-    console.log({l: list.length});
+    console.log({l: list.length}); //TODO remove line
   }
+
+  useEffect(() => {
+    if (searchValue.trim().length > 0) {
+      const tempList = [...filteredDropdownList];
+      setFilteredDropdownList(
+        tempList.filter((item) =>
+          item.toLowerCase().includes(searchValue.toLowerCase()),
+        ),
+      );
+    } else {
+      setFilteredDropdownList(dropdownList);
+    }
+  }, [searchValue]);
+
+  const onHandleSelectedItem = (item: string) => {
+    setSelectedItem(item);
+    onSelectedItem(item);
+    setIsExpanded(false);
+  };
+
+  const styles = getStyles(theme);
 
   return (
     <View style={[styles.container, additionalContainerStyle]}>
@@ -42,7 +73,9 @@ const DropdownSelector = ({
           <Text style={styles.textBase}>{translate(labelTranslationKey)}</Text>
         )}
         <View style={styles.dropdownContainer}>
-          <Text style={[styles.textBase, styles.smallerText]}>HIVE</Text>
+          <Text style={[styles.textBase, styles.smallerText]}>
+            {selectedItem}
+          </Text>
           <Icon
             theme={theme}
             name="expand_thin"
@@ -55,19 +88,30 @@ const DropdownSelector = ({
         </View>
         {isExpanded && (
           <ScrollView style={styles.dropdownlist}>
-            {dropdownList.map((item, index) => {
+            {searchOption && (
+              <CustomSearchBar
+                theme={theme}
+                value={searchValue}
+                onChangeText={(text) => setSearchValue(text)}
+              />
+            )}
+            {filteredDropdownList.map((item, index) => {
               const isLastItem = index === dropdownList.length - 1;
               return (
-                <Text
+                <TouchableOpacity
+                  activeOpacity={1}
                   key={`${item}-currency-selector-swap`}
-                  style={[
-                    styles.textBase,
-                    styles.smallerText,
-                    styles.marginLeft,
-                    isLastItem ? {marginBottom: 10} : undefined,
-                  ]}>
-                  {item}
-                </Text>
+                  onPress={() => onHandleSelectedItem(item)}>
+                  <Text
+                    style={[
+                      styles.textBase,
+                      styles.smallerText,
+                      styles.marginLeft,
+                      isLastItem ? {marginBottom: 10} : undefined,
+                    ]}>
+                    {item}
+                  </Text>
+                </TouchableOpacity>
               );
             })}
           </ScrollView>
@@ -114,9 +158,10 @@ const getStyles = (theme: Theme) =>
       borderWidth: 1,
       top: 80,
       width: '100%',
-      maxHeight: 60,
+      height: 80,
       alignSelf: 'center',
       overflow: 'hidden',
+      zIndex: 30,
     },
     marginLeft: {
       marginLeft: 20,

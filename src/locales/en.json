@@ -394,11 +394,15 @@
         "title_exchanges": "Exchanges"
       },
       "swap": {
-        "title": "SWAP",
+        "title": "Swap",
         "disclaimer": "Keychain compares all the different providers to make sure you get your tokens at the best rate possible",
         "swap_fee_title": "Fee",
         "swap_under_maintenance": "Keychain Swap is under maintenance, please try again later",
-        "service_unavailable_message": "This service is temporarly unavailable. We are working on fixing the issue, sorry for the inconvenience."
+        "service_unavailable_message": "This service is temporarly unavailable. We are working on fixing the issue, sorry for the inconvenience.",
+        "swap_layer_two_delayed": "Hive Engine is currently behind blocks. The swap might take longer than usual and has a bigger chance of aborting due to slippage.",
+        "advance_setting_title": "Advance Setting",
+        "slippage": "Slippage",
+        "swaps_slippage_definition": "At each step of the swap, we check if the final result is superior to the estimation minus the slippage. If not, the swap is canceled and the funds are returned. Note that some swaps require several operations and your funds can be returned in a different token."
       }
     },
     "has": {

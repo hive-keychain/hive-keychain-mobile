@@ -1,6 +1,7 @@
 import {showFloatingBar} from 'actions/floatingBar';
 import {loadTokensMarket} from 'actions/index';
 import ErrorSvg from 'assets/new_UI/error-circle.svg';
+import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import DropdownSelector from 'components/form/DropdownSelector';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -8,17 +9,26 @@ import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {SwapConfig} from 'src/interfaces/swap-token.interface';
 import {Token} from 'src/interfaces/tokens.interface';
+import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
-import {button_link_primary_small} from 'src/styles/typography';
+import {getRotateStyle} from 'src/styles/transform';
+import {
+  body_primary_body_1,
+  button_link_primary_medium,
+  button_link_primary_small,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {capitalize} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
+import {ModalComponent} from 'utils/modal.enum';
+import {navigate} from 'utils/navigation';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
 import {getAllTokens} from 'utils/tokens.utils';
 import OperationThemed from './OperationThemed';
@@ -44,10 +54,14 @@ const Swap = ({
   activeAccount,
 }: PropsFromRedux & Props) => {
   const [loading, setLoading] = useState(true);
+  const [loadingSwap, setLoadingSwap] = useState(false);
+  const [layerTwoDelayed, setLayerTwoDelayed] = useState(false);
   const [serviceUnavailable, setServiceUnavailable] = useState(false);
   const [underMaintenance, setUnderMaintenance] = useState(false);
   const [swapConfig, setSwapConfig] = useState({} as SwapConfig);
+  const [isAdvanceSettingOpen, setIsAdvanceSettingOpen] = useState(false);
   const [startToken, setStartToken] = useState<OptionItem>();
+  const [slippage, setSlippage] = useState(5);
   const [startTokenListOptions, setStartTokenListOptions] = useState<
     OptionItem[]
   >([]);
@@ -76,15 +90,18 @@ const Swap = ({
 
       setUnderMaintenance(serverStatus.isMaintenanceOn);
       setSwapConfig(config);
-      // if (
-      //   serverStatus.layerTwoDelayed &&
-      //   (!['HIVE', 'HBD'].includes(endToken?.value.symbol) ||
-      //     !['HIVE', 'HBD'].includes(startToken?.value.symbol))
-      // ) {
-      //   setLayerTwoDelayed(true);
-      //   setWarningMessage('swap_layer_two_delayed');
-      // }
-      // setSlippage(config.slippage.default);
+      if (
+        serverStatus.layerTwoDelayed &&
+        (!['HIVE', 'HBD'].includes(endToken?.value.symbol) ||
+          !['HIVE', 'HBD'].includes(startToken?.value.symbol))
+      ) {
+        setLayerTwoDelayed(true);
+        SimpleToast.show(
+          translate('wallet.operations.swap.swap_layer_two_delayed'),
+          SimpleToast.LONG,
+        );
+      }
+      setSlippage(config.slippage.default);
     } catch (err) {
       console.log('Error Swap tokens', {err});
       setServiceUnavailable(true);
@@ -162,7 +179,7 @@ const Swap = ({
       : endList[1];
     setEndToken(endTokenToSet);
     setEndTokenListOptions(endList);
-    console.log({endTokenListOptions}); //TODO remove line
+    // console.log({endTokenListOptions}); //TODO remove line
   };
 
   const styles = getStyles(theme);
@@ -201,6 +218,9 @@ const Swap = ({
                   list={startTokenListOptions.map((item) => item.label)}
                   labelTranslationKey="common.select"
                   additionalContainerStyle={styles.currencySelector}
+                  searchOption
+                  //TODO finish bellow
+                  onSelectedItem={(item) => console.log('TODO with: ', {item})}
                 />
                 <OperationInput
                   keyboardType="decimal-pad"
@@ -245,6 +265,8 @@ const Swap = ({
                   list={endTokenListOptions.map((item) => item.label)}
                   labelTranslationKey="common.select"
                   additionalContainerStyle={styles.currencySelector}
+                  //TODO finish bellow
+                  onSelectedItem={(item) => console.log('TODO with: ', {item})}
                 />
                 <OperationInput
                   keyboardType="decimal-pad"
@@ -281,7 +303,65 @@ const Swap = ({
                 />
               </View>
               <Separator height={40} />
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => setIsAdvanceSettingOpen(!isAdvanceSettingOpen)}
+                style={styles.flexRowbetween}>
+                <Text style={[styles.textBase, {...body_primary_body_1}]}>
+                  {translate('wallet.operations.swap.advance_setting_title')}
+                </Text>
+                <Icon
+                  theme={theme}
+                  name="expand_thin"
+                  {...styles.dropdownIcon}
+                  additionalContainerStyle={
+                    isAdvanceSettingOpen
+                      ? getRotateStyle('180')
+                      : getRotateStyle('0')
+                  }
+                />
+              </TouchableOpacity>
+              {isAdvanceSettingOpen && (
+                <OperationInput
+                  keyboardType="decimal-pad"
+                  infoIconAction={() =>
+                    navigate('ModalScreen', {
+                      name: ModalComponent.SWAP_INFO,
+                      fixedHeight: 0.3,
+                    })
+                  }
+                  labelInput={translate('wallet.operations.swap.slippage')}
+                  placeholder={translate('wallet.operations.swap.slippage')}
+                  value={slippage.toString()}
+                  onChangeText={(text) =>
+                    setSlippage(text.trim().length === 0 ? 0 : parseFloat(text))
+                  }
+                  additionalInputContainerStyle={{
+                    marginHorizontal: 0,
+                  }}
+                  additionalOuterContainerStyle={{
+                    width: '100%',
+                    marginBottom: 20,
+                  }}
+                  inputStyle={styles.textBase}
+                />
+              )}
             </View>
+          }
+          childrenBottom={
+            <>
+              <ActiveOperationButton
+                title={translate('wallet.operations.swap.title')}
+                //TODO finish bellow
+                onPress={() => {}}
+                style={[
+                  getButtonStyle(theme).warningStyleButton,
+                  styles.button,
+                ]}
+                isLoading={loadingSwap}
+                additionalTextStyle={{...button_link_primary_medium}}
+              />
+            </>
           }
         />
       )}
@@ -368,6 +448,11 @@ const getStyles = (theme: Theme) =>
     },
     textCentered: {
       textAlign: 'center',
+    },
+    button: {marginBottom: 20},
+    dropdownIcon: {
+      width: 15,
+      height: 15,
     },
   });
 

@@ -1,4 +1,5 @@
 import RequestModalContent from 'components/browser/RequestModalContent';
+import SwapInfo from 'components/hive/SwapInfo';
 import HASAuthRequest from 'components/hive_authentication_service/Auth';
 import HASChallengeRequest from 'components/hive_authentication_service/Challenge';
 import HASError from 'components/hive_authentication_service/Error';
@@ -30,7 +31,8 @@ export default ({navigation, route}: ModalNavigationProps) => {
   if (
     name &&
     (name.toLowerCase().includes('operation') ||
-      name.includes(ModalComponent.HAS_INFO))
+      name.includes(ModalComponent.HAS_INFO) ||
+      name.includes(ModalComponent.SWAP_INFO))
   ) {
     containerStyle = {
       borderWidth: 1,
@@ -41,7 +43,6 @@ export default ({navigation, route}: ModalNavigationProps) => {
   }
 
   const renderContent = () => {
-    console.log({name}); //TODO remove line
     switch (name) {
       case ModalComponent.HAS_AUTH:
         return <HASAuthRequest data={data as any} navigation={navigation} />;
@@ -55,6 +56,8 @@ export default ({navigation, route}: ModalNavigationProps) => {
         return <HASError text={data.text} navigation={navigation} />;
       case ModalComponent.HAS_INFO:
         return <HASInfo />;
+      case ModalComponent.SWAP_INFO:
+        return <SwapInfo />;
       default:
         return null;
     }
