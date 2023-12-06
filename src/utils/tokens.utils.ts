@@ -1,6 +1,6 @@
 import {TokenBalance} from 'actions/interfaces';
 import hsc, {hiveEngineGet} from 'api/hiveEngine';
-import {Token} from 'src/interfaces/tokens.interface';
+import {Token, TokenMarket} from 'src/interfaces/tokens.interface';
 
 export interface TransactionConfirmationResult {
   confirmed: boolean;
@@ -89,6 +89,46 @@ const getTokens = async (offset: number) => {
       metadata: JSON.parse(t.metadata),
     };
   });
+};
+
+const getTokenInfo = async (symbol: string): Promise<Token> => {
+  return (
+    await hiveEngineGet<any[]>({
+      contract: 'tokens',
+      table: 'tokens',
+      query: {symbol: symbol},
+      limit: 1000,
+      offset: 0,
+      indexes: [],
+    })
+  ).map((t: any) => {
+    return {
+      ...t,
+      metadata: JSON.parse(t.metadata),
+    };
+  })[0];
+};
+
+export const getTokenPrecision = async (symbol: string) => {
+  if (symbol === 'HBD' || symbol === 'HIVE') {
+    return 3;
+  }
+  const token = await getTokenInfo(symbol);
+  return token.precision;
+};
+
+export const getHiveEngineTokenPrice = (
+  {symbol}: Partial<TokenBalance>,
+  market: TokenMarket[],
+) => {
+  const tokenMarket = market.find((t) => t.symbol === symbol);
+  const price = tokenMarket
+    ? parseFloat(tokenMarket.lastPrice)
+    : symbol === 'SWAP.HIVE'
+    ? 1
+    : 0;
+  console.log({price}); //TODO remove line
+  return price;
 };
 
 export const BlockchainTransactionUtils = {

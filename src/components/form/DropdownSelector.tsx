@@ -17,18 +17,20 @@ import {Overlay} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
-import {body_primary_body_1} from 'src/styles/typography';
+import {FontPoppinsName, body_primary_body_1} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import CustomSearchBar from './CustomSearchBar';
 
 interface Props {
   theme: Theme;
   list: OptionItem[];
+  selected: OptionItem;
   onSelectedItem: (item: OptionItem) => void;
   labelTranslationKey?: string;
   titleTranslationKey?: string;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   searchOption?: boolean;
+  bottomLabelInfo?: string;
 }
 
 const DropdownSelector = ({
@@ -39,6 +41,8 @@ const DropdownSelector = ({
   searchOption,
   onSelectedItem,
   titleTranslationKey,
+  selected,
+  bottomLabelInfo,
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [dropdownList, setDropdownList] = useState<OptionItem[]>(list);
@@ -46,7 +50,7 @@ const DropdownSelector = ({
   const [filteredDropdownList, setFilteredDropdownList] = useState<
     OptionItem[]
   >(list);
-  const [selectedItem, setSelectedItem] = useState<OptionItem>(dropdownList[0]);
+  const [selectedItem, setSelectedItem] = useState<OptionItem>(selected);
   const [isFiltering, setIsFiltering] = useState(false);
 
   useEffect(() => {
@@ -95,6 +99,18 @@ const DropdownSelector = ({
             }
           />
         </View>
+        {bottomLabelInfo && (
+          <Text
+            style={[
+              styles.textBase,
+              styles.italic,
+              styles.opaque,
+              styles.smallerText,
+              styles.positionAbsolute,
+            ]}>
+            {bottomLabelInfo}
+          </Text>
+        )}
         {isExpanded && (
           <Overlay
             style={styles.overlay}
@@ -119,26 +135,22 @@ const DropdownSelector = ({
                   filteredDropdownList.map((item, index) => {
                     const isLastItem =
                       index === filteredDropdownList.length - 1;
-                    console.log({img: item.img}); //TODO remove line
                     return (
                       <TouchableOpacity
                         activeOpacity={1}
                         key={`${item.label}-currency-selector-swap`}
                         onPress={() => onHandleSelectedItem(item)}
-                        style={styles.dropdownItem}>
+                        style={[
+                          styles.dropdownItem,
+                          isLastItem ? {marginBottom: 10} : undefined,
+                        ]}>
                         {item.img && (
                           <PreloadedImage
                             uri={item.img}
                             symbol={item.value.symbol}
                           />
                         )}
-                        <Text
-                          style={[
-                            styles.textBase,
-                            styles.smallerText,
-                            styles.marginLeft,
-                            isLastItem ? {marginBottom: 10} : undefined,
-                          ]}>
+                        <Text style={[styles.textBase, styles.smallerText]}>
                           {item.label}
                         </Text>
                       </TouchableOpacity>
@@ -214,12 +226,25 @@ const getStyles = (theme: Theme, width: number) =>
     dropdownItem: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 5,
     },
     itemImg: {
       width: 20,
       height: 20,
       backgroundColor: '#FFF',
       borderRadius: 50,
+    },
+    italic: {
+      fontFamily: FontPoppinsName.ITALIC,
+    },
+    opaque: {
+      opacity: 0.6,
+    },
+    positionAbsolute: {
+      position: 'absolute',
+      bottom: -20,
+      alignSelf: 'center',
     },
   });
 

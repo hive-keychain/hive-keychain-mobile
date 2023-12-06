@@ -6,8 +6,11 @@ import DropdownSelector from 'components/form/DropdownSelector';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Loader from 'components/ui/Loader';
+import RotationIconAnimated from 'components/ui/RotationIconAnimated';
 import Separator from 'components/ui/Separator';
-import React, {useEffect, useState} from 'react';
+import {IStep} from 'hive-keychain-commons';
+import {ThrottleSettings, throttle} from 'lodash';
+import React, {useEffect, useMemo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
@@ -17,21 +20,26 @@ import {Token} from 'src/interfaces/tokens.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
-import {getBorderTest} from 'src/styles/test';
 import {getRotateStyle} from 'src/styles/transform';
 import {
+  FontPoppinsName,
   body_primary_body_1,
   button_link_primary_medium,
   button_link_primary_small,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize} from 'utils/format';
+import {SwapsConfig} from 'utils/config';
+import {capitalize, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
-import {getAllTokens} from 'utils/tokens.utils';
+import {
+  getAllTokens,
+  getHiveEngineTokenPrice,
+  getTokenPrecision,
+} from 'utils/tokens.utils';
 import OperationThemed from './OperationThemed';
 
 export interface OptionItem {
@@ -53,6 +61,7 @@ const Swap = ({
   loadTokensMarket,
   tokenMarket,
   activeAccount,
+  price,
 }: PropsFromRedux & Props) => {
   const [loading, setLoading] = useState(true);
   const [loadingSwap, setLoadingSwap] = useState(false);
@@ -61,7 +70,9 @@ const Swap = ({
   const [underMaintenance, setUnderMaintenance] = useState(false);
   const [swapConfig, setSwapConfig] = useState({} as SwapConfig);
   const [isAdvanceSettingOpen, setIsAdvanceSettingOpen] = useState(false);
+  const [amount, setAmount] = useState<string>('');
   const [startToken, setStartToken] = useState<OptionItem>();
+  const [endToken, setEndToken] = useState<OptionItem>();
   const [slippage, setSlippage] = useState(5);
   const [startTokenListOptions, setStartTokenListOptions] = useState<
     OptionItem[]
@@ -69,7 +80,17 @@ const Swap = ({
   const [endTokenListOptions, setEndTokenListOptions] = useState<OptionItem[]>(
     [],
   );
-  const [endToken, setEndToken] = useState<OptionItem>();
+  const [loadingEstimate, setLoadingEstimate] = useState(false);
+  const [estimate, setEstimate] = useState<IStep[]>();
+  const [estimateValue, setEstimateValue] = useState<string | undefined>();
+
+  const [autoRefreshCountdown, setAutoRefreshCountdown] = useState<
+    number | null
+  >(null);
+
+  const [isAdvancedParametersOpen, setIsAdvancedParametersOpen] = useState(
+    false,
+  );
 
   useEffect(() => {
     init();
@@ -118,7 +139,6 @@ const Swap = ({
       SwapTokenUtils.getSwapTokenStartList(activeAccount.account),
       getAllTokens(),
     ]);
-    // console.log({startList, allTokens}); //TODO remove line
     let list = startList.map((token) => {
       const tokenInfo = allTokens.find((t) => t.symbol === token.symbol);
       let img = '';
@@ -176,12 +196,142 @@ const Swap = ({
         : list[0],
     );
     setStartTokenListOptions(list);
+    const findDifferentToken = (start: OptionItem) => {
+      return endList.find(
+        (endItem) => endItem.value.symbol !== start.value.symbol,
+      );
+    };
     const endTokenToSet = lastUsed.to
       ? endList.find((t) => t.value.symbol === lastUsed.to.symbol)
-      : endList[1];
+      : findDifferentToken(list[0]) ?? endList[1];
     setEndToken(endTokenToSet);
     setEndTokenListOptions(endList);
-    // console.log({endTokenListOptions}); //TODO remove line
+  };
+
+  const calculateEstimate = async (
+    amount: string,
+    startToken: OptionItem,
+    endToken: OptionItem,
+    swapConfig: SwapConfig,
+  ) => {
+    if (startToken === endToken) {
+      SimpleToast.show(
+        translate(
+          'wallet.operations.swap.swap_start_end_token_should_be_different',
+        ),
+        SimpleToast.LONG,
+      );
+      return;
+    }
+
+    try {
+      setLoadingEstimate(true);
+      setEstimate(undefined);
+      setEstimateValue(undefined);
+      const result: IStep[] = await SwapTokenUtils.getEstimate(
+        startToken?.value.symbol,
+        endToken?.value.symbol,
+        amount,
+        () => {
+          setAutoRefreshCountdown(null);
+        },
+      );
+
+      if (result.length) {
+        const precision = await getTokenPrecision(
+          result[result.length - 1].endToken,
+        );
+        const value = Number(result[result.length - 1].estimate);
+        const fee =
+          (Number(result[result.length - 1].estimate) * swapConfig.fee.amount) /
+          100;
+        const finalValue = Number(value - fee).toFixed(precision);
+        setEstimate(result);
+        setEstimateValue(finalValue);
+      } else {
+        setEstimateValue(undefined);
+      }
+    } catch (err) {
+      setEstimate(undefined);
+      SimpleToast.show(
+        translate(`wallet.operations.swap.${err.reason.template}`),
+        SimpleToast.LONG,
+      );
+    } finally {
+      setLoadingEstimate(false);
+    }
+  };
+
+  const throttledRefresh = useMemo(() => {
+    return throttle(
+      (newAmount, newEndToken, newStartToken, swapConfig) => {
+        if (parseFloat(newAmount) > 0 && newEndToken && newStartToken) {
+          calculateEstimate(newAmount, newStartToken, newEndToken, swapConfig);
+          setAutoRefreshCountdown(SwapsConfig.autoRefreshPeriodSec);
+        }
+      },
+      1000,
+      {leading: false} as ThrottleSettings,
+    );
+  }, []);
+
+  useEffect(() => {
+    throttledRefresh(amount, endToken, startToken, swapConfig);
+  }, [amount, endToken, startToken, swapConfig]);
+
+  useEffect(() => {
+    if (autoRefreshCountdown === null) {
+      return;
+    }
+
+    if (autoRefreshCountdown === 0 && startToken && endToken) {
+      calculateEstimate(amount, startToken, endToken, swapConfig);
+      setAutoRefreshCountdown(SwapsConfig.autoRefreshPeriodSec);
+      return;
+    }
+
+    const a = setTimeout(() => {
+      setAutoRefreshCountdown(autoRefreshCountdown! - 1);
+    }, 1000);
+
+    return () => {
+      clearTimeout(a);
+    };
+  }, [autoRefreshCountdown]);
+
+  const onHandleRequestEstimate = () => {
+    if (!estimate) return;
+    calculateEstimate(amount, startToken!, endToken!, swapConfig!);
+    setAutoRefreshCountdown(SwapsConfig.autoRefreshPeriodSec);
+  };
+
+  const getTokenUSDPrice = (
+    estimateValue: string | undefined,
+    symbol: string,
+  ) => {
+    if (!estimateValue) return undefined;
+    else {
+      let tokenPrice;
+      if (symbol === getCurrency('HIVE')) {
+        tokenPrice = price.hive.usd!;
+      } else if (symbol === getCurrency('HBD')) {
+        tokenPrice = price.hive_dollar.usd!;
+      } else {
+        tokenPrice =
+          getHiveEngineTokenPrice(
+            {
+              symbol,
+            },
+            tokenMarket,
+          ) * price.hive.usd!;
+      }
+      const tokenPriceUSD = `≈ $${withCommas(
+        Number.parseFloat(estimateValue) * tokenPrice + '',
+        2,
+      )}`;
+      console.log({tokenPriceUSD}); //TODO remove line
+      return tokenPriceUSD;
+    }
   };
 
   const styles = getStyles(theme);
@@ -212,12 +362,7 @@ const Swap = ({
             </View>
           }
           childrenMiddle={
-            <View
-              style={[
-                styles.marginHorizontal,
-                getBorderTest('blue'),
-                {zIndex: 20},
-              ]}>
+            <View style={[styles.marginHorizontal]}>
               <Separator height={35} />
               <View style={styles.flexRowbetween}>
                 <DropdownSelector
@@ -227,16 +372,18 @@ const Swap = ({
                   labelTranslationKey="common.select"
                   additionalContainerStyle={styles.currencySelector}
                   searchOption
-                  //TODO finish bellow
-                  onSelectedItem={(item) => console.log('TODO with: ', {item})}
+                  selected={startToken}
+                  onSelectedItem={setStartToken}
+                  bottomLabelInfo={`${translate('common.available')}: ${
+                    startToken.value.balance
+                  }`}
                 />
                 <OperationInput
                   keyboardType="decimal-pad"
                   labelInput={capitalize(translate('common.amount'))}
                   placeholder={capitalize(translate('common.enter_amount'))}
-                  value={'1.000'}
-                  //TODO finish bellow!
-                  onChangeText={(text) => {}}
+                  value={amount}
+                  onChangeText={setAmount}
                   additionalInputContainerStyle={{
                     marginHorizontal: 0,
                   }}
@@ -274,16 +421,16 @@ const Swap = ({
                   titleTranslationKey="wallet.operations.swap.select_title_to"
                   labelTranslationKey="common.select"
                   additionalContainerStyle={styles.currencySelector}
-                  //TODO finish bellow
-                  onSelectedItem={(item) => console.log('TODO with: ', {item})}
+                  onSelectedItem={setEndToken}
+                  selected={endToken}
                   searchOption
                 />
                 <OperationInput
+                  disabled
                   keyboardType="decimal-pad"
                   labelInput={capitalize(translate('common.amount'))}
                   placeholder={capitalize(translate('common.enter_amount'))}
-                  value={'1.000'}
-                  //TODO finish bellow!
+                  value={estimateValue ? withCommas(estimateValue) : ''}
                   onChangeText={(text) => {}}
                   additionalInputContainerStyle={{
                     marginHorizontal: 0,
@@ -303,13 +450,24 @@ const Swap = ({
                           16,
                         )}
                       />
-                      <TouchableOpacity onPress={() => {}}>
-                        <Text style={styles.textBase}>
-                          {translate('common.max').toUpperCase()}
-                        </Text>
-                      </TouchableOpacity>
+                      <RotationIconAnimated
+                        theme={theme}
+                        animate={loadingEstimate}
+                        onPressIcon={onHandleRequestEstimate}
+                      />
                     </View>
                   }
+                  labelBottomExtraInfo={getTokenUSDPrice(
+                    estimateValue,
+                    endToken.value.symbol,
+                  )}
+                  additionalBottomLabelContainerStyle={styles.positionAbsolute}
+                  additionalBottomLabelTextStyle={[
+                    styles.textBase,
+                    styles.italic,
+                    styles.smallerText,
+                    styles.opaque,
+                  ]}
                 />
               </View>
               <Separator height={40} />
@@ -359,19 +517,14 @@ const Swap = ({
             </View>
           }
           childrenBottom={
-            <View style={getBorderTest('red')}>
-              <ActiveOperationButton
-                title={translate('wallet.operations.swap.title')}
-                //TODO finish bellow
-                onPress={() => {}}
-                style={[
-                  getButtonStyle(theme).warningStyleButton,
-                  styles.button,
-                ]}
-                isLoading={loadingSwap}
-                additionalTextStyle={{...button_link_primary_medium}}
-              />
-            </View>
+            <ActiveOperationButton
+              title={translate('wallet.operations.swap.title')}
+              //TODO finish bellow
+              onPress={() => {}}
+              style={[getButtonStyle(theme).warningStyleButton, styles.button]}
+              isLoading={loadingSwap}
+              additionalTextStyle={{...button_link_primary_medium}}
+            />
           }
         />
       )}
@@ -464,6 +617,17 @@ const getStyles = (theme: Theme) =>
       width: 15,
       height: 15,
     },
+    positionAbsolute: {
+      position: 'absolute',
+      bottom: -20,
+      alignSelf: 'center',
+    },
+    smallerText: {
+      fontSize: 12,
+    },
+    italic: {
+      fontFamily: FontPoppinsName.ITALIC,
+    },
   });
 
 const connector = connect(
@@ -471,6 +635,7 @@ const connector = connect(
     return {
       tokenMarket: state.tokensMarket,
       activeAccount: state.activeAccount,
+      price: state.currencyPrices,
     };
   },
   {showFloatingBar, loadTokensMarket},
