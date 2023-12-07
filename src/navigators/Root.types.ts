@@ -40,6 +40,8 @@ export interface ModalScreenProps {
 export interface TemplateStackProps {
   titleScreen: string;
   component: JSX.Element;
+  hideCloseButton?: boolean;
+  extraActionOnBack?: () => void;
 }
 
 export type RootStackParam = {
@@ -75,6 +77,7 @@ export type RootStackParam = {
   TemplateStack: TemplateStackProps;
   WalletHistory: WalletHistoryComponentProps;
   SwapBuyStack: undefined;
+  SwapHistory: undefined;
 };
 
 export type MainNavigation = StackNavigationProp<RootStackParam, 'Main'>;

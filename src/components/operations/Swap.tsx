@@ -1,8 +1,10 @@
 import {showFloatingBar} from 'actions/floatingBar';
 import {loadTokensMarket} from 'actions/index';
+import {showModal} from 'actions/message';
 import ErrorSvg from 'assets/new_UI/error-circle.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import DropdownSelector from 'components/form/DropdownSelector';
+import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Loader from 'components/ui/Loader';
@@ -10,15 +12,18 @@ import RotationIconAnimated from 'components/ui/RotationIconAnimated';
 import Separator from 'components/ui/Separator';
 import {IStep} from 'hive-keychain-commons';
 import {ThrottleSettings, throttle} from 'lodash';
+import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useMemo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {SwapConfig} from 'src/interfaces/swap-token.interface';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getButtonStyle} from 'src/styles/button';
-import {getColors} from 'src/styles/colors';
+import {getCardStyle} from 'src/styles/card';
+import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getRotateStyle} from 'src/styles/transform';
 import {
@@ -33,7 +38,7 @@ import {capitalize, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
-import {navigate} from 'utils/navigation';
+import {goBack, goBackAndNavigate, navigate} from 'utils/navigation';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
 import {
   getAllTokens,
@@ -62,9 +67,11 @@ const Swap = ({
   tokenMarket,
   activeAccount,
   price,
+  showModal,
 }: PropsFromRedux & Props) => {
   const [loading, setLoading] = useState(true);
   const [loadingSwap, setLoadingSwap] = useState(false);
+  const [loadingConfirmationSwap, setLoadingConfirmationSwap] = useState(false);
   const [layerTwoDelayed, setLayerTwoDelayed] = useState(false);
   const [serviceUnavailable, setServiceUnavailable] = useState(false);
   const [underMaintenance, setUnderMaintenance] = useState(false);
@@ -88,17 +95,13 @@ const Swap = ({
     number | null
   >(null);
 
-  const [isAdvancedParametersOpen, setIsAdvancedParametersOpen] = useState(
-    false,
-  );
-
   useEffect(() => {
     init();
     showFloatingBar(false);
   }, []);
 
+  //TODO cleanup & tests
   const init = async () => {
-    //TODO bellow uncomment & finish up
     let tokenInitialization;
     try {
       if (!tokenMarket.length) loadTokensMarket();
@@ -108,8 +111,6 @@ const Swap = ({
         SwapTokenUtils.getServerStatus(),
         SwapTokenUtils.getConfig(),
       ]);
-      console.log({serverStatus, config}); //TODO remove line
-
       setUnderMaintenance(serverStatus.isMaintenanceOn);
       setSwapConfig(config);
       if (
@@ -254,7 +255,9 @@ const Swap = ({
     } catch (err) {
       setEstimate(undefined);
       SimpleToast.show(
-        translate(`wallet.operations.swap.${err.reason.template}`),
+        translate(`wallet.operations.swap.${err.reason.template}`, {
+          currently: Number(err.reason.params[0]).toFixed(3),
+        }),
         SimpleToast.LONG,
       );
     } finally {
@@ -329,9 +332,268 @@ const Swap = ({
         Number.parseFloat(estimateValue) * tokenPrice + '',
         2,
       )}`;
-      console.log({tokenPriceUSD}); //TODO remove line
       return tokenPriceUSD;
     }
+  };
+
+  const swapStartAndEnd = () => {
+    const option = startTokenListOptions.find(
+      (option) => option.value.symbol === endToken?.value.symbol,
+    );
+    if (option) {
+      const tmp = startToken;
+      setStartToken(option);
+      setEndToken(tmp);
+    } else {
+      SimpleToast.show(
+        translate('wallet.operations.swap.swap_cannot_switch_tokens', {
+          symbol: endToken.value.symbol,
+        }),
+        SimpleToast.LONG,
+      );
+    }
+  };
+
+  const processSwap = async (estimateId: string) => {
+    // let estimateId: string;
+    // try {
+    //   estimateId = await SwapTokenUtils.saveEstimate(
+    //     estimate!,
+    //     slippage,
+    //     startToken?.value.symbol,
+    //     endToken?.value.symbol,
+    //     parseFloat(amount),
+    //     activeAccount.name!,
+    //   );
+    // } catch (err) {
+    //   // setErrorMessage(err.reason.template, err.reason.params);
+    //   SimpleToast.show(
+    //     translate(`wallet.operations.swap.${err.reason.template}`),
+    //     SimpleToast.LONG,
+    //   );
+    //   return;
+    // }
+
+    const startTokenPrecision = await getTokenPrecision(
+      startToken?.value.symbol,
+    );
+    const endTokenPrecision = await getTokenPrecision(endToken?.value.symbol);
+    setLoadingSwap(true);
+    //TODO validations & formattings needed at all?
+    try {
+      let success;
+      success = await SwapTokenUtils.processSwap(
+        estimateId,
+        startToken?.value.symbol,
+        parseFloat(amount),
+        activeAccount,
+        swapConfig.account,
+      );
+      console.log({success});
+      if (success) {
+        await SwapTokenUtils.saveLastUsed(startToken?.value, endToken?.value);
+        await SwapTokenUtils.setAsInitiated(estimateId);
+        // setSuccessMessage('html_popup_swap_sending_token_successful');
+        showModal(
+          'common.swap_sending_token_successful',
+          MessageModalType.SUCCESS,
+        );
+        //TODO goto Swap History.
+        goBackAndNavigate('SwapHistory');
+        // goBackToThenNavigate(Screen.TOKENS_SWAP_HISTORY);
+      } else {
+        // setErrorMessage('html_popup_swap_error_sending_token', [
+        //   swapConfig.account,
+        // ]);
+        SimpleToast.show(
+          translate('common.swap_error_sending_token', {
+            to: swapConfig.account,
+          }),
+          SimpleToast.LONG,
+        );
+      }
+    } catch (err) {
+      console.log('Swap error', {err});
+      // setErrorMessage(err.message);
+      SimpleToast.show(err.message, SimpleToast.LONG);
+    } finally {
+      // removeFromLoadingList('html_popup_delegate_rc_operation');
+      setLoadingSwap(false);
+    }
+  };
+
+  const gotoConfirmationStack = async () => {
+    //validations prior process swap
+    if (!estimate) {
+      SimpleToast.show(
+        translate('wallet.operations.swap.swap_no_estimate_error'),
+        SimpleToast.LONG,
+      );
+      return;
+    }
+    if (slippage < swapConfig.slippage.min) {
+      SimpleToast.show(
+        translate('wallet.operations.swap.swap_min_slippage_error', {
+          min: swapConfig.slippage.min.toString(),
+        }),
+        SimpleToast.LONG,
+      );
+      return;
+    }
+    if (startToken?.value.symbol === endToken?.value.symbol) {
+      // setErrorMessage('swap_start_end_token_should_be_different');
+      SimpleToast.show(
+        translate(
+          'wallet.operations.swap.swap_start_end_token_should_be_different',
+        ),
+        SimpleToast.LONG,
+      );
+      return;
+    }
+    if (!amount || amount.length === 0) {
+      // setErrorMessage('popup_html_need_positive_amount');
+      SimpleToast.show(
+        translate('common.need_positive_amount'),
+        SimpleToast.LONG,
+      );
+      return;
+    }
+
+    if (parseFloat(amount) > parseFloat(startToken?.value.balance)) {
+      // setErrorMessage('hive_engine_overdraw_balance_error', [
+      //   startToken?.label!,
+      // ]);
+      SimpleToast.show(
+        translate('common.overdraw_balance_error', {
+          currency: startToken?.label!,
+        }),
+        SimpleToast.LONG,
+      );
+      return;
+    }
+    setLoadingConfirmationSwap(true);
+    //Generate the estimateId here bellow
+    let estimateId: string;
+    try {
+      estimateId = await SwapTokenUtils.saveEstimate(
+        estimate!,
+        slippage,
+        startToken?.value.symbol,
+        endToken?.value.symbol,
+        parseFloat(amount),
+        activeAccount.name!,
+      );
+    } catch (err) {
+      // setErrorMessage(err.reason.template, err.reason.params);
+      SimpleToast.show(
+        translate(`wallet.operations.swap.${err.reason.template}`),
+        SimpleToast.LONG,
+      );
+      return;
+    } finally {
+      setLoadingConfirmationSwap(false);
+    }
+    //we have estimateId, continue... //TODO cleanup comments
+
+    const onHandleBackButton = async () =>
+      await SwapTokenUtils.cancelSwap(estimateId);
+
+    navigate('TemplateStack', {
+      titleScreen: translate('common.confirm_token_swap'),
+      component: (
+        <OperationThemed
+          renderBottomBg
+          childrenTop={
+            <>
+              <Text
+                style={[
+                  styles.textBase,
+                  styles.opaque,
+                  styles.marginHorizontal,
+                  styles.textCentered,
+                ]}>
+                {translate('wallet.operations.swap.swap_token_confirm_message')}
+              </Text>
+              <Separator />
+            </>
+          }
+          childrenMiddle={
+            <>
+              <Separator height={40} />
+              <View style={getCardStyle(theme).defaultCardItem}>
+                <View style={styles.flexRowbetween}>
+                  <Text style={[styles.textBase, styles.biggerText]}>
+                    {translate('wallet.operations.swap.swap_id_title')}
+                  </Text>
+                  <Text style={[styles.textBase, styles.smallerText]}>
+                    {estimateId}
+                  </Text>
+                </View>
+                <Separator
+                  drawLine
+                  height={0.5}
+                  additionalLineStyle={styles.bottomLine}
+                />
+                <Separator height={10} />
+                <View style={styles.flexRowbetween}>
+                  <Text style={[styles.textBase, styles.biggerText]}>
+                    {translate('wallet.operations.swap.swap_estimation')}
+                  </Text>
+                  <Text style={[styles.textBase]}>{`${
+                    estimate[0].amountStartToken
+                  } ${estimate[0].startToken} => ${estimate[0].estimate.toFixed(
+                    4,
+                  )} ${estimate[0].endToken}`}</Text>
+                </View>
+                <Separator
+                  drawLine
+                  height={0.5}
+                  additionalLineStyle={styles.bottomLine}
+                />
+                <Separator height={10} />
+                <View style={styles.flexRowbetween}>
+                  <Text style={[styles.textBase, styles.biggerText]}>
+                    {translate('wallet.operations.swap.slippage')}
+                  </Text>
+                  <Text style={[styles.textBase]}>{`${slippage}%`}</Text>
+                </View>
+              </View>
+            </>
+          }
+          childrenBottom={
+            <View style={[styles.flexRowbetween, styles.marginBottom]}>
+              <EllipticButton
+                title={translate('common.back')}
+                onPress={async () => {
+                  await SwapTokenUtils.cancelSwap(estimateId);
+                  goBack();
+                }}
+                style={[
+                  styles.operationButton,
+                  styles.operationButtonConfirmation,
+                ]}
+                additionalTextStyle={[
+                  styles.operationButtonText,
+                  styles.buttonTextColorDark,
+                ]}
+              />
+              <ActiveOperationButton
+                title={translate('common.confirm')}
+                onPress={() => processSwap(estimateId)}
+                style={[
+                  styles.operationButton,
+                  getButtonStyle(theme).warningStyleButton,
+                ]}
+                additionalTextStyle={styles.operationButtonText}
+                isLoading={loadingSwap}
+              />
+            </View>
+          }
+        />
+      ),
+      hideCloseButton: true,
+      extraActionOnBack: onHandleBackButton,
+    } as TemplateStackProps);
   };
 
   const styles = getStyles(theme);
@@ -350,12 +612,14 @@ const Swap = ({
               <Separator height={25} />
               <View style={styles.flexRowbetween}>
                 <Text style={[styles.textBase, styles.opaque]}>
-                  {translate('wallet.operations.swap.swap_fee_title')} 0.75 %
+                  {translate('wallet.operations.swap.swap_fee_title')}{' '}
+                  {swapConfig.fee.amount} %
                 </Text>
                 <Icon
                   theme={theme}
                   name="back_time"
                   additionalContainerStyle={[styles.squareButton]}
+                  onClick={() => navigate('SwapHistory')}
                 />
               </View>
               <Separator />
@@ -402,7 +666,9 @@ const Swap = ({
                           16,
                         )}
                       />
-                      <TouchableOpacity onPress={() => {}}>
+                      <TouchableOpacity
+                        //TODO add max bellow
+                        onPress={() => {}}>
                         <Text style={styles.textBase}>
                           {translate('common.max').toUpperCase()}
                         </Text>
@@ -412,7 +678,12 @@ const Swap = ({
                 />
               </View>
               <Separator />
-              <Icon theme={theme} name="repeat" />
+              <Icon
+                theme={theme}
+                name="repeat"
+                onClick={swapStartAndEnd}
+                additionalContainerStyle={styles.autoWidthCentered}
+              />
               <Separator />
               <View style={styles.flexRowbetween}>
                 <DropdownSelector
@@ -519,10 +790,9 @@ const Swap = ({
           childrenBottom={
             <ActiveOperationButton
               title={translate('wallet.operations.swap.title')}
-              //TODO finish bellow
-              onPress={() => {}}
+              onPress={gotoConfirmationStack}
               style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-              isLoading={loadingSwap}
+              isLoading={loadingConfirmationSwap}
               additionalTextStyle={{...button_link_primary_medium}}
             />
           }
@@ -628,6 +898,32 @@ const getStyles = (theme: Theme) =>
     italic: {
       fontFamily: FontPoppinsName.ITALIC,
     },
+    autoWidthCentered: {
+      width: 'auto',
+      alignSelf: 'center',
+    },
+    operationButton: {
+      width: '48%',
+      marginHorizontal: 0,
+    },
+    operationButtonConfirmation: {
+      backgroundColor: '#FFF',
+    },
+    buttonTextColorDark: {
+      color: BACKGROUNDDARKBLUE,
+    },
+    operationButtonText: {
+      ...button_link_primary_medium,
+    },
+    bottomLine: {
+      width: '100%',
+      borderColor: getColors(theme).secondaryLineSeparatorStroke,
+      margin: 0,
+      marginTop: 12,
+    },
+    marginBottom: {
+      marginBottom: 20,
+    },
   });
 
 const connector = connect(
@@ -638,7 +934,7 @@ const connector = connect(
       price: state.currencyPrices,
     };
   },
-  {showFloatingBar, loadTokensMarket},
+  {showFloatingBar, loadTokensMarket, showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

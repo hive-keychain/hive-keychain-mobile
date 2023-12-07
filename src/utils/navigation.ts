@@ -18,6 +18,11 @@ export const goBack = () => {
   if (navigator) navigator.dispatch(NavigationActions.back());
 };
 
+export const goBackAndNavigate = (routeName: string, params?: object) => {
+  goBack();
+  navigate(routeName, params);
+};
+
 export const resetStackAndNavigate = (name: string) => {
   if (navigator)
     navigator.dispatch({

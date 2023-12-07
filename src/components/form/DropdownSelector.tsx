@@ -54,6 +54,12 @@ const DropdownSelector = ({
   const [isFiltering, setIsFiltering] = useState(false);
 
   useEffect(() => {
+    if (selected) {
+      setSelectedItem(selected);
+    }
+  }, [selected]);
+
+  useEffect(() => {
     setIsFiltering(false);
   }, [filteredDropdownList]);
 

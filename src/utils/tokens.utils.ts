@@ -91,7 +91,7 @@ const getTokens = async (offset: number) => {
   });
 };
 
-const getTokenInfo = async (symbol: string): Promise<Token> => {
+export const getTokenInfo = async (symbol: string): Promise<Token> => {
   return (
     await hiveEngineGet<any[]>({
       contract: 'tokens',

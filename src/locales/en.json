@@ -100,7 +100,11 @@
     "sent": "Sent",
     "invalid_url": "Please use a valid URL",
     "clear_all": "Clear all",
-    "select": "Select"
+    "select": "Select",
+    "overdraw_balance_error": "Your {{currency}} balance is insufficient",
+    "swap_sending_token_successful": "Your swap is on the way! Thank you for using our service!",
+    "swap_error_sending_token": "There was an error while sending tokens to @{{to}}.",
+    "confirm_token_swap": "Confirm token swap"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -406,7 +410,15 @@
         "select_title_from": "Selecting From",
         "select_title_to": "Selecting To",
         "no_tokens_found": "No tokens found. Try to clear the filter.",
-        "swap_start_end_token_should_be_different": "Please choose two different tokens"
+        "swap_start_end_token_should_be_different": "Please choose two different tokens",
+        "swap_cannot_switch_tokens": "Cannot switch tokens because you don't have any {{symbol}}",
+        "swap_no_estimate_error": "You need an estimate to be able to process",
+        "swap_min_slippage_error": "The slippage should be at least {{min}}%",
+        "swap_token_confirm_message": "You are about to initiate a token swap using Keychain. You can track its status from the swap history screen.",
+        "swap_id_title": "Swap ID",
+        "swap_estimation": "Swap Estimation",
+        "swap_min_hive_value_error": "Minimum value should be equivalent to 1 HIVE (currently {{currently}} HIVE)",
+        "swap_refresh_countdown": "Refreshing in {{count}}s"
       }
     },
     "has": {
@@ -660,7 +672,8 @@
       "buy": "Buy",
       "swap": "Swap"
     },
-    "swap_buy": "Swap/Buy"
+    "swap_buy": "Swap/Buy",
+    "swap_history": "Swap History"
   },
   "request": {
     "title": {

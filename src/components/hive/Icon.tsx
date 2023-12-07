@@ -645,7 +645,7 @@ const Icon = (props: IconProps) => {
         pressed ? props.additionalPressedStyle : null,
       ]}
       onPress={() => props.onClick()}
-      onLongPress={() => props.onLongPress()}>
+      onLongPress={props.onLongPress ? () => props.onLongPress() : null}>
       {iconComponent}
     </Pressable>
   ) : (

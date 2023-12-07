@@ -22,7 +22,12 @@ const Stack = createStackNavigator<RootStackParam>();
  * @param component Child component(s) to render, passing its props.
  */
 export default ({navigation, route}: TemplateStackNavigationProps) => {
-  const {titleScreen, component} = route.params;
+  const {
+    titleScreen,
+    component,
+    hideCloseButton,
+    extraActionOnBack,
+  } = route.params;
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
 
@@ -38,16 +43,21 @@ export default ({navigation, route}: TemplateStackNavigationProps) => {
           title: titleScreen,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          headerRight: () => (
-            <CloseButton
-              theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
-            />
-          ),
+          headerRight: !hideCloseButton
+            ? () => (
+                <CloseButton
+                  theme={theme}
+                  onPress={() => navigation.navigate('WALLET')}
+                />
+              )
+            : null,
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => {
+                if (extraActionOnBack) extraActionOnBack();
+                (navigation as DrawerNavigationHelpers).goBack();
+              }}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
             />

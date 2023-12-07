@@ -1,15 +1,21 @@
 import {Asset, ExtendedAccount} from '@hiveio/dhive';
 import AsyncStorage from '@react-native-community/async-storage';
-import {TokenBalance} from 'actions/interfaces';
+import {ActiveAccount, TokenBalance} from 'actions/interfaces';
 import {KeychainSwapApi} from 'api/keychain-swap';
-import {IStep} from 'hive-keychain-commons/lib/swaps/swap.interface';
+import {
+  IStep,
+  ISwap,
+  SwapStatus,
+} from 'hive-keychain-commons/lib/swaps/swap.interface';
 import {
   SwapConfig,
   SwapServerStatus,
 } from 'src/interfaces/swap-token.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {getCurrency} from './hive';
-import {getUserBalance} from './tokens.utils';
+import {withCommas} from './format';
+import {getCurrency, sendToken, transfer} from './hive';
+import {sanitizeAmount, sanitizeUsername} from './hiveUtils';
+import {getTokenInfo, getUserBalance} from './tokens.utils';
 
 const getSwapTokenStartList = async (account: ExtendedAccount) => {
   let userTokenList: TokenBalance[] = await getUserBalance(account.name);
@@ -85,83 +91,95 @@ const saveEstimate = async (
   }
 };
 
-//TODO bellow uncomment & finish up
-// const processSwap = async (
-//   estimateId: string,
-//   startToken: string,
-//   amount: number,
-//   activeAccount: ActiveAccount,
-//   swapAccount: string,
-// ) => {
-//   if (
-//     startToken === getCurrency('HBD') ||
-//     startToken === getCurrency('HIVE')
-//   ) {
-//     // const status = await TransferUtils.sendTransfer(
-//     //   activeAccount.name!,
-//     //   swapAccount,
-//     //   `${amount.toFixed(3)} ${startToken}`,
-//     //   estimateId,
-//     //   false,
-//     //   0,
-//     //   0,
-//     //   activeAccount.keys.active!,
-//     // );
-//     const status = await transfer(
-//       activeAccount.keys.active!,
-//       {
-//         from: activeAccount.name!,
-//         to: swapAccount,
-//         amount: `${amount.toFixed(3)} ${startToken}`,
-//         memo: estimateId
-//       }
-//     );
-//     return status?.id;
-//   } else {
-//     const tokenInfo = await TokensUtils.getTokenInfo(startToken);
-//     const status = await TokensUtils.sendToken(
-//       startToken,
-//       swapAccount,
-//       `${amount.toFixed(tokenInfo.precision)}`,
-//       estimateId,
-//       activeAccount.keys.active!,
-//       activeAccount.name!,
-//     );
-//     return status.tx_id;
-//   }
-// };
+const processSwap = async (
+  estimateId: string,
+  startToken: string,
+  amount: number,
+  activeAccount: ActiveAccount,
+  swapAccount: string,
+) => {
+  if (startToken === getCurrency('HBD') || startToken === getCurrency('HIVE')) {
+    // const status = await TransferUtils.sendTransfer(
+    //   activeAccount.name!,
+    //   swapAccount,
+    //   `${amount.toFixed(3)} ${startToken}`,
+    //   estimateId,
+    //   false,
+    //   0,
+    //   0,
+    //   activeAccount.keys.active!,
+    // );
+    console.log('about to swap:', {
+      key: activeAccount.keys.active!,
+      from: activeAccount.name!,
+      to: sanitizeUsername(swapAccount),
+      amount: sanitizeAmount(amount, startToken),
+      memo: estimateId,
+    }); //TODO remove line
+    try {
+      const status: any = await transfer(activeAccount.keys.active!, {
+        from: activeAccount.name!,
+        to: sanitizeUsername(swapAccount),
+        amount: sanitizeAmount(amount, startToken),
+        memo: estimateId,
+      });
+      return true;
+    } catch (error) {
+      console.log('Swap, transfer error:', {error});
+      return false;
+    }
+  } else {
+    const tokenInfo = await getTokenInfo(startToken);
+    // const status = await sendToken(
+    //   startToken,
+    //   swapAccount,
+    //   `${amount.toFixed(tokenInfo.precision)}`,
+    //   estimateId,
+    //   activeAccount.keys.active!,
+    //   activeAccount.name!,
+    // );
+    const status = await sendToken(
+      activeAccount.keys.active,
+      activeAccount.name,
+      {
+        symbol: startToken,
+        to: sanitizeUsername(swapAccount),
+        quantity: sanitizeAmount(`${amount.toFixed(tokenInfo.precision)}`),
+        memo: estimateId,
+      },
+    );
+    return status.id;
+  }
+};
 
-// const retrieveSwapHistory = async (username: string): Promise<ISwap[]> => {
-//   const res = await KeychainSwapApi.get(`token-swap/history/${username}`);
-//   if (res.error) {
-//     return [];
-//   }
-//   const swaps = [];
-//   for (const s of res.result) {
-//     // const precisionStartToken = await TokensUtils.getTokenPrecision(
-//     //   s.startToken,
-//     // );
-//     // const precisionEndToken = await TokensUtils.getTokenPrecision(s.endToken);
-//     if (s.status === SwapStatus.PENDING && !s.transferInitiated) continue;
-//     swaps.push({
-//       ...s,
-//       amount: FormatUtils.withCommas(Number(s.amount).toString(), 3, true),
-//       received:
-//         s.received &&
-//         FormatUtils.withCommas(Number(s.received).toString(), 3, true),
-//       finalAmount: FormatUtils.withCommas(
-//         Number(s.received ?? s.expectedAmountAfterFee).toString(),
-//         3,
-//         true,
-//       ),
-//     });
-//   }
-//   return swaps;
-// };
+const retrieveSwapHistory = async (username: string): Promise<ISwap[]> => {
+  const res = await KeychainSwapApi.get(`token-swap/history/${username}`);
+  if (res.error) {
+    return [];
+  }
+  const swaps = [];
+  for (const s of res.result) {
+    // const precisionStartToken = await TokensUtils.getTokenPrecision(
+    //   s.startToken,
+    // );
+    // const precisionEndToken = await TokensUtils.getTokenPrecision(s.endToken);
+    if (s.status === SwapStatus.PENDING && !s.transferInitiated) continue;
+    swaps.push({
+      ...s,
+      amount: withCommas(Number(s.amount).toString(), 3),
+      received: s.received && withCommas(Number(s.received).toString(), 3),
+      finalAmount: withCommas(
+        Number(s.received ?? s.expectedAmountAfterFee).toString(),
+        3,
+      ),
+    });
+  }
+  return swaps;
+};
 
-// const cancelSwap = async (swapId: string) => {
-//   await KeychainSwapApi.post(`token-swap/${swapId}/cancel`, {});
-// };
+const cancelSwap = async (swapId: string) => {
+  await KeychainSwapApi.post(`token-swap/${swapId}/cancel`, {});
+};
 
 const getServerStatus = async (): Promise<SwapServerStatus> => {
   const res = await KeychainSwapApi.get(`server/status`);
@@ -187,24 +205,24 @@ const getLastUsed = async () => {
   else return JSON.parse(lastUsed);
 };
 
-// const setAsInitiated = async (swapId: ISwap['id']) => {
-//   const res = await KeychainSwapApi.post(`token-swap/${swapId}/confirm`, {});
-//   if (!res.result) {
-//     Logger.error(`Couldn't set as initiated`);
-//   }
-// };
+const setAsInitiated = async (swapId: ISwap['id']) => {
+  const res = await KeychainSwapApi.post(`token-swap/${swapId}/confirm`, {});
+  if (!res.result) {
+    console.log(`Swap Error: Couldn't set as initiated`);
+  }
+};
 
 export const SwapTokenUtils = {
   getSwapTokenStartList,
   getSwapTokenEndList,
-  // processSwap,
+  processSwap,
   getEstimate,
   saveEstimate,
-  // retrieveSwapHistory,
-  // cancelSwap,
+  retrieveSwapHistory,
+  cancelSwap,
   getServerStatus,
   getConfig,
   saveLastUsed,
   getLastUsed,
-  // setAsInitiated,
+  setAsInitiated,
 };
