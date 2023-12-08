@@ -127,7 +127,6 @@ export const getHiveEngineTokenPrice = (
     : symbol === 'SWAP.HIVE'
     ? 1
     : 0;
-  console.log({price}); //TODO remove line
   return price;
 };
 

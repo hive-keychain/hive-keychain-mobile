@@ -398,7 +398,6 @@ const Swap = ({
           'common.swap_sending_token_successful',
           MessageModalType.SUCCESS,
         );
-        //TODO goto Swap History.
         goBackAndNavigate('SwapHistory');
         // goBackToThenNavigate(Screen.TOKENS_SWAP_HISTORY);
       } else {
@@ -539,11 +538,11 @@ const Swap = ({
                   <Text style={[styles.textBase, styles.biggerText]}>
                     {translate('wallet.operations.swap.swap_estimation')}
                   </Text>
-                  <Text style={[styles.textBase]}>{`${
-                    estimate[0].amountStartToken
-                  } ${estimate[0].startToken} => ${estimate[0].estimate.toFixed(
-                    4,
-                  )} ${estimate[0].endToken}`}</Text>
+                  <Text style={[styles.textBase]}>{`${withCommas(amount)} ${
+                    startToken.value.symbol
+                  } => ${withCommas(estimateValue)} ${
+                    endToken.value.symbol
+                  }`}</Text>
                 </View>
                 <Separator
                   drawLine
@@ -555,7 +554,11 @@ const Swap = ({
                   <Text style={[styles.textBase, styles.biggerText]}>
                     {translate('wallet.operations.swap.slippage')}
                   </Text>
-                  <Text style={[styles.textBase]}>{`${slippage}%`}</Text>
+                  <Text style={[styles.textBase]}>
+                    {translate('wallet.operations.swap.swap_slippage_step', {
+                      slippage,
+                    })}
+                  </Text>
                 </View>
               </View>
             </>
@@ -638,9 +641,9 @@ const Swap = ({
                   searchOption
                   selected={startToken}
                   onSelectedItem={setStartToken}
-                  bottomLabelInfo={`${translate('common.available')}: ${
-                    startToken.value.balance
-                  }`}
+                  bottomLabelInfo={`${translate(
+                    'common.available',
+                  )}: ${parseFloat(startToken.value.balance).toFixed(3)}`}
                 />
                 <OperationInput
                   keyboardType="decimal-pad"
@@ -667,8 +670,7 @@ const Swap = ({
                         )}
                       />
                       <TouchableOpacity
-                        //TODO add max bellow
-                        onPress={() => {}}>
+                        onPress={() => setAmount(startToken.value.balance)}>
                         <Text style={styles.textBase}>
                           {translate('common.max').toUpperCase()}
                         </Text>

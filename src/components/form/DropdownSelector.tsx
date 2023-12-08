@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
+import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
 import {FontPoppinsName, body_primary_body_1} from 'src/styles/typography';
@@ -31,6 +32,7 @@ interface Props {
   additionalContainerStyle?: StyleProp<ViewStyle>;
   searchOption?: boolean;
   bottomLabelInfo?: string;
+  displayIconOnSelectedItem?: boolean;
 }
 
 const DropdownSelector = ({
@@ -43,6 +45,7 @@ const DropdownSelector = ({
   titleTranslationKey,
   selected,
   bottomLabelInfo,
+  displayIconOnSelectedItem,
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [dropdownList, setDropdownList] = useState<OptionItem[]>(list);
@@ -85,6 +88,27 @@ const DropdownSelector = ({
 
   const styles = getStyles(theme, useWindowDimensions().width);
 
+  const renderSelectedLabel = (item: OptionItem) => {
+    const labelElement = (
+      <Text style={[styles.textBase, styles.smallerText]}>{item.label}</Text>
+    );
+    if (displayIconOnSelectedItem && item.img) {
+      return (
+        <View style={styles.flexRowCentered}>
+          <PreloadedImage
+            uri={item.img}
+            symbol={item.value.symbol}
+            svgWidth={20}
+            svgHeight={20}
+            additionalContainerStyle={{width: 20, height: 20}}
+          />
+          {labelElement}
+        </View>
+      );
+    }
+    return labelElement;
+  };
+
   return (
     <View style={[styles.container, additionalContainerStyle]}>
       <View>
@@ -92,9 +116,10 @@ const DropdownSelector = ({
           <Text style={styles.textBase}>{translate(labelTranslationKey)}</Text>
         )}
         <View style={styles.dropdownContainer}>
-          <Text style={[styles.textBase, styles.smallerText]}>
+          {/* <Text style={[styles.textBase, styles.smallerText]}>
             {selectedItem.label}
-          </Text>
+          </Text> */}
+          {renderSelectedLabel(selectedItem)}
           <Icon
             theme={theme}
             name="expand_thin"
@@ -117,62 +142,63 @@ const DropdownSelector = ({
             {bottomLabelInfo}
           </Text>
         )}
-        {isExpanded && (
-          <Overlay
-            style={styles.overlay}
-            isVisible={isExpanded}
-            onBackdropPress={() => setIsExpanded(!isExpanded)}>
-            <View style={styles.container}>
-              {titleTranslationKey && (
+      </View>
+      {isExpanded && (
+        <Overlay
+          backdropStyle={styles.backDrop}
+          overlayStyle={styles.overlay}
+          isVisible={isExpanded}
+          statusBarTranslucent
+          onBackdropPress={() => setIsExpanded(!isExpanded)}>
+          <View style={[getCardStyle(theme).defaultCardItem]}>
+            {titleTranslationKey && (
+              <Text style={[styles.textBase, styles.smallerText]}>
+                {translate(titleTranslationKey)}
+              </Text>
+            )}
+            {searchOption && (
+              <CustomSearchBar
+                theme={theme}
+                value={searchValue}
+                onChangeText={(text) => setSearchValue(text)}
+                additionalContainerStyle={styles.searchContainer}
+              />
+            )}
+            <ScrollView style={styles.dropdownlist}>
+              {!isFiltering &&
+                filteredDropdownList.map((item, index) => {
+                  const isLastItem = index === filteredDropdownList.length - 1;
+                  return (
+                    <TouchableOpacity
+                      activeOpacity={1}
+                      key={`${item.label}-currency-selector-swap`}
+                      onPress={() => onHandleSelectedItem(item)}
+                      style={[
+                        styles.dropdownItem,
+                        isLastItem ? {marginBottom: 10} : undefined,
+                      ]}>
+                      {item.img && (
+                        <PreloadedImage
+                          uri={item.img}
+                          symbol={item.value.symbol}
+                        />
+                      )}
+                      <Text style={[styles.textBase, styles.smallerText]}>
+                        {item.label}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              {!isFiltering && filteredDropdownList.length === 0 && (
                 <Text style={[styles.textBase, styles.smallerText]}>
-                  {translate(titleTranslationKey)}
+                  {translate('wallet.operations.swap.no_tokens_found')}
                 </Text>
               )}
-              {searchOption && (
-                <CustomSearchBar
-                  theme={theme}
-                  value={searchValue}
-                  onChangeText={(text) => setSearchValue(text)}
-                  additionalContainerStyle={styles.searchContainer}
-                />
-              )}
-              <ScrollView style={styles.dropdownlist}>
-                {!isFiltering &&
-                  filteredDropdownList.map((item, index) => {
-                    const isLastItem =
-                      index === filteredDropdownList.length - 1;
-                    return (
-                      <TouchableOpacity
-                        activeOpacity={1}
-                        key={`${item.label}-currency-selector-swap`}
-                        onPress={() => onHandleSelectedItem(item)}
-                        style={[
-                          styles.dropdownItem,
-                          isLastItem ? {marginBottom: 10} : undefined,
-                        ]}>
-                        {item.img && (
-                          <PreloadedImage
-                            uri={item.img}
-                            symbol={item.value.symbol}
-                          />
-                        )}
-                        <Text style={[styles.textBase, styles.smallerText]}>
-                          {item.label}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                {!isFiltering && filteredDropdownList.length === 0 && (
-                  <Text style={[styles.textBase, styles.smallerText]}>
-                    {translate('wallet.operations.swap.no_tokens_found')}
-                  </Text>
-                )}
-                {isFiltering && <Loader animating size={'small'} />}
-              </ScrollView>
-            </View>
-          </Overlay>
-        )}
-      </View>
+              {isFiltering && <Loader animating size={'small'} />}
+            </ScrollView>
+          </View>
+        </Overlay>
+      )}
     </View>
   );
 };
@@ -183,6 +209,7 @@ const getStyles = (theme: Theme, width: number) =>
       width: '100%',
       maxHeight: 220,
     },
+    backDrop: {backgroundColor: '#000000a5', padding: 0},
     dropdownContainer: {
       width: '100%',
       display: 'flex',
@@ -217,13 +244,12 @@ const getStyles = (theme: Theme, width: number) =>
       marginLeft: 20,
     },
     overlay: {
-      borderRadius: 20,
-      backgroundColor: getColors(theme).secondaryCardBgColor,
-      borderColor: getColors(theme).quaternaryCardBorderColor,
-      borderWidth: 1,
+      backgroundColor: '#ff000000',
+      padding: 0,
     },
     searchContainer: {
       borderColor: getColors(theme).quaternaryCardBorderColor,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
       borderWidth: 1,
       width: 'auto',
       height: 40,
@@ -251,6 +277,11 @@ const getStyles = (theme: Theme, width: number) =>
       position: 'absolute',
       bottom: -20,
       alignSelf: 'center',
+    },
+    flexRowCentered: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   });
 

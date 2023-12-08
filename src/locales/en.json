@@ -104,7 +104,8 @@
     "overdraw_balance_error": "Your {{currency}} balance is insufficient",
     "swap_sending_token_successful": "Your swap is on the way! Thank you for using our service!",
     "swap_error_sending_token": "There was an error while sending tokens to @{{to}}.",
-    "confirm_token_swap": "Confirm token swap"
+    "confirm_token_swap": "Confirm token swap",
+    "id": "ID"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -418,7 +419,8 @@
         "swap_id_title": "Swap ID",
         "swap_estimation": "Swap Estimation",
         "swap_min_hive_value_error": "Minimum value should be equivalent to 1 HIVE (currently {{currently}} HIVE)",
-        "swap_refresh_countdown": "Refreshing in {{count}}s"
+        "swap_refresh_countdown": "Refreshing in {{count}}s",
+        "swap_slippage_step": "{{slippage}}% (for each step)"
       }
     },
     "has": {
@@ -641,6 +643,7 @@
     "account_username_already_used": "Username is already used. Please pick a new one",
     "account_creation_not_enough_found": "You don't have enough HIVE to buy an account",
     "copied_text": "Keys copied to clipboard!",
+    "copied_id": "ID has been copied to Clipboard!",
     "claims": {
       "need_active_key_for_claim_savings": "You need to add your active key to Keychain to claim savings",
       "need_active_key_for_claim_accounts": "You need to add your active key to Keychain to claim accounts",

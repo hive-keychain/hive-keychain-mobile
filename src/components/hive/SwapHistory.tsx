@@ -7,13 +7,13 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
-import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_small} from 'src/styles/typography';
 import {RootState} from 'store';
 import {SwapsConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
+import SwapHistoryItem from './SwapHistoryItem';
 
 const SwapHistory = ({activeAccount}: PropsFromRedux) => {
   const [history, setHistory] = useState<ISwap[]>([]);
@@ -21,7 +21,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
     number | null
   >(null);
   const [shouldRefresh, setRefresh] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     initSwapHistory();
@@ -33,8 +33,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
     }
 
     if (autoRefreshCountdown === 0) {
-      //TODO refresh bellow
-      //   refresh();
+      refresh();
       setAutoRefreshCountdown(SwapsConfig.autoRefreshHistoryPeriodSec);
       return;
     }
@@ -59,7 +58,6 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
     const result = await SwapTokenUtils.retrieveSwapHistory(
       activeAccount.name!,
     );
-    console.log({result}); //TODO remove line
     setHistory(result);
     setAutoRefreshCountdown(SwapsConfig.autoRefreshHistoryPeriodSec);
     setRefresh(false);
@@ -68,13 +66,54 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
 
-  const renderSwapHistoryItem = (item: ISwap) => {
-    return (
-      <View style={[getCardStyle(theme).defaultCardItem]}>
-        <Text style={styles.textBase}>{item.id}</Text>
-      </View>
-    );
-  };
+  //TODO cleanup code bellow
+  // const renderSwapItemStatusIndicator = (status: SwapStatus) => {
+  //   let iconName = '';
+  //   switch (status) {
+  //     case SwapStatus.COMPLETED:
+  //       iconName = 'check';
+  //       break;
+  //     case SwapStatus.STARTED:
+  //     case SwapStatus.PENDING:
+  //       iconName = 'back_time';
+  //       break;
+  //     case SwapStatus.CANCELED_DUE_TO_ERROR:
+  //     case SwapStatus.FUNDS_RETURNED:
+  //     case SwapStatus.REFUNDED_SLIPPAGE:
+  //       iconName = 'close_circle';
+  //       break;
+  //     default:
+  //       iconName = 'back_time';
+  //       break;
+  //   }
+  //   return <Icon theme={theme} name={iconName} />;
+  // };
+
+  // const renderSwapHistoryItem = (item: ISwap) => {
+  //   return (
+  //     <View
+  //       style={[getCardStyle(theme).defaultCardItem, styles.flexRowBetween]}>
+  //       <Icon theme={theme} name="repeat" bgImage={<BackgroundIconRed />} />
+  //       <View style={styles.flexRowCentered}>
+  //         <Text style={styles.textBase}>
+  //           {item.received ? item.received : '...'} {item.endToken}
+  //         </Text>
+  //         <Icon theme={theme} name="repeat-circle" />
+  //         <Text style={styles.textBase}>
+  //           {item.amount} {item.startToken}
+  //         </Text>
+  //       </View>
+  //       <Icon
+  //         theme={theme}
+  //         name="expand_thin"
+  //         //TODO add state bellow
+  //         onClick={() => {}}
+  //         {...styles.smallIcon}
+  //       />
+  //       {renderSwapItemStatusIndicator(item.status)}
+  //     </View>
+  //   );
+  // };
 
   return !loading ? (
     <OperationThemed
@@ -82,9 +121,9 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
       childrenTop={
         <>
           <Separator height={50} />
-          {!!autoRefreshCountdown && (
+          {autoRefreshCountdown ? (
             <View style={[styles.flexRowRight, styles.marginRight]}>
-              <Text style={styles.textBase}>
+              <Text style={[styles.textBase, styles.smallMarginRight]}>
                 {translate('wallet.operations.swap.swap_refresh_countdown', {
                   count: autoRefreshCountdown,
                 })}
@@ -97,6 +136,8 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
                 onPressIcon={() => {}}
               />
             </View>
+          ) : (
+            <Separator height={21} />
           )}
           <Separator height={10} />
         </>
@@ -107,7 +148,13 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
           {history.length > 0 && (
             <FlatList
               data={history}
-              renderItem={(item) => renderSwapHistoryItem(item.item)}
+              renderItem={(item) => (
+                <SwapHistoryItem
+                  theme={theme}
+                  item={item.item}
+                  currentIndex={item.index}
+                />
+              )}
             />
           )}
         </>
@@ -119,7 +166,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
     </View>
   );
 };
-
+//TODO bellow cleanup unused
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
     loaderContainer: {
@@ -137,6 +184,22 @@ const getStyles = (theme: Theme) =>
     },
     marginRight: {
       marginRight: 20,
+    },
+    smallMarginRight: {
+      marginRight: 5,
+    },
+    flexRowBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    smallIcon: {
+      width: 14,
+      height: 14,
+    },
+    flexRowCentered: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
     },
   });
 

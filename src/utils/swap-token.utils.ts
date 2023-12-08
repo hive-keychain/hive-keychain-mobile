@@ -125,7 +125,7 @@ const processSwap = async (
       });
       return true;
     } catch (error) {
-      console.log('Swap, transfer error:', {error});
+      console.log('Swap, transfer currency error:', {error});
       return false;
     }
   } else {
@@ -138,7 +138,7 @@ const processSwap = async (
     //   activeAccount.keys.active!,
     //   activeAccount.name!,
     // );
-    const status = await sendToken(
+    const status: any = await sendToken(
       activeAccount.keys.active,
       activeAccount.name,
       {
@@ -148,7 +148,8 @@ const processSwap = async (
         memo: estimateId,
       },
     );
-    return status.id;
+    console.log('swap token transfer result', {status}); //TODO remove line
+    return status && status.tx_id ? status : null;
   }
 };
 
