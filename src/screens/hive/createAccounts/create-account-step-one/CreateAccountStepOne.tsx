@@ -63,6 +63,7 @@ const CreateAccountStepOne = ({
   useLockedPortrait(navigation);
 
   useEffect(() => {
+    console.log('about to initPrice'); //TODO remove line
     initPrice();
   }, []);
 
@@ -71,10 +72,12 @@ const CreateAccountStepOne = ({
   };
 
   useEffect(() => {
+    console.log('about to initAccountOptions'); //TODO remove line
     initAccountOptions();
   }, [accounts]);
 
   useEffect(() => {
+    console.log('onSelectedAccountChange', {selectedAccount}); //TODO remove line
     onSelectedAccountChange(selectedAccount);
   }, [selectedAccount]);
 
@@ -155,7 +158,8 @@ const CreateAccountStepOne = ({
       return false;
     }
   };
-
+  //TODO keep checking issues in here:
+  //  - shall we use a templateStack instead?
   const goToNextPage = async () => {
     if (await validateAccountName()) {
       const account = await AccountUtils.getAccount(selectedAccount);
@@ -164,10 +168,11 @@ const CreateAccountStepOne = ({
         creationType === AccountCreationType.USING_TICKET ||
         (creationType === AccountCreationType.BUYING && balance.amount >= 3)
       ) {
+        const usedAccount = accounts.find(
+          (localAccount: Account) => localAccount.name === selectedAccount,
+        );
         navigate('CreateAccountFromWalletScreenPageTwo', {
-          usedAccount: accounts.find(
-            (localAccount: Account) => localAccount.name === selectedAccount,
-          ),
+          usedAccount: usedAccount,
           newUsername: accountName,
           creationType: creationType,
           price: price,
@@ -201,18 +206,23 @@ const CreateAccountStepOne = ({
                 additionalSelectedItemContainerStyle={
                   styles.additionalSelectedItemContainerStyle
                 }
+                selected={accountOptions.find(
+                  (item) => item.label === selectedAccount,
+                )}
                 onSelectedItem={(account) => onSelected(account.value)}
               />
             )}
             <Separator height={15} />
-            <Text style={[styles.text, styles.centeredText, styles.opacity]}>
-              {capitalizeSentence(
-                translate('components.create_account.cost', {
-                  price: getPriceLabel(),
-                  account: selectedAccount,
-                }),
-              )}
-            </Text>
+            {selectedAccount.length > 0 && accountOptions && (
+              <Text style={[styles.text, styles.centeredText, styles.opacity]}>
+                {capitalizeSentence(
+                  translate('components.create_account.cost', {
+                    price: getPriceLabel(),
+                    account: selectedAccount,
+                  }),
+                )}
+              </Text>
+            )}
             <Separator height={25} />
             <OperationInput
               labelInput={translate('common.username')}
@@ -280,20 +290,18 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     },
     additionalContainerListStyle: {
       zIndex: 9,
-      width: '99.5%',
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).cardBorderColor,
       borderWidth: 1,
-      top: 20,
-      left: 1,
+      borderRadius: 10,
       padding: 0,
-      paddingTop: 55,
+      paddingTop: 10,
       paddingBottom: 10,
     },
     additionalExpandedListItemContainer: {
       height: height * 0.05,
-      backgroundColor: getColors(theme).secondaryCardBgColor,
       paddingHorizontal: 10,
+      borderRadius: 10,
     },
     additionalSelectedItemContainerStyle: {
       paddingHorizontal: 16,
@@ -315,6 +323,11 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       width: 30,
       height: 30,
       borderRadius: 50,
+    },
+    flexCentered: {
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
     },
   });
 

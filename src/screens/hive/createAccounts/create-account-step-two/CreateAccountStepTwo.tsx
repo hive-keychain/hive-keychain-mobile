@@ -57,6 +57,7 @@ const CreateAccountStepTwo = ({
   useLockedPortrait(navigation);
 
   const navigationParams = route.params;
+  console.log({navigationParams}); //TODO remove line
 
   const [masterKey, setMasterKey] = useState('');
   const [generatedKeys, setGeneratedKeys] = useState(DEFAULT_EMPTY_KEYS);
@@ -328,7 +329,7 @@ const CreateAccountStepTwo = ({
                 title={capitalizeSentence(
                   translate('components.create_account.create_account'),
                 )}
-                onPress={() => createAccount()}
+                onPress={createAccount}
                 additionalTextStyle={[styles.buttonText, styles.whiteText]}
               />
             </View>

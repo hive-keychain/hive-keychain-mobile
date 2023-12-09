@@ -653,7 +653,8 @@
       "insufficient_hp_claim_accounts": "Insufficient HP to claim accounts."
     },
     "rpc_node_added_success": "RPC added succesfully",
-    "rpc_node_removed_success": "RPC removed succesfully"
+    "rpc_node_removed_success": "RPC removed succesfully",
+    "error_missing_fields": "Missing fields!"
   },
   "navigation": {
     "log_out": "Logout",

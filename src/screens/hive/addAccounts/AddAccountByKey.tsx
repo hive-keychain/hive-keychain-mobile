@@ -23,6 +23,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Text} from 'react-native-elements';
+import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
@@ -54,6 +55,11 @@ const AddAccountByKey = ({
   useLockedPortrait(navigation);
 
   const onImportKeys = async () => {
+    if (account.trim().length === 0 || key.trim().length === 0)
+      return SimpleToast.show(
+        translate('toast.error_missing_fields'),
+        SimpleToast.LONG,
+      );
     try {
       const keys = await validateNewAccount(account, key);
 

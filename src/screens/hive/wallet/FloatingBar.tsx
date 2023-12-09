@@ -18,9 +18,6 @@ interface Props {
   currentRouteName: string;
   showTags?: boolean;
 }
-//TODO
-//  Important changes related to floatingBar & browser bar.
-//      1.1. Add the home left button within the searchBar, as design but when not in HOME.
 
 const Floating = ({
   show,
