@@ -2,6 +2,7 @@ import {Page} from 'actions/interfaces';
 import Fuse from 'fuse.js';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {Theme} from 'src/context/theme.context';
 import {store} from 'store';
 import {BrowserConfig} from 'utils/config';
 import HistoryItem from './HistoryItem';
@@ -10,8 +11,9 @@ type Props = {
   onSubmit: (string: string) => void;
   history: Page[];
   input: string;
+  theme: Theme;
 };
-export default ({input, onSubmit, history}: Props) => {
+export default ({input, onSubmit, history, theme}: Props) => {
   const [candidates, setCandidates] = useState([]);
 
   useEffect(() => {
@@ -53,7 +55,7 @@ export default ({input, onSubmit, history}: Props) => {
     return (
       <View style={styles.wrapper}>
         {candidates.map((e) => (
-          <HistoryItem onSubmit={onSubmit} data={e} />
+          <HistoryItem theme={theme} onSubmit={onSubmit} data={e} />
         ))}
       </View>
     );
@@ -62,7 +64,7 @@ export default ({input, onSubmit, history}: Props) => {
     return (
       <View style={styles.wrapper}>
         {historyCopy.map((e) => (
-          <HistoryItem onSubmit={onSubmit} data={e} />
+          <HistoryItem theme={theme} onSubmit={onSubmit} data={e} />
         ))}
       </View>
     );

@@ -187,6 +187,7 @@ const Browser = ({
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Header
           browser={browser}
+          //@ts-ignore
           navigation={navigation}
           route={route}
           updateTab={updateTab}

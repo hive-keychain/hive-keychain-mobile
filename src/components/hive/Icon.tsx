@@ -35,6 +35,7 @@ import NotSeeIcon from 'assets/new_UI/linear_eye-slash.svg';
 import SeeIcon from 'assets/new_UI/linear_eye.svg';
 import GlobalIcon from 'assets/new_UI/linear_global.svg';
 import RPCNodeIcon from 'assets/new_UI/linear_hierarchy-square-3.svg';
+import HomeBrowserIcon from 'assets/new_UI/linear_home-2.svg';
 import RamIcon from 'assets/new_UI/linear_ram.svg';
 import RepeatCircleIcon from 'assets/new_UI/linear_repeat-circle.svg';
 import RepeatIcon from 'assets/new_UI/linear_repeat.svg';
@@ -589,6 +590,13 @@ const getIconFilePath = (
     case name === 'repeat-circle':
       return (
         <RepeatCircleIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === 'home_browser':
+      return (
+        <HomeBrowserIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

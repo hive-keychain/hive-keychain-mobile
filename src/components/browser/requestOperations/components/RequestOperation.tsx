@@ -9,7 +9,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
-import {body_primary_body_1, title_primary_body_2} from 'src/styles/typography';
+import {title_primary_body_2} from 'src/styles/typography';
 import {urlTransformer} from 'utils/browser';
 import {beautifyErrorMessage} from 'utils/keychain';
 import {
@@ -89,8 +89,8 @@ const RequestOperation = ({
             onSelect={() => {
               setKeep(!keep);
             }}
-            additionalRadioLabelStyle={[styles.textBase, styles.smallerText]}
-            additionalRadioStyleActive={styles.redColor}
+            additionalRadioLabelStyle={[styles.text, styles.smallerText]}
+            additionalRadioStyleActive={styles.bgColor}
             additionalRadioStyleInactive={{borderColor: getColors(theme).icon}}
           />
         </View>
@@ -99,7 +99,7 @@ const RequestOperation = ({
       )}
       <OperationButton
         style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-        additionalTextStyle={styles.textBase}
+        additionalTextStyle={[styles.text, styles.whiteText]}
         title={translate('request.confirm')}
         isLoading={loading}
         onPress={async () => {
@@ -149,7 +149,6 @@ const getStyles = (theme: Theme) =>
     button: {marginTop: 40, marginBottom: 20},
     keep: {marginTop: 40, flexDirection: 'row'},
     radio: {marginLeft: 0},
-    textBase: {color: '#FFF', ...body_primary_body_1},
     text: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
@@ -160,9 +159,10 @@ const getStyles = (theme: Theme) =>
     smallerText: {
       fontSize: 12,
     },
-    redColor: {
+    bgColor: {
       backgroundColor: getColors(theme).icon,
     },
+    whiteText: {color: '#FFF'},
   });
 const connector = connect(null, {addPreference});
 type TypesFromRedux = ConnectedProps<typeof connector>;

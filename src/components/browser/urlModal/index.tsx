@@ -134,7 +134,12 @@ const UrlModal = ({
       </View>
 
       <ScrollView style={styles.containerHistory}>
-        <UrlAutocomplete onSubmit={onSubmitUrl} input={url} history={history} />
+        <UrlAutocomplete
+          onSubmit={onSubmitUrl}
+          input={url}
+          history={history}
+          theme={theme}
+        />
         {history.length ? (
           <TouchableOpacity onPress={clearHistory}>
             <Text style={[styles.textBase, styles.clearHistory]}>
@@ -158,7 +163,7 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
       backgroundColor: getColors(theme).secondaryCardBgColor,
     },
     option: {alignSelf: 'center', marginLeft: 20},
-    eraseText: {fontWeight: 'bold', fontSize: 16},
+    eraseText: {fontSize: 16, color: getColors(theme).icon},
     urlModalContent: {
       flexDirection: 'row',
       borderColor: 'lightgrey',

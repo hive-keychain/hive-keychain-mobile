@@ -29,7 +29,7 @@ export const getTitle = ({title, theme}: {title: string; theme: Theme}) => {
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {paddingVertical: 5},
-    title: {fontSize: 14, fontWeight: 'bold'},
+    title: {fontSize: 14},
     content: {fontSize: 14},
     textBase: {
       color: getColors(theme).secondaryText,

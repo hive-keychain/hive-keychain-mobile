@@ -7,12 +7,9 @@ import {
   TabFields,
 } from 'actions/interfaces';
 import HeartIcon from 'assets/new_UI/heart.svg';
-import KeychainForHiveDark from 'assets/new_UI/keychain-for-hive-dark.svg';
-import KeychainForHiveLight from 'assets/new_UI/keychain-for-hive-light.svg';
 import NotFavoriteIcon from 'assets/new_UI/linear_heart_empty.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import Icon from 'components/hive/Icon';
-import CustomIconButton from 'components/ui/CustomIconButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
@@ -53,7 +50,6 @@ const BrowserHeader = ({
   landscape,
   theme,
   activeTabs,
-  show,
 }: Props & PropsFromRedux) => {
   const {HEADER_HEIGHT} = BrowserConfig;
   const insets = useSafeAreaInsets();
@@ -76,7 +72,11 @@ const BrowserHeader = ({
       if (activeUrl === BrowserConfig.HOMEPAGE_URL) return null;
       return favorites.find((e) => e.url === activeUrl) ? (
         <TouchableOpacity
-          style={[getCardStyle(theme, 50).defaultCardItem, {marginLeft: 8}]}
+          style={[
+            getCardStyle(theme, 50).defaultCardItem,
+            styles.favContainer,
+            styles.marginLeft,
+          ]}
           onPress={() => {
             removeFromFavorites(activeUrl);
           }}>
@@ -84,7 +84,11 @@ const BrowserHeader = ({
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
-          style={[getCardStyle(theme, 50).defaultCardItem, {marginLeft: 8}]}
+          style={[
+            getCardStyle(theme, 50).defaultCardItem,
+            styles.favContainer,
+            styles.marginLeft,
+          ]}
           onPress={() => {
             addToFavorites(active);
           }}>
@@ -108,37 +112,43 @@ const BrowserHeader = ({
         }}>
         <FocusAwareStatusBar />
         <View style={styles.topBar}>
-          {show && (
-            <View
-              style={[
-                styles.flexRowBetween,
-                styles.paddingHorizontal,
-                styles.paddingBottom,
-              ]}>
-              <CustomIconButton
-                theme={theme}
-                lightThemeIcon={<KeychainForHiveLight />}
-                darkThemeIcon={<KeychainForHiveDark />}
-                onPress={goHome}
-              />
-              <TouchableOpacity
-                activeOpacity={1}
-                //TODO bellow ask quentin if needed at all
-                onPress={() => {}}
-                style={styles.tabsIndicator}>
-                <Text
-                  style={[
-                    styles.textBase,
-                    theme === Theme.LIGHT ? styles.redColor : undefined,
-                  ]}>
-                  {activeTabs}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          <View style={styles.flexRowCentered}>
+          {/* //TODO quentin: please check this commented code bellow.
+          //  1. the design team wanted to show this in top but when using the floating bar
+          //  2. as you wanted not to show the floatinBar at all, I guess this header should not be. So let me know. */}
+          {/* <View
+            style={[
+              styles.flexRowBetween,
+              styles.paddingHorizontal,
+              styles.paddingBottom,
+            ]}>
+            <CustomIconButton
+              theme={theme}
+              lightThemeIcon={<KeychainForHiveLight />}
+              darkThemeIcon={<KeychainForHiveDark />}
+              onPress={goHome}
+            />
+            <TouchableOpacity
+              activeOpacity={1}
+              //TODO bellow ask quentin if needed at all
+              onPress={() => {}}
+              style={styles.tabsIndicator}>
+              <Text
+                style={[
+                  styles.textBase,
+                  theme === Theme.LIGHT ? styles.redColor : undefined,
+                ]}>
+                {activeTabs}
+              </Text>
+            </TouchableOpacity>
+          </View> */}
+          <View style={[styles.flexRowCentered, styles.marginBottom]}>
             <CustomSearchBar
               theme={theme}
+              leftIcon={
+                activeUrl !== BrowserConfig.HOMEPAGE_URL ? (
+                  <Icon theme={theme} name="home_browser" onClick={goHome} />
+                ) : null
+              }
               rightIcon={
                 <Icon
                   name={'search'}
@@ -153,6 +163,7 @@ const BrowserHeader = ({
                   : translate('browser.search')
               }
               onChangeText={(text) => {}}
+              onPressIn={() => startSearch(true)}
             />
             {renderFavoritesButton()}
           </View>
@@ -222,12 +233,18 @@ const getStyles = (
       alignItems: 'center',
       justifyContent: 'center',
     },
+    marginLeft: {marginLeft: 8},
+    favContainer: {
+      height: '100%',
+      marginBottom: 0,
+    },
+    marginBottom: {
+      marginBottom: 8,
+    },
   });
 
 const mapStateToProps = (state: RootState) => {
-  return {
-    show: state.floatingBar.show,
-  };
+  return {};
 };
 const connector = connect(mapStateToProps, {});
 type PropsFromRedux = ConnectedProps<typeof connector>;
