@@ -420,7 +420,8 @@
         "swap_estimation": "Swap Estimation",
         "swap_min_hive_value_error": "Minimum value should be equivalent to 1 HIVE (currently {{currently}} HIVE)",
         "swap_refresh_countdown": "Refreshing in {{count}}s",
-        "swap_slippage_step": "{{slippage}}% (for each step)"
+        "swap_slippage_step": "{{slippage}}% (for each step)",
+        "swap_no_history": "Your swap history is empty"
       }
     },
     "has": {

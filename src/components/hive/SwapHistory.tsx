@@ -1,18 +1,22 @@
-import OperationThemed from 'components/operations/OperationThemed';
+import Background from 'components/ui/Background';
+import {BackgroundHexagons} from 'components/ui/BackgroundHexagons';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import RotationIconAnimated from 'components/ui/RotationIconAnimated';
 import Separator from 'components/ui/Separator';
 import {ISwap} from 'hive-keychain-commons';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_small} from 'src/styles/typography';
 import {RootState} from 'store';
 import {SwapsConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
+import {BackToTopButton} from './Back-To-Top-Button';
 import SwapHistoryItem from './SwapHistoryItem';
 
 const SwapHistory = ({activeAccount}: PropsFromRedux) => {
@@ -22,6 +26,9 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
   >(null);
   const [shouldRefresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
+
+  const flatListRef = useRef();
 
   useEffect(() => {
     initSwapHistory();
@@ -63,63 +70,29 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
     setRefresh(false);
   };
 
+  const handleScroll = (event: any) => {
+    const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
+    setDisplayedScrollToTop(innerScrollViewY >= 50);
+  };
+
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
 
-  //TODO cleanup code bellow
-  // const renderSwapItemStatusIndicator = (status: SwapStatus) => {
-  //   let iconName = '';
-  //   switch (status) {
-  //     case SwapStatus.COMPLETED:
-  //       iconName = 'check';
-  //       break;
-  //     case SwapStatus.STARTED:
-  //     case SwapStatus.PENDING:
-  //       iconName = 'back_time';
-  //       break;
-  //     case SwapStatus.CANCELED_DUE_TO_ERROR:
-  //     case SwapStatus.FUNDS_RETURNED:
-  //     case SwapStatus.REFUNDED_SLIPPAGE:
-  //       iconName = 'close_circle';
-  //       break;
-  //     default:
-  //       iconName = 'back_time';
-  //       break;
-  //   }
-  //   return <Icon theme={theme} name={iconName} />;
-  // };
-
-  // const renderSwapHistoryItem = (item: ISwap) => {
-  //   return (
-  //     <View
-  //       style={[getCardStyle(theme).defaultCardItem, styles.flexRowBetween]}>
-  //       <Icon theme={theme} name="repeat" bgImage={<BackgroundIconRed />} />
-  //       <View style={styles.flexRowCentered}>
-  //         <Text style={styles.textBase}>
-  //           {item.received ? item.received : '...'} {item.endToken}
-  //         </Text>
-  //         <Icon theme={theme} name="repeat-circle" />
-  //         <Text style={styles.textBase}>
-  //           {item.amount} {item.startToken}
-  //         </Text>
-  //       </View>
-  //       <Icon
-  //         theme={theme}
-  //         name="expand_thin"
-  //         //TODO add state bellow
-  //         onClick={() => {}}
-  //         {...styles.smallIcon}
-  //       />
-  //       {renderSwapItemStatusIndicator(item.status)}
-  //     </View>
-  //   );
-  // };
-
-  return !loading ? (
-    <OperationThemed
-      additionalSVGOpacity={0.6}
-      childrenTop={
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <Loader animating size={'small'} />
+      </View>
+    );
+  } else {
+    return (
+      <Background
+        using_new_ui
+        theme={theme}
+        additionalBgSvgImageStyle={styles.hexagons}>
         <>
+          <BackgroundHexagons theme={theme} />
+          <FocusAwareStatusBar />
           <Separator height={50} />
           {autoRefreshCountdown ? (
             <View style={[styles.flexRowRight, styles.marginRight]}>
@@ -130,45 +103,59 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
               </Text>
               <RotationIconAnimated
                 theme={theme}
-                //TODO add state bellow
                 animate={shouldRefresh}
-                //TODO add handler bellow
-                onPressIcon={() => {}}
+                onPressIcon={refresh}
               />
             </View>
           ) : (
             <Separator height={21} />
           )}
           <Separator height={10} />
-        </>
-      }
-      childrenMiddle={
-        <>
-          <Separator />
-          {history.length > 0 && (
-            <FlatList
-              data={history}
-              renderItem={(item) => (
-                <SwapHistoryItem
-                  theme={theme}
-                  item={item.item}
-                  currentIndex={item.index}
-                />
-              )}
-            />
+          <FlatList
+            ref={flatListRef}
+            data={history}
+            style={[getCardStyle(theme).roundedCardItem, styles.listContainer]}
+            renderItem={(item) => (
+              <SwapHistoryItem
+                theme={theme}
+                item={item.item}
+                currentIndex={item.index}
+              />
+            )}
+            ListEmptyComponent={() => {
+              return (
+                <View style={styles.flex}>
+                  <Text style={styles.textBase}>
+                    {translate('wallet.operations.swap.swap_no_history')}
+                  </Text>
+                </View>
+              );
+            }}
+            onScroll={handleScroll}
+            ListFooterComponent={<Separator />}
+          />
+          {displayScrollToTop && (
+            <BackToTopButton theme={theme} element={flatListRef} />
           )}
         </>
-      }
-    />
-  ) : (
-    <View style={styles.loaderContainer}>
-      <Loader animating size={'small'} />
-    </View>
-  );
+      </Background>
+    );
+  }
 };
-//TODO bellow cleanup unused
+
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
+    listContainer: {
+      paddingTop: 15,
+      paddingHorizontal: 10,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+    flex: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     loaderContainer: {
       flex: 1,
       justifyContent: 'center',
@@ -188,18 +175,9 @@ const getStyles = (theme: Theme) =>
     smallMarginRight: {
       marginRight: 5,
     },
-    flexRowBetween: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
-    smallIcon: {
-      width: 14,
-      height: 14,
-    },
-    flexRowCentered: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+    hexagons: {
+      bottom: undefined,
+      top: theme === Theme.LIGHT ? -30 : 30,
     },
   });
 
