@@ -21,7 +21,6 @@ interface Props {
 //TODO
 //  Important changes related to floatingBar & browser bar.
 //      1.1. Add the home left button within the searchBar, as design but when not in HOME.
-//    4. Create Swap/Buy mainscreen(which will be a tabs container as governance) //TODO
 
 const Floating = ({
   show,
@@ -67,7 +66,6 @@ const Floating = ({
     activeLink === link ? '#FFF' : undefined;
 
   const onHandlePressButton = (link: FloatingBarLink) => {
-    console.log('pressed', {link});
     setActiveLink(link);
     let screen = '';
     let nestedScreenOrParams;

@@ -99,14 +99,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
         key={`${step.id}-${step.stepNumber}`}
         style={[styles.flexRowBetween, styles.fullWidth, styles.marginTop]}>
         <Text style={styles.textBase}>{step.stepNumber}</Text>
-        <View style={styles.flexRowCentered}>
-          {/* <Text style={styles.textBase}>
-            {withCommas(step.amountStartToken.toFixed(3))} {step.startToken}
-            {' => '}
-            {withCommas(step.amountEndToken.toFixed(3))} {step.endToken}
-          </Text> */}
-          {renderTokensInStep(step)}
-        </View>
+        <View style={styles.flexRowCentered}>{renderTokensInStep(step)}</View>
         {renderStepItemStatusIndicator(step.status)}
       </View>
     );

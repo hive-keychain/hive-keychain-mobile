@@ -116,9 +116,6 @@ const DropdownSelector = ({
           <Text style={styles.textBase}>{translate(labelTranslationKey)}</Text>
         )}
         <View style={styles.dropdownContainer}>
-          {/* <Text style={[styles.textBase, styles.smallerText]}>
-            {selectedItem.label}
-          </Text> */}
           {renderSelectedLabel(selectedItem)}
           <Icon
             theme={theme}

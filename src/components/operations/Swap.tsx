@@ -100,7 +100,6 @@ const Swap = ({
     showFloatingBar(false);
   }, []);
 
-  //TODO cleanup & tests
   const init = async () => {
     let tokenInitialization;
     try {
@@ -128,7 +127,6 @@ const Swap = ({
     } catch (err) {
       console.log('Error Swap tokens', {err});
       setServiceUnavailable(true);
-      // setErrorMessage(err.reason?.template, err.reason?.params);
     } finally {
       await tokenInitialization;
       setLoading(false);
@@ -167,12 +165,12 @@ const Swap = ({
       {
         value: {symbol: getCurrency('HIVE'), precision: 3},
         label: getCurrency('HIVE'),
-        img: 'will_throw_error',
+        img: 'will_fire_default',
       },
       {
         value: {symbol: getCurrency('HBD'), precision: 3},
         label: getCurrency('HBD'),
-        img: 'will_throw_error',
+        img: 'will_fire_default',
       },
       ...allTokens
         .filter((token: Token) => token.precision !== 0) // Remove token that doesn't allow decimals
@@ -181,7 +179,7 @@ const Swap = ({
           img =
             token.metadata.icon && token.metadata.icon.trim().length > 0
               ? token.metadata.icon
-              : 'will_throw_error';
+              : 'will_fire_default';
           return {
             value: token,
             label: token.symbol,
@@ -355,31 +353,7 @@ const Swap = ({
   };
 
   const processSwap = async (estimateId: string) => {
-    // let estimateId: string;
-    // try {
-    //   estimateId = await SwapTokenUtils.saveEstimate(
-    //     estimate!,
-    //     slippage,
-    //     startToken?.value.symbol,
-    //     endToken?.value.symbol,
-    //     parseFloat(amount),
-    //     activeAccount.name!,
-    //   );
-    // } catch (err) {
-    //   // setErrorMessage(err.reason.template, err.reason.params);
-    //   SimpleToast.show(
-    //     translate(`wallet.operations.swap.${err.reason.template}`),
-    //     SimpleToast.LONG,
-    //   );
-    //   return;
-    // }
-
-    const startTokenPrecision = await getTokenPrecision(
-      startToken?.value.symbol,
-    );
-    const endTokenPrecision = await getTokenPrecision(endToken?.value.symbol);
     setLoadingSwap(true);
-    //TODO validations & formattings needed at all?
     try {
       let success;
       success = await SwapTokenUtils.processSwap(
@@ -393,17 +367,12 @@ const Swap = ({
       if (success) {
         await SwapTokenUtils.saveLastUsed(startToken?.value, endToken?.value);
         await SwapTokenUtils.setAsInitiated(estimateId);
-        // setSuccessMessage('html_popup_swap_sending_token_successful');
         showModal(
           'common.swap_sending_token_successful',
           MessageModalType.SUCCESS,
         );
         goBackAndNavigate('SwapHistory');
-        // goBackToThenNavigate(Screen.TOKENS_SWAP_HISTORY);
       } else {
-        // setErrorMessage('html_popup_swap_error_sending_token', [
-        //   swapConfig.account,
-        // ]);
         SimpleToast.show(
           translate('common.swap_error_sending_token', {
             to: swapConfig.account,
@@ -413,16 +382,13 @@ const Swap = ({
       }
     } catch (err) {
       console.log('Swap error', {err});
-      // setErrorMessage(err.message);
       SimpleToast.show(err.message, SimpleToast.LONG);
     } finally {
-      // removeFromLoadingList('html_popup_delegate_rc_operation');
       setLoadingSwap(false);
     }
   };
 
   const gotoConfirmationStack = async () => {
-    //validations prior process swap
     if (!estimate) {
       SimpleToast.show(
         translate('wallet.operations.swap.swap_no_estimate_error'),
@@ -440,7 +406,6 @@ const Swap = ({
       return;
     }
     if (startToken?.value.symbol === endToken?.value.symbol) {
-      // setErrorMessage('swap_start_end_token_should_be_different');
       SimpleToast.show(
         translate(
           'wallet.operations.swap.swap_start_end_token_should_be_different',
@@ -450,7 +415,6 @@ const Swap = ({
       return;
     }
     if (!amount || amount.length === 0) {
-      // setErrorMessage('popup_html_need_positive_amount');
       SimpleToast.show(
         translate('common.need_positive_amount'),
         SimpleToast.LONG,
@@ -459,9 +423,6 @@ const Swap = ({
     }
 
     if (parseFloat(amount) > parseFloat(startToken?.value.balance)) {
-      // setErrorMessage('hive_engine_overdraw_balance_error', [
-      //   startToken?.label!,
-      // ]);
       SimpleToast.show(
         translate('common.overdraw_balance_error', {
           currency: startToken?.label!,
@@ -471,7 +432,6 @@ const Swap = ({
       return;
     }
     setLoadingConfirmationSwap(true);
-    //Generate the estimateId here bellow
     let estimateId: string;
     try {
       estimateId = await SwapTokenUtils.saveEstimate(
@@ -483,7 +443,6 @@ const Swap = ({
         activeAccount.name!,
       );
     } catch (err) {
-      // setErrorMessage(err.reason.template, err.reason.params);
       SimpleToast.show(
         translate(`wallet.operations.swap.${err.reason.template}`),
         SimpleToast.LONG,
@@ -492,7 +451,6 @@ const Swap = ({
     } finally {
       setLoadingConfirmationSwap(false);
     }
-    //we have estimateId, continue... //TODO cleanup comments
 
     const onHandleBackButton = async () =>
       await SwapTokenUtils.cancelSwap(estimateId);
