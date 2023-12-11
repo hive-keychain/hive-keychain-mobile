@@ -5,18 +5,15 @@ import OperationInput from 'components/form/OperationInput';
 import PickerItem from 'components/form/PickerItem';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
+import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useContext, useEffect, useState} from 'react';
-import {
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
@@ -38,6 +35,7 @@ import {capitalizeSentence} from 'utils/format';
 import {getAccountPrice} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
+import StepTwo from '../create-account-step-two/StepTwo';
 
 interface SelectOption {
   label: string;
@@ -56,6 +54,7 @@ const CreateAccountStepOne = ({
   const [accountName, setAccountName] = useState('');
   const [creationType, setCreationType] = useState<AccountCreationType>();
   const [isAvailableAccountName, setIsAvailableAccountName] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
 
   const {theme} = useContext(ThemeContext);
   const styles = getDimensionedStyles({...useWindowDimensions()}, theme);
@@ -63,7 +62,6 @@ const CreateAccountStepOne = ({
   useLockedPortrait(navigation);
 
   useEffect(() => {
-    console.log('about to initPrice'); //TODO remove line
     initPrice();
   }, []);
 
@@ -72,12 +70,11 @@ const CreateAccountStepOne = ({
   };
 
   useEffect(() => {
-    console.log('about to initAccountOptions'); //TODO remove line
     initAccountOptions();
   }, [accounts]);
 
   useEffect(() => {
-    console.log('onSelectedAccountChange', {selectedAccount}); //TODO remove line
+    setLoadingData(true);
     onSelectedAccountChange(selectedAccount);
   }, [selectedAccount]);
 
@@ -107,6 +104,7 @@ const CreateAccountStepOne = ({
       setPrice(3);
       setCreationType(AccountCreationType.BUYING);
     }
+    setLoadingData(false);
   };
 
   const initAccountOptions = async () => {
@@ -158,8 +156,7 @@ const CreateAccountStepOne = ({
       return false;
     }
   };
-  //TODO keep checking issues in here:
-  //  - shall we use a templateStack instead?
+
   const goToNextPage = async () => {
     if (await validateAccountName()) {
       const account = await AccountUtils.getAccount(selectedAccount);
@@ -171,12 +168,17 @@ const CreateAccountStepOne = ({
         const usedAccount = accounts.find(
           (localAccount: Account) => localAccount.name === selectedAccount,
         );
-        navigate('CreateAccountFromWalletScreenPageTwo', {
-          usedAccount: usedAccount,
-          newUsername: accountName,
-          creationType: creationType,
-          price: price,
-        });
+        navigate('TemplateStack', {
+          titleScreen: 'Create Account Step 2',
+          component: (
+            <StepTwo
+              selectedAccount={usedAccount}
+              accountName={accountName}
+              creationType={creationType}
+              price={price}
+            />
+          ),
+        } as TemplateStackProps);
       } else {
         Toast.show(translate('toast.account_creation_not_enough_found'));
       }
@@ -186,10 +188,7 @@ const CreateAccountStepOne = ({
   return (
     <Background using_new_ui theme={theme}>
       <>
-        <StatusBar
-          barStyle={getColors(theme).barStyle}
-          backgroundColor={getColors(theme).primaryBackground}
-        />
+        <FocusAwareStatusBar />
         <View style={styles.container}>
           <View style={styles.content}>
             {selectedAccount.length > 0 && accountOptions && (
@@ -213,7 +212,7 @@ const CreateAccountStepOne = ({
               />
             )}
             <Separator height={15} />
-            {selectedAccount.length > 0 && accountOptions && (
+            {selectedAccount.length > 0 && accountOptions && !loadingData && (
               <Text style={[styles.text, styles.centeredText, styles.opacity]}>
                 {capitalizeSentence(
                   translate('components.create_account.cost', {
@@ -222,6 +221,11 @@ const CreateAccountStepOne = ({
                   }),
                 )}
               </Text>
+            )}
+            {loadingData && (
+              <View style={styles.flexCentered}>
+                <Loader animating size={'small'} />
+              </View>
             )}
             <Separator height={25} />
             <OperationInput

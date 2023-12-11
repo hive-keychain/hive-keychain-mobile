@@ -7,7 +7,6 @@ import CustomIconButton from 'components/ui/CustomIconButton';
 import React, {useContext} from 'react';
 import {StyleSheet} from 'react-native';
 import CreateAccountStepOne from 'screens/hive/createAccounts/create-account-step-one/CreateAccountStepOne';
-import CreateAccountStepTwo from 'screens/hive/createAccounts/create-account-step-two/CreateAccountStepTwo';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
@@ -50,25 +49,6 @@ export default () => {
           ),
         })}
       />
-      <CreateAccountStack.Screen
-        name="CreateAccountFromWalletScreenPageTwo"
-        component={CreateAccountStepTwo}
-        options={({navigation}) => ({
-          headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle,
-          headerTitleAlign: 'center',
-          title: translate('navigation.create_account'),
-          headerLeft: () => (
-            <CustomIconButton
-              theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
-              additionalContainerStyle={styles.marginLeft}
-            />
-          ),
-        })}
-      />
     </CreateAccountStack.Navigator>
   );
 };
@@ -83,10 +63,6 @@ const getStyles = (theme: Theme) =>
     headerTitle: {
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,
-    },
-    cardStyle: {
-      paddingHorizontal: 16,
-      backgroundColor: getColors(theme).primaryBackground,
     },
     marginRight: {marginRight: 16},
     marginLeft: {marginLeft: 16},

@@ -105,7 +105,15 @@
     "swap_sending_token_successful": "Your swap is on the way! Thank you for using our service!",
     "swap_error_sending_token": "There was an error while sending tokens to @{{to}}.",
     "confirm_token_swap": "Confirm token swap",
-    "id": "ID"
+    "id": "ID",
+    "account_name": "Account name",
+    "key": "Key",
+    "password": "Password",
+    "title_master_key": "Master",
+    "title_active_key": "Active",
+    "title_posting_key": "Posting",
+    "title_memo_key": "Memo",
+    "title_owner_key": "Owner"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},

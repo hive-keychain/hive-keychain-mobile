@@ -1,14 +1,14 @@
 import {PrivateKey} from '@hiveio/dhive';
-import Clipboard from '@react-native-community/clipboard';
 import {addAccount} from 'actions/accounts';
 import {Account} from 'actions/interfaces';
 import OperationButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import useLockedPortrait from 'hooks/useLockedPortrait';
-import {CreateAccountFromWalletNavigationProps} from 'navigators/mainDrawerStacks/CreateAccount.types';
+import Loader from 'components/ui/Loader';
+import {KeychainKeyTypes} from 'hive-keychain-commons';
 import React, {useContext, useEffect, useState} from 'react';
 import {
+  Clipboard,
   ScrollView,
   StyleSheet,
   Text,
@@ -16,7 +16,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import Toast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
@@ -34,7 +34,6 @@ import {
 } from 'utils/account-creation.utils';
 import {Dimensions} from 'utils/common.types';
 import {capitalizeSentence} from 'utils/format';
-import {KeychainKeyTypes} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {resetStackAndNavigate} from 'utils/navigation';
 
@@ -45,29 +44,25 @@ const DEFAULT_EMPTY_KEYS = {
   memo: {public: '', private: ''},
 } as GeneratedKeys;
 
-const CreateAccountStepTwo = ({
+interface Props {
+  selectedAccount: Account;
+  accountName: string;
+  creationType: AccountCreationType;
+  price: number;
+}
+
+const StepTwo = ({
   user,
-  navigation,
-  route,
   addAccount,
-}: PropsFromRedux & CreateAccountFromWalletNavigationProps) => {
-  const {theme} = useContext(ThemeContext);
-  const styles = getDimensionedStyles({...useWindowDimensions()}, theme);
-
-  useLockedPortrait(navigation);
-
-  const navigationParams = route.params;
-  console.log({navigationParams}); //TODO remove line
-
+  selectedAccount,
+  accountName,
+  creationType,
+  price,
+}: PropsFromRedux & Props) => {
   const [masterKey, setMasterKey] = useState('');
   const [generatedKeys, setGeneratedKeys] = useState(DEFAULT_EMPTY_KEYS);
   const [keysTextVersion, setKeysTextVersion] = useState('');
-
-  const accountName = navigationParams.newUsername;
-  const price = navigationParams.price;
-  const creationType = navigationParams.creationType as AccountCreationType;
-  const selectedAccount = navigationParams.usedAccount as Account;
-
+  const [loadingMasterKey, setLoadingMasterKey] = useState(true);
   const [paymentUnderstanding, setPaymentUnderstanding] = useState(false);
   const [safelyCopied, setSafelyCopied] = useState(false);
   const [
@@ -76,50 +71,56 @@ const CreateAccountStepTwo = ({
   ] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const {theme} = useContext(ThemeContext);
+  const styles = getDimensionedStyles({...useWindowDimensions()}, theme);
+
   useEffect(() => {
     const masterKey = AccountCreationUtils.generateMasterKey();
     setMasterKey(masterKey);
   }, []);
 
   useEffect(() => {
-    if (masterKey === '') {
-      setGeneratedKeys(DEFAULT_EMPTY_KEYS);
-      return;
+    if (masterKey !== '') {
+      const posting = PrivateKey.fromLogin(accountName, masterKey, 'posting');
+      const active = PrivateKey.fromLogin(accountName, masterKey, 'active');
+      const memo = PrivateKey.fromLogin(accountName, masterKey, 'memo');
+      const owner = PrivateKey.fromLogin(accountName, masterKey, 'owner');
+      setGeneratedKeys({
+        owner: {
+          private: owner.toString(),
+          public: owner.createPublic().toString(),
+        },
+        active: {
+          private: active.toString(),
+          public: active.createPublic().toString(),
+        },
+        posting: {
+          private: posting.toString(),
+          public: posting.createPublic().toString(),
+        },
+        memo: {
+          private: memo.toString(),
+          public: memo.createPublic().toString(),
+        },
+      });
+      setLoadingMasterKey(false);
     }
-    const posting = PrivateKey.fromLogin(accountName, masterKey, 'posting');
-    const active = PrivateKey.fromLogin(accountName, masterKey, 'active');
-    const memo = PrivateKey.fromLogin(accountName, masterKey, 'memo');
-    const owner = PrivateKey.fromLogin(accountName, masterKey, 'owner');
-
-    setGeneratedKeys({
-      owner: {
-        private: owner.toString(),
-        public: owner.createPublic().toString(),
-      },
-      active: {
-        private: active.toString(),
-        public: active.createPublic().toString(),
-      },
-      posting: {
-        private: posting.toString(),
-        public: posting.createPublic().toString(),
-      },
-      memo: {
-        private: memo.toString(),
-        public: memo.createPublic().toString(),
-      },
-    });
   }, [masterKey]);
 
   useEffect(() => {
-    if (masterKey.length) {
-      setKeysTextVersion(generateKeysTextVersion());
-    } else {
-      setKeysTextVersion('');
+    if (
+      generatedKeys.owner.public.length > 0 &&
+      generatedKeys.active.public.length > 0
+    ) {
+      if (masterKey.length) {
+        setKeysTextVersion(generateKeysTextVersion());
+      } else {
+        setKeysTextVersion('');
+      }
+      setNotPrimaryStorageUnderstanding(false);
+      setSafelyCopied(false);
+      setPaymentUnderstanding(false);
     }
-    setNotPrimaryStorageUnderstanding(false);
-    setSafelyCopied(false);
-    setPaymentUnderstanding(false);
   }, [generatedKeys]);
 
   const wrapInHorizontalScrollView = (text: string) => {
@@ -138,7 +139,7 @@ const CreateAccountStepTwo = ({
       <View style={styles.marginHorizontal}>
         <View style={styles.cardKey}>
           <Text style={styles.title}>
-            Account name:{' '}
+            {translate('common.account_name')}:{' '}
             <Text style={[styles.text, styles.opacity]}>{accountName}</Text>
           </Text>
           <Text style={styles.title}>{translate('keys.master_password')}</Text>
@@ -178,29 +179,39 @@ const CreateAccountStepTwo = ({
 
   const generateKeysTextVersion = () => {
     return `    
-    Account name: @${accountName}
-    ---------Master password:--------- 
-    ${masterKey}
-    ---------Owner Key:--------- 
-    Private: ${generatedKeys.owner.private}
-    Public: ${generatedKeys.owner.public}
-    ---------Active Key:--------- 
-    Private: ${generatedKeys.active.private}
-    Public: ${generatedKeys.active.public}
-    ---------Posting Key:---------
-    Private: ${generatedKeys.posting.private}
-    Public: ${generatedKeys.posting.public}
-    ---------Memo Key:---------
-    Private: ${generatedKeys.memo.private}
-    Public: ${generatedKeys.memo.public}
-    -------------------------------`;
+    ${translate('common.account_name')}: @${accountName}
+      ---------${translate('common.title_master_key')} ${translate(
+      'common.password',
+    )}:--------- 
+      ${masterKey}
+      ---------${translate('common.title_owner_key')} ${translate(
+      'common.key',
+    )}:--------- 
+      ${translate('common.private')}: ${generatedKeys.owner.private}
+      ${translate('common.public')}: ${generatedKeys.owner.public}
+      ---------${translate('common.title_active_key')} ${translate(
+      'common.key',
+    )}:--------- 
+      ${translate('common.private')}: ${generatedKeys.active.private}
+      ${translate('common.public')}: ${generatedKeys.active.public}
+      ---------${translate('common.title_posting_key')} ${translate(
+      'common.key',
+    )}:---------
+      ${translate('common.private')}: ${generatedKeys.posting.private}
+      ${translate('common.public')}: ${generatedKeys.posting.public}
+      ---------${translate('common.title_memo_key')} ${translate(
+      'common.key',
+    )}:---------
+      ${translate('common.private')}: ${generatedKeys.memo.private}
+      ${translate('common.public')}: ${generatedKeys.memo.public}
+      -------------------------------`;
   };
 
   const copyAllKeys = () => {
     Clipboard.setString(
       generateKeysTextVersion() + addExtraInfoToClipboard(selectedAccount.name),
     );
-    Toast.show(translate('toast.copied_text'));
+    SimpleToast.show(translate('toast.copied_text'));
   };
 
   const getPaymentCheckboxLabel = () => {
@@ -231,7 +242,7 @@ const CreateAccountStepTwo = ({
             translate('common.missing_key', {key: KeychainKeyTypes.active}),
           );
         const result = await AccountCreationUtils.createAccount(
-          creationType,
+          creationType as AccountCreationType,
           accountName,
           selectedAccount.name!,
           selectedAccount.keys.active!,
@@ -240,23 +251,23 @@ const CreateAccountStepTwo = ({
           generatedKeys,
         );
         if (result) {
-          Toast.show(
+          SimpleToast.show(
             translate('components.create_account.create_account_successful'),
           );
           addAccount(result.name, result.keys, true, false);
           resetStackAndNavigate('WALLET');
         } else {
-          Toast.show(
+          SimpleToast.show(
             translate('components.create_account.create_account_failed'),
           );
         }
       } catch (err) {
-        Toast.show(err.message);
+        SimpleToast.show(err.message);
       } finally {
         setLoading(false);
       }
     } else {
-      Toast.show(
+      SimpleToast.show(
         translate('components.create_account.need_accept_terms_condition'),
       );
       return;
@@ -267,7 +278,7 @@ const CreateAccountStepTwo = ({
     <Background using_new_ui theme={theme}>
       <>
         <FocusAwareStatusBar />
-        {keysTextVersion.length > 0 && (
+        {keysTextVersion.length > 0 && !loadingMasterKey && (
           <View style={styles.container}>
             <ScrollView style={styles.keysContainer}>{renderKeys()}</ScrollView>
             <View style={styles.checkboxesContainer}>
@@ -333,6 +344,11 @@ const CreateAccountStepTwo = ({
                 additionalTextStyle={[styles.buttonText, styles.whiteText]}
               />
             </View>
+          </View>
+        )}
+        {loadingMasterKey && (
+          <View style={styles.loadingContainer}>
+            <Loader animating size={'small'} />
           </View>
         )}
       </>
@@ -409,6 +425,11 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     darkText: {
       color: BACKGROUNDDARKBLUE,
     },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   });
 
 const connector = connect(
@@ -421,4 +442,4 @@ const connector = connect(
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(CreateAccountStepTwo);
+export default connector(StepTwo);
