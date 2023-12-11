@@ -137,12 +137,11 @@ const getStyles = (theme: Theme) =>
       marginBottom: 8,
     },
     itemListContainer: {
-      top: 20,
-      paddingTop: 50,
-      paddingBottom: 30,
-      width: '99%',
-      left: 1,
+      paddingTop: 10,
+      paddingBottom: 10,
+      width: 200,
       paddingHorizontal: 10,
+      alignItems: 'center',
     },
     zIndexBase: {
       zIndex: 10,
