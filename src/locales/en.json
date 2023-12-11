@@ -113,7 +113,8 @@
     "title_active_key": "Active",
     "title_posting_key": "Posting",
     "title_memo_key": "Memo",
-    "title_owner_key": "Owner"
+    "title_owner_key": "Owner",
+    "switch": "Switch"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -543,7 +544,8 @@
       "new_account_history_rpc": "New account history RPC",
       "hive_engine_rpc": "Hive-Engine RPC",
       "hive_engine_account_history_api": "Hive-Engine account history API",
-      "rpc_node_already_exists": "RPC node already exists! Please choose another one"
+      "rpc_node_already_exists": "RPC node already exists! Please choose another one",
+      "rpc_not_responding_error": "{{currentRPC}} node is not responding. Do you want to switch to {{uri}} ?"
     }
   },
   "components": {

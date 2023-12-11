@@ -86,6 +86,7 @@ const Main = ({
   ] = useState<TokenBalance[]>([]);
   const [toggled, setToggled] = useState<number>(null);
   const [loadingUserTokens, setLoadingUserTokens] = useState(true);
+  const [showSwitchRPCPopup, setShowSwitchRPCPopup] = useState(false);
 
   useEffect(() => {
     loadTokens();
@@ -191,92 +192,119 @@ const Main = ({
     showFloatingBar(event.nativeEvent.contentOffset.y === 0);
   };
 
+  //TODO here cleanup code & styles!
+  // const renderSwitchToDefaultRPC = () => {
+  //   const onHandleSwitchRPC = async () => {
+  //     setShowSwitchRPCPopup(false);
+  //     setRpcAction('DEFAULT');
+  //   };
+
+  //   return (
+  //     <View style={styles.popupBottom}>
+  //       <Text style={[styles.white, {...button_link_primary_small}]}>
+  //         {translate('settings.settings.rpc_not_responding_error', {
+  //           currentRPC: currentRPCUri,
+  //           uri: DEFAULT_RPC,
+  //         })}
+  //       </Text>
+  //       <OperationButton
+  //         style={[getButtonStyle(theme).warningStyleButton, styles.button]}
+  //         additionalTextStyle={[styles.white, {...button_link_primary_small}]}
+  //         title={`${translate('common.switch')} RPC`}
+  //         isLoading={false}
+  //         onPress={onHandleSwitchRPC}
+  //       />
+  //     </View>
+  //   );
+  // };
+
   return (
     <WalletPage>
-      {isAppReady ? (
-        <>
-          <ScrollView onScroll={onHandleScroll}>
-            <View style={styles.headerMenu}>
-              <DrawerButton navigation={navigation as any} theme={theme} />
-              <View style={styles.innerHeader}>
-                <StatusIndicator theme={theme} />
-                <Claim theme={theme} />
-                <PickerItem
-                  selected={getItemDropDownSelected(user.name)}
+      <>
+        {isAppReady ? (
+          <>
+            <ScrollView onScroll={onHandleScroll}>
+              <View style={styles.headerMenu}>
+                <DrawerButton navigation={navigation as any} theme={theme} />
+                <View style={styles.innerHeader}>
+                  <StatusIndicator theme={theme} />
+                  <Claim theme={theme} />
+                  <PickerItem
+                    selected={getItemDropDownSelected(user.name)}
+                    theme={theme}
+                    pickerItemList={accounts.map((acc) => {
+                      return {
+                        label: acc.name,
+                        value: acc.name,
+                        icon: (
+                          <UserProfilePicture
+                            username={acc.name}
+                            style={styles.avatar}
+                          />
+                        ),
+                      };
+                    })}
+                    additionalContainerStyle={styles.userPicker}
+                    additionalExpandedListItemContainerStyle={{
+                      padding: 10,
+                    }}
+                    removeDropdownIcon
+                    onSelectedItem={(item) => loadAccount(item.value)}
+                  />
+                </View>
+              </View>
+              <Separator />
+              <View style={styles.rowWrapper}>
+                <PercentageDisplay
+                  name={translate('wallet.vp')}
+                  percent={getVP(user.account) || 100}
+                  IconBgcolor={OVERLAYICONBGCOLOR}
                   theme={theme}
-                  pickerItemList={accounts.map((acc) => {
-                    return {
-                      label: acc.name,
-                      value: acc.name,
-                      icon: (
-                        <UserProfilePicture
-                          username={acc.name}
-                          style={styles.avatar}
-                        />
-                      ),
-                    };
-                  })}
-                  additionalContainerStyle={styles.userPicker}
-                  additionalExpandedListItemContainerStyle={{
-                    padding: 10,
-                  }}
-                  removeDropdownIcon
-                  onSelectedItem={(item) => loadAccount(item.value)}
+                  iconName="send_square"
+                  bgColor={BACKGROUNDITEMDARKISH}
+                  secondary={`$${
+                    getVotingDollarsPerAccount(
+                      100,
+                      properties,
+                      user.account,
+                      false,
+                    ) || '0'
+                  }`}
+                />
+                <PercentageDisplay
+                  iconName="speedometer"
+                  bgColor={DARKER_RED_COLOR}
+                  name={translate('wallet.rc')}
+                  percent={user.rc.percentage || 100}
+                  IconBgcolor={OVERLAYICONBGCOLOR}
+                  theme={theme}
                 />
               </View>
-            </View>
-            <Separator />
-            <View style={styles.rowWrapper}>
-              <PercentageDisplay
-                name={translate('wallet.vp')}
-                percent={getVP(user.account) || 100}
-                IconBgcolor={OVERLAYICONBGCOLOR}
-                theme={theme}
-                iconName="send_square"
-                bgColor={BACKGROUNDITEMDARKISH}
-                secondary={`$${
-                  getVotingDollarsPerAccount(
-                    100,
-                    properties,
-                    user.account,
-                    false,
-                  ) || '0'
-                }`}
-              />
-              <PercentageDisplay
-                iconName="speedometer"
-                bgColor={DARKER_RED_COLOR}
-                name={translate('wallet.rc')}
-                percent={user.rc.percentage || 100}
-                IconBgcolor={OVERLAYICONBGCOLOR}
+              <Separator />
+              <BackgroundHexagons
+                additionalSvgStyle={styles.extraBg}
                 theme={theme}
               />
-            </View>
-            <Separator />
-            <BackgroundHexagons
-              additionalSvgStyle={styles.extraBg}
-              theme={theme}
-            />
-            <AccountValue
-              account={user.account}
-              prices={prices}
-              properties={properties}
-              theme={theme}
-              title={translate('common.estimated_account_value')}
-            />
-            <Separator />
-            <View
-              style={[
-                getCardStyle(theme).roundedCardItem,
-                styles.fullListContainer,
-              ]}>
-              <Primary theme={theme} />
-              <Separator height={10} />
-              <View style={styles.separatorContainer} />
-              <Separator height={10} />
+              <AccountValue
+                account={user.account}
+                prices={prices}
+                properties={properties}
+                theme={theme}
+                title={translate('common.estimated_account_value')}
+              />
+              <Separator />
+              <View
+                style={[
+                  getCardStyle(theme).roundedCardItem,
+                  styles.fullListContainer,
+                ]}>
+                <Primary theme={theme} />
+                <Separator height={10} />
+                <View style={styles.separatorContainer} />
+                <Separator height={10} />
 
-              {/* //TODO uncomment as this needs improvement. It slows the app */}
-              {/* {!loadingUserTokens && orderedUserTokenBalanceList.length > 0 && (
+                {/* //TODO uncomment as this needs improvement. It slows the app */}
+                {/* {!loadingUserTokens && orderedUserTokenBalanceList.length > 0 && (
                 <FlatList
                   data={orderedUserTokenBalanceList}
                   contentContainerStyle={styles.flatlist}
@@ -303,15 +331,17 @@ const Main = ({
                   <Loader size={'small'} animating />
                 </View>
               )} */}
-              {/* //END TODO uncomment as this needs improvement. It slows the app */}
-            </View>
-            <Survey navigation={navigation} />
-            <WhatsNewComponent navigation={navigation} />
-          </ScrollView>
-        </>
-      ) : (
-        <Loader new_ui_loader />
-      )}
+                {/* //END TODO uncomment as this needs improvement. It slows the app */}
+              </View>
+              <Survey navigation={navigation} />
+              <WhatsNewComponent navigation={navigation} />
+            </ScrollView>
+          </>
+        ) : (
+          <Loader new_ui_loader />
+        )}
+        {/* {showSwitchRPCPopup && renderSwitchToDefaultRPC()} */}
+      </>
     </WalletPage>
   );
 };
@@ -370,6 +400,18 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     flatlist: {
       paddingBottom: 20,
     },
+    popupBottom: {
+      position: 'absolute',
+      bottom: 0,
+      zIndex: 100,
+      width: '100%',
+      height: '20%',
+      backgroundColor: 'rgb(163, 17, 42)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 10,
+    },
+    button: {marginTop: 10, marginBottom: 15},
   });
 
 const connector = connect(

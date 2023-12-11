@@ -41,7 +41,7 @@ const CustomDropdown = ({
 }: Props) => {
   const [isListExpanded, setIsListExpanded] = useState(false);
   const styles = getStyles(theme);
-  //TODO check if need to fix using label, instead of .value
+
   return (
     <View style={[styles.container, additionalContainerStyle]}>
       <View
@@ -75,7 +75,7 @@ const CustomDropdown = ({
                   <TouchableOpacity
                     onPress={() => onSelected(item.value)}
                     style={[
-                      item.label === selected
+                      item.value === selected
                         ? styles.itemSelectedInList
                         : undefined,
                     ]}>

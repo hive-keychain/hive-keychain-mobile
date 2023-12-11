@@ -6,6 +6,7 @@ import Icon from 'components/hive/Icon';
 import CollapsibleSettings from 'components/settings/CollapsibleSettings';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import Loader from 'components/ui/Loader';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React, {useContext, useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
@@ -16,7 +17,6 @@ import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {body_primary_body_2, body_primary_body_3} from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 
 const Operations = ({
@@ -33,8 +33,11 @@ const Operations = ({
     [],
   );
   const [searchValue, setSearchValue] = useState('');
+  const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
+    console.log({n: active.name}); //TODO remove line
+    setLoadingData(true);
     init();
   }, [active]);
 
@@ -47,6 +50,9 @@ const Operations = ({
         ? preferences.find((e) => e.username === active.name).domains
         : [],
     );
+    setTimeout(() => {
+      setLoadingData(false);
+    }, 1000);
   };
 
   useEffect(() => {
@@ -78,8 +84,9 @@ const Operations = ({
             styles.marginVertical,
             {...body_primary_body_3},
             styles.paddingHorizontal,
+            {textAlign: 'center'},
           ]}>
-          {capitalizeSentence(translate('settings.settings.operations_info'))}
+          {translate('settings.settings.operations_info')}
         </Text>
         <PickerItem
           theme={theme}
@@ -108,26 +115,33 @@ const Operations = ({
           value={searchValue}
           onChangeText={(text) => setSearchValue(text)}
         />
-        <FlatList
-          data={filteredDomains}
-          renderItem={(preference) => {
-            return (
-              <CollapsibleSettings
-                username={active.name}
-                key={preference.item.domain}
-                index={preference.index}
-                domainPref={preference.item}
-                removePreference={removePreference}
-                theme={theme}
-              />
-            );
-          }}
-          ListEmptyComponent={
-            <Text style={[styles.text, styles.textNoPref]}>
-              {translate('settings.settings.no_pref')}
-            </Text>
-          }
-        />
+        {!loadingData && (
+          <FlatList
+            data={filteredDomains}
+            renderItem={(preference) => {
+              return (
+                <CollapsibleSettings
+                  username={active.name}
+                  key={preference.item.domain}
+                  index={preference.index}
+                  domainPref={preference.item}
+                  removePreference={removePreference}
+                  theme={theme}
+                />
+              );
+            }}
+            ListEmptyComponent={
+              <Text style={[styles.text, styles.textNoPref]}>
+                {translate('settings.settings.no_pref')}
+              </Text>
+            }
+          />
+        )}
+        {loadingData && (
+          <View style={styles.flexCentered}>
+            <Loader animating size={'small'} />
+          </View>
+        )}
       </View>
     </Background>
   );
@@ -162,6 +176,11 @@ const getStyles = (theme: Theme) =>
     },
     paddingHorizontal: {
       paddingHorizontal: 10,
+    },
+    flexCentered: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
     },
   });
 

@@ -1,5 +1,5 @@
-import {setRpc} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
+import {setRpc} from 'actions/settings';
 import CustomDropdown, {DropdownItem} from 'components/form/CustomDropdown';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -41,10 +41,8 @@ export const DEFAULT_HE_RPC_NODE = 'https://engine.rishipanthee.com';
 export const DEFAULT_ACCOUNT_HISTORY_RPC_NODE =
   'https://history.hive-engine.com';
 //TODO very imporant while refactoring.
-//  - save CURRENT_HE_RPC & CURRENT_ACCOUNT_HISTORY_API_RPC in Async.
-//  - they must be loaded from init of app
-//  - then loaded in here as usual.
-const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
+//  - add actions within settings reducers t oset HERPC & AHRPC so they will persist!
+const RpcNodes = ({setRpc, settings, rpc}: PropsFromRedux) => {
   //Hive RPC
   const [showAddCustomRPC, setShowAddCustomRPC] = useState(false);
   const [customRPCSetActive, setCustomRPCSetActive] = useState<boolean>(false);
@@ -59,6 +57,16 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
   useEffect(() => {
     init();
   }, []);
+
+  useEffect(() => {
+    if (switchRPCAuto) {
+      if (typeof rpc === 'object' && rpc.uri !== 'DEFAULT') {
+        if (typeof rpc === 'string' && rpc !== 'DEFAULT') {
+          setRpc('DEFAULT');
+        }
+      }
+    }
+  }, [switchRPCAuto]);
 
   const cleanRpcLabel = (label: string) =>
     label.replace('http://', '').replace('https://', '').split('/')[0];
@@ -154,6 +162,11 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
     setRpcFullList(updatedFullList.filter((removed) => removed.value !== uri));
   };
 
+  const onHandleSetRPC = (item: string) => {
+    // console.log({setRpc}); //TODO remove line
+    setRpc(item);
+  };
+
   const renderRpcItem = () => {
     return (
       <>
@@ -164,9 +177,7 @@ const RpcNodes = ({setRpc, settings}: PropsFromRedux) => {
             selected={
               typeof settings.rpc === 'object' ? settings.rpc.uri : settings.rpc
             }
-            onSelected={(item) => {
-              setRpc(item);
-            }}
+            onSelected={onHandleSetRPC}
             onRemove={(item) => handleOnRemoveCustomRPC(item)}
             additionalContainerStyle={styles.flex85}
           />
@@ -506,6 +517,7 @@ const mapStateToProps = (state: RootState) => ({
   settings: state.settings,
   accounts: state.accounts,
   active: state.activeAccount,
+  rpc: state.settings.rpc,
 });
 const connector = connect(mapStateToProps, {
   setRpc,

@@ -36,16 +36,18 @@ import {
   RequestRemoveAccountAuthority,
   RequestRemoveKeyAuthority,
 } from './keychain.types';
+import {useWorkingRPC} from './rpc-switcher.utils';
 
 type BroadcastResult = {id: string};
 
-const DEFAULT_RPC = 'https://api.hive.blog';
+export const DEFAULT_RPC = 'https://api.hive.blog';
 const DEFAULT_CHAIN_ID =
   'beeab0de00000000000000000000000000000000000000000000000000000000';
 let client = new Client(DEFAULT_RPC);
 let testnet = false;
 
-const getDefault: () => Promise<string> = async () => {
+export const getDefault: () => Promise<string> = async () => {
+  console.log('calling getDefault RPC!!'); //TODO remove line
   try {
     return (await api.get('/hive/rpc')).data.rpc;
   } catch (e) {
@@ -54,6 +56,7 @@ const getDefault: () => Promise<string> = async () => {
 };
 
 export const setRpc = async (rpcObj: Rpc | string) => {
+  console.log('calling setRpc RPC!!', {rpcObj}); //TODO remove line
   let rpc = typeof rpcObj === 'string' ? rpcObj : rpcObj.uri;
   testnet = typeof rpcObj === 'string' ? false : rpcObj.testnet || false;
   if (rpc === 'DEFAULT') {
@@ -560,12 +563,12 @@ export const getData = async (
   const response = await call(method, params);
   if (response?.result) {
     return key ? response.result[key] : response.result;
-  } else
-    throw new Error(
-      `Error while retrieving data from ${method} : ${JSON.stringify(
-        response.error,
-      )}`,
-    );
+  } else useWorkingRPC();
+  throw new Error(
+    `Error while retrieving data from ${method} : ${JSON.stringify(
+      response.error,
+    )}`,
+  );
 };
 
 export default hive;

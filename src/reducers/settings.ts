@@ -7,6 +7,7 @@ export default (
 ) => {
   switch (type) {
     case SET_RPC:
+      console.log('Set rpc: ', {rpc: payload.rpc}); //TODO remove line
       return {...state, rpc: payload!.rpc!};
     default:
       return state;

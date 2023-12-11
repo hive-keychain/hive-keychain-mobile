@@ -14,6 +14,7 @@ import lastAccount from './lastAccount';
 import message from './message';
 import phishingAccounts from './phishing';
 import preferences from './preferences';
+import rpcSwitcher from './rpc-switcher.reducer';
 import settings from './settings';
 import tokenHistory from './tokenHistory';
 import tokens from './tokens';
@@ -46,4 +47,5 @@ export default combineReducers({
   tokensFilters,
   message,
   floatingBar,
+  rpcSwitcher,
 });

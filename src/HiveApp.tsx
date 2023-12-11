@@ -6,8 +6,10 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {showFloatingBar} from 'actions/floatingBar';
 import {forgetRequestedOperation} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
+import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import Bridge from 'components/bridge';
 import {MessageModal} from 'components/modals/MessageModal';
+import RpcSwitcherComponent from 'components/popups/rpc-switcher/rpc-switcher.component';
 import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
@@ -20,10 +22,11 @@ import Modal from 'screens/Modal';
 import {FloatingBar} from 'screens/hive/wallet/FloatingBar';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
-import {setRpc} from 'utils/hive';
+import {DEFAULT_RPC, setRpc} from 'utils/hive';
 import {processQRCodeOp} from 'utils/hive-uri';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
+import {checkRpcStatus} from 'utils/rpc.utils';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 
 const Root = createStackNavigator<RootStackParam>();
@@ -36,6 +39,9 @@ const App = ({
   requestedOp,
   forgetRequestedOperation,
   showFloatingBar,
+  rpcSwitcher,
+  setDisplayChangeRpcPopup,
+  setSwitchToRpc,
 }: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
@@ -59,7 +65,21 @@ const App = ({
 
   useEffect(() => {
     setRpc(rpc as Rpc);
+    if ((rpc as Rpc).uri !== 'DEFAULT') {
+      checkCurrentRPC((rpc as Rpc).uri);
+    }
+    console.log('first setRpc call & check!');
   }, [rpc]);
+
+  const checkCurrentRPC = async (currentRPCUri: string) => {
+    const rpcStatusOK = await checkRpcStatus(currentRPCUri);
+    if (!rpcStatusOK) {
+      setSwitchToRpc({uri: DEFAULT_RPC, testnet: false});
+    }
+    setDisplayChangeRpcPopup(!rpcStatusOK);
+    showFloatingBar(rpcStatusOK);
+    console.log({rpcStatusOK, mustShow: !rpcStatusOK});
+  };
 
   const renderNavigator = () => {
     if (!hasAccounts) {
@@ -111,6 +131,7 @@ const App = ({
       {renderRootNavigator()}
       <MessageModal capitalize />
       <FloatingBar currentRouteName={currentRouteName} />
+      <RpcSwitcherComponent />
       <Bridge />
     </NavigationContainer>
   );
@@ -123,12 +144,15 @@ const mapStateToProps = (state: RootState) => {
     rpc: state.settings.rpc,
     accounts: state.accounts,
     requestedOp: state.hiveUri.operation,
+    rpcSwitcher: state.rpcSwitcher,
   };
 };
 
 const connector = connect(mapStateToProps, {
   forgetRequestedOperation,
   showFloatingBar,
+  setDisplayChangeRpcPopup,
+  setSwitchToRpc,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

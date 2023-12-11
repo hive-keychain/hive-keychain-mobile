@@ -52,6 +52,10 @@ export const FETCH_SAVINGS_REQUESTS = 'FETCH_SAVINGS_REQUESTS';
 export const SHOW_MODAL = 'SHOW_MODAL';
 export const RESET_MODAL = 'RESET_MODAL';
 
+//rpc switcher
+export const SET_SWITCH_TO_RPC = 'SET_SWITCH_TO_RPC';
+export const SET_DISPLAY_SWITCH_RPC = 'SET_DISPLAY_SWITCH_RPC';
+
 //floating bar
 export const SHOW_FLOATING_BAR = 'SHOW_FLOATING_BAR';
 export const SET_IS_LOADING_SCREEN = 'SET_IS_LOADING_FLOATING_BAR';
