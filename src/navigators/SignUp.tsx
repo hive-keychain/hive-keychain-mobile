@@ -1,11 +1,13 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
-import React from 'react';
+import React, {useContext} from 'react';
+import {StyleSheet} from 'react-native';
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
 import CreateAccount from 'screens/hive/CreateAccount';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
+import {Theme, ThemeContext} from 'src/context/theme.context';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
 import {SignupStackParamList} from './Signup.types';
@@ -13,6 +15,8 @@ import {SignupStackParamList} from './Signup.types';
 const Stack = createStackNavigator<SignupStackParamList>();
 
 export default () => {
+  const {theme} = useContext(ThemeContext);
+  const styles = getStyles(theme);
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -31,7 +35,12 @@ export default () => {
         options={{
           headerBackTitle: ' ',
           title: translate('navigation.add_account'),
-          headerRight: () => <MoreInformation type={Info.KEYS} />,
+          headerRight: () => (
+            <MoreInformation
+              type={Info.KEYS}
+              additionalButtonStyle={styles.marginRight}
+            />
+          ),
           headerTintColor: 'white',
           headerTransparent: true,
         }}
@@ -53,3 +62,9 @@ export default () => {
     </Stack.Navigator>
   );
 };
+
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    marginLeft: {marginLeft: 16},
+    marginRight: {marginRight: 16},
+  });

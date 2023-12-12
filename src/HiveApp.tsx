@@ -5,7 +5,6 @@ import {
 import {createStackNavigator} from '@react-navigation/stack';
 import {showFloatingBar} from 'actions/floatingBar';
 import {forgetRequestedOperation} from 'actions/index';
-import {Rpc} from 'actions/interfaces';
 import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import Bridge from 'components/bridge';
 import {MessageModal} from 'components/modals/MessageModal';
@@ -26,7 +25,7 @@ import {DEFAULT_RPC, setRpc} from 'utils/hive';
 import {processQRCodeOp} from 'utils/hive-uri';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
-import {checkRpcStatus} from 'utils/rpc.utils';
+import {checkRpcStatus, getRPCUri} from 'utils/rpc.utils';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 
 const Root = createStackNavigator<RootStackParam>();
@@ -64,11 +63,13 @@ const App = ({
   }, [accounts, requestedOp]);
 
   useEffect(() => {
-    setRpc(rpc as Rpc);
-    if ((rpc as Rpc).uri !== 'DEFAULT') {
-      checkCurrentRPC((rpc as Rpc).uri);
+    console.log('hiveApp', {rpc}); //TODO remove line
+    console.log('first setRpc'); //TODO remove line
+    setRpc(rpc);
+    if (getRPCUri(rpc) !== 'DEFAULT') {
+      console.log('first checkCurrentRPC'); //TODO remove line
+      checkCurrentRPC(getRPCUri(rpc));
     }
-    console.log('first setRpc call & check!');
   }, [rpc]);
 
   const checkCurrentRPC = async (currentRPCUri: string) => {

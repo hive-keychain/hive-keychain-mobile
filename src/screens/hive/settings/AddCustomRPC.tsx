@@ -27,6 +27,7 @@ interface Props {
   setAddNewRpc: () => void;
   onRemoveDropdownItem: (item: string) => void;
   onSelectedDropdown: (item: string) => void;
+  titleTranslationKey?: string;
 }
 
 const AddCustomRPC = ({
@@ -45,6 +46,7 @@ const AddCustomRPC = ({
   setAddNewRpc,
   onRemoveDropdownItem,
   onSelectedDropdown,
+  titleTranslationKey,
 }: Props) => {
   const styles = getStyles(theme);
   return (
@@ -52,6 +54,8 @@ const AddCustomRPC = ({
       <Text style={styles.text}>{title}</Text>
       <View style={styles.rpcItemContainer}>
         <CustomDropdown
+          titleTranslationKey={titleTranslationKey}
+          behaviour="overlay"
           theme={theme}
           list={rpcList}
           selected={selectedRPC ?? rpcList[0].value}

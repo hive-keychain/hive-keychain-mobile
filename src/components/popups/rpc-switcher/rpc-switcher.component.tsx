@@ -1,4 +1,3 @@
-import {Rpc} from 'actions/interfaces';
 import {setDisplayChangeRpcPopup} from 'actions/rpc-switcher';
 import {setRpc} from 'actions/settings';
 import OperationButton from 'components/form/EllipticButton';
@@ -10,6 +9,7 @@ import {getButtonStyle} from 'src/styles/button';
 import {button_link_primary_small} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
+import {getRPCUri} from 'utils/rpc.utils';
 
 const RpcSwitcherComponent = ({
   rpc,
@@ -34,7 +34,7 @@ const RpcSwitcherComponent = ({
     <View style={styles.popupBottom}>
       <Text style={[styles.white, {...button_link_primary_small}]}>
         {translate('settings.settings.rpc_not_responding_error', {
-          currentRPC: (rpc as Rpc).uri,
+          currentRPC: getRPCUri(rpc),
           uri: rpcSwither.rpc.uri,
         })}
       </Text>
@@ -56,11 +56,12 @@ const getStyles = (theme: Theme) =>
       bottom: 0,
       zIndex: 100,
       width: '100%',
-      height: '20%',
+      height: 'auto',
       backgroundColor: 'rgb(163, 17, 42)',
       justifyContent: 'center',
       alignItems: 'center',
       paddingHorizontal: 10,
+      paddingTop: 20,
     },
     button: {marginTop: 10, marginBottom: 15},
     white: {color: 'white'},

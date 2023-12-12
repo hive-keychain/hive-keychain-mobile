@@ -37,6 +37,10 @@ export const deleteCustomRpc = async (rpcs: Rpc[], rpc: Rpc) => {
   );
 };
 
+export const getRPCUri = (rpcObj: string | Rpc) => {
+  return typeof rpcObj === 'object' ? rpcObj.uri : rpcObj;
+};
+
 export const checkRpcStatus = async (uri: string) => {
   axios.interceptors.response.use(
     (response) => {

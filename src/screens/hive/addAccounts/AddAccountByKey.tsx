@@ -85,7 +85,7 @@ const AddAccountByKey = ({
 
   return (
     <Background using_new_ui theme={theme}>
-      <>
+      <View style={styles.flex}>
         <StatusBar
           barStyle={getColors(theme).barStyle}
           backgroundColor={getColors(theme).primaryBackground}
@@ -98,6 +98,7 @@ const AddAccountByKey = ({
               darkThemeIcon={<TitleLogoDark />}
               onPress={() => {}}
               theme={theme}
+              additionalContainerStyle={styles.marginTop}
             />
             <Separator height={height / 15} />
             <Text
@@ -159,13 +160,14 @@ const AddAccountByKey = ({
             )}
           </View>
         </View>
-      </>
+      </View>
     </Background>
   );
 };
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
+    flex: {flex: 1},
     container: {alignItems: 'center', justifyContent: 'space-between', flex: 1},
     text: {color: getColors(theme).secondaryText, ...body_primary_body_1},
     topContainer: {
@@ -192,6 +194,7 @@ const getStyles = (theme: Theme) =>
       width: '100%',
       alignItems: 'center',
     },
+    marginTop: {marginTop: 25},
   });
 
 const mapStateToProps = (state: RootState) => {
