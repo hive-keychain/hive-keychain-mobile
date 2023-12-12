@@ -120,13 +120,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
         <EllipticButton
           title={translate('intro.createAccount')}
           onPress={() => {
-            Linking.canOpenURL(hiveConfig.CREATE_ACCOUNT_URL).then(
-              (supported) => {
-                if (supported) {
-                  Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
-                }
-              },
-            );
+            Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
           }}
           style={styles.warningProceedButton}
           additionalTextStyle={styles.textButtonFilled}

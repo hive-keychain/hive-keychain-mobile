@@ -13,6 +13,7 @@ import {
 import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
 import PickerItem, {PickerItemInterface} from 'components/form/PickerItem';
 import AccountValue from 'components/hive/AccountValue';
+import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
@@ -30,6 +31,7 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
+  FlatList,
   NativeScrollEvent,
   NativeSyntheticEvent,
   StyleSheet,
@@ -86,7 +88,6 @@ const Main = ({
   ] = useState<TokenBalance[]>([]);
   const [toggled, setToggled] = useState<number>(null);
   const [loadingUserTokens, setLoadingUserTokens] = useState(true);
-  const [showSwitchRPCPopup, setShowSwitchRPCPopup] = useState(false);
 
   useEffect(() => {
     loadTokens();
@@ -192,38 +193,12 @@ const Main = ({
     showFloatingBar(event.nativeEvent.contentOffset.y === 0);
   };
 
-  //TODO here cleanup code & styles!
-  // const renderSwitchToDefaultRPC = () => {
-  //   const onHandleSwitchRPC = async () => {
-  //     setShowSwitchRPCPopup(false);
-  //     setRpcAction('DEFAULT');
-  //   };
-
-  //   return (
-  //     <View style={styles.popupBottom}>
-  //       <Text style={[styles.white, {...button_link_primary_small}]}>
-  //         {translate('settings.settings.rpc_not_responding_error', {
-  //           currentRPC: currentRPCUri,
-  //           uri: DEFAULT_RPC,
-  //         })}
-  //       </Text>
-  //       <OperationButton
-  //         style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-  //         additionalTextStyle={[styles.white, {...button_link_primary_small}]}
-  //         title={`${translate('common.switch')} RPC`}
-  //         isLoading={false}
-  //         onPress={onHandleSwitchRPC}
-  //       />
-  //     </View>
-  //   );
-  // };
-
   return (
     <WalletPage>
       <>
         {isAppReady ? (
           <>
-            <ScrollView onScroll={onHandleScroll}>
+            <ScrollView onScroll={onHandleScroll} horizontal={false}>
               <View style={styles.headerMenu}>
                 <DrawerButton navigation={navigation as any} theme={theme} />
                 <View style={styles.innerHeader}>
@@ -303,35 +278,38 @@ const Main = ({
                 <View style={styles.separatorContainer} />
                 <Separator height={10} />
 
-                {/* //TODO uncomment as this needs improvement. It slows the app */}
-                {/* {!loadingUserTokens && orderedUserTokenBalanceList.length > 0 && (
-                <FlatList
-                  data={orderedUserTokenBalanceList}
-                  contentContainerStyle={styles.flatlist}
-                  keyExtractor={(item) => item._id.toString()}
-                  ItemSeparatorComponent={() => <Separator height={10} />}
-                  renderItem={({item}) => (
-                    <EngineTokenDisplay
-                      token={item}
-                      tokensList={tokens}
-                      market={tokensMarket}
-                      toggled={toggled === item._id}
-                      setToggle={() => {
-                        if (toggled === item._id) setToggled(null);
-                        else setToggled(item._id);
-                      }}
-                      using_new_ui
+                {/* //TODO this needs improvement. It slows the app */}
+                {!loadingUserTokens && orderedUserTokenBalanceList.length > 0 && (
+                  <ScrollView
+                    horizontal={true}
+                    contentContainerStyle={{width: '100%', height: '100%'}}>
+                    <FlatList
+                      data={orderedUserTokenBalanceList}
+                      contentContainerStyle={styles.flatlist}
+                      keyExtractor={(item) => item._id.toString()}
+                      ItemSeparatorComponent={() => <Separator height={10} />}
+                      renderItem={({item}) => (
+                        <EngineTokenDisplay
+                          token={item}
+                          tokensList={tokens}
+                          market={tokensMarket}
+                          toggled={toggled === item._id}
+                          setToggle={() => {
+                            if (toggled === item._id) setToggled(null);
+                            else setToggled(item._id);
+                          }}
+                          using_new_ui
+                        />
+                      )}
                     />
-                  )}
-                />
-              )}
-
-              {loadingUserTokens && (
-                <View style={{height: 40}}>
-                  <Loader size={'small'} animating />
-                </View>
-              )} */}
-                {/* //END TODO uncomment as this needs improvement. It slows the app */}
+                  </ScrollView>
+                )}
+                {loadingUserTokens && (
+                  <View style={{height: 40}}>
+                    <Loader size={'small'} animating />
+                  </View>
+                )}
+                {/* //END TODO this needs improvement. It slows the app */}
               </View>
               <Survey navigation={navigation} />
               <WhatsNewComponent navigation={navigation} />
@@ -340,7 +318,6 @@ const Main = ({
         ) : (
           <Loader new_ui_loader />
         )}
-        {/* {showSwitchRPCPopup && renderSwitchToDefaultRPC()} */}
       </>
     </WalletPage>
   );
@@ -348,18 +325,11 @@ const Main = ({
 
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
   StyleSheet.create({
-    textCentered: {textAlign: 'center'},
     white: {color: 'white'},
     rowWrapper: {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingLeft: width * 0.05,
-      paddingRight: width * 0.05,
-    },
-    toggle: {
-      display: 'flex',
-      flexDirection: 'row',
       paddingLeft: width * 0.05,
       paddingRight: width * 0.05,
     },
@@ -400,18 +370,6 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     flatlist: {
       paddingBottom: 20,
     },
-    popupBottom: {
-      position: 'absolute',
-      bottom: 0,
-      zIndex: 100,
-      width: '100%',
-      height: '20%',
-      backgroundColor: 'rgb(163, 17, 42)',
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingHorizontal: 10,
-    },
-    button: {marginTop: 10, marginBottom: 15},
   });
 
 const connector = connect(

@@ -22,6 +22,7 @@ import {FloatingBar} from 'screens/hive/wallet/FloatingBar';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {DEFAULT_RPC, setRpc} from 'utils/hive';
+import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 import {processQRCodeOp} from 'utils/hive-uri';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
@@ -41,6 +42,8 @@ const App = ({
   rpcSwitcher,
   setDisplayChangeRpcPopup,
   setSwitchToRpc,
+  hiveEngineRpc,
+  accountHistoryAPIRpc,
 }: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
@@ -63,8 +66,10 @@ const App = ({
   }, [accounts, requestedOp]);
 
   useEffect(() => {
-    console.log('hiveApp', {rpc}); //TODO remove line
+    console.log('hiveApp', {rpc, hiveEngineRpc, accountHistoryAPIRpc}); //TODO remove line
     console.log('first setRpc'); //TODO remove line
+    HiveEngineConfigUtils.setActiveApi(hiveEngineRpc);
+    HiveEngineConfigUtils.setActiveAccountHistoryApi(accountHistoryAPIRpc);
     setRpc(rpc);
     if (getRPCUri(rpc) !== 'DEFAULT') {
       console.log('first checkCurrentRPC'); //TODO remove line
@@ -146,6 +151,8 @@ const mapStateToProps = (state: RootState) => {
     accounts: state.accounts,
     requestedOp: state.hiveUri.operation,
     rpcSwitcher: state.rpcSwitcher,
+    hiveEngineRpc: state.settings.hiveEngineRpc,
+    accountHistoryAPIRpc: state.settings.accountHistoryAPIRpc,
   };
 };
 

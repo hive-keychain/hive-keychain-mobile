@@ -1,5 +1,5 @@
 import {Rpc} from 'actions/interfaces';
-import {setRpc} from 'actions/settings';
+import {setAccountHistoryRpc, setHiveEngineRpc, setRpc} from 'actions/settings';
 import CustomDropdown, {DropdownItem} from 'components/form/CustomDropdown';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -42,7 +42,15 @@ export const DEFAULT_ACCOUNT_HISTORY_RPC_NODE =
   'https://history.hive-engine.com';
 //TODO very imporant while refactoring.
 //  - add actions within settings reducers t oset HERPC & AHRPC so they will persist!
-const RpcNodes = ({setRpc, settings, rpc}: PropsFromRedux) => {
+const RpcNodes = ({
+  setRpc,
+  settings,
+  activeRpc,
+  setHiveEngineRpc,
+  setAccountHistoryRpc,
+  activeHiveEngineRpc,
+  activeAccountHistoryAPIRpc,
+}: PropsFromRedux) => {
   //Hive RPC
   const [showAddCustomRPC, setShowAddCustomRPC] = useState(false);
   const [customRPCSetActive, setCustomRPCSetActive] = useState<boolean>(false);
@@ -60,8 +68,8 @@ const RpcNodes = ({setRpc, settings, rpc}: PropsFromRedux) => {
 
   useEffect(() => {
     if (switchRPCAuto) {
-      if (typeof rpc === 'object' && rpc.uri !== 'DEFAULT') {
-        if (typeof rpc === 'string' && rpc !== 'DEFAULT') {
+      if (typeof activeRpc === 'object' && activeRpc.uri !== 'DEFAULT') {
+        if (typeof activeRpc === 'string' && activeRpc !== 'DEFAULT') {
           setRpc('DEFAULT');
         }
       }
@@ -175,9 +183,7 @@ const RpcNodes = ({setRpc, settings, rpc}: PropsFromRedux) => {
             behaviour="overlay"
             theme={theme}
             list={rpcFullList}
-            selected={
-              typeof settings.rpc === 'object' ? settings.rpc.uri : settings.rpc
-            }
+            selected={typeof activeRpc === 'object' ? activeRpc.uri : activeRpc}
             onSelected={onHandleSetRPC}
             onRemove={(item) => handleOnRemoveCustomRPC(item)}
             additionalContainerStyle={styles.flex85}
@@ -247,7 +253,10 @@ const RpcNodes = ({setRpc, settings, rpc}: PropsFromRedux) => {
       if (ValidUrl.isWebUri(newHERpc)) {
         if (!hiveEngineRPCList.find((item) => item.value === newHERpc)) {
           await HiveEngineConfigUtils.addCustomRpc(newHERpc);
-          if (newHERPCAsActive) HiveEngineConfigUtils.setActiveApi(newHERpc);
+          if (newHERPCAsActive) {
+            setHiveEngineRpc(newHERpc);
+            HiveEngineConfigUtils.setActiveApi(newHERpc);
+          }
           setNewHERpc('');
           setAddNewHERpc(false);
           setNewHERPCAsActive(false);
@@ -269,8 +278,10 @@ const RpcNodes = ({setRpc, settings, rpc}: PropsFromRedux) => {
   };
 
   const onHandleRemoveCustomHERpc = async (item: string) => {
-    if (HiveEngineConfigUtils.getApi() === item)
+    if (HiveEngineConfigUtils.getApi() === item) {
+      setHiveEngineRpc(DEFAULT_HE_RPC_NODE);
       HiveEngineConfigUtils.setActiveApi(DEFAULT_HE_RPC_NODE);
+    }
     await HiveEngineConfigUtils.deleteCustomRpc(item);
     SimpleToast.show(
       translate('toast.rpc_node_removed_success'),
@@ -280,6 +291,7 @@ const RpcNodes = ({setRpc, settings, rpc}: PropsFromRedux) => {
   };
 
   const onHandleSelectHERpc = (item: string) => {
+    setHiveEngineRpc(item);
     HiveEngineConfigUtils.setActiveApi(item);
     init();
   };
@@ -306,10 +318,12 @@ const RpcNodes = ({setRpc, settings, rpc}: PropsFromRedux) => {
           await HiveEngineConfigUtils.addCustomAccountHistoryApi(
             newAccountHistoryAPIRpc,
           );
-          if (newAccountHistoryAPIAsActive)
+          if (newAccountHistoryAPIAsActive) {
+            setAccountHistoryRpc(newAccountHistoryAPIRpc);
             HiveEngineConfigUtils.setActiveAccountHistoryApi(
               newAccountHistoryAPIRpc,
             );
+          }
           setNewAccountHistoryAPIRpc('');
           setAddNewAccountHistoryAPI(false);
           setNewAccountHistoryAPIAsActive(false);
@@ -331,10 +345,12 @@ const RpcNodes = ({setRpc, settings, rpc}: PropsFromRedux) => {
   };
 
   const onHandleRemoveAccountHistoryAPI = async (item: string) => {
-    if (HiveEngineConfigUtils.getAccountHistoryApi() === item)
+    if (HiveEngineConfigUtils.getAccountHistoryApi() === item) {
+      setAccountHistoryRpc(DEFAULT_ACCOUNT_HISTORY_RPC_NODE);
       HiveEngineConfigUtils.setActiveAccountHistoryApi(
         DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
       );
+    }
     await HiveEngineConfigUtils.deleteCustomAccountHistoryApi(item);
     SimpleToast.show(
       translate('toast.rpc_node_removed_success'),
@@ -344,6 +360,7 @@ const RpcNodes = ({setRpc, settings, rpc}: PropsFromRedux) => {
   };
 
   const onHandleSelectAccountHistoryAPI = (item: string) => {
+    setAccountHistoryRpc(item);
     HiveEngineConfigUtils.setActiveAccountHistoryApi(item);
     init();
   };
@@ -395,7 +412,7 @@ const RpcNodes = ({setRpc, settings, rpc}: PropsFromRedux) => {
               titleTranslationKey="settings.settings.hive_engine_rpc"
               theme={theme}
               rpcList={hiveEngineRPCList}
-              selectedRPC={cleanRpcLabel(HiveEngineConfigUtils.getApi())}
+              selectedRPC={cleanRpcLabel(activeHiveEngineRpc)}
               title={translate('settings.settings.hive_engine_rpc')}
               placeHolderInput={translate('settings.settings.new_HE_rpc')}
               input={newHERpc}
@@ -415,9 +432,7 @@ const RpcNodes = ({setRpc, settings, rpc}: PropsFromRedux) => {
               titleTranslationKey="settings.settings.hive_engine_account_history_api"
               theme={theme}
               rpcList={accountHistoryAPIList}
-              selectedRPC={cleanRpcLabel(
-                HiveEngineConfigUtils.getAccountHistoryApi(),
-              )}
+              selectedRPC={cleanRpcLabel(activeAccountHistoryAPIRpc)}
               title={translate(
                 'settings.settings.hive_engine_account_history_api',
               )}
@@ -521,10 +536,14 @@ const mapStateToProps = (state: RootState) => ({
   settings: state.settings,
   accounts: state.accounts,
   active: state.activeAccount,
-  rpc: state.settings.rpc,
+  activeRpc: state.settings.rpc,
+  activeHiveEngineRpc: state.settings.hiveEngineRpc,
+  activeAccountHistoryAPIRpc: state.settings.accountHistoryAPIRpc,
 });
 const connector = connect(mapStateToProps, {
   setRpc,
+  setHiveEngineRpc,
+  setAccountHistoryRpc,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(RpcNodes);

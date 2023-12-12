@@ -664,7 +664,8 @@
     },
     "rpc_node_added_success": "RPC added succesfully",
     "rpc_node_removed_success": "RPC removed succesfully",
-    "error_missing_fields": "Missing fields!"
+    "error_missing_fields": "Missing fields!",
+    "tokens_timeout": "This node is not replying. Please go to token settings and change the Hive Engine RPC node"
   },
   "navigation": {
     "log_out": "Logout",

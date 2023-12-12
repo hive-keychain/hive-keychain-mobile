@@ -31,10 +31,14 @@ export interface Rpc {
 }
 export interface Settings {
   rpc: string | Rpc;
+  hiveEngineRpc: string;
+  accountHistoryAPIRpc: string;
 }
 
 export interface SettingsPayload {
   rpc?: string | Rpc;
+  hiveEngineRpc?: string;
+  accountHistoryAPIRpc?: string;
 }
 
 export interface Page {

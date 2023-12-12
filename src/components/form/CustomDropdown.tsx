@@ -120,14 +120,16 @@ const CustomDropdown = ({
                   <TouchableOpacity
                     onPress={() => onSelected(item.value)}
                     style={[
-                      item.value === selected
+                      item.value === selected || item.label === selected
                         ? styles.itemSelectedInList
                         : undefined,
                     ]}>
                     <Text
                       style={[
                         styles.text,
-                        item.value === selected ? styles.whiteText : undefined,
+                        item.value === selected || item.label === selected
+                          ? styles.whiteText
+                          : undefined,
                       ]}>
                       {item.label ?? item.value}
                     </Text>

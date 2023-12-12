@@ -1,4 +1,5 @@
 import hsc, {hiveEngineAPI} from 'api/hiveEngine';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {AppThunk} from 'src/hooks/redux';
 import {
   OperationsHiveEngine,
@@ -11,6 +12,7 @@ import {RootState, store} from 'store';
 import {decodeMemoIfNeeded} from 'utils/hiveEngine';
 import {getUserBalance} from 'utils/tokens.utils';
 import {ActionPayload} from './interfaces';
+import {showModal} from './message';
 import {
   CLEAR_TOKEN_HISTORY,
   CLEAR_USER_TOKENS,
@@ -54,6 +56,10 @@ export const loadUserTokens = (account: string): AppThunk => async (
     };
     dispatch(action);
   } catch (e) {
+    if (e.message && e.message.includes('timeout')) {
+      //TODO bellow dispatch showModal as error.
+      dispatch(showModal('toast.tokens_timeout', MessageModalType.ERROR));
+    }
     console.log('loadUserTokens Error: ', e);
   }
 };
