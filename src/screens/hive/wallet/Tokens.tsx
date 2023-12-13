@@ -123,14 +123,14 @@ const Tokens = ({
               }}
             />
           )}
+          ListEmptyComponent={
+            <View style={{flex: 1, justifyContent: 'center'}}>
+              <Text style={styles.no_tokens}>
+                {translate('wallet.no_tokens')}
+              </Text>
+            </View>
+          }
         />
-      );
-    } else if (
-      !userTokens.loading &&
-      filteredUserTokenBalanceList.length === 0
-    ) {
-      return (
-        <Text style={styles.no_tokens}>{translate('wallet.no_tokens')}</Text>
       );
     }
   };

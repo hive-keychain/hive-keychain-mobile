@@ -46,7 +46,7 @@ const DrawerContentItem = (props: Props) => {
             style={({pressed}) =>
               pressed ? props.additionalPressedStyle : null
             }
-            onPress={() => props.onPress()}>
+            onPress={props.onPress}>
             <Text style={[styles.labelStyle]}>
               {translate(props.labelTranslationKey)}
             </Text>

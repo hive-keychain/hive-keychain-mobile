@@ -12,7 +12,7 @@ import {translate} from 'utils/localize';
 import {MainDrawerStackParam} from './MainDrawer.types';
 import AccountManagementStack from './mainDrawerStacks/AccountManagement';
 import Accounts from './mainDrawerStacks/Accounts';
-import AddAccountStack from './mainDrawerStacks/AddAccount';
+import AddAccount from './mainDrawerStacks/AddAccount';
 import CreateAccount from './mainDrawerStacks/CreateAccount';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 import Operation from './mainDrawerStacks/Operation';
@@ -72,7 +72,7 @@ export default () => {
         name="AccountManagementScreen"
         component={AccountManagementStack}
       />
-      <Drawer.Screen name="AddAccountStack" component={AddAccountStack} />
+      <Drawer.Screen name="AddAccountStack" component={AddAccount} />
       <Drawer.Screen name="CreateAccountScreen" component={CreateAccount} />
       <Drawer.Screen name="Tokens" component={Tokens} />
       <Drawer.Screen name="TokensHistory" component={TokensHistory} />
