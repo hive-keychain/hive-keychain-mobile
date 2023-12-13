@@ -298,7 +298,6 @@ const Main = ({
                             if (toggled === item._id) setToggled(null);
                             else setToggled(item._id);
                           }}
-                          using_new_ui
                         />
                       )}
                     />

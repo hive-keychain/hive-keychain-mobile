@@ -1,6 +1,5 @@
 import {Currency, Token} from 'actions/interfaces';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
-import DelegationsList from 'components/operations/DelegationsList';
 import IncomingOutGoingTokenDelegations from 'components/operations/IncomingOutGoingTokenDelegations';
 import RoundButton from 'components/operations/OperationsButtons';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
@@ -11,10 +10,8 @@ import React from 'react';
 import {
   Linking,
   ScaledSize,
-  StyleProp,
   StyleSheet,
   Text,
-  TextStyle,
   TouchableOpacity,
   View,
   useWindowDimensions,
@@ -29,7 +26,7 @@ import {
   getFontSizeSmallDevices,
   title_secondary_body_3,
 } from 'src/styles/typography';
-import {formatBalance, signedNumber} from 'utils/format';
+import {formatBalance} from 'utils/format';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import Icon from './Icon';
@@ -40,20 +37,12 @@ type Props = {
   currency: string;
   value: number;
   totalValue: number;
-  secondaryCurrency?: string;
-  secondaryValue?: number;
   color: string;
   price?: Currency;
-  incoming?: number;
-  outgoing?: number;
   buttons?: JSX.Element[];
-  amountStyle?: StyleProp<TextStyle>;
-  bottomLeft?: JSX.Element;
   toggled: boolean;
   setToggle: () => void;
   onHandleGoToTokenHistory: () => void;
-  //TODO fixed after refactoring UI
-  using_new_ui?: boolean;
   renderButtonOptions?: boolean;
   theme: Theme;
   tokenInfo?: Token;
@@ -68,15 +57,8 @@ const TokenDisplay = ({
   buttons,
   color,
   price,
-  incoming,
-  outgoing,
-  amountStyle,
-  secondaryCurrency,
-  secondaryValue,
-  bottomLeft,
   toggled,
   setToggle,
-  using_new_ui,
   renderButtonOptions,
   theme,
   tokenInfo,
@@ -185,8 +167,7 @@ const TokenDisplay = ({
       } as DelegateTokenOperationProps,
     });
 
-  //TODO bellow cleanup unused
-  return using_new_ui ? (
+  return (
     <TouchableOpacity onPress={() => setToggle()} style={styles.container}>
       <View style={styles.flexRowBetween}>
         <View style={{flexDirection: 'row'}}>
@@ -329,99 +310,7 @@ const TokenDisplay = ({
         </View>
       )}
     </TouchableOpacity>
-  ) : (
-    //TODO OLD UI to remove
-    <TouchableOpacity style={styles.container} onPress={setToggle}>
-      <View style={styles.main}>
-        <View style={styles.left}>
-          <View style={styles.logo}>{logo}</View>
-          <Text style={styles.name}>{name}</Text>
-        </View>
-        <View>
-          <Text style={amountStyle || styles.amount}>
-            {value ? formatBalance(value) : 0}
-            <Text style={styles.currency}>{` ${currency}`}</Text>
-          </Text>
-          {secondaryCurrency ? (
-            <Text style={amountStyle || styles.amount}>
-              {secondaryValue ? formatBalance(secondaryValue) : 0}
-              <Text style={styles.currency}>{` ${secondaryCurrency}`}</Text>
-            </Text>
-          ) : null}
-        </View>
-      </View>
-      {toggled && (
-        <View style={[styles.row, styles.toggle]}>
-          {bottomLeft
-            ? bottomLeft
-            : renderLeftBottom(
-                styles,
-                price,
-                currency,
-                theme,
-                incoming,
-                outgoing,
-              )}
-          <View
-            style={[
-              styles.row,
-              currency !== 'HIVE' ? styles.halfLine : styles.sixtyPercentLine,
-              styles.rowReverse,
-            ]}>
-            {buttons}
-          </View>
-        </View>
-      )}
-    </TouchableOpacity>
   );
-  //END Old UI
-};
-
-const renderLeftBottom = (
-  styles: Styles,
-  price: Currency,
-  currency: string,
-  theme: Theme,
-  incoming?: number,
-  outgoing?: number,
-) => {
-  if (currency !== 'HP') {
-    return (
-      <View style={[styles.row, styles.flex]}>
-        <Text style={styles.price}>{`$ ${price.usd?.toFixed(2)}`}</Text>
-        <Text style={styles.change}>{`${signedNumber(
-          +price.usd_24h_change!.toFixed(2),
-        )}%`}</Text>
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.flex}>
-        <View style={styles.row}>
-          <TouchableOpacity
-            onPress={() => {
-              navigate('ModalScreen', {
-                modalContent: <DelegationsList theme={theme} type="incoming" />,
-              });
-            }}>
-            <Text style={styles.green}>{`+ ${formatBalance(
-              incoming!,
-            )} HP`}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.row}>
-          <TouchableOpacity
-            onPress={() => {
-              navigate('ModalScreen', {
-                modalContent: <DelegationsList theme={theme} type="outgoing" />,
-              });
-            }}>
-            <Text style={styles.red}>{`- ${formatBalance(outgoing!)} HP`}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
 };
 
 const getDimensionedStyles = ({
@@ -432,7 +321,6 @@ const getDimensionedStyles = ({
   theme,
 }: ScaledSize & {color: string; change: string; theme: Theme}) =>
   StyleSheet.create({
-    //TODO after refactoring, update, cleanup
     container: {
       display: 'flex',
       flexDirection: 'column',
@@ -444,43 +332,7 @@ const getDimensionedStyles = ({
       paddingHorizontal: width * 0.05,
       paddingVertical: width * 0.03,
     },
-    main: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    left: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      alignSelf: 'flex-start',
-    },
     logo: {justifyContent: 'center', alignItems: 'center'},
-    name: {
-      marginLeft: width * 0.03,
-      fontSize: 15,
-      color: '#7E8C9A',
-    },
-    amount: {fontWeight: 'bold', fontSize: 17, textAlign: 'right'},
-    currency: {color},
-    row: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    toggle: {
-      marginTop: width * 0.03,
-    },
-    price: {fontSize: 15, color: '#7E8C9A', fontWeight: 'bold'},
-    change: {color: +change > 0 ? '#3BB26E' : '#B9122F'},
-    green: {color: '#3BB26E'},
-    red: {color: '#B9122F'},
-    halfLine: {width: '50%'},
-    sixtyPercentLine: {width: '60%'},
-    rowReverse: {flexDirection: 'row-reverse'},
-    flex: {flex: 1, marginRight: 30},
     flexRowBetween: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -494,29 +346,17 @@ const getDimensionedStyles = ({
     containerMarginLeft: {
       marginLeft: 7,
     },
-    expandMoreButton: {
-      width: 28,
-      height: 20,
-      backgroundColor: theme === Theme.LIGHT ? '#F1F1F1' : null,
-      borderRadius: 11,
-      alignItems: 'center',
-      marginLeft: 7,
-      borderColor: theme === Theme.DARK ? '#364360' : null,
-      borderWidth: theme === Theme.DARK ? 1 : 0,
-    },
     textSymbol: {
       ...button_link_primary_medium,
       lineHeight: 22,
-      //TODO same as bellow todo
-      color: getColors(theme).tertiaryText,
+      color: getColors(theme).symbolText,
       fontSize: getFontSizeSmallDevices(
         height,
         button_link_primary_medium.fontSize,
       ),
     },
     textAmount: {
-      //TODO name this bellow as totalDisplayTextAmount
-      color: getColors(theme).quaternaryText,
+      color: getColors(theme).totalDisplayTextAmount,
       lineHeight: 17,
       ...body_primary_body_2,
       fontSize: getFontSizeSmallDevices(
@@ -533,10 +373,6 @@ const getDimensionedStyles = ({
       marginBottom: 9,
     },
     innerButtonContainer: {flexDirection: 'row', alignItems: 'center'},
-    iconButton: {
-      width: 12,
-      height: 12,
-    },
     iconButtonContainer: {
       alignItems: 'center',
       justifyContent: 'center',
@@ -545,13 +381,6 @@ const getDimensionedStyles = ({
       borderColor: BORDERWHITISH,
       padding: 4,
       marginRight: 3,
-    },
-    buttonContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderWidth: 1,
-      borderRadius: 6,
-      padding: 6,
     },
     squareButton: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
@@ -585,6 +414,5 @@ const getDimensionedStyles = ({
       transform: [{rotateY: '180deg'}],
     },
   });
-type Styles = ReturnType<typeof getDimensionedStyles>;
 
 export default TokenDisplay;

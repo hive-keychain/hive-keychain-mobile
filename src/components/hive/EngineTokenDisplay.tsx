@@ -7,7 +7,6 @@ import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
 import Image from 'react-native-fast-image';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
-import {getColors} from 'src/styles/colors';
 import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
@@ -20,8 +19,6 @@ type Props = {
   market: TokenMarket[];
   toggled: boolean;
   setToggle: () => void;
-  //TODO bellow change to fix after refactoring
-  using_new_ui?: boolean;
 };
 const EngineTokenDisplay = ({
   token,
@@ -29,7 +26,6 @@ const EngineTokenDisplay = ({
   market,
   toggled,
   setToggle,
-  using_new_ui,
   clearTokensFilters,
 }: Props & PropsFromRedux) => {
   const {theme} = useContext(ThemeContext);
@@ -80,7 +76,6 @@ const EngineTokenDisplay = ({
       name={tokenInfo.name}
       currency={token.symbol}
       color="black"
-      amountStyle={styles.amount}
       value={parseFloat(token.balance)}
       totalValue={getHiveEngineTokenValue(token, market)}
       toggled={toggled}
@@ -92,7 +87,6 @@ const EngineTokenDisplay = ({
         ),
       }}
       logo={logo}
-      using_new_ui={using_new_ui}
       renderButtonOptions={false}
       theme={theme}
       tokenInfo={tokenInfo}
@@ -103,27 +97,8 @@ const EngineTokenDisplay = ({
 };
 
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
-  //TODO bellow removed unused styles after refactoring
   StyleSheet.create({
     icon: {width: width / 15, height: width / 15},
-    amount: {fontWeight: 'bold', fontSize: 15},
-    squareButton: {
-      backgroundColor: getColors(theme).secondaryCardBgColor,
-      borderColor: getColors(theme).cardBorderColorContrast,
-      borderWidth: 1,
-      borderRadius: 11,
-      marginLeft: 7,
-      padding: 8,
-    },
-    smallPadding: {
-      padding: 3,
-    },
-    modalContainer: {
-      flex: 1,
-      backgroundColor: getColors(theme).primaryBackground,
-      borderWidth: 0,
-      borderRadius: 0,
-    },
   });
 
 const mapStateToProps = (state: RootState) => {

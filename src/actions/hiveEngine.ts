@@ -57,7 +57,6 @@ export const loadUserTokens = (account: string): AppThunk => async (
     dispatch(action);
   } catch (e) {
     if (e.message && e.message.includes('timeout')) {
-      //TODO bellow dispatch showModal as error.
       dispatch(showModal('toast.tokens_timeout', MessageModalType.ERROR));
     }
     console.log('loadUserTokens Error: ', e);

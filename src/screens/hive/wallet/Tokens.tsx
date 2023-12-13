@@ -1,7 +1,6 @@
 import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
-import HiveEngineAccountValue from 'components/hive/HiveEngineAccountValue';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -34,10 +33,7 @@ import {capitalizeSentence} from 'utils/format';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
 
-interface TokensProps {
-  //TODO remove this prop after refactoring UI & old code.
-  new_ui?: boolean;
-}
+interface TokensProps {}
 
 const Tokens = ({
   user,
@@ -48,7 +44,6 @@ const Tokens = ({
   userTokens,
   prices,
   tokensMarket,
-  new_ui,
 }: PropsFromRedux & TokensProps) => {
   const [
     filteredUserTokenBalanceList,
@@ -126,19 +121,21 @@ const Tokens = ({
                 if (toggled === item._id) setToggled(null);
                 else setToggled(item._id);
               }}
-              using_new_ui={new_ui}
             />
           )}
         />
       );
-    } else {
+    } else if (
+      !userTokens.loading &&
+      filteredUserTokenBalanceList.length === 0
+    ) {
       return (
         <Text style={styles.no_tokens}>{translate('wallet.no_tokens')}</Text>
       );
     }
   };
 
-  return new_ui ? (
+  return (
     <Background using_new_ui={true} theme={theme}>
       <View style={styles.containerTokenScreen}>
         <FocusAwareStatusBar />
@@ -182,25 +179,11 @@ const Tokens = ({
         {renderContent()}
       </View>
     </Background>
-  ) : (
-    //TODO OLD code
-    <View style={styles.container}>
-      <Separator />
-      <HiveEngineAccountValue
-        prices={prices}
-        tokens={userTokens.list}
-        tokensMarket={tokensMarket}
-      />
-      <Separator />
-      {renderContent()}
-    </View>
   );
-  //END OLD code
 };
 
 const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
   StyleSheet.create({
-    container: {flex: 1},
     flatlist: {paddingBottom: 20},
     no_tokens: {
       color: getColors(theme).secondaryText,
@@ -212,8 +195,6 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
         headlines_primary_headline_2.fontSize,
       ),
     },
-    //TODO cleanup after refactoring UI
-    //new UI related
     containerTokenScreen: {
       flex: 1,
     },

@@ -68,4 +68,6 @@ const getStyles = (theme: Theme) =>
       paddingHorizontal: 16,
       backgroundColor: getColors(theme).primaryBackground,
     },
+    marginLeft: {marginLeft: 16},
+    marginRight: {marginRight: 16},
   });

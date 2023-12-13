@@ -126,7 +126,7 @@ const getStyles = (theme: Theme, height: number) =>
       alignItems: 'center',
     },
     textAmount: {
-      color: getColors(theme).quaternaryText,
+      color: getColors(theme).totalDisplayTextAmount,
       lineHeight: 17,
       ...body_primary_body_2,
       fontSize: getFontSizeSmallDevices(height, body_primary_body_2.fontSize),
@@ -134,7 +134,7 @@ const getStyles = (theme: Theme, height: number) =>
     textSymbol: {
       ...button_link_primary_medium,
       lineHeight: 22,
-      color: getColors(theme).tertiaryText,
+      color: getColors(theme).symbolText,
       fontSize: getFontSizeSmallDevices(
         height,
         button_link_primary_medium.fontSize,

@@ -112,35 +112,6 @@ const BrowserHeader = ({
         }}>
         <FocusAwareStatusBar />
         <View style={styles.topBar}>
-          {/* //TODO quentin: please check this commented code bellow.
-          //  1. the design team wanted to show this in top but when using the floating bar
-          //  2. as you wanted not to show the floatinBar at all, I guess this header should not be. So let me know. */}
-          {/* <View
-            style={[
-              styles.flexRowBetween,
-              styles.paddingHorizontal,
-              styles.paddingBottom,
-            ]}>
-            <CustomIconButton
-              theme={theme}
-              lightThemeIcon={<KeychainForHiveLight />}
-              darkThemeIcon={<KeychainForHiveDark />}
-              onPress={goHome}
-            />
-            <TouchableOpacity
-              activeOpacity={1}
-              //TODO bellow ask quentin if needed at all
-              onPress={() => {}}
-              style={styles.tabsIndicator}>
-              <Text
-                style={[
-                  styles.textBase,
-                  theme === Theme.LIGHT ? styles.redColor : undefined,
-                ]}>
-                {activeTabs}
-              </Text>
-            </TouchableOpacity>
-          </View> */}
           <View style={[styles.flexRowCentered, styles.marginBottom]}>
             <CustomSearchBar
               theme={theme}

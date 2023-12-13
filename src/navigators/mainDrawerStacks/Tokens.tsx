@@ -22,7 +22,7 @@ export default () => {
     <Stack.Navigator>
       <Stack.Screen
         name="Tokens"
-        component={() => <Tokens new_ui />}
+        component={Tokens}
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTitleStyle: styles.headerTitle,
