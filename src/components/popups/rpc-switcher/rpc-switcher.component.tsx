@@ -1,7 +1,7 @@
 import {setDisplayChangeRpcPopup} from 'actions/rpc-switcher';
 import {setRpc} from 'actions/settings';
 import OperationButton from 'components/form/EllipticButton';
-import React, {useContext, useEffect} from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
@@ -17,12 +17,6 @@ const RpcSwitcherComponent = ({
   setDisplayChangeRpcPopup,
   setRpc,
 }: PropsFromRedux) => {
-  useEffect(() => {
-    if (rpcSwither) {
-      console.log({rpcSwither}); //TODO remove lines
-    }
-  }, [rpcSwither]);
-
   const onHandleSwitchRPC = () => {
     setDisplayChangeRpcPopup(false);
     setRpc(rpcSwither.rpc.uri);

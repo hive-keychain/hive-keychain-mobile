@@ -10,7 +10,6 @@ import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
 import {AddAccountFromWalletParamList} from './AddAccount.types';
 
 const AccountStack = createStackNavigator<AddAccountFromWalletParamList>();
@@ -22,7 +21,6 @@ export default () => {
     <AccountStack.Navigator>
       <AccountStack.Screen
         name="AddAccountFromWalletScreen"
-        //@ts-ignore : both headerRight and headerTransparent are needed here
         options={({navigation}) => ({
           headerLeft: () => (
             <Icon
@@ -39,7 +37,6 @@ export default () => {
               type={Info.KEYS}
             />
           ),
-
           title: translate('navigation.add_account'),
           headerTitleAlign: 'center',
           headerStyle: styles.header,
@@ -50,14 +47,14 @@ export default () => {
       />
       <AccountStack.Screen
         name="ScanQRScreen"
-        options={{
+        options={({navigation}) => ({
           title: '',
           headerLeft: () => (
             <Icon
               name="arrow_left"
               theme={theme}
               additionalContainerStyle={styles.marginLeft}
-              onClick={() => goBack()}
+              onClick={() => navigation.goBack()}
             />
           ),
           headerRight: () => {
@@ -72,12 +69,11 @@ export default () => {
           headerTitleAlign: 'center',
           headerStyle: styles.header,
           headerTitleStyle: styles.headerTitle,
-        }}
+        })}
         component={ScanQR}
       />
       <AccountStack.Screen
         name="AddAccountFromWalletScreenByAuth"
-        //@ts-ignore : both headerRight and headerTransparent are needed here
         options={({navigation}) => ({
           headerLeft: () => (
             <Icon

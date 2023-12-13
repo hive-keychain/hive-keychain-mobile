@@ -114,7 +114,8 @@
     "title_posting_key": "Posting",
     "title_memo_key": "Memo",
     "title_owner_key": "Owner",
-    "switch": "Switch"
+    "switch": "Switch",
+    "menu": "Menu"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},

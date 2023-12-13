@@ -47,7 +47,6 @@ let client = new Client(DEFAULT_RPC);
 let testnet = false;
 
 export const getDefault: () => Promise<string> = async () => {
-  console.log('calling getDefault RPC!!'); //TODO remove line
   try {
     return (await api.get('/hive/rpc')).data.rpc;
   } catch (e) {
@@ -56,7 +55,6 @@ export const getDefault: () => Promise<string> = async () => {
 };
 
 export const setRpc = async (rpcObj: Rpc | string) => {
-  console.log('calling setRpc RPC!!', {rpcObj}); //TODO remove line
   let rpc = typeof rpcObj === 'string' ? rpcObj : rpcObj.uri;
   testnet = typeof rpcObj === 'string' ? false : rpcObj.testnet || false;
   if (rpc === 'DEFAULT') {

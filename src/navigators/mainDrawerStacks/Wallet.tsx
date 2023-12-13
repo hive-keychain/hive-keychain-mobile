@@ -56,7 +56,6 @@ export default () => {
               theme={theme}
               onPress={() => {
                 const nav = navigation as DrawerNavigationHelpers;
-                // console.log({can: nav.canGoBack()}); //TODO remove line
                 if (nav.canGoBack()) {
                   nav.goBack();
                 } else {

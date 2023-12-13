@@ -36,7 +36,7 @@ export default ({
           theme={theme}
           onPress={() => props.navigation.closeDrawer()}
         />
-        <Text style={styles.textHeader}>Menu</Text>
+        <Text style={styles.textHeader}>{translate('common.menu')}</Text>
       </View>
       <View style={styles.middleContainer}>
         <View style={styles.flexRowCentered}>
@@ -61,7 +61,12 @@ export default ({
           </Text>
         </View>
         <View style={[styles.dropdownContainer]}>
-          <PickerItem theme={theme} pickerItemList={chainItemList} />
+          <PickerItem
+            disabled
+            theme={theme}
+            pickerItemList={chainItemList}
+            selected={chainItemList[1]}
+          />
         </View>
       </View>
     </View>

@@ -2,6 +2,8 @@ import {Page} from 'actions/interfaces';
 import React from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {button_link_primary_medium} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import HistoryItem from '../urlModal/HistoryItem';
 
@@ -12,6 +14,7 @@ type Props = {
 };
 
 export default ({history, updateTabUrl, theme}: Props) => {
+  const styles = getStyles(theme);
   return (
     <View style={styles.container}>
       {history.length ? (
@@ -36,12 +39,17 @@ export default ({history, updateTabUrl, theme}: Props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    marginTop: 30,
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  text: {alignSelf: 'center'},
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'column',
+      marginTop: 30,
+      flex: 1,
+      paddingHorizontal: 20,
+    },
+    text: {
+      alignSelf: 'center',
+      color: getColors(theme).secondaryText,
+      ...button_link_primary_medium,
+    },
+  });

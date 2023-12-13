@@ -18,6 +18,10 @@ import RNBootSplash from 'react-native-bootsplash';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
 import Modal from 'screens/Modal';
+import {
+  DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
+  DEFAULT_HE_RPC_NODE,
+} from 'screens/hive/settings/RpcNodes';
 import {FloatingBar} from 'screens/hive/wallet/FloatingBar';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
@@ -66,13 +70,12 @@ const App = ({
   }, [accounts, requestedOp]);
 
   useEffect(() => {
-    console.log('hiveApp', {rpc, hiveEngineRpc, accountHistoryAPIRpc}); //TODO remove line
-    console.log('first setRpc'); //TODO remove line
-    HiveEngineConfigUtils.setActiveApi(hiveEngineRpc);
-    HiveEngineConfigUtils.setActiveAccountHistoryApi(accountHistoryAPIRpc);
+    HiveEngineConfigUtils.setActiveApi(hiveEngineRpc ?? DEFAULT_HE_RPC_NODE);
+    HiveEngineConfigUtils.setActiveAccountHistoryApi(
+      accountHistoryAPIRpc ?? DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
+    );
     setRpc(rpc);
     if (getRPCUri(rpc) !== 'DEFAULT') {
-      console.log('first checkCurrentRPC'); //TODO remove line
       checkCurrentRPC(getRPCUri(rpc));
     }
   }, [rpc]);
@@ -84,7 +87,6 @@ const App = ({
     }
     setDisplayChangeRpcPopup(!rpcStatusOK);
     showFloatingBar(rpcStatusOK);
-    console.log({rpcStatusOK, mustShow: !rpcStatusOK});
   };
 
   const renderNavigator = () => {

@@ -20,7 +20,9 @@ const Accounts = () => {
       <DrawerContentItem
         labelTranslationKey={'navigation.add_account'}
         theme={theme}
-        onPress={() => navigate('AddAccountStack')}
+        onPress={() => {
+          navigate('AddAccountStack');
+        }}
         iconImage={<AddAccountIcon />}
         drawBottomLine={true}
       />

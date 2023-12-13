@@ -29,13 +29,8 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
         name="TokensHistory"
         component={() => <TokensHistoryComponent {...route.params} />}
         options={() => ({
-          headerStyle: {
-            backgroundColor: getColors(theme).primaryBackground,
-          },
-          headerTitleStyle: {
-            ...headlines_primary_headline_2,
-            color: getColors(theme).primaryText,
-          },
+          headerStyle: styles.header,
+          headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           title: `${currency} ${translate('common.history').toUpperCase()}`,
           headerRight: () => (
@@ -125,4 +120,13 @@ const getStyles = (theme: Theme) =>
       marginRight: 16,
     },
     marginLeft: {marginLeft: 16},
+    headerTitle: {
+      ...headlines_primary_headline_2,
+      color: getColors(theme).primaryText,
+    },
+    header: {
+      backgroundColor: getColors(theme).primaryBackground,
+      elevation: 0,
+      borderWidth: 0,
+    },
   });

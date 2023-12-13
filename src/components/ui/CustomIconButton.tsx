@@ -1,4 +1,3 @@
-//TODO finish it using code bellow + modify
 import React from 'react';
 import {StyleProp, TouchableOpacity, ViewStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';

@@ -2,11 +2,12 @@ import {addAccount} from 'actions/index';
 import {showModal} from 'actions/message';
 import TitleLogoLight from 'assets/new_UI/img_import_dark.svg';
 import TitleLogoDark from 'assets/new_UI/img_import_light.svg';
-import Button from 'components/form/EllipticButton';
+import OperationButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import CustomIconButton from 'components/ui/CustomIconButton';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {AddAccNavigationProps} from 'navigators/Signup.types';
@@ -16,7 +17,6 @@ import {
 } from 'navigators/mainDrawerStacks/AddAccount.types';
 import React, {useContext, useState} from 'react';
 import {
-  StatusBar,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -51,6 +51,7 @@ const AddAccountByKey = ({
   const [allowAddByAuth, setAllowAddByAuth] = useState(
     route.params ? route.params.wallet : false,
   );
+  const [loadingImportAccount, setLoadingImportAccount] = useState(false);
 
   useLockedPortrait(navigation);
 
@@ -61,6 +62,7 @@ const AddAccountByKey = ({
         SimpleToast.LONG,
       );
     try {
+      setLoadingImportAccount(true);
       const keys = await validateNewAccount(account, key);
 
       if (keys) {
@@ -77,6 +79,8 @@ const AddAccountByKey = ({
         undefined,
         true,
       );
+    } finally {
+      setLoadingImportAccount(false);
     }
   };
   const {theme} = useContext(ThemeContext);
@@ -86,13 +90,9 @@ const AddAccountByKey = ({
   return (
     <Background using_new_ui theme={theme}>
       <View style={styles.flex}>
-        <StatusBar
-          barStyle={getColors(theme).barStyle}
-          backgroundColor={getColors(theme).primaryBackground}
-        />
+        <FocusAwareStatusBar />
         <View style={styles.container}>
           <View style={styles.topContainer}>
-            <Separator height={30} />
             <CustomIconButton
               lightThemeIcon={<TitleLogoLight />}
               darkThemeIcon={<TitleLogoDark />}
@@ -141,11 +141,12 @@ const AddAccountByKey = ({
             />
           </View>
           <View style={styles.bottomContainer}>
-            <Button
+            <OperationButton
               title={translate('common.import')}
               onPress={onImportKeys}
               style={[getButtonStyle(theme).warningStyleButton]}
               additionalTextStyle={{...button_link_primary_medium}}
+              isLoading={loadingImportAccount}
             />
             <Separator height={height / 22} />
             {allowAddByAuth && (
@@ -168,10 +169,13 @@ const AddAccountByKey = ({
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
     flex: {flex: 1},
-    container: {alignItems: 'center', justifyContent: 'space-between', flex: 1},
+    container: {
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      height: '100%',
+    },
     text: {color: getColors(theme).secondaryText, ...body_primary_body_1},
     topContainer: {
-      flex: 1,
       width: '100%',
       alignItems: 'center',
       paddingHorizontal: 16,
@@ -186,11 +190,11 @@ const getStyles = (theme: Theme) =>
       opacity: 0.7,
     },
     paddingHorizontal: {
-      paddingHorizontal: 40,
+      paddingHorizontal: 20,
     },
     centeredText: {textAlign: 'center'},
     bottomContainer: {
-      marginBottom: 15,
+      marginBottom: 10,
       width: '100%',
       alignItems: 'center',
     },

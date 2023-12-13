@@ -39,6 +39,7 @@ type Props = {
   labelsToUppercase?: boolean;
   onSelectedItem?: (item: PickerItemInterface) => void;
   removeDropdownIcon?: boolean;
+  disabled?: boolean;
 };
 const PickerItem = ({
   selected,
@@ -51,6 +52,7 @@ const PickerItem = ({
   additionalSelectedItemContainerStyle,
   onSelectedItem,
   removeDropdownIcon,
+  disabled,
 }: Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
@@ -84,6 +86,7 @@ const PickerItem = ({
   return (
     <>
       <TouchableOpacity
+        disabled={disabled}
         activeOpacity={1}
         onPress={() => setExpandList(!expandList)}
         style={[styles.container, additionalContainerStyle]}>

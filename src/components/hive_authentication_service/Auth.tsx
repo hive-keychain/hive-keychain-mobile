@@ -7,7 +7,7 @@ import {ModalNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import HAS from 'utils/hiveAuthenticationService';
 import {HAS_AuthPayload} from 'utils/hiveAuthenticationService/payloads.types';
@@ -44,6 +44,7 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
     data.callback(data.has, data, true, sessionTime, () => {
       setSuccess(true);
       setTimeout(() => {
+        console.log('Going back from HASAuthRequest!!'); //TODO remove line
         navigation.goBack();
       }, 3000);
     });
