@@ -42,7 +42,7 @@ import {
   sanitizeUsername,
 } from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {resetStackAndNavigate} from 'utils/navigation';
 import {getTransferWarning} from 'utils/transferValidator';
 import Balance from './Balance';
 import OperationThemed from './OperationThemed';
@@ -135,7 +135,7 @@ const Transfer = ({
         );
       }
       loadAccount(user.account.name, true);
-      goBack();
+      resetStackAndNavigate('WALLET');
     } catch (e) {
       showModal(
         beautifyTransferError(e as any, {

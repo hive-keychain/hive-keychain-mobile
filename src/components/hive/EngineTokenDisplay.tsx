@@ -12,7 +12,6 @@ import {
 import Image from 'react-native-fast-image';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
-import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {RootState} from 'store';
 import {getBackgroundColorFromBackend} from 'utils/colors';
 import {Width} from 'utils/common.types';
@@ -132,7 +131,6 @@ const getDimensionedStyles = (
     iconContainerBase: {
       padding: 3,
       borderRadius: 50,
-      backgroundColor: PRIMARY_RED_COLOR,
     },
     iconContainerBaseWithBg: {
       backgroundColor: addBackground

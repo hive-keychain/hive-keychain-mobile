@@ -15,7 +15,7 @@
     "lint": "eslint .",
     "dep-clean": "rm -rf node_modules && npm install && npx jetify",
     "clean": "watchman watch-del-all &&npm run dep-clean && npm run android-clean && npm run start -- --reset-cache",
-    "generate-splash": "npx react-native generate-bootsplash src/assets/keychain_logo.png --background-color=000000 --logo-width=320",
+    "generate-splash": "npx react-native generate-bootsplash src/assets/new_UI/keychain-new-logo.png --background-color=000000 --logo-width=320",
     "postinstall": "patch-package",
     "show-on-error-notes": "echo 'Files needed:\nAndroid/gradle.properties'"
   },

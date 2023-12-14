@@ -13,7 +13,6 @@ import {
 import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
 import PickerItem, {PickerItemInterface} from 'components/form/PickerItem';
 import AccountValue from 'components/hive/AccountValue';
-import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
@@ -27,11 +26,10 @@ import UserProfilePicture from 'components/ui/UserProfilePicture';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import {
   AppState,
   AppStateStatus,
-  FlatList,
   NativeScrollEvent,
   NativeSyntheticEvent,
   StyleSheet,
@@ -42,7 +40,6 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {ConnectedProps, connect} from 'react-redux';
 import Primary from 'screens/hive/wallet/Primary';
 import {Theme, ThemeContext} from 'src/context/theme.context';
-import {TokenBalance} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
 import {
   BACKGROUNDITEMDARKISH,
@@ -53,9 +50,9 @@ import {
 import {RootState} from 'store';
 import {Width} from 'utils/common.types';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
-import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
+import EngineTokens from './EngineTokens';
 
 const Main = ({
   loadAccount,
@@ -69,25 +66,15 @@ const Main = ({
   navigation,
   hive_authentication_service,
   prices,
-  tokens,
-  userTokens,
-  tokensMarket,
   loadTokens,
   loadTokensMarket,
   loadUserTokens,
   showFloatingBar,
   setIsDrawerOpen,
   setisLoadingScreen,
-  isAppReady,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useContext(ThemeContext);
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
-  const [
-    orderedUserTokenBalanceList,
-    setOrderedUserTokenBalanceList,
-  ] = useState<TokenBalance[]>([]);
-  const [toggled, setToggled] = useState<number>(null);
-  const [loadingUserTokens, setLoadingUserTokens] = useState(true);
 
   useEffect(() => {
     loadTokens();
@@ -100,26 +87,15 @@ const Main = ({
   }, [isDrawerOpen]);
 
   useEffect(() => {
-    if (!userTokens.loading) {
-      const list = userTokens.list.sort((a, b) => {
-        return (
-          getHiveEngineTokenValue(b, tokensMarket) -
-          getHiveEngineTokenValue(a, tokensMarket)
-        );
-      });
-      setOrderedUserTokenBalanceList(list);
-      setLoadingUserTokens(false);
-    }
-  }, [userTokens]);
-
-  useEffect(() => {
-    if (isAppReady) {
-      setLoadingUserTokens(true);
-      loadUserTokens(user.name);
+    if (
+      properties.globals &&
+      Object.keys(properties.globals).length > 0 &&
+      user.name
+    ) {
       showFloatingBar(true);
       setisLoadingScreen(false);
     }
-  }, [isAppReady]);
+  }, [properties, user.name]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
@@ -196,7 +172,7 @@ const Main = ({
   return (
     <WalletPage>
       <>
-        {isAppReady ? (
+        {user.name && properties.globals ? (
           <>
             <ScrollView onScroll={onHandleScroll} horizontal={false}>
               <View style={styles.headerMenu}>
@@ -277,39 +253,7 @@ const Main = ({
                 <Separator height={10} />
                 <View style={styles.separatorContainer} />
                 <Separator height={10} />
-
-                {/* //TODO this needs improvement. It slows the app */}
-                {!loadingUserTokens && orderedUserTokenBalanceList.length > 0 && (
-                  <ScrollView
-                    horizontal={true}
-                    contentContainerStyle={{width: '100%', height: '100%'}}>
-                    <FlatList
-                      data={orderedUserTokenBalanceList}
-                      contentContainerStyle={styles.flatlist}
-                      keyExtractor={(item) => item._id.toString()}
-                      ItemSeparatorComponent={() => <Separator height={10} />}
-                      renderItem={({item}) => (
-                        <EngineTokenDisplay
-                          addBackground
-                          token={item}
-                          tokensList={tokens}
-                          market={tokensMarket}
-                          toggled={toggled === item._id}
-                          setToggle={() => {
-                            if (toggled === item._id) setToggled(null);
-                            else setToggled(item._id);
-                          }}
-                        />
-                      )}
-                    />
-                  </ScrollView>
-                )}
-                {loadingUserTokens && (
-                  <View style={{height: 40}}>
-                    <Loader size={'small'} animating />
-                  </View>
-                )}
-                {/* //END TODO this needs improvement. It slows the app */}
+                <EngineTokens />
               </View>
               <Survey navigation={navigation} />
               <WhatsNewComponent navigation={navigation} />
@@ -367,9 +311,6 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       backgroundColor: getColors(theme).separatorBgColor,
       marginBottom: 10,
     },
-    flatlist: {
-      paddingBottom: 20,
-    },
   });
 
 const connector = connect(
@@ -381,13 +322,6 @@ const connector = connect(
       lastAccount: state.lastAccount.name,
       hive_authentication_service: state.hive_authentication_service,
       prices: state.currencyPrices,
-      tokens: state.tokens,
-      userTokens: state.userTokens,
-      tokensMarket: state.tokensMarket,
-      isAppReady:
-        state.properties.globals &&
-        Object.keys(state.properties.globals).length > 0 &&
-        Object.keys(state.activeAccount.account).length > 0,
     };
   },
   {

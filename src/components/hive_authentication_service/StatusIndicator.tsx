@@ -9,9 +9,6 @@ import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
 
-//TODO fix styles & usability of this
-//TODO: add functionality to the 'clear all buttons' as "It deletes all hiveAuth sessions"
-//TODO: Use all connection statuses. This will be useful when different servers work with Hive Auth.
 export enum ConnectionStatus {
   VOID,
   DISCONNECTED,
@@ -30,7 +27,7 @@ const StatusIndicator = ({
   additionalContainerStyle,
 }: PropsFromRedux & Props) => {
   let status = ConnectionStatus.VOID;
-  console.log({instancesL: has.instances.length}); //TODO remove line
+
   if (has.instances.length) {
     const connected = has.instances.filter((e) => e.init && e.connected).length;
     if (connected === 0) {
@@ -40,7 +37,6 @@ const StatusIndicator = ({
     } else {
       status = ConnectionStatus.PARTIALLY_CONNECTED;
     }
-    console.log({status}); //TODO remove line
   }
 
   const styles = getStyles(status, theme);
