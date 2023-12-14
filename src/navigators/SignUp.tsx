@@ -33,16 +33,7 @@ export default () => {
       <Stack.Screen
         name="AddAccountByKeyScreen"
         options={{
-          headerBackTitle: ' ',
-          title: translate('navigation.add_account'),
-          headerRight: () => (
-            <MoreInformation
-              type={Info.KEYS}
-              additionalButtonStyle={styles.marginRight}
-            />
-          ),
-          headerTintColor: 'white',
-          headerTransparent: true,
+          headerShown: false,
         }}
         component={AddAccountByKey}
       />

@@ -25,6 +25,7 @@ import {
 import {FloatingBar} from 'screens/hive/wallet/FloatingBar';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
+import {downloadColors} from 'utils/colors';
 import {DEFAULT_RPC, setRpc} from 'utils/hive';
 import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 import {processQRCodeOp} from 'utils/hive-uri';
@@ -52,6 +53,14 @@ const App = ({
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
   const [currentRouteName, setCurrentRouteName] = useState('');
+
+  useEffect(() => {
+    initColorAPI();
+  }, []);
+
+  const initColorAPI = async () => {
+    await downloadColors();
+  };
 
   useEffect(() => {
     setupLinking();

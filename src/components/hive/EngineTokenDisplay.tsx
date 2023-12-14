@@ -3,11 +3,18 @@ import {clearTokensFilters} from 'actions/tokensFilters';
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
 import React, {useContext, useState} from 'react';
-import {Image as Img, StyleSheet, useWindowDimensions} from 'react-native';
+import {
+  Image as Img,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Image from 'react-native-fast-image';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {RootState} from 'store';
+import {getBackgroundColorFromBackend} from 'utils/colors';
 import {Width} from 'utils/common.types';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {navigate} from 'utils/navigation';
@@ -19,6 +26,7 @@ type Props = {
   market: TokenMarket[];
   toggled: boolean;
   setToggle: () => void;
+  addBackground?: boolean;
 };
 const EngineTokenDisplay = ({
   token,
@@ -27,9 +35,15 @@ const EngineTokenDisplay = ({
   toggled,
   setToggle,
   clearTokensFilters,
+  addBackground,
 }: Props & PropsFromRedux) => {
   const {theme} = useContext(ThemeContext);
-  const styles = getDimensionedStyles(useWindowDimensions(), theme);
+  const styles = getDimensionedStyles(
+    useWindowDimensions(),
+    theme,
+    token.symbol,
+    addBackground,
+  );
   const [hasError, setHasError] = useState(false);
   const tokenInfo = tokensList.find((t) => t.symbol === token.symbol);
   const tokenMarket = market.find((t) => t.symbol === token.symbol);
@@ -41,7 +55,7 @@ const EngineTokenDisplay = ({
 
   const logo = hasError ? (
     <Image
-      style={styles.icon}
+      style={styles.iconBase}
       source={{
         uri: Img.resolveAssetSource(HiveEngine).uri,
       }}
@@ -51,7 +65,7 @@ const EngineTokenDisplay = ({
     />
   ) : (
     <Image
-      style={styles.icon}
+      style={[styles.iconBase, styles.iconBase]}
       source={{
         uri: metadata.icon,
       }}
@@ -86,7 +100,15 @@ const EngineTokenDisplay = ({
           tokenMarket ? tokenMarket.priceChangePercent : '0',
         ),
       }}
-      logo={logo}
+      logo={
+        <View
+          style={[
+            styles.iconContainerBase,
+            !hasError ? styles.iconContainerBaseWithBg : undefined,
+          ]}>
+          {logo}
+        </View>
+      }
       renderButtonOptions={false}
       theme={theme}
       tokenInfo={tokenInfo}
@@ -96,9 +118,27 @@ const EngineTokenDisplay = ({
   );
 };
 
-const getDimensionedStyles = ({width}: Width, theme: Theme) =>
+const getDimensionedStyles = (
+  {width}: Width,
+  theme: Theme,
+  symbol: string,
+  addBackground?: boolean,
+) =>
   StyleSheet.create({
-    icon: {width: width / 15, height: width / 15},
+    iconBase: {
+      width: width / 16,
+      height: width / 16,
+    },
+    iconContainerBase: {
+      padding: 3,
+      borderRadius: 50,
+      backgroundColor: PRIMARY_RED_COLOR,
+    },
+    iconContainerBaseWithBg: {
+      backgroundColor: addBackground
+        ? getBackgroundColorFromBackend(symbol)
+        : undefined,
+    },
   });
 
 const mapStateToProps = (state: RootState) => {

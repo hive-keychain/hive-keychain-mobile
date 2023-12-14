@@ -290,6 +290,7 @@ const Main = ({
                       ItemSeparatorComponent={() => <Separator height={10} />}
                       renderItem={({item}) => (
                         <EngineTokenDisplay
+                          addBackground
                           token={item}
                           tokensList={tokens}
                           market={tokensMarket}
