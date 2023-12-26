@@ -17,6 +17,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
@@ -93,7 +94,7 @@ const PendingSavingsWithdrawalPageComponent = ({
             item.complete,
           ).format('L')}`}</Text>
           <TouchableOpacity onPress={cancelSavingWithDraw}>
-            <Icon name="remove" theme={theme} />
+            <Icon name={Icons.REMOVE} theme={theme} />
           </TouchableOpacity>
         </View>
         {toCancelSaving && toCancelSaving.id === item.id && (

@@ -7,6 +7,7 @@ import AddAccountByAuth from 'screens/hive/addAccounts/AddAccountByAuth';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
@@ -24,7 +25,7 @@ export default () => {
         options={({navigation}) => ({
           headerLeft: () => (
             <Icon
-              name="arrow_left"
+              name={Icons.ARROW_LEFT}
               theme={theme}
               additionalContainerStyle={styles.marginLeft}
               onClick={() => navigation.goBack()}
@@ -51,7 +52,7 @@ export default () => {
           title: '',
           headerLeft: () => (
             <Icon
-              name="arrow_left"
+              name={Icons.ARROW_LEFT}
               theme={theme}
               additionalContainerStyle={styles.marginLeft}
               onClick={() => navigation.goBack()}
@@ -77,7 +78,7 @@ export default () => {
         options={({navigation}) => ({
           headerLeft: () => (
             <Icon
-              name="arrow_left"
+              name={Icons.ARROW_LEFT}
               theme={theme}
               additionalContainerStyle={styles.marginLeft}
               onClick={() => navigation.goBack()}
@@ -85,7 +86,7 @@ export default () => {
           ),
           headerRight: () => (
             <Icon
-              name="close_circle"
+              name={Icons.CLOSE_CIRCLE}
               theme={theme}
               onClick={() => navigation.navigate('WALLET')}
               additionalContainerStyle={[styles.marginRight]}

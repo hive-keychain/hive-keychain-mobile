@@ -26,6 +26,7 @@ import {Text} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
@@ -128,7 +129,7 @@ const AddAccountByKey = ({
               inputStyle={[styles.text, styles.smallerText]}
               rightIcon={
                 <Icon
-                  name="scanner"
+                  name={Icons.SCANNER}
                   theme={theme}
                   onClick={() => {
                     (navigation as AddAccFromWalletNavigation).navigate(

@@ -9,6 +9,7 @@ import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {button_link_primary_medium} from 'src/styles/typography';
@@ -152,7 +153,7 @@ const RemoveKey = ({
   forgetKey: () => void;
   theme: Theme;
 }) => {
-  return <Icon name="remove" theme={theme} onClick={forgetKey} />;
+  return <Icon name={Icons.REMOVE} theme={theme} onClick={forgetKey} />;
 };
 
 const CopyKey = ({
@@ -180,7 +181,11 @@ const CopyKey = ({
 type ViewKeyProps = {toggle: () => void; isPKShown: boolean; theme: Theme};
 const ViewKey = ({toggle, isPKShown, theme}: ViewKeyProps) => {
   return (
-    <Icon name={isPKShown ? 'not_see' : 'see'} theme={theme} onClick={toggle} />
+    <Icon
+      name={isPKShown ? Icons.NOT_SEE : Icons.SEE}
+      theme={theme}
+      onClick={toggle}
+    />
   );
 };
 

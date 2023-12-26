@@ -12,6 +12,7 @@ import CustomIconButton from 'components/ui/CustomIconButton';
 import SquareButton from 'components/ui/SquareButton';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
@@ -36,7 +37,7 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
       icon={
         <Icon
           theme={theme}
-          name="transfer"
+          name={Icons.TRANSFER}
           additionalContainerStyle={styles.roundedIcon}
           {...styles.icon}
         />
@@ -79,7 +80,7 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
       icon={
         <Icon
           theme={theme}
-          name="convert"
+          name={Icons.CONVERT}
           additionalContainerStyle={styles.roundedIcon}
           {...styles.icon}
         />

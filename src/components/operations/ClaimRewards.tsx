@@ -6,6 +6,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {RootState} from 'store';
 import {toHP} from 'utils/format';
@@ -74,7 +75,7 @@ const ClaimRewards = ({
             );
           }
         }}>
-        <Icon theme={theme} name="interest" />
+        <Icon theme={theme} name={Icons.INTEREST} />
       </TouchableOpacity>
     );
   else return null;

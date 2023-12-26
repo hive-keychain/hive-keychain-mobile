@@ -8,7 +8,6 @@ import {forgetRequestedOperation} from 'actions/index';
 import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import Bridge from 'components/bridge';
 import {MessageModal} from 'components/modals/MessageModal';
-import RpcSwitcherComponent from 'components/popups/rpc-switcher/rpc-switcher.component';
 import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
@@ -99,6 +98,7 @@ const App = ({
   };
 
   const renderNavigator = () => {
+    console.log('renderNavigator, HiveApp'); //TODO remove line
     if (!hasAccounts) {
       // No accounts, sign up process
       return <SignUpStack />;
@@ -148,7 +148,8 @@ const App = ({
       {renderRootNavigator()}
       <MessageModal capitalize />
       <FloatingBar currentRouteName={currentRouteName} />
-      <RpcSwitcherComponent />
+      {/* TODO commented for now while fixing loading/render times on app */}
+      {/* <RpcSwitcherComponent /> */}
       <Bridge />
     </NavigationContainer>
   );

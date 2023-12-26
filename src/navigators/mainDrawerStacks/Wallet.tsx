@@ -12,14 +12,16 @@ import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import Wallet from 'screens/hive/wallet/Main';
 import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
+import {resetStackAndNavigate} from 'utils/navigation';
 
 const Stack = createStackNavigator();
 
-export default () => {
+export default ({route, navigation}: {route: any; navigation: any}) => {
   const {theme} = useContext(ThemeContext);
   const {width} = useWindowDimensions();
   const styles = getStyles({width}, theme);
@@ -72,9 +74,6 @@ export default () => {
       />
       <Stack.Screen
         name="WalletHistoryScreen"
-        component={({route}) => {
-          return <WalletHistoryComponent {...route.params} />;
-        }}
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTitleStyle: styles.headerTitle,
@@ -83,7 +82,7 @@ export default () => {
           cardStyle: styles.cardStyle,
           headerRight: () => (
             <Icon
-              name={'settings-4'}
+              name={Icons.SETTINGS_4}
               theme={theme}
               onClick={() =>
                 navigation.navigate('ModalScreen', {
@@ -102,11 +101,11 @@ export default () => {
                   renderButtonElement: (
                     <View style={styles.overlayButtonElement}>
                       <Icon
-                        name="settings-4"
+                        name={Icons.SETTINGS_4}
                         theme={theme}
                         additionalContainerStyle={styles.iconButton}
                       />
-                      <Icon theme={theme} name="polygon_down" />
+                      <Icon theme={theme} name={Icons.POLYGON_DOWN} />
                     </View>
                   ),
                 })
@@ -117,12 +116,14 @@ export default () => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => resetStackAndNavigate('WALLET')}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
+        component={WalletHistoryComponent}
+        initialParams={{...route.params}}
       />
     </Stack.Navigator>
   );

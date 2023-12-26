@@ -16,6 +16,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
@@ -108,7 +109,7 @@ const UrlModal = ({
         />
         {url.length ? (
           <Icon
-            name="share"
+            name={Icons.SHARE}
             theme={theme}
             width={16}
             height={16}
@@ -118,7 +119,7 @@ const UrlModal = ({
         ) : null}
         {url.length ? (
           <Icon
-            name="copy"
+            name={Icons.COPY}
             theme={theme}
             width={16}
             height={16}

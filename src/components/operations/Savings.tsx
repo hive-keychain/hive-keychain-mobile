@@ -19,6 +19,7 @@ import {
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
@@ -79,7 +80,7 @@ const Convert = ({
       icon: (
         <Icon
           theme={theme}
-          name="send_square"
+          name={Icons.SEND_SQUARE}
           additionalContainerStyle={getRotateStyle('180')}
         />
       ),
@@ -87,7 +88,7 @@ const Convert = ({
       label: capitalize(SavingsOperations.deposit),
     },
     {
-      icon: <Icon theme={theme} name="send_square" />,
+      icon: <Icon theme={theme} name={Icons.SEND_SQUARE} />,
       value: SavingsOperations.withdraw,
       label: capitalize(SavingsOperations.withdraw),
     },
@@ -231,7 +232,7 @@ const Convert = ({
               </View>
               <Icon
                 theme={theme}
-                name="expand_thin"
+                name={Icons.EXPAND_THIN}
                 additionalContainerStyle={getRotateStyle('90')}
               />
             </TouchableOpacity>
@@ -269,7 +270,7 @@ const Convert = ({
           <OperationInput
             labelInput={translate('common.username')}
             placeholder={translate('common.username')}
-            leftIcon={<Icon theme={theme} name="at" />}
+            leftIcon={<Icon theme={theme} name={Icons.AT} />}
             inputStyle={[styles.textBase, styles.paddingLeft]}
             value={to}
             onChangeText={(e) => {

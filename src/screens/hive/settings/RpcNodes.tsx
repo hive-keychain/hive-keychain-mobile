@@ -18,6 +18,7 @@ import {CheckBox} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {
   DefaultAccountHistoryApis,
   DefaultHiveEngineRpcs,
@@ -206,7 +207,7 @@ const RpcNodes = ({
           <Text style={styles.text}>
             {translate('settings.settings.add_rpc_title')}
           </Text>
-          <Icon theme={theme} name="ram" onClick={handleAddCustomRPC} />
+          <Icon theme={theme} name={Icons.RAM} onClick={handleAddCustomRPC} />
         </View>
         <Separator
           drawLine

@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
@@ -96,7 +97,7 @@ const CustomDropdown = ({
         style={[getCardStyle(theme).defaultCardItem, styles.dropdownContainer]}>
         <Text style={styles.text}>{selected}</Text>
         <Icon
-          name="expand_thin"
+          name={Icons.EXPAND_THIN}
           theme={theme}
           onClick={() => setIsListExpanded(!isListExpanded)}
           additionalContainerStyle={
@@ -137,7 +138,7 @@ const CustomDropdown = ({
                   {item.removable && (
                     <Icon
                       theme={theme}
-                      name="remove"
+                      name={Icons.REMOVE}
                       onClick={() => onRemove(item.value)}
                     />
                   )}

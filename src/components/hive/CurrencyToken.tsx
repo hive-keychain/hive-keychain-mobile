@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_2,
@@ -84,7 +85,7 @@ const CurrencyToken = ({
           {isExpanded && (
             <Icon
               key={`show-token-history-${currencyName}`}
-              name={'back_time'}
+              name={Icons.BACK_TIME}
               onClick={onHandleGoToWalletHistory}
               additionalContainerStyle={styles.squareButton}
               theme={theme}

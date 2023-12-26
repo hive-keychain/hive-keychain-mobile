@@ -9,6 +9,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {
   RCDelegationValue,
   RcDelegation,
@@ -144,7 +145,7 @@ const IncomingOutgoingRcDelegationItem = ({
     <View style={[getCardStyle(theme, 28).defaultCardItem]}>
       <View style={styles.container}>
         <View style={styles.row}>
-          <Icon theme={theme} name="at" {...styles.icon} />
+          <Icon theme={theme} name={Icons.AT} {...styles.icon} />
           <Text style={styles.textBase}> {`${item.delegatee}`}</Text>
         </View>
         <View style={styles.rightContainer}>
@@ -158,7 +159,7 @@ const IncomingOutgoingRcDelegationItem = ({
           </View>
           <Icon
             theme={theme}
-            name="expand_thin"
+            name={Icons.EXPAND_THIN}
             additionalContainerStyle={[
               styles.logo,
               getRotateStyle(
@@ -186,7 +187,7 @@ const IncomingOutgoingRcDelegationItem = ({
               style={[styles.button, styles.marginRight]}
               onPress={() => setEditMode(true)}>
               <Icon
-                name="edit"
+                name={Icons.EDIT}
                 theme={theme}
                 additionalContainerStyle={styles.roundButton}
                 {...styles.icon}
@@ -197,7 +198,7 @@ const IncomingOutgoingRcDelegationItem = ({
               style={styles.button}
               onPress={() => setShowCancelConfirmationRCDelegation(true)}>
               <Icon
-                name="gift_delete"
+                name={Icons.GIFT_DELETE}
                 theme={theme}
                 additionalContainerStyle={styles.roundButton}
                 {...styles.icon}
@@ -294,13 +295,13 @@ const IncomingOutgoingRcDelegationItem = ({
                 {justifyContent: 'center'},
               ]}>
               <Icon
-                name="check"
+                name={Icons.CHECK}
                 theme={theme}
                 onClick={onRCDelegate}
                 {...styles.biggerIcon}
               />
               <Icon
-                name="close_circle"
+                name={Icons.CLOSE_CIRCLE}
                 theme={theme}
                 additionalContainerStyle={styles.marginLeft}
                 onClick={() => setEditMode(false)}

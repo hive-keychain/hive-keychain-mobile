@@ -2,6 +2,7 @@ import Icon from 'components/hive/Icon';
 import React from 'react';
 import {Linking, StyleSheet, Text, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
@@ -35,7 +36,7 @@ const MyWitnessDataBlock = ({
         {urlOnTitle && (
           <Icon
             theme={theme}
-            name="external_link"
+            name={Icons.EXTERNAL_LINK}
             onClick={() => Linking.openURL(urlOnTitle)}
             {...styles.icon}
           />

@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
@@ -119,7 +120,7 @@ const DropdownSelector = ({
           {renderSelectedLabel(selectedItem)}
           <Icon
             theme={theme}
-            name="expand_thin"
+            name={Icons.EXPAND_THIN}
             {...styles.dropdownIcon}
             onClick={() => setIsExpanded(!isExpanded)}
             additionalContainerStyle={

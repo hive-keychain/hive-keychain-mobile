@@ -9,6 +9,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
@@ -59,7 +60,7 @@ const ItemCardExpandable = ({
             <View>
               {memo && memo.length ? (
                 <Icon
-                  name="expand_thin"
+                  name={Icons.EXPAND_THIN}
                   theme={theme}
                   additionalContainerStyle={[
                     toggle ? getRotateStyle('180') : getRotateStyle('0'),

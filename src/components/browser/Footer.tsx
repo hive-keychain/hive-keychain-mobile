@@ -12,6 +12,7 @@ import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {
   BACKGROUNDITEMDARKISH,
   HIVEICONBGCOLOR,
@@ -71,28 +72,28 @@ const Footer = ({
     <View style={styles.footer}>
       <Icon
         theme={theme}
-        name="arrow_left_browser"
+        name={Icons.ARROW_LEFT_BROWSER}
         {...styles.icon}
         color={canGoBack ? getColors(theme).icon : '#854343'}
         onClick={goBack}
       />
       <Icon
         theme={theme}
-        name="arrow_right_browser"
+        name={Icons.ARROW_RIGHT_BROWSER}
         {...styles.icon}
         color={canGoForward ? getColors(theme).icon : '#854343'}
         onClick={goForward}
       />
       <Icon
         theme={theme}
-        name="add_browser"
+        name={Icons.ADD_BROWSER}
         additionalContainerStyle={[styles.circleContainer]}
         onClick={addTab}
         {...styles.icon}
       />
       <Icon
         theme={theme}
-        name="rotate_right_browser"
+        name={Icons.ROTATE_RIGHT_BROWSER}
         onClick={reload}
         onLongPress={() => {
           clearCache();
@@ -114,7 +115,7 @@ const Footer = ({
       </TouchableOpacity>
       <Icon
         theme={theme}
-        name="wallet_add"
+        name={Icons.WALLET_ADD}
         {...styles.icon}
         onClick={() => resetStackAndNavigate('WALLET')}
       />

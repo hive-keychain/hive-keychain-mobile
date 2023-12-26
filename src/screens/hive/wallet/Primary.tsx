@@ -6,6 +6,7 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getHBDButtonList} from 'src/reference-data/hbdOperationButtonList';
 import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
 import {getHPButtonList} from 'src/reference-data/hpOperationButtonList';
@@ -73,7 +74,7 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
         currencyLogo={
           <Icon
             theme={theme}
-            name="hive_currency_logo"
+            name={Icons.HIVE_CURRENCY_LOGO}
             additionalContainerStyle={styles.hiveIconContainer}
             {...styles.icon}
           />
@@ -93,7 +94,7 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
         currencyLogo={
           <Icon
             theme={theme}
-            name="hbd_currency_logo"
+            name={Icons.HBD_CURRENCY_LOGO}
             additionalContainerStyle={[
               styles.hiveIconContainer,
               styles.hbdIconBgColor,

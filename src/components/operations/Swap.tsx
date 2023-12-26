@@ -18,6 +18,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {SwapConfig} from 'src/interfaces/swap-token.interface';
 import {Token} from 'src/interfaces/tokens.interface';
@@ -578,7 +579,7 @@ const Swap = ({
                 </Text>
                 <Icon
                   theme={theme}
-                  name="back_time"
+                  name={Icons.BACK_TIME}
                   additionalContainerStyle={[styles.squareButton]}
                   onClick={() => navigate('SwapHistory')}
                 />
@@ -640,7 +641,7 @@ const Swap = ({
               <Separator />
               <Icon
                 theme={theme}
-                name="repeat"
+                name={Icons.REPEAT}
                 onClick={swapStartAndEnd}
                 additionalContainerStyle={styles.autoWidthCentered}
               />
@@ -711,7 +712,7 @@ const Swap = ({
                 </Text>
                 <Icon
                   theme={theme}
-                  name="expand_thin"
+                  name={Icons.EXPAND_THIN}
                   {...styles.dropdownIcon}
                   additionalContainerStyle={
                     isAdvanceSettingOpen

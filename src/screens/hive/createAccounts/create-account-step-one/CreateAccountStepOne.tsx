@@ -17,6 +17,7 @@ import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
@@ -236,10 +237,10 @@ const CreateAccountStepOne = ({
               value={accountName}
               onChangeText={setAccountName}
               inputStyle={[styles.text, styles.smallerText]}
-              leftIcon={<Icon name="at" theme={theme} />}
+              leftIcon={<Icon name={Icons.AT} theme={theme} />}
               rightIcon={
                 isAvailableAccountName ? (
-                  <Icon name={'check'} theme={theme} />
+                  <Icon name={Icons.CHECK} theme={theme} />
                 ) : null
               }
             />

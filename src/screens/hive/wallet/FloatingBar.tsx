@@ -4,6 +4,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {body_primary_body_1} from 'src/styles/typography';
@@ -96,7 +97,7 @@ const Floating = ({
         <View style={[styles.itemContainer, getActiveStyle('ecosystem')]}>
           <Icon
             theme={theme}
-            name="wallet_add"
+            name={Icons.WALLET_ADD}
             color={getActiveIconColor('ecosystem')}
             {...styles.icon}
             onClick={() => onHandlePressButton('ecosystem')}
@@ -111,7 +112,7 @@ const Floating = ({
           <Icon
             theme={theme}
             color={getActiveIconColor('browser')}
-            name="global"
+            name={Icons.GLOBAL}
             {...styles.icon}
             onClick={() => onHandlePressButton('browser')}
           />
@@ -124,7 +125,7 @@ const Floating = ({
         <View style={[styles.itemContainer, getActiveStyle('scan_qr')]}>
           <Icon
             theme={theme}
-            name="scanner"
+            name={Icons.SCANNER}
             color={getActiveIconColor('scan_qr')}
             {...styles.icon}
             onClick={() => onHandlePressButton('scan_qr')}
@@ -139,7 +140,7 @@ const Floating = ({
           <Icon
             theme={theme}
             color={getActiveIconColor('swap_buy')}
-            name="swap"
+            name={Icons.SWAP}
             {...styles.icon}
             onClick={() => onHandlePressButton('swap_buy')}
           />

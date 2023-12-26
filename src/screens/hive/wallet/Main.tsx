@@ -40,6 +40,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {ConnectedProps, connect} from 'react-redux';
 import Primary from 'screens/hive/wallet/Primary';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {
   BACKGROUNDITEMDARKISH,
@@ -211,7 +212,7 @@ const Main = ({
                   percent={getVP(user.account) || 100}
                   IconBgcolor={OVERLAYICONBGCOLOR}
                   theme={theme}
-                  iconName="send_square"
+                  iconName={Icons.SEND_SQUARE}
                   bgColor={BACKGROUNDITEMDARKISH}
                   secondary={`$${
                     getVotingDollarsPerAccount(
@@ -223,7 +224,7 @@ const Main = ({
                   }`}
                 />
                 <PercentageDisplay
-                  iconName="speedometer"
+                  iconName={Icons.SPEEDOMETER}
                   bgColor={DARKER_RED_COLOR}
                   name={translate('wallet.rc')}
                   percent={user.rc.percentage || 100}

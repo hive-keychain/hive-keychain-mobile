@@ -5,6 +5,7 @@ import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useContext} from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -32,7 +33,7 @@ const SettingsMenu = () => {
             component: <Operations />,
           } as TemplateStackProps)
         }
-        iconImage={<Icon name="cpu" theme={theme} />}
+        iconImage={<Icon name={Icons.CPU} theme={theme} />}
         drawBottomLine={true}
       />
       <DrawerContentItem
@@ -44,7 +45,7 @@ const SettingsMenu = () => {
             component: <RpcNodes />,
           } as TemplateStackProps)
         }
-        iconImage={<Icon name="rpc" theme={theme} />}
+        iconImage={<Icon name={Icons.RPC} theme={theme} />}
         drawBottomLine={true}
       />
     </View>

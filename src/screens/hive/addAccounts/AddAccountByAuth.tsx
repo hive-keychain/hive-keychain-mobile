@@ -19,6 +19,7 @@ import {StatusBar, StyleSheet, useWindowDimensions, View} from 'react-native';
 import {Text} from 'react-native-elements';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
@@ -109,7 +110,7 @@ const AddAccountByAuth = ({
               inputStyle={[styles.text, styles.smallerText]}
               rightIcon={
                 <Icon
-                  name="scanner"
+                  name={Icons.SCANNER}
                   theme={theme}
                   onClick={() => {
                     (navigation as AddAccFromWalletNavigation).navigate(

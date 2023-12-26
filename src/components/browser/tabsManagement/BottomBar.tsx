@@ -4,6 +4,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {
   BACKGROUNDITEMDARKISH,
   HIVEICONBGCOLOR,
@@ -41,7 +42,7 @@ export default ({
       ) : null}
       <Icon2
         theme={theme}
-        name="add_browser"
+        name={Icons.ADD_BROWSER}
         additionalContainerStyle={[styles.circleContainer]}
         onClick={() => {
           onAddTab();

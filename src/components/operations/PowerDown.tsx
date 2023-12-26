@@ -11,6 +11,7 @@ import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {
@@ -195,7 +196,7 @@ const PowerDown = ({
                 </View>
                 <Icon
                   theme={theme}
-                  name="gift_delete"
+                  name={Icons.GIFT_DELETE}
                   onClick={onHandleCancelPowerDown}
                 />
               </View>

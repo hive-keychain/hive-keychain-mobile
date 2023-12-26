@@ -12,6 +12,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {RCDelegationValue} from 'src/interfaces/rc-delegation.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
@@ -250,7 +251,7 @@ const RCDelegation = ({
           <OperationInput
             labelInput={translate('common.username')}
             placeholder={translate('common.username')}
-            leftIcon={<Icon theme={theme} name="at" />}
+            leftIcon={<Icon theme={theme} name={Icons.AT} />}
             inputStyle={styles.textBase}
             value={to}
             onChangeText={(e) => {

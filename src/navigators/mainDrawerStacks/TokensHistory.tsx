@@ -12,6 +12,7 @@ import {
 import React, {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
@@ -35,7 +36,7 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
           title: `${currency} ${translate('common.history').toUpperCase()}`,
           headerRight: () => (
             <Icon
-              name={'settings-4'}
+              name={Icons.SETTINGS_4}
               theme={theme}
               onClick={() =>
                 navigation.navigate('ModalScreen', {
@@ -54,11 +55,11 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
                   renderButtonElement: (
                     <View style={styles.overlayButtonElement}>
                       <Icon
-                        name="settings-4"
+                        name={Icons.SETTINGS_4}
                         theme={theme}
                         additionalContainerStyle={styles.iconButton}
                       />
-                      <Icon theme={theme} name="polygon_down" />
+                      <Icon theme={theme} name={Icons.POLYGON_DOWN} />
                     </View>
                   ),
                 })

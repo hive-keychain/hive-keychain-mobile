@@ -14,6 +14,7 @@ import React, {useContext} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {RootState} from 'store';
 import DrawerContentItem from './drawer-content-item/DrawerContentItem';
@@ -56,35 +57,35 @@ const HeaderContent = (props: Props) => {
           labelTranslationKey="navigation.accounts"
           theme={theme}
           onPress={() => navigation.navigate('Accounts')}
-          iconImage={<Icon name={'accounts'} theme={theme} />}
+          iconImage={<Icon name={Icons.ACCOUNTS} theme={theme} />}
           drawBottomLine
         />
         <DrawerContentItem
           labelTranslationKey="navigation.settings"
           theme={theme}
           onPress={() => navigation.navigate('SettingsScreen')}
-          iconImage={<Icon name="candle" theme={theme} />}
+          iconImage={<Icon name={Icons.CANDLE} theme={theme} />}
           drawBottomLine
         />
         <DrawerContentItem
           labelTranslationKey="navigation.tokens"
           theme={theme}
           onPress={() => navigation.navigate('Tokens')}
-          iconImage={<Icon name={'tokens'} theme={theme} />}
+          iconImage={<Icon name={Icons.TOKENS} theme={theme} />}
           drawBottomLine
         />
         <DrawerContentItem
           labelTranslationKey="navigation.governance"
           theme={theme}
           onPress={() => navigation.navigate('Governance')}
-          iconImage={<Icon name={'governance'} theme={theme} />}
+          iconImage={<Icon name={Icons.GOVERNANCE} theme={theme} />}
           drawBottomLine
         />
         <DrawerContentItem
           labelTranslationKey="navigation.theme_setting"
           theme={theme}
           onPress={() => {}}
-          iconImage={<Icon name={'theme'} theme={theme} />}
+          iconImage={<Icon name={Icons.THEME} theme={theme} />}
           leftSideComponent={
             <CustomSwitch
               theme={theme}
@@ -105,7 +106,11 @@ const HeaderContent = (props: Props) => {
           theme={theme}
           onPress={() => navigation.navigate('ABOUT')}
           iconImage={
-            <Icon name={'info'} theme={theme} color={getColors(theme).icon} />
+            <Icon
+              name={Icons.INFO}
+              theme={theme}
+              color={getColors(theme).icon}
+            />
           }
           drawBottomLine
         />
@@ -116,7 +121,7 @@ const HeaderContent = (props: Props) => {
             lock();
             navigation.closeDrawer();
           }}
-          iconImage={<Icon name={'logout'} theme={theme} />}
+          iconImage={<Icon name={Icons.LOGOUT} theme={theme} />}
         />
         <DrawerItemList
           state={{

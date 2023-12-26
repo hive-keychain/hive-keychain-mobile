@@ -15,6 +15,7 @@ import FastImage from 'react-native-fast-image';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   fields_primary_text_2,
@@ -124,7 +125,7 @@ const ProposalItem = ({
         </View>
         <Icon
           theme={theme}
-          name="expand_thin"
+          name={Icons.EXPAND_THIN}
           {...styles.expander}
           additionalContainerStyle={
             isExpandablePanelOpened ? undefined : styles.rotate
@@ -166,7 +167,7 @@ const ProposalItem = ({
             <View style={styles.detail}>
               <Icon
                 theme={theme}
-                name="arrow_up"
+                name={Icons.ARROW_UP}
                 additionalContainerStyle={styles.detailIcon}
                 {...styles.iconBigger}
               />
@@ -177,7 +178,7 @@ const ProposalItem = ({
             <View style={styles.detail}>
               <Icon
                 theme={theme}
-                name="clock"
+                name={Icons.CLOCK}
                 additionalContainerStyle={styles.detailIcon}
                 {...styles.icon}
               />
@@ -195,7 +196,7 @@ const ProposalItem = ({
             <View style={styles.detail}>
               <Icon
                 theme={theme}
-                name="money"
+                name={Icons.MONEY}
                 additionalContainerStyle={styles.detailIcon}
                 {...styles.icon}
               />

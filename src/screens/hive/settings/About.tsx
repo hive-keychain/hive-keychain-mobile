@@ -12,6 +12,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import VersionInfo from 'react-native-version-info';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_3,
@@ -66,7 +67,7 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
               Discord Server
               <Icon
                 theme={theme}
-                name="external_link"
+                name={Icons.EXTERNAL_LINK}
                 {...styles.link}
                 onClick={() => {
                   Linking.openURL('https://discord.gg/3EM6YfRrGv');
@@ -75,7 +76,7 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
               or on our Github
               <Icon
                 theme={theme}
-                name="external_link"
+                name={Icons.EXTERNAL_LINK}
                 {...styles.link}
                 onClick={() => {
                   Linking.openURL(

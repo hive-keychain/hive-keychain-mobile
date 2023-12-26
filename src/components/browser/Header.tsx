@@ -17,6 +17,7 @@ import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {body_primary_body_1} from 'src/styles/typography';
@@ -117,12 +118,16 @@ const BrowserHeader = ({
               theme={theme}
               leftIcon={
                 activeUrl !== BrowserConfig.HOMEPAGE_URL ? (
-                  <Icon theme={theme} name="home_browser" onClick={goHome} />
+                  <Icon
+                    theme={theme}
+                    name={Icons.HOME_BROWSER}
+                    onClick={goHome}
+                  />
                 ) : null
               }
               rightIcon={
                 <Icon
-                  name={'search'}
+                  name={Icons.SEARCH}
                   theme={theme}
                   onClick={() => startSearch(true)}
                 />

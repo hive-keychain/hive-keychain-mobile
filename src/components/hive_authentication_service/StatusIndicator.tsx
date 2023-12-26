@@ -4,6 +4,7 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {RootState} from 'store';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {ModalComponent} from 'utils/modal.enum';
@@ -69,7 +70,7 @@ export const Indicator = ({
   const styles = getStyles(status, theme);
   return (
     <View style={styles.indicator}>
-      <Icon theme={theme} name="logo_has" width={15} height={15} />
+      <Icon theme={theme} name={Icons.LOGO_HAS} width={15} height={15} />
     </View>
   );
 };

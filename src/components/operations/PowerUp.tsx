@@ -9,6 +9,7 @@ import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -94,7 +95,7 @@ const PowerUp = ({
           <OperationInput
             labelInput={translate('common.username')}
             placeholder={translate('common.username')}
-            leftIcon={<Icon theme={theme} name="at" />}
+            leftIcon={<Icon theme={theme} name={Icons.AT} />}
             inputStyle={styles.text}
             value={to}
             onChangeText={(e) => {

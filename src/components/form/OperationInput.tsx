@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {InputProps} from 'react-native-elements';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {FontPoppinsName, body_primary_body_1} from 'src/styles/typography';
 import CustomInput from './CustomInput';
@@ -47,7 +48,7 @@ export default (props: InputProps & OperationInputProps) => {
         {props.infoIconAction && (
           <Icon
             theme={theme}
-            name="info"
+            name={Icons.INFO}
             onClick={props.infoIconAction}
             additionalContainerStyle={styles.marginLeft}
           />

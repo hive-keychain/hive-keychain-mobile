@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {DARKER_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   fields_primary_text_2,
@@ -15,7 +16,7 @@ type Props = {
   percent: number;
   name: string;
   theme: Theme;
-  iconName: string;
+  iconName: Icons;
   bgColor: string;
   secondary?: string;
 };

@@ -13,6 +13,7 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {DomainPreference} from 'reducers/preferences.types';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {body_primary_body_2, body_primary_body_3} from 'src/styles/typography';
@@ -111,7 +112,7 @@ const Operations = ({
             getCardStyle(theme).defaultCardItem,
             styles.searchBar,
           ]}
-          rightIcon={<Icon name="search" theme={theme} />}
+          rightIcon={<Icon name={Icons.SEARCH} theme={theme} />}
           value={searchValue}
           onChangeText={(text) => setSearchValue(text)}
         />

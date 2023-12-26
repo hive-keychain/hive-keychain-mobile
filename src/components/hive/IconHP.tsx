@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {HIVEICONBGCOLOR} from 'src/styles/colors';
 import Icon from './Icon';
 
@@ -25,7 +26,7 @@ const IconHP = ({
     <View style={[additionalContainerStyle]}>
       <Icon
         theme={theme}
-        name="power_icon"
+        name={Icons.POWER_ICON}
         additionalContainerStyle={[
           styles.powerIcon,
           additionalPowerContainerStyle,
@@ -33,7 +34,7 @@ const IconHP = ({
       />
       <Icon
         theme={theme}
-        name="hive_currency_logo"
+        name={Icons.HIVE_CURRENCY_LOGO}
         width={width}
         height={heigth}
         additionalContainerStyle={[

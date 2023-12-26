@@ -6,6 +6,7 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {body_primary_body_2} from 'src/styles/typography';
@@ -76,7 +77,7 @@ const AddCustomRPC = ({
             <Text style={styles.text}>
               {translate('settings.settings.add_rpc_title')}
             </Text>
-            <Icon theme={theme} name="ram" onClick={onHandleSave} />
+            <Icon theme={theme} name={Icons.RAM} onClick={onHandleSave} />
           </View>
           <Separator
             drawLine

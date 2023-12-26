@@ -17,6 +17,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
 import {BORDERWHITISH, getColors} from 'src/styles/colors';
 import {
@@ -192,7 +193,7 @@ const TokenDisplay = ({
           {toggled && (
             <Icon
               key={`show-token-history-${currency}`}
-              name={'back_time'}
+              name={Icons.BACK_TIME}
               onClick={onHandleGoToTokenHistory}
               additionalContainerStyle={[
                 styles.squareButton,
@@ -228,7 +229,7 @@ const TokenDisplay = ({
                 {tokenBalance.delegationsIn}
               </Text>
               <Icon
-                name="logout"
+                name={Icons.LOGOUT}
                 theme={theme}
                 width={15}
                 height={15}
@@ -247,7 +248,7 @@ const TokenDisplay = ({
                 {tokenBalance.delegationsOut}
               </Text>
               <Icon
-                name="logout"
+                name={Icons.LOGOUT}
                 theme={theme}
                 width={15}
                 height={15}
@@ -273,21 +274,31 @@ const TokenDisplay = ({
             )}
           <View style={styles.buttonsContainer}>
             {renderAsSquareButton(
-              <Icon theme={theme} name="transfer" width={10} height={10} />,
+              <Icon
+                theme={theme}
+                name={Icons.TRANSFER}
+                width={10}
+                height={10}
+              />,
               translate('common.send'),
               onTransfer,
             )}
             {tokenInfo &&
               tokenInfo.stakingEnabled &&
               renderAsSquareButton(
-                <Icon name="3d_cube" theme={theme} width={10} height={10} />,
+                <Icon
+                  name={Icons.THREE_D_CUBE}
+                  theme={theme}
+                  width={10}
+                  height={10}
+                />,
                 translate('wallet.operations.token_stake.title'),
                 onGoToStake,
               )}
             {tokenInfo.stakingEnabled &&
               renderAsSquareButton(
                 <Icon
-                  name="3d_cube_rotate"
+                  name={Icons.THREE_D_CUBE_ROTATE}
                   theme={theme}
                   width={12}
                   height={12}
@@ -298,7 +309,7 @@ const TokenDisplay = ({
             {tokenInfo.delegationEnabled &&
               renderAsSquareButton(
                 <Icon
-                  name="delegate_vesting_shares"
+                  name={Icons.DELEGATE_VESTING_SHARES}
                   theme={theme}
                   width={10}
                   height={10}

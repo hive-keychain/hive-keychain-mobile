@@ -12,6 +12,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {Width} from 'utils/common.types';
 import {navigate} from 'utils/navigation';
@@ -50,7 +51,7 @@ export default ({
   }
   return (
     <Icon
-      name="info"
+      name={Icons.INFO}
       theme={theme}
       additionalContainerStyle={additionalButtonStyle}
       width={25}

@@ -10,6 +10,7 @@ import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
@@ -112,7 +113,7 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
               <CustomInput
                 value={proxyUsername}
                 onChangeText={setProxyUsername}
-                leftIcon={<Icon name="at" theme={theme} />}
+                leftIcon={<Icon name={Icons.AT} theme={theme} />}
                 placeholder={translate('governance.proxy.placeholder')}
                 autoCapitalize="none"
                 containerStyle={[

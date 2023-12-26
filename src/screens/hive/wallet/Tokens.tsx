@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
 import {DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {
@@ -156,19 +157,19 @@ const Tokens = ({
         <View style={styles.searchBarContainer}>
           <CustomSearchBar
             theme={theme}
-            rightIcon={<Icon name={'search'} theme={theme} />}
+            rightIcon={<Icon name={Icons.SEARCH} theme={theme} />}
             value={search}
             onChangeText={(text) => setSearch(text)}
             disabled={userTokens.loading === true}
           />
           <Icon
-            name={'settings-2'}
+            name={Icons.SETTINGS_2}
             theme={theme}
             onClick={() => console.log('TODO handle click settings tokens')}
             additionalContainerStyle={styles.iconButton}
           />
           <Icon
-            name={'settings-4'}
+            name={Icons.SETTINGS_4}
             theme={theme}
             onClick={() =>
               console.log('TODO handle onPress other tokens settings')

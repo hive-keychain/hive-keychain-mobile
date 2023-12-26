@@ -10,6 +10,7 @@ import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
@@ -27,7 +28,7 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
-import BlockchainTransactionUtils from 'utils/tokens.utils';
+import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import Balance from './Balance';
 import OperationThemed from './OperationThemed';
 
@@ -154,7 +155,7 @@ const DelegateToken = ({
           <OperationInput
             labelInput={translate('common.username')}
             placeholder={translate('common.username').toUpperCase()}
-            leftIcon={<Icon name="at" theme={theme} />}
+            leftIcon={<Icon name={Icons.AT} theme={theme} />}
             autoCapitalize="none"
             value={to}
             onChangeText={setTo}

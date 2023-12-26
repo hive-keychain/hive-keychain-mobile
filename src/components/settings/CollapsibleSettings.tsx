@@ -4,6 +4,7 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {DomainPreference, PreferencePayload} from 'reducers/preferences.types';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
@@ -43,7 +44,7 @@ const CollapsibleSettings = ({
               {wordsFromCamelCase(e)}
             </Text>
             <Icon
-              name="remove"
+              name={Icons.REMOVE}
               theme={theme}
               onClick={() => {
                 removePreference(username, domainPref.domain, e);

@@ -2,6 +2,7 @@ import Icon from 'components/hive/Icon';
 import React from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {
   BACKGROUNDITEMDARKISH,
   DARKER_RED_COLOR,
@@ -59,7 +60,7 @@ const CurrentAvailableBalance = ({
         icon={
           <Icon
             theme={theme}
-            name="send_square"
+            name={Icons.SEND_SQUARE}
             color="#FFF"
             additionalContainerStyle={styles.icon}
           />
@@ -79,7 +80,7 @@ const CurrentAvailableBalance = ({
         icon={
           <Icon
             theme={theme}
-            name="empty_wallet"
+            name={Icons.EMPTY_WALLET}
             color="#FFF"
             additionalContainerStyle={styles.icon}
           />

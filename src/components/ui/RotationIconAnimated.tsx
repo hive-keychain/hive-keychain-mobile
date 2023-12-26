@@ -2,6 +2,7 @@ import Icon from 'components/hive/Icon';
 import React from 'react';
 import {Animated, Easing, StyleSheet} from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 
 interface Props {
   theme: Theme;
@@ -27,7 +28,11 @@ const RotationIconAnimated = ({theme, onPressIcon, animate}: Props) => {
 
   return (
     <Animated.View style={{transform: [{rotate: animate ? spin : '0deg'}]}}>
-      <Icon theme={theme} name="rotate_right_browser" onClick={onPressIcon} />
+      <Icon
+        theme={theme}
+        name={Icons.ROTATE_RIGHT_BROWSER}
+        onClick={onPressIcon}
+      />
     </Animated.View>
   );
 };

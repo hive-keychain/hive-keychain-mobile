@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {getSeparatorLineStyle} from 'src/styles/line';
 import {
@@ -102,7 +103,7 @@ const IncomingOutGoingTokenDelegationItem = ({
                   {tokenDelegation.quantity} {tokenDelegation.symbol}
                 </Text>
                 <Icon
-                  name="expand_thin"
+                  name={Icons.EXPAND_THIN}
                   theme={theme}
                   onClick={() => setIsExpanded(!isExpanded)}
                   additionalContainerStyle={[
@@ -122,12 +123,12 @@ const IncomingOutGoingTokenDelegationItem = ({
                 />
                 <View style={[styles.flexRow, styles.marginLeft]}>
                   <Icon
-                    name="check"
+                    name={Icons.CHECK}
                     theme={theme}
                     onClick={() => handleUpdateDelegateToken()}
                   />
                   <Icon
-                    name="close_circle"
+                    name={Icons.CLOSE_CIRCLE}
                     theme={theme}
                     additionalContainerStyle={styles.marginLeft}
                     onClick={() => setEditMode(false)}
@@ -147,7 +148,7 @@ const IncomingOutGoingTokenDelegationItem = ({
                   style={[styles.button, styles.marginRight]}
                   onPress={() => setEditMode(!editMode)}>
                   <Icon
-                    name="edit"
+                    name={Icons.EDIT}
                     theme={theme}
                     additionalContainerStyle={styles.roundButton}
                     {...styles.icon}
@@ -161,7 +162,7 @@ const IncomingOutGoingTokenDelegationItem = ({
                   style={styles.button}
                   onPress={() => handleCancelTokenDelegation()}>
                   <Icon
-                    name="gift_delete"
+                    name={Icons.GIFT_DELETE}
                     theme={theme}
                     additionalContainerStyle={styles.roundButton}
                     {...styles.icon}
@@ -178,7 +179,7 @@ const IncomingOutGoingTokenDelegationItem = ({
         <View style={styles.delegationItemContainer}>
           <View style={styles.flexRow}>
             <Icon
-              name="at"
+              name={Icons.AT}
               theme={theme}
               width={15}
               height={15}

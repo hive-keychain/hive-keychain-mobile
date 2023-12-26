@@ -21,6 +21,7 @@ import {
 } from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {title_primary_title_1} from 'src/styles/typography';
@@ -173,7 +174,7 @@ const Witness = ({
         style={[getCardStyle(theme).defaultCardItem, styles.witnessItem]}
         key={`${witness.name}_${witness.rank}_${witness.active_rank}`}>
         <View style={styles.nameContainer}>
-          <Icon name="at" theme={theme} {...styles.iconBigger} />
+          <Icon name={Icons.AT} theme={theme} {...styles.iconBigger} />
           <Text
             style={[
               styles.text,
@@ -188,7 +189,7 @@ const Witness = ({
           {witness.url && ValidUrl.isWebUri(witness.url) ? (
             <View>
               <Icon
-                name="open"
+                name={Icons.OPEN}
                 theme={theme}
                 onClick={() => Linking.openURL(witness.url)}
                 {...styles.iconBigger}
@@ -248,7 +249,7 @@ const Witness = ({
               }),
             )}
             <Icon
-              name="open"
+              name={Icons.OPEN}
               theme={theme}
               onClick={() =>
                 Linking.openURL('https://hive.arcange.eu/witnesses')
@@ -260,7 +261,7 @@ const Witness = ({
         <Separator />
         <CustomInput
           placeholder={translate('governance.witness.search_placeholder')}
-          rightIcon={<Icon theme={theme} name="search" />}
+          rightIcon={<Icon theme={theme} name={Icons.SEARCH} />}
           autoCapitalize="none"
           value={filterValue}
           onChangeText={setFilterValue}

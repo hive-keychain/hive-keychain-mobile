@@ -19,6 +19,7 @@ import {
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
@@ -172,7 +173,7 @@ const Convert = ({
               </View>
               <Icon
                 theme={theme}
-                name="expand_thin"
+                name={Icons.EXPAND_THIN}
                 additionalContainerStyle={getRotateStyle('90')}
               />
             </TouchableOpacity>

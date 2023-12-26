@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
@@ -38,16 +39,16 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
   const styles = getStyles(theme);
 
   const renderStepItemStatusIndicator = (status: StepHistoryStatus) => {
-    let iconName = 'back_time';
+    let iconName = Icons.BACK_TIME;
     switch (status) {
       case StepHistoryStatus.SUCCESS:
-        iconName = 'check';
+        iconName = Icons.CHECK;
         break;
       case StepHistoryStatus.PENDING:
-        iconName = 'back_time';
+        iconName = Icons.BACK_TIME;
         break;
       case StepHistoryStatus.FAILED:
-        iconName = 'close_circle';
+        iconName = Icons.CLOSE_CIRCLE;
         break;
       default:
         break;
@@ -56,22 +57,22 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
   };
 
   const renderSwapItemStatusIndicator = (status: SwapStatus) => {
-    let iconName = '';
+    let iconName = Icons.BACK_TIME;
     switch (status) {
       case SwapStatus.COMPLETED:
-        iconName = 'check';
+        iconName = Icons.CHECK;
         break;
       case SwapStatus.STARTED:
       case SwapStatus.PENDING:
-        iconName = 'back_time';
+        iconName = Icons.BACK_TIME;
         break;
       case SwapStatus.CANCELED_DUE_TO_ERROR:
       case SwapStatus.FUNDS_RETURNED:
       case SwapStatus.REFUNDED_SLIPPAGE:
-        iconName = 'close_circle';
+        iconName = Icons.CLOSE_CIRCLE;
         break;
       default:
-        iconName = 'back_time';
+        iconName = Icons.BACK_TIME;
         break;
     }
     return <Icon theme={theme} name={iconName} />;
@@ -115,19 +116,23 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
       style={[getCardStyle(theme).defaultCardItem, styles.container]}
       onPress={() => setIsExpanded(!isExpanded)}>
       <View style={[styles.flexRowBetween]}>
-        <Icon theme={theme} name="repeat" bgImage={<BackgroundIconRed />} />
+        <Icon
+          theme={theme}
+          name={Icons.REPEAT}
+          bgImage={<BackgroundIconRed />}
+        />
         <View style={styles.flexRowCentered}>
           <Text style={styles.textBase}>
             {item.amount} {item.startToken}
           </Text>
-          <Icon theme={theme} name="repeat-circle" />
+          <Icon theme={theme} name={Icons.REPEAT_CIRCLE} />
           <Text style={styles.textBase}>
             {item.received ? item.received : '...'} {item.endToken}
           </Text>
         </View>
         <Icon
           theme={theme}
-          name="expand_thin"
+          name={Icons.EXPAND_THIN}
           additionalContainerStyle={
             isExpanded ? getRotateStyle('180') : getRotateStyle('0')
           }
@@ -154,7 +159,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
                   ? `${item.id.substring(0, 15)}...`
                   : item.id}
               </Text>
-              <Icon theme={theme} name="copy" />
+              <Icon theme={theme} name={Icons.COPY} />
             </View>
           </TouchableOpacity>
         </View>
