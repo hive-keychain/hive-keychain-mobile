@@ -3,6 +3,7 @@ import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
 import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {CreateClaimedAccount} from 'src/interfaces/transaction.interface';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
@@ -40,7 +41,7 @@ const CreateClaimedAccountTransactionComponent = ({
       icon={
         useIcon ? (
           <Icon
-            name={transaction.type}
+            name={Icons.CREATE_CLAIMED_ACCOUNT}
             theme={theme}
             bgImage={<BackgroundIconRed />}
           />

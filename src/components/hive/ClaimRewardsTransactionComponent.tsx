@@ -3,6 +3,7 @@ import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
 import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React, {useState} from 'react';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {ClaimReward} from 'src/interfaces/transaction.interface';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
@@ -74,7 +75,11 @@ const ClaimRewardTransactionComponent = ({
       textLine1={line1}
       date={date}
       icon={
-        <Icon name={'interest'} theme={theme} bgImage={<BackgroundIconRed />} />
+        <Icon
+          name={Icons.INTEREST}
+          theme={theme}
+          bgImage={<BackgroundIconRed />}
+        />
       }
     />
   );

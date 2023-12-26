@@ -3,7 +3,9 @@ import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
 import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {PowerDown} from 'src/interfaces/transaction.interface';
+import {getRotateStyle} from 'src/styles/transform';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
@@ -56,9 +58,9 @@ const PowerDownTransactionComponent = ({
       icon={
         useIcon ? (
           <Icon
-            name={transaction.type}
-            subType={transaction.subType}
+            name={Icons.POWER_UP}
             theme={theme}
+            additionalContainerStyle={getRotateStyle('180')}
             bgImage={<BackgroundIconRed />}
           />
         ) : null

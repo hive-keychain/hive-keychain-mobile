@@ -3,6 +3,7 @@ import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
 import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {ReceivedInterests} from 'src/interfaces/transaction.interface';
 import {withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
@@ -42,7 +43,7 @@ const ReceivedInterestTransactionComponent = ({
       icon={
         useIcon ? (
           <Icon
-            name={'savings'}
+            name={Icons.SAVINGS}
             theme={theme}
             bgImage={<BackgroundIconRed />}
           />
