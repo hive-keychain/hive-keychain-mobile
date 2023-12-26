@@ -6,7 +6,7 @@ import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
@@ -18,7 +18,7 @@ import Operation from './Operation';
 import StakeToken from './StakeToken';
 import UnstakeToken from './UnstakeToken';
 
-type TokenDelegationType = 'Outgoing' | 'Incoming';
+export type TokenDelegationType = 'Outgoing' | 'Incoming';
 
 export type MoreInfoTokenProps = {
   token: TokenBalance;
@@ -126,7 +126,7 @@ const MoreTokenInfo = ({
       name: `Show${showTokenDelegations}TokenDelegations`,
       modalContent: (
         <IncomingOutGoingTokenDelegations
-          delegationType={showTokenDelegations.toLowerCase()}
+          delegationType={showTokenDelegations}
           total={
             showTokenDelegations === 'Incoming'
               ? token.delegationsIn

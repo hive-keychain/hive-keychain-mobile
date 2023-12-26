@@ -134,7 +134,6 @@ const Convert = ({
           <Separator />
           <Balance
             theme={theme}
-            using_new_ui
             currency={currency}
             account={user.account}
             setMax={(value: string) => {

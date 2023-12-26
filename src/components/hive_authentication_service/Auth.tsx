@@ -44,7 +44,6 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
     data.callback(data.has, data, true, sessionTime, () => {
       setSuccess(true);
       setTimeout(() => {
-        console.log('Going back from HASAuthRequest!!'); //TODO remove line
         navigation.goBack();
       }, 3000);
     });

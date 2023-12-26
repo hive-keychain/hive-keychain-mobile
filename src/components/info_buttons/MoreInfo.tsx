@@ -30,7 +30,6 @@ export default ({
 }: {
   type: string;
   additionalButtonStyle?: StyleProp<ViewStyle>;
-  //TODO make fixed after refactoring
   theme?: Theme;
 }) => {
   const styles = getDimensionedStyles(useWindowDimensions());

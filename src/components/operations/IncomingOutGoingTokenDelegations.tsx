@@ -21,10 +21,11 @@ import {
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 import IncomingOutGoingTokenDelegationItem from './Incoming-outgoing-token-delegation-item';
+import {TokenDelegationType} from './MoreTokenInfo';
 import OperationThemed from './OperationThemed';
 
 type Props = PropsFromRedux & {
-  delegationType: 'incoming' | 'outgoing';
+  delegationType: TokenDelegationType;
   total: string;
   token: TokenBalance;
   tokenLogo: JSX.Element;
@@ -54,7 +55,7 @@ const IncomingOutGoingTokenDelegations = ({
   const init = async () => {
     let delegations: TokenDelegation[];
 
-    if (delegationType === 'incoming') {
+    if (delegationType === 'Incoming') {
       delegations = await getIncomingTokenDelegations(user.name!, token.symbol);
     } else {
       delegations = await getOutgoingTokenDelegations(user.name!, token.symbol);
@@ -87,7 +88,7 @@ const IncomingOutGoingTokenDelegations = ({
       childrenMiddle={
         <>
           <Separator height={30} />
-          {delegationType === 'outgoing' && (
+          {delegationType === 'Outgoing' && (
             <>
               <Text style={styles.infoText}>
                 {translate(

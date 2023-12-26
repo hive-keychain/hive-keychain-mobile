@@ -22,10 +22,11 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {CancelTokenDelegationOperationProps} from './Cancel-token-delegation';
 import {DelegateTokenOperationProps} from './DelegateToken';
+import {TokenDelegationType} from './MoreTokenInfo';
 
 type Props = {
   tokenDelegation: TokenDelegation;
-  delegationType: string;
+  delegationType: TokenDelegationType;
   tokenLogo: JSX.Element;
   token: TokenBalance;
   tokenInfo: Token;
@@ -41,7 +42,7 @@ const IncomingOutGoingTokenDelegationItem = ({
   theme,
 }: Props) => {
   const [isOutGoingDelegation, setIsOutGoingDelegation] = useState(
-    delegationType === 'outgoing',
+    delegationType === 'Outgoing',
   );
   const [editMode, setEditMode] = useState(false);
   const [amount, setAmount] = useState(tokenDelegation.quantity);

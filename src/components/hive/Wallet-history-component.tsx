@@ -1,5 +1,5 @@
 import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
-import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
+import {clearWalletFilters} from 'actions/walletFilters';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
@@ -23,32 +23,6 @@ import {BackToTopButton} from './Back-To-Top-Button';
 import Icon from './Icon';
 import WalletHistoryItemComponent from './WalletHistoryItemComponent';
 
-type FilterTransactionTypes = {
-  [key: string]: boolean;
-};
-
-const DEFAULT_FILTER: WalletHistoryFilter = {
-  filterValue: '',
-  inSelected: false,
-  outSelected: false,
-  selectedTransactionTypes: {
-    transfer: false,
-    claim_reward_balance: false,
-    delegate_vesting_shares: false,
-    claim_account: false,
-    savings: false,
-    power_up_down: false,
-    convert: false,
-  },
-};
-
-type WalletHistoryFilter = {
-  filterValue: string;
-  inSelected: boolean;
-  outSelected: boolean;
-  selectedTransactionTypes: FilterTransactionTypes;
-};
-
 export interface WalletHistoryComponentProps {
   currency?: string;
 }
@@ -58,7 +32,6 @@ const WallettHistory = ({
   activeAccount,
   fetchAccountTransactions,
   walletFilters,
-  updateWalletFilter,
   clearUserTransactions,
   currency,
 }: PropsFromRedux & WalletHistoryComponentProps) => {
@@ -76,21 +49,13 @@ const WallettHistory = ({
 
   const flatListRef = useRef();
 
-  const childRef = useRef();
-
   const [loading, setLoading] = useState(true);
 
   const [previousTransactionLength, setPreviousTransactionLength] = useState(0);
 
   const [bottomLoader, setBottomLoader] = useState(true);
 
-  const [isFilterOpened, setIsFilterPanelOpened] = useState(false);
-
   const [filteringCounter, setFilteringCounter] = useState(0);
-
-  const toggleFilter = () => {
-    setIsFilterPanelOpened(!isFilterOpened);
-  };
 
   useEffect(() => {
     if (activeAccount.name) {
@@ -170,12 +135,6 @@ const WallettHistory = ({
   };
 
   const forceResetFilters = () => {
-    //TODO cleanup afte refactoring UI
-    // if (childRef.current) {
-    //   setFilteringCounter(0);
-    //   //@ts-ignore
-    //   childRef.current.forceResetFilters();
-    // }
     setFilteringCounter(0);
     clearWalletFilters();
   };
@@ -216,31 +175,10 @@ const WallettHistory = ({
     )
       return;
   };
-  //TODO cleanup unused
+
   return (
     <View style={styles.flex}>
       <FocusAwareStatusBar />
-      {/* <WalletHistoryFilterPanel
-        ref={childRef}
-        DEFAULT_WALLET_FILTER={walletFilters}
-        transactions={transactions}
-        flatListRef={flatListRef}
-        activeAccount={activeAccount}
-        setDisplayedTransactions={setDisplayedTransactions}
-        setPreviousTransactionLength={setPreviousTransactionLength}
-        previousTransactionLength={previousTransactionLength}
-        finalizeDisplayedList={finalizeDisplayedList}
-        fetchAccountTransactions={fetchAccountTransactions}
-        walletFilters={walletFilters}
-        updateWalletFilter={updateWalletFilter}
-        clearWalletFilters={clearWalletFilters}
-        setBottomLoader={setBottomLoader}
-        loading={loading}
-        isFilterOpened={isFilterOpened}
-        toggleFilter={toggleFilter}
-        setLoading={setLoading}
-        displayedTransactions={displayedTransactions}
-      /> */}
 
       {!loading && displayedTransactions.length > 0 && (
         <View style={styles.viewContainer}>
@@ -339,10 +277,6 @@ const WallettHistory = ({
         <BackToTopButton theme={theme} element={flatListRef} />
       )}
       {/* END ScrollToTop Button */}
-
-      {/* //testing counter */}
-
-      {/* end testing */}
     </View>
   );
 };
@@ -357,7 +291,6 @@ const mapStateToProps = (state: RootState) => {
 
 const connector = connect(mapStateToProps, {
   fetchAccountTransactions,
-  updateWalletFilter,
   clearWalletFilters,
   clearUserTransactions,
 });

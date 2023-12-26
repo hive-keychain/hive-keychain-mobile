@@ -125,7 +125,6 @@ const StakeToken = ({
             }}
             tokenLogo={tokenLogo}
             tokenBalance={balance}
-            using_new_ui
             theme={theme}
           />
           <Separator />

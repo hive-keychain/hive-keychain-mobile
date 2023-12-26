@@ -171,7 +171,6 @@ const Transfer = ({
               setMax={(value: string) => {
                 setAmount(value);
               }}
-              using_new_ui
               theme={theme}
             />
             <Separator />
@@ -260,7 +259,7 @@ const Transfer = ({
                     )}
                   />
                   <Icon
-                    name={isMemoEncrypted ? 'encrypt' : 'decrypt'}
+                    name={isMemoEncrypted ? Icons.ENCRYPT : Icons.DECRYPT}
                     theme={theme}
                     onClick={() => setIsMemoEncrypted(!isMemoEncrypted)}
                   />

@@ -19,8 +19,6 @@ type Props = {
   tokenBalance?: string;
   tokenLogo?: JSX.Element;
   setMax?: (value: string) => void;
-  //TODO make fix after refactoring.
-  using_new_ui?: boolean;
   theme?: Theme;
 };
 
@@ -33,7 +31,6 @@ const Balance = ({
   tokenBalance,
   tokenLogo,
   setMax,
-  using_new_ui,
   theme,
 }: Props) => {
   let {color, value, logo} = getCurrencyProperties(currency, account);
@@ -54,44 +51,19 @@ const Balance = ({
     theme,
     ...useWindowDimensions(),
   });
-  return using_new_ui ? (
+  return (
     <TouchableOpacity
-      style={styles.clickeableContainer}
       onPress={() => {
         if (setMax) {
           setMax(parsedValue.toFixed(3) + '');
         }
       }}>
-      <View style={styles.balanceContainer}>
+      <View>
         <Text style={[styles.textBalance, styles.centeredText]}>
           {formatBalance(parsedValue)} {` ${currency}`}
         </Text>
         <Text style={[styles.balanceText, styles.centeredText]}>
           {translate('common.balance')}
-        </Text>
-      </View>
-    </TouchableOpacity>
-  ) : (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => {
-        if (setMax) {
-          setMax(parsedValue.toFixed(3) + '');
-        }
-      }}>
-      <View style={styles.main}>
-        <View style={styles.left}>
-          <View style={styles.logo}>{logo}</View>
-          <Text style={styles.name}>
-            {(pd
-              ? translate('common.available')
-              : translate('common.balance')
-            ).toUpperCase()}
-          </Text>
-        </View>
-        <Text style={styles.amount}>
-          {formatBalance(parsedValue)}
-          <Text style={styles.currency}>{` ${currency}`}</Text>
         </Text>
       </View>
     </TouchableOpacity>
@@ -104,29 +76,7 @@ const getDimensionedStyles = ({
   theme,
 }: Width & {color?: string; theme: Theme}) =>
   StyleSheet.create({
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      borderRadius: 10,
-      width: '100%',
-      backgroundColor: '#DCE4EA',
-      paddingHorizontal: width * 0.05,
-      paddingVertical: width * 0.03,
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    left: {display: 'flex', flexDirection: 'row', alignItems: 'center'},
     logo: {justifyContent: 'center', alignItems: 'center'},
-    name: {
-      marginLeft: width * 0.03,
-      fontSize: 15,
-      color: '#404950',
-    },
-    amount: {fontSize: 17},
     currency: {color},
     row: {
       display: 'flex',
@@ -134,9 +84,6 @@ const getDimensionedStyles = ({
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-    //TODO cleanup styles, delete unused
-    clickeableContainer: {},
-    balanceContainer: {},
     textBalance: {
       ...headerH2Primary,
       color: getColors(theme).primaryText,
