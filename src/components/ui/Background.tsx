@@ -1,17 +1,18 @@
 import React from 'react';
 import {
+  ImageBackground,
   ScaledSize,
   StyleProp,
   StyleSheet,
-  View,
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import ImageBgHexagonsDark from 'src/assets/new_UI/background_hexagons_dark.svg';
-import ImageBgHexagonsLight from 'src/assets/new_UI/background_hexagons_light.svg';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import SafeArea from './SafeArea';
+
+const hexagonsLight = require('assets/new_UI/hexagons-bg-light.png');
+const hexagonsDark = require('assets/new_UI/hexagons-bg-dark.png');
 
 interface BackgroundProps {
   style?: StyleProp<ViewStyle>;
@@ -25,46 +26,40 @@ interface BackgroundProps {
 }
 
 export default (props: BackgroundProps) => {
-  const styles = getStyles(useWindowDimensions());
+  const styles = getStyles(useWindowDimensions(), props.theme);
+
   return (
-    <View
-      {...props}
-      style={[
-        styles.imageBackground,
-        props.style,
-        {
-          backgroundColor: getColors(props.theme).primaryBackground,
-        },
-      ]}>
-      {props.theme === Theme.LIGHT ? (
-        <ImageBgHexagonsLight
-          style={[styles.bgSvgStyle, props.additionalBgSvgImageStyle]}
-        />
-      ) : (
-        <ImageBgHexagonsDark
-          style={[styles.bgSvgStyle, props.additionalBgSvgImageStyle]}
-        />
-      )}
+    <ImageBackground
+      source={props.theme === Theme.LIGHT ? hexagonsLight : hexagonsDark}
+      resizeMethod="scale"
+      resizeMode="stretch"
+      style={[styles.container]}
+      imageStyle={styles.bgSvgStyle}>
       <SafeArea style={[styles.container, props.containerStyle]}>
         {props.children}
       </SafeArea>
-    </View>
+    </ImageBackground>
   );
 };
 
-const getStyles = ({width, height}: ScaledSize) =>
+const getStyles = ({width, height}: ScaledSize, theme: Theme) =>
   StyleSheet.create({
     imageBgd: {width: '100%', height: '100%'},
-    container: {flex: 1},
+    container: {
+      flex: 1,
+      backgroundColor: getColors(theme).primaryBackground,
+      zIndex: -2,
+    },
     imageBackground: {
       width: '100%',
       height: '100%',
     },
     bgSvgStyle: {
       position: 'absolute',
-      bottom: -100,
-      zIndex: -1,
-      width: width * 1.2,
+      top: undefined,
+      bottom: 0,
+      width: width,
+      height: width * 0.6,
       alignSelf: 'center',
     },
   });
