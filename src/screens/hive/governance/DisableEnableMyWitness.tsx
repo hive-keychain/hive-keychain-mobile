@@ -87,7 +87,7 @@ const DisableEnableMyWitness = ({
   };
 
   return (
-    <Background using_new_ui theme={theme}>
+    <Background theme={theme}>
       <View style={styles.container}>
         <FocusAwareStatusBar />
         <Text style={[styles.title, styles.textOpaque]}>

@@ -86,10 +86,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
     );
   } else {
     return (
-      <Background
-        using_new_ui
-        theme={theme}
-        additionalBgSvgImageStyle={styles.hexagons}>
+      <Background theme={theme} additionalBgSvgImageStyle={styles.hexagons}>
         <>
           <BackgroundHexagons theme={theme} />
           <FocusAwareStatusBar />

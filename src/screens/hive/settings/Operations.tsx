@@ -75,7 +75,7 @@ const Operations = ({
   };
 
   return (
-    <Background using_new_ui theme={theme}>
+    <Background theme={theme}>
       <View style={styles.container}>
         <FocusAwareStatusBar />
         <Text

@@ -12,7 +12,7 @@ type Props = {
 export default ({children}: Props) => {
   const {theme} = useContext(ThemeContext);
   return (
-    <Background using_new_ui theme={theme}>
+    <Background theme={theme}>
       <SafeArea style={styles.bgd}>
         <FocusAwareStatusBar />
         {children}

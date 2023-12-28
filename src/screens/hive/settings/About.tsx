@@ -26,7 +26,7 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
   const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
   return (
-    <Background using_new_ui theme={theme}>
+    <Background theme={theme}>
       <>
         <View style={styles.extraBg}>
           {theme === Theme.LIGHT ? <AboutBGLight /> : <AboutBGLight />}

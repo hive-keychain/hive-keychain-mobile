@@ -15,7 +15,7 @@ const Unlock = ({unlock, navigation}: UnlockScreenProps) => {
   const {width} = useWindowDimensions();
   const {theme} = useContext(ThemeContext);
   return (
-    <Background using_new_ui={true} theme={theme}>
+    <Background theme={theme}>
       <>
         <Pincode
           navigation={navigation}

@@ -137,7 +137,7 @@ const Tokens = ({
   };
 
   return (
-    <Background using_new_ui={true} theme={theme}>
+    <Background theme={theme}>
       <View style={styles.containerTokenScreen}>
         <FocusAwareStatusBar />
         <Separator />

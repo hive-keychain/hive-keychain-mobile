@@ -275,7 +275,7 @@ const StepTwo = ({
   };
 
   return (
-    <Background using_new_ui theme={theme}>
+    <Background theme={theme}>
       <>
         <FocusAwareStatusBar />
         {keysTextVersion.length > 0 && !loadingMasterKey && (

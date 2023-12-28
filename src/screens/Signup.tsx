@@ -18,7 +18,7 @@ const Signup = ({signUp, navigation}: Props) => {
     signUp(pwd);
   };
   return (
-    <Background using_new_ui={true} theme={theme}>
+    <Background theme={theme}>
       <Pincode
         signup
         navigation={navigation}

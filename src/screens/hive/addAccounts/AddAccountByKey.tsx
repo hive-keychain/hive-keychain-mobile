@@ -89,7 +89,7 @@ const AddAccountByKey = ({
   const styles = getStyles(theme);
 
   return (
-    <Background using_new_ui theme={theme}>
+    <Background theme={theme}>
       <View style={styles.flex}>
         <FocusAwareStatusBar />
         <View style={styles.container}>

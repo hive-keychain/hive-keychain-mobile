@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {BackgroundHexagons} from './BackgroundHexagons';
 import KeychainLogo from './KeychainLogo';
 
 interface Props {
@@ -43,7 +42,6 @@ export default ({
 
   return new_ui_loader ? (
     <View style={styles.mainContainer}>
-      <BackgroundHexagons theme={theme} />
       <KeychainLogo theme={theme} using_new_ui width={150} />
       <View style={styles.container}>
         {Array.from(Array(dots)).map((e, i) => {

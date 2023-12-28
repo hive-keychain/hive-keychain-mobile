@@ -74,7 +74,7 @@ const AddAccountByAuth = ({
   const styles = getStyles(theme);
 
   return (
-    <Background using_new_ui theme={theme}>
+    <Background theme={theme}>
       <>
         <StatusBar
           barStyle={getColors(theme).barStyle}

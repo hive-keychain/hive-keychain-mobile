@@ -187,7 +187,7 @@ const CreateAccountStepOne = ({
   };
 
   return (
-    <Background using_new_ui theme={theme}>
+    <Background theme={theme}>
       <>
         <FocusAwareStatusBar />
         <View style={styles.container}>

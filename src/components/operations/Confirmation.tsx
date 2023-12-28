@@ -23,7 +23,6 @@ const Confirmation = ({
 
   return (
     <Background
-      using_new_ui
       theme={theme}
       additionalBgSvgImageStyle={styles.backgroundSvgImage}>
       <>

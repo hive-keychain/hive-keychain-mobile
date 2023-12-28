@@ -138,7 +138,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
   };
 
   return (
-    <Background using_new_ui={true} theme={theme}>
+    <Background theme={theme}>
       <>
         <FocusAwareStatusBar
           backgroundColor={getColors(theme).primaryBackground}

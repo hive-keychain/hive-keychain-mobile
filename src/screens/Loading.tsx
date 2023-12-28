@@ -1,12 +1,14 @@
 import Background from 'components/ui/Background';
 import KeychainLogo from 'components/ui/KeychainLogo';
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
+import {ThemeContext} from 'src/context/theme.context';
 
 const Loading = () => {
+  const {theme} = useContext(ThemeContext);
   const {width} = useWindowDimensions();
   return (
-    <Background containerStyle={styles.bgd}>
+    <Background theme={theme} containerStyle={styles.bgd}>
       <KeychainLogo width={width / 2} />
     </Background>
   );

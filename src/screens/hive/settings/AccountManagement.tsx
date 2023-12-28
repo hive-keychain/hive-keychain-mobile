@@ -53,7 +53,7 @@ const AccountManagement = ({
   const styles = getStyles(theme);
 
   return (
-    <Background using_new_ui theme={theme}>
+    <Background theme={theme}>
       <SafeArea style={styles.safeArea}>
         <FocusAwareStatusBar />
 

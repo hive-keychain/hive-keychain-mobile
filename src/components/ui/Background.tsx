@@ -1,9 +1,11 @@
 import React from 'react';
 import {
   ImageBackground,
+  ImageStyle,
   ScaledSize,
   StyleProp,
   StyleSheet,
+  View,
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
@@ -15,44 +17,40 @@ const hexagonsLight = require('assets/new_UI/hexagons-bg-light.png');
 const hexagonsDark = require('assets/new_UI/hexagons-bg-dark.png');
 
 interface BackgroundProps {
+  children: JSX.Element;
+  theme: Theme;
   style?: StyleProp<ViewStyle>;
   containerStyle?: StyleProp<ViewStyle>;
-  children: JSX.Element;
-  using_new_ui?: boolean;
-  //TODO after refactoring remove optional
-  theme?: Theme;
-  additionalBgSvgImageStyle?: StyleProp<ViewStyle>;
-  testingFetch?: string;
+  additionalBgSvgImageStyle?: StyleProp<ImageStyle>;
 }
 
 export default (props: BackgroundProps) => {
   const styles = getStyles(useWindowDimensions(), props.theme);
 
   return (
-    <ImageBackground
-      source={props.theme === Theme.LIGHT ? hexagonsLight : hexagonsDark}
-      resizeMethod="scale"
-      resizeMode="stretch"
-      style={[styles.container]}
-      imageStyle={styles.bgSvgStyle}>
-      <SafeArea style={[styles.container, props.containerStyle]}>
-        {props.children}
-      </SafeArea>
-    </ImageBackground>
+    <View style={styles.mainContainer}>
+      <ImageBackground
+        source={props.theme === Theme.LIGHT ? hexagonsLight : hexagonsDark}
+        resizeMethod="scale"
+        resizeMode="stretch"
+        style={[styles.container]}
+        imageStyle={[styles.bgSvgStyle, props.additionalBgSvgImageStyle]}>
+        <SafeArea style={[styles.container, {zIndex: 1}, props.containerStyle]}>
+          {props.children}
+        </SafeArea>
+      </ImageBackground>
+    </View>
   );
 };
 
 const getStyles = ({width, height}: ScaledSize, theme: Theme) =>
   StyleSheet.create({
-    imageBgd: {width: '100%', height: '100%'},
-    container: {
+    mainContainer: {
       flex: 1,
       backgroundColor: getColors(theme).primaryBackground,
-      zIndex: -2,
     },
-    imageBackground: {
-      width: '100%',
-      height: '100%',
+    container: {
+      flex: 1,
     },
     bgSvgStyle: {
       position: 'absolute',
