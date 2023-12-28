@@ -296,8 +296,7 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     },
     innerHeader: {flexDirection: 'row', height: 44, alignItems: 'center'},
     extraBg: {
-      top: 110,
-      opacity: 0.7,
+      opacity: 0.8,
     },
     fullListContainer: {
       flexGrow: 2,

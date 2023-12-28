@@ -1,27 +1,31 @@
-import HexagonsBgSvgDark from 'assets/new_UI/background_hexagons_dark.svg';
-import HexagonsBgSvgLight from 'assets/new_UI/background_hexagons_light.svg';
 import React from 'react';
 import {
+  ImageBackground,
+  ImageStyle,
   StyleProp,
   StyleSheet,
-  ViewStyle,
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
 
+const hexagonsLight = require('assets/new_UI/hexagons-bg-light.png');
+const hexagonsDark = require('assets/new_UI/hexagons-bg-dark.png');
+
 interface Props {
   theme: Theme;
-  additionalSvgStyle?: StyleProp<ViewStyle>;
+  additionalSvgStyle?: StyleProp<ImageStyle>;
 }
 
 export const BackgroundHexagons = ({theme, additionalSvgStyle}: Props) => {
   const styles = getStyles(theme, useWindowDimensions().height);
-  const finalStyle = [styles.bgSvgStyle, additionalSvgStyle];
-
-  return theme === Theme.LIGHT ? (
-    <HexagonsBgSvgLight style={finalStyle} />
-  ) : (
-    <HexagonsBgSvgDark style={finalStyle} />
+  return (
+    <ImageBackground
+      source={theme === Theme.LIGHT ? hexagonsLight : hexagonsDark}
+      style={{flex: 1}}
+      resizeMethod="scale"
+      resizeMode="stretch"
+      imageStyle={[styles.bgSvgStyle, additionalSvgStyle]}
+    />
   );
 };
 
@@ -29,9 +33,10 @@ const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     bgSvgStyle: {
       position: 'absolute',
-      bottom: -100,
-      zIndex: -1,
-      width: width * 1.2,
+      top: -50,
+      bottom: undefined,
+      width: '100%',
+      height: width / 3,
       alignSelf: 'center',
     },
   });

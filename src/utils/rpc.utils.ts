@@ -57,7 +57,6 @@ export const checkRpcStatus = async (uri: string) => {
         timeout: 10000,
       },
     );
-    console.log('checkRpcStatus: ', {result}); //TODO remove line
     if (result?.data?.error) {
       return false;
     }
