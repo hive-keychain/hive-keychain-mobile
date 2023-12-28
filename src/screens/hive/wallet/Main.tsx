@@ -261,7 +261,7 @@ const Main = ({
             </ScrollView>
           </>
         ) : (
-          <Loader new_ui_loader />
+          <Loader animatedLogo />
         )}
       </>
     </WalletPage>

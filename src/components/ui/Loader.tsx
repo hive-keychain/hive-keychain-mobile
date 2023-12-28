@@ -15,13 +15,13 @@ interface Props {
   color?: string;
   size?: 'small' | 'large' | number;
   animating?: boolean;
-  new_ui_loader?: boolean;
+  animatedLogo?: boolean;
 }
 export default ({
   color = '#E31337',
   size = 'large',
   animating = false,
-  new_ui_loader,
+  animatedLogo,
 }: Props) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const {theme} = useContext(ThemeContext);
@@ -40,7 +40,7 @@ export default ({
     ).start();
   }, [fadeAnim]);
 
-  return new_ui_loader ? (
+  return animatedLogo ? (
     <View style={styles.mainContainer}>
       <KeychainLogo theme={theme} using_new_ui width={150} />
       <View style={styles.container}>
