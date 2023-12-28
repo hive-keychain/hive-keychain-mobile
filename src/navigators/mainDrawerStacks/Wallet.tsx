@@ -61,7 +61,7 @@ export default ({route, navigation}: {route: any; navigation: any}) => {
                 if (nav.canGoBack()) {
                   nav.goBack();
                 } else {
-                  nav.navigate('WALLET', {screen: 'WalletScreen'});
+                  resetStackAndNavigate('WALLET');
                 }
               }}
               lightThemeIcon={<ArrowLeftLight />}

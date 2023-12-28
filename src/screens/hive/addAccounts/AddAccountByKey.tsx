@@ -153,7 +153,7 @@ const AddAccountByKey = ({
             {allowAddByAuth && (
               <TouchableOpacity
                 onPress={() => {
-                  navigate('AddAccountFromWalletScreenByAuth');
+                  navigate('AddAccountFromWalletScreenByAuth', {wallet: true});
                 }}>
                 <Text style={[styles.text, styles.textUnderlined]}>
                   {capitalizeSentence(

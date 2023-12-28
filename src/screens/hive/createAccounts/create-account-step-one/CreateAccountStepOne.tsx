@@ -196,10 +196,10 @@ const CreateAccountStepOne = ({
               <PickerItem
                 theme={theme}
                 pickerItemList={accountOptions}
-                additionalContainerStyle={styles.additionalContainerStyle}
-                additionalContainerListStyle={
-                  styles.additionalContainerListStyle
-                }
+                additionalContainerStyle={[styles.additionalContainerStyle]}
+                additionalContainerListStyle={[
+                  styles.additionalContainerListStyle,
+                ]}
                 additionalExpandedListItemContainerStyle={
                   styles.additionalExpandedListItemContainer
                 }
@@ -298,15 +298,17 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).cardBorderColor,
       borderWidth: 1,
-      borderRadius: 10,
-      padding: 0,
-      paddingTop: 10,
-      paddingBottom: 10,
+      minHeight: 100,
+      justifyContent: 'center',
+      maxHeight: 250,
     },
     additionalExpandedListItemContainer: {
       height: height * 0.05,
       paddingHorizontal: 10,
       borderRadius: 10,
+      paddingVertical: 8,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     additionalSelectedItemContainerStyle: {
       paddingHorizontal: 16,

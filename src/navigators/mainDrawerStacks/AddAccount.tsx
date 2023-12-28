@@ -81,7 +81,9 @@ export default () => {
               name={Icons.ARROW_LEFT}
               theme={theme}
               additionalContainerStyle={styles.marginLeft}
-              onClick={() => navigation.goBack()}
+              onClick={() => {
+                navigation.goBack();
+              }}
             />
           ),
           headerRight: () => (
