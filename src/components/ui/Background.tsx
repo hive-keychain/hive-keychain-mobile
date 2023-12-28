@@ -21,6 +21,7 @@ interface BackgroundProps {
   //TODO after refactoring remove optional
   theme?: Theme;
   additionalBgSvgImageStyle?: StyleProp<ViewStyle>;
+  testingFetch?: string;
 }
 
 export default (props: BackgroundProps) => {
