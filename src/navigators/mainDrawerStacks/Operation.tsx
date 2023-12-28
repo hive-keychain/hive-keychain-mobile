@@ -123,7 +123,6 @@ export default ({navigation, route}: OperationNavigationProps) => {
     <Stack.Navigator>
       <Stack.Screen
         name="Operation"
-        component={() => renderOperation()}
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTitleStyle: styles.headerTitle,
@@ -145,8 +144,9 @@ export default ({navigation, route}: OperationNavigationProps) => {
               darkThemeIcon={<ArrowLeftDark />}
             />
           ),
-        })}
-      />
+        })}>
+        {() => renderOperation()}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 };

@@ -23,7 +23,7 @@ interface PrefetchImageProps {
 }
 
 let prefetchedImages: PrefetchImageProps = {};
-
+//TODO bellow check and style.
 export function prefetchImage(url: string) {
   return Image.prefetch(url).then((val) => {
     prefetchedImages[url] = true;

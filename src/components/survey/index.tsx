@@ -11,7 +11,7 @@ import {SurveyData} from './surveyData';
 type Props = {
   navigation: WalletNavigation;
 };
-
+//TODO bellow check and style.
 const Survey = ({navigation}: Props): null => {
   useEffect(() => {
     init();
