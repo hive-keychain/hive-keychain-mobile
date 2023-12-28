@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  ImageBackground,
   ScaledSize,
   StyleProp,
   StyleSheet,
@@ -14,9 +13,6 @@ import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import SafeArea from './SafeArea';
 
-//TODO after refactoring remove and its use
-const imageBgd = require('assets/background.png');
-
 interface BackgroundProps {
   style?: StyleProp<ViewStyle>;
   containerStyle?: StyleProp<ViewStyle>;
@@ -29,7 +25,7 @@ interface BackgroundProps {
 
 export default (props: BackgroundProps) => {
   const styles = getStyles(useWindowDimensions());
-  return props.using_new_ui ? (
+  return (
     <View
       {...props}
       style={[
@@ -52,15 +48,6 @@ export default (props: BackgroundProps) => {
         {props.children}
       </SafeArea>
     </View>
-  ) : (
-    <ImageBackground
-      {...props}
-      source={imageBgd}
-      style={[styles.imageBgd, props.style]}>
-      <SafeArea style={[styles.container, props.containerStyle]}>
-        {props.children}
-      </SafeArea>
-    </ImageBackground>
   );
 };
 
