@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import Carousel from 'components/carousel/carousel';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
+import {ModalScreenProps} from 'navigators/Root.types';
 import React, {useContext, useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
@@ -23,7 +24,7 @@ interface PrefetchImageProps {
 }
 
 let prefetchedImages: PrefetchImageProps = {};
-//TODO bellow check and style.
+
 export function prefetchImage(url: string) {
   return Image.prefetch(url).then((val) => {
     prefetchedImages[url] = true;
@@ -73,7 +74,7 @@ const WhatsNew = ({navigation}: Props): null => {
           modalContent: renderContent(),
           onForceCloseModal: () => {},
           modalContainerStyle: getModalBaseStyle(theme).roundedTop,
-        });
+        } as ModalScreenProps);
       }
     })();
   }, [whatsNewContent]);

@@ -19,7 +19,7 @@ interface Props {
   currentRouteName: string;
   showTags?: boolean;
 }
-
+//TODO this should be a bottom navigator, do some research and integrate in the mainstack
 const Floating = ({
   show,
   showTags,
