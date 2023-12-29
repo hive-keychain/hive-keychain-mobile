@@ -21,7 +21,10 @@ const Accounts = () => {
         labelTranslationKey={'navigation.add_account'}
         theme={theme}
         onPress={() => {
-          navigate('AddAccountStack');
+          navigate('AddAccountStack', {
+            screen: 'AddAccountFromWalletScreen',
+            params: {wallet: true},
+          });
         }}
         iconImage={<AddAccountIcon />}
         drawBottomLine={true}

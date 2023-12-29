@@ -11,7 +11,7 @@ import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
-
+//TODO testing bellow to add the main param.
 const Stack = createStackNavigator();
 
 export default () => {
