@@ -37,6 +37,10 @@ export default () => {
         itemStyle: styles.item,
       }}
       drawerContent={(props) => <DrawerContent {...props} />}>
+      {/* //TODO remove bellow */}
+      {/* <Drawer.Screen name="TestStack" component={TestStack} /> */}
+      {/* //end remove */}
+
       <Drawer.Screen name="WALLET" component={WalletStack} />
       <Drawer.Screen
         name="BrowserScreen"

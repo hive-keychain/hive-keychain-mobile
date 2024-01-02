@@ -1,4 +1,3 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {addAccount} from 'actions/index';
 import {showModal} from 'actions/message';
 import TitleLogoLight from 'assets/new_UI/img_import_dark.svg';
@@ -11,6 +10,7 @@ import CustomIconButton from 'components/ui/CustomIconButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
+import {AddAccFromWalletNavigation} from 'navigators/mainDrawerStacks/AddAccount.types';
 import React, {useContext, useState} from 'react';
 import {
   StyleSheet,
@@ -41,8 +41,7 @@ const AddAccountByKey = ({
   navigation,
   route,
   showModal,
-}: PropsFromRedux & // (AddAccNavigationProps | AddAccFromWalletNavigationProps)
-//TODO testing bellow
+}: PropsFromRedux & //TODO testing bellow // (AddAccNavigationProps | AddAccFromWalletNavigationProps)
 {navigation: any; route: any}) => {
   const [account, setAccount] = useState('');
   const [key, setKey] = useState('');
@@ -129,20 +128,9 @@ const AddAccountByKey = ({
                   name={Icons.SCANNER}
                   theme={theme}
                   onClick={() => {
-                    // (navigation as AddAccFromWalletNavigation).navigate(
-                    //   'ScanQRScreen',
-                    //   {wallet: true},
-                    // );
-                    // navigate('AddAccountStack', {
-                    //   screen: 'ScanQRScreen',
-                    //   params: {wallet: true},
-                    // });
-                    (navigation as DrawerNavigationHelpers).navigate(
-                      'AddAccountStack',
-                      {
-                        screen: 'ScanQRScreen',
-                        params: {wallet: true},
-                      },
+                    (navigation as AddAccFromWalletNavigation).navigate(
+                      'ScanQRScreen',
+                      {wallet: true},
                     );
                   }}
                 />
@@ -160,13 +148,7 @@ const AddAccountByKey = ({
             <Separator height={height / 22} />
             {allowAddByAuth && (
               <TouchableOpacity
-                onPress={() => {
-                  // navigate('AddAccountFromWalletScreenByAuth', {wallet: true});
-                  navigate('AddAccountStack', {
-                    screen: 'AddAccountFromWalletScreenByAuth',
-                    params: {wallet: true},
-                  });
-                }}>
+                onPress={() => navigate('AddAccountFromWalletScreenByAuth')}>
                 <Text style={[styles.text, styles.textUnderlined]}>
                   {capitalizeSentence(
                     translate('common.use_authorized_account_instead'),

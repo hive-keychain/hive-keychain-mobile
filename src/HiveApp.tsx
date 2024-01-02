@@ -98,6 +98,10 @@ const App = ({
   };
 
   const renderNavigator = () => {
+    //TODO remove block bellow
+    // return <TestStack />;
+    //end remove
+
     console.log('renderNavigator, HiveApp'); //TODO remove line
     if (!hasAccounts) {
       // No accounts, sign up process

@@ -8,6 +8,7 @@ import React, {useContext, useState} from 'react';
 import {
   FlatList,
   Keyboard,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -127,27 +128,31 @@ const PendingSavingsWithdrawalPageComponent = ({
             height={10}
             additionalLineStyle={styles.bottomLine}
           />
-          <FlatList
-            data={currentWithdrawingList.filter(
-              (currentWithdrawItem) =>
-                currentWithdrawItem.amount.split(' ')[1] === currency,
-            )}
-            keyExtractor={(listItem) => listItem.request_id.toString()}
-            renderItem={(withdraw) => renderListItem(withdraw.item)}
-            style={styles.containerMaxHeight}
-            ListEmptyComponent={() => {
-              return (
-                <View style={[styles.containerCentered, styles.marginTop]}>
-                  <Text style={[styles.textBase]}>
-                    {translate(
-                      'wallet.operations.savings.pending_withdraw.no_pending_withdrawals',
-                      {currency},
-                    )}
-                  </Text>
-                </View>
-              );
-            }}
-          />
+          <ScrollView
+            horizontal={true}
+            contentContainerStyle={{width: '100%', height: '100%'}}>
+            <FlatList
+              data={currentWithdrawingList.filter(
+                (currentWithdrawItem) =>
+                  currentWithdrawItem.amount.split(' ')[1] === currency,
+              )}
+              keyExtractor={(listItem) => listItem.request_id.toString()}
+              renderItem={(withdraw) => renderListItem(withdraw.item)}
+              style={styles.containerMaxHeight}
+              ListEmptyComponent={() => {
+                return (
+                  <View style={[styles.containerCentered, styles.marginTop]}>
+                    <Text style={[styles.textBase]}>
+                      {translate(
+                        'wallet.operations.savings.pending_withdraw.no_pending_withdrawals',
+                        {currency},
+                      )}
+                    </Text>
+                  </View>
+                );
+              }}
+            />
+          </ScrollView>
         </>
       }
     />
