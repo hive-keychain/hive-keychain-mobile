@@ -1,19 +1,17 @@
 import CloseButton from 'components/ui/CloseButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import React from 'react';
+import React, {useContext} from 'react';
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
-import {Theme} from 'src/context/theme.context';
+import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {goBack} from 'utils/navigation';
-//TODO after refactoring remove.
+
 type Props = {
   children: JSX.Element;
-  logo?: JSX.Element;
   title: string;
+  logo?: JSX.Element;
   onClose?: () => void;
-  //TODO make fix afte refactoring
-  theme?: Theme;
   additionalHeaderContainerStyle?: StyleProp<ViewStyle>;
 };
 export default ({
@@ -21,9 +19,9 @@ export default ({
   logo,
   title,
   onClose,
-  theme,
   additionalHeaderContainerStyle,
 }: Props) => {
+  const {theme} = useContext(ThemeContext);
   const styles = getStyles(theme);
 
   return (
