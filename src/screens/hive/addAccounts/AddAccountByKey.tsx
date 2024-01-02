@@ -29,6 +29,7 @@ import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
   button_link_primary_medium,
+  getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {capitalizeSentence} from 'utils/format';
@@ -41,8 +42,7 @@ const AddAccountByKey = ({
   navigation,
   route,
   showModal,
-}: PropsFromRedux & //TODO testing bellow // (AddAccNavigationProps | AddAccFromWalletNavigationProps)
-{navigation: any; route: any}) => {
+}: PropsFromRedux & {navigation: any; route: any}) => {
   const [account, setAccount] = useState('');
   const [key, setKey] = useState('');
   const [allowAddByAuth, setAllowAddByAuth] = useState(
@@ -82,7 +82,7 @@ const AddAccountByKey = ({
   };
   const {theme} = useContext(ThemeContext);
   const {height} = useWindowDimensions();
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, height);
 
   return (
     <Background theme={theme}>
@@ -141,8 +141,8 @@ const AddAccountByKey = ({
             <OperationButton
               title={translate('common.import')}
               onPress={onImportKeys}
-              style={[getButtonStyle(theme).warningStyleButton]}
-              additionalTextStyle={{...button_link_primary_medium}}
+              style={[getButtonStyle(theme, height).warningStyleButton]}
+              additionalTextStyle={styles.buttonText}
               isLoading={loadingImportAccount}
             />
             <Separator height={height / 22} />
@@ -163,7 +163,7 @@ const AddAccountByKey = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     flex: {flex: 1},
     container: {
@@ -171,7 +171,14 @@ const getStyles = (theme: Theme) =>
       justifyContent: 'space-between',
       height: '100%',
     },
-    text: {color: getColors(theme).secondaryText, ...body_primary_body_1},
+    text: {
+      color: getColors(theme).secondaryText,
+      ...body_primary_body_1,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...body_primary_body_1}.fontSize,
+      ),
+    },
     topContainer: {
       width: '100%',
       alignItems: 'center',
@@ -196,6 +203,13 @@ const getStyles = (theme: Theme) =>
       alignItems: 'center',
     },
     marginTop: {marginTop: 25},
+    buttonText: {
+      ...button_link_primary_medium,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...button_link_primary_medium}.fontSize,
+      ),
+    },
   });
 
 const mapStateToProps = (state: RootState) => {

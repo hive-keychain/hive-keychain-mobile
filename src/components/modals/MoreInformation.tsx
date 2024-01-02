@@ -6,6 +6,7 @@ import {getColors} from 'src/styles/colors';
 import {
   FontPoppinsName,
   button_link_primary_small,
+  getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {Height} from 'utils/common.types';
@@ -48,10 +49,18 @@ const getDimensionedStyles = ({height}: Height, theme: Theme) =>
     h4: {
       ...headlines_primary_headline_2,
       color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...headlines_primary_headline_2}.fontSize,
+      ),
     },
     textContent: {
       ...button_link_primary_small,
       color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...button_link_primary_small}.fontSize,
+      ),
     },
     bold: {fontFamily: FontPoppinsName.BOLD},
   });

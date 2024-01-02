@@ -7,12 +7,17 @@ import {
   TextStyle,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from 'react-native';
 import {InputProps} from 'react-native-elements';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
-import {FontPoppinsName, body_primary_body_1} from 'src/styles/typography';
+import {
+  FontPoppinsName,
+  body_primary_body_1,
+  getFontSizeSmallDevices,
+} from 'src/styles/typography';
 import CustomInput from './CustomInput';
 
 interface OperationInputProps {
@@ -29,7 +34,7 @@ interface OperationInputProps {
 
 export default (props: InputProps & OperationInputProps) => {
   const {theme} = useContext(ThemeContext);
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
 
   const renderCustomInput = () => (
     <CustomInput
@@ -78,7 +83,7 @@ export default (props: InputProps & OperationInputProps) => {
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     container: {
       width: '100%',
@@ -94,6 +99,10 @@ const getStyles = (theme: Theme) =>
     labelStyle: {
       ...body_primary_body_1,
       color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...body_primary_body_1}.fontSize,
+      ),
     },
     labelInputContainer: {
       flexDirection: 'row',

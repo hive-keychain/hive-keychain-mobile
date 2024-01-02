@@ -2,14 +2,17 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import React, {useContext} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import AddAccountByAuth from 'screens/hive/addAccounts/AddAccountByAuth';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
-import {headlines_primary_headline_2} from 'src/styles/typography';
+import {
+  getFontSizeSmallDevices,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import {AddAccountFromWalletParamList} from './AddAccount.types';
 
@@ -17,7 +20,7 @@ const AccountStack = createStackNavigator<AddAccountFromWalletParamList>();
 
 export default () => {
   const {theme} = useContext(ThemeContext);
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
   return (
     <AccountStack.Navigator>
       <AccountStack.Screen
@@ -33,7 +36,7 @@ export default () => {
           ),
           headerRight: () => (
             <MoreInformation
-              additionalButtonStyle={styles.marginRight}
+              additionalButtonStyle={[styles.marginRight, styles.icon]}
               theme={theme}
               type={Info.KEYS}
             />
@@ -54,14 +57,14 @@ export default () => {
             <Icon
               name={Icons.ARROW_LEFT}
               theme={theme}
-              additionalContainerStyle={styles.marginLeft}
+              additionalContainerStyle={[styles.marginLeft, styles.icon]}
               onClick={() => navigation.goBack()}
             />
           ),
           headerRight: () => {
             return (
               <MoreInformation
-                additionalButtonStyle={styles.marginRight}
+                additionalButtonStyle={[styles.marginRight, styles.icon]}
                 type={Info.QR_ACCOUNT}
                 theme={theme}
               />
@@ -80,7 +83,7 @@ export default () => {
             <Icon
               name={Icons.ARROW_LEFT}
               theme={theme}
-              additionalContainerStyle={styles.marginLeft}
+              additionalContainerStyle={[styles.marginLeft, styles.icon]}
               onClick={() => {
                 navigation.goBack();
               }}
@@ -91,7 +94,7 @@ export default () => {
               name={Icons.CLOSE_CIRCLE}
               theme={theme}
               onClick={() => navigation.navigate('WALLET')}
-              additionalContainerStyle={[styles.marginRight]}
+              additionalContainerStyle={[styles.marginRight, styles.icon]}
             />
           ),
           title: translate('navigation.add_account_by_auth'),
@@ -106,7 +109,7 @@ export default () => {
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     header: {
       backgroundColor: getColors(theme).primaryBackground,
@@ -116,8 +119,12 @@ const getStyles = (theme: Theme) =>
     headerTitle: {
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...headlines_primary_headline_2}.fontSize,
+      ),
     },
     marginLeft: {marginLeft: 16},
     marginRight: {marginRight: 16},
-    closeButton: {width: 18, height: 18},
+    icon: {width: 22, height: 22},
   });

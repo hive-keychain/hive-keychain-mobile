@@ -26,6 +26,7 @@ import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
   button_link_primary_medium,
+  getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
@@ -71,7 +72,7 @@ const AddAccountByAuth = ({
 
   const {theme} = useContext(ThemeContext);
   const {height} = useWindowDimensions();
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, height);
 
   return (
     <Background theme={theme}>
@@ -126,8 +127,8 @@ const AddAccountByAuth = ({
             <Button
               title={translate('common.import').toUpperCase()}
               onPress={onImportKeysByAuth}
-              style={[getButtonStyle(theme).warningStyleButton]}
-              additionalTextStyle={{...button_link_primary_medium}}
+              style={[getButtonStyle(theme, height).warningStyleButton]}
+              additionalTextStyle={styles.buttonText}
             />
           </View>
         </View>
@@ -136,7 +137,7 @@ const AddAccountByAuth = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     container: {alignItems: 'center', justifyContent: 'space-between', flex: 1},
     topContainer: {
@@ -145,7 +146,14 @@ const getStyles = (theme: Theme) =>
       alignItems: 'center',
       paddingHorizontal: 16,
     },
-    text: {color: getColors(theme).secondaryText, ...body_primary_body_1},
+    text: {
+      color: getColors(theme).secondaryText,
+      ...body_primary_body_1,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...body_primary_body_1}.fontSize,
+      ),
+    },
     opacity: {
       opacity: 0.7,
     },
@@ -157,6 +165,13 @@ const getStyles = (theme: Theme) =>
     },
     smallerText: {
       fontSize: 13,
+    },
+    buttonText: {
+      ...button_link_primary_medium,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...button_link_primary_medium}.fontSize,
+      ),
     },
   });
 
