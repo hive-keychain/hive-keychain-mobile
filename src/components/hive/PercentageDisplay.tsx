@@ -1,14 +1,20 @@
 import React from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {
+  ScaledSize,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {DARKER_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   fields_primary_text_2,
+  getFontSizeSmallDevices,
   title_secondary_body_3,
   title_secondary_title_2,
 } from 'src/styles/typography';
-import {Width} from 'utils/common.types';
 import Icon from './Icon';
 
 type Props = {
@@ -29,13 +35,13 @@ const PercentageDisplay = ({
   iconName,
   bgColor,
 }: Props) => {
-  const styles = getDimensionedStyles({
+  const styles = getDimensionedStyles(
+    useWindowDimensions(),
     IconBgcolor,
     percent,
     theme,
     bgColor,
-    ...useWindowDimensions(),
-  });
+  );
 
   return (
     <View style={styles.container}>
@@ -60,18 +66,13 @@ const PercentageDisplay = ({
   );
 };
 
-const getDimensionedStyles = ({
-  width,
-  IconBgcolor,
-  percent,
-  theme,
-  bgColor,
-}: Width & {
-  IconBgcolor: string;
-  percent: number;
-  theme: Theme;
-  bgColor: string;
-}) =>
+const getDimensionedStyles = (
+  {height}: ScaledSize,
+  IconBgcolor: string,
+  percent: number,
+  theme: Theme,
+  bgColor: string,
+) =>
   StyleSheet.create({
     textWrapper: {
       display: 'flex',
@@ -87,8 +88,20 @@ const getDimensionedStyles = ({
       color: '#FFF',
       opacity: 0.7,
       ...title_secondary_body_3,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...title_secondary_body_3}.fontSize,
+      ),
     },
-    percent: {color: '#FFF', ...title_secondary_title_2, lineHeight: 30},
+    percent: {
+      color: '#FFF',
+      ...title_secondary_title_2,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...title_secondary_title_2}.fontSize,
+      ),
+      lineHeight: 30,
+    },
     container: {
       display: 'flex',
       flexDirection: 'row',
