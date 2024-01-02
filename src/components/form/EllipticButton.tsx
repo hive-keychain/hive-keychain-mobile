@@ -10,6 +10,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import {BUTTON_MAX_HEIGHT, BUTTON_MAX_WIDTH} from 'src/styles/button';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -43,10 +44,10 @@ const getDimensionedStyles = ({width}: {width: number}) => {
     text: {color: 'white', fontSize: 16},
     button: {
       marginHorizontal: width * 0.1,
-      width: '80%',
+      width: BUTTON_MAX_WIDTH,
       color: 'black',
       backgroundColor: 'black',
-      height: 50,
+      height: BUTTON_MAX_HEIGHT,
       borderRadius: 25,
       alignItems: 'center',
       justifyContent: 'center',

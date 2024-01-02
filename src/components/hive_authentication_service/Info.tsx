@@ -3,13 +3,14 @@ import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
 import React, {useContext} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
   FontPoppinsName,
   body_primary_body_2,
+  getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
 import {clearHAS} from 'utils/hiveAuthenticationService';
@@ -19,7 +20,8 @@ const TitleDarkPNG = require('assets/new_UI/has_title_dark.png');
 
 const HASInfo = () => {
   const {theme} = useContext(ThemeContext);
-  const styles = getStyles(theme);
+  const height = useWindowDimensions().height;
+  const styles = getStyles(theme, height);
   const fullHasLogo = () => {
     return (
       <View style={styles.flexRowCentered}>
@@ -37,7 +39,7 @@ const HASInfo = () => {
   };
 
   return (
-    <Operation logo={fullHasLogo()} title="" theme={theme}>
+    <Operation logo={fullHasLogo()} title="">
       <View style={styles.view}>
         <Text style={[styles.title, styles.header]}>
           {translate('wallet.has.info.h1')}
@@ -74,8 +76,8 @@ const HASInfo = () => {
           onPress={() => {
             clearHAS();
           }}
-          style={getButtonStyle(theme).warningStyleButton}
-          additionalTextStyle={{...body_primary_body_2}}
+          style={getButtonStyle(theme, height).warningStyleButton}
+          additionalTextStyle={styles.buttonText}
         />
       </View>
     </Operation>
@@ -95,7 +97,7 @@ const IndicatorDescription = ({
   press?: boolean;
   longPress?: boolean;
 }) => {
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
   return (
     <View>
       <View style={styles.indicatorHeader}>
@@ -132,7 +134,7 @@ const IndicatorDescription = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     view: {
       flex: 1,
@@ -142,8 +144,8 @@ const getStyles = (theme: Theme) =>
       paddingHorizontal: 15,
     },
     header: {
-      fontSize: 15,
       marginTop: 10,
+      fontSize: getFontSizeSmallDevices(height, 15),
     },
     text: {},
     indicatorHeader: {flexDirection: 'row', marginTop: 5, alignItems: 'center'},
@@ -165,6 +167,10 @@ const getStyles = (theme: Theme) =>
     textBase: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...title_primary_body_2}.fontSize,
+      ),
     },
     flexRowCentered: {
       flexDirection: 'row',
@@ -173,6 +179,13 @@ const getStyles = (theme: Theme) =>
     },
     hasContainer: {
       backgroundColor: '#FFF',
+    },
+    buttonText: {
+      ...body_primary_body_2,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...body_primary_body_2}.fontSize,
+      ),
     },
   });
 
