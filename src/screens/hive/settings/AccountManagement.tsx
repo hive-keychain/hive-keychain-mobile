@@ -11,12 +11,15 @@ import UserProfilePicture from 'components/ui/UserProfilePicture';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {MainNavigation} from 'navigators/Root.types';
 import React, {useContext, useEffect, useState} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
-import {button_link_primary_medium} from 'src/styles/typography';
+import {
+  button_link_primary_medium,
+  getFontSizeSmallDevices,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -50,7 +53,7 @@ const AccountManagement = ({
   };
 
   const {theme} = useContext(ThemeContext);
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
 
   return (
     <Background theme={theme}>
@@ -124,7 +127,7 @@ const AccountManagement = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     safeArea: {paddingHorizontal: 16},
     cardKey: {
@@ -152,6 +155,10 @@ const getStyles = (theme: Theme) =>
     avatar: {width: 30, height: 30, borderRadius: 50},
     operationButtonText: {
       ...button_link_primary_medium,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...button_link_primary_medium}.fontSize,
+      ),
     },
   });
 

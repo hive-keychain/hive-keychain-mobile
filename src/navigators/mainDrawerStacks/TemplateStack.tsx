@@ -9,10 +9,13 @@ import {
   TemplateStackNavigationProps,
 } from 'navigators/Root.types';
 import React, {useContext} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {headlines_primary_headline_2} from 'src/styles/typography';
+import {
+  getFontSizeSmallDevices,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
 
 const Stack = createStackNavigator<RootStackParam>();
 
@@ -29,7 +32,7 @@ export default ({navigation, route}: TemplateStackNavigationProps) => {
     extraActionOnBack,
   } = route.params;
   const {theme} = useContext(ThemeContext);
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
 
   return (
     <Stack.Navigator>
@@ -68,7 +71,7 @@ export default ({navigation, route}: TemplateStackNavigationProps) => {
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     header: {
       backgroundColor: getColors(theme).primaryBackground,
@@ -78,6 +81,10 @@ const getStyles = (theme: Theme) =>
     headerTitle: {
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...headlines_primary_headline_2}.fontSize,
+      ),
     },
     headerRightContainer: {
       marginRight: 16,

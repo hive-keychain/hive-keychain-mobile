@@ -415,6 +415,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       width: '100%',
+      marginBottom: 10,
     },
     buttonText: {
       ...button_link_primary_small,

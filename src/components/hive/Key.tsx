@@ -5,14 +5,25 @@ import AddKey from 'components/modals/AddKey';
 import Separator from 'components/ui/Separator';
 import {MainNavigation, ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
-import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+  useWindowDimensions,
+} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
-import {button_link_primary_medium} from 'src/styles/typography';
+import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  button_link_primary_medium,
+  getFontSizeSmallDevices,
+} from 'src/styles/typography';
 import {KeyUtils} from 'utils/key.utils';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
@@ -55,7 +66,8 @@ export default ({
     return unsubscribe;
   }, [navigation]);
 
-  const styles = getStyles(theme);
+  const {height} = useWindowDimensions();
+  const styles = getStyles(theme, height);
 
   return (
     <View style={containerStyle}>
@@ -106,7 +118,11 @@ export default ({
                     ? [styles.key, styles.smallerText, styles.opacity]
                     : styles.keyHidden
                 }>
-                {isPKShown ? privateKey : hidePrivateKey(privateKey)}
+                {isPKShown
+                  ? height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED
+                    ? privateKey.substring(0, 35) + '...'
+                    : privateKey
+                  : hidePrivateKey(privateKey)}
               </Text>
               <ViewKey
                 isPKShown={isPKShown}
@@ -197,11 +213,15 @@ const hidePrivateKey = (privateKey: string) => {
   return hiddenKey;
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     keyAuthority: {
       color: getColors(theme).secondaryText,
       ...button_link_primary_medium,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...button_link_primary_medium}.fontSize,
+      ),
     },
     row: {
       flexDirection: 'row',
@@ -210,7 +230,7 @@ const getStyles = (theme: Theme) =>
     keyType: {
       color: getColors(theme).secondaryText,
       ...button_link_primary_medium,
-      fontSize: 13,
+      fontSize: getFontSizeSmallDevices(height, 13),
     },
     key: {
       color: getColors(theme).secondaryText,
@@ -225,7 +245,7 @@ const getStyles = (theme: Theme) =>
     },
     keyHidden: {
       color: getColors(theme).iconBW,
-      fontSize: 25,
+      fontSize: getFontSizeSmallDevices(height, 25),
       letterSpacing: -2,
     },
     addKey: {
@@ -236,6 +256,10 @@ const getStyles = (theme: Theme) =>
     addKeyText: {
       color: getColors(theme).secondaryText,
       ...button_link_primary_medium,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...button_link_primary_medium}.fontSize,
+      ),
     },
     opacity: {
       opacity: 0.7,

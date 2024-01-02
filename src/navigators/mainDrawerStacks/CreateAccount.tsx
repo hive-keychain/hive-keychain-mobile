@@ -5,11 +5,14 @@ import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import React, {useContext} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import CreateAccountStepOne from 'screens/hive/createAccounts/create-account-step-one/CreateAccountStepOne';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {headlines_primary_headline_2} from 'src/styles/typography';
+import {
+  getFontSizeSmallDevices,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import {CreateAccountFromWalletParamList} from './CreateAccount.types';
 
@@ -19,7 +22,7 @@ const CreateAccountStack = createStackNavigator<
 
 export default () => {
   const {theme} = useContext(ThemeContext);
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
 
   return (
     <CreateAccountStack.Navigator>
@@ -53,7 +56,7 @@ export default () => {
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     header: {
       backgroundColor: getColors(theme).primaryBackground,
@@ -63,6 +66,10 @@ const getStyles = (theme: Theme) =>
     headerTitle: {
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...headlines_primary_headline_2}.fontSize,
+      ),
     },
     marginRight: {marginRight: 16},
     marginLeft: {marginLeft: 16},
