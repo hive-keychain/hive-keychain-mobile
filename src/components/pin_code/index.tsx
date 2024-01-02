@@ -44,8 +44,7 @@ interface Props {
   confirm?: string;
   submit: (pin: string, callback?: (unsafe?: boolean) => void) => void;
   navigation: UnlockNavigation | SignupNavigation;
-  //TODO after refactoring UI change to fixed param
-  theme?: Theme;
+  theme: Theme;
 }
 
 const PinCode = ({

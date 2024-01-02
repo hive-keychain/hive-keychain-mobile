@@ -52,7 +52,6 @@ const AssetImage = (props: AssetImageprops) => {
             svgFile={<TransakSVG {...contentSVGProps} />}
           />
         );
-      //TODO complete bellow if needed
       case 'upbit':
         return (
           <SvgContainer

@@ -201,7 +201,7 @@ export const SendDeposit = ({currency}: {currency: string}) => {
     />
   );
 };
-//TODO important on this file: check what's needed & cleanup
+
 export const PendingSavingsWithdraw = ({
   currentWithdrawingList,
   children,
@@ -233,16 +233,11 @@ export const ShowHistory = (props: TokenHistoryProps) => {
   return (
     <RoundButton
       onPress={() => {
-        //TODO change bellow to a stack screen instead.
-        //  - maybe add a general stack page that can be reused anytime.
-
-        //TODO bellow pass the needed props
         navigate('TokensHistory', {...props});
       }}
       size={36}
       backgroundColor="#69C1B3"
       content={<HistoryIcon color={getColors(props.theme).icon} />}
-      // additionalButtonStyle={props.additionalButtonStyle}
     />
   );
 };
