@@ -9,14 +9,24 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React, {useContext, useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {DomainPreference} from 'reducers/preferences.types';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {body_primary_body_2, body_primary_body_3} from 'src/styles/typography';
+import {
+  body_primary_body_2,
+  body_primary_body_3,
+  getFontSizeSmallDevices,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 
@@ -28,7 +38,7 @@ const Operations = ({
   loadAccount,
 }: PropsFromRedux) => {
   const {theme} = useContext(ThemeContext);
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
   const [domainList, setDomainList] = useState<DomainPreference[]>([]);
   const [filteredDomains, setFilteredDomains] = useState<DomainPreference[]>(
     [],
@@ -83,7 +93,7 @@ const Operations = ({
             styles.text,
             styles.opacity,
             styles.marginVertical,
-            {...body_primary_body_3},
+            styles.textOperations,
             styles.paddingHorizontal,
             {textAlign: 'center'},
           ]}>
@@ -148,7 +158,7 @@ const Operations = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     container: {flex: 1, paddingHorizontal: 16},
     avatar: {width: 30, height: 30, borderRadius: 50},
@@ -158,7 +168,14 @@ const getStyles = (theme: Theme) =>
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,
-      fontSize: 15,
+      fontSize: getFontSizeSmallDevices(height, 15),
+    },
+    textOperations: {
+      ...body_primary_body_3,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...body_primary_body_3}.fontSize,
+      ),
     },
     textNoPref: {
       textAlign: 'center',

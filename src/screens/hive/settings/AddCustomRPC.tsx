@@ -3,13 +3,22 @@ import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {body_primary_body_2} from 'src/styles/typography';
+import {
+  body_primary_body_2,
+  getFontSizeSmallDevices,
+} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 
 interface Props {
@@ -49,7 +58,7 @@ const AddCustomRPC = ({
   onSelectedDropdown,
   titleTranslationKey,
 }: Props) => {
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
   return (
     <View>
       <Text style={styles.text}>{title}</Text>
@@ -105,7 +114,7 @@ const AddCustomRPC = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     flexRow: {
       flexDirection: 'row',
@@ -118,7 +127,7 @@ const getStyles = (theme: Theme) =>
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,
-      fontSize: 15,
+      fontSize: getFontSizeSmallDevices(height, 15),
     },
     rpcItemContainer: {
       flexDirection: 'row',
@@ -126,11 +135,11 @@ const getStyles = (theme: Theme) =>
       justifyContent: 'space-between',
     },
     addButton: {
-      minHeight: 50,
       alignItems: 'center',
+      justifyContent: 'center',
       borderRadius: 30,
     },
-    flex85: {width: '85%'},
+    flex85: {width: '80%'},
     input: {
       marginHorizontal: 0,
     },

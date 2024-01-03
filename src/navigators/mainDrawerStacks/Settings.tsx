@@ -1,22 +1,23 @@
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import CloseButton from 'components/ui/CloseButton';
-import CustomIconButton from 'components/ui/CustomIconButton';
+import Icon from 'components/hive/Icon';
 import React, {useContext} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import SettingsMenu from 'screens/hive/settings/SettingsMenu';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
-import {headlines_primary_headline_2} from 'src/styles/typography';
+import {
+  getFontSizeSmallDevices,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator();
 
 export default () => {
   const {theme} = useContext(ThemeContext);
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
 
   return (
     <Stack.Navigator>
@@ -29,20 +30,22 @@ export default () => {
           headerTitleAlign: 'center',
           title: translate('navigation.settings'),
           headerRight: () => (
-            <CloseButton
+            <Icon
+              name={Icons.CLOSE_CIRCLE}
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onClick={() => navigation.navigate('WALLET')}
+              color={getColors(theme).iconBW}
             />
           ),
           cardStyle: styles.card,
           headerLeft: () => (
-            <CustomIconButton
+            <Icon
+              name={Icons.ARROW_LEFT}
               theme={theme}
-              onPress={() =>
+              onClick={() =>
                 (navigation as DrawerNavigationHelpers).openDrawer()
               }
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
+              color={getColors(theme).iconBW}
             />
           ),
         })}
@@ -51,7 +54,7 @@ export default () => {
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     header: {
       backgroundColor: getColors(theme).primaryBackground,
@@ -61,6 +64,10 @@ const getStyles = (theme: Theme) =>
     headerTitle: {
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...headlines_primary_headline_2}.fontSize,
+      ),
     },
     card: {
       paddingHorizontal: 16,

@@ -13,6 +13,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
@@ -25,7 +26,10 @@ import {
 } from 'src/interfaces/hive-engine-rpc.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {body_primary_body_2} from 'src/styles/typography';
+import {
+  body_primary_body_2,
+  getFontSizeSmallDevices,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 import {rpcList} from 'utils/hiveUtils';
@@ -61,7 +65,7 @@ const RpcNodes = ({
   const [customRPCList, setCustomRPCList] = useState<Rpc[]>([]);
 
   const {theme} = useContext(ThemeContext);
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
 
   useEffect(() => {
     init();
@@ -462,7 +466,7 @@ const RpcNodes = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     container: {
       paddingHorizontal: 16,
@@ -471,7 +475,7 @@ const getStyles = (theme: Theme) =>
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,
-      fontSize: 15,
+      fontSize: getFontSizeSmallDevices(height, 15),
     },
     opacity: {
       opacity: 0.7,
@@ -485,7 +489,7 @@ const getStyles = (theme: Theme) =>
     textInfo: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,
-      fontSize: 15,
+      fontSize: getFontSizeSmallDevices(height, 15),
       opacity: 0.7,
     },
     smallerFont: {

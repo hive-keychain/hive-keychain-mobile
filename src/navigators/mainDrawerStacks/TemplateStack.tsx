@@ -1,9 +1,6 @@
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import CloseButton from 'components/ui/CloseButton';
-import CustomIconButton from 'components/ui/CustomIconButton';
+import Icon from 'components/hive/Icon';
 import {
   RootStackParam,
   TemplateStackNavigationProps,
@@ -11,6 +8,7 @@ import {
 import React, {useContext} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
@@ -48,21 +46,23 @@ export default ({navigation, route}: TemplateStackNavigationProps) => {
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: !hideCloseButton
             ? () => (
-                <CloseButton
+                <Icon
+                  name={Icons.CLOSE_CIRCLE}
                   theme={theme}
-                  onPress={() => navigation.navigate('WALLET')}
+                  onClick={() => navigation.navigate('WALLET')}
+                  color={getColors(theme).iconBW}
                 />
               )
             : null,
           headerLeft: () => (
-            <CustomIconButton
+            <Icon
+              name={Icons.ARROW_LEFT}
               theme={theme}
-              onPress={() => {
+              onClick={() => {
                 if (extraActionOnBack) extraActionOnBack();
                 (navigation as DrawerNavigationHelpers).goBack();
               }}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
+              color={getColors(theme).iconBW}
             />
           ),
         })}
