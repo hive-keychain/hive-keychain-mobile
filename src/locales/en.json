@@ -400,6 +400,13 @@
         "total_staked": "Total Staked",
         "pending_unstake": "Pending Unstake"
       },
+      "token_settings": {
+        "title": "Tokens Settings",
+        "tokens_settings_text": "Click on each checkbox to choose which tokens to display. Learn more about custom tokens on the Hive blockchain at",
+        "issued_by": "by",
+        "empty_results": "No results. Try to clear the filter.",
+        "reset_tokens_text": "Reset. Show all tokens"
+      },
       "buy_coins": {
         "title_hive": "HIVE",
         "title_hbd": "HBD",

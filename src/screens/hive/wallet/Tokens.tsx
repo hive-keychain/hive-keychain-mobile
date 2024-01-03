@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
@@ -6,6 +7,7 @@ import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
+import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useContext, useEffect, useState} from 'react';
 import {
   FlatList,
@@ -21,8 +23,10 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   body_primary_body_1,
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
@@ -33,6 +37,8 @@ import {hiveEngineWebsiteURL} from 'utils/config';
 import {capitalizeSentence} from 'utils/format';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
+import TokenSettings from './tokens/TokenSettings';
 
 interface TokensProps {}
 
@@ -51,8 +57,10 @@ const Tokens = ({
     setFilteredUserTokenBalanceList,
   ] = useState<TokenBalance[]>([]);
   const [search, setSearch] = useState<string>('');
+  const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
 
   useEffect(() => {
+    loadHiddenTokens();
     loadTokens();
     loadTokensMarket();
   }, [loadTokens, loadTokensMarket]);
@@ -75,22 +83,36 @@ const Tokens = ({
           getHiveEngineTokenValue(a, tokensMarket)
         );
       });
-      setFilteredUserTokenBalanceList(list);
+      setFilteredUserTokenBalanceList(
+        list.filter((userToken) => !hiddenTokens.includes(userToken.symbol)),
+      );
     }
   }, [userTokens]);
 
   useEffect(() => {
-    if (search.trim().length === 0) {
-      setFilteredUserTokenBalanceList(userTokens.list);
-    } else {
-      const filtered = filteredUserTokenBalanceList.filter(
-        (token) =>
-          token.balance.toLowerCase().includes(search.toLowerCase()) ||
-          token.symbol.toLowerCase().includes(search.toLowerCase()),
-      );
-      setFilteredUserTokenBalanceList(filtered);
-    }
+    const filtered = filteredUserTokenBalanceList.filter(
+      (token) =>
+        token.balance.toLowerCase().includes(search.toLowerCase()) ||
+        token.symbol.toLowerCase().includes(search.toLowerCase()),
+    );
+    setFilteredUserTokenBalanceList(
+      filtered.filter(
+        (filteredToken) => !hiddenTokens.includes(filteredToken.symbol),
+      ),
+    );
   }, [search]);
+
+  const loadHiddenTokens = async () => {
+    let customHiddenTokens = null;
+    try {
+      customHiddenTokens = JSON.parse(
+        await AsyncStorage.getItem(KeychainStorageKeyEnum.HIDDEN_TOKENS),
+      );
+      setHiddenTokens(customHiddenTokens ?? []);
+    } catch (error) {
+      console.log('Error reading hiddenTokens');
+    }
+  };
 
   const {theme} = useContext(ThemeContext);
 
@@ -140,7 +162,7 @@ const Tokens = ({
     <Background theme={theme}>
       <View style={styles.containerTokenScreen}>
         <FocusAwareStatusBar />
-        <Separator />
+        <Separator height={10} />
         <View style={styles.containerInfoText}>
           <Text style={[styles.textInfo, styles.textJustified]}>
             {capitalizeSentence(translate('wallet.operations.tokens.info'))}
@@ -161,21 +183,31 @@ const Tokens = ({
             value={search}
             onChangeText={(text) => setSearch(text)}
             disabled={userTokens.loading === true}
+            additionalContainerStyle={styles.searchBar}
           />
           <Icon
             name={Icons.SETTINGS_2}
             theme={theme}
-            onClick={() => console.log('TODO handle click settings tokens')}
+            onClick={() => {
+              navigate('TemplateStack', {
+                titleScreen: translate(
+                  'wallet.operations.token_settings.title',
+                ),
+                component: <TokenSettings />,
+                hideCloseButton: true,
+              } as TemplateStackProps);
+            }}
             additionalContainerStyle={styles.iconButton}
           />
-          <Icon
+          {/* //TODO important Quentin: please decide what to do with this extra button bellow */}
+          {/* <Icon
             name={Icons.SETTINGS_4}
             theme={theme}
             onClick={() =>
               console.log('TODO handle onPress other tokens settings')
             }
             additionalContainerStyle={styles.iconButton}
-          />
+          /> */}
         </View>
         {renderContent()}
       </View>
@@ -236,6 +268,9 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       justifyContent: 'space-between',
       marginBottom: 35,
       marginTop: 35,
+    },
+    searchBar: {
+      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? '80%' : '85%',
     },
   });
 
