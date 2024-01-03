@@ -1,20 +1,18 @@
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import CloseButton from 'components/ui/CloseButton';
-import CustomIconButton from 'components/ui/CustomIconButton';
+import Icon from 'components/hive/Icon';
 import React, {useContext} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import Accounts from 'screens/hive/accounts/Accounts';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
-//TODO testing bellow to add the main param.
+
 const Stack = createStackNavigator();
 
 export default () => {
@@ -32,22 +30,24 @@ export default () => {
           headerTitleAlign: 'center',
           title: translate('common.account'),
           headerRight: () => (
-            <CloseButton
+            <Icon
+              name={Icons.CLOSE_CIRCLE}
               theme={theme}
-              onPress={() =>
+              onClick={() =>
                 navigation.navigate('WALLET', {screen: 'WalletScreen'})
               }
+              color={getColors(theme).iconBW}
             />
           ),
           cardStyle: styles.card,
           headerLeft: () => (
-            <CustomIconButton
+            <Icon
+              name={Icons.ARROW_LEFT}
               theme={theme}
-              onPress={() =>
+              onClick={() =>
                 (navigation as DrawerNavigationHelpers).openDrawer()
               }
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
+              color={getColors(theme).iconBW}
             />
           ),
         })}
@@ -75,6 +75,4 @@ const getStyles = (theme: Theme, height: number) =>
       paddingHorizontal: 16,
       backgroundColor: getColors(theme).primaryBackground,
     },
-    marginLeft: {marginLeft: 16},
-    marginRight: {marginRight: 16},
   });

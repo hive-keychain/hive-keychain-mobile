@@ -32,11 +32,12 @@ export default () => {
               theme={theme}
               additionalContainerStyle={styles.marginLeft}
               onClick={() => navigation.goBack()}
+              color={getColors(theme).iconBW}
             />
           ),
           headerRight: () => (
             <MoreInformation
-              additionalButtonStyle={[styles.marginRight, styles.icon]}
+              additionalButtonStyle={[styles.marginRight]}
               theme={theme}
               type={Info.KEYS}
             />
@@ -57,14 +58,15 @@ export default () => {
             <Icon
               name={Icons.ARROW_LEFT}
               theme={theme}
-              additionalContainerStyle={[styles.marginLeft, styles.icon]}
+              additionalContainerStyle={[styles.marginLeft]}
               onClick={() => navigation.goBack()}
+              color={getColors(theme).iconBW}
             />
           ),
           headerRight: () => {
             return (
               <MoreInformation
-                additionalButtonStyle={[styles.marginRight, styles.icon]}
+                additionalButtonStyle={[styles.marginRight]}
                 type={Info.QR_ACCOUNT}
                 theme={theme}
               />
@@ -83,10 +85,11 @@ export default () => {
             <Icon
               name={Icons.ARROW_LEFT}
               theme={theme}
-              additionalContainerStyle={[styles.marginLeft, styles.icon]}
+              additionalContainerStyle={[styles.marginLeft]}
               onClick={() => {
                 navigation.goBack();
               }}
+              color={getColors(theme).iconBW}
             />
           ),
           headerRight: () => (
@@ -94,7 +97,8 @@ export default () => {
               name={Icons.CLOSE_CIRCLE}
               theme={theme}
               onClick={() => navigation.navigate('WALLET')}
-              additionalContainerStyle={[styles.marginRight, styles.icon]}
+              additionalContainerStyle={[styles.marginRight]}
+              color={getColors(theme).iconBW}
             />
           ),
           title: translate('navigation.add_account_by_auth'),
@@ -126,5 +130,4 @@ const getStyles = (theme: Theme, height: number) =>
     },
     marginLeft: {marginLeft: 16},
     marginRight: {marginRight: 16},
-    icon: {width: 22, height: 22},
   });

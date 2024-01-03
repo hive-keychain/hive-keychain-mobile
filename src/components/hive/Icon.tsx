@@ -243,7 +243,7 @@ const getIconFilePath = (
     case name === Icons.INFO:
       return (
         <InfoCircleIcon
-          style={[finalStyleOnIcon, {color: color ?? getColors(theme).iconBW}]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
@@ -316,10 +316,7 @@ const getIconFilePath = (
     case name === Icons.ARROW_LEFT || name === Icons.BACK:
       return (
         <ArrowLeftIcon
-          style={[
-            finalStyleOnIcon,
-            {color: color ?? getColors(theme).secodaryIconBW},
-          ]}
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );

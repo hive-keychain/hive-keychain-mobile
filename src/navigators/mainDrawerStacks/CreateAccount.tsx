@@ -1,13 +1,11 @@
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import CloseButton from 'components/ui/CloseButton';
-import CustomIconButton from 'components/ui/CustomIconButton';
+import Icon from 'components/hive/Icon';
 import React, {useContext} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import CreateAccountStepOne from 'screens/hive/createAccounts/create-account-step-one/CreateAccountStepOne';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
@@ -35,19 +33,21 @@ export default () => {
           headerTitleAlign: 'center',
           title: translate('navigation.create_account'),
           headerRight: () => (
-            <CloseButton
+            <Icon
+              name={Icons.CLOSE_CIRCLE}
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
-              additionalContainerStyle={styles.marginRight}
+              onClick={() => navigation.navigate('WALLET')}
+              additionalContainerStyle={[styles.marginRight]}
+              color={getColors(theme).iconBW}
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <Icon
+              name={Icons.ARROW_LEFT}
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
-              additionalContainerStyle={styles.marginLeft}
+              additionalContainerStyle={[styles.marginLeft]}
+              onClick={() => (navigation as DrawerNavigationHelpers).goBack()}
+              color={getColors(theme).iconBW}
             />
           ),
         })}

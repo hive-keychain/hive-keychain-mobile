@@ -1,13 +1,12 @@
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
-import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
+import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
-import CustomIconButton from 'components/ui/CustomIconButton';
 import React, {useContext} from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import AccountManagement from 'screens/hive/settings/AccountManagement';
 import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
@@ -38,12 +37,12 @@ export default () => {
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <Icon
+              name={Icons.ARROW_LEFT}
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
+              onClick={() => (navigation as DrawerNavigationHelpers).goBack()}
               additionalContainerStyle={styles.marginLeft}
+              color={getColors(theme).iconBW}
             />
           ),
         })}

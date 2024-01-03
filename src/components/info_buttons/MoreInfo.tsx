@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {Width} from 'utils/common.types';
 import {navigate} from 'utils/navigation';
@@ -62,6 +63,7 @@ export default ({
           ],
         } as ModalScreenProps)
       }
+      color={getColors(theme).iconBW}
     />
   );
 };
