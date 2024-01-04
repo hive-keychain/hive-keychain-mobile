@@ -1,9 +1,17 @@
 import {setToggleElement} from 'hooks/toggle';
 import React, {useState} from 'react';
-import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+  useWindowDimensions,
+} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
+  getFontSizeSmallDevices,
   title_primary_body_2,
   title_primary_title_1,
 } from 'src/styles/typography';
@@ -25,7 +33,7 @@ const ScreenToggle = ({
   theme,
 }: Props) => {
   const [active, setActive] = useState(0);
-  const styles = getStyles(menu.length, theme);
+  const styles = getStyles(menu.length, theme, useWindowDimensions().height);
 
   return (
     <View style={[styles.wrapper]}>
@@ -59,7 +67,7 @@ const ScreenToggle = ({
   );
 };
 
-const getStyles = (nb: number, theme: Theme) =>
+const getStyles = (nb: number, theme: Theme, height: number) =>
   StyleSheet.create({
     wrapper: {
       display: 'flex',
@@ -70,7 +78,7 @@ const getStyles = (nb: number, theme: Theme) =>
       width: '100%',
       display: 'flex',
       flexDirection: 'row',
-      marginTop: 20,
+      marginTop: 15,
       justifyContent: 'space-between',
     },
     headerElt: {
@@ -80,6 +88,10 @@ const getStyles = (nb: number, theme: Theme) =>
       ...title_primary_title_1,
       color: getColors(theme).secondaryText,
       textAlign: 'center',
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...title_primary_title_1}.fontSize,
+      ),
     },
     smallerHeaderText: {
       ...title_primary_body_2,

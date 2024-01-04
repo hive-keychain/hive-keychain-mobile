@@ -253,6 +253,8 @@ const Main = ({
                 <Primary theme={theme} />
                 <Separator height={10} />
                 <View style={styles.separatorContainer} />
+                {/* //TODO here bellow. Make a separator similar to the one in wallet. Logo + search + settings.
+                //  - reuse the same you just did as tokenSettings. */}
                 <Separator height={10} />
                 <EngineTokens />
               </View>

@@ -24,8 +24,11 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {title_primary_title_1} from 'src/styles/typography';
-import {Width} from 'utils/common.types';
+import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  getFontSizeSmallDevices,
+  title_primary_title_1,
+} from 'src/styles/typography';
 import {capitalizeSentence} from 'utils/format';
 import {getClient, voteForWitness} from 'utils/hive';
 import {translate} from 'utils/localize';
@@ -63,7 +66,8 @@ const Witness = ({
 
   const [usingProxy, setUsingProxy] = useState<boolean>(false);
   const [isLoading, setLoading] = useState(true);
-  const styles = getDimensionedStyles(useWindowDimensions(), theme);
+  const {width, height} = useWindowDimensions();
+  const styles = getDimensionedStyles(width, height, theme);
 
   useEffect(() => {
     init();
@@ -271,6 +275,9 @@ const Witness = ({
           ]}
           inputStyle={[styles.text]}
           inputContainerStyle={styles.inputContainer}
+          makeExpandable={
+            height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? true : false
+          }
         />
         <Separator height={15} />
         <View style={styles.switch}>
@@ -318,7 +325,7 @@ const Witness = ({
     );
 };
 
-const getDimensionedStyles = ({width}: Width, theme: Theme) =>
+const getDimensionedStyles = (width: number, height: number, theme: Theme) =>
   StyleSheet.create({
     container: {
       width: '100%',
@@ -331,6 +338,10 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       textAlignVertical: 'center',
       ...title_primary_title_1,
       color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...title_primary_title_1}.fontSize,
+      ),
     },
     witnessItem: {
       flex: 1,
@@ -354,8 +365,8 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       width: '100%',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginTop: 10,
-      marginBottom: 20,
+      marginBottom: 15,
+      alignSelf: 'center',
     },
     textOpaque: {
       opacity: 0.7,
@@ -376,13 +387,15 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     checkbox: {
       backgroundColor: 'rgba(0,0,0,0)',
       width: '45%',
-      padding: 15,
+      padding: 10,
       borderColor: getColors(theme).senaryCardBorderColor,
       borderRadius: 20,
       justifyContent: 'center',
       alignItems: 'center',
+      marginLeft: 0,
+      marginRight: 0,
     },
-    smallerText: {fontSize: 12},
+    smallerText: {fontSize: getFontSizeSmallDevices(height, 12)},
     voteButton: {
       flexDirection: 'row',
       alignItems: 'center',

@@ -1,12 +1,20 @@
-import React from 'react';
+import Separator from 'components/ui/Separator';
+import React, {useContext, useState} from 'react';
 import {
   StyleProp,
   StyleSheet,
-  useWindowDimensions,
+  Text,
+  TouchableOpacity,
+  View,
   ViewStyle,
+  useWindowDimensions,
 } from 'react-native';
 import {Input, InputProps} from 'react-native-elements';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {fields_primary_text_2} from 'src/styles/typography';
 import {Width} from 'utils/common.types';
+import {translate} from 'utils/localize';
 
 type Props = InputProps & {
   textAlign?: string;
@@ -14,6 +22,7 @@ type Props = InputProps & {
   additionalInputContainerStyle?: StyleProp<ViewStyle>;
   backgroundColor?: string;
   inputColor?: string;
+  makeExpandable?: boolean;
 };
 
 export default ({
@@ -22,15 +31,21 @@ export default ({
   textAlign,
   containerStyle,
   additionalInputContainerStyle,
+  makeExpandable,
   ...props
 }: Props) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const {theme} = useContext(ThemeContext);
   const styles = getDimensionedStyles({
     ...useWindowDimensions(),
+    theme,
     backgroundColor,
     inputColor,
     textAlign,
   });
-  return (
+
+  const renderInput = () => (
     <Input
       placeholderTextColor="#B9C9D6"
       containerStyle={[styles.container, containerStyle]}
@@ -44,14 +59,38 @@ export default ({
       {...props}
     />
   );
+
+  return makeExpandable ? (
+    <>
+      <View style={styles.flexRow}>
+        <Separator
+          height={2}
+          drawLine
+          additionalLineStyle={styles.lineSeparator}
+        />
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => setIsExpanded(!isExpanded)}>
+          <Text style={styles.textBase}>
+            {translate('common.search_box_placeholder')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      {isExpanded && renderInput()}
+    </>
+  ) : (
+    renderInput()
+  );
 };
 
 const getDimensionedStyles = ({
   width,
+  theme,
   backgroundColor,
   inputColor,
   textAlign,
 }: Width & {
+  theme: Theme;
   backgroundColor?: string;
   inputColor?: string;
   textAlign?: string;
@@ -74,5 +113,27 @@ const getDimensionedStyles = ({
       borderBottomWidth: 0,
       marginHorizontal: 15,
       textAlign: textAlign || 'left',
+    },
+    //TODO cleanup
+    // searchIcon: {
+    //   width: 12,
+    //   height: 12,
+    // },
+    flexRow: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+    },
+    lineSeparator: {
+      width: '85%',
+      borderColor: getColors(theme).lineSeparatorStroke,
+      position: 'absolute',
+      left: -5,
+      right: undefined,
+    },
+    textBase: {
+      ...fields_primary_text_2,
+      color: getColors(theme).secondaryText,
     },
   });

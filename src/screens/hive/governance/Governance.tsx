@@ -12,9 +12,12 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {title_primary_title_1} from 'src/styles/typography';
+import {
+  getFontSizeSmallDevices,
+  title_primary_title_1,
+} from 'src/styles/typography';
 import {RootState} from 'store';
-import {Width} from 'utils/common.types';
+import {Height, Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import MyWitness from './MyWitness';
 import Proposal from './Proposal';
@@ -134,7 +137,7 @@ const Governance = ({
   );
 };
 
-const getDimensionedStyles = ({width}: Width, theme: Theme) =>
+const getDimensionedStyles = ({width, height}: Width & Height, theme: Theme) =>
   StyleSheet.create({
     toggle: {
       display: 'flex',
@@ -150,6 +153,10 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       ...title_primary_title_1,
       color: getColors(theme).secondaryText,
       textAlign: 'center',
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...title_primary_title_1}.fontSize,
+      ),
     },
     flexCentered: {flex: 1, justifyContent: 'center'},
   });
