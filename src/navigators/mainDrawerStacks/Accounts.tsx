@@ -52,6 +52,13 @@ export default () => {
           ),
         })}
       />
+      {/* //TODO important all the related screen must be defined below here, same as signupstack */}
+      {/* <Stack.Screen
+        name="AccountManagementScreen"
+        component={AccountManagementStack}
+      />
+      <Stack.Screen name="AddAccountStack" component={AddAccount} />
+      <Stack.Screen name="CreateAccountScreen" component={CreateAccount} /> */}
     </Stack.Navigator>
   );
 };

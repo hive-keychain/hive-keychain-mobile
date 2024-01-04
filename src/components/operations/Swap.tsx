@@ -60,7 +60,7 @@ export interface OptionItem {
 interface Props {
   theme: Theme;
 }
-
+//TODO check confirmation page, details are too low...
 const Swap = ({
   showFloatingBar,
   theme,

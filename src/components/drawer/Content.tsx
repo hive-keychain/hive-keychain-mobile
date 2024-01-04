@@ -17,7 +17,7 @@ import {Theme, ThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {RootState} from 'store';
-import DrawerContentItem from './drawer-content-item/DrawerContentItem';
+import MenuItem from './drawer-content-item/MenuItem';
 
 type Props = PropsFromRedux & DrawerContentComponentProps;
 
@@ -53,35 +53,35 @@ const HeaderContent = (props: Props) => {
       contentContainerStyle={styles.contentContainer}>
       <DrawerHeader theme={theme} props={props} />
       <ScrollView>
-        <DrawerContentItem
+        <MenuItem
           labelTranslationKey="navigation.accounts"
           theme={theme}
           onPress={() => navigation.navigate('Accounts')}
           iconImage={<Icon name={Icons.ACCOUNTS} theme={theme} />}
           drawBottomLine
         />
-        <DrawerContentItem
+        <MenuItem
           labelTranslationKey="navigation.settings"
           theme={theme}
           onPress={() => navigation.navigate('SettingsScreen')}
           iconImage={<Icon name={Icons.CANDLE} theme={theme} />}
           drawBottomLine
         />
-        <DrawerContentItem
+        {/* <MenuItem
           labelTranslationKey="navigation.tokens"
           theme={theme}
           onPress={() => navigation.navigate('Tokens')}
           iconImage={<Icon name={Icons.TOKENS} theme={theme} />}
           drawBottomLine
-        />
-        <DrawerContentItem
+        /> */}
+        <MenuItem
           labelTranslationKey="navigation.governance"
           theme={theme}
           onPress={() => navigation.navigate('Governance')}
           iconImage={<Icon name={Icons.GOVERNANCE} theme={theme} />}
           drawBottomLine
         />
-        <DrawerContentItem
+        <MenuItem
           labelTranslationKey="navigation.theme_setting"
           theme={theme}
           onPress={() => {}}
@@ -101,7 +101,7 @@ const HeaderContent = (props: Props) => {
           }
           drawBottomLine
         />
-        <DrawerContentItem
+        <MenuItem
           labelTranslationKey="navigation.about"
           theme={theme}
           onPress={() => navigation.navigate('ABOUT')}
@@ -114,7 +114,7 @@ const HeaderContent = (props: Props) => {
           }
           drawBottomLine
         />
-        <DrawerContentItem
+        <MenuItem
           labelTranslationKey="navigation.log_out"
           theme={theme}
           onPress={() => {

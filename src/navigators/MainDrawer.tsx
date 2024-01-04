@@ -72,12 +72,14 @@ export default () => {
         component={AboutStack}
       />
       <Drawer.Screen name="Accounts" component={Accounts} />
+
       <Drawer.Screen
         name="AccountManagementScreen"
         component={AccountManagementStack}
       />
       <Drawer.Screen name="AddAccountStack" component={AddAccount} />
       <Drawer.Screen name="CreateAccountScreen" component={CreateAccount} />
+
       <Drawer.Screen name="Tokens" component={Tokens} />
       <Drawer.Screen name="TokensHistory" component={TokensHistory} />
       <Drawer.Screen name="Operation" component={Operation} />

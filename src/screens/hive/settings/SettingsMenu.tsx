@@ -1,4 +1,4 @@
-import DrawerContentItem from 'components/drawer/drawer-content-item/DrawerContentItem';
+import MenuItem from 'components/drawer/drawer-content-item/MenuItem';
 import Icon from 'components/hive/Icon';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import {TemplateStackProps} from 'navigators/Root.types';
@@ -24,7 +24,7 @@ const SettingsMenu = () => {
         barStyle={getColors(theme).barStyle}
         backgroundColor={getColors(theme).primaryBackground}
       />
-      <DrawerContentItem
+      <MenuItem
         labelTranslationKey={'settings.settings.operations'}
         theme={theme}
         onPress={() =>
@@ -36,7 +36,7 @@ const SettingsMenu = () => {
         iconImage={<Icon name={Icons.CPU} theme={theme} />}
         drawBottomLine={true}
       />
-      <DrawerContentItem
+      <MenuItem
         labelTranslationKey={'settings.settings.rpc'}
         theme={theme}
         onPress={() =>

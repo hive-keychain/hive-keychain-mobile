@@ -199,15 +199,6 @@ const Tokens = ({
             }}
             additionalContainerStyle={styles.iconButton}
           />
-          {/* //TODO important Quentin: please decide what to do with this extra button bellow */}
-          {/* <Icon
-            name={Icons.SETTINGS_4}
-            theme={theme}
-            onClick={() =>
-              console.log('TODO handle onPress other tokens settings')
-            }
-            additionalContainerStyle={styles.iconButton}
-          /> */}
         </View>
         {renderContent()}
       </View>

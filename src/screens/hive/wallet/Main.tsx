@@ -252,11 +252,7 @@ const Main = ({
                 ]}>
                 <Primary theme={theme} />
                 <Separator height={10} />
-                <View style={styles.separatorContainer} />
-                {/* //TODO here bellow. Make a separator similar to the one in wallet. Logo + search + settings.
-                //  - reuse the same you just did as tokenSettings. */}
-                <Separator height={10} />
-                <EngineTokens />
+                <EngineTokens showEngineTokenSettings />
               </View>
               <Survey navigation={navigation} />
               <WhatsNewComponent navigation={navigation} />
@@ -305,13 +301,6 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
       paddingHorizontal: 15,
-    },
-    separatorContainer: {
-      borderWidth: 1,
-      borderColor: getColors(theme).cardBorderColor,
-      height: 1,
-      backgroundColor: getColors(theme).separatorBgColor,
-      marginBottom: 10,
     },
   });
 

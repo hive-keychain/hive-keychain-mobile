@@ -1,7 +1,7 @@
 import AddAccountIcon from 'assets/new_UI/add_account.svg';
 import CreateAccountIcon from 'assets/new_UI/create_account.svg';
 import ManageKeysIcon from 'assets/new_UI/key.svg';
-import DrawerContentItem from 'components/drawer/drawer-content-item/DrawerContentItem';
+import MenuItem from 'components/drawer/drawer-content-item/MenuItem';
 import React, {useContext} from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
@@ -17,21 +17,21 @@ const Accounts = () => {
         barStyle={getColors(theme).barStyle}
         backgroundColor={getColors(theme).primaryBackground}
       />
-      <DrawerContentItem
+      <MenuItem
         labelTranslationKey={'navigation.add_account'}
         theme={theme}
         onPress={() => navigate('AddAccountStack')}
         iconImage={<AddAccountIcon />}
         drawBottomLine={true}
       />
-      <DrawerContentItem
+      <MenuItem
         labelTranslationKey={'navigation.create_account'}
         theme={theme}
         onPress={() => navigate('CreateAccountScreen')}
         iconImage={<CreateAccountIcon />}
         drawBottomLine={true}
       />
-      <DrawerContentItem
+      <MenuItem
         labelTranslationKey={'navigation.manage'}
         theme={theme}
         onPress={() => navigate('AccountManagementScreen')}

@@ -32,7 +32,7 @@ interface PropsDrawerContentItem {
 
 type Props = PropsDrawerContentItem;
 
-const DrawerContentItem = (props: Props) => {
+const MenuItem = (props: Props) => {
   const dimensions = useWindowDimensions();
   const {height} = dimensions;
   const styles = getStyles(props.theme, dimensions, !!props.leftSideComponent);
@@ -67,7 +67,7 @@ const DrawerContentItem = (props: Props) => {
   );
 };
 
-export default DrawerContentItem;
+export default MenuItem;
 
 const getStyles = (
   theme: Theme,
