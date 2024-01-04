@@ -60,7 +60,7 @@ export interface OptionItem {
 interface Props {
   theme: Theme;
 }
-//TODO check confirmation page, details are too low...
+
 const Swap = ({
   showFloatingBar,
   theme,
@@ -460,7 +460,10 @@ const Swap = ({
       titleScreen: translate('common.confirm_token_swap'),
       component: (
         <OperationThemed
-          renderBottomBg
+          additionalContentContainerStyle={{
+            justifyContent: 'space-around',
+            alignContent: 'flex-start',
+          }}
           childrenTop={
             <>
               <Text
@@ -476,8 +479,7 @@ const Swap = ({
             </>
           }
           childrenMiddle={
-            <>
-              <Separator height={40} />
+            <View style={{marginTop: 20}}>
               <View style={getCardStyle(theme).defaultCardItem}>
                 <View style={styles.flexRowbetween}>
                   <Text style={[styles.textBase, styles.biggerText]}>
@@ -520,7 +522,7 @@ const Swap = ({
                   </Text>
                 </View>
               </View>
-            </>
+            </View>
           }
           childrenBottom={
             <View style={[styles.flexRowbetween, styles.marginBottom]}>

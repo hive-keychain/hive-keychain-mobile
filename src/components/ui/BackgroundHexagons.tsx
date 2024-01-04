@@ -21,7 +21,7 @@ export const BackgroundHexagons = ({theme, additionalSvgStyle}: Props) => {
   return (
     <ImageBackground
       source={theme === Theme.LIGHT ? hexagonsLight : hexagonsDark}
-      style={{flex: 1}}
+      style={{flex: 1, position: 'absolute'}}
       resizeMethod="scale"
       resizeMode="stretch"
       imageStyle={[styles.bgSvgStyle, additionalSvgStyle]}

@@ -1,16 +1,14 @@
 import Background from 'components/ui/Background';
-import {BackgroundHexagons} from 'components/ui/BackgroundHexagons';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React, {useContext} from 'react';
 import {ScrollView, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-//TODO when finishing the UI refactor, check if can be merged with old one, check
+//TODO find a better way to add renderBottomBg as hexagons bellow as design
 interface OperationProps {
   childrenTop?: JSX.Element;
   childrenMiddle: JSX.Element;
   childrenBottom?: JSX.Element;
-  renderBottomBg?: boolean;
   additionalContentContainerStyle?: StyleProp<ViewStyle>;
   additionalSVGOpacity?: number;
 }
@@ -19,7 +17,6 @@ const OperationThemed = ({
   childrenBottom,
   childrenTop,
   childrenMiddle,
-  renderBottomBg,
   additionalContentContainerStyle,
   additionalSVGOpacity,
 }: OperationProps) => {
@@ -30,16 +27,15 @@ const OperationThemed = ({
     <Background
       theme={theme}
       additionalBgSvgImageStyle={styles.backgroundSvgImage}>
-      <>
+      <View style={{flex: 1}}>
         <FocusAwareStatusBar />
         {childrenTop}
         <View
           style={[styles.contentContainer, additionalContentContainerStyle]}>
-          {renderBottomBg && <BackgroundHexagons theme={theme} />}
           <ScrollView>{childrenMiddle}</ScrollView>
           {childrenBottom}
         </View>
-      </>
+      </View>
     </Background>
   );
 };

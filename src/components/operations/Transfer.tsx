@@ -488,7 +488,6 @@ const Transfer = ({
           </View>
         }
         additionalContentContainerStyle={styles.paddingHorizontal}
-        renderBottomBg
       />
     );
   }
