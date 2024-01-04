@@ -11,9 +11,13 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {ThemeContext} from 'src/context/theme.context';
+import {Theme, ThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
-import {Width} from 'utils/common.types';
+import {getColors} from 'src/styles/colors';
+import {
+  button_link_primary_medium,
+  getFontSizeSmallDevices,
+} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import ProposalUtils, {Proposal as ProposalInterface} from 'utils/proposals';
 import ProxyUtils from 'utils/proxy';
@@ -27,7 +31,8 @@ const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
   const [isLoading, setLoading] = useState(false);
   const [displayingProxyVotes, setDisplayingProxyVotes] = useState(false);
   const {theme} = useContext(ThemeContext);
-  const styles = getDimensionedStyles(useWindowDimensions());
+  const {width, height} = useWindowDimensions();
+  const styles = getDimensionedStyles(width, height, theme);
 
   useEffect(() => {
     initList();
@@ -90,19 +95,23 @@ const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
     );
 };
 
-const getDimensionedStyles = ({width}: Width) =>
+const getDimensionedStyles = (width: number, height: number, theme: Theme) =>
   StyleSheet.create({
     container: {
       width: '100%',
       flex: 1,
       marginTop: 30,
     },
-
     proposalItemContainer: {
       marginBottom: 10,
       borderRadius: 38,
     },
-    text: {fontSize: 16, marginBottom: 20},
+    text: {
+      ...button_link_primary_medium,
+      color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(height, 16),
+      marginBottom: 20,
+    },
   });
 
 const connector = connect(undefined, {

@@ -10,6 +10,7 @@ import {
   Text,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -19,6 +20,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   fields_primary_text_2,
+  getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
 import {withCommas} from 'utils/format';
@@ -100,13 +102,14 @@ const ProposalItem = ({
     setIsVotingUnvotingForProposal('');
   };
 
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
   const isvoting =
     isVotingUnvotingForProposal.trim().length > 0 &&
     isVotingUnvotingForProposal === proposal.creator;
 
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={[style, styles.container]}
       onPressOut={() => {
         if (isPressVote) {
@@ -217,7 +220,7 @@ const ProposalItem = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     container: {paddingVertical: 10},
     firstLine: {
@@ -232,6 +235,10 @@ const getStyles = (theme: Theme) =>
     textTitle: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...title_primary_body_2}.fontSize,
+      ),
     },
     expander: {width: 12, height: 12},
     secondLine: {

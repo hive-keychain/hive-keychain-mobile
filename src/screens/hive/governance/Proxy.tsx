@@ -14,8 +14,10 @@ import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {title_primary_title_1} from 'src/styles/typography';
-import {Width} from 'utils/common.types';
+import {
+  getFontSizeSmallDevices,
+  title_primary_title_1,
+} from 'src/styles/typography';
 import {capitalizeSentence} from 'utils/format';
 import {setProxy} from 'utils/hive';
 import {translate} from 'utils/localize';
@@ -27,7 +29,8 @@ type Props = {
 const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
   const [proxyUsername, setProxyUsername] = useState('');
   const {theme} = useContext(ThemeContext);
-  const styles = getDimensionedStyles(useWindowDimensions(), theme);
+  const {width, height} = useWindowDimensions();
+  const styles = getDimensionedStyles(width, height, theme);
   const [loading, setLoading] = useState(false);
 
   const setAsProxy = async () => {
@@ -132,6 +135,7 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
             onPress={() => setAsProxy()}
             isLoading={false}
             style={[getButtonStyle(theme).warningStyleButton, styles.button]}
+            additionalTextStyle={[styles.text, styles.buttonText]}
           />
         )}
         {user.account.proxy.length > 0 && !loading && (
@@ -147,7 +151,7 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
   );
 };
 
-const getDimensionedStyles = ({width}: Width, theme: Theme) =>
+const getDimensionedStyles = (width: number, heigth: number, theme: Theme) =>
   StyleSheet.create({
     container: {
       width: '100%',
@@ -159,7 +163,7 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       textAlignVertical: 'center',
       ...title_primary_title_1,
       color: getColors(theme).secondaryText,
-      fontSize: 14,
+      fontSize: getFontSizeSmallDevices(heigth, 16),
     },
     textOpaque: {
       opacity: 0.7,
@@ -190,6 +194,9 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       justifyContent: 'space-between',
     },
     flexEnd: {flex: 1, justifyContent: 'flex-end'},
+    buttonText: {
+      color: '#FFF',
+    },
   });
 
 const connector = connect(undefined, {

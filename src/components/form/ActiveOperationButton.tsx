@@ -1,6 +1,6 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
-import {StyleProp, ViewStyle} from 'react-native';
+import {StyleProp, TextStyle, ViewStyle} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
@@ -13,7 +13,7 @@ type Props = {
   style: StyleProp<ViewStyle>;
   onPress: () => void;
   isLoading: boolean;
-  additionalTextStyle?: StyleProp<ViewStyle>;
+  additionalTextStyle?: StyleProp<TextStyle>;
 } & PropsFromRedux;
 const ActiveOperationButton = ({
   method,
