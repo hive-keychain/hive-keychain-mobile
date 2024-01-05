@@ -47,17 +47,13 @@ const ItemCardExpandable = ({
         <View style={styles.rowContainerSpaced}>
           <View style={[styles.row]}>
             {icon && <View style={styles.iconContainer}>{icon}</View>}
-            <View
-              style={[
-                {flexWrap: 'wrap', flexDirection: 'row'},
-                styles.width140,
-              ]}>
+            <View style={[styles.flexWrapGrow2, styles.width140]}>
               <Text style={[styles.textBase]}>{textLine1}</Text>
               {textLine2 && <Text style={[styles.textBase]}>{textLine2}</Text>}
               {textLine3 && <Text style={[styles.textBase]}>{textLine3}</Text>}
             </View>
-            <Text style={styles.textBase}>{date}</Text>
-            <View>
+            <View style={[styles.dateExpanderContainer]}>
+              <Text style={styles.textBase}>{date}</Text>
               {memo && memo.length ? (
                 <Icon
                   name={Icons.EXPAND_THIN}
@@ -87,7 +83,10 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       paddingVertical: 2,
       paddingHorizontal: 4,
     },
-    width140: {width: 140},
+    width140: {
+      width: width / 3,
+      paddingHorizontal: 8,
+    },
     main: {
       display: 'flex',
       flexDirection: 'column',
@@ -106,7 +105,8 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
     rowContainerSpaced: {
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'space-evenly',
+      width: '100%',
     },
     padding: {
       padding: 8,
@@ -124,6 +124,13 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       justifyContent: 'space-between',
       alignItems: 'center',
       width: '100%',
+    },
+    flexWrapGrow2: {flexWrap: 'wrap', flexDirection: 'row', flexGrow: 2},
+    dateExpanderContainer: {
+      flexGrow: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: width / 6,
     },
   });
 
