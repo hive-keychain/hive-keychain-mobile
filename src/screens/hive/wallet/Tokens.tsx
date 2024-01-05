@@ -41,7 +41,7 @@ import {navigate} from 'utils/navigation';
 import TokenSettings from './tokens/TokenSettings';
 
 interface TokensProps {}
-
+/**Note: Currently component not being called or used. */
 const Tokens = ({
   user,
   loadTokens,

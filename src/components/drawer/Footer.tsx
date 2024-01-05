@@ -32,7 +32,6 @@ import {translate} from 'utils/localize';
 
 export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
   const styles = getStyles(theme, useWindowDimensions());
-  //TODO ask quentin what to do here if nor condition meet?? as the button will disappear
   const showVoteForWitness = () => {
     if (
       !user.account.name ||
@@ -41,7 +40,7 @@ export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
         user.account.witness_votes?.includes('stoodkev') &&
         user.account.witness_votes?.includes('cedricguillas'))
     )
-      return <></>;
+      return <View style={{flex: 1}} />;
     else {
       const account = user.account.witness_votes.includes('stoodkev')
         ? 'cedricguillas'
@@ -123,7 +122,6 @@ const getStyles = (theme: Theme, {height}: ScaledSize) =>
   StyleSheet.create({
     footer: {
       width: '100%',
-      height: 130,
       alignItems: 'center',
       justifyContent: 'center',
       bottom: 0,
