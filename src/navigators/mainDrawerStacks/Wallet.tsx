@@ -11,7 +11,7 @@ import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import Wallet from 'screens/hive/wallet/Main';
 import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';

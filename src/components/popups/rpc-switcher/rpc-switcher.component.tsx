@@ -4,7 +4,7 @@ import OperationButton from 'components/form/EllipticButton';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {button_link_primary_small} from 'src/styles/typography';
 import {RootState} from 'store';

@@ -13,7 +13,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {getBuyCoinsListItem} from 'src/reference-data/buy-coins-list-item.list';
 import {getButtonStyle} from 'src/styles/button';

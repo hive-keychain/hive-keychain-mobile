@@ -4,7 +4,7 @@ import Icon from 'components/hive/Icon';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import About from 'screens/hive/settings/About';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {

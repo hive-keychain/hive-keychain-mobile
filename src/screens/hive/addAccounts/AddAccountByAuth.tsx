@@ -18,7 +18,7 @@ import React, {useState} from 'react';
 import {StatusBar, StyleSheet, useWindowDimensions, View} from 'react-native';
 import {Text} from 'react-native-elements';
 import {connect, ConnectedProps} from 'react-redux';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';

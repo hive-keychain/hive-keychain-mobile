@@ -13,7 +13,7 @@ import {MainNavigation} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {

@@ -5,7 +5,7 @@ import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import AccountManagement from 'screens/hive/settings/AccountManagement';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {

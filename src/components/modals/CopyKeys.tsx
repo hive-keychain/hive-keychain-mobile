@@ -1,7 +1,7 @@
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
   FontPoppinsName,

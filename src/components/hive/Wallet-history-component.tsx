@@ -6,7 +6,7 @@ import Separator from 'components/ui/Separator';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {Transaction} from 'src/interfaces/transaction.interface';
 import {getColors} from 'src/styles/colors';

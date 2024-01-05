@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Image from 'react-native-fast-image';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {RootState} from 'store';
 import {getBackgroundColorFromBackend} from 'utils/colors';
 import {Width} from 'utils/common.types';

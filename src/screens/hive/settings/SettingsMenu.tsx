@@ -4,7 +4,7 @@ import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';

@@ -8,6 +8,7 @@ import CustomModal from 'components/modals/CustomModal';
 import {ModalNavigationProps} from 'navigators/Root.types';
 import React from 'react';
 import {StyleProp, ViewStyle} from 'react-native';
+import {useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {HAS_BroadcastModalPayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {ModalComponent} from 'utils/modal.enum';

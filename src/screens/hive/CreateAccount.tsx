@@ -2,6 +2,7 @@ import Background from 'components/ui/Background';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Text} from 'react-native-elements';
+import {useThemeContext} from 'src/context/theme.context';
 
 const CreateAccount = () => {
   const {theme} = useThemeContext();

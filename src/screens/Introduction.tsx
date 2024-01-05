@@ -22,7 +22,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {
   NEUTRAL_WHITE_COLOR,
   PRIMARY_RED_COLOR,

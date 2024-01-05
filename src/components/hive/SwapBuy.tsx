@@ -3,7 +3,7 @@ import Swap from 'components/operations/Swap';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import React from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';

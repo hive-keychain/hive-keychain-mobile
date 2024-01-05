@@ -6,7 +6,7 @@ import {ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect} from 'react';
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {

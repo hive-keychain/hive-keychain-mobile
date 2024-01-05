@@ -4,7 +4,7 @@ import ManageKeysIcon from 'assets/new_UI/key.svg';
 import MenuItem from 'components/drawer/drawer-content-item/MenuItem';
 import React from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {navigate} from 'utils/navigation';
 

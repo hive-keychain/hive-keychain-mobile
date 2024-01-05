@@ -8,7 +8,7 @@ import React, {useState} from 'react';
 import {Keyboard, StyleSheet, Text, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
@@ -23,7 +23,7 @@ import {cancelDelegateToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
-import BlockchainTransactionUtils from 'utils/tokens.utils';
+import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import OperationThemed from './OperationThemed';
 
 export interface CancelTokenDelegationOperationProps {

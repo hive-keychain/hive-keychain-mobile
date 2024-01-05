@@ -6,6 +6,7 @@ import {SignupNavProp} from 'navigators/Signup.types';
 import React from 'react';
 import {useWindowDimensions} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
+import {useThemeContext} from 'src/context/theme.context';
 import {translate} from 'utils/localize';
 
 type Props = PropsFromRedux & SignupNavProp;

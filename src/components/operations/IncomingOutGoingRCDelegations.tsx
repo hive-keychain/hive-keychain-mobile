@@ -3,7 +3,7 @@ import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {
   RCDelegationValue,
   RcDelegation,

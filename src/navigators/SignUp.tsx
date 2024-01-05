@@ -7,7 +7,7 @@ import Signup from 'screens/Signup';
 import CreateAccount from 'screens/hive/CreateAccount';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
 import {SignupStackParamList} from './Signup.types';

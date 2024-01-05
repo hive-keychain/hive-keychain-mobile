@@ -7,6 +7,7 @@ import {UnlockNavigationProp} from 'navigators/Unlock.types';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
+import {useThemeContext} from 'src/context/theme.context';
 import {translate} from 'utils/localize';
 
 type UnlockScreenProps = PropsFromRedux & UnlockNavigationProp;

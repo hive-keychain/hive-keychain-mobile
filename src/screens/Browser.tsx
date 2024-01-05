@@ -18,6 +18,7 @@ import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React from 'react';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
+import {useThemeContext} from 'src/context/theme.context';
 import {RootState} from 'store';
 
 const BrowserScreen = ({

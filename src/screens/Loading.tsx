@@ -2,6 +2,7 @@ import Background from 'components/ui/Background';
 import KeychainLogo from 'components/ui/KeychainLogo';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
+import {useThemeContext} from 'src/context/theme.context';
 
 const Loading = () => {
   const {theme} = useThemeContext();

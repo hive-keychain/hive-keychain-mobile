@@ -7,7 +7,7 @@ import {
 } from 'navigators/Root.types';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {

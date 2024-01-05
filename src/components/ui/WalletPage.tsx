@@ -2,6 +2,7 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import React from 'react';
 import {StyleSheet} from 'react-native';
+import {useThemeContext} from 'src/context/theme.context';
 import Background from './Background';
 
 type Props = {

@@ -32,7 +32,7 @@ import CustomIconButton from 'components/ui/CustomIconButton';
 import {OperationNavigationProps, RootStackParam} from 'navigators/Root.types';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {capitalize} from 'utils/format';

@@ -4,7 +4,7 @@ import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {Image, StyleSheet, Text, View, useWindowDimensions} from 'react-native';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
