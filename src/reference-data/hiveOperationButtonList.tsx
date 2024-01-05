@@ -12,6 +12,7 @@ import {TransferOperationProps} from 'components/operations/Transfer';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import SquareButton from 'components/ui/SquareButton';
 import React from 'react';
+import {StyleSheet} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
@@ -23,6 +24,8 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
   const styles = getStyles(theme);
   return [
     <SquareButton
+      additionalButtonContainerStyle={styles.buttonContainer}
+      additionalSquareButtonText={styles.buttonText}
       key={'square-button-transfer-hive'}
       onPress={() => {
         navigate('Operation', {
@@ -46,6 +49,8 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
       primaryLabel={translate('common.send')}
     />,
     <SquareButton
+      additionalButtonContainerStyle={styles.buttonContainer}
+      additionalSquareButtonText={styles.buttonText}
       key={'square-button-power_up-hive'}
       onPress={() => {
         navigate('Operation', {
@@ -66,6 +71,8 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
       primaryLabel={translate('wallet.operations.powerup.title')}
     />,
     <SquareButton
+      additionalButtonContainerStyle={styles.buttonContainer}
+      additionalSquareButtonText={styles.buttonText}
       key={'square-button-savings-hive'}
       onPress={() => {
         navigate('Operation', {
@@ -89,6 +96,8 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
       secondaryLabel={translate('common.savings')}
     />,
     <SquareButton
+      additionalButtonContainerStyle={styles.buttonContainer}
+      additionalSquareButtonText={styles.buttonText}
       key={'square-button-convert-hive'}
       onPress={() => {
         navigate('Operation', {
@@ -111,8 +120,8 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
   ];
 };
 
-const getStyles = (theme: Theme) => {
-  return {
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
     icon: {
       width: 20,
       height: 20,
@@ -128,5 +137,14 @@ const getStyles = (theme: Theme) => {
       width: 30,
       height: 30,
     },
-  };
-};
+    marginRight: {marginRight: 4},
+    buttonContainer: {
+      width: '38%',
+      height: 70,
+      paddingVertical: 0,
+      paddingHorizontal: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    buttonText: {fontSize: 14},
+  });

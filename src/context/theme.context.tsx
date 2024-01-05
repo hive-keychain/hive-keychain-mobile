@@ -5,6 +5,11 @@ export enum Theme {
   LIGHT = 'light',
 }
 
+export enum ThemeOpacity {
+  dark = '33',
+  light = '2b',
+}
+
 export type ThemeContextType = {
   theme: Theme;
   setTheme: Dispatch<SetStateAction<Theme>>;

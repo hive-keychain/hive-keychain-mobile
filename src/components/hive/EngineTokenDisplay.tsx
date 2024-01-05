@@ -64,7 +64,7 @@ const EngineTokenDisplay = ({
     />
   ) : (
     <Image
-      style={[styles.iconBase, styles.iconBase]}
+      style={styles.iconBase}
       source={{
         uri: metadata.icon,
       }}
@@ -125,16 +125,18 @@ const getDimensionedStyles = (
 ) =>
   StyleSheet.create({
     iconBase: {
-      width: width / 16,
-      height: width / 16,
+      width: 24,
+      height: 24,
     },
     iconContainerBase: {
-      padding: 3,
+      padding: 5,
       borderRadius: 50,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     iconContainerBaseWithBg: {
       backgroundColor: addBackground
-        ? getBackgroundColorFromBackend(symbol)
+        ? getBackgroundColorFromBackend(symbol, theme)
         : undefined,
     },
   });

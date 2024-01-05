@@ -111,7 +111,7 @@ const TokenDisplay = ({
       titleScreen: 'Incoming',
       component: (
         <IncomingOutGoingTokenDelegations
-          delegationType="incoming"
+          delegationType={'Incoming'}
           total={tokenBalance.delegationsIn}
           token={tokenBalance}
           tokenLogo={logo}
@@ -125,7 +125,7 @@ const TokenDisplay = ({
       titleScreen: 'Outgoing',
       component: (
         <IncomingOutGoingTokenDelegations
-          delegationType="outgoing"
+          delegationType={'Outgoing'}
           total={tokenBalance.delegationsOut}
           token={tokenBalance}
           tokenLogo={logo}
@@ -174,7 +174,7 @@ const TokenDisplay = ({
         <View style={{flexDirection: 'row'}}>
           <View style={styles.logo}>{logo}</View>
           <View style={[styles.flexColumnCentered, styles.containerMarginLeft]}>
-            <Text style={styles.textSymbol}>{name}</Text>
+            <Text style={styles.textSymbol}>{currency}</Text>
           </View>
         </View>
         <View
@@ -398,10 +398,9 @@ const getDimensionedStyles = ({
       borderColor: getColors(theme).cardBorderColorContrast,
       borderWidth: 1,
       borderRadius: 11,
-      width: '30%',
-      height: 'auto',
-      paddingHorizontal: 22,
-      paddingVertical: 15,
+      width: '38%',
+      height: 65,
+      justifyContent: 'center',
     },
     expandedItemContainer: {
       marginTop: 10,
@@ -409,16 +408,14 @@ const getDimensionedStyles = ({
     textBodyItem: {
       ...fields_primary_text_2,
       color: getColors(theme).secondaryText,
+      fontSize: 12,
       opacity: 0.7,
       lineHeight: 14.7,
     },
     textButton: {
       ...title_secondary_body_3,
       color: getColors(theme).primaryText,
-      fontSize: getFontSizeSmallDevices(
-        height,
-        title_secondary_body_3.fontSize,
-      ),
+      fontSize: getFontSizeSmallDevices(height, 14),
       letterSpacing: -0.4,
     },
     invertXAxis: {

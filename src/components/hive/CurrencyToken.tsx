@@ -115,7 +115,6 @@ const getStyles = (theme: Theme, height: number) =>
       backgroundColor: getColors(theme).secondaryCardBgColor,
       paddingHorizontal: 20,
       paddingVertical: 10,
-      marginBottom: 10,
     },
     rowContainer: {
       flexDirection: 'row',

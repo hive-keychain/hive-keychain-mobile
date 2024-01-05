@@ -10,6 +10,7 @@ import {RCDelegationOperationProps} from 'components/operations/RCDelegation';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import SquareButton from 'components/ui/SquareButton';
 import React from 'react';
+import {StyleSheet} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {getCurrency} from 'utils/hive';
@@ -20,6 +21,8 @@ export const getHPButtonList = (theme: Theme, delegatee: string) => {
   const styles = getStyles(theme);
   return [
     <SquareButton
+      additionalButtonContainerStyle={styles.buttonContainer}
+      additionalSquareButtonText={styles.buttonText}
       key={'square-button-hp-delegations'}
       onPress={() => {
         navigate('Operation', {
@@ -42,6 +45,8 @@ export const getHPButtonList = (theme: Theme, delegatee: string) => {
       primaryLabel={translate('wallet.operations.delegation.title_button')}
     />,
     <SquareButton
+      additionalButtonContainerStyle={styles.buttonContainer}
+      additionalSquareButtonText={styles.buttonText}
       key={'square-button-rc-delegations'}
       onPress={() => {
         navigate('Operation', {
@@ -61,6 +66,8 @@ export const getHPButtonList = (theme: Theme, delegatee: string) => {
       primaryLabel={translate('wallet.operations.rc_delegation.title_button')}
     />,
     <SquareButton
+      additionalButtonContainerStyle={styles.buttonContainer}
+      additionalSquareButtonText={styles.buttonText}
       key={'square-button-power-down'}
       onPress={() => {
         navigate('Operation', {
@@ -82,8 +89,8 @@ export const getHPButtonList = (theme: Theme, delegatee: string) => {
   ];
 };
 
-const getStyles = (theme: Theme) => {
-  return {
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
     icon: {
       width: 20,
       height: 20,
@@ -100,5 +107,13 @@ const getStyles = (theme: Theme) => {
       height: 30,
     },
     marginRight: {marginRight: 4},
-  };
-};
+    buttonContainer: {
+      width: '38%',
+      height: 70,
+      paddingVertical: 0,
+      paddingHorizontal: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    buttonText: {fontSize: 14},
+  });

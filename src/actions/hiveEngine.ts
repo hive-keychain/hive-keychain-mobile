@@ -45,9 +45,9 @@ export const loadUserTokens = (account: string): AppThunk => async (
     });
 
     let tokensBalance: TokenBalance[] = await getUserBalance(account);
-    tokensBalance = tokensBalance
-      .filter((t) => parseFloat(t.balance) !== 0)
-      .sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
+    tokensBalance = tokensBalance.sort(
+      (a, b) => parseFloat(b.balance) - parseFloat(a.balance),
+    );
     const action: ActionPayload<TokenBalance[]> = {
       type: LOAD_USER_TOKENS,
       payload: tokensBalance,

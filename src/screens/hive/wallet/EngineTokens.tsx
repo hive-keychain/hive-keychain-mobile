@@ -128,7 +128,10 @@ const EngineTokens = ({
                   theme={theme}
                   value={searchValue}
                   onChangeText={(text) => setSearchValue(text)}
-                  additionalContainerStyle={styles.searchContainer}
+                  additionalContainerStyle={[
+                    styles.searchContainer,
+                    isSearchOpen ? styles.borderLight : undefined,
+                  ]}
                   rightIcon={
                     <Icon
                       name={Icons.SEARCH}
@@ -141,13 +144,15 @@ const EngineTokens = ({
                   }
                 />
               )}
-              <HiveEngineLogo height={25} width={25} />
+              <HiveEngineLogo height={23} width={23} />
               <View style={styles.separatorContainer} />
               <Icon
                 name={Icons.SEARCH}
                 theme={theme}
                 additionalContainerStyle={styles.search}
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
+                width={18}
+                height={18}
               />
               <Icon
                 name={Icons.SETTINGS_2}
@@ -208,6 +213,7 @@ const getStyles = (theme: Theme) =>
       flexDirection: 'row',
       alignItems: 'center',
       paddingHorizontal: 4,
+      justifyContent: 'space-between',
     },
     search: {
       marginRight: 4,
@@ -222,8 +228,12 @@ const getStyles = (theme: Theme) =>
       borderColor: getColors(theme).cardBorderColor,
       height: 1,
       backgroundColor: getColors(theme).separatorBgColor,
-      width: '100%',
+      width: '75%',
       flexShrink: 1,
+    },
+    borderLight: {
+      borderColor: getColors(theme).cardBorderColor,
+      borderWidth: 1,
     },
   });
 

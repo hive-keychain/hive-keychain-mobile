@@ -11,6 +11,7 @@ import {TransferOperationProps} from 'components/operations/Transfer';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import SquareButton from 'components/ui/SquareButton';
 import React from 'react';
+import {StyleSheet} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
@@ -22,6 +23,8 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
   const styles = getStyles(theme);
   return [
     <SquareButton
+      additionalButtonContainerStyle={styles.buttonContainer}
+      additionalSquareButtonText={styles.buttonText}
       key={'square-button-transfer-hbd'}
       onPress={() => {
         navigate('Operation', {
@@ -45,6 +48,8 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
       primaryLabel={translate('common.send')}
     />,
     <SquareButton
+      additionalButtonContainerStyle={styles.buttonContainer}
+      additionalSquareButtonText={styles.buttonText}
       key={'square-button-savings-hbd'}
       onPress={() => {
         navigate('Operation', {
@@ -68,6 +73,8 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
       secondaryLabel={translate('common.savings')}
     />,
     <SquareButton
+      additionalButtonContainerStyle={styles.buttonContainer}
+      additionalSquareButtonText={styles.buttonText}
       key={'square-button-convert-hbd'}
       onPress={() => {
         navigate('Operation', {
@@ -90,15 +97,11 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
   ];
 };
 
-const getStyles = (theme: Theme) => {
-  return {
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
     icon: {
       width: 20,
       height: 20,
-    },
-    biggerIcon: {
-      width: 30,
-      height: 30,
     },
     roundedIcon: {
       borderWidth: 1,
@@ -107,5 +110,18 @@ const getStyles = (theme: Theme) => {
       padding: 0,
       marginRight: 3,
     },
-  };
-};
+    biggerIcon: {
+      width: 30,
+      height: 30,
+    },
+    marginRight: {marginRight: 4},
+    buttonContainer: {
+      width: '38%',
+      height: 70,
+      paddingVertical: 0,
+      paddingHorizontal: 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    buttonText: {fontSize: 14},
+  });

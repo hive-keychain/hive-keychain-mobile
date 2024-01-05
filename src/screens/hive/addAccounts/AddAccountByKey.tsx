@@ -81,6 +81,7 @@ const AddAccountByKey = ({
   };
   const {theme} = useThemeContext();
   const {height} = useWindowDimensions();
+  console.log({height}); //TODO remove line
   const styles = getStyles(theme, height);
 
   return (
@@ -113,6 +114,7 @@ const AddAccountByKey = ({
               value={account}
               onChangeText={setAccount}
               inputStyle={[styles.text, styles.smallerText]}
+              addLabelInputIndent
             />
             <Separator height={height / 15} />
 
@@ -134,6 +136,7 @@ const AddAccountByKey = ({
                   }}
                 />
               }
+              addLabelInputIndent
             />
           </View>
           <View style={styles.bottomContainer}>
@@ -171,10 +174,7 @@ const getStyles = (theme: Theme, height: number) =>
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_1,
-      fontSize: getFontSizeSmallDevices(
-        height,
-        {...body_primary_body_1}.fontSize,
-      ),
+      fontSize: getFontSizeSmallDevices(height, 16),
     },
     topContainer: {
       width: '100%',

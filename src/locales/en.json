@@ -229,7 +229,7 @@
         "info_delegation_out": "to @{{delegatee}}",
         "cancelled_delegation": "Cancelled delegation to @{{delegatee}}",
         "info_delegation_in": "@{{delegator}} delegated",
-        "title_button": "HP Delegations",
+        "title_button": "HP Deleg.",
         "title_delegation": "Delegation",
         "title_delegated": "Delegated",
         "total_incoming": "Total Incoming",
@@ -240,7 +240,7 @@
         "confirm_cancel_delegation": "Confirm you want to cancel this delegation?"
       },
       "rc_delegation": {
-        "title_button": "RC Delegations",
+        "title_button": "RC Deleg.",
         "title": "RC Delegation",
         "total_incoming": "Total Incoming",
         "total_outgoing": "Total Outgoing",

@@ -13,6 +13,7 @@ import {InputProps} from 'react-native-elements';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
+import {LABELINDENTSPACE} from 'src/styles/spacing';
 import {
   FontPoppinsName,
   body_primary_body_1,
@@ -30,6 +31,7 @@ interface OperationInputProps {
   additionalInputContainerStyle?: StyleProp<ViewStyle>;
   additionalBottomLabelContainerStyle?: StyleProp<ViewStyle>;
   additionalBottomLabelTextStyle?: StyleProp<TextStyle>;
+  addLabelInputIndent?: boolean;
 }
 
 export default (props: InputProps & OperationInputProps) => {
@@ -47,7 +49,12 @@ export default (props: InputProps & OperationInputProps) => {
   return props.labelInput ? (
     <View style={[styles.outerContainer, props.additionalOuterContainerStyle]}>
       <View style={styles.labelInputContainer}>
-        <Text style={[styles.labelStyle, props.additionalLabelStyle]}>
+        <Text
+          style={[
+            styles.labelStyle,
+            props.additionalLabelStyle,
+            props.addLabelInputIndent ? styles.labelIndent : undefined,
+          ]}>
           {props.labelInput}
         </Text>
         {props.infoIconAction && (
@@ -115,5 +122,8 @@ const getStyles = (theme: Theme, height: number) =>
     },
     marginLeft: {
       marginLeft: 8,
+    },
+    labelIndent: {
+      marginLeft: LABELINDENTSPACE,
     },
   });
