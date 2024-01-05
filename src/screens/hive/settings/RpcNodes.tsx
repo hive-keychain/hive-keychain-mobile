@@ -6,7 +6,7 @@ import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -18,7 +18,7 @@ import {
 import {CheckBox} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {
   DefaultAccountHistoryApis,
@@ -64,7 +64,7 @@ const RpcNodes = ({
   const [rpcFullList, setRpcFullList] = useState<DropdownItem[]>([]);
   const [customRPCList, setCustomRPCList] = useState<Rpc[]>([]);
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions().height);
 
   useEffect(() => {

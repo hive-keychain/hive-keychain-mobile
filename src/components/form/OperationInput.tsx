@@ -1,5 +1,5 @@
 import Icon from 'components/hive/Icon';
-import React, {useContext} from 'react';
+import React from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -10,7 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {InputProps} from 'react-native-elements';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {
@@ -33,7 +33,7 @@ interface OperationInputProps {
 }
 
 export default (props: InputProps & OperationInputProps) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions().height);
 
   const renderCustomInput = () => (

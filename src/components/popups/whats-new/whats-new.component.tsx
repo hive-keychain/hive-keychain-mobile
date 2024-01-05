@@ -2,9 +2,9 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Carousel from 'components/carousel/carousel';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {ModalScreenProps} from 'navigators/Root.types';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
@@ -38,7 +38,7 @@ export function isPrefetched(url: string) {
 const WhatsNew = ({navigation}: Props): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
   const locale = 'en'; // later use getUILanguage()
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
 
   useEffect(() => {
     init();

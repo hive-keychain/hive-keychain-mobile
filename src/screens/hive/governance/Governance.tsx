@@ -5,11 +5,11 @@ import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {default as Toast} from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
@@ -36,7 +36,7 @@ const Governance = ({
   const [ranking, setRanking] = useState<WitnessInterface[]>([]);
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
 
   useLockedPortrait(navigation);

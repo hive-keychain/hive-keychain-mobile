@@ -7,11 +7,11 @@ import Icon from 'components/hive/Icon';
 import {WalletHistoryComponent} from 'components/hive/Wallet-history-component';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import CustomIconButton from 'components/ui/CustomIconButton';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import Wallet from 'screens/hive/wallet/Main';
 import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
@@ -22,7 +22,7 @@ import {resetStackAndNavigate} from 'utils/navigation';
 const Stack = createStackNavigator();
 
 export default ({route, navigation}: {route: any; navigation: any}) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
   const styles = getStyles({width}, theme);
 

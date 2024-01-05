@@ -6,7 +6,7 @@ import Icon from 'components/hive/Icon';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -15,7 +15,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {getColors} from 'src/styles/colors';
@@ -91,7 +91,7 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
     setIsExpandedReset(false);
   };
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {height, width} = useWindowDimensions();
   const styles = getStyles(theme, height);
 

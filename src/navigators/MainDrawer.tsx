@@ -4,9 +4,9 @@ import AboutStack from 'navigators/mainDrawerStacks/About';
 import BrowserStack from 'navigators/mainDrawerStacks/Browser';
 import SettingsStack from 'navigators/mainDrawerStacks/Settings';
 import WalletStack from 'navigators/mainDrawerStacks/Wallet';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
 import {MainDrawerStackParam} from './MainDrawer.types';
@@ -25,7 +25,7 @@ import TokensHistory from './mainDrawerStacks/TokensHistory';
 const Drawer = createDrawerNavigator<MainDrawerStackParam>();
 
 export default () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
   return (

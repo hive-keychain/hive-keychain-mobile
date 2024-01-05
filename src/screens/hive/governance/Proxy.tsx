@@ -5,11 +5,11 @@ import CustomInput from 'components/form/CustomInput';
 import Icon from 'components/hive/Icon';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
@@ -27,7 +27,7 @@ type Props = {
 
 const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
   const [proxyUsername, setProxyUsername] = useState('');
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles(width, height, theme);
   const [loading, setLoading] = useState(false);

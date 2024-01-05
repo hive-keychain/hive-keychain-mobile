@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {title_secondary_body_2} from 'src/styles/typography';
 
@@ -37,7 +37,7 @@ const SquareButton = ({
   additionalPrimaryLabelStyle,
   additionalSecondaryLabelStyle,
 }: Props) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme, marginRight, marginBottom);
   return (
     <TouchableOpacity

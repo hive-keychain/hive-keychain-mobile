@@ -26,7 +26,7 @@ import UserProfilePicture from 'components/ui/UserProfilePicture';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
-import React, {useContext, useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   AppState,
   AppStateStatus,
@@ -39,7 +39,7 @@ import {
 import {ScrollView} from 'react-native-gesture-handler';
 import {ConnectedProps, connect} from 'react-redux';
 import Primary from 'screens/hive/wallet/Primary';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {
@@ -74,7 +74,7 @@ const Main = ({
   setIsDrawerOpen,
   setisLoadingScreen,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
 
   useEffect(() => {

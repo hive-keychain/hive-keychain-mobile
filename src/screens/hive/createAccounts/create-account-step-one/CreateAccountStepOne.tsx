@@ -12,11 +12,11 @@ import UserProfilePicture from 'components/ui/UserProfilePicture';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
 import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
@@ -56,7 +56,7 @@ const CreateAccountStepOne = ({
   const [isAvailableAccountName, setIsAvailableAccountName] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getDimensionedStyles({...useWindowDimensions()}, theme);
 
   useLockedPortrait(navigation);

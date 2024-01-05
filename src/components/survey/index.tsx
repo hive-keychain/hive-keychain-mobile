@@ -3,10 +3,10 @@ import EllipticButton from 'components/form/EllipticButton';
 import moment from 'moment';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {ModalScreenProps} from 'navigators/Root.types';
-import React, {useContext, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {
@@ -45,7 +45,7 @@ const Survey = ({navigation}: Props): null => {
     }
   };
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
   const shadowColor = theme === Theme.LIGHT ? 'black' : PRIMARY_RED_COLOR;
 

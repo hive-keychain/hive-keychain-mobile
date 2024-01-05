@@ -6,15 +6,14 @@ import HASError from 'components/hive_authentication_service/Error';
 import HASInfo from 'components/hive_authentication_service/Info';
 import CustomModal from 'components/modals/CustomModal';
 import {ModalNavigationProps} from 'navigators/Root.types';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleProp, ViewStyle} from 'react-native';
-import {ThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {HAS_BroadcastModalPayload} from 'utils/hiveAuthenticationService/payloads.types';
 import {ModalComponent} from 'utils/modal.enum';
 
 export default ({navigation, route}: ModalNavigationProps) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   let onForceCloseModal = route.params ? route.params!.onForceCloseModal : null;
   const name = route.params?.name;
   const data = route.params?.data;

@@ -6,7 +6,7 @@ import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import {KeychainKeyTypes} from 'hive-keychain-commons';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Clipboard,
   ScrollView,
@@ -18,7 +18,7 @@ import {
 import {CheckBox} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {
@@ -70,7 +70,7 @@ const StepTwo = ({
   ] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getDimensionedStyles({...useWindowDimensions()}, theme);
 
   useEffect(() => {

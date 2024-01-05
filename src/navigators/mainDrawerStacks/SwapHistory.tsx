@@ -4,9 +4,9 @@ import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import SwapHistory from 'components/hive/SwapHistory';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
@@ -14,7 +14,7 @@ import {translate} from 'utils/localize';
 const Stack = createStackNavigator();
 
 export default () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
   return (

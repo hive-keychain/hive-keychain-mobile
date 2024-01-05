@@ -5,9 +5,9 @@ import {
   RootStackParam,
   TemplateStackNavigationProps,
 } from 'navigators/Root.types';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {
@@ -29,7 +29,7 @@ export default ({navigation, route}: TemplateStackNavigationProps) => {
     hideCloseButton,
     extraActionOnBack,
   } = route.params;
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions().height);
 
   return (

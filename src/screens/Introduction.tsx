@@ -14,7 +14,7 @@ import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import {IntroductionNavProp} from 'navigators/Signup.types';
-import React, {useContext} from 'react';
+import React from 'react';
 import {
   Linking,
   StyleSheet,
@@ -22,7 +22,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {
   NEUTRAL_WHITE_COLOR,
   PRIMARY_RED_COLOR,
@@ -40,7 +40,7 @@ import {translate} from 'utils/localize';
 
 const Introduction = ({navigation}: IntroductionNavProp) => {
   const {height, width} = useWindowDimensions();
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const spaced = getSpaceAdjustMultiplier(width, height);
   const styles = getDimensionedStyles(
     {height, width},

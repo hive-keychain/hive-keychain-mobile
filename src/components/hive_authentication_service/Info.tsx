@@ -2,9 +2,9 @@ import HasTitleLight from 'assets/new_UI/has_title_light.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
-import React, {useContext} from 'react';
+import React from 'react';
 import {Image, StyleSheet, Text, View, useWindowDimensions} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
@@ -19,7 +19,7 @@ import StatusIndicator, {ConnectionStatus, Indicator} from './StatusIndicator';
 const TitleDarkPNG = require('assets/new_UI/has_title_dark.png');
 
 const HASInfo = () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const height = useWindowDimensions().height;
   const styles = getStyles(theme, height);
   const fullHasLogo = () => {

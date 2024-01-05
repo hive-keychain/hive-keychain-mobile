@@ -2,11 +2,11 @@ import {KeyTypes} from 'actions/interfaces';
 import {addPreference} from 'actions/preferences';
 import {RadioButton} from 'components/form/CustomRadioGroup';
 import OperationButton from 'components/form/EllipticButton';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
@@ -63,7 +63,7 @@ const RequestOperation = ({
   selectedUsername,
   has,
 }: Props) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {request_id, ...data} = request;
   const [loading, setLoading] = useState(false);
   const [keep, setKeep] = useState(false);

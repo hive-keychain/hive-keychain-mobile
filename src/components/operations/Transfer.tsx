@@ -7,7 +7,7 @@ import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import OptionsToggle from 'components/ui/OptionsToggle';
 import Separator from 'components/ui/Separator';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Keyboard,
   StyleSheet,
@@ -18,7 +18,7 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
@@ -70,7 +70,7 @@ const Transfer = ({
   const [step, setStep] = useState(1);
   const [isRecurrent, setRecurrent] = useState(false);
   const [isMemoEncrypted, setIsMemoEncrypted] = useState<boolean>(false);
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
 
   const sendTransfer = async () => {
     setLoading(true);

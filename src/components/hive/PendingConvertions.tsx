@@ -3,10 +3,10 @@ import {Conversion} from 'actions/interfaces';
 import OperationThemed from 'components/operations/OperationThemed';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
-import React, {useContext} from 'react';
+import React from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_medium} from 'src/styles/typography';
@@ -25,7 +25,7 @@ const PendingConvertions = ({
   currency,
   currentPendingConvertionList,
 }: Props) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
   const renderListItem = (item: Conversion) => {

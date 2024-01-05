@@ -3,10 +3,10 @@ import {clearWalletFilters} from 'actions/walletFilters';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {Transaction} from 'src/interfaces/transaction.interface';
 import {getColors} from 'src/styles/colors';
@@ -139,7 +139,7 @@ const WallettHistory = ({
     clearWalletFilters();
   };
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
   const renderListItem = (transaction: Transaction) => {

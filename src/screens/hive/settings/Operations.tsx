@@ -8,7 +8,7 @@ import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {DomainPreference} from 'reducers/preferences.types';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
@@ -37,7 +37,7 @@ const Operations = ({
   accounts,
   loadAccount,
 }: PropsFromRedux) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions().height);
   const [domainList, setDomainList] = useState<DomainPreference[]>([]);
   const [filteredDomains, setFilteredDomains] = useState<DomainPreference[]>(

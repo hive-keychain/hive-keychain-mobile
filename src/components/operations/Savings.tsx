@@ -7,7 +7,7 @@ import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savin
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Keyboard,
   StyleSheet,
@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getButtonStyle} from 'src/styles/button';
@@ -72,7 +72,7 @@ const Convert = ({
   const [operationType, setOperationType] = useState<SavingsOperations>(
     operation,
   );
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, useWindowDimensions(), theme);
   const operationTypeList: PickerItemInterface[] = [

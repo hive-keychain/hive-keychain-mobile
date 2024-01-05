@@ -1,13 +1,13 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
 import CreateAccount from 'screens/hive/CreateAccount';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
 import {SignupStackParamList} from './Signup.types';
@@ -15,7 +15,7 @@ import {SignupStackParamList} from './Signup.types';
 const Stack = createStackNavigator<SignupStackParamList>();
 
 export default () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
   return (
     <Stack.Navigator>

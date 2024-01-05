@@ -6,7 +6,7 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {AboutNavigation} from 'navigators/MainDrawer.types';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Linking,
   StyleSheet,
@@ -17,7 +17,7 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import VersionInfo from 'react-native-version-info';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {
@@ -30,7 +30,7 @@ import {getSafeState} from 'store';
 export default ({navigation}: {navigation: AboutNavigation}) => {
   useLockedPortrait(navigation);
   const [pressed, setPressed] = useState(0);
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions().height);
   return (
     <Background theme={theme}>

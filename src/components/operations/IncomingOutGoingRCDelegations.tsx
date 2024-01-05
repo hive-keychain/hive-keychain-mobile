@@ -1,9 +1,9 @@
 import {loadAccount} from 'actions/index';
 import Separator from 'components/ui/Separator';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {
   RCDelegationValue,
   RcDelegation,
@@ -34,7 +34,7 @@ const IncomingOutGoingRCDelegations = ({
 }: Props & PropsFromRedux) => {
   const [rcDelegations, setRcDelegations] = useState<RcDelegation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
   useEffect(() => {

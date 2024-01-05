@@ -3,7 +3,7 @@ import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import AssetImage from 'components/ui/AssetImage';
 import Separator from 'components/ui/Separator';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Linking,
   ScrollView,
@@ -13,7 +13,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {getBuyCoinsListItem} from 'src/reference-data/buy-coins-list-item.list';
 import {getButtonStyle} from 'src/styles/button';
@@ -109,7 +109,7 @@ const BuyCoinsComponent = ({user, currency, showFloatingBar}: Props) => {
     showFloatingBar(innerScrollViewY === 0);
   };
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {height} = useWindowDimensions();
 
   const styles = getDimensionedStyles(height, theme);

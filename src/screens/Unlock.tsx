@@ -4,16 +4,15 @@ import Pincode from 'components/pin_code';
 import Background from 'components/ui/Background';
 import KeychainLogo from 'components/ui/KeychainLogo';
 import {UnlockNavigationProp} from 'navigators/Unlock.types';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {ThemeContext} from 'src/context/theme.context';
 import {translate} from 'utils/localize';
 
 type UnlockScreenProps = PropsFromRedux & UnlockNavigationProp;
 const Unlock = ({unlock, navigation}: UnlockScreenProps) => {
   const {width} = useWindowDimensions();
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   return (
     <Background theme={theme}>
       <>

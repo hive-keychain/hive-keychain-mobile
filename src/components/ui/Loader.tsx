@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -7,7 +7,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import KeychainLogo from './KeychainLogo';
 
@@ -24,7 +24,7 @@ export default ({
   animatedLogo,
 }: Props) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
 
   const dots = 3;
 

@@ -4,7 +4,7 @@ import {SavingsOperations} from 'components/operations/Savings';
 import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
   FlatList,
   Keyboard,
@@ -17,7 +17,7 @@ import {
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getCardStyle} from 'src/styles/card';
@@ -49,7 +49,7 @@ const PendingSavingsWithdrawalPageComponent = ({
   const [currency, setCurrency] = useState(c);
   const [toCancelSaving, setToCancelSaving] = useState<SavingsWithdrawal>();
   const [loading, setLoading] = useState(false);
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, useWindowDimensions(), theme);
 

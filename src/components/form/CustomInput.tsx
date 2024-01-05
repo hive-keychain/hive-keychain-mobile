@@ -1,5 +1,5 @@
 import Separator from 'components/ui/Separator';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -10,7 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Input, InputProps} from 'react-native-elements';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {fields_primary_text_2} from 'src/styles/typography';
 import {Width} from 'utils/common.types';
@@ -36,7 +36,7 @@ export default ({
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getDimensionedStyles({
     ...useWindowDimensions(),
     theme,

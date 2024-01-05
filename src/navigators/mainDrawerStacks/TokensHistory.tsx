@@ -9,9 +9,9 @@ import {
   RootStackParam,
   TokensHistoryNavigationProps,
 } from 'navigators/Root.types';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
@@ -20,7 +20,7 @@ import {translate} from 'utils/localize';
 const Stack = createStackNavigator<RootStackParam>();
 
 export default ({navigation, route}: TokensHistoryNavigationProps) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {currency} = route.params;
   const styles = getStyles(theme);
 

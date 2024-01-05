@@ -1,6 +1,6 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
 
@@ -9,7 +9,7 @@ type Props = {
   content: string;
 };
 export default ({title, content}: Props) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
   return (
     <View style={styles.container}>

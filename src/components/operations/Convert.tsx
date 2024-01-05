@@ -7,7 +7,7 @@ import PendingConvertions from 'components/hive/PendingConvertions';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
 import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Keyboard,
@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
@@ -104,7 +104,7 @@ const Convert = ({
       setLoading(false);
     }
   };
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, theme);
 

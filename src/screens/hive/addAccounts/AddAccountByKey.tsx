@@ -11,7 +11,7 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {AddAccFromWalletNavigation} from 'navigators/mainDrawerStacks/AddAccount.types';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -21,7 +21,7 @@ import {
 import {Text} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
@@ -79,7 +79,7 @@ const AddAccountByKey = ({
       setLoadingImportAccount(false);
     }
   };
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {height} = useWindowDimensions();
   const styles = getStyles(theme, height);
 

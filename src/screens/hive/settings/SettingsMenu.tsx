@@ -2,9 +2,9 @@ import MenuItem from 'components/drawer/drawer-content-item/MenuItem';
 import Icon from 'components/hive/Icon';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
@@ -13,7 +13,7 @@ import Operations from './Operations';
 import RpcNodes from './RpcNodes';
 
 const SettingsMenu = () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
   useBackButtonNavigation('WALLET');

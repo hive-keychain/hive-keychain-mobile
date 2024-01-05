@@ -2,7 +2,7 @@ import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import {clearTokensFilters} from 'actions/tokensFilters';
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Image as Img,
   StyleSheet,
@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import Image from 'react-native-fast-image';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {RootState} from 'store';
 import {getBackgroundColorFromBackend} from 'utils/colors';
 import {Width} from 'utils/common.types';
@@ -36,7 +36,7 @@ const EngineTokenDisplay = ({
   clearTokensFilters,
   addBackground,
 }: Props & PropsFromRedux) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getDimensionedStyles(
     useWindowDimensions(),
     theme,

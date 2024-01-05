@@ -1,10 +1,10 @@
 import {setDisplayChangeRpcPopup} from 'actions/rpc-switcher';
 import {setRpc} from 'actions/settings';
 import OperationButton from 'components/form/EllipticButton';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {button_link_primary_small} from 'src/styles/typography';
 import {RootState} from 'store';
@@ -22,7 +22,7 @@ const RpcSwitcherComponent = ({
     setRpc(rpcSwither.rpc.uri);
   };
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
   return rpcSwither.display ? (
     <View style={styles.popupBottom}>

@@ -1,5 +1,5 @@
 import ForgotPIN from 'components/modals/ForgotPIN';
-import React, {useContext} from 'react';
+import React from 'react';
 import {
   ScaledSize,
   StyleSheet,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   useWindowDimensions,
 } from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {FontPoppinsName, underlined} from 'src/styles/typography';
@@ -15,7 +15,7 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
 export default () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   return (
     <TouchableOpacity

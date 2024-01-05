@@ -1,12 +1,12 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import AddAccountByAuth from 'screens/hive/addAccounts/AddAccountByAuth';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {
@@ -19,7 +19,7 @@ import {AddAccountFromWalletParamList} from './AddAccount.types';
 const AccountStack = createStackNavigator<AddAccountFromWalletParamList>();
 
 export default () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions().height);
   return (
     <AccountStack.Navigator>

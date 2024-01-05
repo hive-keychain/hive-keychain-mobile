@@ -1,12 +1,12 @@
 import Operation from 'components/operations/Operation';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, Text} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {body_primary_body_3} from 'src/styles/typography';
 
 export default ({error, onClose}: {error: string; onClose: () => void}) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
   return (

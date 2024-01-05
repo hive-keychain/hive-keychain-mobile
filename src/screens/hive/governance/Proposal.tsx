@@ -2,7 +2,7 @@ import {loadAccount} from 'actions/index';
 import {ActiveAccount} from 'actions/interfaces';
 import ProposalItem from 'components/hive/ProposaItem';
 import Loader from 'components/ui/Loader';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -11,7 +11,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
@@ -30,7 +30,7 @@ const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
   const [proposals, setProposals] = useState<ProposalInterface[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [displayingProxyVotes, setDisplayingProxyVotes] = useState(false);
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles(width, height, theme);
 

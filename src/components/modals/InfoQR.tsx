@@ -1,7 +1,7 @@
 import Separator from 'components/ui/Separator';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
   FontPoppinsName,
@@ -12,7 +12,7 @@ import {Height} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 export default () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   return (
     <>

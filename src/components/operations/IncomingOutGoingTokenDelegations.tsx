@@ -2,10 +2,10 @@ import {loadAccount} from 'actions/index';
 import {Token, TokenBalance} from 'actions/interfaces';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
   title_primary_body_2,
@@ -78,7 +78,7 @@ const IncomingOutGoingTokenDelegations = ({
     );
   };
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(token.symbol);
   const styles = getDimensionedStyles(color, theme);
 

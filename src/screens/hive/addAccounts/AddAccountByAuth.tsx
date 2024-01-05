@@ -14,11 +14,11 @@ import {
   AddAccFromWalletNavigationProps,
 } from 'navigators/mainDrawerStacks/AddAccount.types';
 import {AddAccNavigationProps} from 'navigators/Signup.types';
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {StatusBar, StyleSheet, useWindowDimensions, View} from 'react-native';
 import {Text} from 'react-native-elements';
 import {connect, ConnectedProps} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
@@ -69,7 +69,7 @@ const AddAccountByAuth = ({
     }
   };
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const {height} = useWindowDimensions();
   const styles = getStyles(theme, height);
 

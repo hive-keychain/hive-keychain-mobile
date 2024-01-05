@@ -1,6 +1,6 @@
 import BackspaceDark from 'assets/new_UI/backspace_dark_theme.svg';
 import BackspaceLight from 'assets/new_UI/backspace_light_theme.svg';
-import React, {useContext} from 'react';
+import React from 'react';
 import {
   Dimensions,
   ScaledSize,
@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
@@ -28,7 +28,7 @@ interface Props {
 }
 
 export default ({number, refNumber, helper, back, onPressElement}: Props) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const [activeShape, setActiveshape] = React.useState(null);
   const [pressed, setPressed] = React.useState(false);
   const dimensionReducer = 0.2;

@@ -1,10 +1,10 @@
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import Governance from 'screens/hive/governance/Governance';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {
@@ -16,7 +16,7 @@ import {translate} from 'utils/localize';
 const Stack = createStackNavigator();
 
 export default () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions().height);
 
   return (

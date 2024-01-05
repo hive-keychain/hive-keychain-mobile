@@ -7,11 +7,11 @@ import Icon from 'components/hive/Icon';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {RCDelegationValue} from 'src/interfaces/rc-delegation.interface';
 import {getButtonStyle} from 'src/styles/button';
@@ -66,7 +66,7 @@ const RCDelegation = ({
   const [to, setTo] = useState('');
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
   useEffect(() => {

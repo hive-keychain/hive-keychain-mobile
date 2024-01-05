@@ -30,9 +30,9 @@ import UnstakeToken, {
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import {OperationNavigationProps, RootStackParam} from 'navigators/Root.types';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {capitalize} from 'utils/format';
@@ -42,7 +42,7 @@ const Stack = createStackNavigator<RootStackParam>();
 
 export default ({navigation, route}: OperationNavigationProps) => {
   const {operation, props} = route.params;
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
   const getTitle = () => {

@@ -2,10 +2,10 @@ import {resetModal} from 'actions/message';
 import BigCheckSVG from 'assets/new_UI/Illustration.svg';
 import ErrorSvg from 'assets/new_UI/error-circle.svg';
 import EllipticButton from 'components/form/EllipticButton';
-import React, {useContext, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
@@ -26,7 +26,7 @@ const Message = ({
   resetModal,
   notHideOnSuccess,
 }: Props & PropsFromRedux) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
   const handleReset = () => {

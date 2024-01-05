@@ -15,10 +15,9 @@ import {
 import Browser from 'components/browser';
 import ProposalReminder from 'components/popups/proposal-reminder';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
-import React, {useContext} from 'react';
+import React from 'react';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
-import {ThemeContext} from 'src/context/theme.context';
 import {RootState} from 'store';
 
 const BrowserScreen = ({
@@ -58,7 +57,7 @@ const BrowserScreen = ({
   //   return unsubscribe;
   // }, [navigation]);
 
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
 
   return (
     <>

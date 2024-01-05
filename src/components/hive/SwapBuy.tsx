@@ -1,9 +1,9 @@
 import BuyCoinsComponent from 'components/operations/Buy-coins.component';
 import Swap from 'components/operations/Swap';
 import ScreenToggle from 'components/ui/ScreenToggle';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
-import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Theme} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
@@ -15,7 +15,7 @@ interface SwapBuyToScreenToogleProps {
 }
 
 const SwapBuy = () => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
   const swapBuyElements: SwapBuyToScreenToogleProps = {
     menuLabels: [

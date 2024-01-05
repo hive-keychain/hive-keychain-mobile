@@ -1,8 +1,7 @@
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
-import React, {useContext} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
-import {ThemeContext} from 'src/context/theme.context';
 import Background from './Background';
 
 type Props = {
@@ -10,7 +9,7 @@ type Props = {
 };
 
 export default ({children}: Props) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useThemeContext();
   return (
     <Background theme={theme}>
       <SafeArea style={styles.bgd}>
