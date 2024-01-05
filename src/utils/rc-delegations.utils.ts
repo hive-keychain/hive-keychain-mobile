@@ -13,7 +13,7 @@ const getAllOutgoingDelegations = async (
     start: [username, ''],
     limit: 1000,
   });
-  console.log({result}); //TODO remove line
+
   let list = result
     ? result.rc_direct_delegations.map((delegation: any) => {
         return {
@@ -49,27 +49,6 @@ const sendDelegation = async (
     },
   ]);
 };
-//TODO in this file cleanup unused code after refactoring
-/* istanbul ignore next */
-// const getRcDelegationOperation = (
-//   delegatee: string,
-//   value: number,
-//   username: string,
-// ) => {
-//   return CustomJsonUtils.getCustomJsonOperation(
-//     [
-//       'delegate_rc',
-//       {
-//         from: username,
-//         delegatees: [delegatee],
-//         max_rc: value,
-//       },
-//     ],
-//     username,
-//     KeyType.POSTING,
-//     'rc',
-//   );
-// };
 
 const getHivePerVests = (properties: GlobalProperties) => {
   const totalVestingFund = Asset.fromString(
@@ -136,5 +115,4 @@ export const RcDelegationsUtils = {
   rcToHp,
   cancelDelegation,
   formatRcWithUnit,
-  //   getRcDelegationOperation,
 };
