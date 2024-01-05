@@ -94,18 +94,14 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
       <Hand {...styles.imageHive} />
       {theme === Theme.DARK ? <Dots2Dark /> : <Dots2Light />}
       <Text style={{...styles.text, ...headlines_primary_headline_2}}>
-        {capitalizeSentence(translate('intro.intro_text_2'))}
+        {translate('intro.intro_text_2')}
       </Text>
     </View>,
     <>
       <View style={[styles.flexBetween70]}>
         {renderLogos(true)}
-        <Text style={styles.text}>
-          {capitalizeSentence(translate('intro.text'))}
-        </Text>
-        <Text style={styles.text}>
-          {capitalizeSentence(translate('intro.manage'))}
-        </Text>
+        <Text style={styles.text}>{translate('intro.text')}</Text>
+        <Text style={styles.text}>{translate('intro.manage')}</Text>
       </View>
       <View>
         <EllipticButton

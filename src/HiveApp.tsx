@@ -102,7 +102,6 @@ const App = ({
     // return <TestStack />;
     //end remove
 
-    console.log('renderNavigator, HiveApp'); //TODO remove line
     if (!hasAccounts) {
       // No accounts, sign up process
       return <SignUpStack />;
