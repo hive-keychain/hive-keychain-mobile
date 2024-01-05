@@ -29,11 +29,7 @@ import {
   title_primary_body_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {
-  beautifyTransferError,
-  capitalize,
-  capitalizeSentence,
-} from 'utils/format';
+import {beautifyTransferError, capitalize} from 'utils/format';
 import {recurrentTransfer, sendToken, transfer} from 'utils/hive';
 import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {getCurrencyProperties} from 'utils/hiveReact';
@@ -208,9 +204,7 @@ const Transfer = ({
               <OperationInput
                 keyboardType="decimal-pad"
                 labelInput={capitalize(translate('common.amount'))}
-                placeholder={capitalizeSentence(
-                  translate('common.enter_amount'),
-                )}
+                placeholder={translate('common.enter_amount')}
                 value={amount}
                 onChangeText={setAmount}
                 additionalInputContainerStyle={{
@@ -277,8 +271,8 @@ const Transfer = ({
               <Separator />
               <OperationInput
                 labelInput={translate('wallet.operations.transfer.frecuency')}
-                labelExtraInfo={capitalizeSentence(
-                  translate('wallet.operations.transfer.frecuency_minimum'),
+                labelExtraInfo={translate(
+                  'wallet.operations.transfer.frecuency_minimum',
                 )}
                 placeholder={translate('wallet.operations.transfer.frecuency')}
                 value={recurrence}
@@ -289,8 +283,8 @@ const Transfer = ({
               <Separator />
               <OperationInput
                 labelInput={translate('wallet.operations.transfer.iterations')}
-                labelExtraInfo={capitalizeSentence(
-                  translate('wallet.operations.transfer.iterations_minimum'),
+                labelExtraInfo={translate(
+                  'wallet.operations.transfer.iterations_minimum',
                 )}
                 placeholder={translate('wallet.operations.transfer.iterations')}
                 value={exec}
@@ -323,7 +317,6 @@ const Transfer = ({
                   setStep(2);
                 }
               }}
-              //TODO important need testing in IOS
               style={getButtonStyle(theme).warningStyleButton}
               additionalTextStyle={{...button_link_primary_medium}}
             />
@@ -340,9 +333,7 @@ const Transfer = ({
           <>
             <Separator height={35} />
             <Text style={[styles.text, styles.info]}>
-              {capitalizeSentence(
-                translate('wallet.operations.transfer.confirm.info'),
-              )}
+              {translate('wallet.operations.transfer.confirm.info')}
             </Text>
             <Separator />
             <Text style={[styles.text, styles.warning]}>

@@ -12,7 +12,7 @@ import {
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, capitalizeSentence} from 'utils/format';
+import {capitalize} from 'utils/format';
 import {
   TokenDelegation,
   getIncomingTokenDelegations,
@@ -105,10 +105,8 @@ const IncomingOutGoingTokenDelegations = ({
                   <View style={styles.flexRowBetween}>
                     <Text style={styles.title}>
                       {translate('common.total')}{' '}
-                      {capitalizeSentence(
-                        translate(
-                          'wallet.operations.token_delegation.token_pending_undelegation',
-                        ),
+                      {translate(
+                        'wallet.operations.token_delegation.token_pending_undelegation',
                       )}
                     </Text>
                     <Text style={styles.title}>

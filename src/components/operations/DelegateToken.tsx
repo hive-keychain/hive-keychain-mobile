@@ -22,7 +22,7 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
-import {capitalize, capitalizeSentence} from 'utils/format';
+import {capitalize} from 'utils/format';
 import {delegateToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
@@ -146,9 +146,7 @@ const DelegateToken = ({
         <>
           <Separator />
           <Text style={styles.infoText}>
-            {capitalizeSentence(
-              translate('wallet.operations.token_delegation.info'),
-            )}
+            {translate('wallet.operations.token_delegation.info')}
           </Text>
           <Separator />
           <OperationInput
@@ -178,7 +176,7 @@ const DelegateToken = ({
             <OperationInput
               keyboardType="decimal-pad"
               labelInput={capitalize(translate('common.amount'))}
-              placeholder={capitalizeSentence(translate('common.enter_amount'))}
+              placeholder={translate('common.enter_amount')}
               value={amount}
               onChangeText={setAmount}
               additionalInputContainerStyle={{

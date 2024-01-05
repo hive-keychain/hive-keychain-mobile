@@ -28,7 +28,6 @@ import {
   button_link_primary_medium,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 
 interface Props {
@@ -107,9 +106,7 @@ const Carousel = ({buttonsConfig, content, locale, theme}: Props) => {
           resizeMode={'contain'}
         />
         <Text style={styles.titleText}>{feature.title}</Text>
-        <Text style={styles.descriptionText}>
-          {capitalizeSentence(feature.description)}
-        </Text>
+        <Text style={styles.descriptionText}>{feature.description}</Text>
         <Text
           style={styles.readMoreText}
           onPress={() => handleOnClick(content, feature)}>
@@ -135,7 +132,6 @@ const Carousel = ({buttonsConfig, content, locale, theme}: Props) => {
         <EllipticButton
           title={getCurrentTitleOnNextSlideButton()}
           onPress={() => handleOnPressNextButton()}
-          //TODO important need testing in IOS
           style={[
             styles.warningProceedButton,
             generateBoxShadowStyle(

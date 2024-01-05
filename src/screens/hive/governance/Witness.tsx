@@ -29,7 +29,6 @@ import {
   getFontSizeSmallDevices,
   title_primary_title_1,
 } from 'src/styles/typography';
-import {capitalizeSentence} from 'utils/format';
 import {getClient, voteForWitness} from 'utils/hive';
 import {translate} from 'utils/localize';
 import ProxyUtils from 'utils/proxy';
@@ -238,20 +237,16 @@ const Witness = ({
           )}
           {usingProxy && (
             <Text style={styles.text}>
-              {capitalizeSentence(
-                translate('governance.witness.has_proxy', {
-                  proxy: user.account.proxy,
-                }),
-              )}
+              {translate('governance.witness.has_proxy', {
+                proxy: user.account.proxy,
+              })}
             </Text>
           )}
           <Separator />
           <Text style={[styles.text, styles.textOpaque, styles.marginRight]}>
-            {capitalizeSentence(
-              translate('governance.witness.link_to_arcange', {
-                proxy: user.account.proxy,
-              }),
-            )}
+            {translate('governance.witness.link_to_arcange', {
+              proxy: user.account.proxy,
+            })}
             <Icon
               name={Icons.OPEN}
               theme={theme}

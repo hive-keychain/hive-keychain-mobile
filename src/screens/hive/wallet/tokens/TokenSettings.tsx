@@ -56,7 +56,6 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
       customHiddenTokens = JSON.parse(
         await AsyncStorage.getItem(KeychainStorageKeyEnum.HIDDEN_TOKENS),
       );
-      console.log({customHiddenTokens}); //TODO remove line
       setHiddenTokens(customHiddenTokens ?? []);
     } catch (error) {
       console.log('Error reading hiddenTokens');

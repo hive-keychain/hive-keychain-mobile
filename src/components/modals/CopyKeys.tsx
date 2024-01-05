@@ -9,7 +9,6 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {Height} from 'utils/common.types';
-import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 
 export default () => {
@@ -21,12 +20,12 @@ export default () => {
       <Text style={styles.h4}>{translate('components.copy_keys.title')}</Text>
       <Separator />
       <Text style={styles.textContent}>
-        {capitalizeSentence(translate('components.copy_keys.text1'))}
+        {translate('components.copy_keys.text1')}
       </Text>
       <Separator height={20} />
       <Text style={styles.textContent}>
         <Text style={styles.textContent}>
-          {capitalizeSentence(translate('components.copy_keys.text2'))}
+          {translate('components.copy_keys.text2')}
         </Text>
       </Text>
     </>

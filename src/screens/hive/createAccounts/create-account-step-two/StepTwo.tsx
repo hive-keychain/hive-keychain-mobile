@@ -33,7 +33,6 @@ import {
   GeneratedKeys,
 } from 'utils/account-creation.utils';
 import {Dimensions} from 'utils/common.types';
-import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 import {resetStackAndNavigate} from 'utils/navigation';
 
@@ -337,9 +336,7 @@ const StepTwo = ({
                     ? getButtonStyle(theme).warningStyleButton
                     : styles.buttonDisabled,
                 ]}
-                title={capitalizeSentence(
-                  translate('components.create_account.create_account'),
-                )}
+                title={translate('components.create_account.create_account')}
                 onPress={createAccount}
                 additionalTextStyle={[styles.buttonText, styles.whiteText]}
               />

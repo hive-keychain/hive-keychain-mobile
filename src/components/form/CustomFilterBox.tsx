@@ -26,7 +26,6 @@ import {
 import {TokenHistoryFilter} from 'src/types/tokens.history.types';
 import {WalletHistoryFilter} from 'src/types/wallet.history.types';
 import {RootState} from 'store';
-import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 import CustomSearchBar from './CustomSearchBar';
 import EllipticButton from './EllipticButton';
@@ -139,7 +138,7 @@ const FilterBox = ({
                     styles.filterItemText,
                     getActiveFilterItemTextStyle(filterKey),
                   ]}>
-                  {capitalizeSentence(filterKey.split('_').join(' '))}
+                  {filterKey.split('_').join(' ')}
                 </Text>
               </TouchableOpacity>
             );
@@ -181,7 +180,6 @@ const FilterBox = ({
       <EllipticButton
         title={translate('wallet.filter.clear_filters')}
         onPress={() => handleClearFilter()}
-        //TODO important need testing in IOS
         style={[
           styles.warningProceedButton,
           generateBoxShadowStyle(

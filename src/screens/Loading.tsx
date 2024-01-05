@@ -9,7 +9,7 @@ const Loading = () => {
   const {width} = useWindowDimensions();
   return (
     <Background theme={theme} containerStyle={styles.bgd}>
-      <KeychainLogo width={width / 2} />
+      <KeychainLogo theme={theme} width={width / 2} />
     </Background>
   );
 };

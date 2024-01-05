@@ -14,7 +14,6 @@ import {
   button_link_primary_medium,
   headlines_primary_headline_1,
 } from 'src/styles/typography';
-import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 
@@ -27,7 +26,7 @@ const AddKey = ({addKey, name, type, theme}: Props) => {
     <>
       <Separator height={30} />
       <Text style={styles.title}>
-        {capitalizeSentence(translate('settings.keys.add_keyType', {type}))}
+        {translate('settings.keys.add_keyType', {type})}
       </Text>
       <Separator />
       <OperationInput

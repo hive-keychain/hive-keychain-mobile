@@ -32,7 +32,6 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalizeSentence} from 'utils/format';
 import validateNewAccount from 'utils/keyValidation';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -105,7 +104,7 @@ const AddAccountByKey = ({
                 styles.paddingHorizontal,
                 styles.centeredText,
               ]}>
-              {capitalizeSentence(translate('addAccountByKey.text'))}
+              {translate('addAccountByKey.text')}
             </Text>
             <Separator height={height / 15} />
             <OperationInput
@@ -150,9 +149,7 @@ const AddAccountByKey = ({
               <TouchableOpacity
                 onPress={() => navigate('AddAccountFromWalletScreenByAuth')}>
                 <Text style={[styles.text, styles.textUnderlined]}>
-                  {capitalizeSentence(
-                    translate('common.use_authorized_account_instead'),
-                  )}
+                  {translate('common.use_authorized_account_instead')}
                 </Text>
               </TouchableOpacity>
             )}

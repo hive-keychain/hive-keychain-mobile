@@ -36,7 +36,6 @@ import {
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {hiveConfig} from 'utils/config';
-import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 
 const Introduction = ({navigation}: IntroductionNavProp) => {
@@ -85,7 +84,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
         <Person1 {...styles.imageHive} />
         {theme === Theme.DARK ? <Dots1Dark /> : <Dots1Light />}
         <Text style={{...styles.text, ...headlines_primary_headline_2}}>
-          {capitalizeSentence(translate('intro.intro_text_1'))}
+          {translate('intro.intro_text_1')}
         </Text>
       </View>
     </>,

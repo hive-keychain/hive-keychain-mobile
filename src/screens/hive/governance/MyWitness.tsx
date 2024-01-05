@@ -65,7 +65,6 @@ const MyWitness = ({
 
   const styles = getStyles(theme);
 
-  //TODO bellow need testing in IOS
   const shadowActiveSwitch = generateBoxShadowStyle(
     0,
     13,

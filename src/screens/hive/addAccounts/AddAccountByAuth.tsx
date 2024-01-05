@@ -30,7 +30,6 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
-import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 
 const AddAccountByAuth = ({
@@ -92,7 +91,7 @@ const AddAccountByAuth = ({
             />
             <Separator height={height / 15} />
             <Text style={[styles.text, styles.opacity, styles.centeredText]}>
-              {capitalizeSentence(translate('addAccountByAuth.text'))}
+              {translate('addAccountByAuth.text')}
             </Text>
             <Separator height={height / 15} />
             <OperationInput

@@ -19,7 +19,6 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {Width} from 'utils/common.types';
-import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 
@@ -50,7 +49,7 @@ const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
             styles.marginText,
             {fontSize: getFontSizeSmallDevices(height, styles.text.fontSize)},
           ]}>
-          {capitalizeSentence(translate('components.forgotPIN.text'))}
+          {translate('components.forgotPIN.text')}
         </Text>
       </View>
       <EllipticButton
@@ -59,7 +58,6 @@ const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
           goBack();
           forgetAccounts();
         }}
-        //TODO important need testing in IOS
         style={[
           styles.warningProceedButton,
           generateBoxShadowStyle(

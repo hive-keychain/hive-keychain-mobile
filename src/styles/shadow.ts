@@ -13,6 +13,7 @@ export const generateBoxShadowStyle = (
   shadowColorAndroid: string,
   zIndex?: number,
 ) => {
+  //TODO important need testing in IOS
   if (Platform.OS === 'ios') {
     return {
       shadowColor: shadowColorIos,

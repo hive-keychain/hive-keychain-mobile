@@ -48,7 +48,6 @@ export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
       return (
         <EllipticButton
           title={translate('drawerFooter.vote', {account})}
-          //TODO important need testing in IOS
           style={[
             styles.warningProceedButton,
             generateBoxShadowStyle(

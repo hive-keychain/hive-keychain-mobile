@@ -8,9 +8,8 @@ import {Theme} from 'src/context/theme.context';
 interface Props {
   style?: StyleProp<ViewStyle>;
   width: number;
-  //TODO change after refactoring UI, change to fixed param
+  theme: Theme;
   using_new_ui?: boolean;
-  theme?: Theme;
 }
 
 const KeychainLogo = ({style, width, using_new_ui, theme}: Props) => {

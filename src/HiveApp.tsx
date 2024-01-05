@@ -149,7 +149,7 @@ const App = ({
         logScreenView(currentRouteName);
       }}>
       {renderRootNavigator()}
-      <MessageModal capitalize />
+      <MessageModal />
       <FloatingBar currentRouteName={currentRouteName} />
       {/* TODO commented for now while fixing loading/render times on app */}
       {/* <RpcSwitcherComponent /> */}

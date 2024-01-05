@@ -114,11 +114,6 @@ const getDimensionedStyles = ({
       marginHorizontal: 15,
       textAlign: textAlign || 'left',
     },
-    //TODO cleanup
-    // searchIcon: {
-    //   width: 12,
-    //   height: 12,
-    // },
     flexRow: {
       width: '100%',
       flexDirection: 'row',

@@ -32,7 +32,6 @@ import {
 } from 'utils/account-creation.utils';
 import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
-import {capitalizeSentence} from 'utils/format';
 import {getAccountPrice} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -215,12 +214,10 @@ const CreateAccountStepOne = ({
             <Separator height={15} />
             {selectedAccount.length > 0 && accountOptions && !loadingData && (
               <Text style={[styles.text, styles.centeredText, styles.opacity]}>
-                {capitalizeSentence(
-                  translate('components.create_account.cost', {
-                    price: getPriceLabel(),
-                    account: selectedAccount,
-                  }),
-                )}
+                {translate('components.create_account.cost', {
+                  price: getPriceLabel(),
+                  account: selectedAccount,
+                })}
               </Text>
             )}
             {loadingData && (

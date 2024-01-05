@@ -10,7 +10,6 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {Height} from 'utils/common.types';
-import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 
 export default () => {
@@ -24,21 +23,21 @@ export default () => {
       </Text>
       <Separator />
       <Text style={styles.textContent}>
-        {capitalizeSentence(translate('components.moreInformation.text1'))}
+        {translate('components.moreInformation.text1')}
       </Text>
       <Separator height={10} />
       <Text style={styles.textContent}>
         <Text style={styles.textContent}>
-          {capitalizeSentence(translate('components.moreInformation.text2'))}
+          {translate('components.moreInformation.text2')}
         </Text>
         <Text style={[styles.textContent, styles.bold]}>
           {' '}
-          {capitalizeSentence(translate('components.moreInformation.text3'))}
+          {translate('components.moreInformation.text3')}
         </Text>
       </Text>
       <Separator height={10} />
       <Text style={styles.textContent}>
-        {capitalizeSentence(translate('components.moreInformation.text4'))}
+        {translate('components.moreInformation.text4')}
       </Text>
     </>
   );

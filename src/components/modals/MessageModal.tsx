@@ -14,18 +14,15 @@ import {
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 
 const DEFAULTHIDETIMEMS = 3000;
 interface Props {
-  capitalize?: boolean;
   notHideOnSuccess?: boolean;
 }
 
 const Message = ({
   messageModal,
-  capitalize,
   resetModal,
   notHideOnSuccess,
 }: Props & PropsFromRedux) => {
@@ -70,13 +67,10 @@ const Message = ({
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             {renderIcon()}
-            <Text style={[styles.text, styles.marginVertical]}>
-              {capitalize ? capitalizeSentence(message) : message}
-            </Text>
+            <Text style={[styles.text, styles.marginVertical]}>{message}</Text>
             <EllipticButton
               title={translate('common.close')}
               onPress={() => resetModal()}
-              //TODO important need testing in IOS
               style={[getButtonStyle(theme).warningStyleButton, styles.button]}
               additionalTextStyle={styles.buttonText}
             />

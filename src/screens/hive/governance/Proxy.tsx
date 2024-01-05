@@ -18,7 +18,6 @@ import {
   getFontSizeSmallDevices,
   title_primary_title_1,
 } from 'src/styles/typography';
-import {capitalizeSentence} from 'utils/format';
 import {setProxy} from 'utils/hive';
 import {translate} from 'utils/localize';
 
@@ -93,22 +92,18 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
         {!loading && (
           <View style={{flex: 1}}>
             <Text style={[styles.text, styles.textOpaque]}>
-              {capitalizeSentence(
-                translate(
-                  user.account.proxy.length > 0
-                    ? 'governance.proxy.has_proxy'
-                    : 'governance.proxy.proxy_def',
-                ),
+              {translate(
+                user.account.proxy.length > 0
+                  ? 'governance.proxy.has_proxy'
+                  : 'governance.proxy.proxy_def',
               )}
             </Text>
             <Separator />
             {user.account.proxy.length > 0 && (
               <Text style={[styles.text, styles.textOpaque]}>
-                {capitalizeSentence(
-                  translate('governance.proxy.using_proxy', {
-                    name: user.account.proxy,
-                  }),
-                )}
+                {translate('governance.proxy.using_proxy', {
+                  name: user.account.proxy,
+                })}
               </Text>
             )}
             <Separator />

@@ -19,7 +19,7 @@ import {
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, capitalizeSentence} from 'utils/format';
+import {capitalize} from 'utils/format';
 import {unstakeToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
@@ -135,16 +135,12 @@ const UnstakeToken = ({
         <View style={styles.childrenMiddle}>
           <Separator />
           <Text style={styles.infoText}>
-            {capitalizeSentence(
-              translate('wallet.operations.token_unstake.info'),
-            )}
+            {translate('wallet.operations.token_unstake.info')}
           </Text>
           <Text style={styles.infoText}>
-            {capitalizeSentence(
-              translate('wallet.operations.token_unstake.cooldown_disclaimer', {
-                unstakingCooldown: tokenInfo.unstakingCooldown,
-              }),
-            )}
+            {translate('wallet.operations.token_unstake.cooldown_disclaimer', {
+              unstakingCooldown: tokenInfo.unstakingCooldown,
+            })}
             {tokenInfo.unstakingCooldown === 1 ? '' : 's'},
           </Text>
           <Separator />
@@ -165,7 +161,7 @@ const UnstakeToken = ({
             <OperationInput
               keyboardType="decimal-pad"
               labelInput={capitalize(translate('common.amount'))}
-              placeholder={capitalizeSentence(translate('common.enter_amount'))}
+              placeholder={translate('common.enter_amount')}
               value={amount}
               onChangeText={setAmount}
               additionalInputContainerStyle={{

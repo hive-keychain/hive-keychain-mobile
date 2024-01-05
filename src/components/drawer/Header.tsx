@@ -18,7 +18,6 @@ import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {capitalizeSentence} from 'utils/format';
 import {translate} from 'utils/localize';
 
 export default ({
@@ -41,17 +40,17 @@ export default ({
       <View style={styles.middleContainer}>
         <View style={styles.flexRowCentered}>
           <Text style={styles.textSubHeader}>
-            {capitalizeSentence(translate('drawerFooter.madeBy_part_1'))}
+            {translate('drawerFooter.madeBy_part_1')}
           </Text>
           <View style={styles.heartContainer}>
             <Heart {...styles.heartIcon} />
           </View>
           <Text style={[styles.textSubHeader]}>
-            {capitalizeSentence(translate('drawerFooter.madeBy_part_2'))}
+            {translate('drawerFooter.madeBy_part_2')}
           </Text>
         </View>
         <Text style={[styles.textSubHeader, {textAlign: 'center'}]}>
-          {capitalizeSentence(translate('drawerFooter.madeBy_part_3'))}
+          {translate('drawerFooter.madeBy_part_3')}
         </Text>
       </View>
       <View style={[styles.bottomContainer]}>

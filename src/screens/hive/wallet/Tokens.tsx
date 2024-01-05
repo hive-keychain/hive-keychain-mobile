@@ -34,7 +34,6 @@ import {
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {hiveEngineWebsiteURL} from 'utils/config';
-import {capitalizeSentence} from 'utils/format';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -165,7 +164,7 @@ const Tokens = ({
         <Separator height={10} />
         <View style={styles.containerInfoText}>
           <Text style={[styles.textInfo, styles.textJustified]}>
-            {capitalizeSentence(translate('wallet.operations.tokens.info'))}
+            {translate('wallet.operations.tokens.info')}
           </Text>
         </View>
         <View style={styles.containerInfoText}>

@@ -47,7 +47,6 @@ const Operations = ({
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
-    console.log({n: active.name}); //TODO remove line
     setLoadingData(true);
     init();
   }, [active]);

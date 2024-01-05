@@ -7,11 +7,6 @@ export const getSpaceMultiplier = (width: number, height: number) => {
     case height <= 800:
       heightMultiplier = 0.8;
       break;
-    //TODO
-    //  - greater or lower.
-    //  - how/where to define fontSizes.
-    // default:
-    //     break;
   }
   return heightMultiplier;
 };

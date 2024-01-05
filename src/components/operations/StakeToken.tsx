@@ -19,7 +19,7 @@ import {
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, capitalizeSentence} from 'utils/format';
+import {capitalize} from 'utils/format';
 import {stakeToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
@@ -134,9 +134,7 @@ const StakeToken = ({
         <View style={styles.childrenMiddle}>
           <Separator />
           <Text style={styles.infoText}>
-            {capitalizeSentence(
-              translate('wallet.operations.token_stake.info'),
-            )}
+            {translate('wallet.operations.token_stake.info')}
           </Text>
           <Separator />
           <View style={styles.flexRowBetween}>
@@ -156,7 +154,7 @@ const StakeToken = ({
             <OperationInput
               keyboardType="decimal-pad"
               labelInput={capitalize(translate('common.amount'))}
-              placeholder={capitalizeSentence(translate('common.enter_amount'))}
+              placeholder={translate('common.enter_amount')}
               value={amount}
               onChangeText={setAmount}
               additionalInputContainerStyle={{
