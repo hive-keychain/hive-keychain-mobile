@@ -1,7 +1,9 @@
 import {loadAccount} from 'actions/hive';
 import {removePreference} from 'actions/preferences';
+import {DropdownItem} from 'components/form/CustomDropdown';
 import CustomSearchBar from 'components/form/CustomSearchBar';
-import PickerItem, {PickerItemInterface} from 'components/form/PickerItem';
+import {PickerItemInterface} from 'components/form/PickerItem';
+import UserDropdown from 'components/form/UserDropdown';
 import Icon from 'components/hive/Icon';
 import CollapsibleSettings from 'components/settings/CollapsibleSettings';
 import Background from 'components/ui/Background';
@@ -83,6 +85,15 @@ const Operations = ({
     };
   };
 
+  const getListFromAccount = () =>
+    accounts.map((acc) => {
+      return {
+        label: acc.name,
+        value: acc.name,
+        icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
+      } as DropdownItem;
+    });
+
   return (
     <Background theme={theme}>
       <View style={styles.container}>
@@ -98,22 +109,14 @@ const Operations = ({
           ]}>
           {translate('settings.settings.operations_info')}
         </Text>
-        <PickerItem
-          theme={theme}
+        <UserDropdown
+          list={getListFromAccount()}
           selected={getItemDropDownSelected(active.name!)}
-          additionalContainerStyle={getCardStyle(theme).defaultCardItem}
-          pickerItemList={accounts.map((acc) => {
-            return {
-              label: acc.name,
-              value: acc.name,
-              icon: (
-                <UserProfilePicture username={acc.name} style={styles.avatar} />
-              ),
-            };
-          })}
-          onSelectedItem={(item) => {
-            loadAccount(item.value, true);
-          }}
+          onSelected={(selectedAccount) => loadAccount(selectedAccount, true)}
+          additionalContainerStyle={styles.dropdownContainer}
+          additionalDropdowContainerStyle={styles.dropdownListContainer}
+          dropdownIconScaledSize={{width: 15, height: 15}}
+          iconStyle={styles.avatar}
         />
         <CustomSearchBar
           theme={theme}
@@ -198,6 +201,15 @@ const getStyles = (theme: Theme, height: number) =>
       justifyContent: 'center',
       alignItems: 'center',
       width: '100%',
+    },
+    dropdownContainer: {
+      width: '100%',
+      height: 60,
+      padding: 0,
+    },
+    dropdownListContainer: {
+      borderRadius: 30,
+      height: '100%',
     },
   });
 

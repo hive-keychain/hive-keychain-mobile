@@ -11,7 +11,9 @@ import {
   loadProperties,
 } from 'actions/hive';
 import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
-import PickerItem, {PickerItemInterface} from 'components/form/PickerItem';
+import {DropdownItem} from 'components/form/CustomDropdown';
+import {PickerItemInterface} from 'components/form/PickerItem';
+import UserDropdown from 'components/form/UserDropdown';
 import AccountValue from 'components/hive/AccountValue';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
@@ -170,38 +172,40 @@ const Main = ({
     showFloatingBar(event.nativeEvent.contentOffset.y === 0);
   };
 
+  const getListFromAccount = () =>
+    accounts.map((acc) => {
+      return {
+        label: acc.name,
+        value: acc.name,
+        icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
+      } as DropdownItem;
+    });
+
   return (
     <WalletPage>
       <>
         {user.name && properties.globals ? (
           <>
             <ScrollView onScroll={onHandleScroll} horizontal={false}>
-              <View style={styles.headerMenu}>
+              <Separator height={15} />
+              <View style={[styles.headerMenu]}>
                 <DrawerButton navigation={navigation as any} theme={theme} />
-                <View style={styles.innerHeader}>
+                <View style={[styles.innerHeader]}>
                   <StatusIndicator theme={theme} />
                   <Claim theme={theme} />
-                  <PickerItem
+                  <UserDropdown
+                    list={getListFromAccount()}
                     selected={getItemDropDownSelected(user.name)}
-                    theme={theme}
-                    pickerItemList={accounts.map((acc) => {
-                      return {
-                        label: acc.name,
-                        value: acc.name,
-                        icon: (
-                          <UserProfilePicture
-                            username={acc.name}
-                            style={styles.avatar}
-                          />
-                        ),
-                      };
-                    })}
-                    additionalContainerStyle={styles.userPicker}
-                    additionalExpandedListItemContainerStyle={{
-                      padding: 10,
-                    }}
-                    removeDropdownIcon
-                    onSelectedItem={(item) => loadAccount(item.value)}
+                    onSelected={(selectedAccount) =>
+                      loadAccount(selectedAccount)
+                    }
+                    additionalContainerStyle={styles.dropdownContainer}
+                    additionalDropdowContainerStyle={
+                      styles.dropdownListContainer
+                    }
+                    dropdownIconScaledSize={{width: 15, height: 15}}
+                    iconStyle={styles.avatar}
+                    copyButtonValue
                   />
                 </View>
               </View>
@@ -288,11 +292,16 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       flexDirection: 'row',
       width: '100%',
       justifyContent: 'space-between',
-      paddingTop: 5,
-      paddingBottom: 5,
-      paddingRight: 15,
+      alignItems: 'center',
+      alignContent: 'center',
+      alignSelf: 'center',
+      zIndex: 20,
     },
-    innerHeader: {flexDirection: 'row', height: 44, alignItems: 'center'},
+    innerHeader: {
+      flexDirection: 'row',
+      height: 50,
+      alignItems: 'center',
+    },
     extraBg: {
       opacity: 0.8,
     },
@@ -301,6 +310,15 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
       paddingHorizontal: 15,
+    },
+    dropdownContainer: {
+      width: 'auto',
+      height: '100%',
+      padding: 0,
+    },
+    dropdownListContainer: {
+      borderRadius: 10,
+      height: '100%',
     },
   });
 

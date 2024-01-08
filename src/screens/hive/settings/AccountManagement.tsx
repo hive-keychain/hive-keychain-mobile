@@ -1,7 +1,9 @@
 import {addKey, forgetAccount, forgetKey} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
+import {DropdownItem} from 'components/form/CustomDropdown';
 import EllipticButton from 'components/form/EllipticButton';
-import PickerItem, {PickerItemInterface} from 'components/form/PickerItem';
+import {PickerItemInterface} from 'components/form/PickerItem';
+import UserDropdown from 'components/form/UserDropdown';
 import Key from 'components/hive/Key';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -55,33 +57,30 @@ const AccountManagement = ({
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions().height);
 
+  const getListFromAccount = () =>
+    accounts.map((acc) => {
+      return {
+        label: acc.name,
+        value: acc.name,
+        icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
+      } as DropdownItem;
+    });
+
   return (
     <Background theme={theme}>
       <SafeArea style={styles.safeArea}>
         <FocusAwareStatusBar />
 
         <ScrollView>
-          <PickerItem
-            selected={getItemDropDownSelected(account.name!)}
-            theme={theme}
-            pickerItemList={accounts.map((acc) => {
-              return {
-                label: acc.name,
-                value: acc.name,
-                icon: (
-                  <UserProfilePicture
-                    username={acc.name}
-                    style={styles.avatar}
-                  />
-                ),
-              };
-            })}
-            additionalContainerStyle={[styles.cardKey, styles.zIndexBase]}
-            additionalContainerListStyle={[
-              styles.itemListContainer,
-              styles.zIndexLower,
-            ]}
-            onSelectedItem={(item) => setUsername(item.value)}
+          <UserDropdown
+            list={getListFromAccount()}
+            selected={getItemDropDownSelected(username)}
+            onSelected={(selectedAccount) => setUsername(selectedAccount)}
+            additionalContainerStyle={styles.dropdownContainer}
+            additionalDropdowContainerStyle={styles.dropdownListContainer}
+            dropdownIconScaledSize={{width: 15, height: 15}}
+            iconStyle={styles.avatar}
+            copyButtonValue
           />
           <Separator height={20} />
           <Key
@@ -159,6 +158,15 @@ const getStyles = (theme: Theme, height: number) =>
         height,
         {...button_link_primary_medium}.fontSize,
       ),
+    },
+    dropdownContainer: {
+      width: '100%',
+      height: 70,
+      padding: 0,
+    },
+    dropdownListContainer: {
+      borderRadius: 10,
+      height: '100%',
     },
   });
 

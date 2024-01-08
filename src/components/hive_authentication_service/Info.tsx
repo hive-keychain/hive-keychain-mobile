@@ -159,6 +159,7 @@ const getStyles = (theme: Theme, height: number) =>
       justifyContent: 'center',
       flexDirection: 'row',
       alignItems: 'center',
+      marginRight: 8,
     },
     title: {
       color: getColors(theme).icon,

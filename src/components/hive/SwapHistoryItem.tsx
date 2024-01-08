@@ -1,3 +1,4 @@
+import Clipboard from '@react-native-community/clipboard';
 import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
 import Loader from 'components/ui/Loader';
 import {
@@ -7,13 +8,7 @@ import {
   SwapStatus,
 } from 'hive-keychain-commons';
 import React, {useState} from 'react';
-import {
-  Clipboard,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';

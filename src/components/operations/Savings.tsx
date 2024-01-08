@@ -1,7 +1,7 @@
 import {loadAccount} from 'actions/index';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import CustomDropdown, {DropdownItem} from 'components/form/CustomDropdown';
 import OperationInput from 'components/form/OperationInput';
-import PickerItem, {PickerItemInterface} from 'components/form/PickerItem';
 import Icon from 'components/hive/Icon';
 import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savings-withdrawal-page.component';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
@@ -75,7 +75,7 @@ const Convert = ({
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, useWindowDimensions(), theme);
-  const operationTypeList: PickerItemInterface[] = [
+  const operationTypeList: DropdownItem[] = [
     {
       icon: (
         <Icon
@@ -254,17 +254,20 @@ const Convert = ({
           <Text style={[styles.textBase, styles.title]}>
             {translate('common.operation_type')}
           </Text>
-          <PickerItem
-            selected={operationTypeList.find(
-              (item) => item.value === operationType,
-            )}
+          <CustomDropdown
+            behaviour="down"
             theme={theme}
-            pickerItemList={operationTypeList}
-            additionalSelectedItemContainerStyle={{paddingHorizontal: 10}}
-            additionalExpandedListItemContainerStyle={styles.operationPicker}
-            onSelectedItem={(item) =>
-              setOperationType(item.value as SavingsOperations)
+            selected={
+              operationTypeList.filter(
+                (item) => item.value === operationType,
+              )[0]
             }
+            list={operationTypeList}
+            onSelected={(item) => setOperationType(item as SavingsOperations)}
+            additionalContainerStyle={[styles.dropdown]}
+            additionalDropdowContainerStyle={styles.dropdownListContainer}
+            iconStyle={styles.iconOperation}
+            dropdownIconScaledSize={{width: 15, height: 15}}
           />
           <Separator />
           <OperationInput
@@ -395,6 +398,17 @@ const getDimensionedStyles = (
       alignItems: 'center',
     },
     redText: {color: PRIMARY_RED_COLOR},
+    dropdown: {
+      width: '100%',
+      height: 60,
+      padding: 0,
+      zIndex: 20,
+    },
+    iconOperation: {width: 20, height: 20},
+    dropdownListContainer: {
+      borderRadius: 30,
+      height: '100%',
+    },
   });
 
 const connector = connect(

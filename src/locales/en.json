@@ -677,6 +677,7 @@
     "account_creation_not_enough_found": "You don't have enough HIVE to buy an account",
     "copied_text": "Keys copied to clipboard!",
     "copied_id": "ID has been copied to Clipboard!",
+    "copied_username": "Username has been copied to Clipboard!",
     "claims": {
       "need_active_key_for_claim_savings": "You need to add your active key to Keychain to claim savings",
       "need_active_key_for_claim_accounts": "You need to add your active key to Keychain to claim accounts",

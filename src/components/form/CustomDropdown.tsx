@@ -1,3 +1,4 @@
+import Clipboard from '@react-native-community/clipboard';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
@@ -11,31 +12,39 @@ import {
   ViewStyle,
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
+import {ImageStyle} from 'react-native-fast-image';
+import SimpleToast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 export interface DropdownItem {
   value: string;
   label?: string;
   removable?: boolean;
+  icon?: JSX.Element;
 }
 
 type CustomDropdownBehaviour = 'down' | 'overlay';
 
 interface Props {
   theme: Theme;
-  selected: string;
+  selected: string | DropdownItem;
   list: DropdownItem[];
   onSelected: (item: string) => void;
   onRemove?: (item: string) => void;
   additionalContainerStyle?: StyleProp<ViewStyle>;
+  additionalDropdowContainerStyle?: StyleProp<ViewStyle>;
+  dropdownIconScaledSize?: Dimensions;
   keyExtractor?: keyof DropdownItem;
   behaviour?: CustomDropdownBehaviour;
   titleTranslationKey?: string;
+  iconStyle?: StyleProp<ImageStyle>;
+  copyButtonValue?: boolean;
 }
 
 const CustomDropdown = ({
@@ -48,10 +57,14 @@ const CustomDropdown = ({
   keyExtractor,
   behaviour,
   titleTranslationKey,
+  additionalDropdowContainerStyle,
+  dropdownIconScaledSize,
+  iconStyle,
+  copyButtonValue,
 }: Props) => {
   const [isListExpanded, setIsListExpanded] = useState(false);
   const styles = getStyles(theme);
-
+  console.log({selected}); //TODO remove line
   const behaveAs = behaviour ?? 'down';
 
   const renderExpandedList = (children: JSX.Element) => {
@@ -91,20 +104,41 @@ const CustomDropdown = ({
     }
   };
 
+  const onHandleCopyValue = (username: string) => {
+    Clipboard.setString(username);
+    SimpleToast.show(translate('toast.copied_username'), SimpleToast.LONG);
+  };
+
   return (
     <View style={[styles.container, additionalContainerStyle]}>
-      <View
-        style={[getCardStyle(theme).defaultCardItem, styles.dropdownContainer]}>
-        <Text style={styles.text}>{selected}</Text>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => setIsListExpanded(!isListExpanded)}
+        style={[
+          getCardStyle(theme).defaultCardItem,
+          styles.dropdownContainer,
+          additionalDropdowContainerStyle,
+        ]}>
+        {typeof selected === 'string' ? (
+          <Text style={styles.text}>{selected}</Text>
+        ) : (
+          <View style={styles.flexRow}>
+            {selected.icon}
+            <Text style={[styles.text, styles.marginLeft]}>
+              {selected.label}
+            </Text>
+          </View>
+        )}
         <Icon
           name={Icons.EXPAND_THIN}
           theme={theme}
-          onClick={() => setIsListExpanded(!isListExpanded)}
-          additionalContainerStyle={
-            isListExpanded ? styles.rotateIcon : undefined
-          }
+          additionalContainerStyle={[
+            styles.marginLeft,
+            isListExpanded ? styles.rotateIcon : undefined,
+          ]}
+          {...dropdownIconScaledSize}
         />
-      </View>
+      </TouchableOpacity>
       {isListExpanded &&
         list.length > 0 &&
         renderExpandedList(
@@ -112,24 +146,32 @@ const CustomDropdown = ({
             {list.map((item) => {
               return (
                 <View
-                  style={styles.dropdownItemContainer}
+                  style={[styles.dropdownItemContainer]}
                   key={
                     keyExtractor
                       ? `dropdown-${item[keyExtractor]}`
                       : `dropdown-item-${item.value}`
                   }>
                   <TouchableOpacity
-                    onPress={() => onSelected(item.value)}
+                    onPress={() => {
+                      onSelected(item.value);
+                      setIsListExpanded(!isListExpanded);
+                    }}
                     style={[
                       item.value === selected || item.label === selected
                         ? styles.itemSelectedInList
                         : undefined,
+                      typeof item === 'object' ? styles.flexRow : undefined,
                     ]}>
+                    {typeof item === 'object' && item.icon ? item.icon : null}
                     <Text
                       style={[
                         styles.text,
                         item.value === selected || item.label === selected
                           ? styles.whiteText
+                          : undefined,
+                        typeof selected === 'object'
+                          ? styles.marginLeft
                           : undefined,
                       ]}>
                       {item.label ?? item.value}
@@ -140,6 +182,13 @@ const CustomDropdown = ({
                       theme={theme}
                       name={Icons.REMOVE}
                       onClick={() => onRemove(item.value)}
+                    />
+                  )}
+                  {copyButtonValue && (
+                    <Icon
+                      name={Icons.COPY}
+                      additionalContainerStyle={{width: 15, height: 15}}
+                      onClick={() => onHandleCopyValue(item.value)}
                     />
                   )}
                 </View>
@@ -162,16 +211,16 @@ const getStyles = (theme: Theme) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      flex: 1,
-      flexGrow: 1,
-      minHeight: 55,
+      height: 44,
     },
     dropdownListContainer: {
-      width: '100%',
+      width: 250,
       position: 'absolute',
-      top: 55,
+      top: 51,
       zIndex: 10,
       maxHeight: 200,
+      right: 0,
+      left: undefined,
     },
     rotateIcon: {
       transform: [{rotateX: '180deg'}],
@@ -182,10 +231,11 @@ const getStyles = (theme: Theme) =>
     },
     whiteText: {color: '#FFF'},
     dropdownItemContainer: {
-      paddingBottom: 8,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+      marginBottom: 10,
+      paddingRight: 5,
     },
     itemSelectedInList: {
       padding: 10,
@@ -205,5 +255,13 @@ const getStyles = (theme: Theme) =>
       width: 200,
       borderColor: getColors(theme).contrastBackground,
       alignSelf: 'center',
+    },
+    flexRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    marginLeft: {
+      marginLeft: 8,
     },
   });
