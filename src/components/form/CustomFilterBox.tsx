@@ -150,6 +150,7 @@ const FilterBox = ({
         </View>
       </View>
       <Separator drawLine additionalLineStyle={styles.line} />
+      <Separator height={18} />
       <View style={styles.inOutContainer}>
         <TouchableOpacity
           style={[
@@ -252,8 +253,8 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       borderColor: getColors(theme).tertiaryCardBorderColor,
       borderWidth: 1,
       borderRadius: 18.8,
-      marginRight: 6,
-      marginBottom: 3,
+      marginRight: 8,
+      marginBottom: 8,
       minWidth: 100,
     },
     filterItemText: {

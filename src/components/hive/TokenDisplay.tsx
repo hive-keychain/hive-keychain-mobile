@@ -10,10 +10,12 @@ import React from 'react';
 import {
   Linking,
   ScaledSize,
+  StyleProp,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  ViewStyle,
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
@@ -48,6 +50,7 @@ type Props = {
   theme: Theme;
   tokenInfo?: Token;
   tokenBalance?: TokenBalance;
+  additionalButtonStyle?: StyleProp<ViewStyle>;
 };
 
 const TokenDisplay = ({
@@ -66,6 +69,7 @@ const TokenDisplay = ({
   totalValue,
   tokenBalance,
   onHandleGoToTokenHistory,
+  additionalButtonStyle,
 }: Props) => {
   const styles = getDimensionedStyles({
     color,
@@ -90,7 +94,7 @@ const TokenDisplay = ({
           <Text style={styles.textButton}>{label}</Text>
         </View>
       }
-      additionalButtonStyle={styles.squareButton}
+      additionalButtonStyle={[styles.squareButton, additionalButtonStyle]}
     />
   );
 
@@ -198,6 +202,7 @@ const TokenDisplay = ({
               additionalContainerStyle={[
                 styles.squareButton,
                 styles.containerMarginLeft,
+                styles.historyButton,
               ]}
               theme={theme}
             />
@@ -420,6 +425,10 @@ const getDimensionedStyles = ({
     },
     invertXAxis: {
       transform: [{rotateY: '180deg'}],
+    },
+    historyButton: {
+      width: 40,
+      height: 40,
     },
   });
 

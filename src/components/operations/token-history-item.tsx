@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {
   AuthorCurationTransaction,
   CommentCurationTransaction,
@@ -379,6 +380,22 @@ const TokenHistoryItem = ({
     theme,
   );
 
+  const getTokenIconName = (iconName: string, iconNameSubType: string) => {
+    switch (iconName) {
+      case 'transfer':
+        return Icons.TRANSFER;
+      case 'power_up_down':
+        return Icons.POWER_UP_DOWN;
+      case 'delegate':
+      case 'delegate_vesting_shares':
+        return Icons.DELEGATE_VESTING_SHARES;
+      case 'mining_lottery':
+        return Icons.SAVINGS;
+      default:
+        return Icons.NOT_SEE;
+    }
+  };
+
   return label ? (
     <View>
       <TouchableOpacity
@@ -392,7 +409,7 @@ const TokenHistoryItem = ({
             <View style={[styles.row]}>
               {useIcon && (
                 <Icon
-                  name={iconName}
+                  name={getTokenIconName(iconName, iconNameSubType)}
                   subType={iconNameSubType}
                   theme={theme}
                   additionalContainerStyle={styles.iconContainer}

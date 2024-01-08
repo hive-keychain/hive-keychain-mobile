@@ -608,7 +608,7 @@ interface IconProps {
   onClick?: () => void;
   onLongPress?: () => void;
   name: Icons;
-  subType?: 'transfer_to_vesting' | 'withdraw_vesting';
+  subType?: string;
   marginRight?: boolean;
   theme?: Theme;
   additionalContainerStyle?: StyleProp<ViewStyle>;
