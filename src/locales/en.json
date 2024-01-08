@@ -400,6 +400,18 @@
         "total_staked": "Total Staked",
         "pending_unstake": "Pending Unstake"
       },
+      "tokens_filter": {
+        "comments_curationReward": "Curation reward",
+        "comments_authorReward": "Comment reward",
+        "mining_lottery": "Lottery",
+        "tokens_transfer": "Transfer",
+        "tokens_stake": "Stake",
+        "tokens_unstakeStart": "Unstake start",
+        "tokens_unstakeDone": "Unstake done",
+        "tokens_delegate": "Delegation",
+        "tokens_undelegateStart": "Undelegate start",
+        "tokens_undelegateDone": "Undelegation done"
+      },
       "token_settings": {
         "title": "Tokens Settings",
         "tokens_settings_text": "Click on each checkbox to choose which tokens to display. Learn more about custom tokens on the Hive blockchain at",
@@ -499,6 +511,8 @@
       "savings": "Savings",
       "power_up_down": "Power up/down",
       "convert": "Conversion",
+      "account_create": "Account Create",
+      "create_claimed_account": "Create Claimed Account",
       "filter_in": "In",
       "filter_out": "Out",
       "filters_title": "Filters",

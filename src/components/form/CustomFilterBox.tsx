@@ -20,7 +20,7 @@ import {
 import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {
   button_link_primary_medium,
-  fields_primary_text_2,
+  button_link_primary_small,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {TokenHistoryFilter} from 'src/types/tokens.history.types';
@@ -112,6 +112,10 @@ const FilterBox = ({
   };
 
   const styles = getStyles(theme, useWindowDimensions());
+  const preFixLocale =
+    usingFilter === 'wallet'
+      ? `${usingFilter}.filter`
+      : `wallet.operations.tokens_filter`;
 
   return (
     <View style={[styles.container]}>
@@ -138,7 +142,7 @@ const FilterBox = ({
                     styles.filterItemText,
                     getActiveFilterItemTextStyle(filterKey),
                   ]}>
-                  {filterKey.split('_').join(' ')}
+                  {translate(`${preFixLocale}.${filterKey}`)}
                 </Text>
               </TouchableOpacity>
             );
@@ -255,7 +259,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
     filterItemText: {
       textAlign: 'center',
       padding: 10,
-      ...fields_primary_text_2,
+      ...button_link_primary_small,
       lineHeight: 14.7,
       color: getColors(theme).secondaryText,
     },
