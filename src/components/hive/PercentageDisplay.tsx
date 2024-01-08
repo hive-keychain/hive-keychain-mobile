@@ -49,6 +49,8 @@ const PercentageDisplay = ({
         theme={theme}
         name={iconName}
         additionalContainerStyle={styles.iconContainer}
+        width={22}
+        height={22}
       />
       <View style={styles.textWrapper}>
         <View style={{flexGrow: 1}}>
@@ -116,9 +118,9 @@ const getDimensionedStyles = (
     iconContainer: {
       backgroundColor: IconBgcolor,
       borderRadius: 12,
-      padding: 6.49,
-      width: 33,
-      height: 33,
+      padding: 3,
+      width: 35,
+      height: 35,
       marginRight: 5,
     },
     secondary: {

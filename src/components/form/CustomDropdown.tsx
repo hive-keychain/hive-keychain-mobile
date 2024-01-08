@@ -64,7 +64,6 @@ const CustomDropdown = ({
 }: Props) => {
   const [isListExpanded, setIsListExpanded] = useState(false);
   const styles = getStyles(theme);
-  console.log({selected}); //TODO remove line
   const behaveAs = behaviour ?? 'down';
 
   const renderExpandedList = (children: JSX.Element) => {

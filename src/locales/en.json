@@ -119,7 +119,7 @@
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
-    "rc": "Resource Credit",
+    "rc": "Resource Credits",
     "vp": "Voting Mana",
     "balance": "balance",
     "no_tokens": "No Hive Engine token found.",
