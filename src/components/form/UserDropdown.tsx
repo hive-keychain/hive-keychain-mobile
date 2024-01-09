@@ -1,7 +1,8 @@
+import Icon from 'components/hive/Icon';
 import React from 'react';
 import {StyleProp, ViewStyle} from 'react-native';
-import {ImageStyle} from 'react-native-fast-image';
 import {useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {Dimensions} from 'utils/common.types';
 import CustomDropdown, {DropdownItem} from './CustomDropdown';
 
@@ -11,9 +12,9 @@ interface Props {
   onSelected: (item: string) => void;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalDropdowContainerStyle?: StyleProp<ViewStyle>;
-  iconStyle?: StyleProp<ImageStyle>;
   copyButtonValue?: boolean;
   dropdownIconScaledSize?: Dimensions;
+  showSelectedIcon?: JSX.Element;
 }
 
 const UserDropdown = ({
@@ -22,9 +23,9 @@ const UserDropdown = ({
   onSelected,
   additionalContainerStyle,
   additionalDropdowContainerStyle,
-  iconStyle,
   copyButtonValue,
   dropdownIconScaledSize,
+  showSelectedIcon,
 }: Props) => {
   const {theme} = useThemeContext();
   return (
@@ -37,8 +38,10 @@ const UserDropdown = ({
       additionalContainerStyle={additionalContainerStyle}
       additionalDropdowContainerStyle={additionalDropdowContainerStyle}
       dropdownIconScaledSize={dropdownIconScaledSize}
-      iconStyle={iconStyle}
       copyButtonValue={copyButtonValue}
+      showSelectedIcon={
+        <Icon name={Icons.CHECK} theme={theme} width={15} height={15} />
+      }
     />
   );
 };

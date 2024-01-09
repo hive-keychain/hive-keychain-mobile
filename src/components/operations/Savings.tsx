@@ -266,7 +266,6 @@ const Convert = ({
             onSelected={(item) => setOperationType(item as SavingsOperations)}
             additionalContainerStyle={[styles.dropdown]}
             additionalDropdowContainerStyle={styles.dropdownListContainer}
-            iconStyle={styles.iconOperation}
             dropdownIconScaledSize={{width: 15, height: 15}}
           />
           <Separator />

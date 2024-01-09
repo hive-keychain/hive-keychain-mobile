@@ -204,7 +204,6 @@ const Main = ({
                       styles.dropdownListContainer
                     }
                     dropdownIconScaledSize={{width: 15, height: 15}}
-                    iconStyle={styles.avatar}
                     copyButtonValue
                   />
                 </View>

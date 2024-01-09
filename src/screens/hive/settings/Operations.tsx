@@ -116,7 +116,6 @@ const Operations = ({
           additionalContainerStyle={styles.dropdownContainer}
           additionalDropdowContainerStyle={styles.dropdownListContainer}
           dropdownIconScaledSize={{width: 15, height: 15}}
-          iconStyle={styles.avatar}
         />
         <CustomSearchBar
           theme={theme}

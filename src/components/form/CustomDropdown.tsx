@@ -12,7 +12,6 @@ import {
   ViewStyle,
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
-import {ImageStyle} from 'react-native-fast-image';
 import SimpleToast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -43,8 +42,8 @@ interface Props {
   keyExtractor?: keyof DropdownItem;
   behaviour?: CustomDropdownBehaviour;
   titleTranslationKey?: string;
-  iconStyle?: StyleProp<ImageStyle>;
   copyButtonValue?: boolean;
+  showSelectedIcon?: JSX.Element;
 }
 
 const CustomDropdown = ({
@@ -59,8 +58,8 @@ const CustomDropdown = ({
   titleTranslationKey,
   additionalDropdowContainerStyle,
   dropdownIconScaledSize,
-  iconStyle,
   copyButtonValue,
+  showSelectedIcon,
 }: Props) => {
   const [isListExpanded, setIsListExpanded] = useState(false);
   const styles = getStyles(theme);
@@ -106,6 +105,25 @@ const CustomDropdown = ({
   const onHandleCopyValue = (username: string) => {
     Clipboard.setString(username);
     SimpleToast.show(translate('toast.copied_username'), SimpleToast.LONG);
+  };
+
+  const renderCopyOrSelectedIcon = (item: DropdownItem) => {
+    return showSelectedIcon || copyButtonValue ? (
+      <View style={styles.flexRow}>
+        {typeof selected === 'object' && selected.value === item.value
+          ? showSelectedIcon
+          : null}
+        {copyButtonValue && (
+          <Icon
+            name={Icons.COPY}
+            onClick={() => onHandleCopyValue(item.value)}
+            width={16}
+            height={16}
+            additionalContainerStyle={{marginLeft: 5}}
+          />
+        )}
+      </View>
+    ) : null;
   };
 
   return (
@@ -183,13 +201,9 @@ const CustomDropdown = ({
                       onClick={() => onRemove(item.value)}
                     />
                   )}
-                  {copyButtonValue && (
-                    <Icon
-                      name={Icons.COPY}
-                      additionalContainerStyle={{width: 15, height: 15}}
-                      onClick={() => onHandleCopyValue(item.value)}
-                    />
-                  )}
+                  {typeof item === 'object'
+                    ? renderCopyOrSelectedIcon(item)
+                    : null}
                 </View>
               );
             })}
