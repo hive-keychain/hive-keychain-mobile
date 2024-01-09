@@ -26,7 +26,7 @@ const hiddenRoutesInMain = [
   'AddAccountStack',
   'AccountManagementScreen',
   'WALLET',
-  'BrowserScreen',
+  // 'BrowserScreen', //TODO commented for testings
   'Governance',
   'SettingsScreen',
   'ABOUT',
@@ -67,6 +67,17 @@ const HeaderContent = (props: Props) => {
           iconImage={<Icon name={Icons.CANDLE} theme={theme} />}
           drawBottomLine
         />
+
+        {/* //TODO remove later on, added for testing requests. */}
+        <MenuItem
+          labelTranslationKey="navigation.browser"
+          theme={theme}
+          onPress={() => navigation.navigate('BrowserScreen')}
+          iconImage={<Icon name={Icons.NOT_SEE} theme={theme} />}
+          drawBottomLine
+        />
+        {/* //END REMOVE */}
+
         {/* <MenuItem
           labelTranslationKey="navigation.tokens"
           theme={theme}

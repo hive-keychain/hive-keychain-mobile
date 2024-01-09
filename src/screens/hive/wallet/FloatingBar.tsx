@@ -20,6 +20,7 @@ interface Props {
   showTags?: boolean;
 }
 //TODO this should be a bottom navigator, do some research and integrate in the mainstack
+//  Important: remove from redux...
 const Floating = ({
   show,
   showTags,

@@ -12,7 +12,7 @@ import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
@@ -21,7 +21,6 @@ import {
   DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
   DEFAULT_HE_RPC_NODE,
 } from 'screens/hive/settings/RpcNodes';
-import {FloatingBar} from 'screens/hive/wallet/FloatingBar';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {downloadColors} from 'utils/colors';
@@ -51,7 +50,7 @@ const App = ({
 }: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
-  const [currentRouteName, setCurrentRouteName] = useState('');
+  // const [currentRouteName, setCurrentRouteName] = useState(''); //TODO commented all floatingBar related
 
   useEffect(() => {
     initColorAPI();
@@ -112,7 +111,8 @@ const App = ({
       return <MainDrawer />;
     }
   };
-
+  //TODO important here to test to make nav work properly:
+  //  1. comment floatingBar at all.
   const renderRootNavigator = () => {
     return (
       <Root.Navigator>
@@ -138,7 +138,7 @@ const App = ({
       }}
       onStateChange={async (state) => {
         let currentRouteName = navigationRef.current.getCurrentRoute().name;
-        setCurrentRouteName(currentRouteName);
+        // setCurrentRouteName(currentRouteName); //TODO commented all floatingBar related
         const p = navigationRef.current.getCurrentRoute().params;
         if (currentRouteName === 'WalletScreen') {
           currentRouteName = getToggleElement() || 'WalletScreen';
@@ -150,7 +150,7 @@ const App = ({
       }}>
       {renderRootNavigator()}
       <MessageModal />
-      <FloatingBar currentRouteName={currentRouteName} />
+      {/* <FloatingBar currentRouteName={currentRouteName} /> */}
       {/* TODO commented for now while fixing loading/render times on app */}
       {/* <RpcSwitcherComponent /> */}
       <Bridge />
