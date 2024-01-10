@@ -114,7 +114,6 @@ const AddAccountByKey = ({
               value={account}
               onChangeText={setAccount}
               inputStyle={[styles.text, styles.smallerText]}
-              addLabelInputIndent
             />
             <Separator height={height / 15} />
 
@@ -136,7 +135,6 @@ const AddAccountByKey = ({
                   }}
                 />
               }
-              addLabelInputIndent
             />
           </View>
           <View style={styles.bottomContainer}>

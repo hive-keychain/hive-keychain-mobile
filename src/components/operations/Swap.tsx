@@ -640,7 +640,6 @@ const Swap = ({
                       </TouchableOpacity>
                     </View>
                   }
-                  addLabelInputIndent
                 />
               </View>
               <Separator />
@@ -707,7 +706,6 @@ const Swap = ({
                     styles.smallerText,
                     styles.opaque,
                   ]}
-                  addLabelInputIndent
                 />
               </View>
               <Separator height={40} />
@@ -753,7 +751,6 @@ const Swap = ({
                   }}
                   inputStyle={styles.textBase}
                   additionalLabelStyle={{fontSize: 13}}
-                  addLabelInputIndent
                 />
               )}
             </View>

@@ -176,7 +176,6 @@ const Transfer = ({
           <>
             <Separator height={35} />
             <OperationInput
-              addLabelInputIndent
               labelInput={translate('common.username')}
               placeholder={translate('common.username')}
               leftIcon={<Icon name={Icons.AT} theme={theme} />}
@@ -201,10 +200,8 @@ const Transfer = ({
                 additionalInputContainerStyle={{
                   marginHorizontal: 0,
                 }}
-                addLabelInputIndent
               />
               <OperationInput
-                addLabelInputIndent
                 keyboardType="decimal-pad"
                 labelInput={capitalize(translate('common.amount'))}
                 placeholder={translate('common.enter_amount')}
@@ -240,7 +237,6 @@ const Transfer = ({
             </View>
             <Separator />
             <OperationInput
-              addLabelInputIndent
               labelInput={capitalize(translate('common.memo'))}
               placeholder={translate('wallet.operations.transfer.memo')}
               value={memo}
@@ -275,7 +271,6 @@ const Transfer = ({
               }}>
               <Separator />
               <OperationInput
-                addLabelInputIndent
                 labelInput={translate('wallet.operations.transfer.frecuency')}
                 labelExtraInfo={translate(
                   'wallet.operations.transfer.frecuency_minimum',
@@ -288,7 +283,6 @@ const Transfer = ({
               />
               <Separator />
               <OperationInput
-                addLabelInputIndent
                 labelInput={translate('wallet.operations.transfer.iterations')}
                 labelExtraInfo={translate(
                   'wallet.operations.transfer.iterations_minimum',
