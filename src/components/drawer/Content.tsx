@@ -35,7 +35,7 @@ const hiddenRoutesInMain = [
   'TokensHistory',
   'Operation',
   'TemplateStack',
-  'SwapBuyStack',
+  // 'SwapBuyStack', //TODO uncoment after adding bottom bar
   'SwapHistory',
 ];
 

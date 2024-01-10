@@ -17,12 +17,13 @@ import WhatsNewComponent from 'components/popups/whats-new/whats-new.component';
 import Survey from 'components/survey';
 import {BackgroundHexagons} from 'components/ui/BackgroundHexagons';
 import DrawerButton from 'components/ui/DrawerButton';
+import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import WalletPage from 'components/ui/WalletPage';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
@@ -70,27 +71,22 @@ const Main = ({
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
+  const [loadingUserAndGlobals, setLoadingUserAndGlobals] = useState(true);
 
   useEffect(() => {
     loadTokens();
     loadTokensMarket();
   }, [loadTokens, loadTokensMarket]);
 
-  // const isDrawerOpen = useIsDrawerOpen();
-  // useEffect(() => {
-  //   setIsDrawerOpen(isDrawerOpen);
-  // }, [isDrawerOpen]);
-
-  // useEffect(() => {
-  //   if (
-  //     properties.globals &&
-  //     Object.keys(properties.globals).length > 0 &&
-  //     user.name
-  //   ) {
-  //     showFloatingBar(true);
-  //     setisLoadingScreen(false);
-  //   }
-  // }, [properties, user.name]);
+  useEffect(() => {
+    if (
+      properties.globals &&
+      Object.keys(properties.globals).length > 0 &&
+      user.name
+    ) {
+      setLoadingUserAndGlobals(false);
+    }
+  }, [properties, user.name]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
@@ -175,76 +171,82 @@ const Main = ({
       } as DropdownItem;
     });
 
-  //Remove from bellow the loading.
   return (
     <WalletPage>
-      <ScrollView horizontal={false}>
-        <Separator height={15} />
-        <View style={[styles.headerMenu]}>
-          <DrawerButton navigation={navigation as any} theme={theme} />
-          <View style={[styles.innerHeader]}>
-            <StatusIndicator theme={theme} />
-            <Claim theme={theme} />
-            <UserDropdown
-              list={getListFromAccount()}
-              selected={getItemDropDownSelected(user.name)}
-              onSelected={(selectedAccount) => loadAccount(selectedAccount)}
-              additionalContainerStyle={styles.dropdownContainer}
-              additionalDropdowContainerStyle={styles.dropdownListContainer}
-              dropdownIconScaledSize={{width: 15, height: 15}}
-              copyButtonValue
+      {!loadingUserAndGlobals ? (
+        <ScrollView horizontal={false}>
+          <Separator height={15} />
+          <View style={[styles.headerMenu]}>
+            <DrawerButton navigation={navigation as any} theme={theme} />
+            <View style={[styles.innerHeader]}>
+              <StatusIndicator theme={theme} />
+              <Claim theme={theme} />
+              <UserDropdown
+                list={getListFromAccount()}
+                selected={getItemDropDownSelected(user.name)}
+                onSelected={(selectedAccount) => loadAccount(selectedAccount)}
+                additionalContainerStyle={styles.dropdownContainer}
+                additionalDropdowContainerStyle={styles.dropdownListContainer}
+                dropdownIconScaledSize={{width: 15, height: 15}}
+                copyButtonValue
+              />
+            </View>
+          </View>
+          <Separator />
+          <View style={styles.rowWrapper}>
+            <PercentageDisplay
+              name={translate('wallet.vp')}
+              percent={getVP(user.account) || 100}
+              IconBgcolor={OVERLAYICONBGCOLOR}
+              theme={theme}
+              iconName={Icons.SEND_SQUARE}
+              bgColor={BACKGROUNDITEMDARKISH}
+              secondary={`$${
+                getVotingDollarsPerAccount(
+                  100,
+                  properties,
+                  user.account,
+                  false,
+                ) || '0'
+              }`}
+            />
+            <PercentageDisplay
+              iconName={Icons.SPEEDOMETER}
+              bgColor={DARKER_RED_COLOR}
+              name={translate('wallet.rc')}
+              percent={user.rc.percentage || 100}
+              IconBgcolor={OVERLAYICONBGCOLOR}
+              theme={theme}
             />
           </View>
-        </View>
-        <Separator />
-        <View style={styles.rowWrapper}>
-          <PercentageDisplay
-            name={translate('wallet.vp')}
-            percent={getVP(user.account) || 100}
-            IconBgcolor={OVERLAYICONBGCOLOR}
-            theme={theme}
-            iconName={Icons.SEND_SQUARE}
-            bgColor={BACKGROUNDITEMDARKISH}
-            secondary={`$${
-              getVotingDollarsPerAccount(
-                100,
-                properties,
-                user.account,
-                false,
-              ) || '0'
-            }`}
-          />
-          <PercentageDisplay
-            iconName={Icons.SPEEDOMETER}
-            bgColor={DARKER_RED_COLOR}
-            name={translate('wallet.rc')}
-            percent={user.rc.percentage || 100}
-            IconBgcolor={OVERLAYICONBGCOLOR}
+          <Separator />
+          <BackgroundHexagons
+            additionalSvgStyle={styles.extraBg}
             theme={theme}
           />
-        </View>
-        <Separator />
-        <BackgroundHexagons additionalSvgStyle={styles.extraBg} theme={theme} />
-        <AccountValue
-          account={user.account}
-          prices={prices}
-          properties={properties}
-          theme={theme}
-          title={translate('common.estimated_account_value')}
-        />
-        <Separator />
-        <View
-          style={[
-            getCardStyle(theme).roundedCardItem,
-            styles.fullListContainer,
-          ]}>
-          <Primary theme={theme} />
-          <Separator height={10} />
-          <EngineTokens showEngineTokenSettings />
-        </View>
-        <Survey navigation={navigation} />
-        <WhatsNewComponent navigation={navigation} />
-      </ScrollView>
+          <AccountValue
+            account={user.account}
+            prices={prices}
+            properties={properties}
+            theme={theme}
+            title={translate('common.estimated_account_value')}
+          />
+          <Separator />
+          <View
+            style={[
+              getCardStyle(theme).roundedCardItem,
+              styles.fullListContainer,
+            ]}>
+            <Primary theme={theme} />
+            <Separator height={10} />
+            <EngineTokens showEngineTokenSettings />
+          </View>
+          <Survey navigation={navigation} />
+          <WhatsNewComponent navigation={navigation} />
+        </ScrollView>
+      ) : (
+        <Loader animatedLogo />
+      )}
     </WalletPage>
   );
 };

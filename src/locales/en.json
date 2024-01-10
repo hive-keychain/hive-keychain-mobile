@@ -711,7 +711,7 @@
       "buy": "Buy",
       "swap": "Swap"
     },
-    "swap_buy": "Swap/Buy",
+    "swap_buy": "Swap & Buy",
     "swap_history": "Swap History"
   },
   "request": {

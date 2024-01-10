@@ -8,6 +8,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -18,6 +19,7 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
+import {LABELINDENTSPACE} from 'src/styles/spacing';
 import {getRotateStyle} from 'src/styles/transform';
 import {FontPoppinsName, body_primary_body_1} from 'src/styles/typography';
 import {translate} from 'utils/localize';
@@ -34,6 +36,9 @@ interface Props {
   searchOption?: boolean;
   bottomLabelInfo?: string;
   displayIconOnSelectedItem?: boolean;
+  addDropdownTitleIndent?: boolean;
+  additionalSelectedLabelItemStyle?: StyleProp<TextStyle>;
+  additionalDropdownListLabelItemStyle?: StyleProp<TextStyle>;
 }
 
 const DropdownSelector = ({
@@ -47,6 +52,9 @@ const DropdownSelector = ({
   selected,
   bottomLabelInfo,
   displayIconOnSelectedItem,
+  addDropdownTitleIndent,
+  additionalSelectedLabelItemStyle,
+  additionalDropdownListLabelItemStyle,
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [dropdownList, setDropdownList] = useState<OptionItem[]>(list);
@@ -91,7 +99,14 @@ const DropdownSelector = ({
 
   const renderSelectedLabel = (item: OptionItem) => {
     const labelElement = (
-      <Text style={[styles.textBase, styles.smallerText]}>{item.label}</Text>
+      <Text
+        style={[
+          styles.textBase,
+          styles.smallerText,
+          additionalSelectedLabelItemStyle,
+        ]}>
+        {item.label}
+      </Text>
     );
     if (displayIconOnSelectedItem && item.img) {
       return (
@@ -114,7 +129,13 @@ const DropdownSelector = ({
     <View style={[styles.container, additionalContainerStyle]}>
       <View>
         {labelTranslationKey && (
-          <Text style={styles.textBase}>{translate(labelTranslationKey)}</Text>
+          <Text
+            style={[
+              styles.textBase,
+              addDropdownTitleIndent ? styles.indent : undefined,
+            ]}>
+            {translate(labelTranslationKey)}
+          </Text>
         )}
         <View style={styles.dropdownContainer}>
           {renderSelectedLabel(selectedItem)}
@@ -181,7 +202,12 @@ const DropdownSelector = ({
                           symbol={item.value.symbol}
                         />
                       )}
-                      <Text style={[styles.textBase, styles.smallerText]}>
+                      <Text
+                        style={[
+                          styles.textBase,
+                          styles.smallerText,
+                          additionalDropdownListLabelItemStyle,
+                        ]}>
                         {item.label}
                       </Text>
                     </TouchableOpacity>
@@ -280,6 +306,9 @@ const getStyles = (theme: Theme, width: number) =>
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    indent: {
+      marginLeft: LABELINDENTSPACE,
     },
   });
 

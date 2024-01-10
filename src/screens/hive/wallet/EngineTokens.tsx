@@ -80,12 +80,7 @@ const EngineTokens = ({
   }, [searchValue]);
 
   useEffect(() => {
-    if (
-      properties.globals &&
-      Object.keys(properties.globals).length > 0 &&
-      user.name &&
-      !userTokens.loading
-    ) {
+    if (!userTokens.loading) {
       loadHiddenTokens();
       loadUserTokens(user.name);
     }

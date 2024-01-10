@@ -605,11 +605,13 @@ const Swap = ({
                   bottomLabelInfo={`${translate(
                     'common.available',
                   )}: ${parseFloat(startToken.value.balance).toFixed(3)}`}
+                  addDropdownTitleIndent
+                  additionalDropdownListLabelItemStyle={{fontSize: 13}}
                 />
                 <OperationInput
                   keyboardType="decimal-pad"
                   labelInput={capitalize(translate('common.amount'))}
-                  placeholder={capitalize(translate('common.enter_amount'))}
+                  placeholder={'0'}
                   value={amount}
                   onChangeText={setAmount}
                   additionalInputContainerStyle={{
@@ -638,6 +640,7 @@ const Swap = ({
                       </TouchableOpacity>
                     </View>
                   }
+                  addLabelInputIndent
                 />
               </View>
               <Separator />
@@ -658,12 +661,14 @@ const Swap = ({
                   onSelectedItem={setEndToken}
                   selected={endToken}
                   searchOption
+                  addDropdownTitleIndent
+                  additionalDropdownListLabelItemStyle={{fontSize: 13}}
                 />
                 <OperationInput
                   disabled
                   keyboardType="decimal-pad"
                   labelInput={capitalize(translate('common.amount'))}
-                  placeholder={capitalize(translate('common.enter_amount'))}
+                  placeholder={'0'}
                   value={estimateValue ? withCommas(estimateValue) : ''}
                   onChangeText={(text) => {}}
                   additionalInputContainerStyle={{
@@ -702,6 +707,7 @@ const Swap = ({
                     styles.smallerText,
                     styles.opaque,
                   ]}
+                  addLabelInputIndent
                 />
               </View>
               <Separator height={40} />
@@ -729,7 +735,7 @@ const Swap = ({
                   infoIconAction={() =>
                     navigate('ModalScreen', {
                       name: ModalComponent.SWAP_INFO,
-                      fixedHeight: 0.3,
+                      fixedHeight: 0.35,
                     })
                   }
                   labelInput={translate('wallet.operations.swap.slippage')}
@@ -746,6 +752,8 @@ const Swap = ({
                     marginBottom: 20,
                   }}
                   inputStyle={styles.textBase}
+                  additionalLabelStyle={{fontSize: 13}}
+                  addLabelInputIndent
                 />
               )}
             </View>

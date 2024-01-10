@@ -31,7 +31,7 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
           operation: 'transfer',
           props: {
             currency: 'HBD',
-            tokenBalance: user.account.balance as string,
+            tokenBalance: user.account.hbd_balance as string,
             engine: false,
             tokenLogo: <></>,
           } as TransferOperationProps,

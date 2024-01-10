@@ -27,7 +27,7 @@ interface OperationInputProps {
   labelExtraInfo?: string;
   labelBottomExtraInfo?: string;
   additionalOuterContainerStyle?: StyleProp<ViewStyle>;
-  additionalLabelStyle?: StyleProp<ViewStyle>;
+  additionalLabelStyle?: StyleProp<TextStyle>;
   additionalInputContainerStyle?: StyleProp<ViewStyle>;
   additionalBottomLabelContainerStyle?: StyleProp<ViewStyle>;
   additionalBottomLabelTextStyle?: StyleProp<TextStyle>;

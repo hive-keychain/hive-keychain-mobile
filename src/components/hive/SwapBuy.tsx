@@ -1,6 +1,7 @@
 import BuyCoinsComponent from 'components/operations/Buy-coins.component';
 import Swap from 'components/operations/Swap';
 import ScreenToggle from 'components/ui/ScreenToggle';
+import Separator from 'components/ui/Separator';
 import React from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -36,6 +37,7 @@ const SwapBuy = () => {
         barStyle={getColors(theme).barStyle}
         backgroundColor={getColors(theme).primaryBackground}
       />
+      <Separator />
       <ScreenToggle
         theme={theme}
         style={styles.toggle}
