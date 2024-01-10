@@ -12,16 +12,19 @@ import {TransferOperationProps} from 'components/operations/Transfer';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import SquareButton from 'components/ui/SquareButton';
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {useWindowDimensions} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {getColors} from 'src/styles/colors';
+import {getButtonStyle} from 'src/styles/button';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
 export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
-  const styles = getStyles(theme);
+  const styles = getButtonStyle(
+    theme,
+    useWindowDimensions().height,
+  ).getOperationButtonStylesheet();
   return [
     <SquareButton
       additionalButtonContainerStyle={styles.buttonContainer}
@@ -119,32 +122,3 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
     />,
   ];
 };
-
-const getStyles = (theme: Theme) =>
-  StyleSheet.create({
-    icon: {
-      width: 20,
-      height: 20,
-    },
-    roundedIcon: {
-      borderWidth: 1,
-      borderColor: getColors(theme).cardBorderColorContrast,
-      borderRadius: 50,
-      padding: 0,
-      marginRight: 3,
-    },
-    biggerIcon: {
-      width: 30,
-      height: 30,
-    },
-    marginRight: {marginRight: 4},
-    buttonContainer: {
-      width: '38%',
-      height: 70,
-      paddingVertical: 0,
-      paddingHorizontal: 0,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    buttonText: {fontSize: 14},
-  });

@@ -125,6 +125,8 @@ const DropdownSelector = ({
     return labelElement;
   };
 
+  //TODO important change for a flatlist to render items in filteredDropdownList
+
   return (
     <View style={[styles.container, additionalContainerStyle]}>
       <View>

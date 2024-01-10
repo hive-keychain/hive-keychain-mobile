@@ -95,7 +95,7 @@ const getStyles = (nb: number, theme: Theme, height: number) =>
     },
     smallerHeaderText: {
       ...title_primary_body_2,
-      fontSize: 10,
+      fontSize: getFontSizeSmallDevices(height, 11),
     },
     headerActiveText: {
       color: 'white',

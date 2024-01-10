@@ -146,6 +146,7 @@ const getDimensionedStyles = ({width, height}: Width & Height, theme: Theme) =>
     toogleHeader: {
       width: '95%',
       alignSelf: 'center',
+      alignItems: 'center',
     },
     text: {
       lineHeight: 16,

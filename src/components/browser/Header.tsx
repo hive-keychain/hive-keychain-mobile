@@ -12,7 +12,7 @@ import CustomSearchBar from 'components/form/CustomSearchBar';
 import Icon from 'components/hive/Icon';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {ConnectedProps, connect} from 'react-redux';
@@ -24,7 +24,6 @@ import {body_primary_body_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
-import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
 
 type Props = {
@@ -146,15 +145,17 @@ const BrowserHeader = ({
         </View>
       </GestureRecognizer>
     );
-  } else {
-    return (
-      <View style={styles.container}>
-        <Text style={[styles.textBase, styles.browser]}>
-          {capitalize(translate('navigation.browser'))}
-        </Text>
-      </View>
-    );
   }
+  //TODO commented bellow, is needed at all?
+  // else {
+  //   return (
+  //     <View style={styles.container}>
+  //       <Text style={[styles.textBase, styles.browser]}>
+  //         {capitalize(translate('navigation.browser'))}
+  //       </Text>
+  //     </View>
+  //   );
+  // }
 };
 
 const getStyles = (

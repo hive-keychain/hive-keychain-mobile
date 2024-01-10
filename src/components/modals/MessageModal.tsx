@@ -3,17 +3,26 @@ import BigCheckSVG from 'assets/new_UI/Illustration.svg';
 import ErrorSvg from 'assets/new_UI/error-circle.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import React, {useEffect} from 'react';
-import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   button_link_primary_medium,
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 const DEFAULTHIDETIMEMS = 3000;
@@ -27,7 +36,7 @@ const Message = ({
   notHideOnSuccess,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions());
 
   const handleReset = () => {
     resetModal();
@@ -92,7 +101,7 @@ const connector = connect(mapStateToProps, {
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, {height}: Dimensions) =>
   StyleSheet.create({
     mainContainer: {
       flex: 1,
@@ -135,6 +144,8 @@ const getStyles = (theme: Theme) =>
     },
     svgImage: {
       marginTop: 15,
+      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 35 : undefined,
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 35 : undefined,
     },
     marginVertical: {
       marginVertical: 10,

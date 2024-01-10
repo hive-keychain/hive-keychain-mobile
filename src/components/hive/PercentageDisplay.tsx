@@ -46,6 +46,7 @@ const PercentageDisplay = ({
   return (
     <View style={styles.container}>
       <Icon
+        color={'#FFF'}
         theme={theme}
         name={iconName}
         additionalContainerStyle={styles.iconContainer}

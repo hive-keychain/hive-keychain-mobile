@@ -1,11 +1,16 @@
 import {ExtendedAccount} from '@hiveio/dhive';
 import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
 import React, {useState} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {body_primary_body_1, headerH2Primary} from 'src/styles/typography';
+import {
+  body_primary_body_1,
+  getFontSizeSmallDevices,
+  headerH2Primary,
+} from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 import {withCommas} from 'utils/format';
 import {getAccountValue} from 'utils/price';
 
@@ -26,7 +31,7 @@ const AccountValue = ({prices, account, properties, theme, title}: Props) => {
       ? '...'
       : `$ ${withCommas(accountValue, 2)}`;
   }
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions());
   const regexp = new RegExp(/\d/, 'ig');
 
   return (
@@ -49,11 +54,11 @@ const AccountValue = ({prices, account, properties, theme, title}: Props) => {
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     accountValue: {
       ...headerH2Primary,
-      fontSize: 45,
+      fontSize: getFontSizeSmallDevices(height, 45),
       textAlign: 'center',
     },
     title: {...body_primary_body_1, opacity: 0.6},

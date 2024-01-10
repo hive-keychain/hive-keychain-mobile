@@ -81,7 +81,7 @@ const AddAccountByKey = ({
   };
   const {theme} = useThemeContext();
   const {height} = useWindowDimensions();
-  console.log({height}); //TODO remove line
+
   const styles = getStyles(theme, height);
 
   return (

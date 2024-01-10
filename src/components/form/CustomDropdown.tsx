@@ -115,6 +115,7 @@ const CustomDropdown = ({
           : null}
         {copyButtonValue && (
           <Icon
+            theme={theme}
             name={Icons.COPY}
             onClick={() => onHandleCopyValue(item.value)}
             width={16}
