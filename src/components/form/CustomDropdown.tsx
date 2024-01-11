@@ -110,9 +110,6 @@ const CustomDropdown = ({
   const renderCopyOrSelectedIcon = (item: DropdownItem) => {
     return showSelectedIcon || copyButtonValue ? (
       <View style={styles.flexRow}>
-        {typeof selected === 'object' && selected.value === item.value
-          ? showSelectedIcon
-          : null}
         {copyButtonValue && (
           <Icon
             theme={theme}
@@ -120,9 +117,15 @@ const CustomDropdown = ({
             onClick={() => onHandleCopyValue(item.value)}
             width={16}
             height={16}
-            additionalContainerStyle={{marginLeft: 5}}
+            additionalContainerStyle={{marginRight: 4}}
+            strokeWidth={2}
           />
         )}
+        <View style={{width: 20}}>
+          {typeof selected === 'object' && selected.value === item.value
+            ? showSelectedIcon
+            : null}
+        </View>
       </View>
     ) : null;
   };

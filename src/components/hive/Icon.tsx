@@ -91,6 +91,7 @@ const getIconFilePath = (
   height: number = 20,
   color?: string,
   fill?: string,
+  strokeWidth?: number,
 ) => {
   const finalStyleOnIcon = marginRight ? styles.defaultIconContainer : style;
   let dimensionsProps = {
@@ -418,6 +419,7 @@ const getIconFilePath = (
         <CheckIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
+          strokeWidth={strokeWidth}
         />
       );
     case name === Icons.CLOSE_CIRCLE:
@@ -563,6 +565,7 @@ const getIconFilePath = (
         <CopyIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
+          strokeWidth={strokeWidth}
         />
       );
     case name === Icons.HEART || name === Icons.FAVORITE:
@@ -618,6 +621,7 @@ interface IconProps {
   height?: number;
   color?: string;
   fill?: string;
+  strokeWidth?: number;
 }
 
 const Icon = (props: IconProps) => {
@@ -631,6 +635,7 @@ const Icon = (props: IconProps) => {
     props.height,
     props.color,
     props.fill,
+    props.strokeWidth,
   );
   const styleProps = {
     style: [styles.defaultIconContainer, props.additionalContainerStyle],

@@ -4,7 +4,7 @@ import Loader from 'components/ui/Loader';
 import PreloadedImage from 'components/ui/PreloadedImage';
 import React, {useEffect, useState} from 'react';
 import {
-  ScrollView,
+  FlatList,
   StyleProp,
   StyleSheet,
   Text,
@@ -125,7 +125,43 @@ const DropdownSelector = ({
     return labelElement;
   };
 
-  //TODO important change for a flatlist to render items in filteredDropdownList
+  const renderDropdownItem = (item: OptionItem, index: number) => {
+    const isLastItem = index === filteredDropdownList.length - 1;
+    return (
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => onHandleSelectedItem(item)}
+        style={[
+          styles.dropdownItem,
+          isLastItem ? {marginBottom: 10} : undefined,
+        ]}>
+        {item.img && (
+          <PreloadedImage uri={item.img} symbol={item.value.symbol} />
+        )}
+        <Text
+          style={[
+            styles.textBase,
+            styles.smallerText,
+            additionalDropdownListLabelItemStyle,
+          ]}>
+          {item.label}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderEmpty = () => {
+    return (
+      <>
+        {!isFiltering && filteredDropdownList.length === 0 && (
+          <Text style={[styles.textBase, styles.smallerText]}>
+            {translate('wallet.operations.swap.no_tokens_found')}
+          </Text>
+        )}
+        {isFiltering && <Loader animating size={'small'} />}
+      </>
+    );
+  };
 
   return (
     <View style={[styles.container, additionalContainerStyle]}>
@@ -185,43 +221,18 @@ const DropdownSelector = ({
                 additionalContainerStyle={styles.searchContainer}
               />
             )}
-            <ScrollView style={styles.dropdownlist}>
-              {!isFiltering &&
-                filteredDropdownList.map((item, index) => {
-                  const isLastItem = index === filteredDropdownList.length - 1;
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={1}
-                      key={`${item.label}-currency-selector-swap`}
-                      onPress={() => onHandleSelectedItem(item)}
-                      style={[
-                        styles.dropdownItem,
-                        isLastItem ? {marginBottom: 10} : undefined,
-                      ]}>
-                      {item.img && (
-                        <PreloadedImage
-                          uri={item.img}
-                          symbol={item.value.symbol}
-                        />
-                      )}
-                      <Text
-                        style={[
-                          styles.textBase,
-                          styles.smallerText,
-                          additionalDropdownListLabelItemStyle,
-                        ]}>
-                        {item.label}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
-              {!isFiltering && filteredDropdownList.length === 0 && (
-                <Text style={[styles.textBase, styles.smallerText]}>
-                  {translate('wallet.operations.swap.no_tokens_found')}
-                </Text>
+            <View style={styles.dropdownlist}>
+              {!isFiltering && (
+                <FlatList
+                  data={filteredDropdownList}
+                  keyExtractor={(item) => item.label}
+                  renderItem={(item) =>
+                    renderDropdownItem(item.item, item.index)
+                  }
+                  ListEmptyComponent={renderEmpty}
+                />
               )}
-              {isFiltering && <Loader animating size={'small'} />}
-            </ScrollView>
+            </View>
           </View>
         </Overlay>
       )}
@@ -262,7 +273,7 @@ const getStyles = (theme: Theme, width: number) =>
     },
     dropdownlist: {
       width: width * 0.5,
-      maxHeight: 200,
+      height: 200,
       alignSelf: 'center',
       zIndex: 30,
     },

@@ -40,7 +40,13 @@ const UserDropdown = ({
       dropdownIconScaledSize={dropdownIconScaledSize}
       copyButtonValue={copyButtonValue}
       showSelectedIcon={
-        <Icon name={Icons.CHECK} theme={theme} width={15} height={15} />
+        <Icon
+          name={Icons.CHECK}
+          theme={theme}
+          width={15}
+          height={15}
+          strokeWidth={2}
+        />
       }
     />
   );
