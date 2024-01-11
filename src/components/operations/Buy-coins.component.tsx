@@ -1,9 +1,8 @@
-import {showFloatingBar} from 'actions/floatingBar';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import AssetImage from 'components/ui/AssetImage';
 import Separator from 'components/ui/Separator';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   Linking,
   ScrollView,
@@ -33,13 +32,9 @@ export type BuyCoinsprops = {
 };
 type Props = PropsFromRedux & BuyCoinsprops;
 
-const BuyCoinsComponent = ({user, currency, showFloatingBar}: Props) => {
+const BuyCoinsComponent = ({user, currency}: Props) => {
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
   const scrollViewRef = useRef();
-
-  useEffect(() => {
-    showFloatingBar(true);
-  }, []);
 
   const renderListItem = (item: any) => {
     const handleOnClick = () => {
@@ -103,19 +98,13 @@ const BuyCoinsComponent = ({user, currency, showFloatingBar}: Props) => {
     );
   };
 
-  const onHandleScroll = (event: any) => {
-    const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
-    setDisplayedScrollToTop(innerScrollViewY >= 50);
-    showFloatingBar(innerScrollViewY === 0);
-  };
-
   const {theme} = useThemeContext();
   const {height} = useWindowDimensions();
 
   const styles = getDimensionedStyles(height, theme);
 
   return (
-    <ScrollView onScroll={onHandleScroll} ref={scrollViewRef}>
+    <ScrollView ref={scrollViewRef}>
       <Separator />
       <View style={styles.marginHorizontal}>
         <View>
@@ -156,14 +145,11 @@ const BuyCoinsComponent = ({user, currency, showFloatingBar}: Props) => {
     </ScrollView>
   );
 };
-const connector = connect(
-  (state: RootState) => {
-    return {
-      user: state.activeAccount,
-    };
-  },
-  {showFloatingBar},
-);
+const connector = connect((state: RootState) => {
+  return {
+    user: state.activeAccount,
+  };
+}, {});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 const getDimensionedStyles = (width: number, theme: Theme) =>

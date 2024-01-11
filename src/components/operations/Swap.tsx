@@ -1,4 +1,3 @@
-import {showFloatingBar} from 'actions/floatingBar';
 import {loadTokensMarket} from 'actions/index';
 import {showModal} from 'actions/message';
 import ErrorSvg from 'assets/new_UI/error-circle.svg';
@@ -62,7 +61,6 @@ interface Props {
 }
 
 const Swap = ({
-  showFloatingBar,
   theme,
   loadTokensMarket,
   tokenMarket,
@@ -98,7 +96,6 @@ const Swap = ({
 
   useEffect(() => {
     init();
-    showFloatingBar(false);
   }, []);
 
   const init = async () => {
@@ -902,7 +899,7 @@ const connector = connect(
       price: state.currencyPrices,
     };
   },
-  {showFloatingBar, loadTokensMarket, showModal},
+  {loadTokensMarket, showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

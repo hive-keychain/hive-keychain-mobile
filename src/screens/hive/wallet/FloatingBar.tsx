@@ -1,6 +1,6 @@
 import {showFloatingBar} from 'actions/floatingBar';
 import Icon from 'components/hive/Icon';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -12,51 +12,21 @@ import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
-const ScreensComponentAllowanceList = ['WalletScreen', 'SwapBuyStack'];
-
 export type FloatingBarLink = 'ecosystem' | 'browser' | 'scan_qr' | 'swap_buy';
 interface Props {
-  currentRouteName: string;
   showTags?: boolean;
 }
-//TODO this should be a bottom navigator, do some research and integrate in the mainstack
-//  Important: remove from redux...
+
 const Floating = ({
   show,
   showTags,
   isLoadingScreen,
-  currentRouteName,
   isDrawerOpen,
   showFloatingBar,
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
-  const [isScreenAllowed, setIsScreenAllowed] = useState(false);
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
-
-  useEffect(() => {
-    if (currentRouteName) {
-      const isAllowed =
-        ScreensComponentAllowanceList.find(
-          (screenName) => screenName === currentRouteName,
-        ) !== undefined;
-      setIsScreenAllowed(isAllowed);
-      if (isAllowed) {
-        switch (true) {
-          case currentRouteName === 'WALLET' ||
-            currentRouteName === 'WalletScreen':
-            setActiveLink('ecosystem');
-            break;
-          case currentRouteName === 'BrowserScreen':
-            setActiveLink('browser');
-            break;
-          case currentRouteName === 'SwapBuyStack':
-            setActiveLink('swap_buy');
-            break;
-        }
-      }
-    }
-  }, [currentRouteName]);
 
   const getActiveStyle = (link: FloatingBarLink) =>
     activeLink === link ? styles.active : undefined;
@@ -65,7 +35,7 @@ const Floating = ({
     activeLink === link ? '#FFF' : undefined;
 
   const onHandlePressButton = (link: FloatingBarLink) => {
-    setActiveLink(link);
+    // setActiveLink(link); //TODO commented for now as no need.
     let screen = '';
     let nestedScreenOrParams;
     switch (link) {
@@ -155,7 +125,7 @@ const Floating = ({
     );
   };
 
-  return show && !isLoadingScreen && !isDrawerOpen && isScreenAllowed
+  return show && !isDrawerOpen && !isLoadingScreen
     ? renderNavigationBar()
     : null;
 };

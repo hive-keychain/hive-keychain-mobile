@@ -1,4 +1,9 @@
-import {setisLoadingScreen} from 'actions/floatingBar';
+import {useIsDrawerOpen} from '@react-navigation/drawer';
+import {
+  setIsDrawerOpen,
+  setisLoadingScreen,
+  showFloatingBar,
+} from 'actions/floatingBar';
 import {
   fetchPhishingAccounts,
   loadAccount,
@@ -27,6 +32,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   StyleSheet,
   View,
   useWindowDimensions,
@@ -65,8 +72,8 @@ const Main = ({
   loadTokens,
   loadTokensMarket,
   loadUserTokens,
-  // showFloatingBar, //TODO commented all floatinBar related.
-  // setIsDrawerOpen,
+  showFloatingBar,
+  setIsDrawerOpen,
   setisLoadingScreen,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useThemeContext();
@@ -85,6 +92,7 @@ const Main = ({
       user.name
     ) {
       setLoadingUserAndGlobals(false);
+      setisLoadingScreen(false);
     }
   }, [properties, user.name]);
 
@@ -109,6 +117,12 @@ const Main = ({
   useLockedPortrait(navigation);
 
   const appState = useRef(AppState.currentState);
+
+  const isDrawerOpen: boolean = useIsDrawerOpen();
+
+  useEffect(() => {
+    setIsDrawerOpen(isDrawerOpen);
+  }, [isDrawerOpen]);
 
   useEffect(() => {
     const handler = (nextAppState: AppStateStatus) => {
@@ -158,9 +172,9 @@ const Main = ({
 
   //TODO commented to disable all floatinBar related
   //Remove call to onHandleScroll from main scrollview.
-  // const onHandleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-  //   showFloatingBar(event.nativeEvent.contentOffset.y === 0);
-  // };
+  const onHandleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    showFloatingBar(event.nativeEvent.contentOffset.y === 0);
+  };
 
   const getListFromAccount = () =>
     accounts.map((acc) => {
@@ -174,7 +188,7 @@ const Main = ({
   return (
     <WalletPage>
       {!loadingUserAndGlobals ? (
-        <ScrollView horizontal={false}>
+        <ScrollView horizontal={false} onScroll={onHandleScroll}>
           <Separator height={15} />
           <View style={[styles.headerMenu]}>
             <DrawerButton navigation={navigation as any} theme={theme} />
@@ -322,8 +336,8 @@ const connector = connect(
     loadTokens,
     loadUserTokens,
     loadTokensMarket,
-    // showFloatingBar,
-    // setIsDrawerOpen,
+    showFloatingBar,
+    setIsDrawerOpen,
     setisLoadingScreen,
   },
 );

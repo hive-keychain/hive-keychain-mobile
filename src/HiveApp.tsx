@@ -21,6 +21,7 @@ import {
   DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
   DEFAULT_HE_RPC_NODE,
 } from 'screens/hive/settings/RpcNodes';
+import {FloatingBar} from 'screens/hive/wallet/FloatingBar';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {downloadColors} from 'utils/colors';
@@ -31,6 +32,7 @@ import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
 import {checkRpcStatus, getRPCUri} from 'utils/rpc.utils';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
+import {FLOATINGBAR_ALLOWED_SCREENS} from './reference-data/FloatingScreenList';
 
 const Root = createStackNavigator<RootStackParam>();
 
@@ -50,7 +52,6 @@ const App = ({
 }: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
-  // const [currentRouteName, setCurrentRouteName] = useState(''); //TODO commented all floatingBar related
 
   useEffect(() => {
     initColorAPI();
@@ -93,14 +94,10 @@ const App = ({
       setSwitchToRpc({uri: DEFAULT_RPC, testnet: false});
     }
     setDisplayChangeRpcPopup(!rpcStatusOK);
-    showFloatingBar(rpcStatusOK);
+    // showFloatingBar(rpcStatusOK); //TODO uncomment & implement when adding again the rpcSwitcher.
   };
 
   const renderNavigator = () => {
-    //TODO remove block bellow
-    // return <TestStack />;
-    //end remove
-
     if (!hasAccounts) {
       // No accounts, sign up process
       return <SignUpStack />;
@@ -111,8 +108,7 @@ const App = ({
       return <MainDrawer />;
     }
   };
-  //TODO important here to test to make nav work properly:
-  //  1. comment floatingBar at all.
+
   const renderRootNavigator = () => {
     return (
       <Root.Navigator>
@@ -138,7 +134,19 @@ const App = ({
       }}
       onStateChange={async (state) => {
         let currentRouteName = navigationRef.current.getCurrentRoute().name;
-        // setCurrentRouteName(currentRouteName); //TODO commented all floatingBar related
+        // if (
+        //   FLOATINGBAR_ALLOWED_SCREENS.find(
+        //     (route) => route === currentRouteName,
+        //   )
+        // ) {
+        showFloatingBar(
+          !!FLOATINGBAR_ALLOWED_SCREENS.find(
+            (route) => route === currentRouteName,
+          ),
+        );
+        // } else {
+        // showFloatingBar(false);
+        // }
         const p = navigationRef.current.getCurrentRoute().params;
         if (currentRouteName === 'WalletScreen') {
           currentRouteName = getToggleElement() || 'WalletScreen';
@@ -150,7 +158,7 @@ const App = ({
       }}>
       {renderRootNavigator()}
       <MessageModal />
-      {/* <FloatingBar currentRouteName={currentRouteName} /> */}
+      <FloatingBar />
       {/* TODO commented for now while fixing loading/render times on app */}
       {/* <RpcSwitcherComponent /> */}
       <Bridge />
