@@ -134,19 +134,11 @@ const App = ({
       }}
       onStateChange={async (state) => {
         let currentRouteName = navigationRef.current.getCurrentRoute().name;
-        // if (
-        //   FLOATINGBAR_ALLOWED_SCREENS.find(
-        //     (route) => route === currentRouteName,
-        //   )
-        // ) {
         showFloatingBar(
           !!FLOATINGBAR_ALLOWED_SCREENS.find(
             (route) => route === currentRouteName,
           ),
         );
-        // } else {
-        // showFloatingBar(false);
-        // }
         const p = navigationRef.current.getCurrentRoute().params;
         if (currentRouteName === 'WalletScreen') {
           currentRouteName = getToggleElement() || 'WalletScreen';

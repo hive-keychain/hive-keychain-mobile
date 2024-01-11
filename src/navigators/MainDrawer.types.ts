@@ -18,9 +18,6 @@ export type MainDrawerStackParam = {
   TemplateStack: undefined;
   SwapBuyStack: undefined;
   SwapHistory: undefined;
-  //TODO remove bellow
-  TestStack: undefined;
-  //end remove
 };
 
 export type BrowserNavigation = StackNavigationProp<

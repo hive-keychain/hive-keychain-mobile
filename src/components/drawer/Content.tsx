@@ -26,7 +26,7 @@ const hiddenRoutesInMain = [
   'AddAccountStack',
   'AccountManagementScreen',
   'WALLET',
-  // 'BrowserScreen', //TODO commented for testings
+  'BrowserScreen',
   'Governance',
   'SettingsScreen',
   'ABOUT',
@@ -35,7 +35,7 @@ const hiddenRoutesInMain = [
   'TokensHistory',
   'Operation',
   'TemplateStack',
-  // 'SwapBuyStack', //TODO uncoment after adding bottom bar
+  'SwapBuyStack',
   'SwapHistory',
 ];
 
@@ -67,16 +67,6 @@ const HeaderContent = (props: Props) => {
           iconImage={<Icon name={Icons.CANDLE} theme={theme} />}
           drawBottomLine
         />
-
-        {/* //TODO remove later on, added for testing requests. */}
-        <MenuItem
-          labelTranslationKey="navigation.browser"
-          theme={theme}
-          onPress={() => navigation.navigate('BrowserScreen')}
-          iconImage={<Icon name={Icons.NOT_SEE} theme={theme} />}
-          drawBottomLine
-        />
-        {/* //END REMOVE */}
 
         {/* <MenuItem
           labelTranslationKey="navigation.tokens"
