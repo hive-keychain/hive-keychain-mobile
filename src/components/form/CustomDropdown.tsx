@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
@@ -17,7 +18,11 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {title_primary_body_2} from 'src/styles/typography';
+import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  getFontSizeSmallDevices,
+  title_primary_body_2,
+} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
@@ -62,7 +67,7 @@ const CustomDropdown = ({
   showSelectedIcon,
 }: Props) => {
   const [isListExpanded, setIsListExpanded] = useState(false);
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
   const behaveAs = behaviour ?? 'down';
 
   const renderExpandedList = (children: JSX.Element) => {
@@ -219,16 +224,16 @@ const CustomDropdown = ({
 
 export default CustomDropdown;
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     container: {
       width: '100%',
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 60,
     },
     dropdownContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      height: 44,
     },
     dropdownListContainer: {
       width: 250,
@@ -245,6 +250,10 @@ const getStyles = (theme: Theme) =>
     text: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...title_primary_body_2}.fontSize,
+      ),
     },
     whiteText: {color: '#FFF'},
     dropdownItemContainer: {
@@ -280,5 +289,11 @@ const getStyles = (theme: Theme) =>
     },
     marginLeft: {
       marginLeft: 8,
+    },
+    title: {
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...title_primary_body_2}.fontSize,
+      ),
     },
   });

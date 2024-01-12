@@ -1,13 +1,17 @@
 import {showFloatingBar} from 'actions/floatingBar';
 import Icon from 'components/hive/Icon';
 import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {body_primary_body_1} from 'src/styles/typography';
+import {getIconDimensions} from 'src/styles/icon';
+import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  body_primary_body_1,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -26,7 +30,8 @@ const Floating = ({
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const {theme} = useThemeContext();
-  const styles = getStyles(theme);
+  const {height} = useWindowDimensions();
+  const styles = getStyles(theme, height);
 
   const getActiveStyle = (link: FloatingBarLink) =>
     activeLink === link ? styles.active : undefined;
@@ -70,7 +75,7 @@ const Floating = ({
             theme={theme}
             name={Icons.WALLET_ADD}
             color={getActiveIconColor('ecosystem')}
-            {...styles.icon}
+            {...getIconDimensions(height)}
             onClick={() => onHandlePressButton('ecosystem')}
           />
           {showTags && (
@@ -84,7 +89,7 @@ const Floating = ({
             theme={theme}
             color={getActiveIconColor('browser')}
             name={Icons.GLOBAL}
-            {...styles.icon}
+            {...getIconDimensions(height)}
             onClick={() => onHandlePressButton('browser')}
           />
           {showTags && (
@@ -98,7 +103,7 @@ const Floating = ({
             theme={theme}
             name={Icons.SCANNER}
             color={getActiveIconColor('scan_qr')}
-            {...styles.icon}
+            {...getIconDimensions(height)}
             onClick={() => onHandlePressButton('scan_qr')}
           />
           {showTags && (
@@ -112,7 +117,7 @@ const Floating = ({
             theme={theme}
             color={getActiveIconColor('swap_buy')}
             name={Icons.SWAP}
-            {...styles.icon}
+            {...getIconDimensions(height)}
             onClick={() => onHandlePressButton('swap_buy')}
           />
           {showTags && (
@@ -130,7 +135,7 @@ const Floating = ({
     : null;
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     container: {
       position: 'absolute',
@@ -150,11 +155,7 @@ const getStyles = (theme: Theme) =>
     itemContainer: {
       alignItems: 'center',
       justifyContent: 'center',
-      width: '25%',
-    },
-    icon: {
-      width: 30,
-      height: 30,
+      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? '20%' : '25%',
     },
     marginTop: {
       marginTop: 5,

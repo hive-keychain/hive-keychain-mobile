@@ -29,6 +29,7 @@ import {getRotateStyle} from 'src/styles/transform';
 import {
   FontJosefineSansName,
   button_link_primary_medium,
+  getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
@@ -371,7 +372,7 @@ const getDimensionedStyles = (
       color: getColors(theme).secondaryText,
     },
     title: {
-      fontSize: 15,
+      fontSize: getFontSizeSmallDevices(height, 15),
     },
     josefineFont: {
       fontFamily: FontJosefineSansName.MEDIUM,
@@ -399,7 +400,6 @@ const getDimensionedStyles = (
     redText: {color: PRIMARY_RED_COLOR},
     dropdown: {
       width: '100%',
-      height: 60,
       padding: 0,
       zIndex: 20,
     },
