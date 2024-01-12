@@ -58,7 +58,7 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
   }, [user.name]);
 
   const styles = getStyles();
-
+  //TODO keep checking with both devices, in here, actions buttons, etc.
   return (
     <View style={styles.container}>
       <Separator height={20} />
