@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import {IconNode, InputProps} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
 import {DARKBLUELIGHTER, getColors} from 'src/styles/colors';
@@ -11,6 +11,7 @@ interface Props {
   rightIcon?: IconNode;
   leftIcon?: IconNode;
   additionalContainerStyle?: StyleProp<ViewStyle>;
+  additionalCustomInputStyle?: StyleProp<TextStyle>;
 }
 
 const CustomSearchBar = ({
@@ -18,6 +19,7 @@ const CustomSearchBar = ({
   rightIcon,
   leftIcon,
   additionalContainerStyle,
+  additionalCustomInputStyle,
   ...restProps
 }: Props & InputProps) => {
   const styles = getStyles(theme);
@@ -33,7 +35,7 @@ const CustomSearchBar = ({
           ? 'rgba(33, 40, 56, 0.30)'
           : 'rgba(255, 255, 255, 0.30)'
       }
-      style={styles.inputText}
+      style={[styles.inputText, additionalCustomInputStyle]}
       backgroundColor={getColors(theme).cardBgLighter}
       additionalInputContainerStyle={styles.noMarginHorizontal}
       {...restProps}

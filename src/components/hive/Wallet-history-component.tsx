@@ -33,8 +33,14 @@ const WallettHistory = ({
   fetchAccountTransactions,
   walletFilters,
   clearUserTransactions,
-  currency,
-}: PropsFromRedux & WalletHistoryComponentProps) => {
+  route,
+}: PropsFromRedux & {route: any}) => {
+  const [currency, setCurrency] = useState('');
+
+  useEffect(() => {
+    if (route.params) setCurrency(route.params.currency);
+  }, []);
+
   let lastOperationFetched = -1;
 
   const [displayedTransactions, setDisplayedTransactions] = useState<
@@ -110,9 +116,16 @@ const WallettHistory = ({
     }
   }, [transactions, walletFilters]);
 
+  useEffect(() => {
+    if (walletFilters.filterValue.trim().length > 0) {
+      setCurrency(walletFilters.filterValue);
+    } else {
+      setCurrency(route.params ? route.params.currency : '');
+    }
+  }, [walletFilters.filterValue]);
+
   const filterTransactions = () => {
     let walletFiltersTemp = walletFilters;
-    if (currency) walletFilters.filterValue = currency;
     let filteredTransactions = WalletHistoryUtils.applyAllFilters(
       transactions.list,
       walletFiltersTemp,

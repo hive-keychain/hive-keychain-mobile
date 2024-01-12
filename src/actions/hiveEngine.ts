@@ -54,7 +54,7 @@ export const loadUserTokens = (account: string): AppThunk => async (
     };
     dispatch(action);
   } catch (e) {
-    //TODO commented bellow while fixing loading/renders
+    //TODO Quentin uncomment bellow to test the message of the tokens timeout.
     // if (e.message && e.message.includes('timeout')) {
     //   dispatch(showModal('toast.tokens_timeout', MessageModalType.ERROR));
     // }

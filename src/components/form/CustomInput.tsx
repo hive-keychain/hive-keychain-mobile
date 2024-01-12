@@ -12,8 +12,9 @@ import {
 import {Input, InputProps} from 'react-native-elements';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {getInputHeight} from 'src/styles/input';
 import {fields_primary_text_2} from 'src/styles/typography';
-import {Width} from 'utils/common.types';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 type Props = InputProps & {
@@ -85,11 +86,12 @@ export default ({
 
 const getDimensionedStyles = ({
   width,
+  height,
   theme,
   backgroundColor,
   inputColor,
   textAlign,
-}: Width & {
+}: Dimensions & {
   theme: Theme;
   backgroundColor?: string;
   inputColor?: string;
@@ -102,7 +104,7 @@ const getDimensionedStyles = ({
       width: 0.9 * width,
       backgroundColor: backgroundColor || '#000000',
       borderRadius: 25,
-      height: 50,
+      height: getInputHeight(height),
       borderWidth: 1,
     },
     leftIcon: {height: 30, marginRight: 20},

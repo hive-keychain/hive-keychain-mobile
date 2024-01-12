@@ -14,16 +14,18 @@ import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
-import {headlines_primary_headline_2} from 'src/styles/typography';
+import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
 import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation';
 
 const Stack = createStackNavigator();
 
-export default ({route, navigation}: {route: any; navigation: any}) => {
+export default () => {
   const {theme} = useThemeContext();
-  const {width} = useWindowDimensions();
+  const {width, height} = useWindowDimensions();
   const styles = getStyles({width}, theme);
 
   return (
@@ -61,7 +63,7 @@ export default ({route, navigation}: {route: any; navigation: any}) => {
                 if (nav.canGoBack()) {
                   nav.goBack();
                 } else {
-                  resetStackAndNavigate('WALLET');
+                  navigation.navigate('WalletScreen');
                 }
               }}
               lightThemeIcon={<ArrowLeftLight />}
@@ -94,7 +96,8 @@ export default ({route, navigation}: {route: any; navigation: any}) => {
                       usingFilter="wallet"
                     />
                   ),
-                  fixedHeight: 0.7,
+                  fixedHeight:
+                    height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 0.85 : 0.7,
                   additionalWrapperFixedStyle: styles.wrapperFixed,
                   modalPosition: undefined,
                   modalContainerStyle: styles.modalContainer,
@@ -116,14 +119,13 @@ export default ({route, navigation}: {route: any; navigation: any}) => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => resetStackAndNavigate('WALLET')}
+              onPress={() => navigation.navigate('WalletScreen')}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
         component={WalletHistoryComponent}
-        initialParams={{...route.params}}
       />
     </Stack.Navigator>
   );

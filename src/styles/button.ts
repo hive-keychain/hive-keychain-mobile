@@ -2,16 +2,21 @@ import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, RED_SHADOW_COLOR, getColors} from './colors';
 import {generateBoxShadowStyle} from './shadow';
-import {getFontSizeSmallDevices} from './typography';
+import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  getFontSizeSmallDevices,
+} from './typography';
 
 export const BUTTON_MAX_HEIGHT = 50;
 export const BUTTON_MAX_WIDTH = '80%';
 
-export const getButtonStyle = (theme: Theme, height?: number) => {
-  const getButtonHeight = (height: number) => {
-    return height <= 600 ? BUTTON_MAX_HEIGHT * 0.7 : BUTTON_MAX_HEIGHT;
-  };
+export const getButtonHeight = (height: number) => {
+  return height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED
+    ? BUTTON_MAX_HEIGHT * 0.75
+    : BUTTON_MAX_HEIGHT;
+};
 
+export const getButtonStyle = (theme: Theme, height?: number) => {
   return {
     outline: {
       borderColor: getColors(theme).borderContrast,

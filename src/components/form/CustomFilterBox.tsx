@@ -19,8 +19,10 @@ import {
 } from 'src/styles/colors';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   button_link_primary_medium,
   button_link_primary_small,
+  getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {TokenHistoryFilter} from 'src/types/tokens.history.types';
@@ -126,6 +128,10 @@ const FilterBox = ({
           additionalContainerStyle={styles.searchBarContainer}
           onChangeText={(text) => updateFilterValue(text)}
           value={filter.filterValue}
+          additionalCustomInputStyle={[
+            styles.filterItemText,
+            styles.filterSearchText,
+          ]}
         />
         <View style={styles.filterItemContainer}>
           {Object.keys(filter.selectedTransactionTypes).map((filterKey) => {
@@ -197,7 +203,7 @@ const FilterBox = ({
             RED_SHADOW_COLOR,
           ),
         ]}
-        additionalTextStyle={{...button_link_primary_medium}}
+        additionalTextStyle={styles.buttonText}
       />
     </View>
   );
@@ -232,6 +238,10 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       textAlign: 'center',
       ...headlines_primary_headline_2,
       color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...headlines_primary_headline_2}.fontSize,
+      ),
     },
     searchBarContainer: {
       borderWidth: 1,
@@ -239,6 +249,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       width: '100%',
       borderColor: getColors(theme).tertiaryCardBorderColor,
       marginBottom: 10,
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 35 : 60,
     },
     itemContainer: {
       justifyContent: 'center',
@@ -263,6 +274,10 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       ...button_link_primary_small,
       lineHeight: 14.7,
       color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...button_link_primary_small}.fontSize,
+      ),
     },
     line: {
       height: 1,
@@ -280,7 +295,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       backgroundColor: PRIMARY_RED_COLOR,
       width: '55%',
       alignSelf: 'center',
-      height: 40,
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 30 : 40,
       marginVertical: 8,
     },
     activeFilterItem: {
@@ -288,6 +303,16 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
     },
     activeTextFilter: {
       color: '#FFF',
+    },
+    buttonText: {
+      ...button_link_primary_medium,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...button_link_primary_medium}.fontSize,
+      ),
+    },
+    filterSearchText: {
+      textAlign: 'left',
     },
   });
 

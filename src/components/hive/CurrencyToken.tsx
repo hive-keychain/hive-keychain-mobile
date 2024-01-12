@@ -50,12 +50,9 @@ const CurrencyToken = ({
 
   const onHandleGoToWalletHistory = () => {
     clearWalletFilters();
-    navigate('WALLET', {
-      screen: 'WalletHistoryScreen',
-      params: {
-        currency: currencyName.toLowerCase(),
-      } as WalletHistoryComponentProps,
-    });
+    navigate('WalletHistoryScreen', {
+      currency: currencyName.toLowerCase(),
+    } as WalletHistoryComponentProps);
   };
 
   return (

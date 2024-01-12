@@ -1,9 +1,13 @@
 import {RadioButton} from 'components/form/CustomRadioGroup';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {body_primary_body_1} from 'src/styles/typography';
+import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  body_primary_body_1,
+  getFontSizeSmallDevices,
+} from 'src/styles/typography';
 
 type Props = {
   children: JSX.Element[];
@@ -14,7 +18,7 @@ type Props = {
 };
 
 const OptionsToggle = ({children, title, toggled, callback, theme}: Props) => {
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions().height);
 
   return (
     <View style={styles.container}>
@@ -37,7 +41,7 @@ const OptionsToggle = ({children, title, toggled, callback, theme}: Props) => {
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -45,8 +49,8 @@ const getStyles = (theme: Theme) =>
     toggled: {flex: 1, justifyContent: 'center'},
     untoggled: {display: 'none'},
     toggleButton: {
-      width: 20,
-      height: 20,
+      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 15 : 20,
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 15 : 20,
       borderRadius: 10,
       borderWidth: 2,
       borderColor: getColors(theme).icon,
@@ -60,6 +64,10 @@ const getStyles = (theme: Theme) =>
     title: {
       ...body_primary_body_1,
       color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...body_primary_body_1}.fontSize,
+      ),
     },
     radioButtonActive: {
       backgroundColor: getColors(theme).icon,

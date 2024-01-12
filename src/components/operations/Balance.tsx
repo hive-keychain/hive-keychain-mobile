@@ -4,8 +4,11 @@ import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {FontPoppinsName, headerH2Primary} from 'src/styles/typography';
-import {Width} from 'utils/common.types';
+import {
+  FontPoppinsName,
+  getFontSizeSmallDevices,
+  headerH2Primary,
+} from 'src/styles/typography';
 import {formatBalance, toHP} from 'utils/format';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
@@ -46,10 +49,12 @@ const Balance = ({
     parsedValue = +tokenBalance!;
     logo = tokenLogo!;
   }
+  const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({
+    width,
+    height,
     color,
     theme,
-    ...useWindowDimensions(),
   });
   return (
     <TouchableOpacity
@@ -72,9 +77,15 @@ const Balance = ({
 
 const getDimensionedStyles = ({
   width,
+  height,
   color,
   theme,
-}: Width & {color?: string; theme: Theme}) =>
+}: {
+  width: number;
+  height: number;
+  color?: string;
+  theme: Theme;
+}) =>
   StyleSheet.create({
     logo: {justifyContent: 'center', alignItems: 'center'},
     currency: {color},
@@ -90,6 +101,7 @@ const getDimensionedStyles = ({
       height: headerH2Primary.fontSize,
       lineHeight: headerH2Primary.fontSize + 5,
       textAlignVertical: 'auto',
+      fontSize: getFontSizeSmallDevices(height, headerH2Primary.fontSize),
     },
     centeredText: {
       textAlign: 'center',

@@ -151,7 +151,9 @@ const App = ({
       {renderRootNavigator()}
       <MessageModal />
       <FloatingBar />
-      {/* TODO commented for now while fixing loading/render times on app */}
+      {/* TODO QUENTIN: please uncomment and check, let me know if you like to do changes about this 
+          -> also uncomment in hiveEngine.ts
+      */}
       {/* <RpcSwitcherComponent /> */}
       <Bridge />
     </NavigationContainer>

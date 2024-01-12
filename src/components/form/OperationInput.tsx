@@ -114,6 +114,7 @@ const getStyles = (theme: Theme, height: number) =>
     labelInputContainer: {
       flexDirection: 'row',
       alignItems: 'center',
+      flexWrap: 'wrap',
     },
     smallerLabelSize: {
       marginLeft: 10,

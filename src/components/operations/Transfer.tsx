@@ -21,7 +21,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
+import {getButtonHeight, getButtonStyle} from 'src/styles/button';
 import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {
@@ -71,7 +71,7 @@ const Transfer = ({
   const [isRecurrent, setRecurrent] = useState(false);
   const [isMemoEncrypted, setIsMemoEncrypted] = useState<boolean>(false);
   const {theme} = useThemeContext();
-  console.log({currency, tokenBalance}); //TODO remove line
+
   const sendTransfer = async () => {
     setLoading(true);
     let finalMemo = memo;
@@ -204,7 +204,7 @@ const Transfer = ({
               <OperationInput
                 keyboardType="decimal-pad"
                 labelInput={capitalize(translate('common.amount'))}
-                placeholder={translate('common.enter_amount')}
+                placeholder={'0'}
                 value={amount}
                 onChangeText={setAmount}
                 additionalInputContainerStyle={{
@@ -280,6 +280,7 @@ const Transfer = ({
                 onChangeText={setRecurrence}
                 keyboardType={'number-pad'}
                 inputStyle={styles.text}
+                additionalLabelStyle={styles.text}
               />
               <Separator />
               <OperationInput
@@ -292,6 +293,7 @@ const Transfer = ({
                 onChangeText={setExec}
                 keyboardType={'number-pad'}
                 inputStyle={styles.text}
+                additionalLabelStyle={styles.text}
               />
             </OptionsToggle>
             <Separator />
@@ -318,7 +320,7 @@ const Transfer = ({
                   setStep(2);
                 }
               }}
-              style={getButtonStyle(theme).warningStyleButton}
+              style={getButtonStyle(theme, height).warningStyleButton}
               additionalTextStyle={{...button_link_primary_medium}}
             />
           </View>
@@ -472,7 +474,7 @@ const Transfer = ({
               onPress={onSend}
               style={[
                 styles.operationButton,
-                getButtonStyle(theme).warningStyleButton,
+                getButtonStyle(theme, height).warningStyleButton,
               ]}
               additionalTextStyle={styles.operationButtonText}
               isLoading={loading}
@@ -485,7 +487,7 @@ const Transfer = ({
   }
 };
 
-const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
+const getDimensionedStyles = (color: string, height: number, theme: Theme) =>
   StyleSheet.create({
     warning: {color: 'red'},
     title: {fontSize: 16},
@@ -530,6 +532,7 @@ const getDimensionedStyles = (color: string, width: number, theme: Theme) =>
     operationButton: {
       width: '48%',
       marginHorizontal: 0,
+      height: getButtonHeight(height),
     },
     operationButtonConfirmation: {
       backgroundColor: '#FFF',
