@@ -41,7 +41,7 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
   }, []);
 
   useEffect(() => {
-    if (user && Object.keys(user.account).length > 0) {
+    if (user && user.name && Object.keys(user.account).length > 0) {
       const delegatedVestingShares = parseFloat(
         user.account.delegated_vesting_shares.toString().replace(' VESTS', ''),
       );
@@ -55,7 +55,15 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
       const delegation = toHP(delegationVestingShares, properties.globals);
       setDelegationAmount(delegation.toFixed(3));
     }
-  }, [user.name]);
+  }, [user]);
+
+  const getHPPrefix = (value: string | number) => {
+    if (typeof value === 'string') {
+      return parseFloat(value) > 0 ? '+' : undefined;
+    } else if (typeof value === 'number') {
+      return value > 0 ? '+' : undefined;
+    }
+  };
 
   const styles = getStyles();
   //TODO keep checking with both devices, in here, actions buttons, etc.
@@ -91,6 +99,11 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
             ? (user.account.savings_hbd_balance as string).split(' ')[0]
             : undefined
         }
+        preFixSubValue={
+          parseFloat(user.account.savings_hbd_balance as string) > 0
+            ? '+'
+            : undefined
+        }
         currencyLogo={
           <Icon
             theme={theme}
@@ -110,6 +123,7 @@ const Primary = ({user, prices, properties, theme}: PropsFromRedux & Props) => {
         currencyName={getCurrency('HP')}
         value={toHP(user.account.vesting_shares as string, properties.globals)}
         subValue={delegationAmount as string}
+        preFixSubValue={getHPPrefix(delegationAmount)}
         subValueShortDescription={translate('common.deleg')}
         currencyLogo={
           <IconHP theme={theme} additionalContainerStyle={{marginTop: 8}} />
