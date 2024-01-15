@@ -8,6 +8,7 @@ import CreateAccount from 'screens/hive/CreateAccount';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
 import {SignupStackParamList} from './Signup.types';
@@ -43,6 +44,7 @@ export default () => {
           headerBackTitle: translate('navigation.add_account'),
           headerStyle: {backgroundColor: 'black'},
           headerTintColor: 'white',
+          headerRightContainerStyle: styles.paddingRight,
           title: '',
           headerRight: () => {
             return <MoreInformation type={Info.QR_ACCOUNT} />;
@@ -56,6 +58,5 @@ export default () => {
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
-    marginLeft: {marginLeft: 16},
-    marginRight: {marginRight: 16},
+    paddingRight: {paddingRight: HEADER_ICON_MARGIN},
   });

@@ -57,14 +57,14 @@ const AddAccountByKey = ({
         translate('toast.error_missing_fields'),
         SimpleToast.LONG,
       );
+    const accountName = account.toLowerCase();
     try {
       setLoadingImportAccount(true);
-      const keys = await validateNewAccount(account, key);
+      const keys = await validateNewAccount(accountName.toLowerCase(), key);
 
       if (keys) {
         const wallet = route.params ? route.params.wallet : false;
-        addAccount(account, keys, wallet, false);
-        showModal('common.added_account', MessageModalType.SUCCESS);
+        addAccount(accountName, keys, wallet, false);
       } else {
         showModal('toast.error_add_account', MessageModalType.ERROR);
       }

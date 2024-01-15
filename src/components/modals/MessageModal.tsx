@@ -14,11 +14,12 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
+import {getButtonHeight, getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   button_link_primary_medium,
+  getFontSizeSmallDevices,
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
@@ -36,7 +37,8 @@ const Message = ({
   notHideOnSuccess,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, useWindowDimensions());
+  const {height} = useWindowDimensions();
+  const styles = getStyles(theme, height);
 
   const handleReset = () => {
     resetModal();
@@ -58,11 +60,15 @@ const Message = ({
     : translate(messageModal.key, messageModal.params);
 
   const renderIcon = () => {
+    const iconDimensions = {
+      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 70 : 120,
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 70 : 120,
+    };
     switch (messageModal.type) {
       case MessageModalType.SUCCESS:
-        return <BigCheckSVG style={styles.svgImage} />;
+        return <BigCheckSVG style={styles.svgImage} {...iconDimensions} />;
       case MessageModalType.ERROR:
-        return <ErrorSvg style={styles.svgImage} />;
+        return <ErrorSvg style={styles.svgImage} {...iconDimensions} />;
     }
   };
 
@@ -101,7 +107,7 @@ const connector = connect(mapStateToProps, {
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const getStyles = (theme: Theme, {height}: Dimensions) =>
+const getStyles = (theme: Theme, height: Dimensions['height']) =>
   StyleSheet.create({
     mainContainer: {
       flex: 1,
@@ -132,20 +138,25 @@ const getStyles = (theme: Theme, {height}: Dimensions) =>
     text: {
       ...title_primary_title_1,
       color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...title_primary_title_1}.fontSize,
+      ),
+      paddingVertical: 10,
+      paddingHorizontal: 8,
     },
     button: {
       width: '60%',
       marginHorizontal: 0,
       marginTop: 10,
-      marginBottom: 25,
+      marginBottom: 15,
+      height: getButtonHeight(height),
     },
     buttonText: {
       ...button_link_primary_medium,
     },
     svgImage: {
-      marginTop: 15,
-      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 35 : undefined,
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 35 : undefined,
+      marginHorizontal: 15,
     },
     marginVertical: {
       marginVertical: 10,
