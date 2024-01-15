@@ -49,7 +49,7 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
                       usingFilter="tokens"
                     />
                   ),
-                  fixedHeight: 0.7,
+                  // fixedHeight: 0.7,
                   additionalWrapperFixedStyle: styles.wrapperFixed,
                   modalPosition: undefined,
                   modalContainerStyle: styles.modalContainer,
@@ -95,7 +95,7 @@ const getStyles = (theme: Theme) =>
       right: 10,
     },
     modalContainer: {
-      width: '80%',
+      width: '95%',
       alignSelf: 'flex-end',
       backgroundColor: 'none',
       borderWidth: 0,

@@ -72,7 +72,6 @@ const CustomDropdown = ({
 
   const renderExpandedList = (children: JSX.Element) => {
     if (behaveAs === 'down') {
-      //TODO gtesting bello to add an overlay
       return (
         <Overlay
           isVisible
@@ -166,7 +165,7 @@ const CustomDropdown = ({
           theme={theme}
           additionalContainerStyle={[
             styles.marginLeft,
-            isListExpanded ? styles.rotateIcon : undefined,
+            isListExpanded ? undefined : styles.rotateIcon,
           ]}
           {...dropdownIconScaledSize}
         />

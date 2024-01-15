@@ -232,6 +232,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       borderRadius: 15.1,
       flex: 1,
       justifyContent: 'space-evenly',
+      paddingVertical: 10,
     },
     headerText: {
       marginVertical: 8,
