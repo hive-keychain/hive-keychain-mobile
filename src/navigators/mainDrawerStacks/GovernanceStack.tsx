@@ -6,6 +6,7 @@ import {StyleSheet, useWindowDimensions} from 'react-native';
 import Governance from 'screens/hive/governance/Governance';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {CARD_SMALLEST_PADDING} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
@@ -70,7 +71,7 @@ const getStyles = (theme: Theme, height: number) =>
       ),
     },
     cardStyle: {
-      paddingHorizontal: 15,
+      paddingHorizontal: CARD_SMALLEST_PADDING,
       backgroundColor: getColors(theme).primaryBackground,
     },
   });

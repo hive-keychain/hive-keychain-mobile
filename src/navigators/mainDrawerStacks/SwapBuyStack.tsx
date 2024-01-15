@@ -8,6 +8,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 
@@ -63,10 +64,10 @@ const getStyles = (theme: Theme) =>
       color: getColors(theme).primaryText,
     },
     marginRight: {
-      marginRight: 16,
+      marginRight: HEADER_ICON_MARGIN,
     },
     marginLeft: {
-      marginLeft: 16,
+      marginLeft: HEADER_ICON_MARGIN,
     },
     cardStyle: {
       backgroundColor: getColors(theme).primaryBackground,

@@ -10,6 +10,7 @@ import {StyleSheet, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
+import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
@@ -87,9 +88,9 @@ const getStyles = (theme: Theme, height: number) =>
       ),
     },
     headerRightContainer: {
-      marginRight: 16,
+      marginRight: HEADER_ICON_MARGIN,
     },
     headerLeftContainer: {
-      marginLeft: 16,
+      marginLeft: HEADER_ICON_MARGIN,
     },
   });

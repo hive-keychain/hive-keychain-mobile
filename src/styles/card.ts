@@ -2,6 +2,9 @@ import {StyleProp, ViewStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from './colors';
 
+export const CARD_PADDING_HORIZONTAL = 16;
+export const CARD_SMALLEST_PADDING = 15;
+
 export const getCardStyle = (theme: Theme, borderRadius?: number) => {
   return {
     defaultCardItem: {

@@ -34,6 +34,7 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
@@ -166,9 +167,9 @@ const getStyles = (theme: Theme) =>
       backgroundColor: getColors(theme).primaryBackground,
     },
     headerRightContainer: {
-      marginRight: 10,
+      marginRight: HEADER_ICON_MARGIN,
     },
     headerLeftContainer: {
-      marginLeft: 10,
+      marginLeft: HEADER_ICON_MARGIN,
     },
   });

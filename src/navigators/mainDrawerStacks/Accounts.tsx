@@ -6,6 +6,7 @@ import {StyleSheet, useWindowDimensions} from 'react-native';
 import Accounts from 'screens/hive/accounts/Accounts';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
@@ -52,13 +53,6 @@ export default () => {
           ),
         })}
       />
-      {/* //TODO important all the related screen must be defined below here, same as signupstack */}
-      {/* <Stack.Screen
-        name="AccountManagementScreen"
-        component={AccountManagementStack}
-      />
-      <Stack.Screen name="AddAccountStack" component={AddAccount} />
-      <Stack.Screen name="CreateAccountScreen" component={CreateAccount} /> */}
     </Stack.Navigator>
   );
 };
@@ -79,7 +73,7 @@ const getStyles = (theme: Theme, height: number) =>
       ),
     },
     card: {
-      paddingHorizontal: 16,
+      paddingHorizontal: CARD_PADDING_HORIZONTAL,
       backgroundColor: getColors(theme).primaryBackground,
     },
   });

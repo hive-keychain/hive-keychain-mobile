@@ -14,6 +14,7 @@ import {StyleSheet, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
+import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 
@@ -105,7 +106,7 @@ const getStyles = (theme: Theme) =>
       bottom: undefined,
       right: 0,
       left: undefined,
-      marginRight: 16,
+      marginRight: HEADER_ICON_MARGIN,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -118,9 +119,9 @@ const getStyles = (theme: Theme) =>
       borderRadius: 26,
     },
     marginRight: {
-      marginRight: 16,
+      marginRight: HEADER_ICON_MARGIN,
     },
-    marginLeft: {marginLeft: 16},
+    marginLeft: {marginLeft: HEADER_ICON_MARGIN},
     headerTitle: {
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,

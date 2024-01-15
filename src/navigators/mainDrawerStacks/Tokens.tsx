@@ -6,6 +6,7 @@ import {StyleSheet, useWindowDimensions} from 'react-native';
 import Tokens from 'screens/hive/wallet/Tokens';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
@@ -70,7 +71,7 @@ const getStyles = (theme: Theme, height: number) =>
       ),
     },
     cardStyle: {
-      paddingHorizontal: 16,
+      paddingHorizontal: CARD_PADDING_HORIZONTAL,
       backgroundColor: getColors(theme).primaryBackground,
     },
   });
