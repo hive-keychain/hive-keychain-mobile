@@ -9,11 +9,21 @@ import {
 
 export const BUTTON_MAX_HEIGHT = 50;
 export const BUTTON_MAX_WIDTH = '80%';
+export const BUTTON_MARGIN_BETWEEN = 3;
+export const BUTTON_ICON_SMALL_WIDTH_HEIGHT = 20;
+export const BUTTON_ICON_BIG_WIDTH_HEIGHT = 30;
+export const BUTTON_ICON_TEXT_MARGIN = 8;
 
 export const getButtonHeight = (height: number) => {
   return height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED
     ? BUTTON_MAX_HEIGHT * 0.75
     : BUTTON_MAX_HEIGHT;
+};
+
+export const getButtonIconDimension = (height: number) => {
+  return height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED
+    ? BUTTON_ICON_SMALL_WIDTH_HEIGHT
+    : BUTTON_ICON_BIG_WIDTH_HEIGHT;
 };
 
 export const getButtonStyle = (theme: Theme, height?: number) => {
@@ -44,19 +54,19 @@ export const getButtonStyle = (theme: Theme, height?: number) => {
     getOperationButtonStylesheet: () =>
       StyleSheet.create({
         icon: {
-          width: 20,
-          height: 20,
+          width: BUTTON_ICON_SMALL_WIDTH_HEIGHT,
+          height: BUTTON_ICON_SMALL_WIDTH_HEIGHT,
         },
         roundedIcon: {
           borderWidth: 1,
           borderColor: getColors(theme).cardBorderColorContrast,
           borderRadius: 50,
           padding: 0,
-          marginRight: 3,
+          marginRight: BUTTON_ICON_TEXT_MARGIN,
         },
         biggerIcon: {
-          width: 30,
-          height: 30,
+          width: BUTTON_ICON_BIG_WIDTH_HEIGHT,
+          height: BUTTON_ICON_BIG_WIDTH_HEIGHT,
         },
         marginRight: {marginRight: 4},
         buttonContainer: {

@@ -99,7 +99,7 @@ const getIconFilePath = (
     height,
   };
   if (smallerIconSizeNameList.includes(name)) {
-    dimensionsProps = {width: width * 1.5, height: height * 1.5};
+    dimensionsProps = {width: width * 1.2, height: height * 1.2};
   }
   switch (true) {
     case name === Icons.TRANSFER ||

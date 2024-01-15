@@ -18,6 +18,7 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
 import {formatBalance} from 'utils/format';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -48,7 +49,7 @@ const CurrencyToken = ({
 }: Props & PropsFromRedux) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const styles = getStyles(theme, useWindowDimensions().height);
+  const styles = getStyles(theme, useWindowDimensions());
 
   const onHandleGoToWalletHistory = () => {
     clearWalletFilters();
@@ -102,7 +103,7 @@ const CurrencyToken = ({
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {
       display: 'flex',
@@ -112,8 +113,8 @@ const getStyles = (theme: Theme, height: number) =>
       borderRadius: 20,
       width: '100%',
       backgroundColor: getColors(theme).secondaryCardBgColor,
-      paddingHorizontal: 20,
-      paddingVertical: 10,
+      paddingHorizontal: width * 0.05,
+      paddingVertical: width * 0.03,
     },
     rowContainer: {
       flexDirection: 'row',

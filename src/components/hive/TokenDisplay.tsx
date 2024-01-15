@@ -21,6 +21,10 @@ import {
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
+import {
+  BUTTON_ICON_TEXT_MARGIN,
+  BUTTON_MARGIN_BETWEEN,
+} from 'src/styles/button';
 import {BORDERWHITISH, getColors} from 'src/styles/colors';
 import {
   body_primary_body_2,
@@ -282,8 +286,8 @@ const TokenDisplay = ({
               <Icon
                 theme={theme}
                 name={Icons.TRANSFER}
-                width={10}
-                height={10}
+                width={16}
+                height={16}
               />,
               translate('common.send'),
               onTransfer,
@@ -294,8 +298,8 @@ const TokenDisplay = ({
                 <Icon
                   name={Icons.THREE_D_CUBE}
                   theme={theme}
-                  width={10}
-                  height={10}
+                  width={18}
+                  height={18}
                 />,
                 translate('wallet.operations.token_stake.title'),
                 onGoToStake,
@@ -305,8 +309,7 @@ const TokenDisplay = ({
                 <Icon
                   name={Icons.THREE_D_CUBE_ROTATE}
                   theme={theme}
-                  width={12}
-                  height={12}
+                  {...styles.buttonIcon}
                 />,
                 translate('wallet.operations.token_unstake.title'),
                 onGoToUnstake,
@@ -316,8 +319,7 @@ const TokenDisplay = ({
                 <Icon
                   name={Icons.DELEGATE_VESTING_SHARES}
                   theme={theme}
-                  width={10}
-                  height={10}
+                  {...styles.buttonIcon}
                 />,
                 translate('wallet.operations.token_delegation.title'),
                 onGoToDelegate,
@@ -395,8 +397,7 @@ const getDimensionedStyles = ({
       borderRadius: 30,
       borderWidth: 1,
       borderColor: BORDERWHITISH,
-      padding: 4,
-      marginRight: 3,
+      marginRight: BUTTON_ICON_TEXT_MARGIN,
     },
     squareButton: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
@@ -406,6 +407,7 @@ const getDimensionedStyles = ({
       width: '38%',
       height: 65,
       justifyContent: 'center',
+      margin: BUTTON_MARGIN_BETWEEN,
     },
     expandedItemContainer: {
       marginTop: 10,
@@ -429,6 +431,10 @@ const getDimensionedStyles = ({
     historyButton: {
       width: 40,
       height: 40,
+    },
+    buttonIcon: {
+      width: 20,
+      height: 20,
     },
   });
 
