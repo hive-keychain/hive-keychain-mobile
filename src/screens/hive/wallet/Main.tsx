@@ -201,7 +201,7 @@ const Main = ({
                 onSelected={(selectedAccount) => loadAccount(selectedAccount)}
                 additionalContainerStyle={styles.dropdownContainer}
                 additionalDropdowContainerStyle={styles.dropdownListContainer}
-                dropdownIconScaledSize={{width: 15, height: 15}}
+                dropdownIconScaledSize={{width: 10, height: 10}}
                 copyButtonValue
               />
             </View>

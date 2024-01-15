@@ -72,14 +72,20 @@ const CustomDropdown = ({
 
   const renderExpandedList = (children: JSX.Element) => {
     if (behaveAs === 'down') {
+      //TODO gtesting bello to add an overlay
       return (
-        <View
-          style={[
-            getCardStyle(theme).defaultCardItem,
-            styles.dropdownListContainer,
-          ]}>
-          {children}
-        </View>
+        <Overlay
+          isVisible
+          onBackdropPress={() => setIsListExpanded(!isListExpanded)}
+          overlayStyle={styles.mainOverlay}>
+          <View
+            style={[
+              getCardStyle(theme).defaultCardItem,
+              styles.dropdownListContainer,
+            ]}>
+            {children}
+          </View>
+        </Overlay>
       );
     } else {
       return (
@@ -236,13 +242,21 @@ const getStyles = (theme: Theme, height: number) =>
       alignItems: 'center',
     },
     dropdownListContainer: {
+      width: '100%',
+      height: 'auto',
+    },
+    mainOverlay: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#ff000000',
       width: 250,
-      position: 'absolute',
-      top: 51,
-      zIndex: 10,
-      maxHeight: 200,
-      right: 0,
-      left: undefined,
+      maxHeight: 300,
+      borderWidth: 0,
+      padding: 0,
+      borderRadius: 0,
+      borderColor: '#00000000',
+      elevation: 0,
     },
     rotateIcon: {
       transform: [{rotateX: '180deg'}],
