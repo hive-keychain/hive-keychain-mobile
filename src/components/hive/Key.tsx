@@ -17,10 +17,9 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   button_link_primary_medium,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
@@ -102,7 +101,9 @@ export default ({
                 ? translate('keys.using_authorized_account', {
                     authorizedAccount: publicKey,
                   })
-                : publicKey}
+                : publicKey.substring(0, 15) +
+                  '...' +
+                  publicKey.substring(publicKey.length - 15, publicKey.length)}
             </Text>
           </CopyKey>
           <Separator height={20} />
@@ -114,14 +115,15 @@ export default ({
             <View style={[styles.row, styles.aligned]}>
               <Text
                 style={
-                  isPKShown
-                    ? [styles.key, styles.smallerText, styles.opacity]
-                    : styles.keyHidden
+                  isPKShown ? [styles.key, styles.opacity] : styles.keyHidden
                 }>
                 {isPKShown
-                  ? height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED
-                    ? privateKey.substring(0, 35) + '...'
-                    : privateKey
+                  ? privateKey.substring(0, 15) +
+                    '...' +
+                    privateKey.substring(
+                      privateKey.length - 15,
+                      privateKey.length,
+                    )
                   : hidePrivateKey(privateKey)}
               </Text>
               <ViewKey
@@ -169,7 +171,14 @@ const RemoveKey = ({
   forgetKey: () => void;
   theme: Theme;
 }) => {
-  return <Icon name={Icons.REMOVE} theme={theme} onClick={forgetKey} />;
+  return (
+    <Icon
+      name={Icons.REMOVE}
+      theme={theme}
+      onClick={forgetKey}
+      color={PRIMARY_RED_COLOR}
+    />
+  );
 };
 
 const CopyKey = ({
@@ -200,6 +209,7 @@ const ViewKey = ({toggle, isPKShown, theme}: ViewKeyProps) => {
     <Icon
       name={isPKShown ? Icons.NOT_SEE : Icons.SEE}
       theme={theme}
+      color={PRIMARY_RED_COLOR}
       onClick={toggle}
     />
   );
@@ -245,7 +255,7 @@ const getStyles = (theme: Theme, height: number) =>
     },
     keyHidden: {
       color: getColors(theme).iconBW,
-      fontSize: getFontSizeSmallDevices(height, 25),
+      fontSize: getFontSizeSmallDevices(height, 20),
       letterSpacing: -2,
     },
     addKey: {
