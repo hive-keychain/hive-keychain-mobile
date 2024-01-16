@@ -391,6 +391,9 @@ const TokenHistoryItem = ({
         return Icons.DELEGATE_VESTING_SHARES;
       case 'mining_lottery':
         return Icons.SAVINGS;
+      case 'convert':
+      case 'hivepegged_buy':
+        return Icons.CONVERT;
       default:
         return Icons.NOT_SEE;
     }

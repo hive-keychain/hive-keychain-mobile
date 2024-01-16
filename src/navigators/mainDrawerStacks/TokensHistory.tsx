@@ -49,7 +49,6 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
                       usingFilter="tokens"
                     />
                   ),
-                  // fixedHeight: 0.7,
                   additionalWrapperFixedStyle: styles.wrapperFixed,
                   modalPosition: undefined,
                   modalContainerStyle: styles.modalContainer,

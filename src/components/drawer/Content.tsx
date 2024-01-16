@@ -15,7 +15,7 @@ import {ScrollView, StyleSheet} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, ThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {RootState} from 'store';
 import MenuItem from './drawer-content-item/MenuItem';
 
@@ -57,14 +57,22 @@ const HeaderContent = (props: Props) => {
           labelTranslationKey="navigation.accounts"
           theme={theme}
           onPress={() => navigation.navigate('Accounts')}
-          iconImage={<Icon name={Icons.ACCOUNTS} theme={theme} />}
+          iconImage={
+            <Icon
+              name={Icons.ACCOUNTS}
+              theme={theme}
+              color={PRIMARY_RED_COLOR}
+            />
+          }
           drawBottomLine
         />
         <MenuItem
           labelTranslationKey="navigation.settings"
           theme={theme}
           onPress={() => navigation.navigate('SettingsScreen')}
-          iconImage={<Icon name={Icons.CANDLE} theme={theme} />}
+          iconImage={
+            <Icon name={Icons.CANDLE} theme={theme} color={PRIMARY_RED_COLOR} />
+          }
           drawBottomLine
         />
 
@@ -79,14 +87,22 @@ const HeaderContent = (props: Props) => {
           labelTranslationKey="navigation.governance"
           theme={theme}
           onPress={() => navigation.navigate('Governance')}
-          iconImage={<Icon name={Icons.GOVERNANCE} theme={theme} />}
+          iconImage={
+            <Icon
+              name={Icons.GOVERNANCE}
+              theme={theme}
+              color={PRIMARY_RED_COLOR}
+            />
+          }
           drawBottomLine
         />
         <MenuItem
           labelTranslationKey="navigation.theme_setting"
           theme={theme}
           onPress={() => {}}
-          iconImage={<Icon name={Icons.THEME} theme={theme} />}
+          iconImage={
+            <Icon name={Icons.THEME} theme={theme} color={PRIMARY_RED_COLOR} />
+          }
           leftSideComponent={
             <CustomSwitch
               theme={theme}
@@ -107,11 +123,7 @@ const HeaderContent = (props: Props) => {
           theme={theme}
           onPress={() => navigation.navigate('ABOUT')}
           iconImage={
-            <Icon
-              name={Icons.INFO}
-              theme={theme}
-              color={getColors(theme).icon}
-            />
+            <Icon name={Icons.INFO} theme={theme} color={PRIMARY_RED_COLOR} />
           }
           drawBottomLine
         />
@@ -122,7 +134,9 @@ const HeaderContent = (props: Props) => {
             lock();
             navigation.closeDrawer();
           }}
-          iconImage={<Icon name={Icons.LOGOUT} theme={theme} />}
+          iconImage={
+            <Icon name={Icons.LOGOUT} theme={theme} color={PRIMARY_RED_COLOR} />
+          }
         />
         <DrawerItemList
           state={{
