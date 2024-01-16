@@ -6,7 +6,7 @@ import React from 'react';
 import {StatusBar, StyleSheet, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import Operations from './Operations';
@@ -33,7 +33,9 @@ const SettingsMenu = () => {
             component: <Operations />,
           } as TemplateStackProps)
         }
-        iconImage={<Icon name={Icons.CPU} theme={theme} />}
+        iconImage={
+          <Icon name={Icons.CPU} theme={theme} color={PRIMARY_RED_COLOR} />
+        }
         drawBottomLine={true}
       />
       <MenuItem
@@ -45,7 +47,9 @@ const SettingsMenu = () => {
             component: <RpcNodes />,
           } as TemplateStackProps)
         }
-        iconImage={<Icon name={Icons.RPC} theme={theme} />}
+        iconImage={
+          <Icon name={Icons.RPC} theme={theme} color={PRIMARY_RED_COLOR} />
+        }
         drawBottomLine={true}
       />
     </View>

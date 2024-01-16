@@ -14,11 +14,12 @@ import {CheckBox} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   body_primary_body_2,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 interface Props {
@@ -38,6 +39,7 @@ interface Props {
   onRemoveDropdownItem: (item: string) => void;
   onSelectedDropdown: (item: string) => void;
   titleTranslationKey?: string;
+  dropdownIconScaledSize?: Dimensions;
 }
 
 const AddCustomRPC = ({
@@ -57,6 +59,7 @@ const AddCustomRPC = ({
   onRemoveDropdownItem,
   onSelectedDropdown,
   titleTranslationKey,
+  dropdownIconScaledSize,
 }: Props) => {
   const styles = getStyles(theme, useWindowDimensions().height);
   return (
@@ -73,6 +76,8 @@ const AddCustomRPC = ({
           onRemove={onRemoveDropdownItem}
           additionalContainerStyle={styles.flex85}
           keyExtractor="label"
+          dropdownIconScaledSize={dropdownIconScaledSize}
+          additionalDropdownIconColor={getColors(theme).iconBW}
         />
         <TouchableOpacity
           style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
@@ -86,7 +91,12 @@ const AddCustomRPC = ({
             <Text style={styles.text}>
               {translate('settings.settings.add_rpc_title')}
             </Text>
-            <Icon theme={theme} name={Icons.RAM} onClick={onHandleSave} />
+            <Icon
+              theme={theme}
+              name={Icons.RAM}
+              onClick={onHandleSave}
+              color={PRIMARY_RED_COLOR}
+            />
           </View>
           <Separator
             drawLine
@@ -106,7 +116,7 @@ const AddCustomRPC = ({
             title={checkBoxTitle}
             containerStyle={styles.checkBox}
             textStyle={styles.text}
-            checkedColor={getColors(theme).icon}
+            checkedColor={PRIMARY_RED_COLOR}
           />
         </View>
       )}
@@ -138,6 +148,10 @@ const getStyles = (theme: Theme, height: number) =>
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: 30,
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+      width: 50,
+      height: 50,
     },
     flex85: {width: '80%'},
     input: {

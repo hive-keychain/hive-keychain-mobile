@@ -25,7 +25,7 @@ import {
   DefaultHiveEngineRpcs,
 } from 'src/interfaces/hive-engine-rpc.interface';
 import {getCardStyle} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   body_primary_body_2,
   getFontSizeSmallDevices,
@@ -192,6 +192,8 @@ const RpcNodes = ({
             onSelected={onHandleSetRPC}
             onRemove={(item) => handleOnRemoveCustomRPC(item)}
             additionalContainerStyle={styles.flex85}
+            dropdownIconScaledSize={styles.dropdownIconDimensions}
+            additionalDropdownIconColor={getColors(theme).iconBW}
           />
           <TouchableOpacity
             style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
@@ -211,7 +213,12 @@ const RpcNodes = ({
           <Text style={styles.text}>
             {translate('settings.settings.add_rpc_title')}
           </Text>
-          <Icon theme={theme} name={Icons.RAM} onClick={handleAddCustomRPC} />
+          <Icon
+            theme={theme}
+            name={Icons.RAM}
+            onClick={handleAddCustomRPC}
+            color={PRIMARY_RED_COLOR}
+          />
         </View>
         <Separator
           drawLine
@@ -231,7 +238,7 @@ const RpcNodes = ({
           title={translate('settings.settings.testnet')}
           containerStyle={styles.checkBox}
           textStyle={styles.text}
-          checkedColor={getColors(theme).icon}
+          checkedColor={PRIMARY_RED_COLOR}
         />
         <CheckBox
           checked={customRPCSetActive}
@@ -239,7 +246,7 @@ const RpcNodes = ({
           title={translate('settings.settings.set_as_active')}
           containerStyle={styles.checkBox}
           textStyle={styles.text}
-          checkedColor={getColors(theme).icon}
+          checkedColor={PRIMARY_RED_COLOR}
         />
       </View>
     );
@@ -397,7 +404,7 @@ const RpcNodes = ({
               title={translate('settings.settings.switch_auto')}
               containerStyle={styles.checkBox}
               textStyle={styles.text}
-              checkedColor={getColors(theme).icon}
+              checkedColor={PRIMARY_RED_COLOR}
             />
             <Text
               style={[
@@ -430,6 +437,7 @@ const RpcNodes = ({
               setAddNewRpc={() => setAddNewHERpc(!addNewHERpc)}
               onRemoveDropdownItem={onHandleRemoveCustomHERpc}
               onSelectedDropdown={onHandleSelectHERpc}
+              dropdownIconScaledSize={styles.dropdownIconDimensions}
             />
           )}
           {accountHistoryAPIList.length > 0 && (
@@ -458,6 +466,7 @@ const RpcNodes = ({
               }
               onRemoveDropdownItem={onHandleRemoveAccountHistoryAPI}
               onSelectedDropdown={onHandleSelectAccountHistoryAPI}
+              dropdownIconScaledSize={styles.dropdownIconDimensions}
             />
           )}
         </ScrollView>
@@ -517,11 +526,16 @@ const getStyles = (theme: Theme, height: number) =>
       width: '80%',
       minHeight: 50,
     },
-    flex85: {width: '85%'},
+    flex85: {width: '80%'},
     addButton: {
       minHeight: 50,
       alignItems: 'center',
       borderRadius: 30,
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+      width: 50,
+      height: 50,
+      justifyContent: 'center',
     },
     flexRow: {
       flexDirection: 'row',
@@ -535,6 +549,7 @@ const getStyles = (theme: Theme, height: number) =>
       marginHorizontal: 0,
     },
     button: {marginBottom: 20},
+    dropdownIconDimensions: {width: 15, height: 15},
   });
 
 const mapStateToProps = (state: RootState) => ({

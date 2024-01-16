@@ -49,6 +49,7 @@ interface Props {
   titleTranslationKey?: string;
   copyButtonValue?: boolean;
   showSelectedIcon?: JSX.Element;
+  additionalDropdownIconColor?: string;
 }
 
 const CustomDropdown = ({
@@ -65,6 +66,7 @@ const CustomDropdown = ({
   dropdownIconScaledSize,
   copyButtonValue,
   showSelectedIcon,
+  additionalDropdownIconColor,
 }: Props) => {
   const [isListExpanded, setIsListExpanded] = useState(false);
   const styles = getStyles(theme, useWindowDimensions().height);
@@ -168,6 +170,7 @@ const CustomDropdown = ({
             isListExpanded ? undefined : styles.rotateIcon,
           ]}
           {...dropdownIconScaledSize}
+          color={additionalDropdownIconColor}
         />
       </TouchableOpacity>
       {isListExpanded &&
