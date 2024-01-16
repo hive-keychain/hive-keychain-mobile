@@ -130,6 +130,7 @@ const Governance = ({
             menu={governanceComponents.menuLabels}
             toUpperCase={false}
             components={governanceComponents.components}
+            addShadowItem
           />
         )}
       </>

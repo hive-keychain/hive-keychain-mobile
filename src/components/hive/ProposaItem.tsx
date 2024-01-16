@@ -26,7 +26,7 @@ import {
 import {withCommas} from 'utils/format';
 import {updateProposalVote} from 'utils/hive';
 import {translate} from 'utils/localize';
-import {Proposal} from 'utils/proposals';
+import {FundedOption, Proposal} from 'utils/proposals';
 import Icon from './Icon';
 
 interface ProposalItemProps {
@@ -130,9 +130,10 @@ const ProposalItem = ({
           theme={theme}
           name={Icons.EXPAND_THIN}
           {...styles.expander}
-          additionalContainerStyle={
-            isExpandablePanelOpened ? undefined : styles.rotate
-          }
+          additionalContainerStyle={[
+            styles.marginRight,
+            isExpandablePanelOpened ? undefined : styles.rotate,
+          ]}
         />
       </View>
       <View style={styles.secondLine}>
@@ -173,6 +174,7 @@ const ProposalItem = ({
                 name={Icons.ARROW_UP}
                 additionalContainerStyle={styles.detailIcon}
                 {...styles.iconBigger}
+                color={getColors(theme).iconBW}
               />
               <Text style={[styles.username, styles.detailText]}>
                 {proposal.totalVotes}
@@ -184,6 +186,7 @@ const ProposalItem = ({
                 name={Icons.CLOCK}
                 additionalContainerStyle={styles.detailIcon}
                 {...styles.icon}
+                color={getColors(theme).iconBW}
               />
               <Text style={[styles.username, styles.detailText]}>
                 {translate('governance.proposal.remaining', {
@@ -202,6 +205,7 @@ const ProposalItem = ({
                 name={Icons.MONEY}
                 additionalContainerStyle={styles.detailIcon}
                 {...styles.icon}
+                color={getColors(theme).iconBW}
               />
               <Text style={[styles.username, styles.detailText]}>
                 {withCommas(proposal.dailyPay)}/
@@ -209,8 +213,20 @@ const ProposalItem = ({
               </Text>
             </View>
           </View>
-          <View style={styles.status}>
-            <Text style={styles.textTitle}>
+          <View
+            style={[
+              styles.status,
+              proposal.funded === FundedOption.TOTALLY_FUNDED
+                ? styles.funded
+                : undefined,
+            ]}>
+            <Text
+              style={[
+                styles.textTitle,
+                proposal.funded === FundedOption.TOTALLY_FUNDED
+                  ? styles.whiteText
+                  : undefined,
+              ]}>
               {translate(`governance.proposal.${proposal.funded}`)}
             </Text>
           </View>
@@ -229,6 +245,7 @@ const getStyles = (theme: Theme, height: number) =>
       width: '100%',
       justifyContent: 'space-between',
     },
+    whiteText: {color: 'white'},
     title: {
       width: '90%',
     },
@@ -288,6 +305,10 @@ const getStyles = (theme: Theme, height: number) =>
     iconBigger: {
       width: 22,
       height: 22,
+    },
+    marginRight: {marginRight: 5},
+    funded: {
+      backgroundColor: PRIMARY_RED_COLOR,
     },
   });
 

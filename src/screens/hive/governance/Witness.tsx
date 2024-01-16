@@ -23,7 +23,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   getFontSizeSmallDevices,
@@ -205,7 +205,9 @@ const Witness = ({
           {!votingUnvoting && (
             <Vote
               fill={
-                votedWitnesses.includes(witness.name) ? 'black' : 'lightgrey'
+                votedWitnesses.includes(witness.name)
+                  ? PRIMARY_RED_COLOR
+                  : 'lightgrey'
               }
               onPress={() => handleVotedButtonClick(witness)}
             />
