@@ -56,12 +56,9 @@ export const getButtonStyle = (theme: Theme, height?: number) => {
         icon: {
           width: BUTTON_ICON_SMALL_WIDTH_HEIGHT,
           height: BUTTON_ICON_SMALL_WIDTH_HEIGHT,
+          color: PRIMARY_RED_COLOR,
         },
-        roundedIcon: {
-          borderWidth: 1,
-          borderColor: getColors(theme).cardBorderColorContrast,
-          borderRadius: 50,
-          padding: 0,
+        buttonMarginRight: {
           marginRight: BUTTON_ICON_TEXT_MARGIN,
         },
         biggerIcon: {
@@ -77,7 +74,10 @@ export const getButtonStyle = (theme: Theme, height?: number) => {
           justifyContent: 'center',
           alignItems: 'center',
         },
-        buttonText: {fontSize: getFontSizeSmallDevices(height, 14)},
+        buttonText: {
+          fontSize: getFontSizeSmallDevices(height, 14),
+          marginBottom: 4,
+        },
       }),
   };
 };

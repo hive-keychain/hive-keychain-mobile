@@ -131,6 +131,7 @@ const CustomDropdown = ({
             height={16}
             additionalContainerStyle={{marginRight: 4}}
             strokeWidth={2}
+            color={PRIMARY_RED_COLOR}
           />
         )}
         <View style={{width: 20}}>

@@ -3,6 +3,7 @@ import React from 'react';
 import {StyleProp, ViewStyle} from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {Dimensions} from 'utils/common.types';
 import CustomDropdown, {DropdownItem} from './CustomDropdown';
 
@@ -46,6 +47,7 @@ const UserDropdown = ({
           width={15}
           height={15}
           strokeWidth={2}
+          color={PRIMARY_RED_COLOR}
         />
       }
     />

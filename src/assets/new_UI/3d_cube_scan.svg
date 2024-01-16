@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" fill="none" viewBox="0 0 13 12">
-  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width=".5" d="M1.667 4.5v-1c0-1.5 1-2.5 2.5-2.5h5c1.5 0 2.5 1 2.5 2.5v1m-10 3v1c0 1.5 1 2.5 2.5 2.5h5c1.5 0 2.5-1 2.5-2.5v-1"/>
-  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5" d="m4.017 4.63 2.65 1.535 2.63-1.525m-2.63 4.245V6.16"/>
-  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width=".5" d="m6.047 3.145-1.6.89c-.36.2-.66.705-.66 1.12V6.85c0 .415.295.92.66 1.12l1.6.89c.34.19.9.19 1.245 0l1.6-.89c.36-.2.66-.705.66-1.12V5.155c0-.415-.295-.92-.66-1.12l-1.6-.89c-.345-.195-.905-.195-1.245 0Z"/>
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1" d="M1.667 4.5v-1c0-1.5 1-2.5 2.5-2.5h5c1.5 0 2.5 1 2.5 2.5v1m-10 3v1c0 1.5 1 2.5 2.5 2.5h5c1.5 0 2.5-1 2.5-2.5v-1"/>
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="m4.017 4.63 2.65 1.535 2.63-1.525m-2.63 4.245V6.16"/>
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="m6.047 3.145-1.6.89c-.36.2-.66.705-.66 1.12V6.85c0 .415.295.92.66 1.12l1.6.89c.34.19.9.19 1.245 0l1.6-.89c.36-.2.66-.705.66-1.12V5.155c0-.415-.295-.92-.66-1.12l-1.6-.89c-.345-.195-.905-.195-1.245 0Z"/>
 </svg>

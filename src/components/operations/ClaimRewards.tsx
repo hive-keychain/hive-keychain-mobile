@@ -7,7 +7,7 @@ import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {getColors} from 'src/styles/colors';
+import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {RootState} from 'store';
 import {toHP} from 'utils/format';
 import {claimRewards} from 'utils/hive';
@@ -75,7 +75,7 @@ const ClaimRewards = ({
             );
           }
         }}>
-        <Icon theme={theme} name={Icons.INTEREST} />
+        <Icon theme={theme} name={Icons.INTEREST} color={PRIMARY_RED_COLOR} />
       </TouchableOpacity>
     );
   else return null;
@@ -102,7 +102,7 @@ const getStyles = (theme: Theme) =>
       height: 33,
       borderWidth: 1,
       borderColor: getColors(theme).cardBorderColorContrast,
-      backgroundColor: getColors(theme).secondaryCardBgColor,
+      backgroundColor: 'white',
     },
   });
 

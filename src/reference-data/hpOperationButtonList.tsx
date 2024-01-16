@@ -1,8 +1,5 @@
 import HPIconLight from 'assets/new_UI/hp-icon-light.svg';
-import HPIconDark from 'assets/new_UI/hp_icon_dark.svg';
-import PowerDownDark from 'assets/new_UI/power-down-dark.svg';
 import PowerDownLight from 'assets/new_UI/power-down-light.svg';
-import RPDelegationDark from 'assets/new_UI/rc-delegation-dark.svg';
 import RCDelegationLight from 'assets/new_UI/rc-delegation-light.svg';
 import {DelegationOperationProps} from 'components/operations/Delegation';
 import {PowerDownOperationProps} from 'components/operations/PowerDown';
@@ -40,7 +37,7 @@ export const getHPButtonList = (theme: Theme, delegatee: string) => {
         <CustomIconButton
           theme={theme}
           lightThemeIcon={<HPIconLight {...styles.icon} />}
-          darkThemeIcon={<HPIconDark {...styles.icon} />}
+          darkThemeIcon={<HPIconLight {...styles.icon} />}
           onPress={() => {}}
           additionalContainerStyle={styles.marginRight}
         />
@@ -61,7 +58,7 @@ export const getHPButtonList = (theme: Theme, delegatee: string) => {
         <CustomIconButton
           theme={theme}
           lightThemeIcon={<RCDelegationLight {...styles.icon} />}
-          darkThemeIcon={<RPDelegationDark {...styles.icon} />}
+          darkThemeIcon={<RCDelegationLight {...styles.icon} />}
           onPress={() => {}}
           additionalContainerStyle={styles.marginRight}
         />
@@ -82,7 +79,7 @@ export const getHPButtonList = (theme: Theme, delegatee: string) => {
         <CustomIconButton
           theme={theme}
           lightThemeIcon={<PowerDownLight {...styles.icon} />}
-          darkThemeIcon={<PowerDownDark {...styles.icon} />}
+          darkThemeIcon={<PowerDownLight {...styles.icon} />}
           onPress={() => {}}
           additionalContainerStyle={styles.marginRight}
         />

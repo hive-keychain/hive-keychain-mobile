@@ -1,7 +1,6 @@
 import {Currency, Token} from 'actions/interfaces';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
 import IncomingOutGoingTokenDelegations from 'components/operations/IncomingOutGoingTokenDelegations';
-import RoundButton from 'components/operations/OperationsButtons';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
 import {TransferOperationProps} from 'components/operations/Transfer';
 import {UnstakeTokenOperationProps} from 'components/operations/UnstakeToken';
@@ -25,7 +24,7 @@ import {
   BUTTON_ICON_TEXT_MARGIN,
   BUTTON_MARGIN_BETWEEN,
 } from 'src/styles/button';
-import {BORDERWHITISH, getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   body_primary_body_2,
   button_link_primary_medium,
@@ -88,18 +87,15 @@ const TokenDisplay = ({
     label: string,
     onPress: () => void,
   ) => (
-    <RoundButton
-      size={22}
+    <TouchableOpacity
+      activeOpacity={1}
       onPress={onPress}
-      backgroundColor="black"
-      content={
-        <View style={styles.innerButtonContainer}>
-          <View style={styles.iconButtonContainer}>{icon}</View>
-          <Text style={styles.textButton}>{label}</Text>
-        </View>
-      }
-      additionalButtonStyle={[styles.squareButton, additionalButtonStyle]}
-    />
+      style={[styles.squareButton, additionalButtonStyle]}>
+      <View style={[styles.innerButtonContainer]}>
+        {icon}
+        <Text style={[styles.textButton]}>{label}</Text>
+      </View>
+    </TouchableOpacity>
   );
 
   const onTransfer = () => {
@@ -209,6 +205,7 @@ const TokenDisplay = ({
                 styles.historyButton,
               ]}
               theme={theme}
+              color={PRIMARY_RED_COLOR}
             />
           )}
         </View>
@@ -247,6 +244,7 @@ const TokenDisplay = ({
                   styles.invertXAxis,
                 ]}
                 onClick={onGoToIncoming}
+                color={PRIMARY_RED_COLOR}
               />
             </View>
           )}
@@ -263,6 +261,7 @@ const TokenDisplay = ({
                 height={15}
                 additionalContainerStyle={styles.containerMarginLeft}
                 onClick={onGoToOutgoing}
+                color={PRIMARY_RED_COLOR}
               />
             </View>
           )}
@@ -286,8 +285,9 @@ const TokenDisplay = ({
               <Icon
                 theme={theme}
                 name={Icons.TRANSFER}
-                width={16}
-                height={16}
+                {...styles.buttonIcon}
+                additionalContainerStyle={styles.marginRight}
+                color={PRIMARY_RED_COLOR}
               />,
               translate('common.send'),
               onTransfer,
@@ -298,8 +298,9 @@ const TokenDisplay = ({
                 <Icon
                   name={Icons.THREE_D_CUBE}
                   theme={theme}
-                  width={18}
-                  height={18}
+                  {...styles.buttonIcon}
+                  additionalContainerStyle={styles.marginRight}
+                  color={PRIMARY_RED_COLOR}
                 />,
                 translate('wallet.operations.token_stake.title'),
                 onGoToStake,
@@ -309,7 +310,10 @@ const TokenDisplay = ({
                 <Icon
                   name={Icons.THREE_D_CUBE_ROTATE}
                   theme={theme}
-                  {...styles.buttonIcon}
+                  width={28}
+                  height={28}
+                  additionalContainerStyle={styles.marginRight}
+                  color={PRIMARY_RED_COLOR}
                 />,
                 translate('wallet.operations.token_unstake.title'),
                 onGoToUnstake,
@@ -320,6 +324,8 @@ const TokenDisplay = ({
                   name={Icons.DELEGATE_VESTING_SHARES}
                   theme={theme}
                   {...styles.buttonIcon}
+                  additionalContainerStyle={styles.marginRight}
+                  color={PRIMARY_RED_COLOR}
                 />,
                 translate('wallet.operations.token_delegation.title'),
                 onGoToDelegate,
@@ -390,14 +396,10 @@ const getDimensionedStyles = ({
       marginTop: 14,
       marginBottom: 9,
     },
-    innerButtonContainer: {flexDirection: 'row', alignItems: 'center'},
-    iconButtonContainer: {
+    innerButtonContainer: {
+      flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: 30,
-      borderWidth: 1,
-      borderColor: BORDERWHITISH,
-      marginRight: BUTTON_ICON_TEXT_MARGIN,
     },
     squareButton: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
@@ -423,18 +425,21 @@ const getDimensionedStyles = ({
       ...title_secondary_body_3,
       color: getColors(theme).primaryText,
       fontSize: getFontSizeSmallDevices(height, 14),
-      letterSpacing: -0.4,
+      marginBottom: 4,
     },
     invertXAxis: {
       transform: [{rotateY: '180deg'}],
     },
     historyButton: {
-      width: 40,
-      height: 40,
+      width: 38,
+      height: 38,
     },
     buttonIcon: {
       width: 20,
       height: 20,
+    },
+    marginRight: {
+      marginRight: BUTTON_ICON_TEXT_MARGIN,
     },
   });
 

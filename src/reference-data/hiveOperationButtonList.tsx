@@ -1,5 +1,4 @@
 import {ActiveAccount} from 'actions/interfaces';
-import CurrencySavingDark from 'assets/new_UI/currency-saving-dark.svg';
 import CurrencySavingLight from 'assets/new_UI/currency-saving-light.svg';
 import Icon from 'components/hive/Icon';
 import {ConvertOperationProps} from 'components/operations/Convert';
@@ -16,6 +15,7 @@ import {useWindowDimensions} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -45,7 +45,7 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
         <Icon
           theme={theme}
           name={Icons.TRANSFER}
-          additionalContainerStyle={styles.roundedIcon}
+          additionalContainerStyle={styles.buttonMarginRight}
           {...styles.icon}
         />
       }
@@ -67,8 +67,9 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
         <Icon
           theme={theme}
           name={Icons.POWER_UP}
-          additionalContainerStyle={styles.roundedIcon}
+          additionalContainerStyle={styles.buttonMarginRight}
           {...styles.biggerIcon}
+          color={PRIMARY_RED_COLOR}
         />
       }
       primaryLabel={translate('wallet.operations.powerup.title')}
@@ -90,9 +91,9 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
         <CustomIconButton
           theme={theme}
           lightThemeIcon={<CurrencySavingLight {...styles.biggerIcon} />}
-          darkThemeIcon={<CurrencySavingDark {...styles.biggerIcon} />}
+          darkThemeIcon={<CurrencySavingLight {...styles.biggerIcon} />}
           onPress={() => {}}
-          additionalContainerStyle={styles.roundedIcon}
+          additionalContainerStyle={styles.buttonMarginRight}
         />
       }
       primaryLabel={'HIVE'}
@@ -114,8 +115,10 @@ export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
         <Icon
           theme={theme}
           name={Icons.CONVERT}
-          additionalContainerStyle={styles.roundedIcon}
-          {...styles.icon}
+          additionalContainerStyle={styles.buttonMarginRight}
+          width={25}
+          height={25}
+          color={PRIMARY_RED_COLOR}
         />
       }
       primaryLabel={translate('wallet.operations.convert.button')}

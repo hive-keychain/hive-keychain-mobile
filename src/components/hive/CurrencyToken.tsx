@@ -11,7 +11,7 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   body_primary_body_2,
   button_link_primary_medium,
@@ -89,6 +89,7 @@ const CurrencyToken = ({
               onClick={onHandleGoToWalletHistory}
               additionalContainerStyle={styles.squareButton}
               theme={theme}
+              color={PRIMARY_RED_COLOR}
             />
           )}
         </View>
