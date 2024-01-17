@@ -22,7 +22,11 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonHeight, getButtonStyle} from 'src/styles/button';
-import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
+import {
+  BACKGROUNDDARKBLUE,
+  PRIMARY_RED_COLOR,
+  getColors,
+} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {
   FontPoppinsName,
@@ -177,7 +181,7 @@ const Transfer = ({
           <>
             <Separator height={35} />
             <OperationInput
-              labelInput={translate('common.username')}
+              labelInput={translate('common.to')}
               placeholder={translate('common.username')}
               leftIcon={<Icon name={Icons.AT} theme={theme} />}
               autoCapitalize="none"
@@ -228,7 +232,7 @@ const Transfer = ({
                     />
                     <TouchableOpacity
                       onPress={() => setAmount(tokenBalance.split(' ')[0])}>
-                      <Text style={styles.text}>
+                      <Text style={[styles.text, styles.redText]}>
                         {translate('common.max').toUpperCase()}
                       </Text>
                     </TouchableOpacity>
@@ -258,12 +262,14 @@ const Transfer = ({
                     name={isMemoEncrypted ? Icons.ENCRYPT : Icons.DECRYPT}
                     theme={theme}
                     onClick={() => setIsMemoEncrypted(!isMemoEncrypted)}
+                    color={PRIMARY_RED_COLOR}
                   />
                 </View>
               }
             />
             <Separator />
             <OptionsToggle
+              type={'checkbox'}
               theme={theme}
               title={translate('common.recurrent_transfer')}
               toggled={isRecurrent}
@@ -563,7 +569,9 @@ const getDimensionedStyles = (color: string, height: number, theme: Theme) =>
     infoLabel: {
       fontSize: 11,
       fontFamily: FontPoppinsName.ITALIC,
+      color: getColors(theme).labelInfoText,
     },
+    redText: {color: PRIMARY_RED_COLOR},
   });
 
 const connector = connect(

@@ -181,9 +181,9 @@
         "executions": "Number of executions",
         "recurrence": "Recurrence Period",
         "frequency": "Frequency",
-        "frequency_minimum": "Frequency(in hours). Minimum 24 hours",
+        "frequency_minimum": "Minimum 24 hours",
         "iterations": "Iterations",
-        "iterations_minimum": "Iterations. Minimum 2",
+        "iterations_minimum": "Minimum 2",
         "sent": "Sent",
         "received": "Received",
         "confirm": {

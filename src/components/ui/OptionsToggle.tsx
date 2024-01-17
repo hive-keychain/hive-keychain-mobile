@@ -1,8 +1,9 @@
 import {RadioButton} from 'components/form/CustomRadioGroup';
 import React from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {CheckBox} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   body_primary_body_1,
@@ -10,6 +11,7 @@ import {
 } from 'src/styles/typography';
 
 type Props = {
+  type: 'checkbox' | 'option';
   children: JSX.Element[];
   title: string;
   callback: (toggled: boolean) => void;
@@ -17,21 +19,40 @@ type Props = {
   theme: Theme;
 };
 
-const OptionsToggle = ({children, title, toggled, callback, theme}: Props) => {
+const OptionsToggle = ({
+  children,
+  title,
+  toggled,
+  callback,
+  theme,
+  type,
+}: Props) => {
   const styles = getStyles(theme, useWindowDimensions().height);
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <RadioButton
-          onSelect={() => {
-            callback(!toggled);
-          }}
-          selected={toggled}
-          style={styles.toggleButton}
-          radioStyle={styles.radioStyle}
-          additionalRadioStyleActive={styles.radioButtonActive}
-        />
+        {type === 'option' ? (
+          <RadioButton
+            onSelect={() => {
+              callback(!toggled);
+            }}
+            selected={toggled}
+            style={styles.toggleButton}
+            radioStyle={styles.radioStyle}
+            additionalRadioStyleActive={styles.radioButtonActive}
+          />
+        ) : (
+          <CheckBox
+            checked={toggled}
+            onPress={() => {
+              callback(!toggled);
+            }}
+            containerStyle={[styles.checkbox]}
+            checkedColor={PRIMARY_RED_COLOR}
+            size={22}
+          />
+        )}
         <Text style={styles.title}>{title}</Text>
       </View>
       <View style={toggled ? styles.toggled : styles.untoggled}>
@@ -75,6 +96,13 @@ const getStyles = (theme: Theme, height: number) =>
     radioStyle: {
       width: 22,
       marginRight: 10,
+    },
+    checkbox: {
+      backgroundColor: 'rgba(0,0,0,0)',
+      borderColor: getColors(theme).senaryCardBorderColor,
+      borderRadius: 20,
+      padding: 0,
+      margin: 0,
     },
   });
 

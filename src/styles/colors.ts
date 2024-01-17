@@ -92,5 +92,6 @@ export const getColors = (theme: Theme) => {
       theme === Theme.DARK
         ? ('light-content' as StatusBarStyle)
         : ('dark-content' as StatusBarStyle),
+    labelInfoText: theme === Theme.LIGHT ? '#B6B6B6' : '#FFF',
   };
 };
