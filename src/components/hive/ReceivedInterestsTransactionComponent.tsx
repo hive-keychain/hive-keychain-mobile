@@ -5,6 +5,7 @@ import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {ReceivedInterests} from 'src/interfaces/transaction.interface';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
@@ -46,6 +47,7 @@ const ReceivedInterestTransactionComponent = ({
             name={Icons.SAVINGS}
             theme={theme}
             bgImage={<BackgroundIconRed />}
+            color={PRIMARY_RED_COLOR}
           />
         ) : null
       }

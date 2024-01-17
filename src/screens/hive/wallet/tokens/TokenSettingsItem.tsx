@@ -6,7 +6,7 @@ import {CheckBox} from 'react-native-elements';
 import Image from 'react-native-fast-image';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   fields_primary_text_1,
   getFontSizeSmallDevices,
@@ -82,7 +82,7 @@ const TokenSettingsItem = ({
           checked={checkedValue}
           onPress={setChecked}
           containerStyle={[styles.checkbox]}
-          checkedColor={getColors(theme).icon}
+          checkedColor={PRIMARY_RED_COLOR}
           size={22}
         />
       </View>
@@ -160,7 +160,7 @@ const getStyles = (
     },
     iconContainerBaseWithBg: {
       backgroundColor: addBackground
-        ? getBackgroundColorFromBackend(symbol)
+        ? getBackgroundColorFromBackend(symbol, theme)
         : undefined,
     },
     row: {

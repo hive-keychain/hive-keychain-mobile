@@ -5,6 +5,7 @@ import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {CreateAccount} from 'src/interfaces/transaction.interface';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
@@ -47,6 +48,7 @@ const CreateAccountTransactionComponent = ({
             name={Icons.ACCOUNT_CREATE}
             theme={theme}
             bgImage={<BackgroundIconRed />}
+            color={PRIMARY_RED_COLOR}
           />
         ) : null
       }

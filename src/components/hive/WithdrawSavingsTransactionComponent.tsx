@@ -5,6 +5,7 @@ import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {StartWithdrawSavings} from 'src/interfaces/transaction.interface';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
@@ -48,6 +49,7 @@ const WithdrawSavingsTransactionComponent = ({
             name={Icons.SAVINGS}
             theme={theme}
             bgImage={<BackgroundIconRed />}
+            color={PRIMARY_RED_COLOR}
           />
         ) : null
       }

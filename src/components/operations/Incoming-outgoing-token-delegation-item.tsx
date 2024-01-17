@@ -11,12 +11,13 @@ import {
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getSeparatorLineStyle} from 'src/styles/line';
 import {
   title_primary_body_2,
   title_secondary_body_3,
 } from 'src/styles/typography';
+import {withCommas} from 'utils/format';
 import {TokenDelegation} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -101,7 +102,8 @@ const IncomingOutGoingTokenDelegationItem = ({
             {!editMode ? (
               <View style={styles.flexRow}>
                 <Text style={styles.textItem}>
-                  {tokenDelegation.quantity} {tokenDelegation.symbol}
+                  {withCommas(tokenDelegation.quantity)}{' '}
+                  {tokenDelegation.symbol}
                 </Text>
                 <Icon
                   name={Icons.EXPAND_THIN}
@@ -112,6 +114,7 @@ const IncomingOutGoingTokenDelegationItem = ({
                     isExpanded ? styles.iconXAxisInverted : null,
                   ]}
                   {...styles.smallIcon}
+                  color={PRIMARY_RED_COLOR}
                 />
               </View>
             ) : (
@@ -127,12 +130,14 @@ const IncomingOutGoingTokenDelegationItem = ({
                     name={Icons.CHECK}
                     theme={theme}
                     onClick={() => handleUpdateDelegateToken()}
+                    color={PRIMARY_RED_COLOR}
                   />
                   <Icon
                     name={Icons.CLOSE_CIRCLE}
                     theme={theme}
                     additionalContainerStyle={styles.marginLeft}
                     onClick={() => setEditMode(false)}
+                    color={PRIMARY_RED_COLOR}
                   />
                 </View>
               </View>
@@ -151,8 +156,8 @@ const IncomingOutGoingTokenDelegationItem = ({
                   <Icon
                     name={Icons.EDIT}
                     theme={theme}
-                    additionalContainerStyle={styles.roundButton}
                     {...styles.icon}
+                    color={PRIMARY_RED_COLOR}
                   />
                   <Text style={styles.buttonText}>
                     {translate('common.edit')}
@@ -165,8 +170,8 @@ const IncomingOutGoingTokenDelegationItem = ({
                   <Icon
                     name={Icons.GIFT_DELETE}
                     theme={theme}
-                    additionalContainerStyle={styles.roundButton}
                     {...styles.icon}
+                    color={PRIMARY_RED_COLOR}
                   />
                   <Text style={styles.buttonText}>
                     {translate('common.delete')}

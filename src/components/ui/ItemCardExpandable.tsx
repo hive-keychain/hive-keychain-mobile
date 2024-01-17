@@ -11,7 +11,7 @@ import {
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
 import {fields_primary_text_1} from 'src/styles/typography';
 
@@ -63,6 +63,7 @@ const ItemCardExpandable = ({
                     styles.expandIconcontainer,
                   ]}
                   {...styles.expandIcon}
+                  color={PRIMARY_RED_COLOR}
                 />
               ) : null}
             </View>

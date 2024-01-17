@@ -31,7 +31,7 @@ import {
   UnStakeTokenDoneTransaction,
   UnStakeTokenStartTransaction,
 } from 'src/interfaces/tokens.interface';
-import {getColors} from 'src/styles/colors';
+import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
@@ -417,6 +417,7 @@ const TokenHistoryItem = ({
                   theme={theme}
                   additionalContainerStyle={styles.iconContainer}
                   bgImage={<BackgroundIconRed />}
+                  color={PRIMARY_RED_COLOR}
                 />
               )}
               <View style={styles.width140}>{label}</View>

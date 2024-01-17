@@ -72,8 +72,7 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
           additionalContainerStyle={styles.buttonMarginRight}
         />
       }
-      primaryLabel={'HIVE'}
-      secondaryLabel={translate('common.savings')}
+      primaryLabel={translate('common.savings')}
     />,
     <SquareButton
       additionalButtonContainerStyle={styles.buttonContainer}

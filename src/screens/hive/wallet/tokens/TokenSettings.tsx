@@ -18,7 +18,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
@@ -104,9 +104,14 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
           {translate('wallet.operations.token_settings.tokens_settings_text')}{' '}
         </Text>
         <Text style={[styles.textBase, styles.textWarning]}>
-          {hiveEngineWebsiteURL}
+          {hiveEngineWebsiteURL}{' '}
         </Text>
-        <Icon name={Icons.EXTERNAL_LINK} theme={theme} {...styles.iconLink} />
+        <Icon
+          name={Icons.EXTERNAL_LINK}
+          theme={theme}
+          {...styles.iconLink}
+          color={PRIMARY_RED_COLOR}
+        />
       </Text>
       <Separator height={10} />
       <CustomSearchBar
@@ -193,11 +198,11 @@ const getStyles = (theme: Theme, height: number) =>
       backgroundColor: getColors(theme).primaryBackground,
     },
     iconLink: {
-      width: 15,
-      height: 15,
+      width: 12,
+      height: 12,
     },
     textWarning: {
-      color: getColors(theme).icon,
+      color: PRIMARY_RED_COLOR,
     },
     searchBar: {
       width: '100%',

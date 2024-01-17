@@ -5,6 +5,7 @@ import React, {useState} from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {ClaimAccount} from 'src/interfaces/transaction.interface';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
@@ -45,6 +46,7 @@ const ClaimAccountTransactionComponent = ({
             name={Icons.ACCOUNTS}
             theme={theme}
             bgImage={<BackgroundIconRed />}
+            color={PRIMARY_RED_COLOR}
           />
         ) : null
       }
