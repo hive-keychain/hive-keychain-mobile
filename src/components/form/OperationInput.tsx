@@ -31,6 +31,7 @@ interface OperationInputProps {
   additionalInputContainerStyle?: StyleProp<ViewStyle>;
   additionalBottomLabelContainerStyle?: StyleProp<ViewStyle>;
   additionalBottomLabelTextStyle?: StyleProp<TextStyle>;
+  additionalLabelExtraInfoTextStyle?: StyleProp<TextStyle>;
   removeLabelInputIndent?: boolean;
 }
 
@@ -71,6 +72,7 @@ export default (props: InputProps & OperationInputProps) => {
               styles.labelStyle,
               styles.smallerLabelSize,
               props.additionalLabelStyle,
+              props.additionalLabelExtraInfoTextStyle,
             ]}>
             {props.labelExtraInfo}
           </Text>

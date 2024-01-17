@@ -25,6 +25,7 @@ import {getButtonHeight, getButtonStyle} from 'src/styles/button';
 import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {
+  FontPoppinsName,
   button_link_primary_medium,
   title_primary_body_2,
 } from 'src/styles/typography';
@@ -271,16 +272,17 @@ const Transfer = ({
               }}>
               <Separator />
               <OperationInput
-                labelInput={translate('wallet.operations.transfer.frecuency')}
+                labelInput={translate('wallet.operations.transfer.frequency')}
                 labelExtraInfo={translate(
-                  'wallet.operations.transfer.frecuency_minimum',
+                  'wallet.operations.transfer.frequency_minimum',
                 )}
-                placeholder={translate('wallet.operations.transfer.frecuency')}
+                placeholder={translate('wallet.operations.transfer.frequency')}
                 value={recurrence}
                 onChangeText={setRecurrence}
                 keyboardType={'number-pad'}
                 inputStyle={styles.text}
                 additionalLabelStyle={styles.text}
+                additionalLabelExtraInfoTextStyle={styles.infoLabel}
               />
               <Separator />
               <OperationInput
@@ -294,6 +296,7 @@ const Transfer = ({
                 keyboardType={'number-pad'}
                 inputStyle={styles.text}
                 additionalLabelStyle={styles.text}
+                additionalLabelExtraInfoTextStyle={styles.infoLabel}
               />
             </OptionsToggle>
             <Separator />
@@ -556,6 +559,10 @@ const getDimensionedStyles = (color: string, height: number, theme: Theme) =>
     },
     paddingHorizontal: {
       paddingHorizontal: 18,
+    },
+    infoLabel: {
+      fontSize: 11,
+      fontFamily: FontPoppinsName.ITALIC,
     },
   });
 
