@@ -11,11 +11,13 @@ import {
 } from 'react-native';
 import {Input, InputProps} from 'react-native-elements';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {AutoCompleteValuesType} from 'src/interfaces/autocomplete.interface';
 import {getColors} from 'src/styles/colors';
 import {getInputHeight} from 'src/styles/input';
 import {fields_primary_text_2} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
+import AutoCompleteBox from './AutoCompleteBox';
 
 type Props = InputProps & {
   textAlign?: string;
@@ -24,6 +26,7 @@ type Props = InputProps & {
   backgroundColor?: string;
   inputColor?: string;
   makeExpandable?: boolean;
+  autoCompleteValues?: AutoCompleteValuesType;
 };
 
 export default ({
@@ -33,9 +36,11 @@ export default ({
   containerStyle,
   additionalInputContainerStyle,
   makeExpandable,
+  autoCompleteValues,
   ...props
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({
@@ -46,19 +51,36 @@ export default ({
     textAlign,
   });
 
+  const handleOnBlur = () => {
+    setTimeout(() => {
+      setIsFocused(false);
+    }, 200);
+  };
+
   const renderInput = () => (
-    <Input
-      placeholderTextColor="#B9C9D6"
-      containerStyle={[styles.container, containerStyle]}
-      inputStyle={styles.input}
-      leftIconContainerStyle={styles.leftIcon}
-      rightIconContainerStyle={styles.rightIcon}
-      inputContainerStyle={[
-        styles.inputContainer,
-        additionalInputContainerStyle,
-      ]}
-      {...props}
-    />
+    <View>
+      <Input
+        onFocus={() => setIsFocused(true)}
+        onBlur={handleOnBlur}
+        placeholderTextColor="#B9C9D6"
+        containerStyle={[styles.container, containerStyle]}
+        inputStyle={styles.input}
+        leftIconContainerStyle={styles.leftIcon}
+        rightIconContainerStyle={styles.rightIcon}
+        inputContainerStyle={[
+          styles.inputContainer,
+          additionalInputContainerStyle,
+        ]}
+        {...props}
+      />
+      {isFocused && autoCompleteValues && (
+        <AutoCompleteBox
+          autoCompleteValues={autoCompleteValues}
+          // isFocused={isFocused}
+          handleOnChange={props.onChangeText}
+        />
+      )}
+    </View>
   );
 
   return makeExpandable ? (

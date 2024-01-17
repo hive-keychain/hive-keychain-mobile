@@ -12,6 +12,7 @@ import {
 import {InputProps} from 'react-native-elements';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {AutoCompleteValuesType} from 'src/interfaces/autocomplete.interface';
 import {getColors} from 'src/styles/colors';
 import {LABELINDENTSPACE} from 'src/styles/spacing';
 import {
@@ -33,6 +34,7 @@ interface OperationInputProps {
   additionalBottomLabelTextStyle?: StyleProp<TextStyle>;
   additionalLabelExtraInfoTextStyle?: StyleProp<TextStyle>;
   removeLabelInputIndent?: boolean;
+  autoCompleteValues?: AutoCompleteValuesType;
 }
 
 export default (props: InputProps & OperationInputProps) => {
@@ -44,6 +46,7 @@ export default (props: InputProps & OperationInputProps) => {
       {...props}
       containerStyle={styles.container}
       additionalInputContainerStyle={props.additionalInputContainerStyle}
+      autoCompleteValues={props.autoCompleteValues}
     />
   );
 

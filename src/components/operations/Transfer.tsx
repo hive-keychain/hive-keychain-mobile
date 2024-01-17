@@ -181,6 +181,8 @@ const Transfer = ({
           <>
             <Separator height={35} />
             <OperationInput
+              //TODO testing bellow while coding
+              autoCompleteValues={['one', 'two', 'three']}
               labelInput={translate('common.to')}
               placeholder={translate('common.username')}
               leftIcon={<Icon name={Icons.AT} theme={theme} />}
