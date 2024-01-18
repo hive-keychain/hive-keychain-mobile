@@ -170,8 +170,6 @@ const Main = ({
     };
   };
 
-  //TODO commented to disable all floatinBar related
-  //Remove call to onHandleScroll from main scrollview.
   const onHandleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     showFloatingBar(event.nativeEvent.contentOffset.y === 0);
   };

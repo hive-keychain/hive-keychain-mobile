@@ -7,7 +7,7 @@ import Icon from 'components/hive/Icon';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -50,6 +50,9 @@ const EngineTokens = ({
 
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
+
+  const flatListRef = useRef();
+  const itemRef = useRef();
 
   useEffect(() => {
     if (!userTokens.loading) {
@@ -105,6 +108,23 @@ const EngineTokens = ({
       hideCloseButton: true,
     } as TemplateStackProps);
   };
+
+  //TODO find a way to scrollIntoView & cleanup
+  // const handleClickToView = (itemIndex: number) => {
+  //   if (flatListRef && flatListRef.current) {
+  //     (flatListRef.current as FlatList).scrollToIndex({
+  //       animated: true,
+  //       index: itemIndex,
+  //       viewPosition: 0.5,
+  //       viewOffset: 100,
+  //     });
+  //   }
+  // };
+
+  // const handleOnScroll = (event: any) => {
+  //   const scrollOffset = event.nativeEvent.contentOffset.y;
+  //   console.log({scrollOffset});
+  // };
 
   if (userTokens.loading || !tokensMarket?.length) {
     return (
@@ -162,20 +182,23 @@ const EngineTokens = ({
           horizontal={true}
           contentContainerStyle={{width: '100%', height: '100%'}}>
           <FlatList
+            // onScroll={handleOnScroll}
+            ref={flatListRef}
             data={filteredUserTokenBalanceList}
             contentContainerStyle={styles.flatlist}
             keyExtractor={(item) => item._id.toString()}
             ItemSeparatorComponent={() => <Separator height={10} />}
-            renderItem={({item}) => (
+            renderItem={(item) => (
               <EngineTokenDisplay
                 addBackground
-                token={item}
+                token={item.item}
                 tokensList={tokens}
                 market={tokensMarket}
-                toggled={toggled === item._id}
+                toggled={toggled === item.item._id}
                 setToggle={() => {
-                  if (toggled === item._id) setToggled(null);
-                  else setToggled(item._id);
+                  if (toggled === item.item._id) setToggled(null);
+                  else setToggled(item.item._id);
+                  // handleClickToView(item.index);
                 }}
               />
             )}
