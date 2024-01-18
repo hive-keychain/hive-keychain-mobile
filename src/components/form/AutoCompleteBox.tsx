@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -14,27 +15,22 @@ import {
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {getInputHeight} from 'src/styles/input';
-import {fields_primary_text_2} from 'src/styles/typography';
+import {
+  FontPoppinsName,
+  fields_primary_text_2,
+  getFontSizeSmallDevices,
+} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
+import {translate} from 'utils/localize';
 
 interface Props {
   autoCompleteValues: AutoCompleteValuesType;
-  //   isFocused: boolean;
   handleOnChange: (value: any) => void;
 }
 
-const AutoCompleteBox = ({
-  autoCompleteValues,
-  //   isFocused,
-  handleOnChange,
-}: Props) => {
-  console.log({autoCompleteValues}); //TODO remove line
+const AutoCompleteBox = ({autoCompleteValues, handleOnChange}: Props) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions());
-
-  //   const handlePress = (item: any) => {
-  //     console.log({pressed: item});
-  //   };
 
   const handleRenderList = (autoCompleteValues: AutoCompleteValuesType) => {
     if (typeof (autoCompleteValues as string[])[0] === 'string') {
@@ -50,16 +46,43 @@ const AutoCompleteBox = ({
         </TouchableOpacity>
       ));
     } else if (!!(autoCompleteValues as AutoCompleteValues).categories) {
-      //TODO bellow
-      return <Text>TODO</Text>;
+      return (autoCompleteValues as AutoCompleteValues).categories.map(
+        (category) =>
+          category.values.length > 0 && (
+            <View key={category.title}>
+              <Text style={[styles.textBase, styles.titleCategory]}>
+                {category.translateTitle
+                  ? translate(`common.${category.title}`)
+                  : category.title}
+              </Text>
+              <View>
+                {category.values.map((autoCompleteItem, index) => (
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => handleOnChange(autoCompleteItem.value)}
+                    key={`${autoCompleteItem.value}-${index}`}>
+                    <Text style={[styles.textBase, styles.autoCompleteValue]}>
+                      {autoCompleteItem.translateValue
+                        ? translate(autoCompleteItem.value)
+                        : autoCompleteItem.value}
+                      {autoCompleteItem.subLabel
+                        ? ` (${autoCompleteItem.subLabel})`
+                        : ''}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          ),
+      );
     }
     return null;
   };
 
   return (
-    <View style={[getCardStyle(theme).defaultCardItem, styles.container]}>
+    <ScrollView style={[getCardStyle(theme).defaultCardItem, styles.container]}>
       {handleRenderList(autoCompleteValues)}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -71,10 +94,19 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       bottom: undefined,
       width: '100%',
       zIndex: 10,
+      maxHeight: 150,
     },
     textBase: {
       ...fields_primary_text_2,
       color: getColors(theme).secondaryText,
+    },
+    titleCategory: {
+      fontFamily: FontPoppinsName.SEMI_BOLD,
+      fontSize: getFontSizeSmallDevices(height, 13),
+    },
+    autoCompleteValue: {
+      fontSize: 11,
+      paddingLeft: 8,
     },
   });
 

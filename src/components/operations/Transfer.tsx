@@ -7,7 +7,7 @@ import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import OptionsToggle from 'components/ui/OptionsToggle';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Keyboard,
   StyleSheet,
@@ -21,6 +21,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {AutoCompleteValues} from 'src/interfaces/autocomplete.interface';
 import {getButtonHeight, getButtonStyle} from 'src/styles/button';
 import {
   BACKGROUNDDARKBLUE,
@@ -34,6 +35,7 @@ import {
   title_primary_body_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import {FavoriteUserUtils} from 'utils/favorite-user.utils';
 import {beautifyTransferError, capitalize} from 'utils/format';
 import {recurrentTransfer, sendToken, transfer} from 'utils/hive';
 import {tryConfirmTransaction} from 'utils/hiveEngine';
@@ -65,6 +67,7 @@ const Transfer = ({
   tokenLogo,
   phishingAccounts,
   showModal,
+  localAccounts,
 }: Props) => {
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
@@ -75,7 +78,25 @@ const Transfer = ({
   const [step, setStep] = useState(1);
   const [isRecurrent, setRecurrent] = useState(false);
   const [isMemoEncrypted, setIsMemoEncrypted] = useState<boolean>(false);
+  const [autocompleteFavoriteUsers, setAutocompleteFavoriteUsers] = useState<
+    AutoCompleteValues
+  >({
+    categories: [],
+  });
   const {theme} = useThemeContext();
+
+  useEffect(() => {
+    loadAutocompleteTransferUsernames();
+  }, []);
+
+  const loadAutocompleteTransferUsernames = async () => {
+    const autoCompleteListByCategories: AutoCompleteValues = await FavoriteUserUtils.getAutocompleteListByCategories(
+      user.name!,
+      localAccounts,
+      {addExchanges: true, token: currency.toUpperCase()},
+    );
+    setAutocompleteFavoriteUsers(autoCompleteListByCategories);
+  };
 
   const sendTransfer = async () => {
     setLoading(true);
@@ -136,6 +157,7 @@ const Transfer = ({
           MessageModalType.SUCCESS,
         );
       }
+      await FavoriteUserUtils.saveFavoriteUser(to, user);
       loadAccount(user.account.name, true);
       resetStackAndNavigate('WALLET');
     } catch (e) {
@@ -181,8 +203,7 @@ const Transfer = ({
           <>
             <Separator height={35} />
             <OperationInput
-              //TODO testing bellow while coding
-              autoCompleteValues={['one', 'two', 'three']}
+              autoCompleteValues={autocompleteFavoriteUsers}
               labelInput={translate('common.to')}
               placeholder={translate('common.username')}
               leftIcon={<Icon name={Icons.AT} theme={theme} />}
@@ -580,6 +601,7 @@ const connector = connect(
   (state: RootState) => {
     return {
       user: state.activeAccount,
+      localAccounts: state.accounts,
       phishingAccounts: state.phishingAccounts,
     };
   },

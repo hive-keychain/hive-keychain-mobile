@@ -115,7 +115,10 @@
     "title_memo_key": "Memo",
     "title_owner_key": "Owner",
     "switch": "Switch",
-    "menu": "Menu"
+    "menu": "Menu",
+    "users": "Users",
+    "local_accounts": "Local Accounts",
+    "exchanges": "Exchanges"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},

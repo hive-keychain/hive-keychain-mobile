@@ -76,7 +76,6 @@ export default ({
       {isFocused && autoCompleteValues && (
         <AutoCompleteBox
           autoCompleteValues={autoCompleteValues}
-          // isFocused={isFocused}
           handleOnChange={props.onChangeText}
         />
       )}
