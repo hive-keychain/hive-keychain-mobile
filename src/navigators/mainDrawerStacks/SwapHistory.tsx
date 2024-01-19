@@ -71,5 +71,6 @@ const getStyles = (theme: Theme) =>
     },
     cardStyle: {
       backgroundColor: getColors(theme).primaryBackground,
+      paddingTop: 10,
     },
   });

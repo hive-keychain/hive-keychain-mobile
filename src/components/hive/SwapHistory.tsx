@@ -10,7 +10,7 @@ import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {button_link_primary_small} from 'src/styles/typography';
 import {RootState} from 'store';
 import {SwapsConfig} from 'utils/config';
@@ -102,6 +102,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
                 theme={theme}
                 animate={shouldRefresh}
                 onPressIcon={refresh}
+                color={PRIMARY_RED_COLOR}
               />
             </View>
           ) : (

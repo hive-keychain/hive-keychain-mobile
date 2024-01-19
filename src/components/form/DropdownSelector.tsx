@@ -39,6 +39,7 @@ interface Props {
   addDropdownTitleIndent?: boolean;
   additionalSelectedLabelItemStyle?: StyleProp<TextStyle>;
   additionalDropdownListLabelItemStyle?: StyleProp<TextStyle>;
+  dropdownColor?: string;
 }
 
 const DropdownSelector = ({
@@ -55,6 +56,7 @@ const DropdownSelector = ({
   addDropdownTitleIndent,
   additionalSelectedLabelItemStyle,
   additionalDropdownListLabelItemStyle,
+  dropdownColor,
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [dropdownList, setDropdownList] = useState<OptionItem[]>(list);
@@ -185,6 +187,7 @@ const DropdownSelector = ({
             additionalContainerStyle={
               isExpanded ? getRotateStyle('180') : getRotateStyle('0')
             }
+            color={dropdownColor}
           />
         </View>
         {bottomLabelInfo && (

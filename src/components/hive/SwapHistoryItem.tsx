@@ -13,7 +13,7 @@ import SimpleToast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
 import {button_link_primary_small} from 'src/styles/typography';
 import {withCommas} from 'utils/format';
@@ -48,7 +48,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
       default:
         break;
     }
-    return <Icon theme={theme} name={iconName} />;
+    return <Icon theme={theme} name={iconName} color={PRIMARY_RED_COLOR} />;
   };
 
   const renderSwapItemStatusIndicator = (status: SwapStatus) => {
@@ -70,7 +70,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
         iconName = Icons.BACK_TIME;
         break;
     }
-    return <Icon theme={theme} name={iconName} />;
+    return <Icon theme={theme} name={iconName} color={PRIMARY_RED_COLOR} />;
   };
 
   const renderTokensInStep = (step: IStepHistory) => {
@@ -115,12 +115,18 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
           theme={theme}
           name={Icons.REPEAT}
           bgImage={<BackgroundIconRed />}
+          color={PRIMARY_RED_COLOR}
         />
         <View style={styles.flexRowCentered}>
           <Text style={styles.textBase}>
             {item.amount} {item.startToken}
           </Text>
-          <Icon theme={theme} name={Icons.REPEAT_CIRCLE} />
+          <Icon
+            theme={theme}
+            name={Icons.REPEAT_CIRCLE}
+            color={PRIMARY_RED_COLOR}
+            additionalContainerStyle={styles.paddingHorizontal}
+          />
           <Text style={styles.textBase}>
             {item.received ? item.received : '...'} {item.endToken}
           </Text>
@@ -132,6 +138,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
             isExpanded ? getRotateStyle('180') : getRotateStyle('0')
           }
           {...styles.smallIcon}
+          color={PRIMARY_RED_COLOR}
         />
         {renderSwapItemStatusIndicator(item.status)}
       </View>
@@ -200,6 +207,9 @@ const getStyles = (theme: Theme) =>
     },
     marginTop: {
       marginTop: 10,
+    },
+    paddingHorizontal: {
+      paddingHorizontal: 4,
     },
   });
 

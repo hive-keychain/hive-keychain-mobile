@@ -26,6 +26,7 @@ import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import WalletPage from 'components/ui/WalletPage';
+import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useRef, useState} from 'react';
@@ -114,6 +115,7 @@ const Main = ({
     lastAccount,
   ]);
 
+  useBackButtonNavigation('WALLET', true);
   useLockedPortrait(navigation);
 
   const appState = useRef(AppState.currentState);

@@ -57,30 +57,51 @@ export default ({
     }, 200);
   };
 
-  const renderInput = () => (
-    <View>
-      <Input
-        onFocus={() => setIsFocused(true)}
-        onBlur={handleOnBlur}
-        placeholderTextColor="#B9C9D6"
-        containerStyle={[styles.container, containerStyle]}
-        inputStyle={styles.input}
-        leftIconContainerStyle={styles.leftIcon}
-        rightIconContainerStyle={styles.rightIcon}
-        inputContainerStyle={[
-          styles.inputContainer,
-          additionalInputContainerStyle,
-        ]}
-        {...props}
-      />
-      {isFocused && autoCompleteValues && (
-        <AutoCompleteBox
-          autoCompleteValues={autoCompleteValues}
-          handleOnChange={props.onChangeText}
+  const renderInput = () => {
+    if (autoCompleteValues) {
+      return (
+        <View>
+          <Input
+            onFocus={() => setIsFocused(true)}
+            onBlur={handleOnBlur}
+            placeholderTextColor="#B9C9D6"
+            containerStyle={[styles.container, containerStyle]}
+            inputStyle={styles.input}
+            leftIconContainerStyle={styles.leftIcon}
+            rightIconContainerStyle={styles.rightIcon}
+            inputContainerStyle={[
+              styles.inputContainer,
+              additionalInputContainerStyle,
+            ]}
+            {...props}
+          />
+          {isFocused && autoCompleteValues && (
+            <AutoCompleteBox
+              autoCompleteValues={autoCompleteValues}
+              handleOnChange={props.onChangeText}
+              filterValue={props.value}
+            />
+          )}
+        </View>
+      );
+    } else
+      return (
+        <Input
+          onFocus={() => setIsFocused(true)}
+          onBlur={handleOnBlur}
+          placeholderTextColor="#B9C9D6"
+          containerStyle={[styles.container, containerStyle]}
+          inputStyle={styles.input}
+          leftIconContainerStyle={styles.leftIcon}
+          rightIconContainerStyle={styles.rightIcon}
+          inputContainerStyle={[
+            styles.inputContainer,
+            additionalInputContainerStyle,
+          ]}
+          {...props}
         />
-      )}
-    </View>
-  );
+      );
+  };
 
   return makeExpandable ? (
     <>

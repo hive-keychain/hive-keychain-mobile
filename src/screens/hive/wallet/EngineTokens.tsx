@@ -8,7 +8,14 @@ import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useRef, useState} from 'react';
-import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -17,6 +24,7 @@ import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum'
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_medium} from 'src/styles/typography';
 import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -47,12 +55,10 @@ const EngineTokens = ({
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const flatListRef = useRef();
 
   const {theme} = useThemeContext();
-  const styles = getStyles(theme);
-
-  const flatListRef = useRef();
-  const itemRef = useRef();
+  const styles = getStyles(theme, useWindowDimensions());
 
   useEffect(() => {
     if (!userTokens.loading) {
@@ -109,22 +115,16 @@ const EngineTokens = ({
     } as TemplateStackProps);
   };
 
-  //TODO find a way to scrollIntoView & cleanup
-  // const handleClickToView = (itemIndex: number) => {
-  //   if (flatListRef && flatListRef.current) {
-  //     (flatListRef.current as FlatList).scrollToIndex({
-  //       animated: true,
-  //       index: itemIndex,
-  //       viewPosition: 0.5,
-  //       viewOffset: 100,
-  //     });
-  //   }
-  // };
-
-  // const handleOnScroll = (event: any) => {
-  //   const scrollOffset = event.nativeEvent.contentOffset.y;
-  //   console.log({scrollOffset});
-  // };
+  //TODO find a way to make it work, ask Quentin
+  const handleClickToView = (itemIndex: number) => {
+    if (flatListRef && flatListRef.current) {
+      (flatListRef.current as FlatList).scrollToIndex({
+        animated: true,
+        index: itemIndex,
+        viewPosition: 0,
+      });
+    }
+  };
 
   if (userTokens.loading || !tokensMarket?.length) {
     return (
@@ -137,6 +137,7 @@ const EngineTokens = ({
       <>
         {showEngineTokenSettings && (
           <>
+            {isSearchOpen && <Separator height={5} />}
             <View style={[styles.flexRow]}>
               {isSearchOpen && (
                 <CustomSearchBar
@@ -175,6 +176,7 @@ const EngineTokens = ({
                 onClick={handleClickSettings}
               />
             </View>
+            {isSearchOpen && <Separator height={5} />}
             <Separator />
           </>
         )}
@@ -198,7 +200,7 @@ const EngineTokens = ({
                 setToggle={() => {
                   if (toggled === item.item._id) setToggled(null);
                   else setToggled(item.item._id);
-                  // handleClickToView(item.index);
+                  handleClickToView(item.index);
                 }}
               />
             )}
@@ -217,7 +219,7 @@ const EngineTokens = ({
   } else return null;
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     flatlist: {
       paddingBottom: 20,
@@ -240,6 +242,7 @@ const getStyles = (theme: Theme) =>
       position: 'absolute',
       right: 0,
       zIndex: 10,
+      height: 45,
     },
     separatorContainer: {
       borderWidth: 1,

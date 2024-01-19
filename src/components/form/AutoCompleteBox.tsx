@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  FlexStyle,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,6 +10,7 @@ import {
 } from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {
+  AutoCompleteCategory,
   AutoCompleteValues,
   AutoCompleteValuesType,
 } from 'src/interfaces/autocomplete.interface';
@@ -26,13 +28,77 @@ import {translate} from 'utils/localize';
 interface Props {
   autoCompleteValues: AutoCompleteValuesType;
   handleOnChange: (value: any) => void;
+  filterValue: string;
 }
 
-const AutoCompleteBox = ({autoCompleteValues, handleOnChange}: Props) => {
+const AutoCompleteBox = ({
+  autoCompleteValues,
+  handleOnChange,
+  filterValue,
+}: Props) => {
   const {theme} = useThemeContext();
+  const [filteredAutoComplete, setFilteredAutoComplete] = useState<
+    string[] | AutoCompleteValues
+  >([]);
+
   const styles = getStyles(theme, useWindowDimensions());
 
+  useEffect(() => {
+    if (typeof (autoCompleteValues as string[])[0] === 'string') {
+      //TODO when needed.
+    } else if (!!(autoCompleteValues as AutoCompleteValues).categories) {
+      const currentAutoComplete = autoCompleteValues;
+      const filteredCategories = (currentAutoComplete as AutoCompleteValues).categories.map(
+        (category) => {
+          return {
+            ...category,
+            values: category.values.filter(
+              (categoryValue) =>
+                categoryValue.value
+                  .toLowerCase()
+                  .includes(filterValue.toLowerCase()) ||
+                categoryValue.subLabel
+                  ?.toLowerCase()
+                  .includes(filterValue.toLowerCase()),
+            ),
+          };
+        },
+      );
+      setFilteredAutoComplete({
+        categories: filteredCategories.filter(
+          (category) => category.values.length > 0,
+        ),
+      });
+    }
+  }, [filterValue, autoCompleteValues]);
+
+  const getVisibleStyle = (
+    filtered: string[] | AutoCompleteValues,
+  ): FlexStyle => {
+    if (typeof (filtered as string[])[0] === 'string') {
+      //TODO when needed.
+      return undefined;
+    } else if (!!(filtered as AutoCompleteValues).categories) {
+      return (filtered as AutoCompleteValues).categories.length > 0
+        ? {display: 'flex'}
+        : {display: 'none'};
+    }
+    return undefined;
+  };
+
   const handleRenderList = (autoCompleteValues: AutoCompleteValuesType) => {
+    const getLastItemStyle = (
+      index: number,
+      category: AutoCompleteCategory,
+      catIndex: number,
+    ) => {
+      return index === category.values.length - 1 &&
+        (autoCompleteValues as AutoCompleteValues).categories.length - 1 ===
+          catIndex
+        ? styles.paddingBottom
+        : undefined;
+    };
+
     if (typeof (autoCompleteValues as string[])[0] === 'string') {
       return (autoCompleteValues as string[]).map((item, index) => (
         <TouchableOpacity
@@ -47,20 +113,21 @@ const AutoCompleteBox = ({autoCompleteValues, handleOnChange}: Props) => {
       ));
     } else if (!!(autoCompleteValues as AutoCompleteValues).categories) {
       return (autoCompleteValues as AutoCompleteValues).categories.map(
-        (category) =>
+        (category, catIndex) =>
           category.values.length > 0 && (
-            <View key={category.title}>
+            <View style={styles.fullDimensions} key={category.title}>
               <Text style={[styles.textBase, styles.titleCategory]}>
                 {category.translateTitle
                   ? translate(`common.${category.title}`)
                   : category.title}
               </Text>
-              <View>
+              <View style={[styles.fullDimensions, styles.marginBottom]}>
                 {category.values.map((autoCompleteItem, index) => (
                   <TouchableOpacity
                     activeOpacity={1}
                     onPress={() => handleOnChange(autoCompleteItem.value)}
-                    key={`${autoCompleteItem.value}-${index}`}>
+                    key={`${autoCompleteItem.value}-${index}`}
+                    style={getLastItemStyle(index, category, catIndex)}>
                     <Text style={[styles.textBase, styles.autoCompleteValue]}>
                       {autoCompleteItem.translateValue
                         ? translate(autoCompleteItem.value)
@@ -80,8 +147,13 @@ const AutoCompleteBox = ({autoCompleteValues, handleOnChange}: Props) => {
   };
 
   return (
-    <ScrollView style={[getCardStyle(theme).defaultCardItem, styles.container]}>
-      {handleRenderList(autoCompleteValues)}
+    <ScrollView
+      style={[
+        getCardStyle(theme).defaultCardItem,
+        styles.container,
+        getVisibleStyle(filteredAutoComplete),
+      ]}>
+      {handleRenderList(filteredAutoComplete)}
     </ScrollView>
   );
 };
@@ -94,7 +166,8 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       bottom: undefined,
       width: '100%',
       zIndex: 10,
-      maxHeight: 150,
+      height: 'auto',
+      maxHeight: 180,
     },
     textBase: {
       ...fields_primary_text_2,
@@ -108,6 +181,9 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       fontSize: 11,
       paddingLeft: 8,
     },
+    fullDimensions: {width: '100%', height: 'auto'},
+    paddingBottom: {paddingBottom: 20},
+    marginBottom: {marginBottom: 10},
   });
 
 export default AutoCompleteBox;

@@ -23,7 +23,11 @@ import {SwapConfig} from 'src/interfaces/swap-token.interface';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
-import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
+import {
+  BACKGROUNDDARKBLUE,
+  PRIMARY_RED_COLOR,
+  getColors,
+} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getRotateStyle} from 'src/styles/transform';
 import {
@@ -581,6 +585,7 @@ const Swap = ({
                   name={Icons.BACK_TIME}
                   additionalContainerStyle={[styles.squareButton]}
                   onClick={() => navigate('SwapHistory')}
+                  color={PRIMARY_RED_COLOR}
                 />
               </View>
               <Separator />
@@ -604,6 +609,7 @@ const Swap = ({
                   )}: ${parseFloat(startToken.value.balance).toFixed(3)}`}
                   addDropdownTitleIndent
                   additionalDropdownListLabelItemStyle={{fontSize: 13}}
+                  dropdownColor={PRIMARY_RED_COLOR}
                 />
                 <OperationInput
                   keyboardType="decimal-pad"
@@ -631,7 +637,7 @@ const Swap = ({
                       />
                       <TouchableOpacity
                         onPress={() => setAmount(startToken.value.balance)}>
-                        <Text style={styles.textBase}>
+                        <Text style={[styles.textBase, styles.redText]}>
                           {translate('common.max').toUpperCase()}
                         </Text>
                       </TouchableOpacity>
@@ -645,6 +651,7 @@ const Swap = ({
                 name={Icons.REPEAT}
                 onClick={swapStartAndEnd}
                 additionalContainerStyle={styles.autoWidthCentered}
+                color={PRIMARY_RED_COLOR}
               />
               <Separator />
               <View style={styles.flexRowbetween}>
@@ -659,6 +666,7 @@ const Swap = ({
                   searchOption
                   addDropdownTitleIndent
                   additionalDropdownListLabelItemStyle={{fontSize: 13}}
+                  dropdownColor={PRIMARY_RED_COLOR}
                 />
                 <OperationInput
                   disabled
@@ -689,6 +697,7 @@ const Swap = ({
                         theme={theme}
                         animate={loadingEstimate}
                         onPressIcon={onHandleRequestEstimate}
+                        color={PRIMARY_RED_COLOR}
                       />
                     </View>
                   }
@@ -722,6 +731,7 @@ const Swap = ({
                       ? getRotateStyle('180')
                       : getRotateStyle('0')
                   }
+                  color={PRIMARY_RED_COLOR}
                 />
               </TouchableOpacity>
               {isAdvanceSettingOpen && (
@@ -888,6 +898,9 @@ const getStyles = (theme: Theme) =>
     },
     marginBottom: {
       marginBottom: 20,
+    },
+    redText: {
+      color: PRIMARY_RED_COLOR,
     },
   });
 

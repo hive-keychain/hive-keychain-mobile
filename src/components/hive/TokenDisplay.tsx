@@ -172,8 +172,12 @@ const TokenDisplay = ({
       } as DelegateTokenOperationProps,
     });
 
+  const handleToogle = () => {
+    setToggle();
+  };
+
   return (
-    <TouchableOpacity onPress={() => setToggle()} style={styles.container}>
+    <TouchableOpacity onPress={handleToogle} style={styles.container}>
       <View style={styles.flexRowBetween}>
         <View style={{flexDirection: 'row'}}>
           <View style={styles.logo}>{logo}</View>

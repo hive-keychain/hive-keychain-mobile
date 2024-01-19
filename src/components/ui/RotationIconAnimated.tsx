@@ -8,9 +8,10 @@ interface Props {
   theme: Theme;
   onPressIcon: () => void;
   animate: boolean;
+  color?: string;
 }
 
-const RotationIconAnimated = ({theme, onPressIcon, animate}: Props) => {
+const RotationIconAnimated = ({theme, onPressIcon, animate, color}: Props) => {
   const styles = getStyles(theme);
   const spinValue = new Animated.Value(0);
 
@@ -32,6 +33,7 @@ const RotationIconAnimated = ({theme, onPressIcon, animate}: Props) => {
         theme={theme}
         name={Icons.ROTATE_RIGHT_BROWSER}
         onClick={onPressIcon}
+        color={color}
       />
     </Animated.View>
   );
