@@ -6,13 +6,12 @@ import {
   Page,
   TabFields,
 } from 'actions/interfaces';
-import HeartIcon from 'assets/new_UI/heart.svg';
-import NotFavoriteIcon from 'assets/new_UI/linear_heart_empty.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import Icon from 'components/hive/Icon';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {ConnectedProps, connect} from 'react-redux';
@@ -26,6 +25,9 @@ import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
+
+const HEART_PNG = require('assets/new_UI/heart.png');
+const HEART_EMPTY_PNG = require('assets/new_UI/heart-empty.png');
 
 type Props = {
   browser: Browser;
@@ -73,31 +75,19 @@ const BrowserHeader = ({
       if (activeUrl === BrowserConfig.HOMEPAGE_URL) return null;
       return favorites.find((e) => e.url === activeUrl) ? (
         <TouchableOpacity
-          style={[
-            getCardStyle(theme, 50).defaultCardItem,
-            styles.favContainer,
-            styles.marginLeft,
-          ]}
+          style={[getCardStyle(theme, 50).defaultCardItem, styles.favContainer]}
           onPress={() => {
             removeFromFavorites(activeUrl);
           }}>
-          <HeartIcon width={17} height={16} color={getColors(theme).icon} />
+          <FastImage source={HEART_PNG} style={styles.heartIcon} />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
-          style={[
-            getCardStyle(theme, 50).defaultCardItem,
-            styles.favContainer,
-            styles.marginLeft,
-          ]}
+          style={[getCardStyle(theme, 50).defaultCardItem, styles.favContainer]}
           onPress={() => {
             addToFavorites(active);
           }}>
-          <NotFavoriteIcon
-            width={17}
-            height={16}
-            color={getColors(theme).icon}
-          />
+          <FastImage source={HEART_EMPTY_PNG} style={styles.heartIcon} />
         </TouchableOpacity>
       );
     };
@@ -211,11 +201,23 @@ const getStyles = (
     },
     marginLeft: {marginLeft: 8},
     favContainer: {
-      height: '100%',
+      width: 50,
+      height: 50,
       marginBottom: 0,
+      justifyContent: 'center',
+      alignContent: 'center',
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+      marginLeft: 10,
+      alignSelf: 'center',
     },
     marginBottom: {
       marginBottom: 8,
+    },
+    heartIcon: {
+      width: 22,
+      height: 22,
+      alignSelf: 'center',
     },
   });
 

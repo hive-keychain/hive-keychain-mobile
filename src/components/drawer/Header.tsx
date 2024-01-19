@@ -1,6 +1,4 @@
 import {DrawerContentComponentProps} from '@react-navigation/drawer';
-import Heart from 'assets/new_UI/heart.svg';
-import PickerItem from 'components/form/PickerItem';
 import CloseButton from 'components/ui/CloseButton';
 import React from 'react';
 import {
@@ -10,8 +8,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {Theme} from 'src/context/theme.context';
-import {chainItemList} from 'src/reference-data/chainDropdownlist';
 import {getColors} from 'src/styles/colors';
 import {PADDINGLEFTMAINMENU} from 'src/styles/spacing';
 import {
@@ -19,7 +17,9 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
+const HEART_PNG = require('assets/new_UI/heart.png');
 
+//TODO uncomment chain switcher when needed & implented.
 export default ({
   theme,
   props,
@@ -43,7 +43,7 @@ export default ({
             {translate('drawerFooter.madeBy_part_1')}
           </Text>
           <View style={styles.heartContainer}>
-            <Heart {...styles.heartIcon} />
+            <FastImage source={HEART_PNG} style={styles.heartIcon} />
           </View>
           <Text style={[styles.textSubHeader]}>
             {translate('drawerFooter.madeBy_part_2')}
@@ -53,7 +53,7 @@ export default ({
           {translate('drawerFooter.madeBy_part_3')}
         </Text>
       </View>
-      <View style={[styles.bottomContainer]}>
+      {/* <View style={[styles.bottomContainer]}>
         <View style={[{alignItems: 'center'}]}>
           <Text style={[styles.textLabel]}>
             {translate('multichain.switch_chain')}
@@ -67,7 +67,7 @@ export default ({
             selected={chainItemList[1]}
           />
         </View>
-      </View>
+      </View> */}
     </View>
   );
 };
@@ -96,6 +96,7 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
       width: '70%',
       alignSelf: 'flex-start',
       height: 45.4,
+      marginBottom: 25,
     },
     bottomContainer: {
       width: '100%',
@@ -128,7 +129,7 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
       width: 22,
       height: 22,
     },
-    heartContainer: {alignItems: 'center', paddingHorizontal: 6},
+    heartContainer: {alignItems: 'center', marginHorizontal: 6},
     flexRowCentered: {
       flexDirection: 'row',
       alignItems: 'center',

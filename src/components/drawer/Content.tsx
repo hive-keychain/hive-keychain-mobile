@@ -114,6 +114,7 @@ const HeaderContent = (props: Props) => {
               onValueChange={(value) => {
                 setTheme(value);
               }}
+              additionalContainerStyle={styles.marginRight}
             />
           }
           drawBottomLine
@@ -153,6 +154,7 @@ const HeaderContent = (props: Props) => {
 };
 const styles = StyleSheet.create({
   contentContainer: {height: '100%', flex: 1, zIndex: 0},
+  marginRight: {marginRight: 10},
 });
 const mapStateToProps = (state: RootState) => ({
   user: state.activeAccount,

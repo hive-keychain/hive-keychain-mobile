@@ -1,6 +1,5 @@
 import Clipboard from '@react-native-community/clipboard';
 import AboutBGLight from 'assets/new_UI/about_background_light.svg';
-import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
@@ -18,8 +17,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import VersionInfo from 'react-native-version-info';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   body_primary_body_3,
   getFontSizeSmallDevices,
@@ -70,27 +68,22 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
           <Separator height={20} />
           <Text style={[styles.textBase, styles.text]}>
             Should you encounter any issue, contact us on our{' '}
-            <Text style={styles.highLigth}>
+            <Text
+              style={styles.highLigth}
+              onPress={() => {
+                Linking.openURL('https://discord.gg/3EM6YfRrGv');
+              }}>
               Discord Server
-              <Icon
-                theme={theme}
-                name={Icons.EXTERNAL_LINK}
-                {...styles.link}
-                onClick={() => {
-                  Linking.openURL('https://discord.gg/3EM6YfRrGv');
-                }}
-              />{' '}
-              or on our Github
-              <Icon
-                theme={theme}
-                name={Icons.EXTERNAL_LINK}
-                {...styles.link}
-                onClick={() => {
-                  Linking.openURL(
-                    'https://github.com/stoodkev/hive-keychain-mobile',
-                  );
-                }}
-              />
+            </Text>
+            <Text style={[styles.textBase, styles.text]}> or </Text>
+            <Text
+              style={styles.highLigth}
+              onPress={() => {
+                Linking.openURL(
+                  'https://github.com/stoodkev/hive-keychain-mobile',
+                );
+              }}>
+              on our Github
             </Text>
           </Text>
         </View>
@@ -103,8 +96,8 @@ const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     container: {
       marginVertical: 10,
-      paddingHorizontal: 20,
-      alignItems: 'center',
+      paddingHorizontal: 45,
+      justifyContent: 'center',
     },
     link: {width: 15, height: 15},
     textBase: {
@@ -122,7 +115,7 @@ const getStyles = (theme: Theme, height: number) =>
       textAlign: 'center',
     },
     highLigth: {
-      color: getColors(theme).icon,
+      color: PRIMARY_RED_COLOR,
     },
     extraBg: {
       position: 'absolute',
