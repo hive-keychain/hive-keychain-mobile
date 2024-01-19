@@ -13,8 +13,10 @@ import {Theme} from 'src/context/theme.context';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {
   body_primary_body_1,
+  getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 import {BrowserConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 import {Category as CategoryType} from './components/CategoryButton';
@@ -31,7 +33,7 @@ export default ({updateTabUrl, accounts, theme}: Props) => {
   if (Platform.OS === 'ios') {
     categories = categories.filter((e) => e.title !== 'gaming');
   }
-  const styles = getStyles(useWindowDimensions().width, theme);
+  const styles = getStyles(useWindowDimensions(), theme);
 
   return (
     <ScrollView style={styles.container}>
@@ -79,7 +81,7 @@ export default ({updateTabUrl, accounts, theme}: Props) => {
         <Text style={[styles.textBase, styles.text]}>
           {translate('browser.home.cant_see_dapps.part_2')}
           <Text
-            style={styles.redColor}
+            style={[styles.textBase, styles.text, styles.redColor]}
             onPress={() => {
               Linking.openURL('https://discord.gg/tUHtyev2xF');
             }}>
@@ -92,7 +94,7 @@ export default ({updateTabUrl, accounts, theme}: Props) => {
   );
 };
 
-const getStyles = (width: number, theme: Theme) =>
+const getStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     container: {
       flexDirection: 'column',
@@ -110,7 +112,7 @@ const getStyles = (width: number, theme: Theme) =>
       justifyContent: 'center',
       marginBottom: 30,
     },
-    text: {fontSize: 13},
+    text: {fontSize: getFontSizeSmallDevices(height, 13)},
     scroll: {marginLeft: 0.03 * width, marginBottom: 20},
     textBase: {
       color: getColors(theme).secondaryText,
@@ -119,6 +121,10 @@ const getStyles = (width: number, theme: Theme) =>
     categoryTitle: {
       ...headlines_primary_headline_2,
       color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...headlines_primary_headline_2}.fontSize,
+      ),
     },
     cards: {
       marginTop: 30,

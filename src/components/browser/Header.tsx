@@ -19,7 +19,11 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {body_primary_body_1} from 'src/styles/typography';
+import {getInputHeight} from 'src/styles/input';
+import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  body_primary_body_1,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
@@ -201,8 +205,8 @@ const getStyles = (
     },
     marginLeft: {marginLeft: 8},
     favContainer: {
-      width: 50,
-      height: 50,
+      width: getInputHeight(height),
+      height: getInputHeight(height),
       marginBottom: 0,
       justifyContent: 'center',
       alignContent: 'center',
@@ -215,8 +219,8 @@ const getStyles = (
       marginBottom: 8,
     },
     heartIcon: {
-      width: 22,
-      height: 22,
+      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 18 : 22,
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 18 : 22,
       alignSelf: 'center',
     },
   });
