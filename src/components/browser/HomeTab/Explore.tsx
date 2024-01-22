@@ -1,26 +1,44 @@
 import {Account} from 'actions/interfaces';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Linking,
   Platform,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import {useChainContext} from 'src/context/multichain.context';
 import {Theme} from 'src/context/theme.context';
-import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
-import {BrowserConfig} from 'utils/config';
+import {EcosystemUtils} from 'utils/ecosystem.utils';
 import {translate} from 'utils/localize';
-import {Category as CategoryType} from './components/CategoryButton';
 import DAppCard from './components/DAppCard';
+
+export interface DApp {
+  name: string;
+  description: string;
+  icon: string;
+  url: string;
+  appendUsername?: boolean;
+  categories: string[];
+}
+
+export interface DAppCategory {
+  category: string;
+  dapps: DApp[];
+}
+
+export interface EcosystemCategoryProps {
+  category: DAppCategory;
+}
 
 type Props = {
   updateTabUrl: (link: string) => void;
@@ -29,33 +47,49 @@ type Props = {
 };
 
 export default ({updateTabUrl, accounts, theme}: Props) => {
-  let {categories} = BrowserConfig.HomeTab;
-  if (Platform.OS === 'ios') {
-    categories = categories.filter((e) => e.title !== 'gaming');
-  }
+  const {chain} = useChainContext();
+  const [categories, setCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  const init = async () => {
+    const tcategories: DAppCategory[] = (
+      await EcosystemUtils.getDappList(chain)
+    ).data;
+    const tempTabs: any = [];
+    for (const tcategory of tcategories) {
+      tempTabs.push({
+        id: tcategory.category,
+        title: `browser.home.categories.${tcategory.category}`,
+        dapps: tcategory.dapps,
+      });
+    }
+    setCategories(tempTabs);
+  };
+
   const styles = getStyles(useWindowDimensions(), theme);
 
   return (
     <ScrollView style={[styles.container]}>
-      {categories.map((cat: CategoryType) => (
-        <View key={cat.title}>
-          <Text style={styles.categoryTitle}>
-            {translate(`browser.home.categories.${cat.title}`)}
-          </Text>
+      {categories.map((cat: any) => (
+        <View key={cat.id}>
+          <Text style={styles.categoryTitle}>{translate(cat.title)}</Text>
           <ScrollView horizontal style={styles.scroll}>
             <View style={styles.cards}>
-              {BrowserConfig.HomeTab.dApps
-                .filter((e) => {
+              {cat.dapps
+                .filter((e: DApp) => {
                   if (Platform.OS === 'ios') {
                     return (
-                      e.categories.includes(cat.title) &&
+                      e.categories.includes(cat.id) &&
                       !e.categories.includes('gaming')
                     );
                   } else {
-                    return e.categories.includes(cat.title);
+                    return e.categories.includes(cat.id);
                   }
                 })
-                .map((e) => (
+                .map((e: DApp) => (
                   <DAppCard
                     key={e.name}
                     dApp={e}
@@ -63,13 +97,6 @@ export default ({updateTabUrl, accounts, theme}: Props) => {
                     theme={theme}
                   />
                 ))}
-              {BrowserConfig.HomeTab.dApps.filter((e) =>
-                e.categories.includes(cat.title),
-              ).length %
-                3 ===
-              2 ? (
-                <View style={{width: '30%'}}></View>
-              ) : null}
             </View>
           </ScrollView>
         </View>

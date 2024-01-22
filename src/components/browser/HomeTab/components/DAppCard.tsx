@@ -24,6 +24,7 @@ type Props = {
 };
 
 const DAppCard = ({dApp, updateTabUrl, theme}: Props) => {
+  console.log({dApp}); //TODO remove line
   const styles = getStyles(useWindowDimensions(), theme);
   return (
     <TouchableOpacity
@@ -51,10 +52,8 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) => {
       height: 0.6 * width,
       marginRight: 10,
     },
-    //TODO bellow still needs work.
     imageContainer: {
       alignSelf: 'center',
-      // width: '60%',
       height: 0.21 * width,
       width: 0.21 * width,
       padding: 10,
@@ -62,8 +61,6 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) => {
     image: {
       width: '100%',
       height: '100%',
-      // marginBottom: 20,
-      // borderRadius: 10,
     },
     textBase: {
       color: getColors(theme).secondaryText,
