@@ -250,10 +250,8 @@ export default ({
         },
       );
     } else {
-      //TODO check about webview refs & fix
       const onForceCloseModal = () => {
         navigationGoBack();
-        console.log({tabRef, tabParentRef}); //TODO remove line
         sendError(tabRef, {
           error: 'user_cancel',
           message: 'Request was canceled by the user.',

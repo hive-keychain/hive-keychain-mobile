@@ -43,7 +43,7 @@ const getStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
       flexDirection: 'column',
-      marginTop: 30,
+      marginTop: 10,
       flex: 1,
       paddingHorizontal: 20,
     },

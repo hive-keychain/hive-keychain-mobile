@@ -36,7 +36,7 @@ export default ({updateTabUrl, accounts, theme}: Props) => {
   const styles = getStyles(useWindowDimensions(), theme);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container]}>
       {categories.map((cat: CategoryType) => (
         <View key={cat.title}>
           <Text style={styles.categoryTitle}>
@@ -99,7 +99,7 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
     container: {
       flexDirection: 'column',
       flex: 1,
-      marginTop: 25,
+      marginTop: 10,
       paddingTop: 25,
       borderTopLeftRadius: 40,
       paddingLeft: 30,

@@ -54,8 +54,13 @@ export default ({input, onSubmit, history, theme}: Props) => {
   if (candidates.length)
     return (
       <View style={styles.wrapper}>
-        {candidates.map((e) => (
-          <HistoryItem theme={theme} onSubmit={onSubmit} data={e} />
+        {candidates.map((e, index) => (
+          <HistoryItem
+            theme={theme}
+            onSubmit={onSubmit}
+            data={e}
+            indexItem={index}
+          />
         ))}
       </View>
     );
@@ -63,8 +68,13 @@ export default ({input, onSubmit, history, theme}: Props) => {
     let historyCopy = [...history].reverse().slice(0, 10);
     return (
       <View style={styles.wrapper}>
-        {historyCopy.map((e) => (
-          <HistoryItem theme={theme} onSubmit={onSubmit} data={e} />
+        {historyCopy.map((e, index) => (
+          <HistoryItem
+            theme={theme}
+            onSubmit={onSubmit}
+            data={e}
+            indexItem={index}
+          />
         ))}
       </View>
     );

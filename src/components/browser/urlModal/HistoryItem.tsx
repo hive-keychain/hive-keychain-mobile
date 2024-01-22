@@ -11,15 +11,16 @@ type Props = {
   data: TabFields;
   onSubmit: (url: string) => void;
   theme: Theme;
+  indexItem?: number;
 };
-export default ({data, onSubmit, theme}: Props) => {
+export default ({data, onSubmit, theme, indexItem}: Props) => {
   const {name, url, icon} = data;
   const styles = getStyles(theme);
   return (
     <TouchableOpacity
       style={[getCardStyle(theme).defaultCardItem, styles.card]}
       onPress={() => onSubmit(url)}
-      key={url}>
+      key={`${url}-${indexItem}`}>
       <View style={styles.itemWrapper}>
         <Image style={styles.img} source={{uri: icon}} />
         <View style={styles.text}>

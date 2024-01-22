@@ -26,7 +26,7 @@ const NewTab = ({
   theme,
 }: Props) => {
   return (
-    <View style={styles.container} ref={homeRef} collapsable={false}>
+    <View style={[styles.container]} ref={homeRef} collapsable={false}>
       <ScreenToggle
         theme={theme}
         menu={[
@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     width: '90%',
     alignSelf: 'center',
+    marginTop: 0,
   },
 });
 

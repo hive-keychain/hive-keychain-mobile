@@ -10,7 +10,13 @@ import CustomSearchBar from 'components/form/CustomSearchBar';
 import Icon from 'components/hive/Icon';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import GestureRecognizer from 'react-native-swipe-gestures';
@@ -19,7 +25,7 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {getInputHeight} from 'src/styles/input';
+import {getInputContainerHeight} from 'src/styles/input';
 import {
   SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   body_primary_body_1,
@@ -60,7 +66,12 @@ const BrowserHeader = ({
 }: Props & PropsFromRedux) => {
   const {HEADER_HEIGHT} = BrowserConfig;
   const insets = useSafeAreaInsets();
-  const styles = getStyles(HEADER_HEIGHT, insets, landscape, theme);
+  const styles = getStyles(
+    useWindowDimensions().height,
+    insets,
+    landscape,
+    theme,
+  );
 
   const goHome = () => {
     updateTab(activeTab, {url: BrowserConfig.HOMEPAGE_URL});
@@ -98,7 +109,7 @@ const BrowserHeader = ({
 
     return (
       <GestureRecognizer
-        style={{width: '100%'}}
+        style={styles.gesture}
         onSwipeLeft={() => {
           swipeToTab(false);
         }}
@@ -107,7 +118,7 @@ const BrowserHeader = ({
         }}>
         <FocusAwareStatusBar />
         <View style={styles.topBar}>
-          <View style={[styles.flexRowCentered, styles.marginBottom]}>
+          <View style={[styles.flexRowCentered]}>
             <CustomSearchBar
               theme={theme}
               leftIcon={
@@ -116,6 +127,7 @@ const BrowserHeader = ({
                     theme={theme}
                     name={Icons.HOME_BROWSER}
                     onClick={goHome}
+                    color={PRIMARY_RED_COLOR}
                   />
                 ) : null
               }
@@ -124,6 +136,7 @@ const BrowserHeader = ({
                   name={Icons.SEARCH}
                   theme={theme}
                   onClick={() => startSearch(true)}
+                  color={PRIMARY_RED_COLOR}
                 />
               }
               value={
@@ -134,6 +147,7 @@ const BrowserHeader = ({
               }
               onChangeText={(text) => {}}
               onPressIn={() => startSearch(true)}
+              additionalContainerStyle={styles.searchBarContainer}
             />
             {renderFavoritesButton()}
           </View>
@@ -158,6 +172,7 @@ const getStyles = (
   theme: Theme,
 ) =>
   StyleSheet.create({
+    gesture: {width: '100%'},
     container: {
       width: '100%',
       justifyContent: 'center',
@@ -166,7 +181,8 @@ const getStyles = (
     topBar: {
       borderRadius: 6,
       alignItems: 'center',
-      paddingTop: 20,
+      paddingVertical: 10,
+      height: 'auto',
     },
     paddingHorizontal: {
       paddingHorizontal: 15,
@@ -205,8 +221,8 @@ const getStyles = (
     },
     marginLeft: {marginLeft: 8},
     favContainer: {
-      width: getInputHeight(height),
-      height: getInputHeight(height),
+      width: getInputContainerHeight(height),
+      height: getInputContainerHeight(height),
       marginBottom: 0,
       justifyContent: 'center',
       alignContent: 'center',
@@ -222,6 +238,11 @@ const getStyles = (
       width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 18 : 22,
       height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 18 : 22,
       alignSelf: 'center',
+    },
+    searchBarContainer: {
+      borderRadius: 30,
+      height: getInputContainerHeight(height),
+      paddingHorizontal: 16,
     },
   });
 

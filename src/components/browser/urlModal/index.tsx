@@ -17,7 +17,7 @@ import Modal from 'react-native-modal';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import UrlAutocomplete from './UrlAutocomplete';
@@ -115,6 +115,7 @@ const UrlModal = ({
             height={16}
             onClick={() => Share.share({message: url})}
             additionalContainerStyle={styles.option}
+            color={PRIMARY_RED_COLOR}
           />
         ) : null}
         {url.length ? (
@@ -125,6 +126,7 @@ const UrlModal = ({
             height={16}
             onClick={() => Clipboard.setString(url)}
             additionalContainerStyle={styles.option}
+            color={PRIMARY_RED_COLOR}
           />
         ) : null}
         {url.length ? (
@@ -134,7 +136,7 @@ const UrlModal = ({
         ) : null}
       </View>
 
-      <ScrollView style={styles.containerHistory}>
+      <ScrollView style={[styles.containerHistory]}>
         <UrlAutocomplete
           onSubmit={onSubmitUrl}
           input={url}
@@ -164,7 +166,7 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
       backgroundColor: getColors(theme).secondaryCardBgColor,
     },
     option: {alignSelf: 'center', marginLeft: 20},
-    eraseText: {fontSize: 16, color: getColors(theme).icon},
+    eraseText: {fontSize: 16, color: PRIMARY_RED_COLOR},
     urlModalContent: {
       flexDirection: 'row',
       borderColor: 'lightgrey',

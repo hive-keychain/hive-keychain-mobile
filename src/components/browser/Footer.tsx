@@ -74,14 +74,14 @@ const Footer = ({
         theme={theme}
         name={Icons.ARROW_LEFT_BROWSER}
         {...styles.icon}
-        color={canGoBack ? getColors(theme).icon : '#854343'}
+        color={canGoBack ? PRIMARY_RED_COLOR : '#854343'}
         onClick={goBack}
       />
       <Icon
         theme={theme}
         name={Icons.ARROW_RIGHT_BROWSER}
         {...styles.icon}
-        color={canGoForward ? getColors(theme).icon : '#854343'}
+        color={canGoForward ? PRIMARY_RED_COLOR : '#854343'}
         onClick={goForward}
       />
       <Icon
@@ -90,6 +90,7 @@ const Footer = ({
         additionalContainerStyle={[styles.circleContainer]}
         onClick={addTab}
         {...styles.icon}
+        color={PRIMARY_RED_COLOR}
       />
       <Icon
         theme={theme}
@@ -101,16 +102,11 @@ const Footer = ({
           reload();
         }}
         {...styles.icon}
+        color={PRIMARY_RED_COLOR}
       />
       <TouchableOpacity onPress={manageTabs}>
         <View style={styles.manage}>
-          <Text
-            style={[
-              styles.textBase,
-              theme === Theme.LIGHT ? styles.redColor : undefined,
-            ]}>
-            {tabs}
-          </Text>
+          <Text style={[styles.textBase, styles.redColor]}>{tabs}</Text>
         </View>
       </TouchableOpacity>
       <Icon
@@ -118,6 +114,7 @@ const Footer = ({
         name={Icons.WALLET_ADD}
         {...styles.icon}
         onClick={() => resetStackAndNavigate('WALLET')}
+        color={PRIMARY_RED_COLOR}
       />
     </View>
   );
@@ -138,7 +135,7 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
       alignItems: 'center',
     },
     manage: {
-      borderColor: getColors(theme).icon,
+      borderColor: PRIMARY_RED_COLOR,
       borderWidth: 1,
       width: 25,
       height: 25,
@@ -153,7 +150,7 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
         theme === Theme.LIGHT ? HIVEICONBGCOLOR : BACKGROUNDITEMDARKISH,
       width: 30,
       height: 30,
-      borderColor: getColors(theme).icon,
+      borderColor: PRIMARY_RED_COLOR,
       borderWidth: 1,
     },
     textBase: {
