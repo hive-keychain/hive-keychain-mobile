@@ -55,6 +55,7 @@ const App = ({
 
   useEffect(() => {
     initColorAPI();
+    showFloatingBar(false);
   }, []);
 
   const initColorAPI = async () => {

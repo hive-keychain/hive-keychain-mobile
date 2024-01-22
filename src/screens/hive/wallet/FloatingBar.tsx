@@ -1,7 +1,15 @@
 import {showFloatingBar} from 'actions/floatingBar';
 import Icon from 'components/hive/Icon';
-import React, {useState} from 'react';
-import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -32,6 +40,8 @@ const Floating = ({
   const {theme} = useThemeContext();
   const {height} = useWindowDimensions();
   const styles = getStyles(theme, height);
+  const anim = useRef(new Animated.Value(0)).current;
+  const [isTop, setIsTop] = useState(false);
 
   const getActiveStyle = (link: FloatingBarLink) =>
     activeLink === link ? styles.active : undefined;
@@ -67,72 +77,94 @@ const Floating = ({
     return navigate(screen, nestedScreenOrParams);
   };
 
-  const renderNavigationBar = () => {
-    return (
-      <View style={[getCardStyle(theme).floatingBar, styles.container]}>
-        <View style={[styles.itemContainer, getActiveStyle('ecosystem')]}>
-          <Icon
-            theme={theme}
-            name={Icons.WALLET_ADD}
-            color={getActiveIconColor('ecosystem')}
-            {...getIconDimensions(height)}
-            onClick={() => onHandlePressButton('ecosystem')}
-          />
-          {showTags && (
-            <Text style={[styles.textBase, styles.marginTop]}>
-              {translate('navigation.floating_bar.ecosystem')}
-            </Text>
-          )}
-        </View>
-        <View style={[styles.itemContainer, getActiveStyle('browser')]}>
-          <Icon
-            theme={theme}
-            color={getActiveIconColor('browser')}
-            name={Icons.GLOBAL}
-            {...getIconDimensions(height)}
-            onClick={() => onHandlePressButton('browser')}
-          />
-          {showTags && (
-            <Text style={[styles.textBase, styles.marginTop]}>
-              {translate('navigation.floating_bar.browser')}
-            </Text>
-          )}
-        </View>
-        <View style={[styles.itemContainer, getActiveStyle('scan_qr')]}>
-          <Icon
-            theme={theme}
-            name={Icons.SCANNER}
-            color={getActiveIconColor('scan_qr')}
-            {...getIconDimensions(height)}
-            onClick={() => onHandlePressButton('scan_qr')}
-          />
-          {showTags && (
-            <Text style={[styles.textBase, styles.marginTop]}>
-              {translate('navigation.floating_bar.buy')}
-            </Text>
-          )}
-        </View>
-        <View style={[styles.itemContainer, getActiveStyle('swap_buy')]}>
-          <Icon
-            theme={theme}
-            color={getActiveIconColor('swap_buy')}
-            name={Icons.SWAP}
-            {...getIconDimensions(height)}
-            onClick={() => onHandlePressButton('swap_buy')}
-          />
-          {showTags && (
-            <Text style={[styles.textBase, styles.marginTop]}>
-              {translate('navigation.floating_bar.swap')}
-            </Text>
-          )}
-        </View>
-      </View>
-    );
+  const startAnimation = (toValue: number) => {
+    Animated.timing(anim, {
+      toValue,
+      duration: 1000,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }).start(() => {});
   };
 
-  return show && !isDrawerOpen && !isLoadingScreen
-    ? renderNavigationBar()
-    : null;
+  useEffect(() => {
+    startAnimation(isTop ? 0 : 1);
+  }, [isTop]);
+
+  useEffect(() => {
+    setIsTop(show && !isDrawerOpen && !isLoadingScreen);
+  }, [show, isDrawerOpen, isLoadingScreen]);
+
+  const translateY = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, Dimensions.get('window').height - 70],
+    extrapolate: 'clamp',
+  });
+
+  return show ? (
+    <Animated.View
+      style={[
+        getCardStyle(theme).floatingBar,
+        styles.container,
+        {transform: [{translateY}]},
+      ]}>
+      <View style={[styles.itemContainer, getActiveStyle('ecosystem')]}>
+        <Icon
+          theme={theme}
+          name={Icons.WALLET_ADD}
+          color={getActiveIconColor('ecosystem')}
+          {...getIconDimensions(height)}
+          onClick={() => onHandlePressButton('ecosystem')}
+        />
+        {showTags && (
+          <Text style={[styles.textBase, styles.marginTop]}>
+            {translate('navigation.floating_bar.ecosystem')}
+          </Text>
+        )}
+      </View>
+      <View style={[styles.itemContainer, getActiveStyle('browser')]}>
+        <Icon
+          theme={theme}
+          color={getActiveIconColor('browser')}
+          name={Icons.GLOBAL}
+          {...getIconDimensions(height)}
+          onClick={() => onHandlePressButton('browser')}
+        />
+        {showTags && (
+          <Text style={[styles.textBase, styles.marginTop]}>
+            {translate('navigation.floating_bar.browser')}
+          </Text>
+        )}
+      </View>
+      <View style={[styles.itemContainer, getActiveStyle('scan_qr')]}>
+        <Icon
+          theme={theme}
+          name={Icons.SCANNER}
+          color={getActiveIconColor('scan_qr')}
+          {...getIconDimensions(height)}
+          onClick={() => onHandlePressButton('scan_qr')}
+        />
+        {showTags && (
+          <Text style={[styles.textBase, styles.marginTop]}>
+            {translate('navigation.floating_bar.buy')}
+          </Text>
+        )}
+      </View>
+      <View style={[styles.itemContainer, getActiveStyle('swap_buy')]}>
+        <Icon
+          theme={theme}
+          color={getActiveIconColor('swap_buy')}
+          name={Icons.SWAP}
+          {...getIconDimensions(height)}
+          onClick={() => onHandlePressButton('swap_buy')}
+        />
+        {showTags && (
+          <Text style={[styles.textBase, styles.marginTop]}>
+            {translate('navigation.floating_bar.swap')}
+          </Text>
+        )}
+      </View>
+    </Animated.View>
+  ) : null;
 };
 
 const getStyles = (theme: Theme, height: number) =>
