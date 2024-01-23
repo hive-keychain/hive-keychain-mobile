@@ -18,9 +18,6 @@ import AccountValue from 'components/hive/AccountValue';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
-import WhatsNewComponent from 'components/popups/whats-new/whats-new.component';
-import Survey from 'components/survey';
-import {BackgroundHexagons} from 'components/ui/BackgroundHexagons';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
@@ -35,16 +32,16 @@ import {
   AppStateStatus,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  SectionList,
   StyleSheet,
+  Text,
+  TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
 import {ConnectedProps, connect} from 'react-redux';
-import Primary from 'screens/hive/wallet/Primary';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {getCardStyle} from 'src/styles/card';
 import {
   BACKGROUNDITEMDARKISH,
   DARKER_RED_COLOR,
@@ -56,7 +53,6 @@ import {Width} from 'utils/common.types';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import EngineTokens from './EngineTokens';
 
 const Main = ({
   loadAccount,
@@ -80,6 +76,7 @@ const Main = ({
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   const [loadingUserAndGlobals, setLoadingUserAndGlobals] = useState(true);
+  const sectionListRef = useRef();
 
   useEffect(() => {
     loadTokens();
@@ -184,85 +181,219 @@ const Main = ({
         icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
       } as DropdownItem;
     });
+  //TODO commented while testing sectionList bellow
+  // return (
+  //   <WalletPage>
+  //     {!loadingUserAndGlobals ? (
+  //       <ScrollView horizontal={false} onScroll={onHandleScroll}>
+  //         <Separator height={15} />
+  //         <View style={[styles.headerMenu]}>
+  //           <DrawerButton navigation={navigation as any} theme={theme} />
+  //           <View style={[styles.innerHeader]}>
+  //             <StatusIndicator theme={theme} />
+  //             <Claim theme={theme} />
+  //             <UserDropdown
+  //               list={getListFromAccount()}
+  //               selected={getItemDropDownSelected(user.name)}
+  //               onSelected={(selectedAccount) => loadAccount(selectedAccount)}
+  //               additionalContainerStyle={styles.dropdownContainer}
+  //               additionalDropdowContainerStyle={styles.dropdownListContainer}
+  //               dropdownIconScaledSize={{width: 10, height: 10}}
+  //               copyButtonValue
+  //             />
+  //           </View>
+  //         </View>
+  //         <Separator />
+  //         <View style={styles.rowWrapper}>
+  //           <PercentageDisplay
+  //             name={translate('wallet.vp')}
+  //             percent={getVP(user.account) || 100}
+  //             IconBgcolor={OVERLAYICONBGCOLOR}
+  //             theme={theme}
+  //             iconName={Icons.SEND_SQUARE}
+  //             bgColor={BACKGROUNDITEMDARKISH}
+  //             secondary={`$${
+  //               getVotingDollarsPerAccount(
+  //                 100,
+  //                 properties,
+  //                 user.account,
+  //                 false,
+  //               ) || '0'
+  //             }`}
+  //           />
+  //           <PercentageDisplay
+  //             iconName={Icons.SPEEDOMETER}
+  //             bgColor={DARKER_RED_COLOR}
+  //             name={translate('wallet.rc')}
+  //             percent={user.rc.percentage || 100}
+  //             IconBgcolor={OVERLAYICONBGCOLOR}
+  //             theme={theme}
+  //           />
+  //         </View>
+  //         <Separator />
+  //         <BackgroundHexagons
+  //           additionalSvgStyle={styles.extraBg}
+  //           theme={theme}
+  //         />
+  //         <AccountValue
+  //           account={user.account}
+  //           prices={prices}
+  //           properties={properties}
+  //           theme={theme}
+  //           title={translate('common.estimated_account_value')}
+  //         />
+  //         <Separator />
+  //         <View
+  //           style={[
+  //             getCardStyle(theme).roundedCardItem,
+  //             styles.fullListContainer,
+  //           ]}>
+  //           <Primary theme={theme} />
+  //           <Separator height={10} />
+  //           <EngineTokens showEngineTokenSettings />
+  //         </View>
+  //         <Survey navigation={navigation} />
+  //         <WhatsNewComponent navigation={navigation} />
+  //       </ScrollView>
+  //     ) : (
+  //       <Loader animatedLogo />
+  //     )}
+  //   </WalletPage>
+  // );
 
+  //TODO testing sectionList bellow
+  const handleItemClick = (index: number) => {
+    if (sectionListRef && sectionListRef.current) {
+      (sectionListRef as any).current.scrollToLocation({
+        animated: true,
+        itemIndex: index,
+        sectionIndex: 0,
+        viewPosition: 0.5,
+      });
+    }
+  };
+
+  const DATA = [
+    {
+      title: 'Main dishes',
+      data: [
+        'Pizza',
+        'Burger',
+        'Risotto',
+        'Pizza2',
+        'Burger2',
+        'Risotto2',
+        'Pizza3',
+        'Burger3',
+        'Risotto3',
+        'Pizza4',
+        'Burger4',
+        'Risotto4',
+      ],
+    },
+    // {
+    //   title: 'Sides',
+    //   data: ['French Fries', 'Onion Rings', 'Fried Shrimps'],
+    // },
+    // {
+    //   title: 'Drinks',
+    //   data: ['Water', 'Coke', 'Beer'],
+    // },
+    // {
+    //   title: '',
+    //   data: ['Cheese Cake', 'Ice Cream'],
+    // },
+  ];
+  //IMmportant //TODO
+  //  - create an item token(currency | engine)
+  //  - apply styles to each item to have the borders top, etc, etc, using the index.
+  //  - implement within section list.
   return (
-    <WalletPage>
+    <WalletPage
+      additionalBgSvgImageStyle={
+        !loadingUserAndGlobals ? {top: 80} : undefined
+      }>
       {!loadingUserAndGlobals ? (
-        <ScrollView horizontal={false} onScroll={onHandleScroll}>
-          <Separator height={15} />
-          <View style={[styles.headerMenu]}>
-            <DrawerButton navigation={navigation as any} theme={theme} />
-            <View style={[styles.innerHeader]}>
-              <StatusIndicator theme={theme} />
-              <Claim theme={theme} />
-              <UserDropdown
-                list={getListFromAccount()}
-                selected={getItemDropDownSelected(user.name)}
-                onSelected={(selectedAccount) => loadAccount(selectedAccount)}
-                additionalContainerStyle={styles.dropdownContainer}
-                additionalDropdowContainerStyle={styles.dropdownListContainer}
-                dropdownIconScaledSize={{width: 10, height: 10}}
-                copyButtonValue
+        <SectionList
+          ref={sectionListRef}
+          onScroll={onHandleScroll}
+          ListHeaderComponent={
+            <>
+              <Separator height={15} />
+              <View style={[styles.headerMenu]}>
+                <DrawerButton navigation={navigation as any} theme={theme} />
+                <View style={[styles.innerHeader]}>
+                  <StatusIndicator theme={theme} />
+                  <Claim theme={theme} />
+                  <UserDropdown
+                    list={getListFromAccount()}
+                    selected={getItemDropDownSelected(user.name)}
+                    onSelected={(selectedAccount) =>
+                      loadAccount(selectedAccount)
+                    }
+                    additionalContainerStyle={styles.dropdownContainer}
+                    additionalDropdowContainerStyle={
+                      styles.dropdownListContainer
+                    }
+                    dropdownIconScaledSize={{width: 10, height: 10}}
+                    copyButtonValue
+                  />
+                </View>
+              </View>
+              <Separator />
+              <View style={styles.rowWrapper}>
+                <PercentageDisplay
+                  name={translate('wallet.vp')}
+                  percent={getVP(user.account) || 100}
+                  IconBgcolor={OVERLAYICONBGCOLOR}
+                  theme={theme}
+                  iconName={Icons.SEND_SQUARE}
+                  bgColor={BACKGROUNDITEMDARKISH}
+                  secondary={`$${
+                    getVotingDollarsPerAccount(
+                      100,
+                      properties,
+                      user.account,
+                      false,
+                    ) || '0'
+                  }`}
+                />
+                <PercentageDisplay
+                  iconName={Icons.SPEEDOMETER}
+                  bgColor={DARKER_RED_COLOR}
+                  name={translate('wallet.rc')}
+                  percent={user.rc.percentage || 100}
+                  IconBgcolor={OVERLAYICONBGCOLOR}
+                  theme={theme}
+                />
+              </View>
+              <Separator />
+              <AccountValue
+                account={user.account}
+                prices={prices}
+                properties={properties}
+                theme={theme}
+                title={translate('common.estimated_account_value')}
               />
-            </View>
-          </View>
-          <Separator />
-          <View style={styles.rowWrapper}>
-            <PercentageDisplay
-              name={translate('wallet.vp')}
-              percent={getVP(user.account) || 100}
-              IconBgcolor={OVERLAYICONBGCOLOR}
-              theme={theme}
-              iconName={Icons.SEND_SQUARE}
-              bgColor={BACKGROUNDITEMDARKISH}
-              secondary={`$${
-                getVotingDollarsPerAccount(
-                  100,
-                  properties,
-                  user.account,
-                  false,
-                ) || '0'
-              }`}
-            />
-            <PercentageDisplay
-              iconName={Icons.SPEEDOMETER}
-              bgColor={DARKER_RED_COLOR}
-              name={translate('wallet.rc')}
-              percent={user.rc.percentage || 100}
-              IconBgcolor={OVERLAYICONBGCOLOR}
-              theme={theme}
-            />
-          </View>
-          <Separator />
-          <BackgroundHexagons
-            additionalSvgStyle={styles.extraBg}
-            theme={theme}
-          />
-          <AccountValue
-            account={user.account}
-            prices={prices}
-            properties={properties}
-            theme={theme}
-            title={translate('common.estimated_account_value')}
-          />
-          <Separator />
-          <View
-            style={[
-              getCardStyle(theme).roundedCardItem,
-              styles.fullListContainer,
-            ]}>
-            <Primary theme={theme} />
-            <Separator height={10} />
-            <EngineTokens showEngineTokenSettings />
-          </View>
-          <Survey navigation={navigation} />
-          <WhatsNewComponent navigation={navigation} />
-        </ScrollView>
+              <Separator />
+            </>
+          }
+          sections={DATA}
+          keyExtractor={(item, index) => item + index}
+          renderItem={(item) => (
+            <TouchableOpacity
+              onPress={() => handleItemClick(item.index)}
+              style={styles.item}>
+              <Text style={{fontSize: 16}}>{item.item}</Text>
+            </TouchableOpacity>
+          )}
+        />
       ) : (
         <Loader animatedLogo />
       )}
     </WalletPage>
   );
+  //end test
 };
 
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
@@ -298,7 +429,8 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       alignItems: 'center',
     },
     extraBg: {
-      opacity: 0.8,
+      opacity: 1,
+      top: 0, //TODO testing to make it fit in sectionList
     },
     fullListContainer: {
       flexGrow: 2,
@@ -314,6 +446,12 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     dropdownListContainer: {
       borderRadius: 10,
       height: '100%',
+    },
+    //TODO remove bellow after implementing or testing
+    item: {
+      backgroundColor: '#f9c2ff5c',
+      padding: 20,
+      marginVertical: 8,
     },
   });
 
