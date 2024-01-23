@@ -26,6 +26,8 @@ export const processQRCodeOp = async (op: Operation) => {
   const type = op[0];
   const data = op[1];
   let request;
+  console.log({type}); //TODO remove line
+
   switch (type) {
     case 'transfer':
       const transferOp = data as TransferOperation[1];
@@ -78,7 +80,7 @@ export const processQRCodeOp = async (op: Operation) => {
   }
 
   const accounts = await store.getState().accounts;
-  console.log('accounts', accounts);
+  console.log('hive-uri accounts', accounts);
   if (accounts && accounts.length) {
     const validity = validateAuthority(accounts, request);
     if (validity.valid) {

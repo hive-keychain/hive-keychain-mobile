@@ -7,6 +7,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -50,6 +51,7 @@ interface Props {
   copyButtonValue?: boolean;
   showSelectedIcon?: JSX.Element;
   additionalDropdownIconColor?: string;
+  additionalTextStyle?: StyleProp<TextStyle>;
 }
 
 const CustomDropdown = ({
@@ -67,6 +69,7 @@ const CustomDropdown = ({
   copyButtonValue,
   showSelectedIcon,
   additionalDropdownIconColor,
+  additionalTextStyle,
 }: Props) => {
   const [isListExpanded, setIsListExpanded] = useState(false);
   const styles = getStyles(theme, useWindowDimensions().height);
@@ -97,7 +100,8 @@ const CustomDropdown = ({
           <>
             {titleTranslationKey && (
               <>
-                <Text style={[styles.text, styles.aligned]}>
+                <Text
+                  style={[styles.text, styles.aligned, additionalTextStyle]}>
                   {translate(titleTranslationKey)}
                 </Text>
                 <Separator
@@ -154,11 +158,11 @@ const CustomDropdown = ({
           additionalDropdowContainerStyle,
         ]}>
         {typeof selected === 'string' ? (
-          <Text style={styles.text}>{selected}</Text>
+          <Text style={[styles.text, additionalTextStyle]}>{selected}</Text>
         ) : (
           <View style={styles.flexRow}>
             {selected.icon}
-            <Text style={[styles.text, styles.marginLeft]}>
+            <Text style={[styles.text, styles.marginLeft, additionalTextStyle]}>
               {selected.label}
             </Text>
           </View>
@@ -208,6 +212,7 @@ const CustomDropdown = ({
                         typeof selected === 'object'
                           ? styles.marginLeft
                           : undefined,
+                        additionalTextStyle,
                       ]}>
                       {item.label ?? item.value}
                     </Text>

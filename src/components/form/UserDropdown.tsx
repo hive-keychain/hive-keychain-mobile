@@ -1,6 +1,6 @@
 import Icon from 'components/hive/Icon';
 import React from 'react';
-import {StyleProp, ViewStyle} from 'react-native';
+import {StyleProp, TextStyle, ViewStyle} from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
@@ -16,6 +16,7 @@ interface Props {
   copyButtonValue?: boolean;
   dropdownIconScaledSize?: Dimensions;
   showSelectedIcon?: JSX.Element;
+  additionalTextStyle?: StyleProp<TextStyle>;
 }
 
 const UserDropdown = ({
@@ -27,6 +28,7 @@ const UserDropdown = ({
   copyButtonValue,
   dropdownIconScaledSize,
   showSelectedIcon,
+  additionalTextStyle,
 }: Props) => {
   const {theme} = useThemeContext();
   return (
@@ -50,6 +52,7 @@ const UserDropdown = ({
           color={PRIMARY_RED_COLOR}
         />
       }
+      additionalTextStyle={additionalTextStyle}
     />
   );
 };

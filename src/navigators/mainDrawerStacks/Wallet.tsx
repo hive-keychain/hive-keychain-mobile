@@ -62,11 +62,11 @@ export default () => {
               theme={theme}
               onPress={() => {
                 const nav = navigation as DrawerNavigationHelpers;
-                if (nav.canGoBack()) {
-                  nav.goBack();
-                } else {
-                  navigation.navigate('WalletScreen');
-                }
+                // if (nav.canGoBack()) {
+                //   nav.goBack();
+                // } else {
+                navigation.navigate('WalletScreen');
+                // }
               }}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}

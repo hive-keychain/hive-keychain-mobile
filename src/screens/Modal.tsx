@@ -29,10 +29,11 @@ export default ({navigation, route}: ModalNavigationProps) => {
   }
 
   if (
-    name &&
-    (name.toLowerCase().includes('operation') ||
-      name.includes(ModalComponent.HAS_INFO) ||
-      name.includes(ModalComponent.SWAP_INFO))
+    (name &&
+      (name.toLowerCase().includes('operation') ||
+        name.includes(ModalComponent.HAS_INFO) ||
+        name.includes(ModalComponent.SWAP_INFO))) ||
+    name.includes(ModalComponent.BROADCAST)
   ) {
     containerStyle = {
       borderWidth: 1,
