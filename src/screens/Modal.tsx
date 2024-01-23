@@ -33,13 +33,17 @@ export default ({navigation, route}: ModalNavigationProps) => {
       (name.toLowerCase().includes('operation') ||
         name.includes(ModalComponent.HAS_INFO) ||
         name.includes(ModalComponent.SWAP_INFO))) ||
-    name.includes(ModalComponent.BROADCAST)
+    name.includes(ModalComponent.BROADCAST) ||
+    name.includes(ModalComponent.HAS_AUTH) ||
+    name.includes(ModalComponent.HAS_ERROR)
   ) {
     containerStyle = {
       borderWidth: 1,
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
       padding: 10,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
     } as StyleProp<ViewStyle>;
   }
 

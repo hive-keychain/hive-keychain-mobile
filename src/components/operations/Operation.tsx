@@ -1,7 +1,14 @@
 import CloseButton from 'components/ui/CloseButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
-import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
@@ -13,6 +20,7 @@ type Props = {
   logo?: JSX.Element;
   onClose?: () => void;
   additionalHeaderContainerStyle?: StyleProp<ViewStyle>;
+  additionalHeaderTitleStyle?: StyleProp<TextStyle>;
 };
 export default ({
   children,
@@ -20,6 +28,7 @@ export default ({
   title,
   onClose,
   additionalHeaderContainerStyle,
+  additionalHeaderTitleStyle,
 }: Props) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
@@ -29,7 +38,7 @@ export default ({
       <FocusAwareStatusBar />
       <View style={[styles.header, additionalHeaderContainerStyle]}>
         <View style={styles.headerLeft}>{logo}</View>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, additionalHeaderTitleStyle]}>{title}</Text>
         <CloseButton
           theme={theme}
           onPress={() => (onClose ? onClose() : goBack())}

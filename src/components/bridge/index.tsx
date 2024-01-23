@@ -24,6 +24,7 @@ class Bridge extends Component implements InnerProps {
     const paramsJoined = params
       .map((e) => e.replace(/\\/g, '\\\\'))
       .join("','");
+    console.log({params, paramsJoined}); //TODO remove line
     const js = `
         returnValue = window.${methodName}('${paramsJoined}');
         returnObject = JSON.stringify({id: "${id}", data: returnValue});
