@@ -1,10 +1,10 @@
-import {Token} from 'actions/interfaces';
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import React, {useState} from 'react';
 import {Image as Img, StyleSheet, Text, View} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import Image from 'react-native-fast-image';
 import {Theme} from 'src/context/theme.context';
+import {Token} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
@@ -48,7 +48,6 @@ const TokenSettingsItem = ({
   if (!token) {
     return null;
   }
-  const metadata = JSON.parse(token.metadata);
 
   const logo = hasError ? (
     <Image
@@ -64,7 +63,7 @@ const TokenSettingsItem = ({
     <Image
       style={[styles.iconBase, styles.iconBase]}
       source={{
-        uri: metadata.icon,
+        uri: token.metadata.icon,
       }}
       onError={() => {
         setHasError(true);

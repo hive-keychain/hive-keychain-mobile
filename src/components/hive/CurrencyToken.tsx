@@ -14,6 +14,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {getHBDButtonList} from 'src/reference-data/hbdOperationButtonList';
 import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
 import {getHPButtonList} from 'src/reference-data/hpOperationButtonList';
+import {getCardStyle} from 'src/styles/card';
 import {
   HBDICONBGCOLOR,
   HIVEICONBGCOLOR,
@@ -170,50 +171,56 @@ const CurrencyToken = ({
   };
 
   return (
-    <View style={styles.container} key={`currency-token-${currencyName}`}>
-      <TouchableOpacity
-        onPress={() => {
-          onPress();
-          setIsExpanded(!isExpanded);
-        }}
-        style={styles.rowContainer}>
-        <View style={styles.leftContainer}>
-          {getCurrencyLogo()}
-          <Text style={[styles.textSymbol, styles.marginLeft]}>
-            {currencyName}
-          </Text>
-        </View>
-        <View style={isExpanded ? styles.rowContainer : undefined}>
-          <View>
-            <Text style={[styles.textAmount, styles.alignedRitgh]}>
-              {value ? formatBalance(value) : 0}
+    <View style={getCardStyle(theme).wrapperCardItem}>
+      <View style={styles.container} key={`currency-token-${currencyName}`}>
+        <TouchableOpacity
+          onPress={() => {
+            onPress();
+            setIsExpanded(!isExpanded);
+          }}
+          style={styles.rowContainer}>
+          <View style={styles.leftContainer}>
+            {getCurrencyLogo()}
+            <Text style={[styles.textSymbol, styles.marginLeft]}>
+              {currencyName}
             </Text>
-            {subValue && (
-              <Text
-                style={[styles.textAmount, styles.opaque, styles.alignedRitgh]}>
-                {preFixSubValue ? preFixSubValue : ''} {subValue} (
-                {subValueShortDescription ?? translate('common.savings')})
+          </View>
+          <View style={isExpanded ? styles.rowContainer : undefined}>
+            <View>
+              <Text style={[styles.textAmount, styles.alignedRitgh]}>
+                {value ? formatBalance(value) : 0}
               </Text>
+              {subValue && (
+                <Text
+                  style={[
+                    styles.textAmount,
+                    styles.opaque,
+                    styles.alignedRitgh,
+                  ]}>
+                  {preFixSubValue ? preFixSubValue : ''} {subValue} (
+                  {subValueShortDescription ?? translate('common.savings')})
+                </Text>
+              )}
+            </View>
+            {isExpanded && (
+              <Icon
+                key={`show-token-history-${currencyName}`}
+                name={Icons.BACK_TIME}
+                onClick={onHandleGoToWalletHistory}
+                additionalContainerStyle={styles.squareButton}
+                theme={theme}
+                color={PRIMARY_RED_COLOR}
+              />
             )}
           </View>
-          {isExpanded && (
-            <Icon
-              key={`show-token-history-${currencyName}`}
-              name={Icons.BACK_TIME}
-              onClick={onHandleGoToWalletHistory}
-              additionalContainerStyle={styles.squareButton}
-              theme={theme}
-              color={PRIMARY_RED_COLOR}
-            />
-          )}
-        </View>
-      </TouchableOpacity>
-      {isExpanded && (
-        <View>
-          <Separator drawLine additionalLineStyle={styles.line} />
-          <View style={styles.rowWrappedContainer}>{buttons}</View>
-        </View>
-      )}
+        </TouchableOpacity>
+        {isExpanded && (
+          <View>
+            <Separator drawLine additionalLineStyle={styles.line} />
+            <View style={styles.rowWrappedContainer}>{buttons}</View>
+          </View>
+        )}
+      </View>
     </View>
   );
 };

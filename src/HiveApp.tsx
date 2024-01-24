@@ -8,6 +8,7 @@ import {forgetRequestedOperation} from 'actions/index';
 import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import Bridge from 'components/bridge';
 import {MessageModal} from 'components/modals/MessageModal';
+import RpcSwitcherComponent from 'components/popups/rpc-switcher/rpc-switcher.component';
 import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
@@ -90,12 +91,16 @@ const App = ({
   }, [rpc]);
 
   const checkCurrentRPC = async (currentRPCUri: string) => {
-    const rpcStatusOK = await checkRpcStatus(currentRPCUri);
-    if (!rpcStatusOK) {
-      setSwitchToRpc({uri: DEFAULT_RPC, testnet: false});
+    try {
+      const rpcStatusOK = await checkRpcStatus(currentRPCUri);
+      if (!rpcStatusOK) {
+        setSwitchToRpc({uri: DEFAULT_RPC, testnet: false});
+      }
+      setDisplayChangeRpcPopup(!rpcStatusOK);
+      // showFloatingBar(rpcStatusOK); //TODO uncomment & implement when adding again the rpcSwitcher.
+    } catch (error) {
+      console.log('Error checking rpcStatusOK', {error});
     }
-    setDisplayChangeRpcPopup(!rpcStatusOK);
-    // showFloatingBar(rpcStatusOK); //TODO uncomment & implement when adding again the rpcSwitcher.
   };
 
   const renderNavigator = () => {
@@ -152,10 +157,7 @@ const App = ({
       {renderRootNavigator()}
       <MessageModal />
       <FloatingBar />
-      {/* TODO QUENTIN: please uncomment and check, let me know if you like to do changes about this 
-          -> also uncomment in hiveEngine.ts
-      */}
-      {/* <RpcSwitcherComponent /> */}
+      <RpcSwitcherComponent />
       <Bridge />
     </NavigationContainer>
   );

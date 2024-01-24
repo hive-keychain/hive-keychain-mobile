@@ -13,6 +13,7 @@ import Image from 'react-native-fast-image';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Token} from 'src/interfaces/tokens.interface';
+import {getCardStyle} from 'src/styles/card';
 import {RootState} from 'store';
 import {getBackgroundColorFromBackend} from 'utils/colors';
 import {Width} from 'utils/common.types';
@@ -83,35 +84,37 @@ const EngineTokenDisplay = ({
   };
 
   return (
-    <TokenDisplay
-      name={tokenInfo.name}
-      currency={token.symbol}
-      color="black"
-      value={parseFloat(token.balance)}
-      totalValue={getHiveEngineTokenValue(token, market)}
-      toggled={toggled}
-      setToggle={setToggle}
-      price={{
-        usd: tokenMarket ? parseFloat(tokenMarket.lastPrice) : 0,
-        usd_24h_change: parseFloat(
-          tokenMarket ? tokenMarket.priceChangePercent : '0',
-        ),
-      }}
-      logo={
-        <View
-          style={[
-            styles.iconContainerBase,
-            !hasError ? styles.iconContainerBaseWithBg : undefined,
-          ]}>
-          {logo}
-        </View>
-      }
-      renderButtonOptions={false}
-      theme={theme}
-      tokenInfo={tokenInfo}
-      tokenBalance={token}
-      onHandleGoToTokenHistory={onHandleGoToTokenHistory}
-    />
+    <View style={getCardStyle(theme).wrapperCardItem}>
+      <TokenDisplay
+        name={tokenInfo.name}
+        currency={token.symbol}
+        color="black"
+        value={parseFloat(token.balance)}
+        totalValue={getHiveEngineTokenValue(token, market)}
+        toggled={toggled}
+        setToggle={setToggle}
+        price={{
+          usd: tokenMarket ? parseFloat(tokenMarket.lastPrice) : 0,
+          usd_24h_change: parseFloat(
+            tokenMarket ? tokenMarket.priceChangePercent : '0',
+          ),
+        }}
+        logo={
+          <View
+            style={[
+              styles.iconContainerBase,
+              !hasError ? styles.iconContainerBaseWithBg : undefined,
+            ]}>
+            {logo}
+          </View>
+        }
+        renderButtonOptions={false}
+        theme={theme}
+        tokenInfo={tokenInfo}
+        tokenBalance={token}
+        onHandleGoToTokenHistory={onHandleGoToTokenHistory}
+      />
+    </View>
   );
 };
 

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import {useIsDrawerOpen} from '@react-navigation/drawer';
 import {
   setIsDrawerOpen,
@@ -11,12 +12,15 @@ import {
   loadProperties,
 } from 'actions/hive';
 import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
+import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
 import {DropdownItem} from 'components/form/CustomDropdown';
+import CustomSearchBar from 'components/form/CustomSearchBar';
 import {PickerItemInterface} from 'components/form/PickerItem';
 import UserDropdown from 'components/form/UserDropdown';
 import AccountValue from 'components/hive/AccountValue';
 import CurrencyToken from 'components/hive/CurrencyToken';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
+import Icon from 'components/hive/Icon';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
@@ -28,6 +32,7 @@ import WalletPage from 'components/ui/WalletPage';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
+import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   AppState,
@@ -36,7 +41,6 @@ import {
   NativeSyntheticEvent,
   SectionList,
   StyleSheet,
-  Text,
   View,
   useWindowDimensions,
 } from 'react-native';
@@ -44,6 +48,8 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {getCardStyle} from 'src/styles/card';
 import {
   BACKGROUNDITEMDARKISH,
   DARKER_RED_COLOR,
@@ -57,6 +63,8 @@ import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
+import TokenSettings from './tokens/TokenSettings';
 
 const Main = ({
   loadAccount,
@@ -89,6 +97,13 @@ const Main = ({
     orderedUserTokenBalanceList,
     setOrderedUserTokenBalanceList,
   ] = useState<TokenBalance[]>([]);
+  const [
+    filteredUserTokenBalanceList,
+    setFilteredUserTokenBalanceList,
+  ] = useState<TokenBalance[]>([]);
+  const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     loadTokens();
@@ -104,13 +119,12 @@ const Main = ({
         );
       });
       //TODO bellow uncomment & implement
-      // setFilteredUserTokenBalanceList(
-      //   list.filter((userToken) => !hiddenTokens.includes(userToken.symbol)),
-      // );
+      setFilteredUserTokenBalanceList(
+        list.filter((userToken) => !hiddenTokens.includes(userToken.symbol)),
+      );
       setOrderedUserTokenBalanceList(list);
     }
-    //TODO bellow add hiddenTokens as hook dependency
-  }, [userTokens]);
+  }, [userTokens, hiddenTokens]);
 
   useEffect(() => {
     if (
@@ -121,11 +135,24 @@ const Main = ({
       setLoadingUserAndGlobals(false);
       setisLoadingScreen(false);
       if (!userTokens.loading) {
-        // loadHiddenTokens();
+        loadHiddenTokens();
         loadUserTokens(user.name);
       }
     }
   }, [properties, user.name]);
+
+  useEffect(() => {
+    const filtered = orderedUserTokenBalanceList.filter(
+      (token) =>
+        token.balance.toLowerCase().includes(searchValue.toLowerCase()) ||
+        token.symbol.toLowerCase().includes(searchValue.toLowerCase()),
+    );
+    setFilteredUserTokenBalanceList(
+      filtered.filter(
+        (filteredToken) => !hiddenTokens.includes(filteredToken.symbol),
+      ),
+    );
+  }, [searchValue]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
     loadAccount(lastAccount || accounts[0].name);
@@ -192,6 +219,18 @@ const Main = ({
   if (!user || !user.name) {
     return null;
   }
+
+  const loadHiddenTokens = async () => {
+    let customHiddenTokens = null;
+    try {
+      customHiddenTokens = JSON.parse(
+        await AsyncStorage.getItem(KeychainStorageKeyEnum.HIDDEN_TOKENS),
+      );
+      setHiddenTokens(customHiddenTokens ?? []);
+    } catch (error) {
+      console.log('Error reading hiddenTokens');
+    }
+  };
 
   const getItemDropDownSelected = (username: string): PickerItemInterface => {
     const selected = accounts.filter((acc) => acc.name === username)[0]!;
@@ -297,6 +336,14 @@ const Main = ({
   //TODO testing sectionList bellow
 
   //TODO bellow add the famous and wanted clickToView of the sectionList on each list.
+  const handleClickSettings = () => {
+    navigate('TemplateStack', {
+      titleScreen: translate('wallet.operations.token_settings.title'),
+      component: <TokenSettings />,
+      hideCloseButton: true,
+    } as TemplateStackProps);
+  };
+
   const handleClickToView = (index: number, sectionIndex: 0 | 1) => {
     if (sectionListRef && sectionListRef.current) {
       (sectionListRef as any).current.scrollToLocation({
@@ -346,13 +393,10 @@ const Main = ({
           />
         );
       },
-      data: orderedUserTokenBalanceList,
+      data: filteredUserTokenBalanceList,
     },
   ];
-  //IMmportant //TODO
-  //  - create an item token(currency | engine)
-  //  - apply styles to each item to have the borders top, etc, etc, using the index.
-  //  - use filters on tokens and render it in section header, conditionally.
+
   return (
     <WalletPage
       additionalBgSvgImageStyle={
@@ -423,7 +467,7 @@ const Main = ({
               <Separator />
             </>
           }
-          //TODO bellow fix or add ts-ignore
+          //@ts-ignore
           sections={DATA}
           keyExtractor={(item: any, index) =>
             item.currency ? item.currency + index : item.symbol + index
@@ -431,11 +475,65 @@ const Main = ({
           renderItem={({section: {renderItem}, index}) => (
             <View>{renderItem}</View>
           )}
-          renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
-          ItemSeparatorComponent={() => <Separator height={9} />}
+          renderSectionHeader={({section: {title}}) =>
+            title === 'Currencies' ? (
+              <View style={getCardStyle(theme).borderTopCard}>
+                <Separator height={25} />
+              </View>
+            ) : (
+              <View style={getCardStyle(theme).wrapperCardItem}>
+                <View
+                  style={[
+                    styles.flexRow,
+                    isSearchOpen ? styles.paddingVertical : undefined,
+                  ]}>
+                  {isSearchOpen && (
+                    <CustomSearchBar
+                      theme={theme}
+                      value={searchValue}
+                      onChangeText={(text) => {
+                        setSearchValue(text);
+                      }}
+                      additionalContainerStyle={[
+                        styles.searchContainer,
+                        isSearchOpen ? styles.borderLight : undefined,
+                      ]}
+                      rightIcon={
+                        <Icon
+                          name={Icons.SEARCH}
+                          theme={theme}
+                          onClick={() => {
+                            setSearchValue('');
+                            setIsSearchOpen(false);
+                          }}
+                        />
+                      }
+                    />
+                  )}
+                  <HiveEngineLogo height={23} width={23} />
+                  <View style={styles.separatorContainer} />
+                  <Icon
+                    name={Icons.SEARCH}
+                    theme={theme}
+                    additionalContainerStyle={styles.search}
+                    onClick={() => {
+                      setIsSearchOpen(!isSearchOpen);
+                    }}
+                    width={18}
+                    height={18}
+                  />
+                  <Icon
+                    name={Icons.SETTINGS_2}
+                    theme={theme}
+                    onClick={handleClickSettings}
+                  />
+                </View>
+              </View>
+            )
+          }
           ListFooterComponent={
             userTokens.loading && (
-              <View style={{height: 40}}>
+              <View style={{height: 60, marginTop: 20}}>
                 <Loader size={'small'} animating />
               </View>
             )
@@ -451,6 +549,13 @@ const Main = ({
 //TODO bellow check & cleanup
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
   StyleSheet.create({
+    paddingVertical: {paddingVertical: 10},
+    flexRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 4,
+      justifyContent: 'space-between',
+    },
     white: {color: 'white'},
     rowWrapper: {
       display: 'flex',
@@ -499,6 +604,27 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     dropdownListContainer: {
       borderRadius: 10,
       height: '100%',
+    },
+    search: {
+      marginRight: 4,
+    },
+    separatorContainer: {
+      borderWidth: 1,
+      borderColor: getColors(theme).cardBorderColor,
+      height: 1,
+      backgroundColor: getColors(theme).separatorBgColor,
+      width: '75%',
+      flexShrink: 1,
+    },
+    borderLight: {
+      borderColor: getColors(theme).cardBorderColor,
+      borderWidth: 1,
+    },
+    searchContainer: {
+      position: 'absolute',
+      right: 0,
+      zIndex: 10,
+      height: 45,
     },
   });
 

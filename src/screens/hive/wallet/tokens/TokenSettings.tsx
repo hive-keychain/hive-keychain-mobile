@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {loadTokens} from 'actions/index';
-import {Token} from 'actions/interfaces';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import Icon from 'components/hive/Icon';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -17,6 +16,7 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {Token} from 'src/interfaces/tokens.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';

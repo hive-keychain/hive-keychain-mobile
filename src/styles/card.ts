@@ -32,5 +32,22 @@ export const getCardStyle = (theme: Theme, borderRadius?: number) => {
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
     } as StyleProp<ViewStyle>,
+    wrapperCardItem: {
+      paddingHorizontal: 15,
+      borderLeftWidth: 1,
+      borderLeftColor: getColors(theme).cardBorderColor,
+      borderRightWidth: 1,
+      borderRightColor: getColors(theme).cardBorderColor,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      paddingBottom: 9,
+    },
+    borderTopCard: {
+      borderWidth: 1,
+      borderColor: getColors(theme).cardBorderColor,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      borderBottomWidth: 0,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+    },
   };
 };
