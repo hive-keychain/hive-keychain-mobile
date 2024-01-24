@@ -1,4 +1,4 @@
-import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
+import {TokenBalance, TokenMarket} from 'actions/interfaces';
 import {clearTokensFilters} from 'actions/tokensFilters';
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import {TokenHistoryProps} from 'components/operations/Tokens-history';
@@ -12,6 +12,7 @@ import {
 import Image from 'react-native-fast-image';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Token} from 'src/interfaces/tokens.interface';
 import {RootState} from 'store';
 import {getBackgroundColorFromBackend} from 'utils/colors';
 import {Width} from 'utils/common.types';
@@ -47,10 +48,7 @@ const EngineTokenDisplay = ({
   const tokenInfo = tokensList.find((t) => t.symbol === token.symbol);
   const tokenMarket = market.find((t) => t.symbol === token.symbol);
 
-  if (!tokenInfo) {
-    return null;
-  }
-  const metadata = JSON.parse(tokenInfo.metadata);
+  if (!tokenInfo) return null;
 
   const logo = hasError ? (
     <Image
@@ -66,7 +64,7 @@ const EngineTokenDisplay = ({
     <Image
       style={styles.iconBase}
       source={{
-        uri: metadata.icon,
+        uri: tokenInfo.metadata.icon,
       }}
       onError={() => {
         setHasError(true);

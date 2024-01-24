@@ -15,6 +15,8 @@ import {DropdownItem} from 'components/form/CustomDropdown';
 import {PickerItemInterface} from 'components/form/PickerItem';
 import UserDropdown from 'components/form/UserDropdown';
 import AccountValue from 'components/hive/AccountValue';
+import CurrencyToken from 'components/hive/CurrencyToken';
+import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
@@ -35,13 +37,13 @@ import {
   SectionList,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {TokenBalance} from 'src/interfaces/tokens.interface';
 import {
   BACKGROUNDITEMDARKISH,
   DARKER_RED_COLOR,
@@ -50,7 +52,9 @@ import {
 } from 'src/styles/colors';
 import {RootState} from 'store';
 import {Width} from 'utils/common.types';
+import {getCurrency} from 'utils/hive';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
+import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 
@@ -72,16 +76,41 @@ const Main = ({
   showFloatingBar,
   setIsDrawerOpen,
   setisLoadingScreen,
+  tokens,
+  userTokens,
+  tokensMarket,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   const [loadingUserAndGlobals, setLoadingUserAndGlobals] = useState(true);
   const sectionListRef = useRef();
+  const [toggled, setToggled] = useState<number>(null);
+  const [
+    orderedUserTokenBalanceList,
+    setOrderedUserTokenBalanceList,
+  ] = useState<TokenBalance[]>([]);
 
   useEffect(() => {
     loadTokens();
     loadTokensMarket();
   }, [loadTokens, loadTokensMarket]);
+
+  useEffect(() => {
+    if (!userTokens.loading) {
+      let list = userTokens.list.sort((a, b) => {
+        return (
+          getHiveEngineTokenValue(b, tokensMarket) -
+          getHiveEngineTokenValue(a, tokensMarket)
+        );
+      });
+      //TODO bellow uncomment & implement
+      // setFilteredUserTokenBalanceList(
+      //   list.filter((userToken) => !hiddenTokens.includes(userToken.symbol)),
+      // );
+      setOrderedUserTokenBalanceList(list);
+    }
+    //TODO bellow add hiddenTokens as hook dependency
+  }, [userTokens]);
 
   useEffect(() => {
     if (
@@ -91,6 +120,10 @@ const Main = ({
     ) {
       setLoadingUserAndGlobals(false);
       setisLoadingScreen(false);
+      if (!userTokens.loading) {
+        // loadHiddenTokens();
+        loadUserTokens(user.name);
+      }
     }
   }, [properties, user.name]);
 
@@ -262,52 +295,64 @@ const Main = ({
   // );
 
   //TODO testing sectionList bellow
-  const handleItemClick = (index: number) => {
+
+  //TODO bellow add the famous and wanted clickToView of the sectionList on each list.
+  const handleClickToView = (index: number, sectionIndex: 0 | 1) => {
     if (sectionListRef && sectionListRef.current) {
       (sectionListRef as any).current.scrollToLocation({
         animated: true,
         itemIndex: index,
-        sectionIndex: 0,
+        sectionIndex: sectionIndex,
         viewPosition: 0.5,
+        viewOffset: sectionIndex === 1 ? -50 : 0,
       });
     }
   };
 
   const DATA = [
     {
-      title: 'Main dishes',
+      title: 'Currencies',
+      renderItem: ({item, index}: any) => {
+        return (
+          <CurrencyToken
+            theme={theme}
+            currencyName={getCurrency(item.currency)}
+            itemIndex={index}
+            onPress={() => handleClickToView(index, 0)}
+          />
+        );
+      },
       data: [
-        'Pizza',
-        'Burger',
-        'Risotto',
-        'Pizza2',
-        'Burger2',
-        'Risotto2',
-        'Pizza3',
-        'Burger3',
-        'Risotto3',
-        'Pizza4',
-        'Burger4',
-        'Risotto4',
+        {currency: getCurrency('HIVE')},
+        {currency: getCurrency('HBD')},
+        {currency: getCurrency('HP')},
       ],
     },
-    // {
-    //   title: 'Sides',
-    //   data: ['French Fries', 'Onion Rings', 'Fried Shrimps'],
-    // },
-    // {
-    //   title: 'Drinks',
-    //   data: ['Water', 'Coke', 'Beer'],
-    // },
-    // {
-    //   title: '',
-    //   data: ['Cheese Cake', 'Ice Cream'],
-    // },
+    {
+      title: 'Engine Tokens',
+      renderItem: ({item, index}: any) => {
+        return (
+          <EngineTokenDisplay
+            addBackground
+            token={item}
+            tokensList={tokens}
+            market={tokensMarket}
+            toggled={toggled === item._id}
+            setToggle={() => {
+              if (toggled === item._id) setToggled(null);
+              else setToggled(item._id);
+              handleClickToView(index, 1);
+            }}
+          />
+        );
+      },
+      data: orderedUserTokenBalanceList,
+    },
   ];
   //IMmportant //TODO
   //  - create an item token(currency | engine)
   //  - apply styles to each item to have the borders top, etc, etc, using the index.
-  //  - implement within section list.
+  //  - use filters on tokens and render it in section header, conditionally.
   return (
     <WalletPage
       additionalBgSvgImageStyle={
@@ -378,15 +423,23 @@ const Main = ({
               <Separator />
             </>
           }
+          //TODO bellow fix or add ts-ignore
           sections={DATA}
-          keyExtractor={(item, index) => item + index}
-          renderItem={(item) => (
-            <TouchableOpacity
-              onPress={() => handleItemClick(item.index)}
-              style={styles.item}>
-              <Text style={{fontSize: 16}}>{item.item}</Text>
-            </TouchableOpacity>
+          keyExtractor={(item: any, index) =>
+            item.currency ? item.currency + index : item.symbol + index
+          }
+          renderItem={({section: {renderItem}, index}) => (
+            <View>{renderItem}</View>
           )}
+          renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
+          ItemSeparatorComponent={() => <Separator height={9} />}
+          ListFooterComponent={
+            userTokens.loading && (
+              <View style={{height: 40}}>
+                <Loader size={'small'} animating />
+              </View>
+            )
+          }
         />
       ) : (
         <Loader animatedLogo />
@@ -395,7 +448,7 @@ const Main = ({
   );
   //end test
 };
-
+//TODO bellow check & cleanup
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
   StyleSheet.create({
     white: {color: 'white'},
@@ -447,12 +500,6 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       borderRadius: 10,
       height: '100%',
     },
-    //TODO remove bellow after implementing or testing
-    item: {
-      backgroundColor: '#f9c2ff5c',
-      padding: 20,
-      marginVertical: 8,
-    },
   });
 
 const connector = connect(
@@ -464,6 +511,9 @@ const connector = connect(
       lastAccount: state.lastAccount.name,
       hive_authentication_service: state.hive_authentication_service,
       prices: state.currencyPrices,
+      tokens: state.tokens,
+      userTokens: state.userTokens,
+      tokensMarket: state.tokensMarket,
     };
   },
   {

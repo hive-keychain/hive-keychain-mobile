@@ -1,6 +1,6 @@
 import {clearWalletFilters} from 'actions/walletFilters';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,15 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getHBDButtonList} from 'src/reference-data/hbdOperationButtonList';
+import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
+import {getHPButtonList} from 'src/reference-data/hpOperationButtonList';
+import {
+  HBDICONBGCOLOR,
+  HIVEICONBGCOLOR,
+  PRIMARY_RED_COLOR,
+  getColors,
+} from 'src/styles/colors';
 import {
   body_primary_body_2,
   button_link_primary_medium,
@@ -19,52 +27,158 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
-import {formatBalance} from 'utils/format';
+import {formatBalance, toHP} from 'utils/format';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import Icon from './Icon';
+import IconHP from './IconHP';
 import {WalletHistoryComponentProps} from './Wallet-history-component';
 
 interface Props {
   theme: Theme;
   currencyName: string;
-  value: number;
-  subValue?: string;
-  preFixSubValue?: string;
-  subValueShortDescription?: string;
-  currencyLogo: JSX.Element;
-  buttons: JSX.Element[];
+  itemIndex: number;
+  onPress: () => void;
 }
-
+//TODO here cleanup & test
 const CurrencyToken = ({
   theme,
   currencyName,
-  currencyLogo,
-  value,
-  subValue,
-  buttons,
   clearWalletFilters,
-  subValueShortDescription,
-  preFixSubValue,
+  user,
+  properties,
+  itemIndex,
+  onPress,
 }: Props & PropsFromRedux) => {
+  //TODO bellow add styles as requested per design:
+  //  item 0: has border top.
   const [isExpanded, setIsExpanded] = useState(false);
+  const [value, setValue] = useState<number>(0);
+  const [subValue, setSubValue] = useState<string | undefined>(undefined);
+  const [preFixSubValue, setPreFixSubValue] = useState<string | undefined>(
+    undefined,
+  );
+  const [subValueShortDescription, setSubValueShortDescription] = useState<
+    string | undefined
+  >(undefined);
+
+  const getButtons = (currency: string) => {
+    switch (currency) {
+      case 'HIVE':
+        return getHiveButtonList(user, theme);
+      case 'HBD':
+        return getHBDButtonList(user, theme);
+      case 'HP':
+        return getHPButtonList(theme, user.name!);
+    }
+  };
+  const [buttons, setButtons] = useState<JSX.Element[]>(
+    getButtons(currencyName),
+  );
 
   const styles = getStyles(theme, useWindowDimensions());
 
+  const getHPPrefix = (value: string | number) => {
+    if (typeof value === 'string') {
+      return parseFloat(value) > 0 ? '+' : undefined;
+    } else if (typeof value === 'number') {
+      return value > 0 ? '+' : undefined;
+    }
+  };
+
+  useEffect(() => {
+    if (user && user.name && Object.keys(user.account).length > 0) {
+      if (currencyName === 'HIVE') {
+        setValue(parseFloat(user.account.balance as string));
+        setSubValue(
+          parseFloat(user.account.savings_balance as string) > 0
+            ? (user.account.savings_balance as string).split(' ')[0]
+            : undefined,
+        );
+      } else if (currencyName === 'HBD') {
+        setValue(parseFloat(user.account.hbd_balance as string));
+        setSubValue(
+          parseFloat(user.account.savings_hbd_balance as string) > 0
+            ? (user.account.savings_hbd_balance as string).split(' ')[0]
+            : undefined,
+        );
+        setPreFixSubValue(
+          parseFloat(user.account.savings_hbd_balance as string) > 0
+            ? '+'
+            : undefined,
+        );
+      } else if (currencyName === 'HP') {
+        setValue(
+          toHP(user.account.vesting_shares as string, properties.globals),
+        );
+        const delegatedVestingShares = parseFloat(
+          user.account.delegated_vesting_shares
+            .toString()
+            .replace(' VESTS', ''),
+        );
+        const receivedVestingShares = parseFloat(
+          user.account.received_vesting_shares.toString().replace(' VESTS', ''),
+        );
+        const delegationVestingShares = (
+          receivedVestingShares - delegatedVestingShares
+        ).toFixed(3);
+
+        const delegation = toHP(delegationVestingShares, properties.globals);
+        setSubValue(delegation.toFixed(3));
+        setPreFixSubValue(getHPPrefix(delegation));
+        setSubValueShortDescription(translate('common.deleg'));
+      }
+    }
+  }, [user]);
+
   const onHandleGoToWalletHistory = () => {
     clearWalletFilters();
+    //TODO check what is happening here bellow as the filter is not getting the currency
     navigate('WalletHistoryScreen', {
       currency: currencyName.toLowerCase(),
     } as WalletHistoryComponentProps);
   };
 
+  const getCurrencyLogo = () => {
+    switch (currencyName) {
+      case 'HIVE':
+        return (
+          <Icon
+            theme={theme}
+            name={Icons.HIVE_CURRENCY_LOGO}
+            additionalContainerStyle={styles.hiveIconContainer}
+            {...styles.icon}
+          />
+        );
+      case 'HBD':
+        return (
+          <Icon
+            theme={theme}
+            name={Icons.HBD_CURRENCY_LOGO}
+            additionalContainerStyle={[
+              styles.hiveIconContainer,
+              styles.hbdIconBgColor,
+            ]}
+            {...styles.icon}
+          />
+        );
+      case 'HP':
+        return (
+          <IconHP theme={theme} additionalContainerStyle={{marginTop: 8}} />
+        );
+    }
+  };
+
   return (
     <View style={styles.container} key={`currency-token-${currencyName}`}>
       <TouchableOpacity
-        onPress={() => setIsExpanded(!isExpanded)}
+        onPress={() => {
+          onPress();
+          setIsExpanded(!isExpanded);
+        }}
         style={styles.rowContainer}>
         <View style={styles.leftContainer}>
-          {currencyLogo}
+          {getCurrencyLogo()}
           <Text style={[styles.textSymbol, styles.marginLeft]}>
             {currencyName}
           </Text>
@@ -168,10 +282,25 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       flexWrap: 'wrap',
       justifyContent: 'center',
     },
+    icon: {
+      width: 20,
+      height: 20,
+    },
+    hiveIconContainer: {
+      borderRadius: 50,
+      padding: 5,
+      backgroundColor: HIVEICONBGCOLOR,
+    },
+    hbdIconBgColor: {
+      backgroundColor: HBDICONBGCOLOR,
+    },
   });
 
 const mapStateToProps = (state: RootState) => {
-  return {};
+  return {
+    user: state.activeAccount,
+    properties: state.properties,
+  };
 };
 
 const connector = connect(mapStateToProps, {

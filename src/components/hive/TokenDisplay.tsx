@@ -1,4 +1,4 @@
-import {Currency, Token} from 'actions/interfaces';
+import {Currency} from 'actions/interfaces';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
 import IncomingOutGoingTokenDelegations from 'components/operations/IncomingOutGoingTokenDelegations';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {TokenBalance} from 'src/interfaces/tokens.interface';
+import {Token, TokenBalance} from 'src/interfaces/tokens.interface';
 import {
   BUTTON_ICON_TEXT_MARGIN,
   BUTTON_MARGIN_BETWEEN,

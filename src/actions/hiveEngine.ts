@@ -9,7 +9,7 @@ import {
 } from 'src/interfaces/tokens.interface';
 import {RootState, store} from 'store';
 import {decodeMemoIfNeeded} from 'utils/hiveEngine';
-import {getUserBalance} from 'utils/tokens.utils';
+import {getAllTokens, getUserBalance} from 'utils/tokens.utils';
 import {ActionPayload} from './interfaces';
 import {
   CLEAR_TOKEN_HISTORY,
@@ -21,9 +21,10 @@ import {
 } from './types';
 
 export const loadTokens = (): AppThunk => async (dispatch) => {
+  const tokens = await getAllTokens();
   const action: ActionPayload<Token[]> = {
     type: LOAD_TOKENS,
-    payload: await hsc.find('tokens', 'tokens', {}, 1000, 0, []),
+    payload: tokens,
   };
   dispatch(action);
 };

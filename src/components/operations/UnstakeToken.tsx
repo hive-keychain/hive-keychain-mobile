@@ -1,5 +1,5 @@
 import {loadAccount, loadUserTokens} from 'actions/index';
-import {KeyTypes, Token} from 'actions/interfaces';
+import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
@@ -10,6 +10,7 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Token} from 'src/interfaces/tokens.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
