@@ -24,7 +24,6 @@ type Props = {
 };
 
 const DAppCard = ({dApp, updateTabUrl, theme}: Props) => {
-  console.log({dApp}); //TODO remove line
   const styles = getStyles(useWindowDimensions(), theme);
   return (
     <TouchableOpacity

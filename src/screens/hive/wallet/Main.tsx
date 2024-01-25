@@ -118,7 +118,6 @@ const Main = ({
           getHiveEngineTokenValue(a, tokensMarket)
         );
       });
-      //TODO bellow uncomment & implement
       setFilteredUserTokenBalanceList(
         list.filter((userToken) => !hiddenTokens.includes(userToken.symbol)),
       );
@@ -253,89 +252,7 @@ const Main = ({
         icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
       } as DropdownItem;
     });
-  //TODO commented while testing sectionList bellow
-  // return (
-  //   <WalletPage>
-  //     {!loadingUserAndGlobals ? (
-  //       <ScrollView horizontal={false} onScroll={onHandleScroll}>
-  //         <Separator height={15} />
-  //         <View style={[styles.headerMenu]}>
-  //           <DrawerButton navigation={navigation as any} theme={theme} />
-  //           <View style={[styles.innerHeader]}>
-  //             <StatusIndicator theme={theme} />
-  //             <Claim theme={theme} />
-  //             <UserDropdown
-  //               list={getListFromAccount()}
-  //               selected={getItemDropDownSelected(user.name)}
-  //               onSelected={(selectedAccount) => loadAccount(selectedAccount)}
-  //               additionalContainerStyle={styles.dropdownContainer}
-  //               additionalDropdowContainerStyle={styles.dropdownListContainer}
-  //               dropdownIconScaledSize={{width: 10, height: 10}}
-  //               copyButtonValue
-  //             />
-  //           </View>
-  //         </View>
-  //         <Separator />
-  //         <View style={styles.rowWrapper}>
-  //           <PercentageDisplay
-  //             name={translate('wallet.vp')}
-  //             percent={getVP(user.account) || 100}
-  //             IconBgcolor={OVERLAYICONBGCOLOR}
-  //             theme={theme}
-  //             iconName={Icons.SEND_SQUARE}
-  //             bgColor={BACKGROUNDITEMDARKISH}
-  //             secondary={`$${
-  //               getVotingDollarsPerAccount(
-  //                 100,
-  //                 properties,
-  //                 user.account,
-  //                 false,
-  //               ) || '0'
-  //             }`}
-  //           />
-  //           <PercentageDisplay
-  //             iconName={Icons.SPEEDOMETER}
-  //             bgColor={DARKER_RED_COLOR}
-  //             name={translate('wallet.rc')}
-  //             percent={user.rc.percentage || 100}
-  //             IconBgcolor={OVERLAYICONBGCOLOR}
-  //             theme={theme}
-  //           />
-  //         </View>
-  //         <Separator />
-  //         <BackgroundHexagons
-  //           additionalSvgStyle={styles.extraBg}
-  //           theme={theme}
-  //         />
-  //         <AccountValue
-  //           account={user.account}
-  //           prices={prices}
-  //           properties={properties}
-  //           theme={theme}
-  //           title={translate('common.estimated_account_value')}
-  //         />
-  //         <Separator />
-  //         <View
-  //           style={[
-  //             getCardStyle(theme).roundedCardItem,
-  //             styles.fullListContainer,
-  //           ]}>
-  //           <Primary theme={theme} />
-  //           <Separator height={10} />
-  //           <EngineTokens showEngineTokenSettings />
-  //         </View>
-  //         <Survey navigation={navigation} />
-  //         <WhatsNewComponent navigation={navigation} />
-  //       </ScrollView>
-  //     ) : (
-  //       <Loader animatedLogo />
-  //     )}
-  //   </WalletPage>
-  // );
 
-  //TODO testing sectionList bellow
-
-  //TODO bellow add the famous and wanted clickToView of the sectionList on each list.
   const handleClickSettings = () => {
     navigate('TemplateStack', {
       titleScreen: translate('wallet.operations.token_settings.title'),
@@ -544,9 +461,7 @@ const Main = ({
       )}
     </WalletPage>
   );
-  //end test
 };
-//TODO bellow check & cleanup
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
   StyleSheet.create({
     paddingVertical: {paddingVertical: 10},
@@ -556,7 +471,6 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       paddingHorizontal: 4,
       justifyContent: 'space-between',
     },
-    white: {color: 'white'},
     rowWrapper: {
       display: 'flex',
       flexDirection: 'row',
@@ -565,13 +479,6 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       paddingRight: width * 0.05,
     },
     avatar: {width: 25, height: 25, borderRadius: 50},
-    userPicker: {
-      width: 145,
-      height: 44,
-      borderWidth: 1,
-      borderColor: getColors(theme).walletUserPickerBorder,
-      borderRadius: 11,
-    },
     headerMenu: {
       flexDirection: 'row',
       width: '100%',
@@ -585,16 +492,6 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       flexDirection: 'row',
       height: 50,
       alignItems: 'center',
-    },
-    extraBg: {
-      opacity: 1,
-      top: 0, //TODO testing to make it fit in sectionList
-    },
-    fullListContainer: {
-      flexGrow: 2,
-      borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 0,
-      paddingHorizontal: 15,
     },
     dropdownContainer: {
       width: 'auto',

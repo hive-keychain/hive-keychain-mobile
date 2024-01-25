@@ -115,7 +115,6 @@ const EngineTokens = ({
     } as TemplateStackProps);
   };
 
-  //TODO find a way to make it work, ask Quentin
   const handleClickToView = (itemIndex: number) => {
     if (flatListRef && flatListRef.current) {
       (flatListRef.current as FlatList).scrollToIndex({

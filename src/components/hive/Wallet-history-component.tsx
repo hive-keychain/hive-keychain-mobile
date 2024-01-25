@@ -1,5 +1,5 @@
 import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
-import {clearWalletFilters} from 'actions/walletFilters';
+import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
@@ -33,12 +33,15 @@ const WallettHistory = ({
   fetchAccountTransactions,
   walletFilters,
   clearUserTransactions,
+  updateWalletFilter,
   route,
 }: PropsFromRedux & {route: any}) => {
   const [currency, setCurrency] = useState('');
 
   useEffect(() => {
-    if (route.params) setCurrency(route.params.currency);
+    if (route.params) {
+      setCurrency(route.params.currency);
+    }
   }, []);
 
   let lastOperationFetched = -1;
@@ -310,6 +313,7 @@ const connector = connect(mapStateToProps, {
   fetchAccountTransactions,
   clearWalletFilters,
   clearUserTransactions,
+  updateWalletFilter,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

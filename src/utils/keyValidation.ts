@@ -24,7 +24,6 @@ const validatePrivateKey = (
   publicKey: string,
 ): AccountKeys | null => {
   let keys: AccountKeys;
-  console.log({memo: account.memo_key}); //TODO remove line
   if (isMemoWif(publicKey, account.memo_key)) {
     keys = {memo: pwd, memoPubkey: publicKey};
     return keys;

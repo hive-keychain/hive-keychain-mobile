@@ -99,23 +99,6 @@ const processSwap = async (
   swapAccount: string,
 ) => {
   if (startToken === getCurrency('HBD') || startToken === getCurrency('HIVE')) {
-    // const status = await TransferUtils.sendTransfer(
-    //   activeAccount.name!,
-    //   swapAccount,
-    //   `${amount.toFixed(3)} ${startToken}`,
-    //   estimateId,
-    //   false,
-    //   0,
-    //   0,
-    //   activeAccount.keys.active!,
-    // );
-    console.log('about to swap:', {
-      key: activeAccount.keys.active!,
-      from: activeAccount.name!,
-      to: sanitizeUsername(swapAccount),
-      amount: sanitizeAmount(amount, startToken),
-      memo: estimateId,
-    }); //TODO remove line
     try {
       const status: any = await transfer(activeAccount.keys.active!, {
         from: activeAccount.name!,
@@ -130,14 +113,6 @@ const processSwap = async (
     }
   } else {
     const tokenInfo = await getTokenInfo(startToken);
-    // const status = await sendToken(
-    //   startToken,
-    //   swapAccount,
-    //   `${amount.toFixed(tokenInfo.precision)}`,
-    //   estimateId,
-    //   activeAccount.keys.active!,
-    //   activeAccount.name!,
-    // );
     const status: any = await sendToken(
       activeAccount.keys.active,
       activeAccount.name,
@@ -148,7 +123,6 @@ const processSwap = async (
         memo: estimateId,
       },
     );
-    console.log('swap token transfer result', {status}); //TODO remove line
     return status && status.tx_id ? status : null;
   }
 };

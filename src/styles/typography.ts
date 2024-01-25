@@ -8,8 +8,6 @@ import {TextStyle} from 'react-native';
 
 // /!\ Never change a value, it might affect other part of the App, create a new variable instead
 
-//TODO : Change examples below, this was just put here as an example
-
 export enum FontPoppinsName {
   ITALIC = 'Poppins-Italic',
   SEMI_BOLD = 'Poppins-SemiBold',

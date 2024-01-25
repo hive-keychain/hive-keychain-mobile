@@ -45,8 +45,7 @@ const DEFAULT_CUSTOM_RPC = {
 export const DEFAULT_HE_RPC_NODE = 'https://engine.rishipanthee.com';
 export const DEFAULT_ACCOUNT_HISTORY_RPC_NODE =
   'https://history.hive-engine.com';
-//TODO very imporant while refactoring.
-//  - add actions within settings reducers t oset HERPC & AHRPC so they will persist!
+
 const RpcNodes = ({
   setRpc,
   settings,

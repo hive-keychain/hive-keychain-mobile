@@ -26,7 +26,6 @@ export const processQRCodeOp = async (op: Operation) => {
   const type = op[0];
   const data = op[1];
   let request;
-  console.log({type}); //TODO remove line
 
   switch (type) {
     case 'transfer':

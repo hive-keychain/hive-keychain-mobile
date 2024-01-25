@@ -41,7 +41,7 @@ interface Props {
   itemIndex: number;
   onPress: () => void;
 }
-//TODO here cleanup & test
+
 const CurrencyToken = ({
   theme,
   currencyName,
@@ -51,8 +51,6 @@ const CurrencyToken = ({
   itemIndex,
   onPress,
 }: Props & PropsFromRedux) => {
-  //TODO bellow add styles as requested per design:
-  //  item 0: has border top.
   const [isExpanded, setIsExpanded] = useState(false);
   const [value, setValue] = useState<number>(0);
   const [subValue, setSubValue] = useState<string | undefined>(undefined);
@@ -134,7 +132,6 @@ const CurrencyToken = ({
 
   const onHandleGoToWalletHistory = () => {
     clearWalletFilters();
-    //TODO check what is happening here bellow as the filter is not getting the currency
     navigate('WalletHistoryScreen', {
       currency: currencyName.toLowerCase(),
     } as WalletHistoryComponentProps);

@@ -27,11 +27,6 @@ const Survey = ({navigation}: Props): null => {
 
   const init = async () => {
     const survey = await AsyncStorage.getItem('SURVEY_ID');
-    console.log('Survey: ', +survey); //TODO remove line
-    console.log(
-      +survey !== SurveyData.id,
-      !moment(Date.now()).isSameOrAfter(SurveyData.expirationDate),
-    ); //TODO remove line
     if (
       +survey !== SurveyData.id &&
       !moment(Date.now()).isSameOrAfter(SurveyData.expirationDate)

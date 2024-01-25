@@ -12,8 +12,6 @@ import {Theme} from 'src/context/theme.context';
 
 // /!\ Never change a value, it might affect other part of the App, create a new variable instead
 
-//TODO : Change primary, this was just put here as an example
-
 //Colors
 export const NEUTRAL_WHITE_COLOR = '#FFF';
 export const PRIMARY_RED_COLOR = '#E31337';
@@ -37,11 +35,6 @@ export const HBDICONBGCOLOR = '#DFF6E1';
 export const ICONGRAYBGCOLOR = 'rgba(255, 255, 255, 0.17)';
 
 export const getColors = (theme: Theme) => {
-  //TODO
-  // change those primaryText, secondaryText for a more descriptive and useful name(depending on use)
-  //  if they are not being used in many places follow:
-  //  - name them per use + location(component, stack)
-  //  - do the same for cards, just keeping the most used(primary,secondary)
   return {
     primaryText: theme === Theme.LIGHT ? '#484848' : '#FFF',
     secondaryText: theme === Theme.LIGHT ? '#212838' : '#FFF',

@@ -9,8 +9,6 @@ import {getSpaceMultiplier} from './sizeAdjuster';
 
 // /!\ Never change a value, it might affect other part of the App, create a new variable instead
 
-//TODO : Change below, this was just put here as an example
-
 export const PADDINGLEFTMAINMENU = 12;
 export const LABELINDENTSPACE = 14;
 
