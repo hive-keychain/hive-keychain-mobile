@@ -37,8 +37,9 @@ export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
       !user.account.name ||
       user.account.proxy?.length ||
       (user.account?.witness_votes &&
-        user.account.witness_votes?.includes('stoodkev') &&
-        user.account.witness_votes?.includes('cedricguillas'))
+        user.account.witness_votes?.includes('stoodkev'))
+      // &&
+      // user.account.witness_votes?.includes('cedricguillas')
     )
       return <View style={{flex: 1}} />;
     else {
