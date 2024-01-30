@@ -76,9 +76,21 @@ export default () => {
       <Drawer.Screen name="CreateAccountScreen" component={CreateAccount} />
       <Drawer.Screen name="Tokens" component={Tokens} />
       <Drawer.Screen name="TokensHistory" component={TokensHistory} />
-      <Drawer.Screen name="Operation" component={Operation} />
+      <Drawer.Screen
+        name="Operation"
+        component={Operation}
+        options={{
+          unmountOnBlur: true,
+        }}
+      />
       <Drawer.Screen name="TemplateStack" component={TemplateStack} />
-      <Drawer.Screen name="SwapBuyStack" component={SwapBuyStack} />
+      <Drawer.Screen
+        name="SwapBuyStack"
+        component={SwapBuyStack}
+        options={{
+          unmountOnBlur: true,
+        }}
+      />
       <Drawer.Screen name="SwapHistory" component={SwapHistory} />
     </Drawer.Navigator>
   );
