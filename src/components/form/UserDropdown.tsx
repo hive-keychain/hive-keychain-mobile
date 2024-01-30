@@ -17,6 +17,7 @@ interface Props {
   dropdownIconScaledSize?: Dimensions;
   showSelectedIcon?: JSX.Element;
   additionalTextStyle?: StyleProp<TextStyle>;
+  additionalMainOverlayStyle?: StyleProp<ViewStyle>;
 }
 
 const UserDropdown = ({
@@ -29,6 +30,7 @@ const UserDropdown = ({
   dropdownIconScaledSize,
   showSelectedIcon,
   additionalTextStyle,
+  additionalMainOverlayStyle,
 }: Props) => {
   const {theme} = useThemeContext();
   return (
@@ -53,6 +55,7 @@ const UserDropdown = ({
         />
       }
       additionalTextStyle={additionalTextStyle}
+      additionalMainOverlayStyle={additionalMainOverlayStyle}
     />
   );
 };

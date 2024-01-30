@@ -84,7 +84,7 @@ const EngineTokenDisplay = ({
   };
 
   return (
-    <View style={getCardStyle(theme).wrapperCardItem}>
+    <View style={[getCardStyle(theme).wrapperCardItem, {zIndex: 11}]}>
       <TokenDisplay
         name={tokenInfo.name}
         currency={token.symbol}

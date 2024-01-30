@@ -52,6 +52,7 @@ interface Props {
   showSelectedIcon?: JSX.Element;
   additionalDropdownIconColor?: string;
   additionalTextStyle?: StyleProp<TextStyle>;
+  additionalMainOverlayStyle?: StyleProp<ViewStyle>;
 }
 
 const CustomDropdown = ({
@@ -70,6 +71,7 @@ const CustomDropdown = ({
   showSelectedIcon,
   additionalDropdownIconColor,
   additionalTextStyle,
+  additionalMainOverlayStyle,
 }: Props) => {
   const [isListExpanded, setIsListExpanded] = useState(false);
   const styles = getStyles(theme, useWindowDimensions().height);
@@ -81,7 +83,7 @@ const CustomDropdown = ({
         <Overlay
           isVisible
           onBackdropPress={() => setIsListExpanded(!isListExpanded)}
-          overlayStyle={styles.mainOverlay}>
+          overlayStyle={[styles.mainOverlay, additionalMainOverlayStyle]}>
           <View
             style={[
               getCardStyle(theme).defaultCardItem,

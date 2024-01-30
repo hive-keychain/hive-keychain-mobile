@@ -49,5 +49,15 @@ export const getCardStyle = (theme: Theme, borderRadius?: number) => {
       borderBottomWidth: 0,
       backgroundColor: getColors(theme).secondaryCardBgColor,
     },
+    filledWrapper: {
+      height: 200,
+      borderLeftColor: getColors(theme).cardBorderColor,
+      borderRightWidth: 1,
+      borderLeftWidth: 1,
+      borderRightColor: getColors(theme).cardBorderColor,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      bottom: 0,
+      zIndex: 10,
+    },
   };
 };

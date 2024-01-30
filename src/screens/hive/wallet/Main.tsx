@@ -89,7 +89,8 @@ const Main = ({
   tokensMarket,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useThemeContext();
-  const styles = getDimensionedStyles(useWindowDimensions(), theme);
+  const {width, height} = useWindowDimensions();
+  const styles = getDimensionedStyles({width}, theme);
   const [loadingUserAndGlobals, setLoadingUserAndGlobals] = useState(true);
   const sectionListRef = useRef();
   const [toggled, setToggled] = useState<number>(null);
@@ -104,6 +105,7 @@ const Main = ({
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [lastScrollYValue, setLastScrollYValue] = useState(0);
 
   useEffect(() => {
     loadTokens();
@@ -241,7 +243,16 @@ const Main = ({
   };
 
   const onHandleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    showFloatingBar(event.nativeEvent.contentOffset.y === 0);
+    showFloatingBar(
+      event.nativeEvent.contentOffset.y === 0 ||
+        event.nativeEvent.contentOffset.y < lastScrollYValue,
+    );
+  };
+
+  const onHandleEndScroll = (
+    event: NativeSyntheticEvent<NativeScrollEvent>,
+  ) => {
+    setLastScrollYValue(event.nativeEvent.contentOffset.y);
   };
 
   const getListFromAccount = () =>
@@ -320,142 +331,148 @@ const Main = ({
         !loadingUserAndGlobals ? {top: 80} : undefined
       }>
       {!loadingUserAndGlobals ? (
-        <SectionList
-          ref={sectionListRef}
-          onScroll={onHandleScroll}
-          ListHeaderComponent={
-            <>
-              <Separator height={15} />
-              <View style={[styles.headerMenu]}>
-                <DrawerButton navigation={navigation as any} theme={theme} />
-                <View style={[styles.innerHeader]}>
-                  <StatusIndicator theme={theme} />
-                  <Claim theme={theme} />
-                  <UserDropdown
-                    list={getListFromAccount()}
-                    selected={getItemDropDownSelected(user.name)}
-                    onSelected={(selectedAccount) =>
-                      loadAccount(selectedAccount)
-                    }
-                    additionalContainerStyle={styles.dropdownContainer}
-                    additionalDropdowContainerStyle={
-                      styles.dropdownListContainer
-                    }
-                    dropdownIconScaledSize={{width: 10, height: 10}}
-                    copyButtonValue
-                  />
-                </View>
-              </View>
-              <Separator />
-              <View style={styles.rowWrapper}>
-                <PercentageDisplay
-                  name={translate('wallet.vp')}
-                  percent={getVP(user.account) || 100}
-                  IconBgcolor={OVERLAYICONBGCOLOR}
-                  theme={theme}
-                  iconName={Icons.SEND_SQUARE}
-                  bgColor={BACKGROUNDITEMDARKISH}
-                  secondary={`$${
-                    getVotingDollarsPerAccount(
-                      100,
-                      properties,
-                      user.account,
-                      false,
-                    ) || '0'
-                  }`}
-                />
-                <PercentageDisplay
-                  iconName={Icons.SPEEDOMETER}
-                  bgColor={DARKER_RED_COLOR}
-                  name={translate('wallet.rc')}
-                  percent={user.rc.percentage || 100}
-                  IconBgcolor={OVERLAYICONBGCOLOR}
-                  theme={theme}
-                />
-              </View>
-              <Separator />
-              <AccountValue
-                account={user.account}
-                prices={prices}
-                properties={properties}
-                theme={theme}
-                title={translate('common.estimated_account_value')}
-              />
-              <Separator />
-            </>
-          }
-          //@ts-ignore
-          sections={DATA}
-          keyExtractor={(item: any, index) =>
-            item.currency ? item.currency + index : item.symbol + index
-          }
-          renderItem={({section: {renderItem}, index}) => (
-            <View>{renderItem}</View>
-          )}
-          renderSectionHeader={({section: {title}}) =>
-            title === 'Currencies' ? (
-              <View style={getCardStyle(theme).borderTopCard}>
-                <Separator height={25} />
-              </View>
-            ) : (
-              <View style={getCardStyle(theme).wrapperCardItem}>
-                <View
-                  style={[
-                    styles.flexRow,
-                    isSearchOpen ? styles.paddingVertical : undefined,
-                  ]}>
-                  {isSearchOpen && (
-                    <CustomSearchBar
-                      theme={theme}
-                      value={searchValue}
-                      onChangeText={(text) => {
-                        setSearchValue(text);
-                      }}
-                      additionalContainerStyle={[
-                        styles.searchContainer,
-                        isSearchOpen ? styles.borderLight : undefined,
-                      ]}
-                      rightIcon={
-                        <Icon
-                          name={Icons.SEARCH}
-                          theme={theme}
-                          onClick={() => {
-                            setSearchValue('');
-                            setIsSearchOpen(false);
-                          }}
-                        />
+        <View>
+          <SectionList
+            ref={sectionListRef}
+            onScrollEndDrag={onHandleEndScroll}
+            onScroll={onHandleScroll}
+            ListHeaderComponent={
+              <>
+                <Separator height={15} />
+                <View style={[styles.headerMenu]}>
+                  <DrawerButton navigation={navigation as any} theme={theme} />
+                  <View style={[styles.innerHeader]}>
+                    <StatusIndicator theme={theme} />
+                    <Claim theme={theme} />
+                    <UserDropdown
+                      list={getListFromAccount()}
+                      selected={getItemDropDownSelected(user.name)}
+                      onSelected={(selectedAccount) =>
+                        loadAccount(selectedAccount)
                       }
+                      additionalContainerStyle={styles.dropdownContainer}
+                      additionalDropdowContainerStyle={
+                        styles.dropdownListContainer
+                      }
+                      dropdownIconScaledSize={{width: 10, height: 10}}
+                      copyButtonValue
+                      additionalMainOverlayStyle={styles.dropdownOverlay}
                     />
-                  )}
-                  <HiveEngineLogo height={23} width={23} />
-                  <View style={styles.separatorContainer} />
-                  <Icon
-                    name={Icons.SEARCH}
+                  </View>
+                </View>
+                <Separator />
+                <View style={styles.rowWrapper}>
+                  <PercentageDisplay
+                    name={translate('wallet.vp')}
+                    percent={getVP(user.account) || 100}
+                    IconBgcolor={OVERLAYICONBGCOLOR}
                     theme={theme}
-                    additionalContainerStyle={styles.search}
-                    onClick={() => {
-                      setIsSearchOpen(!isSearchOpen);
-                    }}
-                    width={18}
-                    height={18}
+                    iconName={Icons.SEND_SQUARE}
+                    bgColor={BACKGROUNDITEMDARKISH}
+                    secondary={`$${
+                      getVotingDollarsPerAccount(
+                        100,
+                        properties,
+                        user.account,
+                        false,
+                      ) || '0'
+                    }`}
                   />
-                  <Icon
-                    name={Icons.SETTINGS_2}
+                  <PercentageDisplay
+                    iconName={Icons.SPEEDOMETER}
+                    bgColor={DARKER_RED_COLOR}
+                    name={translate('wallet.rc')}
+                    percent={user.rc.percentage || 100}
+                    IconBgcolor={OVERLAYICONBGCOLOR}
                     theme={theme}
-                    onClick={handleClickSettings}
                   />
                 </View>
-              </View>
-            )
-          }
-          ListFooterComponent={
-            userTokens.loading && (
-              <View style={{height: 60, marginTop: 20}}>
-                <Loader size={'small'} animating />
-              </View>
-            )
-          }
-        />
+                <Separator />
+                <AccountValue
+                  account={user.account}
+                  prices={prices}
+                  properties={properties}
+                  theme={theme}
+                  title={translate('common.estimated_account_value')}
+                />
+                <Separator />
+              </>
+            }
+            //@ts-ignore
+            sections={DATA}
+            keyExtractor={(item: any, index) =>
+              item.currency ? item.currency + index : item.symbol + index
+            }
+            renderItem={({section: {renderItem}, index}) => (
+              <View>{renderItem}</View>
+            )}
+            renderSectionHeader={({section: {title}}) =>
+              title === 'Currencies' ? (
+                <View style={getCardStyle(theme).borderTopCard}>
+                  <Separator height={25} />
+                </View>
+              ) : (
+                <View style={getCardStyle(theme).wrapperCardItem}>
+                  <View
+                    style={[
+                      styles.flexRow,
+                      isSearchOpen ? styles.paddingVertical : undefined,
+                    ]}>
+                    {isSearchOpen && (
+                      <CustomSearchBar
+                        theme={theme}
+                        value={searchValue}
+                        onChangeText={(text) => {
+                          setSearchValue(text);
+                        }}
+                        additionalContainerStyle={[
+                          styles.searchContainer,
+                          isSearchOpen ? styles.borderLight : undefined,
+                        ]}
+                        rightIcon={
+                          <Icon
+                            name={Icons.SEARCH}
+                            theme={theme}
+                            onClick={() => {
+                              setSearchValue('');
+                              setIsSearchOpen(false);
+                            }}
+                          />
+                        }
+                      />
+                    )}
+                    <HiveEngineLogo height={23} width={23} />
+                    <View style={styles.separatorContainer} />
+                    <Icon
+                      name={Icons.SEARCH}
+                      theme={theme}
+                      additionalContainerStyle={styles.search}
+                      onClick={() => {
+                        setIsSearchOpen(!isSearchOpen);
+                      }}
+                      width={18}
+                      height={18}
+                    />
+                    <Icon
+                      name={Icons.SETTINGS_2}
+                      theme={theme}
+                      onClick={handleClickSettings}
+                    />
+                  </View>
+                </View>
+              )
+            }
+            ListFooterComponent={
+              userTokens.loading &&
+              filteredUserTokenBalanceList.length === 0 && (
+                <View style={styles.extraContainerMiniLoader}>
+                  <Loader size={'small'} animating />
+                </View>
+              )
+            }
+          />
+          <View style={getCardStyle(theme).filledWrapper} />
+        </View>
       ) : (
         <Loader animatedLogo />
       )}
@@ -470,6 +487,7 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       alignItems: 'center',
       paddingHorizontal: 4,
       justifyContent: 'space-between',
+      paddingVertical: 8,
     },
     rowWrapper: {
       display: 'flex',
@@ -497,6 +515,7 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       width: 'auto',
       height: '100%',
       padding: 0,
+      marginRight: 10,
     },
     dropdownListContainer: {
       borderRadius: 10,
@@ -522,6 +541,17 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       right: 0,
       zIndex: 10,
       height: 45,
+    },
+    extraContainerMiniLoader: {
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      height: 150,
+      paddingTop: 30,
+      zIndex: 11,
+    },
+    dropdownOverlay: {
+      position: 'absolute',
+      top: 55,
+      right: 10,
     },
   });
 
