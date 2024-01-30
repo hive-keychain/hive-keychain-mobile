@@ -3,6 +3,7 @@ import Hbd from 'assets/wallet/icon_hbd.svg';
 import Hive from 'assets/wallet/icon_hive.svg';
 import Hp from 'assets/wallet/icon_hp.svg';
 import React from 'react';
+import {withCommas} from './format';
 
 export const getCurrencyProperties = (
   currency: string,
@@ -13,11 +14,19 @@ export const getCurrencyProperties = (
     case 'HIVE':
       color = '#A3112A';
       logo = <Hive />;
-      value = account ? account.balance : null;
+      value = account
+        ? withCommas((account.balance as string).split(' ')[0]) +
+          ' ' +
+          (account.balance as string).split(' ')[1]
+        : null;
       break;
     case 'HBD':
       color = '#005C09';
-      value = account ? account.hbd_balance : null;
+      value = account
+        ? withCommas((account.hbd_balance as string).split(' ')[0]) +
+          ' ' +
+          (account.hbd_balance as string).split(' ')[1]
+        : null;
       logo = <Hbd />;
       break;
     default:

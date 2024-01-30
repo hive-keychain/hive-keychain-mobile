@@ -23,6 +23,7 @@ import {Token, TokenBalance} from 'src/interfaces/tokens.interface';
 import {
   BUTTON_ICON_TEXT_MARGIN,
   BUTTON_MARGIN_BETWEEN,
+  MAIN_PAGE_ACTION_BUTTONS_WIDTH,
 } from 'src/styles/button';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
@@ -410,7 +411,7 @@ const getDimensionedStyles = ({
       borderColor: getColors(theme).cardBorderColorContrast,
       borderWidth: 1,
       borderRadius: 11,
-      width: '38%',
+      width: MAIN_PAGE_ACTION_BUTTONS_WIDTH,
       height: 65,
       justifyContent: 'center',
       margin: BUTTON_MARGIN_BETWEEN,

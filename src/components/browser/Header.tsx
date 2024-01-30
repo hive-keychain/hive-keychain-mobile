@@ -94,7 +94,7 @@ const BrowserHeader = ({
           onPress={() => {
             removeFromFavorites(activeUrl);
           }}>
-          <FastImage source={HEART_PNG} style={styles.heartIcon} />
+          <FastImage source={HEART_PNG} style={styles.icons} />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
@@ -102,7 +102,7 @@ const BrowserHeader = ({
           onPress={() => {
             addToFavorites(active);
           }}>
-          <FastImage source={HEART_EMPTY_PNG} style={styles.heartIcon} />
+          <FastImage source={HEART_EMPTY_PNG} style={styles.icons} />
         </TouchableOpacity>
       );
     };
@@ -128,6 +128,7 @@ const BrowserHeader = ({
                     name={Icons.HOME_BROWSER}
                     onClick={goHome}
                     color={PRIMARY_RED_COLOR}
+                    {...styles.icons}
                   />
                 ) : null
               }
@@ -137,6 +138,7 @@ const BrowserHeader = ({
                   theme={theme}
                   onClick={() => startSearch(true)}
                   color={PRIMARY_RED_COLOR}
+                  {...styles.icons}
                 />
               }
               value={
@@ -234,9 +236,9 @@ const getStyles = (
     marginBottom: {
       marginBottom: 8,
     },
-    heartIcon: {
-      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 18 : 22,
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 18 : 22,
+    icons: {
+      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 16 : 18,
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 16 : 18,
       alignSelf: 'center',
     },
     searchBarContainer: {

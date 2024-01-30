@@ -179,6 +179,16 @@ const Transfer = ({
 
   const styles = getDimensionedStyles(color, height, theme);
 
+  const onhandleSetMaxAvailableBalance = () => {
+    let availableBalance;
+    if (engine) {
+      availableBalance = tokenBalance.split(' ')[0];
+    } else {
+      availableBalance = getCurrencyProperties(currency, user.account).value;
+    }
+    setAmount((availableBalance as string).split(' ')[0]);
+  };
+
   if (step === 1) {
     return (
       <OperationThemed
@@ -253,8 +263,7 @@ const Transfer = ({
                         16,
                       )}
                     />
-                    <TouchableOpacity
-                      onPress={() => setAmount(tokenBalance.split(' ')[0])}>
+                    <TouchableOpacity onPress={onhandleSetMaxAvailableBalance}>
                       <Text style={[styles.text, styles.redText]}>
                         {translate('common.max').toUpperCase()}
                       </Text>

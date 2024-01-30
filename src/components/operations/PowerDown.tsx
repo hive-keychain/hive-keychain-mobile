@@ -145,8 +145,8 @@ const PowerDown = ({
           <Separator />
           <CurrentAvailableBalance
             theme={theme}
-            currentValue={current as string}
-            availableValue={available as string}
+            currentValue={withCommas(current as string)}
+            availableValue={withCommas(available as string)}
             additionalContainerStyle={styles.currentAvailableBalances}
             setMaxAvailable={(value) => setAmount(value)}
           />

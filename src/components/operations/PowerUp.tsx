@@ -18,7 +18,7 @@ import {
   title_primary_body_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, toHP} from 'utils/format';
+import {capitalize, toHP, withCommas} from 'utils/format';
 import {powerUp} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
@@ -74,10 +74,11 @@ const PowerUp = ({
           <Separator />
           <CurrentAvailableBalance
             theme={theme}
-            currentValue={`${toHP(
-              user.account.vesting_shares + '',
-              globalProperties,
-            ).toFixed(3)} HP`}
+            currentValue={`${withCommas(
+              toHP(user.account.vesting_shares + '', globalProperties).toFixed(
+                3,
+              ),
+            )} HP`}
             availableValue={availableHpAmount}
             additionalContainerStyle={styles.currentAvailableBalances}
             setMaxAvailable={(value) => setAmount(value)}

@@ -56,10 +56,10 @@ const AutoCompleteBox = ({
               (categoryValue) =>
                 categoryValue.value
                   .toLowerCase()
-                  .includes(filterValue.toLowerCase()) ||
+                  .includes(filterValue.trim().toLowerCase()) ||
                 categoryValue.subLabel
                   ?.toLowerCase()
-                  .includes(filterValue.toLowerCase()),
+                  .includes(filterValue.trim().toLowerCase()),
             ),
           };
         },
@@ -79,7 +79,8 @@ const AutoCompleteBox = ({
       //TODO when needed.
       return undefined;
     } else if (!!(filtered as AutoCompleteValues).categories) {
-      return (filtered as AutoCompleteValues).categories.length > 0
+      return (filtered as AutoCompleteValues).categories.length > 0 &&
+        filterValue.trim().length >= 2
         ? {display: 'flex'}
         : {display: 'none'};
     }
@@ -95,7 +96,7 @@ const AutoCompleteBox = ({
       return index === category.values.length - 1 &&
         (autoCompleteValues as AutoCompleteValues).categories.length - 1 ===
           catIndex
-        ? styles.paddingBottom
+        ? styles.largerMarginBottom
         : undefined;
     };
 
@@ -105,7 +106,6 @@ const AutoCompleteBox = ({
           key={`${item}-${index}`}
           activeOpacity={1}
           onPress={() => {
-            console.log({item});
             handleOnChange(item);
           }}>
           <Text style={styles.textBase}>{item}</Text>
@@ -178,11 +178,12 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       fontSize: getFontSizeSmallDevices(height, 13),
     },
     autoCompleteValue: {
-      fontSize: 11,
+      fontSize: 12,
       paddingLeft: 8,
+      paddingVertical: 3,
     },
     fullDimensions: {width: '100%', height: 'auto'},
-    paddingBottom: {paddingBottom: 20},
+    largerMarginBottom: {marginBottom: 20},
     marginBottom: {marginBottom: 10},
   });
 

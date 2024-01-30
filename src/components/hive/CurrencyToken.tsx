@@ -194,7 +194,8 @@ const CurrencyToken = ({
                     styles.opaque,
                     styles.alignedRitgh,
                   ]}>
-                  {preFixSubValue ? preFixSubValue : ''} {subValue} (
+                  {preFixSubValue ? preFixSubValue : ''}{' '}
+                  {formatBalance(parseFloat(subValue))} (
                   {subValueShortDescription ?? translate('common.savings')})
                 </Text>
               )}

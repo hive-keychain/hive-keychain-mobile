@@ -73,14 +73,14 @@ const Footer = ({
       <Icon
         theme={theme}
         name={Icons.ARROW_LEFT_BROWSER}
-        {...styles.icon}
+        {...styles.iconSlightlyBigger}
         color={canGoBack ? PRIMARY_RED_COLOR : '#854343'}
         onClick={goBack}
       />
       <Icon
         theme={theme}
         name={Icons.ARROW_RIGHT_BROWSER}
-        {...styles.icon}
+        {...styles.iconSlightlyBigger}
         color={canGoForward ? PRIMARY_RED_COLOR : '#854343'}
         onClick={goForward}
       />
@@ -122,7 +122,11 @@ const Footer = ({
 
 const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
   StyleSheet.create({
-    icon: {width: 20, height: 20},
+    icon: {width: 22, height: 22},
+    iconSlightlyBigger: {
+      width: 24,
+      height: 24,
+    },
     footer: {
       height: height || 40,
       paddingBottom: insets.bottom,
@@ -137,19 +141,19 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
     manage: {
       borderColor: PRIMARY_RED_COLOR,
       borderWidth: 1,
-      width: 25,
-      height: 25,
+      width: 22,
+      height: 22,
       borderRadius: 10,
       alignItems: 'center',
       justifyContent: 'center',
     },
     circleContainer: {
-      padding: 2,
+      // padding: 2,
       borderRadius: 50,
       backgroundColor:
         theme === Theme.LIGHT ? HIVEICONBGCOLOR : BACKGROUNDITEMDARKISH,
-      width: 30,
-      height: 30,
+      // width: 30,
+      // height: 30,
       borderColor: PRIMARY_RED_COLOR,
       borderWidth: 1,
     },

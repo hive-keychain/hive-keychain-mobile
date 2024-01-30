@@ -2,22 +2,21 @@ import BackspaceDark from 'assets/new_UI/backspace_dark_theme.svg';
 import BackspaceLight from 'assets/new_UI/backspace_light_theme.svg';
 import React from 'react';
 import {
-  Dimensions,
-  ScaledSize,
   StyleSheet,
   Text,
-  TextStyle,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
-  headerH2Primary,
+  headerH3Primary,
   title_primary_body_2,
 } from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 
 interface Props {
   number?: number;
@@ -32,38 +31,15 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
   const [activeShape, setActiveshape] = React.useState(null);
   const [pressed, setPressed] = React.useState(false);
   const dimensionReducer = 0.2;
-  const {width, height}: ScaledSize = Dimensions.get('window');
-  const styles = getStyles(
-    theme,
-    Dimensions.get('window'),
-    dimensionReducer,
-    pressed,
-  );
-  const fontResizedSize = (currentFontSize: number): TextStyle => {
-    return {fontSize: getFontSizeSmallDevices(height, currentFontSize)};
-  };
-
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width, height}, dimensionReducer, pressed);
   const renderPinElements = () => {
     return (
       <View style={styles.pinElements}>
         {number || number === 0 ? (
-          <Text
-            style={{
-              ...styles.number,
-              ...fontResizedSize(styles.number.fontSize),
-            }}>
-            {number}
-          </Text>
+          <Text style={styles.number}>{number}</Text>
         ) : null}
-        {helper ? (
-          <Text
-            style={{
-              ...styles.helper,
-              ...fontResizedSize(styles.helper.fontSize),
-            }}>
-            {helper}
-          </Text>
-        ) : null}
+        {helper ? <Text style={styles.helper}>{helper}</Text> : null}
         {back ? (
           theme === Theme.DARK ? (
             <BackspaceDark style={styles.backspace} />
@@ -113,7 +89,7 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
 
 const getStyles = (
   theme: Theme,
-  {width, height}: ScaledSize,
+  {width, height}: Dimensions,
   dimensionReducer: number,
   pressed: boolean,
 ) =>
@@ -139,14 +115,16 @@ const getStyles = (
     number: {
       flex: 0.65,
       color: !pressed ? getColors(theme).secondaryText : '#FFF',
-      ...headerH2Primary,
+      ...headerH3Primary,
       includeFontPadding: false,
       textAlign: 'center',
       textAlignVertical: 'center',
+      fontSize: getFontSizeSmallDevices(height, headerH3Primary.fontSize),
     },
     helper: {
       color: !pressed ? getColors(theme).secondaryText : '#FFF',
       ...title_primary_body_2,
+      fontSize: getFontSizeSmallDevices(height, title_primary_body_2.fontSize),
     },
     backspace: {
       top: undefined,

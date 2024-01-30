@@ -40,6 +40,11 @@ export const headerH2Primary: TextStyle = {
   fontFamily: FontPoppinsName.BOLD,
 };
 
+export const headerH3Primary: TextStyle = {
+  fontSize: FontSize.h3,
+  fontFamily: FontPoppinsName.BOLD,
+};
+
 export const headlines_primary_headline_1: TextStyle = {
   fontSize: FontSize.h4,
   fontFamily: FontPoppinsName.SEMI_BOLD,

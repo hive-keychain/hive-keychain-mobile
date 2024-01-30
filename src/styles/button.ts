@@ -13,6 +13,7 @@ export const BUTTON_MARGIN_BETWEEN = 3;
 export const BUTTON_ICON_SMALL_WIDTH_HEIGHT = 20;
 export const BUTTON_ICON_BIG_WIDTH_HEIGHT = 30;
 export const BUTTON_ICON_TEXT_MARGIN = 8;
+export const MAIN_PAGE_ACTION_BUTTONS_WIDTH = '43%';
 
 export const getButtonHeight = (height: number) => {
   return height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED
@@ -67,7 +68,7 @@ export const getButtonStyle = (theme: Theme, height?: number) => {
         },
         marginRight: {marginRight: 4},
         buttonContainer: {
-          width: '40%',
+          width: MAIN_PAGE_ACTION_BUTTONS_WIDTH,
           height: 70,
           paddingVertical: 0,
           paddingHorizontal: 0,

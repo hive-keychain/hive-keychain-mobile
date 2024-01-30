@@ -114,7 +114,6 @@ const HeaderContent = (props: Props) => {
               onValueChange={(value) => {
                 setTheme(value);
               }}
-              additionalContainerStyle={styles.marginRight}
             />
           }
           drawBottomLine
