@@ -32,7 +32,9 @@ const OperationThemed = ({
         {childrenTop}
         <View
           style={[styles.contentContainer, additionalContentContainerStyle]}>
-          <ScrollView>{childrenMiddle}</ScrollView>
+          <ScrollView keyboardShouldPersistTaps="handled">
+            {childrenMiddle}
+          </ScrollView>
           {childrenBottom}
         </View>
       </View>
