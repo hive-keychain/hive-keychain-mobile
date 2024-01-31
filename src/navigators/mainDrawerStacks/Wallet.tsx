@@ -1,4 +1,3 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
@@ -60,14 +59,7 @@ export default () => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => {
-                const nav = navigation as DrawerNavigationHelpers;
-                // if (nav.canGoBack()) {
-                //   nav.goBack();
-                // } else {
-                navigation.navigate('WalletScreen');
-                // }
-              }}
+              onPress={() => navigation.navigate('WalletScreen')}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
               additionalContainerStyle={styles.marginLeft}

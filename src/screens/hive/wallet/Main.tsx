@@ -54,10 +54,13 @@ import {
   BACKGROUNDITEMDARKISH,
   DARKER_RED_COLOR,
   OVERLAYICONBGCOLOR,
+  PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
+import {TOPCONTAINERSEPARATION} from 'src/styles/spacing';
+import {SMALLEST_SCREEN_HEIGHT_SUPPORTED} from 'src/styles/typography';
 import {RootState} from 'store';
-import {Width} from 'utils/common.types';
+import {Dimensions} from 'utils/common.types';
 import {getCurrency} from 'utils/hive';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
@@ -90,7 +93,7 @@ const Main = ({
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-  const styles = getDimensionedStyles({width}, theme);
+  const styles = getDimensionedStyles({width, height}, theme);
   const [loadingUserAndGlobals, setLoadingUserAndGlobals] = useState(true);
   const sectionListRef = useRef();
   const [toggled, setToggled] = useState<number>(null);
@@ -338,26 +341,43 @@ const Main = ({
             onScroll={onHandleScroll}
             ListHeaderComponent={
               <>
-                <Separator height={15} />
+                <Separator height={TOPCONTAINERSEPARATION} />
                 <View style={[styles.headerMenu]}>
                   <DrawerButton navigation={navigation as any} theme={theme} />
                   <View style={[styles.innerHeader]}>
                     <StatusIndicator theme={theme} />
                     <Claim theme={theme} />
-                    <UserDropdown
-                      list={getListFromAccount()}
-                      selected={getItemDropDownSelected(user.name)}
-                      onSelected={(selectedAccount) =>
-                        loadAccount(selectedAccount)
-                      }
-                      additionalContainerStyle={styles.dropdownContainer}
-                      additionalDropdowContainerStyle={
-                        styles.dropdownListContainer
-                      }
-                      dropdownIconScaledSize={{width: 10, height: 10}}
-                      copyButtonValue
-                      additionalMainOverlayStyle={styles.dropdownOverlay}
-                    />
+                    <View style={styles.marginRight}>
+                      <UserDropdown
+                        list={getListFromAccount()}
+                        selected={getItemDropDownSelected(user.name)}
+                        onSelected={(selectedAccount) =>
+                          loadAccount(selectedAccount)
+                        }
+                        additionalContainerStyle={styles.dropdownContainer}
+                        additionalDropdowContainerStyle={
+                          styles.dropdownContainer
+                        }
+                        dropdownIconScaledSize={{width: 10, height: 10}}
+                        copyButtonValue
+                        //TODO testing bellow while adding changes
+                        additionalMainOverlayStyle={styles.dropdownOverlay}
+                        additionalRenderButtonElementStyle={[
+                          styles.dropdownButton,
+                          styles.marginRight,
+                        ]}
+                        showSelectedIcon={
+                          <Icon
+                            name={Icons.CHECK}
+                            theme={theme}
+                            width={15}
+                            height={15}
+                            strokeWidth={2}
+                            color={PRIMARY_RED_COLOR}
+                          />
+                        }
+                      />
+                    </View>
                   </View>
                 </View>
                 <Separator />
@@ -479,7 +499,7 @@ const Main = ({
     </WalletPage>
   );
 };
-const getDimensionedStyles = ({width}: Width, theme: Theme) =>
+const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     paddingVertical: {paddingVertical: 10},
     flexRow: {
@@ -493,8 +513,7 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingLeft: width * 0.05,
-      paddingRight: width * 0.05,
+      paddingHorizontal: width * 0.05,
     },
     avatar: {width: 25, height: 25, borderRadius: 50},
     headerMenu: {
@@ -512,10 +531,21 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
       alignItems: 'center',
     },
     dropdownContainer: {
-      width: 'auto',
-      height: '100%',
+      width: width * (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 0.45 : 0.4),
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
       padding: 0,
-      marginRight: 10,
+      borderRadius: 10,
+      marginBottom: 0,
+      alignSelf: 'flex-end',
+    },
+    marginRight: {
+      marginRight: width * 0.05,
+    },
+    dropdownButton: {
+      top: TOPCONTAINERSEPARATION,
+      width: width * (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 0.45 : 0.4),
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
+      alignSelf: 'flex-end',
     },
     dropdownListContainer: {
       borderRadius: 10,
@@ -550,8 +580,8 @@ const getDimensionedStyles = ({width}: Width, theme: Theme) =>
     },
     dropdownOverlay: {
       position: 'absolute',
-      top: 55,
-      right: 10,
+      top: 55 + TOPCONTAINERSEPARATION,
+      right: width * 0.05,
     },
   });
 

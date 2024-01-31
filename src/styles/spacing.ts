@@ -11,6 +11,7 @@ import {getSpaceMultiplier} from './sizeAdjuster';
 
 export const PADDINGLEFTMAINMENU = 12;
 export const LABELINDENTSPACE = 14;
+export const TOPCONTAINERSEPARATION = 15;
 
 export const getSpacing = (width = 0, height = 0) => {
   return {

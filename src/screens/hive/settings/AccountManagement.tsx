@@ -19,10 +19,12 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   button_link_primary_medium,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
@@ -55,8 +57,11 @@ const AccountManagement = ({
   };
 
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, useWindowDimensions().height);
-
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width, height});
+  //TODO here
+  // fix userDropdown so it can be used on each as wanted.
+  //  pass modal styles as props.
   const getListFromAccount = () =>
     accounts.map((acc) => {
       return {
@@ -76,8 +81,8 @@ const AccountManagement = ({
             list={getListFromAccount()}
             selected={getItemDropDownSelected(username)}
             onSelected={(selectedAccount) => setUsername(selectedAccount)}
-            additionalContainerStyle={styles.dropdownContainer}
-            additionalDropdowContainerStyle={styles.dropdownListContainer}
+            // additionalContainerStyle={}
+            additionalDropdowContainerStyle={styles.dropdownContainer}
             dropdownIconScaledSize={{width: 15, height: 15}}
           />
           <Separator height={20} />
@@ -124,7 +129,7 @@ const AccountManagement = ({
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     safeArea: {paddingHorizontal: 16},
     cardKey: {
@@ -159,8 +164,10 @@ const getStyles = (theme: Theme, height: number) =>
     },
     dropdownContainer: {
       width: '100%',
-      height: 70,
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
       padding: 0,
+      borderRadius: 10,
+      marginBottom: 0,
     },
     dropdownListContainer: {
       borderRadius: 10,
