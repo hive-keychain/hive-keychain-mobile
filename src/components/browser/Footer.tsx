@@ -13,12 +13,7 @@ import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {
-  BACKGROUNDITEMDARKISH,
-  HIVEICONBGCOLOR,
-  PRIMARY_RED_COLOR,
-  getColors,
-} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {body_primary_body_2} from 'src/styles/typography';
 import {RootState} from 'store';
 import {resetStackAndNavigate} from 'utils/navigation';
@@ -74,14 +69,26 @@ const Footer = ({
         theme={theme}
         name={Icons.ARROW_LEFT_BROWSER}
         {...styles.iconSlightlyBigger}
-        color={canGoBack ? PRIMARY_RED_COLOR : '#854343'}
+        color={
+          canGoBack
+            ? PRIMARY_RED_COLOR
+            : theme === Theme.LIGHT
+            ? '#939292b3'
+            : '#93929263'
+        }
         onClick={goBack}
       />
       <Icon
         theme={theme}
         name={Icons.ARROW_RIGHT_BROWSER}
         {...styles.iconSlightlyBigger}
-        color={canGoForward ? PRIMARY_RED_COLOR : '#854343'}
+        color={
+          canGoForward
+            ? PRIMARY_RED_COLOR
+            : theme === Theme.LIGHT
+            ? '#939292b3'
+            : '#93929263'
+        }
         onClick={goForward}
       />
       <Icon
@@ -149,12 +156,7 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
       justifyContent: 'center',
     },
     circleContainer: {
-      // padding: 2,
       borderRadius: 50,
-      backgroundColor:
-        theme === Theme.LIGHT ? HIVEICONBGCOLOR : BACKGROUNDITEMDARKISH,
-      // width: 30,
-      // height: 30,
       borderColor: PRIMARY_RED_COLOR,
       borderWidth: 1,
     },

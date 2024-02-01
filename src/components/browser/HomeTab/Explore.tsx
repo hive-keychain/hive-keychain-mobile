@@ -1,4 +1,5 @@
 import {Account} from 'actions/interfaces';
+import Loader from 'components/ui/Loader';
 import React, {useEffect, useState} from 'react';
 import {
   Linking,
@@ -49,6 +50,7 @@ type Props = {
 export default ({updateTabUrl, accounts, theme}: Props) => {
   const {chain} = useChainContext();
   const [categories, setCategories] = useState<any[]>([]);
+  const [loadingDapps, setLoadingDapps] = useState(true);
 
   useEffect(() => {
     init();
@@ -68,11 +70,12 @@ export default ({updateTabUrl, accounts, theme}: Props) => {
         });
     }
     setCategories(tempTabs);
+    setLoadingDapps(false);
   };
 
   const styles = getStyles(useWindowDimensions(), theme);
 
-  return (
+  return !loadingDapps ? (
     <ScrollView style={[styles.container]}>
       {categories.map((cat: any) => (
         <View key={cat.id}>
@@ -119,6 +122,10 @@ export default ({updateTabUrl, accounts, theme}: Props) => {
         </Text>
       </View>
     </ScrollView>
+  ) : (
+    <View style={[{flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
+      <Loader animating size={'small'} />
+    </View>
   );
 };
 

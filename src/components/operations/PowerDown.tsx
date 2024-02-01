@@ -145,8 +145,12 @@ const PowerDown = ({
           <Separator />
           <CurrentAvailableBalance
             theme={theme}
-            currentValue={withCommas(current as string)}
-            availableValue={withCommas(available as string)}
+            currentValue={`${withCommas(current as string)} ${getCurrency(
+              'HIVE',
+            )}`}
+            availableValue={`${withCommas(available as string)} ${getCurrency(
+              'HP',
+            )}`}
             additionalContainerStyle={styles.currentAvailableBalances}
             setMaxAvailable={(value) => setAmount(value)}
           />
@@ -252,7 +256,7 @@ const PowerDown = ({
                     )}
                   />
                   <TouchableOpacity
-                    onPress={() => setAmount(available.toString())}>
+                    onPress={() => setAmount(withCommas(available.toString()))}>
                     <Text style={[styles.textBase, styles.redText]}>
                       {translate('common.max').toUpperCase()}
                     </Text>

@@ -41,6 +41,7 @@ import {
   NativeSyntheticEvent,
   SectionList,
   StyleSheet,
+  Text,
   View,
   useWindowDimensions,
 } from 'react-native';
@@ -59,7 +60,10 @@ import {
   getColors,
 } from 'src/styles/colors';
 import {TOPCONTAINERSEPARATION} from 'src/styles/spacing';
-import {SMALLEST_SCREEN_HEIGHT_SUPPORTED} from 'src/styles/typography';
+import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  button_link_primary_medium,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {getCurrency} from 'utils/hive';
@@ -484,12 +488,30 @@ const Main = ({
               )
             }
             ListFooterComponent={
-              userTokens.loading &&
-              filteredUserTokenBalanceList.length === 0 && (
-                <View style={styles.extraContainerMiniLoader}>
-                  <Loader size={'small'} animating />
-                </View>
-              )
+              <>
+                {userTokens.loading &&
+                  filteredUserTokenBalanceList.length === 0 && (
+                    <View style={styles.extraContainerMiniLoader}>
+                      <Loader size={'small'} animating />
+                    </View>
+                  )}
+                {!userTokens.loading &&
+                  filteredUserTokenBalanceList.length === 0 && (
+                    <View
+                      style={[
+                        getCardStyle(theme).filledWrapper,
+                        {
+                          justifyContent: 'center',
+                          height: 150,
+                          alignItems: 'center',
+                        },
+                      ]}>
+                      <Text style={styles.no_tokens}>
+                        {translate('wallet.no_tokens')}
+                      </Text>
+                    </View>
+                  )}
+              </>
             }
           />
           <View style={getCardStyle(theme).filledWrapper} />
@@ -586,8 +608,12 @@ const getDimensionedStyles = (
     dropdownOverlay: {
       position: 'absolute',
       top: 55 + TOPCONTAINERSEPARATION,
-      // marginTop: insets.top,
       right: width * 0.05,
+    },
+    no_tokens: {
+      color: getColors(theme).secondaryText,
+      textAlign: 'center',
+      ...button_link_primary_medium,
     },
   });
 

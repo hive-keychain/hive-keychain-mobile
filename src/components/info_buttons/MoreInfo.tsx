@@ -56,11 +56,13 @@ export default ({
       additionalContainerStyle={additionalButtonStyle}
       onClick={() =>
         navigate('ModalScreen', {
+          name: Info.COPY_KEYS,
           modalContent: content,
           modalContainerStyle: [
             getModalBaseStyle(theme).roundedTop,
             styles.moreInfoModal,
           ],
+          fixedHeight: 0.35,
         } as ModalScreenProps)
       }
       color={getColors(theme).iconBW}
