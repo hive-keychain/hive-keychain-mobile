@@ -198,7 +198,9 @@ const getStyles = (theme: Theme, height: number, insets: EdgeInsets) =>
       borderTopRightRadius: 22,
       borderTopLeftRadius: 22,
       backgroundColor: PRIMARY_RED_COLOR,
-      paddingVertical: 8,
+      paddingTop: 8,
+      paddingBottom: 8 + insets.bottom,
+      marginBottom: -insets.bottom,
     },
   });
 
