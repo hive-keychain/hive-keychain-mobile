@@ -429,8 +429,9 @@ const getDimensionedStyles = ({
     textButton: {
       ...title_secondary_body_3,
       color: getColors(theme).primaryText,
-      fontSize: getFontSizeSmallDevices(height, 14),
-      marginBottom: 4,
+      fontSize: getFontSizeSmallDevices(height, 15),
+      paddingTop: 4,
+      lineHeight: 15,
     },
     invertXAxis: {
       transform: [{rotateY: '180deg'}],

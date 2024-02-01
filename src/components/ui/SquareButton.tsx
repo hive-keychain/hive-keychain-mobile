@@ -93,7 +93,8 @@ const getStyles = (theme: Theme, marginRight: number, marginBottom: number) =>
     squareButtonText: {
       color: getColors(theme).secondaryText,
       ...title_secondary_body_2,
-      fontSize: 9,
+      lineHeight: 15,
+      paddingTop: 4,
     },
     alignedCenter: {
       alignItems: 'center',

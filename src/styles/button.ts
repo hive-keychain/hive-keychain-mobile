@@ -76,8 +76,8 @@ export const getButtonStyle = (theme: Theme, height?: number) => {
           alignItems: 'center',
         },
         buttonText: {
-          fontSize: getFontSizeSmallDevices(height, 14),
-          marginBottom: 4,
+          fontSize: getFontSizeSmallDevices(height, 15),
+          // marginBottom: 4,
         },
       }),
   };
