@@ -60,11 +60,12 @@ export default ({updateTabUrl, accounts, theme}: Props) => {
     ).data;
     const tempTabs: any = [];
     for (const tcategory of tcategories) {
-      tempTabs.push({
-        id: tcategory.category,
-        title: `browser.home.categories.${tcategory.category}`,
-        dapps: tcategory.dapps,
-      });
+      if (!(Platform.OS === 'ios' && tcategory.category === 'gaming'))
+        tempTabs.push({
+          id: tcategory.category,
+          title: `browser.home.categories.${tcategory.category}`,
+          dapps: tcategory.dapps,
+        });
     }
     setCategories(tempTabs);
   };
