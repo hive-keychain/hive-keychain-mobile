@@ -2,6 +2,7 @@ import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
 import {ScrollView, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 
@@ -21,7 +22,7 @@ const OperationThemed = ({
   additionalSVGOpacity,
 }: OperationProps) => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, additionalSVGOpacity);
+  const styles = getStyles(theme, useSafeAreaInsets(), additionalSVGOpacity);
 
   return (
     <Background
@@ -42,7 +43,7 @@ const OperationThemed = ({
   );
 };
 
-const getStyles = (theme: Theme, customOpacity?: number) =>
+const getStyles = (theme: Theme, insets: EdgeInsets, customOpacity?: number) =>
   StyleSheet.create({
     backgroundSvgImage: {
       top: theme === Theme.LIGHT ? -80 : 0,
@@ -57,6 +58,7 @@ const getStyles = (theme: Theme, customOpacity?: number) =>
       borderColor: getColors(theme).cardBorderColorJustDark,
       paddingHorizontal: 10,
       justifyContent: 'space-between',
+      marginBottom: -insets.bottom,
     },
   });
 
