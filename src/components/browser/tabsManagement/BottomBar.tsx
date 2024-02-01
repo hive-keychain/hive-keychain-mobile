@@ -68,7 +68,7 @@ const getsStyles = (insets: EdgeInsets, theme: Theme) =>
     container: {
       height: BrowserConfig.HEADER_HEIGHT + insets.bottom,
       paddingHorizontal: 20,
-      paddingBottom: insets.bottom,
+      marginBottom: -insets.bottom,
       backgroundColor: getColors(theme).tertiaryCardBgColor,
       flexDirection: 'row',
       justifyContent: 'space-between',

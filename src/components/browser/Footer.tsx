@@ -129,6 +129,7 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
     },
     footer: {
       height: height || 40,
+      marginBottom: -insets.bottom,
       paddingBottom: insets.bottom,
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderWidth: 1,

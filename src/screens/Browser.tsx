@@ -14,6 +14,7 @@ import {
 } from 'actions/index';
 import Browser from 'components/browser';
 import ProposalReminder from 'components/popups/proposal-reminder';
+import SafeArea from 'components/ui/SafeArea';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React from 'react';
 import Orientation from 'react-native-orientation-locker';
@@ -61,7 +62,7 @@ const BrowserScreen = ({
   const {theme} = useThemeContext();
 
   return (
-    <>
+    <SafeArea>
       <Browser
         theme={theme}
         accounts={accounts}
@@ -83,7 +84,7 @@ const BrowserScreen = ({
         showFloatingBar={showFloatingBar}
       />
       <ProposalReminder navigation={navigation} />
-    </>
+    </SafeArea>
   );
 };
 
