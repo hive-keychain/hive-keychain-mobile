@@ -1,9 +1,10 @@
-import {addKey, forgetAccount, forgetKey} from 'actions/index';
+import {addKey, forgetAccount, forgetKey, loadAccount} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import {DropdownItem} from 'components/form/CustomDropdown';
 import EllipticButton from 'components/form/EllipticButton';
 import {PickerItemInterface} from 'components/form/PickerItem';
 import UserDropdown from 'components/form/UserDropdown';
+import Icon from 'components/hive/Icon';
 import Key from 'components/hive/Key';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -16,8 +17,9 @@ import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   button_link_primary_medium,
@@ -35,6 +37,7 @@ const AccountManagement = ({
   addKey,
   navigation,
   accounts,
+  loadAccount,
 }: PropsFromRedux & {navigation: MainNavigation}) => {
   const [username, setUsername] = useState(account.name);
   useLockedPortrait(navigation);
@@ -59,9 +62,7 @@ const AccountManagement = ({
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width, height});
-  //TODO here
-  // fix userDropdown so it can be used on each as wanted.
-  //  pass modal styles as props.
+
   const getListFromAccount = () =>
     accounts.map((acc) => {
       return {
@@ -75,17 +76,32 @@ const AccountManagement = ({
     <Background theme={theme}>
       <SafeArea style={styles.safeArea}>
         <FocusAwareStatusBar />
-
         <ScrollView>
           <UserDropdown
             list={getListFromAccount()}
             selected={getItemDropDownSelected(username)}
-            onSelected={(selectedAccount) => setUsername(selectedAccount)}
-            // additionalContainerStyle={}
+            onSelected={(selectedAccount) => loadAccount(selectedAccount)}
             additionalDropdowContainerStyle={styles.dropdownContainer}
             dropdownIconScaledSize={{width: 15, height: 15}}
+            additionalRenderButtonElementStyle={{
+              top: 55,
+              paddingHorizontal: 16,
+            }}
+            additionalModalWrapperFixedStyle={[styles.modalWrapper]}
+            additionalModalContainerStyle={styles.modalContainer}
+            showSelectedIcon={
+              <Icon
+                name={Icons.CHECK}
+                theme={theme}
+                width={15}
+                height={15}
+                strokeWidth={2}
+                color={PRIMARY_RED_COLOR}
+              />
+            }
+            copyButtonValue
           />
-          <Separator height={20} />
+          <Separator height={10} />
           <Key
             type={KeyTypes.posting}
             containerStyle={styles.cardKey}
@@ -141,19 +157,6 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       paddingVertical: 15,
       marginBottom: 8,
     },
-    itemListContainer: {
-      paddingTop: 10,
-      paddingBottom: 10,
-      width: 200,
-      paddingHorizontal: 10,
-      alignItems: 'center',
-    },
-    zIndexBase: {
-      zIndex: 10,
-    },
-    zIndexLower: {
-      zIndex: 9,
-    },
     avatar: {width: 30, height: 30, borderRadius: 50},
     operationButtonText: {
       ...button_link_primary_medium,
@@ -169,9 +172,20 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       borderRadius: 10,
       marginBottom: 0,
     },
-    dropdownListContainer: {
-      borderRadius: 10,
-      height: '100%',
+    modalWrapper: {
+      top: 55 + (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50) + 1,
+      width: width - 32,
+      left: 16,
+      alignSelf: 'center',
+      justifyContent: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
+    },
+    modalContainer: {
+      width: '100%',
+      marginRight: 0,
+      alignSelf: 'center',
+      maxHeight: 300,
     },
   });
 
@@ -183,6 +197,7 @@ const connector = connect(mapStateToProps, {
   forgetAccount,
   addKey,
   forgetKey,
+  loadAccount,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(AccountManagement);

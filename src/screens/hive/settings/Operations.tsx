@@ -25,11 +25,13 @@ import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
+  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   body_primary_body_2,
   body_primary_body_3,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 const Operations = ({
@@ -40,7 +42,7 @@ const Operations = ({
   loadAccount,
 }: PropsFromRedux) => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, useWindowDimensions().height);
+  const styles = getStyles(theme, useWindowDimensions());
   const [domainList, setDomainList] = useState<DomainPreference[]>([]);
   const [filteredDomains, setFilteredDomains] = useState<DomainPreference[]>(
     [],
@@ -113,9 +115,11 @@ const Operations = ({
           list={getListFromAccount()}
           selected={getItemDropDownSelected(active.name!)}
           onSelected={(selectedAccount) => loadAccount(selectedAccount, true)}
-          additionalContainerStyle={styles.dropdownContainer}
-          additionalDropdowContainerStyle={styles.dropdownListContainer}
+          additionalDropdowContainerStyle={styles.dropdownContainer}
           dropdownIconScaledSize={{width: 15, height: 15}}
+          additionalRenderButtonElementStyle={[styles.dropdownButton]}
+          additionalModalContainerStyle={styles.dropdownModal}
+          additionalModalWrapperFixedStyle={[styles.wrapperDropdown]}
         />
         <CustomSearchBar
           theme={theme}
@@ -150,7 +154,7 @@ const Operations = ({
           />
         )}
         {loadingData && (
-          <View style={styles.flexCentered}>
+          <View style={[styles.flexCentered, styles.marginTop]}>
             <Loader animating size={'small'} />
           </View>
         )}
@@ -159,13 +163,14 @@ const Operations = ({
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {flex: 1, paddingHorizontal: 16},
     avatar: {width: 30, height: 30, borderRadius: 50},
     itemDropdown: {
       paddingHorizontal: 18,
     },
+    marginTop: {marginTop: 20},
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,
@@ -203,12 +208,22 @@ const getStyles = (theme: Theme, height: number) =>
     },
     dropdownContainer: {
       width: '100%',
-      height: 60,
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
       padding: 0,
     },
-    dropdownListContainer: {
-      borderRadius: 30,
-      height: '100%',
+    dropdownButton: {
+      top: 130,
+      width: width - 32,
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
+      alignSelf: 'center',
+    },
+    wrapperDropdown: {
+      top: 130 + (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50) + 5,
+      width: width - 32,
+      alignSelf: 'center',
+    },
+    dropdownModal: {
+      width: '100%',
     },
   });
 

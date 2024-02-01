@@ -1,11 +1,12 @@
 import {Account} from 'actions/interfaces';
-import {DropdownItem} from 'components/form/CustomDropdown';
+import CustomDropdown, {DropdownItem} from 'components/form/CustomDropdown';
 import {PickerItemInterface} from 'components/form/PickerItem';
-import UserDropdown from 'components/form/UserDropdown';
+import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {SMALLEST_SCREEN_HEIGHT_SUPPORTED} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import RequestItem from './RequestItem';
@@ -45,27 +46,26 @@ export default ({username, accounts, account, setAccount}: Props) => {
     />
   ) : (
     <View style={styles.container}>
-      <UserDropdown
+      <CustomDropdown
+        theme={theme}
         list={getListFromAccount()}
         selected={getItemDropDownSelected(account)}
         onSelected={(selectedAccount) => setAccount(selectedAccount)}
-        additionalContainerStyle={styles.dropdownContainer}
-        additionalDropdowContainerStyle={styles.dropdownListContainer}
-        dropdownIconScaledSize={{width: 10, height: 10}}
-        additionalTextStyle={styles.text}
       />
+      <Separator />
     </View>
   );
 };
 
-const getDimensionedStyles = ({width}: Dimensions, theme: Theme) =>
+const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     container: {width: '100%', marginTop: -30, marginBottom: 10},
     avatar: {width: 25, height: 25, borderRadius: 50},
     dropdownContainer: {
       width: 'auto',
-      height: 70,
       padding: 0,
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
+      borderRadius: 10,
     },
     dropdownListContainer: {
       borderRadius: 10,

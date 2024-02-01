@@ -362,7 +362,6 @@ const Main = ({
                         }
                         dropdownIconScaledSize={{width: 10, height: 10}}
                         copyButtonValue
-                        //TODO testing bellow while adding changes
                         additionalMainOverlayStyle={styles.dropdownOverlay}
                         additionalRenderButtonElementStyle={[
                           styles.dropdownButton,

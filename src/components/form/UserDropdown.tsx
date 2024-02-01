@@ -41,6 +41,8 @@ interface Props {
   additionalTextStyle?: StyleProp<TextStyle>;
   additionalMainOverlayStyle?: StyleProp<ViewStyle>;
   additionalRenderButtonElementStyle?: StyleProp<ViewStyle>;
+  additionalModalContainerStyle?: StyleProp<ViewStyle>;
+  additionalModalWrapperFixedStyle?: StyleProp<ViewStyle>;
 }
 
 const UserDropdown = ({
@@ -55,6 +57,8 @@ const UserDropdown = ({
   additionalTextStyle,
   additionalMainOverlayStyle,
   additionalRenderButtonElementStyle,
+  additionalModalContainerStyle,
+  additionalModalWrapperFixedStyle,
 }: Props) => {
   const [isListExpanded, setIsListExpanded] = useState(false);
   const {theme} = useThemeContext();
@@ -119,9 +123,15 @@ const UserDropdown = ({
           </ScrollView>
         ) : null,
       fixedHeight: 0.5,
-      additionalWrapperFixedStyle: [styles.wrapperFixed],
+      additionalWrapperFixedStyle: [
+        styles.wrapperFixed,
+        additionalModalWrapperFixedStyle,
+      ],
       modalPosition: undefined,
-      modalContainerStyle: [styles.modalContainer],
+      modalContainerStyle: [
+        styles.modalContainer,
+        additionalModalContainerStyle,
+      ],
       renderButtonElement: (
         <View style={[additionalRenderButtonElementStyle]}>
           {renderDropdownTop(true)}

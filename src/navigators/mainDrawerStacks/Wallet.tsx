@@ -21,6 +21,7 @@ import {
 } from 'src/styles/typography';
 import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
+import {goBack} from 'utils/navigation';
 
 const Stack = createStackNavigator();
 
@@ -57,11 +58,11 @@ export default () => {
             );
           },
           headerLeft: () => (
-            <CustomIconButton
+            <Icon
+              name={Icons.ARROW_LEFT}
               theme={theme}
-              onPress={() => navigation.navigate('WalletScreen')}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
+              onClick={() => goBack()}
+              color={getColors(theme).iconBW}
               additionalContainerStyle={styles.marginLeft}
             />
           ),
