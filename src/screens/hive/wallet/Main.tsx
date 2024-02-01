@@ -39,7 +39,6 @@ import {
   AppStateStatus,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  Platform,
   SectionList,
   StyleSheet,
   View,
@@ -113,7 +112,6 @@ const Main = ({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [lastScrollYValue, setLastScrollYValue] = useState(0);
-  console.log('insets', insets, Platform.OS);
   useEffect(() => {
     loadTokens();
     loadTokensMarket();

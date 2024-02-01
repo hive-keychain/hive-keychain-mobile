@@ -28,6 +28,7 @@ export default ({
   theme,
 }: Props) => {
   const insets = useSafeAreaInsets();
+
   const styles = getsStyles(insets, theme);
   return (
     <View

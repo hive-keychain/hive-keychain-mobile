@@ -5,11 +5,13 @@ import {
   Animated,
   Dimensions,
   Easing,
+  Platform,
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
 } from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -39,7 +41,7 @@ const Floating = ({
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const {theme} = useThemeContext();
   const {height} = useWindowDimensions();
-  const styles = getStyles(theme, height);
+  const styles = getStyles(theme, height, useSafeAreaInsets());
   const anim = useRef(new Animated.Value(0)).current;
   const [isTop, setIsTop] = useState(false);
 
@@ -167,7 +169,7 @@ const Floating = ({
   ) : null;
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, height: number, insets: EdgeInsets) =>
   StyleSheet.create({
     container: {
       position: 'absolute',
@@ -177,7 +179,7 @@ const getStyles = (theme: Theme, height: number) =>
       alignSelf: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingBottom: 0,
+      paddingBottom: Platform.OS === 'ios' ? 20 : 0,
       alignItems: 'center',
     },
     textBase: {
