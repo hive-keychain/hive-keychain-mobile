@@ -162,12 +162,12 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {
       position: 'absolute',
-      top: getInputHeight(height),
+      top: getInputHeight(height) + 5,
       bottom: undefined,
       width: '100%',
-      zIndex: 10,
       height: 'auto',
       maxHeight: 180,
+      zIndex: 10,
     },
     textBase: {
       ...fields_primary_text_2,
