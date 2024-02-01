@@ -56,12 +56,13 @@ const PercentageDisplay = ({
       <View style={styles.textWrapper}>
         <View style={{flexGrow: 1}}>
           <Text style={styles.name}>{name}</Text>
-          <View style={[styles.textWrapper, styles.justifyBetween]}>
-            <Text style={styles.percent}>
+          <View style={[styles.textWrapper]}>
+            <Text style={[styles.percent]}>
               {`${percent.toFixed(0)}`}
-              <Text style={[{...title_secondary_body_3}]}> %</Text>
+              <Text style={[{...title_secondary_body_3}]}> % </Text>
+
+              <Text style={styles.secondary}>{secondary}</Text>
             </Text>
-            <Text style={styles.secondary}>{secondary}</Text>
           </View>
         </View>
       </View>
@@ -83,6 +84,7 @@ const getDimensionedStyles = (
       flexGrow: 1,
     },
     justifyBetween: {
+      display: 'flex',
       justifyContent: 'space-between',
       flexGrow: 1,
       maxWidth: '90%',
@@ -126,6 +128,7 @@ const getDimensionedStyles = (
     },
     secondary: {
       color: '#FFF',
+      paddingLeft: 10,
       ...fields_primary_text_2,
       textAlignVertical: 'bottom',
     },
