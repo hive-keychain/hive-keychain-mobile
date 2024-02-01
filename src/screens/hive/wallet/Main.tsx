@@ -39,11 +39,13 @@ import {
   AppStateStatus,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   SectionList,
   StyleSheet,
   View,
   useWindowDimensions,
 } from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -93,7 +95,9 @@ const Main = ({
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-  const styles = getDimensionedStyles({width, height}, theme);
+  const insets = useSafeAreaInsets();
+
+  const styles = getDimensionedStyles({width, height}, theme, insets);
   const [loadingUserAndGlobals, setLoadingUserAndGlobals] = useState(true);
   const sectionListRef = useRef();
   const [toggled, setToggled] = useState<number>(null);
@@ -109,7 +113,7 @@ const Main = ({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [lastScrollYValue, setLastScrollYValue] = useState(0);
-
+  console.log('insets', insets, Platform.OS);
   useEffect(() => {
     loadTokens();
     loadTokensMarket();
@@ -499,7 +503,11 @@ const Main = ({
     </WalletPage>
   );
 };
-const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
+const getDimensionedStyles = (
+  {width, height}: Dimensions,
+  theme: Theme,
+  insets: EdgeInsets,
+) =>
   StyleSheet.create({
     paddingVertical: {paddingVertical: 10},
     flexRow: {
@@ -542,7 +550,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       marginRight: width * 0.05,
     },
     dropdownButton: {
-      top: TOPCONTAINERSEPARATION,
+      top: TOPCONTAINERSEPARATION + insets.top,
       width: width * (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 0.45 : 0.4),
       height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
       alignSelf: 'flex-end',
@@ -581,6 +589,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     dropdownOverlay: {
       position: 'absolute',
       top: 55 + TOPCONTAINERSEPARATION,
+      // marginTop: insets.top,
       right: width * 0.05,
     },
   });

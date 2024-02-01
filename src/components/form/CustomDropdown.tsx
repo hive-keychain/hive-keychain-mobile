@@ -80,6 +80,7 @@ const CustomDropdown = ({
   const renderExpandedList = (children: JSX.Element) => {
     if (behaveAs === 'down') {
       return (
+        // <SafeArea>
         <Overlay
           isVisible
           onBackdropPress={() => setIsListExpanded(!isListExpanded)}
@@ -92,6 +93,7 @@ const CustomDropdown = ({
             {children}
           </View>
         </Overlay>
+        // </SafeArea>
       );
     } else {
       return (

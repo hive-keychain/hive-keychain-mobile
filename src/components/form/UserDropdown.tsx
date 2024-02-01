@@ -13,6 +13,7 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -58,7 +59,7 @@ const UserDropdown = ({
   const [isListExpanded, setIsListExpanded] = useState(false);
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-  const styles = getStyles(theme, {width, height});
+  const styles = getStyles(theme, {width, height}, useSafeAreaInsets());
   //TODO after finishing this one, go check each use of the same component & fix
 
   const onHandleClick = () => {
@@ -193,7 +194,11 @@ const UserDropdown = ({
   return <View>{renderDropdownTop()}</View>;
 };
 
-const getStyles = (theme: Theme, {width, height}: Dimensions) =>
+const getStyles = (
+  theme: Theme,
+  {width, height}: Dimensions,
+  insets: EdgeInsets,
+) =>
   StyleSheet.create({
     modalContainer: {
       width: '80%',
@@ -202,7 +207,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       height: 'auto',
     },
     wrapperFixed: {
-      top: 55 + TOPCONTAINERSEPARATION,
+      top: 55 + TOPCONTAINERSEPARATION + insets.top,
       bottom: undefined,
       left: undefined,
       right: width * 0.05,
