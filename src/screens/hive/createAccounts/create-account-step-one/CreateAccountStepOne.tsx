@@ -2,7 +2,7 @@ import {Asset} from '@hiveio/dhive';
 import {Account} from 'actions/interfaces';
 import OperationButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
-import PickerItem from 'components/form/PickerItem';
+import UserDropdown from 'components/form/UserDropdown';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -57,7 +57,8 @@ const CreateAccountStepOne = ({
   const [loadingData, setLoadingData] = useState(false);
 
   const {theme} = useThemeContext();
-  const styles = getDimensionedStyles({...useWindowDimensions()}, theme);
+  const {width, height} = useWindowDimensions();
+  const styles = getDimensionedStyles({width, height}, theme);
 
   useLockedPortrait(navigation);
 
@@ -192,24 +193,19 @@ const CreateAccountStepOne = ({
         <View style={styles.container}>
           <View style={styles.content}>
             {selectedAccount.length > 0 && accountOptions && (
-              <PickerItem
-                theme={theme}
-                pickerItemList={accountOptions}
-                additionalContainerStyle={[styles.additionalContainerStyle]}
-                additionalContainerListStyle={[
-                  styles.additionalContainerListStyle,
-                ]}
-                additionalExpandedListItemContainerStyle={
-                  styles.additionalExpandedListItemContainer
-                }
-                additionalSelectedItemContainerStyle={
-                  styles.additionalSelectedItemContainerStyle
-                }
-                selected={accountOptions.find(
-                  (item) => item.label === selectedAccount,
-                )}
-                onSelectedItem={(account) => onSelected(account.value)}
-              />
+              <>
+                <UserDropdown
+                  list={accountOptions}
+                  selected={accountOptions.find(
+                    (item) => item.label === selectedAccount,
+                  )}
+                  onSelected={(selectedAccount) => onSelected(selectedAccount)}
+                  additionalDropdowContainerStyle={styles.dropdown}
+                  additionalModalWrapperFixedStyle={styles.dropdownModalWrapper}
+                  additionalModalContainerStyle={styles.dropdownModal}
+                  additionalRenderButtonElementStyle={styles.renderButton}
+                />
+              </>
             )}
             <Separator height={15} />
             {selectedAccount.length > 0 && accountOptions && !loadingData && (
@@ -283,33 +279,6 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       color: getColors(theme).secondaryText,
       fontFamily: FontPoppinsName.ITALIC,
     },
-    additionalContainerStyle: {
-      backgroundColor: getColors(theme).secondaryCardBgColor,
-      borderColor: getColors(theme).cardBorderColor,
-      marginHorizontal: 0,
-      width: '100%',
-      zIndex: 10,
-    },
-    additionalContainerListStyle: {
-      zIndex: 9,
-      backgroundColor: getColors(theme).secondaryCardBgColor,
-      borderColor: getColors(theme).cardBorderColor,
-      borderWidth: 1,
-      minHeight: 100,
-      justifyContent: 'center',
-      maxHeight: 250,
-    },
-    additionalExpandedListItemContainer: {
-      height: height * 0.05,
-      paddingHorizontal: 10,
-      borderRadius: 10,
-      paddingVertical: 8,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    additionalSelectedItemContainerStyle: {
-      paddingHorizontal: 16,
-    },
     marginVertical: {
       marginVertical: height / 30,
     },
@@ -332,6 +301,27 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       width: '100%',
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    dropdown: {
+      width: '100%',
+      borderRadius: 22,
+    },
+    dropdownModalWrapper: {
+      width: width,
+      top: 90 + 60 + 3,
+      right: 0,
+    },
+    dropdownModal: {
+      width: width - 32,
+      alignSelf: 'center',
+      marginRight: 0,
+      borderRadius: 22,
+    },
+    renderButton: {
+      width: width - 32,
+      top: 85,
+      alignSelf: 'center',
+      marginRight: 0,
     },
   });
 

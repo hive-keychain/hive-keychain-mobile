@@ -3,6 +3,7 @@ import Icon from 'components/hive/Icon';
 import {ModalScreenProps} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {
+  LayoutChangeEvent,
   ScrollView,
   StyleProp,
   StyleSheet,
@@ -64,7 +65,6 @@ const UserDropdown = ({
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width, height}, useSafeAreaInsets());
-  //TODO after finishing this one, go check each use of the same component & fix
 
   const onHandleClick = () => {
     setIsListExpanded(!isListExpanded);
@@ -201,7 +201,16 @@ const UserDropdown = ({
     ) : null;
   };
 
-  return <View>{renderDropdownTop()}</View>;
+  const onHandleLayout = (event: LayoutChangeEvent) => {
+    const layout = event.nativeEvent.layout;
+    //TODO remove all belliw
+    console.log('height:', layout.height);
+    console.log('width:', layout.width);
+    console.log('x:', layout.x);
+    console.log('y:', layout.y);
+  };
+
+  return <View onLayout={onHandleLayout}>{renderDropdownTop()}</View>;
 };
 
 const getStyles = (

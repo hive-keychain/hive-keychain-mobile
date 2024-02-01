@@ -8,6 +8,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
+import {getBorderTest} from 'src/styles/test';
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
@@ -26,7 +27,7 @@ export default () => {
         name="SettingsScreen"
         component={SettingsMenu}
         options={({navigation}) => ({
-          headerStyle: styles.header,
+          headerStyle: [styles.header, getBorderTest('red')],
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           title: translate('navigation.settings'),

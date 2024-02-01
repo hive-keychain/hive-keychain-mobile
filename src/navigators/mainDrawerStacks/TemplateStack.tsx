@@ -11,6 +11,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
+import {getBorderTest} from 'src/styles/test';
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
@@ -39,7 +40,7 @@ export default ({navigation, route}: TemplateStackNavigationProps) => {
         name="TemplateStack"
         component={() => component}
         options={({navigation}) => ({
-          headerStyle: styles.header,
+          headerStyle: [styles.header, getBorderTest('red')],
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           title: titleScreen,
@@ -78,6 +79,11 @@ const getStyles = (theme: Theme, height: number) =>
       backgroundColor: getColors(theme).primaryBackground,
       borderWidth: 0,
       elevation: 0,
+      //TODO add fixed height for all stack/headers
+      //  declared in spacing.
+      // STACK_HEADER_HEIGHT: 55,
+      // -> then test in different devices.
+      //  -> within the userdropdown, make use of that if not passed so you can drar the button + list exactly bellow
     },
     headerTitle: {
       ...headlines_primary_headline_2,

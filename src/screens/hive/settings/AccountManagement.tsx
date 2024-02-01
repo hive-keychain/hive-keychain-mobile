@@ -169,11 +169,11 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       width: '100%',
       height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
       padding: 0,
-      borderRadius: 10,
+      borderRadius: 20,
       marginBottom: 0,
     },
     modalWrapper: {
-      top: 55 + (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50) + 1,
+      top: 55 + (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50) + 4,
       width: width - 32,
       left: 16,
       alignSelf: 'center',
@@ -186,6 +186,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       marginRight: 0,
       alignSelf: 'center',
       maxHeight: 300,
+      borderRadius: 20,
     },
   });
 

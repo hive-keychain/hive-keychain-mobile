@@ -191,6 +191,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       borderRadius: 33,
       marginVertical: 10,
       width: '100%',
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
     },
     opacity: {
       opacity: 0.7,
@@ -210,6 +211,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       width: '100%',
       height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
       padding: 0,
+      borderRadius: 30,
     },
     dropdownButton: {
       top: 130,
@@ -218,12 +220,16 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       alignSelf: 'center',
     },
     wrapperDropdown: {
-      top: 130 + (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50) + 5,
-      width: width - 32,
+      top: 119 + 58 + 50,
+      width: '100%',
       alignSelf: 'center',
+      justifyContent: 'center',
+      right: 0,
     },
     dropdownModal: {
-      width: '100%',
+      width: width - 32,
+      borderRadius: 30,
+      alignSelf: 'center',
     },
   });
 
