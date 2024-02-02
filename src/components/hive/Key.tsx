@@ -6,6 +6,7 @@ import Separator from 'components/ui/Separator';
 import {MainNavigation, ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {
+  Platform,
   StyleProp,
   StyleSheet,
   Text,
@@ -255,8 +256,9 @@ const getStyles = (theme: Theme, height: number) =>
     },
     keyHidden: {
       color: getColors(theme).iconBW,
-      fontSize: getFontSizeSmallDevices(height, 20),
-      letterSpacing: -2,
+      fontSize:
+        Platform.OS === 'android' ? getFontSizeSmallDevices(height, 20) : 12,
+      letterSpacing: Platform.OS === 'android' ? -2 : 0,
     },
     addKey: {
       backgroundColor: getColors(theme).tertiaryCardBgColor,
