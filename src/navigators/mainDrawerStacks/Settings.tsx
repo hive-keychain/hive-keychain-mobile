@@ -8,7 +8,6 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {getBorderTest} from 'src/styles/test';
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
@@ -27,7 +26,7 @@ export default () => {
         name="SettingsScreen"
         component={SettingsMenu}
         options={({navigation}) => ({
-          headerStyle: [styles.header, getBorderTest('red')],
+          headerStyle: [styles.header],
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           title: translate('navigation.settings'),
@@ -37,6 +36,7 @@ export default () => {
               theme={theme}
               onClick={() => navigation.navigate('WALLET')}
               color={getColors(theme).iconBW}
+              additionalContainerStyle={styles.padding}
             />
           ),
           cardStyle: styles.card,
@@ -48,6 +48,7 @@ export default () => {
                 (navigation as DrawerNavigationHelpers).openDrawer()
               }
               color={getColors(theme).iconBW}
+              additionalContainerStyle={styles.padding}
             />
           ),
         })}
@@ -72,7 +73,9 @@ const getStyles = (theme: Theme, height: number) =>
       ),
     },
     card: {
-      paddingHorizontal: CARD_PADDING_HORIZONTAL,
       backgroundColor: getColors(theme).primaryBackground,
+    },
+    padding: {
+      paddingHorizontal: CARD_PADDING_HORIZONTAL,
     },
   });

@@ -38,6 +38,7 @@ export default () => {
                 navigation.navigate('WALLET', {screen: 'WalletScreen'})
               }
               color={getColors(theme).iconBW}
+              additionalContainerStyle={styles.padding}
             />
           ),
           cardStyle: styles.card,
@@ -49,6 +50,7 @@ export default () => {
                 (navigation as DrawerNavigationHelpers).openDrawer()
               }
               color={getColors(theme).iconBW}
+              additionalContainerStyle={styles.padding}
             />
           ),
         })}
@@ -73,7 +75,9 @@ const getStyles = (theme: Theme, height: number) =>
       ),
     },
     card: {
-      paddingHorizontal: CARD_PADDING_HORIZONTAL,
       backgroundColor: getColors(theme).primaryBackground,
+    },
+    padding: {
+      paddingHorizontal: CARD_PADDING_HORIZONTAL,
     },
   });
