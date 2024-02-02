@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {
   FlexStyle,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {
   AutoCompleteCategory,
@@ -122,22 +122,28 @@ const AutoCompleteBox = ({
                   : category.title}
               </Text>
               <View style={[styles.fullDimensions, styles.marginBottom]}>
-                {category.values.map((autoCompleteItem, index) => (
-                  <TouchableOpacity
-                    activeOpacity={1}
-                    onPress={() => handleOnChange(autoCompleteItem.value)}
-                    key={`${autoCompleteItem.value}-${index}`}
-                    style={getLastItemStyle(index, category, catIndex)}>
-                    <Text style={[styles.textBase, styles.autoCompleteValue]}>
-                      {autoCompleteItem.translateValue
-                        ? translate(autoCompleteItem.value)
-                        : autoCompleteItem.value}
-                      {autoCompleteItem.subLabel
-                        ? ` (${autoCompleteItem.subLabel})`
-                        : ''}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                <FlatList
+                  data={category.values}
+                  keyExtractor={(e) => e.value}
+                  renderItem={({item: autoCompleteItem, index}) => (
+                    <TouchableOpacity
+                      activeOpacity={1}
+                      onPress={() => handleOnChange(autoCompleteItem.value)}
+                      style={getLastItemStyle(index, category, catIndex)}>
+                      <Text style={[styles.textBase, styles.autoCompleteValue]}>
+                        {autoCompleteItem.translateValue
+                          ? translate(autoCompleteItem.value)
+                          : autoCompleteItem.value}
+                        {autoCompleteItem.subLabel
+                          ? ` (${autoCompleteItem.subLabel})`
+                          : ''}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  onTouchEnd={(e) => {
+                    console.log('touchy');
+                  }}
+                />
               </View>
             </View>
           ),
@@ -147,14 +153,14 @@ const AutoCompleteBox = ({
   };
 
   return (
-    <ScrollView
+    <View
       style={[
         getCardStyle(theme).defaultCardItem,
         styles.container,
         getVisibleStyle(filteredAutoComplete),
       ]}>
       {handleRenderList(filteredAutoComplete)}
-    </ScrollView>
+    </View>
   );
 };
 
