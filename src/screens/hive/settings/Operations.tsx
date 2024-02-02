@@ -209,18 +209,14 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     },
     dropdownContainer: {
       width: '100%',
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
       padding: 0,
       borderRadius: 30,
     },
     dropdownButton: {
-      top: 130,
       width: width - 32,
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
       alignSelf: 'center',
     },
     wrapperDropdown: {
-      top: 119 + 58 + 50,
       width: '100%',
       alignSelf: 'center',
       justifyContent: 'center',

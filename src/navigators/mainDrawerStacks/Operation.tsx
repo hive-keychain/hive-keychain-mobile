@@ -35,6 +35,7 @@ import {StyleSheet} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
+import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {headlines_primary_headline_2} from 'src/styles/typography';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
@@ -158,6 +159,7 @@ const getStyles = (theme: Theme) =>
       backgroundColor: getColors(theme).primaryBackground,
       borderWidth: 0,
       elevation: 0,
+      height: STACK_HEADER_HEIGHT,
     },
     headerTitle: {
       ...headlines_primary_headline_2,

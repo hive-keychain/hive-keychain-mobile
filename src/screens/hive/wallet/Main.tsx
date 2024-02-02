@@ -15,8 +15,8 @@ import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
 import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
 import {DropdownItem} from 'components/form/CustomDropdown';
 import CustomSearchBar from 'components/form/CustomSearchBar';
+import Dropdown from 'components/form/Dropdown';
 import {PickerItemInterface} from 'components/form/PickerItem';
-import UserDropdown from 'components/form/UserDropdown';
 import AccountValue from 'components/hive/AccountValue';
 import CurrencyToken from 'components/hive/CurrencyToken';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
@@ -59,7 +59,10 @@ import {
   PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {TOPCONTAINERSEPARATION} from 'src/styles/spacing';
+import {
+  MIN_SEPARATION_ELEMENTS,
+  TOPCONTAINERSEPARATION,
+} from 'src/styles/spacing';
 import {
   SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   button_link_primary_medium,
@@ -287,8 +290,7 @@ const Main = ({
         animated: true,
         itemIndex: index,
         sectionIndex: sectionIndex,
-        viewPosition: 0.5,
-        viewOffset: sectionIndex === 1 ? -50 : 0,
+        viewPosition: 0,
       });
     }
   };
@@ -341,88 +343,89 @@ const Main = ({
       }>
       {!loadingUserAndGlobals ? (
         <View>
+          <Separator height={TOPCONTAINERSEPARATION} />
+          <View style={{zIndex: 20}}>
+            <View style={[styles.headerMenu]}>
+              <DrawerButton navigation={navigation as any} theme={theme} />
+              <View style={[styles.innerHeader]}>
+                <StatusIndicator theme={theme} />
+                <Claim theme={theme} />
+                <View style={styles.marginRight}>
+                  <View
+                    style={{
+                      width: 180,
+                      zIndex: 100,
+                    }}>
+                    <Dropdown
+                      list={getListFromAccount()}
+                      selected={getItemDropDownSelected(user.name)}
+                      onSelected={(selectedAccount) =>
+                        loadAccount(selectedAccount)
+                      }
+                      dropdownIconScaledSize={{width: 10, height: 10}}
+                      showSelectedIcon={
+                        <Icon
+                          name={Icons.CHECK}
+                          theme={theme}
+                          width={15}
+                          height={15}
+                          strokeWidth={2}
+                          color={PRIMARY_RED_COLOR}
+                        />
+                      }
+                      copyButtonValue
+                      additionalListContainerStyle={{
+                        width: 250,
+                        marginTop: MIN_SEPARATION_ELEMENTS,
+                        alignSelf: 'flex-end',
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+            <Separator />
+            <View style={styles.rowWrapper}>
+              <PercentageDisplay
+                name={translate('wallet.vp')}
+                percent={getVP(user.account) || 100}
+                IconBgcolor={OVERLAYICONBGCOLOR}
+                theme={theme}
+                iconName={Icons.SEND_SQUARE}
+                bgColor={BACKGROUNDITEMDARKISH}
+                secondary={`$${
+                  getVotingDollarsPerAccount(
+                    100,
+                    properties,
+                    user.account,
+                    false,
+                  ) || '0'
+                }`}
+              />
+              <PercentageDisplay
+                iconName={Icons.SPEEDOMETER}
+                bgColor={DARKER_RED_COLOR}
+                name={translate('wallet.rc')}
+                percent={user.rc.percentage || 100}
+                IconBgcolor={OVERLAYICONBGCOLOR}
+                theme={theme}
+              />
+            </View>
+            <Separator />
+            <AccountValue
+              account={user.account}
+              prices={prices}
+              properties={properties}
+              theme={theme}
+              title={translate('common.estimated_account_value')}
+            />
+            <Separator />
+          </View>
+          {/* //end block */}
           <SectionList
             ref={sectionListRef}
             onScrollEndDrag={onHandleEndScroll}
             onScroll={onHandleScroll}
-            ListHeaderComponent={
-              <>
-                <Separator height={TOPCONTAINERSEPARATION} />
-                <View style={[styles.headerMenu]}>
-                  <DrawerButton navigation={navigation as any} theme={theme} />
-                  <View style={[styles.innerHeader]}>
-                    <StatusIndicator theme={theme} />
-                    <Claim theme={theme} />
-                    <View style={styles.marginRight}>
-                      <UserDropdown
-                        list={getListFromAccount()}
-                        selected={getItemDropDownSelected(user.name)}
-                        onSelected={(selectedAccount) =>
-                          loadAccount(selectedAccount)
-                        }
-                        additionalContainerStyle={styles.dropdownContainer}
-                        additionalDropdowContainerStyle={
-                          styles.dropdownContainer
-                        }
-                        dropdownIconScaledSize={{width: 10, height: 10}}
-                        copyButtonValue
-                        additionalMainOverlayStyle={styles.dropdownOverlay}
-                        additionalRenderButtonElementStyle={[
-                          styles.dropdownButton,
-                          styles.marginRight,
-                        ]}
-                        showSelectedIcon={
-                          <Icon
-                            name={Icons.CHECK}
-                            theme={theme}
-                            width={15}
-                            height={15}
-                            strokeWidth={2}
-                            color={PRIMARY_RED_COLOR}
-                          />
-                        }
-                      />
-                    </View>
-                  </View>
-                </View>
-                <Separator />
-                <View style={styles.rowWrapper}>
-                  <PercentageDisplay
-                    name={translate('wallet.vp')}
-                    percent={getVP(user.account) || 100}
-                    IconBgcolor={OVERLAYICONBGCOLOR}
-                    theme={theme}
-                    iconName={Icons.SEND_SQUARE}
-                    bgColor={BACKGROUNDITEMDARKISH}
-                    secondary={`$${
-                      getVotingDollarsPerAccount(
-                        100,
-                        properties,
-                        user.account,
-                        false,
-                      ) || '0'
-                    }`}
-                  />
-                  <PercentageDisplay
-                    iconName={Icons.SPEEDOMETER}
-                    bgColor={DARKER_RED_COLOR}
-                    name={translate('wallet.rc')}
-                    percent={user.rc.percentage || 100}
-                    IconBgcolor={OVERLAYICONBGCOLOR}
-                    theme={theme}
-                  />
-                </View>
-                <Separator />
-                <AccountValue
-                  account={user.account}
-                  prices={prices}
-                  properties={properties}
-                  theme={theme}
-                  title={translate('common.estimated_account_value')}
-                />
-                <Separator />
-              </>
-            }
             //@ts-ignore
             sections={DATA}
             keyExtractor={(item: any, index) =>
@@ -433,11 +436,11 @@ const Main = ({
             )}
             renderSectionHeader={({section: {title}}) =>
               title === 'Currencies' ? (
-                <View style={getCardStyle(theme).borderTopCard}>
+                <View style={[getCardStyle(theme).borderTopCard]}>
                   <Separator height={25} />
                 </View>
               ) : (
-                <View style={getCardStyle(theme).wrapperCardItem}>
+                <View style={[getCardStyle(theme).wrapperCardItem]}>
                   <View
                     style={[
                       styles.flexRow,
@@ -500,11 +503,7 @@ const Main = ({
                     <View
                       style={[
                         getCardStyle(theme).filledWrapper,
-                        {
-                          justifyContent: 'center',
-                          height: 100,
-                          alignItems: 'center',
-                        },
+                        styles.filledWrapper,
                       ]}>
                       <Text style={styles.no_tokens}>
                         {translate('wallet.no_tokens')}
@@ -559,7 +558,6 @@ const getDimensionedStyles = (
     },
     dropdownContainer: {
       width: width * (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 0.45 : 0.4),
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
       padding: 0,
       borderRadius: 10,
       marginBottom: 0,
@@ -569,9 +567,7 @@ const getDimensionedStyles = (
       marginRight: width * 0.05,
     },
     dropdownButton: {
-      top: TOPCONTAINERSEPARATION + insets.top,
       width: width * (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 0.45 : 0.4),
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
       alignSelf: 'flex-end',
     },
     dropdownListContainer: {
@@ -605,15 +601,15 @@ const getDimensionedStyles = (
       paddingTop: 30,
       zIndex: 11,
     },
-    dropdownOverlay: {
-      position: 'absolute',
-      top: 55 + TOPCONTAINERSEPARATION,
-      right: width * 0.05,
-    },
     no_tokens: {
       color: getColors(theme).secondaryText,
       textAlign: 'center',
       ...button_link_primary_medium,
+    },
+    filledWrapper: {
+      justifyContent: 'center',
+      height: 100,
+      alignItems: 'center',
     },
   });
 

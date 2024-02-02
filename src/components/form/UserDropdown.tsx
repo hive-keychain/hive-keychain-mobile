@@ -20,7 +20,11 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {TOPCONTAINERSEPARATION} from 'src/styles/spacing';
+import {
+  MIN_SEPARATION_ELEMENTS,
+  STACK_HEADER_HEIGHT,
+  getElementHeight,
+} from 'src/styles/spacing';
 import {
   getFontSizeSmallDevices,
   title_primary_body_2,
@@ -64,7 +68,13 @@ const UserDropdown = ({
   const [isListExpanded, setIsListExpanded] = useState(false);
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-  const styles = getStyles(theme, {width, height}, useSafeAreaInsets());
+  const [topDropdown, setTopDropdown] = useState(0);
+  const styles = getStyles(
+    theme,
+    {width, height},
+    useSafeAreaInsets(),
+    topDropdown,
+  );
 
   const onHandleClick = () => {
     setIsListExpanded(!isListExpanded);
@@ -75,12 +85,7 @@ const UserDropdown = ({
           <ScrollView
             style={[
               getCardStyle(theme).defaultCardItem,
-              {
-                width: '100%',
-                borderRadius: 10,
-                maxHeight: 300,
-                marginBottom: 0,
-              },
+              styles.modalContentScrollView,
             ]}>
             {list.map((item) => {
               return (
@@ -133,8 +138,10 @@ const UserDropdown = ({
         additionalModalContainerStyle,
       ],
       renderButtonElement: (
-        <View style={[additionalRenderButtonElementStyle]}>
+        <View
+          style={[styles.buttonElement, additionalRenderButtonElementStyle]}>
           {renderDropdownTop(true)}
+          {console.log({t: styles.buttonElement.top})}
         </View>
       ),
     } as ModalScreenProps);
@@ -203,11 +210,8 @@ const UserDropdown = ({
 
   const onHandleLayout = (event: LayoutChangeEvent) => {
     const layout = event.nativeEvent.layout;
-    //TODO remove all belliw
-    console.log('height:', layout.height);
-    console.log('width:', layout.width);
-    console.log('x:', layout.x);
-    console.log('y:', layout.y);
+    const top = layout.y + STACK_HEADER_HEIGHT;
+    setTopDropdown(top);
   };
 
   return <View onLayout={onHandleLayout}>{renderDropdownTop()}</View>;
@@ -217,8 +221,13 @@ const getStyles = (
   theme: Theme,
   {width, height}: Dimensions,
   insets: EdgeInsets,
+  topDropdown: number,
 ) =>
   StyleSheet.create({
+    buttonElement: {
+      top: topDropdown,
+      height: getElementHeight(height),
+    },
     modalContainer: {
       width: '80%',
       backgroundColor: 'none',
@@ -226,7 +235,7 @@ const getStyles = (
       height: 'auto',
     },
     wrapperFixed: {
-      top: 55 + TOPCONTAINERSEPARATION + insets.top,
+      top: topDropdown + getElementHeight(height) + MIN_SEPARATION_ELEMENTS,
       bottom: undefined,
       left: undefined,
       right: width * 0.05,
@@ -235,10 +244,17 @@ const getStyles = (
       alignItems: 'flex-end',
       justifyContent: 'flex-start',
     },
+    modalContentScrollView: {
+      width: '100%',
+      borderRadius: 10,
+      maxHeight: 300,
+      marginBottom: 0,
+    },
     dropdownContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+      height: getElementHeight(height),
     },
     rotateIcon: {
       transform: [{rotateX: '180deg'}],

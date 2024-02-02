@@ -15,6 +15,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {CARD_SMALLEST_PADDING} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
+import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {
   SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   headlines_primary_headline_2,
@@ -36,15 +37,15 @@ export default () => {
         name="WalletScreen"
         component={Wallet}
         options={({navigation}) => ({
-          headerStyle: styles.headerStyle,
-          title: '',
+          headerStyle: styles.noStyle,
           headerTransparent: true,
+          title: '',
         })}
       />
       <Stack.Screen
         name="ScanQRFromWalletScreen"
         options={({navigation}) => ({
-          headerStyle: styles.header,
+          headerStyle: styles.headerStyle,
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           title: translate('components.infoWalletQR.title'),
@@ -72,7 +73,7 @@ export default () => {
       <Stack.Screen
         name="WalletHistoryScreen"
         options={({navigation}) => ({
-          headerStyle: styles.header,
+          headerStyle: styles.headerStyle,
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           title: translate('navigation.wallet_history'),
@@ -128,13 +129,13 @@ export default () => {
 
 const getStyles = ({width}: Width, theme: Theme) =>
   StyleSheet.create({
-    headerStyle: {
-      height: 'auto',
-      backgroundColor: getColors(theme).primaryBackground,
+    noStyle: {
+      height: 0,
       borderWidth: 0,
       elevation: 0,
     },
-    header: {
+    headerStyle: {
+      height: STACK_HEADER_HEIGHT,
       backgroundColor: getColors(theme).primaryBackground,
       borderWidth: 0,
       elevation: 0,

@@ -8,6 +8,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
+import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
@@ -65,6 +66,7 @@ const getStyles = (theme: Theme, height: number) =>
       backgroundColor: getColors(theme).primaryBackground,
       elevation: 0,
       borderWidth: 0,
+      height: STACK_HEADER_HEIGHT,
     },
     headerTitle: {
       ...headlines_primary_headline_2,

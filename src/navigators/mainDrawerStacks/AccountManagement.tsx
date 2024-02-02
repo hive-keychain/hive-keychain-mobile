@@ -10,6 +10,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
+import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
@@ -59,6 +60,7 @@ const getStyles = (theme: Theme, height: number) =>
       backgroundColor: getColors(theme).primaryBackground,
       borderWidth: 0,
       elevation: 0,
+      height: STACK_HEADER_HEIGHT,
     },
     headerTitle: {
       ...headlines_primary_headline_2,
