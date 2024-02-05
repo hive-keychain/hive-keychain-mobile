@@ -141,7 +141,6 @@ const UserDropdown = ({
         <View
           style={[styles.buttonElement, additionalRenderButtonElementStyle]}>
           {renderDropdownTop(true)}
-          {console.log({t: styles.buttonElement.top})}
         </View>
       ),
     } as ModalScreenProps);

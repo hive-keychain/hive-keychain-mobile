@@ -36,6 +36,7 @@ interface Props {
   dropdownIconScaledSize?: Dimensions;
   copyButtonValue?: boolean;
   additionalListContainerStyle?: StyleProp<ViewStyle>;
+  additionalDropdownContainerStyle?: StyleProp<ViewStyle>;
 }
 
 const Dropdown = ({
@@ -47,6 +48,7 @@ const Dropdown = ({
   copyButtonValue,
   showSelectedIcon,
   additionalListContainerStyle,
+  additionalDropdownContainerStyle,
 }: Props & PropsFromRedux) => {
   const {width, height} = useWindowDimensions();
   const {theme} = useThemeContext();
@@ -128,6 +130,7 @@ const Dropdown = ({
           getCardStyle(theme).defaultCardItem,
           styles.dropdownContainer,
           {zIndex: 120},
+          additionalDropdownContainerStyle,
         ]}>
         {typeof selected === 'string' ? (
           <Text style={[styles.text, {zIndex: 120}]}>{selected}</Text>

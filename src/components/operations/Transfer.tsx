@@ -1,4 +1,5 @@
 import {loadAccount} from 'actions/index';
+import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import {encodeMemo} from 'components/bridge';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
@@ -342,7 +343,8 @@ const Transfer = ({
         }
         childrenBottom={
           <View style={styles.operationButtonsContainer}>
-            <EllipticButton
+            <ActiveOperationButton
+              method={KeyTypes.active}
               title={translate('common.send')}
               onPress={() => {
                 if (
@@ -363,6 +365,7 @@ const Transfer = ({
               }}
               style={getButtonStyle(theme, height).warningStyleButton}
               additionalTextStyle={{...button_link_primary_medium}}
+              isLoading={false}
             />
           </View>
         }

@@ -3,6 +3,7 @@ import React from 'react';
 import {StyleProp, TextStyle, ViewStyle} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
+import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import EllipticButton from './EllipticButton';
@@ -23,11 +24,17 @@ const ActiveOperationButton = ({
   ...props
 }: Props) => {
   const disabled = !props.user.keys[method || KeyTypes.active];
+  const noShadowStyle = disabled
+    ? generateBoxShadowStyle(0, 0, '#00000000', 0, 0, 0, '#00000000')
+    : undefined;
   return (
     <>
       <EllipticButton
         {...props}
-        style={[style, disabled ? {backgroundColor: '#AAA'} : undefined]}
+        style={[
+          style,
+          disabled ? {backgroundColor: '#AAA', ...noShadowStyle} : undefined,
+        ]}
         onPress={() => {
           if (disabled) {
             SimpleToast.show(

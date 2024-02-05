@@ -379,6 +379,9 @@ const Main = ({
                         marginTop: MIN_SEPARATION_ELEMENTS,
                         alignSelf: 'flex-end',
                       }}
+                      additionalDropdownContainerStyle={
+                        styles.dropdownContainer
+                      }
                     />
                   </View>
                 </View>
@@ -557,11 +560,9 @@ const getDimensionedStyles = (
       alignItems: 'center',
     },
     dropdownContainer: {
-      width: width * (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 0.45 : 0.4),
-      padding: 0,
-      borderRadius: 10,
-      marginBottom: 0,
-      alignSelf: 'flex-end',
+      backgroundColor: '#ffffff00',
+      borderWidth: 1,
+      borderColor: getColors(theme).walletUserPickerBorder,
     },
     marginRight: {
       marginRight: width * 0.05,
