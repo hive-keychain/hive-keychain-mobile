@@ -23,14 +23,13 @@ import {Icons} from 'src/enums/icons.enums';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getRotateStyle} from 'src/styles/transform';
 import {
   FontJosefineSansName,
-  button_link_primary_medium,
   getFontSizeSmallDevices,
-  title_primary_body_2,
+  getFormFontStyle,
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
@@ -75,7 +74,8 @@ const Convert = ({
   );
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
-  const styles = getDimensionedStyles(color, useWindowDimensions(), theme);
+  const {width, height} = useWindowDimensions();
+  const styles = getDimensionedStyles(color, {width, height}, theme);
   const operationTypeList: DropdownItem[] = [
     {
       icon: (
@@ -191,15 +191,18 @@ const Convert = ({
       additionalContentContainerStyle={{paddingHorizontal: 20}}
       childrenTop={
         <>
-          <Separator />
+          <Separator height={10} />
           <CurrentAvailableBalance
             theme={theme}
             currentValue={currentBalance as string}
             availableValue={availableBalance as string}
             additionalContainerStyle={styles.currentAvailableBalances}
             setMaxAvailable={(value) => setAmount(value)}
+            additionalLabelTitleStyle={{
+              fontSize: getFontSizeSmallDevices(height, 15),
+            }}
           />
-          <Separator />
+          <Separator height={10} />
           {totalPendingSavingsWithdrawals > 0 && (
             <TouchableOpacity
               onPress={() => {
@@ -223,11 +226,19 @@ const Convert = ({
               ]}>
               <View>
                 <Text
-                  style={[styles.textBase, styles.josefineFont, styles.opaque]}>
+                  style={[
+                    getFormFontStyle(height, theme).title,
+                    styles.josefineFont,
+                    styles.opaque,
+                  ]}>
                   {capitalize(translate(`wallet.operations.savings.pending`))}
                 </Text>
                 <Text
-                  style={[styles.textBase, styles.title, styles.josefineFont]}>
+                  style={[
+                    getFormFontStyle(height, theme).input,
+                    styles.title,
+                    styles.josefineFont,
+                  ]}>
                   {totalPendingSavingsWithdrawals} {currency}
                 </Text>
               </View>
@@ -238,7 +249,7 @@ const Convert = ({
               />
             </TouchableOpacity>
           )}
-          <Separator height={25} />
+          <Separator height={10} />
         </>
       }
       childrenMiddle={
@@ -246,13 +257,19 @@ const Convert = ({
           {operationType === SavingsOperations.withdraw && (
             <>
               <Separator />
-              <Text style={[styles.textBase, styles.opaque, styles.disclaimer]}>
+              <Text
+                style={[
+                  getFormFontStyle(height, theme).title,
+                  styles.opaque,
+                  styles.disclaimer,
+                ]}>
                 {translate(`wallet.operations.savings.disclaimer`, {currency})}
               </Text>
             </>
           )}
           <Separator />
-          <Text style={[styles.textBase, styles.title]}>
+          <Text
+            style={[getFormFontStyle(height, theme).title, styles.marginLeft]}>
             {translate('common.operation_type')}
           </Text>
           <CustomDropdown
@@ -268,17 +285,22 @@ const Convert = ({
             additionalContainerStyle={[styles.dropdown]}
             additionalDropdowContainerStyle={styles.dropdownListContainer}
             dropdownIconScaledSize={{width: 15, height: 15}}
+            additionalTextStyle={getFormFontStyle(height, theme).input}
           />
           <Separator />
           <OperationInput
             labelInput={translate('common.username')}
             placeholder={translate('common.username')}
             leftIcon={<Icon theme={theme} name={Icons.AT} />}
-            inputStyle={[styles.textBase, styles.paddingLeft]}
             value={to}
             onChangeText={(e) => {
               setTo(e.trim());
             }}
+            inputStyle={[
+              getFormFontStyle(height, theme).input,
+              styles.paddingLeft,
+            ]}
+            additionalLabelStyle={getFormFontStyle(height, theme).title}
           />
           <Separator />
           <View style={styles.flexRowBetween}>
@@ -290,18 +312,26 @@ const Convert = ({
               additionalOuterContainerStyle={{
                 width: '40%',
               }}
-              inputStyle={styles.textBase}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
               }}
+              inputStyle={[
+                getFormFontStyle(height, theme).input,
+                styles.paddingLeft,
+              ]}
+              additionalLabelStyle={getFormFontStyle(height, theme).title}
             />
             <OperationInput
               labelInput={capitalize(translate('common.amount'))}
-              placeholder={'0.000'}
+              placeholder={'0'}
               keyboardType="decimal-pad"
               textAlign="right"
               value={amount}
-              inputStyle={[styles.textBase, styles.paddingLeft]}
+              inputStyle={[
+                getFormFontStyle(height, theme).input,
+                styles.paddingLeft,
+              ]}
+              additionalLabelStyle={getFormFontStyle(height, theme).title}
               onChangeText={setAmount}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
@@ -321,7 +351,11 @@ const Convert = ({
                     )}
                   />
                   <TouchableOpacity onPress={() => handleSetMax()}>
-                    <Text style={[styles.textBase, styles.redText]}>
+                    <Text
+                      style={[
+                        getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
+                          .input,
+                      ]}>
                       {translate('common.max').toUpperCase()}
                     </Text>
                   </TouchableOpacity>
@@ -340,7 +374,7 @@ const Convert = ({
             onPress={onSavings}
             style={[getButtonStyle(theme).warningStyleButton]}
             isLoading={loading}
-            additionalTextStyle={{...button_link_primary_medium}}
+            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
           />
           <Separator />
         </>
@@ -367,10 +401,6 @@ const getDimensionedStyles = (
       justifyContent: 'space-between',
       flexDirection: 'row',
     },
-    textBase: {
-      ...title_primary_body_2,
-      color: getColors(theme).secondaryText,
-    },
     title: {
       fontSize: getFontSizeSmallDevices(height, 15),
     },
@@ -379,10 +409,6 @@ const getDimensionedStyles = (
     },
     opaque: {
       opacity: 0.7,
-    },
-    operationPicker: {
-      paddingHorizontal: 20,
-      paddingVertical: 10,
     },
     paddingLeft: {
       paddingLeft: 10,
@@ -397,7 +423,6 @@ const getDimensionedStyles = (
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-    redText: {color: PRIMARY_RED_COLOR},
     dropdown: {
       width: '100%',
       padding: 0,
@@ -408,6 +433,7 @@ const getDimensionedStyles = (
       borderRadius: 30,
       height: '100%',
     },
+    marginLeft: {marginLeft: 15},
   });
 
 const connector = connect(
