@@ -5,16 +5,24 @@ import Icon from 'components/hive/Icon';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {
-  button_link_primary_medium,
+  getFontSizeSmallDevices,
+  getFormFontStyle,
   title_primary_body_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
@@ -61,6 +69,7 @@ const PowerUp = ({
       setLoading(false);
     }
   };
+  const {height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, theme);
@@ -82,6 +91,9 @@ const PowerUp = ({
             availableValue={availableHpAmount}
             additionalContainerStyle={styles.currentAvailableBalances}
             setMaxAvailable={(value) => setAmount(value)}
+            additionalLabelTitleStyle={{
+              fontSize: getFontSizeSmallDevices(height, 15),
+            }}
           />
           <Separator height={25} />
         </>
@@ -89,7 +101,8 @@ const PowerUp = ({
       childrenMiddle={
         <>
           <Separator height={35} />
-          <Text style={styles.infoText}>
+          <Text
+            style={[getFormFontStyle(height, theme).title, styles.infoText]}>
             {translate('wallet.operations.powerup.info_text')}
           </Text>
           <Separator />
@@ -97,11 +110,12 @@ const PowerUp = ({
             labelInput={translate('common.username')}
             placeholder={translate('common.username')}
             leftIcon={<Icon theme={theme} name={Icons.AT} />}
-            inputStyle={styles.text}
             value={to}
             onChangeText={(e) => {
               setTo(e.trim());
             }}
+            inputStyle={getFormFontStyle(height, theme).input}
+            additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
           />
           <Separator />
           <View style={styles.flexRowBetween}>
@@ -113,18 +127,20 @@ const PowerUp = ({
               additionalOuterContainerStyle={{
                 width: '40%',
               }}
-              inputStyle={styles.text}
+              inputStyle={getFormFontStyle(height, theme).input}
+              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
               }}
             />
             <OperationInput
               labelInput={capitalize(translate('common.amount'))}
-              placeholder={'0.000'}
+              placeholder={'0'}
               keyboardType="decimal-pad"
               textAlign="right"
               value={amount}
-              inputStyle={styles.text}
+              inputStyle={getFormFontStyle(height, theme).input}
+              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
               onChangeText={setAmount}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
@@ -145,7 +161,10 @@ const PowerUp = ({
                   />
                   <TouchableOpacity
                     onPress={() => setAmount(availableHpAmount.split(' ')[0])}>
-                    <Text style={styles.text}>
+                    <Text
+                      style={
+                        getFormFontStyle(height, theme, PRIMARY_RED_COLOR).input
+                      }>
                       {translate('common.max').toUpperCase()}
                     </Text>
                   </TouchableOpacity>
@@ -161,7 +180,7 @@ const PowerUp = ({
           onPress={onPowerUp}
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
           isLoading={loading}
-          additionalTextStyle={{...button_link_primary_medium}}
+          additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
         />
       }
     />
@@ -175,10 +194,8 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
       paddingHorizontal: 15,
     },
     infoText: {
-      color: getColors(theme).secondaryText,
-      ...button_link_primary_medium,
+      marginLeft: 15,
       opacity: 0.6,
-      textAlign: 'center',
     },
     text: {
       ...title_primary_body_2,

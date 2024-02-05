@@ -1,6 +1,6 @@
 import Icon from 'components/hive/Icon';
 import React from 'react';
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {
@@ -17,6 +17,7 @@ interface Props {
   currentValue: string;
   availableValue: string;
   additionalContainerStyle?: StyleProp<ViewStyle>;
+  additionalLabelTitleStyle?: StyleProp<TextStyle>;
   setMaxAvailable?: (value: string) => void;
   leftLabelTranslationKey?: string;
   rightLabelTranslationKey?: string;
@@ -34,6 +35,7 @@ const CurrentAvailableBalance = ({
   rightLabelTranslationKey,
   onleftClick,
   onRightClick,
+  additionalLabelTitleStyle,
 }: Props) => {
   const styles = getStyles(theme);
 
@@ -72,7 +74,10 @@ const CurrentAvailableBalance = ({
           styles.buttonContainer,
           styles.backgroundColorDarkBlue,
         ]}
-        additionalPrimaryLabelStyle={styles.current}
+        additionalPrimaryLabelStyle={[
+          styles.current,
+          additionalLabelTitleStyle,
+        ]}
         additionalSecondaryLabelStyle={styles.available}
         additionalSquareButtonText={styles.whiteText}
       />
@@ -92,7 +97,10 @@ const CurrentAvailableBalance = ({
           styles.buttonContainer,
           styles.backgroundColorRed,
         ]}
-        additionalPrimaryLabelStyle={styles.current}
+        additionalPrimaryLabelStyle={[
+          styles.current,
+          additionalLabelTitleStyle,
+        ]}
         additionalSecondaryLabelStyle={styles.available}
         additionalSquareButtonText={styles.whiteText}
       />
