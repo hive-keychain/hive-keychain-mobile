@@ -10,7 +10,7 @@ import {
   headerH2Primary,
 } from 'src/styles/typography';
 import {formatBalance, toHP} from 'utils/format';
-import {getCurrencyProperties} from 'utils/hiveReact';
+import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 
 type Props = {
@@ -36,24 +36,58 @@ const Balance = ({
   setMax,
   theme,
 }: Props) => {
-  let {color, value, logo} = getCurrencyProperties(currency, account);
-  let parsedValue = parseFloat(value as string);
+  // let {color, value, logo} = getCurrencyProperties(currency, account);
 
-  if (pd && value) {
-    parsedValue =
-      parseFloat(value as string) -
-      parseFloat(account.delegated_vesting_shares as string);
-    parsedValue = toHP(value as string, globalProperties);
-  }
-  if (isHiveEngine) {
-    parsedValue = +tokenBalance!;
-    logo = tokenLogo!;
-  }
+  const getParsedValue = (
+    currency: string,
+    account: ExtendedAccount,
+    isHiveEngine?: boolean,
+  ) => {
+    if (isHiveEngine) {
+      // logo = tokenLogo!;
+      return +tokenBalance!;
+    }
+    switch (currency) {
+      case getCurrency('HIVE'):
+        return parseFloat((account.balance as string).split(' ')[0]);
+      case getCurrency('HBD'):
+        return parseFloat((account.hbd_balance as string).split(' ')[0]);
+      case getCurrency('HP'):
+        let hpBalance = toHP(
+          (account.vesting_balance as string).split(' ')[0],
+          globalProperties,
+        );
+        if (pd) {
+          hpBalance =
+            hpBalance -
+            parseFloat(
+              (account.delegated_vesting_shares as string).split(' ')[0],
+            );
+        }
+        return hpBalance;
+    }
+  };
+  //TODO IP: keep working here bellow, the idea is not needed anymore that function in `src/utils/hiveReact.tsx`
+  //  - so all the calculations remain inside balance.
+  //  - after coding, test and search all it uses & fix/update
+  let parsedValue = getParsedValue(currency, account, isHiveEngine);
+  console.log({parsedValue}); //TODO remove line
+
+  // if (pd && value) {
+  //   parsedValue =
+  //     parseFloat(value as string) -
+  //     parseFloat(account.delegated_vesting_shares as string);
+  //   parsedValue = toHP(value as string, globalProperties);
+  // }
+  // if (isHiveEngine) {
+  //   parsedValue = +tokenBalance!;
+  //   logo = tokenLogo!;
+  // }
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({
     width,
     height,
-    color,
+    // color,
     theme,
   });
   return (
@@ -78,17 +112,17 @@ const Balance = ({
 const getDimensionedStyles = ({
   width,
   height,
-  color,
+  // color,
   theme,
 }: {
   width: number;
   height: number;
-  color?: string;
+  // color?: string;
   theme: Theme;
 }) =>
   StyleSheet.create({
     logo: {justifyContent: 'center', alignItems: 'center'},
-    currency: {color},
+    // currency: {color},
     row: {
       display: 'flex',
       flexDirection: 'row',
