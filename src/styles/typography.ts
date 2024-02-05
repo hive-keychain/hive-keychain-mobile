@@ -1,6 +1,8 @@
 // Define widely used text styles throughout the App
 
-import {TextStyle} from 'react-native';
+import {StyleProp, TextStyle} from 'react-native';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from './colors';
 
 // Usage : In stylesheet, you can compound several styles : {thisTextField:{...Typography.mainHeader,Typography.underlined }}
 
@@ -80,6 +82,11 @@ export const title_primary_body_2: TextStyle = {
   fontFamily: FontPoppinsName.SEMI_BOLD,
 };
 
+export const title_primary_body_3: TextStyle = {
+  fontSize: 15,
+  fontFamily: FontPoppinsName.SEMI_BOLD,
+};
+
 export const title_secondary_title_2: TextStyle = {
   fontSize: FontSize.h3,
   fontFamily: FontJosefineSansName.BOLD,
@@ -130,4 +137,42 @@ export const getFontSizeSmallDevices = (
   return height <= smallestScreenHeight
     ? currentFontSize * 0.7
     : currentFontSize;
+};
+
+export const getFormFontStyle = (
+  height: number,
+  theme: Theme,
+  color?: string,
+) => {
+  return {
+    title: {
+      ...button_link_primary_medium,
+      color: color ?? getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...button_link_primary_medium}.fontSize,
+      ),
+    } as StyleProp<TextStyle>,
+    input: {
+      ...body_primary_body_3,
+      color: color ?? getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...body_primary_body_3}.fontSize,
+      ),
+    } as StyleProp<TextStyle>,
+    labelInput: {
+      ...title_primary_body_3,
+      color: color ?? getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        height,
+        {...title_primary_body_3}.fontSize,
+      ),
+    } as StyleProp<TextStyle>,
+    infoLabel: {
+      fontFamily: FontPoppinsName.ITALIC,
+      color: color ?? getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(height, 15),
+    } as StyleProp<TextStyle>,
+  };
 };

@@ -30,11 +30,7 @@ import {
   getColors,
 } from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
-import {
-  FontPoppinsName,
-  button_link_primary_medium,
-  title_primary_body_2,
-} from 'src/styles/typography';
+import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {FavoriteUserUtils} from 'utils/favorite-user.utils';
 import {beautifyTransferError, capitalize} from 'utils/format';
@@ -223,7 +219,8 @@ const Transfer = ({
               onChangeText={(e) => {
                 setTo(e.trim());
               }}
-              inputStyle={styles.text}
+              inputStyle={getFormFontStyle(height, theme).input}
+              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
             />
             <Separator />
             <View style={styles.flexRowBetween}>
@@ -235,10 +232,13 @@ const Transfer = ({
                 additionalOuterContainerStyle={{
                   width: '40%',
                 }}
-                inputStyle={styles.text}
                 additionalInputContainerStyle={{
                   marginHorizontal: 0,
                 }}
+                inputStyle={getFormFontStyle(height, theme).input}
+                additionalLabelStyle={
+                  getFormFontStyle(height, theme).labelInput
+                }
               />
               <OperationInput
                 keyboardType="decimal-pad"
@@ -252,7 +252,10 @@ const Transfer = ({
                 additionalOuterContainerStyle={{
                   width: '54%',
                 }}
-                inputStyle={styles.text}
+                inputStyle={getFormFontStyle(height, theme).input}
+                additionalLabelStyle={
+                  getFormFontStyle(height, theme).labelInput
+                }
                 rightIcon={
                   <View style={styles.flexRowCenter}>
                     <Separator
@@ -265,7 +268,11 @@ const Transfer = ({
                       )}
                     />
                     <TouchableOpacity onPress={onhandleSetMaxAvailableBalance}>
-                      <Text style={[styles.text, styles.redText]}>
+                      <Text
+                        style={
+                          getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
+                            .input
+                        }>
                         {translate('common.max').toUpperCase()}
                       </Text>
                     </TouchableOpacity>
@@ -279,7 +286,8 @@ const Transfer = ({
               placeholder={translate('wallet.operations.transfer.memo')}
               value={memo}
               onChangeText={setMemo}
-              inputStyle={styles.text}
+              inputStyle={getFormFontStyle(height, theme).input}
+              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
               rightIcon={
                 <View style={styles.flexRowCenter}>
                   <Separator
@@ -306,6 +314,7 @@ const Transfer = ({
               theme={theme}
               title={translate('common.recurrent_transfer')}
               toggled={isRecurrent}
+              additionalTitleStyle={getFormFontStyle(height, theme).title}
               callback={(toggled) => {
                 setRecurrent(toggled);
               }}>
@@ -319,9 +328,13 @@ const Transfer = ({
                 value={recurrence}
                 onChangeText={setRecurrence}
                 keyboardType={'number-pad'}
-                inputStyle={styles.text}
-                additionalLabelStyle={styles.text}
-                additionalLabelExtraInfoTextStyle={styles.infoLabel}
+                inputStyle={getFormFontStyle(height, theme).input}
+                additionalLabelStyle={
+                  getFormFontStyle(height, theme).labelInput
+                }
+                additionalLabelExtraInfoTextStyle={
+                  getFormFontStyle(height, theme).infoLabel
+                }
               />
               <Separator />
               <OperationInput
@@ -333,9 +346,13 @@ const Transfer = ({
                 value={exec}
                 onChangeText={setExec}
                 keyboardType={'number-pad'}
-                inputStyle={styles.text}
-                additionalLabelStyle={styles.text}
-                additionalLabelExtraInfoTextStyle={styles.infoLabel}
+                inputStyle={getFormFontStyle(height, theme).input}
+                additionalLabelStyle={
+                  getFormFontStyle(height, theme).labelInput
+                }
+                additionalLabelExtraInfoTextStyle={
+                  getFormFontStyle(height, theme).infoLabel
+                }
               />
             </OptionsToggle>
             <Separator />
@@ -364,7 +381,9 @@ const Transfer = ({
                 }
               }}
               style={getButtonStyle(theme, height).warningStyleButton}
-              additionalTextStyle={{...button_link_primary_medium}}
+              additionalTextStyle={
+                getFormFontStyle(height, theme, 'white').title
+              }
               isLoading={false}
             />
           </View>
@@ -379,11 +398,15 @@ const Transfer = ({
         childrenMiddle={
           <>
             <Separator height={35} />
-            <Text style={[styles.text, styles.info]}>
+            <Text style={[getFormFontStyle(height, theme).title, styles.info]}>
               {translate('wallet.operations.transfer.confirm.info')}
             </Text>
             <Separator />
-            <Text style={[styles.text, styles.warning]}>
+            <Text
+              style={[
+                getFormFontStyle(height, theme).infoLabel,
+                styles.warning,
+              ]}>
               {
                 getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
                   .warning
@@ -392,12 +415,12 @@ const Transfer = ({
             <Separator />
             <View style={styles.justifyCenter}>
               <View style={[styles.flexRowBetween, styles.width95]}>
-                <Text style={[styles.text, styles.title]}>
+                <Text style={[getFormFontStyle(height, theme).title]}>
                   {translate('wallet.operations.transfer.confirm.from')}
                 </Text>
                 <Text
                   style={[
-                    styles.text,
+                    getFormFontStyle(height, theme).title,
                     styles.textContent,
                   ]}>{`@${user.account.name}`}</Text>
               </View>
@@ -410,10 +433,14 @@ const Transfer = ({
             <Separator />
             <View style={styles.justifyCenter}>
               <View style={[styles.flexRowBetween, styles.width95]}>
-                <Text style={[styles.text, styles.title]}>
+                <Text style={[getFormFontStyle(height, theme).title]}>
                   {translate('wallet.operations.transfer.confirm.to')}
                 </Text>
-                <Text style={[styles.text, styles.textContent]}>{`@${to} ${
+                <Text
+                  style={[
+                    getFormFontStyle(height, theme).title,
+                    styles.textContent,
+                  ]}>{`@${to} ${
                   getTransferWarning(
                     phishingAccounts,
                     to,
@@ -434,12 +461,12 @@ const Transfer = ({
             <Separator />
             <View style={styles.justifyCenter}>
               <View style={[styles.flexRowBetween, styles.width95]}>
-                <Text style={[styles.text, styles.title]}>
+                <Text style={[getFormFontStyle(height, theme).title]}>
                   {translate('wallet.operations.transfer.confirm.amount')}
                 </Text>
                 <Text
                   style={[
-                    styles.text,
+                    getFormFontStyle(height, theme).title,
                     styles.textContent,
                   ]}>{`${amount} ${currency}`}</Text>
               </View>
@@ -454,12 +481,18 @@ const Transfer = ({
                 <Separator />
                 <View style={styles.justifyCenter}>
                   <View style={[styles.flexRowBetween, styles.width95]}>
-                    <Text style={[styles.text, styles.title]}>
+                    <Text style={[getFormFontStyle(height, theme).title]}>
                       {translate('wallet.operations.transfer.confirm.memo')}
                     </Text>
-                    <Text style={[styles.text, styles.textContent]}>{`${memo} ${
-                      isMemoEncrypted ? '(encrypted)' : ''
-                    }`}</Text>
+                    <Text
+                      style={[
+                        getFormFontStyle(height, theme).title,
+                        styles.textContent,
+                      ]}>{`${
+                      memo.trim().length > 25
+                        ? memo.substring(0, 22) + '...'
+                        : memo
+                    } ${isMemoEncrypted ? '(encrypted)' : ''}`}</Text>
                   </View>
                   <Separator
                     drawLine
@@ -474,12 +507,16 @@ const Transfer = ({
               <>
                 <View style={styles.justifyCenter}>
                   <View style={[styles.flexRowBetween, styles.width95]}>
-                    <Text style={[styles.text, styles.title]}>
+                    <Text style={[getFormFontStyle(height, theme).title]}>
                       {translate(
                         'wallet.operations.transfer.confirm.recurrence',
                       )}
                     </Text>
-                    <Text style={[styles.text, styles.textContent]}>
+                    <Text
+                      style={[
+                        getFormFontStyle(height, theme).title,
+                        styles.textContent,
+                      ]}>
                       {translate(
                         'wallet.operations.transfer.confirm.recurrenceData',
                         {
@@ -507,11 +544,17 @@ const Transfer = ({
               style={[
                 styles.operationButton,
                 styles.operationButtonConfirmation,
+                theme === Theme.LIGHT
+                  ? {
+                      borderWidth: 1,
+                      borderColor: getColors(theme)
+                        .secondaryLineSeparatorStroke,
+                    }
+                  : undefined,
               ]}
-              additionalTextStyle={[
-                styles.operationButtonText,
-                styles.buttonTextColorDark,
-              ]}
+              additionalTextStyle={
+                getFormFontStyle(height, theme, BACKGROUNDDARKBLUE).title
+              }
             />
             <ActiveOperationButton
               title={translate('common.confirm')}
@@ -520,7 +563,9 @@ const Transfer = ({
                 styles.operationButton,
                 getButtonStyle(theme, height).warningStyleButton,
               ]}
-              additionalTextStyle={styles.operationButtonText}
+              additionalTextStyle={
+                getFormFontStyle(height, theme, 'white').title
+              }
               isLoading={loading}
             />
           </View>
@@ -534,7 +579,6 @@ const Transfer = ({
 const getDimensionedStyles = (color: string, height: number, theme: Theme) =>
   StyleSheet.create({
     warning: {color: 'red'},
-    title: {fontSize: 16},
     flexRowCenter: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -544,16 +588,10 @@ const getDimensionedStyles = (color: string, height: number, theme: Theme) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
-    text: {
-      ...title_primary_body_2,
-      color: getColors(theme).secondaryText,
-    },
     info: {
-      fontSize: 15,
       opacity: 0.7,
     },
     textContent: {
-      fontSize: 14,
       color: getColors(theme).senaryText,
     },
     bottomLine: {
@@ -581,15 +619,6 @@ const getDimensionedStyles = (color: string, height: number, theme: Theme) =>
     operationButtonConfirmation: {
       backgroundColor: '#FFF',
     },
-    buttonTextColorDark: {
-      color: BACKGROUNDDARKBLUE,
-    },
-    operationButtonText: {
-      ...button_link_primary_medium,
-    },
-    buttonTextColor: {
-      color: getColors(theme).secondaryText,
-    },
     modalContainer: {
       width: '100%',
       alignSelf: 'flex-end',
@@ -601,12 +630,6 @@ const getDimensionedStyles = (color: string, height: number, theme: Theme) =>
     paddingHorizontal: {
       paddingHorizontal: 18,
     },
-    infoLabel: {
-      fontSize: 11,
-      fontFamily: FontPoppinsName.ITALIC,
-      color: getColors(theme).labelInfoText,
-    },
-    redText: {color: PRIMARY_RED_COLOR},
   });
 
 const connector = connect(

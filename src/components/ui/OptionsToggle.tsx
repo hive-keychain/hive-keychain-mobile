@@ -1,6 +1,13 @@
 import {RadioButton} from 'components/form/CustomRadioGroup';
 import React from 'react';
-import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
@@ -17,6 +24,7 @@ type Props = {
   callback: (toggled: boolean) => void;
   toggled: boolean;
   theme: Theme;
+  additionalTitleStyle?: StyleProp<TextStyle>;
 };
 
 const OptionsToggle = ({
@@ -26,6 +34,7 @@ const OptionsToggle = ({
   callback,
   theme,
   type,
+  additionalTitleStyle,
 }: Props) => {
   const styles = getStyles(theme, useWindowDimensions().height);
 
@@ -53,7 +62,7 @@ const OptionsToggle = ({
             size={22}
           />
         )}
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, additionalTitleStyle]}>{title}</Text>
       </View>
       <View style={toggled ? styles.toggled : styles.untoggled}>
         {children}
