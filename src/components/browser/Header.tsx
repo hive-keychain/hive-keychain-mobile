@@ -109,15 +109,17 @@ const BrowserHeader = ({
 
     return (
       <GestureRecognizer
-        style={styles.gesture}
+        style={[styles.gesture]}
         onSwipeLeft={() => {
+          console.log('onSwipeLeft'); //TODO remove line
           swipeToTab(false);
         }}
         onSwipeRight={() => {
+          console.log('onSwipeRight'); //TODO remove line
           swipeToTab(true);
         }}>
         <FocusAwareStatusBar />
-        <View style={styles.topBar}>
+        <View style={[styles.topBar]}>
           <View style={[styles.flexRowCentered]}>
             <CustomSearchBar
               theme={theme}
@@ -148,7 +150,9 @@ const BrowserHeader = ({
                   : translate('browser.search')
               }
               onChangeText={(text) => {}}
-              onPressIn={() => startSearch(true)}
+              onFocus={() => {
+                startSearch(true);
+              }}
               additionalContainerStyle={styles.searchBarContainer}
             />
             {renderFavoritesButton()}
@@ -174,7 +178,7 @@ const getStyles = (
   theme: Theme,
 ) =>
   StyleSheet.create({
-    gesture: {width: '100%'},
+    gesture: {width: '100%', height: 'auto'},
     container: {
       width: '100%',
       justifyContent: 'center',
