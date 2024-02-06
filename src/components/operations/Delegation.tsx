@@ -115,8 +115,6 @@ const Delegation = ({
       component: <DelegationsList type={type} theme={theme} />,
     } as TemplateStackProps);
   };
-  //TODO here:
-  //  - fix styles, same as transfer.
 
   return (
     <OperationThemed
