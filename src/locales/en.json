@@ -691,6 +691,7 @@
     "rpc_node_added_success": "RPC added succesfully",
     "rpc_node_removed_success": "RPC removed succesfully",
     "error_missing_fields": "Missing fields!",
+    "missing_memo_key": "The account @{{account}} is missing the memo key to encrypt the message!",
     "tokens_timeout": "This node is not replying. Please go to token settings and change the Hive Engine RPC node",
     "account_not_in_hive": "The account @{{account}} does not exist, please check the username."
   },

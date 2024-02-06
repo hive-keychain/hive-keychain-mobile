@@ -17,7 +17,10 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import Toast from 'react-native-simple-toast';
+import {
+  default as SimpleToast,
+  default as Toast,
+} from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -125,18 +128,28 @@ const Transfer = ({
 
   const transferToken = async () => {
     setLoading(true);
+    let finalMemo = memo;
+    if (isMemoEncrypted) {
+      const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
+      finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
+    }
 
     return await sendToken(user.keys.active, user.name, {
       symbol: currency,
       to: sanitizeUsername(to),
       quantity: sanitizeAmount(amount),
-      memo: memo,
+      memo: finalMemo,
     });
   };
 
   const onSend = async () => {
     Keyboard.dismiss();
     try {
+      if (isMemoEncrypted && !user.keys.memo)
+        return SimpleToast.show(
+          translate('toast.missing_memo_key', {account: user.name!}),
+          SimpleToast.LONG,
+        );
       if (!engine) {
         await sendTransfer();
         showModal(
