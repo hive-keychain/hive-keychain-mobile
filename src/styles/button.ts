@@ -31,6 +31,11 @@ export const getButtonStyle = (theme: Theme, height?: number) => {
   return {
     outline: {
       borderColor: getColors(theme).borderContrast,
+      borderWidth: 1,
+    } as StyleProp<ViewStyle>,
+    outlineSoftBorder: {
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+      borderWidth: 1,
     } as StyleProp<ViewStyle>,
     warningStyleButton: [
       {

@@ -8,7 +8,13 @@ import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -16,17 +22,13 @@ import {Icons} from 'src/enums/icons.enums';
 import {RCDelegationValue} from 'src/interfaces/rc-delegation.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
-import {
-  BACKGROUNDDARKBLUE,
-  PRIMARY_RED_COLOR,
-  getColors,
-} from 'src/styles/colors';
+import {BACKGROUNDDARKBLUE, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {
   FontJosefineSansName,
   FontPoppinsName,
   button_link_primary_medium,
-  title_primary_body_2,
+  getFormFontStyle,
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {capitalize, withCommas} from 'utils/format';
@@ -66,6 +68,7 @@ const RCDelegation = ({
   const [to, setTo] = useState('');
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
+  const {height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
@@ -203,6 +206,7 @@ const RCDelegation = ({
           <Separator />
           <CurrentAvailableBalance
             theme={theme}
+            height={height}
             currentValue={`+${RcDelegationsUtils.formatRcWithUnit(
               totalIncoming.gigaRcValue,
               true,
@@ -212,7 +216,6 @@ const RCDelegation = ({
               true,
             )}`}
             additionalContainerStyle={styles.currentAvailableBalances}
-            setMaxAvailable={(value) => {}}
             leftLabelTranslationKey="wallet.operations.rc_delegation.total_incoming"
             rightLabelTranslationKey="wallet.operations.rc_delegation.total_outgoing"
             onleftClick={() => onHandleNavigateToRCDelegations('incoming')}
@@ -227,11 +230,18 @@ const RCDelegation = ({
             ]}>
             <View>
               <Text
-                style={[styles.textBase, styles.josefineFont, styles.opaque]}>
+                style={[
+                  getFormFontStyle(height, theme).smallLabel,
+                  styles.josefineFont,
+                  styles.opaque,
+                ]}>
                 {capitalize(translate(`common.available`))}
               </Text>
               <Text
-                style={[styles.textBase, styles.title, styles.josefineFont]}>
+                style={[
+                  getFormFontStyle(height, theme).input,
+                  styles.josefineFont,
+                ]}>
                 {`${withCommas(available.gigaRcValue)} ${translate(
                   'wallet.operations.rc_delegation.giga_rc',
                 )}`}
@@ -244,7 +254,12 @@ const RCDelegation = ({
       childrenMiddle={
         <>
           <Separator height={30} />
-          <Text style={[styles.textBase, styles.opaque, styles.disclaimer]}>
+          <Text
+            style={[
+              getFormFontStyle(height, theme).title,
+              styles.opaque,
+              styles.disclaimer,
+            ]}>
             {translate('wallet.operations.rc_delegation.disclaimer')}
           </Text>
           <Separator />
@@ -252,7 +267,11 @@ const RCDelegation = ({
             labelInput={translate('common.username')}
             placeholder={translate('common.username')}
             leftIcon={<Icon theme={theme} name={Icons.AT} />}
-            inputStyle={styles.textBase}
+            inputStyle={[
+              getFormFontStyle(height, theme).input,
+              styles.paddingLeft,
+            ]}
+            additionalLabelStyle={getFormFontStyle(height, theme).title}
             value={to}
             onChangeText={(e) => {
               setTo(e.trim());
@@ -268,7 +287,11 @@ const RCDelegation = ({
               additionalOuterContainerStyle={{
                 width: '40%',
               }}
-              inputStyle={styles.textBase}
+              inputStyle={[
+                getFormFontStyle(height, theme).input,
+                styles.paddingLeft,
+              ]}
+              additionalLabelStyle={getFormFontStyle(height, theme).title}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
               }}
@@ -284,11 +307,15 @@ const RCDelegation = ({
               keyboardType="decimal-pad"
               textAlign="right"
               value={amount}
-              inputStyle={[styles.textBase, styles.paddingLeft]}
+              inputStyle={[
+                getFormFontStyle(height, theme).input,
+                styles.paddingLeft,
+              ]}
+              additionalLabelStyle={getFormFontStyle(height, theme).title}
               additionalBottomLabelTextStyle={[
-                styles.textBase,
+                getFormFontStyle(height, theme, PRIMARY_RED_COLOR).smallLabel,
                 styles.italic,
-                styles.redText,
+                styles.textRight,
               ]}
               onChangeText={setAmount}
               additionalInputContainerStyle={{
@@ -310,7 +337,11 @@ const RCDelegation = ({
                   />
                   <TouchableOpacity
                     onPress={() => setAmount(available.gigaRcValue)}>
-                    <Text style={[styles.textBase, styles.redText]}>
+                    <Text
+                      style={[
+                        getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
+                          .input,
+                      ]}>
                       {translate('common.max').toUpperCase()}
                     </Text>
                   </TouchableOpacity>
@@ -318,7 +349,7 @@ const RCDelegation = ({
               }
             />
           </View>
-          <View style={styles.flexWrap}>
+          <View style={[styles.flexWrap, styles.marginBottom]}>
             {[5, 10, 50, 100].map((value) => {
               return (
                 <TouchableOpacity
@@ -326,9 +357,9 @@ const RCDelegation = ({
                   key={`preset-rc-delegation-${value}`}
                   style={[getCardStyle(theme).roundedCardItem, styles.button]}>
                   <Text
-                    style={styles.textBase}>{`${value.toString()} ${getCurrency(
-                    'HP',
-                  )}`}</Text>
+                    style={
+                      getFormFontStyle(height, theme).smallLabel
+                    }>{`${value.toString()} ${getCurrency('HP')}`}</Text>
                 </TouchableOpacity>
               );
             })}
@@ -345,7 +376,7 @@ const RCDelegation = ({
             onPress={handleConfirmation}
             style={[getButtonStyle(theme).warningStyleButton]}
             isLoading={loading}
-            additionalTextStyle={{...button_link_primary_medium}}
+            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
           />
           <Separator height={15} />
         </>
@@ -361,7 +392,11 @@ const RCDelegation = ({
       childrenMiddle={
         <>
           <Separator height={25} />
-          <Text style={[styles.textBase, styles.textCentered]}>
+          <Text
+            style={[
+              getFormFontStyle(height, theme).title,
+              styles.textCentered,
+            ]}>
             {translate(
               `wallet.operations.rc_delegation.${
                 isCancel ? 'confirmation_cancel' : 'confirmation'
@@ -372,14 +407,22 @@ const RCDelegation = ({
           <View
             style={[getCardStyle(theme).defaultCardItem, styles.marginPadding]}>
             <View style={styles.flexRow}>
-              <Text style={[styles.textBase]}>{translate('common.to')}</Text>
-              <Text style={[styles.textBase, styles.opaque]}>{`@${to}`}</Text>
-            </View>
-            <View style={styles.flexRow}>
-              <Text style={[styles.textBase]}>{translate('common.value')}</Text>
+              <Text style={[getFormFontStyle(height, theme).title]}>
+                {translate('common.to')}
+              </Text>
               <Text
                 style={[
-                  styles.textBase,
+                  getFormFontStyle(height, theme).title,
+                  styles.opaque,
+                ]}>{`@${to}`}</Text>
+            </View>
+            <View style={styles.flexRow}>
+              <Text style={[getFormFontStyle(height, theme).title]}>
+                {translate('common.value')}
+              </Text>
+              <Text
+                style={[
+                  getFormFontStyle(height, theme).title,
                   styles.opaque,
                 ]}>{`${amount} ${translate(
                 'wallet.operations.rc_delegation.giga_rc',
@@ -395,10 +438,13 @@ const RCDelegation = ({
           <EllipticButton
             title={translate('common.back')}
             onPress={() => setStep(1)}
-            style={[styles.operationButton, styles.operationButtonConfirmation]}
+            style={[
+              getButtonStyle(theme).outlineSoftBorder,
+              styles.operationButton,
+              styles.operationButtonConfirmation,
+            ]}
             additionalTextStyle={[
-              styles.operationButtonText,
-              styles.buttonTextColorDark,
+              getFormFontStyle(height, theme, BACKGROUNDDARKBLUE).title,
             ]}
           />
           <ActiveOperationButton
@@ -408,7 +454,7 @@ const RCDelegation = ({
               styles.operationButton,
               getButtonStyle(theme).warningStyleButton,
             ]}
-            additionalTextStyle={styles.operationButtonText}
+            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
             isLoading={loading}
           />
         </View>
@@ -423,21 +469,13 @@ const getStyles = (theme: Theme) =>
       paddingHorizontal: 15,
     },
     marginPadding: {marginHorizontal: 15, paddingVertical: 10},
-    textBase: {
-      ...title_primary_body_2,
-      color: getColors(theme).secondaryText,
-    },
     opaque: {
       opacity: 0.7,
     },
     josefineFont: {
       fontFamily: FontJosefineSansName.MEDIUM,
     },
-    title: {
-      fontSize: 15,
-    },
     disclaimer: {
-      fontSize: 14,
       paddingHorizontal: 8,
     },
     flexRowBetween: {
@@ -445,7 +483,6 @@ const getStyles = (theme: Theme) =>
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-    redText: {color: PRIMARY_RED_COLOR},
     flexRowCenter: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -486,10 +523,9 @@ const getStyles = (theme: Theme) =>
     operationButtonText: {
       ...button_link_primary_medium,
     },
-    buttonTextColor: {
-      color: getColors(theme).secondaryText,
-    },
     textCentered: {textAlign: 'center'},
+    textRight: {textAlign: 'right', marginRight: 10, marginTop: 5},
+    marginBottom: {marginBottom: 10},
   });
 
 const connector = connect(

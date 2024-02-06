@@ -194,13 +194,11 @@ const Convert = ({
           <Separator height={10} />
           <CurrentAvailableBalance
             theme={theme}
+            height={height}
             currentValue={currentBalance as string}
             availableValue={availableBalance as string}
             additionalContainerStyle={styles.currentAvailableBalances}
             setMaxAvailable={(value) => setAmount(value)}
-            additionalLabelTitleStyle={{
-              fontSize: getFontSizeSmallDevices(height, 15),
-            }}
           />
           <Separator height={10} />
           {totalPendingSavingsWithdrawals > 0 && (
@@ -227,7 +225,7 @@ const Convert = ({
               <View>
                 <Text
                   style={[
-                    getFormFontStyle(height, theme).title,
+                    getFormFontStyle(height, theme).smallLabel,
                     styles.josefineFont,
                     styles.opaque,
                   ]}>

@@ -7,24 +7,23 @@ import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
-import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
-import {
-  BACKGROUNDDARKBLUE,
-  PRIMARY_RED_COLOR,
-  getColors,
-} from 'src/styles/colors';
+import {BACKGROUNDDARKBLUE, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
-import {
-  FontJosefineSansName,
-  button_link_primary_medium,
-  title_primary_body_2,
-} from 'src/styles/typography';
+import {FontJosefineSansName, getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
 import {capitalize, fromHP, toHP, withCommas} from 'utils/format';
@@ -133,6 +132,7 @@ const PowerDown = ({
     setStep(2);
   };
 
+  const {height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, theme);
@@ -144,6 +144,7 @@ const PowerDown = ({
         <>
           <Separator />
           <CurrentAvailableBalance
+            height={height}
             theme={theme}
             currentValue={`${withCommas(current as string)} ${getCurrency(
               'HIVE',
@@ -165,7 +166,7 @@ const PowerDown = ({
                 <View>
                   <Text
                     style={[
-                      styles.textBase,
+                      getFormFontStyle(height, theme).smallLabel,
                       styles.josefineFont,
                       styles.opaque,
                     ]}>
@@ -173,8 +174,7 @@ const PowerDown = ({
                   </Text>
                   <Text
                     style={[
-                      styles.textBase,
-                      styles.title,
+                      getFormFontStyle(height, theme).input,
                       styles.josefineFont,
                     ]}>
                     {poweringDown.total_withdrawing} {getCurrency('HP')}
@@ -183,7 +183,7 @@ const PowerDown = ({
                 <View>
                   <Text
                     style={[
-                      styles.textBase,
+                      getFormFontStyle(height, theme).smallLabel,
                       styles.josefineFont,
                       styles.opaque,
                     ]}>
@@ -191,8 +191,7 @@ const PowerDown = ({
                   </Text>
                   <Text
                     style={[
-                      styles.textBase,
-                      styles.title,
+                      getFormFontStyle(height, theme).input,
                       styles.josefineFont,
                     ]}>
                     {moment(poweringDown.next_vesting_withdrawal).format('L')}
@@ -212,7 +211,12 @@ const PowerDown = ({
       childrenMiddle={
         <>
           <Separator height={25} />
-          <Text style={[styles.textBase, styles.opaque]}>
+          <Text
+            style={[
+              getFormFontStyle(height, theme).title,
+              styles.currentAvailableBalances,
+              styles.opaque,
+            ]}>
             {translate('wallet.operations.powerdown.powerdown_text')}
           </Text>
           <Separator />
@@ -225,18 +229,26 @@ const PowerDown = ({
               additionalOuterContainerStyle={{
                 width: '40%',
               }}
-              inputStyle={styles.textBase}
+              inputStyle={[
+                getFormFontStyle(height, theme).input,
+                styles.paddingLeft,
+              ]}
+              additionalLabelStyle={getFormFontStyle(height, theme).title}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
               }}
             />
             <OperationInput
               labelInput={capitalize(translate('common.amount'))}
-              placeholder={'0.000'}
+              placeholder={'0'}
               keyboardType="decimal-pad"
               textAlign="right"
               value={amount}
-              inputStyle={[styles.textBase, styles.paddingLeft]}
+              inputStyle={[
+                getFormFontStyle(height, theme).input,
+                styles.paddingLeft,
+              ]}
+              additionalLabelStyle={getFormFontStyle(height, theme).title}
               onChangeText={setAmount}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
@@ -257,7 +269,11 @@ const PowerDown = ({
                   />
                   <TouchableOpacity
                     onPress={() => setAmount(withCommas(available.toString()))}>
-                    <Text style={[styles.textBase, styles.redText]}>
+                    <Text
+                      style={[
+                        getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
+                          .input,
+                      ]}>
                       {translate('common.max').toUpperCase()}
                     </Text>
                   </TouchableOpacity>
@@ -274,7 +290,7 @@ const PowerDown = ({
             onPress={onHandleConfirmStepOne}
             style={[getButtonStyle(theme).warningStyleButton]}
             isLoading={loading}
-            additionalTextStyle={{...button_link_primary_medium}}
+            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
           />
           <Separator />
         </>
@@ -288,8 +304,7 @@ const PowerDown = ({
           <Separator height={25} />
           <Text
             style={[
-              styles.textBase,
-              styles.title,
+              getFormFontStyle(height, theme).title,
               styles.opaque,
               styles.textCentered,
             ]}>
@@ -308,12 +323,14 @@ const PowerDown = ({
                   styles.marginHorizontal,
                   styles.flexRowBetween,
                 ]}>
-                <Text style={[styles.textBase, styles.title]}>
+                <Text style={[getFormFontStyle(height, theme).title]}>
                   {capitalize(translate('common.amount'))}
                 </Text>
-                <Text style={[styles.textBase, styles.opaque]}>{`${withCommas(
-                  amount,
-                )} ${getCurrency('HP')}`}</Text>
+                <Text
+                  style={[
+                    getFormFontStyle(height, theme).title,
+                    styles.opaque,
+                  ]}>{`${withCommas(amount)} ${getCurrency('HP')}`}</Text>
               </View>
             </>
           )}
@@ -324,10 +341,13 @@ const PowerDown = ({
           <EllipticButton
             title={translate('common.back')}
             onPress={onHandleBack}
-            style={[styles.operationButton, styles.operationButtonConfirmation]}
+            style={[
+              getButtonStyle(theme).outlineSoftBorder,
+              styles.operationButton,
+              styles.operationButtonConfirmation,
+            ]}
             additionalTextStyle={[
-              styles.operationButtonText,
-              styles.buttonTextColorDark,
+              getFormFontStyle(height, theme, BACKGROUNDDARKBLUE).title,
             ]}
           />
           <ActiveOperationButton
@@ -337,7 +357,7 @@ const PowerDown = ({
               styles.operationButton,
               getButtonStyle(theme).warningStyleButton,
             ]}
-            additionalTextStyle={styles.operationButtonText}
+            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
             isLoading={loading}
           />
         </View>
@@ -350,13 +370,6 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
     currentAvailableBalances: {
       paddingHorizontal: 15,
-    },
-    textBase: {
-      ...title_primary_body_2,
-      color: getColors(theme).secondaryText,
-    },
-    title: {
-      fontSize: 15,
     },
     josefineFont: {
       fontFamily: FontJosefineSansName.MEDIUM,
@@ -392,15 +405,6 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
     },
     operationButtonConfirmation: {
       backgroundColor: '#FFF',
-    },
-    buttonTextColorDark: {
-      color: BACKGROUNDDARKBLUE,
-    },
-    operationButtonText: {
-      ...button_link_primary_medium,
-    },
-    buttonTextColor: {
-      color: getColors(theme).secondaryText,
     },
     textCentered: {textAlign: 'center'},
   });

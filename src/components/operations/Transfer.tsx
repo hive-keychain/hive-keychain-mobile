@@ -80,6 +80,7 @@ const Transfer = ({
   >({
     categories: [],
   });
+  const [availableBalance, setAvailableBalance] = useState('');
   const {theme} = useThemeContext();
 
   useEffect(() => {
@@ -176,16 +177,6 @@ const Transfer = ({
 
   const styles = getDimensionedStyles(color, height, theme);
 
-  const onhandleSetMaxAvailableBalance = () => {
-    let availableBalance;
-    if (engine) {
-      availableBalance = tokenBalance.split(' ')[0];
-    } else {
-      availableBalance = getCurrencyProperties(currency, user.account).value;
-    }
-    setAmount((availableBalance as string).split(' ')[0]);
-  };
-
   if (step === 1) {
     return (
       <OperationThemed
@@ -200,7 +191,11 @@ const Transfer = ({
               isHiveEngine={engine}
               setMax={(value: string) => {
                 setAmount(value);
+                setAvailableBalance(value);
               }}
+              setAvailableBalance={(available) =>
+                setAvailableBalance(available)
+              }
               theme={theme}
             />
             <Separator />
@@ -267,7 +262,8 @@ const Transfer = ({
                         16,
                       )}
                     />
-                    <TouchableOpacity onPress={onhandleSetMaxAvailableBalance}>
+                    <TouchableOpacity
+                      onPress={() => setAmount(availableBalance)}>
                       <Text
                         style={
                           getFormFontStyle(height, theme, PRIMARY_RED_COLOR)

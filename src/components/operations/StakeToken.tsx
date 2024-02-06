@@ -5,19 +5,22 @@ import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
-import {
-  button_link_primary_medium,
-  title_primary_body_2,
-  title_primary_title_1,
-} from 'src/styles/typography';
+import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {capitalize} from 'utils/format';
 import {stakeToken} from 'utils/hive';
@@ -106,6 +109,7 @@ const StakeToken = ({
     goBack();
   };
 
+  const {height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, theme);
@@ -133,7 +137,8 @@ const StakeToken = ({
       childrenMiddle={
         <View style={styles.childrenMiddle}>
           <Separator />
-          <Text style={styles.infoText}>
+          <Text
+            style={[getFormFontStyle(height, theme).title, styles.infoText]}>
             {translate('wallet.operations.token_stake.info')}
           </Text>
           <Separator />
@@ -146,7 +151,8 @@ const StakeToken = ({
               additionalOuterContainerStyle={{
                 width: '40%',
               }}
-              inputStyle={styles.text}
+              inputStyle={getFormFontStyle(height, theme).input}
+              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
               }}
@@ -154,7 +160,7 @@ const StakeToken = ({
             <OperationInput
               keyboardType="decimal-pad"
               labelInput={capitalize(translate('common.amount'))}
-              placeholder={translate('common.enter_amount')}
+              placeholder={'0'}
               value={amount}
               onChangeText={setAmount}
               additionalInputContainerStyle={{
@@ -163,7 +169,8 @@ const StakeToken = ({
               additionalOuterContainerStyle={{
                 width: '54%',
               }}
-              inputStyle={styles.text}
+              inputStyle={getFormFontStyle(height, theme).input}
+              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
               rightIcon={
                 <View style={styles.flexRowCenter}>
                   <Separator
@@ -176,7 +183,10 @@ const StakeToken = ({
                     )}
                   />
                   <TouchableOpacity onPress={() => setAmount(balance)}>
-                    <Text style={styles.text}>
+                    <Text
+                      style={
+                        getFormFontStyle(height, theme, PRIMARY_RED_COLOR).input
+                      }>
                       {translate('common.max').toUpperCase()}
                     </Text>
                   </TouchableOpacity>
@@ -192,7 +202,7 @@ const StakeToken = ({
           onPress={onStakeToken}
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
           isLoading={loading}
-          additionalTextStyle={{...button_link_primary_medium}}
+          additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
         />
       }
     />
@@ -202,11 +212,9 @@ const StakeToken = ({
 const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
     button: {marginBottom: 20},
-    currency: {fontWeight: 'bold', fontSize: 18, color},
     infoText: {
       color: getColors(theme).septenaryText,
       opacity: theme === Theme.DARK ? 0.6 : 1,
-      ...title_primary_title_1,
       paddingHorizontal: 15,
     },
     childrenMiddle: {
@@ -215,10 +223,6 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
     flexRowBetween: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-    },
-    text: {
-      ...title_primary_body_2,
-      color: getColors(theme).secondaryText,
     },
     flexRowCenter: {
       flexDirection: 'row',

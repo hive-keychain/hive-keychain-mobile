@@ -174,5 +174,10 @@ export const getFormFontStyle = (
       color: color ?? getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(height, 15),
     } as StyleProp<TextStyle>,
+    smallLabel: {
+      ...title_primary_body_3,
+      color: color ?? getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(height, 12),
+    } as StyleProp<TextStyle>,
   };
 };

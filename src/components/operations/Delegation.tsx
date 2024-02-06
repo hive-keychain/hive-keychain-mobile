@@ -6,7 +6,14 @@ import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useState} from 'react';
-import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -17,11 +24,11 @@ import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {
   FontJosefineSansName,
-  button_link_primary_medium,
+  getFormFontStyle,
   title_primary_body_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, fromHP, toHP} from 'utils/format';
+import {capitalize, fromHP, toHP, withCommas} from 'utils/format';
 import {delegate, getCurrency} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
@@ -75,23 +82,22 @@ const Delegation = ({
     }
   };
 
+  const {height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, theme);
 
-  const totalHpIncoming = `+${toHP(
-    user.account.received_vesting_shares as string,
-    properties.globals,
-  )
-    .toFixed(3)
-    .toString()} ${getCurrency('HP')}`;
+  const totalHpIncoming = `+${withCommas(
+    toHP(user.account.received_vesting_shares as string, properties.globals)
+      .toFixed(3)
+      .toString(),
+  )} ${getCurrency('HP')}`;
 
-  const totalHpOutgoing = `-${toHP(
-    user.account.delegated_vesting_shares as string,
-    properties.globals,
-  )
-    .toFixed(3)
-    .toString()} ${getCurrency('HP')}`;
+  const totalHpOutgoing = `-${withCommas(
+    toHP(user.account.delegated_vesting_shares as string, properties.globals)
+      .toFixed(3)
+      .toString(),
+  )} ${getCurrency('HP')}`;
 
   const totalHp = toHP(
     user.account.vesting_shares as string,
@@ -109,6 +115,8 @@ const Delegation = ({
       component: <DelegationsList type={type} theme={theme} />,
     } as TemplateStackProps);
   };
+  //TODO here:
+  //  - fix styles, same as transfer.
 
   return (
     <OperationThemed
@@ -117,6 +125,7 @@ const Delegation = ({
           <Separator />
           <CurrentAvailableBalance
             theme={theme}
+            height={height}
             currentValue={totalHpIncoming}
             availableValue={totalHpOutgoing}
             additionalContainerStyle={styles.currentAvailableBalances}
@@ -128,19 +137,26 @@ const Delegation = ({
           />
           <Separator />
           <TouchableOpacity
-            onPress={() => setAmount(available.toString())}
+            onPress={() => setAmount(withCommas(available.toString()))}
             style={[
               getCardStyle(theme, 30).defaultCardItem,
               {marginHorizontal: 15, paddingVertical: 10},
             ]}>
             <View>
               <Text
-                style={[styles.textBase, styles.josefineFont, styles.opaque]}>
+                style={[
+                  getFormFontStyle(height, theme).smallLabel,
+                  styles.josefineFont,
+                  styles.opaque,
+                ]}>
                 {capitalize(translate(`common.available`))}
               </Text>
               <Text
-                style={[styles.textBase, styles.title, styles.josefineFont]}>
-                {`${available.toString()} ${getCurrency('HP')}`}
+                style={[
+                  getFormFontStyle(height, theme).input,
+                  styles.josefineFont,
+                ]}>
+                {`${withCommas(available.toString())} ${getCurrency('HP')}`}
               </Text>
             </View>
           </TouchableOpacity>
@@ -150,7 +166,12 @@ const Delegation = ({
       childrenMiddle={
         <>
           <Separator height={30} />
-          <Text style={[styles.textBase, styles.opaque, styles.disclaimer]}>
+          <Text
+            style={[
+              getFormFontStyle(height, theme).title,
+              styles.opaque,
+              styles.disclaimer,
+            ]}>
             {translate('wallet.operations.delegation.delegation_disclaimer')}
           </Text>
           <Separator />
@@ -158,7 +179,11 @@ const Delegation = ({
             labelInput={translate('common.username')}
             placeholder={translate('common.username')}
             leftIcon={<Icon theme={theme} name={Icons.AT} />}
-            inputStyle={[styles.textBase, styles.paddingLeft]}
+            inputStyle={[
+              getFormFontStyle(height, theme).input,
+              styles.paddingLeft,
+            ]}
+            additionalLabelStyle={getFormFontStyle(height, theme).title}
             value={to}
             onChangeText={(e) => {
               setTo(e.trim());
@@ -174,18 +199,26 @@ const Delegation = ({
               additionalOuterContainerStyle={{
                 width: '40%',
               }}
-              inputStyle={styles.textBase}
+              inputStyle={[
+                getFormFontStyle(height, theme).input,
+                styles.paddingLeft,
+              ]}
+              additionalLabelStyle={getFormFontStyle(height, theme).title}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
               }}
             />
             <OperationInput
               labelInput={capitalize(translate('common.amount'))}
-              placeholder={'0.000'}
+              placeholder={'0'}
               keyboardType="decimal-pad"
               textAlign="right"
               value={amount}
-              inputStyle={[styles.textBase, styles.paddingLeft]}
+              inputStyle={[
+                getFormFontStyle(height, theme).input,
+                styles.paddingLeft,
+              ]}
+              additionalLabelStyle={getFormFontStyle(height, theme).title}
               onChangeText={setAmount}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
@@ -205,17 +238,12 @@ const Delegation = ({
                     )}
                   />
                   <TouchableOpacity
-                    onPress={() =>
-                      setAmount(
-                        toHP(
-                          user.account.vesting_shares as string,
-                          properties.globals,
-                        )
-                          .toFixed(5)
-                          .toString(),
-                      )
-                    }>
-                    <Text style={[styles.textBase, styles.redText]}>
+                    onPress={() => setAmount(withCommas(available))}>
+                    <Text
+                      style={[
+                        getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
+                          .input,
+                      ]}>
                       {translate('common.max').toUpperCase()}
                     </Text>
                   </TouchableOpacity>
@@ -232,7 +260,7 @@ const Delegation = ({
             onPress={onDelegate}
             style={[getButtonStyle(theme).warningStyleButton]}
             isLoading={loading}
-            additionalTextStyle={{...button_link_primary_medium}}
+            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
           />
           <Separator />
         </>
@@ -255,7 +283,6 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
     },
     textCentered: {textAlign: 'center'},
     disclaimer: {
-      fontSize: 14,
       paddingHorizontal: 8,
     },
     paddingLeft: {

@@ -6,20 +6,23 @@ import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
-import {
-  button_link_primary_medium,
-  title_primary_body_2,
-  title_primary_title_1,
-} from 'src/styles/typography';
+import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
 import {capitalize} from 'utils/format';
@@ -120,6 +123,7 @@ const DelegateToken = ({
     goBack();
   };
 
+  const {height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, theme);
@@ -145,18 +149,20 @@ const DelegateToken = ({
       childrenMiddle={
         <>
           <Separator />
-          <Text style={styles.infoText}>
+          <Text
+            style={[getFormFontStyle(height, theme).title, styles.infoText]}>
             {translate('wallet.operations.token_delegation.info')}
           </Text>
           <Separator />
           <OperationInput
             labelInput={translate('common.username')}
-            placeholder={translate('common.username').toUpperCase()}
+            placeholder={translate('common.username')}
             leftIcon={<Icon name={Icons.AT} theme={theme} />}
             autoCapitalize="none"
             value={to}
             onChangeText={setTo}
-            inputStyle={styles.text}
+            inputStyle={getFormFontStyle(height, theme).input}
+            additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
           />
           <Separator />
           <View style={styles.flexRowBetween}>
@@ -168,7 +174,8 @@ const DelegateToken = ({
               additionalOuterContainerStyle={{
                 width: '40%',
               }}
-              inputStyle={styles.text}
+              inputStyle={getFormFontStyle(height, theme).input}
+              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
               }}
@@ -176,7 +183,7 @@ const DelegateToken = ({
             <OperationInput
               keyboardType="decimal-pad"
               labelInput={capitalize(translate('common.amount'))}
-              placeholder={translate('common.enter_amount')}
+              placeholder={'0'}
               value={amount}
               onChangeText={setAmount}
               additionalInputContainerStyle={{
@@ -185,7 +192,8 @@ const DelegateToken = ({
               additionalOuterContainerStyle={{
                 width: '54%',
               }}
-              inputStyle={styles.text}
+              inputStyle={getFormFontStyle(height, theme).input}
+              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
               rightIcon={
                 <View style={styles.flexRowCenter}>
                   <Separator
@@ -198,7 +206,10 @@ const DelegateToken = ({
                     )}
                   />
                   <TouchableOpacity onPress={() => setAmount(balance)}>
-                    <Text style={styles.text}>
+                    <Text
+                      style={
+                        getFormFontStyle(height, theme, PRIMARY_RED_COLOR).input
+                      }>
                       {translate('common.max').toUpperCase()}
                     </Text>
                   </TouchableOpacity>
@@ -213,7 +224,7 @@ const DelegateToken = ({
           title={translate(update ? 'common.confirm' : 'common.delegate')}
           onPress={onDelegateToken}
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-          additionalTextStyle={{...button_link_primary_medium}}
+          additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
           isLoading={loading}
         />
       }
@@ -227,12 +238,7 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
     infoText: {
       color: getColors(theme).septenaryText,
       opacity: theme === Theme.DARK ? 0.6 : 1,
-      ...title_primary_title_1,
       paddingHorizontal: 15,
-    },
-    text: {
-      ...title_primary_body_2,
-      color: getColors(theme).secondaryText,
     },
     flexRowBetween: {
       flexDirection: 'row',

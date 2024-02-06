@@ -4,7 +4,7 @@ import Hive from 'assets/wallet/icon_hive.svg';
 import Hp from 'assets/wallet/icon_hp.svg';
 import React from 'react';
 import {withCommas} from './format';
-
+//TODO after refactoring UI check if needed at all & remove component.
 export const getCurrencyProperties = (
   currency: string,
   account?: ExtendedAccount,

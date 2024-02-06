@@ -9,11 +9,13 @@ import {
   ICONGRAYBGCOLOR,
   getColors,
 } from 'src/styles/colors';
+import {getFormFontStyle} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import SquareButton from './SquareButton';
 
 interface Props {
   theme: Theme;
+  height: number;
   currentValue: string;
   availableValue: string;
   additionalContainerStyle?: StyleProp<ViewStyle>;
@@ -27,6 +29,7 @@ interface Props {
 
 const CurrentAvailableBalance = ({
   theme,
+  height,
   currentValue,
   availableValue,
   additionalContainerStyle,
@@ -75,6 +78,7 @@ const CurrentAvailableBalance = ({
           styles.backgroundColorDarkBlue,
         ]}
         additionalPrimaryLabelStyle={[
+          getFormFontStyle(height, theme, 'white').smallLabel,
           styles.current,
           additionalLabelTitleStyle,
         ]}
@@ -98,6 +102,7 @@ const CurrentAvailableBalance = ({
           styles.backgroundColorRed,
         ]}
         additionalPrimaryLabelStyle={[
+          getFormFontStyle(height, theme, 'white').smallLabel,
           styles.current,
           additionalLabelTitleStyle,
         ]}
@@ -130,7 +135,6 @@ const getStyles = (theme: Theme) =>
       backgroundColor: DARKER_RED_COLOR,
     },
     current: {
-      fontSize: 12,
       opacity: 0.7,
     },
     available: {

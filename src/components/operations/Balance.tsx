@@ -9,7 +9,7 @@ import {
   getFontSizeSmallDevices,
   headerH2Primary,
 } from 'src/styles/typography';
-import {formatBalance, toHP} from 'utils/format';
+import {toHP, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 
@@ -22,6 +22,7 @@ type Props = {
   tokenBalance?: string;
   tokenLogo?: JSX.Element;
   setMax?: (value: string) => void;
+  setAvailableBalance?: (value: string) => void;
   theme?: Theme;
 };
 
@@ -35,24 +36,25 @@ const Balance = ({
   tokenLogo,
   setMax,
   theme,
+  setAvailableBalance,
 }: Props) => {
-  // let {color, value, logo} = getCurrencyProperties(currency, account);
-
   const getParsedValue = (
     currency: string,
     account: ExtendedAccount,
     isHiveEngine?: boolean,
   ) => {
-    if (isHiveEngine) {
-      // logo = tokenLogo!;
-      return +tokenBalance!;
-    }
-    switch (currency) {
-      case getCurrency('HIVE'):
-        return parseFloat((account.balance as string).split(' ')[0]);
-      case getCurrency('HBD'):
-        return parseFloat((account.hbd_balance as string).split(' ')[0]);
-      case getCurrency('HP'):
+    let tempBalance;
+    switch (true) {
+      case isHiveEngine:
+        tempBalance = +tokenBalance!;
+        break;
+      case currency === getCurrency('HIVE'):
+        tempBalance = parseFloat((account.balance as string).split(' ')[0]);
+        break;
+      case currency === getCurrency('HBD'):
+        tempBalance = parseFloat((account.hbd_balance as string).split(' ')[0]);
+        break;
+      case currency === getCurrency('HP'):
         let hpBalance = toHP(
           (account.vesting_balance as string).split(' ')[0],
           globalProperties,
@@ -64,42 +66,32 @@ const Balance = ({
               (account.delegated_vesting_shares as string).split(' ')[0],
             );
         }
-        return hpBalance;
+        tempBalance = hpBalance;
+        break;
     }
+    if (setAvailableBalance)
+      setAvailableBalance(withCommas(tempBalance.toString()));
+    return tempBalance;
   };
-  //TODO IP: keep working here bellow, the idea is not needed anymore that function in `src/utils/hiveReact.tsx`
-  //  - so all the calculations remain inside balance.
-  //  - after coding, test and search all it uses & fix/update
-  let parsedValue = getParsedValue(currency, account, isHiveEngine);
-  console.log({parsedValue}); //TODO remove line
 
-  // if (pd && value) {
-  //   parsedValue =
-  //     parseFloat(value as string) -
-  //     parseFloat(account.delegated_vesting_shares as string);
-  //   parsedValue = toHP(value as string, globalProperties);
-  // }
-  // if (isHiveEngine) {
-  //   parsedValue = +tokenBalance!;
-  //   logo = tokenLogo!;
-  // }
+  let parsedValue = getParsedValue(currency, account, isHiveEngine);
+
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({
     width,
     height,
-    // color,
     theme,
   });
   return (
     <TouchableOpacity
       onPress={() => {
         if (setMax) {
-          setMax(parsedValue.toFixed(3) + '');
+          setMax(withCommas(parsedValue.toString()));
         }
       }}>
       <View>
         <Text style={[styles.textBalance, styles.centeredText]}>
-          {formatBalance(parsedValue)} {` ${currency}`}
+          {withCommas(parsedValue.toString())} {` ${currency}`}
         </Text>
         <Text style={[styles.balanceText, styles.centeredText]}>
           {translate('common.balance')}
@@ -112,17 +104,14 @@ const Balance = ({
 const getDimensionedStyles = ({
   width,
   height,
-  // color,
   theme,
 }: {
   width: number;
   height: number;
-  // color?: string;
   theme: Theme;
 }) =>
   StyleSheet.create({
     logo: {justifyContent: 'center', alignItems: 'center'},
-    // currency: {color},
     row: {
       display: 'flex',
       flexDirection: 'row',

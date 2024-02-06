@@ -20,11 +20,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
-import {
-  getFontSizeSmallDevices,
-  getFormFontStyle,
-  title_primary_body_2,
-} from 'src/styles/typography';
+import {getFormFontStyle, title_primary_body_2} from 'src/styles/typography';
 import {RootState} from 'store';
 import {capitalize, toHP, withCommas} from 'utils/format';
 import {powerUp} from 'utils/hive';
@@ -83,6 +79,7 @@ const PowerUp = ({
           <Separator />
           <CurrentAvailableBalance
             theme={theme}
+            height={height}
             currentValue={`${withCommas(
               toHP(user.account.vesting_shares + '', globalProperties).toFixed(
                 3,
@@ -91,9 +88,6 @@ const PowerUp = ({
             availableValue={availableHpAmount}
             additionalContainerStyle={styles.currentAvailableBalances}
             setMaxAvailable={(value) => setAmount(value)}
-            additionalLabelTitleStyle={{
-              fontSize: getFontSizeSmallDevices(height, 15),
-            }}
           />
           <Separator height={25} />
         </>

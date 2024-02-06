@@ -15,6 +15,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
@@ -22,14 +23,10 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getRotateStyle} from 'src/styles/transform';
-import {
-  FontJosefineSansName,
-  button_link_primary_medium,
-  title_primary_body_2,
-} from 'src/styles/typography';
+import {FontJosefineSansName, getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {capitalize} from 'utils/format';
 import {collateralizedConvert, convert} from 'utils/hive';
@@ -56,6 +53,7 @@ const Convert = ({
   const [loading, setLoading] = useState(false);
   const [showConversionsList, setShowConversionsList] = useState(false);
   const [totalPendingConvertions, setTotalPendingConvertions] = useState(0);
+  const [availableBalance, setAvailableBalance] = useState('');
 
   useEffect(() => {
     fetchConversionRequests(user.name!, currency);
@@ -104,6 +102,7 @@ const Convert = ({
       setLoading(false);
     }
   };
+  const {height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, theme);
@@ -111,12 +110,12 @@ const Convert = ({
   const renderConvertionItem = (item: Conversion) => {
     const [amt, c] = item.amount.split(' ');
     return currency === c ? (
-      <View style={styles.conversionRow}>
-        <Text style={[styles.textBase]}>
+      <View style={[styles.conversionRow, styles.paddingHorizontal]}>
+        <Text style={[getFormFontStyle(height, theme).input]}>
           {amt} {currency}
         </Text>
-        <Text style={[styles.textBase]}>-</Text>
-        <Text style={[styles.textBase]}>
+        <Text style={[getFormFontStyle(height, theme).input]}>-</Text>
+        <Text style={[getFormFontStyle(height, theme).input]}>
           {item.conversion_date
             .replace('T', ' ')
             .replace('-', '/')
@@ -138,7 +137,9 @@ const Convert = ({
             account={user.account}
             setMax={(value: string) => {
               setAmount(value);
+              setAvailableBalance(value);
             }}
+            setAvailableBalance={(available) => setAvailableBalance(available)}
           />
           <Separator />
           {totalPendingConvertions > 0 && (
@@ -162,11 +163,18 @@ const Convert = ({
               ]}>
               <View>
                 <Text
-                  style={[styles.textBase, styles.josefineFont, styles.opaque]}>
+                  style={[
+                    getFormFontStyle(height, theme).smallLabel,
+                    styles.josefineFont,
+                    styles.opaque,
+                  ]}>
                   {capitalize(translate(`common.pending`))}
                 </Text>
                 <Text
-                  style={[styles.textBase, styles.title, styles.josefineFont]}>
+                  style={[
+                    getFormFontStyle(height, theme).input,
+                    styles.josefineFont,
+                  ]}>
                   {totalPendingConvertions} {currency}
                 </Text>
               </View>
@@ -185,7 +193,7 @@ const Convert = ({
           <Separator />
           <Text
             style={[
-              styles.textBase,
+              getFormFontStyle(height, theme).title,
               styles.opaque,
               styles.disclaimer,
               styles.paddingHorizontal,
@@ -204,18 +212,26 @@ const Convert = ({
               additionalOuterContainerStyle={{
                 width: '40%',
               }}
-              inputStyle={styles.textBase}
+              inputStyle={[
+                getFormFontStyle(height, theme).input,
+                styles.paddingLeft,
+              ]}
+              additionalLabelStyle={getFormFontStyle(height, theme).title}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
               }}
             />
             <OperationInput
               labelInput={capitalize(translate('common.amount'))}
-              placeholder={'0.000'}
+              placeholder={'0'}
               keyboardType="decimal-pad"
               textAlign="right"
               value={amount}
-              inputStyle={[styles.textBase, styles.paddingLeft]}
+              inputStyle={[
+                getFormFontStyle(height, theme).input,
+                styles.paddingLeft,
+              ]}
+              additionalLabelStyle={getFormFontStyle(height, theme).title}
               onChangeText={setAmount}
               additionalInputContainerStyle={{
                 marginHorizontal: 0,
@@ -235,12 +251,12 @@ const Convert = ({
                     )}
                   />
                   <TouchableOpacity
-                    onPress={() =>
-                      setAmount(
-                        (user.account.hbd_balance as string).split(' ')[0],
-                      )
-                    }>
-                    <Text style={[styles.textBase, styles.redText]}>
+                    onPress={() => setAmount(availableBalance.toString())}>
+                    <Text
+                      style={[
+                        getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
+                          .input,
+                      ]}>
                       {translate('common.max').toUpperCase()}
                     </Text>
                   </TouchableOpacity>
@@ -252,10 +268,11 @@ const Convert = ({
           <TouchableOpacity
             onPress={() => {
               setShowConversionsList(!showConversionsList);
-            }}>
+            }}
+            style={styles.paddingHorizontal}>
             <Text
               style={
-                styles.textBase
+                getFormFontStyle(height, theme).input
               }>{`${conversions.length} conversions`}</Text>
           </TouchableOpacity>
           <Separator />
@@ -275,7 +292,7 @@ const Convert = ({
             title={translate('wallet.operations.convert.button')}
             onPress={onConvert}
             style={[getButtonStyle(theme).warningStyleButton]}
-            additionalTextStyle={{...button_link_primary_medium}}
+            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
             isLoading={loading}
           />
           <Separator />
@@ -305,13 +322,6 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
       justifyContent: 'space-between',
       flexDirection: 'row',
     },
-    textBase: {
-      ...title_primary_body_2,
-      color: getColors(theme).secondaryText,
-    },
-    title: {
-      fontSize: 15,
-    },
     josefineFont: {
       fontFamily: FontJosefineSansName.MEDIUM,
     },
@@ -332,7 +342,6 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
     paddingLeft: {
       paddingLeft: 10,
     },
-    redText: {color: PRIMARY_RED_COLOR},
   });
 
 const connector = connect(
