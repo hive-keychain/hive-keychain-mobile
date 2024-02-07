@@ -12,7 +12,6 @@ import Wallet from 'screens/hive/wallet/Main';
 import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {CARD_SMALLEST_PADDING} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
@@ -109,7 +108,7 @@ export default () => {
                   ),
                 })
               }
-              additionalContainerStyle={[styles.iconButton]}
+              additionalContainerStyle={[styles.iconButton, styles.marginRight]}
             />
           ),
           headerLeft: () => (
@@ -118,6 +117,7 @@ export default () => {
               onPress={() => navigation.navigate('WalletScreen')}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
+              additionalContainerStyle={styles.marginLeft}
             />
           ),
         })}
@@ -145,7 +145,6 @@ const getStyles = ({width}: Width, theme: Theme) =>
       color: getColors(theme).primaryText,
     },
     cardStyle: {
-      paddingHorizontal: CARD_SMALLEST_PADDING,
       backgroundColor: getColors(theme).primaryBackground,
     },
     wrapperFixed: {

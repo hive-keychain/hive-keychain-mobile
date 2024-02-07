@@ -1,5 +1,6 @@
 import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
 import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
+import OperationThemed from 'components/operations/OperationThemed';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
@@ -193,111 +194,123 @@ const WallettHistory = ({
   };
 
   return (
-    <View style={styles.flex}>
-      <FocusAwareStatusBar />
+    <OperationThemed
+      additionalBgSvgImageStyle={{
+        top: theme === Theme.DARK ? -50 : -130,
+        opacity: 1,
+      }}
+      additionalContentContainerStyle={{
+        marginTop: 20,
+      }}
+      childrenMiddle={
+        <View style={styles.flex}>
+          <FocusAwareStatusBar />
 
-      {!loading && displayedTransactions.length > 0 && (
-        <View style={styles.viewContainer}>
-          <FlatList
-            ref={flatListRef}
-            data={displayedTransactions}
-            initialNumToRender={20}
-            onEndReachedThreshold={0.5}
-            renderItem={(transaction) => renderListItem(transaction.item)}
-            keyExtractor={(transaction) => transaction.key}
-            style={styles.transactionsList}
-            onScroll={handleScroll}
-            onEndReached={() => {
-              if (
-                transactions.list.length &&
-                transactions.list[transactions.list.length - 1].last
-              ) {
-                const isLast =
-                  transactions.list[transactions.list.length - 1].last;
-                if (!isLast && displayedTransactions.length > 8) {
-                  tryToLoadMore();
-                }
-              }
-            }}
-            ListFooterComponent={() => {
-              return (
-                <>
-                  {transactions.list[transactions.list.length - 1]?.last ===
-                    false &&
-                    transactions.lastUsedStart !== 0 &&
-                    !loading &&
-                    !bottomLoader && (
-                      <TouchableOpacity
-                        style={styles.loadMorePanel}
-                        onPress={() => tryToLoadMore()}>
-                        <Text style={styles.textBase}>
-                          {translate('wallet.operations.history.load_more')}
-                        </Text>
-                        <Icon
-                          name={Icons.ADD_CIRCLE_OUTLINE}
-                          theme={theme}
-                          additionalContainerStyle={{marginLeft: 5}}
-                        />
-                      </TouchableOpacity>
-                    )}
-                  {/* BOTTOM LOADER */}
-                  {!loading && bottomLoader && (
-                    <View style={styles.centeredContainer}>
-                      <Loader animating size={'small'} />
-                    </View>
-                  )}
-                  {/* END BOTTOM LOADER */}
-                </>
-              );
-            }}
-          />
-        </View>
-      )}
-
-      {/* results on applied filter */}
-      {!loading &&
-        displayedTransactions.length === 0 &&
-        transactions.list.length > 0 && (
-          <View
-            style={[
-              {flex: 1},
-              {justifyContent: 'center', alignItems: 'center'},
-            ]}>
-            <Text style={styles.textBase}>
-              {translate(
-                'wallet.operations.history.list_is_empty_try_clear_filter',
-              )}
-            </Text>
-          </View>
-        )}
-      {/* END results */}
-
-      {/* LOADER */}
-      {loading && (
-        <View style={styles.renderTransactions}>
-          <Separator height={120} />
-          <Loader animating />
-          {filteringCounter > 40 ? (
-            <TouchableOpacity
-              style={styles.centered}
-              onPress={forceResetFilters}>
-              <Text style={[styles.textBase, styles.alertText]}>
-                {translate('wallet.operations.history.reset_filters')}
-              </Text>
-            </TouchableOpacity>
-          ) : (
-            <Separator height={120} />
+          {!loading && displayedTransactions.length > 0 && (
+            <View style={styles.viewContainer}>
+              <Separator />
+              <FlatList
+                ref={flatListRef}
+                data={displayedTransactions}
+                initialNumToRender={20}
+                onEndReachedThreshold={0.5}
+                renderItem={(transaction) => renderListItem(transaction.item)}
+                keyExtractor={(transaction) => transaction.key}
+                style={styles.transactionsList}
+                onScroll={handleScroll}
+                onEndReached={() => {
+                  if (
+                    transactions.list.length &&
+                    transactions.list[transactions.list.length - 1].last
+                  ) {
+                    const isLast =
+                      transactions.list[transactions.list.length - 1].last;
+                    if (!isLast && displayedTransactions.length > 8) {
+                      tryToLoadMore();
+                    }
+                  }
+                }}
+                ListFooterComponent={() => {
+                  return (
+                    <>
+                      {transactions.list[transactions.list.length - 1]?.last ===
+                        false &&
+                        transactions.lastUsedStart !== 0 &&
+                        !loading &&
+                        !bottomLoader && (
+                          <TouchableOpacity
+                            style={styles.loadMorePanel}
+                            onPress={() => tryToLoadMore()}>
+                            <Text style={styles.textBase}>
+                              {translate('wallet.operations.history.load_more')}
+                            </Text>
+                            <Icon
+                              name={Icons.ADD_CIRCLE_OUTLINE}
+                              theme={theme}
+                              additionalContainerStyle={{marginLeft: 5}}
+                            />
+                          </TouchableOpacity>
+                        )}
+                      {/* BOTTOM LOADER */}
+                      {!loading && bottomLoader && (
+                        <View style={styles.centeredContainer}>
+                          <Loader animating size={'small'} />
+                        </View>
+                      )}
+                      {/* END BOTTOM LOADER */}
+                    </>
+                  );
+                }}
+              />
+            </View>
           )}
-        </View>
-      )}
-      {/* END LOADER */}
 
-      {/* ScrollToTop Button */}
-      {!loading && displayScrollToTop && (
-        <BackToTopButton theme={theme} element={flatListRef} />
-      )}
-      {/* END ScrollToTop Button */}
-    </View>
+          {/* results on applied filter */}
+          {!loading &&
+            displayedTransactions.length === 0 &&
+            transactions.list.length > 0 && (
+              <View
+                style={[
+                  {flex: 1},
+                  {justifyContent: 'center', alignItems: 'center'},
+                ]}>
+                <Text style={styles.textBase}>
+                  {translate(
+                    'wallet.operations.history.list_is_empty_try_clear_filter',
+                  )}
+                </Text>
+              </View>
+            )}
+          {/* END results */}
+
+          {/* LOADER */}
+          {loading && (
+            <View style={styles.renderTransactions}>
+              <Separator height={120} />
+              <Loader animating />
+              {filteringCounter > 40 ? (
+                <TouchableOpacity
+                  style={styles.centered}
+                  onPress={forceResetFilters}>
+                  <Text style={[styles.textBase, styles.alertText]}>
+                    {translate('wallet.operations.history.reset_filters')}
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <Separator height={120} />
+              )}
+            </View>
+          )}
+          {/* END LOADER */}
+
+          {/* ScrollToTop Button */}
+          {!loading && displayScrollToTop && (
+            <BackToTopButton theme={theme} element={flatListRef} />
+          )}
+          {/* END ScrollToTop Button */}
+        </View>
+      }
+    />
   );
 };
 
