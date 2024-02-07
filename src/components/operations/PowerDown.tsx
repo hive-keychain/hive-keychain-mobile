@@ -140,6 +140,9 @@ const PowerDown = ({
   return step === 1 ? (
     <OperationThemed
       additionalContentContainerStyle={{paddingHorizontal: 20}}
+      additionalBgSvgImageStyle={{
+        top: -40,
+      }}
       childrenTop={
         <>
           <Separator />

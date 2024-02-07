@@ -201,6 +201,9 @@ const RCDelegation = ({
 
   return step === 1 ? (
     <OperationThemed
+      additionalBgSvgImageStyle={{
+        top: -40,
+      }}
       childrenTop={
         <>
           <Separator />
