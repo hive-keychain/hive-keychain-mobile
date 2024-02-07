@@ -128,6 +128,9 @@ const Convert = ({
   return (
     <OperationThemed
       additionalContentContainerStyle={styles.paddingHorizontal}
+      additionalBgSvgImageStyle={{
+        top: -40,
+      }}
       childrenTop={
         <>
           <Separator />
