@@ -1,7 +1,14 @@
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
-import {ScrollView, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import {
+  ImageStyle,
+  ScrollView,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
@@ -12,6 +19,7 @@ interface OperationProps {
   childrenBottom?: JSX.Element;
   additionalContentContainerStyle?: StyleProp<ViewStyle>;
   additionalSVGOpacity?: number;
+  additionalBgSvgImageStyle?: StyleProp<ImageStyle>;
 }
 
 const OperationThemed = ({
@@ -20,6 +28,7 @@ const OperationThemed = ({
   childrenMiddle,
   additionalContentContainerStyle,
   additionalSVGOpacity,
+  additionalBgSvgImageStyle,
 }: OperationProps) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useSafeAreaInsets(), additionalSVGOpacity);
@@ -27,7 +36,10 @@ const OperationThemed = ({
   return (
     <Background
       theme={theme}
-      additionalBgSvgImageStyle={styles.backgroundSvgImage}>
+      additionalBgSvgImageStyle={[
+        styles.backgroundSvgImage,
+        additionalBgSvgImageStyle,
+      ]}>
       <View style={{flex: 1}}>
         <FocusAwareStatusBar />
         {childrenTop}

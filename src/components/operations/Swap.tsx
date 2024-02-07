@@ -567,7 +567,11 @@ const Swap = ({
     <>
       {!underMaintenance && !loading && !serviceUnavailable && (
         <OperationThemed
-          additionalSVGOpacity={0.5}
+          additionalSVGOpacity={1}
+          additionalBgSvgImageStyle={{
+            top: -70,
+            opacity: 1,
+          }}
           childrenTop={
             <View style={styles.marginHorizontal}>
               <Separator />

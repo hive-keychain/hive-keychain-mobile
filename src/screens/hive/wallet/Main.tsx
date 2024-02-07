@@ -339,7 +339,7 @@ const Main = ({
   return (
     <WalletPage
       additionalBgSvgImageStyle={
-        !loadingUserAndGlobals ? {top: 80} : undefined
+        !loadingUserAndGlobals ? {top: '15%'} : undefined
       }>
       {!loadingUserAndGlobals ? (
         <View>

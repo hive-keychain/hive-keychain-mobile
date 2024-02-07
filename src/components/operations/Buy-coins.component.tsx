@@ -25,6 +25,7 @@ import {
 import {RootState} from 'store';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
+import OperationThemed from './OperationThemed';
 
 export type BuyCoinsprops = {
   currency: BuyCoinType;
@@ -104,45 +105,63 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
   const styles = getDimensionedStyles(height, theme);
 
   return (
-    <ScrollView ref={scrollViewRef}>
-      <Separator />
-      <View style={styles.marginHorizontal}>
-        <View>
-          {getBuyCoinsListItem(currency, user.name!).list.map((listItem) =>
-            renderListItem(listItem),
-          )}
-        </View>
-        <Separator height={25} />
-        <View
-          style={[
-            getCardStyle(theme).defaultCardItem,
-            styles.border,
-            {paddingHorizontal: 10, paddingVertical: 10},
-          ]}>
-          <Text
-            style={[styles.textBase, styles.textTitle, styles.textCentered]}>
-            {translate('wallet.operations.buy_coins.title_exchanges')}
-          </Text>
+    <OperationThemed
+      additionalSVGOpacity={1}
+      additionalBgSvgImageStyle={{
+        top: -70,
+        opacity: 1,
+      }}
+      additionalContentContainerStyle={styles.content}
+      childrenMiddle={
+        <ScrollView ref={scrollViewRef}>
           <Separator />
-          <View
-            style={[
-              {
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-              },
-            ]}>
-            {getBuyCoinsListItem(
-              currency,
-              user.name!,
-            ).exchanges.map((exchange) => renderExchangeItem(exchange))}
+          <View style={styles.marginHorizontal}>
+            <View>
+              {getBuyCoinsListItem(currency, user.name!).list.map((listItem) =>
+                renderListItem(listItem),
+              )}
+            </View>
+            <Separator height={25} />
+            <View
+              style={[
+                getCardStyle(theme).defaultCardItem,
+                styles.border,
+                {paddingHorizontal: 10, paddingVertical: 10},
+              ]}>
+              <Text
+                style={[
+                  styles.textBase,
+                  styles.textTitle,
+                  styles.textCentered,
+                ]}>
+                {translate('wallet.operations.buy_coins.title_exchanges')}
+              </Text>
+              <Separator />
+              <View
+                style={[
+                  {
+                    flexDirection: 'row',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                  },
+                ]}>
+                {getBuyCoinsListItem(
+                  currency,
+                  user.name!,
+                ).exchanges.map((exchange) => renderExchangeItem(exchange))}
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
-      {displayScrollToTop && (
-        <BackToTopButton theme={theme} element={scrollViewRef} isScrollView />
-      )}
-    </ScrollView>
+          {displayScrollToTop && (
+            <BackToTopButton
+              theme={theme}
+              element={scrollViewRef}
+              isScrollView
+            />
+          )}
+        </ScrollView>
+      }
+    />
   );
 };
 const connector = connect((state: RootState) => {
@@ -192,6 +211,11 @@ const getDimensionedStyles = (width: number, theme: Theme) =>
     },
     textCentered: {
       textAlign: 'center',
+    },
+    content: {
+      borderWidth: 0,
+      borderColor: '#00000000',
+      backgroundColor: '#00000000',
     },
   });
 
