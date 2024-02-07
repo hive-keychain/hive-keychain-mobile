@@ -118,6 +118,9 @@ const Delegation = ({
 
   return (
     <OperationThemed
+      additionalBgSvgImageStyle={{
+        top: -40,
+      }}
       childrenTop={
         <>
           <Separator />
