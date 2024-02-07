@@ -206,6 +206,7 @@ const Transfer = ({
                 setAmount(value);
                 setAvailableBalance(value);
               }}
+              //TODO fix bellow!! ask quentin
               setAvailableBalance={(available) =>
                 setAvailableBalance(available)
               }
