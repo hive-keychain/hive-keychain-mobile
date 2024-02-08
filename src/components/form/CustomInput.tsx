@@ -27,6 +27,7 @@ type Props = InputProps & {
   inputColor?: string;
   makeExpandable?: boolean;
   autoCompleteValues?: AutoCompleteValuesType;
+  isFocused?: boolean;
 };
 
 export default ({
@@ -37,10 +38,11 @@ export default ({
   additionalInputContainerStyle,
   makeExpandable,
   autoCompleteValues,
+  isFocused,
   ...props
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
+  // const [isFocused, setIsFocused] = useState(setIsFocus);
 
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({
@@ -51,19 +53,19 @@ export default ({
     textAlign,
   });
 
-  const handleOnBlur = () => {
-    setTimeout(() => {
-      setIsFocused(false);
-    }, 200);
-  };
+  // const handleOnBlur = () => {
+  //   setTimeout(() => {
+  //     setIsFocused(false);
+  //   }, 200);
+  // };
 
   const renderInput = () => {
     if (autoCompleteValues) {
       return (
         <View>
           <Input
-            onFocus={() => setIsFocused(true)}
-            onBlur={handleOnBlur}
+            // onFocus={() => setIsFocused(true)}
+            // onBlur={handleOnBlur}
             placeholderTextColor="#B9C9D6"
             containerStyle={[styles.container, containerStyle]}
             inputStyle={styles.input}
@@ -87,8 +89,8 @@ export default ({
     } else
       return (
         <Input
-          onFocus={() => setIsFocused(true)}
-          onBlur={handleOnBlur}
+          // onFocus={() => setIsFocused(true)}
+          // onBlur={handleOnBlur}
           placeholderTextColor="#B9C9D6"
           containerStyle={[styles.container, containerStyle]}
           inputStyle={styles.input}

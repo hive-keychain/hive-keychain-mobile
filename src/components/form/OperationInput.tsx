@@ -35,6 +35,7 @@ interface OperationInputProps {
   additionalLabelExtraInfoTextStyle?: StyleProp<TextStyle>;
   removeLabelInputIndent?: boolean;
   autoCompleteValues?: AutoCompleteValuesType;
+  isFocused?: boolean;
 }
 
 export default (props: InputProps & OperationInputProps) => {

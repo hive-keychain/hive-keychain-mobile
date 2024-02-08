@@ -87,6 +87,8 @@ const Transfer = ({
   const [availableBalance, setAvailableBalance] = useState('');
   const {theme} = useThemeContext();
 
+  const [usernameInputIsFocused, setUsernameInputIsFocused] = useState(false);
+
   useEffect(() => {
     loadAutocompleteTransferUsernames();
   }, []);
@@ -203,6 +205,8 @@ const Transfer = ({
         const {nativeID} = memoizedProps;
         console.log({nativeID}); //TODO remove line
 
+        //TODO bellow prob add the autoCompleteBox as well
+        setUsernameInputIsFocused(nativeID && nativeID === 'username-input');
         //TODO bellow
         //  - if nativeID === "username-input", setFocus. Else unSet.
         //  - change the use of onFocus & onBlur.
@@ -285,6 +289,7 @@ const Transfer = ({
                 additionalLabelStyle={
                   getFormFontStyle(height, theme).labelInput
                 }
+                isFocused={usernameInputIsFocused}
               />
               <Separator />
               <View style={styles.flexRowBetween}>
