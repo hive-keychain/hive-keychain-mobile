@@ -39,6 +39,7 @@ import {
   AppStateStatus,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  PanResponder,
   SectionList,
   StyleSheet,
   Text,
@@ -119,6 +120,7 @@ const Main = ({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [lastScrollYValue, setLastScrollYValue] = useState(0);
+
   useEffect(() => {
     loadTokens();
     loadTokensMarket();
@@ -336,13 +338,55 @@ const Main = ({
     },
   ];
 
+  //TODO testing bellow panResponder
+  //TODO bellow, cleanup remove as no needed here!
+  const panResponder = React.useRef(
+    PanResponder.create({
+      // Ask to be the responder:
+      // onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => {
+        const target = evt.nativeEvent.target;
+        console.log({target}); //TODO remove line
+        return gestureState.dx != 0 && gestureState.dy != 0;
+      },
+      // onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      // onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+
+      // onPanResponderGrant: (evt, gestureState) => {
+      //   // The gesture has started. Show visual feedback so the user knows
+      //   // what is happening!
+      //   // gestureState.d{x,y} will be set to zero now
+      // },
+      // onPanResponderMove: (evt, gestureState) => {
+      //   // The most recent move distance is gestureState.move{X,Y}
+      //   // The accumulated gesture distance since becoming responder is
+      //   // gestureState.d{x,y}
+      // },
+      onPanResponderTerminationRequest: (evt, gestureState) => false,
+      // onPanResponderRelease: (evt, gestureState) => {
+      //   // The user has released all touches while this view is the
+      //   // responder. This typically means a gesture has succeeded
+      // },
+      // onPanResponderTerminate: (evt, gestureState) => {
+      //   // Another component has become the responder, so this gesture
+      //   // should be cancelled
+      // },
+      // onShouldBlockNativeResponder: (evt, gestureState) => {
+      //   // Returns whether this component should block native components from becoming the JS
+      //   // responder. Returns true by default. Is currently only supported on android.
+      //   return true;
+      // },
+    }),
+  ).current;
+  //END testing
+
   return (
     <WalletPage
       additionalBgSvgImageStyle={
         !loadingUserAndGlobals ? {top: '15%'} : undefined
       }>
       {!loadingUserAndGlobals ? (
-        <View>
+        <View {...panResponder.panHandlers}>
           <Separator height={TOPCONTAINERSEPARATION} />
           <View style={{zIndex: 20}}>
             <View style={[styles.headerMenu]}>

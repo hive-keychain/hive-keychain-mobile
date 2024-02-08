@@ -11,6 +11,7 @@ import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {
   Keyboard,
+  PanResponder,
   StyleSheet,
   Text,
   View,
@@ -190,77 +191,166 @@ const Transfer = ({
 
   const styles = getDimensionedStyles(color, height, theme);
 
+  //TODO testing bellow panResponder
+  const panResponder = React.useRef(
+    PanResponder.create({
+      // Ask to be the responder:
+      // onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => {
+        const target = evt.nativeEvent;
+        const _target = (evt as any)._targetInst;
+        const {memoizedProps, memoizedState} = _target;
+        const {nativeID} = memoizedProps;
+        console.log({nativeID}); //TODO remove line
+
+        //TODO bellow
+        //  - if nativeID === "username-input", setFocus. Else unSet.
+        //  - change the use of onFocus & onBlur.
+        //  - test and submit.
+        //  - ask Quentin to test in IOS.
+        return gestureState.dx != 0 && gestureState.dy != 0;
+      },
+      // onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      // onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+
+      // onPanResponderGrant: (evt, gestureState) => {
+      //   // The gesture has started. Show visual feedback so the user knows
+      //   // what is happening!
+      //   // gestureState.d{x,y} will be set to zero now
+      // },
+      // onPanResponderMove: (evt, gestureState) => {
+      //   // The most recent move distance is gestureState.move{X,Y}
+      //   // The accumulated gesture distance since becoming responder is
+      //   // gestureState.d{x,y}
+      // },
+      onPanResponderTerminationRequest: (evt, gestureState) => false,
+      // onPanResponderRelease: (evt, gestureState) => {
+      //   // The user has released all touches while this view is the
+      //   // responder. This typically means a gesture has succeeded
+      // },
+      // onPanResponderTerminate: (evt, gestureState) => {
+      //   // Another component has become the responder, so this gesture
+      //   // should be cancelled
+      // },
+      // onShouldBlockNativeResponder: (evt, gestureState) => {
+      //   // Returns whether this component should block native components from becoming the JS
+      //   // responder. Returns true by default. Is currently only supported on android.
+      //   return true;
+      // },
+    }),
+  ).current;
+  //END testing
+
   if (step === 1) {
     return (
-      <OperationThemed
-        childrenTop={
-          <>
-            <Separator />
-            <Balance
-              currency={currency}
-              account={user.account}
-              tokenBalance={tokenBalance}
-              tokenLogo={tokenLogo}
-              isHiveEngine={engine}
-              setMax={(value: string) => {
-                setAmount(value);
-                setAvailableBalance(value);
-              }}
-              //TODO fix bellow!! ask quentin
-              setAvailableBalance={(available) =>
-                setAvailableBalance(available)
-              }
-              theme={theme}
-            />
-            <Separator />
-          </>
-        }
-        childrenMiddle={
-          <>
-            <Separator height={35} />
-            <OperationInput
-              autoCompleteValues={autocompleteFavoriteUsers}
-              labelInput={translate('common.to')}
-              placeholder={translate('common.username')}
-              leftIcon={<Icon name={Icons.AT} theme={theme} />}
-              autoCapitalize="none"
-              value={to}
-              onChangeText={(e) => {
-                setTo(e.trim());
-              }}
-              inputStyle={getFormFontStyle(height, theme).input}
-              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
-            />
-            <Separator />
-            <View style={styles.flexRowBetween}>
-              <OperationInput
-                labelInput={translate('common.currency')}
-                placeholder={currency}
-                value={currency}
-                editable={false}
-                additionalOuterContainerStyle={{
-                  width: '40%',
+      <View style={{flex: 1}} {...panResponder.panHandlers}>
+        <OperationThemed
+          childrenTop={
+            <>
+              <Separator />
+              <Balance
+                currency={currency}
+                account={user.account}
+                tokenBalance={tokenBalance}
+                tokenLogo={tokenLogo}
+                isHiveEngine={engine}
+                setMax={(value: string) => {
+                  setAmount(value);
+                  setAvailableBalance(value);
                 }}
-                additionalInputContainerStyle={{
-                  marginHorizontal: 0,
+                //TODO fix bellow!! ask quentin
+                setAvailableBalance={(available) =>
+                  setAvailableBalance(available)
+                }
+                theme={theme}
+              />
+              <Separator />
+            </>
+          }
+          childrenMiddle={
+            <>
+              <Separator height={35} />
+              <OperationInput
+                nativeID="username-input"
+                autoCompleteValues={autocompleteFavoriteUsers}
+                labelInput={translate('common.to')}
+                placeholder={translate('common.username')}
+                leftIcon={<Icon name={Icons.AT} theme={theme} />}
+                autoCapitalize="none"
+                value={to}
+                onChangeText={(e) => {
+                  setTo(e.trim());
                 }}
                 inputStyle={getFormFontStyle(height, theme).input}
                 additionalLabelStyle={
                   getFormFontStyle(height, theme).labelInput
                 }
               />
+              <Separator />
+              <View style={styles.flexRowBetween}>
+                <OperationInput
+                  labelInput={translate('common.currency')}
+                  placeholder={currency}
+                  value={currency}
+                  editable={false}
+                  additionalOuterContainerStyle={{
+                    width: '40%',
+                  }}
+                  additionalInputContainerStyle={{
+                    marginHorizontal: 0,
+                  }}
+                  inputStyle={getFormFontStyle(height, theme).input}
+                  additionalLabelStyle={
+                    getFormFontStyle(height, theme).labelInput
+                  }
+                />
+                <OperationInput
+                  keyboardType="decimal-pad"
+                  labelInput={capitalize(translate('common.amount'))}
+                  placeholder={'0'}
+                  value={amount}
+                  onChangeText={setAmount}
+                  additionalInputContainerStyle={{
+                    marginHorizontal: 0,
+                  }}
+                  additionalOuterContainerStyle={{
+                    width: '54%',
+                  }}
+                  inputStyle={getFormFontStyle(height, theme).input}
+                  additionalLabelStyle={
+                    getFormFontStyle(height, theme).labelInput
+                  }
+                  rightIcon={
+                    <View style={styles.flexRowCenter}>
+                      <Separator
+                        drawLine
+                        additionalLineStyle={getHorizontalLineStyle(
+                          theme,
+                          1,
+                          35,
+                          16,
+                        )}
+                      />
+                      <TouchableOpacity
+                        onPress={() => setAmount(availableBalance)}>
+                        <Text
+                          style={
+                            getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
+                              .input
+                          }>
+                          {translate('common.max').toUpperCase()}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  }
+                />
+              </View>
+              <Separator />
               <OperationInput
-                keyboardType="decimal-pad"
-                labelInput={capitalize(translate('common.amount'))}
-                placeholder={'0'}
-                value={amount}
-                onChangeText={setAmount}
-                additionalInputContainerStyle={{
-                  marginHorizontal: 0,
-                }}
-                additionalOuterContainerStyle={{
-                  width: '54%',
-                }}
+                labelInput={capitalize(translate('common.memo'))}
+                placeholder={translate('wallet.operations.transfer.memo')}
+                value={memo}
+                onChangeText={setMemo}
                 inputStyle={getFormFontStyle(height, theme).input}
                 additionalLabelStyle={
                   getFormFontStyle(height, theme).labelInput
@@ -276,137 +366,111 @@ const Transfer = ({
                         16,
                       )}
                     />
-                    <TouchableOpacity
-                      onPress={() => setAmount(availableBalance)}>
-                      <Text
-                        style={
-                          getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
-                            .input
-                        }>
-                        {translate('common.max').toUpperCase()}
-                      </Text>
-                    </TouchableOpacity>
+                    <Icon
+                      name={isMemoEncrypted ? Icons.ENCRYPT : Icons.DECRYPT}
+                      theme={theme}
+                      onClick={() => setIsMemoEncrypted(!isMemoEncrypted)}
+                      color={PRIMARY_RED_COLOR}
+                    />
                   </View>
                 }
               />
+              <Separator />
+              <OptionsToggle
+                type={'checkbox'}
+                theme={theme}
+                title={translate('common.recurrent_transfer')}
+                toggled={isRecurrent}
+                additionalTitleStyle={getFormFontStyle(height, theme).title}
+                callback={(toggled) => {
+                  setRecurrent(toggled);
+                }}>
+                <Separator />
+                <OperationInput
+                  labelInput={translate('wallet.operations.transfer.frequency')}
+                  labelExtraInfo={translate(
+                    'wallet.operations.transfer.frequency_minimum',
+                  )}
+                  placeholder={translate(
+                    'wallet.operations.transfer.frequency',
+                  )}
+                  value={recurrence}
+                  onChangeText={setRecurrence}
+                  keyboardType={'number-pad'}
+                  inputStyle={getFormFontStyle(height, theme).input}
+                  additionalLabelStyle={
+                    getFormFontStyle(height, theme).labelInput
+                  }
+                  additionalLabelExtraInfoTextStyle={
+                    getFormFontStyle(height, theme).infoLabel
+                  }
+                />
+                <Separator />
+                <OperationInput
+                  labelInput={translate(
+                    'wallet.operations.transfer.iterations',
+                  )}
+                  labelExtraInfo={translate(
+                    'wallet.operations.transfer.iterations_minimum',
+                  )}
+                  placeholder={translate(
+                    'wallet.operations.transfer.iterations',
+                  )}
+                  value={exec}
+                  onChangeText={setExec}
+                  keyboardType={'number-pad'}
+                  inputStyle={getFormFontStyle(height, theme).input}
+                  additionalLabelStyle={
+                    getFormFontStyle(height, theme).labelInput
+                  }
+                  additionalLabelExtraInfoTextStyle={
+                    getFormFontStyle(height, theme).infoLabel
+                  }
+                />
+              </OptionsToggle>
+              <Separator />
+            </>
+          }
+          childrenBottom={
+            <View style={styles.operationButtonsContainer}>
+              <ActiveOperationButton
+                method={KeyTypes.active}
+                title={translate('common.send')}
+                onPress={() => {
+                  if (
+                    !amount.length ||
+                    !to.length ||
+                    (isRecurrent &&
+                      (exec.trim().length === 0 ||
+                        recurrence.trim().length === 0))
+                  ) {
+                    Toast.show(
+                      translate(
+                        'wallet.operations.transfer.warning.missing_info',
+                      ),
+                    );
+                  } else {
+                    setStep(2);
+                  }
+                }}
+                style={getButtonStyle(theme, height).warningStyleButton}
+                additionalTextStyle={
+                  getFormFontStyle(height, theme, 'white').title
+                }
+                isLoading={false}
+              />
             </View>
-            <Separator />
-            <OperationInput
-              labelInput={capitalize(translate('common.memo'))}
-              placeholder={translate('wallet.operations.transfer.memo')}
-              value={memo}
-              onChangeText={setMemo}
-              inputStyle={getFormFontStyle(height, theme).input}
-              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
-              rightIcon={
-                <View style={styles.flexRowCenter}>
-                  <Separator
-                    drawLine
-                    additionalLineStyle={getHorizontalLineStyle(
-                      theme,
-                      1,
-                      35,
-                      16,
-                    )}
-                  />
-                  <Icon
-                    name={isMemoEncrypted ? Icons.ENCRYPT : Icons.DECRYPT}
-                    theme={theme}
-                    onClick={() => setIsMemoEncrypted(!isMemoEncrypted)}
-                    color={PRIMARY_RED_COLOR}
-                  />
-                </View>
-              }
-            />
-            <Separator />
-            <OptionsToggle
-              type={'checkbox'}
-              theme={theme}
-              title={translate('common.recurrent_transfer')}
-              toggled={isRecurrent}
-              additionalTitleStyle={getFormFontStyle(height, theme).title}
-              callback={(toggled) => {
-                setRecurrent(toggled);
-              }}>
-              <Separator />
-              <OperationInput
-                labelInput={translate('wallet.operations.transfer.frequency')}
-                labelExtraInfo={translate(
-                  'wallet.operations.transfer.frequency_minimum',
-                )}
-                placeholder={translate('wallet.operations.transfer.frequency')}
-                value={recurrence}
-                onChangeText={setRecurrence}
-                keyboardType={'number-pad'}
-                inputStyle={getFormFontStyle(height, theme).input}
-                additionalLabelStyle={
-                  getFormFontStyle(height, theme).labelInput
-                }
-                additionalLabelExtraInfoTextStyle={
-                  getFormFontStyle(height, theme).infoLabel
-                }
-              />
-              <Separator />
-              <OperationInput
-                labelInput={translate('wallet.operations.transfer.iterations')}
-                labelExtraInfo={translate(
-                  'wallet.operations.transfer.iterations_minimum',
-                )}
-                placeholder={translate('wallet.operations.transfer.iterations')}
-                value={exec}
-                onChangeText={setExec}
-                keyboardType={'number-pad'}
-                inputStyle={getFormFontStyle(height, theme).input}
-                additionalLabelStyle={
-                  getFormFontStyle(height, theme).labelInput
-                }
-                additionalLabelExtraInfoTextStyle={
-                  getFormFontStyle(height, theme).infoLabel
-                }
-              />
-            </OptionsToggle>
-            <Separator />
-          </>
-        }
-        childrenBottom={
-          <View style={styles.operationButtonsContainer}>
-            <ActiveOperationButton
-              method={KeyTypes.active}
-              title={translate('common.send')}
-              onPress={() => {
-                if (
-                  !amount.length ||
-                  !to.length ||
-                  (isRecurrent &&
-                    (exec.trim().length === 0 ||
-                      recurrence.trim().length === 0))
-                ) {
-                  Toast.show(
-                    translate(
-                      'wallet.operations.transfer.warning.missing_info',
-                    ),
-                  );
-                } else {
-                  setStep(2);
-                }
-              }}
-              style={getButtonStyle(theme, height).warningStyleButton}
-              additionalTextStyle={
-                getFormFontStyle(height, theme, 'white').title
-              }
-              isLoading={false}
-            />
-          </View>
-        }
-        additionalContentContainerStyle={styles.paddingHorizontal}
-      />
+          }
+          additionalContentContainerStyle={styles.paddingHorizontal}
+        />
+      </View>
     );
   } else {
     return (
       <OperationThemed
         childrenTop={<Separator height={50} />}
         childrenMiddle={
-          <>
+          <View>
             <Separator height={35} />
             <Text style={[getFormFontStyle(height, theme).title, styles.info]}>
               {translate('wallet.operations.transfer.confirm.info')}
@@ -544,7 +608,7 @@ const Transfer = ({
                 </View>
               </>
             ) : null}
-          </>
+          </View>
         }
         childrenBottom={
           <View style={styles.operationButtonsContainer}>
