@@ -54,6 +54,13 @@ export const BrowserConfig = {
         categories: ['social'],
       },
       {
+        name: 'Ecency',
+        description: 'Decentralized, rewarding, true ownership social network',
+        icon: 'https://images.hive.blog/u/ecency/avatar',
+        url: 'https://ecency.com',
+        categories: ['social'],
+      },
+      {
         name: 'Hive.blog',
         description: 'Community interface for Hive',
         icon: 'https://images.hive.blog/u/hiveio/avatar',
