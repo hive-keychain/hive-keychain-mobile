@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {
-  FlexStyle,
+  PanResponder,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  ViewStyle,
   useWindowDimensions,
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
@@ -40,6 +41,9 @@ const AutoCompleteBox = ({
   const [filteredAutoComplete, setFilteredAutoComplete] = useState<
     string[] | AutoCompleteValues
   >([]);
+  const [mainContainerStyle, setMainContainerStyle] = useState<ViewStyle>({
+    display: 'none',
+  });
 
   const styles = getStyles(theme, useWindowDimensions());
 
@@ -69,23 +73,45 @@ const AutoCompleteBox = ({
           (category) => category.values.length > 0,
         ),
       });
+      getVisibleStyle({
+        categories: filteredCategories,
+      });
     }
   }, [filterValue, autoCompleteValues]);
 
-  const getVisibleStyle = (
-    filtered: string[] | AutoCompleteValues,
-  ): FlexStyle => {
+  const getVisibleStyle = (filtered: string[] | AutoCompleteValues) => {
     if (typeof (filtered as string[])[0] === 'string') {
-      //TODO when needed.
-      return undefined;
+      setMainContainerStyle({display: 'none'});
     } else if (!!(filtered as AutoCompleteValues).categories) {
-      return (filtered as AutoCompleteValues).categories.length > 0 &&
+      if (
+        (filtered as AutoCompleteValues).categories.length > 0 &&
         filterValue.trim().length >= 2
-        ? {display: 'flex'}
-        : {display: 'none'};
+      ) {
+        setMainContainerStyle({display: 'flex'});
+      } else {
+        setMainContainerStyle({display: 'none'});
+      }
     }
-    return undefined;
   };
+
+  const panResponder = React.useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => {
+        try {
+          const _target = (evt as any)._targetInst;
+          const {memoizedProps} = _target;
+          const {nativeID, children} = memoizedProps;
+          if (nativeID === 'automplete-item-text') {
+            handleOnChange(children[0]);
+          }
+        } catch (error) {
+          console.log('Autocomplete error', {error});
+        }
+        return gestureState.dx != 0 && gestureState.dy != 0;
+      },
+      onPanResponderTerminationRequest: (evt, gestureState) => false,
+    }),
+  ).current;
 
   const handleRenderList = (autoCompleteValues: AutoCompleteValuesType) => {
     const getLastItemStyle = (
@@ -123,14 +149,18 @@ const AutoCompleteBox = ({
               </Text>
               <View style={[styles.fullDimensions, styles.marginBottom]}>
                 <FlatList
+                  nativeID="flatlist-automplete"
                   data={category.values}
                   keyExtractor={(e) => e.value}
                   renderItem={({item: autoCompleteItem, index}) => (
                     <TouchableOpacity
+                      testID="automplete-item"
                       activeOpacity={1}
                       onPress={() => handleOnChange(autoCompleteItem.value)}
                       style={getLastItemStyle(index, category, catIndex)}>
-                      <Text style={[styles.textBase, styles.autoCompleteValue]}>
+                      <Text
+                        nativeID="automplete-item-text"
+                        style={[styles.textBase, styles.autoCompleteValue]}>
                         {autoCompleteItem.translateValue
                           ? translate(autoCompleteItem.value)
                           : autoCompleteItem.value}
@@ -140,9 +170,6 @@ const AutoCompleteBox = ({
                       </Text>
                     </TouchableOpacity>
                   )}
-                  onTouchEnd={(e) => {
-                    console.log('touchy');
-                  }}
                 />
               </View>
             </View>
@@ -154,10 +181,12 @@ const AutoCompleteBox = ({
 
   return (
     <View
+      {...panResponder.panHandlers}
+      nativeID="autocomplete-box"
       style={[
+        mainContainerStyle,
         getCardStyle(theme).defaultCardItem,
         styles.container,
-        getVisibleStyle(filteredAutoComplete),
       ]}>
       {handleRenderList(filteredAutoComplete)}
     </View>

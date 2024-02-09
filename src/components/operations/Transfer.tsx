@@ -11,7 +11,6 @@ import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {
   Keyboard,
-  PanResponder,
   StyleSheet,
   Text,
   View,
@@ -86,8 +85,6 @@ const Transfer = ({
   });
   const [availableBalance, setAvailableBalance] = useState('');
   const {theme} = useThemeContext();
-
-  const [usernameInputIsFocused, setUsernameInputIsFocused] = useState(false);
 
   useEffect(() => {
     loadAutocompleteTransferUsernames();
@@ -193,61 +190,9 @@ const Transfer = ({
 
   const styles = getDimensionedStyles(color, height, theme);
 
-  //TODO testing bellow panResponder
-  const panResponder = React.useRef(
-    PanResponder.create({
-      // Ask to be the responder:
-      // onStartShouldSetPanResponder: (evt, gestureState) => true,
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => {
-        const target = evt.nativeEvent;
-        const _target = (evt as any)._targetInst;
-        const {memoizedProps, memoizedState} = _target;
-        const {nativeID} = memoizedProps;
-        console.log({nativeID}); //TODO remove line
-
-        //TODO bellow prob add the autoCompleteBox as well
-        setUsernameInputIsFocused(nativeID && nativeID === 'username-input');
-        //TODO bellow
-        //  - if nativeID === "username-input", setFocus. Else unSet.
-        //  - change the use of onFocus & onBlur.
-        //  - test and submit.
-        //  - ask Quentin to test in IOS.
-        return gestureState.dx != 0 && gestureState.dy != 0;
-      },
-      // onMoveShouldSetPanResponder: (evt, gestureState) => true,
-      // onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
-
-      // onPanResponderGrant: (evt, gestureState) => {
-      //   // The gesture has started. Show visual feedback so the user knows
-      //   // what is happening!
-      //   // gestureState.d{x,y} will be set to zero now
-      // },
-      // onPanResponderMove: (evt, gestureState) => {
-      //   // The most recent move distance is gestureState.move{X,Y}
-      //   // The accumulated gesture distance since becoming responder is
-      //   // gestureState.d{x,y}
-      // },
-      onPanResponderTerminationRequest: (evt, gestureState) => false,
-      // onPanResponderRelease: (evt, gestureState) => {
-      //   // The user has released all touches while this view is the
-      //   // responder. This typically means a gesture has succeeded
-      // },
-      // onPanResponderTerminate: (evt, gestureState) => {
-      //   // Another component has become the responder, so this gesture
-      //   // should be cancelled
-      // },
-      // onShouldBlockNativeResponder: (evt, gestureState) => {
-      //   // Returns whether this component should block native components from becoming the JS
-      //   // responder. Returns true by default. Is currently only supported on android.
-      //   return true;
-      // },
-    }),
-  ).current;
-  //END testing
-
   if (step === 1) {
     return (
-      <View style={{flex: 1}} {...panResponder.panHandlers}>
+      <View style={{flex: 1}}>
         <OperationThemed
           childrenTop={
             <>
@@ -275,6 +220,7 @@ const Transfer = ({
             <>
               <Separator height={35} />
               <OperationInput
+                testID="username-input-testID"
                 nativeID="username-input"
                 autoCompleteValues={autocompleteFavoriteUsers}
                 labelInput={translate('common.to')}
@@ -289,7 +235,6 @@ const Transfer = ({
                 additionalLabelStyle={
                   getFormFontStyle(height, theme).labelInput
                 }
-                isFocused={usernameInputIsFocused}
               />
               <Separator />
               <View style={styles.flexRowBetween}>
