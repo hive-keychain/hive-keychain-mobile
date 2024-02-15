@@ -724,7 +724,7 @@ const Swap = ({
                 onPress={() => setIsAdvanceSettingOpen(!isAdvanceSettingOpen)}
                 style={styles.flexRowbetween}>
                 <Text style={[styles.textBase, {...body_primary_body_1}]}>
-                  {translate('wallet.operations.swap.advance_setting_title')}
+                  {translate('wallet.operations.swap.advanced_settings_title')}
                 </Text>
                 <Icon
                   theme={theme}
