@@ -29,6 +29,7 @@ import {
   getColors,
 } from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
+import {getBorderTest} from 'src/styles/test';
 import {getRotateStyle} from 'src/styles/transform';
 import {
   FontPoppinsName,
@@ -563,10 +564,32 @@ const Swap = ({
 
   const styles = getStyles(theme);
 
+  //TODO check or cleanup block
+  const onLayout = (event: any) => {
+    const {x, y, width, height} = event.nativeEvent.layout;
+    console.log('onLayout:', {x, y, width, height});
+  };
+  const onLayout2 = (event: any) => {
+    const {x, y, width, height} = event.nativeEvent.layout;
+    console.log('onLayout Main container:', {x, y, width, height});
+  };
+
+  const onLayoutDropdown = (event: any) => {
+    const {x, y, width, height} = event.nativeEvent.layout;
+    console.log('onLayout Dropdown container:', {x, y, width, height});
+  };
+
+  const onLayoutMiddleContentContainer = (event: any) => {
+    const {x, y, width, height} = event.nativeEvent.layout;
+    console.log('onLayout Middle content container:', {x, y, width, height});
+  };
+  //end block
+
   return (
-    <>
+    <View onLayout={onLayout2} style={[{width: '100%'}, getBorderTest('red')]}>
       {!underMaintenance && !loading && !serviceUnavailable && (
         <OperationThemed
+          onLayoutMiddle={onLayoutMiddleContentContainer}
           additionalSVGOpacity={1}
           additionalBgSvgImageStyle={{
             top: -70,
@@ -598,8 +621,9 @@ const Swap = ({
           childrenMiddle={
             <View style={[styles.marginHorizontal]}>
               <Separator height={35} />
-              <View style={styles.flexRowbetween}>
+              <View style={styles.flexRowbetween} onLayout={onLayout}>
                 <DropdownSelector
+                  onLayout={onLayoutDropdown}
                   theme={theme}
                   list={startTokenListOptions}
                   titleTranslationKey="wallet.operations.swap.select_title_from"
@@ -810,7 +834,7 @@ const Swap = ({
           </Text>
         </View>
       )}
-    </>
+    </View>
   );
 };
 

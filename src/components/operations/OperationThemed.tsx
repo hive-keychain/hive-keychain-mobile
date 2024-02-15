@@ -20,6 +20,7 @@ interface OperationProps {
   additionalContentContainerStyle?: StyleProp<ViewStyle>;
   additionalSVGOpacity?: number;
   additionalBgSvgImageStyle?: StyleProp<ImageStyle>;
+  onLayoutMiddle?: (event: any) => void;
 }
 
 const OperationThemed = ({
@@ -29,6 +30,7 @@ const OperationThemed = ({
   additionalContentContainerStyle,
   additionalSVGOpacity,
   additionalBgSvgImageStyle,
+  onLayoutMiddle,
 }: OperationProps) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useSafeAreaInsets(), additionalSVGOpacity);
@@ -44,7 +46,8 @@ const OperationThemed = ({
         <FocusAwareStatusBar />
         {childrenTop}
         <View
-          style={[styles.contentContainer, additionalContentContainerStyle]}>
+          style={[styles.contentContainer, additionalContentContainerStyle]}
+          onLayout={onLayoutMiddle}>
           <ScrollView keyboardShouldPersistTaps="handled">
             {childrenMiddle}
           </ScrollView>

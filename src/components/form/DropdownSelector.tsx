@@ -40,6 +40,7 @@ interface Props {
   additionalSelectedLabelItemStyle?: StyleProp<TextStyle>;
   additionalDropdownListLabelItemStyle?: StyleProp<TextStyle>;
   dropdownColor?: string;
+  onLayout?: (event: any) => void;
 }
 
 const DropdownSelector = ({
@@ -57,6 +58,7 @@ const DropdownSelector = ({
   additionalSelectedLabelItemStyle,
   additionalDropdownListLabelItemStyle,
   dropdownColor,
+  onLayout,
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [dropdownList, setDropdownList] = useState<OptionItem[]>(list);
@@ -177,7 +179,7 @@ const DropdownSelector = ({
             {translate(labelTranslationKey)}
           </Text>
         )}
-        <View style={styles.dropdownContainer}>
+        <View style={styles.dropdownContainer} onLayout={onLayout}>
           {renderSelectedLabel(selectedItem)}
           <Icon
             theme={theme}

@@ -38,6 +38,19 @@ const SwapBuy = () => {
         backgroundColor={getColors(theme).primaryBackground}
       />
       <Separator />
+      {/* //TODO testing line pos */}
+      <View
+        style={{
+          position: 'absolute',
+          // top: 145.14,
+          top: 0,
+          width: 250,
+          borderTopColor: 'red',
+          borderTopWidth: 1,
+          zIndex: 200,
+        }}
+      />
+      {/* //end testing */}
       <ScreenToggle
         theme={theme}
         style={styles.toggle}
