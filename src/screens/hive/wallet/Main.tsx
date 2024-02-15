@@ -63,10 +63,7 @@ import {
   MIN_SEPARATION_ELEMENTS,
   TOPCONTAINERSEPARATION,
 } from 'src/styles/spacing';
-import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
-  button_link_primary_medium,
-} from 'src/styles/typography';
+import {button_link_primary_medium} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {getCurrency} from 'utils/hive';
@@ -380,9 +377,9 @@ const Main = ({
                         marginTop: MIN_SEPARATION_ELEMENTS,
                         alignSelf: 'flex-end',
                       }}
-                      additionalDropdownContainerStyle={
-                        styles.dropdownContainer
-                      }
+                      additionalDropdownContainerStyle={[
+                        styles.dropdownContainer,
+                      ]}
                     />
                   </View>
                 </View>
@@ -561,20 +558,12 @@ const getDimensionedStyles = (
       alignItems: 'center',
     },
     dropdownContainer: {
-      backgroundColor: '#ffffff00',
+      backgroundColor: getColors(theme).cardBgColor,
       borderWidth: 1,
       borderColor: getColors(theme).walletUserPickerBorder,
     },
     marginRight: {
       marginRight: width * 0.05,
-    },
-    dropdownButton: {
-      width: width * (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 0.45 : 0.4),
-      alignSelf: 'flex-end',
-    },
-    dropdownListContainer: {
-      borderRadius: 10,
-      height: '100%',
     },
     search: {
       marginRight: 4,
