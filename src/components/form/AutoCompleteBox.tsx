@@ -85,7 +85,10 @@ const AutoCompleteBox = ({
     } else if (!!(filtered as AutoCompleteValues).categories) {
       if (
         (filtered as AutoCompleteValues).categories.length > 0 &&
-        filterValue.trim().length >= 2
+        filterValue.trim().length >= 2 &&
+        (filtered as AutoCompleteValues).categories.some(
+          (cat) => cat.values.length > 0,
+        )
       ) {
         setMainContainerStyle({display: 'flex'});
       } else {
