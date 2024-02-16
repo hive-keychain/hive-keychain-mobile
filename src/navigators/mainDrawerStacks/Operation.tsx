@@ -32,6 +32,7 @@ import CustomIconButton from 'components/ui/CustomIconButton';
 import {OperationNavigationProps, RootStackParam} from 'navigators/Root.types';
 import React from 'react';
 import {StyleSheet} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
@@ -45,7 +46,7 @@ const Stack = createStackNavigator<RootStackParam>();
 export default ({navigation, route}: OperationNavigationProps) => {
   const {operation, props} = route.params;
   const {theme} = useThemeContext();
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useSafeAreaInsets());
 
   const getTitle = () => {
     switch (operation) {
@@ -153,13 +154,14 @@ export default ({navigation, route}: OperationNavigationProps) => {
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, insets: EdgeInsets) =>
   StyleSheet.create({
     header: {
       backgroundColor: getColors(theme).primaryBackground,
       borderWidth: 0,
       elevation: 0,
-      height: STACK_HEADER_HEIGHT,
+      shadowColor: 'transparent',
+      height: STACK_HEADER_HEIGHT + insets.top,
     },
     headerTitle: {
       ...headlines_primary_headline_2,
