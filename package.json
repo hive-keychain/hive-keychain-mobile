@@ -8,7 +8,7 @@
     "android-release": "react-native run-android --variant=devRelease",
     "android-clean": "cd android && ./gradlew clean && cd ..",
     "ei": "adb shell input text",
-    "ios": "npx react-native run-ios --simulator=\"iPhone 16\"",
+    "ios": "npx react-native run-ios --simulator=\"iPhone 15 Pro\"",
     "start": "react-native start",
     "test": "jest",
     "test:cov": "jest --coverage",
