@@ -117,6 +117,7 @@ const getStyles = (theme: Theme, height: number) =>
       ),
     },
     labelInputContainer: {
+      marginBottom: 2,
       flexDirection: 'row',
       alignItems: 'center',
       flexWrap: 'wrap',
