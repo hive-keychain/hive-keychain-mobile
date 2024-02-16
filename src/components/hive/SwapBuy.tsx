@@ -3,11 +3,12 @@ import Swap from 'components/operations/Swap';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import Separator from 'components/ui/Separator';
 import React from 'react';
-import {StatusBar, StyleSheet, View} from 'react-native';
+import {StatusBar, StyleSheet, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
+import {MIN_SEPARATION_ELEMENTS, getElementHeight} from 'src/styles/spacing';
 import {translate} from 'utils/localize';
 
 interface SwapBuyToScreenToogleProps {
@@ -17,7 +18,8 @@ interface SwapBuyToScreenToogleProps {
 
 const SwapBuy = () => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme);
+  const {height} = useWindowDimensions();
+  const styles = getStyles(theme, height);
   const swapBuyElements: SwapBuyToScreenToogleProps = {
     menuLabels: [
       translate('wallet.operations.swap.title'),
@@ -68,7 +70,7 @@ const SwapBuy = () => {
 
 export default SwapBuy;
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, height: number) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -86,5 +88,8 @@ const getStyles = (theme: Theme) =>
       width: '95%',
       alignSelf: 'center',
       zIndex: 10,
+      //TODO testing while coding the new dropdownmodal
+      height: getElementHeight(height),
+      marginBottom: MIN_SEPARATION_ELEMENTS,
     },
   });

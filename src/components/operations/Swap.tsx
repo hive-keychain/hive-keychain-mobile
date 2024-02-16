@@ -2,7 +2,7 @@ import {loadTokensMarket} from 'actions/index';
 import {showModal} from 'actions/message';
 import ErrorSvg from 'assets/new_UI/error-circle.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import DropdownSelector from 'components/form/DropdownSelector';
+import DropdownModal from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -29,6 +29,7 @@ import {
   getColors,
 } from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
+import {MARGINPADDING} from 'src/styles/spacing';
 import {getBorderTest} from 'src/styles/test';
 import {getRotateStyle} from 'src/styles/transform';
 import {
@@ -64,7 +65,16 @@ export interface OptionItem {
 interface Props {
   theme: Theme;
 }
-
+//TODO imporant:
+//  - finish this new dropdownModal, code it in a way that can be reused in all the project.
+//  - not change it yet in the whole project to have a commit where we can goback if needed.
+//  - commit changes. Test Swap.
+//  - add same component to RPC settings as well.
+//  - test it & commit.
+//  - finally use it eveywhere & test to ensure it works, then commit.
+//  - Other bugs/issues:
+//    -> in Main:
+//      - fix the "not engine tokens found" being showed while loading.
 const Swap = ({
   theme,
   loadTokensMarket,
@@ -98,6 +108,9 @@ const Swap = ({
   const [autoRefreshCountdown, setAutoRefreshCountdown] = useState<
     number | null
   >(null);
+
+  const [yPosDropdownOne, setYPosDropdownOne] = useState(0);
+  const [yPosDropdownTwo, setYPosDropdownTwo] = useState(0);
 
   useEffect(() => {
     init();
@@ -567,8 +580,19 @@ const Swap = ({
   //TODO check or cleanup block
   const onLayout = (event: any) => {
     const {x, y, width, height} = event.nativeEvent.layout;
-    console.log('onLayout:', {x, y, width, height});
+    setYPosDropdownOne(y);
+    console.log('onLayout DropdownSelector container in Swap.tsx:', {
+      x,
+      y,
+      width,
+      height,
+    });
   };
+  const onLayoutDropdownTwoContainer = (event: any) => {
+    const {x, y, width, height} = event.nativeEvent.layout;
+    setYPosDropdownTwo(y);
+  };
+
   const onLayout2 = (event: any) => {
     const {x, y, width, height} = event.nativeEvent.layout;
     console.log('onLayout Main container:', {x, y, width, height});
@@ -579,8 +603,17 @@ const Swap = ({
     console.log('onLayout Dropdown container:', {x, y, width, height});
   };
 
+  // const onLayoutDropdown1 = (event: any) => {
+  //   const {x, y, width, height} = event.nativeEvent.layout;
+  //   setYPosDropdownOne((prev) => prev + y);
+  //   console.log('onLayout Dropdown 1 itself:', {x, y, width, height});
+  // };
+
   const onLayoutMiddleContentContainer = (event: any) => {
     const {x, y, width, height} = event.nativeEvent.layout;
+    //add second value from OperationThemed
+    setYPosDropdownOne((prev) => prev + y);
+    setYPosDropdownTwo((prev) => prev + y);
     console.log('onLayout Middle content container:', {x, y, width, height});
   };
   //end block
@@ -621,8 +654,17 @@ const Swap = ({
           childrenMiddle={
             <View style={[styles.marginHorizontal]}>
               <Separator height={35} />
-              <View style={styles.flexRowbetween} onLayout={onLayout}>
-                <DropdownSelector
+              <View
+                style={[styles.flexRowbetween, getBorderTest('pink')]}
+                onLayout={onLayout}>
+                {/* //TODO testing bellow to somehow add the exact top pos */}
+                <DropdownModal
+                  yPos={yPosDropdownOne}
+                  // onLayoutDropdown={onLayoutDropdown1}
+                />
+
+                {/* //TODO bellow commented while coding */}
+                {/* <DropdownSelector
                   onLayout={onLayoutDropdown}
                   theme={theme}
                   list={startTokenListOptions}
@@ -638,7 +680,7 @@ const Swap = ({
                   addDropdownTitleIndent
                   additionalDropdownListLabelItemStyle={{fontSize: 13}}
                   dropdownColor={PRIMARY_RED_COLOR}
-                />
+                /> */}
                 <OperationInput
                   keyboardType="decimal-pad"
                   labelInput={capitalize(translate('common.amount'))}
@@ -682,8 +724,16 @@ const Swap = ({
                 color={PRIMARY_RED_COLOR}
               />
               <Separator />
-              <View style={styles.flexRowbetween}>
-                <DropdownSelector
+              <View
+                style={styles.flexRowbetween}
+                onLayout={onLayoutDropdownTwoContainer}>
+                {/* //TODO bellow finish */}
+                <DropdownModal
+                  yPos={yPosDropdownTwo}
+                  // onLayoutDropdown={onLayoutDropdown1}
+                />
+                {/* //TODo bellow commented while fixing & adding new dropdownModal component */}
+                {/* <DropdownSelector
                   theme={theme}
                   list={endTokenListOptions}
                   titleTranslationKey="wallet.operations.swap.select_title_to"
@@ -695,7 +745,7 @@ const Swap = ({
                   addDropdownTitleIndent
                   additionalDropdownListLabelItemStyle={{fontSize: 13}}
                   dropdownColor={PRIMARY_RED_COLOR}
-                />
+                /> */}
                 <OperationInput
                   disabled
                   keyboardType="decimal-pad"
@@ -847,7 +897,7 @@ const getStyles = (theme: Theme) =>
     opaque: {
       opacity: 0.8,
     },
-    marginHorizontal: {marginHorizontal: 16},
+    marginHorizontal: {marginHorizontal: MARGINPADDING},
     squareButton: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).cardBorderColorContrast,

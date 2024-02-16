@@ -15,6 +15,8 @@ export const LABELINDENTSPACE = 14;
 export const TOPCONTAINERSEPARATION = 15;
 export const STACK_HEADER_HEIGHT = 55;
 export const MIN_SEPARATION_ELEMENTS = 4;
+export const MARGINPADDING = 16;
+export const CONTENTMARGINPADDING = 10;
 
 export const getSpacing = (width = 0, height = 0) => {
   return {

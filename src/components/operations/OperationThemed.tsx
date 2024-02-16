@@ -12,6 +12,7 @@ import {
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {CONTENTMARGINPADDING} from 'src/styles/spacing';
 
 interface OperationProps {
   childrenTop?: JSX.Element;
@@ -71,7 +72,7 @@ const getStyles = (theme: Theme, insets: EdgeInsets, customOpacity?: number) =>
       borderWidth: 1,
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).cardBorderColorJustDark,
-      paddingHorizontal: 10,
+      paddingHorizontal: CONTENTMARGINPADDING,
       justifyContent: 'space-between',
       marginBottom: -insets.bottom,
     },
