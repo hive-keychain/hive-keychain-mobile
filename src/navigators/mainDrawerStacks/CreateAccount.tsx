@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import CreateAccountStepOne from 'screens/hive/createAccounts/create-account-step-one/CreateAccountStepOne';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -22,7 +23,11 @@ const CreateAccountStack = createStackNavigator<
 
 export default () => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, useWindowDimensions().height);
+  const styles = getStyles(
+    theme,
+    useWindowDimensions().height,
+    useSafeAreaInsets(),
+  );
 
   return (
     <CreateAccountStack.Navigator>
@@ -58,13 +63,14 @@ export default () => {
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, height: number, insets: EdgeInsets) =>
   StyleSheet.create({
     header: {
       backgroundColor: getColors(theme).primaryBackground,
       borderWidth: 0,
       elevation: 0,
-      height: STACK_HEADER_HEIGHT,
+      shadowColor: 'transparent',
+      height: STACK_HEADER_HEIGHT + insets.top,
     },
     headerTitle: {
       ...headlines_primary_headline_2,

@@ -1,5 +1,6 @@
 import BuyCoinsComponent from 'components/operations/Buy-coins.component';
 import Swap from 'components/operations/Swap';
+import SafeArea from 'components/ui/SafeArea';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import Separator from 'components/ui/Separator';
 import React from 'react';
@@ -32,7 +33,7 @@ const SwapBuy = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeArea style={styles.container}>
       <StatusBar
         barStyle={getColors(theme).barStyle}
         backgroundColor={getColors(theme).primaryBackground}
@@ -62,7 +63,7 @@ const SwapBuy = () => {
         toUpperCase={false}
         components={swapBuyElements.components}
       />
-    </View>
+    </SafeArea>
   );
 };
 

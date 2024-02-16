@@ -8,6 +8,7 @@ import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Wallet from 'screens/hive/wallet/Main';
 import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -28,7 +29,7 @@ const Stack = createStackNavigator();
 export default () => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-  const styles = getStyles({width}, theme);
+  const styles = getStyles({width}, theme, useSafeAreaInsets());
 
   return (
     <Stack.Navigator>
@@ -127,7 +128,7 @@ export default () => {
   );
 };
 
-const getStyles = ({width}: Width, theme: Theme) =>
+const getStyles = ({width}: Width, theme: Theme, insets: EdgeInsets) =>
   StyleSheet.create({
     noStyle: {
       height: 0,
@@ -135,10 +136,11 @@ const getStyles = ({width}: Width, theme: Theme) =>
       elevation: 0,
     },
     headerStyle: {
-      height: STACK_HEADER_HEIGHT,
+      height: STACK_HEADER_HEIGHT + insets.top,
       backgroundColor: getColors(theme).primaryBackground,
       borderWidth: 0,
       elevation: 0,
+      shadowColor: 'transparent',
     },
     headerTitle: {
       ...headlines_primary_headline_2,

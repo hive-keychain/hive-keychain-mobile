@@ -11,6 +11,7 @@ import {
 } from 'navigators/Root.types';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
@@ -24,7 +25,7 @@ const Stack = createStackNavigator<RootStackParam>();
 export default ({navigation, route}: TokensHistoryNavigationProps) => {
   const {theme} = useThemeContext();
   const {currency} = route.params;
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useSafeAreaInsets());
 
   return (
     <Stack.Navigator>
@@ -86,7 +87,7 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, insets: EdgeInsets) =>
   StyleSheet.create({
     wrapperFixed: {
       top: 55,
@@ -130,6 +131,7 @@ const getStyles = (theme: Theme) =>
       backgroundColor: getColors(theme).primaryBackground,
       elevation: 0,
       borderWidth: 0,
-      height: STACK_HEADER_HEIGHT,
+      height: STACK_HEADER_HEIGHT + insets.top,
+      shadowColor: 'transparent',
     },
   });
