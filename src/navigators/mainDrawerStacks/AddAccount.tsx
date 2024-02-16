@@ -3,6 +3,7 @@ import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import AddAccountByAuth from 'screens/hive/addAccounts/AddAccountByAuth';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
@@ -22,7 +23,11 @@ const AccountStack = createStackNavigator<AddAccountFromWalletParamList>();
 
 export default () => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, useWindowDimensions().height);
+  const styles = getStyles(
+    theme,
+    useWindowDimensions().height,
+    useSafeAreaInsets(),
+  );
   return (
     <AccountStack.Navigator>
       <AccountStack.Screen
@@ -115,13 +120,14 @@ export default () => {
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, height: number, insets: EdgeInsets) =>
   StyleSheet.create({
     header: {
       backgroundColor: getColors(theme).primaryBackground,
       borderWidth: 0,
       elevation: 0,
-      height: STACK_HEADER_HEIGHT,
+      shadowColor: 'transparent',
+      height: STACK_HEADER_HEIGHT + insets.top,
     },
     headerTitle: {
       ...headlines_primary_headline_2,

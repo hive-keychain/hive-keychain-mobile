@@ -26,6 +26,7 @@ import {
 } from 'src/interfaces/hive-engine-rpc.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {LABELINDENTSPACE} from 'src/styles/spacing';
 import {
   body_primary_body_2,
   getFontSizeSmallDevices,
@@ -389,7 +390,7 @@ const RpcNodes = ({
             </Text>
           ))}
           <Separator />
-          <Text style={styles.text}>
+          <Text style={[styles.title, styles.text]}>
             {translate('settings.settings.hive_rpc')}
           </Text>
           <View
@@ -480,6 +481,7 @@ const getStyles = (theme: Theme, height: number) =>
       paddingHorizontal: 16,
       flex: 1,
     },
+    title: {marginBottom: 2, marginLeft: LABELINDENTSPACE},
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,

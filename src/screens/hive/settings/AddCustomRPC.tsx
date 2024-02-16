@@ -15,6 +15,7 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {LABELINDENTSPACE} from 'src/styles/spacing';
 import {
   body_primary_body_2,
   getFontSizeSmallDevices,
@@ -64,7 +65,7 @@ const AddCustomRPC = ({
   const styles = getStyles(theme, useWindowDimensions().height);
   return (
     <View>
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[styles.text, styles.title]}>{title}</Text>
       <View style={styles.rpcItemContainer}>
         <CustomDropdown
           titleTranslationKey={titleTranslationKey}
@@ -139,6 +140,7 @@ const getStyles = (theme: Theme, height: number) =>
       ...body_primary_body_2,
       fontSize: getFontSizeSmallDevices(height, 15),
     },
+    title: {marginBottom: 2, marginLeft: LABELINDENTSPACE},
     rpcItemContainer: {
       flexDirection: 'row',
       width: '100%',
