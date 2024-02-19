@@ -4,7 +4,7 @@ import SafeArea from 'components/ui/SafeArea';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import Separator from 'components/ui/Separator';
 import React from 'react';
-import {StatusBar, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {StatusBar, StyleSheet, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {getCardStyle} from 'src/styles/card';
@@ -41,19 +41,6 @@ const SwapBuy = () => {
         backgroundColor={getColors(theme).primaryBackground}
       />
       <Separator />
-      {/* //TODO testing line pos */}
-      <View
-        style={{
-          position: 'absolute',
-          // top: 145.14,
-          top: 0,
-          width: 250,
-          borderTopColor: 'red',
-          borderTopWidth: 1,
-          zIndex: 200,
-        }}
-      />
-      {/* //end testing */}
       <ScreenToggle
         theme={theme}
         style={styles.toggle}

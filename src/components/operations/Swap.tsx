@@ -2,18 +2,26 @@ import {loadTokensMarket} from 'actions/index';
 import {showModal} from 'actions/message';
 import ErrorSvg from 'assets/new_UI/error-circle.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import {DropdownItem} from 'components/form/CustomDropdown';
 import DropdownModal from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Loader from 'components/ui/Loader';
+import PreloadedImage from 'components/ui/PreloadedImage';
 import RotationIconAnimated from 'components/ui/RotationIconAnimated';
 import Separator from 'components/ui/Separator';
 import {IStep} from 'hive-keychain-commons';
 import {ThrottleSettings, throttle} from 'lodash';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useMemo, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
@@ -28,9 +36,9 @@ import {
   PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
+import {ICONMINDIMENSIONS} from 'src/styles/icon';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {MARGINPADDING} from 'src/styles/spacing';
-import {getBorderTest} from 'src/styles/test';
 import {getRotateStyle} from 'src/styles/transform';
 import {
   FontPoppinsName,
@@ -104,7 +112,6 @@ const Swap = ({
   const [loadingEstimate, setLoadingEstimate] = useState(false);
   const [estimate, setEstimate] = useState<IStep[]>();
   const [estimateValue, setEstimateValue] = useState<string | undefined>();
-
   const [autoRefreshCountdown, setAutoRefreshCountdown] = useState<
     number | null
   >(null);
@@ -575,18 +582,12 @@ const Swap = ({
     } as TemplateStackProps);
   };
 
+  const {height} = useWindowDimensions();
   const styles = getStyles(theme);
 
-  //TODO check or cleanup block
   const onLayout = (event: any) => {
     const {x, y, width, height} = event.nativeEvent.layout;
     setYPosDropdownOne(y);
-    console.log('onLayout DropdownSelector container in Swap.tsx:', {
-      x,
-      y,
-      width,
-      height,
-    });
   };
   const onLayoutDropdownTwoContainer = (event: any) => {
     const {x, y, width, height} = event.nativeEvent.layout;
@@ -598,28 +599,15 @@ const Swap = ({
     console.log('onLayout Main container:', {x, y, width, height});
   };
 
-  const onLayoutDropdown = (event: any) => {
-    const {x, y, width, height} = event.nativeEvent.layout;
-    console.log('onLayout Dropdown container:', {x, y, width, height});
-  };
-
-  // const onLayoutDropdown1 = (event: any) => {
-  //   const {x, y, width, height} = event.nativeEvent.layout;
-  //   setYPosDropdownOne((prev) => prev + y);
-  //   console.log('onLayout Dropdown 1 itself:', {x, y, width, height});
-  // };
-
   const onLayoutMiddleContentContainer = (event: any) => {
     const {x, y, width, height} = event.nativeEvent.layout;
     //add second value from OperationThemed
     setYPosDropdownOne((prev) => prev + y);
     setYPosDropdownTwo((prev) => prev + y);
-    console.log('onLayout Middle content container:', {x, y, width, height});
   };
-  //end block
 
   return (
-    <View onLayout={onLayout2} style={[{width: '100%'}, getBorderTest('red')]}>
+    <View onLayout={onLayout2} style={[{width: '100%'}]}>
       {!underMaintenance && !loading && !serviceUnavailable && (
         <OperationThemed
           onLayoutMiddle={onLayoutMiddleContentContainer}
@@ -655,32 +643,60 @@ const Swap = ({
             <View style={[styles.marginHorizontal]}>
               <Separator height={35} />
               <View
-                style={[styles.flexRowbetween, getBorderTest('pink')]}
+                style={[
+                  styles.flexRowbetween,
+                  {
+                    width: '100%',
+                  },
+                ]}
                 onLayout={onLayout}>
-                {/* //TODO testing bellow to somehow add the exact top pos */}
                 <DropdownModal
+                  enableSearch
+                  dropdownTtitleTr="common.token"
+                  dropdownIconScaledSize={ICONMINDIMENSIONS}
                   yPos={yPosDropdownOne}
-                  // onLayoutDropdown={onLayoutDropdown1}
-                />
-
-                {/* //TODO bellow commented while coding */}
-                {/* <DropdownSelector
-                  onLayout={onLayoutDropdown}
-                  theme={theme}
-                  list={startTokenListOptions}
-                  titleTranslationKey="wallet.operations.swap.select_title_from"
-                  labelTranslationKey="common.select"
-                  additionalContainerStyle={styles.currencySelector}
-                  searchOption
-                  selected={startToken}
-                  onSelectedItem={setStartToken}
+                  selected={
+                    {
+                      value: startToken.value.symbol,
+                      label: startToken.label,
+                      icon: (
+                        <PreloadedImage
+                          uri={startToken.img}
+                          symbol={startToken.value.symbol}
+                          svgHeight={20}
+                          svgWidth={20}
+                        />
+                      ),
+                    } as DropdownItem
+                  }
+                  onSelected={(item) => {
+                    const selectedItem = startTokenListOptions.find(
+                      (token) => token.value.symbol === item.value,
+                    );
+                    setStartToken(selectedItem);
+                  }}
+                  list={startTokenListOptions.map((startToken) => {
+                    return {
+                      value: startToken.value.symbol,
+                      label: startToken.label,
+                      icon: (
+                        <PreloadedImage
+                          uri={startToken.img}
+                          symbol={startToken.value.symbol}
+                          svgHeight={20}
+                          svgWidth={20}
+                        />
+                      ),
+                    } as DropdownItem;
+                  })}
+                  additionalTitleTextStyle={{fontSize: 15}}
+                  additionalMainContainerDropdown={{
+                    width: '44%',
+                  }}
                   bottomLabelInfo={`${translate(
                     'common.available',
                   )}: ${parseFloat(startToken.value.balance).toFixed(3)}`}
-                  addDropdownTitleIndent
-                  additionalDropdownListLabelItemStyle={{fontSize: 13}}
-                  dropdownColor={PRIMARY_RED_COLOR}
-                /> */}
+                />
                 <OperationInput
                   keyboardType="decimal-pad"
                   labelInput={capitalize(translate('common.amount'))}
@@ -689,10 +705,14 @@ const Swap = ({
                   onChangeText={setAmount}
                   additionalInputContainerStyle={{
                     marginHorizontal: 0,
+                    height: 60,
+                    margin: 0,
                   }}
-                  additionalOuterContainerStyle={{
-                    width: '54%',
-                  }}
+                  additionalOuterContainerStyle={[
+                    {
+                      width: '54%',
+                    },
+                  ]}
                   inputStyle={styles.textBase}
                   rightIcon={
                     <View style={styles.flexRowCenter}>
@@ -727,25 +747,51 @@ const Swap = ({
               <View
                 style={styles.flexRowbetween}
                 onLayout={onLayoutDropdownTwoContainer}>
-                {/* //TODO bellow finish */}
                 <DropdownModal
+                  enableSearch
+                  dropdownTtitleTr="common.token"
+                  dropdownIconScaledSize={ICONMINDIMENSIONS}
                   yPos={yPosDropdownTwo}
-                  // onLayoutDropdown={onLayoutDropdown1}
+                  selected={
+                    {
+                      value: endToken.value.symbol,
+                      label: endToken.label,
+                      icon: (
+                        <PreloadedImage
+                          uri={endToken.img}
+                          symbol={endToken.value.symbol}
+                          svgHeight={20}
+                          svgWidth={20}
+                        />
+                      ),
+                    } as DropdownItem
+                  }
+                  onSelected={(item) =>
+                    setEndToken(
+                      endTokenListOptions.find(
+                        (token) => token.value.symbol === item.value,
+                      ),
+                    )
+                  }
+                  list={endTokenListOptions.map((endToken) => {
+                    return {
+                      value: endToken.value.symbol,
+                      label: endToken.label,
+                      icon: (
+                        <PreloadedImage
+                          uri={endToken.img}
+                          symbol={endToken.value.symbol}
+                          svgHeight={20}
+                          svgWidth={20}
+                        />
+                      ),
+                    } as DropdownItem;
+                  })}
+                  additionalTitleTextStyle={{fontSize: 15}}
+                  additionalMainContainerDropdown={{
+                    width: '44%',
+                  }}
                 />
-                {/* //TODo bellow commented while fixing & adding new dropdownModal component */}
-                {/* <DropdownSelector
-                  theme={theme}
-                  list={endTokenListOptions}
-                  titleTranslationKey="wallet.operations.swap.select_title_to"
-                  labelTranslationKey="common.select"
-                  additionalContainerStyle={styles.currencySelector}
-                  onSelectedItem={setEndToken}
-                  selected={endToken}
-                  searchOption
-                  addDropdownTitleIndent
-                  additionalDropdownListLabelItemStyle={{fontSize: 13}}
-                  dropdownColor={PRIMARY_RED_COLOR}
-                /> */}
                 <OperationInput
                   disabled
                   keyboardType="decimal-pad"
