@@ -15,7 +15,7 @@ import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
 import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
 import {DropdownItem} from 'components/form/CustomDropdown';
 import CustomSearchBar from 'components/form/CustomSearchBar';
-import Dropdown from 'components/form/Dropdown';
+import DropdownModal from 'components/form/DropdownModal';
 import {PickerItemInterface} from 'components/form/PickerItem';
 import AccountValue from 'components/hive/AccountValue';
 import CurrencyToken from 'components/hive/CurrencyToken';
@@ -59,10 +59,7 @@ import {
   PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {
-  MIN_SEPARATION_ELEMENTS,
-  TOPCONTAINERSEPARATION,
-} from 'src/styles/spacing';
+import {TOPCONTAINERSEPARATION} from 'src/styles/spacing';
 import {button_link_primary_medium} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
@@ -349,39 +346,30 @@ const Main = ({
                 <StatusIndicator theme={theme} />
                 <Claim theme={theme} />
                 <View style={styles.marginRight}>
-                  <View
-                    style={{
-                      width: 180,
-                      zIndex: 100,
-                    }}>
-                    <Dropdown
-                      list={getListFromAccount()}
-                      selected={getItemDropDownSelected(user.name)}
-                      onSelected={(selectedAccount) =>
-                        loadAccount(selectedAccount)
-                      }
-                      dropdownIconScaledSize={{width: 10, height: 10}}
-                      showSelectedIcon={
-                        <Icon
-                          name={Icons.CHECK}
-                          theme={theme}
-                          width={15}
-                          height={15}
-                          strokeWidth={2}
-                          color={PRIMARY_RED_COLOR}
-                        />
-                      }
-                      copyButtonValue
-                      additionalListContainerStyle={{
-                        width: 250,
-                        marginTop: MIN_SEPARATION_ELEMENTS,
-                        alignSelf: 'flex-end',
-                      }}
-                      additionalDropdownContainerStyle={[
-                        styles.dropdownContainer,
-                      ]}
-                    />
-                  </View>
+                  <DropdownModal
+                    list={getListFromAccount()}
+                    selected={getItemDropDownSelected(user.name)}
+                    onSelected={(selectedAccount) =>
+                      loadAccount(selectedAccount.value)
+                    }
+                    dropdownIconScaledSize={styles.smallIcon}
+                    additionalMainContainerDropdown={[styles.dropdownContainer]}
+                    additionalOverlayStyle={[styles.dropdownOverlay]}
+                    additionalListExpandedContainerStyle={
+                      styles.dropdownExpandedContainer
+                    }
+                    copyButtonValue
+                    showSelectedIcon={
+                      <Icon
+                        name={Icons.CHECK}
+                        theme={theme}
+                        width={15}
+                        height={15}
+                        strokeWidth={2}
+                        color={PRIMARY_RED_COLOR}
+                      />
+                    }
+                  />
                 </View>
               </View>
             </View>
@@ -558,9 +546,8 @@ const getDimensionedStyles = (
       alignItems: 'center',
     },
     dropdownContainer: {
-      backgroundColor: getColors(theme).cardBgColor,
-      borderWidth: 1,
-      borderColor: getColors(theme).walletUserPickerBorder,
+      width: 180,
+      alignSelf: 'flex-end',
     },
     marginRight: {
       marginRight: width * 0.05,
@@ -601,6 +588,15 @@ const getDimensionedStyles = (
       justifyContent: 'center',
       height: 100,
       alignItems: 'center',
+    },
+    dropdownOverlay: {
+      paddingHorizontal: 0,
+      paddingRight: width * 0.05,
+    },
+    smallIcon: {width: 10, height: 10},
+    dropdownExpandedContainer: {
+      width: '65%',
+      alignSelf: 'flex-end',
     },
   });
 

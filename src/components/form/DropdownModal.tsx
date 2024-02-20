@@ -1,3 +1,4 @@
+import Clipboard from '@react-native-community/clipboard';
 import Icon from 'components/hive/Icon';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
@@ -12,6 +13,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
+import SimpleToast from 'react-native-simple-toast';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
@@ -34,12 +36,10 @@ import {translate} from 'utils/localize';
 import {DropdownItem} from './CustomDropdown';
 import CustomSearchBar from './CustomSearchBar';
 //TODO important:
-//  - Let us try the way they did it, using useCallback:
-// const _measure = useCallback(() => {
-//   if (ref && ref?.current) {
-//     ref.current.measureInWindow((pageX, pageY, width, height) => {
-//    - test it to see if gives the meassures no matter what.
-//  - replace all places!!! just one dropdown from now on.
+//  - check with quentin to fix the error happening in swap about not refreshing the icon picture.
+//  - add into rpc, will need to add code from other dropdown components.
+//  - replace all places!!! just one dropdown from now on. & after testing all good, remove old versions.
+//   -> done in: Main.
 interface Props {
   //TODO check bellow if not needed to add string[] | dropdown[] and code both.
   list: DropdownItem[];
@@ -51,10 +51,14 @@ interface Props {
   additionalModalContainerStyle?: StyleProp<ViewStyle>;
   additionalDropdowContainerStyle?: StyleProp<ViewStyle>;
   additionalMainContainerDropdown?: StyleProp<ViewStyle>;
+  additionalListExpandedContainerStyle?: StyleProp<ViewStyle>;
+  additionalOverlayStyle?: StyleProp<ViewStyle>;
   dropdownTtitleTr?: string;
   removeDropdownTitleIndent?: boolean;
   enableSearch?: boolean;
   bottomLabelInfo?: string;
+  showSelectedIcon?: JSX.Element;
+  copyButtonValue?: boolean;
 }
 
 const DropdownModal = ({
@@ -71,6 +75,10 @@ const DropdownModal = ({
   enableSearch,
   onSelected,
   bottomLabelInfo,
+  additionalOverlayStyle,
+  additionalListExpandedContainerStyle,
+  showSelectedIcon,
+  copyButtonValue,
 }: Props) => {
   const dropdownContainerRef = useRef();
   const [dropdownPageY, setDropdownPageY] = useState(0);
@@ -103,6 +111,41 @@ const DropdownModal = ({
     setIsListExpanded(false);
   };
 
+  const onHandleCopyValue = (username: string) => {
+    Clipboard.setString(username);
+    SimpleToast.show(translate('toast.copied_username'), SimpleToast.LONG);
+  };
+
+  const renderCopyOrSelectedIcon = (item: DropdownItem) => {
+    return showSelectedIcon || copyButtonValue ? (
+      <View
+        style={[
+          styles.flexRow,
+          {
+            marginLeft: MIN_SEPARATION_ELEMENTS,
+          },
+        ]}>
+        {copyButtonValue && (
+          <Icon
+            theme={theme}
+            name={Icons.COPY}
+            onClick={() => onHandleCopyValue(item.value)}
+            width={16}
+            height={16}
+            additionalContainerStyle={{marginRight: 4}}
+            strokeWidth={2}
+            color={PRIMARY_RED_COLOR}
+          />
+        )}
+        <View style={{width: 20}}>
+          {typeof selected === 'object' && selected.value === item.value
+            ? showSelectedIcon
+            : null}
+        </View>
+      </View>
+    ) : null;
+  };
+
   const renderDropdownItem = (item: DropdownItem, index: number) => {
     const isLastItem = index === list.length - 1;
     return (
@@ -111,10 +154,19 @@ const DropdownModal = ({
         onPress={() => onHandleSelectedItem(item)}
         style={[
           styles.dropdownItem,
-          isLastItem ? {marginBottom: 10} : undefined,
+          isLastItem ? {paddingBottom: 20} : undefined,
         ]}>
         {item.icon}
-        <Text style={[styles.textBase, styles.smallerText]}>{item.label}</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignSelf: 'flex-end',
+          }}>
+          <Text style={[styles.textBase, styles.smallerText]}>
+            {item.label}
+          </Text>
+          {typeof item === 'object' ? renderCopyOrSelectedIcon(item) : null}
+        </View>
       </TouchableOpacity>
     );
   };
@@ -201,7 +253,11 @@ const DropdownModal = ({
             height: '100%',
             backgroundColor: '#00000078',
           }}
-          overlayStyle={[styles.dropdownListContainer, styles.overlay]}>
+          overlayStyle={[
+            styles.dropdownListContainer,
+            styles.overlay,
+            additionalOverlayStyle,
+          ]}>
           <>
             <View style={additionalMainContainerDropdown}>
               {renderDropdownTop(true)}
@@ -220,6 +276,7 @@ const DropdownModal = ({
               style={[
                 getCardStyle(theme).defaultCardItem,
                 styles.dropdownListContainer,
+                additionalListExpandedContainerStyle,
               ]}
               data={filteredDropdownList}
               keyExtractor={(item) => item.label}
