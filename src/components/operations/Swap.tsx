@@ -116,9 +116,6 @@ const Swap = ({
     number | null
   >(null);
 
-  const [yPosDropdownOne, setYPosDropdownOne] = useState(0);
-  const [yPosDropdownTwo, setYPosDropdownTwo] = useState(0);
-
   useEffect(() => {
     init();
   }, []);
@@ -585,32 +582,10 @@ const Swap = ({
   const {height} = useWindowDimensions();
   const styles = getStyles(theme);
 
-  const onLayout = (event: any) => {
-    const {x, y, width, height} = event.nativeEvent.layout;
-    setYPosDropdownOne(y);
-  };
-  const onLayoutDropdownTwoContainer = (event: any) => {
-    const {x, y, width, height} = event.nativeEvent.layout;
-    setYPosDropdownTwo(y);
-  };
-
-  const onLayout2 = (event: any) => {
-    const {x, y, width, height} = event.nativeEvent.layout;
-    console.log('onLayout Main container:', {x, y, width, height});
-  };
-
-  const onLayoutMiddleContentContainer = (event: any) => {
-    const {x, y, width, height} = event.nativeEvent.layout;
-    //add second value from OperationThemed
-    setYPosDropdownOne((prev) => prev + y);
-    setYPosDropdownTwo((prev) => prev + y);
-  };
-
   return (
-    <View onLayout={onLayout2} style={[{width: '100%'}]}>
+    <View style={[{width: '100%'}]}>
       {!underMaintenance && !loading && !serviceUnavailable && (
         <OperationThemed
-          onLayoutMiddle={onLayoutMiddleContentContainer}
           additionalSVGOpacity={1}
           additionalBgSvgImageStyle={{
             top: -70,
@@ -648,13 +623,11 @@ const Swap = ({
                   {
                     width: '100%',
                   },
-                ]}
-                onLayout={onLayout}>
+                ]}>
                 <DropdownModal
                   enableSearch
                   dropdownTtitleTr="common.token"
                   dropdownIconScaledSize={ICONMINDIMENSIONS}
-                  yPos={yPosDropdownOne}
                   selected={
                     {
                       value: startToken.value.symbol,
@@ -692,6 +665,7 @@ const Swap = ({
                   additionalTitleTextStyle={{fontSize: 15}}
                   additionalMainContainerDropdown={{
                     width: '44%',
+                    top: 0,
                   }}
                   bottomLabelInfo={`${translate(
                     'common.available',
@@ -744,14 +718,11 @@ const Swap = ({
                 color={PRIMARY_RED_COLOR}
               />
               <Separator />
-              <View
-                style={styles.flexRowbetween}
-                onLayout={onLayoutDropdownTwoContainer}>
+              <View style={styles.flexRowbetween}>
                 <DropdownModal
                   enableSearch
                   dropdownTtitleTr="common.token"
                   dropdownIconScaledSize={ICONMINDIMENSIONS}
-                  yPos={yPosDropdownTwo}
                   selected={
                     {
                       value: endToken.value.symbol,

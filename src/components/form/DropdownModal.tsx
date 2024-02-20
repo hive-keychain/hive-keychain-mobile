@@ -1,5 +1,5 @@
 import Icon from 'components/hive/Icon';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   StyleProp,
@@ -22,7 +22,6 @@ import {
   MARGINLEFTRIGHTMIN,
   MARGINPADDING,
   MIN_SEPARATION_ELEMENTS,
-  STACK_HEADER_HEIGHT,
 } from 'src/styles/spacing';
 import {
   FontPoppinsName,
@@ -35,11 +34,13 @@ import {translate} from 'utils/localize';
 import {DropdownItem} from './CustomDropdown';
 import CustomSearchBar from './CustomSearchBar';
 //TODO important:
-//  - replace this comp for main page -> userDropdown and see if works properly.
-//    -> need to add the position of parent using onLayout.
-//  - replace in rpc settings as well, adapt & test.
+//  - Let us try the way they did it, using useCallback:
+// const _measure = useCallback(() => {
+//   if (ref && ref?.current) {
+//     ref.current.measureInWindow((pageX, pageY, width, height) => {
+//    - test it to see if gives the meassures no matter what.
+//  - replace all places!!! just one dropdown from now on.
 interface Props {
-  yPos: number;
   //TODO check bellow if not needed to add string[] | dropdown[] and code both.
   list: DropdownItem[];
   selected: string | DropdownItem;
@@ -57,7 +58,6 @@ interface Props {
 }
 
 const DropdownModal = ({
-  yPos,
   selected,
   list,
   additionalTextStyle,
@@ -72,8 +72,9 @@ const DropdownModal = ({
   onSelected,
   bottomLabelInfo,
 }: Props) => {
+  const dropdownContainerRef = useRef();
+  const [dropdownPageY, setDropdownPageY] = useState(0);
   const [isListExpanded, setIsListExpanded] = useState(false);
-  const [yPosMainContainer, setYPosMainContainer] = useState(0);
   const [searchValue, setSearchValue] = useState('');
   const [filteredDropdownList, setFilteredDropdownList] = useState<
     DropdownItem[]
@@ -82,7 +83,7 @@ const DropdownModal = ({
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
 
-  const styles = getStyles(yPosMainContainer + yPos, width, height, theme);
+  const styles = getStyles(dropdownPageY, width, height, theme);
 
   useEffect(() => {
     if (searchValue.trim().length > 0) {
@@ -118,20 +119,14 @@ const DropdownModal = ({
     );
   };
 
-  const onLayoutMainContainer = (event: any) => {
-    const {x, y, width, height} = event.nativeEvent.layout;
-    setYPosMainContainer(y);
-  };
-
   const renderDropdownTop = (showOpened?: boolean) => (
     <TouchableOpacity
       onPress={() => setIsListExpanded(!isListExpanded)}
       style={[
         getCardStyle(theme).defaultCardItem,
         styles.dropdownContainer,
-        additionalDropdowContainerStyle,
-      ]}
-      onLayout={onLayoutMainContainer}>
+        // additionalDropdowContainerStyle,
+      ]}>
       {typeof selected === 'string' ? (
         <Text style={[styles.textBase, additionalTextStyle]}>{selected}</Text>
       ) : (
@@ -156,11 +151,20 @@ const DropdownModal = ({
     </TouchableOpacity>
   );
 
+  const _measure = useCallback(() => {
+    if (dropdownContainerRef && dropdownContainerRef?.current) {
+      (dropdownContainerRef.current as any).measureInWindow(
+        (pageX: any, pageY: any, width: any, height: any) => {
+          console.log('Self meassures: ', {pageX, pageY, width, height});
+          setDropdownPageY(pageY);
+        },
+      );
+    }
+  }, [height, width]);
+
   return (
     <>
-      <View
-        onLayout={onLayoutMainContainer}
-        style={additionalMainContainerDropdown}>
+      <View style={additionalMainContainerDropdown}>
         {dropdownTtitleTr && (
           <Text
             style={[
@@ -171,7 +175,9 @@ const DropdownModal = ({
             {capitalize(translate(dropdownTtitleTr))}
           </Text>
         )}
-        {renderDropdownTop()}
+        <View ref={dropdownContainerRef} onLayout={_measure}>
+          {renderDropdownTop()}
+        </View>
         {bottomLabelInfo && (
           <Text
             style={[
@@ -223,42 +229,40 @@ const DropdownModal = ({
             />
           </>
         </Overlay>
+        // <TouchableOpacity
+        //   style={{
+        //     position: 'absolute',
+        //     top: 0,
+        //     left: 0,
+        //     width: '100%',
+        //     height: '100%',
+        //     zIndex: 2,
+        //     backgroundColor: '#0000002d',
+        //   }}></TouchableOpacity>
       )}
     </>
   );
 };
 //TODO bellow cleanup
 const getStyles = (
-  topDropdown: number,
+  dropdownPageY: number,
   width: number,
   height: number,
   theme: Theme,
 ) =>
   StyleSheet.create({
-    wrapperFixed: {
-      top: topDropdown + 60 + STACK_HEADER_HEIGHT + 20, //TODO add this bellow in spacing as SEPARATORMINDEFAULT = 20
-      bottom: undefined,
-      left: MARGINPADDING + CONTENTMARGINPADDING,
-      width: '80%',
-      height: 'auto',
-      zIndex: 0,
-    },
     overlay: {
       backgroundColor: '#00000000',
       width: '100%',
       height: 'auto',
       maxHeight: undefined,
       marginTop: 0,
-      top: topDropdown + 60 + STACK_HEADER_HEIGHT + 20,
+      top: dropdownPageY,
       position: 'absolute',
       zIndex: 10,
       elevation: 0,
       paddingHorizontal: MARGINPADDING + CONTENTMARGINPADDING,
-    },
-    dropdownElement: {
-      top: topDropdown + 60 + STACK_HEADER_HEIGHT,
-      left: MARGINPADDING + CONTENTMARGINPADDING,
-      zIndex: 20,
+      paddingTop: 0,
     },
     dropdownListContainer: {
       marginTop: MIN_SEPARATION_ELEMENTS,
@@ -294,6 +298,9 @@ const getStyles = (
       borderRadius: 25,
       width: '100%',
       zIndex: 30,
+      paddingVertical: 0,
+      marginTop: 0,
+      paddingTop: 0,
     },
     dropdownItem: {
       flexDirection: 'row',
@@ -323,7 +330,7 @@ const getStyles = (
     },
     positionAbsolute: {
       position: 'absolute',
-      bottom: -20,
+      bottom: -24,
       alignSelf: 'center',
     },
   });
