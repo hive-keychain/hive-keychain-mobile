@@ -2,8 +2,8 @@ import {loadAccount} from 'actions/hive';
 import {removePreference} from 'actions/preferences';
 import {DropdownItem} from 'components/form/CustomDropdown';
 import CustomSearchBar from 'components/form/CustomSearchBar';
+import DropdownModal from 'components/form/DropdownModal';
 import {PickerItemInterface} from 'components/form/PickerItem';
-import UserDropdown from 'components/form/UserDropdown';
 import Icon from 'components/hive/Icon';
 import CollapsibleSettings from 'components/settings/CollapsibleSettings';
 import Background from 'components/ui/Background';
@@ -24,6 +24,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
+import {MARGINPADDING} from 'src/styles/spacing';
 import {
   SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   body_primary_body_2,
@@ -111,15 +112,15 @@ const Operations = ({
           ]}>
           {translate('settings.settings.operations_info')}
         </Text>
-        <UserDropdown
+        <DropdownModal
           list={getListFromAccount()}
           selected={getItemDropDownSelected(active.name!)}
-          onSelected={(selectedAccount) => loadAccount(selectedAccount, true)}
+          onSelected={(selectedAccount) =>
+            loadAccount(selectedAccount.value, true)
+          }
           additionalDropdowContainerStyle={styles.dropdownContainer}
+          additionalOverlayStyle={styles.dropdownOverlay}
           dropdownIconScaledSize={{width: 15, height: 15}}
-          additionalRenderButtonElementStyle={[styles.dropdownButton]}
-          additionalModalContainerStyle={styles.dropdownModal}
-          additionalModalWrapperFixedStyle={[styles.wrapperDropdown]}
         />
         <CustomSearchBar
           theme={theme}
@@ -212,20 +213,8 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       padding: 0,
       borderRadius: 30,
     },
-    dropdownButton: {
-      width: width - 32,
-      alignSelf: 'center',
-    },
-    wrapperDropdown: {
-      width: '100%',
-      alignSelf: 'center',
-      justifyContent: 'center',
-      right: 0,
-    },
-    dropdownModal: {
-      width: width - 32,
-      borderRadius: 30,
-      alignSelf: 'center',
+    dropdownOverlay: {
+      paddingHorizontal: MARGINPADDING,
     },
   });
 

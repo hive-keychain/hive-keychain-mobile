@@ -40,7 +40,7 @@ const Root = createStackNavigator<RootStackParam>();
 const App = ({
   hasAccounts,
   auth,
-  rpc,
+  activeRpc,
   accounts,
   requestedOp,
   forgetRequestedOperation,
@@ -50,10 +50,11 @@ const App = ({
   setSwitchToRpc,
   hiveEngineRpc,
   accountHistoryAPIRpc,
+  newActiveRpc,
 }: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
-
+  console.log({newActiveRpc}); //TODO remove line
   useEffect(() => {
     initColorAPI();
     showFloatingBar(false);
@@ -84,11 +85,11 @@ const App = ({
     HiveEngineConfigUtils.setActiveAccountHistoryApi(
       accountHistoryAPIRpc ?? DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
     );
-    setRpc(rpc);
-    if (getRPCUri(rpc) !== 'DEFAULT') {
-      checkCurrentRPC(getRPCUri(rpc));
+    setRpc(activeRpc);
+    if (getRPCUri(activeRpc) !== 'DEFAULT') {
+      checkCurrentRPC(getRPCUri(activeRpc));
     }
-  }, [rpc]);
+  }, [activeRpc]);
 
   const checkCurrentRPC = async (currentRPCUri: string) => {
     try {
@@ -167,7 +168,8 @@ const mapStateToProps = (state: RootState) => {
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
-    rpc: state.settings.rpc,
+    activeRpc: state.settings.rpc,
+    newActiveRpc: state.activeRpc,
     accounts: state.accounts,
     requestedOp: state.hiveUri.operation,
     rpcSwitcher: state.rpcSwitcher,

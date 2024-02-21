@@ -1,9 +1,9 @@
 import {addKey, forgetAccount, forgetKey, loadAccount} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import {DropdownItem} from 'components/form/CustomDropdown';
+import DropdownModal from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import {PickerItemInterface} from 'components/form/PickerItem';
-import UserDropdown from 'components/form/UserDropdown';
 import Icon from 'components/hive/Icon';
 import Key from 'components/hive/Key';
 import Background from 'components/ui/Background';
@@ -20,8 +20,8 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {MARGINPADDING} from 'src/styles/spacing';
 import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   button_link_primary_medium,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
@@ -52,6 +52,7 @@ const AccountManagement = ({
 
   const getItemDropDownSelected = (username: string): PickerItemInterface => {
     const selected = accounts.filter((acc) => acc.name === username)[0];
+    console.log({selected, username}); //TODO remove line
     return {
       label: selected.name,
       value: selected.name,
@@ -77,18 +78,16 @@ const AccountManagement = ({
       <SafeArea style={styles.safeArea}>
         <FocusAwareStatusBar />
         <ScrollView>
-          <UserDropdown
+          <DropdownModal
             list={getListFromAccount()}
             selected={getItemDropDownSelected(username)}
-            onSelected={(selectedAccount) => loadAccount(selectedAccount)}
-            additionalDropdowContainerStyle={styles.dropdownContainer}
-            dropdownIconScaledSize={{width: 15, height: 15}}
-            additionalRenderButtonElementStyle={{
-              top: 55,
-              paddingHorizontal: 16,
+            onSelected={(selectedAccount) => {
+              loadAccount(selectedAccount.value);
+              setUsername(selectedAccount.value);
             }}
-            additionalModalWrapperFixedStyle={[styles.modalWrapper]}
-            additionalModalContainerStyle={styles.modalContainer}
+            dropdownIconScaledSize={{width: 15, height: 15}}
+            additionalDropdowContainerStyle={styles.dropdownContainer}
+            additionalOverlayStyle={styles.dropdownOverlay}
             showSelectedIcon={
               <Icon
                 name={Icons.CHECK}
@@ -167,26 +166,12 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     },
     dropdownContainer: {
       width: '100%',
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
       padding: 0,
       borderRadius: 20,
       marginBottom: 0,
     },
-    modalWrapper: {
-      top: 55 + (height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50) + 4,
-      width: width - 32,
-      left: 16,
-      alignSelf: 'center',
-      justifyContent: 'center',
-      alignContent: 'center',
-      alignItems: 'center',
-    },
-    modalContainer: {
-      width: '100%',
-      marginRight: 0,
-      alignSelf: 'center',
-      maxHeight: 300,
-      borderRadius: 20,
+    dropdownOverlay: {
+      paddingHorizontal: MARGINPADDING,
     },
   });
 

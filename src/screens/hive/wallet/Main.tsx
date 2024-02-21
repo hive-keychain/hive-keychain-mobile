@@ -54,7 +54,9 @@ import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum'
 import {getCardStyle} from 'src/styles/card';
 import {
   BACKGROUNDITEMDARKISH,
+  DARKBLUELIGHTER,
   DARKER_RED_COLOR,
+  NEUTRAL_WHITE_COLOR,
   OVERLAYICONBGCOLOR,
   PRIMARY_RED_COLOR,
   getColors,
@@ -353,6 +355,7 @@ const Main = ({
                       loadAccount(selectedAccount.value)
                     }
                     dropdownIconScaledSize={styles.smallIcon}
+                    additionalDropdowContainerStyle={styles.userdropdown}
                     additionalMainContainerDropdown={[styles.dropdownContainer]}
                     additionalOverlayStyle={[styles.dropdownOverlay]}
                     additionalListExpandedContainerStyle={
@@ -597,6 +600,13 @@ const getDimensionedStyles = (
     dropdownExpandedContainer: {
       width: '65%',
       alignSelf: 'flex-end',
+    },
+    userdropdown: {
+      backgroundColor: '#ffffff00',
+      borderWidth: 1,
+      borderColor:
+        theme === Theme.LIGHT ? NEUTRAL_WHITE_COLOR : DARKBLUELIGHTER,
+      borderRadius: 11,
     },
   });
 

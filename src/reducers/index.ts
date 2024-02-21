@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux';
 import accounts from './accounts';
+import activeRpc from './active-rpc';
 import activeAccount from './activeAccount';
 import auth from './auth';
 import browser from './browser';
@@ -23,6 +24,7 @@ import tokensMarket from './tokensMarket';
 import transactions from './transactions';
 import userTokens from './userTokens';
 import walletFilters from './walletFilters';
+
 export default combineReducers({
   auth,
   accounts,
@@ -48,4 +50,5 @@ export default combineReducers({
   message,
   floatingBar,
   rpcSwitcher,
+  activeRpc,
 });

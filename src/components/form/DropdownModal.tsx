@@ -35,6 +35,9 @@ import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
 import {DropdownItem} from './CustomDropdown';
 import CustomSearchBar from './CustomSearchBar';
+//TODO
+//  bring here bellow DropdownItem interface.
+
 //TODO important:
 //  - check with quentin to fix the error happening in swap about not refreshing the icon picture.
 //  - add into rpc, will need to add code from other dropdown components.
@@ -48,7 +51,6 @@ interface Props {
   additionalTextStyle?: StyleProp<TextStyle>;
   additionalTitleTextStyle?: StyleProp<TextStyle>;
   dropdownIconScaledSize?: Dimensions;
-  additionalModalContainerStyle?: StyleProp<ViewStyle>;
   additionalDropdowContainerStyle?: StyleProp<ViewStyle>;
   additionalMainContainerDropdown?: StyleProp<ViewStyle>;
   additionalListExpandedContainerStyle?: StyleProp<ViewStyle>;
@@ -66,7 +68,6 @@ const DropdownModal = ({
   list,
   additionalTextStyle,
   dropdownIconScaledSize,
-  additionalModalContainerStyle,
   additionalDropdowContainerStyle,
   dropdownTtitleTr,
   additionalTitleTextStyle,
@@ -148,6 +149,7 @@ const DropdownModal = ({
 
   const renderDropdownItem = (item: DropdownItem, index: number) => {
     const isLastItem = index === list.length - 1;
+    console.log({item}); //TODO remove line
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -177,7 +179,7 @@ const DropdownModal = ({
       style={[
         getCardStyle(theme).defaultCardItem,
         styles.dropdownContainer,
-        // additionalDropdowContainerStyle,
+        additionalDropdowContainerStyle,
       ]}>
       {typeof selected === 'string' ? (
         <Text style={[styles.textBase, additionalTextStyle]}>{selected}</Text>
@@ -247,12 +249,7 @@ const DropdownModal = ({
         <Overlay
           onBackdropPress={() => setIsListExpanded(!isListExpanded)}
           isVisible={isListExpanded}
-          backdropStyle={{
-            flex: 1,
-            width: '100%',
-            height: '100%',
-            backgroundColor: '#00000078',
-          }}
+          backdropStyle={styles.backdrop}
           overlayStyle={[
             styles.dropdownListContainer,
             styles.overlay,
@@ -286,16 +283,6 @@ const DropdownModal = ({
             />
           </>
         </Overlay>
-        // <TouchableOpacity
-        //   style={{
-        //     position: 'absolute',
-        //     top: 0,
-        //     left: 0,
-        //     width: '100%',
-        //     height: '100%',
-        //     zIndex: 2,
-        //     backgroundColor: '#0000002d',
-        //   }}></TouchableOpacity>
       )}
     </>
   );
@@ -389,6 +376,12 @@ const getStyles = (
       position: 'absolute',
       bottom: -24,
       alignSelf: 'center',
+    },
+    backdrop: {
+      flex: 1,
+      width: '100%',
+      height: '100%',
+      backgroundColor: '#00000078',
     },
   });
 

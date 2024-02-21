@@ -1,6 +1,8 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import {Rpc} from 'actions/interfaces';
 import {setAccountHistoryRpc, setHiveEngineRpc, setRpc} from 'actions/settings';
-import CustomDropdown, {DropdownItem} from 'components/form/CustomDropdown';
+import {DropdownItem} from 'components/form/CustomDropdown';
+import DropdownModal from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
@@ -24,9 +26,10 @@ import {
   DefaultAccountHistoryApis,
   DefaultHiveEngineRpcs,
 } from 'src/interfaces/hive-engine-rpc.interface';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {LABELINDENTSPACE} from 'src/styles/spacing';
+import {LABELINDENTSPACE, MARGINPADDING} from 'src/styles/spacing';
 import {
   body_primary_body_2,
   getFontSizeSmallDevices,
@@ -60,26 +63,37 @@ const RpcNodes = ({
   const [showAddCustomRPC, setShowAddCustomRPC] = useState(false);
   const [customRPCSetActive, setCustomRPCSetActive] = useState<boolean>(false);
   const [customRPC, setCustomRPC] = useState<Rpc>(DEFAULT_CUSTOM_RPC);
-  const [switchRPCAuto, setSwitchRPCAuto] = useState(false);
+  const [switchRPCAuto, setSwitchRPCAuto] = useState(true);
   const [rpcFullList, setRpcFullList] = useState<DropdownItem[]>([]);
   const [customRPCList, setCustomRPCList] = useState<Rpc[]>([]);
 
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, useWindowDimensions().height);
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, width, height);
 
   useEffect(() => {
     init();
+    initSwitchAuto();
   }, []);
 
-  useEffect(() => {
-    if (switchRPCAuto) {
-      if (typeof activeRpc === 'object' && activeRpc.uri !== 'DEFAULT') {
-        if (typeof activeRpc === 'string' && activeRpc !== 'DEFAULT') {
-          setRpc('DEFAULT');
-        }
-      }
-    }
-  }, [switchRPCAuto]);
+  const initSwitchAuto = async () => {
+    setSwitchRPCAuto(
+      Boolean(
+        await AsyncStorage.getItem(KeychainStorageKeyEnum.SWITCH_RPC_AUTO),
+      ),
+    );
+  };
+
+  //TODO bellow check & fix
+  // useEffect(() => {
+  //   if (switchRPCAuto) {
+  //     if (typeof activeRpc === 'object' && activeRpc.uri !== 'DEFAULT') {
+  //       if (typeof activeRpc === 'string' && activeRpc !== 'DEFAULT') {
+  //         setRpc('DEFAULT');
+  //       }
+  //     }
+  //   }
+  // }, [switchRPCAuto]);
 
   const cleanRpcLabel = (label: string) =>
     label.replace('http://', '').replace('https://', '').split('/')[0];
@@ -98,12 +112,13 @@ const RpcNodes = ({
   };
 
   const init = async () => {
+    //TODO bellow cleanup
     //init Hive RPCs
-    if (typeof settings.rpc === 'object') {
-      if (settings.rpc.uri === 'DEFAULT') setSwitchRPCAuto(true);
-    } else if (typeof settings.rpc === 'string') {
-      if (settings.rpc === 'DEFAULT') setSwitchRPCAuto(true);
-    }
+    // if (typeof settings.rpc === 'object') {
+    //   if (settings.rpc.uri === 'DEFAULT') setSwitchRPCAuto(true);
+    // } else if (typeof settings.rpc === 'string') {
+    //   if (settings.rpc === 'DEFAULT') setSwitchRPCAuto(true);
+    // }
     const customRPCs = await getCustomRpcs();
     setCustomRPCList(customRPCs);
     const finalDropdownRpcList = [
@@ -168,8 +183,9 @@ const RpcNodes = ({
   };
 
   const handleOnRemoveCustomRPC = async (uri: string) => {
-    if (uri === (settings.rpc as string) || uri === (settings.rpc as Rpc).uri)
-      setRpc('DEFAULT');
+    //TODo bellow check & update
+    // if (uri === (settings.rpc as string) || uri === (settings.rpc as Rpc).uri)
+    //   setRpc('DEFAULT');
     await deleteCustomRpc(customRPCList, {uri});
     const updatedFullList = [...rpcFullList];
     setRpcFullList(updatedFullList.filter((removed) => removed.value !== uri));
@@ -181,9 +197,27 @@ const RpcNodes = ({
 
   const renderRpcItem = () => {
     return (
-      <>
-        <View style={styles.rpcItemContainer}>
-          <CustomDropdown
+      <View
+        style={{
+          width: '100%',
+        }}>
+        <View style={[styles.rpcItemContainer]}>
+          <DropdownModal
+            list={rpcFullList}
+            selected={typeof activeRpc === 'object' ? activeRpc.uri : activeRpc}
+            onSelected={(selected) => onHandleSetRPC(selected.value)}
+            additionalDropdowContainerStyle={[styles.dropdownSelector]}
+            //TODO add onRemove
+            dropdownIconScaledSize={styles.dropdownIconDimensions}
+            additionalOverlayStyle={{
+              paddingHorizontal: MARGINPADDING,
+            }}
+            additionalListExpandedContainerStyle={{
+              width: width * 0.79,
+            }}
+            // additionalDropdownIconColor={getColors(theme).iconBW}
+          />
+          {/* <CustomDropdown
             titleTranslationKey="settings.settings.add_rpc_title"
             behaviour="overlay"
             theme={theme}
@@ -194,7 +228,7 @@ const RpcNodes = ({
             additionalContainerStyle={styles.flex85}
             dropdownIconScaledSize={styles.dropdownIconDimensions}
             additionalDropdownIconColor={getColors(theme).iconBW}
-          />
+          /> */}
           <TouchableOpacity
             style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
             onPress={() => setShowAddCustomRPC(!showAddCustomRPC)}>
@@ -202,7 +236,7 @@ const RpcNodes = ({
           </TouchableOpacity>
         </View>
         {showAddCustomRPC && renderAddCustomRPC()}
-      </>
+      </View>
     );
   };
 
@@ -377,11 +411,23 @@ const RpcNodes = ({
     init();
   };
 
+  useEffect(() => {
+    console.log('About to set:', {switchRPCAuto}); //TODO remove line
+    AsyncStorage.setItem(
+      KeychainStorageKeyEnum.SWITCH_RPC_AUTO,
+      String(switchRPCAuto),
+    );
+    if (switchRPCAuto) setRpc('DEFAULT');
+  }, [switchRPCAuto]);
+
   return (
     <Background theme={theme}>
       <View style={styles.container}>
         <FocusAwareStatusBar />
-        <View>
+        <View
+          style={{
+            width: '100%',
+          }}>
           <Separator height={10} />
           {//@ts-ignore
           translate('settings.settings.disclaimer').map((disclaimer, i) => (
@@ -475,10 +521,10 @@ const RpcNodes = ({
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, width: number, height: number) =>
   StyleSheet.create({
     container: {
-      paddingHorizontal: 16,
+      paddingHorizontal: MARGINPADDING,
       flex: 1,
     },
     title: {marginBottom: 2, marginLeft: LABELINDENTSPACE},
@@ -520,16 +566,21 @@ const getStyles = (theme: Theme, height: number) =>
     },
     rpcItemContainer: {
       flexDirection: 'row',
-      width: '100%',
+      width: 'auto',
       justifyContent: 'space-between',
+      alignItems: 'center',
     },
-    rpcDropdown: {
-      width: '80%',
-      minHeight: 50,
-    },
+    //TODO bellow cleanup
+    // rpcDropdown: {
+    //   width: width * 0.3,
+    //   minHeight: 50,
+    // },
     flex85: {width: '80%'},
+    dropdownSelector: {
+      width: width * 0.79,
+    },
     addButton: {
-      minHeight: 50,
+      // minHeight: 50,
       alignItems: 'center',
       borderRadius: 30,
       paddingHorizontal: 0,
@@ -537,6 +588,7 @@ const getStyles = (theme: Theme, height: number) =>
       width: 50,
       height: 50,
       justifyContent: 'center',
+      marginBottom: 0,
     },
     flexRow: {
       flexDirection: 'row',

@@ -1,8 +1,8 @@
 import {Asset} from '@hiveio/dhive';
 import {Account} from 'actions/interfaces';
+import DropdownModal from 'components/form/DropdownModal';
 import OperationButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
-import UserDropdown from 'components/form/UserDropdown';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -20,6 +20,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
+import {MARGINPADDING} from 'src/styles/spacing';
 import {
   FontPoppinsName,
   body_primary_body_1,
@@ -194,16 +195,17 @@ const CreateAccountStepOne = ({
           <View style={styles.content}>
             {selectedAccount.length > 0 && accountOptions && (
               <>
-                <UserDropdown
+                <DropdownModal
                   list={accountOptions}
                   selected={accountOptions.find(
                     (item) => item.label === selectedAccount,
                   )}
-                  onSelected={(selectedAccount) => onSelected(selectedAccount)}
+                  onSelected={(selectedAccount) =>
+                    onSelected(selectedAccount.value)
+                  }
                   additionalDropdowContainerStyle={styles.dropdown}
-                  additionalModalWrapperFixedStyle={styles.dropdownModalWrapper}
-                  additionalModalContainerStyle={styles.dropdownModal}
-                  additionalRenderButtonElementStyle={styles.renderButton}
+                  additionalOverlayStyle={styles.paddingHorizontal}
+                  dropdownIconScaledSize={styles.icon}
                 />
               </>
             )}
@@ -304,24 +306,13 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     },
     dropdown: {
       width: '100%',
-      borderRadius: 22,
     },
-    dropdownModalWrapper: {
-      width: width,
-      top: 90 + 60 + 3,
-      right: 0,
+    paddingHorizontal: {
+      paddingHorizontal: MARGINPADDING,
     },
-    dropdownModal: {
-      width: width - 32,
-      alignSelf: 'center',
-      marginRight: 0,
-      borderRadius: 22,
-    },
-    renderButton: {
-      width: width - 32,
-      top: 85,
-      alignSelf: 'center',
-      marginRight: 0,
+    icon: {
+      width: 18,
+      height: 18,
     },
   });
 
