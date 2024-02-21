@@ -36,6 +36,7 @@ import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 import {FLOATINGBAR_ALLOWED_SCREENS} from './reference-data/FloatingScreenList';
 
 const Root = createStackNavigator<RootStackParam>();
+let rpc: string | undefined = '';
 
 const App = ({
   hasAccounts,

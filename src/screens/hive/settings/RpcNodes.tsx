@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
+import {setActiveRpc} from 'actions/active-rpc';
 import {Rpc} from 'actions/interfaces';
 import {setAccountHistoryRpc, setHiveEngineRpc, setRpc} from 'actions/settings';
 import {DropdownItem} from 'components/form/CustomDropdown';
@@ -58,6 +59,7 @@ const RpcNodes = ({
   setAccountHistoryRpc,
   activeHiveEngineRpc,
   activeAccountHistoryAPIRpc,
+  setActiveRpc,
 }: PropsFromRedux) => {
   //Hive RPC
   const [showAddCustomRPC, setShowAddCustomRPC] = useState(false);
@@ -192,6 +194,10 @@ const RpcNodes = ({
   };
 
   const onHandleSetRPC = (item: string) => {
+    //TODO bellow keep updating following ext.
+    setActiveRpc({
+      uri: item,
+    });
     setRpc(item);
   };
 
@@ -617,6 +623,7 @@ const connector = connect(mapStateToProps, {
   setRpc,
   setHiveEngineRpc,
   setAccountHistoryRpc,
+  setActiveRpc,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(RpcNodes);
