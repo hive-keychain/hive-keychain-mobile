@@ -39,6 +39,7 @@ import {
   AppStateStatus,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  ScrollView,
   SectionList,
   StyleSheet,
   Text,
@@ -115,6 +116,11 @@ const Main = ({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [lastScrollYValue, setLastScrollYValue] = useState(0);
+
+  //TODO bellow testing main scroll ref
+  // const [sectionListContainerYPos, setSectionListContainerYPos] = useState(0);
+  const mainScrollRef = useRef();
+  // const sectionListContainerRef = useRef();
 
   useEffect(() => {
     loadTokens();
@@ -321,10 +327,21 @@ const Main = ({
             tokensList={tokens}
             market={tokensMarket}
             toggled={toggled === item._id}
-            setToggle={() => {
+            setToggle={(yPosElement: number) => {
               if (toggled === item._id) setToggled(null);
               else setToggled(item._id);
-              handleClickToView(index, 1);
+              console.log('itemCliked !', {yPosElement}); //TODO remove line
+              //TODO cleanup & remove handleClickToView
+              // handleClickToView(index, 1);
+              //TODO bellow check if works moving the main scroll to a point.
+              if (mainScrollRef && mainScrollRef.current) {
+                // const finalPos = yPosElement + sectionListContainerYPos;
+                // console.log({finalPos, yPosElement, sectionListContainerYPos}); //TODO remove line
+                (mainScrollRef.current as any).scrollTo({
+                  x: 0,
+                  y: yPosElement,
+                });
+              }
             }}
           />
         );
@@ -333,13 +350,33 @@ const Main = ({
     },
   ];
 
+  // const _measure = () => {
+  //   if (sectionListContainerRef && sectionListContainerRef.current) {
+  //     (sectionListContainerRef.current as any).measureInWindow(
+  //       (pageX: any, pageY: any, width: any, height: any) => {
+  //         console.log('sectionListContainer meassures when onLayout: ', {
+  //           pageX,
+  //           pageY,
+  //           width,
+  //           height,
+  //         }); //TODO remove line
+  //         setSectionListContainerYPos(pageY);
+  //       },
+  //     );
+  //   }
+  // };
+
   return (
     <WalletPage
       additionalBgSvgImageStyle={
         !loadingUserAndGlobals ? {top: '15%'} : undefined
       }>
       {!loadingUserAndGlobals ? (
-        <View>
+        <ScrollView
+          //TODO bellow check if works using this as main scroll
+          ref={mainScrollRef}
+          onScrollEndDrag={onHandleEndScroll}
+          onScroll={onHandleScroll}>
           <Separator height={TOPCONTAINERSEPARATION} />
           <View style={{zIndex: 20}}>
             <View style={[styles.headerMenu]}>
@@ -414,99 +451,105 @@ const Main = ({
             <Separator />
           </View>
           {/* //end block */}
-          <SectionList
-            ref={sectionListRef}
-            onScrollEndDrag={onHandleEndScroll}
-            onScroll={onHandleScroll}
-            //@ts-ignore
-            sections={DATA}
-            keyExtractor={(item: any, index) =>
-              item.currency ? item.currency + index : item.symbol + index
-            }
-            renderItem={({section: {renderItem}, index}) => (
-              <View>{renderItem}</View>
-            )}
-            renderSectionHeader={({section: {title}}) =>
-              title === 'Currencies' ? (
-                <View style={[getCardStyle(theme).borderTopCard]}>
-                  <Separator height={25} />
-                </View>
-              ) : (
-                <View style={[getCardStyle(theme).wrapperCardItem]}>
-                  <View
-                    style={[
-                      styles.flexRow,
-                      isSearchOpen ? styles.paddingVertical : undefined,
-                    ]}>
-                    {isSearchOpen && (
-                      <CustomSearchBar
-                        theme={theme}
-                        value={searchValue}
-                        onChangeText={(text) => {
-                          setSearchValue(text);
-                        }}
-                        additionalContainerStyle={[
-                          styles.searchContainer,
-                          isSearchOpen ? styles.borderLight : undefined,
-                        ]}
-                        rightIcon={
-                          <Icon
-                            name={Icons.SEARCH}
-                            theme={theme}
-                            onClick={() => {
-                              setSearchValue('');
-                              setIsSearchOpen(false);
-                            }}
-                          />
-                        }
-                      />
-                    )}
-                    <HiveEngineLogo height={23} width={23} />
-                    <View style={styles.separatorContainer} />
-                    <Icon
-                      name={Icons.SEARCH}
-                      theme={theme}
-                      additionalContainerStyle={styles.search}
-                      onClick={() => {
-                        setIsSearchOpen(!isSearchOpen);
-                      }}
-                      width={18}
-                      height={18}
-                    />
-                    <Icon
-                      name={Icons.SETTINGS_2}
-                      theme={theme}
-                      onClick={handleClickSettings}
-                    />
+          <View
+          // ref={sectionListContainerRef}
+          // onLayout={_measure}
+          >
+            <SectionList
+              ref={sectionListRef}
+              //TODO check bellow. Commented while using a ScrollView as parent of all page.
+              // onScrollEndDrag={onHandleEndScroll}
+              // onScroll={onHandleScroll}
+              //@ts-ignore
+              sections={DATA}
+              keyExtractor={(item: any, index) =>
+                item.currency ? item.currency + index : item.symbol + index
+              }
+              renderItem={({section: {renderItem}, index}) => (
+                <View>{renderItem}</View>
+              )}
+              renderSectionHeader={({section: {title}}) =>
+                title === 'Currencies' ? (
+                  <View style={[getCardStyle(theme).borderTopCard]}>
+                    <Separator height={25} />
                   </View>
-                </View>
-              )
-            }
-            ListFooterComponent={
-              <>
-                {userTokens.loading &&
-                  filteredUserTokenBalanceList.length === 0 && (
-                    <View style={styles.extraContainerMiniLoader}>
-                      <Loader size={'small'} animating />
-                    </View>
-                  )}
-                {!userTokens.loading &&
-                  filteredUserTokenBalanceList.length === 0 && (
+                ) : (
+                  <View style={[getCardStyle(theme).wrapperCardItem]}>
                     <View
                       style={[
-                        getCardStyle(theme).filledWrapper,
-                        styles.filledWrapper,
+                        styles.flexRow,
+                        isSearchOpen ? styles.paddingVertical : undefined,
                       ]}>
-                      <Text style={styles.no_tokens}>
-                        {translate('wallet.no_tokens')}
-                      </Text>
+                      {isSearchOpen && (
+                        <CustomSearchBar
+                          theme={theme}
+                          value={searchValue}
+                          onChangeText={(text) => {
+                            setSearchValue(text);
+                          }}
+                          additionalContainerStyle={[
+                            styles.searchContainer,
+                            isSearchOpen ? styles.borderLight : undefined,
+                          ]}
+                          rightIcon={
+                            <Icon
+                              name={Icons.SEARCH}
+                              theme={theme}
+                              onClick={() => {
+                                setSearchValue('');
+                                setIsSearchOpen(false);
+                              }}
+                            />
+                          }
+                        />
+                      )}
+                      <HiveEngineLogo height={23} width={23} />
+                      <View style={styles.separatorContainer} />
+                      <Icon
+                        name={Icons.SEARCH}
+                        theme={theme}
+                        additionalContainerStyle={styles.search}
+                        onClick={() => {
+                          setIsSearchOpen(!isSearchOpen);
+                        }}
+                        width={18}
+                        height={18}
+                      />
+                      <Icon
+                        name={Icons.SETTINGS_2}
+                        theme={theme}
+                        onClick={handleClickSettings}
+                      />
                     </View>
-                  )}
-              </>
-            }
-          />
+                  </View>
+                )
+              }
+              ListFooterComponent={
+                <>
+                  {userTokens.loading &&
+                    filteredUserTokenBalanceList.length === 0 && (
+                      <View style={styles.extraContainerMiniLoader}>
+                        <Loader size={'small'} animating />
+                      </View>
+                    )}
+                  {!userTokens.loading &&
+                    filteredUserTokenBalanceList.length === 0 && (
+                      <View
+                        style={[
+                          getCardStyle(theme).filledWrapper,
+                          styles.filledWrapper,
+                        ]}>
+                        <Text style={styles.no_tokens}>
+                          {translate('wallet.no_tokens')}
+                        </Text>
+                      </View>
+                    )}
+                </>
+              }
+            />
+          </View>
           <View style={getCardStyle(theme).filledWrapper} />
-        </View>
+        </ScrollView>
       ) : (
         <Loader animatedLogo />
       )}

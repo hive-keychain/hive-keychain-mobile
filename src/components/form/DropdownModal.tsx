@@ -209,7 +209,6 @@ const DropdownModal = ({
     if (dropdownContainerRef && dropdownContainerRef?.current) {
       (dropdownContainerRef.current as any).measureInWindow(
         (pageX: any, pageY: any, width: any, height: any) => {
-          console.log('Self meassures: ', {pageX, pageY, width, height});
           setDropdownPageY(pageY);
         },
       );

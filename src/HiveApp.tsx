@@ -51,11 +51,11 @@ const App = ({
   setSwitchToRpc,
   hiveEngineRpc,
   accountHistoryAPIRpc,
-  newActiveRpc,
+  rpc,
 }: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
-  console.log({newActiveRpc}); //TODO remove line
+  console.log({activeRpc}); //TODO remove line
   useEffect(() => {
     initColorAPI();
     showFloatingBar(false);
@@ -86,12 +86,16 @@ const App = ({
     HiveEngineConfigUtils.setActiveAccountHistoryApi(
       accountHistoryAPIRpc ?? DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
     );
-    setRpc(activeRpc);
-    if (getRPCUri(activeRpc) !== 'DEFAULT') {
-      checkCurrentRPC(getRPCUri(activeRpc));
+    setRpc(rpc);
+    if (getRPCUri(rpc) !== 'DEFAULT') {
+      checkCurrentRPC(getRPCUri(rpc));
     }
-  }, [activeRpc]);
-
+  }, [rpc]);
+  //TODO important here:
+  //  - implement activeRpc.
+  //  - remove default from src/utils/hive.ts
+  //  - apply in all the app the use of activeRpc instead of settings.rpc
+  //  - check & update rpc nodes settings using activeRpc.
   const checkCurrentRPC = async (currentRPCUri: string) => {
     try {
       const rpcStatusOK = await checkRpcStatus(currentRPCUri);
@@ -169,8 +173,8 @@ const mapStateToProps = (state: RootState) => {
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
-    activeRpc: state.settings.rpc,
-    newActiveRpc: state.activeRpc,
+    rpc: state.settings.rpc,
+    activeRpc: state.activeRpc,
     accounts: state.accounts,
     requestedOp: state.hiveUri.operation,
     rpcSwitcher: state.rpcSwitcher,
