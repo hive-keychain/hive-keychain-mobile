@@ -48,6 +48,7 @@ interface Props {
   list: DropdownItem[];
   selected: string | DropdownItem;
   onSelected: (itemValue: DropdownItem) => void;
+  onRemove?: (item: string) => void;
   additionalTextStyle?: StyleProp<TextStyle>;
   additionalTitleTextStyle?: StyleProp<TextStyle>;
   dropdownIconScaledSize?: Dimensions;
@@ -61,6 +62,7 @@ interface Props {
   bottomLabelInfo?: string;
   showSelectedIcon?: JSX.Element;
   copyButtonValue?: boolean;
+  selectedBgColor?: string;
 }
 
 const DropdownModal = ({
@@ -80,6 +82,8 @@ const DropdownModal = ({
   additionalListExpandedContainerStyle,
   showSelectedIcon,
   copyButtonValue,
+  selectedBgColor,
+  onRemove,
 }: Props) => {
   const dropdownContainerRef = useRef();
   const [dropdownPageY, setDropdownPageY] = useState(0);
@@ -149,24 +153,60 @@ const DropdownModal = ({
 
   const renderDropdownItem = (item: DropdownItem, index: number) => {
     const isLastItem = index === list.length - 1;
-    console.log({item}); //TODO remove line
+    console.log({item, selected}); //TODO remove line
+    const showSelectedBgOnItem = selectedBgColor && selected === item.value;
     return (
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => onHandleSelectedItem(item)}
         style={[
           styles.dropdownItem,
+          showSelectedBgOnItem
+            ? {
+                backgroundColor: selectedBgColor,
+                borderRadius: 10,
+                paddingVertical: 8,
+              }
+            : null,
           isLastItem ? {paddingBottom: 20} : undefined,
         ]}>
         {item.icon}
         <View
-          style={{
-            flexDirection: 'row',
-            alignSelf: 'flex-end',
-          }}>
-          <Text style={[styles.textBase, styles.smallerText]}>
+          style={[
+            {
+              //TODO bellow add all inline styles to getStyles.
+              flexDirection: 'row',
+              // alignSelf: 'flex-end',
+              justifyContent: 'space-between',
+              width: item.removable ? '100%' : 'auto',
+            },
+            selectedBgColor
+              ? {
+                  paddingHorizontal: 10,
+                  alignContent: 'space-between',
+                }
+              : null,
+          ]}>
+          <Text
+            style={[
+              styles.textBase,
+              styles.smallerText,
+              showSelectedBgOnItem
+                ? {
+                    color: 'white',
+                  }
+                : null,
+            ]}>
             {item.label}
           </Text>
+          {item.removable && (
+            <Icon
+              theme={theme}
+              name={Icons.REMOVE}
+              //TODO bellow finish onRemove
+              onClick={() => onRemove(item.value)}
+            />
+          )}
           {typeof item === 'object' ? renderCopyOrSelectedIcon(item) : null}
         </View>
       </TouchableOpacity>
@@ -273,6 +313,12 @@ const DropdownModal = ({
                 getCardStyle(theme).defaultCardItem,
                 styles.dropdownListContainer,
                 additionalListExpandedContainerStyle,
+                selectedBgColor
+                  ? {
+                      paddingHorizontal: 4,
+                      paddingVertical: 6,
+                    }
+                  : null,
               ]}
               data={filteredDropdownList}
               keyExtractor={(item) => item.label}

@@ -87,6 +87,8 @@ const RpcNodes = ({
   };
 
   //TODO bellow check & fix
+  //  - it seems that having a condition to render the rpcList is making the list not to update
+  //    properly. Check!
   // useEffect(() => {
   //   if (switchRPCAuto) {
   //     if (typeof activeRpc === 'object' && activeRpc.uri !== 'DEFAULT') {
@@ -169,6 +171,7 @@ const RpcNodes = ({
         setCustomRPCSetActive(false);
         setShowAddCustomRPC(false);
         setCustomRPC(DEFAULT_CUSTOM_RPC);
+        init();
         SimpleToast.show(
           translate('toast.rpc_node_added_success'),
           SimpleToast.LONG,
@@ -212,8 +215,9 @@ const RpcNodes = ({
             list={rpcFullList}
             selected={typeof activeRpc === 'object' ? activeRpc.uri : activeRpc}
             onSelected={(selected) => onHandleSetRPC(selected.value)}
+            onRemove={(item) => handleOnRemoveCustomRPC(item)}
             additionalDropdowContainerStyle={[styles.dropdownSelector]}
-            //TODO add onRemove
+            //TODO important add onRemove
             dropdownIconScaledSize={styles.dropdownIconDimensions}
             additionalOverlayStyle={{
               paddingHorizontal: MARGINPADDING,
@@ -221,7 +225,7 @@ const RpcNodes = ({
             additionalListExpandedContainerStyle={{
               width: width * 0.79,
             }}
-            // additionalDropdownIconColor={getColors(theme).iconBW}
+            selectedBgColor={PRIMARY_RED_COLOR}
           />
           {/* <CustomDropdown
             titleTranslationKey="settings.settings.add_rpc_title"
@@ -472,6 +476,7 @@ const RpcNodes = ({
         </View>
         <ScrollView>
           {hiveEngineRPCList.length > 0 && (
+            //TODO bellow, update AddCustomRPC to use DropdownModal as well, test.
             <AddCustomRPC
               titleTranslationKey="settings.settings.hive_engine_rpc"
               theme={theme}
