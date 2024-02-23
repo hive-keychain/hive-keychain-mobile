@@ -30,7 +30,11 @@ import {
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {LABELINDENTSPACE, MARGINPADDING} from 'src/styles/spacing';
+import {
+  LABELINDENTSPACE,
+  MARGINLEFTRIGHTMIN,
+  MARGINPADDING,
+} from 'src/styles/spacing';
 import {
   body_primary_body_2,
   getFontSizeSmallDevices,
@@ -65,7 +69,7 @@ const RpcNodes = ({
   const [showAddCustomRPC, setShowAddCustomRPC] = useState(false);
   const [customRPCSetActive, setCustomRPCSetActive] = useState<boolean>(false);
   const [customRPC, setCustomRPC] = useState<Rpc>(DEFAULT_CUSTOM_RPC);
-  const [switchRPCAuto, setSwitchRPCAuto] = useState(true);
+  const [switchRPCAuto, setSwitchRPCAuto] = useState(false);
   const [rpcFullList, setRpcFullList] = useState<DropdownItem[]>([]);
   const [customRPCList, setCustomRPCList] = useState<Rpc[]>([]);
 
@@ -75,7 +79,7 @@ const RpcNodes = ({
 
   useEffect(() => {
     init();
-    initSwitchAuto();
+    // initSwitchAuto();
   }, []);
 
   const initSwitchAuto = async () => {
@@ -86,9 +90,7 @@ const RpcNodes = ({
     );
   };
 
-  //TODO bellow check & fix
-  //  - it seems that having a condition to render the rpcList is making the list not to update
-  //    properly. Check!
+  //TODO bellow see if needed at all
   // useEffect(() => {
   //   if (switchRPCAuto) {
   //     if (typeof activeRpc === 'object' && activeRpc.uri !== 'DEFAULT') {
@@ -116,13 +118,12 @@ const RpcNodes = ({
   };
 
   const init = async () => {
-    //TODO bellow cleanup
     //init Hive RPCs
-    // if (typeof settings.rpc === 'object') {
-    //   if (settings.rpc.uri === 'DEFAULT') setSwitchRPCAuto(true);
-    // } else if (typeof settings.rpc === 'string') {
-    //   if (settings.rpc === 'DEFAULT') setSwitchRPCAuto(true);
-    // }
+    if (typeof settings.rpc === 'object') {
+      if (settings.rpc.uri === 'DEFAULT') setSwitchRPCAuto(true);
+    } else if (typeof settings.rpc === 'string') {
+      if (settings.rpc === 'DEFAULT') setSwitchRPCAuto(true);
+    }
     const customRPCs = await getCustomRpcs();
     setCustomRPCList(customRPCs);
     const finalDropdownRpcList = [
@@ -188,19 +189,19 @@ const RpcNodes = ({
   };
 
   const handleOnRemoveCustomRPC = async (uri: string) => {
-    //TODo bellow check & update
-    // if (uri === (settings.rpc as string) || uri === (settings.rpc as Rpc).uri)
-    //   setRpc('DEFAULT');
+    if (uri === (settings.rpc as string) || uri === (settings.rpc as Rpc).uri)
+      setRpc('DEFAULT');
     await deleteCustomRpc(customRPCList, {uri});
     const updatedFullList = [...rpcFullList];
     setRpcFullList(updatedFullList.filter((removed) => removed.value !== uri));
   };
 
   const onHandleSetRPC = (item: string) => {
-    //TODO bellow keep updating following ext.
-    setActiveRpc({
-      uri: item,
-    });
+    //TODO bellow keep updating after implementing activeRpc in hiveApp, following ext.
+    console.log('onHandleSetRPC', {item}); //TODO remove line
+    // setActiveRpc({
+    //   uri: item,
+    // });
     setRpc(item);
   };
 
@@ -217,7 +218,6 @@ const RpcNodes = ({
             onSelected={(selected) => onHandleSetRPC(selected.value)}
             onRemove={(item) => handleOnRemoveCustomRPC(item)}
             additionalDropdowContainerStyle={[styles.dropdownSelector]}
-            //TODO important add onRemove
             dropdownIconScaledSize={styles.dropdownIconDimensions}
             additionalOverlayStyle={{
               paddingHorizontal: MARGINPADDING,
@@ -227,18 +227,6 @@ const RpcNodes = ({
             }}
             selectedBgColor={PRIMARY_RED_COLOR}
           />
-          {/* <CustomDropdown
-            titleTranslationKey="settings.settings.add_rpc_title"
-            behaviour="overlay"
-            theme={theme}
-            list={rpcFullList}
-            selected={typeof activeRpc === 'object' ? activeRpc.uri : activeRpc}
-            onSelected={onHandleSetRPC}
-            onRemove={(item) => handleOnRemoveCustomRPC(item)}
-            additionalContainerStyle={styles.flex85}
-            dropdownIconScaledSize={styles.dropdownIconDimensions}
-            additionalDropdownIconColor={getColors(theme).iconBW}
-          /> */}
           <TouchableOpacity
             style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
             onPress={() => setShowAddCustomRPC(!showAddCustomRPC)}>
@@ -422,7 +410,6 @@ const RpcNodes = ({
   };
 
   useEffect(() => {
-    console.log('About to set:', {switchRPCAuto}); //TODO remove line
     AsyncStorage.setItem(
       KeychainStorageKeyEnum.SWITCH_RPC_AUTO,
       String(switchRPCAuto),
@@ -476,13 +463,10 @@ const RpcNodes = ({
         </View>
         <ScrollView>
           {hiveEngineRPCList.length > 0 && (
-            //TODO bellow, update AddCustomRPC to use DropdownModal as well, test.
             <AddCustomRPC
-              titleTranslationKey="settings.settings.hive_engine_rpc"
               theme={theme}
               rpcList={hiveEngineRPCList}
               selectedRPC={cleanRpcLabel(activeHiveEngineRpc)}
-              title={translate('settings.settings.hive_engine_rpc')}
               placeHolderInput={translate('settings.settings.new_HE_rpc')}
               input={newHERpc}
               onChangeInput={(text) => setNewHERpc(text)}
@@ -494,18 +478,13 @@ const RpcNodes = ({
               setAddNewRpc={() => setAddNewHERpc(!addNewHERpc)}
               onRemoveDropdownItem={onHandleRemoveCustomHERpc}
               onSelectedDropdown={onHandleSelectHERpc}
-              dropdownIconScaledSize={styles.dropdownIconDimensions}
             />
           )}
           {accountHistoryAPIList.length > 0 && (
             <AddCustomRPC
-              titleTranslationKey="settings.settings.hive_engine_account_history_api"
               theme={theme}
               rpcList={accountHistoryAPIList}
               selectedRPC={cleanRpcLabel(activeAccountHistoryAPIRpc)}
-              title={translate(
-                'settings.settings.hive_engine_account_history_api',
-              )}
               placeHolderInput={translate(
                 'settings.settings.new_account_history_rpc',
               )}
@@ -523,7 +502,6 @@ const RpcNodes = ({
               }
               onRemoveDropdownItem={onHandleRemoveAccountHistoryAPI}
               onSelectedDropdown={onHandleSelectAccountHistoryAPI}
-              dropdownIconScaledSize={styles.dropdownIconDimensions}
             />
           )}
         </ScrollView>
@@ -580,18 +558,12 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       width: 'auto',
       justifyContent: 'space-between',
       alignItems: 'center',
+      marginBottom: MARGINLEFTRIGHTMIN,
     },
-    //TODO bellow cleanup
-    // rpcDropdown: {
-    //   width: width * 0.3,
-    //   minHeight: 50,
-    // },
-    flex85: {width: '80%'},
     dropdownSelector: {
       width: width * 0.79,
     },
     addButton: {
-      // minHeight: 50,
       alignItems: 'center',
       borderRadius: 30,
       paddingHorizontal: 0,
@@ -612,7 +584,6 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     input: {
       marginHorizontal: 0,
     },
-    button: {marginBottom: 20},
     dropdownIconDimensions: {width: 15, height: 15},
   });
 

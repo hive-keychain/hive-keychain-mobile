@@ -1,4 +1,5 @@
-import CustomDropdown, {DropdownItem} from 'components/form/CustomDropdown';
+import {DropdownItem} from 'components/form/CustomDropdown';
+import DropdownModal from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
@@ -15,19 +16,17 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {LABELINDENTSPACE} from 'src/styles/spacing';
+import {MARGINLEFTRIGHTMIN, MARGINPADDING} from 'src/styles/spacing';
 import {
   body_primary_body_2,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 interface Props {
   theme: Theme;
   rpcList: DropdownItem[];
   selectedRPC: string;
-  title: string;
   placeHolderInput: string;
   checkBoxTitle: string;
   onHandleSave: () => void;
@@ -39,15 +38,11 @@ interface Props {
   setAddNewRpc: () => void;
   onRemoveDropdownItem: (item: string) => void;
   onSelectedDropdown: (item: string) => void;
-  titleTranslationKey?: string;
-  dropdownIconScaledSize?: Dimensions;
 }
-
 const AddCustomRPC = ({
   theme,
   rpcList,
   selectedRPC,
-  title,
   placeHolderInput,
   checkBoxTitle,
   onHandleSave,
@@ -59,26 +54,31 @@ const AddCustomRPC = ({
   setAddNewRpc,
   onRemoveDropdownItem,
   onSelectedDropdown,
-  titleTranslationKey,
-  dropdownIconScaledSize,
 }: Props) => {
-  const styles = getStyles(theme, useWindowDimensions().height);
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, width, height);
   return (
-    <View>
-      <Text style={[styles.text, styles.title]}>{title}</Text>
+    <View
+      style={{
+        alignItems: 'center',
+        alignContent: 'center',
+        width: '100%',
+      }}>
       <View style={styles.rpcItemContainer}>
-        <CustomDropdown
-          titleTranslationKey={titleTranslationKey}
-          behaviour="overlay"
-          theme={theme}
+        <DropdownModal
           list={rpcList}
           selected={selectedRPC ?? rpcList[0].value}
-          onSelected={onSelectedDropdown}
+          onSelected={(selectedItem) => onSelectedDropdown(selectedItem.value)}
           onRemove={onRemoveDropdownItem}
-          additionalContainerStyle={styles.flex85}
-          keyExtractor="label"
-          dropdownIconScaledSize={dropdownIconScaledSize}
-          additionalDropdownIconColor={getColors(theme).iconBW}
+          additionalDropdowContainerStyle={[styles.dropdownSelector]}
+          dropdownIconScaledSize={styles.dropdownIconDimensions}
+          additionalOverlayStyle={{
+            paddingHorizontal: MARGINPADDING,
+          }}
+          additionalListExpandedContainerStyle={{
+            width: width * 0.79,
+          }}
+          selectedBgColor={PRIMARY_RED_COLOR}
         />
         <TouchableOpacity
           style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
@@ -125,11 +125,12 @@ const AddCustomRPC = ({
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, width: number, height: number) =>
   StyleSheet.create({
     flexRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      width: 'auto',
     },
     bottomLine: {
       marginVertical: 8,
@@ -140,11 +141,11 @@ const getStyles = (theme: Theme, height: number) =>
       ...body_primary_body_2,
       fontSize: getFontSizeSmallDevices(height, 15),
     },
-    title: {marginBottom: 2, marginLeft: LABELINDENTSPACE},
     rpcItemContainer: {
       flexDirection: 'row',
       width: '100%',
       justifyContent: 'space-between',
+      marginBottom: MARGINLEFTRIGHTMIN,
     },
     addButton: {
       alignItems: 'center',
@@ -154,10 +155,12 @@ const getStyles = (theme: Theme, height: number) =>
       paddingVertical: 0,
       width: 50,
       height: 50,
+      alignSelf: 'center',
+      marginBottom: 0,
     },
-    flex85: {width: '80%'},
     input: {
       marginHorizontal: 0,
+      width: '100%',
     },
     checkBox: {
       width: '100%',
@@ -167,6 +170,10 @@ const getStyles = (theme: Theme, height: number) =>
       borderWidth: 0,
       alignContent: 'center',
     },
+    dropdownSelector: {
+      width: width * 0.79,
+    },
+    dropdownIconDimensions: {width: 15, height: 15},
   });
 
 export default AddCustomRPC;

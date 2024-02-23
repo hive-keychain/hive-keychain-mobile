@@ -92,7 +92,6 @@ const DropdownModal = ({
   const [filteredDropdownList, setFilteredDropdownList] = useState<
     DropdownItem[]
   >(list);
-
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
 
@@ -109,7 +108,7 @@ const DropdownModal = ({
     } else {
       setFilteredDropdownList(list);
     }
-  }, [searchValue]);
+  }, [searchValue, list]);
 
   const onHandleSelectedItem = (item: DropdownItem) => {
     onSelected(item);
@@ -153,58 +152,54 @@ const DropdownModal = ({
 
   const renderDropdownItem = (item: DropdownItem, index: number) => {
     const isLastItem = index === list.length - 1;
-    console.log({item, selected}); //TODO remove line
-    const showSelectedBgOnItem = selectedBgColor && selected === item.value;
+    const showSelectedBgOnItem =
+      selectedBgColor && (selected === item.value || selected === item.label);
+    const bgStyle = showSelectedBgOnItem
+      ? ({
+          backgroundColor: selectedBgColor,
+          borderRadius: 10,
+          paddingVertical: 8,
+          alignItems: 'center',
+        } as ViewStyle)
+      : null;
+    const innerContainerStyle = {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: item.removable ? '100%' : 'auto',
+      alignItems: 'center',
+      alignContent: 'center',
+    } as ViewStyle;
+    const innerContainerBgStyle = selectedBgColor
+      ? ({
+          paddingHorizontal: 10,
+          alignContent: 'space-between',
+        } as ViewStyle)
+      : null;
+    const labelTextStyle = showSelectedBgOnItem
+      ? ({
+          color: 'white',
+        } as ViewStyle)
+      : null;
     return (
       <TouchableOpacity
         activeOpacity={1}
         onPress={() => onHandleSelectedItem(item)}
         style={[
           styles.dropdownItem,
-          showSelectedBgOnItem
-            ? {
-                backgroundColor: selectedBgColor,
-                borderRadius: 10,
-                paddingVertical: 8,
-              }
-            : null,
+          bgStyle,
           isLastItem ? {paddingBottom: 20} : undefined,
         ]}>
         {item.icon}
-        <View
-          style={[
-            {
-              //TODO bellow add all inline styles to getStyles.
-              flexDirection: 'row',
-              // alignSelf: 'flex-end',
-              justifyContent: 'space-between',
-              width: item.removable ? '100%' : 'auto',
-            },
-            selectedBgColor
-              ? {
-                  paddingHorizontal: 10,
-                  alignContent: 'space-between',
-                }
-              : null,
-          ]}>
-          <Text
-            style={[
-              styles.textBase,
-              styles.smallerText,
-              showSelectedBgOnItem
-                ? {
-                    color: 'white',
-                  }
-                : null,
-            ]}>
+        <View style={[innerContainerStyle, innerContainerBgStyle]}>
+          <Text style={[styles.textBase, styles.smallerText, labelTextStyle]}>
             {item.label}
           </Text>
           {item.removable && (
             <Icon
               theme={theme}
               name={Icons.REMOVE}
-              //TODO bellow finish onRemove
               onClick={() => onRemove(item.value)}
+              color={showSelectedBgOnItem ? 'white' : PRIMARY_RED_COLOR}
             />
           )}
           {typeof item === 'object' ? renderCopyOrSelectedIcon(item) : null}
@@ -323,7 +318,10 @@ const DropdownModal = ({
               data={filteredDropdownList}
               keyExtractor={(item) => item.label}
               renderItem={(item) => renderDropdownItem(item.item, item.index)}
-              //TODO bellow add if empty
+              contentContainerStyle={{
+                alignContent: 'center',
+              }}
+              //TODO bellow add if empty when needed
               // ListEmptyComponent={renderEmpty}
             />
           </>
@@ -332,7 +330,7 @@ const DropdownModal = ({
     </>
   );
 };
-//TODO bellow cleanup
+
 const getStyles = (
   dropdownPageY: number,
   width: number,
