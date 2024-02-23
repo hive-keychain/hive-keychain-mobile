@@ -1,5 +1,6 @@
 import {Account} from 'actions/interfaces';
-import CustomDropdown, {DropdownItem} from 'components/form/CustomDropdown';
+import {DropdownItem} from 'components/form/CustomDropdown';
+import DropdownModal from 'components/form/DropdownModal';
 import {PickerItemInterface} from 'components/form/PickerItem';
 import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
@@ -46,11 +47,10 @@ export default ({username, accounts, account, setAccount}: Props) => {
     />
   ) : (
     <View style={styles.container}>
-      <CustomDropdown
-        theme={theme}
+      <DropdownModal
         list={getListFromAccount()}
         selected={getItemDropDownSelected(account)}
-        onSelected={(selectedAccount) => setAccount(selectedAccount)}
+        onSelected={(selectedAccount) => setAccount(selectedAccount.value)}
       />
       <Separator />
     </View>
@@ -59,7 +59,7 @@ export default ({username, accounts, account, setAccount}: Props) => {
 
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
-    container: {width: '100%', marginTop: -30, marginBottom: 10},
+    container: {width: '100%', marginTop: -30, marginBottom: 10, height: 60},
     avatar: {width: 25, height: 25, borderRadius: 50},
     dropdownContainer: {
       width: 'auto',
