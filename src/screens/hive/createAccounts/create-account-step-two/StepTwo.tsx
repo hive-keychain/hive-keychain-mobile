@@ -24,7 +24,6 @@ import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {
   body_primary_body_2,
   button_link_primary_small,
-  fields_primary_text_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {
@@ -403,7 +402,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     },
     text: {
       color: getColors(theme).secondaryText,
-      ...fields_primary_text_2,
+      ...button_link_primary_small,
     },
     opacity: {
       opacity: 0.7,
