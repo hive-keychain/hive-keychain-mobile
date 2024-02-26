@@ -23,7 +23,7 @@ import {
   button_link_primary_medium,
   button_link_primary_small,
   getFontSizeSmallDevices,
-  headlines_primary_headline_2,
+  headlines_primary_headline_3,
 } from 'src/styles/typography';
 import {TokenHistoryFilter} from 'src/types/tokens.history.types';
 import {WalletHistoryFilter} from 'src/types/wallet.history.types';
@@ -133,7 +133,7 @@ const FilterBox = ({
             styles.filterSearchText,
           ]}
         />
-        <View style={styles.filterItemContainer}>
+        <View style={[styles.filterItemContainer]}>
           {Object.keys(filter.selectedTransactionTypes).map((filterKey) => {
             return (
               <TouchableOpacity
@@ -155,13 +155,15 @@ const FilterBox = ({
           })}
         </View>
       </View>
-      <Separator drawLine additionalLineStyle={styles.line} />
-      <Separator height={18} />
+      <Separator drawLine height={8} additionalLineStyle={styles.line} />
       <View style={styles.inOutContainer}>
         <TouchableOpacity
           style={[
             styles.filterItem,
             getActiveContainerStyleInOrOut('inSelected'),
+            {
+              width: 70,
+            },
           ]}
           onPress={() => toggleFilterIn()}>
           <Text
@@ -176,6 +178,9 @@ const FilterBox = ({
           style={[
             styles.filterItem,
             getActiveContainerStyleInOrOut('outSelected'),
+            {
+              width: 70,
+            },
           ]}
           onPress={() => toggleFilterOut()}>
           <Text
@@ -237,11 +242,11 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
     headerText: {
       marginVertical: 8,
       textAlign: 'center',
-      ...headlines_primary_headline_2,
+      ...headlines_primary_headline_3,
       color: getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(
         height,
-        {...headlines_primary_headline_2}.fontSize,
+        {...headlines_primary_headline_3}.fontSize,
       ),
     },
     searchBarContainer: {
@@ -250,7 +255,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       width: '100%',
       borderColor: getColors(theme).tertiaryCardBorderColor,
       marginBottom: 10,
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 35 : 60,
+      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 35 : 50,
     },
     itemContainer: {
       justifyContent: 'center',
@@ -265,9 +270,10 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       borderColor: getColors(theme).tertiaryCardBorderColor,
       borderWidth: 1,
       borderRadius: 18.8,
-      marginRight: 8,
-      marginBottom: 8,
-      minWidth: 100,
+      marginRight: 4,
+      marginBottom: 4,
+      width: 'auto',
+      minHeight: 40,
     },
     filterItemText: {
       textAlign: 'center',
@@ -275,22 +281,22 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       ...button_link_primary_small,
       lineHeight: 14.7,
       color: getColors(theme).secondaryText,
-      fontSize: getFontSizeSmallDevices(
-        height,
-        {...button_link_primary_small}.fontSize,
-      ),
+      fontSize: getFontSizeSmallDevices(height, 12),
     },
     line: {
-      height: 1,
-      borderEndWidth: 0.5,
-      borderBottomColor: getColors(theme).tertiaryCardBorderColor,
+      height: 0,
       width: '88%',
       alignSelf: 'center',
+      margin: 0,
+      marginVertical: 8,
+      borderWidth: 0.4,
+      borderColor: getColors(theme).tertiaryCardBorderColor,
     },
     inOutContainer: {
       flexDirection: 'row',
       flexWrap: 'wrap',
       paddingHorizontal: 18,
+      justifyContent: 'center',
     },
     warningProceedButton: {
       backgroundColor: PRIMARY_RED_COLOR,

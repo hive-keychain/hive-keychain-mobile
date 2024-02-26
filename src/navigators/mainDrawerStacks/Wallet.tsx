@@ -20,7 +20,7 @@ import {
   SMALLEST_SCREEN_HEIGHT_SUPPORTED,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {Width} from 'utils/common.types';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 
@@ -29,7 +29,7 @@ const Stack = createStackNavigator();
 export default () => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-  const styles = getStyles({width}, theme, useSafeAreaInsets());
+  const styles = getStyles({width, height}, theme, useSafeAreaInsets());
 
   return (
     <Stack.Navigator>
@@ -128,7 +128,11 @@ export default () => {
   );
 };
 
-const getStyles = ({width}: Width, theme: Theme, insets: EdgeInsets) =>
+const getStyles = (
+  {width, height}: Dimensions,
+  theme: Theme,
+  insets: EdgeInsets,
+) =>
   StyleSheet.create({
     noStyle: {
       height: 0,
@@ -156,7 +160,7 @@ const getStyles = ({width}: Width, theme: Theme, insets: EdgeInsets) =>
       right: 10,
     },
     modalContainer: {
-      width: '80%',
+      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? '90%' : '70%',
       alignSelf: 'flex-end',
       backgroundColor: 'none',
       borderWidth: 0,

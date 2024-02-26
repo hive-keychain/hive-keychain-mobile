@@ -57,6 +57,11 @@ export const headlines_primary_headline_2: TextStyle = {
   fontFamily: FontPoppinsName.SEMI_BOLD,
 };
 
+export const headlines_primary_headline_3: TextStyle = {
+  fontSize: 18,
+  fontFamily: FontPoppinsName.SEMI_BOLD,
+};
+
 export const body_primary_body_1: TextStyle = {
   fontSize: 15,
   fontFamily: FontPoppinsName.MEDIUM,
