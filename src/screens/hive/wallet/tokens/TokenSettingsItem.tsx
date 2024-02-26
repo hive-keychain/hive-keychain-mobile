@@ -77,13 +77,6 @@ const TokenSettingsItem = ({
       key={token.symbol}>
       <View style={[styles.item]}>
         <Text style={[styles.textBase, styles.title]}>{token.name}</Text>
-        <CheckBox
-          checked={checkedValue}
-          onPress={setChecked}
-          containerStyle={[styles.checkbox]}
-          checkedColor={PRIMARY_RED_COLOR}
-          size={22}
-        />
       </View>
       <>
         <View style={styles.row}>
@@ -94,22 +87,35 @@ const TokenSettingsItem = ({
             ]}>
             {logo}
           </View>
-          <View>
-            <Text>
-              <Text style={styles.textBase}>{token.symbol} </Text>
-              <Text style={styles.textBase}>
-                {translate('wallet.operations.token_settings.issued_by')}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <CheckBox
+              checked={checkedValue}
+              onPress={setChecked}
+              containerStyle={[styles.checkbox]}
+              checkedColor={PRIMARY_RED_COLOR}
+              size={22}
+            />
+            <View>
+              <Text>
+                <Text style={styles.textBase}>{token.symbol} </Text>
+                <Text style={styles.textBase}>
+                  {translate('wallet.operations.token_settings.issued_by')}
+                </Text>
               </Text>
               <Text style={styles.textBase}>
                 {' @'}
                 {token.issuer}
               </Text>
-            </Text>
-            <Text style={styles.textBase}>
-              {nFormatter(parseFloat(token.circulatingSupply), 3)}
-              {'/'}
-              {nFormatter(parseFloat(token.maxSupply), 3)}
-            </Text>
+              <Text style={styles.textBase}>
+                {nFormatter(parseFloat(token.circulatingSupply), 3)}
+                {'/'}
+                {nFormatter(parseFloat(token.maxSupply), 3)}
+              </Text>
+            </View>
           </View>
         </View>
       </>
