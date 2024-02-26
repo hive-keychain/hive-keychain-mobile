@@ -1,4 +1,5 @@
-import CustomPicker from 'components/form/CustomPicker';
+import {DropdownItem} from 'components/form/CustomDropdown';
+import DropdownModal from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
@@ -40,6 +41,13 @@ export enum SessionTime {
   WEEK = '1 Week',
   MONTH = '1 Month',
 }
+
+const SESSION_LIST = [
+  SessionTime.HOUR,
+  SessionTime.DAY,
+  SessionTime.WEEK,
+  SessionTime.MONTH,
+];
 
 const HASAuthRequest = ({data, accounts, navigation}: Props) => {
   const [success, setSuccess] = useState(false);
@@ -105,19 +113,17 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
             <Text style={[styles.text, styles.italic]}>
               {translate('wallet.has.session.prompt')}
             </Text>
-            <CustomPicker
-              selectedValue={sessionTime}
-              onSelected={setSessionTime}
-              iosTextStyle={styles.text}
-              prompt={translate('wallet.has.session.prompt')}
-              list={[
-                SessionTime.HOUR,
-                SessionTime.DAY,
-                SessionTime.WEEK,
-                SessionTime.MONTH,
-              ]}
-              style={styles.text}
-              dropdownIconColor={PRIMARY_RED_COLOR}
+            <DropdownModal
+              selected={sessionTime}
+              onSelected={(sessionItem) =>
+                setSessionTime(sessionItem.value as SessionTime)
+              }
+              list={SESSION_LIST.map((item) => {
+                return {
+                  label: item,
+                  value: item,
+                } as DropdownItem;
+              })}
             />
           </>
         ) : (

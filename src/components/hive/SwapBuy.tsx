@@ -76,7 +76,6 @@ const getStyles = (theme: Theme, height: number) =>
       width: '95%',
       alignSelf: 'center',
       zIndex: 10,
-      //TODO testing while coding the new dropdownmodal
       height: getElementHeight(height),
       marginBottom: MIN_SEPARATION_ELEMENTS,
     },
