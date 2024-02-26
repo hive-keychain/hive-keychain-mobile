@@ -1,13 +1,14 @@
 import {loadAccount} from 'actions/index';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import CustomDropdown, {DropdownItem} from 'components/form/CustomDropdown';
+import {DropdownItem} from 'components/form/CustomDropdown';
+import DropdownModal from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savings-withdrawal-page.component';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Keyboard,
   StyleSheet,
@@ -72,6 +73,10 @@ const Convert = ({
   const [operationType, setOperationType] = useState<SavingsOperations>(
     operation,
   );
+  const [extraElementHeigth, setExtraElementHeigth] = useState(0);
+  const extraElementRef = useRef();
+  const [extraElementHeigth2, setExtraElementHeigth2] = useState(0);
+  const extraElementRef2 = useRef();
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const {width, height} = useWindowDimensions();
@@ -186,6 +191,26 @@ const Convert = ({
     } else setAmount((currentBalance as string).split(' ')[0]);
   };
 
+  const _measure = useCallback(() => {
+    if (extraElementRef && extraElementRef?.current) {
+      (extraElementRef.current as any).measureInWindow(
+        (pageX: any, pageY: any, width: any, height: any) => {
+          setExtraElementHeigth(height);
+        },
+      );
+    }
+  }, []);
+
+  const _measure2 = useCallback(() => {
+    if (extraElementRef2 && extraElementRef2?.current) {
+      (extraElementRef2.current as any).measureInWindow(
+        (pageX: any, pageY: any, width: any, height: any) => {
+          setExtraElementHeigth2(height + 8);
+        },
+      );
+    }
+  }, []);
+
   return (
     <OperationThemed
       additionalContentContainerStyle={{paddingHorizontal: 20}}
@@ -203,6 +228,8 @@ const Convert = ({
           <Separator height={10} />
           {totalPendingSavingsWithdrawals > 0 && (
             <TouchableOpacity
+              ref={extraElementRef2}
+              onLayout={_measure2}
               onPress={() => {
                 navigate('TemplateStack', {
                   titleScreen: capitalize(
@@ -244,6 +271,8 @@ const Convert = ({
                 theme={theme}
                 name={Icons.EXPAND_THIN}
                 additionalContainerStyle={getRotateStyle('90')}
+                width={15}
+                height={15}
               />
             </TouchableOpacity>
           )}
@@ -253,7 +282,7 @@ const Convert = ({
       childrenMiddle={
         <>
           {operationType === SavingsOperations.withdraw && (
-            <>
+            <View onLayout={_measure} ref={extraElementRef}>
               <Separator />
               <Text
                 style={[
@@ -263,27 +292,32 @@ const Convert = ({
                 ]}>
                 {translate(`wallet.operations.savings.disclaimer`, {currency})}
               </Text>
-            </>
+            </View>
           )}
           <Separator />
           <Text
             style={[getFormFontStyle(height, theme).title, styles.marginLeft]}>
             {translate('common.operation_type')}
           </Text>
-          <CustomDropdown
-            behaviour="down"
-            theme={theme}
+          <DropdownModal
             selected={
               operationTypeList.filter(
                 (item) => item.value === operationType,
               )[0]
             }
             list={operationTypeList}
-            onSelected={(item) => setOperationType(item as SavingsOperations)}
-            additionalContainerStyle={[styles.dropdown]}
-            additionalDropdowContainerStyle={styles.dropdownListContainer}
+            onSelected={(item) => {
+              setOperationType(item.value as SavingsOperations);
+              if (item.value === SavingsOperations.deposit)
+                setExtraElementHeigth(0);
+            }}
+            addExtraHeightFromElements={
+              extraElementHeigth + extraElementHeigth2
+            }
+            additionalListExpandedContainerStyle={{
+              height: 80,
+            }}
             dropdownIconScaledSize={{width: 15, height: 15}}
-            additionalTextStyle={getFormFontStyle(height, theme).input}
           />
           <Separator />
           <OperationInput

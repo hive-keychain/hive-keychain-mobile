@@ -49,6 +49,7 @@ interface Props {
   selected: string | DropdownItem;
   onSelected: (itemValue: DropdownItem) => void;
   onRemove?: (item: string) => void;
+  addExtraHeightFromElements?: number;
   additionalTextStyle?: StyleProp<TextStyle>;
   additionalTitleTextStyle?: StyleProp<TextStyle>;
   dropdownIconScaledSize?: Dimensions;
@@ -83,6 +84,7 @@ const DropdownModal = ({
   showSelectedIcon,
   copyButtonValue,
   selectedBgColor,
+  addExtraHeightFromElements,
   onRemove,
 }: Props) => {
   const dropdownContainerRef = useRef();
@@ -95,7 +97,13 @@ const DropdownModal = ({
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
 
-  const styles = getStyles(dropdownPageY, width, height, theme);
+  const styles = getStyles(
+    dropdownPageY,
+    width,
+    height,
+    theme,
+    addExtraHeightFromElements,
+  );
 
   useEffect(() => {
     if (searchValue.trim().length > 0) {
@@ -336,6 +344,7 @@ const getStyles = (
   width: number,
   height: number,
   theme: Theme,
+  addExtraY?: number,
 ) =>
   StyleSheet.create({
     overlay: {
@@ -344,7 +353,7 @@ const getStyles = (
       height: 'auto',
       maxHeight: undefined,
       marginTop: 0,
-      top: dropdownPageY,
+      top: dropdownPageY + addExtraY,
       position: 'absolute',
       zIndex: 10,
       elevation: 0,
