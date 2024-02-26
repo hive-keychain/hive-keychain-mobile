@@ -185,6 +185,8 @@ const Convert = ({
                 theme={theme}
                 name={Icons.EXPAND_THIN}
                 additionalContainerStyle={getRotateStyle('90')}
+                width={13}
+                height={13}
               />
             </TouchableOpacity>
           )}

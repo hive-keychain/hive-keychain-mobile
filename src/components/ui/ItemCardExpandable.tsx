@@ -59,7 +59,7 @@ const ItemCardExpandable = ({
                   name={Icons.EXPAND_THIN}
                   theme={theme}
                   additionalContainerStyle={[
-                    toggle ? getRotateStyle('180') : getRotateStyle('0'),
+                    toggle ? getRotateStyle('0') : getRotateStyle('180'),
                     styles.expandIconcontainer,
                   ]}
                   {...styles.expandIcon}

@@ -164,8 +164,8 @@ const IncomingOutgoingRcDelegationItem = ({
               styles.logo,
               getRotateStyle(
                 selectedItem && selectedItem.delegatee === item.delegatee
-                  ? '180'
-                  : '0',
+                  ? '0'
+                  : '180',
               ),
             ]}
             {...styles.smallIcon}

@@ -132,7 +132,7 @@ const ProposalItem = ({
           {...styles.expander}
           additionalContainerStyle={[
             styles.marginRight,
-            isExpandablePanelOpened ? undefined : styles.rotate,
+            isExpandablePanelOpened ? styles.rotate : undefined,
           ]}
         />
       </View>

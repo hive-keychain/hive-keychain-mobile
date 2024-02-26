@@ -111,11 +111,9 @@ const BrowserHeader = ({
       <GestureRecognizer
         style={[styles.gesture]}
         onSwipeLeft={() => {
-          console.log('onSwipeLeft'); //TODO remove line
           swipeToTab(false);
         }}
         onSwipeRight={() => {
-          console.log('onSwipeRight'); //TODO remove line
           swipeToTab(true);
         }}>
         <FocusAwareStatusBar />

@@ -182,8 +182,8 @@ const DelegationsList = ({
                 styles.logo,
                 getRotateStyle(
                   selectedOutgoingItem && selectedOutgoingItem.id === item.id
-                    ? '180'
-                    : '0',
+                    ? '0'
+                    : '180',
                 ),
               ]}
               {...styles.smallIcon}

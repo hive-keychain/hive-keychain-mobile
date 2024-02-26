@@ -135,7 +135,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
           theme={theme}
           name={Icons.EXPAND_THIN}
           additionalContainerStyle={
-            isExpanded ? getRotateStyle('180') : getRotateStyle('0')
+            isExpanded ? getRotateStyle('0') : getRotateStyle('180')
           }
           {...styles.smallIcon}
           color={PRIMARY_RED_COLOR}

@@ -112,7 +112,7 @@ const IncomingOutGoingTokenDelegationItem = ({
                   onClick={() => setIsExpanded(!isExpanded)}
                   additionalContainerStyle={[
                     styles.marginLeft,
-                    isExpanded ? styles.iconXAxisInverted : null,
+                    isExpanded ? undefined : styles.iconXAxisInverted,
                   ]}
                   {...styles.smallIcon}
                   color={PRIMARY_RED_COLOR}

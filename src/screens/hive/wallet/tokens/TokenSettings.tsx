@@ -132,7 +132,7 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
               width={10}
               height={10}
               additionalContainerStyle={getRotateStyle(
-                isExpandedReset ? '180' : '0',
+                isExpandedReset ? '0' : '180',
               )}
               onClick={() => setIsExpandedReset(!isExpandedReset)}
             />

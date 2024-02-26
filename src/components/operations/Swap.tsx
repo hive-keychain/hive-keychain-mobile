@@ -822,8 +822,8 @@ const Swap = ({
                   {...styles.dropdownIcon}
                   additionalContainerStyle={
                     isAdvanceSettingOpen
-                      ? getRotateStyle('180')
-                      : getRotateStyle('0')
+                      ? getRotateStyle('0')
+                      : getRotateStyle('180')
                   }
                   color={PRIMARY_RED_COLOR}
                 />
