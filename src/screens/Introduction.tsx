@@ -22,6 +22,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import GestureRecognizer from 'react-native-swipe-gestures';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {
   NEUTRAL_WHITE_COLOR,
@@ -139,7 +140,9 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           backgroundColor={getColors(theme).primaryBackground}
           barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
         />
-        <View style={styles.flexAround}>
+        <GestureRecognizer
+          style={styles.flexAround}
+          onSwipeLeft={() => handleNextStep()}>
           {introductionStepList[currentStep]}
           {currentStep < introductionStepList.length - 1 && (
             <EllipticButton
@@ -149,7 +152,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
               additionalTextStyle={styles.textButtonFilled}
             />
           )}
-        </View>
+        </GestureRecognizer>
       </>
     </Background>
   );
