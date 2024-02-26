@@ -36,6 +36,7 @@ import {
 } from 'src/styles/spacing';
 import {
   body_primary_body_2,
+  fields_primary_text_1,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
@@ -465,6 +466,7 @@ const RpcNodes = ({
             <AddCustomRPC
               theme={theme}
               rpcList={hiveEngineRPCList}
+              tittleTranslationKey={'settings.settings.hive_engine_rpc'}
               selectedRPC={cleanRpcLabel(activeHiveEngineRpc)}
               placeHolderInput={translate('settings.settings.new_HE_rpc')}
               input={newHERpc}
@@ -483,6 +485,9 @@ const RpcNodes = ({
             <AddCustomRPC
               theme={theme}
               rpcList={accountHistoryAPIList}
+              tittleTranslationKey={
+                'settings.settings.hive_engine_account_history_api'
+              }
               selectedRPC={cleanRpcLabel(activeAccountHistoryAPIRpc)}
               placeHolderInput={translate(
                 'settings.settings.new_account_history_rpc',
@@ -532,7 +537,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     },
     textInfo: {
       color: getColors(theme).secondaryText,
-      ...body_primary_body_2,
+      ...fields_primary_text_1,
       fontSize: getFontSizeSmallDevices(height, 15),
       opacity: 0.7,
     },

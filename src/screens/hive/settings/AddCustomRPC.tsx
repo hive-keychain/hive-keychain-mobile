@@ -1,12 +1,13 @@
-import {DropdownItem} from 'components/form/CustomDropdown';
-import DropdownModal from 'components/form/DropdownModal';
+import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {
+  StyleProp,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   View,
   useWindowDimensions,
@@ -16,7 +17,11 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {MARGINLEFTRIGHTMIN, MARGINPADDING} from 'src/styles/spacing';
+import {
+  LABELINDENTSPACE,
+  MARGINLEFTRIGHTMIN,
+  MARGINPADDING,
+} from 'src/styles/spacing';
 import {
   body_primary_body_2,
   getFontSizeSmallDevices,
@@ -25,7 +30,8 @@ import {translate} from 'utils/localize';
 
 interface Props {
   theme: Theme;
-  rpcList: DropdownItem[];
+  rpcList: DropdownModalItem[];
+  tittleTranslationKey?: string;
   selectedRPC: string;
   placeHolderInput: string;
   checkBoxTitle: string;
@@ -38,6 +44,7 @@ interface Props {
   setAddNewRpc: () => void;
   onRemoveDropdownItem: (item: string) => void;
   onSelectedDropdown: (item: string) => void;
+  additionalTitleStyle?: StyleProp<TextStyle>;
 }
 const AddCustomRPC = ({
   theme,
@@ -54,6 +61,8 @@ const AddCustomRPC = ({
   setAddNewRpc,
   onRemoveDropdownItem,
   onSelectedDropdown,
+  tittleTranslationKey,
+  additionalTitleStyle,
 }: Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, width, height);
@@ -64,6 +73,15 @@ const AddCustomRPC = ({
         alignContent: 'center',
         width: '100%',
       }}>
+      <View
+        style={{
+          width: '100%',
+          justifyContent: 'flex-start',
+        }}>
+        <Text style={[styles.text, styles.indent, additionalTitleStyle]}>
+          {translate(tittleTranslationKey)}
+        </Text>
+      </View>
       <View style={styles.rpcItemContainer}>
         <DropdownModal
           list={rpcList}
@@ -174,6 +192,9 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       width: width * 0.79,
     },
     dropdownIconDimensions: {width: 15, height: 15},
+    indent: {
+      marginLeft: LABELINDENTSPACE,
+    },
   });
 
 export default AddCustomRPC;
