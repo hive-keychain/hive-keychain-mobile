@@ -3,7 +3,6 @@ import {removePreference} from 'actions/preferences';
 import {DropdownItem} from 'components/form/CustomDropdown';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import DropdownModal from 'components/form/DropdownModal';
-import {PickerItemInterface} from 'components/form/PickerItem';
 import Icon from 'components/hive/Icon';
 import CollapsibleSettings from 'components/settings/CollapsibleSettings';
 import Background from 'components/ui/Background';
@@ -79,7 +78,7 @@ const Operations = ({
     );
   }, [searchValue, domainList]);
 
-  const getItemDropDownSelected = (username: string): PickerItemInterface => {
+  const getItemDropDownSelected = (username: string): DropdownItem => {
     const selected = accounts.filter((acc) => acc.name === username)[0];
     return {
       label: selected.name,

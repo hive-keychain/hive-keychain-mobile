@@ -1,7 +1,5 @@
 import {Account} from 'actions/interfaces';
-import {DropdownItem} from 'components/form/CustomDropdown';
-import DropdownModal from 'components/form/DropdownModal';
-import {PickerItemInterface} from 'components/form/PickerItem';
+import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React from 'react';
@@ -28,10 +26,10 @@ export default ({username, accounts, account, setAccount}: Props) => {
         label: acc.name,
         value: acc.name,
         icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
-      } as DropdownItem;
+      } as DropdownModalItem;
     });
 
-  const getItemDropDownSelected = (username: string): PickerItemInterface => {
+  const getItemDropDownSelected = (username: string): DropdownModalItem => {
     const selected = accounts.filter((acc) => acc.name === username)[0]!;
     return {
       label: selected.name,

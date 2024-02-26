@@ -1,7 +1,6 @@
 import {loadAccount} from 'actions/index';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import {DropdownItem} from 'components/form/CustomDropdown';
-import DropdownModal from 'components/form/DropdownModal';
+import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savings-withdrawal-page.component';
@@ -81,7 +80,7 @@ const Convert = ({
   const {color} = getCurrencyProperties(currency);
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles(color, {width, height}, theme);
-  const operationTypeList: DropdownItem[] = [
+  const operationTypeList: DropdownModalItem[] = [
     {
       icon: (
         <Icon

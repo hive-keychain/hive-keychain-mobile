@@ -2,8 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {setActiveRpc} from 'actions/active-rpc';
 import {Rpc} from 'actions/interfaces';
 import {setAccountHistoryRpc, setHiveEngineRpc, setRpc} from 'actions/settings';
-import {DropdownItem} from 'components/form/CustomDropdown';
-import DropdownModal from 'components/form/DropdownModal';
+import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
@@ -70,7 +69,7 @@ const RpcNodes = ({
   const [customRPCSetActive, setCustomRPCSetActive] = useState<boolean>(false);
   const [customRPC, setCustomRPC] = useState<Rpc>(DEFAULT_CUSTOM_RPC);
   const [switchRPCAuto, setSwitchRPCAuto] = useState(false);
-  const [rpcFullList, setRpcFullList] = useState<DropdownItem[]>([]);
+  const [rpcFullList, setRpcFullList] = useState<DropdownModalItem[]>([]);
   const [customRPCList, setCustomRPCList] = useState<Rpc[]>([]);
 
   const {theme} = useThemeContext();
@@ -114,7 +113,7 @@ const RpcNodes = ({
       value: item,
       label: label,
       removable: removable,
-    } as DropdownItem;
+    } as DropdownModalItem;
   };
 
   const init = async () => {
@@ -285,9 +284,9 @@ const RpcNodes = ({
   };
 
   //HIVE Engine RPC
-  const [hiveEngineRPCList, setHiveEngineRPCList] = useState<DropdownItem[]>(
-    [],
-  );
+  const [hiveEngineRPCList, setHiveEngineRPCList] = useState<
+    DropdownModalItem[]
+  >([]);
   const [newHERpc, setNewHERpc] = useState('');
   const [addNewHERpc, setAddNewHERpc] = useState(false);
   const [newHERPCAsActive, setNewHERPCAsActive] = useState(false);
@@ -342,7 +341,7 @@ const RpcNodes = ({
 
   //Account History API
   const [accountHistoryAPIList, setAccountHistoryAPIList] = useState<
-    DropdownItem[]
+    DropdownModalItem[]
   >([]);
   const [newAccountHistoryAPIRpc, setNewAccountHistoryAPIRpc] = useState('');
   const [addNewAccountHistoryAPI, setAddNewAccountHistoryAPI] = useState(false);

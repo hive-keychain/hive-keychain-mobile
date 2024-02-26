@@ -13,10 +13,8 @@ import {
 } from 'actions/hive';
 import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
 import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
-import {DropdownItem} from 'components/form/CustomDropdown';
 import CustomSearchBar from 'components/form/CustomSearchBar';
-import DropdownModal from 'components/form/DropdownModal';
-import {PickerItemInterface} from 'components/form/PickerItem';
+import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import AccountValue from 'components/hive/AccountValue';
 import CurrencyToken from 'components/hive/CurrencyToken';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
@@ -247,7 +245,7 @@ const Main = ({
     }
   };
 
-  const getItemDropDownSelected = (username: string): PickerItemInterface => {
+  const getItemDropDownSelected = (username: string): DropdownModalItem => {
     const selected = accounts.filter((acc) => acc.name === username)[0]!;
     return {
       label: selected.name,
@@ -275,7 +273,7 @@ const Main = ({
         label: acc.name,
         value: acc.name,
         icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
-      } as DropdownItem;
+      } as DropdownModalItem;
     });
 
   const handleClickSettings = () => {

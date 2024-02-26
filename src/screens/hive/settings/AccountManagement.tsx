@@ -1,9 +1,7 @@
 import {addKey, forgetAccount, forgetKey, loadAccount} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
-import {DropdownItem} from 'components/form/CustomDropdown';
-import DropdownModal from 'components/form/DropdownModal';
+import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
-import {PickerItemInterface} from 'components/form/PickerItem';
 import Icon from 'components/hive/Icon';
 import Key from 'components/hive/Key';
 import Background from 'components/ui/Background';
@@ -50,9 +48,8 @@ const AccountManagement = ({
   }, [navigation, account.name]);
   if (!username) return null;
 
-  const getItemDropDownSelected = (username: string): PickerItemInterface => {
+  const getItemDropDownSelected = (username: string): DropdownModalItem => {
     const selected = accounts.filter((acc) => acc.name === username)[0];
-    console.log({selected, username}); //TODO remove line
     return {
       label: selected.name,
       value: selected.name,
@@ -70,7 +67,7 @@ const AccountManagement = ({
         label: acc.name,
         value: acc.name,
         icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
-      } as DropdownItem;
+      } as DropdownModalItem;
     });
 
   return (

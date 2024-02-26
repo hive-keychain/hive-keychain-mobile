@@ -2,8 +2,7 @@ import {loadTokensMarket} from 'actions/index';
 import {showModal} from 'actions/message';
 import ErrorSvg from 'assets/new_UI/error-circle.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import {DropdownItem} from 'components/form/CustomDropdown';
-import DropdownModal from 'components/form/DropdownModal';
+import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -640,7 +639,7 @@ const Swap = ({
                           svgWidth={20}
                         />
                       ),
-                    } as DropdownItem
+                    } as DropdownModalItem
                   }
                   onSelected={(item) => {
                     const selectedItem = startTokenListOptions.find(
@@ -660,7 +659,7 @@ const Swap = ({
                           svgWidth={20}
                         />
                       ),
-                    } as DropdownItem;
+                    } as DropdownModalItem;
                   })}
                   additionalTitleTextStyle={{fontSize: 15}}
                   additionalMainContainerDropdown={{
@@ -735,7 +734,7 @@ const Swap = ({
                           svgWidth={20}
                         />
                       ),
-                    } as DropdownItem
+                    } as DropdownModalItem
                   }
                   onSelected={(item) =>
                     setEndToken(
@@ -756,7 +755,7 @@ const Swap = ({
                           svgWidth={20}
                         />
                       ),
-                    } as DropdownItem;
+                    } as DropdownModalItem;
                   })}
                   additionalTitleTextStyle={{fontSize: 15}}
                   additionalMainContainerDropdown={{

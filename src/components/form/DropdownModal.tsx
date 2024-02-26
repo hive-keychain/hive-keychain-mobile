@@ -33,10 +33,14 @@ import {
 import {Dimensions} from 'utils/common.types';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
-import {DropdownItem} from './CustomDropdown';
 import CustomSearchBar from './CustomSearchBar';
-//TODO
-//  bring here bellow DropdownItem interface.
+
+export interface DropdownModalItem {
+  value: string;
+  label?: string;
+  removable?: boolean;
+  icon?: JSX.Element;
+}
 
 //TODO important:
 //  - check with quentin to fix the error happening in swap about not refreshing the icon picture.
@@ -45,9 +49,9 @@ import CustomSearchBar from './CustomSearchBar';
 //   -> done in: Main.
 interface Props {
   //TODO check bellow if not needed to add string[] | dropdown[] and code both.
-  list: DropdownItem[];
-  selected: string | DropdownItem;
-  onSelected: (itemValue: DropdownItem) => void;
+  list: DropdownModalItem[];
+  selected: string | DropdownModalItem;
+  onSelected: (itemValue: DropdownModalItem) => void;
   onRemove?: (item: string) => void;
   addExtraHeightFromElements?: number;
   additionalTextStyle?: StyleProp<TextStyle>;
@@ -92,7 +96,7 @@ const DropdownModal = ({
   const [isListExpanded, setIsListExpanded] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [filteredDropdownList, setFilteredDropdownList] = useState<
-    DropdownItem[]
+    DropdownModalItem[]
   >(list);
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -118,7 +122,7 @@ const DropdownModal = ({
     }
   }, [searchValue, list]);
 
-  const onHandleSelectedItem = (item: DropdownItem) => {
+  const onHandleSelectedItem = (item: DropdownModalItem) => {
     onSelected(item);
     setIsListExpanded(false);
   };
@@ -128,7 +132,7 @@ const DropdownModal = ({
     SimpleToast.show(translate('toast.copied_username'), SimpleToast.LONG);
   };
 
-  const renderCopyOrSelectedIcon = (item: DropdownItem) => {
+  const renderCopyOrSelectedIcon = (item: DropdownModalItem) => {
     return showSelectedIcon || copyButtonValue ? (
       <View
         style={[
@@ -158,7 +162,7 @@ const DropdownModal = ({
     ) : null;
   };
 
-  const renderDropdownItem = (item: DropdownItem, index: number) => {
+  const renderDropdownItem = (item: DropdownModalItem, index: number) => {
     const isLastItem = index === list.length - 1;
     const showSelectedBgOnItem =
       selectedBgColor && (selected === item.value || selected === item.label);
@@ -353,7 +357,7 @@ const getStyles = (
       height: 'auto',
       maxHeight: undefined,
       marginTop: 0,
-      top: dropdownPageY + addExtraY,
+      top: dropdownPageY + (addExtraY ?? 0),
       position: 'absolute',
       zIndex: 10,
       elevation: 0,

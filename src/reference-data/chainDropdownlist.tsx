@@ -1,6 +1,6 @@
 import EthereumImage from 'assets/new_UI/ethereum_logo.svg';
 import HiveChainImage from 'assets/new_UI/hive_logo.svg';
-import {PickerItemInterface} from 'components/form/PickerItem';
+import {DropdownModalItem} from 'components/form/DropdownModal';
 import React from 'react';
 import {View} from 'react-native';
 
@@ -9,7 +9,7 @@ const iconListImage = {
   height: 18,
 };
 
-export const chainItemList: PickerItemInterface[] = [
+export const chainItemList: DropdownModalItem[] = [
   {
     icon: <EthereumImage {...iconListImage} />,
     label: 'ethereum',
