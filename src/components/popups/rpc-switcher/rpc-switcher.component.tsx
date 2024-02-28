@@ -1,7 +1,6 @@
 import {setActiveRpc} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
 import {setDisplayChangeRpcPopup} from 'actions/rpc-switcher';
-import {setRpc} from 'actions/settings';
 import OperationButton from 'components/form/EllipticButton';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
@@ -17,20 +16,15 @@ interface Props {
 }
 
 const RpcSwitcherComponent = ({
-  // rpc,
   rpcSwitcher,
   setDisplayChangeRpcPopup,
-  setRpc,
   activeRpc,
   initialRpc,
   setActiveRpc,
 }: Props & PropsFromRedux) => {
-  console.log('RpcSwitcherComponent:', {rpcSwitcher, activeRpc, initialRpc}); //TODO remove line
   const onHandleSwitchRPC = () => {
     setDisplayChangeRpcPopup(false);
     setActiveRpc(rpcSwitcher.rpc);
-    //TODO remove line bellow
-    setRpc(rpcSwitcher.rpc.uri);
   };
 
   const {theme} = useThemeContext();
@@ -79,7 +73,7 @@ const connector = connect(
       activeRpc: state.activeRpc,
     };
   },
-  {setDisplayChangeRpcPopup, setRpc, setActiveRpc},
+  {setDisplayChangeRpcPopup, setActiveRpc},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
