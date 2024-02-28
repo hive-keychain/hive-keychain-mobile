@@ -203,6 +203,8 @@ const RpcNodes = ({
     //   uri: item,
     // });
     setRpc(item);
+    //TODO bellow fix as the item must be an rpc not just the .uri
+    setActiveRpc({uri: item} as Rpc);
   };
 
   const renderRpcItem = () => {

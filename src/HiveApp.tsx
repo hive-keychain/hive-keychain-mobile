@@ -4,7 +4,8 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {showFloatingBar} from 'actions/floatingBar';
-import {forgetRequestedOperation} from 'actions/index';
+import {forgetRequestedOperation, setActiveRpc} from 'actions/index';
+import {Rpc} from 'actions/interfaces';
 import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import Bridge from 'components/bridge';
 import {MessageModal} from 'components/modals/MessageModal';
@@ -13,7 +14,7 @@ import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
@@ -31,7 +32,8 @@ import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 import {processQRCodeOp} from 'utils/hive-uri';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
-import {checkRpcStatus, getRPCUri} from 'utils/rpc.utils';
+import {useWorkingRPC} from 'utils/rpc-switcher.utils';
+import {checkRpcStatus, getCurrentRpc} from 'utils/rpc.utils';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 import {FLOATINGBAR_ALLOWED_SCREENS} from './reference-data/FloatingScreenList';
 
@@ -51,15 +53,45 @@ const App = ({
   setSwitchToRpc,
   hiveEngineRpc,
   accountHistoryAPIRpc,
-  rpc,
+  // rpc,
+  setActiveRpc,
 }: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
+  const [initialRpc, setInitialRpc] = useState<Rpc>();
+
   console.log({activeRpc}); //TODO remove line
   useEffect(() => {
+    initApplication();
+    // initColorAPI();
+    // showFloatingBar(false);
+  }, []);
+
+  const initApplication = async () => {
+    HiveEngineConfigUtils.setActiveApi(hiveEngineRpc ?? DEFAULT_HE_RPC_NODE);
+    HiveEngineConfigUtils.setActiveAccountHistoryApi(
+      accountHistoryAPIRpc ?? DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
+    );
     initColorAPI();
     showFloatingBar(false);
-  }, []);
+    const rpc = await getCurrentRpc();
+    console.log('HiveApp:', {currRPC: rpc}); //TODO remove line
+    setInitialRpc(rpc);
+    await initActiveRpc(rpc);
+  };
+
+  const initActiveRpc = async (rpc: Rpc) => {
+    const rpcStatusOk = await checkRpcStatus(rpc.uri);
+    console.log({rpcStatusOk}); //TODO remove line
+    setDisplayChangeRpcPopup(!rpcStatusOk);
+    if (rpcStatusOk) {
+      setActiveRpc(rpc);
+      setRpc(rpc);
+    } else {
+      useWorkingRPC(rpc);
+      setRpc(rpc);
+    }
+  };
 
   const initColorAPI = async () => {
     await downloadColors();
@@ -82,15 +114,25 @@ const App = ({
   }, [accounts, requestedOp]);
 
   useEffect(() => {
-    HiveEngineConfigUtils.setActiveApi(hiveEngineRpc ?? DEFAULT_HE_RPC_NODE);
-    HiveEngineConfigUtils.setActiveAccountHistoryApi(
-      accountHistoryAPIRpc ?? DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
-    );
-    setRpc(rpc);
-    if (getRPCUri(rpc) !== 'DEFAULT') {
-      checkCurrentRPC(getRPCUri(rpc));
+    if (activeRpc?.uri !== 'NULL' && activeRpc?.uri !== rpc) {
+      initApplication();
     }
-  }, [rpc]);
+    rpc = activeRpc?.uri;
+  }, [activeRpc]);
+
+  //TODO remove bellow block
+  // useEffect(() => {
+  //   HiveEngineConfigUtils.setActiveApi(hiveEngineRpc ?? DEFAULT_HE_RPC_NODE);
+  //   HiveEngineConfigUtils.setActiveAccountHistoryApi(
+  //     accountHistoryAPIRpc ?? DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
+  //   );
+  //   setRpc(rpc);
+  //   // if (getRPCUri(rpc) !== 'DEFAULT') {
+  //   //   checkCurrentRPC(getRPCUri(rpc));
+  //   // }
+  // }, [rpc]);
+  //end block
+
   //TODO important here:
   //  - implement activeRpc.
   //  - remove default from src/utils/hive.ts
@@ -163,7 +205,7 @@ const App = ({
       {renderRootNavigator()}
       <MessageModal />
       <FloatingBar />
-      <RpcSwitcherComponent />
+      <RpcSwitcherComponent initialRpc={initialRpc} />
       <Bridge />
     </NavigationContainer>
   );
@@ -173,7 +215,8 @@ const mapStateToProps = (state: RootState) => {
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
-    rpc: state.settings.rpc,
+    //TODO cleanup
+    // rpc: state.settings.rpc,
     activeRpc: state.activeRpc,
     accounts: state.accounts,
     requestedOp: state.hiveUri.operation,
@@ -188,6 +231,7 @@ const connector = connect(mapStateToProps, {
   showFloatingBar,
   setDisplayChangeRpcPopup,
   setSwitchToRpc,
+  setActiveRpc,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

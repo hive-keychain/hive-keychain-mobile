@@ -37,6 +37,23 @@ export const deleteCustomRpc = async (rpcs: Rpc[], rpc: Rpc) => {
   );
 };
 
+export const saveCurrentRpc = async (rpc: Rpc) => {
+  AsyncStorage.setItem(KeychainStorageKeyEnum.CURRENT_RPC, JSON.stringify(rpc));
+};
+export const getCurrentRpc = async (): Promise<Rpc> => {
+  let currentRpc = JSON.parse(
+    await AsyncStorage.getItem(KeychainStorageKeyEnum.CURRENT_RPC),
+  );
+  currentRpc = currentRpc ? currentRpc : {uri: 'DEFAULT', testnet: false};
+  if (currentRpc.uri.endsWith('/'))
+    currentRpc = {
+      ...currentRpc,
+      uri: currentRpc.uri.substring(0, currentRpc.uri.length - 1),
+    };
+
+  return currentRpc;
+};
+
 export const getRPCUri = (rpcObj: string | Rpc) => {
   return typeof rpcObj === 'object' ? rpcObj.uri : rpcObj;
 };

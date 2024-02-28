@@ -95,6 +95,7 @@ const Main = ({
   tokens,
   userTokens,
   tokensMarket,
+  activeRpc,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -118,6 +119,12 @@ const Main = ({
   const [lastScrollYValue, setLastScrollYValue] = useState(0);
 
   const mainScrollRef = useRef();
+
+  //TODO remove block bellow, testing
+  useEffect(() => {
+    console.log('Main.tsx: ', {activeRpc});
+  }, [activeRpc]);
+  //end block
 
   useEffect(() => {
     loadTokens();
@@ -339,9 +346,11 @@ const Main = ({
   return (
     <WalletPage
       additionalBgSvgImageStyle={
-        !loadingUserAndGlobals ? {top: '15%'} : undefined
+        !loadingUserAndGlobals && activeRpc && activeRpc.uri !== 'NULL'
+          ? {top: '15%'}
+          : undefined
       }>
-      {!loadingUserAndGlobals ? (
+      {!loadingUserAndGlobals && activeRpc && activeRpc.uri !== 'NULL' ? (
         <View>
           <ScrollView
             ref={mainScrollRef}
@@ -634,6 +643,7 @@ const connector = connect(
       tokens: state.tokens,
       userTokens: state.userTokens,
       tokensMarket: state.tokensMarket,
+      activeRpc: state.activeRpc,
     };
   },
   {

@@ -37,6 +37,7 @@ const Floating = ({
   isLoadingScreen,
   isDrawerOpen,
   showFloatingBar,
+  activeRpc,
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const {theme} = useThemeContext();
@@ -102,7 +103,7 @@ const Floating = ({
     extrapolate: 'clamp',
   });
 
-  return show ? (
+  return show && activeRpc && activeRpc.uri !== 'NULL' ? (
     <Animated.View
       style={[
         getCardStyle(theme).floatingBar,
@@ -210,6 +211,7 @@ const connector = connect(
       show: state.floatingBar.show,
       isLoadingScreen: state.floatingBar.isLoadingScreen,
       isDrawerOpen: state.floatingBar.isDrawerOpened,
+      activeRpc: state.activeRpc,
     };
   },
   {showFloatingBar},

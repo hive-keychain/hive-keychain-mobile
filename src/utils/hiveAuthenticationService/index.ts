@@ -10,6 +10,7 @@ import {RootState, store} from 'store';
 import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
+import {saveCurrentRpc} from 'utils/rpc.utils';
 import {HAS_Session} from './has.types';
 import {answerAuthReq} from './helpers/auth';
 import {prepareRegistrationChallenge} from './helpers/challenge';
@@ -18,10 +19,23 @@ import {processAuthenticationRequest} from './messages/authenticate';
 import {HAS_AuthPayload, HAS_SignPayload} from './payloads.types';
 
 let previousState: RootState = store.getState();
+//TODO check bellow // // if works properly, then remove line
+let previousRpc = store.getState().activeRpc;
+////
 
 store.subscribe(() => {
   if (!previousState) return;
+  //Added rpc initial setup
   const state = store.getState() as RootState;
+  if (
+    previousRpc &&
+    previousRpc.uri !== state.activeRpc?.uri &&
+    state.activeRpc
+  ) {
+    previousRpc = state.activeRpc;
+    saveCurrentRpc(state.activeRpc);
+  }
+  ///////
   if (
     state.auth.mk !== previousState.auth.mk ||
     previousState.hive_authentication_service !==

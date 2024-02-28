@@ -1,3 +1,5 @@
+import {setActiveRpc} from 'actions/index';
+import {Rpc} from 'actions/interfaces';
 import {setDisplayChangeRpcPopup} from 'actions/rpc-switcher';
 import {setRpc} from 'actions/settings';
 import OperationButton from 'components/form/EllipticButton';
@@ -9,27 +11,36 @@ import {getButtonStyle} from 'src/styles/button';
 import {button_link_primary_small} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
-import {getRPCUri} from 'utils/rpc.utils';
+
+interface Props {
+  initialRpc: Rpc;
+}
 
 const RpcSwitcherComponent = ({
-  rpc,
-  rpcSwither,
+  // rpc,
+  rpcSwitcher,
   setDisplayChangeRpcPopup,
   setRpc,
-}: PropsFromRedux) => {
+  activeRpc,
+  initialRpc,
+  setActiveRpc,
+}: Props & PropsFromRedux) => {
+  console.log('RpcSwitcherComponent:', {rpcSwitcher, activeRpc, initialRpc}); //TODO remove line
   const onHandleSwitchRPC = () => {
     setDisplayChangeRpcPopup(false);
-    setRpc(rpcSwither.rpc.uri);
+    setActiveRpc(rpcSwitcher.rpc);
+    //TODO remove line bellow
+    setRpc(rpcSwitcher.rpc.uri);
   };
 
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
-  return rpcSwither.display ? (
+  return rpcSwitcher.display && rpcSwitcher.rpc && activeRpc ? (
     <View style={styles.popupBottom}>
       <Text style={[styles.white, {...button_link_primary_small}]}>
         {translate('settings.settings.rpc_not_responding_error', {
-          currentRPC: getRPCUri(rpc),
-          uri: rpcSwither.rpc.uri,
+          currentRPC: initialRpc?.uri!,
+          uri: rpcSwitcher.rpc.uri,
         })}
       </Text>
       <OperationButton
@@ -64,11 +75,11 @@ const getStyles = (theme: Theme) =>
 const connector = connect(
   (state: RootState) => {
     return {
-      rpcSwither: state.rpcSwitcher,
-      rpc: state.settings.rpc,
+      rpcSwitcher: state.rpcSwitcher,
+      activeRpc: state.activeRpc,
     };
   },
-  {setDisplayChangeRpcPopup, setRpc},
+  {setDisplayChangeRpcPopup, setRpc, setActiveRpc},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
