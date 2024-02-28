@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {setActiveRpc} from 'actions/active-rpc';
 import {Rpc} from 'actions/interfaces';
-import {setAccountHistoryRpc, setHiveEngineRpc, setRpc} from 'actions/settings';
+import {setAccountHistoryRpc, setHiveEngineRpc} from 'actions/settings';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -56,7 +56,6 @@ export const DEFAULT_ACCOUNT_HISTORY_RPC_NODE =
   'https://history.hive-engine.com';
 
 const RpcNodes = ({
-  setRpc,
   settings,
   activeRpc,
   setHiveEngineRpc,
@@ -79,27 +78,15 @@ const RpcNodes = ({
 
   useEffect(() => {
     init();
-    // initSwitchAuto();
+    initSwitchAuto();
   }, []);
 
   const initSwitchAuto = async () => {
-    setSwitchRPCAuto(
-      Boolean(
-        await AsyncStorage.getItem(KeychainStorageKeyEnum.SWITCH_RPC_AUTO),
-      ),
+    const switchAuto = await AsyncStorage.getItem(
+      KeychainStorageKeyEnum.SWITCH_RPC_AUTO,
     );
+    setSwitchRPCAuto(switchAuto === 'true');
   };
-
-  //TODO bellow see if needed at all
-  // useEffect(() => {
-  //   if (switchRPCAuto) {
-  //     if (typeof activeRpc === 'object' && activeRpc.uri !== 'DEFAULT') {
-  //       if (typeof activeRpc === 'string' && activeRpc !== 'DEFAULT') {
-  //         setRpc('DEFAULT');
-  //       }
-  //     }
-  //   }
-  // }, [switchRPCAuto]);
 
   const cleanRpcLabel = (label: string) =>
     label.replace('http://', '').replace('https://', '').split('/')[0];
@@ -118,12 +105,6 @@ const RpcNodes = ({
   };
 
   const init = async () => {
-    //init Hive RPCs
-    if (typeof settings.rpc === 'object') {
-      if (settings.rpc.uri === 'DEFAULT') setSwitchRPCAuto(true);
-    } else if (typeof settings.rpc === 'string') {
-      if (settings.rpc === 'DEFAULT') setSwitchRPCAuto(true);
-    }
     const customRPCs = await getCustomRpcs();
     setCustomRPCList(customRPCs);
     const finalDropdownRpcList = [
@@ -168,7 +149,9 @@ const RpcNodes = ({
         const newList = [...rpcFullList];
         newList.push({value: customRPC.uri, removable: true});
         setRpcFullList(newList);
-        if (customRPCSetActive) setRpc(customRPC.uri);
+        if (customRPCSetActive) {
+          setActiveRpc(customRPC);
+        }
         setCustomRPCSetActive(false);
         setShowAddCustomRPC(false);
         setCustomRPC(DEFAULT_CUSTOM_RPC);
@@ -189,21 +172,12 @@ const RpcNodes = ({
   };
 
   const handleOnRemoveCustomRPC = async (uri: string) => {
-    if (uri === (settings.rpc as string) || uri === (settings.rpc as Rpc).uri)
-      setRpc('DEFAULT');
     await deleteCustomRpc(customRPCList, {uri});
     const updatedFullList = [...rpcFullList];
     setRpcFullList(updatedFullList.filter((removed) => removed.value !== uri));
   };
 
   const onHandleSetRPC = (item: string) => {
-    //TODO bellow keep updating after implementing activeRpc in hiveApp, following ext.
-    console.log('onHandleSetRPC', {item}); //TODO remove line
-    // setActiveRpc({
-    //   uri: item,
-    // });
-    setRpc(item);
-    //TODO bellow fix as the item must be an rpc not just the .uri
     setActiveRpc({uri: item} as Rpc);
   };
 
@@ -416,7 +390,6 @@ const RpcNodes = ({
       KeychainStorageKeyEnum.SWITCH_RPC_AUTO,
       String(switchRPCAuto),
     );
-    if (switchRPCAuto) setRpc('DEFAULT');
   }, [switchRPCAuto]);
 
   return (
@@ -597,12 +570,11 @@ const mapStateToProps = (state: RootState) => ({
   settings: state.settings,
   accounts: state.accounts,
   active: state.activeAccount,
-  activeRpc: state.settings.rpc,
+  activeRpc: state.activeRpc,
   activeHiveEngineRpc: state.settings.hiveEngineRpc,
   activeAccountHistoryAPIRpc: state.settings.accountHistoryAPIRpc,
 });
 const connector = connect(mapStateToProps, {
-  setRpc,
   setHiveEngineRpc,
   setAccountHistoryRpc,
   setActiveRpc,

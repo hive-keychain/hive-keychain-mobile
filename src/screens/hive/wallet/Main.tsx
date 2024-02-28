@@ -71,9 +71,7 @@ import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import TokenSettings from './tokens/TokenSettings';
-//TODO important:
-//  - keep checking the use of dropdowns, change them to use dropdownModal.
-//  - after all checked, removed the others.
+
 const Main = ({
   loadAccount,
   loadProperties,
@@ -119,12 +117,6 @@ const Main = ({
   const [lastScrollYValue, setLastScrollYValue] = useState(0);
 
   const mainScrollRef = useRef();
-
-  //TODO remove block bellow, testing
-  useEffect(() => {
-    console.log('Main.tsx: ', {activeRpc});
-  }, [activeRpc]);
-  //end block
 
   useEffect(() => {
     loadTokens();

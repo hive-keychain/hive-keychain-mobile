@@ -27,7 +27,7 @@ import {FloatingBar} from 'screens/hive/wallet/FloatingBar';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {downloadColors} from 'utils/colors';
-import {DEFAULT_RPC, setRpc} from 'utils/hive';
+import {setRpc} from 'utils/hive';
 import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 import {processQRCodeOp} from 'utils/hive-uri';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
@@ -53,18 +53,14 @@ const App = ({
   setSwitchToRpc,
   hiveEngineRpc,
   accountHistoryAPIRpc,
-  // rpc,
   setActiveRpc,
 }: PropsFromRedux) => {
   let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
   const [initialRpc, setInitialRpc] = useState<Rpc>();
 
-  console.log({activeRpc}); //TODO remove line
   useEffect(() => {
     initApplication();
-    // initColorAPI();
-    // showFloatingBar(false);
   }, []);
 
   const initApplication = async () => {
@@ -75,14 +71,12 @@ const App = ({
     initColorAPI();
     showFloatingBar(false);
     const rpc = await getCurrentRpc();
-    console.log('HiveApp:', {currRPC: rpc}); //TODO remove line
     setInitialRpc(rpc);
     await initActiveRpc(rpc);
   };
 
   const initActiveRpc = async (rpc: Rpc) => {
     const rpcStatusOk = await checkRpcStatus(rpc.uri);
-    console.log({rpcStatusOk}); //TODO remove line
     setDisplayChangeRpcPopup(!rpcStatusOk);
     if (rpcStatusOk) {
       setActiveRpc(rpc);
@@ -119,37 +113,6 @@ const App = ({
     }
     rpc = activeRpc?.uri;
   }, [activeRpc]);
-
-  //TODO remove bellow block
-  // useEffect(() => {
-  //   HiveEngineConfigUtils.setActiveApi(hiveEngineRpc ?? DEFAULT_HE_RPC_NODE);
-  //   HiveEngineConfigUtils.setActiveAccountHistoryApi(
-  //     accountHistoryAPIRpc ?? DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
-  //   );
-  //   setRpc(rpc);
-  //   // if (getRPCUri(rpc) !== 'DEFAULT') {
-  //   //   checkCurrentRPC(getRPCUri(rpc));
-  //   // }
-  // }, [rpc]);
-  //end block
-
-  //TODO important here:
-  //  - implement activeRpc.
-  //  - remove default from src/utils/hive.ts
-  //  - apply in all the app the use of activeRpc instead of settings.rpc
-  //  - check & update rpc nodes settings using activeRpc.
-  const checkCurrentRPC = async (currentRPCUri: string) => {
-    try {
-      const rpcStatusOK = await checkRpcStatus(currentRPCUri);
-      if (!rpcStatusOK) {
-        setSwitchToRpc({uri: DEFAULT_RPC, testnet: false});
-      }
-      setDisplayChangeRpcPopup(!rpcStatusOK);
-      // showFloatingBar(rpcStatusOK); //TODO uncomment & implement when adding again the rpcSwitcher.
-    } catch (error) {
-      console.log('Error checking rpcStatusOK', {error});
-    }
-  };
 
   const renderNavigator = () => {
     if (!hasAccounts) {
@@ -215,8 +178,6 @@ const mapStateToProps = (state: RootState) => {
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
-    //TODO cleanup
-    // rpc: state.settings.rpc,
     activeRpc: state.activeRpc,
     accounts: state.accounts,
     requestedOp: state.hiveUri.operation,

@@ -55,7 +55,6 @@ export const getDefault: () => Promise<string> = async () => {
 };
 
 export const setRpc = async (rpcObj: Rpc | string) => {
-  //TODO check and cleanup
   let rpc = typeof rpcObj === 'string' ? rpcObj : rpcObj.uri;
   testnet = typeof rpcObj === 'string' ? false : rpcObj.testnet || false;
   if (rpc === 'DEFAULT') {
