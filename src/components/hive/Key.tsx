@@ -66,8 +66,8 @@ export default ({
     return unsubscribe;
   }, [navigation]);
 
-  const {height} = useWindowDimensions();
-  const styles = getStyles(theme, height);
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, width, height);
 
   return (
     <View style={containerStyle}>
@@ -224,13 +224,13 @@ const hidePrivateKey = (privateKey: string) => {
   return hiddenKey;
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, width: number, height: number) =>
   StyleSheet.create({
     keyAuthority: {
       color: getColors(theme).secondaryText,
       ...button_link_primary_medium,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...button_link_primary_medium}.fontSize,
       ),
     },
@@ -241,7 +241,7 @@ const getStyles = (theme: Theme, height: number) =>
     keyType: {
       color: getColors(theme).secondaryText,
       ...button_link_primary_medium,
-      fontSize: getFontSizeSmallDevices(height, 13),
+      fontSize: getFontSizeSmallDevices(width, 13),
     },
     key: {
       color: getColors(theme).secondaryText,
@@ -257,7 +257,7 @@ const getStyles = (theme: Theme, height: number) =>
     keyHidden: {
       color: getColors(theme).iconBW,
       fontSize:
-        Platform.OS === 'android' ? getFontSizeSmallDevices(height, 20) : 12,
+        Platform.OS === 'android' ? getFontSizeSmallDevices(width, 20) : 12,
       letterSpacing: Platform.OS === 'android' ? -2 : 0,
     },
     addKey: {
@@ -269,7 +269,7 @@ const getStyles = (theme: Theme, height: number) =>
       color: getColors(theme).secondaryText,
       ...button_link_primary_medium,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...button_link_primary_medium}.fontSize,
       ),
     },

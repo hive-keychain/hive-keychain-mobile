@@ -433,7 +433,7 @@ const getDimensionedStyles = (
       flexDirection: 'row',
     },
     title: {
-      fontSize: getFontSizeSmallDevices(height, 15),
+      fontSize: getFontSizeSmallDevices(width, 15),
     },
     josefineFont: {
       fontFamily: FontJosefineSansName.MEDIUM,

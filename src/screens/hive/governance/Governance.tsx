@@ -17,7 +17,7 @@ import {
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Height, Width} from 'utils/common.types';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import MyWitness from './MyWitness';
 import Proposal from './Proposal';
@@ -138,7 +138,7 @@ const Governance = ({
   );
 };
 
-const getDimensionedStyles = ({width, height}: Width & Height, theme: Theme) =>
+const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     toggle: {
       display: 'flex',
@@ -156,7 +156,7 @@ const getDimensionedStyles = ({width, height}: Width & Height, theme: Theme) =>
       color: getColors(theme).secondaryText,
       textAlign: 'center',
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...title_primary_title_1}.fontSize,
       ),
     },

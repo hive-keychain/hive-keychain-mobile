@@ -71,6 +71,9 @@ import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import TokenSettings from './tokens/TokenSettings';
+//TODO important.
+// - check getButtonHeight(width) and change param as screen width.
+// - check also in every use of SMALLEST_SCREEN_WIDTH_SUPPORTED
 
 const Main = ({
   loadAccount,

@@ -71,7 +71,7 @@ const PercentageDisplay = ({
 };
 
 const getDimensionedStyles = (
-  {height}: ScaledSize,
+  {width, height}: ScaledSize,
   IconBgcolor: string,
   percent: number,
   theme: Theme,
@@ -94,17 +94,14 @@ const getDimensionedStyles = (
       opacity: 0.7,
       ...title_secondary_body_3,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...title_secondary_body_3}.fontSize,
       ),
     },
     percent: {
       color: '#FFF',
       ...title_secondary_title_2,
-      fontSize: getFontSizeSmallDevices(
-        height,
-        {...title_secondary_title_2}.fontSize,
-      ),
+      fontSize: getFontSizeSmallDevices(width, 30),
       lineHeight: 30,
     },
     container: {
@@ -131,6 +128,7 @@ const getDimensionedStyles = (
       paddingLeft: 10,
       ...fields_primary_text_2,
       textAlignVertical: 'bottom',
+      fontSize: getFontSizeSmallDevices(width, fields_primary_text_2.fontSize),
     },
   });
 

@@ -30,6 +30,7 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 const AddAccountByAuth = ({
@@ -70,8 +71,8 @@ const AddAccountByAuth = ({
   };
 
   const {theme} = useThemeContext();
-  const {height} = useWindowDimensions();
-  const styles = getStyles(theme, height);
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width, height});
 
   return (
     <Background theme={theme}>
@@ -136,7 +137,7 @@ const AddAccountByAuth = ({
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {alignItems: 'center', justifyContent: 'space-between', flex: 1},
     topContainer: {
@@ -149,7 +150,7 @@ const getStyles = (theme: Theme, height: number) =>
       color: getColors(theme).secondaryText,
       ...body_primary_body_1,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...body_primary_body_1}.fontSize,
       ),
     },
@@ -168,7 +169,7 @@ const getStyles = (theme: Theme, height: number) =>
     buttonText: {
       ...button_link_primary_medium,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...button_link_primary_medium}.fontSize,
       ),
     },

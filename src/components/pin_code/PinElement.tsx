@@ -119,12 +119,12 @@ const getStyles = (
       includeFontPadding: false,
       textAlign: 'center',
       textAlignVertical: 'center',
-      fontSize: getFontSizeSmallDevices(height, headerH3Primary.fontSize),
+      fontSize: getFontSizeSmallDevices(width, headerH3Primary.fontSize),
     },
     helper: {
       color: !pressed ? getColors(theme).secondaryText : '#FFF',
       ...title_primary_body_2,
-      fontSize: getFontSizeSmallDevices(height, title_primary_body_2.fontSize),
+      fontSize: getFontSizeSmallDevices(width, title_primary_body_2.fontSize),
     },
     backspace: {
       top: undefined,

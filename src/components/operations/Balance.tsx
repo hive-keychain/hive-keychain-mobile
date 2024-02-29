@@ -124,7 +124,7 @@ const getDimensionedStyles = ({
       height: headerH2Primary.fontSize,
       lineHeight: headerH2Primary.fontSize + 5,
       textAlignVertical: 'auto',
-      fontSize: getFontSizeSmallDevices(height, headerH2Primary.fontSize),
+      fontSize: getFontSizeSmallDevices(width, headerH2Primary.fontSize),
     },
     centeredText: {
       textAlign: 'center',

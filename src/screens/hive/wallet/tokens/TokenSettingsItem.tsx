@@ -136,7 +136,7 @@ const getStyles = (
     },
     title: {
       ...title_primary_body_2,
-      fontSize: getFontSizeSmallDevices(height, 16),
+      fontSize: getFontSizeSmallDevices(width, 16),
     },
     item: {
       flexDirection: 'row',

@@ -380,7 +380,7 @@ const getDimensionedStyles = ({
       lineHeight: 22,
       color: getColors(theme).symbolText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         button_link_primary_medium.fontSize,
       ),
     },
@@ -389,7 +389,7 @@ const getDimensionedStyles = ({
       lineHeight: 17,
       ...body_primary_body_2,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         button_link_primary_medium.fontSize,
       ),
     },
@@ -429,7 +429,7 @@ const getDimensionedStyles = ({
     textButton: {
       ...title_secondary_body_3,
       color: getColors(theme).primaryText,
-      fontSize: getFontSizeSmallDevices(height, 15),
+      fontSize: getFontSizeSmallDevices(width, 15),
       paddingTop: 4,
       lineHeight: 15,
     },

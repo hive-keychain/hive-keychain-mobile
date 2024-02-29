@@ -249,14 +249,14 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       color: getColors(theme).totalDisplayTextAmount,
       lineHeight: 17,
       ...body_primary_body_2,
-      fontSize: getFontSizeSmallDevices(height, body_primary_body_2.fontSize),
+      fontSize: getFontSizeSmallDevices(width, body_primary_body_2.fontSize),
     },
     textSymbol: {
       ...button_link_primary_medium,
       lineHeight: 22,
       color: getColors(theme).symbolText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         button_link_primary_medium.fontSize,
       ),
     },

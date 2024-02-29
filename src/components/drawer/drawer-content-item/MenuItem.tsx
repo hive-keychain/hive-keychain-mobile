@@ -96,7 +96,7 @@ const getStyles = (
     labelStyle: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
-      fontSize: getFontSizeSmallDevices(height, 15),
+      fontSize: getFontSizeSmallDevices(width, 15),
       marginLeft: 11,
     },
     bottomLine: {

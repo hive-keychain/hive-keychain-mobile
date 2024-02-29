@@ -66,12 +66,12 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) => {
       ...body_primary_body_3,
     },
     name: {
-      fontSize: getFontSizeSmallDevices(height, 14),
+      fontSize: getFontSizeSmallDevices(width, 14),
       textAlign: 'center',
       marginBottom: 5,
       marginTop: 10,
     },
-    desc: {fontSize: getFontSizeSmallDevices(height, 12), textAlign: 'center'},
+    desc: {fontSize: getFontSizeSmallDevices(width, 12), textAlign: 'center'},
   });
 };
 export default DAppCard;

@@ -24,12 +24,13 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {getSafeState} from 'store';
+import {Dimensions} from 'utils/common.types';
 
 export default ({navigation}: {navigation: AboutNavigation}) => {
   useLockedPortrait(navigation);
   const [pressed, setPressed] = useState(0);
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, useWindowDimensions().height);
+  const styles = getStyles(theme, useWindowDimensions());
   return (
     <Background theme={theme}>
       <>
@@ -92,7 +93,7 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {
       marginVertical: 10,
@@ -105,11 +106,11 @@ const getStyles = (theme: Theme, height: number) =>
       ...headlines_primary_headline_2,
     },
     title: {
-      fontSize: getFontSizeSmallDevices(height, 16),
+      fontSize: getFontSizeSmallDevices(width, 16),
     },
     text: {
       ...body_primary_body_3,
-      fontSize: getFontSizeSmallDevices(height, 15),
+      fontSize: getFontSizeSmallDevices(width, 15),
     },
     textCentered: {
       textAlign: 'center',

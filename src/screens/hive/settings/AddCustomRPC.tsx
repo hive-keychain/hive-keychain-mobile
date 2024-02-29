@@ -157,7 +157,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,
-      fontSize: getFontSizeSmallDevices(height, 13),
+      fontSize: getFontSizeSmallDevices(width, 13),
     },
     rpcItemContainer: {
       flexDirection: 'row',

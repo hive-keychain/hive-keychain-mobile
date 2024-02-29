@@ -102,7 +102,8 @@ const ProposalItem = ({
     setIsVotingUnvotingForProposal('');
   };
 
-  const styles = getStyles(theme, useWindowDimensions().height);
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, width, height);
   const isvoting =
     isVotingUnvotingForProposal.trim().length > 0 &&
     isVotingUnvotingForProposal === proposal.creator;
@@ -236,7 +237,7 @@ const ProposalItem = ({
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, width: number, height: number) =>
   StyleSheet.create({
     container: {paddingVertical: 10},
     firstLine: {
@@ -253,7 +254,7 @@ const getStyles = (theme: Theme, height: number) =>
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...title_primary_body_2}.fontSize,
       ),
     },

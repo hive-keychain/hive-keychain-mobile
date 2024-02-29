@@ -39,7 +39,8 @@ interface OperationInputProps {
 
 export default (props: InputProps & OperationInputProps) => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, useWindowDimensions().height);
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, width, height);
 
   const renderCustomInput = () => (
     <CustomInput
@@ -95,7 +96,7 @@ export default (props: InputProps & OperationInputProps) => {
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, width: number, height: number) =>
   StyleSheet.create({
     container: {
       width: '100%',
@@ -112,7 +113,7 @@ const getStyles = (theme: Theme, height: number) =>
       ...body_primary_body_1,
       color: getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...body_primary_body_1}.fontSize,
       ),
     },

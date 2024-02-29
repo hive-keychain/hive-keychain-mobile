@@ -15,19 +15,19 @@ export const BUTTON_ICON_BIG_WIDTH_HEIGHT = 30;
 export const BUTTON_ICON_TEXT_MARGIN = 8;
 export const MAIN_PAGE_ACTION_BUTTONS_WIDTH = '43%';
 
-export const getButtonHeight = (height: number) => {
-  return height <= SMALLEST_SCREEN_WIDTH_SUPPORTED
+export const getButtonHeight = (screenWidth: number) => {
+  return screenWidth <= SMALLEST_SCREEN_WIDTH_SUPPORTED
     ? BUTTON_MAX_HEIGHT * 0.75
     : BUTTON_MAX_HEIGHT;
 };
 
-export const getButtonIconDimension = (height: number) => {
-  return height <= SMALLEST_SCREEN_WIDTH_SUPPORTED
+export const getButtonIconDimension = (screenWidth: number) => {
+  return screenWidth <= SMALLEST_SCREEN_WIDTH_SUPPORTED
     ? BUTTON_ICON_SMALL_WIDTH_HEIGHT
     : BUTTON_ICON_BIG_WIDTH_HEIGHT;
 };
 
-export const getButtonStyle = (theme: Theme, height?: number) => {
+export const getButtonStyle = (theme: Theme, screenWidth?: number) => {
   return {
     outline: {
       borderColor: getColors(theme).borderContrast,
@@ -40,7 +40,7 @@ export const getButtonStyle = (theme: Theme, height?: number) => {
     warningStyleButton: [
       {
         backgroundColor: PRIMARY_RED_COLOR,
-        height: height ? getButtonHeight(height) : BUTTON_MAX_HEIGHT,
+        height: screenWidth ? getButtonHeight(screenWidth) : BUTTON_MAX_HEIGHT,
       },
       generateBoxShadowStyle(
         0,
@@ -81,8 +81,7 @@ export const getButtonStyle = (theme: Theme, height?: number) => {
           alignItems: 'center',
         },
         buttonText: {
-          fontSize: getFontSizeSmallDevices(height, 15),
-          // marginBottom: 4,
+          fontSize: getFontSizeSmallDevices(screenWidth, 15),
         },
       }),
   };

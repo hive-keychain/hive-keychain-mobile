@@ -37,7 +37,7 @@ const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
           style={[
             styles.h4,
             styles.textCentered,
-            {fontSize: getFontSizeSmallDevices(height, styles.h4.fontSize)},
+            {fontSize: getFontSizeSmallDevices(width, styles.h4.fontSize)},
           ]}>
           {translate('components.forgotPIN.title')}
         </Text>
@@ -47,7 +47,7 @@ const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
             styles.text,
             styles.textCentered,
             styles.marginText,
-            {fontSize: getFontSizeSmallDevices(height, styles.text.fontSize)},
+            {fontSize: getFontSizeSmallDevices(width, styles.text.fontSize)},
           ]}>
           {translate('components.forgotPIN.text')}
         </Text>

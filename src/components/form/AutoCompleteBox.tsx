@@ -213,7 +213,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     },
     titleCategory: {
       fontFamily: FontPoppinsName.SEMI_BOLD,
-      fontSize: getFontSizeSmallDevices(height, 13),
+      fontSize: getFontSizeSmallDevices(width, 13),
     },
     autoCompleteValue: {
       fontSize: 12,

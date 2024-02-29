@@ -499,7 +499,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,
-      fontSize: getFontSizeSmallDevices(height, 15),
+      fontSize: getFontSizeSmallDevices(width, 15),
     },
     opacity: {
       opacity: 0.7,
@@ -513,7 +513,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     textInfo: {
       color: getColors(theme).secondaryText,
       ...fields_primary_text_1,
-      fontSize: getFontSizeSmallDevices(height, 15),
+      fontSize: getFontSizeSmallDevices(width, 15),
       opacity: 0.7,
     },
     smallerFont: {

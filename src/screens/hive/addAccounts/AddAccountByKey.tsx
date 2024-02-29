@@ -32,6 +32,7 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
 import validateNewAccount from 'utils/keyValidation';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -80,9 +81,9 @@ const AddAccountByKey = ({
     }
   };
   const {theme} = useThemeContext();
-  const {height} = useWindowDimensions();
+  const {width, height} = useWindowDimensions();
 
-  const styles = getStyles(theme, height);
+  const styles = getStyles(theme, {width, height});
 
   return (
     <Background theme={theme}>
@@ -161,7 +162,7 @@ const AddAccountByKey = ({
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     flex: {flex: 1},
     container: {
@@ -172,7 +173,7 @@ const getStyles = (theme: Theme, height: number) =>
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_1,
-      fontSize: getFontSizeSmallDevices(height, 16),
+      fontSize: getFontSizeSmallDevices(width, 16),
     },
     topContainer: {
       width: '100%',
@@ -201,7 +202,7 @@ const getStyles = (theme: Theme, height: number) =>
     buttonText: {
       ...button_link_primary_medium,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...button_link_primary_medium}.fontSize,
       ),
     },

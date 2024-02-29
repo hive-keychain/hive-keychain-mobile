@@ -16,6 +16,7 @@ import {
   body_primary_body_1,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 
 type Props = {
   type: 'checkbox' | 'option';
@@ -36,7 +37,7 @@ const OptionsToggle = ({
   type,
   additionalTitleStyle,
 }: Props) => {
-  const styles = getStyles(theme, useWindowDimensions().height);
+  const styles = getStyles(theme, useWindowDimensions());
 
   return (
     <View style={styles.container}>
@@ -71,7 +72,7 @@ const OptionsToggle = ({
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -95,7 +96,7 @@ const getStyles = (theme: Theme, height: number) =>
       ...body_primary_body_1,
       color: getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...body_primary_body_1}.fontSize,
       ),
     },

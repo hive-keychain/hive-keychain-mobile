@@ -1,8 +1,7 @@
 import {loadAccount} from 'actions/hive';
 import {removePreference} from 'actions/preferences';
-import {DropdownItem} from 'components/form/CustomDropdown';
 import CustomSearchBar from 'components/form/CustomSearchBar';
-import DropdownModal from 'components/form/DropdownModal';
+import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import Icon from 'components/hive/Icon';
 import CollapsibleSettings from 'components/settings/CollapsibleSettings';
 import Background from 'components/ui/Background';
@@ -78,7 +77,7 @@ const Operations = ({
     );
   }, [searchValue, domainList]);
 
-  const getItemDropDownSelected = (username: string): DropdownItem => {
+  const getItemDropDownSelected = (username: string): DropdownModalItem => {
     const selected = accounts.filter((acc) => acc.name === username)[0];
     return {
       label: selected.name,
@@ -93,7 +92,7 @@ const Operations = ({
         label: acc.name,
         value: acc.name,
         icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
-      } as DropdownItem;
+      } as DropdownModalItem;
     });
 
   return (
@@ -174,12 +173,12 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,
-      fontSize: getFontSizeSmallDevices(height, 15),
+      fontSize: getFontSizeSmallDevices(width, 15),
     },
     textOperations: {
       ...body_primary_body_3,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...body_primary_body_3}.fontSize,
       ),
     },
@@ -191,7 +190,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       borderRadius: 33,
       marginVertical: 10,
       width: '100%',
-      height: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 45 : 50,
+      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 45 : 50,
     },
     opacity: {
       opacity: 0.7,

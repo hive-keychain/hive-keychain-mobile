@@ -9,7 +9,7 @@ import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {Height} from 'utils/common.types';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 export default () => {
@@ -43,13 +43,13 @@ export default () => {
   );
 };
 
-const getDimensionedStyles = ({height}: Height, theme: Theme) =>
+const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     h4: {
       ...headlines_primary_headline_2,
       color: getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...headlines_primary_headline_2}.fontSize,
       ),
     },
@@ -57,7 +57,7 @@ const getDimensionedStyles = ({height}: Height, theme: Theme) =>
       ...button_link_primary_small,
       color: getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...button_link_primary_small}.fontSize,
       ),
     },

@@ -158,7 +158,7 @@ const getDimensionedStyles = (width: number, heigth: number, theme: Theme) =>
       textAlignVertical: 'center',
       ...title_primary_title_1,
       color: getColors(theme).secondaryText,
-      fontSize: getFontSizeSmallDevices(heigth, 16),
+      fontSize: getFontSizeSmallDevices(width, 16),
     },
     textOpaque: {
       opacity: 0.7,

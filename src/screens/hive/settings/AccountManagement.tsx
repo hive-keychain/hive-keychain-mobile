@@ -157,7 +157,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     operationButtonText: {
       ...button_link_primary_medium,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...button_link_primary_medium}.fontSize,
       ),
     },

@@ -58,10 +58,14 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     accountValue: {
       ...headerH2Primary,
-      fontSize: getFontSizeSmallDevices(height, 45),
+      fontSize: getFontSizeSmallDevices(width, 45),
       textAlign: 'center',
     },
-    title: {...body_primary_body_1, opacity: 0.6},
+    title: {
+      ...body_primary_body_1,
+      opacity: 0.6,
+      fontSize: getFontSizeSmallDevices(width, body_primary_body_1.fontSize),
+    },
     textBase: {
       color: getColors(theme).secondaryText,
     },

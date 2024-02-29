@@ -147,7 +147,7 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
       justifyContent: 'center',
       marginBottom: 30,
     },
-    text: {fontSize: getFontSizeSmallDevices(height, 13)},
+    text: {fontSize: getFontSizeSmallDevices(width, 13)},
     scroll: {marginLeft: 0.03 * width, marginBottom: 20},
     textBase: {
       color: getColors(theme).secondaryText,
@@ -157,7 +157,7 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
       ...headlines_primary_headline_2,
       color: getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...headlines_primary_headline_2}.fontSize,
       ),
     },

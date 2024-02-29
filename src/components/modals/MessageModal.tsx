@@ -23,7 +23,6 @@ import {
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 const DEFAULTHIDETIMEMS = 3000;
@@ -37,8 +36,8 @@ const Message = ({
   notHideOnSuccess,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
-  const {height} = useWindowDimensions();
-  const styles = getStyles(theme, height);
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, width, height);
 
   const handleReset = () => {
     resetModal();
@@ -107,7 +106,7 @@ const connector = connect(mapStateToProps, {
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const getStyles = (theme: Theme, height: Dimensions['height']) =>
+const getStyles = (theme: Theme, width: number, height: number) =>
   StyleSheet.create({
     mainContainer: {
       flex: 1,
@@ -139,7 +138,7 @@ const getStyles = (theme: Theme, height: Dimensions['height']) =>
       ...title_primary_title_1,
       color: getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...title_primary_title_1}.fontSize,
       ),
       paddingVertical: 10,
@@ -150,7 +149,7 @@ const getStyles = (theme: Theme, height: Dimensions['height']) =>
       marginHorizontal: 0,
       marginTop: 10,
       marginBottom: 15,
-      height: getButtonHeight(height),
+      height: getButtonHeight(width),
     },
     buttonText: {
       ...button_link_primary_medium,

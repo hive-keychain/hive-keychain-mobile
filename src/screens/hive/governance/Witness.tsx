@@ -336,7 +336,7 @@ const getDimensionedStyles = (width: number, height: number, theme: Theme) =>
       ...title_primary_title_1,
       color: getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...title_primary_title_1}.fontSize,
       ),
     },
@@ -392,7 +392,7 @@ const getDimensionedStyles = (width: number, height: number, theme: Theme) =>
       marginLeft: 0,
       marginRight: 0,
     },
-    smallerText: {fontSize: getFontSizeSmallDevices(height, 12)},
+    smallerText: {fontSize: getFontSizeSmallDevices(width, 12)},
     voteButton: {
       flexDirection: 'row',
       alignItems: 'center',

@@ -110,7 +110,7 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
       color: getColors(theme).secondaryText,
       ...headlines_primary_headline_2,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         headlines_primary_headline_2.fontSize,
       ),
     },
@@ -118,12 +118,12 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
       color: getColors(theme).secondaryText,
       ...headlines_primary_headline_2,
       opacity: 0.6,
-      fontSize: getFontSizeSmallDevices(height, 15),
+      fontSize: getFontSizeSmallDevices(width, 15),
     },
     textLabel: {
       color: getColors(theme).secondaryText,
       ...headlines_primary_headline_2,
-      fontSize: getFontSizeSmallDevices(height, 14),
+      fontSize: getFontSizeSmallDevices(width, 14),
     },
     heartIcon: {
       width: 22,

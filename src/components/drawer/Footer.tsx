@@ -118,7 +118,7 @@ export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
   );
 };
 
-const getStyles = (theme: Theme, {height}: ScaledSize) =>
+const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
   StyleSheet.create({
     footer: {
       width: '100%',
@@ -142,7 +142,7 @@ const getStyles = (theme: Theme, {height}: ScaledSize) =>
     },
     buttonText: {
       ...button_link_primary_medium,
-      fontSize: getFontSizeSmallDevices(height, 12),
+      fontSize: getFontSizeSmallDevices(width, 12),
     },
     footerIconContainer: {
       borderWidth: 1,

@@ -17,6 +17,7 @@ import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 
 const Stack = createStackNavigator<RootStackParam>();
 
@@ -33,11 +34,7 @@ export default ({navigation, route}: TemplateStackNavigationProps) => {
     extraActionOnBack,
   } = route.params;
   const {theme} = useThemeContext();
-  const styles = getStyles(
-    theme,
-    useWindowDimensions().height,
-    useSafeAreaInsets(),
-  );
+  const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
 
   return (
     <Stack.Navigator>
@@ -78,7 +75,11 @@ export default ({navigation, route}: TemplateStackNavigationProps) => {
   );
 };
 
-const getStyles = (theme: Theme, height: number, insets: EdgeInsets) =>
+const getStyles = (
+  theme: Theme,
+  {width, height}: Dimensions,
+  insets: EdgeInsets,
+) =>
   StyleSheet.create({
     header: {
       backgroundColor: getColors(theme).primaryBackground,
@@ -91,7 +92,7 @@ const getStyles = (theme: Theme, height: number, insets: EdgeInsets) =>
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...headlines_primary_headline_2}.fontSize,
       ),
     },

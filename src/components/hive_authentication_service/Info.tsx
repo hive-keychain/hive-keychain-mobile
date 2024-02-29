@@ -20,8 +20,8 @@ const TitleDarkPNG = require('assets/new_UI/has_title_dark.png');
 
 const HASInfo = () => {
   const {theme} = useThemeContext();
-  const height = useWindowDimensions().height;
-  const styles = getStyles(theme, height);
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, width, height);
   const fullHasLogo = () => {
     return (
       <View style={styles.flexRowCentered}>
@@ -97,7 +97,8 @@ const IndicatorDescription = ({
   press?: boolean;
   longPress?: boolean;
 }) => {
-  const styles = getStyles(theme, useWindowDimensions().height);
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, width, height);
   return (
     <View>
       <View style={styles.indicatorHeader}>
@@ -134,7 +135,7 @@ const IndicatorDescription = ({
   );
 };
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, width: number, height: number) =>
   StyleSheet.create({
     view: {
       flex: 1,
@@ -145,7 +146,7 @@ const getStyles = (theme: Theme, height: number) =>
     },
     header: {
       marginTop: 10,
-      fontSize: getFontSizeSmallDevices(height, 15),
+      fontSize: getFontSizeSmallDevices(width, 15),
     },
     text: {},
     indicatorHeader: {flexDirection: 'row', marginTop: 5, alignItems: 'center'},
@@ -169,7 +170,7 @@ const getStyles = (theme: Theme, height: number) =>
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...title_primary_body_2}.fontSize,
       ),
     },
@@ -184,7 +185,7 @@ const getStyles = (theme: Theme, height: number) =>
     buttonText: {
       ...body_primary_body_2,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...body_primary_body_2}.fontSize,
       ),
     },

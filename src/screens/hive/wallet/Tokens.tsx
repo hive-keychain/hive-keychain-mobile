@@ -214,7 +214,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       textAlign: 'center',
       ...headlines_primary_headline_2,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         headlines_primary_headline_2.fontSize,
       ),
     },
@@ -229,7 +229,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       ...body_primary_body_1,
       opacity: 0.6,
       color: getColors(theme).secondaryText,
-      fontSize: getFontSizeSmallDevices(height, body_primary_body_1.fontSize),
+      fontSize: getFontSizeSmallDevices(width, body_primary_body_1.fontSize),
     },
     textUnderlined: {
       textDecorationLine: 'underline',

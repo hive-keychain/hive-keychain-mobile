@@ -245,7 +245,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       ...headlines_primary_headline_3,
       color: getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...headlines_primary_headline_3}.fontSize,
       ),
     },
@@ -281,7 +281,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       ...button_link_primary_small,
       lineHeight: 14.7,
       color: getColors(theme).secondaryText,
-      fontSize: getFontSizeSmallDevices(height, 12),
+      fontSize: getFontSizeSmallDevices(width, 12),
     },
     line: {
       height: 0,
@@ -314,7 +314,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
     buttonText: {
       ...button_link_primary_medium,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...button_link_primary_medium}.fontSize,
       ),
     },

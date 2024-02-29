@@ -374,7 +374,7 @@ const getStyles = (
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
       fontSize: getFontSizeSmallDevices(
-        height,
+        width,
         {...title_primary_body_2}.fontSize,
       ),
     },
