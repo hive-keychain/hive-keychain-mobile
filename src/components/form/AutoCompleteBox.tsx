@@ -200,7 +200,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {
       position: 'absolute',
-      top: getInputHeight(height) + 5,
+      top: getInputHeight(width) + 5,
       bottom: undefined,
       width: '100%',
       height: 'auto',

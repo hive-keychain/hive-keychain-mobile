@@ -260,7 +260,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       marginTop: 35,
     },
     searchBar: {
-      width: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? '80%' : '85%',
+      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? '80%' : '85%',
     },
   });
 

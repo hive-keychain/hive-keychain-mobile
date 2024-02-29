@@ -146,7 +146,7 @@ const getDimensionedStyles = ({
       width: 0.9 * width,
       backgroundColor: backgroundColor || '#000000',
       borderRadius: 25,
-      height: getInputHeight(height),
+      height: getInputHeight(width),
       borderWidth: 1,
     },
     leftIcon: {height: 30, marginRight: 20},

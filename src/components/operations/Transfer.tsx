@@ -35,6 +35,7 @@ import {
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
 import {FavoriteUserUtils} from 'utils/favorite-user.utils';
 import {beautifyTransferError, capitalize} from 'utils/format';
 import {recurrentTransfer, sendToken, transfer} from 'utils/hive';
@@ -186,9 +187,9 @@ const Transfer = ({
     }
   };
   const {color} = getCurrencyProperties(currency);
-  const {height} = useWindowDimensions();
+  const {width, height} = useWindowDimensions();
 
-  const styles = getDimensionedStyles(color, height, theme);
+  const styles = getDimensionedStyles(color, {width, height}, theme);
 
   if (step === 1) {
     return (
@@ -600,7 +601,11 @@ const Transfer = ({
   }
 };
 
-const getDimensionedStyles = (color: string, height: number, theme: Theme) =>
+const getDimensionedStyles = (
+  color: string,
+  {width, height}: Dimensions,
+  theme: Theme,
+) =>
   StyleSheet.create({
     warning: {color: 'red'},
     flexRowCenter: {
@@ -638,7 +643,7 @@ const getDimensionedStyles = (color: string, height: number, theme: Theme) =>
     operationButton: {
       width: '48%',
       marginHorizontal: 0,
-      height: getButtonHeight(height),
+      height: getButtonHeight(width),
     },
     operationButtonConfirmation: {
       backgroundColor: '#FFF',

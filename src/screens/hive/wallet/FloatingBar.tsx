@@ -3,7 +3,6 @@ import Icon from 'components/hive/Icon';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
-  Dimensions,
   Easing,
   Platform,
   StyleSheet,
@@ -23,6 +22,7 @@ import {
   body_primary_body_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
@@ -41,8 +41,8 @@ const Floating = ({
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const {theme} = useThemeContext();
-  const {height} = useWindowDimensions();
-  const styles = getStyles(theme, height, useSafeAreaInsets());
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width, height}, useSafeAreaInsets());
   const anim = useRef(new Animated.Value(0)).current;
   const [isTop, setIsTop] = useState(false);
 
@@ -99,7 +99,7 @@ const Floating = ({
 
   const translateY = anim.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, Dimensions.get('window').height - 70],
+    outputRange: [0, height - 70],
     extrapolate: 'clamp',
   });
 
@@ -115,7 +115,7 @@ const Floating = ({
           theme={theme}
           name={Icons.WALLET_ADD}
           color={getActiveIconColor('ecosystem')}
-          {...getIconDimensions(height)}
+          {...getIconDimensions(width)}
           onClick={() => onHandlePressButton('ecosystem')}
         />
         {showTags && (
@@ -129,7 +129,7 @@ const Floating = ({
           theme={theme}
           color={getActiveIconColor('browser')}
           name={Icons.GLOBAL}
-          {...getIconDimensions(height)}
+          {...getIconDimensions(width)}
           onClick={() => onHandlePressButton('browser')}
         />
         {showTags && (
@@ -143,7 +143,7 @@ const Floating = ({
           theme={theme}
           name={Icons.SCANNER}
           color={getActiveIconColor('scan_qr')}
-          {...getIconDimensions(height)}
+          {...getIconDimensions(width)}
           onClick={() => onHandlePressButton('scan_qr')}
         />
         {showTags && (
@@ -157,7 +157,7 @@ const Floating = ({
           theme={theme}
           color={getActiveIconColor('swap_buy')}
           name={Icons.SWAP}
-          {...getIconDimensions(height)}
+          {...getIconDimensions(width)}
           onClick={() => onHandlePressButton('swap_buy')}
         />
         {showTags && (
@@ -170,7 +170,11 @@ const Floating = ({
   ) : null;
 };
 
-const getStyles = (theme: Theme, height: number, insets: EdgeInsets) =>
+const getStyles = (
+  theme: Theme,
+  {width, height}: Dimensions,
+  insets: EdgeInsets,
+) =>
   StyleSheet.create({
     container: {
       position: 'absolute',
@@ -190,7 +194,7 @@ const getStyles = (theme: Theme, height: number, insets: EdgeInsets) =>
     itemContainer: {
       alignItems: 'center',
       justifyContent: 'center',
-      width: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? '20%' : '25%',
+      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? '20%' : '25%',
     },
     marginTop: {
       marginTop: 5,

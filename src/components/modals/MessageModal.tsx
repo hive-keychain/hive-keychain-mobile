@@ -60,8 +60,8 @@ const Message = ({
 
   const renderIcon = () => {
     const iconDimensions = {
-      width: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 70 : 120,
-      height: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 70 : 120,
+      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 70 : 120,
+      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 70 : 120,
     };
     switch (messageModal.type) {
       case MessageModalType.SUCCESS:

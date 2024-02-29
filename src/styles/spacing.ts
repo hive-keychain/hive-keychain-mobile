@@ -27,8 +27,8 @@ export const getSpacing = (width = 0, height = 0) => {
   };
 };
 
-export const getElementHeight = (height: number) => {
-  return height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 45 : 50;
+export const getElementHeight = (screenWidth: number) => {
+  return screenWidth <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 45 : 50;
 };
 
 export const getSpaceAdjustMultiplier = (

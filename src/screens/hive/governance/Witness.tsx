@@ -273,7 +273,7 @@ const Witness = ({
           inputStyle={[styles.text]}
           inputContainerStyle={styles.inputContainer}
           makeExpandable={
-            height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? true : false
+            width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? true : false
           }
         />
         <Separator height={15} />

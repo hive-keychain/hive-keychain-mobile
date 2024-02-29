@@ -10,6 +10,7 @@ import {BuyCoinType} from 'src/enums/operations.enum';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {MIN_SEPARATION_ELEMENTS, getElementHeight} from 'src/styles/spacing';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 interface SwapBuyToScreenToogleProps {
@@ -19,8 +20,8 @@ interface SwapBuyToScreenToogleProps {
 
 const SwapBuy = () => {
   const {theme} = useThemeContext();
-  const {height} = useWindowDimensions();
-  const styles = getStyles(theme, height);
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width, height});
   const swapBuyElements: SwapBuyToScreenToogleProps = {
     menuLabels: [
       translate('wallet.operations.swap.title'),
@@ -58,7 +59,7 @@ const SwapBuy = () => {
 
 export default SwapBuy;
 
-const getStyles = (theme: Theme, height: number) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -76,7 +77,7 @@ const getStyles = (theme: Theme, height: number) =>
       width: '95%',
       alignSelf: 'center',
       zIndex: 10,
-      height: getElementHeight(height),
+      height: getElementHeight(width),
       marginBottom: MIN_SEPARATION_ELEMENTS,
     },
   });

@@ -62,7 +62,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     dropdownContainer: {
       width: 'auto',
       padding: 0,
-      height: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 45 : 50,
+      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 45 : 50,
       borderRadius: 10,
     },
     dropdownListContainer: {

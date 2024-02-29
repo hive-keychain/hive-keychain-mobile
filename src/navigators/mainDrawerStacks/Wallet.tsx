@@ -93,7 +93,7 @@ export default () => {
                     />
                   ),
                   fixedHeight:
-                    height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.85 : 0.7,
+                    width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.85 : 0.7,
                   additionalWrapperFixedStyle: styles.wrapperFixed,
                   modalPosition: undefined,
                   modalContainerStyle: styles.modalContainer,
@@ -160,7 +160,7 @@ const getStyles = (
       right: 10,
     },
     modalContainer: {
-      width: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? '90%' : '70%',
+      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? '90%' : '70%',
       alignSelf: 'flex-end',
       backgroundColor: 'none',
       borderWidth: 0,

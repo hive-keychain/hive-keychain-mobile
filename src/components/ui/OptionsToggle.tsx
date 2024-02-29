@@ -80,8 +80,8 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     toggled: {flex: 1, justifyContent: 'center'},
     untoggled: {display: 'none'},
     toggleButton: {
-      width: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 15 : 20,
-      height: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 15 : 20,
+      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 15 : 20,
+      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 15 : 20,
       borderRadius: 10,
       borderWidth: 2,
       borderColor: getColors(theme).icon,

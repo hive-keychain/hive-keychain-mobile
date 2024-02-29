@@ -32,6 +32,7 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {urlTransformer} from 'utils/browser';
+import {Dimensions} from 'utils/common.types';
 import {BrowserConfig} from 'utils/config';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
@@ -66,12 +67,7 @@ const BrowserHeader = ({
 }: Props & PropsFromRedux) => {
   const {HEADER_HEIGHT} = BrowserConfig;
   const insets = useSafeAreaInsets();
-  const styles = getStyles(
-    useWindowDimensions().height,
-    insets,
-    landscape,
-    theme,
-  );
+  const styles = getStyles(useWindowDimensions(), insets, landscape, theme);
 
   const goHome = () => {
     updateTab(activeTab, {url: BrowserConfig.HOMEPAGE_URL});
@@ -170,7 +166,7 @@ const BrowserHeader = ({
 };
 
 const getStyles = (
-  height: number,
+  {width, height}: Dimensions,
   insets: EdgeInsets,
   landscape: boolean,
   theme: Theme,
@@ -225,8 +221,8 @@ const getStyles = (
     },
     marginLeft: {marginLeft: 8},
     favContainer: {
-      width: getInputContainerHeight(height),
-      height: getInputContainerHeight(height),
+      width: getInputContainerHeight(width),
+      height: getInputContainerHeight(width),
       marginBottom: 0,
       justifyContent: 'center',
       alignContent: 'center',
@@ -239,13 +235,13 @@ const getStyles = (
       marginBottom: 8,
     },
     icons: {
-      width: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 16 : 18,
-      height: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 16 : 18,
+      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 16 : 18,
+      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 16 : 18,
       alignSelf: 'center',
     },
     searchBarContainer: {
       borderRadius: 30,
-      height: getInputContainerHeight(height),
+      height: getInputContainerHeight(width),
       paddingHorizontal: 16,
     },
   });
