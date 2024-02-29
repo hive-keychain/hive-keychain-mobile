@@ -1,4 +1,5 @@
 import ForgotPIN from 'components/modals/ForgotPIN';
+import {ModalScreenProps} from 'navigators/Root.types';
 import React from 'react';
 import {
   ScaledSize,
@@ -21,10 +22,11 @@ export default () => {
     <TouchableOpacity
       onPress={() => {
         navigate('ModalScreen', {
+          name: '',
           modalContent: <ForgotPIN theme={theme} />,
           modalContainerStyle: getModalBaseStyle(theme).roundedTop,
           fixedHeight: 0.4,
-        });
+        } as ModalScreenProps);
       }}>
       <Text style={styles.text}>{translate('components.forgotPIN.title')}</Text>
     </TouchableOpacity>
