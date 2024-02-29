@@ -132,20 +132,20 @@ export const underlined: TextStyle = {
   textDecorationLine: 'underline',
 };
 
-export const SMALLEST_SCREEN_HEIGHT_SUPPORTED = 600;
+export const SMALLEST_SCREEN_WIDTH_SUPPORTED = 320;
 
 export const getFontSizeSmallDevices = (
-  height: number,
+  screenWidth: number,
   currentFontSize: number,
-  smallestScreenHeight = SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  smallestScreenWidth = SMALLEST_SCREEN_WIDTH_SUPPORTED,
 ) => {
-  return height <= smallestScreenHeight
+  return screenWidth <= smallestScreenWidth
     ? currentFontSize * 0.7
     : currentFontSize;
 };
 
 export const getFormFontStyle = (
-  height: number,
+  screenWidth: number,
   theme: Theme,
   color?: string,
 ) => {
@@ -154,7 +154,7 @@ export const getFormFontStyle = (
       ...button_link_primary_medium,
       color: color ?? getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        screenWidth,
         {...button_link_primary_medium}.fontSize,
       ),
     } as StyleProp<TextStyle>,
@@ -162,7 +162,7 @@ export const getFormFontStyle = (
       ...body_primary_body_3,
       color: color ?? getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        screenWidth,
         {...body_primary_body_3}.fontSize,
       ),
     } as StyleProp<TextStyle>,
@@ -170,19 +170,19 @@ export const getFormFontStyle = (
       ...title_primary_body_3,
       color: color ?? getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(
-        height,
+        screenWidth,
         {...title_primary_body_3}.fontSize,
       ),
     } as StyleProp<TextStyle>,
     infoLabel: {
       fontFamily: FontPoppinsName.ITALIC,
       color: color ?? getColors(theme).secondaryText,
-      fontSize: getFontSizeSmallDevices(height, 15),
+      fontSize: getFontSizeSmallDevices(screenWidth, 15),
     } as StyleProp<TextStyle>,
     smallLabel: {
       ...title_primary_body_3,
       color: color ?? getColors(theme).secondaryText,
-      fontSize: getFontSizeSmallDevices(height, 12),
+      fontSize: getFontSizeSmallDevices(screenWidth, 12),
     } as StyleProp<TextStyle>,
   };
 };

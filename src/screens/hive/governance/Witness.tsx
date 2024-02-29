@@ -25,7 +25,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   getFontSizeSmallDevices,
   title_primary_title_1,
 } from 'src/styles/typography';
@@ -273,7 +273,7 @@ const Witness = ({
           inputStyle={[styles.text]}
           inputContainerStyle={styles.inputContainer}
           makeExpandable={
-            height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? true : false
+            height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? true : false
           }
         />
         <Separator height={15} />

@@ -5,7 +5,7 @@ import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {SMALLEST_SCREEN_HEIGHT_SUPPORTED} from 'src/styles/typography';
+import {SMALLEST_SCREEN_WIDTH_SUPPORTED} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import RequestItem from './RequestItem';
@@ -62,7 +62,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     dropdownContainer: {
       width: 'auto',
       padding: 0,
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
+      height: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 45 : 50,
       borderRadius: 10,
     },
     dropdownListContainer: {

@@ -17,7 +17,7 @@ import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
@@ -93,7 +93,7 @@ export default () => {
                     />
                   ),
                   fixedHeight:
-                    height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 0.85 : 0.7,
+                    height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.85 : 0.7,
                   additionalWrapperFixedStyle: styles.wrapperFixed,
                   modalPosition: undefined,
                   modalContainerStyle: styles.modalContainer,
@@ -160,7 +160,7 @@ const getStyles = (
       right: 10,
     },
     modalContainer: {
-      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? '90%' : '70%',
+      width: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? '90%' : '70%',
       alignSelf: 'flex-end',
       backgroundColor: 'none',
       borderWidth: 0,

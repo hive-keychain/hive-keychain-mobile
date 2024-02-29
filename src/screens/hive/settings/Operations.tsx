@@ -25,7 +25,7 @@ import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {MARGINPADDING} from 'src/styles/spacing';
 import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_2,
   body_primary_body_3,
   getFontSizeSmallDevices,
@@ -191,7 +191,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       borderRadius: 33,
       marginVertical: 10,
       width: '100%',
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50,
+      height: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 45 : 50,
     },
     opacity: {
       opacity: 0.7,

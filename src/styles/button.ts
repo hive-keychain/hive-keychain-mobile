@@ -3,7 +3,7 @@ import {Theme} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, RED_SHADOW_COLOR, getColors} from './colors';
 import {generateBoxShadowStyle} from './shadow';
 import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   getFontSizeSmallDevices,
 } from './typography';
 
@@ -16,13 +16,13 @@ export const BUTTON_ICON_TEXT_MARGIN = 8;
 export const MAIN_PAGE_ACTION_BUTTONS_WIDTH = '43%';
 
 export const getButtonHeight = (height: number) => {
-  return height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED
+  return height <= SMALLEST_SCREEN_WIDTH_SUPPORTED
     ? BUTTON_MAX_HEIGHT * 0.75
     : BUTTON_MAX_HEIGHT;
 };
 
 export const getButtonIconDimension = (height: number) => {
-  return height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED
+  return height <= SMALLEST_SCREEN_WIDTH_SUPPORTED
     ? BUTTON_ICON_SMALL_WIDTH_HEIGHT
     : BUTTON_ICON_BIG_WIDTH_HEIGHT;
 };

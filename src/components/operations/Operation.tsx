@@ -2,6 +2,7 @@ import CloseButton from 'components/ui/CloseButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
 import {
+  ScrollView,
   StyleProp,
   StyleSheet,
   Text,
@@ -44,7 +45,7 @@ export default ({
           onPress={() => (onClose ? onClose() : goBack())}
         />
       </View>
-      {children}
+      <ScrollView>{children}</ScrollView>
     </>
   );
 };

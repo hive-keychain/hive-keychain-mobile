@@ -1,7 +1,7 @@
 // Define widely used spacing throughout the App
 
 import {getSpaceMultiplier} from './sizeAdjuster';
-import {SMALLEST_SCREEN_HEIGHT_SUPPORTED} from './typography';
+import {SMALLEST_SCREEN_WIDTH_SUPPORTED} from './typography';
 
 // Usage : In stylesheet : {..., marginLeft:getSpacing(widht,height).mainMarginHorizontal }
 // If you need a static value, no need to pass width and height  {..., marginLeft:getSpacing().mainFixedMargin }
@@ -28,7 +28,7 @@ export const getSpacing = (width = 0, height = 0) => {
 };
 
 export const getElementHeight = (height: number) => {
-  return height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 45 : 50;
+  return height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 45 : 50;
 };
 
 export const getSpaceAdjustMultiplier = (

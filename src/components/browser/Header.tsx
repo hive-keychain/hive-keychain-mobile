@@ -27,7 +27,7 @@ import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getInputContainerHeight} from 'src/styles/input';
 import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
@@ -239,8 +239,8 @@ const getStyles = (
       marginBottom: 8,
     },
     icons: {
-      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 16 : 18,
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 16 : 18,
+      width: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 16 : 18,
+      height: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 16 : 18,
       alignSelf: 'center',
     },
     searchBarContainer: {

@@ -19,7 +19,7 @@ import {
 } from 'src/styles/colors';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   button_link_primary_medium,
   button_link_primary_small,
   getFontSizeSmallDevices,
@@ -255,7 +255,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       width: '100%',
       borderColor: getColors(theme).tertiaryCardBorderColor,
       marginBottom: 10,
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 35 : 50,
+      height: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 35 : 50,
     },
     itemContainer: {
       justifyContent: 'center',
@@ -302,7 +302,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       backgroundColor: PRIMARY_RED_COLOR,
       width: '55%',
       alignSelf: 'center',
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 30 : 40,
+      height: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 30 : 40,
       marginVertical: 8,
     },
     activeFilterItem: {

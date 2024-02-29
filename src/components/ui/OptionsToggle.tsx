@@ -12,7 +12,7 @@ import {CheckBox} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_1,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
@@ -79,8 +79,8 @@ const getStyles = (theme: Theme, height: number) =>
     toggled: {flex: 1, justifyContent: 'center'},
     untoggled: {display: 'none'},
     toggleButton: {
-      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 15 : 20,
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 15 : 20,
+      width: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 15 : 20,
+      height: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 15 : 20,
       borderRadius: 10,
       borderWidth: 2,
       borderColor: getColors(theme).icon,

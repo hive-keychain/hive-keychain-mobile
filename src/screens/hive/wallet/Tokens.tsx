@@ -26,7 +26,7 @@ import {TokenBalance} from 'src/interfaces/tokens.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_1,
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
@@ -260,7 +260,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       marginTop: 35,
     },
     searchBar: {
-      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? '80%' : '85%',
+      width: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? '80%' : '85%',
     },
   });
 

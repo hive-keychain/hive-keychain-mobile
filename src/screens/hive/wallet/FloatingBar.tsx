@@ -19,7 +19,7 @@ import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getIconDimensions} from 'src/styles/icon';
 import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
@@ -190,7 +190,7 @@ const getStyles = (theme: Theme, height: number, insets: EdgeInsets) =>
     itemContainer: {
       alignItems: 'center',
       justifyContent: 'center',
-      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? '20%' : '25%',
+      width: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? '20%' : '25%',
     },
     marginTop: {
       marginTop: 5,

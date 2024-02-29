@@ -17,7 +17,7 @@ import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonHeight, getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
-  SMALLEST_SCREEN_HEIGHT_SUPPORTED,
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   button_link_primary_medium,
   getFontSizeSmallDevices,
   title_primary_title_1,
@@ -61,8 +61,8 @@ const Message = ({
 
   const renderIcon = () => {
     const iconDimensions = {
-      width: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 70 : 120,
-      height: height <= SMALLEST_SCREEN_HEIGHT_SUPPORTED ? 70 : 120,
+      width: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 70 : 120,
+      height: height <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 70 : 120,
     };
     switch (messageModal.type) {
       case MessageModalType.SUCCESS:
