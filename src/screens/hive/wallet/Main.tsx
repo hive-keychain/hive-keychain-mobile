@@ -500,8 +500,11 @@ const Main = ({
                             <Loader size={'small'} animating />
                           </View>
                         )}
-                      {!userTokens.loading &&
-                        filteredUserTokenBalanceList.length === 0 && (
+                      {/* //TODO keep finding a way to make it work. */}
+                      {/* //   also ask quentin what should show when user has no tokens or just we keep this bellow */}
+                      {/* {!userTokens.loading &&
+                        filteredUserTokenBalanceList.length === 0 &&
+                        orderedUserTokenBalanceList.length === 0 && (
                           <View
                             style={[
                               getCardStyle(theme).filledWrapper,
@@ -509,6 +512,19 @@ const Main = ({
                             ]}>
                             <Text style={styles.no_tokens}>
                               {translate('wallet.no_tokens')}
+                            </Text>
+                          </View>
+                        )} */}
+                      {!userTokens.loading &&
+                        orderedUserTokenBalanceList.length > 0 &&
+                        filteredUserTokenBalanceList.length === 0 && (
+                          <View
+                            style={[
+                              getCardStyle(theme).filledWrapper,
+                              styles.filledWrapper,
+                            ]}>
+                            <Text style={styles.no_tokens}>
+                              No tokens found, try clear your filters
                             </Text>
                           </View>
                         )}
