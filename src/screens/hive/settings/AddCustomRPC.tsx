@@ -94,7 +94,7 @@ const AddCustomRPC = ({
             paddingHorizontal: MARGINPADDING,
           }}
           additionalListExpandedContainerStyle={{
-            width: width * 0.79,
+            width: width * 0.77,
           }}
           selectedBgColor={PRIMARY_RED_COLOR}
         />
@@ -189,7 +189,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       alignContent: 'center',
     },
     dropdownSelector: {
-      width: width * 0.79,
+      width: width * 0.77,
     },
     dropdownIconDimensions: {width: 15, height: 15},
     indent: {

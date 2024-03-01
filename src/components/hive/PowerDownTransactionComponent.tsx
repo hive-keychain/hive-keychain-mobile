@@ -43,7 +43,7 @@ const PowerDownTransactionComponent = ({
     ? `${translate('wallet.operations.powerdown.cancelled_power_down')}`
     : `${translate('common.initiated_a')} ${formattedAmount} ${
         amount.split(' ')[1]
-      }`;
+      } `;
   const text2 = isCancellation
     ? undefined
     : `${translate('wallet.operations.powerdown.info_power_down')}`;
@@ -64,6 +64,8 @@ const PowerDownTransactionComponent = ({
             additionalContainerStyle={getRotateStyle('180')}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
+            width={24}
+            height={24}
           />
         ) : null
       }

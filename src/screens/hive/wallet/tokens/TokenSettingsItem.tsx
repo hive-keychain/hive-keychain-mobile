@@ -100,17 +100,17 @@ const TokenSettingsItem = ({
               size={22}
             />
             <View>
-              <Text>
+              <Text style={styles.textAlignedRight}>
                 <Text style={styles.textBase}>{token.symbol} </Text>
                 <Text style={styles.textBase}>
                   {translate('wallet.operations.token_settings.issued_by')}
                 </Text>
               </Text>
-              <Text style={styles.textBase}>
+              <Text style={[styles.textBase, styles.textAlignedRight]}>
                 {' @'}
                 {token.issuer}
               </Text>
-              <Text style={styles.textBase}>
+              <Text style={[styles.textBase, styles.textAlignedRight]}>
                 {nFormatter(parseFloat(token.circulatingSupply), 3)}
                 {'/'}
                 {nFormatter(parseFloat(token.maxSupply), 3)}
@@ -173,6 +173,7 @@ const getStyles = (
       alignItems: 'center',
       justifyContent: 'space-between',
     },
+    textAlignedRight: {textAlign: 'right'},
   });
 
 export default TokenSettingsItem;

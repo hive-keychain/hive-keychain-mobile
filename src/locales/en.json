@@ -229,7 +229,7 @@
         "title": "Delegate Hive Power",
         "incoming": "Incoming Delegations",
         "outgoing": "Outgoing Delegations",
-        "info_delegation_out": "to @{{delegatee}}",
+        "info_delegation_out": "Delegated to @{{delegatee}}",
         "cancelled_delegation": "Cancelled delegation to @{{delegatee}}",
         "info_delegation_in": "@{{delegator}} delegated",
         "title_button": "HP Deleg.",

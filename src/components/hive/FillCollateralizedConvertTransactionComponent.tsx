@@ -50,6 +50,8 @@ const FillCollateralizedConvertTransactionComponent = ({
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
+            width={24}
+            height={24}
           />
         ) : null
       }

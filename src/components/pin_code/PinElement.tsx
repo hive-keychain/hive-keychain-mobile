@@ -42,9 +42,12 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
         {helper ? <Text style={styles.helper}>{helper}</Text> : null}
         {back ? (
           theme === Theme.DARK ? (
-            <BackspaceDark style={styles.backspace} />
+            <BackspaceDark style={styles.backspace} {...styles.backSpaceIcon} />
           ) : (
-            <BackspaceLight style={styles.backspace} />
+            <BackspaceLight
+              style={styles.backspace}
+              {...styles.backSpaceIcon}
+            />
           )
         ) : null}
       </View>
@@ -133,5 +136,9 @@ const getStyles = (
       right: 0,
       width: 40,
       height: 40,
+    },
+    backSpaceIcon: {
+      width: 35,
+      height: 35,
     },
   });
