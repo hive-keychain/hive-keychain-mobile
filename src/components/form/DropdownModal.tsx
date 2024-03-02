@@ -186,12 +186,14 @@ const DropdownModal = ({
           paddingHorizontal: 10,
           alignContent: 'space-between',
         } as ViewStyle)
-      : null;
+      : undefined;
     const labelTextStyle = showSelectedBgOnItem
       ? ({
           color: 'white',
         } as ViewStyle)
-      : null;
+      : ({
+          marginLeft: MIN_SEPARATION_ELEMENTS,
+        } as ViewStyle);
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -201,8 +203,8 @@ const DropdownModal = ({
           bgStyle,
           isLastItem && index > 2 ? {paddingBottom: 20} : undefined,
         ]}>
-        {item.icon}
         <View style={[innerContainerStyle, innerContainerBgStyle]}>
+          {item.icon}
           <Text style={[styles.textBase, styles.smallerText, labelTextStyle]}>
             {item.label}
           </Text>
@@ -214,8 +216,8 @@ const DropdownModal = ({
               color={showSelectedBgOnItem ? 'white' : PRIMARY_RED_COLOR}
             />
           )}
-          {typeof item === 'object' ? renderCopyOrSelectedIcon(item) : null}
         </View>
+        {typeof item === 'object' ? renderCopyOrSelectedIcon(item) : null}
       </TouchableOpacity>
     );
   };
@@ -368,6 +370,7 @@ const getStyles = (
       marginTop: MIN_SEPARATION_ELEMENTS,
       bottom: undefined,
       width: '100%',
+      height: 'auto',
       maxHeight: 120,
     },
     textBase: {
