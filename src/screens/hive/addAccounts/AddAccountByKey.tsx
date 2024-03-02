@@ -113,7 +113,7 @@ const AddAccountByKey = ({
               labelInput={translate('common.username')}
               placeholder={translate('common.username')}
               value={account}
-              onChangeText={setAccount}
+              onChangeText={(textValue) => setAccount(textValue.toLowerCase())}
               inputStyle={[styles.text, styles.smallerText]}
             />
             <Separator height={height / 15} />
