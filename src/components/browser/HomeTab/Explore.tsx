@@ -13,6 +13,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {useChainContext} from 'src/context/multichain.context';
 import {Theme} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {MARGINLEFTRIGHTMIN, MIN_SEPARATION_ELEMENTS} from 'src/styles/spacing';
 import {
   body_primary_body_1,
   getFontSizeSmallDevices,
@@ -137,7 +138,7 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
       marginTop: 10,
       paddingTop: 25,
       borderTopLeftRadius: 40,
-      paddingLeft: 30,
+      paddingLeft: MIN_SEPARATION_ELEMENTS,
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
     },
@@ -148,7 +149,9 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
       marginBottom: 30,
     },
     text: {fontSize: getFontSizeSmallDevices(width, 13)},
-    scroll: {marginLeft: 0.03 * width, marginBottom: 20},
+    scroll: {
+      marginBottom: 20,
+    },
     textBase: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_1,
@@ -160,6 +163,7 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
         width,
         {...headlines_primary_headline_2}.fontSize,
       ),
+      paddingLeft: MARGINLEFTRIGHTMIN,
     },
     cards: {
       marginTop: 30,
