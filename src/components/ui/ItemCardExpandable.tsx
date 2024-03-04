@@ -48,9 +48,15 @@ const ItemCardExpandable = ({
           <View style={[styles.row]}>
             {icon && <View style={styles.iconContainer}>{icon}</View>}
             <View style={[styles.flexWrapGrow2, styles.width140]}>
-              <Text style={[styles.textBase]}>{textLine1}</Text>
-              {textLine2 && <Text style={[styles.textBase]}>{textLine2}</Text>}
-              {textLine3 && <Text style={[styles.textBase]}>{textLine3}</Text>}
+              <View>
+                <Text style={[styles.textBase]}>{textLine1}</Text>
+                {textLine2 && (
+                  <Text style={[styles.textBase]}>{textLine2}</Text>
+                )}
+                {textLine3 && (
+                  <Text style={[styles.textBase]}>{textLine3}</Text>
+                )}
+              </View>
             </View>
             <View style={[styles.dateExpanderContainer]}>
               <Text style={styles.textBase}>{date}</Text>
