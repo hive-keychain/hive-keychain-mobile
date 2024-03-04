@@ -23,7 +23,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
-import {PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getRotateStyle} from 'src/styles/transform';
 import {
@@ -317,6 +317,18 @@ const Convert = ({
               height: 80,
             }}
             dropdownIconScaledSize={{width: 15, height: 15}}
+            drawLineBellowSelectedItem
+            showSelectedIcon={
+              <Icon
+                name={Icons.CHECK}
+                theme={theme}
+                width={18}
+                height={18}
+                strokeWidth={2}
+                color={PRIMARY_RED_COLOR}
+              />
+            }
+            additionalLineStyle={styles.bottomLineDropdownItem}
           />
           <Separator />
           <OperationInput
@@ -465,6 +477,12 @@ const getDimensionedStyles = (
       height: '100%',
     },
     marginLeft: {marginLeft: 15},
+    bottomLineDropdownItem: {
+      borderWidth: 1,
+      width: '85%',
+      borderColor: getColors(theme).lineSeparatorStroke,
+      alignSelf: 'center',
+    },
   });
 
 const connector = connect(
