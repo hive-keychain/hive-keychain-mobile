@@ -77,7 +77,7 @@ const CurrencyToken = ({
 
   const styles = getStyles(theme, useWindowDimensions());
 
-  const getHPPrefix = (value: string | number) => {
+  const getPlusPrefix = (value: string | number) => {
     if (typeof value === 'string') {
       return parseFloat(value) > 0 ? '+' : undefined;
     } else if (typeof value === 'number') {
@@ -93,6 +93,9 @@ const CurrencyToken = ({
           parseFloat(user.account.savings_balance as string) > 0
             ? (user.account.savings_balance as string).split(' ')[0]
             : undefined,
+        );
+        setPreFixSubValue(
+          getPlusPrefix(user.account.savings_balance as string),
         );
       } else if (currencyName === 'HBD') {
         setValue(parseFloat(user.account.hbd_balance as string));
@@ -124,7 +127,7 @@ const CurrencyToken = ({
 
         const delegation = toHP(delegationVestingShares, properties.globals);
         setSubValue(delegation.toFixed(3));
-        setPreFixSubValue(getHPPrefix(delegation));
+        setPreFixSubValue(getPlusPrefix(delegation));
         setSubValueShortDescription(translate('common.deleg'));
       }
     }
