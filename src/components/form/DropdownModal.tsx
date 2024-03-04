@@ -69,7 +69,8 @@ interface Props {
   copyButtonValue?: boolean;
   selectedBgColor?: string;
 }
-
+//TODO bellow
+//  - change the dropdown for strings, same as ext. Check rpcNodes adv settings in ext.
 const DropdownModal = ({
   selected,
   list,

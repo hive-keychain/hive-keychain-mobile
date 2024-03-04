@@ -138,7 +138,7 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
       marginTop: 10,
       paddingTop: 25,
       borderTopLeftRadius: 40,
-      paddingLeft: MIN_SEPARATION_ELEMENTS,
+      paddingLeft: MARGINLEFTRIGHTMIN,
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
     },
@@ -163,7 +163,7 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
         width,
         {...headlines_primary_headline_2}.fontSize,
       ),
-      paddingLeft: MARGINLEFTRIGHTMIN,
+      paddingLeft: MIN_SEPARATION_ELEMENTS,
     },
     cards: {
       marginTop: 30,

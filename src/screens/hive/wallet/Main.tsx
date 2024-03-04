@@ -502,7 +502,7 @@ const Main = ({
                         )}
                       {/* //TODO keep finding a way to make it work. */}
                       {/* //   also ask quentin what should show when user has no tokens or just we keep this bellow */}
-                      {/* {!userTokens.loading &&
+                      {!userTokens.loading &&
                         filteredUserTokenBalanceList.length === 0 &&
                         orderedUserTokenBalanceList.length === 0 && (
                           <View
@@ -514,7 +514,7 @@ const Main = ({
                               {translate('wallet.no_tokens')}
                             </Text>
                           </View>
-                        )} */}
+                        )}
                       {!userTokens.loading &&
                         orderedUserTokenBalanceList.length > 0 &&
                         filteredUserTokenBalanceList.length === 0 && (
