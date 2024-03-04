@@ -104,7 +104,7 @@ const getStyles = (nb: number, theme: Theme, {width, height}: Dimensions) =>
       justifyContent: 'space-between',
     },
     headerElt: {
-      width: `${Math.round(90 / nb)}%`,
+      minWidth: `${Math.round(90 / nb)}%`,
     },
     headerText: {
       ...title_primary_title_1,
