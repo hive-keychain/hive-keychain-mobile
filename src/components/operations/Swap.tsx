@@ -68,20 +68,10 @@ export interface OptionItem {
   img?: string;
   imgBackup?: string;
 }
-
 interface Props {
   theme: Theme;
 }
-//TODO imporant:
-//  - finish this new dropdownModal, code it in a way that can be reused in all the project.
-//  - not change it yet in the whole project to have a commit where we can goback if needed.
-//  - commit changes. Test Swap.
-//  - add same component to RPC settings as well.
-//  - test it & commit.
-//  - finally use it eveywhere & test to ensure it works, then commit.
-//  - Other bugs/issues:
-//    -> in Main:
-//      - fix the "not engine tokens found" being showed while loading.
+
 const Swap = ({
   theme,
   loadTokensMarket,
@@ -669,6 +659,18 @@ const Swap = ({
                   bottomLabelInfo={`${translate(
                     'common.available',
                   )}: ${parseFloat(startToken.value.balance).toFixed(3)}`}
+                  drawLineBellowSelectedItem
+                  showSelectedIcon={
+                    <Icon
+                      name={Icons.CHECK}
+                      theme={theme}
+                      width={18}
+                      height={18}
+                      strokeWidth={2}
+                      color={PRIMARY_RED_COLOR}
+                    />
+                  }
+                  additionalLineStyle={styles.bottomLineDropdownItem}
                 />
                 <OperationInput
                   keyboardType="decimal-pad"
@@ -761,6 +763,18 @@ const Swap = ({
                   additionalMainContainerDropdown={{
                     width: '44%',
                   }}
+                  drawLineBellowSelectedItem
+                  showSelectedIcon={
+                    <Icon
+                      name={Icons.CHECK}
+                      theme={theme}
+                      width={18}
+                      height={18}
+                      strokeWidth={2}
+                      color={PRIMARY_RED_COLOR}
+                    />
+                  }
+                  additionalLineStyle={styles.bottomLineDropdownItem}
                 />
                 <OperationInput
                   disabled
@@ -995,6 +1009,12 @@ const getStyles = (theme: Theme) =>
     },
     redText: {
       color: PRIMARY_RED_COLOR,
+    },
+    bottomLineDropdownItem: {
+      borderWidth: 1,
+      width: '85%',
+      borderColor: getColors(theme).lineSeparatorStroke,
+      alignSelf: 'center',
     },
   });
 
