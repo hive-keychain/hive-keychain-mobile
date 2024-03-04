@@ -193,14 +193,12 @@ const RpcNodes = ({
             selected={typeof activeRpc === 'object' ? activeRpc.uri : activeRpc}
             onSelected={(selected) => onHandleSetRPC(selected.value)}
             onRemove={(item) => handleOnRemoveCustomRPC(item)}
-            additionalDropdowContainerStyle={[styles.dropdownSelector]}
+            additionalDropdowContainerStyle={[styles.dropdownWidth]}
             dropdownIconScaledSize={styles.dropdownIconDimensions}
             additionalOverlayStyle={{
               paddingHorizontal: MARGINPADDING,
             }}
-            additionalListExpandedContainerStyle={{
-              width: width * 0.79,
-            }}
+            additionalListExpandedContainerStyle={styles.dropdownWidth}
             selectedBgColor={PRIMARY_RED_COLOR}
           />
           <TouchableOpacity
@@ -539,8 +537,8 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       alignItems: 'center',
       marginBottom: MARGINLEFTRIGHTMIN,
     },
-    dropdownSelector: {
-      width: width * 0.79,
+    dropdownWidth: {
+      width: width * 0.77,
     },
     addButton: {
       alignItems: 'center',

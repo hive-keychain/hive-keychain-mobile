@@ -88,14 +88,12 @@ const AddCustomRPC = ({
           selected={selectedRPC ?? rpcList[0].value}
           onSelected={(selectedItem) => onSelectedDropdown(selectedItem.value)}
           onRemove={onRemoveDropdownItem}
-          additionalDropdowContainerStyle={[styles.dropdownSelector]}
+          additionalDropdowContainerStyle={[styles.dropdownWidth]}
           dropdownIconScaledSize={styles.dropdownIconDimensions}
           additionalOverlayStyle={{
             paddingHorizontal: MARGINPADDING,
           }}
-          additionalListExpandedContainerStyle={{
-            width: width * 0.77,
-          }}
+          additionalListExpandedContainerStyle={styles.dropdownWidth}
           selectedBgColor={PRIMARY_RED_COLOR}
         />
         <TouchableOpacity
@@ -188,7 +186,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       borderWidth: 0,
       alignContent: 'center',
     },
-    dropdownSelector: {
+    dropdownWidth: {
       width: width * 0.77,
     },
     dropdownIconDimensions: {width: 15, height: 15},
