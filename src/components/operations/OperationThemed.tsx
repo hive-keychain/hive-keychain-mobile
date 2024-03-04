@@ -33,6 +33,11 @@ const OperationThemed = ({
 }: OperationProps) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useSafeAreaInsets(), additionalSVGOpacity);
+  //TODO important here bellow:
+  //  - related to transfer and every compo using the space-between.
+  //  - quentint suggestion:
+  //    -> The best for this would be to use flexbox, with flex:1 to get the content element to take the whole screen, and a defined height for the button at the bottom:
+  //    - https://stackoverflow.com/questions/52539528/how-to-position-a-view-at-the-bottom-of-a-scrollview
 
   return (
     <Background

@@ -18,6 +18,11 @@ const Stack = createStackNavigator<SignupStackParamList>();
 export default () => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
+  //TODO bellow intro related, add animation.
+  //  ref: You said you did all the other points, but im checking the first one and I dont see any animation between the elements of the introduction
+  // On most apps it looks like something like this :
+  // https://medium.com/backticks-tildes/create-a-custom-app-intro-slider-in-react-native-4308fae83ad1
+
   return (
     <Stack.Navigator>
       <Stack.Screen

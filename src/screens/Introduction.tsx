@@ -14,15 +14,17 @@ import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import {IntroductionNavProp} from 'navigators/Signup.types';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   Linking,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
   StyleSheet,
   Text,
   View,
   useWindowDimensions,
 } from 'react-native';
-import GestureRecognizer from 'react-native-swipe-gestures';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {
   NEUTRAL_WHITE_COLOR,
@@ -40,6 +42,7 @@ import {hiveConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 
 const Introduction = ({navigation}: IntroductionNavProp) => {
+  const scrollViewRef = useRef();
   const {height, width} = useWindowDimensions();
   const {theme} = useThemeContext();
   const spaced = getSpaceAdjustMultiplier(width, height);
@@ -76,7 +79,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
   const [introductionStepList, setIntroductionStepList] = React.useState<
     JSX.Element[]
   >([
-    <>
+    <View style={{width, height}}>
       <View style={[styles.centeredView, styles.flexAbsCentered]}>
         <BackgroundSquares {...styles.backgroundSquares} />
       </View>
@@ -88,8 +91,9 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           {translate('intro.intro_text_1')}
         </Text>
       </View>
-    </>,
-    <View style={[styles.centeredView, styles.flexBetween70]}>
+    </View>,
+
+    <View style={[{width, height}, styles.centeredView, styles.flexBetween70]}>
       {renderLogos(false)}
       <Hand {...styles.imageHive} />
       {theme === Theme.DARK ? <Dots2Dark /> : <Dots2Light />}
@@ -97,7 +101,8 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
         {translate('intro.intro_text_2')}
       </Text>
     </View>,
-    <>
+
+    <View style={{width, height}}>
       <View style={[styles.flexBetween70]}>
         {renderLogos(true)}
         <Text style={styles.text}>{translate('intro.text')}</Text>
@@ -123,7 +128,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
         />
         <Separator height={height * spaced.multiplier} />
       </View>
-    </>,
+    </View>,
   ]);
   const [currentStep, setCurrentStep] = React.useState(0);
 
@@ -133,6 +138,41 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
     if (introductionStepList[step]) setCurrentStep(step);
   };
 
+  useEffect(() => {
+    if (scrollViewRef && scrollViewRef.current) {
+      console.log('Should scrollTo', {currentStep}); //TODO remove line
+      (scrollViewRef.current as any).scrollTo({
+        x: width * currentStep,
+        animated: true,
+      });
+    }
+  }, [currentStep]);
+
+  //TODO cleanup
+  // const toNextPage = () => {
+  //   let step = currentStep;
+  //   step++;
+  //   if (scrollViewRef && scrollViewRef.current) {
+  //     console.log('Should scrollTo', {step}); //TODO remove line
+  //     (scrollViewRef.current as any).scrollTo({
+  //       x: width * currentStep,
+  //       animated: true,
+  //     });
+  //   }
+  // };
+
+  const onHandleScrollEndDrag = (
+    event: NativeSyntheticEvent<NativeScrollEvent>,
+  ) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    console.log({contentOffsetX});
+    if (contentOffsetX < width) {
+      console.log('Moving left!');
+    } else if (contentOffsetX >= width) {
+      console.log('Moving right!');
+    }
+  };
+
   return (
     <Background theme={theme}>
       <>
@@ -140,19 +180,100 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           backgroundColor={getColors(theme).primaryBackground}
           barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
         />
-        <GestureRecognizer
+        {/* <GestureRecognizer
           style={styles.flexAround}
-          onSwipeLeft={() => handleNextStep()}>
-          {introductionStepList[currentStep]}
-          {currentStep < introductionStepList.length - 1 && (
+          onSwipeLeft={() => handleNextStep()}> */}
+        <ScrollView
+          ref={scrollViewRef}
+          style={{flex: 1}}
+          horizontal={true}
+          scrollEventThrottle={16}
+          // onScroll={onHandleScroll}
+          onScrollEndDrag={onHandleScrollEndDrag}
+          pagingEnabled={true}
+          // contentContainerStyle={{
+          //   alignItems: 'center',
+          //   alignContent: 'center',
+          // }}
+        >
+          {/* {introductionStepList[currentStep]} */}
+          {/* {currentStep < introductionStepList.length - 1 && (
             <EllipticButton
               title={translate('common.next')}
               onPress={() => handleNextStep()}
               style={styles.warningProceedButton}
               additionalTextStyle={styles.textButtonFilled}
             />
-          )}
-        </GestureRecognizer>
+          )} */}
+          <View style={styles.scrollableScreen}>
+            <View style={[styles.centeredView, styles.flexAbsCentered]}>
+              <BackgroundSquares {...styles.backgroundSquares} />
+            </View>
+            <View style={[styles.centeredView, styles.flexBetween70]}>
+              {renderLogos(false)}
+              <Person1 {...styles.imageHive} />
+              {theme === Theme.DARK ? <Dots1Dark /> : <Dots1Light />}
+              <Text style={{...styles.text, ...headlines_primary_headline_2}}>
+                {translate('intro.intro_text_1')}
+              </Text>
+            </View>
+            <EllipticButton
+              title={translate('common.next')}
+              onPress={handleNextStep}
+              style={styles.warningProceedButton}
+              additionalTextStyle={styles.textButtonFilled}
+            />
+          </View>
+
+          <View
+            style={[
+              styles.scrollableScreen,
+              styles.centeredView,
+              styles.flexBetween70,
+            ]}>
+            {renderLogos(false)}
+            <Hand {...styles.imageHive} />
+            {theme === Theme.DARK ? <Dots2Dark /> : <Dots2Light />}
+            <Text style={{...styles.text, ...headlines_primary_headline_2}}>
+              {translate('intro.intro_text_2')}
+            </Text>
+            <EllipticButton
+              title={translate('common.next')}
+              onPress={handleNextStep}
+              style={styles.warningProceedButton}
+              additionalTextStyle={styles.textButtonFilled}
+            />
+          </View>
+
+          <View style={styles.scrollableScreen}>
+            <View style={[styles.flexBetween70]}>
+              {renderLogos(true)}
+              <Text style={styles.text}>{translate('intro.text')}</Text>
+              <Text style={styles.text}>{translate('intro.manage')}</Text>
+            </View>
+            <View>
+              <EllipticButton
+                title={translate('intro.existingAccount')}
+                onPress={() => {
+                  navigation.navigate('SignupScreen');
+                }}
+                style={styles.outlineButton}
+                additionalTextStyle={styles.textOutLineButton}
+              />
+              <Separator height={height * 0.02} />
+              <EllipticButton
+                title={translate('intro.createAccount')}
+                onPress={() => {
+                  Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
+                }}
+                style={styles.warningProceedButton}
+                additionalTextStyle={styles.textButtonFilled}
+              />
+              <Separator height={height * spaced.multiplier} />
+            </View>
+          </View>
+        </ScrollView>
+        {/* </GestureRecognizer> */}
       </>
     </Background>
   );
@@ -163,6 +284,12 @@ const getDimensionedStyles = (
   adjustMultiplier: number,
 ) =>
   StyleSheet.create({
+    scrollableScreen: {
+      width,
+      height,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     backgroundSquares: {
       width: width * 0.85,
       bottom: undefined,
