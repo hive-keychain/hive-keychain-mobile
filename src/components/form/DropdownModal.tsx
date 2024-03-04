@@ -42,14 +42,7 @@ export interface DropdownModalItem {
   removable?: boolean;
   icon?: JSX.Element;
 }
-
-//TODO important:
-//  - check with quentin to fix the error happening in swap about not refreshing the icon picture.
-//  - add into rpc, will need to add code from other dropdown components.
-//  - replace all places!!! just one dropdown from now on. & after testing all good, remove old versions.
-//   -> done in: Main.
 interface Props {
-  //TODO check bellow if not needed to add string[] | dropdown[] and code both.
   list: DropdownModalItem[];
   selected: string | DropdownModalItem;
   onSelected: (itemValue: DropdownModalItem) => void;
@@ -72,8 +65,7 @@ interface Props {
   selectedBgColor?: string;
   drawLineBellowSelectedItem?: boolean;
 }
-//TODO bellow
-//  - change the dropdown for strings, same as ext. Check rpcNodes adv settings in ext.
+
 const DropdownModal = ({
   selected,
   list,
@@ -142,14 +134,6 @@ const DropdownModal = ({
     const isMatchingObjectSelected =
       typeof selected === 'object' &&
       (selected.value === item.value || selected.label === item.label);
-
-    console.log({
-      t: typeof selected,
-      item,
-      showSelectedIcon,
-      selected,
-      isMatchingObjectSelected,
-    }); //TODO remove line
 
     return showSelectedIcon || copyButtonValue ? (
       <View

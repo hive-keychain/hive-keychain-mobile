@@ -40,6 +40,7 @@ import {
   headlines_primary_headline_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import {DEFAULT_RPC} from 'utils/hive';
 import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 import {rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
@@ -172,6 +173,9 @@ const RpcNodes = ({
   };
 
   const handleOnRemoveCustomRPC = async (uri: string) => {
+    if (activeRpc.uri === uri) {
+      onHandleSetRPC(DEFAULT_RPC);
+    }
     await deleteCustomRpc(customRPCList, {uri});
     const updatedFullList = [...rpcFullList];
     setRpcFullList(updatedFullList.filter((removed) => removed.value !== uri));
