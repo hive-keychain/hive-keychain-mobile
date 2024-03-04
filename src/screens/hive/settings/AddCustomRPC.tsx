@@ -1,3 +1,4 @@
+import {Rpc} from 'actions/interfaces';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -23,8 +24,8 @@ import {
   MARGINPADDING,
 } from 'src/styles/spacing';
 import {
-  body_primary_body_2,
   getFontSizeSmallDevices,
+  headlines_primary_headline_3,
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
 
@@ -66,6 +67,17 @@ const AddCustomRPC = ({
 }: Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, width, height);
+
+  const cleanRpcLabel = (label: string) =>
+    label.replace('http://', '').replace('https://', '').split('/')[0];
+
+  const getItemDropDownSelected = (rpcItem: Rpc): DropdownModalItem => {
+    return {
+      label: cleanRpcLabel(rpcItem.uri),
+      value: rpcItem.uri,
+    };
+  };
+
   return (
     <View
       style={{
@@ -85,7 +97,7 @@ const AddCustomRPC = ({
       <View style={styles.rpcItemContainer}>
         <DropdownModal
           list={rpcList}
-          selected={selectedRPC ?? rpcList[0].value}
+          selected={getItemDropDownSelected({uri: selectedRPC} as Rpc)}
           onSelected={(selectedItem) => onSelectedDropdown(selectedItem.value)}
           onRemove={onRemoveDropdownItem}
           additionalDropdowContainerStyle={[styles.dropdownWidth]}
@@ -94,12 +106,25 @@ const AddCustomRPC = ({
             paddingHorizontal: MARGINPADDING,
           }}
           additionalListExpandedContainerStyle={styles.dropdownWidth}
-          selectedBgColor={PRIMARY_RED_COLOR}
+          drawLineBellowSelectedItem
+          showSelectedIcon={
+            <Icon
+              name={Icons.CHECK}
+              theme={theme}
+              width={18}
+              height={18}
+              strokeWidth={2}
+              color={PRIMARY_RED_COLOR}
+            />
+          }
+          additionalLineStyle={styles.bottomLineDropdownItem}
         />
         <TouchableOpacity
           style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
           onPress={setAddNewRpc}>
-          <Text style={styles.text}>{addNewRpc ? 'x' : '+'}</Text>
+          <Text style={[styles.text, styles.textAdd]}>
+            {addNewRpc ? 'x' : '+'}
+          </Text>
         </TouchableOpacity>
       </View>
       {addNewRpc && (
@@ -154,8 +179,11 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     },
     text: {
       color: getColors(theme).secondaryText,
-      ...body_primary_body_2,
+      ...headlines_primary_headline_3,
       fontSize: getFontSizeSmallDevices(width, 13),
+    },
+    textAdd: {
+      fontSize: getFontSizeSmallDevices(width, 15),
     },
     rpcItemContainer: {
       flexDirection: 'row',
@@ -192,6 +220,12 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     dropdownIconDimensions: {width: 15, height: 15},
     indent: {
       marginLeft: LABELINDENTSPACE,
+    },
+    bottomLineDropdownItem: {
+      borderWidth: 1,
+      width: '85%',
+      borderColor: getColors(theme).lineSeparatorStroke,
+      alignSelf: 'center',
     },
   });
 

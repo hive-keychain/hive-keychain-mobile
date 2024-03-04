@@ -1,5 +1,6 @@
 import Clipboard from '@react-native-community/clipboard';
 import Icon from 'components/hive/Icon';
+import Separator from 'components/ui/Separator';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   FlatList,
@@ -61,6 +62,7 @@ interface Props {
   additionalMainContainerDropdown?: StyleProp<ViewStyle>;
   additionalListExpandedContainerStyle?: StyleProp<ViewStyle>;
   additionalOverlayStyle?: StyleProp<ViewStyle>;
+  additionalLineStyle?: StyleProp<ViewStyle>;
   dropdownTtitleTr?: string;
   removeDropdownTitleIndent?: boolean;
   enableSearch?: boolean;
@@ -68,6 +70,7 @@ interface Props {
   showSelectedIcon?: JSX.Element;
   copyButtonValue?: boolean;
   selectedBgColor?: string;
+  drawLineBellowSelectedItem?: boolean;
 }
 //TODO bellow
 //  - change the dropdown for strings, same as ext. Check rpcNodes adv settings in ext.
@@ -91,6 +94,8 @@ const DropdownModal = ({
   selectedBgColor,
   addExtraHeightFromElements,
   onRemove,
+  drawLineBellowSelectedItem,
+  additionalLineStyle,
 }: Props) => {
   const dropdownContainerRef = useRef();
   const [dropdownPageY, setDropdownPageY] = useState(0);
@@ -134,6 +139,18 @@ const DropdownModal = ({
   };
 
   const renderCopyOrSelectedIcon = (item: DropdownModalItem) => {
+    const isMatchingObjectSelected =
+      typeof selected === 'object' &&
+      (selected.value === item.value || selected.label === item.label);
+
+    console.log({
+      t: typeof selected,
+      item,
+      showSelectedIcon,
+      selected,
+      isMatchingObjectSelected,
+    }); //TODO remove line
+
     return showSelectedIcon || copyButtonValue ? (
       <View
         style={[
@@ -154,11 +171,9 @@ const DropdownModal = ({
             color={PRIMARY_RED_COLOR}
           />
         )}
-        <View style={{width: 20}}>
-          {typeof selected === 'object' && selected.value === item.value
-            ? showSelectedIcon
-            : null}
-        </View>
+        {isMatchingObjectSelected ? (
+          <View style={{width: 20}}>{showSelectedIcon}</View>
+        ) : null}
       </View>
     ) : null;
   };
@@ -196,30 +211,39 @@ const DropdownModal = ({
           marginLeft: MIN_SEPARATION_ELEMENTS,
         } as ViewStyle);
     return (
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => onHandleSelectedItem(item)}
-        style={[
-          styles.dropdownItem,
-          bgStyle,
-          isLastItem && index > 2 ? {paddingBottom: 20} : undefined,
-        ]}>
-        <View style={[innerContainerStyle, innerContainerBgStyle]}>
-          {item.icon}
-          <Text style={[styles.textBase, styles.smallerText, labelTextStyle]}>
-            {item.label}
-          </Text>
-          {item.removable && (
-            <Icon
-              theme={theme}
-              name={Icons.REMOVE}
-              onClick={() => onRemove(item.value)}
-              color={showSelectedBgOnItem ? 'white' : PRIMARY_RED_COLOR}
-            />
-          )}
-        </View>
-        {typeof item === 'object' ? renderCopyOrSelectedIcon(item) : null}
-      </TouchableOpacity>
+      <>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => onHandleSelectedItem(item)}
+          style={[
+            styles.dropdownItem,
+            bgStyle,
+            isLastItem && index > 2 ? {paddingBottom: 20} : undefined,
+          ]}>
+          <View style={[innerContainerStyle, innerContainerBgStyle]}>
+            {item.icon}
+            <Text style={[styles.textBase, styles.smallerText, labelTextStyle]}>
+              {item.label}
+            </Text>
+            {item.removable && (
+              <Icon
+                theme={theme}
+                name={Icons.REMOVE}
+                onClick={() => onRemove(item.value)}
+                color={showSelectedBgOnItem ? 'white' : PRIMARY_RED_COLOR}
+              />
+            )}
+          </View>
+          {typeof item === 'object' ? renderCopyOrSelectedIcon(item) : null}
+        </TouchableOpacity>
+        {drawLineBellowSelectedItem && (
+          <Separator
+            drawLine
+            additionalLineStyle={additionalLineStyle}
+            height={5}
+          />
+        )}
+      </>
     );
   };
 

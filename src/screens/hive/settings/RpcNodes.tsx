@@ -35,9 +35,9 @@ import {
   MARGINPADDING,
 } from 'src/styles/spacing';
 import {
-  body_primary_body_2,
   fields_primary_text_1,
   getFontSizeSmallDevices,
+  headlines_primary_headline_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
@@ -181,6 +181,13 @@ const RpcNodes = ({
     setActiveRpc({uri: item} as Rpc);
   };
 
+  const getItemDropDownSelected = (rpcItem: Rpc): DropdownModalItem => {
+    return {
+      label: cleanRpcLabel(rpcItem.uri),
+      value: rpcItem.uri,
+    };
+  };
+
   const renderRpcItem = () => {
     return (
       <View
@@ -190,7 +197,7 @@ const RpcNodes = ({
         <View style={[styles.rpcItemContainer]}>
           <DropdownModal
             list={rpcFullList}
-            selected={typeof activeRpc === 'object' ? activeRpc.uri : activeRpc}
+            selected={getItemDropDownSelected(activeRpc)}
             onSelected={(selected) => onHandleSetRPC(selected.value)}
             onRemove={(item) => handleOnRemoveCustomRPC(item)}
             additionalDropdowContainerStyle={[styles.dropdownWidth]}
@@ -198,8 +205,19 @@ const RpcNodes = ({
             additionalOverlayStyle={{
               paddingHorizontal: MARGINPADDING,
             }}
+            drawLineBellowSelectedItem
             additionalListExpandedContainerStyle={styles.dropdownWidth}
-            selectedBgColor={PRIMARY_RED_COLOR}
+            showSelectedIcon={
+              <Icon
+                name={Icons.CHECK}
+                theme={theme}
+                width={18}
+                height={18}
+                strokeWidth={2}
+                color={PRIMARY_RED_COLOR}
+              />
+            }
+            additionalLineStyle={styles.bottomLineDropdownItem}
           />
           <TouchableOpacity
             style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
@@ -440,7 +458,7 @@ const RpcNodes = ({
               theme={theme}
               rpcList={hiveEngineRPCList}
               tittleTranslationKey={'settings.settings.hive_engine_rpc'}
-              selectedRPC={cleanRpcLabel(activeHiveEngineRpc)}
+              selectedRPC={activeHiveEngineRpc}
               placeHolderInput={translate('settings.settings.new_HE_rpc')}
               input={newHERpc}
               onChangeInput={(text) => setNewHERpc(text)}
@@ -461,7 +479,7 @@ const RpcNodes = ({
               tittleTranslationKey={
                 'settings.settings.hive_engine_account_history_api'
               }
-              selectedRPC={cleanRpcLabel(activeAccountHistoryAPIRpc)}
+              selectedRPC={activeAccountHistoryAPIRpc}
               placeHolderInput={translate(
                 'settings.settings.new_account_history_rpc',
               )}
@@ -496,7 +514,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     title: {marginBottom: 2, marginLeft: LABELINDENTSPACE},
     text: {
       color: getColors(theme).secondaryText,
-      ...body_primary_body_2,
+      ...headlines_primary_headline_3,
       fontSize: getFontSizeSmallDevices(width, 15),
     },
     opacity: {
@@ -562,6 +580,12 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       marginHorizontal: 0,
     },
     dropdownIconDimensions: {width: 15, height: 15},
+    bottomLineDropdownItem: {
+      borderWidth: 1,
+      width: '85%',
+      borderColor: getColors(theme).lineSeparatorStroke,
+      alignSelf: 'center',
+    },
   });
 
 const mapStateToProps = (state: RootState) => ({
