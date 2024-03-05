@@ -52,7 +52,6 @@ export default () => {
           headerRight: () => {
             return (
               <MoreInformation
-                theme={theme}
                 type={Info.QR_WALLET}
                 additionalButtonStyle={styles.marginRight}
               />

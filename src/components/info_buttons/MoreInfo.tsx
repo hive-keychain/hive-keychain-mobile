@@ -11,7 +11,7 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import {Theme} from 'src/context/theme.context';
+import {useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
@@ -27,12 +27,11 @@ export enum Info {
 export default ({
   type,
   additionalButtonStyle,
-  theme,
 }: {
   type: string;
   additionalButtonStyle?: StyleProp<ViewStyle>;
-  theme?: Theme;
 }) => {
+  const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions());
   let content = <></>;
   switch (type) {
