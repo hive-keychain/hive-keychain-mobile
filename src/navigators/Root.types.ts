@@ -2,6 +2,7 @@ import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {WalletHistoryComponentProps} from 'components/hive/Wallet-history-component';
 import {CancelTokenDelegationOperationProps} from 'components/operations/Cancel-token-delegation';
+import {ConfirmationPageProps} from 'components/operations/Confirmation';
 import {ConvertOperationProps} from 'components/operations/Convert';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
 import {DelegationOperationProps} from 'components/operations/Delegation';
@@ -78,6 +79,7 @@ export type RootStackParam = {
   WalletHistory: WalletHistoryComponentProps;
   SwapBuyStack: undefined;
   SwapHistory: undefined;
+  ConfirmationPage: ConfirmationPageProps;
 };
 
 export type MainNavigation = StackNavigationProp<RootStackParam, 'Main'>;
@@ -134,3 +136,8 @@ export type TemplateStackNavigationProps = {
   navigation: TemplateStackNavigation;
   route: TemplateStackNavigationRoute;
 };
+
+export type ConfirmationPageRoute = RouteProp<
+  RootStackParam,
+  'ConfirmationPage'
+>;

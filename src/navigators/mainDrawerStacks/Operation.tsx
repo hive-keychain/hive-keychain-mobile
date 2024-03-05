@@ -5,6 +5,7 @@ import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import CancelTokenDelegation, {
   CancelTokenDelegationOperationProps,
 } from 'components/operations/Cancel-token-delegation';
+import ConfirmationPage from 'components/operations/Confirmation';
 import Convert, {ConvertOperationProps} from 'components/operations/Convert';
 import DelegateToken, {
   DelegateTokenOperationProps,
@@ -150,6 +151,32 @@ export default ({navigation, route}: OperationNavigationProps) => {
         })}>
         {() => renderOperation()}
       </Stack.Screen>
+      <Stack.Screen
+        name="ConfirmationPage"
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleStyle: styles.headerTitle,
+          headerTitleAlign: 'center',
+          title: translate('common.confirm'),
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => navigation.navigate('WALLET')}
+            />
+          ),
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+        component={ConfirmationPage}
+      />
     </Stack.Navigator>
   );
 };
