@@ -41,7 +41,6 @@ export default ({
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({
     ...useWindowDimensions(),
@@ -62,6 +61,7 @@ export default ({
       return (
         <View>
           <Input
+            autoCapitalize={'none'}
             onFocus={() => setIsFocused(true)}
             onBlur={handleOnBlur}
             placeholderTextColor="#B9C9D6"
@@ -87,6 +87,7 @@ export default ({
     } else
       return (
         <Input
+          autoCapitalize={'none'}
           onFocus={() => setIsFocused(true)}
           onBlur={handleOnBlur}
           placeholderTextColor="#B9C9D6"
