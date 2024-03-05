@@ -36,7 +36,7 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
           headerStyle: styles.header,
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
-          title: `${currency} ${translate('common.history').toUpperCase()}`,
+          title: `${currency} ${translate('common.history')}`,
           headerRight: () => (
             <Icon
               name={Icons.SETTINGS_4}

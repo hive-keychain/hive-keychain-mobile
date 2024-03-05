@@ -125,7 +125,7 @@ const AddAccountByAuth = ({
           </View>
           <View style={styles.bottomContainer}>
             <Button
-              title={translate('common.import').toUpperCase()}
+              title={translate('common.import')}
               onPress={onImportKeysByAuth}
               style={[getButtonStyle(theme, height).warningStyleButton]}
               additionalTextStyle={styles.buttonText}

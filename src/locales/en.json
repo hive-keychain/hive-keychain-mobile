@@ -556,7 +556,7 @@
       ],
       "user": "User settings",
       "operations": "Operations",
-      "operations_info": "For a better experience, you can whitelist non-active authority operation when dApps requested them. you won’t receive a confirmation prompt for opertions",
+      "operations_info": "For a better experience, you can whitelist non-active authority operation when dApps requested them. you won’t receive a confirmation prompt for operations",
       "switch_auto": "Switch Automatically",
       "switch_auto_info": "Will always select the best RPC node for you",
       "hive_rpc": "Hive RPC",
@@ -936,7 +936,7 @@
     "proxy": {
       "has_proxy": "The proxy account makes governance decisions on your behalf. If you wish to vote for witnesses and proposals by yourself, you must first remove the proxy.",
       "proxy_def": "Adding an account as a proxy means that the proxy account can use the weight of your HP in governance matters (voting for witnesses and proposals). This will not affect your HP regarding curation, and you can remove the proxy at any given moment.",
-      "using_proxy": "You are currently using @{{name}} as a proxy. His/her votes are displayed",
+      "using_proxy": "You are currently using @{{name}} as a proxy. Their governances votes are displayed.",
       "placeholder": "Proxy",
       "buttons": {"set": "Set as Proxy", "clear": "Clear Proxy"},
       "error": {

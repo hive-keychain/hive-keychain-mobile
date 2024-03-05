@@ -37,9 +37,7 @@ const SavingsBalance = ({currency, account, setMax}: Props) => {
           <View style={styles.logo}>
             <Savings />
           </View>
-          <Text style={styles.name}>
-            {translate('common.balance').toUpperCase()}
-          </Text>
+          <Text style={styles.name}>{translate('common.balance')}</Text>
         </View>
         <Text style={styles.amount}>
           {formatBalance(value)}
