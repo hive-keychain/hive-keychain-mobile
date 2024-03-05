@@ -88,7 +88,7 @@ const getStyles = (theme: Theme, marginRight: number, marginBottom: number) =>
     flexRowAligned: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
     },
     squareButtonText: {
       color: getColors(theme).secondaryText,
