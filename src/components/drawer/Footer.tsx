@@ -1,5 +1,5 @@
-import {loadAccount} from 'actions/hive';
-import {ActiveAccount, KeyTypes} from 'actions/interfaces';
+import { loadAccount } from 'actions/hive';
+import { ActiveAccount, KeyTypes } from 'actions/interfaces';
 import DiscordLogo from 'assets/new_UI/discord_logo.svg';
 import HiveLogo from 'assets/new_UI/hive_logo.svg';
 import ThreadsLogo from 'assets/new_UI/threads_logo.svg';
@@ -12,23 +12,23 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
-import {Theme} from 'src/context/theme.context';
+import { Theme } from 'src/context/theme.context';
 import {
   BACKGROUNDITEMDARKISH,
   PRIMARY_RED_COLOR,
   RED_SHADOW_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {generateBoxShadowStyle} from 'src/styles/shadow';
+import { generateBoxShadowStyle } from 'src/styles/shadow';
 import {
   button_link_primary_medium,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
-import {store} from 'store';
-import {voteForWitness} from 'utils/hive';
-import {translate} from 'utils/localize';
+import { store } from 'store';
+import { voteForWitness } from 'utils/hive';
+import { translate } from 'utils/localize';
 
 export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
   const styles = getStyles(theme, useWindowDimensions());
@@ -109,7 +109,7 @@ export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
           <DiscordLogo style={styles.footerLogo} />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => Linking.openURL(`https://www.threads.net/`)}
+          onPress={() => Linking.openURL(`https://twitter.com/HiveKeychain`)}
           style={styles.footerIconContainer}>
           <ThreadsLogo width={20} style={styles.footerLogo} />
         </TouchableOpacity>

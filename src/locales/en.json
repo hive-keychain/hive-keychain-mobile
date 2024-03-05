@@ -190,7 +190,7 @@
         "sent": "Sent",
         "received": "Received",
         "confirm": {
-          "info": "Please Confirm Your Transfer.\nThis cannot be Undone",
+          "info": "Please confirm your transfer.\nThis cannot be undone",
           "from": "From",
           "to": "To",
           "amount": "Amount",
