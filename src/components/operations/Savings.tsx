@@ -82,18 +82,10 @@ const Convert = ({
   const styles = getDimensionedStyles(color, {width, height}, theme);
   const operationTypeList: DropdownModalItem[] = [
     {
-      icon: (
-        <Icon
-          theme={theme}
-          name={Icons.SEND_SQUARE}
-          additionalContainerStyle={getRotateStyle('180')}
-        />
-      ),
       value: SavingsOperations.deposit,
       label: capitalize(SavingsOperations.deposit),
     },
     {
-      icon: <Icon theme={theme} name={Icons.SEND_SQUARE} />,
       value: SavingsOperations.withdraw,
       label: capitalize(SavingsOperations.withdraw),
     },
@@ -314,8 +306,11 @@ const Convert = ({
               extraElementHeigth + extraElementHeigth2
             }
             additionalListExpandedContainerStyle={{
-              height: 80,
+              height: 'auto',
+              width: '100%',
             }}
+            additionalMainContainerDropdown={{width: '100%'}}
+            additionalDropdowContainerStyle={{width: '100%'}}
             dropdownIconScaledSize={{width: 15, height: 15}}
             drawLineBellowSelectedItem
             showSelectedIcon={
