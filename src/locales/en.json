@@ -243,9 +243,11 @@
         "delegation_disclaimer": "You may delegate your Hive Power (HP) to another user. Click on the Outgoing amount to review or make change",
         "outgoing_disclaimer": "After being canceled, delegations take 5 days to return to your available Hive Power balance",
         "pending_undelegations": "Pending Undelegations",
-        "confirm_cancel_delegation": "Confirm you want to cancel this delegation?"
+        "confirm_cancel_delegation": "Confirm you want to cancel this delegation?",
+        "confirm": {"info": "Please confirm the HP delegation."}
       },
       "rc_delegation": {
+        "confirm": {"info": "Please confirm the RC delegation."},
         "title_button": "RC Deleg.",
         "title": "RC Delegation",
         "total_incoming": "Total Incoming",

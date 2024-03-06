@@ -1,4 +1,4 @@
-import {loadAccount} from 'actions/index';
+import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -7,7 +7,6 @@ import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {
-  Keyboard,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -18,6 +17,7 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
@@ -33,7 +33,8 @@ import {delegate, getCurrency} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
+import {ConfirmationPageProps} from './Confirmation';
 import DelegationsList from './DelegationsList';
 import OperationThemed from './OperationThemed';
 
@@ -47,7 +48,7 @@ type Props = PropsFromRedux & DelegationOperationProps;
 const Delegation = ({
   currency = 'HP',
   user,
-  loadAccount,
+  showModal,
   properties,
   delegatee,
 }: Props) => {
@@ -56,10 +57,8 @@ const Delegation = ({
   const [loading, setLoading] = useState(false);
 
   const onDelegate = async () => {
-    setLoading(true);
-    Keyboard.dismiss();
     try {
-      const delegation = await delegate(user.keys.active, {
+      await delegate(user.keys.active, {
         vesting_shares: sanitizeAmount(
           fromHP(sanitizeAmount(amount), properties.globals).toString(),
           'VESTS',
@@ -68,17 +67,50 @@ const Delegation = ({
         delegatee: sanitizeUsername(to),
         delegator: user.account.name,
       });
-      loadAccount(user.account.name, true);
-      goBack();
       if (parseFloat(amount.replace(',', '.')) !== 0) {
-        Toast.show(translate('toast.delegation_success'), Toast.LONG);
+        showModal('toast.delegation_success', MessageModalType.SUCCESS);
       } else {
-        Toast.show(translate('toast.stop_delegation_success'), Toast.LONG);
+        showModal('toast.stop_delegation_success', MessageModalType.SUCCESS);
       }
     } catch (e) {
-      Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
-    } finally {
-      setLoading(false);
+      showModal(
+        `Error : ${(e as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
+      );
+    }
+  };
+
+  const onDelegateConfirmation = () => {
+    if (!to || !amount) {
+      Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
+    } else if (+amount > parseFloat(available as string)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      const confirmationData: ConfirmationPageProps = {
+        onSend: onDelegate,
+        title: 'wallet.operations.delegation.confirm.info',
+        data: [
+          {
+            title: 'wallet.operations.transfer.confirm.from',
+            value: `@${user.account.name}`,
+          },
+          {
+            value: `@${to}`,
+            title: 'wallet.operations.transfer.confirm.to',
+          },
+          {
+            title: 'wallet.operations.transfer.confirm.amount',
+            value: `${amount} ${currency}`,
+          },
+        ],
+      };
+      navigate('ConfirmationPage', confirmationData);
     }
   };
 
@@ -258,7 +290,7 @@ const Delegation = ({
         <>
           <ActiveOperationButton
             title={translate('common.send')}
-            onPress={onDelegate}
+            onPress={onDelegateConfirmation}
             style={[getButtonStyle(theme).warningStyleButton]}
             isLoading={loading}
             additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
@@ -315,7 +347,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {loadAccount},
+  {showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
