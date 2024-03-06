@@ -28,6 +28,7 @@ interface OperationProps {
   onNext?: () => void;
   buttonTitle?: string;
   method?: KeyTypes;
+  loading?: boolean;
 }
 
 const OperationThemed = ({
@@ -38,6 +39,7 @@ const OperationThemed = ({
   onNext,
   method,
   buttonTitle,
+  loading = false,
 }: OperationProps) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useSafeAreaInsets(), additionalSVGOpacity);
@@ -77,7 +79,7 @@ const OperationThemed = ({
                       marginBottom: 30,
                     },
                   ]}
-                  isLoading={false}
+                  isLoading={loading}
                 />
               )}
             </ScrollView>

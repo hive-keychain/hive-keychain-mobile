@@ -46,7 +46,7 @@ const ConfirmationPage = ({
   const {width, height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({width, height}, theme);
-  console.log(title);
+  console.log(loading);
   return (
     <OperationThemed
       childrenTop={<Separator height={50} />}
@@ -104,6 +104,7 @@ const ConfirmationPage = ({
         loadAccount(user.name, true);
         resetStackAndNavigate('WALLET');
       }}
+      loading={loading}
       additionalContentContainerStyle={styles.paddingHorizontal}
     />
   );
