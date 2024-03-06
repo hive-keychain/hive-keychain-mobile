@@ -1,6 +1,5 @@
-import {loadAccount} from 'actions/index';
+import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
@@ -8,7 +7,6 @@ import Separator from 'components/ui/Separator';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {
-  Keyboard,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -19,9 +17,10 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
-import {BACKGROUNDDARKBLUE, PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {FontJosefineSansName, getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
@@ -31,7 +30,8 @@ import {getCurrency, powerDown} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
+import {ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface PowerDownOperationProps {
@@ -42,14 +42,13 @@ type Props = PropsFromRedux & PowerDownOperationProps;
 const PowerDown = ({
   currency = 'HP',
   user,
-  loadAccount,
+  showModal,
   properties,
   delegations,
 }: Props) => {
   const [amount, setAmount] = useState('0');
   const [current, setCurrent] = useState<string | number>('...');
   const [available, setAvailable] = useState<string | number>('...');
-  const [step, setStep] = useState<number>(1);
   const [loading, setLoading] = useState(false);
   const [isCancel, setIsCancel] = useState(false);
 
@@ -84,9 +83,6 @@ const PowerDown = ({
   );
 
   const onPowerDown = async () => {
-    setLoading(true);
-    Keyboard.dismiss();
-
     try {
       await powerDown(user.keys.active!, {
         vesting_shares: sanitizeAmount(
@@ -96,48 +92,54 @@ const PowerDown = ({
         ),
         account: user.account.name,
       });
-      loadAccount(user.account.name, true);
-      goBack();
       if (parseFloat(amount.replace(',', '.')) !== 0) {
-        Toast.show(translate('toast.powerdown_success'), Toast.LONG);
+        showModal('toast.powerdown_success', MessageModalType.SUCCESS);
       } else {
-        Toast.show(translate('toast.stop_powerdown_success'), Toast.LONG);
+        showModal('toast.stop_powerdown_success', MessageModalType.SUCCESS);
       }
     } catch (e) {
-      Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
-    } finally {
-      setLoading(false);
+      showModal(
+        `Error : ${(e as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
+      );
     }
   };
 
-  const onHandleCancelPowerDown = () => {
-    setIsCancel(true);
-    setAmount('0');
-    setStep(2);
-  };
-
-  const onHandleBack = () => {
-    setIsCancel(false);
-    setAmount('0');
-    setStep(1);
-  };
-
-  const onHandleConfirmStepOne = () => {
-    if (
-      parseFloat(amount) === 0 &&
-      parseFloat(poweringDown.total_withdrawing) > 0
-    ) {
-      setIsCancel(true);
+  const onPowerDownConfirmation = (isCancel = false) => {
+    if (!isCancel && !amount) {
+      Toast.show(translate('wallet.operations.convert.warning.missing_info'));
+    } else if (+amount > parseFloat(available as string)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      const confirmationData: ConfirmationPageProps = {
+        onSend: onPowerDown,
+        title: `wallet.operations.powerdown.confirm.info${
+          isCancel ? '_stop' : ''
+        }`,
+        data: isCancel
+          ? []
+          : [
+              {
+                title: 'wallet.operations.transfer.confirm.amount',
+                value: `${amount} ${currency}`,
+              },
+            ],
+      };
+      navigate('ConfirmationPage', confirmationData);
     }
-    setStep(2);
   };
-
   const {height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, theme);
 
-  return step === 1 ? (
+  return (
     <OperationThemed
       additionalContentContainerStyle={{paddingHorizontal: 20}}
       additionalBgSvgImageStyle={{
@@ -203,7 +205,9 @@ const PowerDown = ({
                 <Icon
                   theme={theme}
                   name={Icons.GIFT_DELETE}
-                  onClick={onHandleCancelPowerDown}
+                  onClick={() => {
+                    onPowerDownConfirmation(true);
+                  }}
                 />
               </View>
             </View>
@@ -290,80 +294,13 @@ const PowerDown = ({
         <>
           <ActiveOperationButton
             title={translate(`wallet.operations.powerdown.title`)}
-            onPress={onHandleConfirmStepOne}
+            onPress={onPowerDownConfirmation}
             style={[getButtonStyle(theme).warningStyleButton]}
             isLoading={loading}
             additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
           />
           <Separator />
         </>
-      }
-    />
-  ) : (
-    <OperationThemed
-      childrenTop={<Separator height={40} />}
-      childrenMiddle={
-        <>
-          <Separator height={25} />
-          <Text
-            style={[
-              getFormFontStyle(height, theme).title,
-              styles.opaque,
-              styles.textCentered,
-            ]}>
-            {translate(
-              `wallet.operations.powerdown.${
-                isCancel ? 'confirm_cancel' : 'confirm_power_down'
-              }`,
-            )}
-          </Text>
-          {!isCancel && (
-            <>
-              <Separator />
-              <View
-                style={[
-                  getCardStyle(theme).defaultCardItem,
-                  styles.marginHorizontal,
-                  styles.flexRowBetween,
-                ]}>
-                <Text style={[getFormFontStyle(height, theme).title]}>
-                  {capitalize(translate('common.amount'))}
-                </Text>
-                <Text
-                  style={[
-                    getFormFontStyle(height, theme).title,
-                    styles.opaque,
-                  ]}>{`${withCommas(amount)} ${getCurrency('HP')}`}</Text>
-              </View>
-            </>
-          )}
-        </>
-      }
-      childrenBottom={
-        <View style={styles.operationButtonsContainer}>
-          <EllipticButton
-            title={translate('common.back')}
-            onPress={onHandleBack}
-            style={[
-              getButtonStyle(theme).outlineSoftBorder,
-              styles.operationButton,
-              styles.operationButtonConfirmation,
-            ]}
-            additionalTextStyle={[
-              getFormFontStyle(height, theme, BACKGROUNDDARKBLUE).title,
-            ]}
-          />
-          <ActiveOperationButton
-            title={translate('common.confirm')}
-            onPress={onPowerDown}
-            style={[
-              styles.operationButton,
-              getButtonStyle(theme).warningStyleButton,
-            ]}
-            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
-            isLoading={loading}
-          />
-        </View>
       }
     />
   );
@@ -420,7 +357,7 @@ const connector = connect(
       delegations: state.delegations,
     };
   },
-  {loadAccount},
+  {showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

@@ -219,14 +219,17 @@
         "confirm": {"info": "Please confirm your power up."}
       },
       "powerdown": {
+        "confirm": {
+          "info": "Please confirm your power down.",
+          "info_stop": "Please confirm you want to stop your power down."
+        },
         "title": "Power down",
         "info_power_down": "power down",
         "canceled_power_down": "canceled a power down",
         "powering_down": "Powering down",
         "next_power_down": "Next power down",
         "powerdown_text": "Power Down your Hive Power to get liquid HIVE. The entire Power Down process will take 13 weeks.",
-        "confirm_cancel": "Please confirm that you want to cancel your power down.",
-        "confirm": {"info": "Please confirm your power down."}
+        "confirm_cancel": "Please confirm that you want to cancel your power down."
       },
       "delegation": {
         "title": "Delegate Hive Power",
