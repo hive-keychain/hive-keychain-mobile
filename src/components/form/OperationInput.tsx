@@ -14,7 +14,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {AutoCompleteValuesType} from 'src/interfaces/autocomplete.interface';
 import {getColors} from 'src/styles/colors';
-import {LABELINDENTSPACE} from 'src/styles/spacing';
+import {LABEL_INDENT_SPACE} from 'src/styles/spacing';
 import {
   FontPoppinsName,
   body_primary_body_1,
@@ -132,6 +132,6 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       marginLeft: 8,
     },
     labelIndent: {
-      marginLeft: LABELINDENTSPACE,
+      marginLeft: LABEL_INDENT_SPACE,
     },
   });

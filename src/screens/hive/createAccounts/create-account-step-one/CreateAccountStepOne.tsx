@@ -20,7 +20,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
-import {MARGINPADDING} from 'src/styles/spacing';
+import {MARGIN_PADDING} from 'src/styles/spacing';
 import {
   FontPoppinsName,
   body_primary_body_1,
@@ -308,7 +308,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       width: '100%',
     },
     paddingHorizontal: {
-      paddingHorizontal: MARGINPADDING,
+      paddingHorizontal: MARGIN_PADDING,
     },
     icon: {
       width: 18,

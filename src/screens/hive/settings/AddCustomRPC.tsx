@@ -19,9 +19,9 @@ import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
-  LABELINDENTSPACE,
-  MARGINLEFTRIGHTMIN,
-  MARGINPADDING,
+  LABEL_INDENT_SPACE,
+  MARGIN_LEFT_RIGHT_MIN,
+  MARGIN_PADDING,
 } from 'src/styles/spacing';
 import {
   getFontSizeSmallDevices,
@@ -103,7 +103,7 @@ const AddCustomRPC = ({
           additionalDropdowContainerStyle={[styles.dropdownWidth]}
           dropdownIconScaledSize={styles.dropdownIconDimensions}
           additionalOverlayStyle={{
-            paddingHorizontal: MARGINPADDING,
+            paddingHorizontal: MARGIN_PADDING,
           }}
           additionalListExpandedContainerStyle={styles.dropdownWidth}
           drawLineBellowSelectedItem
@@ -189,7 +189,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       flexDirection: 'row',
       width: '100%',
       justifyContent: 'space-between',
-      marginBottom: MARGINLEFTRIGHTMIN,
+      marginBottom: MARGIN_LEFT_RIGHT_MIN,
     },
     addButton: {
       alignItems: 'center',
@@ -219,7 +219,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     },
     dropdownIconDimensions: {width: 15, height: 15},
     indent: {
-      marginLeft: LABELINDENTSPACE,
+      marginLeft: LABEL_INDENT_SPACE,
     },
     bottomLineDropdownItem: {
       borderWidth: 1,

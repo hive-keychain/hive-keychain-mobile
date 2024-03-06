@@ -30,9 +30,9 @@ import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum'
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
-  LABELINDENTSPACE,
-  MARGINLEFTRIGHTMIN,
-  MARGINPADDING,
+  LABEL_INDENT_SPACE,
+  MARGIN_LEFT_RIGHT_MIN,
+  MARGIN_PADDING,
 } from 'src/styles/spacing';
 import {
   fields_primary_text_1,
@@ -207,7 +207,7 @@ const RpcNodes = ({
             additionalDropdowContainerStyle={[styles.dropdownWidth]}
             dropdownIconScaledSize={styles.dropdownIconDimensions}
             additionalOverlayStyle={{
-              paddingHorizontal: MARGINPADDING,
+              paddingHorizontal: MARGIN_PADDING,
             }}
             drawLineBellowSelectedItem
             additionalListExpandedContainerStyle={styles.dropdownWidth}
@@ -512,10 +512,10 @@ const RpcNodes = ({
 const getStyles = (theme: Theme, width: number, height: number) =>
   StyleSheet.create({
     container: {
-      paddingHorizontal: MARGINPADDING,
+      paddingHorizontal: MARGIN_PADDING,
       flex: 1,
     },
-    title: {marginBottom: 2, marginLeft: LABELINDENTSPACE},
+    title: {marginBottom: 2, marginLeft: LABEL_INDENT_SPACE},
     text: {
       color: getColors(theme).secondaryText,
       ...headlines_primary_headline_3,
@@ -557,7 +557,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       width: 'auto',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: MARGINLEFTRIGHTMIN,
+      marginBottom: MARGIN_LEFT_RIGHT_MIN,
     },
     dropdownWidth: {
       width: width * 0.77,

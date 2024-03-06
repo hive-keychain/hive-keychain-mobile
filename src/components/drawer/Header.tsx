@@ -11,7 +11,7 @@ import {
 import FastImage from 'react-native-fast-image';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {PADDINGLEFTMAINMENU} from 'src/styles/spacing';
+import {PADDING_LEFT_MAIN_MENU} from 'src/styles/spacing';
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
@@ -80,7 +80,7 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
       width: '95%',
       marginTop: 8,
       zIndex: 1,
-      paddingLeft: PADDINGLEFTMAINMENU,
+      paddingLeft: PADDING_LEFT_MAIN_MENU,
     },
     topContainer: {
       flexDirection: 'row',
