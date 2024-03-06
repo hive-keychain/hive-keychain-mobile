@@ -1,6 +1,12 @@
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import React, {useState} from 'react';
-import {Image as Img, StyleSheet, Text, View} from 'react-native';
+import {
+  Image as Img,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import Image from 'react-native-fast-image';
 import {Theme} from 'src/context/theme.context';
@@ -72,14 +78,20 @@ const TokenSettingsItem = ({
   );
 
   return (
-    <View
+    <TouchableOpacity
+      onPress={setChecked}
       style={[getCardStyle(theme).defaultCardItem, styles.container]}
       key={token.symbol}>
-      <View style={[styles.item]}>
+      <CheckBox
+        checked={checkedValue}
+        onPress={setChecked}
+        containerStyle={[styles.checkbox]}
+        checkedColor={PRIMARY_RED_COLOR}
+        size={22}
+      />
+      <View>
         <Text style={[styles.textBase, styles.title]}>{token.name}</Text>
-      </View>
-      <>
-        <View style={styles.row}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View
             style={[
               styles.iconContainerBase,
@@ -87,39 +99,20 @@ const TokenSettingsItem = ({
             ]}>
             {logo}
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <CheckBox
-              checked={checkedValue}
-              onPress={setChecked}
-              containerStyle={[styles.checkbox]}
-              checkedColor={PRIMARY_RED_COLOR}
-              size={22}
-            />
-            <View>
-              <Text style={styles.textAlignedRight}>
-                <Text style={styles.textBase}>{token.symbol} </Text>
-                <Text style={styles.textBase}>
-                  {translate('wallet.operations.token_settings.issued_by')}
-                </Text>
-              </Text>
-              <Text style={[styles.textBase, styles.textAlignedRight]}>
-                {' @'}
-                {token.issuer}
-              </Text>
-              <Text style={[styles.textBase, styles.textAlignedRight]}>
-                {nFormatter(parseFloat(token.circulatingSupply), 3)}
-                {'/'}
-                {nFormatter(parseFloat(token.maxSupply), 3)}
-              </Text>
-            </View>
-          </View>
+          <Text style={styles.textBase}>{token.symbol} </Text>
+          <Text style={styles.textBase}>
+            {translate('wallet.operations.token_settings.issued_by')}
+            {` @${token.issuer}`}
+          </Text>
         </View>
-      </>
-    </View>
+        <Text style={[styles.textBase]}>
+          {translate('wallet.operations.token_settings.supply')} :
+          {nFormatter(parseFloat(token.circulatingSupply), 3)}
+          {'/'}
+          {nFormatter(parseFloat(token.maxSupply), 3)}
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -133,6 +126,8 @@ const getStyles = (
   StyleSheet.create({
     container: {
       width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
     },
     title: {
       ...title_primary_body_2,
@@ -155,13 +150,14 @@ const getStyles = (
       color: getColors(theme).secondaryText,
     },
     iconBase: {
-      width: 40,
-      height: 40,
+      width: 24,
+      height: 24,
     },
     iconContainerBase: {
       borderRadius: 50,
-      width: 40,
-      height: 40,
+      width: 24,
+      height: 24,
+      marginRight: 8,
     },
     iconContainerBaseWithBg: {
       backgroundColor: addBackground

@@ -19,7 +19,6 @@ import {Icons} from 'src/enums/icons.enums';
 import {Token} from 'src/interfaces/tokens.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {getRotateStyle} from 'src/styles/transform';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {hiveEngineWebsiteURL} from 'utils/config';
@@ -123,7 +122,7 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
         additionalContainerStyle={styles.searchBar}
       />
       <Separator height={10} />
-      {!loadingTokens && hiddenTokens.length > 0 && (
+      {/* {!loadingTokens && hiddenTokens.length > 0 && (
         <View style={styles.flexEnd}>
           <View>
             <Icon
@@ -152,7 +151,7 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
             )}
           </View>
         </View>
-      )}
+      )} */}
       <Separator height={8} />
       {loadingTokens ? (
         <View style={styles.flexCentered}>
@@ -206,6 +205,7 @@ const getStyles = (theme: Theme, height: number) =>
     },
     searchBar: {
       width: '100%',
+      height: 40,
     },
     flexCentered: {
       flex: 1,
