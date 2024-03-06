@@ -1,4 +1,3 @@
-import {loadAccount} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import {encodeMemo} from 'components/bridge';
@@ -8,18 +7,9 @@ import Icon from 'components/hive/Icon';
 import OptionsToggle from 'components/ui/OptionsToggle';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
-import {
-  Keyboard,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {
-  default as SimpleToast,
-  default as Toast,
-} from 'react-native-simple-toast';
+import {default as Toast} from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -41,7 +31,7 @@ import {
   sanitizeUsername,
 } from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {navigate, resetStackAndNavigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
 import {getTransferWarning} from 'utils/transferValidator';
 import Balance from './Balance';
 import OperationThemed from './OperationThemed';
@@ -56,7 +46,6 @@ type Props = PropsFromRedux & TransferOperationProps;
 const Transfer = ({
   currency,
   user,
-  loadAccount,
   engine,
   tokenBalance,
   tokenLogo,
@@ -137,12 +126,11 @@ const Transfer = ({
   };
 
   const onSend = async () => {
-    Keyboard.dismiss();
     try {
       if (isMemoEncrypted && !user.keys.memo)
-        return SimpleToast.show(
+        return showModal(
           translate('toast.missing_memo_key', {account: user.name!}),
-          SimpleToast.LONG,
+          MessageModalType.ERROR,
         );
       if (!engine) {
         await sendTransfer();
@@ -162,9 +150,6 @@ const Transfer = ({
           MessageModalType.SUCCESS,
         );
       }
-      await FavoriteUserUtils.saveFavoriteUser(to, user);
-      loadAccount(user.account.name, true);
-      resetStackAndNavigate('WALLET');
     } catch (e) {
       showModal(
         beautifyTransferError(e as any, {
@@ -176,7 +161,6 @@ const Transfer = ({
         undefined,
         true,
       );
-      setLoading(false);
     }
   };
   const {width, height} = useWindowDimensions();
@@ -381,6 +365,12 @@ const Transfer = ({
                       'wallet.operations.transfer.warning.missing_info',
                     ),
                   );
+                } else if (+amount > parseFloat(availableBalance)) {
+                  Toast.show(
+                    translate('common.overdraw_balance_error', {
+                      currency,
+                    }),
+                  );
                 } else {
                   //TODO : Call confirmation page
                   const confirmationData = {
@@ -502,7 +492,7 @@ const connector = connect(
       phishingAccounts: state.phishingAccounts,
     };
   },
-  {loadAccount, showModal},
+  {showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

@@ -115,7 +115,10 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     },
     modalContainer: {
       width: '100%',
-      height: '50%',
+      height: 'auto',
+      minHeight: '40%',
+      maxHeight: '80%',
+      paddingVertical: 20,
       backgroundColor: getColors(theme).cardBgColor,
       borderColor: getColors(theme).cardBorderColorContrast,
       borderWidth: 0,
@@ -124,12 +127,11 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       borderBottomWidth: 0,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
-      justifyContent: 'center',
+      justifyContent: 'space-around',
       alignItems: 'center',
     },
     modalContent: {
       width: '100%',
-      maxHeight: 300,
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: 14,
@@ -148,7 +150,6 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       width: '60%',
       marginHorizontal: 0,
       marginTop: 10,
-      marginBottom: 15,
       height: getButtonHeight(width),
     },
     buttonText: {

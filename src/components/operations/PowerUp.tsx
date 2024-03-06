@@ -1,4 +1,4 @@
-import {loadAccount} from 'actions/index';
+import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -6,7 +6,6 @@ import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {
-  Keyboard,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -17,6 +16,7 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -27,7 +27,8 @@ import {powerUp} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
+import {ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface PowerUpOperationProps {
@@ -39,38 +40,68 @@ type Props = PropsFromRedux & PowerUpOperationProps;
 const PowerUp = ({
   currency = 'HIVE',
   user,
-  loadAccount,
+  showModal,
   globalProperties,
 }: Props) => {
   const [to, setTo] = useState(user.account.name);
   const [amount, setAmount] = useState('');
-  const [loading, setLoading] = useState(false);
+
+  const {height} = useWindowDimensions();
+  const {theme} = useThemeContext();
+  const {color} = getCurrencyProperties(currency);
+  const styles = getDimensionedStyles(color, theme);
+  const availableHiveAmount = getCurrencyProperties(currency, user.account)
+    .value as string;
 
   const onPowerUp = async () => {
-    Keyboard.dismiss();
-    setLoading(true);
-
     try {
       await powerUp(user.keys.active!, {
         amount: sanitizeAmount(amount, currency),
         to: sanitizeUsername(to),
         from: user.account.name,
       });
-      loadAccount(user.account.name, true);
-      goBack();
-      Toast.show(translate('toast.powerup_success'), Toast.LONG);
+      showModal('toast.powerup_success', MessageModalType.SUCCESS);
     } catch (e) {
-      Toast.show(`Error: ${(e as any).message}`, Toast.LONG);
-    } finally {
-      setLoading(false);
+      showModal(
+        `Error: ${(e as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
+      );
     }
   };
-  const {height} = useWindowDimensions();
-  const {theme} = useThemeContext();
-  const {color} = getCurrencyProperties(currency);
-  const styles = getDimensionedStyles(color, theme);
-  const availableHpAmount = getCurrencyProperties(currency, user.account)
-    .value as string;
+
+  const onPowerUpConfirmation = () => {
+    if (!to || !amount) {
+      Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
+    } else if (+amount > parseFloat(availableHiveAmount)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      const confirmationData: ConfirmationPageProps = {
+        onSend: onPowerUp,
+        title: 'wallet.operations.powerup.confirm.info',
+        data: [
+          {
+            title: 'wallet.operations.transfer.confirm.from',
+            value: `@${user.account.name}`,
+          },
+          {
+            value: `@${to}`,
+            title: 'wallet.operations.transfer.confirm.to',
+          },
+          {
+            title: 'wallet.operations.transfer.confirm.amount',
+            value: `${amount} ${currency}`,
+          },
+        ],
+      };
+      navigate('ConfirmationPage', confirmationData);
+    }
+  };
 
   return (
     <OperationThemed
@@ -85,7 +116,7 @@ const PowerUp = ({
                 3,
               ),
             )} HP`}
-            availableValue={availableHpAmount}
+            availableValue={availableHiveAmount}
             additionalContainerStyle={styles.currentAvailableBalances}
             setMaxAvailable={(value) => setAmount(value)}
           />
@@ -154,7 +185,9 @@ const PowerUp = ({
                     )}
                   />
                   <TouchableOpacity
-                    onPress={() => setAmount(availableHpAmount.split(' ')[0])}>
+                    onPress={() =>
+                      setAmount(availableHiveAmount.split(' ')[0])
+                    }>
                     <Text
                       style={
                         getFormFontStyle(height, theme, PRIMARY_RED_COLOR).input
@@ -171,9 +204,9 @@ const PowerUp = ({
       childrenBottom={
         <ActiveOperationButton
           title={translate('wallet.operations.powerup.title')}
-          onPress={onPowerUp}
+          onPress={onPowerUpConfirmation}
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-          isLoading={loading}
+          isLoading={false}
           additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
         />
       }
@@ -214,7 +247,7 @@ const connector = connect(
       globalProperties: state.properties.globals,
     };
   },
-  {loadAccount},
+  {showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(PowerUp);

@@ -158,6 +158,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           title: translate('common.confirm'),
+          animationEnabled: false,
+
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (

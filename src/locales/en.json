@@ -202,7 +202,8 @@
           "phishing": "This account has been listed as a potential phishing account, check the spelling and make sure it is the account you want to transfer to.",
           "exchange_currency": "This exchange account does not accept {{currency}} deposits.",
           "exchange_memo": "Make sure you add a memo when transfering to an exchange account.",
-          "missing_info": "Please fill the username and amount to proceed"
+          "missing_info": "Please fill the username and amount to proceed",
+          "insufficient": "Please fill the username and amount to proceed"
         },
         "started_recurrent_transfer": "Started recurrent transfer of",
         "fill_recurrent_transfer_out": "to @{{other}} ({{remainingExecutions}} remaining)",
@@ -213,7 +214,8 @@
       "powerup": {
         "title": "Power up",
         "info_power_up": "Powered up",
-        "info_text": "Power up HIVE to transform it in HP"
+        "info_text": "Power up HIVE to transform it in HP",
+        "confirm": {"info": "Please confirm your power up."}
       },
       "powerdown": {
         "title": "Power down",

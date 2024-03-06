@@ -1,18 +1,27 @@
+import {loadAccount} from 'actions/index';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import Separator from 'components/ui/Separator';
 import {ConfirmationPageRoute} from 'navigators/Root.types';
-import React from 'react';
-import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonHeight, getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {getFormFontStyle} from 'src/styles/typography';
+import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
+import {resetStackAndNavigate} from 'utils/navigation';
 import OperationThemed from './OperationThemed';
 
 export type ConfirmationPageProps = {
-  loading: boolean;
   onSend: () => void;
   title: string;
   introText?: string;
@@ -25,8 +34,15 @@ type ConfirmationData = {
   value: string;
 };
 
-const ConfirmationPage = ({route}: {route: ConfirmationPageRoute}) => {
-  const {onSend, loading, title, introText, warningText, data} = route.params;
+const ConfirmationPage = ({
+  route,
+  loadAccount,
+  user,
+}: {
+  route: ConfirmationPageRoute;
+} & PropsFromRedux) => {
+  const {onSend, title, introText, warningText, data} = route.params;
+  const [loading, setLoading] = useState(false);
   console.log(route.params);
   const {width, height} = useWindowDimensions();
   const {theme} = useThemeContext();
@@ -84,7 +100,14 @@ const ConfirmationPage = ({route}: {route: ConfirmationPageRoute}) => {
         <View style={styles.operationButtonsContainer}>
           <ActiveOperationButton
             title={translate('common.confirm')}
-            onPress={onSend}
+            onPress={async () => {
+              setLoading(true);
+              Keyboard.dismiss();
+              await onSend();
+              setLoading(false);
+              loadAccount(user.account.name, true);
+              resetStackAndNavigate('WALLET');
+            }}
             style={[
               styles.operationButton,
               getButtonStyle(theme, height).warningStyleButton,
@@ -98,8 +121,6 @@ const ConfirmationPage = ({route}: {route: ConfirmationPageRoute}) => {
     />
   );
 };
-
-export default ConfirmationPage;
 
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
@@ -142,3 +163,10 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       paddingHorizontal: 18,
     },
   });
+
+const connector = connect((state: RootState) => ({user: state.activeAccount}), {
+  loadAccount,
+});
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(ConfirmationPage);
