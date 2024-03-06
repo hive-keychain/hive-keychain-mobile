@@ -158,7 +158,7 @@ const BrowserHeader = ({
     return (
       <View style={styles.container}>
         <Text style={[styles.textBase, styles.browser]}>
-          {capitalize(translate('navigation.browser'))}
+          {capitalize(translate('navigation.tabs'))}
         </Text>
       </View>
     );
