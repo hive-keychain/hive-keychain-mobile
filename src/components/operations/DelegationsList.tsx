@@ -1,6 +1,7 @@
 import {VestingDelegation} from '@hiveio/dhive';
 import {loadAccount, loadDelegatees, loadDelegators} from 'actions/index';
 import {IncomingDelegation} from 'actions/interfaces';
+import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import ConfirmationInItem from 'components/ui/ConfirmationInItem';
@@ -16,10 +17,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle, getSeparatorLineStyle} from 'src/styles/line';
@@ -54,6 +55,7 @@ const DelegationsList = ({
   delegations,
   type,
   properties,
+  showModal,
   theme,
 }: Props) => {
   const [totalDelegationsAmount, setTotalDelegationsAmount] = useState<number>(
@@ -147,12 +149,17 @@ const DelegationsList = ({
         loadAccount(user.account.name, true);
         goBack();
         if (parseFloat(amount.replace(',', '.')) !== 0) {
-          Toast.show(translate('toast.delegation_success'), Toast.LONG);
+          showModal('toast.delegation_success', MessageModalType.SUCCESS);
         } else {
-          Toast.show(translate('toast.stop_delegation_success'), Toast.LONG);
+          showModal('toast.stop_delegation_success', MessageModalType.SUCCESS);
         }
       } catch (e) {
-        Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
+        showModal(
+          `Error : ${(e as any).message}`,
+          MessageModalType.ERROR,
+          null,
+          true,
+        );
       } finally {
         setSelectedOutgoingItem(undefined);
         setShowCancelConfirmationDelegation(false);
@@ -503,6 +510,7 @@ const connector = connect(
   {
     loadDelegatees,
     loadDelegators,
+    showModal,
   },
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;

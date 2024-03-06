@@ -2,7 +2,6 @@ import {loadAccount, loadUserTokens} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {Keyboard, StyleSheet, Text, View} from 'react-native';
@@ -130,15 +129,6 @@ const CancelDelegationToken = ({
       }
       childrenBottom={
         <View style={styles.operationButtonsContainer}>
-          <EllipticButton
-            title={translate('common.back')}
-            onPress={() => goBack()}
-            style={[styles.operationButton, styles.operationButtonConfirmation]}
-            additionalTextStyle={[
-              styles.operationButtonText,
-              styles.buttonTextColorDark,
-            ]}
-          />
           <ActiveOperationButton
             title={translate('common.confirm')}
             onPress={onCancelDelegateToken}
@@ -189,7 +179,6 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
       width: '100%',
     },
     operationButton: {
-      width: '48%',
       marginHorizontal: 0,
     },
     operationButtonConfirmation: {

@@ -41,9 +41,6 @@ const IncomingOutGoingTokenDelegations = ({
   tokenLogo,
   user,
   tokenInfo,
-  loadAccount,
-  properties,
-  gobackAction,
 }: Props) => {
   const [loading, setLoading] = useState(false);
   const [delegationList, setDelegationList] = useState<TokenDelegation[]>([]);
@@ -105,7 +102,6 @@ const IncomingOutGoingTokenDelegations = ({
                   <Separator />
                   <View style={styles.flexRowBetween}>
                     <Text style={styles.title}>
-                      {translate('common.total')}{' '}
                       {translate(
                         'wallet.operations.token_delegation.token_pending_undelegation',
                       )}
@@ -120,9 +116,7 @@ const IncomingOutGoingTokenDelegations = ({
           )}
           <Separator />
           <View style={styles.flexRowBetween}>
-            <Text style={styles.title}>
-              {translate('common.total')} {capitalize(delegationType)}
-            </Text>
+            <Text style={styles.title}>{capitalize(delegationType)}</Text>
             <Text style={styles.title}>
               {total} {token.symbol}
             </Text>
