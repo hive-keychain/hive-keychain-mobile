@@ -80,52 +80,54 @@ export default ({updateTabUrl, accounts, theme}: Props) => {
   const styles = getStyles(useWindowDimensions(), theme);
 
   return !loadingDapps ? (
-    <ScrollView style={[styles.container]}>
-      {categories.map((cat: any) => (
-        <View key={cat.id}>
-          <Text style={styles.categoryTitle}>{translate(cat.title)}</Text>
-          <ScrollView horizontal style={styles.scroll}>
-            <View style={styles.cards}>
-              {cat.dapps
-                .filter((e: DApp) => {
-                  if (Platform.OS === 'ios') {
-                    return (
-                      e.categories.includes(cat.id) &&
-                      !e.categories.includes('gaming')
-                    );
-                  } else {
-                    return e.categories.includes(cat.id);
-                  }
-                })
-                .map((e: DApp) => (
-                  <DAppCard
-                    key={e.name}
-                    dApp={e}
-                    updateTabUrl={updateTabUrl}
-                    theme={theme}
-                  />
-                ))}
-            </View>
-          </ScrollView>
-        </View>
-      ))}
-      <View style={styles.footer}>
-        <Text style={[styles.textBase, styles.text]}>
-          {translate('browser.home.cant_see_dapps.part_1')}
-        </Text>
-        <Text style={[styles.textBase, styles.text]}>
-          {translate('browser.home.cant_see_dapps.part_2')}
-          <Text
-            style={[styles.textBase, styles.text, styles.redColor]}
-            onPress={() => {
-              Linking.openURL('https://discord.gg/tUHtyev2xF');
-            }}>
-            Discord
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollviewContentContainer}>
+        {categories.map((cat: any) => (
+          <View key={cat.id}>
+            <Text style={styles.categoryTitle}>{translate(cat.title)}</Text>
+            <ScrollView horizontal style={styles.scroll}>
+              <View style={styles.cards}>
+                {cat.dapps
+                  .filter((e: DApp) => {
+                    if (Platform.OS === 'ios') {
+                      return (
+                        e.categories.includes(cat.id) &&
+                        !e.categories.includes('gaming')
+                      );
+                    } else {
+                      return e.categories.includes(cat.id);
+                    }
+                  })
+                  .map((e: DApp) => (
+                    <DAppCard
+                      key={e.name}
+                      dApp={e}
+                      updateTabUrl={updateTabUrl}
+                      theme={theme}
+                    />
+                  ))}
+              </View>
+            </ScrollView>
+          </View>
+        ))}
+        <View style={styles.footer}>
+          <Text style={[styles.textBase, styles.text]}>
+            {translate('browser.home.cant_see_dapps.part_1')}
           </Text>
-          !
-        </Text>
-      </View>
-    </ScrollView>
+          <Text style={[styles.textBase, styles.text]}>
+            {translate('browser.home.cant_see_dapps.part_2')}
+            <Text
+              style={[styles.textBase, styles.text, styles.redColor]}
+              onPress={() => {
+                Linking.openURL('https://discord.gg/tUHtyev2xF');
+              }}>
+              Discord
+            </Text>
+            !
+          </Text>
+        </View>
+      </ScrollView>
+    </View>
   ) : (
     <View style={[{flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
       <Loader animating size={'small'} />
@@ -138,13 +140,17 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
     container: {
       flexDirection: 'column',
       flex: 1,
-      marginTop: 10,
-      paddingTop: 25,
       borderTopLeftRadius: 40,
+      marginTop: 10,
       borderTopRightRadius: 40,
-      paddingLeft: MARGIN_LEFT_RIGHT_MIN,
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
+      overflow: 'hidden',
+    },
+    scrollviewContentContainer: {
+      paddingLeft: MARGIN_LEFT_RIGHT_MIN,
+      marginTop: 25,
+      overflow: 'hidden',
     },
     footer: {
       flexDirection: 'column',
