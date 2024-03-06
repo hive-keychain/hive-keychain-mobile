@@ -42,7 +42,6 @@ export default () => {
           headerRight: () => (
             <MoreInformation
               additionalButtonStyle={[styles.marginRight]}
-              theme={theme}
               type={Info.KEYS}
             />
           ),
@@ -72,7 +71,6 @@ export default () => {
               <MoreInformation
                 additionalButtonStyle={[styles.marginRight]}
                 type={Info.QR_ACCOUNT}
-                theme={theme}
               />
             );
           },

@@ -1,8 +1,7 @@
 import BackgroundSquares from 'assets/new_UI/background_squares.svg';
-import Dots1Dark from 'assets/new_UI/dots_1_dark.svg';
-import Dots1Light from 'assets/new_UI/dots_1_light.svg';
-import Dots2Dark from 'assets/new_UI/dots_2_dark.svg';
-import Dots2Light from 'assets/new_UI/dots_2_light.svg';
+import IndicatorActive from 'assets/new_UI/circle_indicator_active.svg';
+import IndicatorInactive from 'assets/new_UI/circle_indicator_inactive.svg';
+import IndicatorInactiveLight from 'assets/new_UI/circle_indicator_inactive_light.svg';
 import Hand from 'assets/new_UI/hand_1.svg';
 import HiveImageSignupDark from 'assets/new_UI/hive_logo_signup_dark.svg';
 import HiveImageSignupLight from 'assets/new_UI/hive_logo_signup_light.svg';
@@ -34,12 +33,15 @@ import {
 import {getSpaceAdjustMultiplier, getSpacing} from 'src/styles/spacing';
 import {
   button_link_primary_medium,
+  getFontSizeSmallDevices,
   headlines_primary_headline_2,
   title_primary_title_1,
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {hiveConfig} from 'utils/config';
 import {translate} from 'utils/localize';
+
+const INTROSTEPS = 3;
 
 const Introduction = ({navigation}: IntroductionNavProp) => {
   const scrollViewRef = useRef();
@@ -76,71 +78,14 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
     );
   };
 
-  const [introductionStepList, setIntroductionStepList] = React.useState<
-    JSX.Element[]
-  >([
-    <View style={{width, height}}>
-      <View style={[styles.centeredView, styles.flexAbsCentered]}>
-        <BackgroundSquares {...styles.backgroundSquares} />
-      </View>
-      <View style={[styles.centeredView, styles.flexBetween70]}>
-        {renderLogos(false)}
-        <Person1 {...styles.imageHive} />
-        {theme === Theme.DARK ? <Dots1Dark /> : <Dots1Light />}
-        <Text style={{...styles.text, ...headlines_primary_headline_2}}>
-          {translate('intro.intro_text_1')}
-        </Text>
-      </View>
-    </View>,
-
-    <View style={[{width, height}, styles.centeredView, styles.flexBetween70]}>
-      {renderLogos(false)}
-      <Hand {...styles.imageHive} />
-      {theme === Theme.DARK ? <Dots2Dark /> : <Dots2Light />}
-      <Text style={{...styles.text, ...headlines_primary_headline_2}}>
-        {translate('intro.intro_text_2')}
-      </Text>
-    </View>,
-
-    <View style={{width, height}}>
-      <View style={[styles.flexBetween70]}>
-        {renderLogos(true)}
-        <Text style={styles.text}>{translate('intro.text')}</Text>
-        <Text style={styles.text}>{translate('intro.manage')}</Text>
-      </View>
-      <View>
-        <EllipticButton
-          title={translate('intro.existingAccount')}
-          onPress={() => {
-            navigation.navigate('SignupScreen');
-          }}
-          style={styles.outlineButton}
-          additionalTextStyle={styles.textOutLineButton}
-        />
-        <Separator height={height * 0.02} />
-        <EllipticButton
-          title={translate('intro.createAccount')}
-          onPress={() => {
-            Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
-          }}
-          style={styles.warningProceedButton}
-          additionalTextStyle={styles.textButtonFilled}
-        />
-        <Separator height={height * spaced.multiplier} />
-      </View>
-    </View>,
-  ]);
   const [currentStep, setCurrentStep] = React.useState(0);
 
   const handleNextStep = () => {
-    let step = currentStep;
-    step++;
-    if (introductionStepList[step]) setCurrentStep(step);
+    setCurrentStep((prevStep) => prevStep + 1);
   };
 
   useEffect(() => {
     if (scrollViewRef && scrollViewRef.current) {
-      console.log('Should scrollTo', {currentStep}); //TODO remove line
       (scrollViewRef.current as any).scrollTo({
         x: width * currentStep,
         animated: true,
@@ -148,72 +93,65 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
     }
   }, [currentStep]);
 
-  //TODO cleanup
-  // const toNextPage = () => {
-  //   let step = currentStep;
-  //   step++;
-  //   if (scrollViewRef && scrollViewRef.current) {
-  //     console.log('Should scrollTo', {step}); //TODO remove line
-  //     (scrollViewRef.current as any).scrollTo({
-  //       x: width * currentStep,
-  //       animated: true,
-  //     });
-  //   }
-  // };
-
   const onHandleScrollEndDrag = (
     event: NativeSyntheticEvent<NativeScrollEvent>,
   ) => {
-    const contentOffsetX = event.nativeEvent.contentOffset.x;
-    console.log({contentOffsetX});
-    if (contentOffsetX < width) {
-      console.log('Moving left!');
-    } else if (contentOffsetX >= width) {
-      console.log('Moving right!');
+    const {x} = event.nativeEvent.contentOffset;
+    const indexOfNextScreen = (x / width).toFixed(0);
+    setCurrentStep(parseFloat(indexOfNextScreen));
+  };
+
+  const drawPageIndicators = (currentIndex: number) => {
+    const createCircleAddKey = (index: number, active?: boolean) => {
+      const key = `${index}-circle-${Math.random().toFixed(5).toString()}`;
+      const indicatorProps = {
+        key: key,
+        style: {marginRight: 6},
+        ...styles.indicatorCircle,
+      };
+      return active ? (
+        <IndicatorActive {...indicatorProps} />
+      ) : theme === Theme.LIGHT ? (
+        <IndicatorInactiveLight {...indicatorProps} />
+      ) : (
+        <IndicatorInactive {...indicatorProps} />
+      );
+    };
+    const circleArray: JSX.Element[] = [];
+    for (let i = 0; i < INTROSTEPS; i++) {
+      circleArray.push(createCircleAddKey(i, currentIndex === i));
     }
+    return circleArray;
   };
 
   return (
     <Background theme={theme}>
-      <>
+      <View style={{flex: 1}}>
         <FocusAwareStatusBar
           backgroundColor={getColors(theme).primaryBackground}
           barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
         />
-        {/* <GestureRecognizer
-          style={styles.flexAround}
-          onSwipeLeft={() => handleNextStep()}> */}
         <ScrollView
           ref={scrollViewRef}
           style={{flex: 1}}
           horizontal={true}
           scrollEventThrottle={16}
-          // onScroll={onHandleScroll}
           onScrollEndDrag={onHandleScrollEndDrag}
-          pagingEnabled={true}
-          // contentContainerStyle={{
-          //   alignItems: 'center',
-          //   alignContent: 'center',
-          // }}
-        >
-          {/* {introductionStepList[currentStep]} */}
-          {/* {currentStep < introductionStepList.length - 1 && (
-            <EllipticButton
-              title={translate('common.next')}
-              onPress={() => handleNextStep()}
-              style={styles.warningProceedButton}
-              additionalTextStyle={styles.textButtonFilled}
-            />
-          )} */}
+          pagingEnabled={true}>
           <View style={styles.scrollableScreen}>
+            <Separator height={10} />
             <View style={[styles.centeredView, styles.flexAbsCentered]}>
               <BackgroundSquares {...styles.backgroundSquares} />
             </View>
             <View style={[styles.centeredView, styles.flexBetween70]}>
               {renderLogos(false)}
               <Person1 {...styles.imageHive} />
-              {theme === Theme.DARK ? <Dots1Dark /> : <Dots1Light />}
-              <Text style={{...styles.text, ...headlines_primary_headline_2}}>
+              <View style={[styles.pageIndicatorsContainer]}>
+                {drawPageIndicators(currentStep).map((indicator) => {
+                  return indicator;
+                })}
+              </View>
+              <Text style={[styles.text, styles.biggerText]}>
                 {translate('intro.intro_text_1')}
               </Text>
             </View>
@@ -223,35 +161,51 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
               style={styles.warningProceedButton}
               additionalTextStyle={styles.textButtonFilled}
             />
+            <Separator height={10} />
           </View>
 
-          <View
-            style={[
-              styles.scrollableScreen,
-              styles.centeredView,
-              styles.flexBetween70,
-            ]}>
-            {renderLogos(false)}
-            <Hand {...styles.imageHive} />
-            {theme === Theme.DARK ? <Dots2Dark /> : <Dots2Light />}
-            <Text style={{...styles.text, ...headlines_primary_headline_2}}>
-              {translate('intro.intro_text_2')}
-            </Text>
+          <View style={[styles.scrollableScreen]}>
+            <Separator height={10} />
+            <View style={[styles.centeredView, styles.flexBetween70]}>
+              {renderLogos(false)}
+              <Hand {...styles.imageHive} />
+              <View style={[styles.pageIndicatorsContainer]}>
+                {drawPageIndicators(currentStep).map((indicator) => {
+                  return indicator;
+                })}
+              </View>
+              <Text style={[styles.text, styles.biggerText]}>
+                {translate('intro.intro_text_2')}
+              </Text>
+            </View>
             <EllipticButton
               title={translate('common.next')}
               onPress={handleNextStep}
               style={styles.warningProceedButton}
               additionalTextStyle={styles.textButtonFilled}
             />
+            <Separator height={10} />
           </View>
 
           <View style={styles.scrollableScreen}>
-            <View style={[styles.flexBetween70]}>
+            <Separator height={10} />
+            <View style={[styles.centeredView, styles.flexBetween60]}>
               {renderLogos(true)}
-              <Text style={styles.text}>{translate('intro.text')}</Text>
-              <Text style={styles.text}>{translate('intro.manage')}</Text>
+              <View style={[styles.pageIndicatorsContainer]}>
+                {drawPageIndicators(currentStep).map((indicator) => {
+                  return indicator;
+                })}
+              </View>
+              <View>
+                <Text style={[styles.text, styles.dynamicTextSize]}>
+                  {translate('intro.text')}
+                </Text>
+                <Text style={[styles.text, styles.dynamicTextSize]}>
+                  {translate('intro.manage')}
+                </Text>
+              </View>
             </View>
-            <View>
+            <View style={{width: '100%'}}>
               <EllipticButton
                 title={translate('intro.existingAccount')}
                 onPress={() => {
@@ -269,12 +223,11 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
                 style={styles.warningProceedButton}
                 additionalTextStyle={styles.textButtonFilled}
               />
-              <Separator height={height * spaced.multiplier} />
             </View>
+            <Separator height={10} />
           </View>
         </ScrollView>
-        {/* </GestureRecognizer> */}
-      </>
+      </View>
     </Background>
   );
 };
@@ -287,7 +240,7 @@ const getDimensionedStyles = (
     scrollableScreen: {
       width,
       height,
-      justifyContent: 'center',
+      justifyContent: 'space-between',
       alignItems: 'center',
     },
     backgroundSquares: {
@@ -328,29 +281,40 @@ const getDimensionedStyles = (
       fontSize: 13,
       color: NEUTRAL_WHITE_COLOR,
     },
-    backgroundImage: {
-      alignSelf: 'center',
-      position: 'absolute',
-      top: 0,
-      bottom: undefined,
-      zIndex: 1,
-    },
     centeredView: {
       justifyContent: 'center',
       alignItems: 'center',
       alignContent: 'center',
     },
-    flexAround: {
-      flex: 1,
-      justifyContent: 'space-around',
-    },
     flexBetween70: {justifyContent: 'space-between', height: '70%'},
+    flexBetween60: {justifyContent: 'space-between', height: '60%'},
     flexAbsCentered: {
       position: 'absolute',
       top: -5,
       bottom: undefined,
       flex: 1,
       alignSelf: 'center',
+    },
+    pageIndicatorsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignContent: 'center',
+      marginBottom: 10,
+      alignSelf: 'center',
+    },
+    indicatorCircle: {
+      width: 12,
+      height: 12,
+    },
+    dynamicTextSize: {
+      fontSize: getFontSizeSmallDevices(width, 16),
+    },
+    biggerText: {
+      ...headlines_primary_headline_2,
+      fontSize: getFontSizeSmallDevices(
+        width,
+        headlines_primary_headline_2.fontSize,
+      ),
     },
   });
 

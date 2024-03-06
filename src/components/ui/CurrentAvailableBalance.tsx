@@ -100,6 +100,7 @@ const CurrentAvailableBalance = ({
         additionalButtonContainerStyle={[
           styles.buttonContainer,
           styles.backgroundColorRed,
+          styles.buttonContainerRed,
         ]}
         additionalPrimaryLabelStyle={[
           getFormFontStyle(height, theme, 'white').smallLabel,
@@ -127,6 +128,9 @@ const getStyles = (theme: Theme) =>
       borderRadius: 13,
       paddingHorizontal: 15,
       paddingVertical: 10,
+    },
+    buttonContainerRed: {
+      borderWidth: 0,
     },
     backgroundColorDarkBlue: {
       backgroundColor: BACKGROUNDITEMDARKISH,

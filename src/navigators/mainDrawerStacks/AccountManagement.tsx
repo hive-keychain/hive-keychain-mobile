@@ -38,7 +38,6 @@ export default () => {
             <MoreInformation
               additionalButtonStyle={styles.marginRight}
               type={Info.COPY_KEYS}
-              theme={theme}
             />
           ),
           headerLeft: () => (

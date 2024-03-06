@@ -418,7 +418,7 @@ const getStyles = (
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 5,
+      marginBottom: 12,
     },
     smallerText: {
       fontSize: 12,
