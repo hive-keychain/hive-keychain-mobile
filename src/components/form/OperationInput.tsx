@@ -73,9 +73,7 @@ export default (props: InputProps & OperationInputProps) => {
         {props.labelExtraInfo && (
           <Text
             style={[
-              styles.labelStyle,
               styles.smallerLabelSize,
-              props.additionalLabelStyle,
               props.additionalLabelExtraInfoTextStyle,
             ]}>
             {props.labelExtraInfo}
@@ -126,7 +124,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     smallerLabelSize: {
       marginLeft: 10,
       fontFamily: FontPoppinsName.ITALIC,
-      fontSize: 13,
+      fontSize: getFontSizeSmallDevices(width, 13),
     },
     marginLeft: {
       marginLeft: 8,

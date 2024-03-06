@@ -306,9 +306,9 @@ const RCDelegation = ({
             />
             <OperationInput
               labelInput={capitalize(translate('common.amount'))}
-              labelBottomExtraInfo={
+              labelExtraInfo={
                 equivalentHPAmount
-                  ? `(≈ ${equivalentHPAmount} ${getCurrency('HP')})`
+                  ? `≈ ${equivalentHPAmount} ${getCurrency('HP')}`
                   : undefined
               }
               placeholder={'0.000'}
@@ -357,7 +357,7 @@ const RCDelegation = ({
               }
             />
           </View>
-          <View style={[styles.flexWrap, styles.marginBottom]}>
+          <View style={[styles.delegationValuesButtons]}>
             {[5, 10, 50, 100].map((value) => {
               return (
                 <TouchableOpacity
@@ -413,12 +413,12 @@ const getStyles = (theme: Theme) =>
       fontFamily: FontPoppinsName.ITALIC,
     },
     flexRow: {flexDirection: 'row', justifyContent: 'space-between'},
-    flexWrap: {
+    delegationValuesButtons: {
       flexDirection: 'row',
       flexWrap: 'wrap',
       width: '100%',
-      justifyContent: 'space-between',
-      marginTop: 10,
+      justifyContent: 'space-evenly',
+      marginVertical: 24,
     },
     button: {width: 60, justifyContent: 'center', alignItems: 'center'},
     operationButtonsContainer: {
