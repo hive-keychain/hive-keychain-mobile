@@ -18,7 +18,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {MARGINPADDING} from 'src/styles/spacing';
+import {MARGIN_PADDING} from 'src/styles/spacing';
 import {
   button_link_primary_medium,
   getFontSizeSmallDevices,
@@ -168,7 +168,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       marginBottom: 0,
     },
     dropdownOverlay: {
-      paddingHorizontal: MARGINPADDING,
+      paddingHorizontal: MARGIN_PADDING,
     },
   });
 

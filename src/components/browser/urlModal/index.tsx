@@ -18,7 +18,7 @@ import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {MARGINPADDING} from 'src/styles/spacing';
+import {MARGIN_PADDING} from 'src/styles/spacing';
 import {title_primary_body_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import UrlAutocomplete from './UrlAutocomplete';
@@ -185,7 +185,7 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
       borderColor: getColors(theme).quaternaryCardBorderColor,
       borderWidth: 1,
       borderRadius: 15,
-      paddingLeft: MARGINPADDING,
+      paddingLeft: MARGIN_PADDING,
     },
     clearHistory: {
       marginLeft: 20,

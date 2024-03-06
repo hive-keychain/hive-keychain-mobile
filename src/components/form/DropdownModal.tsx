@@ -20,10 +20,10 @@ import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
-  CONTENTMARGINPADDING,
-  LABELINDENTSPACE,
-  MARGINLEFTRIGHTMIN,
-  MARGINPADDING,
+  CONTENT_MARGIN_PADDING,
+  LABEL_INDENT_SPACE,
+  MARGIN_LEFT_RIGHT_MIN,
+  MARGIN_PADDING,
   MIN_SEPARATION_ELEMENTS,
 } from 'src/styles/spacing';
 import {
@@ -372,7 +372,7 @@ const getStyles = (
       position: 'absolute',
       zIndex: 10,
       elevation: 0,
-      paddingHorizontal: MARGINPADDING + CONTENTMARGINPADDING,
+      paddingHorizontal: MARGIN_PADDING + CONTENT_MARGIN_PADDING,
       paddingTop: 0,
     },
     dropdownListContainer: {
@@ -399,7 +399,7 @@ const getStyles = (
       justifyContent: 'space-between',
     },
     marginLeft: {
-      marginLeft: MARGINLEFTRIGHTMIN,
+      marginLeft: MARGIN_LEFT_RIGHT_MIN,
     },
     dropdownContainer: {
       flexDirection: 'row',
@@ -424,7 +424,7 @@ const getStyles = (
       fontSize: 12,
     },
     indent: {
-      marginLeft: LABELINDENTSPACE,
+      marginLeft: LABEL_INDENT_SPACE,
     },
     searchContainer: {
       borderColor: getColors(theme).quaternaryCardBorderColor,

@@ -37,7 +37,7 @@ import {
 } from 'src/styles/colors';
 import {ICONMINDIMENSIONS} from 'src/styles/icon';
 import {getHorizontalLineStyle} from 'src/styles/line';
-import {MARGINPADDING} from 'src/styles/spacing';
+import {MARGIN_PADDING} from 'src/styles/spacing';
 import {getRotateStyle} from 'src/styles/transform';
 import {
   FontPoppinsName,
@@ -927,7 +927,7 @@ const getStyles = (theme: Theme) =>
     opaque: {
       opacity: 0.8,
     },
-    marginHorizontal: {marginHorizontal: MARGINPADDING},
+    marginHorizontal: {marginHorizontal: MARGIN_PADDING},
     squareButton: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).cardBorderColorContrast,

@@ -22,7 +22,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {MARGINPADDING} from 'src/styles/spacing';
+import {MARGIN_PADDING} from 'src/styles/spacing';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_2,
@@ -212,7 +212,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       borderRadius: 30,
     },
     dropdownOverlay: {
-      paddingHorizontal: MARGINPADDING,
+      paddingHorizontal: MARGIN_PADDING,
     },
   });
 

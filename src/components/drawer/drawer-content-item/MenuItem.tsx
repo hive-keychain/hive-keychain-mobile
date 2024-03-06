@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {PADDINGLEFTMAINMENU} from 'src/styles/spacing';
+import {PADDING_LEFT_MAIN_MENU} from 'src/styles/spacing';
 import {
   getFontSizeSmallDevices,
   title_primary_body_2,
@@ -77,7 +77,7 @@ const getStyles = (
   StyleSheet.create({
     container: {
       flexDirection: 'row',
-      paddingLeft: PADDINGLEFTMAINMENU,
+      paddingLeft: PADDING_LEFT_MAIN_MENU,
       alignItems: 'center',
       height: 41,
       width: hasLeftComponent ? '95%' : '100%',

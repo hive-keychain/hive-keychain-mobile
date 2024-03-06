@@ -60,7 +60,7 @@ import {
   PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {TOPCONTAINERSEPARATION} from 'src/styles/spacing';
+import {TOP_CONTAINER_SEPARATION} from 'src/styles/spacing';
 import {button_link_primary_medium} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
@@ -349,7 +349,7 @@ const Main = ({
             ref={mainScrollRef}
             onScrollEndDrag={onHandleEndScroll}
             onScroll={onHandleScroll}>
-            <Separator height={TOPCONTAINERSEPARATION} />
+            <Separator height={TOP_CONTAINER_SEPARATION} />
             <View style={{zIndex: 20}}>
               <View style={[styles.headerMenu]}>
                 <DrawerButton navigation={navigation as any} theme={theme} />
