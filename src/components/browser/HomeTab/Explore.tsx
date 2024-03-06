@@ -141,6 +141,7 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
       marginTop: 10,
       paddingTop: 25,
       borderTopLeftRadius: 40,
+      borderTopRightRadius: 40,
       paddingLeft: MARGIN_LEFT_RIGHT_MIN,
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
