@@ -116,7 +116,10 @@ class StyleSheetFactory {
         right: 0,
         justifyContent: 'center',
         alignItems: 'center',
-        height: fixedHeight * height,
+        minHeight: fixedHeight * height,
+        height: 'auto',
+        maxHeight: 0.85 * height,
+
         width: '100%',
       },
       modalContainer: {
@@ -127,16 +130,6 @@ class StyleSheetFactory {
         borderColor: 'white',
         borderStyle: 'solid',
         borderRadius: 10,
-      },
-      gradient: {
-        width: '100%',
-        height: '100%',
-        flex: 0,
-        margin: 0,
-        borderRadius: 10,
-        padding: 0,
-        paddingHorizontal: width * 0.05,
-        paddingVertical: width * 0.05,
       },
     });
 
