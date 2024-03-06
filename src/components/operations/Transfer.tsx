@@ -297,54 +297,66 @@ const Transfer = ({
                 </View>
               }
             />
-            <Separator />
-            <OptionsToggle
-              type={'checkbox'}
-              theme={theme}
-              title={translate('common.recurrent_transfer')}
-              toggled={isRecurrent}
-              additionalTitleStyle={getFormFontStyle(height, theme).title}
-              callback={(toggled) => {
-                setRecurrent(toggled);
-              }}>
-              <Separator />
-              <OperationInput
-                labelInput={translate('wallet.operations.transfer.frequency')}
-                labelExtraInfo={translate(
-                  'wallet.operations.transfer.frequency_minimum',
-                )}
-                placeholder={translate('wallet.operations.transfer.frequency')}
-                value={recurrence}
-                onChangeText={setRecurrence}
-                keyboardType={'number-pad'}
-                inputStyle={getFormFontStyle(height, theme).input}
-                additionalLabelStyle={
-                  getFormFontStyle(height, theme).labelInput
-                }
-                additionalLabelExtraInfoTextStyle={
-                  getFormFontStyle(height, theme).infoLabel
-                }
-              />
-              <Separator />
-              <OperationInput
-                labelInput={translate('wallet.operations.transfer.iterations')}
-                labelExtraInfo={translate(
-                  'wallet.operations.transfer.iterations_minimum',
-                )}
-                placeholder={translate('wallet.operations.transfer.iterations')}
-                value={exec}
-                onChangeText={setExec}
-                keyboardType={'number-pad'}
-                inputStyle={getFormFontStyle(height, theme).input}
-                additionalLabelStyle={
-                  getFormFontStyle(height, theme).labelInput
-                }
-                additionalLabelExtraInfoTextStyle={
-                  getFormFontStyle(height, theme).infoLabel
-                }
-              />
-            </OptionsToggle>
-            <Separator />
+            {!engine && (
+              <>
+                <Separator />
+                <OptionsToggle
+                  type={'checkbox'}
+                  theme={theme}
+                  title={translate('common.recurrent_transfer')}
+                  toggled={isRecurrent}
+                  additionalTitleStyle={getFormFontStyle(height, theme).title}
+                  callback={(toggled) => {
+                    setRecurrent(toggled);
+                  }}>
+                  <Separator />
+                  <OperationInput
+                    labelInput={translate(
+                      'wallet.operations.transfer.frequency',
+                    )}
+                    labelExtraInfo={translate(
+                      'wallet.operations.transfer.frequency_minimum',
+                    )}
+                    placeholder={translate(
+                      'wallet.operations.transfer.frequency',
+                    )}
+                    value={recurrence}
+                    onChangeText={setRecurrence}
+                    keyboardType={'number-pad'}
+                    inputStyle={getFormFontStyle(height, theme).input}
+                    additionalLabelStyle={
+                      getFormFontStyle(height, theme).labelInput
+                    }
+                    additionalLabelExtraInfoTextStyle={
+                      getFormFontStyle(height, theme).infoLabel
+                    }
+                  />
+                  <Separator />
+                  <OperationInput
+                    labelInput={translate(
+                      'wallet.operations.transfer.iterations',
+                    )}
+                    labelExtraInfo={translate(
+                      'wallet.operations.transfer.iterations_minimum',
+                    )}
+                    placeholder={translate(
+                      'wallet.operations.transfer.iterations',
+                    )}
+                    value={exec}
+                    onChangeText={setExec}
+                    keyboardType={'number-pad'}
+                    inputStyle={getFormFontStyle(height, theme).input}
+                    additionalLabelStyle={
+                      getFormFontStyle(height, theme).labelInput
+                    }
+                    additionalLabelExtraInfoTextStyle={
+                      getFormFontStyle(height, theme).infoLabel
+                    }
+                  />
+                </OptionsToggle>
+                <Separator />
+              </>
+            )}
           </>
         }
         childrenBottom={
