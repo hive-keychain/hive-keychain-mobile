@@ -1,7 +1,6 @@
 import {loadAccount, loadUserTokens} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {Keyboard, StyleSheet, Text, View} from 'react-native';
@@ -9,7 +8,6 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
 import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {
   button_link_primary_medium,
@@ -127,20 +125,8 @@ const CancelDelegationToken = ({
           </View>
         </>
       }
-      childrenBottom={
-        <View style={styles.operationButtonsContainer}>
-          <ActiveOperationButton
-            title={translate('common.confirm')}
-            onPress={onCancelDelegateToken}
-            style={[
-              styles.operationButton,
-              getButtonStyle(theme).warningStyleButton,
-            ]}
-            additionalTextStyle={styles.operationButtonText}
-            isLoading={loading}
-          />
-        </View>
-      }
+      buttonTitle={'common.confirm'}
+      onNext={onCancelDelegateToken}
     />
   );
 };

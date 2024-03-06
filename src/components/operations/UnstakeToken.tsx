@@ -1,5 +1,5 @@
+import {Token} from 'actions/interfaces';
 import {showModal} from 'actions/message';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
@@ -14,8 +14,6 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {Token} from 'src/interfaces/tokens.interface';
-import {getButtonStyle} from 'src/styles/button';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
@@ -219,15 +217,8 @@ const UnstakeToken = ({
           </View>
         </View>
       }
-      childrenBottom={
-        <ActiveOperationButton
-          title={translate('common.unstake')}
-          onPress={onUnstakeTokenConfirmation}
-          style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-          isLoading={false}
-          additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
-        />
-      }
+      buttonTitle={'common.unstake'}
+      onNext={onUnstakeTokenConfirmation}
     />
   );
 };

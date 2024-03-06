@@ -1,9 +1,7 @@
 import {loadTokensMarket} from 'actions/index';
 import {showModal} from 'actions/message';
 import ErrorSvg from 'assets/new_UI/error-circle.svg';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
-import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Loader from 'components/ui/Loader';
@@ -28,7 +26,6 @@ import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {SwapConfig} from 'src/interfaces/swap-token.interface';
 import {Token} from 'src/interfaces/tokens.interface';
-import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {
   BACKGROUNDDARKBLUE,
@@ -51,7 +48,7 @@ import {capitalize, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
-import {goBack, goBackAndNavigate, navigate} from 'utils/navigation';
+import {goBackAndNavigate, navigate} from 'utils/navigation';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
 import {
   getAllTokens,
@@ -532,35 +529,8 @@ const Swap = ({
               </View>
             </View>
           }
-          childrenBottom={
-            <View style={[styles.flexRowbetween, styles.marginBottom]}>
-              <EllipticButton
-                title={translate('common.back')}
-                onPress={async () => {
-                  await SwapTokenUtils.cancelSwap(estimateId);
-                  goBack();
-                }}
-                style={[
-                  styles.operationButton,
-                  styles.operationButtonConfirmation,
-                ]}
-                additionalTextStyle={[
-                  styles.operationButtonText,
-                  styles.buttonTextColorDark,
-                ]}
-              />
-              <ActiveOperationButton
-                title={translate('common.confirm')}
-                onPress={() => processSwap(estimateId)}
-                style={[
-                  styles.operationButton,
-                  getButtonStyle(theme).warningStyleButton,
-                ]}
-                additionalTextStyle={styles.operationButtonText}
-                isLoading={loadingSwap}
-              />
-            </View>
-          }
+          buttonTitle={'common.confirm'}
+          onNext={() => processSwap(estimateId)}
         />
       ),
       hideCloseButton: true,
@@ -870,15 +840,8 @@ const Swap = ({
               )}
             </View>
           }
-          childrenBottom={
-            <ActiveOperationButton
-              title={translate('wallet.operations.swap.title')}
-              onPress={gotoConfirmationStack}
-              style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-              isLoading={loadingConfirmationSwap}
-              additionalTextStyle={{...button_link_primary_medium}}
-            />
-          }
+          buttonTitle={'wallet.operations.swap.title'}
+          onNext={gotoConfirmationStack}
         />
       )}
       {underMaintenance && !loading && !serviceUnavailable && (

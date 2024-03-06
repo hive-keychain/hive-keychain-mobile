@@ -1,5 +1,4 @@
 import {showModal} from 'actions/message';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
@@ -18,7 +17,6 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -197,7 +195,7 @@ const Delegation = ({
         </>
       }
       childrenMiddle={
-        <>
+        <View>
           <Separator height={30} />
           <Text
             style={[
@@ -284,20 +282,10 @@ const Delegation = ({
               }
             />
           </View>
-        </>
+        </View>
       }
-      childrenBottom={
-        <>
-          <ActiveOperationButton
-            title={translate('common.send')}
-            onPress={onDelegateConfirmation}
-            style={[getButtonStyle(theme).warningStyleButton]}
-            isLoading={loading}
-            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
-          />
-          <Separator />
-        </>
-      }
+      buttonTitle={'common.send'}
+      onNext={onDelegateConfirmation}
     />
   );
 };

@@ -1,5 +1,4 @@
 import {showModal} from 'actions/message';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
@@ -16,7 +15,6 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
@@ -161,7 +159,7 @@ const DelegateToken = ({
         </>
       }
       childrenMiddle={
-        <>
+        <View>
           <Separator />
           <Text
             style={[getFormFontStyle(height, theme).title, styles.infoText]}>
@@ -231,17 +229,10 @@ const DelegateToken = ({
               }
             />
           </View>
-        </>
+        </View>
       }
-      childrenBottom={
-        <ActiveOperationButton
-          title={translate(update ? 'common.confirm' : 'common.delegate')}
-          onPress={onDelegateConfirmation}
-          style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-          additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
-          isLoading={false}
-        />
-      }
+      buttonTitle={update ? 'common.confirm' : 'common.delegate'}
+      onNext={onDelegateConfirmation}
     />
   );
 };

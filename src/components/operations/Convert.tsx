@@ -1,7 +1,6 @@
 import {fetchConversionRequests} from 'actions/index';
 import {Conversion} from 'actions/interfaces';
 import {showModal} from 'actions/message';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import PendingConvertions from 'components/hive/PendingConvertions';
@@ -22,7 +21,6 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -226,7 +224,7 @@ const Convert = ({
         </>
       }
       childrenMiddle={
-        <>
+        <View>
           <Separator />
           <Text
             style={[
@@ -321,20 +319,10 @@ const Convert = ({
               keyExtractor={(conversion) => conversion.id + ''}
             />
           ) : null}
-        </>
+        </View>
       }
-      childrenBottom={
-        <>
-          <ActiveOperationButton
-            title={translate('wallet.operations.convert.button')}
-            onPress={onConvertConfirmation}
-            style={[getButtonStyle(theme).warningStyleButton]}
-            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
-            isLoading={loading}
-          />
-          <Separator />
-        </>
-      }
+      buttonTitle={'wallet.operations.convert.button'}
+      onNext={onConvertConfirmation}
     />
   );
 };

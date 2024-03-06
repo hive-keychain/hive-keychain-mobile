@@ -1,5 +1,4 @@
 import {loadAccount} from 'actions/index';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import Separator from 'components/ui/Separator';
 import {ConfirmationPageRoute} from 'navigators/Root.types';
 import React, {useState} from 'react';
@@ -12,7 +11,7 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {getButtonHeight, getButtonStyle} from 'src/styles/button';
+import {getButtonHeight} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
@@ -96,27 +95,15 @@ const ConfirmationPage = ({
           ))}
         </View>
       }
-      childrenBottom={
-        <View style={styles.operationButtonsContainer}>
-          <ActiveOperationButton
-            title={translate('common.confirm')}
-            onPress={async () => {
-              setLoading(true);
-              Keyboard.dismiss();
-              await onSend();
-              setLoading(false);
-              loadAccount(user.name, true);
-              resetStackAndNavigate('WALLET');
-            }}
-            style={[
-              styles.operationButton,
-              getButtonStyle(theme, height).warningStyleButton,
-            ]}
-            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
-            isLoading={loading}
-          />
-        </View>
-      }
+      buttonTitle={'common.confirm'}
+      onNext={async () => {
+        setLoading(true);
+        Keyboard.dismiss();
+        await onSend();
+        setLoading(false);
+        loadAccount(user.name, true);
+        resetStackAndNavigate('WALLET');
+      }}
       additionalContentContainerStyle={styles.paddingHorizontal}
     />
   );

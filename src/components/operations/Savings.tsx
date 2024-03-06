@@ -1,5 +1,4 @@
 import {showModal} from 'actions/message';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -21,7 +20,6 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
-import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -297,7 +295,7 @@ const Savings = ({
         </>
       }
       childrenMiddle={
-        <>
+        <View>
           {operationType === SavingsOperations.withdraw && (
             <View onLayout={_measure} ref={extraElementRef}>
               <Separator />
@@ -427,22 +425,10 @@ const Savings = ({
               }
             />
           </View>
-        </>
+        </View>
       }
-      childrenBottom={
-        <>
-          <ActiveOperationButton
-            title={translate(
-              `wallet.operations.savings.${operationType}_button`,
-            )}
-            onPress={onSavingsConfirmation}
-            style={[getButtonStyle(theme).warningStyleButton]}
-            isLoading={false}
-            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
-          />
-          <Separator />
-        </>
-      }
+      buttonTitle={`wallet.operations.savings.${operationType}_button`}
+      onNext={onSavingsConfirmation}
     />
   );
 };

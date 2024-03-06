@@ -1,5 +1,4 @@
 import {showModal} from 'actions/message';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
@@ -17,7 +16,6 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle, title_primary_body_2} from 'src/styles/typography';
@@ -124,7 +122,7 @@ const PowerUp = ({
         </>
       }
       childrenMiddle={
-        <>
+        <View style={{flex: 1}}>
           <Separator height={35} />
           <Text
             style={[getFormFontStyle(height, theme).title, styles.infoText]}>
@@ -199,17 +197,10 @@ const PowerUp = ({
               }
             />
           </View>
-        </>
+        </View>
       }
-      childrenBottom={
-        <ActiveOperationButton
-          title={translate('wallet.operations.powerup.title')}
-          onPress={onPowerUpConfirmation}
-          style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-          isLoading={false}
-          additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
-        />
-      }
+      buttonTitle={'wallet.operations.powerup.title'}
+      onNext={onPowerUpConfirmation}
     />
   );
 };

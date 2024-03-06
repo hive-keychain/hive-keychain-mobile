@@ -1,5 +1,4 @@
 import {showModal} from 'actions/message';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
@@ -18,7 +17,6 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -223,7 +221,7 @@ const PowerDown = ({
         </>
       }
       childrenMiddle={
-        <>
+        <View>
           <Separator height={25} />
           <Text
             style={[
@@ -295,20 +293,10 @@ const PowerDown = ({
               }
             />
           </View>
-        </>
+        </View>
       }
-      childrenBottom={
-        <>
-          <ActiveOperationButton
-            title={translate(`wallet.operations.powerdown.title`)}
-            onPress={onPowerDownConfirmation}
-            style={[getButtonStyle(theme).warningStyleButton]}
-            isLoading={false}
-            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
-          />
-          <Separator />
-        </>
-      }
+      buttonTitle={`wallet.operations.powerdown.title`}
+      onNext={onPowerDownConfirmation}
     />
   );
 };

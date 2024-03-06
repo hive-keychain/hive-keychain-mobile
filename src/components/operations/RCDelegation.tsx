@@ -1,6 +1,5 @@
 import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
@@ -20,7 +19,6 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {RCDelegationValue} from 'src/interfaces/rc-delegation.interface';
-import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {BACKGROUNDDARKBLUE, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -262,7 +260,7 @@ const RCDelegation = ({
         </>
       }
       childrenMiddle={
-        <>
+        <View>
           <Separator height={30} />
           <Text
             style={[
@@ -374,23 +372,11 @@ const RCDelegation = ({
               );
             })}
           </View>
-        </>
+        </View>
       }
-      childrenBottom={
-        <>
-          <ActiveOperationButton
-            method={KeyTypes.posting}
-            title={translate(
-              'wallet.operations.rc_delegation.delegate_to_user',
-            )}
-            onPress={onRCDelegateConfirmation}
-            style={[getButtonStyle(theme).warningStyleButton]}
-            isLoading={false}
-            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
-          />
-          <Separator height={15} />
-        </>
-      }
+      method={KeyTypes.posting}
+      buttonTitle={'wallet.operations.rc_delegation.delegate_to_user'}
+      onNext={onRCDelegateConfirmation}
     />
   );
 };

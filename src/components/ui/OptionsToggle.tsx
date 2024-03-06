@@ -75,9 +75,9 @@ const OptionsToggle = ({
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {
-      flex: 1,
+      // height: 'auto',
     },
-    toggled: {flex: 1, justifyContent: 'center'},
+    toggled: {},
     untoggled: {display: 'none'},
     toggleButton: {
       width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 15 : 20,

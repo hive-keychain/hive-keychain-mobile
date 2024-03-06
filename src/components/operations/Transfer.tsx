@@ -1,7 +1,5 @@
-import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import {encodeMemo} from 'components/bridge';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import OptionsToggle from 'components/ui/OptionsToggle';
@@ -15,7 +13,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {AutoCompleteValues} from 'src/interfaces/autocomplete.interface';
-import {getButtonHeight, getButtonStyle} from 'src/styles/button';
+import {getButtonHeight} from 'src/styles/button';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
@@ -163,6 +161,80 @@ const Transfer = ({
       );
     }
   };
+
+  const onTransferConfirmation = () => {
+    if (
+      !amount.length ||
+      !to.length ||
+      (isRecurrent &&
+        (exec.trim().length === 0 || recurrence.trim().length === 0))
+    ) {
+      Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
+    } else if (+amount > parseFloat(availableBalance)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      //TODO : Call confirmation page
+      const confirmationData = {
+        title: 'wallet.operations.transfer.confirm.info',
+        onSend,
+        warningText: getTransferWarning(
+          phishingAccounts,
+          to,
+          currency,
+          !!memo,
+          memo,
+        ).warning,
+        data: [
+          {
+            title: 'wallet.operations.transfer.confirm.from',
+            value: `@${user.account.name}`,
+          },
+          {
+            value: `@${to} ${
+              getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
+                .exchange
+                ? '(exchange)'
+                : ''
+            }`,
+            title: 'wallet.operations.transfer.confirm.to',
+          },
+          {
+            title: 'wallet.operations.transfer.confirm.amount',
+            value: `${amount} ${currency}`,
+          },
+        ],
+      };
+      if (memo.length)
+        confirmationData.data.push({
+          title: 'wallet.operations.transfer.confirm.memo',
+          value: `${
+            memo.trim().length > 25 ? memo.substring(0, 22) + '...' : memo
+          } ${isMemoEncrypted ? '(encrypted)' : ''}`,
+        });
+      if (isRecurrent)
+        confirmationData.data.push(
+          ...[
+            {
+              title: 'wallet.operations.transfer.confirm.recurrence',
+              value: translate(
+                'wallet.operations.transfer.confirm.recurrenceData',
+                {
+                  exec,
+                  recurrence,
+                },
+              ),
+            },
+          ],
+        );
+      //TODO : put navigation screens in enum
+      navigate('ConfirmationPage', confirmationData);
+    }
+  };
+
   const {width, height} = useWindowDimensions();
 
   const styles = getDimensionedStyles({width, height}, theme);
@@ -193,7 +265,7 @@ const Transfer = ({
           </>
         }
         childrenMiddle={
-          <>
+          <View>
             <Separator height={35} />
             <OperationInput
               testID="username-input-testID"
@@ -298,7 +370,7 @@ const Transfer = ({
               }
             />
             {!engine && (
-              <>
+              <View>
                 <Separator />
                 <OptionsToggle
                   type={'checkbox'}
@@ -355,108 +427,12 @@ const Transfer = ({
                   />
                 </OptionsToggle>
                 <Separator />
-              </>
+              </View>
             )}
-          </>
-        }
-        childrenBottom={
-          <View style={styles.operationButtonsContainer}>
-            <ActiveOperationButton
-              method={KeyTypes.active}
-              title={translate('common.send')}
-              onPress={() => {
-                if (
-                  !amount.length ||
-                  !to.length ||
-                  (isRecurrent &&
-                    (exec.trim().length === 0 ||
-                      recurrence.trim().length === 0))
-                ) {
-                  Toast.show(
-                    translate(
-                      'wallet.operations.transfer.warning.missing_info',
-                    ),
-                  );
-                } else if (+amount > parseFloat(availableBalance)) {
-                  Toast.show(
-                    translate('common.overdraw_balance_error', {
-                      currency,
-                    }),
-                  );
-                } else {
-                  //TODO : Call confirmation page
-                  const confirmationData = {
-                    title: 'wallet.operations.transfer.confirm.info',
-                    onSend,
-                    warningText: getTransferWarning(
-                      phishingAccounts,
-                      to,
-                      currency,
-                      !!memo,
-                      memo,
-                    ).warning,
-                    data: [
-                      {
-                        title: 'wallet.operations.transfer.confirm.from',
-                        value: `@${user.account.name}`,
-                      },
-                      {
-                        value: `@${to} ${
-                          getTransferWarning(
-                            phishingAccounts,
-                            to,
-                            currency,
-                            !!memo,
-                            memo,
-                          ).exchange
-                            ? '(exchange)'
-                            : ''
-                        }`,
-                        title: 'wallet.operations.transfer.confirm.to',
-                      },
-                      {
-                        title: 'wallet.operations.transfer.confirm.amount',
-                        value: `${amount} ${currency}`,
-                      },
-                    ],
-                  };
-                  if (memo.length)
-                    confirmationData.data.push({
-                      title: 'wallet.operations.transfer.confirm.memo',
-                      value: `${
-                        memo.trim().length > 25
-                          ? memo.substring(0, 22) + '...'
-                          : memo
-                      } ${isMemoEncrypted ? '(encrypted)' : ''}`,
-                    });
-                  if (isRecurrent)
-                    confirmationData.data.push(
-                      ...[
-                        {
-                          title:
-                            'wallet.operations.transfer.confirm.recurrence',
-                          value: translate(
-                            'wallet.operations.transfer.confirm.recurrenceData',
-                            {
-                              exec,
-                              recurrence,
-                            },
-                          ),
-                        },
-                      ],
-                    );
-                  //TODO : put navigation screens in enum
-                  navigate('ConfirmationPage', confirmationData);
-                }
-              }}
-              style={getButtonStyle(theme, height).warningStyleButton}
-              additionalTextStyle={
-                getFormFontStyle(height, theme, 'white').title
-              }
-              isLoading={false}
-            />
           </View>
         }
+        buttonTitle={'common.send'}
+        onNext={onTransferConfirmation}
         additionalContentContainerStyle={styles.paddingHorizontal}
       />
     </View>
