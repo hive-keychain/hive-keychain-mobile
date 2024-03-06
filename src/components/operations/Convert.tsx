@@ -1,5 +1,4 @@
 import {fetchConversionRequests} from 'actions/index';
-import {Conversion} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -9,7 +8,6 @@ import moment from 'moment';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {
-  FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -51,7 +49,6 @@ const Convert = ({
 }: Props) => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showConversionsList, setShowConversionsList] = useState(false);
   const [totalPendingConvertions, setTotalPendingConvertions] = useState(0);
   const [availableBalance, setAvailableBalance] = useState('');
 
@@ -136,24 +133,6 @@ const Convert = ({
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const styles = getDimensionedStyles(color, theme);
-
-  const renderConvertionItem = (item: Conversion) => {
-    const [amt, c] = item.amount.split(' ');
-    return currency === c ? (
-      <View style={[styles.conversionRow, styles.paddingHorizontal]}>
-        <Text style={[getFormFontStyle(height, theme).input]}>
-          {amt} {currency}
-        </Text>
-        <Text style={[getFormFontStyle(height, theme).input]}>-</Text>
-        <Text style={[getFormFontStyle(height, theme).input]}>
-          {item.conversion_date
-            .replace('T', ' ')
-            .replace('-', '/')
-            .replace('-', '/')}
-        </Text>
-      </View>
-    ) : null;
-  };
 
   return (
     <OperationThemed
@@ -300,25 +279,6 @@ const Convert = ({
             />
           </View>
           <Separator />
-          <TouchableOpacity
-            onPress={() => {
-              setShowConversionsList(!showConversionsList);
-            }}
-            style={styles.paddingHorizontal}>
-            <Text
-              style={
-                getFormFontStyle(height, theme).input
-              }>{`${conversions.length} conversions`}</Text>
-          </TouchableOpacity>
-          <Separator />
-          {showConversionsList ? (
-            <FlatList
-              data={conversions}
-              style={styles.conversionContainer}
-              renderItem={({item}) => renderConvertionItem(item)}
-              keyExtractor={(conversion) => conversion.id + ''}
-            />
-          ) : null}
         </View>
       }
       buttonTitle={'wallet.operations.convert.button'}
