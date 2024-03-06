@@ -1,4 +1,4 @@
-import {loadAccount} from 'actions/index';
+import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
@@ -9,7 +9,6 @@ import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  Keyboard,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -20,6 +19,7 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
@@ -37,8 +37,9 @@ import {capitalize} from 'utils/format';
 import {depositToSavings, withdrawFromSavings} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
 import {SavingsUtils} from 'utils/savings.utils';
+import {ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export enum SavingsOperations {
@@ -51,12 +52,12 @@ export interface SavingOperationProps {
 }
 
 type Props = PropsFromRedux & SavingOperationProps;
-const Convert = ({
+const Savings = ({
   user,
-  loadAccount,
   currency: c,
   operation,
   userSavingsWithdrawRequests,
+  showModal,
 }: Props) => {
   const [to, setTo] = useState(user.name!);
   const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
@@ -132,8 +133,6 @@ const Convert = ({
   };
 
   const onSavings = async () => {
-    Keyboard.dismiss();
-    setLoading(true);
     try {
       if (operationType === SavingsOperations.deposit) {
         await depositToSavings(user.keys.active, {
@@ -152,27 +151,58 @@ const Convert = ({
           memo: '',
         });
       }
-      loadAccount(user.account.name, true);
-      goBack();
       if (operationType === SavingsOperations.deposit) {
-        Toast.show(
-          translate('toast.savings_deposit_success', {
-            amount: `${(+amount).toFixed(3)} ${currency}`,
-          }),
-          Toast.LONG,
-        );
+        showModal('toast.savings_deposit_success', MessageModalType.SUCCESS, {
+          amount: `${(+amount).toFixed(3)} ${currency}`,
+        });
       } else {
-        Toast.show(
-          translate('toast.savings_withdraw_success', {
-            amount: `${(+amount).toFixed(3)} ${currency}`,
-          }),
-          Toast.LONG,
-        );
+        showModal('toast.savings_withdraw_success', MessageModalType.SUCCESS, {
+          amount: `${(+amount).toFixed(3)} ${currency}`,
+        });
       }
     } catch (e) {
-      Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
-    } finally {
-      setLoading(false);
+      showModal(
+        `Error : ${(e as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
+      );
+    }
+  };
+  const onSavingsConfirmation = () => {
+    if (!to || !amount) {
+      Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
+    } else if (+amount > parseFloat(availableBalance as string)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      const confirmationData: ConfirmationPageProps = {
+        onSend: onSavings,
+        title: 'wallet.operations.savings.confirm.info',
+        data: [
+          {
+            title: 'common.operation_type',
+            value: operationTypeList.find((e) => e.value === operationType)
+              .label,
+          },
+          {
+            title: 'wallet.operations.transfer.confirm.from',
+            value: `@${user.account.name}`,
+          },
+          {
+            value: `@${to}`,
+            title: 'wallet.operations.transfer.confirm.to',
+          },
+          {
+            title: 'wallet.operations.transfer.confirm.amount',
+            value: `${amount} ${currency}`,
+          },
+        ],
+      };
+      navigate('ConfirmationPage', confirmationData);
     }
   };
 
@@ -409,7 +439,7 @@ const Convert = ({
             title={translate(
               `wallet.operations.savings.${operationType}_button`,
             )}
-            onPress={onSavings}
+            onPress={onSavingsConfirmation}
             style={[getButtonStyle(theme).warningStyleButton]}
             isLoading={loading}
             additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
@@ -488,9 +518,7 @@ const connector = connect(
         state.activeAccount.account.savings_withdraw_requests,
     };
   },
-  {
-    loadAccount,
-  },
+  {showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
-export default connector(Convert);
+export default connector(Savings);
