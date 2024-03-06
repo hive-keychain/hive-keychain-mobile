@@ -169,8 +169,8 @@
           "title_page": "PENDING WITHDRAWALS",
           "cancel_confirm_disclaimer": "Please confirm that you want to cancel this withdrawal from savings",
           "cancel_withdraw_title": "CANCEL WITHDRAWAL",
-          "cancelled": {
-            "success": "Savings withdrawal cancelled succesfully"
+          "canceled": {
+            "success": "Savings withdrawal canceled succesfully"
           }
         },
         "confirm": {"info": "Please confirm your savings operation."},
@@ -221,7 +221,7 @@
       "powerdown": {
         "title": "Power down",
         "info_power_down": "power down",
-        "cancelled_power_down": "Cancelled a power down",
+        "canceled_power_down": "canceled a power down",
         "powering_down": "Powering down",
         "next_power_down": "Next power down",
         "powerdown_text": "Power Down your Hive Power to get liquid HIVE. The entire Power Down process will take 13 weeks.",
@@ -233,7 +233,7 @@
         "incoming": "Incoming Delegations",
         "outgoing": "Outgoing Delegations",
         "info_delegation_out": "Delegated to @{{delegatee}}",
-        "cancelled_delegation": "Cancelled delegation to @{{delegatee}}",
+        "canceled_delegation": "canceled delegation to @{{delegatee}}",
         "info_delegation_in": "@{{delegator}} delegated",
         "title_button": "HP Deleg.",
         "title_delegation": "Delegation",
@@ -259,8 +259,8 @@
           "no_username_or_amount": "Please fill valid username and amount to proceed"
         },
         "success": {
-          "rc_delegation_successful": "You successfully delegated RC to {{to}}",
-          "cancel_rc_delegation_successful": "You successfully canceled your delegation to {{to}}"
+          "rc_delegation_successful": "You successfully delegated RC to @{{to}}",
+          "cancel_rc_delegation_successful": "You successfully canceled your delegation to @{{to}}"
         },
         "failed": {
           "rc_delegation_failed": "Rc Delegation failed"
@@ -676,7 +676,7 @@
     "token_stake_success": "You succesfully staked some {{currency}}!",
     "token_unstake_success": "You succesfully started unstaking some {{currency}}!",
     "token_delegate_sucess": "You succesfully delegated some {{currency}}!",
-    "token_cancel_delegation_sucess": "Your delegation of {{currency}} has been cancelled!",
+    "token_cancel_delegation_sucess": "Your delegation of {{currency}} has been canceled!",
     "token_undelegate_sucess": "Your delegation of {{currency}} was removed!",
     "hive_engine_error": "Hive Engine error: {{error}}",
     "token_timeout": "We could not verify this transaction on Hive Engine. This might mean that Hive Engine is behind blocks, wait for the operation to appear in your history, or contact the Hive Engine team on Discord.",

@@ -1,7 +1,6 @@
-import {loadAccount} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
+import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
@@ -15,10 +14,11 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import SimpleToast from 'react-native-simple-toast';
+import {default as Toast} from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {RCDelegationValue} from 'src/interfaces/rc-delegation.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
@@ -34,8 +34,9 @@ import {RootState} from 'store';
 import {capitalize, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
 import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
+import {ConfirmationPageProps} from './Confirmation';
 import IncomingOutGoingRCDelegations from './IncomingOutGoingRCDelegations';
 import OperationThemed from './OperationThemed';
 
@@ -49,9 +50,9 @@ const DEFAULT_VALUE: RCDelegationValue = {
 };
 
 const RCDelegation = ({
-  loadAccount,
   properties,
   user,
+  showModal,
 }: RCDelegationOperationProps & PropsFromRedux) => {
   const [totalIncoming, setTotalIncoming] = useState<RCDelegationValue>(
     DEFAULT_VALUE,
@@ -71,7 +72,6 @@ const RCDelegation = ({
   const {height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
-
   useEffect(() => {
     init();
   }, [user.name!]);
@@ -135,26 +135,40 @@ const RCDelegation = ({
     } as TemplateStackProps);
   };
 
-  const handleConfirmation = () => {
-    setStep(2);
+  const onRCDelegateConfirmation = () => {
+    if (!to || !amount) {
+      Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
+    } else if (+amount > parseFloat(available.gigaRcValue as string)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency: 'RC',
+        }),
+      );
+    } else {
+      const confirmationData: ConfirmationPageProps = {
+        onSend: onRCDelegate,
+        title: 'wallet.operations.rc_delegation.confirm.info',
+        data: [
+          {
+            title: 'wallet.operations.transfer.confirm.from',
+            value: `@${user.account.name}`,
+          },
+          {
+            value: `@${to}`,
+            title: 'wallet.operations.transfer.confirm.to',
+          },
+          {
+            title: 'wallet.operations.transfer.confirm.amount',
+            value: `${amount} GRC`,
+          },
+        ],
+      };
+      navigate('ConfirmationPage', confirmationData);
+    }
   };
 
   const onRCDelegate = async () => {
-    if (
-      amount.trim().length === 0 ||
-      parseFloat(amount) < 0 ||
-      to.trim().length === 0
-    ) {
-      return SimpleToast.show(
-        translate(
-          'wallet.operations.rc_delegation.warning.no_username_or_amount',
-        ),
-        SimpleToast.LONG,
-      );
-    }
-
     try {
-      setLoading(true);
       let success: any;
 
       success = await RcDelegationsUtils.sendDelegation(
@@ -165,41 +179,36 @@ const RCDelegation = ({
       );
 
       if (success) {
-        loadAccount(user.name!);
-        goBack();
         if (!isCancel) {
-          SimpleToast.show(
-            translate(
-              'wallet.operations.rc_delegation.success.rc_delegation_successful',
-              {to},
-            ),
-            SimpleToast.LONG,
+          showModal(
+            'wallet.operations.rc_delegation.success.rc_delegation_successful',
+            MessageModalType.SUCCESS,
+            {to},
           );
         } else {
-          SimpleToast.show(
-            translate(
-              'wallet.operations.rc_delegation.success.cancel_rc_delegation_successful',
-              {to},
-            ),
-            SimpleToast.LONG,
+          showModal(
+            'wallet.operations.rc_delegation.success.cancel_rc_delegation_successful',
+            MessageModalType.SUCCESS,
+            {to},
           );
         }
       } else {
-        SimpleToast.show(
-          translate(
-            'wallet.operations.rc_delegation.failed.rc_delegation_failed',
-          ),
-          SimpleToast.LONG,
+        showModal(
+          'wallet.operations.rc_delegation.failed.rc_delegation_failed',
+          MessageModalType.ERROR,
         );
       }
     } catch (error) {
-      SimpleToast.show(`Error : ${(error as any).message}`, SimpleToast.LONG);
-    } finally {
-      setLoading(false);
+      showModal(
+        `Error : ${(error as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
+      );
     }
   };
 
-  return step === 1 ? (
+  return (
     <OperationThemed
       additionalBgSvgImageStyle={{
         top: -40,
@@ -376,91 +385,13 @@ const RCDelegation = ({
             title={translate(
               'wallet.operations.rc_delegation.delegate_to_user',
             )}
-            onPress={handleConfirmation}
+            onPress={onRCDelegateConfirmation}
             style={[getButtonStyle(theme).warningStyleButton]}
             isLoading={loading}
             additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
           />
           <Separator height={15} />
         </>
-      }
-    />
-  ) : (
-    <OperationThemed
-      childrenTop={
-        <>
-          <Separator height={40} />
-        </>
-      }
-      childrenMiddle={
-        <>
-          <Separator height={25} />
-          <Text
-            style={[
-              getFormFontStyle(height, theme).title,
-              styles.textCentered,
-            ]}>
-            {translate(
-              `wallet.operations.rc_delegation.${
-                isCancel ? 'confirmation_cancel' : 'confirmation'
-              }`,
-            )}
-          </Text>
-          <Separator height={25} />
-          <View
-            style={[getCardStyle(theme).defaultCardItem, styles.marginPadding]}>
-            <View style={styles.flexRow}>
-              <Text style={[getFormFontStyle(height, theme).title]}>
-                {translate('common.to')}
-              </Text>
-              <Text
-                style={[
-                  getFormFontStyle(height, theme).title,
-                  styles.opaque,
-                ]}>{`@${to}`}</Text>
-            </View>
-            <View style={styles.flexRow}>
-              <Text style={[getFormFontStyle(height, theme).title]}>
-                {translate('common.value')}
-              </Text>
-              <Text
-                style={[
-                  getFormFontStyle(height, theme).title,
-                  styles.opaque,
-                ]}>{`${amount} ${translate(
-                'wallet.operations.rc_delegation.giga_rc',
-              )} (≈ ${
-                equivalentHPAmount ? equivalentHPAmount : '0'
-              } ${getCurrency('HP')})`}</Text>
-            </View>
-          </View>
-        </>
-      }
-      childrenBottom={
-        <View style={styles.operationButtonsContainer}>
-          <EllipticButton
-            title={translate('common.back')}
-            onPress={() => setStep(1)}
-            style={[
-              getButtonStyle(theme).outlineSoftBorder,
-              styles.operationButton,
-              styles.operationButtonConfirmation,
-            ]}
-            additionalTextStyle={[
-              getFormFontStyle(height, theme, BACKGROUNDDARKBLUE).title,
-            ]}
-          />
-          <ActiveOperationButton
-            title={translate('common.confirm')}
-            onPress={onRCDelegate}
-            style={[
-              styles.operationButton,
-              getButtonStyle(theme).warningStyleButton,
-            ]}
-            additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
-            isLoading={loading}
-          />
-        </View>
       }
     />
   );
@@ -538,7 +469,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {loadAccount},
+  {showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
