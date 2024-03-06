@@ -2,6 +2,8 @@ import {VestingDelegation} from '@hiveio/dhive';
 import {loadAccount, loadDelegatees, loadDelegators} from 'actions/index';
 import {IncomingDelegation} from 'actions/interfaces';
 import {showModal} from 'actions/message';
+import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import ConfirmationInItem from 'components/ui/ConfirmationInItem';
@@ -21,9 +23,11 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle, getSeparatorLineStyle} from 'src/styles/line';
+import {MARGIN_PADDING} from 'src/styles/spacing';
 import {getRotateStyle} from 'src/styles/transform';
 import {
   title_primary_body_2,
@@ -126,8 +130,12 @@ const DelegationsList = ({
   }, [delegations]);
 
   const onHandleSelectedOutgoingItem = (item: VestingDelegation) => {
-    console.log({item}); //TODO remove line
-    setSelectedOutgoingItem(selectedOutgoingItem ? undefined : item);
+    setSelectedOutgoingItem(
+      selectedOutgoingItem && selectedOutgoingItem.delegatee === item.delegatee
+        ? undefined
+        : item,
+    );
+    setEditMode(false);
   };
 
   const styles = getDimensionedStyles(theme);
@@ -174,7 +182,9 @@ const DelegationsList = ({
 
     return (
       <View style={[getCardStyle(theme, 28).defaultCardItem]}>
-        <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => onHandleSelectedOutgoingItem(item)}
+          style={styles.container}>
           <View style={styles.row}>
             <Icon theme={theme} name={Icons.AT} />
             <Text style={styles.textBase}> {`${item.delegatee}`}</Text>
@@ -195,10 +205,10 @@ const DelegationsList = ({
                 ),
               ]}
               {...styles.smallIcon}
-              onClick={() => onHandleSelectedOutgoingItem(item)}
+              color={PRIMARY_RED_COLOR}
             />
           </View>
-        </View>
+        </TouchableOpacity>
         {!showCancelConfirmationDelegation && isItemSelected && !editMode && (
           <>
             <Separator
@@ -217,6 +227,7 @@ const DelegationsList = ({
                   theme={theme}
                   additionalContainerStyle={styles.roundButton}
                   {...styles.icon}
+                  color={PRIMARY_RED_COLOR}
                 />
                 <Text style={styles.buttonText}>
                   {translate('common.edit')}
@@ -230,6 +241,7 @@ const DelegationsList = ({
                   theme={theme}
                   additionalContainerStyle={styles.roundButton}
                   {...styles.icon}
+                  color={PRIMARY_RED_COLOR}
                 />
                 <Text style={styles.buttonText}>
                   {translate('common.delete')}
@@ -252,7 +264,8 @@ const DelegationsList = ({
           isItemSelected &&
           !showCancelConfirmationDelegation &&
           !isLoading && (
-            <View style={[{alignItems: 'center'}, styles.margins]}>
+            <View
+              style={[{alignSelf: 'center', width: '100%'}, styles.margins]}>
               <OperationInput
                 placeholder={'0.000'}
                 keyboardType="decimal-pad"
@@ -288,19 +301,25 @@ const DelegationsList = ({
                   </View>
                 }
               />
-              <View style={[styles.flexRowCenter, styles.marginTop]}>
-                <Icon
-                  name={Icons.CHECK}
-                  theme={theme}
-                  onClick={() => onDelegate(false)}
-                  {...styles.biggerIcon}
+              <View style={styles.editConfirmationPanel}>
+                <EllipticButton
+                  title={translate('common.cancel')}
+                  onPress={() => setEditMode(false)}
+                  style={[
+                    getButtonStyle(theme).secondaryButton,
+                    styles.confirmationButton,
+                  ]}
+                  additionalTextStyle={styles.textBase}
                 />
-                <Icon
-                  name={Icons.CLOSE_CIRCLE}
-                  theme={theme}
-                  additionalContainerStyle={styles.marginLeft}
-                  onClick={() => setEditMode(false)}
-                  {...styles.biggerIcon}
+                <ActiveOperationButton
+                  title={translate('common.confirm')}
+                  onPress={() => onDelegate(false)}
+                  style={[
+                    getButtonStyle(theme).warningStyleButton,
+                    styles.confirmationButton,
+                  ]}
+                  additionalTextStyle={[styles.textBase]}
+                  isLoading={isLoading}
                 />
               </View>
             </View>
@@ -440,6 +459,13 @@ const getDimensionedStyles = (theme: Theme) =>
       flexDirection: 'row',
       alignItems: 'center',
     },
+    editConfirmationPanel: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
+      justifyContent: 'space-between',
+      marginTop: MARGIN_PADDING,
+    },
     logo: {marginLeft: 10},
     flexRow: {flexDirection: 'row', justifyContent: 'space-between'},
     textBase: {
@@ -459,6 +485,11 @@ const getDimensionedStyles = (theme: Theme) =>
     icon: {
       width: 18,
       height: 18,
+    },
+    confirmationButton: {
+      width: '48%',
+      marginHorizontal: 0,
+      height: 40,
     },
     button: {
       flexDirection: 'row',
@@ -480,9 +511,6 @@ const getDimensionedStyles = (theme: Theme) =>
     },
     marginLeft: {marginLeft: 4},
     roundButton: {
-      borderWidth: 1,
-      borderColor: getColors(theme).quinaryCardBorderColor,
-      borderRadius: 100,
       width: 25,
       height: 25,
     },
@@ -498,7 +526,6 @@ const getDimensionedStyles = (theme: Theme) =>
     },
     redText: {color: PRIMARY_RED_COLOR},
     biggerIcon: {width: 25, height: 25},
-    marginTop: {marginTop: 8},
   });
 
 const connector = connect(

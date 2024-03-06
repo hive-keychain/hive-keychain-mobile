@@ -28,13 +28,13 @@ const ConfirmationInItem = ({
 }: Props) => {
   const styles = getStyles(theme);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
       <Separator height={10} />
       <Text style={[styles.textBase, styles.opaque, styles.textCentered]}>
         {translate(titleKey)}
       </Text>
       <Separator height={10} />
-      <View style={styles.flexRow}>
+      <View style={[styles.flexRow]}>
         <EllipticButton
           title={translate('common.cancel')}
           onPress={onCancel}
@@ -56,7 +56,7 @@ const ConfirmationInItem = ({
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
-      width: '80%',
+      width: '100%',
       alignItems: 'center',
       alignSelf: 'center',
     },
