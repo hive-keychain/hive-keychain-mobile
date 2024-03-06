@@ -50,7 +50,7 @@ const Delegation = ({
   properties,
   delegatee,
 }: Props) => {
-  const [to, setTo] = useState(delegatee || '');
+  const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
 
