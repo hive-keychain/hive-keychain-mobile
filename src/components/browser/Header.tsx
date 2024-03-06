@@ -114,7 +114,14 @@ const BrowserHeader = ({
         }}>
         <FocusAwareStatusBar />
         <View style={[styles.topBar]}>
-          <View style={[styles.flexRowCentered]}>
+          <View
+            style={[
+              {
+                width: '100%',
+                paddingHorizontal: 16,
+                flexDirection: 'row',
+              },
+            ]}>
             <CustomSearchBar
               theme={theme}
               leftIcon={
@@ -183,6 +190,7 @@ const getStyles = (
       alignItems: 'center',
       paddingVertical: 10,
       height: 'auto',
+      width: '100%',
     },
     paddingHorizontal: {
       paddingHorizontal: 15,
@@ -243,6 +251,7 @@ const getStyles = (
       borderRadius: 30,
       height: getInputContainerHeight(width),
       paddingHorizontal: 16,
+      flex: 1,
     },
   });
 
