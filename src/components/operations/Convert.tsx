@@ -1,5 +1,6 @@
-import {fetchConversionRequests, loadAccount} from 'actions/index';
+import {fetchConversionRequests} from 'actions/index';
 import {Conversion} from 'actions/interfaces';
+import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -10,7 +11,6 @@ import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
-  Keyboard,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -21,6 +21,7 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
@@ -33,8 +34,9 @@ import {collateralizedConvert, convert} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
 import Balance from './Balance';
+import {ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface ConvertOperationProps {
@@ -44,7 +46,7 @@ export interface ConvertOperationProps {
 type Props = PropsFromRedux & ConvertOperationProps;
 const Convert = ({
   user,
-  loadAccount,
+  showModal,
   fetchConversionRequests,
   conversions,
   currency,
@@ -77,8 +79,6 @@ const Convert = ({
   }, [conversions]);
 
   const onConvert = async () => {
-    Keyboard.dismiss();
-    setLoading(true);
     try {
       if (currency === 'HBD') {
         await convert(user.keys.active!, {
@@ -93,15 +93,47 @@ const Convert = ({
           requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
         });
       }
-      loadAccount(user.account.name, true);
-      goBack();
-      Toast.show(translate('toast.convert_success', {currency}), Toast.LONG);
+      showModal('toast.convert_success', MessageModalType.SUCCESS, {
+        currency,
+      });
     } catch (e) {
-      Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
-    } finally {
-      setLoading(false);
+      showModal(
+        `Error : ${(e as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
+      );
     }
   };
+
+  const onConvertConfirmation = () => {
+    if (!amount) {
+      Toast.show(translate('wallet.operations.convert.warning.missing_info'));
+    } else if (+amount > parseFloat(availableBalance as string)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      const confirmationData: ConfirmationPageProps = {
+        onSend: onConvert,
+        title: 'wallet.operations.convert.confirm.info',
+        data: [
+          {
+            title: 'common.account',
+            value: `@${user.account.name}`,
+          },
+          {
+            title: 'wallet.operations.transfer.confirm.amount',
+            value: `${amount} ${currency}`,
+          },
+        ],
+      };
+      navigate('ConfirmationPage', confirmationData);
+    }
+  };
+
   const {height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
@@ -295,7 +327,7 @@ const Convert = ({
         <>
           <ActiveOperationButton
             title={translate('wallet.operations.convert.button')}
-            onPress={onConvert}
+            onPress={onConvertConfirmation}
             style={[getButtonStyle(theme).warningStyleButton]}
             additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
             isLoading={loading}
@@ -357,7 +389,7 @@ const connector = connect(
     };
   },
   {
-    loadAccount,
+    showModal,
     fetchConversionRequests,
   },
 );

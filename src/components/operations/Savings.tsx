@@ -156,9 +156,6 @@ const Savings = ({
           amount: `${(+amount).toFixed(3)} ${currency}`,
         });
       } else {
-        showModal('toast.savings_withdraw_success', MessageModalType.SUCCESS, {
-          amount: `${(+amount).toFixed(3)} ${currency}`,
-        });
       }
     } catch (e) {
       showModal(
