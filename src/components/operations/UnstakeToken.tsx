@@ -1,12 +1,9 @@
-import {loadAccount, loadUserTokens} from 'actions/index';
-import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {
-  Keyboard,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -28,9 +25,10 @@ import {unstakeToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
 import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import Balance from './Balance';
+import {ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface UnstakeTokenOperationProps {
@@ -47,68 +45,86 @@ const UnstakeToken = ({
   currency,
   user,
   balance,
-  loadAccount,
   properties,
   tokenLogo,
   tokenInfo,
-  loadUserTokens,
-  gobackAction,
   showModal,
 }: Props) => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
 
   const onUnstakeToken = async () => {
-    if (!user.keys.active) {
-      return Toast.show(
-        translate('common.missing_key', {key: KeyTypes.active}),
-      );
-    }
-
-    if (parseFloat(amount) <= 0 || amount.trim().length === 0) {
-      return Toast.show(translate('common.need_positive_amount'), Toast.LONG);
-    }
-
-    setLoading(true);
-    Keyboard.dismiss();
-
-    const tokenOperationResult: any = await unstakeToken(
-      user.keys.active,
-      user.name!,
-      {
-        symbol: currency,
-        quantity: sanitizeAmount(amount),
-      },
-    );
-
-    if (tokenOperationResult && tokenOperationResult.tx_id) {
-      let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
-        tokenOperationResult.tx_id,
+    try {
+      const tokenOperationResult: any = await unstakeToken(
+        user.keys.active,
+        user.name!,
+        {
+          symbol: currency,
+          quantity: sanitizeAmount(amount),
+        },
       );
 
-      if (confirmationResult && confirmationResult.confirmed) {
-        if (confirmationResult.error) {
-          showModal('toast.hive_engine_error', MessageModalType.ERROR, {
-            error: confirmationResult.error,
-          });
+      if (tokenOperationResult && tokenOperationResult.tx_id) {
+        let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
+          tokenOperationResult.tx_id,
+        );
+
+        if (confirmationResult && confirmationResult.confirmed) {
+          if (confirmationResult.error) {
+            showModal('toast.hive_engine_error', MessageModalType.ERROR, {
+              error: confirmationResult.error,
+            });
+          } else {
+            showModal('toast.token_unstake_success', MessageModalType.SUCCESS, {
+              currency,
+            });
+          }
         } else {
-          showModal('toast.token_unstake_success', MessageModalType.SUCCESS, {
-            currency,
-          });
+          showModal('toast.token_timeout', MessageModalType.ERROR);
         }
       } else {
-        showModal('toast.token_timeout', MessageModalType.ERROR);
+        showModal('toast.tokens_operation_failed', MessageModalType.ERROR, {
+          tokenOperation: 'unstake',
+        });
       }
-    } else {
-      showModal('toast.tokens_operation_failed', MessageModalType.ERROR, {
-        tokenOperation: 'unstake',
-      });
+    } catch (e) {
+      showModal(
+        `Error : ${(e as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
+      );
     }
+  };
 
-    setLoading(false);
-    loadAccount(user.account.name, true);
-    loadUserTokens(user.name!);
-    goBack();
+  const onUnstakeTokenConfirmation = () => {
+    if (!amount) {
+      Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
+    } else if (+amount > parseFloat(balance)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      const confirmationData: ConfirmationPageProps = {
+        onSend: onUnstakeToken,
+        title: 'wallet.operations.token_unstake.confirm.info',
+        shouldLoadTokens: true,
+        data: [
+          {
+            title: 'common.account',
+            value: `@${user.account.name}`,
+          },
+
+          {
+            title: 'wallet.operations.transfer.confirm.amount',
+            value: `${amount} ${currency}`,
+          },
+        ],
+      };
+      navigate('ConfirmationPage', confirmationData);
+    }
   };
 
   const {height} = useWindowDimensions();
@@ -208,7 +224,7 @@ const UnstakeToken = ({
       childrenBottom={
         <ActiveOperationButton
           title={translate('common.unstake')}
-          onPress={onUnstakeToken}
+          onPress={onUnstakeTokenConfirmation}
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
           isLoading={loading}
           additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
@@ -252,7 +268,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {loadAccount, loadUserTokens, showModal},
+  {showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

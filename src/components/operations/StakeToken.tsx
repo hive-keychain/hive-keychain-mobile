@@ -108,6 +108,7 @@ const StakeToken = ({
       const confirmationData: ConfirmationPageProps = {
         onSend: onStakeToken,
         title: 'wallet.operations.token_stake.confirm.info',
+        shouldLoadTokens: true,
         data: [
           {
             title: 'common.account',
