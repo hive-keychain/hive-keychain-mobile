@@ -11,7 +11,7 @@ import {
   loadPrices,
   loadProperties,
 } from 'actions/hive';
-import {loadTokens, loadTokensMarket, loadUserTokens} from 'actions/index';
+import {loadTokens, loadTokensMarket} from 'actions/index';
 import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
@@ -86,7 +86,6 @@ const Main = ({
   prices,
   loadTokens,
   loadTokensMarket,
-  loadUserTokens,
   showFloatingBar,
   setIsDrawerOpen,
   setisLoadingScreen,
@@ -115,14 +114,13 @@ const Main = ({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [lastScrollYValue, setLastScrollYValue] = useState(0);
-
+  const [isHiveEngineLoading, setIsHiveEngineLoading] = useState(true);
   const mainScrollRef = useRef();
 
   useEffect(() => {
     loadTokens();
     loadTokensMarket();
   }, [loadTokens, loadTokensMarket]);
-
   useEffect(() => {
     if (!userTokens.loading) {
       let list = userTokens.list.sort((a, b) => {
@@ -135,6 +133,10 @@ const Main = ({
         list.filter((userToken) => !hiddenTokens.includes(userToken.symbol)),
       );
       setOrderedUserTokenBalanceList(list);
+      setIsHiveEngineLoading(false);
+    } else {
+      setFilteredUserTokenBalanceList([]);
+      setIsHiveEngineLoading(true);
     }
   }, [userTokens, hiddenTokens]);
 
@@ -148,7 +150,6 @@ const Main = ({
       setisLoadingScreen(false);
       if (!userTokens.loading) {
         loadHiddenTokens();
-        loadUserTokens(user.name);
       }
     }
   }, [properties, user.name]);
@@ -494,14 +495,11 @@ const Main = ({
                   }
                   ListFooterComponent={
                     <>
-                      {userTokens.loading &&
-                        filteredUserTokenBalanceList.length === 0 && (
-                          <View style={styles.extraContainerMiniLoader}>
-                            <Loader size={'small'} animating />
-                          </View>
-                        )}
-                      {/* //TODO keep finding a way to make it work. */}
-                      {/* //   also ask quentin what should show when user has no tokens or just we keep this bellow */}
+                      {isHiveEngineLoading && (
+                        <View style={styles.extraContainerMiniLoader}>
+                          <Loader size={'small'} animating />
+                        </View>
+                      )}
                       {!userTokens.loading &&
                         filteredUserTokenBalanceList.length === 0 &&
                         orderedUserTokenBalanceList.length === 0 && (
@@ -524,7 +522,7 @@ const Main = ({
                               styles.filledWrapper,
                             ]}>
                             <Text style={styles.no_tokens}>
-                              No tokens found, try clear your filters
+                              {translate('wallet.no_tokens_filter')}
                             </Text>
                           </View>
                         )}
@@ -660,7 +658,6 @@ const connector = connect(
     loadPrices,
     fetchPhishingAccounts,
     loadTokens,
-    loadUserTokens,
     loadTokensMarket,
     showFloatingBar,
     setIsDrawerOpen,

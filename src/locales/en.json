@@ -126,6 +126,7 @@
     "vp": "Voting Mana",
     "balance": "balance",
     "no_tokens": "No Hive Engine token found.",
+    "no_tokens_filter": "Nothing to show. Please clear the filter.",
     "no_transaction": "No recent transaction.",
     "add_memo": "Please add your memo key to decrypt this message.",
     "add_active": "Please add your active key to perform this operation.",

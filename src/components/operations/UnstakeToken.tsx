@@ -109,7 +109,6 @@ const UnstakeToken = ({
       const confirmationData: ConfirmationPageProps = {
         onSend: onUnstakeToken,
         title: 'wallet.operations.token_unstake.confirm.info',
-        shouldLoadTokens: true,
         data: [
           {
             title: 'common.account',
