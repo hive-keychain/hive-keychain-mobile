@@ -6,7 +6,7 @@ import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savin
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -23,6 +23,7 @@ import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
+import {MARGIN_PADDING} from 'src/styles/spacing';
 import {getRotateStyle} from 'src/styles/transform';
 import {
   FontJosefineSansName,
@@ -70,10 +71,6 @@ const Savings = ({
   const [operationType, setOperationType] = useState<SavingsOperations>(
     operation,
   );
-  const [extraElementHeigth, setExtraElementHeigth] = useState(0);
-  const extraElementRef = useRef();
-  const [extraElementHeigth2, setExtraElementHeigth2] = useState(0);
-  const extraElementRef2 = useRef();
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const {width, height} = useWindowDimensions();
@@ -206,26 +203,6 @@ const Savings = ({
     } else setAmount((currentBalance as string).split(' ')[0]);
   };
 
-  const _measure = useCallback(() => {
-    if (extraElementRef && extraElementRef?.current) {
-      (extraElementRef.current as any).measureInWindow(
-        (pageX: any, pageY: any, width: any, height: any) => {
-          setExtraElementHeigth(height);
-        },
-      );
-    }
-  }, []);
-
-  const _measure2 = useCallback(() => {
-    if (extraElementRef2 && extraElementRef2?.current) {
-      (extraElementRef2.current as any).measureInWindow(
-        (pageX: any, pageY: any, width: any, height: any) => {
-          setExtraElementHeigth2(height + 8);
-        },
-      );
-    }
-  }, []);
-
   return (
     <OperationThemed
       additionalContentContainerStyle={{paddingHorizontal: 20}}
@@ -243,8 +220,6 @@ const Savings = ({
           <Separator height={10} />
           {totalPendingSavingsWithdrawals > 0 && (
             <TouchableOpacity
-              ref={extraElementRef2}
-              onLayout={_measure2}
               onPress={() => {
                 navigate('TemplateStack', {
                   titleScreen: capitalize(
@@ -296,19 +271,21 @@ const Savings = ({
       }
       childrenMiddle={
         <View>
-          {operationType === SavingsOperations.withdraw && (
-            <View onLayout={_measure} ref={extraElementRef}>
-              <Separator />
-              <Text
-                style={[
-                  getFormFontStyle(height, theme).title,
-                  styles.opaque,
-                  styles.disclaimer,
-                ]}>
-                {translate(`wallet.operations.savings.disclaimer`, {currency})}
-              </Text>
-            </View>
-          )}
+          <View>
+            <Separator />
+            <Text
+              style={[
+                getFormFontStyle(height, theme).title,
+                styles.opaque,
+                styles.disclaimer,
+                styles.paddingHorizontal,
+              ]}>
+              {translate(
+                `wallet.operations.savings.${operationType}_disclaimer`,
+              )}
+            </Text>
+          </View>
+
           <Separator />
           <Text
             style={[getFormFontStyle(height, theme).title, styles.marginLeft]}>
@@ -323,18 +300,19 @@ const Savings = ({
             list={operationTypeList}
             onSelected={(item) => {
               setOperationType(item.value as SavingsOperations);
-              if (item.value === SavingsOperations.deposit)
-                setExtraElementHeigth(0);
             }}
-            addExtraHeightFromElements={
-              extraElementHeigth + extraElementHeigth2
-            }
             additionalListExpandedContainerStyle={{
               height: 'auto',
               width: '100%',
             }}
-            additionalMainContainerDropdown={{width: '100%'}}
-            additionalDropdowContainerStyle={{width: '100%'}}
+            additionalMainContainerDropdown={[
+              {width: '100%', paddingHorizontal: 0},
+            ]}
+            additionalOverlayStyle={[
+              {
+                paddingHorizontal: 10,
+              },
+            ]}
             dropdownIconScaledSize={{width: 15, height: 15}}
             drawLineBellowSelectedItem
             showSelectedIcon={
@@ -489,6 +467,9 @@ const getDimensionedStyles = (
       width: '85%',
       borderColor: getColors(theme).lineSeparatorStroke,
       alignSelf: 'center',
+    },
+    paddingHorizontal: {
+      paddingHorizontal: MARGIN_PADDING,
     },
   });
 

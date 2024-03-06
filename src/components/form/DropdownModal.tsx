@@ -331,12 +331,6 @@ const DropdownModal = ({
                 getCardStyle(theme).defaultCardItem,
                 styles.dropdownListContainer,
                 additionalListExpandedContainerStyle,
-                selectedBgColor
-                  ? {
-                      paddingHorizontal: 4,
-                      paddingVertical: 6,
-                    }
-                  : null,
               ]}
               data={filteredDropdownList}
               keyExtractor={(item) => item.label}

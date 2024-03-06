@@ -155,7 +155,8 @@
       "savings": {
         "deposit": "Deposit Funds",
         "withdraw": "Withdraw Funds",
-        "disclaimer": "Note: Withdrawing funds from savings will take 3.5 days.",
+        "withdraw_disclaimer": "Note: Withdrawing funds from savings will take 3.5 days.",
+        "deposit_disclaimer": "Depositing HBD to savings currently yields a 20% APR determined by the witnesses.",
         "withdraw_button": "Withdraw",
         "deposit_button": "Deposit",
         "prompt": "Select a currency",
