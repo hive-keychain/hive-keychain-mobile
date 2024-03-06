@@ -220,7 +220,7 @@ const DropdownModal = ({
           </View>
           {typeof item === 'object' ? renderCopyOrSelectedIcon(item) : null}
         </TouchableOpacity>
-        {drawLineBellowSelectedItem && (
+        {drawLineBellowSelectedItem && !isLastItem && (
           <Separator
             drawLine
             additionalLineStyle={additionalLineStyle}
@@ -381,6 +381,7 @@ const getStyles = (
       width: '100%',
       height: 'auto',
       maxHeight: 120,
+      paddingVertical: 8,
     },
     textBase: {
       color: getColors(theme).secondaryText,
@@ -418,7 +419,8 @@ const getStyles = (
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 12,
+      marginBottom: 6,
+      marginTop: 6,
     },
     smallerText: {
       fontSize: 12,
