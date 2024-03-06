@@ -51,7 +51,6 @@ const UnstakeToken = ({
   showModal,
 }: Props) => {
   const [amount, setAmount] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const onUnstakeToken = async () => {
     try {
@@ -226,7 +225,7 @@ const UnstakeToken = ({
           title={translate('common.unstake')}
           onPress={onUnstakeTokenConfirmation}
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-          isLoading={loading}
+          isLoading={false}
           additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
         />
       }

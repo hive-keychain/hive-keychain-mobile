@@ -310,6 +310,7 @@
         "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient"
       },
       "token_delegation": {
+        "confirm": {"info": "Please confirm you want to delegate tokens."},
         "title": "Delegate",
         "delegating": "Delegating",
         "delegating_token": "Delegating {{currency}}",
@@ -686,7 +687,7 @@
     "hive_engine_error": "Hive Engine error: {{error}}",
     "token_timeout": "We could not verify this transaction on Hive Engine. This might mean that Hive Engine is behind blocks, wait for the operation to appear in your history, or contact the Hive Engine team on Discord.",
     "tokens_operation_failed": "Failed to {{tokenOperation}} a token",
-    "no_such_account": "This username is not registered on the blockchain!",
+    "no_such_account": "We could not find this account on the blockchain.",
     "username_too_short": "Username is too short. Needs minimum 4 characters",
     "account_name_not_valid": "Account name is not valid",
     "account_username_already_used": "Username is already used. Please pick a new one",

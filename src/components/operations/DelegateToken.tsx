@@ -1,5 +1,3 @@
-import {loadAccount, loadUserTokens} from 'actions/index';
-import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
@@ -7,7 +5,6 @@ import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {
-  Keyboard,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -30,9 +27,10 @@ import {delegateToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
 import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import Balance from './Balance';
+import {ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface DelegateTokenOperationProps {
@@ -50,77 +48,93 @@ type Props = PropsFromRedux & DelegateTokenOperationProps;
 const DelegateToken = ({
   currency,
   user,
-  balance,
-  loadAccount,
-  properties,
-  tokenLogo,
   sendTo,
   delegateAmount,
+  tokenLogo,
+  balance,
   update,
-  loadUserTokens,
-  gobackAction,
   showModal,
 }: Props) => {
   const [to, setTo] = useState(sendTo || '');
   const [amount, setAmount] = useState(delegateAmount || '');
-  const [loading, setLoading] = useState(false);
 
   const onDelegateToken = async () => {
-    if (!(await AccountUtils.doesAccountExist(to))) {
-      return Toast.show(translate('toast.no_such_account'), Toast.LONG);
-    }
-
-    if (!user.keys.active) {
-      return Toast.show(
-        translate('common.missing_key', {key: KeyTypes.active}),
-      );
-    }
-
-    if (parseFloat(amount) <= 0) {
-      return Toast.show(translate('common.need_positive_amount'), Toast.LONG);
-    }
-
-    setLoading(true);
-    Keyboard.dismiss();
-
-    const tokenOperationResult: any = await delegateToken(
-      user.keys.active,
-      user.name!,
-      {
-        to: sanitizeUsername(to),
-        symbol: currency,
-        quantity: sanitizeAmount(amount),
-      },
-    );
-
-    if (tokenOperationResult && tokenOperationResult.tx_id) {
-      let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
-        tokenOperationResult.tx_id,
+    try {
+      const tokenOperationResult: any = await delegateToken(
+        user.keys.active,
+        user.name!,
+        {
+          to: sanitizeUsername(to),
+          symbol: currency,
+          quantity: sanitizeAmount(amount),
+        },
       );
 
-      if (confirmationResult && confirmationResult.confirmed) {
-        if (confirmationResult.error) {
-          showModal('toast.hive_engine_error', MessageModalType.ERROR, {
-            error: confirmationResult.error,
-          });
+      if (tokenOperationResult && tokenOperationResult.tx_id) {
+        let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
+          tokenOperationResult.tx_id,
+        );
+
+        if (confirmationResult && confirmationResult.confirmed) {
+          if (confirmationResult.error) {
+            showModal('toast.hive_engine_error', MessageModalType.ERROR, {
+              error: confirmationResult.error,
+            });
+          } else {
+            showModal('toast.token_delegate_sucess', MessageModalType.SUCCESS, {
+              currency,
+            });
+          }
         } else {
-          showModal('toast.token_delegate_sucess', MessageModalType.SUCCESS, {
-            currency,
-          });
+          showModal('toast.token_timeout', MessageModalType.ERROR);
         }
       } else {
-        showModal('toast.token_timeout', MessageModalType.ERROR);
+        showModal('toast.tokens_operation_failed', MessageModalType.ERROR, {
+          tokenOperation: 'delegate',
+        });
       }
-    } else {
-      showModal('toast.tokens_operation_failed', MessageModalType.ERROR, {
-        tokenOperation: 'delegate',
-      });
+    } catch (e) {
+      showModal(
+        `Error : ${(e as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
+      );
     }
+  };
 
-    setLoading(false);
-    loadAccount(user.account.name, true);
-    loadUserTokens(user.name!);
-    goBack();
+  const onDelegateConfirmation = async () => {
+    if (!(await AccountUtils.doesAccountExist(to))) {
+      return Toast.show(translate('toast.no_such_account'), Toast.LONG);
+    } else if (!to || !amount) {
+      Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
+    } else if (+amount > parseFloat(balance as string)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      const confirmationData: ConfirmationPageProps = {
+        onSend: onDelegateToken,
+        title: 'wallet.operations.token_delegation.confirm.info',
+        data: [
+          {
+            title: 'wallet.operations.transfer.confirm.from',
+            value: `@${user.account.name}`,
+          },
+          {
+            value: `@${to}`,
+            title: 'wallet.operations.transfer.confirm.to',
+          },
+          {
+            title: 'wallet.operations.transfer.confirm.amount',
+            value: `${amount} ${currency}`,
+          },
+        ],
+      };
+      navigate('ConfirmationPage', confirmationData);
+    }
   };
 
   const {height} = useWindowDimensions();
@@ -222,10 +236,10 @@ const DelegateToken = ({
       childrenBottom={
         <ActiveOperationButton
           title={translate(update ? 'common.confirm' : 'common.delegate')}
-          onPress={onDelegateToken}
+          onPress={onDelegateConfirmation}
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
           additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
-          isLoading={loading}
+          isLoading={false}
         />
       }
     />
@@ -258,7 +272,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {loadAccount, loadUserTokens, showModal},
+  {showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
