@@ -126,6 +126,7 @@ const DelegationsList = ({
   }, [delegations]);
 
   const onHandleSelectedOutgoingItem = (item: VestingDelegation) => {
+    console.log({item}); //TODO remove line
     setSelectedOutgoingItem(selectedOutgoingItem ? undefined : item);
   };
 
@@ -381,7 +382,7 @@ const DelegationsList = ({
     <OperationThemed
       childrenTop={<Separator height={40} />}
       childrenMiddle={
-        <>
+        <View>
           <Separator height={35} />
           {type === 'outgoing' && (
             <>
@@ -390,6 +391,7 @@ const DelegationsList = ({
                   styles.textBase,
                   styles.opaque,
                   styles.paddingHorizontal,
+                  styles.title,
                 ]}>
                 {translate('wallet.operations.delegation.outgoing_disclaimer')}
               </Text>
@@ -420,7 +422,7 @@ const DelegationsList = ({
           </View>
           <Separator height={10} />
           {type === 'incoming' ? renderIncoming() : renderOutgoing()}
-        </>
+        </View>
       }
     />
   );
