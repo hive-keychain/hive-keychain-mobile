@@ -68,7 +68,6 @@ const Savings = ({
     setTotalPendingSavingsWithdrawals,
   ] = useState(0);
   const [amount, setAmount] = useState('');
-  const [loading, setLoading] = useState(false);
   const [currency, setCurrency] = useState(c);
   const [operationType, setOperationType] = useState<SavingsOperations>(
     operation,
@@ -438,7 +437,7 @@ const Savings = ({
             )}
             onPress={onSavingsConfirmation}
             style={[getButtonStyle(theme).warningStyleButton]}
-            isLoading={loading}
+            isLoading={false}
             additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
           />
           <Separator />

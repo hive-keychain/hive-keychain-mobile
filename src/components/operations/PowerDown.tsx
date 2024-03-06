@@ -46,11 +46,9 @@ const PowerDown = ({
   properties,
   delegations,
 }: Props) => {
-  const [amount, setAmount] = useState('0');
+  const [amount, setAmount] = useState('');
   const [current, setCurrent] = useState<string | number>('...');
   const [available, setAvailable] = useState<string | number>('...');
-  const [loading, setLoading] = useState(false);
-  const [isCancel, setIsCancel] = useState(false);
 
   useEffect(() => {
     const hiveBalance = Number((user.account.balance as string).split(' ')[0]);
@@ -123,8 +121,17 @@ const PowerDown = ({
           isCancel ? '_stop' : ''
         }`,
         data: isCancel
-          ? []
+          ? [
+              {
+                title: 'common.account',
+                value: `@${user.name}`,
+              },
+            ]
           : [
+              {
+                title: 'common.account',
+                value: `@${user.name}`,
+              },
               {
                 title: 'wallet.operations.transfer.confirm.amount',
                 value: `${amount} ${currency}`,
@@ -296,7 +303,7 @@ const PowerDown = ({
             title={translate(`wallet.operations.powerdown.title`)}
             onPress={onPowerDownConfirmation}
             style={[getButtonStyle(theme).warningStyleButton]}
-            isLoading={loading}
+            isLoading={false}
             additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
           />
           <Separator />

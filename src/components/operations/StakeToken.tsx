@@ -1,12 +1,10 @@
 import {loadAccount, loadUserTokens} from 'actions/index';
-import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {
-  Keyboard,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -27,9 +25,10 @@ import {stakeToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
 import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import Balance from './Balance';
+import {ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface StakeTokenOperationProps {
@@ -45,68 +44,84 @@ const StakeToken = ({
   currency,
   user,
   balance,
-  loadAccount,
   properties,
   tokenLogo,
-  loadUserTokens,
-  gobackAction,
   showModal,
 }: Props) => {
-  const [amount, setAmount] = useState('0');
-  const [loading, setLoading] = useState(false);
+  const [amount, setAmount] = useState('');
 
   const onStakeToken = async () => {
-    if (!user.keys.active) {
-      return Toast.show(
-        translate('common.missing_key', {key: KeyTypes.active}),
-      );
-    }
-
-    if (parseFloat(amount) <= 0 || amount.trim().length === 0) {
-      return Toast.show(translate('common.need_positive_amount'), Toast.LONG);
-    }
-
-    setLoading(true);
-    Keyboard.dismiss();
-
-    const tokenOperationResult: any = await stakeToken(
-      user.keys.active,
-      user.name!,
-      {
-        to: sanitizeUsername(user.name!),
-        symbol: currency,
-        quantity: sanitizeAmount(amount),
-      },
-    );
-
-    if (tokenOperationResult && tokenOperationResult.tx_id) {
-      let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
-        tokenOperationResult.tx_id,
+    try {
+      const tokenOperationResult: any = await stakeToken(
+        user.keys.active,
+        user.name!,
+        {
+          to: sanitizeUsername(user.name!),
+          symbol: currency,
+          quantity: sanitizeAmount(amount),
+        },
       );
 
-      if (confirmationResult && confirmationResult.confirmed) {
-        if (confirmationResult.error) {
-          showModal('toast.hive_engine_error', MessageModalType.ERROR, {
-            error: confirmationResult.error,
-          });
+      if (tokenOperationResult && tokenOperationResult.tx_id) {
+        let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
+          tokenOperationResult.tx_id,
+        );
+
+        if (confirmationResult && confirmationResult.confirmed) {
+          if (confirmationResult.error) {
+            showModal('toast.hive_engine_error', MessageModalType.ERROR, {
+              error: confirmationResult.error,
+            });
+          } else {
+            showModal('toast.token_stake_success', MessageModalType.SUCCESS, {
+              currency,
+            });
+          }
         } else {
-          showModal('toast.token_stake_success', MessageModalType.SUCCESS, {
-            currency,
-          });
+          showModal('toast.token_timeout', MessageModalType.ERROR);
         }
       } else {
-        showModal('toast.token_timeout', MessageModalType.ERROR);
+        showModal('toast.tokens_operation_failed', MessageModalType.ERROR, {
+          tokenOperation: 'stake',
+        });
       }
-    } else {
-      showModal('toast.tokens_operation_failed', MessageModalType.ERROR, {
-        tokenOperation: 'stake',
-      });
+    } catch (e) {
+      showModal(
+        `Error : ${(e as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
+      );
     }
+  };
 
-    setLoading(false);
-    loadAccount(user.account.name, true);
-    loadUserTokens(user.name!);
-    goBack();
+  const onStakeConfirmation = () => {
+    if (!amount) {
+      Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
+    } else if (+amount > parseFloat(balance)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      const confirmationData: ConfirmationPageProps = {
+        onSend: onStakeToken,
+        title: 'wallet.operations.token_stake.confirm.info',
+        data: [
+          {
+            title: 'common.account',
+            value: `@${user.account.name}`,
+          },
+
+          {
+            title: 'wallet.operations.transfer.confirm.amount',
+            value: `${amount} ${currency}`,
+          },
+        ],
+      };
+      navigate('ConfirmationPage', confirmationData);
+    }
   };
 
   const {height} = useWindowDimensions();
@@ -199,9 +214,9 @@ const StakeToken = ({
       childrenBottom={
         <ActiveOperationButton
           title={translate('common.stake')}
-          onPress={onStakeToken}
+          onPress={onStakeConfirmation}
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-          isLoading={loading}
+          isLoading={false}
           additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
         />
       }

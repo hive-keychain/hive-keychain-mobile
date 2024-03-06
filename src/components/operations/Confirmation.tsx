@@ -1,4 +1,4 @@
-import {loadAccount} from 'actions/index';
+import {loadAccount, loadUserTokens} from 'actions/index';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import Separator from 'components/ui/Separator';
 import {ConfirmationPageRoute} from 'navigators/Root.types';
@@ -27,6 +27,7 @@ export type ConfirmationPageProps = {
   introText?: string;
   warningText?: string;
   data: ConfirmationData[];
+  shouldLoadTokens?: boolean;
 };
 
 type ConfirmationData = {
@@ -37,11 +38,19 @@ type ConfirmationData = {
 const ConfirmationPage = ({
   route,
   loadAccount,
+  loadUserTokens,
   user,
 }: {
   route: ConfirmationPageRoute;
 } & PropsFromRedux) => {
-  const {onSend, title, introText, warningText, data} = route.params;
+  const {
+    onSend,
+    title,
+    introText,
+    warningText,
+    data,
+    shouldLoadTokens,
+  } = route.params;
   const [loading, setLoading] = useState(false);
   console.log(route.params);
   const {width, height} = useWindowDimensions();
@@ -105,7 +114,8 @@ const ConfirmationPage = ({
               Keyboard.dismiss();
               await onSend();
               setLoading(false);
-              loadAccount(user.account.name, true);
+              loadAccount(user.name, true);
+              if (shouldLoadTokens) loadUserTokens(user.name);
               resetStackAndNavigate('WALLET');
             }}
             style={[
@@ -166,6 +176,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
 
 const connector = connect((state: RootState) => ({user: state.activeAccount}), {
   loadAccount,
+  loadUserTokens,
 });
 
 type PropsFromRedux = ConnectedProps<typeof connector>;

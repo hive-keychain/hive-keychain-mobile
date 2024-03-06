@@ -67,8 +67,6 @@ const RCDelegation = ({
     string | undefined
   >();
   const [to, setTo] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState(1);
   const {height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
@@ -387,7 +385,7 @@ const RCDelegation = ({
             )}
             onPress={onRCDelegateConfirmation}
             style={[getButtonStyle(theme).warningStyleButton]}
-            isLoading={loading}
+            isLoading={false}
             additionalTextStyle={getFormFontStyle(height, theme, 'white').title}
           />
           <Separator height={15} />
