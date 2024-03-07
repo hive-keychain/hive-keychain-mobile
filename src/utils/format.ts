@@ -46,7 +46,16 @@ export const signedNumber = (nb: number) =>
   nb > 0 ? `+ ${nb}` : `${nb.toString().replace('-', '- ')}`;
 
 export const formatBalance = (balance: number) =>
-  balance > 1000 ? withCommas(balance + '', 0) : withCommas(balance + '');
+  balance > 1000 || balance < -1000
+    ? withCommas(balance + '', 0)
+    : withCommas(balance + '');
+
+export const formatBalanceCurrency = (balanceS: string) => {
+  console.log(balanceS);
+  const balance = Number(balanceS.split(' ')[0].replace(',', ''));
+  const currency = balanceS.split(' ')[1];
+  return `${formatBalance(balance)} ${currency}`;
+};
 
 export const capitalize = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);

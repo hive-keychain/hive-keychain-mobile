@@ -10,6 +10,7 @@ import {
   getColors,
 } from 'src/styles/colors';
 import {getFormFontStyle} from 'src/styles/typography';
+import {formatBalanceCurrency} from 'utils/format';
 import {translate} from 'utils/localize';
 import SquareButton from './SquareButton';
 
@@ -71,7 +72,7 @@ const CurrentAvailableBalance = ({
           />
         }
         primaryLabel={leftLabel}
-        secondaryLabel={currentValue}
+        secondaryLabel={formatBalanceCurrency(currentValue)}
         onPress={() => handleClick(currentValue.split(' ')[0], 'left')}
         additionalButtonContainerStyle={[
           styles.buttonContainer,
@@ -95,7 +96,7 @@ const CurrentAvailableBalance = ({
           />
         }
         primaryLabel={rightLabel}
-        secondaryLabel={availableValue}
+        secondaryLabel={formatBalanceCurrency(availableValue)}
         onPress={() => handleClick(availableValue.split(' ')[0], 'right')}
         additionalButtonContainerStyle={[
           styles.buttonContainer,
@@ -126,7 +127,7 @@ const getStyles = (theme: Theme) =>
       borderColor: getColors(theme).cardBorderColorJustDark,
       borderWidth: theme === Theme.DARK ? 1 : 0,
       borderRadius: 13,
-      paddingHorizontal: 15,
+      paddingHorizontal: 10,
       paddingVertical: 10,
     },
     buttonContainerRed: {
