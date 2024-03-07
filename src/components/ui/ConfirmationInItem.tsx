@@ -93,8 +93,6 @@ const getStyles = (theme: Theme) =>
       alignItems: 'center',
       width: '100%',
       marginBottom: 10,
-      borderColor: getBorderTest('red').borderColor,
-      borderWidth: 1,
     },
     loaderContainer: {
       ...getBorderTest('green'),
