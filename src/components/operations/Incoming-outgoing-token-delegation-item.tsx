@@ -91,7 +91,8 @@ const IncomingOutGoingTokenDelegationItem = ({
   if (cancelledSuccessfully) return null;
 
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => setIsExpanded(!isExpanded)}
       style={[styles.container, isExpanded ? styles.expandedContainer : null]}>
       {isOutGoingDelegation ? (
         <>
@@ -108,7 +109,6 @@ const IncomingOutGoingTokenDelegationItem = ({
                 <Icon
                   name={Icons.EXPAND_THIN}
                   theme={theme}
-                  onClick={() => setIsExpanded(!isExpanded)}
                   additionalContainerStyle={[
                     styles.marginLeft,
                     isExpanded ? undefined : styles.iconXAxisInverted,
@@ -198,7 +198,7 @@ const IncomingOutGoingTokenDelegationItem = ({
           </Text>
         </View>
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
 

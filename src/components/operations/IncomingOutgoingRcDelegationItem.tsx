@@ -142,7 +142,9 @@ const IncomingOutgoingRcDelegationItem = ({
   };
 
   return (
-    <View style={[getCardStyle(theme, 28).defaultCardItem]}>
+    <TouchableOpacity
+      style={[getCardStyle(theme, 28).defaultCardItem]}
+      onPress={() => onHandleSelectedItem(item)}>
       <View style={styles.container}>
         <View style={styles.row}>
           <Icon theme={theme} name={Icons.AT} {...styles.icon} />
@@ -169,7 +171,6 @@ const IncomingOutgoingRcDelegationItem = ({
               ),
             ]}
             {...styles.smallIcon}
-            onClick={() => onHandleSelectedItem(item)}
           />
         </View>
       </View>
@@ -314,7 +315,7 @@ const IncomingOutgoingRcDelegationItem = ({
         isItemSelected &&
         !showCancelConfirmationRCDelegation &&
         isLoading && <Loader size={'small'} animating />}
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -336,6 +337,7 @@ const getStyles = (theme: Theme) =>
     textBase: {
       ...title_primary_body_2,
       color: getColors(theme).secondaryText,
+      textAlign: 'right',
     },
     title: {fontSize: 15},
     row: {flexDirection: 'row'},
