@@ -35,6 +35,7 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
         options={() => ({
           headerStyle: styles.header,
           headerTitleStyle: styles.headerTitle,
+          animationEnabled: false,
           headerTitleAlign: 'center',
           title: `${currency} ${translate('common.history')}`,
           headerRight: () => (

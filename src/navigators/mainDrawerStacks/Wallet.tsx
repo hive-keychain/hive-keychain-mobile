@@ -75,6 +75,7 @@ export default () => {
           headerStyle: styles.headerStyle,
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
+          animationEnabled: false,
           title: translate('navigation.wallet_history'),
           cardStyle: styles.cardStyle,
           headerRight: () => (

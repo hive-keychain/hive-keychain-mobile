@@ -52,9 +52,9 @@ const FillWithdrawSavingsTransactionComponent = ({
           />
         ) : null
       }
-      textLine1={translate('wallet.operations.savings.successfully_withdrawn')}
-      textLine2={`${formattedAmount} ${amount.split(' ')[1]}`}
-      textLine3={translate('wallet.operations.savings.fill_withdraw_savings')}
+      textLine1={translate('wallet.operations.savings.fill_withdraw_savings', {
+        amount: `${formattedAmount} ${amount.split(' ')[1]}`,
+      })}
       date={date}
     />
   );

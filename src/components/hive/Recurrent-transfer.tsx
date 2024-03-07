@@ -6,7 +6,7 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {RecurrentTransfer as RecurrentTransferInterface} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
-import {withCommas} from 'utils/format';
+import {capitalize, withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from './Icon';
 
@@ -56,8 +56,8 @@ const RecurrentTransfer = ({
       setToggle={() => setToggle(!toggle)}
       textLine1={translate(
         'wallet.operations.transfer.started_recurrent_transfer',
+        {amount: `${formattedAmount} ${amount.split(' ')[1]}`},
       )}
-      textLine2={`${formattedAmount} ${amount.split(' ')[1]}`}
       date={date}
       icon={
         useIcon ? (
@@ -77,7 +77,9 @@ const RecurrentTransfer = ({
           executions,
         },
       )} \n${
-        memo.trim().length > 0 ? `${translate('common.memo')}: ${memo}` : ''
+        memo.trim().length > 0
+          ? `${capitalize(translate('common.memo'))}: ${memo}`
+          : ''
       }`}
     />
   );

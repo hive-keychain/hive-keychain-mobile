@@ -206,10 +206,10 @@
           "missing_info": "Please fill the username and amount to proceed",
           "insufficient": "Please fill the username and amount to proceed"
         },
-        "started_recurrent_transfer": "Started recurrent transfer of",
-        "fill_recurrent_transfer_out": "to @{{other}} ({{remainingExecutions}} remaining)",
-        "fill_recurrent_transfer_in": "from @{{other}} ({{remainingExecutions}} remaining)",
-        "start_recurrent_transfer_out": "to @{{other} (every {{recurrence}} hours - {{executions}} times)",
+        "started_recurrent_transfer": "Started a recurrent transfer of {{amount}}",
+        "fill_recurrent_transfer_out": "To @{{other}}: ({{remainingExecutions}} remaining)",
+        "fill_recurrent_transfer_in": "From @{{other}}: ({{remainingExecutions}} remaining)",
+        "start_recurrent_transfer_out": "To @{{other} (every {{recurrence}} hours - {{executions}} times)",
         "info_recurrent_transfer_in": "@{{other}} started transfer of {{amount}} (every {{recurrence}} hours - {{executions}} times)"
       },
       "powerup": {

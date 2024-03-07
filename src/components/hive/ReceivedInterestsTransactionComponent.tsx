@@ -55,9 +55,7 @@ const ReceivedInterestTransactionComponent = ({
       textLine1={translate(
         'wallet.operations.savings.info_received_interests',
         {
-          amount: `${translate('common.received')} ${withCommas(
-            interest,
-          )} ${getCurrency('HBD')}`,
+          amount: `${withCommas(interest)} ${getCurrency('HBD')}`,
         },
       )}
     />
