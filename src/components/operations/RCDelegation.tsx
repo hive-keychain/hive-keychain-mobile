@@ -29,7 +29,7 @@ import {
   getFormFontStyle,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, withCommas} from 'utils/format';
+import {capitalize, formatBalanceCurrency, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -308,7 +308,9 @@ const RCDelegation = ({
               labelInput={capitalize(translate('common.amount'))}
               labelExtraInfo={
                 equivalentHPAmount
-                  ? `≈ ${equivalentHPAmount} ${getCurrency('HP')}`
+                  ? `≈ ${formatBalanceCurrency(
+                      equivalentHPAmount,
+                    )} ${getCurrency('HP')}`
                   : undefined
               }
               placeholder={'0.000'}
