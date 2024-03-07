@@ -158,13 +158,12 @@ const getDimensionedStyles = ({
       height: getInputHeight(width),
       borderWidth: 1,
     },
-    leftIcon: {height: 30, marginRight: 15},
+    leftIcon: {height: 30},
     rightIcon: {height: 30, marginLeft: 15},
     input: {color: inputColor || '#ffffff'},
     inputContainer: {
       height: '100%',
       borderBottomWidth: 0,
-      marginHorizontal: 15,
       textAlign: textAlign || 'left',
     },
     flexRow: {
