@@ -40,6 +40,7 @@ export const getButtonStyle = (theme: Theme, screenWidth?: number) => {
     warningStyleButton: [
       {
         backgroundColor: PRIMARY_RED_COLOR,
+        color: getColors(theme).secondaryTextInverted,
         height: screenWidth ? getButtonHeight(screenWidth) : BUTTON_MAX_HEIGHT,
       },
       generateBoxShadowStyle(

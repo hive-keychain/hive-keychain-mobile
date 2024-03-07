@@ -2,12 +2,9 @@ import {VestingDelegation} from '@hiveio/dhive';
 import {loadAccount, loadDelegatees, loadDelegators} from 'actions/index';
 import {IncomingDelegation} from 'actions/interfaces';
 import {showModal} from 'actions/message';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import ConfirmationInItem from 'components/ui/ConfirmationInItem';
-import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
@@ -23,7 +20,6 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle, getSeparatorLineStyle} from 'src/styles/line';
@@ -260,74 +256,58 @@ const DelegationsList = ({
             additionalConfirmTextStyle={styles.whiteText}
           />
         )}
-        {editMode &&
-          isItemSelected &&
-          !showCancelConfirmationDelegation &&
-          !isLoading && (
-            <View
-              style={[{alignSelf: 'center', width: '100%'}, styles.margins]}>
-              <OperationInput
-                placeholder={'0.000'}
-                keyboardType="decimal-pad"
-                textAlign="right"
-                value={editedAmountDelegation}
-                inputStyle={[styles.textBase, styles.paddingLeft]}
-                onChangeText={setEditedAmountDelegation}
-                additionalInputContainerStyle={{
-                  paddingVertical: 10,
-                }}
-                additionalOuterContainerStyle={{
-                  width: '54%',
-                }}
-                rightIcon={
-                  <View style={styles.flexRowCenter}>
-                    <Separator
-                      drawLine
-                      additionalLineStyle={getHorizontalLineStyle(
-                        theme,
-                        1,
-                        35,
-                        16,
-                      )}
-                    />
-                    <TouchableOpacity
-                      onPress={() =>
-                        setEditedAmountDelegation(available.toString())
-                      }>
-                      <Text style={[styles.textBase, styles.redText]}>
-                        {translate('common.max').toUpperCase()}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                }
+        {editMode && isItemSelected && !showCancelConfirmationDelegation && (
+          <View style={[{alignSelf: 'center', width: '100%'}, styles.margins]}>
+            <OperationInput
+              placeholder={'0.000'}
+              keyboardType="decimal-pad"
+              textAlign="right"
+              value={editedAmountDelegation}
+              inputStyle={[styles.textBase, styles.paddingLeft]}
+              onChangeText={setEditedAmountDelegation}
+              additionalInputContainerStyle={{
+                paddingVertical: 10,
+              }}
+              additionalOuterContainerStyle={{
+                width: '54%',
+              }}
+              rightIcon={
+                <View style={styles.flexRowCenter}>
+                  <Separator
+                    drawLine
+                    additionalLineStyle={getHorizontalLineStyle(
+                      theme,
+                      1,
+                      35,
+                      16,
+                    )}
+                  />
+                  <TouchableOpacity
+                    onPress={() =>
+                      setEditedAmountDelegation(available.toString())
+                    }>
+                    <Text style={[styles.textBase, styles.redText]}>
+                      {translate('common.max').toUpperCase()}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              }
+            />
+            <View style={styles.editConfirmationPanel}>
+              <ConfirmationInItem
+                theme={theme}
+                onCancel={() => setEditMode(false)}
+                onConfirm={() => onDelegate(false)}
+                isLoading={isLoading}
+                additionalConfirmTextStyle={styles.whiteText}
               />
-              <View style={styles.editConfirmationPanel}>
-                <EllipticButton
-                  title={translate('common.cancel')}
-                  onPress={() => setEditMode(false)}
-                  style={[
-                    getButtonStyle(theme).secondaryButton,
-                    styles.confirmationButton,
-                  ]}
-                  additionalTextStyle={styles.textBase}
-                />
-                <ActiveOperationButton
-                  title={translate('common.confirm')}
-                  onPress={() => onDelegate(false)}
-                  style={[
-                    getButtonStyle(theme).warningStyleButton,
-                    styles.confirmationButton,
-                  ]}
-                  additionalTextStyle={[styles.textBase]}
-                  isLoading={isLoading}
-                />
-              </View>
             </View>
-          )}
-        {editMode &&
+          </View>
+        )}
+        {/* {editMode &&
           isItemSelected &&
           !showCancelConfirmationDelegation &&
-          isLoading && <Loader size={'small'} animating />}
+          isLoading && <Loader size={'small'} animating />} */}
       </View>
     );
   };
@@ -490,6 +470,13 @@ const getDimensionedStyles = (theme: Theme) =>
       width: '48%',
       marginHorizontal: 0,
       height: 40,
+    },
+    cancelButton: {
+      width: '48%',
+      marginHorizontal: 0,
+      height: 40,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+      color: getColors(theme).secondaryText,
     },
     button: {
       flexDirection: 'row',
