@@ -4,6 +4,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   ViewStyle,
   useWindowDimensions,
@@ -47,7 +48,12 @@ const ScreenToggle = ({
     <View style={[styles.wrapper]}>
       <View style={[style, styles.header, additionalHeaderStyle]}>
         {menu.map((menuItem, i) => (
-          <View
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => {
+              setActive(i);
+              setToggleElement(menuItem);
+            }}
             key={menuItem}
             style={[
               styles.headerItemBase,
@@ -74,14 +80,10 @@ const ScreenToggle = ({
                 styles.headerText,
                 i === active ? styles.headerActiveText : styles.opaqueText,
                 menu.length >= 4 ? styles.smallerHeaderText : undefined,
-              ]}
-              onPress={() => {
-                setActive(i);
-                setToggleElement(menuItem);
-              }}>
+              ]}>
               {toUpperCase ? menuItem.toUpperCase() : menuItem}
             </Text>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
       <View style={[style, styles.pane]}>{components[active]}</View>
