@@ -109,17 +109,17 @@ const ProposalItem = ({
     isVotingUnvotingForProposal === proposal.creator;
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      style={[style, styles.container]}
-      onPressOut={() => {
-        if (isPressVote) {
-          setIsPressVote(false);
-        } else {
-          setExpandablePanelOpened(!isExpandablePanelOpened);
-        }
-      }}>
-      <View style={styles.firstLine}>
+    <View style={[style, styles.container]}>
+      <TouchableOpacity
+        style={styles.firstLine}
+        onPressOut={() => {
+          if (isPressVote) {
+            setIsPressVote(false);
+          } else {
+            setExpandablePanelOpened(!isExpandablePanelOpened);
+          }
+        }}
+        activeOpacity={1}>
         <View style={styles.title}>
           <Text
             onLongPress={() => goTo(proposal.link)}
@@ -133,10 +133,10 @@ const ProposalItem = ({
           {...styles.expander}
           additionalContainerStyle={[
             styles.marginRight,
-            isExpandablePanelOpened ? styles.rotate : undefined,
+            !isExpandablePanelOpened ? styles.rotate : undefined,
           ]}
         />
-      </View>
+      </TouchableOpacity>
       <View style={styles.secondLine}>
         <View style={styles.user}>
           <TouchableOpacity onLongPress={() => goToCreator(proposal.creator)}>
@@ -233,7 +233,7 @@ const ProposalItem = ({
           </View>
         </View>
       )}
-    </TouchableOpacity>
+    </View>
   );
 };
 
