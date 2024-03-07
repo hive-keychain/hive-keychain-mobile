@@ -6,10 +6,9 @@ import {DomainPreference, PreferencePayload} from 'reducers/preferences.types';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
 import {wordsFromCamelCase} from 'utils/format';
-import {translate} from 'utils/localize';
 
 type Props = {
   domainPref: DomainPreference;
@@ -34,9 +33,7 @@ const CollapsibleSettings = ({
 
   return (
     <View style={getCardStyle(theme).defaultCardItem}>
-      <Text style={[styles.domain, styles.font]}>
-        {translate('common.dapp_title')}: {domainPref.domain}
-      </Text>
+      <Text style={[styles.domain, styles.font]}>{domainPref.domain}</Text>
       <View style={styles.whitelistsContainer}>
         {domainPref.whitelisted_requests.map((e) => (
           <View style={styles.whitelistContainer} key={e}>
@@ -50,6 +47,7 @@ const CollapsibleSettings = ({
                 removePreference(username, domainPref.domain, e);
               }}
               {...styles.removeIcon}
+              color={PRIMARY_RED_COLOR}
             />
           </View>
         ))}
