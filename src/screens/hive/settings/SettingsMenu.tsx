@@ -50,7 +50,6 @@ const SettingsMenu = () => {
         iconImage={
           <Icon name={Icons.RPC} theme={theme} color={PRIMARY_RED_COLOR} />
         }
-        drawBottomLine={true}
       />
     </View>
   );

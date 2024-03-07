@@ -8,7 +8,7 @@ export const getMenuCardStyle = (theme: Theme) => {
     borderWidth: 1,
     borderColor: getColors(theme).cardBorderColorContrast,
     backgroundColor: getColors(theme).cardBgLighter,
-    paddingVertical: 25,
+    paddingVertical: 12,
     paddingHorizontal: 14,
     marginHorizontal: 16,
   } as ViewStyle;

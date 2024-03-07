@@ -36,7 +36,6 @@ const Accounts = () => {
         theme={theme}
         onPress={() => navigate('AccountManagementScreen')}
         iconImage={<ManageKeysIcon />}
-        drawBottomLine={true}
       />
     </View>
   );
