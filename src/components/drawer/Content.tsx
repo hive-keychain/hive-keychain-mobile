@@ -45,7 +45,7 @@ const HeaderContent = (props: Props) => {
   newState.routes = newState.routes.filter(
     (route) => !hiddenRoutesInMain.includes(route.name),
   );
-  const {theme, setTheme} = useContext(ThemeContext);
+  const {theme, setTheme, toggleTheme} = useContext(ThemeContext);
 
   return (
     <DrawerContentScrollView
@@ -99,21 +99,17 @@ const HeaderContent = (props: Props) => {
         <MenuItem
           labelTranslationKey="navigation.theme_setting"
           theme={theme}
-          onPress={() => {}}
+          onPress={() => toggleTheme()}
           iconImage={
             <Icon name={Icons.THEME} theme={theme} color={PRIMARY_RED_COLOR} />
           }
           leftSideComponent={
             <CustomSwitch
-              theme={theme}
+              currentValue={theme}
               iconLeftSide={<SwitchLightIcon width={24} height={24} />}
               iconRightSide={<SwitchDarkIcon width={24} height={24} />}
-              initalValue={theme === Theme.LIGHT}
-              valueTrue={Theme.LIGHT}
-              valueFalse={Theme.DARK}
-              onValueChange={(value) => {
-                setTheme(value);
-              }}
+              valueLeft={Theme.LIGHT}
+              valueRight={Theme.DARK}
             />
           }
           drawBottomLine
