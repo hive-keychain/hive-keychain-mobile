@@ -134,7 +134,7 @@
     "claim": {
       "success": "Successfully claimed {{rewards}}!",
       "error_posting": "Please add your posting key to be able to claim rewards!",
-      "info_claim_account": "Claimed account",
+      "info_claim_account": "Claimed account {{account}}",
       "info_create_claimed_account": "Claimed account",
       "info_claim_rewards": "{{currency}} claimed",
       "info_account_create": "Paid {{fee}} to create @{{new_account_name}}",
@@ -161,9 +161,9 @@
         "deposit_button": "Deposit",
         "prompt": "Select a currency",
         "fill_withdraw_savings": "Successfully withdrawn {{amount}} from savings",
-        "start_withdraw_savings": "withdrawal from savings",
-        "info_deposit_savings": "into savings",
-        "info_received_interests": "of interests from savings",
+        "start_withdraw_savings": "Started a {{amount}} withdrawal from savings",
+        "info_deposit_savings": "Deposited {{amount}} into savings",
+        "info_received_interests": "Received {{amount}} of interests from savings",
         "pending_withdraw": {
           "pending": "Withdrawing",
           "pending_disclaimer": "Withdrawing from savings takes 3 days. Cancel the operation if you wish to keep your {{currency}} in the savings.",
@@ -214,7 +214,7 @@
       },
       "powerup": {
         "title": "Power up",
-        "info_power_up": "Powered up",
+        "info_power_up": "Powered up {{amount}}",
         "info_text": "Power up HIVE to transform it in HP",
         "confirm": {"info": "Please confirm your power up."}
       },
@@ -224,7 +224,7 @@
           "info_stop": "Please confirm you want to stop your power down."
         },
         "title": "Power down",
-        "info_power_down": "power down",
+        "info_power_down": "Initiated a {{amount}} power down",
         "canceled_power_down": "Canceled a power down",
         "powering_down": "Powering down",
         "next_power_down": "Next power down",

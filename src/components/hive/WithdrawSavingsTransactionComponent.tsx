@@ -53,10 +53,9 @@ const WithdrawSavingsTransactionComponent = ({
           />
         ) : null
       }
-      textLine1={`${translate(
-        'common.started_a',
-      )} ${formattedAmount} ${getCurrency('HBD')}`}
-      textLine2={translate('wallet.operations.savings.start_withdraw_savings')}
+      textLine1={translate('wallet.operations.savings.start_withdraw_savings', {
+        amount: `${formattedAmount} ${getCurrency('HBD')}`,
+      })}
       date={date}
     />
   );

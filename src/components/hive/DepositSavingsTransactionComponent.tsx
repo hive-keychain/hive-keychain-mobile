@@ -53,10 +53,9 @@ const DepositSavingsTransactionComponent = ({
           />
         ) : null
       }
-      textLine1={`${translate(
-        'wallet.operations.savings.deposit_of',
-      )} ${formattedAmount} ${getCurrency('HBD')}`}
-      textLine2={translate('wallet.operations.savings.info_deposit_savings')}
+      textLine1={translate('wallet.operations.savings.info_deposit_savings', {
+        amount: `${formattedAmount} ${getCurrency('HBD')}`,
+      })}
       date={date}
     />
   );

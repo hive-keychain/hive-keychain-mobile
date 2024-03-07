@@ -40,13 +40,10 @@ const PowerDownTransactionComponent = ({
   const formattedAmount = withCommas(amount);
   const isCancellation = parseFloat(formattedAmount) === 0;
   const text = isCancellation
-    ? `${translate('wallet.operations.powerdown.canceled_power_down')}`
-    : `${translate('common.initiated_a')} ${formattedAmount} ${
-        amount.split(' ')[1]
-      } `;
-  const text2 = isCancellation
-    ? undefined
-    : `${translate('wallet.operations.powerdown.info_power_down')}`;
+    ? translate('wallet.operations.powerdown.canceled_power_down')
+    : translate('wallet.operations.powerdown.info_power_down', {
+        amount: `${formattedAmount} ${amount.split(' ')[1]} `,
+      });
 
   return (
     <ItemCardExpandable
@@ -54,7 +51,6 @@ const PowerDownTransactionComponent = ({
       setToggle={() => {}}
       theme={theme}
       textLine1={text}
-      textLine2={text2}
       date={date}
       icon={
         useIcon ? (

@@ -44,8 +44,9 @@ const PowerUpTransactionComponent = ({
       toggle
       setToggle={() => {}}
       date={date}
-      textLine1={translate('wallet.operations.powerup.info_power_up')}
-      textLine2={` ${formattedAmount} ${amount.split(' ')[1]}`}
+      textLine1={translate('wallet.operations.powerup.info_power_up', {
+        amount: `${formattedAmount} ${amount.split(' ')[1]}`,
+      })}
       icon={
         useIcon ? (
           <Icon

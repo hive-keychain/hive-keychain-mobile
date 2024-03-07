@@ -52,10 +52,14 @@ const ReceivedInterestTransactionComponent = ({
         ) : null
       }
       date={date}
-      textLine1={`${translate('common.received')} ${withCommas(
-        interest,
-      )} ${getCurrency('HBD')}`}
-      textLine2={translate('wallet.operations.savings.info_received_interests')}
+      textLine1={translate(
+        'wallet.operations.savings.info_received_interests',
+        {
+          amount: `${translate('common.received')} ${withCommas(
+            interest,
+          )} ${getCurrency('HBD')}`,
+        },
+      )}
     />
   );
 };

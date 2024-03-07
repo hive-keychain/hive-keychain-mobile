@@ -50,8 +50,9 @@ const CreateClaimedAccountTransactionComponent = ({
         ) : null
       }
       date={date}
-      textLine1={translate('wallet.claim.info_claim_account')}
-      textLine2={`@${new_account_name}`}
+      textLine1={translate('wallet.claim.info_claim_account', {
+        account: `@${new_account_name}`,
+      })}
     />
   );
 };
