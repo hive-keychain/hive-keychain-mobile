@@ -24,7 +24,6 @@ import {
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
 import {RootState} from 'store';
-import Transfer from '../hive/Transfer';
 import ClaimAccountTransactionComponent from './history-elements/ClaimAccountTransactionComponent';
 import ClaimRewardsTransactionComponent from './history-elements/ClaimRewardsTransactionComponent';
 import CollateralizedConvertTransactionComponent from './history-elements/CollateralizedConvertTransactionComponent';
@@ -41,6 +40,7 @@ import PowerDownTransactionComponent from './history-elements/PowerDownTransacti
 import PowerUpTransactionComponent from './history-elements/PowerUpTransactionComponent';
 import ReceivedInterestsTransactionComponent from './history-elements/ReceivedInterestsTransactionComponent';
 import RecurrentTransfer from './history-elements/RecurrentTransfer';
+import Transfer from './history-elements/Transfer';
 import WithdrawSavingsTransactionComponent from './history-elements/WithdrawSavingsTransactionComponent';
 
 type Props = {
