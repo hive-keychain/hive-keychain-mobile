@@ -238,6 +238,11 @@ const DropdownModal = ({
         getCardStyle(theme).defaultCardItem,
         styles.dropdownContainer,
         additionalDropdowContainerStyle,
+        showOpened
+          ? {
+              backgroundColor: getColors(theme).secondaryCardBgColor,
+            }
+          : undefined,
       ]}>
       {typeof selected === 'string' ? (
         <Text style={[styles.textBase, additionalTextStyle]}>{selected}</Text>
