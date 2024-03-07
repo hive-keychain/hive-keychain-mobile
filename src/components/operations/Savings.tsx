@@ -271,20 +271,23 @@ const Savings = ({
       }
       childrenMiddle={
         <View>
-          <View>
-            <Separator />
-            <Text
-              style={[
-                getFormFontStyle(height, theme).title,
-                styles.opaque,
-                styles.disclaimer,
-                styles.paddingHorizontal,
-              ]}>
-              {translate(
-                `wallet.operations.savings.${operationType}_disclaimer`,
-              )}
-            </Text>
-          </View>
+          {(currency !== 'HIVE' ||
+            operationType !== SavingsOperations.deposit) && (
+            <View>
+              <Separator />
+              <Text
+                style={[
+                  getFormFontStyle(height, theme).title,
+                  styles.opaque,
+                  styles.disclaimer,
+                  styles.paddingHorizontal,
+                ]}>
+                {translate(
+                  `wallet.operations.savings.${operationType}_disclaimer`,
+                )}
+              </Text>
+            </View>
+          )}
 
           <Separator />
           <Text
