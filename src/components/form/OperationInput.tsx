@@ -125,6 +125,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       marginLeft: 10,
       fontFamily: FontPoppinsName.ITALIC,
       fontSize: getFontSizeSmallDevices(width, 13),
+      color: getColors(theme).primaryText,
     },
     marginLeft: {
       marginLeft: 8,

@@ -52,9 +52,9 @@ export const formatBalance = (balance: number) =>
 
 export const formatBalanceCurrency = (balanceS: string) => {
   console.log(balanceS);
-  const balance = Number(balanceS.split(' ')[0].replace(',', ''));
+  const balance = Number(balanceS.split(' ')[0].replace(/,/g, ''));
   const currency = balanceS.split(' ')[1];
-  return `${formatBalance(balance)} ${currency}`;
+  return `${formatBalance(balance)} ${currency ?? ''}`;
 };
 
 export const capitalize = (string: string) =>
