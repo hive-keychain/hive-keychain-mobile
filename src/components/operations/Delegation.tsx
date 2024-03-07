@@ -176,17 +176,13 @@ const Delegation = ({
             <View>
               <Text
                 style={[
-                  getFormFontStyle(height, theme).smallLabel,
+                  styles.availablePanelTitle,
                   styles.josefineFont,
                   styles.opaque,
                 ]}>
                 {capitalize(translate(`common.available`))}
               </Text>
-              <Text
-                style={[
-                  getFormFontStyle(height, theme).input,
-                  styles.josefineFont,
-                ]}>
+              <Text style={[styles.availablePanelValue, styles.josefineFont]}>
                 {`${withCommas(available.toString())} ${getCurrency('HP')}`}
               </Text>
             </View>
@@ -292,6 +288,12 @@ const Delegation = ({
 
 const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
+    availablePanelTitle: {
+      fontSize: 14,
+    },
+    availablePanelValue: {
+      fontSize: 16,
+    },
     currentAvailableBalances: {
       paddingHorizontal: 15,
     },
