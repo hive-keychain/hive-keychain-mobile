@@ -41,8 +41,10 @@ import {
   body_primary_body_1,
   button_link_primary_medium,
   button_link_primary_small,
+  getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
 import {SwapsConfig} from 'utils/config';
 import {capitalize, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
@@ -538,8 +540,8 @@ const Swap = ({
     } as TemplateStackProps);
   };
 
-  const {height} = useWindowDimensions();
-  const styles = getStyles(theme);
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width, height});
 
   return (
     <View style={[{width: '100%'}]}>
@@ -553,7 +555,7 @@ const Swap = ({
           childrenTop={
             <View style={styles.marginHorizontal}>
               <Separator />
-              <Text style={[styles.textBase, styles.opaque]}>
+              <Text style={[styles.textBase, styles.opaque, styles.disclaimer]}>
                 {translate('wallet.operations.swap.disclaimer')}
               </Text>
               <Separator height={25} />
@@ -796,7 +798,7 @@ const Swap = ({
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={() => setIsAdvanceSettingOpen(!isAdvanceSettingOpen)}
-                style={styles.flexRowbetween}>
+                style={[styles.flexRowbetween, {marginBottom: 12}]}>
                 <Text style={[styles.textBase, {...body_primary_body_1}]}>
                   {translate('wallet.operations.swap.advanced_settings_title')}
                 </Text>
@@ -835,7 +837,7 @@ const Swap = ({
                     marginBottom: 20,
                   }}
                   inputStyle={styles.textBase}
-                  additionalLabelStyle={{fontSize: 13}}
+                  additionalinfoIconActionColor={getColors(theme).secondaryText}
                 />
               )}
             </View>
@@ -881,12 +883,13 @@ const Swap = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     textBase: {
       color: getColors(theme).secondaryText,
       ...button_link_primary_small,
     },
+    disclaimer: {fontSize: getFontSizeSmallDevices(width, 14)},
     opaque: {
       opacity: 0.8,
     },
