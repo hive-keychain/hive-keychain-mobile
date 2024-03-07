@@ -83,7 +83,7 @@ const UrlModal = ({
   return (
     <Modal
       isVisible={isVisible}
-      style={styles.urlModal}
+      style={[styles.urlModal]}
       onBackdropPress={dismissModal}
       onBackButtonPress={dismissModal}
       animationIn="slideInDown"
@@ -91,6 +91,7 @@ const UrlModal = ({
       backdropOpacity={0.8}
       animationInTiming={SLIDE_TIME}
       animationOutTiming={SLIDE_TIME}
+      statusBarTranslucent
       useNativeDriver>
       <View style={styles.urlModalContent}>
         <TextInput

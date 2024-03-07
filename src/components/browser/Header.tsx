@@ -29,6 +29,7 @@ import {getInputContainerHeight} from 'src/styles/input';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_1,
+  button_link_primary_small,
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {urlTransformer} from 'utils/browser';
@@ -114,50 +115,64 @@ const BrowserHeader = ({
         }}>
         <FocusAwareStatusBar />
         <View style={[styles.topBar]}>
-          <View
-            style={[
-              {
-                width: '100%',
-                paddingHorizontal: 16,
-                flexDirection: 'row',
-              },
-            ]}>
-            <CustomSearchBar
-              theme={theme}
-              leftIcon={
-                activeUrl !== BrowserConfig.HOMEPAGE_URL ? (
+          {activeUrl !== BrowserConfig.HOMEPAGE_URL ? (
+            <>
+              <CustomSearchBar
+                theme={theme}
+                leftIcon={
+                  activeUrl !== BrowserConfig.HOMEPAGE_URL ? (
+                    <Icon
+                      theme={theme}
+                      name={Icons.HOME_BROWSER}
+                      onClick={goHome}
+                      color={PRIMARY_RED_COLOR}
+                      {...styles.icons}
+                    />
+                  ) : null
+                }
+                rightIcon={
                   <Icon
+                    name={Icons.SEARCH}
                     theme={theme}
-                    name={Icons.HOME_BROWSER}
-                    onClick={goHome}
+                    onClick={() => startSearch(true)}
                     color={PRIMARY_RED_COLOR}
                     {...styles.icons}
                   />
-                ) : null
-              }
-              rightIcon={
-                <Icon
-                  name={Icons.SEARCH}
-                  theme={theme}
-                  onClick={() => startSearch(true)}
-                  color={PRIMARY_RED_COLOR}
-                  {...styles.icons}
-                />
-              }
-              value={
-                activeUrl !== BrowserConfig.HOMEPAGE_URL
-                  ? urlTransformer(activeUrl).hostname +
-                    urlTransformer(activeUrl).pathname
-                  : translate('browser.search')
-              }
-              onChangeText={(text) => {}}
-              onFocus={() => {
-                startSearch(true);
-              }}
-              additionalContainerStyle={styles.searchBarContainer}
-            />
-            {renderFavoritesButton()}
-          </View>
+                }
+                value={
+                  activeUrl !== BrowserConfig.HOMEPAGE_URL
+                    ? urlTransformer(activeUrl).hostname +
+                      urlTransformer(activeUrl).pathname
+                    : translate('browser.search')
+                }
+                onChangeText={(text) => {}}
+                onFocus={() => {
+                  startSearch(true);
+                }}
+                additionalContainerStyle={styles.searchBarContainer}
+              />
+              {renderFavoritesButton()}
+            </>
+          ) : (
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => startSearch(true)}
+              style={[
+                getCardStyle(theme).defaultCardItem,
+                styles.fakeSearchBar,
+              ]}>
+              <Text style={[styles.fakeSearchBarText]}>
+                {translate('browser.search')}
+              </Text>
+              <Icon
+                name={Icons.SEARCH}
+                theme={theme}
+                onClick={() => startSearch(true)}
+                color={PRIMARY_RED_COLOR}
+                {...styles.icons}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </GestureRecognizer>
     );
@@ -191,6 +206,9 @@ const getStyles = (
       paddingVertical: 10,
       height: 'auto',
       width: '100%',
+      paddingHorizontal: 16,
+      flexDirection: 'row',
+      marginTop: 8,
     },
     paddingHorizontal: {
       paddingHorizontal: 15,
@@ -252,6 +270,23 @@ const getStyles = (
       height: getInputContainerHeight(width),
       paddingHorizontal: 16,
       flex: 1,
+    },
+    fakeSearchBar: {
+      borderRadius: 30,
+      height: getInputContainerHeight(width),
+      paddingHorizontal: 16,
+      flex: 1,
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexDirection: 'row',
+      paddingVertical: 4,
+    },
+    fakeSearchBarText: {
+      ...button_link_primary_small,
+      color:
+        theme === Theme.LIGHT
+          ? 'rgba(33, 40, 56, 0.30)'
+          : 'rgba(255, 255, 255, 0.30)',
     },
   });
 
