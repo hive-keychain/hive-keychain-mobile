@@ -3,6 +3,7 @@ import reducers from 'reducers/index';
 import {applyMiddleware, createStore} from 'redux';
 import {persistReducer, persistStore} from 'redux-persist';
 import thunk from 'redux-thunk';
+import {saveCurrentRpc} from 'utils/rpc.utils';
 import transforms from './transforms';
 
 const persistConfig = {
@@ -34,6 +35,15 @@ const persistor = persistStore(store);
 
 const getSafeState = () => {
   const state: RootState = {...store.getState()};
+  let previousRpc = state.activeRpc;
+  if (
+    previousRpc &&
+    previousRpc.uri !== state.activeRpc?.uri &&
+    state.activeRpc
+  ) {
+    previousRpc = state.activeRpc;
+    saveCurrentRpc(state.activeRpc);
+  }
   state.accounts.forEach((e) => delete e.keys);
   delete state.activeAccount.keys;
   delete state.auth;
