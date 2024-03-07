@@ -9,6 +9,7 @@ import currencyPrices from './currencyPrices';
 import delegations from './delegations';
 import floatingBar from './floatingBar';
 import properties from './globalProperties';
+import historyFilters from './historyFilters';
 import hiveUri from './hive-uri';
 import hive_authentication_service from './hiveAuthenticationService';
 import lastAccount from './lastAccount';
@@ -23,7 +24,6 @@ import tokensFilters from './tokensFilters';
 import tokensMarket from './tokensMarket';
 import transactions from './transactions';
 import userTokens from './userTokens';
-import walletFilters from './walletFilters';
 
 export default combineReducers({
   auth,
@@ -45,7 +45,7 @@ export default combineReducers({
   preferences,
   hive_authentication_service,
   hiveUri,
-  walletFilters,
+  historyFilters,
   tokensFilters,
   message,
   floatingBar,

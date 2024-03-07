@@ -19,7 +19,7 @@ export const DEFAULT_WALLET_FILTER: WalletHistoryFilter = {
   },
 };
 
-const walletFilterReducer = (
+const historyFiltersReducer = (
   state: WalletHistoryFilter = DEFAULT_WALLET_FILTER,
   {type, payload}: ActionPayload<WalletHistoryFilter>,
 ) => {
@@ -27,7 +27,7 @@ const walletFilterReducer = (
     case UPDATE_WALLET_FILTER:
       return {...state, ...payload};
     case CLEAR_WALLET_FILTERS:
-      return {...DEFAULT_WALLET_FILTER};
+      return state;
     default:
       return state;
   }
@@ -35,5 +35,5 @@ const walletFilterReducer = (
 
 export default persistReducer(
   persistConfig('walletFilterPersist'),
-  walletFilterReducer,
+  historyFiltersReducer,
 );

@@ -14,7 +14,7 @@ const persistConfig = {
     'browser',
     'preferences',
     'hive_authentication_service',
-    'walletFilters',
+    'historyFilters',
     'tokensFilters',
   ],
   transforms,

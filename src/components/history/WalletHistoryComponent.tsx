@@ -318,7 +318,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     transactions: state.transactions,
     activeAccount: state.activeAccount,
-    walletFilters: state.walletFilters,
+    walletFilters: state.historyFilters,
   };
 };
 

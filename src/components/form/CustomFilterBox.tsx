@@ -216,7 +216,7 @@ const FilterBox = ({
 
 const mapStateToProps = (state: RootState) => {
   return {
-    walletFilters: state.walletFilters,
+    walletFilters: state.historyFilters,
     tokensFilter: state.tokensFilters,
   };
 };
