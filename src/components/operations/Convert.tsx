@@ -2,7 +2,7 @@ import {fetchConversionRequests} from 'actions/index';
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
-import PendingConvertions from 'components/hive/PendingConvertions';
+import PendingConvertions from 'components/hive/PendingConversions';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
 import {TemplateStackProps} from 'navigators/Root.types';

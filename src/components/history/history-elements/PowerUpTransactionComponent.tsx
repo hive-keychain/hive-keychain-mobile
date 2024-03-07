@@ -4,22 +4,22 @@ import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {StartWithdrawSavings} from 'src/interfaces/transaction.interface';
+import {PowerUp} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
-import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
-import Icon from './Icon';
+import Icon from '../../hive/Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: StartWithdrawSavings;
+  transaction: PowerUp;
   locale: string;
   theme: Theme;
   token?: boolean;
   useIcon?: boolean;
 };
-const WithdrawSavingsTransactionComponent = ({
+
+const PowerUpTransactionComponent = ({
   transaction,
   user,
   locale,
@@ -27,7 +27,7 @@ const WithdrawSavingsTransactionComponent = ({
   useIcon,
   theme,
 }: Props) => {
-  const {timestamp, amount} = transaction;
+  const {timestamp, amount, to, from} = transaction;
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -43,22 +43,24 @@ const WithdrawSavingsTransactionComponent = ({
       theme={theme}
       toggle
       setToggle={() => {}}
+      date={date}
+      textLine1={translate('wallet.operations.powerup.info_power_up', {
+        amount: `${formattedAmount} ${amount.split(' ')[1]}`,
+      })}
       icon={
         useIcon ? (
           <Icon
-            name={Icons.SAVINGS}
+            name={Icons.POWER_UP}
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
+            width={24}
+            height={24}
           />
         ) : null
       }
-      textLine1={translate('wallet.operations.savings.start_withdraw_savings', {
-        amount: `${formattedAmount} ${getCurrency('HBD')}`,
-      })}
-      date={date}
     />
   );
 };
 
-export default WithdrawSavingsTransactionComponent;
+export default PowerUpTransactionComponent;

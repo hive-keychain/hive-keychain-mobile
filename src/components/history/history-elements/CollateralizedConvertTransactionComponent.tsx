@@ -1,23 +1,24 @@
 import {ActiveAccount} from 'actions/interfaces';
 import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
 import ItemCardExpandable from 'components/ui/ItemCardExpandable';
-import React, {useState} from 'react';
+import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {ClaimAccount} from 'src/interfaces/transaction.interface';
+import {CollateralizedConvert} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
-import Icon from './Icon';
+import Icon from '../../hive/Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: ClaimAccount;
+  transaction: CollateralizedConvert;
   locale: string;
   theme: Theme;
   token?: boolean;
   useIcon?: boolean;
 };
-const ClaimAccountTransactionComponent = ({
+const CollateralizedConvertTransactionComponent = ({
   transaction,
   user,
   locale,
@@ -25,8 +26,7 @@ const ClaimAccountTransactionComponent = ({
   useIcon,
   theme,
 }: Props) => {
-  const [toggle, setToggle] = useState(false);
-  const {timestamp} = transaction;
+  const {timestamp, amount} = transaction;
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -35,25 +35,31 @@ const ClaimAccountTransactionComponent = ({
     day: '2-digit',
   });
 
+  const formattedAmount = withCommas(amount);
+
   return (
     <ItemCardExpandable
       theme={theme}
-      toggle={toggle}
-      setToggle={() => setToggle(!toggle)}
+      toggle
+      setToggle={() => {}}
       icon={
         useIcon ? (
           <Icon
-            name={Icons.ACCOUNTS}
+            name={Icons.CONVERT}
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
+            width={24}
+            height={24}
           />
         ) : null
       }
-      textLine1={translate('wallet.claim.info_create_claimed_account')}
       date={date}
+      textLine1={translate('wallet.operations.convert.start_collateralized', {
+        amount: `${formattedAmount} ${amount.split(' ')[1]}`,
+      })}
     />
   );
 };
 
-export default ClaimAccountTransactionComponent;
+export default CollateralizedConvertTransactionComponent;

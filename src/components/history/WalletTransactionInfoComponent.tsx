@@ -24,24 +24,24 @@ import {
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
 import {RootState} from 'store';
-import ClaimAccountTransactionComponent from './ClaimAccountTransactionComponent';
-import ClaimRewardsTransactionComponent from './ClaimRewardsTransactionComponent';
-import CollateralizedConvertTransactionComponent from './CollateralizedConvertTransactionComponent';
-import ConvertTransactionComponent from './ConvertTransactionComponent';
-import CreateAccountTransactionComponent from './CreateAccountTransactionComponent';
-import CreateClaimedAccountTransactionComponent from './CreateClaimedAccountTransactionComponent';
-import DelegationTransactionComponent from './DelegationTransactionComponent';
-import DepositSavingsTransactionComponent from './DepositSavingsTransactionComponent';
-import FillRecurrentTransfer from './Fill-recurrent-transfer';
-import FillCollateralizedConvertTransactionComponent from './FillCollateralizedConvertTransactionComponent';
-import FillConvertTransactionComponent from './FillConvertTransactionComponent';
-import FillWithdrawSavingsTransactionComponent from './FillWithdrawSavingsTransactionComponent';
-import PowerDownTransactionComponent from './PowerDownTransactionComponent';
-import PowerUpTransactionComponent from './PowerUpTransactionComponent';
-import ReceivedInterestsTransactionComponent from './ReceivedInterestsTransactionComponent';
-import RecurrentTransfer from './Recurrent-transfer';
-import Transfer from './Transfer';
-import WithdrawSavingsTransactionComponent from './WithdrawSavingsTransactionComponent';
+import ClaimAccountTransactionComponent from './history-elements/ClaimAccountTransactionComponent';
+import ClaimRewardsTransactionComponent from './history-elements/ClaimRewardsTransactionComponent';
+import CollateralizedConvertTransactionComponent from './history-elements/CollateralizedConvertTransactionComponent';
+import ConvertTransactionComponent from './history-elements/ConvertTransactionComponent';
+import CreateAccountTransactionComponent from './history-elements/CreateAccountTransactionComponent';
+import CreateClaimedAccountTransactionComponent from './history-elements/CreateClaimedAccountTransactionComponent';
+import DelegationTransactionComponent from './history-elements/DelegationTransactionComponent';
+import DepositSavingsTransactionComponent from './history-elements/DepositSavingsTransactionComponent';
+import FillCollateralizedConvertTransactionComponent from './history-elements/FillCollateralizedConvertTransactionComponent';
+import FillConvertTransactionComponent from './history-elements/FillConvertTransactionComponent';
+import FillRecurrentTransfer from './history-elements/FillRecurrentTransfer';
+import FillWithdrawSavingsTransactionComponent from './history-elements/FillWithdrawSavingsTransactionComponent';
+import PowerDownTransactionComponent from './history-elements/PowerDownTransactionComponent';
+import PowerUpTransactionComponent from './history-elements/PowerUpTransactionComponent';
+import ReceivedInterestsTransactionComponent from './history-elements/ReceivedInterestsTransactionComponent';
+import RecurrentTransfer from './history-elements/RecurrentTransfer';
+import Transfer from './history-elements/Transfer';
+import WithdrawSavingsTransactionComponent from './history-elements/WithdrawSavingsTransactionComponent';
 
 type Props = {
   user: ActiveAccount;

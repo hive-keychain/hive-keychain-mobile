@@ -2,8 +2,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import {CustomFilterBox} from 'components/form/CustomFilterBox';
+import {WalletHistoryComponent} from 'components/history/WalletHistoryComponent';
 import Icon from 'components/hive/Icon';
-import {WalletHistoryComponent} from 'components/hive/Wallet-history-component';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import React from 'react';
@@ -75,6 +75,7 @@ export default () => {
           headerStyle: styles.headerStyle,
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
+          animationEnabled: false,
           title: translate('navigation.wallet_history'),
           cardStyle: styles.cardStyle,
           headerRight: () => (

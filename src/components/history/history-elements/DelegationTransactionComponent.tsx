@@ -4,21 +4,22 @@ import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React, {useState} from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {Transfer as TransferInterface} from 'src/interfaces/transaction.interface';
+import {Delegation} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
-import Icon from './Icon';
+import Icon from '../../hive/Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: TransferInterface;
+  transaction: Delegation;
   locale: string;
-  useIcon: boolean;
   theme: Theme;
   token?: boolean;
+  useIcon?: boolean;
 };
-const Transfer = ({
+
+const DelegationTransactionComponent = ({
   transaction,
   user,
   locale,
@@ -28,19 +29,8 @@ const Transfer = ({
 }: Props) => {
   const [toggle, setToggle] = useState(false);
   const username = user.name;
-  const {timestamp, from, to, amount, memo} = transaction;
-  const other = from === username ? to : from;
-  const direction = from === username ? '-' : '+';
-  const operationDetails = {
-    action:
-      direction === '+'
-        ? translate('wallet.operations.transfer.received')
-        : translate('wallet.operations.transfer.sent'),
-    actionFromTo:
-      direction === '+'
-        ? translate('wallet.operations.transfer.confirm.from')
-        : translate('wallet.operations.transfer.confirm.to'),
-  };
+  const {timestamp, amount, delegatee, delegator} = transaction as Delegation;
+  const direction = delegator === username ? '-' : '+';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -49,29 +39,44 @@ const Transfer = ({
     day: '2-digit',
   });
 
+  const formattedAmount = withCommas(amount);
+  const isCancellation = parseFloat(formattedAmount) === 0;
+  const finalAmount = `${formattedAmount} ${amount.split(' ')[1]}`;
+  const cancellationText = `${translate(
+    'wallet.operations.delegation.canceled_delegation',
+    {
+      delegatee,
+    },
+  )}`;
+  const delegationText =
+    direction === '+'
+      ? `${translate('wallet.operations.delegation.info_delegation_in', {
+          delegator: delegator,
+        })} ${finalAmount}`
+      : `${translate('wallet.operations.delegation.info_delegation_out', {
+          delegatee,
+        })} ${finalAmount}`;
+
   return (
     <ItemCardExpandable
       theme={theme}
       toggle={toggle}
       setToggle={() => setToggle(!toggle)}
-      textLine1={`${operationDetails.action} ${withCommas(amount)} ${
-        amount.split(' ')[1]
-      }`}
-      textLine2={`${operationDetails.actionFromTo} @${other}`}
-      date={date}
       icon={
         useIcon ? (
           <Icon
-            name={Icons.TRANSFER}
+            name={Icons.DELEGATE}
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
           />
         ) : null
       }
-      memo={memo}
+      textLine1={isCancellation ? cancellationText : delegationText}
+      date={date}
+      memo={undefined}
     />
   );
 };
 
-export default Transfer;
+export default DelegationTransactionComponent;

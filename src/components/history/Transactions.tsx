@@ -4,6 +4,7 @@ import Loader from 'components/ui/Loader';
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
+import {useThemeContext} from 'src/context/theme.context';
 import {RootState} from 'store';
 import {getMainLocale, translate} from 'utils/localize';
 import WalletHistoryItemComponent from './WalletHistoryItemComponent';
@@ -58,6 +59,7 @@ const Transactions = ({
             renderItem={(transaction) => {
               return (
                 <WalletHistoryItemComponent
+                  theme={useThemeContext().theme}
                   transaction={transaction.item}
                   user={user}
                   locale={locale}

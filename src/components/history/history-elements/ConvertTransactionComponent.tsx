@@ -4,21 +4,21 @@ import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {WithdrawSavings} from 'src/interfaces/transaction.interface';
+import {Convert} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
-import Icon from './Icon';
+import Icon from '../../hive/Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: WithdrawSavings;
+  transaction: Convert;
   locale: string;
   theme: Theme;
   token?: boolean;
   useIcon?: boolean;
 };
-const FillWithdrawSavingsTransactionComponent = ({
+const ConvertTransactionComponent = ({
   transaction,
   user,
   locale,
@@ -45,19 +45,21 @@ const FillWithdrawSavingsTransactionComponent = ({
       icon={
         useIcon ? (
           <Icon
-            name={Icons.SAVINGS}
+            name={Icons.CONVERT}
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
+            width={24}
+            height={24}
           />
         ) : null
       }
-      textLine1={translate('wallet.operations.savings.successfully_withdrawn')}
-      textLine2={`${formattedAmount} ${amount.split(' ')[1]}`}
-      textLine3={translate('wallet.operations.savings.fill_withdraw_savings')}
+      textLine1={translate('wallet.operations.convert.start_convert', {
+        amount: `${formattedAmount} ${amount.split(' ')[1]}`,
+      })}
       date={date}
     />
   );
 };
 
-export default FillWithdrawSavingsTransactionComponent;
+export default ConvertTransactionComponent;

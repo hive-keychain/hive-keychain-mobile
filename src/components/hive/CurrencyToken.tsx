@@ -31,9 +31,9 @@ import {Dimensions} from 'utils/common.types';
 import {formatBalance, toHP} from 'utils/format';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
+import {WalletHistoryComponentProps} from '../history/WalletHistoryComponent';
 import Icon from './Icon';
 import IconHP from './IconHP';
-import {WalletHistoryComponentProps} from './Wallet-history-component';
 
 interface Props {
   theme: Theme;

@@ -7,7 +7,7 @@ import Plus from 'assets/wallet/icon_deposit.svg';
 import Power from 'assets/wallet/icon_power.svg';
 import ShoppingCartIconWhite from 'assets/wallet/icon_shopping_cart_white.svg';
 import Minus from 'assets/wallet/icon_withdraw.svg';
-import PendingSavingsWithdrawalPageComponent from 'components/hive/Pending-savings-withdrawal-page.component';
+import PendingSavingsWithdrawalPageComponent from 'components/hive/PendingSavingsWithdrawalPage.component';
 import Convert from 'components/operations/Convert';
 import Delegation from 'components/operations/Delegation';
 import PowerDown from 'components/operations/PowerDown';

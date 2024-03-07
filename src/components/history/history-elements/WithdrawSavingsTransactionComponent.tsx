@@ -4,22 +4,22 @@ import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {DepositSavings} from 'src/interfaces/transaction.interface';
+import {StartWithdrawSavings} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
-import Icon from './Icon';
+import Icon from '../../hive/Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: DepositSavings;
+  transaction: StartWithdrawSavings;
   locale: string;
   theme: Theme;
   token?: boolean;
   useIcon?: boolean;
 };
-const DepositSavingsTransactionComponent = ({
+const WithdrawSavingsTransactionComponent = ({
   transaction,
   user,
   locale,
@@ -27,7 +27,7 @@ const DepositSavingsTransactionComponent = ({
   useIcon,
   theme,
 }: Props) => {
-  const {timestamp, amount, to, from} = transaction;
+  const {timestamp, amount} = transaction;
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -53,7 +53,7 @@ const DepositSavingsTransactionComponent = ({
           />
         ) : null
       }
-      textLine1={translate('wallet.operations.savings.info_deposit_savings', {
+      textLine1={translate('wallet.operations.savings.start_withdraw_savings', {
         amount: `${formattedAmount} ${getCurrency('HBD')}`,
       })}
       date={date}
@@ -61,4 +61,4 @@ const DepositSavingsTransactionComponent = ({
   );
 };
 
-export default DepositSavingsTransactionComponent;
+export default WithdrawSavingsTransactionComponent;
