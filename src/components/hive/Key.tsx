@@ -113,7 +113,7 @@ export default ({
           </View>
           <Separator height={5} />
           <CopyKey wif={privateKey}>
-            <View style={[styles.row, styles.aligned]}>
+            <View style={[styles.row, styles.aligned, {height: 40}]}>
               <Text
                 style={
                   isPKShown ? [styles.key, styles.opacity] : styles.keyHidden
@@ -195,7 +195,7 @@ const CopyKey = ({
     children
   ) : (
     <TouchableOpacity
-      activeOpacity={0.5}
+      activeOpacity={1}
       onLongPress={() => {
         Clipboard.setString(wif);
         Toast.show(translate('toast.keys.copied'));
