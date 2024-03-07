@@ -1,4 +1,4 @@
-import {Token, TokenBalance} from 'actions/interfaces';
+import {TokenBalance} from 'actions/interfaces';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {Token} from 'src/interfaces/tokens.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getSeparatorLineStyle} from 'src/styles/line';
 import {

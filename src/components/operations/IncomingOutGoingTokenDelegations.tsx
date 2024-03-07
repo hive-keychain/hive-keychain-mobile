@@ -1,11 +1,12 @@
 import {loadAccount} from 'actions/index';
-import {Token, TokenBalance} from 'actions/interfaces';
+import {TokenBalance} from 'actions/interfaces';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Token} from 'src/interfaces/tokens.interface';
 import {getColors} from 'src/styles/colors';
 import {
   title_primary_body_2,
