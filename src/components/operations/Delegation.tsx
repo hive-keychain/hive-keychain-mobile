@@ -289,9 +289,11 @@ const Delegation = ({
 const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
     availablePanelTitle: {
+      color: getColors(theme).secondaryText,
       fontSize: 14,
     },
     availablePanelValue: {
+      color: getColors(theme).primaryText,
       fontSize: 16,
     },
     currentAvailableBalances: {
