@@ -20,8 +20,8 @@ import TransactionUtils, {
   NB_TRANSACTION_FETCHED,
 } from 'utils/transactions.utils';
 import {WalletHistoryUtils} from 'utils/walletHistoryUtils';
-import {BackToTopButton} from './Back-To-Top-Button';
-import Icon from './Icon';
+import Icon from '../hive/Icon';
+import {BackToTopButton} from '../ui/Back-To-Top-Button';
 import WalletHistoryItemComponent from './WalletHistoryItemComponent';
 
 export interface WalletHistoryComponentProps {

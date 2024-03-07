@@ -4,20 +4,21 @@ import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {CreateClaimedAccount} from 'src/interfaces/transaction.interface';
+import {FillCollateralizedConvert} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
-import Icon from './Icon';
+import Icon from '../../hive/Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: CreateClaimedAccount;
+  transaction: FillCollateralizedConvert;
   locale: string;
   theme: Theme;
   token?: boolean;
   useIcon?: boolean;
 };
-const CreateClaimedAccountTransactionComponent = ({
+const FillCollateralizedConvertTransactionComponent = ({
   transaction,
   user,
   locale,
@@ -25,7 +26,7 @@ const CreateClaimedAccountTransactionComponent = ({
   useIcon,
   theme,
 }: Props) => {
-  const {timestamp, creator, new_account_name} = transaction;
+  const {timestamp, amount_in, amount_out} = transaction;
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -33,6 +34,9 @@ const CreateClaimedAccountTransactionComponent = ({
     month: '2-digit',
     day: '2-digit',
   });
+
+  const formattedAmountIn = withCommas(amount_in);
+  const formattedAmountOut = withCommas(amount_out);
 
   return (
     <ItemCardExpandable
@@ -42,19 +46,22 @@ const CreateClaimedAccountTransactionComponent = ({
       icon={
         useIcon ? (
           <Icon
-            name={Icons.CREATE_CLAIMED_ACCOUNT}
+            name={Icons.CONVERT}
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
+            width={24}
+            height={24}
           />
         ) : null
       }
       date={date}
-      textLine1={translate('wallet.claim.info_claim_account', {
-        account: `@${new_account_name}`,
-      })}
+      textLine1={translate('wallet.operations.convert.fill_convert_request')}
+      textLine2={` ${formattedAmountOut} ${
+        amount_out.split(' ')[1]
+      } => ${formattedAmountIn} ${amount_in.split(' ')[1]}`}
     />
   );
 };
 
-export default CreateClaimedAccountTransactionComponent;
+export default FillCollateralizedConvertTransactionComponent;

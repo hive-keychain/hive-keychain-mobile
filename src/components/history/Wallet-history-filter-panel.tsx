@@ -22,7 +22,7 @@ import {
   NB_TRANSACTION_FETCHED,
 } from 'utils/transactions.utils';
 import {WalletHistoryUtils} from 'utils/walletHistoryUtils';
-import Icon from './Icon';
+import Icon from '../hive/Icon';
 
 interface WalletHistoryFilterPanelProps {
   DEFAULT_WALLET_FILTER: WalletHistoryFilter;

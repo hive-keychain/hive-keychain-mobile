@@ -4,11 +4,11 @@ import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React, {useState} from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {RecurrentTransfer as RecurrentTransferInterface} from 'src/interfaces/transaction.interface';
+import {FillRecurrentTransfer as FillRecurrentTransferInterface} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
-import {capitalize, withCommas} from 'utils/format';
+import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
-import Icon from './Icon';
+import Icon from '../../hive/Icon';
 
 type Props = {
   user: ActiveAccount;
@@ -19,7 +19,7 @@ type Props = {
   useIcon?: boolean;
 };
 
-const RecurrentTransfer = ({
+const FillRecurrentTransfer = ({
   transaction,
   user,
   locale,
@@ -35,10 +35,10 @@ const RecurrentTransfer = ({
     to,
     amount,
     memo,
-    executions,
-    recurrence,
-  } = transaction as RecurrentTransferInterface;
+    remainingExecutions,
+  } = transaction as FillRecurrentTransferInterface;
   const other = from === username ? to : from;
+  const direction = from === username ? '-' : '+';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -49,40 +49,43 @@ const RecurrentTransfer = ({
 
   const formattedAmount = withCommas(amount);
 
+  const translationMessage =
+    direction === '+'
+      ? 'wallet.operations.transfer.fill_recurrent_transfer_in'
+      : 'wallet.operations.transfer.fill_recurrent_transfer_out';
+
+  const tempMemo =
+    memo && memo.trim().length > 0
+      ? `${translate('common.memo')}: ${memo}`
+      : null;
+
+  const finalMemo = `${translate(translationMessage, {
+    other,
+    remainingExecutions,
+  })} ${tempMemo}`;
+
   return (
     <ItemCardExpandable
       theme={theme}
       toggle={toggle}
       setToggle={() => setToggle(!toggle)}
-      textLine1={translate(
-        'wallet.operations.transfer.started_recurrent_transfer',
-        {amount: `${formattedAmount} ${amount.split(' ')[1]}`},
-      )}
-      date={date}
+      textLine1={`${translate(
+        direction === '+' ? 'common.received' : 'common.sent',
+      )} ${formattedAmount} ${amount.split(' ')[1]}`}
       icon={
         useIcon ? (
           <Icon
-            name={Icons.RECURRENT_TRANSFER}
+            name={Icons.FILL_RECURRENT_TRANSFER}
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
           />
         ) : null
       }
-      memo={`${translate(
-        'wallet.operations.transfer.start_recurrent_transfer_out',
-        {
-          other,
-          recurrence,
-          executions,
-        },
-      )} \n${
-        memo.trim().length > 0
-          ? `${capitalize(translate('common.memo'))}: ${memo}`
-          : ''
-      }`}
+      date={date}
+      memo={finalMemo}
     />
   );
 };
 
-export default RecurrentTransfer;
+export default FillRecurrentTransfer;

@@ -4,21 +4,22 @@ import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {Convert} from 'src/interfaces/transaction.interface';
+import {ReceivedInterests} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
+import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
-import Icon from './Icon';
+import Icon from '../../hive/Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: Convert;
+  transaction: ReceivedInterests;
   locale: string;
   theme: Theme;
   token?: boolean;
   useIcon?: boolean;
 };
-const ConvertTransactionComponent = ({
+const ReceivedInterestTransactionComponent = ({
   transaction,
   user,
   locale,
@@ -26,7 +27,7 @@ const ConvertTransactionComponent = ({
   useIcon,
   theme,
 }: Props) => {
-  const {timestamp, amount} = transaction;
+  const {timestamp, interest} = transaction;
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -35,31 +36,30 @@ const ConvertTransactionComponent = ({
     day: '2-digit',
   });
 
-  const formattedAmount = withCommas(amount);
-
   return (
     <ItemCardExpandable
       theme={theme}
-      toggle
+      toggle={true}
       setToggle={() => {}}
       icon={
         useIcon ? (
           <Icon
-            name={Icons.CONVERT}
+            name={Icons.SAVINGS}
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
-            width={24}
-            height={24}
           />
         ) : null
       }
-      textLine1={translate('wallet.operations.convert.start_convert', {
-        amount: `${formattedAmount} ${amount.split(' ')[1]}`,
-      })}
       date={date}
+      textLine1={translate(
+        'wallet.operations.savings.info_received_interests',
+        {
+          amount: `${withCommas(interest)} ${getCurrency('HBD')}`,
+        },
+      )}
     />
   );
 };
 
-export default ConvertTransactionComponent;
+export default ReceivedInterestTransactionComponent;

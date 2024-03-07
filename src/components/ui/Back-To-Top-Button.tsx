@@ -3,7 +3,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
-import Icon from './Icon';
+import Icon from '../hive/Icon';
 
 interface BackToTopButtonProps {
   element: any;

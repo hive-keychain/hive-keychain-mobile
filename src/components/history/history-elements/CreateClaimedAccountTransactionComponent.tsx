@@ -4,21 +4,20 @@ import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {CreateAccount} from 'src/interfaces/transaction.interface';
+import {CreateClaimedAccount} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
-import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
-import Icon from './Icon';
+import Icon from '../../hive/Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: CreateAccount;
+  transaction: CreateClaimedAccount;
   locale: string;
   theme: Theme;
   token?: boolean;
   useIcon?: boolean;
 };
-const CreateAccountTransactionComponent = ({
+const CreateClaimedAccountTransactionComponent = ({
   transaction,
   user,
   locale,
@@ -26,7 +25,7 @@ const CreateAccountTransactionComponent = ({
   useIcon,
   theme,
 }: Props) => {
-  const {timestamp, creator, new_account_name, fee} = transaction;
+  const {timestamp, creator, new_account_name} = transaction;
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -34,8 +33,6 @@ const CreateAccountTransactionComponent = ({
     month: '2-digit',
     day: '2-digit',
   });
-
-  const formattedFee = withCommas(fee);
 
   return (
     <ItemCardExpandable
@@ -45,7 +42,7 @@ const CreateAccountTransactionComponent = ({
       icon={
         useIcon ? (
           <Icon
-            name={Icons.ACCOUNT_CREATE}
+            name={Icons.CREATE_CLAIMED_ACCOUNT}
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
@@ -53,12 +50,11 @@ const CreateAccountTransactionComponent = ({
         ) : null
       }
       date={date}
-      textLine1={translate('wallet.claim.info_account_create', {
-        fee: formattedFee,
-        new_account_name,
+      textLine1={translate('wallet.claim.info_claim_account', {
+        account: `@${new_account_name}`,
       })}
     />
   );
 };
 
-export default CreateAccountTransactionComponent;
+export default CreateClaimedAccountTransactionComponent;

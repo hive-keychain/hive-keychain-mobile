@@ -4,22 +4,21 @@ import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {DepositSavings} from 'src/interfaces/transaction.interface';
+import {FillConvert} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
-import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
-import Icon from './Icon';
+import Icon from '../../hive/Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: DepositSavings;
+  transaction: FillConvert;
   locale: string;
   theme: Theme;
   token?: boolean;
   useIcon?: boolean;
 };
-const DepositSavingsTransactionComponent = ({
+const FillConvertTransactionComponent = ({
   transaction,
   user,
   locale,
@@ -27,7 +26,7 @@ const DepositSavingsTransactionComponent = ({
   useIcon,
   theme,
 }: Props) => {
-  const {timestamp, amount, to, from} = transaction;
+  const {timestamp, amount_in, amount_out} = transaction;
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -36,7 +35,8 @@ const DepositSavingsTransactionComponent = ({
     day: '2-digit',
   });
 
-  const formattedAmount = withCommas(amount);
+  const formattedAmountIn = withCommas(amount_in);
+  const formattedAmountOut = withCommas(amount_out);
 
   return (
     <ItemCardExpandable
@@ -46,19 +46,22 @@ const DepositSavingsTransactionComponent = ({
       icon={
         useIcon ? (
           <Icon
-            name={Icons.SAVINGS}
+            name={Icons.CONVERT}
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
+            width={24}
+            height={24}
           />
         ) : null
       }
-      textLine1={translate('wallet.operations.savings.info_deposit_savings', {
-        amount: `${formattedAmount} ${getCurrency('HBD')}`,
-      })}
       date={date}
+      textLine1={translate('wallet.operations.convert.fill_convert_request')}
+      textLine2={`${formattedAmountOut} ${
+        amount_out.split(' ')[1]
+      } => ${formattedAmountIn} ${amount_in.split(' ')[1]}`}
     />
   );
 };
 
-export default DepositSavingsTransactionComponent;
+export default FillConvertTransactionComponent;

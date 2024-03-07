@@ -4,21 +4,21 @@ import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {WithdrawSavings} from 'src/interfaces/transaction.interface';
+import {CreateAccount} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
-import Icon from './Icon';
+import Icon from '../../hive/Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: WithdrawSavings;
+  transaction: CreateAccount;
   locale: string;
   theme: Theme;
   token?: boolean;
   useIcon?: boolean;
 };
-const FillWithdrawSavingsTransactionComponent = ({
+const CreateAccountTransactionComponent = ({
   transaction,
   user,
   locale,
@@ -26,7 +26,7 @@ const FillWithdrawSavingsTransactionComponent = ({
   useIcon,
   theme,
 }: Props) => {
-  const {timestamp, amount} = transaction;
+  const {timestamp, creator, new_account_name, fee} = transaction;
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -35,7 +35,7 @@ const FillWithdrawSavingsTransactionComponent = ({
     day: '2-digit',
   });
 
-  const formattedAmount = withCommas(amount);
+  const formattedFee = withCommas(fee);
 
   return (
     <ItemCardExpandable
@@ -45,19 +45,20 @@ const FillWithdrawSavingsTransactionComponent = ({
       icon={
         useIcon ? (
           <Icon
-            name={Icons.SAVINGS}
+            name={Icons.ACCOUNT_CREATE}
             theme={theme}
             bgImage={<BackgroundIconRed />}
             color={PRIMARY_RED_COLOR}
           />
         ) : null
       }
-      textLine1={translate('wallet.operations.savings.fill_withdraw_savings', {
-        amount: `${formattedAmount} ${amount.split(' ')[1]}`,
-      })}
       date={date}
+      textLine1={translate('wallet.claim.info_account_create', {
+        fee: formattedFee,
+        new_account_name,
+      })}
     />
   );
 };
 
-export default FillWithdrawSavingsTransactionComponent;
+export default CreateAccountTransactionComponent;

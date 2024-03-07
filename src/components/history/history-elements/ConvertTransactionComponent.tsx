@@ -4,21 +4,21 @@ import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import React from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {FillCollateralizedConvert} from 'src/interfaces/transaction.interface';
+import {Convert} from 'src/interfaces/transaction.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
-import Icon from './Icon';
+import Icon from '../../hive/Icon';
 
 type Props = {
   user: ActiveAccount;
-  transaction: FillCollateralizedConvert;
+  transaction: Convert;
   locale: string;
   theme: Theme;
   token?: boolean;
   useIcon?: boolean;
 };
-const FillCollateralizedConvertTransactionComponent = ({
+const ConvertTransactionComponent = ({
   transaction,
   user,
   locale,
@@ -26,7 +26,7 @@ const FillCollateralizedConvertTransactionComponent = ({
   useIcon,
   theme,
 }: Props) => {
-  const {timestamp, amount_in, amount_out} = transaction;
+  const {timestamp, amount} = transaction;
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
   ).toLocaleDateString([locale], {
@@ -35,8 +35,7 @@ const FillCollateralizedConvertTransactionComponent = ({
     day: '2-digit',
   });
 
-  const formattedAmountIn = withCommas(amount_in);
-  const formattedAmountOut = withCommas(amount_out);
+  const formattedAmount = withCommas(amount);
 
   return (
     <ItemCardExpandable
@@ -55,13 +54,12 @@ const FillCollateralizedConvertTransactionComponent = ({
           />
         ) : null
       }
+      textLine1={translate('wallet.operations.convert.start_convert', {
+        amount: `${formattedAmount} ${amount.split(' ')[1]}`,
+      })}
       date={date}
-      textLine1={translate('wallet.operations.convert.fill_convert_request')}
-      textLine2={` ${formattedAmountOut} ${
-        amount_out.split(' ')[1]
-      } => ${formattedAmountIn} ${amount_in.split(' ')[1]}`}
     />
   );
 };
 
-export default FillCollateralizedConvertTransactionComponent;
+export default ConvertTransactionComponent;

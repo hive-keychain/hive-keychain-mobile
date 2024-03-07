@@ -1,6 +1,6 @@
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import {BackToTopButton} from 'components/hive/Back-To-Top-Button';
 import AssetImage from 'components/ui/AssetImage';
+import {BackToTopButton} from 'components/ui/Back-To-Top-Button';
 import Separator from 'components/ui/Separator';
 import React, {useRef, useState} from 'react';
 import {
