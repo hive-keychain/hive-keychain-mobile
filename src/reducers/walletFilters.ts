@@ -12,12 +12,10 @@ export const DEFAULT_WALLET_FILTER: WalletHistoryFilter = {
     transfer: false,
     claim_reward_balance: false,
     delegate_vesting_shares: false,
-    claim_account: false,
     savings: false,
     power_up_down: false,
     convert: false,
     account_create: false,
-    create_claimed_account: false,
   },
 };
 

@@ -91,6 +91,8 @@ const getAccountTransactions = async (
             memoKey,
           )) as Transfer;
 
+          specificTransaction.type = 'transfer';
+          specificTransaction.subType = 'transfer';
           break;
         }
         case 'recurrent_transfer': {
@@ -99,6 +101,8 @@ const getAccountTransactions = async (
             specificTransaction,
             memoKey,
           )) as RecurrentTransfer;
+          specificTransaction.type = 'transfer';
+          specificTransaction.subType = 'recurrent_transfer';
           break;
         }
         case 'fill_recurrent_transfer': {
@@ -121,6 +125,8 @@ const getAccountTransactions = async (
             specificTransaction,
             memoKey,
           )) as FillRecurrentTransfer;
+          specificTransaction.type = 'transfer';
+          specificTransaction.subType = 'fill_recurrent_transfer';
           break;
         }
         case 'claim_reward_balance': {
@@ -181,10 +187,6 @@ const getAccountTransactions = async (
           specificTransaction.subType = 'fill_transfer_from_savings';
           break;
         }
-        case 'claim_account': {
-          specificTransaction = e[1].op[1] as ClaimAccount;
-          break;
-        }
         case 'convert': {
           specificTransaction = e[1].op[1] as Convert;
           specificTransaction.type = 'convert';
@@ -209,12 +211,22 @@ const getAccountTransactions = async (
           specificTransaction.subType = 'fill_collateralized_convert_request';
           break;
         }
+        case 'claim_account': {
+          specificTransaction = e[1].op[1] as ClaimAccount;
+          specificTransaction.type = 'account_create';
+          specificTransaction.subType = 'claim_account';
+          break;
+        }
         case 'create_claimed_account': {
           specificTransaction = e[1].op[1] as CreateClaimedAccount;
+          specificTransaction.type = 'account_create';
+          specificTransaction.subType = 'create_claimed_account';
           break;
         }
         case 'account_create': {
           specificTransaction = e[1].op[1] as CreateAccount;
+          specificTransaction.type = 'account_create';
+          specificTransaction.subType = 'account_create';
           break;
         }
       }

@@ -61,38 +61,38 @@ const WalletTransactionInfo = ({
   const getTransactionContent = () => {
     switch (transaction.type) {
       case 'transfer':
-        return (
-          <Transfer
-            transaction={transaction as TransferInterface}
-            user={user}
-            locale={locale}
-            useIcon={true}
-            theme={theme}
-          />
-        );
-
-      case 'recurrent_transfer':
-        return (
-          <RecurrentTransfer
-            transaction={transaction as RecurrentTransferInterface}
-            user={user}
-            locale={locale}
-            useIcon={true}
-            theme={theme}
-          />
-        );
-
-      case 'fill_recurrent_transfer':
-        return (
-          <FillRecurrentTransfer
-            transaction={transaction as FillRecurrentTransferInterface}
-            user={user}
-            locale={locale}
-            useIcon={true}
-            theme={theme}
-          />
-        );
-
+        switch (transaction.subType) {
+          case 'transfer':
+            return (
+              <Transfer
+                transaction={transaction as TransferInterface}
+                user={user}
+                locale={locale}
+                useIcon={true}
+                theme={theme}
+              />
+            );
+          case 'recurrent_transfer':
+            return (
+              <RecurrentTransfer
+                transaction={transaction as RecurrentTransferInterface}
+                user={user}
+                locale={locale}
+                useIcon={true}
+                theme={theme}
+              />
+            );
+          case 'fill_recurrent_transfer':
+            return (
+              <FillRecurrentTransfer
+                transaction={transaction as FillRecurrentTransferInterface}
+                user={user}
+                locale={locale}
+                useIcon={true}
+                theme={theme}
+              />
+            );
+        }
       case 'claim_reward_balance':
         return (
           <ClaimRewardsTransactionComponent
@@ -108,17 +108,6 @@ const WalletTransactionInfo = ({
         return (
           <DelegationTransactionComponent
             transaction={transaction as Delegation}
-            user={user}
-            locale={locale}
-            useIcon={true}
-            theme={theme}
-          />
-        );
-
-      case 'claim_account':
-        return (
-          <ClaimAccountTransactionComponent
-            transaction={transaction as ClaimAccount}
             user={user}
             locale={locale}
             useIcon={true}
@@ -240,27 +229,40 @@ const WalletTransactionInfo = ({
         }
       }
 
-      case 'account_create':
-        return (
-          <CreateAccountTransactionComponent
-            transaction={transaction as CreateAccount}
-            user={user}
-            locale={locale}
-            useIcon={true}
-            theme={theme}
-          />
-        );
-
-      case 'create_claimed_account':
-        return (
-          <CreateClaimedAccountTransactionComponent
-            transaction={transaction as CreateClaimedAccount}
-            user={user}
-            locale={locale}
-            useIcon={true}
-            theme={theme}
-          />
-        );
+      case 'account_create': {
+        switch (transaction.subType) {
+          case 'account_create':
+            return (
+              <CreateAccountTransactionComponent
+                transaction={transaction as CreateAccount}
+                user={user}
+                locale={locale}
+                useIcon={true}
+                theme={theme}
+              />
+            );
+          case 'claim_account':
+            return (
+              <ClaimAccountTransactionComponent
+                transaction={transaction as ClaimAccount}
+                user={user}
+                locale={locale}
+                useIcon={true}
+                theme={theme}
+              />
+            );
+          case 'create_claimed_account':
+            return (
+              <CreateClaimedAccountTransactionComponent
+                transaction={transaction as CreateClaimedAccount}
+                user={user}
+                locale={locale}
+                useIcon={true}
+                theme={theme}
+              />
+            );
+        }
+      }
     }
   };
   return <View>{getTransactionContent()}</View>;
