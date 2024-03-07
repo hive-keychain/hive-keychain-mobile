@@ -1,13 +1,7 @@
 import {Tab as TabType} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useState} from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import Orientation, {OrientationType} from 'react-native-orientation-locker';
 import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
@@ -56,13 +50,6 @@ const Browser = ({
   useEffect(() => {
     setSearchUrl(url);
   }, [url]);
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      StatusBar.setHidden(true);
-    });
-
-    return unsubscribe;
-  }, [navigation]);
 
   useEffect(() => {
     setBrowserFocus(false);
