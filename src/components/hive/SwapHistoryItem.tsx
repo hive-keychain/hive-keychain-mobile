@@ -48,7 +48,14 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
       default:
         break;
     }
-    return <Icon theme={theme} name={iconName} color={PRIMARY_RED_COLOR} />;
+    return (
+      <Icon
+        theme={theme}
+        name={iconName}
+        color={PRIMARY_RED_COLOR}
+        additionalContainerStyle={styles.statusIcon}
+      />
+    );
   };
 
   const renderSwapItemStatusIndicator = (status: SwapStatus) => {
@@ -70,7 +77,14 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
         iconName = Icons.BACK_TIME;
         break;
     }
-    return <Icon theme={theme} name={iconName} color={PRIMARY_RED_COLOR} />;
+    return (
+      <Icon
+        theme={theme}
+        name={iconName}
+        color={PRIMARY_RED_COLOR}
+        additionalContainerStyle={styles.statusIcon}
+      />
+    );
   };
 
   const renderTokensInStep = (step: IStepHistory) => {
@@ -91,11 +105,9 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
 
   const renderStepItem = (step: IStepHistory) => {
     return (
-      <View
-        key={`${step.id}-${step.stepNumber}`}
-        style={[styles.flexRowBetween, styles.fullWidth, styles.marginTop]}>
-        <Text style={styles.textBase}>{step.stepNumber}</Text>
-        <View style={styles.flexRowCentered}>{renderTokensInStep(step)}</View>
+      <View key={`${step.id}-${step.stepNumber}`} style={styles.stepDetail}>
+        <Text style={styles.textBase}>{step.stepNumber} - </Text>
+        <View style={{}}>{renderTokensInStep(step)}</View>
         {renderStepItemStatusIndicator(step.status)}
       </View>
     );
@@ -110,27 +122,26 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
     <TouchableOpacity
       style={[getCardStyle(theme).defaultCardItem, styles.container]}
       onPress={() => setIsExpanded(!isExpanded)}>
-      <View style={[styles.flexRowBetween]}>
+      <View style={[styles.historyItemDetail]}>
         <Icon
           theme={theme}
           name={Icons.REPEAT}
           bgImage={<BackgroundIconRed />}
           color={PRIMARY_RED_COLOR}
+          additionalContainerStyle={{marginRight: 16}}
         />
-        <View style={styles.flexRowCentered}>
-          <Text style={styles.textBase}>
-            {item.amount} {item.startToken}
-          </Text>
-          <Icon
-            theme={theme}
-            name={Icons.REPEAT_CIRCLE}
-            color={PRIMARY_RED_COLOR}
-            additionalContainerStyle={styles.paddingHorizontal}
-          />
-          <Text style={styles.textBase}>
-            {item.received ? item.received : '...'} {item.endToken}
-          </Text>
-        </View>
+        <Text style={[styles.textBase, styles.tokenIn]}>
+          {item.amount} {item.startToken}
+        </Text>
+        <Icon
+          theme={theme}
+          name={Icons.REPEAT_CIRCLE}
+          color={PRIMARY_RED_COLOR}
+          additionalContainerStyle={styles.swapIcon}
+        />
+        <Text style={[styles.textBase, styles.tokenOut]}>
+          {item.received ? item.received : '...'} {item.endToken}
+        </Text>
         <Icon
           theme={theme}
           name={Icons.EXPAND_THIN}
@@ -143,7 +154,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
         {renderSwapItemStatusIndicator(item.status)}
       </View>
       {isExpanded && (
-        <View style={[styles.flexCentered, styles.marginTop]}>
+        <View style={[styles.marginTop]}>
           {(item.status === SwapStatus.STARTED ||
             item.status !== SwapStatus.COMPLETED) && (
             <View style={[styles.flexCentered, styles.fullWidth]}>
@@ -153,16 +164,10 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
           {item.history.map((stepHistory) => renderStepItem(stepHistory))}
           <TouchableOpacity
             onPress={() => onHandleCopyID(item.id)}
-            style={[styles.flexRowBetween, styles.fullWidth, styles.marginTop]}>
-            <Text style={styles.textBase}>{translate('common.id')}</Text>
-            <View style={styles.flexRowCentered}>
-              <Text style={styles.textBase}>
-                {item.id.length > 15
-                  ? `${item.id.substring(0, 15)}...`
-                  : item.id}
-              </Text>
-              <Icon theme={theme} name={Icons.COPY} />
-            </View>
+            style={[styles.marginTop]}>
+            <Text style={styles.textBase}>
+              {translate('common.id')} - {item.id}
+            </Text>
           </TouchableOpacity>
         </View>
       )}
@@ -175,7 +180,35 @@ const getStyles = (theme: Theme) =>
     container: {
       display: 'flex',
       flexDirection: 'column',
+      paddingHorizontal: 16,
     },
+
+    historyItemDetail: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    tokenIn: {
+      flex: 3,
+      textAlign: 'right',
+    },
+    tokenOut: {
+      flex: 4,
+      textAlign: 'left',
+    },
+    swapIcon: {
+      marginHorizontal: 4,
+    },
+    statusIcon: {
+      marginLeft: 8,
+    },
+    stepDetail: {
+      marginTop: 10,
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
+    },
+
     flexRowBetween: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -188,6 +221,7 @@ const getStyles = (theme: Theme) =>
     textBase: {
       color: getColors(theme).secondaryText,
       ...button_link_primary_small,
+      textAlignVertical: 'center',
     },
     smallIcon: {
       width: 14,
@@ -207,9 +241,6 @@ const getStyles = (theme: Theme) =>
     },
     marginTop: {
       marginTop: 10,
-    },
-    paddingHorizontal: {
-      paddingHorizontal: 4,
     },
   });
 
