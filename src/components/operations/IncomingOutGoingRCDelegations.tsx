@@ -12,7 +12,7 @@ import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {FontPoppinsName, title_primary_body_2} from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize} from 'utils/format';
+import {formatBalance} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
@@ -46,7 +46,6 @@ const IncomingOutGoingRCDelegations = ({
       const delegations = await RcDelegationsUtils.getAllOutgoingDelegations(
         user.name,
       );
-      console.log({delegations});
       setRcDelegations(delegations);
     }
   };
@@ -66,7 +65,7 @@ const IncomingOutGoingRCDelegations = ({
     <OperationThemed
       childrenTop={<Separator />}
       childrenMiddle={
-        <>
+        <View style={{justifyContent: 'flex-start'}}>
           <Separator height={30} />
           <View
             style={[
@@ -74,15 +73,16 @@ const IncomingOutGoingRCDelegations = ({
               getCardStyle(theme).defaultCardItem,
             ]}>
             <Text style={styles.title}>
-              {translate('common.total')} {capitalize(type)}
+              {translate(`wallet.operations.rc_delegation.total_${type}`)}
             </Text>
-            <Text style={styles.title}>
-              {total.gigaRcValue}{' '}
-              {translate('wallet.operations.rc_delegation.giga_rc')}
-              <Text style={styles.italicText}>
-                (≈{total.hpValue} {getCurrency('HP')})
+            <View style={styles.title}>
+              <Text style={styles.title}>
+                {RcDelegationsUtils.formatRcWithUnit(total.gigaRcValue, true)}
               </Text>
-            </Text>
+              <Text style={styles.italicText}>
+                ≈{formatBalance(+total.hpValue)} {getCurrency('HP')}
+              </Text>
+            </View>
           </View>
           <Separator
             drawLine
@@ -98,7 +98,7 @@ const IncomingOutGoingRCDelegations = ({
               }
             />
           )}
-        </>
+        </View>
       }
     />
   );
@@ -108,15 +108,19 @@ const getStyles = (theme: Theme) =>
     flexRowBetween: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
     },
     title: {
       ...title_primary_body_2,
       color: getColors(theme).secondaryText,
+      flexDirection: 'column',
       fontSize: 15,
+      textAlign: 'right',
     },
     opaque: {opacity: 0.6},
     italicText: {
       fontFamily: FontPoppinsName.ITALIC,
+      textAlign: 'right',
     },
     bottomLine: {
       borderColor: getColors(theme).lineSeparatorStroke,

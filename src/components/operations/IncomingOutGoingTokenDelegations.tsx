@@ -20,7 +20,7 @@ import {
 } from 'utils/hiveEngine';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
-import IncomingOutGoingTokenDelegationItem from './Incoming-outgoing-token-delegation-item';
+import IncomingOutGoingTokenDelegationItem from './IncomingOutgoingTokenDelegationItem';
 import {TokenDelegationType} from './MoreTokenInfo';
 import OperationThemed from './OperationThemed';
 
@@ -83,7 +83,7 @@ const IncomingOutGoingTokenDelegations = ({
     <OperationThemed
       childrenTop={<Separator />}
       childrenMiddle={
-        <>
+        <View>
           <Separator height={30} />
           {delegationType === 'Outgoing' && (
             <>
@@ -142,7 +142,7 @@ const IncomingOutGoingTokenDelegations = ({
               />
             </ScrollView>
           )}
-        </>
+        </View>
       }
     />
   );
