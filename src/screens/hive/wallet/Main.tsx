@@ -464,6 +464,8 @@ const Main = ({
                                 <Icon
                                   name={Icons.SEARCH}
                                   theme={theme}
+                                  width={18}
+                                  height={18}
                                   onClick={() => {
                                     setSearchValue('');
                                     setIsSearchOpen(false);
@@ -479,7 +481,7 @@ const Main = ({
                             theme={theme}
                             additionalContainerStyle={styles.search}
                             onClick={() => {
-                              setIsSearchOpen(!isSearchOpen);
+                              setIsSearchOpen(true);
                             }}
                             width={18}
                             height={18}
@@ -583,13 +585,14 @@ const getDimensionedStyles = (
       marginRight: width * 0.05,
     },
     search: {
-      marginRight: 4,
+      marginRight: 10,
     },
     separatorContainer: {
       borderWidth: 1,
       borderColor: getColors(theme).cardBorderColor,
       height: 1,
       backgroundColor: getColors(theme).separatorBgColor,
+      marginHorizontal: 10,
       width: '75%',
       flexShrink: 1,
     },
