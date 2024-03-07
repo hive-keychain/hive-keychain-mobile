@@ -171,7 +171,7 @@ const CreateAccountStepOne = ({
           (localAccount: Account) => localAccount.name === selectedAccount,
         );
         navigate('TemplateStack', {
-          titleScreen: 'Create Account Step 2',
+          titleScreen: translate('navigation.create_account'),
           component: (
             <StepTwo
               selectedAccount={usedAccount}
