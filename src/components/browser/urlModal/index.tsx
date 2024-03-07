@@ -91,7 +91,6 @@ const UrlModal = ({
       backdropOpacity={0.8}
       animationInTiming={SLIDE_TIME}
       animationOutTiming={SLIDE_TIME}
-      statusBarTranslucent
       useNativeDriver>
       <View style={styles.urlModalContent}>
         <TextInput
