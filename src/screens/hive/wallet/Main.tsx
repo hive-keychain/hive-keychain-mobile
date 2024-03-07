@@ -530,7 +530,6 @@ const Main = ({
               </ScrollView>
             </ScrollView>
           </ScrollView>
-          <View style={getCardStyle(theme).filledWrapper} />
         </View>
       ) : (
         <Loader animatedLogo />
