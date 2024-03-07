@@ -38,6 +38,7 @@ export const getColors = (theme: Theme) => {
   return {
     primaryText: theme === Theme.LIGHT ? '#484848' : '#FFF',
     secondaryText: theme === Theme.LIGHT ? '#212838' : '#FFF',
+    secondaryTextInverted: theme === Theme.DARK ? '#212838' : '#FFF',
     symbolText: theme === Theme.LIGHT ? '#3D3D3D' : '#FFF',
     totalDisplayTextAmount: theme === Theme.LIGHT ? '#242424' : '#FFF',
     quinaryText: theme === Theme.LIGHT ? '#7F8288' : '#FFF',
