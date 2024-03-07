@@ -67,7 +67,7 @@ const PendingSavingsWithdrawalPageComponent = ({
       onUpdate(newList.filter((item) => item.id !== toCancelSaving.id));
       Toast.show(
         translate(
-          'wallet.operations.savings.pending_withdraw.cancelled.success',
+          'wallet.operations.savings.pending_withdraw.canceled.success',
         ),
         Toast.LONG,
       );

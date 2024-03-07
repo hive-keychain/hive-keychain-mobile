@@ -43,7 +43,7 @@ const DelegationTransactionComponent = ({
   const isCancellation = parseFloat(formattedAmount) === 0;
   const finalAmount = `${formattedAmount} ${amount.split(' ')[1]}`;
   const cancellationText = `${translate(
-    'wallet.operations.delegation.cancelled_delegation',
+    'wallet.operations.delegation.canceled_delegation',
     {
       delegatee,
     },

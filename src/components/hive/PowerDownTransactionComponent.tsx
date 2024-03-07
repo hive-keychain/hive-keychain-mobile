@@ -40,7 +40,7 @@ const PowerDownTransactionComponent = ({
   const formattedAmount = withCommas(amount);
   const isCancellation = parseFloat(formattedAmount) === 0;
   const text = isCancellation
-    ? `${translate('wallet.operations.powerdown.cancelled_power_down')}`
+    ? `${translate('wallet.operations.powerdown.canceled_power_down')}`
     : `${translate('common.initiated_a')} ${formattedAmount} ${
         amount.split(' ')[1]
       } `;

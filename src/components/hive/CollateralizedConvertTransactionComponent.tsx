@@ -55,9 +55,9 @@ const CollateralizedConvertTransactionComponent = ({
         ) : null
       }
       date={date}
-      textLine1={translate('wallet.operations.convert.started_a')}
-      textLine2={` ${formattedAmount} ${amount.split(' ')[1]}`}
-      textLine3={translate('wallet.operations.convert.start_collateralized')}
+      textLine1={translate('wallet.operations.convert.start_collateralized', {
+        amount: `${formattedAmount} ${amount.split(' ')[1]}`,
+      })}
     />
   );
 };

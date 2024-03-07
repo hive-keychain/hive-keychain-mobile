@@ -54,9 +54,9 @@ const ConvertTransactionComponent = ({
           />
         ) : null
       }
-      textLine1={translate('wallet.operations.convert.started_a')}
-      textLine2={` ${formattedAmount} ${amount.split(' ')[1]}`}
-      textLine3={translate('wallet.operations.convert.start_convert')}
+      textLine1={translate('wallet.operations.convert.start_convert', {
+        amount: `${formattedAmount} ${amount.split(' ')[1]}`,
+      })}
       date={date}
     />
   );
