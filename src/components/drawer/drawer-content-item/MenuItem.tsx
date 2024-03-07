@@ -6,6 +6,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
   ViewStyle,
   useWindowDimensions,
@@ -38,7 +39,10 @@ const MenuItem = (props: Props) => {
   const styles = getStyles(props.theme, dimensions, !!props.leftSideComponent);
 
   return (
-    <View style={[styles.container, props.additionalContainerStyle]}>
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={props.onPress}
+      style={[styles.container, props.additionalContainerStyle]}>
       <View style={styles.iconContainer}>{props.iconImage}</View>
       <View style={[styles.flexShrinkHeightFixed]}>
         <View style={[styles.flexRowStart]}>
@@ -63,7 +67,7 @@ const MenuItem = (props: Props) => {
           />
         )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
