@@ -149,6 +149,7 @@ const BrowserHeader = ({
                 onFocus={() => {
                   startSearch(true);
                 }}
+                disableFocus
                 additionalContainerStyle={styles.searchBarContainer}
               />
               {renderFavoritesButton()}

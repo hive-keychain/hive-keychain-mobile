@@ -12,6 +12,7 @@ interface Props {
   leftIcon?: IconNode;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalCustomInputStyle?: StyleProp<TextStyle>;
+  disableFocus?: boolean;
 }
 
 const CustomSearchBar = ({

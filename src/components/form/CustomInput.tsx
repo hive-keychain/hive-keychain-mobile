@@ -1,5 +1,5 @@
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
+import React, {MutableRefObject, useRef, useState} from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -27,6 +27,7 @@ type Props = InputProps & {
   inputColor?: string;
   makeExpandable?: boolean;
   autoCompleteValues?: AutoCompleteValuesType;
+  disableFocus?: boolean;
 };
 
 export default ({
@@ -37,6 +38,8 @@ export default ({
   additionalInputContainerStyle,
   makeExpandable,
   autoCompleteValues,
+  disableFocus,
+  onFocus,
   ...props
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -49,20 +52,23 @@ export default ({
     inputColor,
     textAlign,
   });
-
+  const ref: MutableRefObject<Input> = useRef(null);
   const handleOnBlur = () => {
     setTimeout(() => {
       setIsFocused(false);
     }, 200);
   };
-
+  const onFocusHandler = () => {
+    if (!!onFocus) onFocus(null);
+    setIsFocused(true);
+    if (disableFocus && ref.current) ref.current.blur();
+  };
   const renderInput = () => {
     if (autoCompleteValues) {
       return (
         <View>
           <Input
             autoCapitalize={'none'}
-            onFocus={() => setIsFocused(true)}
             onBlur={handleOnBlur}
             placeholderTextColor="#B9C9D6"
             containerStyle={[styles.container, containerStyle]}
@@ -74,6 +80,7 @@ export default ({
               additionalInputContainerStyle,
             ]}
             {...props}
+            onFocus={onFocus}
           />
           {isFocused && autoCompleteValues && (
             <AutoCompleteBox
@@ -88,9 +95,9 @@ export default ({
       return (
         <Input
           autoCapitalize={'none'}
-          onFocus={() => setIsFocused(true)}
           onBlur={handleOnBlur}
           placeholderTextColor="#B9C9D6"
+          ref={ref}
           containerStyle={[styles.container, containerStyle]}
           inputStyle={styles.input}
           leftIconContainerStyle={styles.leftIcon}
@@ -100,6 +107,7 @@ export default ({
             additionalInputContainerStyle,
           ]}
           {...props}
+          onFocus={onFocusHandler}
         />
       );
   };
