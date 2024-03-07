@@ -2,7 +2,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import {CustomFilterBox} from 'components/form/CustomFilterBox';
-import {WalletHistoryComponent} from 'components/history/Wallet-history-component';
+import {WalletHistoryComponent} from 'components/history/WalletHistoryComponent';
 import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import CustomIconButton from 'components/ui/CustomIconButton';

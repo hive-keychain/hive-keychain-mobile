@@ -1,6 +1,6 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {WalletHistoryComponentProps} from 'components/history/Wallet-history-component';
+import {WalletHistoryComponentProps} from 'components/history/WalletHistoryComponent';
 import {CancelTokenDelegationOperationProps} from 'components/operations/Cancel-token-delegation';
 import {ConfirmationPageProps} from 'components/operations/Confirmation';
 import {ConvertOperationProps} from 'components/operations/Convert';

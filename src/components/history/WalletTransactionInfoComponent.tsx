@@ -33,14 +33,14 @@ import CreateAccountTransactionComponent from './history-elements/CreateAccountT
 import CreateClaimedAccountTransactionComponent from './history-elements/CreateClaimedAccountTransactionComponent';
 import DelegationTransactionComponent from './history-elements/DelegationTransactionComponent';
 import DepositSavingsTransactionComponent from './history-elements/DepositSavingsTransactionComponent';
-import FillRecurrentTransfer from './history-elements/Fill-recurrent-transfer';
 import FillCollateralizedConvertTransactionComponent from './history-elements/FillCollateralizedConvertTransactionComponent';
 import FillConvertTransactionComponent from './history-elements/FillConvertTransactionComponent';
+import FillRecurrentTransfer from './history-elements/FillRecurrentTransfer';
 import FillWithdrawSavingsTransactionComponent from './history-elements/FillWithdrawSavingsTransactionComponent';
 import PowerDownTransactionComponent from './history-elements/PowerDownTransactionComponent';
 import PowerUpTransactionComponent from './history-elements/PowerUpTransactionComponent';
 import ReceivedInterestsTransactionComponent from './history-elements/ReceivedInterestsTransactionComponent';
-import RecurrentTransfer from './history-elements/Recurrent-transfer';
+import RecurrentTransfer from './history-elements/RecurrentTransfer';
 import WithdrawSavingsTransactionComponent from './history-elements/WithdrawSavingsTransactionComponent';
 
 type Props = {
