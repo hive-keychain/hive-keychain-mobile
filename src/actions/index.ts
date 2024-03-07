@@ -50,6 +50,7 @@ export const lock = () => {
   return action;
 };
 
+export * from 'actions/accountValueDisplay';
 export * from 'actions/accounts';
 export * from 'actions/active-rpc';
 export * from 'actions/browser';

@@ -1,8 +1,10 @@
 import {ExtendedAccount} from '@hiveio/dhive';
+import {setAccountValueDisplay} from 'actions/index';
 import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
@@ -10,6 +12,7 @@ import {
   getFontSizeSmallDevices,
   headerH2Primary,
 } from 'src/styles/typography';
+import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {withCommas} from 'utils/format';
 import {getAccountValue} from 'utils/price';
@@ -20,11 +23,18 @@ type Props = {
   title: string;
   properties: GlobalProperties;
   theme: Theme;
-};
-const AccountValue = ({prices, account, properties, theme, title}: Props) => {
+} & PropsFromRedux;
+const AccountValue = ({
+  prices,
+  account,
+  properties,
+  theme,
+  title,
+  accountValueDisplay,
+  setAccountValueDisplay,
+}: Props) => {
   const [hideValue, setHideValue] = useState(false);
   const [accountValue, setAccountValue] = useState([]);
-  const [accountValueIndex, setAccountValueIndex] = useState(0);
   useEffect(() => {
     if (prices.bitcoin && account && properties.globals) {
       const accVal = getAccountValue(account, prices, properties.globals) + '';
@@ -47,15 +57,15 @@ const AccountValue = ({prices, account, properties, theme, title}: Props) => {
   return (
     <TouchableOpacity
       onLongPress={() => {
-        let index = accountValueIndex + 1;
+        let index = accountValueDisplay + 1;
         if (index === 3) index = 0;
-        setAccountValueIndex(index);
+        setAccountValueDisplay(index);
       }}>
       <Text style={[styles.title, styles.textBase, styles.textCentered]}>
         {title}
       </Text>
       <Text style={[styles.accountValue, styles.textBase]}>
-        {accountValue[accountValueIndex]}
+        {accountValue[accountValueDisplay]}
       </Text>
     </TouchableOpacity>
   );
@@ -81,4 +91,13 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     },
   });
 
-export default AccountValue;
+const connector = connect(
+  (state: RootState) => ({
+    accountValueDisplay: state.accountValueDisplay,
+  }),
+  {
+    setAccountValueDisplay,
+  },
+);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(AccountValue);

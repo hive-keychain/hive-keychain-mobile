@@ -16,6 +16,7 @@ const persistConfig = {
     'hive_authentication_service',
     'historyFilters',
     'tokensFilters',
+    'accountValueDisplay',
   ],
   transforms,
 };

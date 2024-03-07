@@ -1,4 +1,5 @@
 import {combineReducers} from 'redux';
+import accountValueDisplay from './accountValueDisplay';
 import accounts from './accounts';
 import activeRpc from './active-rpc';
 import activeAccount from './activeAccount';
@@ -51,4 +52,5 @@ export default combineReducers({
   floatingBar,
   rpcSwitcher,
   activeRpc,
+  accountValueDisplay,
 });
