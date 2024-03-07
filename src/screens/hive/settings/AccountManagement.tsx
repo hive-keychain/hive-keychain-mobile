@@ -99,7 +99,7 @@ const AccountManagement = ({
           />
           <Separator height={10} />
           <Key
-            type={KeyTypes.posting}
+            type={KeyTypes.active}
             containerStyle={styles.cardKey}
             account={accounts.find((e) => e.name === username)}
             forgetKey={forgetKey}
@@ -107,7 +107,7 @@ const AccountManagement = ({
             theme={theme}
           />
           <Key
-            type={KeyTypes.active}
+            type={KeyTypes.posting}
             containerStyle={styles.cardKey}
             account={accounts.find((e) => e.name === username)}
             forgetKey={forgetKey}
