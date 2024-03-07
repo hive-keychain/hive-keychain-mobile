@@ -415,7 +415,8 @@
         "incoming": "Incoming Delegation",
         "outgoing": "Outgoing Delegation",
         "total_staked": "Total Staked",
-        "pending_unstake": "Pending Unstake"
+        "pending_unstake": "Pending Unstake",
+        "issuer": "Issuer"
       },
       "tokens_filter": {
         "comments_curationReward": "Curation reward",

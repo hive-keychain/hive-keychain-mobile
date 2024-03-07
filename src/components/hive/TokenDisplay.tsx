@@ -4,6 +4,7 @@ import IncomingOutGoingTokenDelegations from 'components/operations/IncomingOutG
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
 import {TransferOperationProps} from 'components/operations/Transfer';
 import {UnstakeTokenOperationProps} from 'components/operations/UnstakeToken';
+import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React from 'react';
 import {
@@ -177,6 +178,10 @@ const TokenDisplay = ({
     setToggle();
   };
 
+  const bottomLine = () => (
+    <Separator drawLine height={0.5} additionalLineStyle={styles.bottomLine} />
+  );
+
   return (
     <TouchableOpacity onPress={handleToogle} style={styles.container}>
       <View style={styles.flexRowBetween}>
@@ -221,69 +226,130 @@ const TokenDisplay = ({
             <TouchableOpacity
               onPress={() =>
                 Linking.openURL(`https://peakd.com/@${tokenInfo.issuer}`)
-              }>
-              <Text style={styles.textBodyItem}>@{tokenInfo.issuer}</Text>
+              }
+              style={styles.tokenInformationRow}>
+              <View
+                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text style={styles.textBodyItem}>
+                  {translate('wallet.operations.tokens.issuer')}
+                </Text>
+                <Text style={styles.textBodyItem}>@{tokenInfo.issuer}</Text>
+              </View>
             </TouchableOpacity>
           )}
-          <Text style={styles.textBodyItem}>
-            {translate('wallet.operations.tokens.total_value')} : $
-            {tokenTotalValue} (${tokenTotalValue}/Token)
-          </Text>
-          <Text style={styles.textBodyItem}>
-            {translate('wallet.operations.tokens.liquid_balance')} :{' '}
-            {value ? formatBalance(value) : 0}
-          </Text>
-          {tokenBalance && parseFloat(tokenBalance.delegationsIn) > 0 && (
-            <View style={styles.flexRowAligned}>
+          <View>
+            {bottomLine()}
+            <View style={styles.tokenInformationRow}>
               <Text style={styles.textBodyItem}>
-                {translate('wallet.operations.tokens.incoming')} :{' '}
-                {tokenBalance.delegationsIn}
+                {translate('wallet.operations.tokens.total_value')}
               </Text>
-              <Icon
-                name={Icons.LOGOUT}
-                theme={theme}
-                width={15}
-                height={15}
-                additionalContainerStyle={[
-                  styles.containerMarginLeft,
-                  styles.invertXAxis,
-                ]}
-                onClick={onGoToIncoming}
-                color={PRIMARY_RED_COLOR}
-              />
+              <Text style={styles.textBodyItem}>
+                ${tokenTotalValue} (${tokenTotalValue}/Token)
+              </Text>
             </View>
+          </View>
+
+          <View>
+            {bottomLine()}
+            <View style={styles.tokenInformationRow}>
+              <Text style={styles.textBodyItem}>
+                {translate('wallet.operations.tokens.liquid_balance')}
+              </Text>
+              <Text style={styles.textBodyItem}>
+                {value ? formatBalance(value) : 0}
+              </Text>
+            </View>
+          </View>
+
+          {tokenBalance && parseFloat(tokenBalance.delegationsIn) > 0 && (
+            <TouchableOpacity activeOpacity={1} onPress={onGoToIncoming}>
+              {bottomLine()}
+              <View
+                style={[
+                  {
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  },
+                ]}>
+                <View style={[styles.tokenInformationRow]}>
+                  <Text style={styles.textBodyItem}>
+                    {translate('wallet.operations.tokens.incoming')}
+                  </Text>
+                  <Text style={styles.textBodyItem}>
+                    {tokenBalance.delegationsIn}
+                  </Text>
+                </View>
+                <Icon
+                  name={Icons.LOGOUT}
+                  theme={theme}
+                  width={15}
+                  height={15}
+                  additionalContainerStyle={[
+                    styles.containerMarginLeft,
+                    styles.invertXAxis,
+                  ]}
+                  onClick={onGoToIncoming}
+                  color={PRIMARY_RED_COLOR}
+                />
+              </View>
+            </TouchableOpacity>
           )}
           {tokenBalance && parseFloat(tokenBalance.delegationsOut) > 0 && (
-            <View style={styles.flexRowAligned}>
-              <Text style={styles.textBodyItem}>
-                {translate('wallet.operations.tokens.outgoing')} :{' '}
-                {tokenBalance.delegationsOut}
-              </Text>
-              <Icon
-                name={Icons.LOGOUT}
-                theme={theme}
-                width={15}
-                height={15}
-                additionalContainerStyle={styles.containerMarginLeft}
-                onClick={onGoToOutgoing}
-                color={PRIMARY_RED_COLOR}
-              />
-            </View>
+            <TouchableOpacity activeOpacity={1} onPress={onGoToOutgoing}>
+              {bottomLine()}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}>
+                <View style={styles.tokenInformationRow}>
+                  <Text style={styles.textBodyItem}>
+                    {translate('wallet.operations.tokens.outgoing')}
+                  </Text>
+                  <Text style={styles.textBodyItem}>
+                    {tokenBalance.delegationsOut}
+                  </Text>
+                </View>
+                <Icon
+                  name={Icons.LOGOUT}
+                  theme={theme}
+                  width={15}
+                  height={15}
+                  additionalContainerStyle={[styles.containerMarginLeft]}
+                  onClick={onGoToOutgoing}
+                  color={PRIMARY_RED_COLOR}
+                />
+              </View>
+            </TouchableOpacity>
           )}
           {tokenInfo && tokenInfo.stakingEnabled && tokenBalance.stake && (
-            <Text style={styles.textBodyItem}>
-              {translate('wallet.operations.tokens.total_staked')} :{' '}
-              {tokenBalance.stake}
-            </Text>
+            <View>
+              {bottomLine()}
+              <View style={styles.tokenInformationRow}>
+                <Text style={styles.textBodyItem}>
+                  {translate('wallet.operations.tokens.total_staked')}
+                </Text>
+                <Text style={styles.textBodyItem}>{tokenBalance.stake}</Text>
+              </View>
+            </View>
           )}
           {tokenInfo &&
             tokenInfo.stakingEnabled &&
             tokenBalance.pendingUnstake &&
             parseFloat(tokenBalance.pendingUnstake) > 0 && (
-              <Text style={styles.textBodyItem}>
-                {translate('wallet.operations.tokens.pending_unstake')} :{' '}
-                {tokenBalance.pendingUnstake}
-              </Text>
+              <View>
+                {bottomLine()}
+                <View style={styles.tokenInformationRow}>
+                  <Text style={styles.textBodyItem}>
+                    {translate('wallet.operations.tokens.pending_unstake')}
+                  </Text>
+                  <Text style={styles.textBodyItem}>
+                    {tokenBalance.pendingUnstake}
+                  </Text>
+                </View>
+              </View>
             )}
           <View style={styles.buttonsContainer}>
             {renderAsSquareButton(
@@ -291,7 +357,7 @@ const TokenDisplay = ({
                 theme={theme}
                 name={Icons.TRANSFER}
                 {...styles.buttonIcon}
-                additionalContainerStyle={styles.marginRight}
+                additionalContainerStyle={[styles.marginRight]}
                 color={PRIMARY_RED_COLOR}
               />,
               translate('common.send'),
@@ -417,14 +483,13 @@ const getDimensionedStyles = ({
       margin: BUTTON_MARGIN_BETWEEN,
     },
     expandedItemContainer: {
-      marginTop: 10,
+      paddingVertical: 8,
     },
     textBodyItem: {
       ...fields_primary_text_2,
       color: getColors(theme).secondaryText,
       fontSize: 12,
       opacity: 0.7,
-      lineHeight: 14.7,
     },
     textButton: {
       ...title_secondary_body_3,
@@ -446,6 +511,21 @@ const getDimensionedStyles = ({
     },
     marginRight: {
       marginRight: BUTTON_ICON_TEXT_MARGIN,
+    },
+    bottomLine: {
+      width: '85%',
+      borderColor: getColors(theme).lineSeparatorStroke,
+      alignSelf: 'center',
+      marginVertical: 4,
+    },
+    displayItemContainer: {
+      width: '95%',
+    },
+    tokenInformationRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '95%',
+      marginVertical: 4,
     },
   });
 
