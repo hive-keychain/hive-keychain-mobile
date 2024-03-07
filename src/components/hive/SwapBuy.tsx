@@ -9,7 +9,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {MIN_SEPARATION_ELEMENTS, getElementHeight} from 'src/styles/spacing';
+import {MIN_SEPARATION_ELEMENTS} from 'src/styles/spacing';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
@@ -76,8 +76,8 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     toogleHeader: {
       width: '95%',
       alignSelf: 'center',
+      alignItems: 'center',
       zIndex: 10,
-      height: getElementHeight(width),
       marginBottom: MIN_SEPARATION_ELEMENTS,
     },
   });
