@@ -56,7 +56,6 @@ const PendingConvertions = ({
             )}
             keyExtractor={(listItem) => listItem.requestid.toString()}
             renderItem={(withdraw) => renderListItem(withdraw.item)}
-            style={styles.containerMaxHeight}
             ListEmptyComponent={() => {
               return (
                 <View style={[styles.containerCentered, styles.marginTop]}>
@@ -82,13 +81,8 @@ const getStyles = (theme: Theme) =>
       color: getColors(theme).secondaryText,
       ...button_link_primary_medium,
     },
-    containerMaxHeight: {
-      maxHeight: 400,
-    },
     containerCentered: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
     },
     marginTop: {
       marginTop: 30,
