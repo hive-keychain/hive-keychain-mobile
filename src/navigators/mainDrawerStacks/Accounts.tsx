@@ -1,4 +1,3 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
 import React from 'react';
@@ -50,7 +49,7 @@ export default () => {
               name={Icons.ARROW_LEFT}
               theme={theme}
               onClick={() =>
-                (navigation as DrawerNavigationHelpers).openDrawer()
+                navigation.navigate('WALLET', {screen: 'WalletScreen'})
               }
               color={getColors(theme).iconBW}
               additionalContainerStyle={styles.padding}
