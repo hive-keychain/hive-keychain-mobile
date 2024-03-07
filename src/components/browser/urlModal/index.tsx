@@ -91,9 +91,17 @@ const UrlModal = ({
       backdropOpacity={0.8}
       animationInTiming={SLIDE_TIME}
       animationOutTiming={SLIDE_TIME}
-      statusBarTranslucent
       useNativeDriver>
       <View style={styles.urlModalContent}>
+        <Icon
+          name={Icons.BACK}
+          theme={theme}
+          width={16}
+          height={16}
+          onClick={() => toggle(false)}
+          additionalContainerStyle={styles.backButton}
+          color={PRIMARY_RED_COLOR}
+        />
         <TextInput
           keyboardType="web-search"
           ref={urlInput}
@@ -167,7 +175,8 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
       justifyContent: 'flex-start',
       backgroundColor: getColors(theme).secondaryCardBgColor,
     },
-    option: {alignSelf: 'center', marginLeft: 20},
+    option: {alignSelf: 'center', marginLeft: 15},
+    backButton: {alignSelf: 'center', marginRight: 15},
     eraseText: {fontSize: 16, color: PRIMARY_RED_COLOR},
     urlModalContent: {
       flexDirection: 'row',

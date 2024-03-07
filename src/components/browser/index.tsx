@@ -223,7 +223,7 @@ const Browser = ({
           toggle={toggleVisibility}
           onNewSearch={onNewSearch}
           history={history}
-          url={searchUrl}
+          url={searchUrl === 'about:blank' ? '' : searchUrl}
           setUrl={setSearchUrl}
           clearHistory={clearHistory}
           theme={theme}
