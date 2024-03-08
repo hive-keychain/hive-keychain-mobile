@@ -22,8 +22,10 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_2,
   button_link_primary_small,
+  getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {
@@ -124,7 +126,9 @@ const StepTwo = ({
   const wrapInHorizontalScrollView = (text: string) => {
     return (
       <ScrollView horizontal>
-        <Text style={[styles.text, styles.opacity]}>{text}</Text>
+        <Text style={[styles.text, styles.dynamicTextSize, styles.opacity]}>
+          {text}
+        </Text>
       </ScrollView>
     );
   };
@@ -138,7 +142,9 @@ const StepTwo = ({
         <View style={styles.cardKey}>
           <Text style={styles.title}>
             {translate('common.account_name')}:{' '}
-            <Text style={[styles.text, styles.opacity]}>{accountName}</Text>
+            <Text style={[styles.text, styles.dynamicTextSize, styles.opacity]}>
+              {accountName}
+            </Text>
           </Text>
           <Text style={styles.title}>{translate('keys.master_password')}</Text>
           {wrapInHorizontalScrollView(`${masterKey}`)}
@@ -274,18 +280,18 @@ const StepTwo = ({
 
   return (
     <Background theme={theme}>
-      <>
+      <View style={{flex: 1, width: '100%', height: '100%'}}>
         <FocusAwareStatusBar />
         {keysTextVersion.length > 0 && !loadingMasterKey && (
           <View style={styles.container}>
             <ScrollView style={styles.keysContainer}>{renderKeys()}</ScrollView>
-            <View style={styles.checkboxesContainer}>
+            <View style={[styles.checkboxesContainer]}>
               <CheckBox
                 checked={paymentUnderstanding}
                 onPress={() => setPaymentUnderstanding(!paymentUnderstanding)}
                 title={getPaymentCheckboxLabel()}
                 containerStyle={styles.checkbox}
-                textStyle={styles.text}
+                textStyle={[styles.text, styles.dynamicTextSize]}
                 checkedColor={getColors(theme).icon}
               />
               <CheckBox
@@ -295,7 +301,7 @@ const StepTwo = ({
                   'components.create_account.safely_copied_keys',
                 )}
                 containerStyle={styles.checkbox}
-                textStyle={styles.text}
+                textStyle={[styles.text, styles.dynamicTextSize]}
                 checkedColor={getColors(theme).icon}
               />
               <CheckBox
@@ -309,16 +315,20 @@ const StepTwo = ({
                   'components.create_account.storage_understanding',
                 )}
                 containerStyle={styles.checkbox}
-                textStyle={styles.text}
+                textStyle={[styles.text, styles.dynamicTextSize]}
                 checkedColor={getColors(theme).icon}
               />
             </View>
-            <View style={[styles.buttonsContainer, styles.buttonMarginTop]}>
+            <View style={[styles.buttonsContainer, styles.spacing]}>
               <OperationButton
                 style={[styles.button, styles.whiteBackground]}
                 title={translate('components.create_account.copy')}
                 onPress={() => copyAllKeys()}
-                additionalTextStyle={[styles.buttonText, styles.darkText]}
+                additionalTextStyle={[
+                  styles.buttonText,
+                  styles.dynamicTextSize,
+                  styles.darkText,
+                ]}
               />
               <OperationButton
                 isLoading={loading}
@@ -337,7 +347,11 @@ const StepTwo = ({
                 ]}
                 title={translate('components.create_account.create_account')}
                 onPress={createAccount}
-                additionalTextStyle={[styles.buttonText, styles.whiteText]}
+                additionalTextStyle={[
+                  styles.buttonText,
+                  styles.dynamicTextSize,
+                  styles.whiteText,
+                ]}
               />
             </View>
           </View>
@@ -347,7 +361,7 @@ const StepTwo = ({
             <Loader animating size={'small'} />
           </View>
         )}
-      </>
+      </View>
     </Background>
   );
 };
@@ -357,6 +371,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     container: {
       marginHorizontal: width * 0.06,
       flex: 1,
+      justifyContent: 'space-between',
     },
     button: {
       width: '45%',
@@ -367,23 +382,29 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       marginHorizontal: 0,
     },
     keysContainer: {
-      maxHeight: 250,
+      maxHeight:
+        height * (width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.3 : 0.5),
+      flex: 1,
       overflow: 'hidden',
       marginTop: 20,
     },
     checkboxesContainer: {
       marginVertical: 10,
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     whiteText: {
       color: 'white',
     },
-    buttonMarginTop: {
+    spacing: {
       marginTop: 20,
+      paddingBottom: 10,
     },
     checkbox: {
       backgroundColor: 'rgba(0,0,0,0)',
-      width: '95%',
-      padding: 18,
+      width: '100%',
+      padding: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 10 : 18,
       borderColor: getColors(theme).senaryCardBorderColor,
       borderRadius: 20,
     },
@@ -399,10 +420,17 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     title: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,
+      fontSize: getFontSizeSmallDevices(width, body_primary_body_2.fontSize),
     },
     text: {
       color: getColors(theme).secondaryText,
       ...button_link_primary_small,
+    },
+    dynamicTextSize: {
+      fontSize: getFontSizeSmallDevices(
+        width,
+        button_link_primary_small.fontSize,
+      ),
     },
     opacity: {
       opacity: 0.7,
