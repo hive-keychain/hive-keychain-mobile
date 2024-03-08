@@ -53,14 +53,14 @@ const ConfirmationPage = ({
       childrenMiddle={
         <View>
           <Separator height={35} />
-          <Text style={[getFormFontStyle(height, theme).title, styles.info]}>
+          <Text style={[getFormFontStyle(width, theme).title, styles.info]}>
             {translate(title)}
           </Text>
           <Separator />
           {warningText && (
             <Text
               style={[
-                getFormFontStyle(height, theme).infoLabel,
+                getFormFontStyle(width, theme).infoLabel,
                 styles.warning,
               ]}>
               {warningText}
@@ -71,12 +71,12 @@ const ConfirmationPage = ({
             <>
               <View style={styles.justifyCenter}>
                 <View style={[styles.flexRowBetween, styles.width95]}>
-                  <Text style={[getFormFontStyle(height, theme).title]}>
+                  <Text style={[getFormFontStyle(width, theme).title]}>
                     {translate(e.title)}
                   </Text>
                   <Text
                     style={[
-                      getFormFontStyle(height, theme).title,
+                      getFormFontStyle(width, theme).title,
                       styles.textContent,
                     ]}>
                     {e.value}

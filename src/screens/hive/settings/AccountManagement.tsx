@@ -70,6 +70,49 @@ const AccountManagement = ({
       } as DropdownModalItem;
     });
 
+  const handleGotoConfirmationAccountRemoval = () => {
+    if (username) {
+      const confirmationData = {
+        title: 'common.confirm_account_remove',
+        onSend: () => {
+          forgetAccount(username);
+        },
+        data: [
+          {
+            title: 'common.account',
+            value: `@${username}`,
+          },
+        ],
+      };
+      navigate('Operation', {
+        screen: 'ConfirmationPage',
+        params: confirmationData,
+      });
+    }
+  };
+
+  const handleGotoConfirmationKeyRemoval = (
+    username: string,
+    key: KeyTypes,
+  ) => {
+    const confirmationData = {
+      title: 'common.confirm_key_remove',
+      onSend: () => {
+        forgetKey(username, key);
+      },
+      data: [
+        {
+          title: 'common.key',
+          value: `${key}`,
+        },
+      ],
+    };
+    navigate('Operation', {
+      screen: 'ConfirmationPage',
+      params: confirmationData,
+    });
+  };
+
   return (
     <Background theme={theme}>
       <SafeArea style={styles.safeArea}>
@@ -102,7 +145,7 @@ const AccountManagement = ({
             type={KeyTypes.active}
             containerStyle={styles.cardKey}
             account={accounts.find((e) => e.name === username)}
-            forgetKey={forgetKey}
+            forgetKey={handleGotoConfirmationKeyRemoval}
             navigation={navigation}
             theme={theme}
           />
@@ -110,7 +153,7 @@ const AccountManagement = ({
             type={KeyTypes.posting}
             containerStyle={styles.cardKey}
             account={accounts.find((e) => e.name === username)}
-            forgetKey={forgetKey}
+            forgetKey={handleGotoConfirmationKeyRemoval}
             navigation={navigation}
             theme={theme}
           />
@@ -118,7 +161,7 @@ const AccountManagement = ({
             type={KeyTypes.memo}
             containerStyle={styles.cardKey}
             account={accounts.find((e) => e.name === username)}
-            forgetKey={forgetKey}
+            forgetKey={handleGotoConfirmationKeyRemoval}
             navigation={navigation}
             theme={theme}
           />
@@ -126,12 +169,7 @@ const AccountManagement = ({
           <EllipticButton
             style={getButtonStyle(theme).warningStyleButton}
             title={translate('common.forget_account')}
-            onPress={() => {
-              if (username) {
-                forgetAccount(username);
-                navigate('WALLET');
-              }
-            }}
+            onPress={handleGotoConfirmationAccountRemoval}
             additionalTextStyle={styles.operationButtonText}
           />
           <Separator height={25} />

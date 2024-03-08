@@ -37,6 +37,8 @@
     "value": "Value",
     "username": "Username",
     "authorized_username": "Auth. Account",
+    "confirm_key_remove": "Please confirm removal of key from Keychain",
+    "confirm_account_remove": "Please confirm you want to remove from Keychain.",
     "confirm": "Confirm",
     "added_account": "Account has been added successfully!",
     "cancel": "Cancel",

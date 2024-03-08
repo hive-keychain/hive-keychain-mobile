@@ -2,6 +2,7 @@ import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/s
 import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
+import Icon from 'components/hive/Icon';
 import ConfirmationPage from 'components/operations/Confirmation';
 import Convert, {ConvertOperationProps} from 'components/operations/Convert';
 import DelegateToken, {
@@ -29,13 +30,18 @@ import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import {OperationNavigationProps, RootStackParam} from 'navigators/Root.types';
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {headlines_primary_headline_2} from 'src/styles/typography';
+import {
+  getFontSizeSmallDevices,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
 
@@ -44,7 +50,7 @@ const Stack = createStackNavigator<RootStackParam>();
 export default ({navigation, route}: OperationNavigationProps) => {
   const {operation, props} = route.params;
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, useSafeAreaInsets());
+  const styles = getStyles(theme, useSafeAreaInsets(), useWindowDimensions());
 
   const getTitle = () => {
     switch (operation) {
@@ -152,17 +158,19 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (
-            <CloseButton
+            <Icon
+              name={Icons.CLOSE_CIRCLE}
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onClick={() => navigation.navigate('WALLET')}
+              color={getColors(theme).iconBW}
             />
           ),
           headerLeft: () => (
-            <CustomIconButton
+            <Icon
+              name={Icons.ARROW_LEFT}
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
-              lightThemeIcon={<ArrowLeftLight />}
-              darkThemeIcon={<ArrowLeftDark />}
+              onClick={() => (navigation as DrawerNavigationHelpers).goBack()}
+              color={getColors(theme).iconBW}
             />
           ),
         })}
@@ -172,7 +180,11 @@ export default ({navigation, route}: OperationNavigationProps) => {
   );
 };
 
-const getStyles = (theme: Theme, insets: EdgeInsets) =>
+const getStyles = (
+  theme: Theme,
+  insets: EdgeInsets,
+  {width, height}: Dimensions,
+) =>
   StyleSheet.create({
     header: {
       backgroundColor: getColors(theme).primaryBackground,
@@ -184,6 +196,10 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
     headerTitle: {
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,
+      fontSize: getFontSizeSmallDevices(
+        width,
+        headlines_primary_headline_2.fontSize,
+      ),
     },
     cardStyle: {
       backgroundColor: getColors(theme).primaryBackground,
