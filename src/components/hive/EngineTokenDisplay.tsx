@@ -16,6 +16,7 @@ import {getCardStyle} from 'src/styles/card';
 import {RootState} from 'store';
 import {getBackgroundColorFromBackend} from 'utils/colors';
 import {Width} from 'utils/common.types';
+import {formatBalance} from 'utils/format';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {navigate} from 'utils/navigation';
 import TokenDisplay from './TokenDisplay';
@@ -35,6 +36,7 @@ const EngineTokenDisplay = ({
   toggled,
   setToggle,
   addBackground,
+  price,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -92,7 +94,9 @@ const EngineTokenDisplay = ({
         toggled={toggled}
         setToggle={setToggle}
         price={{
-          usd: tokenMarket ? parseFloat(tokenMarket.lastPrice) : 0,
+          usd: tokenMarket
+            ? +formatBalance(parseFloat(tokenMarket.lastPrice) * price)
+            : 0,
           usd_24h_change: parseFloat(
             tokenMarket ? tokenMarket.priceChangePercent : '0',
           ),
@@ -141,7 +145,7 @@ const getDimensionedStyles = (
   });
 
 const mapStateToProps = (state: RootState) => {
-  return {};
+  return {price: state.currencyPrices.hive.usd};
 };
 
 const connector = connect(mapStateToProps);
