@@ -345,85 +345,81 @@ const Main = ({
       }>
       {!loadingUserAndGlobals && activeRpc && activeRpc.uri !== 'NULL' ? (
         <View>
+          <Separator height={TOP_CONTAINER_SEPARATION} />
+          <View style={[styles.headerMenu]}>
+            <DrawerButton navigation={navigation as any} theme={theme} />
+            <View style={[styles.innerHeader]}>
+              <StatusIndicator theme={theme} />
+              <Claim theme={theme} />
+              <View style={styles.marginRight}>
+                <DropdownModal
+                  list={getListFromAccount()}
+                  selected={getItemDropDownSelected(user.name)}
+                  onSelected={(selectedAccount) =>
+                    loadAccount(selectedAccount.value)
+                  }
+                  dropdownIconScaledSize={styles.smallIcon}
+                  additionalDropdowContainerStyle={styles.userdropdown}
+                  additionalMainContainerDropdown={[styles.dropdownContainer]}
+                  additionalOverlayStyle={[styles.dropdownOverlay]}
+                  additionalListExpandedContainerStyle={
+                    styles.dropdownExpandedContainer
+                  }
+                  copyButtonValue
+                  showSelectedIcon={
+                    <Icon
+                      name={Icons.CHECK}
+                      theme={theme}
+                      width={15}
+                      height={15}
+                      strokeWidth={2}
+                      color={PRIMARY_RED_COLOR}
+                    />
+                  }
+                />
+              </View>
+            </View>
+          </View>
+          <Separator />
           <ScrollView
             ref={mainScrollRef}
             onScrollEndDrag={onHandleEndScroll}
             onScroll={onHandleScroll}>
-            <Separator height={TOP_CONTAINER_SEPARATION} />
-            <View style={{zIndex: 20}}>
-              <View style={[styles.headerMenu]}>
-                <DrawerButton navigation={navigation as any} theme={theme} />
-                <View style={[styles.innerHeader]}>
-                  <StatusIndicator theme={theme} />
-                  <Claim theme={theme} />
-                  <View style={styles.marginRight}>
-                    <DropdownModal
-                      list={getListFromAccount()}
-                      selected={getItemDropDownSelected(user.name)}
-                      onSelected={(selectedAccount) =>
-                        loadAccount(selectedAccount.value)
-                      }
-                      dropdownIconScaledSize={styles.smallIcon}
-                      additionalDropdowContainerStyle={styles.userdropdown}
-                      additionalMainContainerDropdown={[
-                        styles.dropdownContainer,
-                      ]}
-                      additionalOverlayStyle={[styles.dropdownOverlay]}
-                      additionalListExpandedContainerStyle={
-                        styles.dropdownExpandedContainer
-                      }
-                      copyButtonValue
-                      showSelectedIcon={
-                        <Icon
-                          name={Icons.CHECK}
-                          theme={theme}
-                          width={15}
-                          height={15}
-                          strokeWidth={2}
-                          color={PRIMARY_RED_COLOR}
-                        />
-                      }
-                    />
-                  </View>
-                </View>
-              </View>
-              <Separator />
-              <View style={styles.rowWrapper}>
-                <PercentageDisplay
-                  name={translate('wallet.vp')}
-                  percent={getVP(user.account) || 100}
-                  IconBgcolor={OVERLAYICONBGCOLOR}
-                  theme={theme}
-                  iconName={Icons.SEND_SQUARE}
-                  bgColor={BACKGROUNDITEMDARKISH}
-                  secondary={`$${
-                    getVotingDollarsPerAccount(
-                      100,
-                      properties,
-                      user.account,
-                      false,
-                    ) || '0'
-                  }`}
-                />
-                <PercentageDisplay
-                  iconName={Icons.SPEEDOMETER}
-                  bgColor={DARKER_RED_COLOR}
-                  name={translate('wallet.rc')}
-                  percent={user.rc.percentage || 100}
-                  IconBgcolor={OVERLAYICONBGCOLOR}
-                  theme={theme}
-                />
-              </View>
-              <Separator />
-              <AccountValue
-                account={user.account}
-                prices={prices}
-                properties={properties}
+            <View style={styles.rowWrapper}>
+              <PercentageDisplay
+                name={translate('wallet.vp')}
+                percent={getVP(user.account) || 100}
+                IconBgcolor={OVERLAYICONBGCOLOR}
                 theme={theme}
-                title={translate('common.estimated_account_value')}
+                iconName={Icons.SEND_SQUARE}
+                bgColor={BACKGROUNDITEMDARKISH}
+                secondary={`$${
+                  getVotingDollarsPerAccount(
+                    100,
+                    properties,
+                    user.account,
+                    false,
+                  ) || '0'
+                }`}
               />
-              <Separator />
+              <PercentageDisplay
+                iconName={Icons.SPEEDOMETER}
+                bgColor={DARKER_RED_COLOR}
+                name={translate('wallet.rc')}
+                percent={user.rc.percentage || 100}
+                IconBgcolor={OVERLAYICONBGCOLOR}
+                theme={theme}
+              />
             </View>
+            <Separator />
+            <AccountValue
+              account={user.account}
+              prices={prices}
+              properties={properties}
+              theme={theme}
+              title={translate('common.estimated_account_value')}
+            />
+            <Separator />
             <ScrollView horizontal={false} style={{flex: 1}}>
               <ScrollView
                 horizontal={true}
@@ -534,7 +530,6 @@ const Main = ({
               </ScrollView>
             </ScrollView>
           </ScrollView>
-          <View style={getCardStyle(theme).filledWrapper} />
         </View>
       ) : (
         <Loader animatedLogo />

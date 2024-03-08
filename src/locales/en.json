@@ -415,7 +415,8 @@
         "incoming": "Incoming Delegation",
         "outgoing": "Outgoing Delegation",
         "total_staked": "Total Staked",
-        "pending_unstake": "Pending Unstake"
+        "pending_unstake": "Pending Unstake",
+        "issuer": "Issuer"
       },
       "tokens_filter": {
         "comments_curationReward": "Curation reward",
@@ -713,7 +714,7 @@
     "add_account": "Add Accounts",
     "add_account_by_auth": "AUTH. ACCOUNT",
     "manage": "Manage Keys",
-    "settings": "User Preferences",
+    "settings": "Settings",
     "about": "About",
     "wallet": "WALLET",
     "browser": "BROWSER",

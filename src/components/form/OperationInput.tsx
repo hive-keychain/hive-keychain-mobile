@@ -35,6 +35,7 @@ interface OperationInputProps {
   additionalLabelExtraInfoTextStyle?: StyleProp<TextStyle>;
   removeLabelInputIndent?: boolean;
   autoCompleteValues?: AutoCompleteValuesType;
+  additionalinfoIconActionColor?: string;
 }
 
 export default (props: InputProps & OperationInputProps) => {
@@ -68,6 +69,7 @@ export default (props: InputProps & OperationInputProps) => {
             name={Icons.INFO}
             onClick={props.infoIconAction}
             additionalContainerStyle={styles.marginLeft}
+            color={props.additionalinfoIconActionColor}
           />
         )}
         {props.labelExtraInfo && (

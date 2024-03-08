@@ -6,7 +6,6 @@ import {StyleProp, StyleSheet, Text, TextStyle, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
-import {getBorderTest} from 'src/styles/test';
 import {button_link_primary_small} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import Loader from './Loader';
@@ -93,11 +92,8 @@ const getStyles = (theme: Theme) =>
       alignItems: 'center',
       width: '100%',
       marginBottom: 10,
-      borderColor: getBorderTest('red').borderColor,
-      borderWidth: 1,
     },
     loaderContainer: {
-      ...getBorderTest('green'),
       flexDirection: 'row',
       alignSelf: 'center',
       justifyContent: 'center',

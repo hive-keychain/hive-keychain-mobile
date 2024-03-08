@@ -112,6 +112,7 @@ const getStyles = (nb: number, theme: Theme, {width, height}: Dimensions) =>
       ...title_primary_title_1,
       color: getColors(theme).secondaryText,
       textAlign: 'center',
+      textAlignVertical: 'center',
       fontSize: getFontSizeSmallDevices(width, 12),
     },
     smallerHeaderText: {

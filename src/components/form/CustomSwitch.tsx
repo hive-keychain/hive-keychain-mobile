@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {
   BACKGROUNDDARKBLUE,
   BACKGROUNDITEMDARKISH,
@@ -10,43 +10,43 @@ import {
 } from 'src/styles/colors';
 
 interface Props {
-  onValueChange: (value: any) => void;
-  theme: Theme;
+  currentValue: any;
+  onValueChange?: (value: any) => void;
   iconLeftSide: JSX.Element;
   iconRightSide: JSX.Element;
-  initalValue: boolean;
-  valueTrue: any;
-  valueFalse: any;
+  valueLeft: any;
+  valueRight: any;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalIconContainerStyle?: StyleProp<ViewStyle>;
 }
 
 const CustomSwitch = ({
-  theme,
   iconLeftSide,
   iconRightSide,
   onValueChange,
-  valueFalse,
-  valueTrue,
-  initalValue,
+  valueLeft,
+  valueRight,
+  currentValue,
   additionalContainerStyle,
   additionalIconContainerStyle,
 }: Props) => {
-  const [value, setValue] = React.useState(initalValue);
-  const styles = getStyles(theme, value);
-  const justifyStyle = value ? styles.justifyStart : styles.justifyEnd;
+  const {theme} = useThemeContext();
+  const styles = getStyles(theme, currentValue === valueLeft);
+  const justifyStyle =
+    currentValue === valueLeft ? styles.justifyStart : styles.justifyEnd;
 
-  React.useEffect(() => {
-    onValueChange(value ? valueTrue : valueFalse);
-  }, [value]);
+  const handleOnPress = () => {
+    if (onValueChange)
+      onValueChange(currentValue === valueLeft ? valueRight : valueLeft);
+  };
 
   return (
     <View style={[styles.container, justifyStyle, additionalContainerStyle]}>
       <TouchableOpacity
         style={[styles.iconContainer, additionalIconContainerStyle]}
         containerStyle={styles.touchableOpacityStyle}
-        onPress={() => setValue(!value)}>
-        {value ? iconLeftSide : iconRightSide}
+        onPress={handleOnPress}>
+        {currentValue === valueLeft ? iconLeftSide : iconRightSide}
       </TouchableOpacity>
     </View>
   );

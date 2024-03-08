@@ -85,7 +85,7 @@ const getStyles = (
       alignItems: 'center',
       height: 41,
       width: hasLeftComponent ? '95%' : '100%',
-      marginBottom: 20,
+      marginVertical: 12,
     },
     iconContainer: {
       justifyContent: 'center',

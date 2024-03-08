@@ -20,7 +20,11 @@ import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {RCDelegationValue} from 'src/interfaces/rc-delegation.interface';
 import {getCardStyle} from 'src/styles/card';
-import {BACKGROUNDDARKBLUE, PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {
+  BACKGROUNDDARKBLUE,
+  PRIMARY_RED_COLOR,
+  getColors,
+} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {
   FontJosefineSansName,
@@ -239,17 +243,13 @@ const RCDelegation = ({
             <View>
               <Text
                 style={[
-                  getFormFontStyle(height, theme).smallLabel,
+                  styles.availablePanelTitle,
                   styles.josefineFont,
                   styles.opaque,
                 ]}>
                 {capitalize(translate(`common.available`))}
               </Text>
-              <Text
-                style={[
-                  getFormFontStyle(height, theme).input,
-                  styles.josefineFont,
-                ]}>
+              <Text style={[styles.availablePanelValue, styles.josefineFont]}>
                 {`${withCommas(available.gigaRcValue)} ${translate(
                   'wallet.operations.rc_delegation.giga_rc',
                 )}`}
@@ -385,6 +385,14 @@ const RCDelegation = ({
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
+    availablePanelTitle: {
+      color: getColors(theme).secondaryText,
+      fontSize: 14,
+    },
+    availablePanelValue: {
+      color: getColors(theme).primaryText,
+      fontSize: 16,
+    },
     currentAvailableBalances: {
       paddingHorizontal: 15,
     },

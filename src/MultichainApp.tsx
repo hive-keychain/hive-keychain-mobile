@@ -36,6 +36,12 @@ export default () => {
     if (theme) AsyncStorage.setItem(KeychainStorageKeyEnum.ACTIVE_THEME, theme);
   }, [theme]);
 
+  const toggleTheme = () => {
+    setTheme((oldTheme) => {
+      return oldTheme === Theme.DARK ? Theme.LIGHT : Theme.DARK;
+    });
+  };
+
   const renderChain = (selectedChain: Chain) => {
     switch (selectedChain) {
       case Chain.HIVE:
@@ -51,7 +57,7 @@ export default () => {
 
   if (ready && chain && theme)
     return (
-      <ThemeContext.Provider value={{theme, setTheme}}>
+      <ThemeContext.Provider value={{theme, setTheme, toggleTheme}}>
         <ChainContext.Provider value={{chain, setChain}}>
           {renderChain(chain)}
         </ChainContext.Provider>

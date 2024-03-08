@@ -494,9 +494,8 @@ const getDimensionedStyles = (theme: Theme) =>
       marginLeft: 8,
     },
     marginRight: {
-      marginRight: 3,
+      marginRight: 16,
     },
-    marginLeft: {marginLeft: 4},
     roundButton: {
       width: 25,
       height: 25,
