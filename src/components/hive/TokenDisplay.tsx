@@ -226,12 +226,10 @@ const TokenDisplay = ({
             <TouchableOpacity
               onPress={() =>
                 Linking.openURL(`https://peakd.com/@${tokenInfo.issuer}`)
-              }
-              style={styles.tokenInformationRow}>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              }>
+              <View style={styles.tokenInformationRow}>
                 <Text style={styles.textBodyItem}>
-                  {translate('wallet.operations.tokens.issuer')}
+                  {translate('wallet.operations.tokens.issuer') + ' '}
                 </Text>
                 <Text style={styles.textBodyItem}>@{tokenInfo.issuer}</Text>
               </View>
@@ -244,7 +242,8 @@ const TokenDisplay = ({
                 {translate('wallet.operations.tokens.total_value')}
               </Text>
               <Text style={styles.textBodyItem}>
-                ${tokenTotalValue} (${tokenTotalValue}/Token)
+                ${tokenTotalValue} (${tokenTotalValue}/
+                {translate('common.token').toLowerCase()})
               </Text>
             </View>
           </View>
@@ -367,7 +366,7 @@ const TokenDisplay = ({
               tokenInfo.stakingEnabled &&
               renderAsSquareButton(
                 <Icon
-                  name={Icons.THREE_D_CUBE}
+                  name={Icons.STAKE}
                   theme={theme}
                   {...styles.buttonIcon}
                   additionalContainerStyle={styles.marginRight}
@@ -379,7 +378,7 @@ const TokenDisplay = ({
             {tokenInfo.stakingEnabled &&
               renderAsSquareButton(
                 <Icon
-                  name={Icons.THREE_D_CUBE_ROTATE}
+                  name={Icons.UNSTAKE}
                   theme={theme}
                   width={28}
                   height={28}
@@ -392,7 +391,7 @@ const TokenDisplay = ({
             {tokenInfo.delegationEnabled &&
               renderAsSquareButton(
                 <Icon
-                  name={Icons.DELEGATE_VESTING_SHARES}
+                  name={Icons.DELEGATE_TOKEN}
                   theme={theme}
                   {...styles.buttonIcon}
                   additionalContainerStyle={styles.marginRight}

@@ -150,7 +150,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.DELEGATE_VESTING_SHARES:
+    case name === Icons.DELEGATE_TOKEN:
       return (
         <ReceiveSquareIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -379,14 +379,14 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.THREE_D_CUBE:
+    case name === Icons.STAKE:
       return (
         <Cube3dScanIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
       );
-    case name === Icons.THREE_D_CUBE_ROTATE:
+    case name === Icons.UNSTAKE:
       return (
         <Cube3dRotate
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}

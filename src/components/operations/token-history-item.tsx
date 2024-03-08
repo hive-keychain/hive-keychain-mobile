@@ -51,8 +51,6 @@ const TokenHistoryItem = ({
   theme,
 }: TokenHistoryItemProps & PropsFromRedux) => {
   const [toggle, setToggle] = useState(false);
-  let iconName = '';
-  let iconNameSubType = '';
   const localePrefix = 'wallet.operations.tokens';
   let labelDataList: LabelDataType[];
 
@@ -70,7 +68,6 @@ const TokenHistoryItem = ({
     switch (transaction.operation) {
       case OperationsHiveEngine.COMMENT_AUTHOR_REWARD: {
         const t = transaction as AuthorCurationTransaction;
-        iconName = 'claim_reward_balance';
         labelDataList = [
           {label: 'info_author_reward.part_1'},
           {
@@ -86,7 +83,6 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.COMMENT_CURATION_REWARD: {
         const t = transaction as CommentCurationTransaction;
-        iconName = 'claim_reward_balance';
         labelDataList = [
           {label: 'info_comment_curation_reward.part_1'},
           {
@@ -102,7 +98,6 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.MINING_LOTTERY: {
         const t = transaction as MiningLotteryTransaction;
-        iconName = 'claim_reward_balance';
         labelDataList = [
           {label: 'info_mining_lottery.part_1'},
           {
@@ -118,7 +113,6 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.TOKENS_TRANSFER: {
         const t = transaction as TransferTokenTransaction;
-        iconName = 'transfer';
         if (t.from === activeAccountName) {
           labelDataList = [
             {label: 'info_transfer_out.part_1'},
@@ -146,7 +140,6 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.TOKENS_DELEGATE: {
         const t = transaction as DelegateTokenTransaction;
-        iconName = 'delegate';
         if (t.delegator === activeAccountName) {
           labelDataList = [
             {label: 'info_delegation_out.part_1'},
@@ -181,7 +174,6 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.TOKEN_UNDELEGATE_START: {
         const t = transaction as UndelegateTokenStartTransaction;
-        iconName = 'delegate_vesting_shares';
         if (t.delegator === activeAccountName) {
           labelDataList = [
             {
@@ -221,8 +213,6 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.TOKEN_UNDELEGATE_DONE: {
         const t = transaction as UndelegateTokenDoneTransaction;
-        iconName = 'power_up_down';
-        iconNameSubType = 'transfer_to_vesting';
         if (t.delegator === activeAccountName) {
           labelDataList = [
             {
@@ -261,8 +251,6 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.TOKEN_STAKE: {
         const t = transaction as StakeTokenTransaction;
-        iconName = 'power_up_down';
-        iconNameSubType = 'transfer_to_vesting';
         if (t.from !== activeAccountName) {
           labelDataList = [
             {
@@ -295,8 +283,6 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.TOKEN_UNSTAKE_START: {
         const t = transaction as UnStakeTokenStartTransaction;
-        iconName = 'power_up_down';
-        iconNameSubType = 'withdraw_vesting';
         labelDataList = [
           {
             label: 'info_start_unstake.part_1',
@@ -311,8 +297,6 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.TOKEN_UNSTAKE_DONE: {
         const t = transaction as UnStakeTokenDoneTransaction;
-        iconName = 'power_up_down';
-        iconNameSubType = 'withdraw_vesting';
         labelDataList = [
           {
             label: 'info_unstake_done.amount',
@@ -326,7 +310,6 @@ const TokenHistoryItem = ({
         return returnWithList(labelDataList);
       }
       case OperationsHiveEngine.TOKEN_ISSUE:
-        iconName = 'claim_reward_balance';
         labelDataList = [
           {label: 'info_issue.part_1'},
           {
@@ -337,7 +320,6 @@ const TokenHistoryItem = ({
         ];
         return returnWithList(labelDataList);
       case OperationsHiveEngine.HIVE_PEGGED_BUY:
-        iconName = 'convert';
         labelDataList = [
           {label: 'info_pegged_buy.part_1'},
           {
@@ -380,22 +362,29 @@ const TokenHistoryItem = ({
     theme,
   );
 
-  const getTokenIconName = (iconName: string, iconNameSubType: string) => {
-    switch (iconName) {
-      case 'transfer':
+  const getTokenIconName = (operationType: OperationsHiveEngine) => {
+    switch (operationType) {
+      case OperationsHiveEngine.TOKENS_TRANSFER:
+      case OperationsHiveEngine.TOKEN_ISSUE:
         return Icons.TRANSFER;
-      case 'power_up_down':
-        return Icons.POWER_UP_DOWN;
-      case 'delegate':
-      case 'delegate_vesting_shares':
-        return Icons.DELEGATE_VESTING_SHARES;
-      case 'mining_lottery':
+      case OperationsHiveEngine.COMMENT_CURATION_REWARD:
+      case OperationsHiveEngine.COMMENT_AUTHOR_REWARD:
+        return Icons.CLAIM_REWARD_BALANCE;
+      case OperationsHiveEngine.TOKENS_DELEGATE:
+      case OperationsHiveEngine.TOKEN_UNDELEGATE_START:
+      case OperationsHiveEngine.TOKEN_UNDELEGATE_DONE:
+        return Icons.DELEGATE_TOKEN;
+      case OperationsHiveEngine.MINING_LOTTERY:
         return Icons.SAVINGS;
-      case 'convert':
-      case 'hivepegged_buy':
+      case OperationsHiveEngine.HIVE_PEGGED_BUY:
         return Icons.CONVERT;
+      case OperationsHiveEngine.TOKEN_STAKE:
+        return Icons.STAKE;
+      case OperationsHiveEngine.TOKEN_UNSTAKE_START:
+      case OperationsHiveEngine.TOKEN_UNSTAKE_DONE:
+        return Icons.UNSTAKE;
       default:
-        return Icons.NOT_SEE;
+        console.log(operationType);
     }
   };
 
@@ -412,8 +401,7 @@ const TokenHistoryItem = ({
             <View style={[styles.row]}>
               {useIcon && (
                 <Icon
-                  name={getTokenIconName(iconName, iconNameSubType)}
-                  subType={iconNameSubType}
+                  name={getTokenIconName(transaction.operation)}
                   theme={theme}
                   additionalContainerStyle={styles.iconContainer}
                   bgImage={<BackgroundIconRed />}
