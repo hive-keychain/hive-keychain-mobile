@@ -333,7 +333,10 @@ const Main = ({
               overflow: 'hidden',
               height: '100%',
             }}>
-            <ScrollView ref={mainScrollRef} contentContainerStyle={{}}>
+            <ScrollView
+              ref={mainScrollRef}
+              onScrollEndDrag={onHandleEndScroll}
+              onScroll={onHandleScroll}>
               <View style={styles.rowWrapper}>
                 <PercentageDisplay
                   name={translate('wallet.vp')}
