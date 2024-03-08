@@ -1,5 +1,4 @@
-import {DropdownItem} from 'components/form/CustomDropdown';
-import DropdownModal from 'components/form/DropdownModal';
+import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
@@ -122,7 +121,7 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
                 return {
                   label: item,
                   value: item,
-                } as DropdownItem;
+                } as DropdownModalItem;
               })}
             />
           </>
