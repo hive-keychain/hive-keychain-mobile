@@ -38,7 +38,6 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
-  SectionList,
   StyleSheet,
   Text,
   View,
@@ -283,47 +282,6 @@ const Main = ({
     }
   };
 
-  const DATA = [
-    {
-      title: 'Currencies',
-      renderItem: ({item, index}: any) => {
-        return (
-          <CurrencyToken
-            theme={theme}
-            currencyName={getCurrency(item.currency)}
-            itemIndex={index}
-            onPress={() => handleClickToView(index, 0)}
-          />
-        );
-      },
-      data: [
-        {currency: getCurrency('HIVE')},
-        {currency: getCurrency('HBD')},
-        {currency: getCurrency('HP')},
-      ],
-    },
-    {
-      title: 'Engine Tokens',
-      renderItem: ({item, index}: any) => {
-        return (
-          <EngineTokenDisplay
-            addBackground
-            token={item}
-            tokensList={tokens}
-            market={tokensMarket}
-            toggled={toggled === item._id}
-            setToggle={() => {
-              if (toggled === item._id) setToggled(null);
-              else setToggled(item._id);
-              handleClickToView(index, 1);
-            }}
-          />
-        );
-      },
-      data: filteredUserTokenBalanceList,
-    },
-  ];
-
   return (
     <WalletPage
       additionalBgSvgImageStyle={
@@ -369,156 +327,166 @@ const Main = ({
             </View>
           </View>
           <Separator />
-          <ScrollView
-            ref={mainScrollRef}
-            onScrollEndDrag={onHandleEndScroll}
-            onScroll={onHandleScroll}>
-            <View style={styles.rowWrapper}>
-              <PercentageDisplay
-                name={translate('wallet.vp')}
-                percent={getVP(user.account) || 100}
-                IconBgcolor={OVERLAYICONBGCOLOR}
+          <View
+            style={{
+              borderRadius: 20,
+              overflow: 'hidden',
+              height: '100%',
+            }}>
+            <ScrollView ref={mainScrollRef} contentContainerStyle={{}}>
+              <View style={styles.rowWrapper}>
+                <PercentageDisplay
+                  name={translate('wallet.vp')}
+                  percent={getVP(user.account) || 100}
+                  IconBgcolor={OVERLAYICONBGCOLOR}
+                  theme={theme}
+                  iconName={Icons.SEND_SQUARE}
+                  bgColor={BACKGROUNDITEMDARKISH}
+                  secondary={`$${
+                    getVotingDollarsPerAccount(
+                      100,
+                      properties,
+                      user.account,
+                      false,
+                    ) || '0'
+                  }`}
+                />
+                <PercentageDisplay
+                  iconName={Icons.SPEEDOMETER}
+                  bgColor={DARKER_RED_COLOR}
+                  name={translate('wallet.rc')}
+                  percent={user.rc.percentage || 100}
+                  IconBgcolor={OVERLAYICONBGCOLOR}
+                  theme={theme}
+                />
+              </View>
+              <Separator />
+              <AccountValue
+                account={user.account}
+                prices={prices}
+                properties={properties}
                 theme={theme}
-                iconName={Icons.SEND_SQUARE}
-                bgColor={BACKGROUNDITEMDARKISH}
-                secondary={`$${
-                  getVotingDollarsPerAccount(
-                    100,
-                    properties,
-                    user.account,
-                    false,
-                  ) || '0'
-                }`}
+                title={translate('common.estimated_account_value')}
               />
-              <PercentageDisplay
-                iconName={Icons.SPEEDOMETER}
-                bgColor={DARKER_RED_COLOR}
-                name={translate('wallet.rc')}
-                percent={user.rc.percentage || 100}
-                IconBgcolor={OVERLAYICONBGCOLOR}
-                theme={theme}
-              />
-            </View>
-            <Separator />
-            <AccountValue
-              account={user.account}
-              prices={prices}
-              properties={properties}
-              theme={theme}
-              title={translate('common.estimated_account_value')}
-            />
-            <Separator />
-            <ScrollView horizontal={false} style={{flex: 1}}>
-              <ScrollView
-                horizontal={true}
-                contentContainerStyle={{width: '100%', height: '100%'}}>
-                <SectionList
-                  //@ts-ignore
-                  sections={DATA}
-                  keyExtractor={(item: any, index) =>
-                    item.currency ? item.currency + index : item.symbol + index
-                  }
-                  renderItem={({section: {renderItem}, index}) => (
-                    <View>{renderItem}</View>
-                  )}
-                  renderSectionHeader={({section: {title}}) =>
-                    title === 'Currencies' ? (
-                      <View style={[getCardStyle(theme).borderTopCard]}>
-                        <Separator height={25} />
-                      </View>
-                    ) : (
-                      <View style={[getCardStyle(theme).wrapperCardItem]}>
-                        <View
-                          style={[
-                            styles.flexRow,
-                            isSearchOpen ? styles.paddingVertical : undefined,
-                          ]}>
-                          {isSearchOpen && (
-                            <CustomSearchBar
-                              theme={theme}
-                              value={searchValue}
-                              onChangeText={(text) => {
-                                setSearchValue(text);
-                              }}
-                              additionalContainerStyle={[
-                                styles.searchContainer,
-                                isSearchOpen ? styles.borderLight : undefined,
-                              ]}
-                              rightIcon={
-                                <Icon
-                                  name={Icons.SEARCH}
-                                  theme={theme}
-                                  width={18}
-                                  height={18}
-                                  onClick={() => {
-                                    setSearchValue('');
-                                    setIsSearchOpen(false);
-                                  }}
-                                />
-                              }
-                            />
-                          )}
-                          <HiveEngineLogo height={23} width={23} />
-                          <View style={styles.separatorContainer} />
+              <Separator />
+              <View style={getCardStyle(theme).borderTopCard}>
+                <View>
+                  {[
+                    {currency: getCurrency('HIVE')},
+                    {currency: getCurrency('HBD')},
+                    {currency: getCurrency('HP')},
+                  ].map((item, index) => (
+                    <CurrencyToken
+                      theme={theme}
+                      currencyName={item.currency}
+                      itemIndex={index}
+                      onPress={() => handleClickToView(index, 0)}
+                    />
+                  ))}
+                </View>
+
+                <View style={[getCardStyle(theme).wrapperCardItem]}>
+                  <View
+                    style={[
+                      styles.flexRow,
+                      isSearchOpen ? styles.paddingVertical : undefined,
+                    ]}>
+                    {isSearchOpen && (
+                      <CustomSearchBar
+                        theme={theme}
+                        value={searchValue}
+                        onChangeText={(text) => {
+                          setSearchValue(text);
+                        }}
+                        additionalContainerStyle={[
+                          styles.searchContainer,
+                          isSearchOpen ? styles.borderLight : undefined,
+                        ]}
+                        rightIcon={
                           <Icon
                             name={Icons.SEARCH}
                             theme={theme}
-                            additionalContainerStyle={styles.search}
-                            onClick={() => {
-                              setIsSearchOpen(true);
-                            }}
                             width={18}
                             height={18}
+                            onClick={() => {
+                              setSearchValue('');
+                              setIsSearchOpen(false);
+                            }}
                           />
-                          <Icon
-                            name={Icons.SETTINGS_2}
-                            theme={theme}
-                            onClick={handleClickSettings}
-                          />
-                        </View>
+                        }
+                      />
+                    )}
+                    <HiveEngineLogo height={23} width={23} />
+                    <View style={styles.separatorContainer} />
+                    <Icon
+                      name={Icons.SEARCH}
+                      theme={theme}
+                      additionalContainerStyle={styles.search}
+                      onClick={() => {
+                        setIsSearchOpen(true);
+                      }}
+                      width={18}
+                      height={18}
+                    />
+                    <Icon
+                      name={Icons.SETTINGS_2}
+                      theme={theme}
+                      onClick={handleClickSettings}
+                    />
+                  </View>
+                </View>
+                {filteredUserTokenBalanceList.map((item, index) => (
+                  <EngineTokenDisplay
+                    addBackground
+                    token={item}
+                    tokensList={tokens}
+                    market={tokensMarket}
+                    toggled={toggled === item._id}
+                    setToggle={() => {
+                      if (toggled === item._id) setToggled(null);
+                      else setToggled(item._id);
+                      handleClickToView(index, 1);
+                    }}
+                  />
+                ))}
+
+                <>
+                  {isHiveEngineLoading && (
+                    <View style={styles.extraContainerMiniLoader}>
+                      <Loader size={'small'} animating />
+                    </View>
+                  )}
+                  {!userTokens.loading &&
+                    filteredUserTokenBalanceList.length === 0 &&
+                    orderedUserTokenBalanceList.length === 0 && (
+                      <View
+                        style={[
+                          getCardStyle(theme).filledWrapper,
+                          styles.filledWrapper,
+                        ]}>
+                        <Text style={styles.no_tokens}>
+                          {translate('wallet.no_tokens')}
+                        </Text>
                       </View>
-                    )
-                  }
-                  ListFooterComponent={
-                    <>
-                      {isHiveEngineLoading && (
-                        <View style={styles.extraContainerMiniLoader}>
-                          <Loader size={'small'} animating />
-                        </View>
-                      )}
-                      {!userTokens.loading &&
-                        filteredUserTokenBalanceList.length === 0 &&
-                        orderedUserTokenBalanceList.length === 0 && (
-                          <View
-                            style={[
-                              getCardStyle(theme).filledWrapper,
-                              styles.filledWrapper,
-                            ]}>
-                            <Text style={styles.no_tokens}>
-                              {translate('wallet.no_tokens')}
-                            </Text>
-                          </View>
-                        )}
-                      {!userTokens.loading &&
-                        orderedUserTokenBalanceList.length > 0 &&
-                        filteredUserTokenBalanceList.length === 0 && (
-                          <View
-                            style={[
-                              getCardStyle(theme).filledWrapper,
-                              styles.filledWrapper,
-                            ]}>
-                            <Text style={styles.no_tokens}>
-                              {translate('wallet.no_tokens_filter')}
-                            </Text>
-                          </View>
-                        )}
-                    </>
-                  }
-                />
-              </ScrollView>
+                    )}
+                  {!userTokens.loading &&
+                    orderedUserTokenBalanceList.length > 0 &&
+                    filteredUserTokenBalanceList.length === 0 && (
+                      <View
+                        style={[
+                          getCardStyle(theme).filledWrapper,
+                          styles.filledWrapper,
+                        ]}>
+                        <Text style={styles.no_tokens}>
+                          {translate('wallet.no_tokens_filter')}
+                        </Text>
+                      </View>
+                    )}
+                </>
+              </View>
+              <View style={getCardStyle(theme).filledWrapper} />
             </ScrollView>
-            <View style={getCardStyle(theme).filledWrapper} />
-          </ScrollView>
+          </View>
         </View>
       ) : (
         <Loader animatedLogo />
@@ -526,6 +494,7 @@ const Main = ({
     </WalletPage>
   );
 };
+
 const getDimensionedStyles = (
   {width, height}: Dimensions,
   theme: Theme,
@@ -603,7 +572,6 @@ const getDimensionedStyles = (
     },
     filledWrapper: {
       justifyContent: 'center',
-      height: 100,
       alignItems: 'center',
     },
     dropdownOverlay: {
