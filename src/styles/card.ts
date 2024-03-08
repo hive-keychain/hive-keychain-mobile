@@ -46,6 +46,7 @@ export const getCardStyle = (theme: Theme, borderRadius?: number) => {
       borderColor: getColors(theme).cardBorderColor,
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
+      paddingTop: 20,
       borderBottomWidth: 0,
       backgroundColor: getColors(theme).secondaryCardBgColor,
     },
