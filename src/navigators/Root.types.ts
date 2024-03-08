@@ -2,7 +2,6 @@ import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {WalletHistoryComponentProps} from 'components/history/WalletHistoryComponent';
 import {TokenHistoryProps} from 'components/history/hive-engine/TokensHistory';
-import {CancelTokenDelegationOperationProps} from 'components/operations/Cancel-token-delegation';
 import {ConfirmationPageProps} from 'components/operations/Confirmation';
 import {ConvertOperationProps} from 'components/operations/Convert';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
@@ -55,7 +54,6 @@ export type RootStackParam = {
       | 'stake'
       | 'unstake'
       | 'delegate'
-      | 'cancel_delegation'
       | 'power_up'
       | 'savings'
       | 'convert'
@@ -67,7 +65,6 @@ export type RootStackParam = {
       | StakeTokenOperationProps
       | UnstakeTokenOperationProps
       | DelegateTokenOperationProps
-      | CancelTokenDelegationOperationProps
       | PowerUpOperationProps
       | SavingOperationProps
       | ConvertOperationProps

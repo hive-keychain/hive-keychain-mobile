@@ -1,16 +1,15 @@
+import {loadAccount} from 'actions/index';
 import {TokenBalance} from 'actions/interfaces';
+import {showModal} from 'actions/message';
 import Icon from 'components/hive/Icon';
+import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {Token} from 'src/interfaces/tokens.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getSeparatorLineStyle} from 'src/styles/line';
@@ -18,12 +17,12 @@ import {
   title_primary_body_2,
   title_secondary_body_3,
 } from 'src/styles/typography';
+import {RootState} from 'store';
 import {withCommas} from 'utils/format';
+import {cancelDelegateToken} from 'utils/hive';
 import {TokenDelegation} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
-import {CancelTokenDelegationOperationProps} from './Cancel-token-delegation';
-import {DelegateTokenOperationProps} from './DelegateToken';
+import {goBack} from 'utils/navigation';
 import {TokenDelegationType} from './MoreTokenInfo';
 
 type Props = {
@@ -33,7 +32,7 @@ type Props = {
   token: TokenBalance;
   tokenInfo: Token;
   theme: Theme;
-};
+} & PropsFromRedux;
 
 const IncomingOutGoingTokenDelegationItem = ({
   tokenDelegation,
@@ -42,55 +41,46 @@ const IncomingOutGoingTokenDelegationItem = ({
   token,
   tokenInfo,
   theme,
+  user,
+  loadAccount,
+  showModal,
 }: Props) => {
   const [isOutGoingDelegation, setIsOutGoingDelegation] = useState(
     delegationType === 'Outgoing',
   );
-  const [editMode, setEditMode] = useState(false);
-  const [amount, setAmount] = useState(tokenDelegation.quantity);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [cancelledSuccessfully, setCancelledSuccessfully] = useState(false);
-
-  const updateAmount = (value: string) => {
-    setAmount(value);
-  };
-
-  const handleCancelTokenDelegation = () => {
-    navigate('Operation', {
-      operation: 'cancel_delegation',
-      props: {
-        currency: token.symbol,
-        amount: tokenDelegation.quantity,
-        engine: true,
-        tokenLogo: tokenLogo,
-        from: tokenDelegation.to,
-        setCancelledSuccessfully: (value) => setCancelledSuccessfully(value),
-      } as CancelTokenDelegationOperationProps,
-    });
-  };
-
-  const handleUpdateDelegateToken = () => {
-    if (parseFloat(amount) <= 0) return handleCancelTokenDelegation();
-
-    const availableBalance =
-      parseFloat(token.stake) - parseFloat(token.pendingUndelegations);
-    navigate('Operation', {
-      operation: 'delegate',
-      props: {
-        currency: token.symbol,
-        balance: availableBalance.toString(),
-        delegateAmount: amount,
-        tokenLogo: tokenLogo,
-        sendTo: tokenDelegation.to,
-        update: true,
-      } as DelegateTokenOperationProps,
-    });
-  };
-
+  const [
+    showCancelConfirmationDelegation,
+    setShowCancelConfirmationDelegation,
+  ] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const styles = getStyles(theme);
 
   if (cancelledSuccessfully) return null;
-
+  const onDelete = async () => {
+    setIsLoading(true);
+    try {
+      await cancelDelegateToken(user.keys.active, user.name!, {
+        from: tokenDelegation.to,
+        symbol: tokenDelegation.symbol,
+        quantity: tokenDelegation.quantity,
+      });
+      loadAccount(user.account.name, true);
+      goBack();
+      showModal('toast.stop_delegation_success', MessageModalType.SUCCESS);
+    } catch (e) {
+      showModal(
+        `Error : ${(e as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
+      );
+    } finally {
+      setShowCancelConfirmationDelegation(false);
+      setIsLoading(false);
+    }
+  };
   return (
     <TouchableOpacity
       onPress={() => setIsExpanded(!isExpanded)}
@@ -101,48 +91,22 @@ const IncomingOutGoingTokenDelegationItem = ({
             <Text style={[styles.textItem, styles.lowerOpacity]}>
               @{tokenDelegation.to}
             </Text>
-            {!editMode ? (
-              <View style={styles.flexRow}>
-                <Text style={styles.textItem}>
-                  {withCommas(tokenDelegation.quantity)}{' '}
-                  {tokenDelegation.symbol}
-                </Text>
-                <Icon
-                  name={Icons.EXPAND_THIN}
-                  theme={theme}
-                  additionalContainerStyle={[
-                    styles.marginLeft,
-                    isExpanded ? undefined : styles.iconXAxisInverted,
-                  ]}
-                  {...styles.smallIcon}
-                  color={PRIMARY_RED_COLOR}
-                />
-              </View>
-            ) : (
-              <View style={[styles.flexRow, styles.flexEnd]}>
-                <TextInput
-                  style={styles.customInputStyle}
-                  value={amount}
-                  onChangeText={updateAmount}
-                  keyboardType="decimal-pad"
-                />
-                <View style={[styles.flexRow, styles.marginLeft]}>
-                  <Icon
-                    name={Icons.CHECK}
-                    theme={theme}
-                    onClick={() => handleUpdateDelegateToken()}
-                    color={PRIMARY_RED_COLOR}
-                  />
-                  <Icon
-                    name={Icons.CLOSE_CIRCLE}
-                    theme={theme}
-                    additionalContainerStyle={styles.marginLeft}
-                    onClick={() => setEditMode(false)}
-                    color={PRIMARY_RED_COLOR}
-                  />
-                </View>
-              </View>
-            )}
+
+            <View style={styles.flexRow}>
+              <Text style={styles.textItem}>
+                {withCommas(tokenDelegation.quantity)} {tokenDelegation.symbol}
+              </Text>
+              <Icon
+                name={Icons.EXPAND_THIN}
+                theme={theme}
+                additionalContainerStyle={[
+                  styles.marginLeft,
+                  isExpanded ? undefined : styles.iconXAxisInverted,
+                ]}
+                {...styles.smallIcon}
+                color={PRIMARY_RED_COLOR}
+              />
+            </View>
           </View>
           {isExpanded && (
             <>
@@ -150,35 +114,39 @@ const IncomingOutGoingTokenDelegationItem = ({
                 drawLine
                 additionalLineStyle={getSeparatorLineStyle(theme, 0.5).itemLine}
               />
-              <View style={styles.buttonRowContainer}>
-                <TouchableOpacity
-                  style={[styles.button, styles.marginRight]}
-                  onPress={() => setEditMode(!editMode)}>
-                  <Icon
-                    name={Icons.EDIT}
+              {!showCancelConfirmationDelegation ? (
+                <View style={styles.buttonRowContainer}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      setShowCancelConfirmationDelegation(true);
+                    }}>
+                    <Icon
+                      name={Icons.GIFT_DELETE}
+                      theme={theme}
+                      {...styles.icon}
+                      color={PRIMARY_RED_COLOR}
+                    />
+                    <Text style={styles.buttonText}>
+                      {translate('common.delete')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View
+                  style={{
+                    paddingHorizontal: 15,
+                  }}>
+                  <ConfirmationInItem
                     theme={theme}
-                    {...styles.icon}
-                    color={PRIMARY_RED_COLOR}
+                    titleKey="wallet.operations.delegation.confirm_cancel_delegation"
+                    onConfirm={onDelete}
+                    onCancel={() => setShowCancelConfirmationDelegation(false)}
+                    isLoading={isLoading}
+                    // additionalConfirmTextStyle={styles.whiteText}
                   />
-                  <Text style={styles.buttonText}>
-                    {translate('common.edit')}
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => handleCancelTokenDelegation()}>
-                  <Icon
-                    name={Icons.GIFT_DELETE}
-                    theme={theme}
-                    {...styles.icon}
-                    color={PRIMARY_RED_COLOR}
-                  />
-                  <Text style={styles.buttonText}>
-                    {translate('common.delete')}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                </View>
+              )}
             </>
           )}
         </>
@@ -292,4 +260,13 @@ const getStyles = (theme: Theme) =>
     },
   });
 
-export default IncomingOutGoingTokenDelegationItem;
+const connector = connect(
+  (state: RootState) => {
+    return {
+      user: state.activeAccount,
+    };
+  },
+  {loadAccount, showModal},
+);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(IncomingOutGoingTokenDelegationItem);

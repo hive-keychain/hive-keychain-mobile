@@ -2,9 +2,6 @@ import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/s
 import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
-import CancelTokenDelegation, {
-  CancelTokenDelegationOperationProps,
-} from 'components/operations/Cancel-token-delegation';
 import ConfirmationPage from 'components/operations/Confirmation';
 import Convert, {ConvertOperationProps} from 'components/operations/Convert';
 import DelegateToken, {
@@ -69,10 +66,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return `${capitalize(
           translate('wallet.operations.token_delegation.delegating'),
         )} ${translate('common.token')}`;
-      case 'cancel_delegation':
-        return `${capitalize(
-          translate('wallet.operations.token_delegation.cancelling_delegation'),
-        )} ${translate('common.token')}`;
+
       case 'power_up':
         return translate('wallet.operations.powerup.title');
       case 'savings':
@@ -102,12 +96,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return <UnstakeToken {...(props as UnstakeTokenOperationProps)} />;
       case 'delegate':
         return <DelegateToken {...(props as DelegateTokenOperationProps)} />;
-      case 'cancel_delegation':
-        return (
-          <CancelTokenDelegation
-            {...(props as CancelTokenDelegationOperationProps)}
-          />
-        );
+
       case 'power_up':
         return <PowerUp {...(props as PowerUpOperationProps)} />;
       case 'savings':
