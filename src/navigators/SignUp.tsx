@@ -36,7 +36,11 @@ export default () => {
         options={noHeader}
         component={Introduction}
       />
-      <Stack.Screen name="SignupScreen" options={noHeader} component={Signup} />
+      <Stack.Screen
+        name="SignupScreen"
+        options={{...noHeader, animationEnabled: false}}
+        component={Signup}
+      />
       <Stack.Screen
         name="CreateAccountScreen"
         options={noHeader}
