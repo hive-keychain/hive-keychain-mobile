@@ -1,5 +1,8 @@
 import {loadAccount} from 'actions/hive';
-import Toast from 'react-native-simple-toast';
+import {
+  default as SimpleToast,
+  default as Toast,
+} from 'react-native-simple-toast';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {AppThunk} from 'src/hooks/redux';
 import {encryptJson} from 'utils/encrypt';
@@ -81,23 +84,39 @@ export const forgetAccount = (username: string): AppThunk => async (
 
 export const forgetKey = (username: string, key: KeyTypes): AppThunk => async (
   dispatch,
+  getState,
 ) => {
-  dispatch(
-    updateAccounts((account: Account) => {
-      if (account.name === username) {
-        const keys = {...account.keys};
-        delete keys[key];
-        const pubKey: PubKeyTypes = PubKeyTypes[key];
-        delete keys[pubKey];
-        return {...account, keys};
-      } else {
-        return account;
-      }
-    }),
-  );
-  dispatch(
-    showModal('toast.keys.key_removed', MessageModalType.SUCCESS, {type: key}),
-  );
+  const keysLenght =
+    Object.keys(
+      getState().accounts.filter((acc) => acc.name === username)[0].keys,
+    ).length / 2;
+
+  if (keysLenght === 1) {
+    dispatch(forgetAccount(username));
+    SimpleToast.show(
+      translate('toast.account_removed', {account: username}),
+      SimpleToast.LONG,
+    );
+  } else {
+    dispatch(
+      updateAccounts((account: Account) => {
+        if (account.name === username) {
+          const keys = {...account.keys};
+          delete keys[key];
+          const pubKey: PubKeyTypes = PubKeyTypes[key];
+          delete keys[pubKey];
+          return {...account, keys};
+        } else {
+          return account;
+        }
+      }),
+    );
+    dispatch(
+      showModal('toast.keys.key_removed', MessageModalType.SUCCESS, {
+        type: key,
+      }),
+    );
+  }
 };
 
 export const addKey = (
