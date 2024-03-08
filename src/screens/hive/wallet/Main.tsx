@@ -517,6 +517,7 @@ const Main = ({
                 />
               </ScrollView>
             </ScrollView>
+            <View style={getCardStyle(theme).filledWrapper} />
           </ScrollView>
         </View>
       ) : (
