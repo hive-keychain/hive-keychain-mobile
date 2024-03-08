@@ -1,6 +1,7 @@
 import {PrivateKey} from '@hiveio/dhive';
 import {addAccount} from 'actions/accounts';
 import {Account} from 'actions/interfaces';
+import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -30,6 +31,7 @@ import {
   body_primary_body_2,
   button_link_primary_small,
   getFontSizeSmallDevices,
+  title_primary_body_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {
@@ -331,32 +333,31 @@ const StepTwo = ({
             </View>
             <View style={[styles.buttonsContainer, styles.spacing]}>
               <OperationButton
-                style={[styles.button, styles.whiteBackground]}
+                style={[
+                  styles.button,
+                  {
+                    backgroundColor:
+                      theme === Theme.DARK
+                        ? getColors(theme).cardBgColor
+                        : 'white',
+                  },
+                ]}
                 title={translate('components.create_account.copy')}
                 onPress={() => copyAllKeys()}
                 additionalTextStyle={[
                   styles.buttonText,
                   styles.dynamicTextSize,
-                  styles.darkText,
+                  styles.copyButtonText,
                 ]}
               />
-              <OperationButton
+              <ActiveOperationButton
                 isLoading={loading}
-                disabled={
-                  !safelyCopied &&
-                  !notPrimaryStorageUnderstanding &&
-                  !paymentUnderstanding
-                }
                 style={[
                   styles.button,
-                  safelyCopied &&
-                  notPrimaryStorageUnderstanding &&
-                  paymentUnderstanding
-                    ? getButtonStyle(theme).warningStyleButton
-                    : styles.buttonDisabled,
+                  getButtonStyle(theme).warningStyleButton,
                 ]}
-                title={translate('components.create_account.create_account')}
                 onPress={createAccount}
+                title={translate('components.create_account.create_account')}
                 additionalTextStyle={[
                   styles.buttonText,
                   styles.dynamicTextSize,
@@ -412,7 +413,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       paddingBottom: 10,
     },
     checkbox: {
-      backgroundColor: 'rgba(0,0,0,0)',
+      backgroundColor: getColors(theme).cardBgColor,
       width: '100%',
       padding: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 10 : 18,
       borderColor: getColors(theme).senaryCardBorderColor,
@@ -452,7 +453,11 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       marginBottom: 10,
     },
     buttonText: {
-      ...button_link_primary_small,
+      ...title_primary_body_2,
+      color: 'white',
+    },
+    copyButtonText: {
+      color: theme === Theme.LIGHT ? 'black' : 'white',
     },
     whiteBackground: {
       backgroundColor: '#fff',
