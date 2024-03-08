@@ -64,7 +64,8 @@ const TokenHistoryItem = ({
         />
       );
     }
-
+    transaction.amount =
+      parseFloat(transaction.amount) + ' ' + transaction.symbol;
     switch (transaction.operation) {
       case OperationsHiveEngine.COMMENT_AUTHOR_REWARD: {
         const t = transaction as AuthorCurationTransaction;
