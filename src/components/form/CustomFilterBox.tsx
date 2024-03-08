@@ -238,6 +238,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       flex: 1,
       justifyContent: 'space-evenly',
       paddingVertical: 10,
+      maxWidth: width * 0.75,
     },
     headerText: {
       marginVertical: 8,
