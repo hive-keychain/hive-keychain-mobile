@@ -43,7 +43,7 @@ type Props = {
   name: string;
   logo: JSX.Element;
   currency: string;
-  value: number;
+  balance: number;
   totalValue: number;
   color: string;
   price?: Currency;
@@ -62,7 +62,7 @@ const TokenDisplay = ({
   name,
   logo,
   currency,
-  value,
+  balance: value,
   buttons,
   color,
   price,
@@ -242,7 +242,7 @@ const TokenDisplay = ({
                 {translate('wallet.operations.tokens.total_value')}
               </Text>
               <Text style={styles.textBodyItem}>
-                ${tokenTotalValue} (${tokenTotalValue}/
+                ${tokenTotalValue} (${price.usd}/
                 {translate('common.token').toLowerCase()})
               </Text>
             </View>
@@ -276,7 +276,7 @@ const TokenDisplay = ({
                     {translate('wallet.operations.tokens.incoming')}
                   </Text>
                   <Text style={styles.textBodyItem}>
-                    {tokenBalance.delegationsIn}
+                    {formatBalance(parseFloat(tokenBalance.delegationsIn))}
                   </Text>
                 </View>
                 <Icon
@@ -308,7 +308,7 @@ const TokenDisplay = ({
                     {translate('wallet.operations.tokens.outgoing')}
                   </Text>
                   <Text style={styles.textBodyItem}>
-                    {tokenBalance.delegationsOut}
+                    {formatBalance(parseFloat(tokenBalance.delegationsOut))}
                   </Text>
                 </View>
                 <Icon
@@ -330,7 +330,10 @@ const TokenDisplay = ({
                 <Text style={styles.textBodyItem}>
                   {translate('wallet.operations.tokens.total_staked')}
                 </Text>
-                <Text style={styles.textBodyItem}>{tokenBalance.stake}</Text>
+                <Text style={styles.textBodyItem}>
+                  {' '}
+                  {formatBalance(parseFloat(tokenBalance.stake))}
+                </Text>
               </View>
             </View>
           )}
@@ -345,7 +348,7 @@ const TokenDisplay = ({
                     {translate('wallet.operations.tokens.pending_unstake')}
                   </Text>
                   <Text style={styles.textBodyItem}>
-                    {tokenBalance.pendingUnstake}
+                    {formatBalance(parseFloat(tokenBalance.pendingUnstake))}
                   </Text>
                 </View>
               </View>

@@ -45,6 +45,22 @@ const getDelayedTransactionInfo = (trxID: string) => {
 export const getHiveEngineTokenValue = (
   balance: TokenBalance,
   market: TokenMarket[],
+  minVolume = 0,
+) => {
+  const {price, volume} = getHiveEngineTokenTradingInfo(balance, market);
+  const withVolumeAccounted =
+    minVolume <= parseFloat(volume)
+      ? parseFloat(balance.balance) * price +
+        parseFloat(balance.stake) * price +
+        parseFloat(balance.pendingUnstake) * price
+      : 0;
+
+  return withVolumeAccounted;
+};
+
+export const getHiveEngineTokenTradingInfo = (
+  balance: TokenBalance,
+  market: TokenMarket[],
 ) => {
   const tokenMarket = market.find((t) => t.symbol === balance.symbol);
   const price = tokenMarket
@@ -52,7 +68,7 @@ export const getHiveEngineTokenValue = (
     : balance.symbol === 'SWAP.HIVE'
     ? 1
     : 0;
-  return parseFloat(balance.balance) * price;
+  return {price, volume: tokenMarket?.volume};
 };
 
 export const decodeMemoIfNeeded = (memo: string, memoKey: string) => {
