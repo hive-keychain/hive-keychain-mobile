@@ -2,9 +2,9 @@ import BackspaceDark from 'assets/new_UI/backspace_dark_theme.svg';
 import BackspaceLight from 'assets/new_UI/backspace_light_theme.svg';
 import React from 'react';
 import {
+  Pressable,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native';
@@ -69,24 +69,16 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
   };
 
   return (
-    <TouchableOpacity
-      disabled={refNumber === 10}
-      onPressIn={() => {
-        if (refNumber !== 10 && refNumber !== 12) {
-          setActiveshape(<View style={styles.pinElementPressed} />);
-          setPressed(true);
-        }
-      }}
-      onPressOut={() => {
-        setActiveshape(null);
-        setPressed(false);
-      }}
+    <Pressable
       onPress={() => onPressElement(number, back)}
-      style={styles.pinElements}
-      activeOpacity={1}>
+      style={({pressed}) => {
+        return pressed && refNumber !== 12
+          ? [styles.pinElements, styles.pinElementPressed]
+          : styles.pinElements;
+      }}>
       {activeShape}
       {renderWithGradients(refNumber)}
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
@@ -106,14 +98,10 @@ const getStyles = (
       width: width * dimensionReducer,
       height: Math.round(width * dimensionReducer),
       borderRadius: width * dimensionReducer,
+      transition: 2,
     },
     pinElementPressed: {
-      position: 'absolute',
-      width: width * dimensionReducer,
-      height: Math.round(width * dimensionReducer),
-      borderRadius: width * dimensionReducer,
       backgroundColor: getColors(theme).primaryRedShape,
-      zIndex: -1,
     },
     number: {
       flex: 0.65,
