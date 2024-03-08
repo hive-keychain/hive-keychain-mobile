@@ -221,18 +221,6 @@ const Main = ({
     };
   }, []);
 
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      updateUserWallet(lastAccount);
-    });
-
-    return unsubscribe;
-  }, [navigation, lastAccount]);
-
-  if (!user || !user.name) {
-    return null;
-  }
-
   const loadHiddenTokens = async () => {
     let customHiddenTokens = null;
     try {
