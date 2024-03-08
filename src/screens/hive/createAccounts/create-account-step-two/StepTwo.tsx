@@ -20,7 +20,11 @@ import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
-import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
+import {
+  BACKGROUNDDARKBLUE,
+  PRIMARY_RED_COLOR,
+  getColors,
+} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_2,
@@ -72,7 +76,8 @@ const StepTwo = ({
   const [loading, setLoading] = useState(false);
 
   const {theme} = useThemeContext();
-  const styles = getDimensionedStyles({...useWindowDimensions()}, theme);
+  const {width, height} = useWindowDimensions();
+  const styles = getDimensionedStyles({width, height}, theme);
 
   useEffect(() => {
     const masterKey = AccountCreationUtils.generateMasterKey();
@@ -278,6 +283,8 @@ const StepTwo = ({
     }
   };
 
+  const checkBoxSize = width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 14 : 24;
+
   return (
     <Background theme={theme}>
       <View style={{flex: 1, width: '100%', height: '100%'}}>
@@ -292,7 +299,8 @@ const StepTwo = ({
                 title={getPaymentCheckboxLabel()}
                 containerStyle={styles.checkbox}
                 textStyle={[styles.text, styles.dynamicTextSize]}
-                checkedColor={getColors(theme).icon}
+                checkedColor={PRIMARY_RED_COLOR}
+                size={checkBoxSize}
               />
               <CheckBox
                 checked={safelyCopied}
@@ -302,7 +310,8 @@ const StepTwo = ({
                 )}
                 containerStyle={styles.checkbox}
                 textStyle={[styles.text, styles.dynamicTextSize]}
-                checkedColor={getColors(theme).icon}
+                checkedColor={PRIMARY_RED_COLOR}
+                size={checkBoxSize}
               />
               <CheckBox
                 checked={notPrimaryStorageUnderstanding}
@@ -316,7 +325,8 @@ const StepTwo = ({
                 )}
                 containerStyle={styles.checkbox}
                 textStyle={[styles.text, styles.dynamicTextSize]}
-                checkedColor={getColors(theme).icon}
+                checkedColor={PRIMARY_RED_COLOR}
+                size={checkBoxSize}
               />
             </View>
             <View style={[styles.buttonsContainer, styles.spacing]}>
