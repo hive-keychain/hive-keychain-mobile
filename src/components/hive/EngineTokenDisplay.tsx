@@ -1,7 +1,7 @@
 import {TokenBalance, TokenMarket} from 'actions/interfaces';
 import {clearTokensFilters} from 'actions/tokensFilters';
 import HiveEngine from 'assets/wallet/hive_engine.png';
-import {TokenHistoryProps} from 'components/operations/Tokens-history';
+import {TokenHistoryProps} from 'components/history/hive-engine/TokensHistory';
 import React, {useState} from 'react';
 import {
   Image as Img,

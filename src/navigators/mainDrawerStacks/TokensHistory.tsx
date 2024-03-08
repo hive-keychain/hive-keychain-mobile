@@ -2,8 +2,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import {CustomFilterBox} from 'components/form/CustomFilterBox';
+import {TokensHistoryComponent} from 'components/history/hive-engine/TokensHistory';
 import Icon from 'components/hive/Icon';
-import {TokensHistoryComponent} from 'components/operations/Tokens-history';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import {
   RootStackParam,

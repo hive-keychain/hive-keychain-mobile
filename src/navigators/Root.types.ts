@@ -1,6 +1,7 @@
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {WalletHistoryComponentProps} from 'components/history/WalletHistoryComponent';
+import {TokenHistoryProps} from 'components/history/hive-engine/TokensHistory';
 import {CancelTokenDelegationOperationProps} from 'components/operations/Cancel-token-delegation';
 import {ConfirmationPageProps} from 'components/operations/Confirmation';
 import {ConvertOperationProps} from 'components/operations/Convert';
@@ -11,7 +12,6 @@ import {PowerUpOperationProps} from 'components/operations/PowerUp';
 import {RCDelegationOperationProps} from 'components/operations/RCDelegation';
 import {SavingOperationProps} from 'components/operations/Savings';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
-import {TokenHistoryProps} from 'components/operations/Tokens-history';
 import {TransferOperationProps} from 'components/operations/Transfer';
 import {UnstakeTokenOperationProps} from 'components/operations/UnstakeToken';
 import {StyleProp, ViewStyle} from 'react-native';

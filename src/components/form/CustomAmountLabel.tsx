@@ -3,7 +3,6 @@ import {StyleSheet, Text, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {fields_primary_text_1} from 'src/styles/typography';
-import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
 
 export type LabelDataType = {
@@ -32,18 +31,7 @@ const CustomAmountLabel = ({
   return (
     <View style={styles.rowContainer}>
       {list.map((listItem) => {
-        return listItem.data && listItem.data.hasOwnProperty('amount') ? (
-          <View key={applyRandomKey()} style={styles.rowContainer}>
-            <Text style={[{color: listItem.color ?? 'black'}, styles.text]}>
-              {translate(`${translatePrefix}.${listItem.label}`, {
-                amount: withCommas(listItem.data.amount.split(' ')[0], 3),
-              })}{' '}
-            </Text>
-            <Text style={[{color: listItem.color ?? 'black'}, styles.text]}>
-              {listItem.data.amount.split(' ')[1]}{' '}
-            </Text>
-          </View>
-        ) : (
+        return (
           <Text
             key={applyRandomKey()}
             style={[{color: listItem.color ?? 'black'}, styles.text]}>

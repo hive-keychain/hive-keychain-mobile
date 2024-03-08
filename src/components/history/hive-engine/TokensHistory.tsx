@@ -21,7 +21,7 @@ import {
   OUT_TOKENS_TRANSACTIONS,
   TokenTransactionUtils,
 } from 'utils/token-transaction.utils';
-import {TokenHistoryItemComponent} from './token-history-item';
+import {TokenHistoryItemComponent} from './TokenHistoryItem';
 
 export type TokenHistoryProps = {
   tokenBalance: string;

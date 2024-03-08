@@ -69,45 +69,37 @@ const TokenHistoryItem = ({
       case OperationsHiveEngine.COMMENT_AUTHOR_REWARD: {
         const t = transaction as AuthorCurationTransaction;
         labelDataList = [
-          {label: 'info_author_reward.part_1'},
           {
-            label: 'info_author_reward.amount',
+            label: 'info_author_reward',
             data: {
               amount: t.amount,
             },
-            color: '#3BB26E',
           },
-          {label: 'info_author_reward.part_2'},
         ];
         return returnWithList(labelDataList);
       }
       case OperationsHiveEngine.COMMENT_CURATION_REWARD: {
         const t = transaction as CommentCurationTransaction;
+
         labelDataList = [
-          {label: 'info_comment_curation_reward.part_1'},
           {
-            label: 'info_comment_curation_reward.amount',
+            label: 'info_comment_curation_reward',
             data: {
               amount: t.amount,
             },
-            color: '#3BB26E',
           },
-          {label: 'info_comment_curation_reward.part_2'},
         ];
         return returnWithList(labelDataList);
       }
       case OperationsHiveEngine.MINING_LOTTERY: {
         const t = transaction as MiningLotteryTransaction;
         labelDataList = [
-          {label: 'info_mining_lottery.part_1'},
           {
-            label: 'info_mining_lottery.amount',
+            label: 'info_mining_lottery',
             data: {
               amount: t.amount,
             },
-            color: '#3BB26E',
           },
-          {label: 'info_mining_lottery.part_2', data: {poolId: t.poolId}},
         ];
         return returnWithList(labelDataList);
       }
@@ -115,24 +107,17 @@ const TokenHistoryItem = ({
         const t = transaction as TransferTokenTransaction;
         if (t.from === activeAccountName) {
           labelDataList = [
-            {label: 'info_transfer_out.part_1'},
             {
-              label: 'info_transfer_out.amount',
+              label: 'info_transfer_out.part_1',
               data: {
                 amount: t.amount,
               },
-              color: '#B9122F',
             },
             {label: 'info_transfer_out.part_2', data: {to: t.to}},
           ];
         } else {
           labelDataList = [
-            {label: 'info_transfer_in.part_1'},
-            {
-              label: 'info_transfer_in.amount',
-              data: {amount: t.amount},
-              color: '#3BB26E',
-            },
+            {label: 'info_transfer_in.part_1', data: {amount: t.amount}},
             {label: 'info_transfer_in.part_2', data: {from: t.from}},
           ];
         }
@@ -142,31 +127,19 @@ const TokenHistoryItem = ({
         const t = transaction as DelegateTokenTransaction;
         if (t.delegator === activeAccountName) {
           labelDataList = [
-            {label: 'info_delegation_out.part_1'},
             {
-              label: 'info_delegation_out.amount',
+              label: 'info_delegation_out',
               data: {
                 amount: t.amount,
+                delegatee: t.delegatee,
               },
-              color: '#B9122F',
-            },
-            {
-              label: 'info_delegation_out.part_2',
-              data: {delegatee: t.delegatee},
             },
           ];
         } else {
           labelDataList = [
             {
-              label: 'info_delegation_in.part_1',
-              data: {delegator: t.delegator},
-            },
-            {
-              label: 'info_delegation_in.amount',
-              data: {
-                amount: t.amount,
-              },
-              color: '#3BB26E',
+              label: 'info_delegation_in',
+              data: {delegator: t.delegator, amount: t.amount},
             },
           ];
         }
@@ -177,35 +150,18 @@ const TokenHistoryItem = ({
         if (t.delegator === activeAccountName) {
           labelDataList = [
             {
-              label: 'info_start_cancel_delegation_out.part_1',
-            },
-            {
-              label: 'info_start_cancel_delegation_out.amount',
+              label: 'info_start_cancel_delegation_out',
               data: {
                 amount: t.amount,
+                delegatee: t.delegatee,
               },
-              color: '#3BB26E',
-            },
-            {
-              label: 'info_start_cancel_delegation_out.part_2',
-              data: {delegatee: t.delegatee},
             },
           ];
         } else {
           labelDataList = [
             {
-              label: 'info_start_cancel_delegation_in.part_1',
-              data: {delegator: t.delegator},
-            },
-            {
-              label: 'info_start_cancel_delegation_in.amount',
-              data: {
-                amount: t.amount,
-              },
-              color: '#B9122F',
-            },
-            {
-              label: 'info_start_cancel_delegation_in.part_2',
+              label: 'info_start_cancel_delegation_in',
+              data: {delegator: t.delegator, amount: t.amount},
             },
           ];
         }
@@ -216,34 +172,19 @@ const TokenHistoryItem = ({
         if (t.delegator === activeAccountName) {
           labelDataList = [
             {
-              label: 'info_cancel_delegation_out.part_1',
-            },
-            {
-              label: 'info_cancel_delegation_out.amount',
-              data: {amount: t.amount},
-              color: '#3BB26E',
-            },
-            {
-              label: 'info_cancel_delegation_out.part_2',
-              data: {delegatee: t.delegatee},
+              label: 'info_cancel_delegation_out',
+              data: {delegatee: t.delegatee, amount: t.amount},
             },
           ];
         } else {
           labelDataList = [
             {
-              label: 'info_cancel_delegation_in.part_1',
+              label: 'info_cancel_delegation_in',
               data: {
                 delegator:
                   t.delegator ?? translate('common.unknown_data.value'),
+                amount: t.amount,
               },
-            },
-            {
-              label: 'info_cancel_delegation_in.amount',
-              data: {amount: t.amount},
-              color: '#B9122F',
-            },
-            {
-              label: 'info_cancel_delegation_in.part_2',
             },
           ];
         }
@@ -254,28 +195,15 @@ const TokenHistoryItem = ({
         if (t.from !== activeAccountName) {
           labelDataList = [
             {
-              label: 'info_stake_other_user.part_1',
-              data: {from: t.from},
-            },
-            {
-              label: 'info_stake_other_user.amount',
-              data: {amount: t.amount},
-              color: '#3BB26E',
-            },
-            {
-              label: 'info_stake_other_user.part_2',
-              data: {to: t.to},
+              label: 'info_stake_other_user',
+              data: {from: t.from, amount: t.amount, to: t.to},
             },
           ];
         } else {
           labelDataList = [
             {
-              label: 'info_stake.part_1',
-            },
-            {
-              label: 'info_stake.amount',
+              label: 'info_stake',
               data: {amount: t.amount},
-              color: '#3BB26E',
             },
           ];
         }
@@ -285,12 +213,8 @@ const TokenHistoryItem = ({
         const t = transaction as UnStakeTokenStartTransaction;
         labelDataList = [
           {
-            label: 'info_start_unstake.part_1',
-          },
-          {
-            label: 'info_start_unstake.amount',
+            label: 'info_start_unstake',
             data: {amount: t.amount},
-            color: '#B9122F',
           },
         ];
         return returnWithList(labelDataList);
@@ -299,34 +223,20 @@ const TokenHistoryItem = ({
         const t = transaction as UnStakeTokenDoneTransaction;
         labelDataList = [
           {
-            label: 'info_unstake_done.amount',
+            label: 'info_unstake_done',
             data: {amount: t.amount},
-            color: '#B9122F',
-          },
-          {
-            label: 'info_unstake_done.part_1',
           },
         ];
         return returnWithList(labelDataList);
       }
       case OperationsHiveEngine.TOKEN_ISSUE:
         labelDataList = [
-          {label: 'info_issue.part_1'},
-          {
-            label: 'info_issue.amount',
-            data: {amount: transaction.amount},
-            color: '#3BB26E',
-          },
+          {label: 'info_issue', data: {amount: transaction.amount}},
         ];
         return returnWithList(labelDataList);
       case OperationsHiveEngine.HIVE_PEGGED_BUY:
         labelDataList = [
-          {label: 'info_pegged_buy.part_1'},
-          {
-            label: 'info_pegged_buy.amount',
-            data: {amount: transaction.amount},
-            color: '#3BB26E',
-          },
+          {label: 'info_pegged_buy', data: {amount: transaction.amount}},
         ];
         return returnWithList(labelDataList);
 
@@ -383,8 +293,6 @@ const TokenHistoryItem = ({
       case OperationsHiveEngine.TOKEN_UNSTAKE_START:
       case OperationsHiveEngine.TOKEN_UNSTAKE_DONE:
         return Icons.UNSTAKE;
-      default:
-        console.log(operationType);
     }
   };
 
