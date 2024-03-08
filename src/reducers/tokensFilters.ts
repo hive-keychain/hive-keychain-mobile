@@ -4,21 +4,25 @@ import {persistReducer} from 'redux-persist';
 import {TokenHistoryFilter} from 'src/types/tokens.history.types';
 import {persistConfig} from './configs';
 
+export enum HiveEngineFilterTypes {
+  transfer = 'transfer',
+  rewards = 'rewards',
+  miningLottery = 'miningLottery',
+  stake = 'stake',
+  unstake = 'unstake',
+  delegations = 'delegations',
+}
 export const DEFAULT_FILTER_TOKENS: TokenHistoryFilter = {
   filterValue: '',
   inSelected: false,
   outSelected: false,
   selectedTransactionTypes: {
-    comments_curationReward: false,
-    comments_authorReward: false,
-    mining_lottery: false,
-    tokens_transfer: false,
-    tokens_stake: false,
-    tokens_unstakeStart: false,
-    tokens_unstakeDone: false,
-    tokens_delegate: false,
-    tokens_undelegateStart: false,
-    tokens_undelegateDone: false,
+    transfer: false,
+    rewards: false,
+    miningLottery: false,
+    stake: false,
+    unstake: false,
+    delegations: false,
   },
 };
 

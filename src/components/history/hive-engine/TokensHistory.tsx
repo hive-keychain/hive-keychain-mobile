@@ -5,6 +5,7 @@ import Loader from 'components/ui/Loader';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
+import {HiveEngineFilterTypes} from 'reducers/tokensFilters';
 import {Theme} from 'src/context/theme.context';
 import {
   DelegateTokenTransaction,
@@ -55,12 +56,50 @@ const TokensHistory = ({
     };
   }, []);
 
+  const getAllSubTypes = (types: HiveEngineFilterTypes[]) => {
+    let subTypes: OperationsHiveEngine[] = [];
+    for (const type of types) {
+      switch (type) {
+        case HiveEngineFilterTypes.delegations:
+          subTypes.push(
+            OperationsHiveEngine.TOKENS_DELEGATE,
+            OperationsHiveEngine.TOKEN_UNDELEGATE_START,
+            OperationsHiveEngine.TOKEN_UNDELEGATE_DONE,
+          );
+          break;
+        case HiveEngineFilterTypes.miningLottery:
+          subTypes.push(OperationsHiveEngine.MINING_LOTTERY);
+          break;
+        case HiveEngineFilterTypes.rewards:
+          subTypes.push(
+            OperationsHiveEngine.COMMENT_AUTHOR_REWARD,
+            OperationsHiveEngine.COMMENT_CURATION_REWARD,
+          );
+          break;
+        case HiveEngineFilterTypes.stake:
+          subTypes.push(OperationsHiveEngine.TOKEN_STAKE);
+          break;
+        case HiveEngineFilterTypes.transfer:
+          subTypes.push(OperationsHiveEngine.TOKENS_TRANSFER);
+          break;
+        case HiveEngineFilterTypes.unstake:
+          subTypes.push(
+            OperationsHiveEngine.TOKEN_UNSTAKE_DONE,
+            OperationsHiveEngine.TOKEN_UNSTAKE_START,
+          );
+      }
+    }
+    return subTypes;
+  };
+
   useEffect(() => {
     if (tokenHistory.length > 0 && tokensFilter) {
       setLoading(true);
-      const selectedTransactionTypes = Object.keys(
-        tokensFilter.selectedTransactionTypes,
-      ).filter((operation) => tokensFilter.selectedTransactionTypes[operation]);
+      const selectedTransactionTypes = getAllSubTypes(
+        Object.keys(tokensFilter.selectedTransactionTypes).filter(
+          (operation) => tokensFilter.selectedTransactionTypes[operation],
+        ) as HiveEngineFilterTypes[],
+      );
 
       const isInOrOutSelected =
         tokensFilter.inSelected || tokensFilter.outSelected;
