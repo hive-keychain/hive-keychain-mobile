@@ -59,6 +59,7 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
           <View>
             <View style={{width: 60, height: 60}}>
               <AssetImage
+                theme={theme}
                 withoutSVGContainer
                 nameImage={item.image.split('.')[0]}
               />
@@ -89,6 +90,7 @@ const BuyCoinsComponent = ({user, currency}: Props) => {
           styles.border,
         ]}>
         <AssetImage
+          theme={theme}
           nameImage={item.image.split('.')[0]}
           containerStyles={{
             borderWidth: 0,
