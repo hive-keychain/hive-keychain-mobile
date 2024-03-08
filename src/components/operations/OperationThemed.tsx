@@ -29,6 +29,7 @@ interface OperationProps {
   buttonTitle?: string;
   method?: KeyTypes;
   loading?: boolean;
+  inScrollView?: boolean;
 }
 
 const OperationThemed = ({
@@ -40,10 +41,31 @@ const OperationThemed = ({
   method,
   buttonTitle,
   loading = false,
+  inScrollView = true,
 }: OperationProps) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useSafeAreaInsets(), additionalSVGOpacity);
   const {width, height} = useWindowDimensions();
+
+  const renderContent = () => (
+    <>
+      {childrenMiddle}
+      {onNext && buttonTitle && (
+        <ActiveOperationButton
+          method={method || KeyTypes.active}
+          title={translate(buttonTitle)}
+          onPress={onNext}
+          style={[
+            getButtonStyle(theme, height).warningStyleButton,
+            {
+              marginBottom: 30,
+            },
+          ]}
+          isLoading={loading}
+        />
+      )}
+    </>
+  );
 
   //TODO important here bellow:
   //  - related to transfer and every compo using the space-between.
@@ -63,26 +85,16 @@ const OperationThemed = ({
         <View style={{flex: 1}}>
           {childrenTop}
           <View style={{flex: 1}}>
-            <ScrollView
-              contentContainerStyle={[styles.contentContainer]}
-              scrollEnabled={true}
-              keyboardShouldPersistTaps="handled">
-              {childrenMiddle}
-              {onNext && buttonTitle && (
-                <ActiveOperationButton
-                  method={method || KeyTypes.active}
-                  title={translate(buttonTitle)}
-                  onPress={onNext}
-                  style={[
-                    getButtonStyle(theme, height).warningStyleButton,
-                    {
-                      marginBottom: 30,
-                    },
-                  ]}
-                  isLoading={loading}
-                />
-              )}
-            </ScrollView>
+            {inScrollView ? (
+              <ScrollView
+                contentContainerStyle={[styles.contentContainer]}
+                scrollEnabled={true}
+                keyboardShouldPersistTaps="handled">
+                {renderContent()}
+              </ScrollView>
+            ) : (
+              <View style={[styles.contentContainer]}>{renderContent()}</View>
+            )}
           </View>
         </View>
       </>

@@ -202,6 +202,7 @@ const WallettHistory = ({
       additionalContentContainerStyle={{
         marginTop: 20,
       }}
+      inScrollView={false}
       childrenMiddle={
         <View style={styles.flex}>
           <FocusAwareStatusBar />

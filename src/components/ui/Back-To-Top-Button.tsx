@@ -16,7 +16,7 @@ export const BackToTopButton = (props: BackToTopButtonProps) => {
     if (props.element && props.element.current) {
       try {
         if (!props.isScrollView) {
-          props.element.current.scrollToIndex({animated: false, index: 0});
+          props.element.current.scrollToIndex({animated: true, index: 0});
         } else {
           props.element.current.scrollTo({x: 0, y: 0, animated: true});
         }
@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignItems: 'center',
     position: 'absolute',
-    bottom: 5,
-    right: 5,
+    bottom: 10,
+    right: 10,
     // borderWidth: 1,
     width: 45,
     height: 45,
