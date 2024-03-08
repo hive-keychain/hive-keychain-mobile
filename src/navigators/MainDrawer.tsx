@@ -73,7 +73,13 @@ export default () => {
         component={AccountManagementStack}
       />
       <Drawer.Screen name="AddAccountStack" component={AddAccount} />
-      <Drawer.Screen name="CreateAccountScreen" component={CreateAccount} />
+      <Drawer.Screen
+        name="CreateAccountScreen"
+        component={CreateAccount}
+        options={{
+          unmountOnBlur: true,
+        }}
+      />
       <Drawer.Screen name="Tokens" component={Tokens} />
       <Drawer.Screen name="TokensHistory" component={TokensHistory} />
       <Drawer.Screen
