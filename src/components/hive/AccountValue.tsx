@@ -32,12 +32,20 @@ const AccountValue = ({
   title,
   accountValueDisplay,
   setAccountValueDisplay,
+  userTokens,
+  tokensMarket,
 }: Props) => {
-  const [hideValue, setHideValue] = useState(false);
   const [accountValue, setAccountValue] = useState([]);
   useEffect(() => {
     if (prices.bitcoin && account && properties.globals) {
-      const accVal = getAccountValue(account, prices, properties.globals) + '';
+      const accVal =
+        getAccountValue(
+          account,
+          prices,
+          properties.globals,
+          userTokens,
+          tokensMarket,
+        ) + '';
       if (isNaN(+accVal)) {
         setAccountValue(['...']);
         return;
@@ -94,6 +102,8 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
 const connector = connect(
   (state: RootState) => ({
     accountValueDisplay: state.accountValueDisplay,
+    userTokens: state.userTokens.list,
+    tokensMarket: state.tokensMarket,
   }),
   {
     setAccountValueDisplay,

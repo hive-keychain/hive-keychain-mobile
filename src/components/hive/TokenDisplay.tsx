@@ -43,7 +43,7 @@ type Props = {
   name: string;
   logo: JSX.Element;
   currency: string;
-  value: number;
+  balance: number;
   totalValue: number;
   color: string;
   price?: Currency;
@@ -62,7 +62,7 @@ const TokenDisplay = ({
   name,
   logo,
   currency,
-  value,
+  balance: value,
   buttons,
   color,
   price,
