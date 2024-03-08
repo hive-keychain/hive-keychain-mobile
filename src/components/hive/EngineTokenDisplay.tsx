@@ -1,5 +1,4 @@
 import {TokenBalance, TokenMarket} from 'actions/interfaces';
-import {clearTokensFilters} from 'actions/tokensFilters';
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import {TokenHistoryProps} from 'components/history/hive-engine/TokensHistory';
 import React, {useState} from 'react';
@@ -35,7 +34,6 @@ const EngineTokenDisplay = ({
   market,
   toggled,
   setToggle,
-  clearTokensFilters,
   addBackground,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
@@ -75,7 +73,6 @@ const EngineTokenDisplay = ({
   );
 
   const onHandleGoToTokenHistory = () => {
-    clearTokensFilters();
     navigate('TokensHistory', {
       currency: token.symbol,
       tokenBalance: token.balance,
@@ -147,9 +144,7 @@ const mapStateToProps = (state: RootState) => {
   return {};
 };
 
-const connector = connect(mapStateToProps, {
-  clearTokensFilters,
-});
+const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(EngineTokenDisplay);
