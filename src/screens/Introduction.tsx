@@ -93,12 +93,12 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
     }
   }, [currentStep]);
 
-  const onHandleScrollEndDrag = (
+  const handleMomentumScrollEnd = (
     event: NativeSyntheticEvent<NativeScrollEvent>,
   ) => {
     const {x} = event.nativeEvent.contentOffset;
-    const indexOfNextScreen = (x / width).toFixed(0);
-    setCurrentStep(parseFloat(indexOfNextScreen));
+    const indexOfNextScreen = Math.round(x / width);
+    setCurrentStep(indexOfNextScreen);
   };
 
   const drawPageIndicators = (currentIndex: number) => {
@@ -135,8 +135,8 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           ref={scrollViewRef}
           style={{flex: 1}}
           horizontal={true}
-          scrollEventThrottle={16}
-          onScrollEndDrag={onHandleScrollEndDrag}
+          scrollEventThrottle={0}
+          onMomentumScrollEnd={handleMomentumScrollEnd}
           pagingEnabled={true}>
           <View style={styles.scrollableScreen}>
             <Separator height={10} />
