@@ -147,7 +147,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
               {renderLogos(false)}
               <Person1 {...styles.imageHive} />
               <View style={[styles.pageIndicatorsContainer]}>
-                {drawPageIndicators(currentStep).map((indicator) => {
+                {drawPageIndicators(0).map((indicator) => {
                   return indicator;
                 })}
               </View>
@@ -170,7 +170,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
               {renderLogos(false)}
               <Hand {...styles.imageHive} />
               <View style={[styles.pageIndicatorsContainer]}>
-                {drawPageIndicators(currentStep).map((indicator) => {
+                {drawPageIndicators(1).map((indicator) => {
                   return indicator;
                 })}
               </View>
@@ -192,7 +192,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
             <View style={[styles.centeredView, styles.flexBetween60]}>
               {renderLogos(true)}
               <View style={[styles.pageIndicatorsContainer]}>
-                {drawPageIndicators(currentStep).map((indicator) => {
+                {drawPageIndicators(2).map((indicator) => {
                   return indicator;
                 })}
               </View>
