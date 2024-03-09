@@ -1,14 +1,14 @@
 import {KeyTypes} from 'actions/interfaces';
 import {addPreference} from 'actions/preferences';
-import {RadioButton} from 'components/form/CustomRadioGroup';
 import OperationButton from 'components/form/EllipticButton';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
+import {CheckBox} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
 import {urlTransformer} from 'utils/browser';
 import {beautifyErrorMessage} from 'utils/keychain';
@@ -78,20 +78,20 @@ const RequestOperation = ({
       {method !== KeyTypes.active &&
       type !== KeychainRequestTypes.addAccount ? (
         <View style={styles.keep}>
-          <RadioButton
-            selected={keep}
-            label={translate(`request.keep${has ? '_has' : ''}`, {
+          <CheckBox
+            checked={keep}
+            onPress={() => {
+              setKeep(!keep);
+            }}
+            containerStyle={[styles.checkbox]}
+            checkedColor={PRIMARY_RED_COLOR}
+            size={22}
+            title={translate(`request.keep${has ? '_has' : ''}`, {
               domain,
               username: username || selectedUsername,
               type,
             })}
-            style={styles.radio}
-            onSelect={() => {
-              setKeep(!keep);
-            }}
-            additionalRadioLabelStyle={[styles.text, styles.smallerText]}
-            additionalRadioStyleActive={styles.bgColor}
-            additionalRadioStyleInactive={{borderColor: getColors(theme).icon}}
+            textStyle={[styles.text, styles.smallerText]}
           />
         </View>
       ) : (
@@ -148,7 +148,6 @@ const getStyles = (theme: Theme) =>
   StyleSheet.create({
     button: {marginTop: 40, marginBottom: 20},
     keep: {marginTop: 40, flexDirection: 'row'},
-    radio: {marginLeft: 0},
     text: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
@@ -163,6 +162,13 @@ const getStyles = (theme: Theme) =>
       backgroundColor: getColors(theme).icon,
     },
     whiteText: {color: '#FFF'},
+    checkbox: {
+      backgroundColor: 'rgba(0,0,0,0)',
+      borderColor: 'rgba(0,0,0,0)',
+      borderRadius: 0,
+      padding: 0,
+      margin: 0,
+    },
   });
 const connector = connect(null, {addPreference});
 type TypesFromRedux = ConnectedProps<typeof connector>;

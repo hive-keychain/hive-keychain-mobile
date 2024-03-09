@@ -93,12 +93,12 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
     }
   }, [currentStep]);
 
-  const onHandleScrollEndDrag = (
+  const handleMomentumScrollEnd = (
     event: NativeSyntheticEvent<NativeScrollEvent>,
   ) => {
     const {x} = event.nativeEvent.contentOffset;
-    const indexOfNextScreen = (x / width).toFixed(0);
-    setCurrentStep(parseFloat(indexOfNextScreen));
+    const indexOfNextScreen = Math.round(x / width);
+    setCurrentStep(indexOfNextScreen);
   };
 
   const drawPageIndicators = (currentIndex: number) => {
@@ -135,8 +135,8 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           ref={scrollViewRef}
           style={{flex: 1}}
           horizontal={true}
-          scrollEventThrottle={16}
-          onScrollEndDrag={onHandleScrollEndDrag}
+          scrollEventThrottle={0}
+          onMomentumScrollEnd={handleMomentumScrollEnd}
           pagingEnabled={true}>
           <View style={styles.scrollableScreen}>
             <Separator height={10} />
@@ -147,7 +147,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
               {renderLogos(false)}
               <Person1 {...styles.imageHive} />
               <View style={[styles.pageIndicatorsContainer]}>
-                {drawPageIndicators(currentStep).map((indicator) => {
+                {drawPageIndicators(0).map((indicator) => {
                   return indicator;
                 })}
               </View>
@@ -170,7 +170,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
               {renderLogos(false)}
               <Hand {...styles.imageHive} />
               <View style={[styles.pageIndicatorsContainer]}>
-                {drawPageIndicators(currentStep).map((indicator) => {
+                {drawPageIndicators(1).map((indicator) => {
                   return indicator;
                 })}
               </View>
@@ -192,7 +192,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
             <View style={[styles.centeredView, styles.flexBetween60]}>
               {renderLogos(true)}
               <View style={[styles.pageIndicatorsContainer]}>
-                {drawPageIndicators(currentStep).map((indicator) => {
+                {drawPageIndicators(2).map((indicator) => {
                   return indicator;
                 })}
               </View>

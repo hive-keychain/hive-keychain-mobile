@@ -373,7 +373,6 @@ const Transfer = ({
               <View>
                 <Separator />
                 <OptionsToggle
-                  type={'checkbox'}
                   theme={theme}
                   title={translate('common.recurrent_transfer')}
                   toggled={isRecurrent}
