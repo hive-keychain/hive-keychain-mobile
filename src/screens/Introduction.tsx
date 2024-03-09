@@ -1,13 +1,13 @@
-import BackgroundSquares from 'assets/new_UI/background_squares.svg';
+import BACKGROUNDSQUARES from 'assets/new_UI/background_squares.svg';
 import IndicatorActive from 'assets/new_UI/circle_indicator_active.svg';
 import IndicatorInactive from 'assets/new_UI/circle_indicator_inactive.svg';
 import IndicatorInactiveLight from 'assets/new_UI/circle_indicator_inactive_light.svg';
-import Hand from 'assets/new_UI/hand_1.svg';
-import HiveImageSignupDark from 'assets/new_UI/hive_logo_signup_dark.svg';
+import HANDIMAGE from 'assets/new_UI/hand_1.svg';
+import HIVEIMAGESIGNUPDARK from 'assets/new_UI/hive_logo_signup_dark.svg';
 import HiveImageSignupLight from 'assets/new_UI/hive_logo_signup_light.svg';
 import KeychainLogoDark from 'assets/new_UI/keychain_logo_powered_dark_theme.svg';
 import KeychainLogoLight from 'assets/new_UI/keychain_logo_powered_light_theme.svg';
-import Person1 from 'assets/new_UI/person_1.svg';
+import PERSONIMAGE from 'assets/new_UI/person_1.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -25,13 +25,15 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {getButtonHeight} from 'src/styles/button';
 import {
   NEUTRAL_WHITE_COLOR,
   PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {getSpaceAdjustMultiplier, getSpacing} from 'src/styles/spacing';
+import {getSpaceAdjustMultiplier} from 'src/styles/spacing';
 import {
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   button_link_primary_medium,
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
@@ -42,7 +44,9 @@ import {hiveConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 
 const INTROSTEPS = 3;
-
+//TODO
+//  -> while coding this task: Fix intro : page is poorly aligned on smaller devices
+//    -> if not enough screen height to fit in both sizes(XL & S), remove the Keychain logo.
 const Introduction = ({navigation}: IntroductionNavProp) => {
   const scrollViewRef = useRef();
   const {height, width} = useWindowDimensions();
@@ -54,26 +58,42 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
     spaced.adjustMultiplier,
   );
 
-  const renderLogos = (hiveImage: boolean) => {
+  const renderLogos = (pageIndex: number) => {
+    const renderBGImage = () => {
+      if (pageIndex === 0) {
+        return (
+          <View style={[styles.flexAbsCentered]}>
+            <BACKGROUNDSQUARES {...styles.backgroundSquares} />
+          </View>
+        );
+      }
+    };
+    const renderHIVEProperLogo = () =>
+      theme === Theme.LIGHT ? (
+        <HiveImageSignupLight {...styles.imageHive} />
+      ) : (
+        <HIVEIMAGESIGNUPDARK {...styles.imageHive} />
+      );
+    const renderImages = () => {
+      return (
+        <View>
+          {pageIndex === 0 && <PERSONIMAGE {...styles.imageHive} />}
+          {pageIndex === 1 && <HANDIMAGE {...styles.imageHive} />}
+          {pageIndex === 2 && renderHIVEProperLogo()}
+        </View>
+      );
+    };
     return theme === Theme.LIGHT ? (
       <View style={[styles.centeredView]}>
+        {renderBGImage()}
         <KeychainLogoLight {...styles.imageLogo} />
-        {hiveImage && (
-          <>
-            <Separator height={height * spaced.multiplier * 2} />
-            <HiveImageSignupLight {...styles.imageHive} />
-          </>
-        )}
+        {renderImages()}
       </View>
     ) : (
       <View style={[styles.centeredView]}>
+        {renderBGImage()}
         <KeychainLogoDark {...styles.imageLogo} />
-        {hiveImage && (
-          <>
-            <Separator height={height * spaced.multiplier * 2} />
-            <HiveImageSignupDark {...styles.imageHive} />
-          </>
-        )}
+        {renderImages()}
       </View>
     );
   };
@@ -123,6 +143,70 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
     }
     return circleArray;
   };
+  //TODO cleanup
+  const renderCustomLayout = (
+    pageIndex: number,
+    textElements: JSX.Element,
+    buttons: JSX.Element,
+  ) => {
+    return (
+      <View
+        style={[
+          {flex: 1, justifyContent: 'center', width, height},
+          // getBorderTest('red'),
+        ]}>
+        <View
+          style={[
+            {
+              width: '100%',
+              height: height * 0.5,
+            },
+            // getBorderTest('yellow'),
+          ]}>
+          {renderLogos(pageIndex)}
+        </View>
+        <View
+          style={[
+            {
+              width: '100%',
+              height: height * 0.04,
+              alignItems: 'center',
+            },
+            // getBorderTest('blue'),
+          ]}>
+          <View style={[styles.pageIndicatorsContainer]}>
+            {drawPageIndicators(pageIndex).map((indicator) => {
+              return indicator;
+            })}
+          </View>
+        </View>
+        <View
+          style={[
+            {
+              width: '100%',
+              height: height * 0.3,
+              justifyContent: 'space-between',
+            },
+            // getBorderTest('purple'),
+          ]}>
+          <View
+            style={[
+              {height: '50%', justifyContent: 'center'},
+              // getBorderTest('yellow'),
+            ]}>
+            {textElements}
+          </View>
+          <View
+            style={[
+              {height: '50%', justifyContent: 'flex-end'},
+              // getBorderTest('red'),
+            ]}>
+            {buttons}
+          </View>
+        </View>
+      </View>
+    );
+  };
 
   return (
     <Background theme={theme}>
@@ -132,6 +216,73 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
         />
         <ScrollView
+          ref={scrollViewRef}
+          style={{flex: 1}}
+          horizontal={true}
+          scrollEventThrottle={0}
+          onMomentumScrollEnd={handleMomentumScrollEnd}
+          pagingEnabled={true}>
+          {renderCustomLayout(
+            0,
+            <Text style={[styles.text, styles.biggerText]}>
+              {translate('intro.intro_text_1')}
+            </Text>,
+            <EllipticButton
+              title={translate('common.next')}
+              onPress={handleNextStep}
+              style={styles.warningProceedButton}
+              additionalTextStyle={styles.textButtonFilled}
+            />,
+          )}
+          {renderCustomLayout(
+            1,
+            <Text style={[styles.text, styles.biggerText]}>
+              {translate('intro.intro_text_2')}
+            </Text>,
+            <EllipticButton
+              title={translate('common.next')}
+              onPress={handleNextStep}
+              style={styles.warningProceedButton}
+              additionalTextStyle={styles.textButtonFilled}
+            />,
+          )}
+          {renderCustomLayout(
+            2,
+            <>
+              <Text style={[styles.text, styles.biggerText]}>
+                {translate('intro.text')}
+              </Text>
+              <Text style={[styles.text, styles.biggerText]}>
+                {translate('intro.manage')}
+              </Text>
+            </>,
+            <View
+              style={[
+                {flex: 1, justifyContent: 'flex-end'},
+                // getBorderTest('yellow'),
+              ]}>
+              <EllipticButton
+                title={translate('intro.existingAccount')}
+                onPress={() => {
+                  navigation.navigate('SignupScreen');
+                }}
+                style={styles.outlineButton}
+                additionalTextStyle={styles.textOutLineButton}
+              />
+              <Separator height={height * 0.015} />
+              <EllipticButton
+                title={translate('intro.createAccount')}
+                onPress={() => {
+                  Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
+                }}
+                style={styles.warningProceedButton}
+                additionalTextStyle={styles.textButtonFilled}
+              />
+            </View>,
+          )}
+        </ScrollView>
+
+        {/* <ScrollView
           ref={scrollViewRef}
           style={{flex: 1}}
           horizontal={true}
@@ -226,7 +377,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
             </View>
             <Separator height={10} />
           </View>
-        </ScrollView>
+        </ScrollView> */}
       </View>
     </Background>
   );
@@ -245,18 +396,17 @@ const getDimensionedStyles = (
     },
     backgroundSquares: {
       width: width * 0.85,
-      bottom: undefined,
     },
     imageLogo: {
-      width: width * adjustMultiplier,
+      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 30 : 100,
     },
     imageHive: {
-      width: width * 0.75 * adjustMultiplier,
-      height: width * 0.75 * adjustMultiplier,
+      width: width * (width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.65 : 0.75),
+      height: width * (width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.65 : 0.75),
     },
     text: {
       color: getColors(theme).secondaryText,
-      marginHorizontal: getSpacing(width).mainmarginHorizontalExtra,
+      marginHorizontal: 10,
       ...title_primary_title_1,
       textAlign: 'center',
       alignSelf: 'stretch',
@@ -267,6 +417,7 @@ const getDimensionedStyles = (
       borderWidth: 1,
       backgroundColor: '#00000000',
       zIndex: 10,
+      height: getButtonHeight(width),
     },
     textOutLineButton: {
       ...button_link_primary_medium,
@@ -275,6 +426,7 @@ const getDimensionedStyles = (
     },
     warningProceedButton: {
       backgroundColor: PRIMARY_RED_COLOR,
+      height: getButtonHeight(width),
     },
     textButtonFilled: {
       ...button_link_primary_medium,
@@ -290,21 +442,19 @@ const getDimensionedStyles = (
     flexBetween60: {justifyContent: 'space-between', height: '60%'},
     flexAbsCentered: {
       position: 'absolute',
-      top: -5,
-      bottom: undefined,
-      flex: 1,
+      top: -100,
       alignSelf: 'center',
     },
     pageIndicatorsContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
-      alignContent: 'center',
-      marginBottom: 10,
+      alignItems: 'center',
       alignSelf: 'center',
+      flex: 1,
     },
     indicatorCircle: {
-      width: 12,
-      height: 12,
+      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 8 : 12,
+      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 8 : 12,
     },
     dynamicTextSize: {
       fontSize: getFontSizeSmallDevices(width, 16),
