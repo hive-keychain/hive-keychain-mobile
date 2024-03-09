@@ -1,4 +1,3 @@
-import {RadioButton} from 'components/form/CustomRadioGroup';
 import React from 'react';
 import {
   StyleProp,
@@ -12,14 +11,12 @@ import {CheckBox} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
-  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_1,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 
 type Props = {
-  type: 'checkbox' | 'option';
   children: JSX.Element[];
   title: string;
   callback: (toggled: boolean) => void;
@@ -27,14 +24,15 @@ type Props = {
   theme: Theme;
   additionalTitleStyle?: StyleProp<TextStyle>;
 };
-
+/**
+ * Note: Using a checkbox, to toogle children components
+ */
 const OptionsToggle = ({
   children,
   title,
   toggled,
   callback,
   theme,
-  type,
   additionalTitleStyle,
 }: Props) => {
   const styles = getStyles(theme, useWindowDimensions());
@@ -42,27 +40,16 @@ const OptionsToggle = ({
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {type === 'option' ? (
-          <RadioButton
-            onSelect={() => {
-              callback(!toggled);
-            }}
-            selected={toggled}
-            style={styles.toggleButton}
-            radioStyle={styles.radioStyle}
-            additionalRadioStyleActive={styles.radioButtonActive}
-          />
-        ) : (
-          <CheckBox
-            checked={toggled}
-            onPress={() => {
-              callback(!toggled);
-            }}
-            containerStyle={[styles.checkbox]}
-            checkedColor={PRIMARY_RED_COLOR}
-            size={22}
-          />
-        )}
+        <CheckBox
+          checked={toggled}
+          onPress={() => {
+            callback(!toggled);
+          }}
+          containerStyle={[styles.checkbox]}
+          checkedColor={PRIMARY_RED_COLOR}
+          size={22}
+        />
+
         <Text style={[styles.title, additionalTitleStyle]}>{title}</Text>
       </View>
       <View style={toggled ? styles.toggled : styles.untoggled}>
@@ -79,16 +66,6 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     },
     toggled: {},
     untoggled: {display: 'none'},
-    toggleButton: {
-      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 15 : 20,
-      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 15 : 20,
-      borderRadius: 10,
-      borderWidth: 2,
-      borderColor: getColors(theme).icon,
-      marginLeft: 0,
-      marginRight: 0,
-      paddingRight: 0,
-    },
     header: {
       flexDirection: 'row',
     },
@@ -99,13 +76,6 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
         width,
         {...body_primary_body_1}.fontSize,
       ),
-    },
-    radioButtonActive: {
-      backgroundColor: getColors(theme).icon,
-    },
-    radioStyle: {
-      width: 22,
-      marginRight: 10,
     },
     checkbox: {
       backgroundColor: 'rgba(0,0,0,0)',
