@@ -5,8 +5,6 @@ import IndicatorInactiveLight from 'assets/new_UI/circle_indicator_inactive_ligh
 import HANDIMAGE from 'assets/new_UI/hand_1.svg';
 import HIVEIMAGESIGNUPDARK from 'assets/new_UI/hive_logo_signup_dark.svg';
 import HiveImageSignupLight from 'assets/new_UI/hive_logo_signup_light.svg';
-import KeychainLogoDark from 'assets/new_UI/keychain_logo_powered_dark_theme.svg';
-import KeychainLogoLight from 'assets/new_UI/keychain_logo_powered_light_theme.svg';
 import PERSONIMAGE from 'assets/new_UI/person_1.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
@@ -83,16 +81,9 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
         </View>
       );
     };
-    return theme === Theme.LIGHT ? (
+    return (
       <View style={[styles.centeredView]}>
         {renderBGImage()}
-        <KeychainLogoLight {...styles.imageLogo} />
-        {renderImages()}
-      </View>
-    ) : (
-      <View style={[styles.centeredView]}>
-        {renderBGImage()}
-        <KeychainLogoDark {...styles.imageLogo} />
         {renderImages()}
       </View>
     );
@@ -184,21 +175,22 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           style={[
             {
               width: '100%',
-              height: height * 0.3,
+              height: height * 0.46,
               justifyContent: 'space-between',
+              paddingVertical: 20,
             },
             // getBorderTest('purple'),
           ]}>
           <View
             style={[
-              {height: '50%', justifyContent: 'center'},
+              {justifyContent: 'center'},
               // getBorderTest('yellow'),
             ]}>
             {textElements}
           </View>
           <View
             style={[
-              {height: '50%', justifyContent: 'flex-end'},
+              {justifyContent: 'flex-end'},
               // getBorderTest('red'),
             ]}>
             {buttons}
@@ -281,103 +273,6 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
             </View>,
           )}
         </ScrollView>
-
-        {/* <ScrollView
-          ref={scrollViewRef}
-          style={{flex: 1}}
-          horizontal={true}
-          scrollEventThrottle={0}
-          onMomentumScrollEnd={handleMomentumScrollEnd}
-          pagingEnabled={true}>
-          <View style={styles.scrollableScreen}>
-            <Separator height={10} />
-            <View style={[styles.centeredView, styles.flexAbsCentered]}>
-              <BackgroundSquares {...styles.backgroundSquares} />
-            </View>
-            <View style={[styles.centeredView, styles.flexBetween70]}>
-              {renderLogos(false)}
-              <Person1 {...styles.imageHive} />
-              <View style={[styles.pageIndicatorsContainer]}>
-                {drawPageIndicators(0).map((indicator) => {
-                  return indicator;
-                })}
-              </View>
-              <Text style={[styles.text, styles.biggerText]}>
-                {translate('intro.intro_text_1')}
-              </Text>
-            </View>
-            <EllipticButton
-              title={translate('common.next')}
-              onPress={handleNextStep}
-              style={styles.warningProceedButton}
-              additionalTextStyle={styles.textButtonFilled}
-            />
-            <Separator height={10} />
-          </View>
-
-          <View style={[styles.scrollableScreen]}>
-            <Separator height={10} />
-            <View style={[styles.centeredView, styles.flexBetween70]}>
-              {renderLogos(false)}
-              <Hand {...styles.imageHive} />
-              <View style={[styles.pageIndicatorsContainer]}>
-                {drawPageIndicators(1).map((indicator) => {
-                  return indicator;
-                })}
-              </View>
-              <Text style={[styles.text, styles.biggerText]}>
-                {translate('intro.intro_text_2')}
-              </Text>
-            </View>
-            <EllipticButton
-              title={translate('common.next')}
-              onPress={handleNextStep}
-              style={styles.warningProceedButton}
-              additionalTextStyle={styles.textButtonFilled}
-            />
-            <Separator height={10} />
-          </View>
-
-          <View style={styles.scrollableScreen}>
-            <Separator height={10} />
-            <View style={[styles.centeredView, styles.flexBetween60]}>
-              {renderLogos(true)}
-              <View style={[styles.pageIndicatorsContainer]}>
-                {drawPageIndicators(2).map((indicator) => {
-                  return indicator;
-                })}
-              </View>
-              <View>
-                <Text style={[styles.text, styles.dynamicTextSize]}>
-                  {translate('intro.text')}
-                </Text>
-                <Text style={[styles.text, styles.dynamicTextSize]}>
-                  {translate('intro.manage')}
-                </Text>
-              </View>
-            </View>
-            <View style={{width: '100%'}}>
-              <EllipticButton
-                title={translate('intro.existingAccount')}
-                onPress={() => {
-                  navigation.navigate('SignupScreen');
-                }}
-                style={styles.outlineButton}
-                additionalTextStyle={styles.textOutLineButton}
-              />
-              <Separator height={height * 0.02} />
-              <EllipticButton
-                title={translate('intro.createAccount')}
-                onPress={() => {
-                  Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
-                }}
-                style={styles.warningProceedButton}
-                additionalTextStyle={styles.textButtonFilled}
-              />
-            </View>
-            <Separator height={10} />
-          </View>
-        </ScrollView> */}
       </View>
     </Background>
   );
