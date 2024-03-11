@@ -2,6 +2,7 @@ import {PrivateKey} from '@hiveio/dhive';
 import {addAccount} from 'actions/accounts';
 import {Account} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -16,16 +17,11 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {CheckBox} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
-import {
-  BACKGROUNDDARKBLUE,
-  PRIMARY_RED_COLOR,
-  getColors,
-} from 'src/styles/colors';
+import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_2,
@@ -295,40 +291,28 @@ const StepTwo = ({
           <View style={styles.container}>
             <ScrollView style={styles.keysContainer}>{renderKeys()}</ScrollView>
             <View style={[styles.checkboxesContainer]}>
-              <CheckBox
+              <CheckBoxPanel
                 checked={paymentUnderstanding}
                 onPress={() => setPaymentUnderstanding(!paymentUnderstanding)}
                 title={getPaymentCheckboxLabel()}
-                containerStyle={styles.checkbox}
-                textStyle={[styles.text, styles.dynamicTextSize]}
-                checkedColor={PRIMARY_RED_COLOR}
-                size={checkBoxSize}
+                skipTranslation
+                subTitle=""
+                skipSubtitleTranslation
               />
-              <CheckBox
+              <CheckBoxPanel
                 checked={safelyCopied}
                 onPress={() => setSafelyCopied(!safelyCopied)}
-                title={translate(
-                  'components.create_account.safely_copied_keys',
-                )}
-                containerStyle={styles.checkbox}
-                textStyle={[styles.text, styles.dynamicTextSize]}
-                checkedColor={PRIMARY_RED_COLOR}
-                size={checkBoxSize}
+                title="components.create_account.safely_copied_keys"
+                subTitle=""
               />
-              <CheckBox
+              <CheckBoxPanel
                 checked={notPrimaryStorageUnderstanding}
                 onPress={() =>
                   setNotPrimaryStorageUnderstanding(
                     !notPrimaryStorageUnderstanding,
                   )
                 }
-                title={translate(
-                  'components.create_account.storage_understanding',
-                )}
-                containerStyle={styles.checkbox}
-                textStyle={[styles.text, styles.dynamicTextSize]}
-                checkedColor={PRIMARY_RED_COLOR}
-                size={checkBoxSize}
+                title="components.create_account.storage_understanding"
               />
             </View>
             <View style={[styles.buttonsContainer, styles.spacing]}>
@@ -401,6 +385,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     },
     checkboxesContainer: {
       marginVertical: 10,
+      marginHorizontal: 10,
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',

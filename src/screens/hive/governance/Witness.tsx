@@ -1,6 +1,7 @@
 import {loadAccount} from 'actions/hive';
 import {ActiveAccount, Witness as WitnessInterface} from 'actions/interfaces';
 import Vote from 'assets/governance/arrow_circle_up.svg';
+import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import CustomInput from 'components/form/CustomInput';
 import Icon from 'components/hive/Icon';
 import Loader from 'components/ui/Loader';
@@ -14,7 +15,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {CheckBox} from 'react-native-elements';
 import {
   default as SimpleToast,
   default as Toast,
@@ -278,33 +278,21 @@ const Witness = ({
         />
         <Separator height={15} />
         <View style={styles.switch}>
-          <CheckBox
+          <CheckBoxPanel
             checked={displayVotedOnly}
             onPress={() => {
               setDisplayVotedOnly(!displayVotedOnly);
             }}
-            title={
-              <Text
-                style={[styles.text, styles.smallerText, styles.textOpaque]}>
-                {translate('governance.witness.show_voted')}
-              </Text>
-            }
+            title="governance.witness.show_voted"
             containerStyle={styles.checkbox}
-            checkedColor={getColors(theme).icon}
           />
-          <CheckBox
+          <CheckBoxPanel
             checked={hideNonActive}
             onPress={() => {
               setHideNonActive(!hideNonActive);
             }}
-            title={
-              <Text
-                style={[styles.text, styles.smallerText, styles.textOpaque]}>
-                {translate('governance.witness.hide_inactive')}
-              </Text>
-            }
+            title="governance.witness.hide_inactive"
             containerStyle={styles.checkbox}
-            checkedColor={getColors(theme).icon}
           />
         </View>
         <FlatList

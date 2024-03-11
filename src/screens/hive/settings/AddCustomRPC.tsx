@@ -1,4 +1,5 @@
 import {Rpc} from 'actions/interfaces';
+import CheckBox from 'components/form/CustomCheckBox';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -13,7 +14,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {CheckBox} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
@@ -156,9 +156,7 @@ const AddCustomRPC = ({
             checked={checkedValue}
             onPress={onChangeCheckBox}
             title={checkBoxTitle}
-            containerStyle={styles.checkBox}
-            textStyle={styles.text}
-            checkedColor={PRIMARY_RED_COLOR}
+            skipTranslation
           />
         </View>
       )}

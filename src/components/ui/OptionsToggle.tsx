@@ -1,15 +1,14 @@
+import CheckBox from 'components/form/CustomCheckBox';
 import React from 'react';
 import {
   StyleProp,
   StyleSheet,
-  Text,
   TextStyle,
   View,
   useWindowDimensions,
 } from 'react-native';
-import {CheckBox} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
   getFontSizeSmallDevices,
@@ -36,6 +35,7 @@ const OptionsToggle = ({
   additionalTitleStyle,
 }: Props) => {
   const styles = getStyles(theme, useWindowDimensions());
+  const {width} = useWindowDimensions();
 
   return (
     <View style={styles.container}>
@@ -45,12 +45,9 @@ const OptionsToggle = ({
           onPress={() => {
             callback(!toggled);
           }}
-          containerStyle={[styles.checkbox]}
-          checkedColor={PRIMARY_RED_COLOR}
-          size={22}
+          title={title}
+          skipTranslation
         />
-
-        <Text style={[styles.title, additionalTitleStyle]}>{title}</Text>
       </View>
       <View style={toggled ? styles.toggled : styles.untoggled}>
         {children}

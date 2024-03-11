@@ -1,14 +1,14 @@
 import {KeyTypes} from 'actions/interfaces';
 import {addPreference} from 'actions/preferences';
+import CheckBox from 'components/form/CustomCheckBox';
 import OperationButton from 'components/form/EllipticButton';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {CheckBox} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
 import {urlTransformer} from 'utils/browser';
 import {beautifyErrorMessage} from 'utils/keychain';
@@ -83,15 +83,16 @@ const RequestOperation = ({
             onPress={() => {
               setKeep(!keep);
             }}
-            containerStyle={[styles.checkbox]}
-            checkedColor={PRIMARY_RED_COLOR}
-            size={22}
             title={translate(`request.keep${has ? '_has' : ''}`, {
               domain,
               username: username || selectedUsername,
               type,
             })}
-            textStyle={[styles.text, styles.smallerText]}
+            skipTranslation
+            // containerStyle={[styles.checkbox]}
+            // checkedColor={PRIMARY_RED_COLOR}
+            // size={22}
+            // textStyle={[styles.text, styles.smallerText]}
           />
         </View>
       ) : (

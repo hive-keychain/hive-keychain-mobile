@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {setActiveRpc} from 'actions/active-rpc';
 import {Rpc} from 'actions/interfaces';
 import {setAccountHistoryRpc, setHiveEngineRpc} from 'actions/settings';
+import CheckBoxPanel from 'components/form/CheckBoxPanel';
+import CheckBox from 'components/form/CustomCheckBox';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -18,7 +20,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {CheckBox} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -36,7 +37,6 @@ import {
   MARGIN_PADDING,
 } from 'src/styles/spacing';
 import {
-  fields_primary_text_1,
   getFontSizeSmallDevices,
   headlines_primary_headline_3,
 } from 'src/styles/typography';
@@ -264,18 +264,12 @@ const RpcNodes = ({
         <CheckBox
           checked={customRPC.testnet}
           onPress={() => handleSetCustomRPC(!customRPC.testnet, 'testnet')}
-          title={translate('settings.settings.testnet')}
-          containerStyle={styles.checkBox}
-          textStyle={styles.text}
-          checkedColor={PRIMARY_RED_COLOR}
+          title={'settings.settings.testnet'}
         />
         <CheckBox
           checked={customRPCSetActive}
           onPress={() => setCustomRPCSetActive(!customRPCSetActive)}
-          title={translate('settings.settings.set_as_active')}
-          containerStyle={styles.checkBox}
-          textStyle={styles.text}
-          checkedColor={PRIMARY_RED_COLOR}
+          title={'settings.settings.set_as_active'}
         />
       </View>
     );
@@ -426,28 +420,13 @@ const RpcNodes = ({
           <Text style={[styles.title, styles.text]}>
             {translate('settings.settings.hive_rpc')}
           </Text>
-          <View
-            style={[
-              getCardStyle(theme).defaultCardItem,
-              styles.checkBoxContainer,
-            ]}>
-            <CheckBox
-              checked={switchRPCAuto}
-              onPress={() => setSwitchRPCAuto(!switchRPCAuto)}
-              title={translate('settings.settings.switch_auto')}
-              containerStyle={styles.checkBox}
-              textStyle={styles.text}
-              checkedColor={PRIMARY_RED_COLOR}
-            />
-            <Text
-              style={[
-                styles.textInfo,
-                styles.smallerFont,
-                styles.paddingHorizontal,
-              ]}>
-              {translate('settings.settings.switch_auto_info')}
-            </Text>
-          </View>
+          <CheckBoxPanel
+            checked={switchRPCAuto}
+            onPress={() => setSwitchRPCAuto(!switchRPCAuto)}
+            title={'settings.settings.switch_auto'}
+            subTitle="settings.settings.switch_auto_info"
+          />
+
           <Separator />
           {!switchRPCAuto && renderRpcItem()}
         </View>
@@ -522,31 +501,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     marginVertical: {
       marginVertical: 15,
     },
-    paddingHorizontal: {
-      paddingHorizontal: 10,
-    },
-    textInfo: {
-      color: getColors(theme).secondaryText,
-      ...fields_primary_text_1,
-      fontSize: getFontSizeSmallDevices(width, 15),
-      opacity: 0.7,
-    },
-    smallerFont: {
-      fontSize: 12,
-    },
-    checkBox: {
-      width: '100%',
-      margin: 0,
-      paddingLeft: 0,
-      backgroundColor: '#00000000',
-      borderWidth: 0,
-      alignContent: 'center',
-    },
-    checkBoxContainer: {
-      justifyContent: 'center',
-      paddingHorizontal: 10,
-      paddingVertical: 4,
-    },
+
     rpcItemContainer: {
       flexDirection: 'row',
       width: 'auto',
