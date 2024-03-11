@@ -316,7 +316,7 @@
         "title": "Delegate",
         "delegating": "Delegating",
         "delegating_token": "Delegating {{currency}}",
-        "cancel_delegation": "Cancelling Delegation {{currency}}",
+        "cancel_delegation": "Cancelling {{currency}} delegation ",
         "cancelling_delegation": "Cancelling Delegation",
         "title_confirm_cancel_delegation": "Please confirm that you want to cancel a {{amount}} {{currency}} Token Delegation",
         "in": "Delegation in",
