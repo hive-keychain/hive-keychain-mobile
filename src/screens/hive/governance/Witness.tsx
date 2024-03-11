@@ -3,6 +3,7 @@ import {ActiveAccount, Witness as WitnessInterface} from 'actions/interfaces';
 import Vote from 'assets/governance/arrow_circle_up.svg';
 import CustomInput from 'components/form/CustomInput';
 import Icon from 'components/hive/Icon';
+import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
@@ -11,6 +12,7 @@ import {
   Linking,
   StyleSheet,
   Text,
+  TextStyle,
   View,
   useWindowDimensions,
 } from 'react-native';
@@ -229,37 +231,21 @@ const Witness = ({
   else if (!isLoading && !rankingError)
     return (
       <View style={styles.container}>
-        <View style={styles.flex90}>
-          {!usingProxy && (
-            <Text style={[styles.text, styles.withPadding]}>
-              {translate('governance.witness.remaining_votes', {
-                remainingVotes,
-              })}
-            </Text>
-          )}
-          {usingProxy && (
-            <Text style={styles.text}>
-              {translate('governance.witness.has_proxy', {
-                proxy: user.account.proxy,
-              })}
-            </Text>
-          )}
-          <Separator />
-          <Text style={[styles.text, styles.textOpaque, styles.marginRight]}>
-            {translate('governance.witness.link_to_arcange', {
-              proxy: user.account.proxy,
-            })}
-            <Icon
-              name={Icons.OPEN}
-              theme={theme}
-              onClick={() =>
-                Linking.openURL('https://hive.arcange.eu/witnesses')
-              }
-              {...styles.icon}
-            />
-          </Text>
-        </View>
-        <Separator />
+        <Caption
+          text={
+            usingProxy
+              ? 'governance.witness.has_proxy'
+              : 'governance.witness.remaining_votes'
+          }
+          textParams={
+            usingProxy ? {proxy: user.account.proxy} : {remainingVotes}
+          }
+          additionnalText="governance.witness.link_to_arcange"
+          additionnalTextOnClick={() =>
+            Linking.openURL('https://hive.arcange.eu/witnesses')
+          }
+          additionnalTextStyle={{textDecorationLine: 'underline'} as TextStyle}
+        />
         <CustomInput
           placeholder={translate('governance.witness.search_placeholder')}
           rightIcon={<Icon theme={theme} name={Icons.SEARCH} />}
@@ -327,7 +313,6 @@ const getDimensionedStyles = (width: number, height: number, theme: Theme) =>
     container: {
       width: '100%',
       flex: 1,
-      marginTop: 30,
       justifyContent: 'center',
     },
     text: {

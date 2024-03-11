@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, useWindowDimensions} from 'react-native';
+import {Text, TextStyle, useWindowDimensions} from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {getCaptionStyle} from 'src/styles/text';
@@ -12,6 +12,8 @@ interface CaptionProps {
   additionnalText?: string;
   additionnalTextParams?: any;
   hideSeparator?: boolean;
+  additionnalTextStyle?: TextStyle;
+  additionnalTextOnClick?: () => void;
 }
 
 export const Caption = ({
@@ -20,9 +22,15 @@ export const Caption = ({
   additionnalText,
   additionnalTextParams,
   hideSeparator = false,
+  additionnalTextStyle,
+  additionnalTextOnClick,
 }: CaptionProps) => {
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
+
+  const handleAdditionnalTextOnClick = () => {
+    if (additionnalTextOnClick) additionnalTextOnClick();
+  };
 
   return (
     <>
@@ -30,7 +38,13 @@ export const Caption = ({
         {translate(text, textParams)}
       </Text>
       {additionnalText && (
-        <Text style={getCaptionStyle(width, theme)}>
+        <Text
+          style={[
+            getCaptionStyle(width, theme),
+            {marginTop: 8},
+            additionnalTextStyle,
+          ]}
+          onPress={handleAdditionnalTextOnClick}>
           {translate(additionnalText, additionnalTextParams)}
         </Text>
       )}
