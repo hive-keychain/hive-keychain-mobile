@@ -10,6 +10,7 @@ import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getMenuCardStyle} from 'src/styles/menu';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
+import AutomatedTasks from './AutomatedTasks';
 import Operations from './Operations';
 import RpcNodes from './RpcNodes';
 
@@ -52,16 +53,20 @@ const SettingsMenu = () => {
         }
       />
       <MenuItem
-        labelTranslationKey={'settings.settings.automated_tasks'}
+        labelTranslationKey={'settings.settings.automated_tasks.title'}
         theme={theme}
         onPress={() =>
           navigate('TemplateStack', {
-            titleScreen: translate('settings.settings.automated_tasks'),
-            component: <RpcNodes />,
+            titleScreen: translate('settings.settings.automated_tasks.title'),
+            component: <AutomatedTasks />,
           } as TemplateStackProps)
         }
         iconImage={
-          <Icon name={Icons.RPC} theme={theme} color={PRIMARY_RED_COLOR} />
+          <Icon
+            name={Icons.AUTOMATED_TASKS}
+            theme={theme}
+            color={PRIMARY_RED_COLOR}
+          />
         }
       />
     </View>

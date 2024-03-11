@@ -28,7 +28,7 @@ const alarmHandler = async () => {
     allClaims[`${item[0]}`] = item[1] ? JSON.parse(item[1]) : false;
   });
 
-  const allClaimsAccounts = allClaims[KeychainStorageKeyEnum.CLAIM_REWARDS];
+  const allClaimsAccounts = allClaims[KeychainStorageKeyEnum.CLAIM_ACCOUNTS];
   const allClaimsRewards = allClaims[KeychainStorageKeyEnum.CLAIM_REWARDS];
   const allClaimsSavings = allClaims[KeychainStorageKeyEnum.CLAIM_SAVINGS];
   if (

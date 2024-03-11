@@ -11,7 +11,7 @@ export enum Icons {
   // AT = 'alternate_email',
   ATTACH_MONEY = 'attach_money',
   AUTO_LOCK = 'lock_clock',
-  AUTOMATED_TASKS = 'hdr_auto',
+  AUTOMATED_TASKS = 'automated_tasks',
   AUTHORIZED_OPERATIONS = 'rule',
   // BACK = 'arrow_back',
   BUY = 'shopping_cart',

@@ -70,6 +70,7 @@ import ClaimIcon from 'src/assets/new_UI/gift.svg';
 import ReceiveSquareIcon from 'src/assets/new_UI/receive_square.svg';
 import SavingsIcon from 'src/assets/new_UI/savings.svg';
 import TransferIcon from 'src/assets/new_UI/send.svg';
+import AutomatedTasks from 'src/assets/settings/automated-tasks.svg';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
@@ -593,6 +594,13 @@ const getIconFilePath = (
     case name === Icons.HOME_BROWSER:
       return (
         <HomeBrowserIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.AUTOMATED_TASKS:
+      return (
+        <AutomatedTasks
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

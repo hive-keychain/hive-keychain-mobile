@@ -143,7 +143,7 @@
       "enable_autoclaim_rewards": "Claim Rewards",
       "enable_autoclaim_accounts": "Claim Accounts",
       "enable_autoclaim_savings": "Claim savings interest",
-      "enable_autoclaim_rewards_info": "Regularly claiming your rewards can increase your gains.",
+      "enable_autoclaim_rewards_info": "Regularly claiming your rewards can increase your earnings.",
       "enable_autoclaim_accounts_info": "Claim a free account ticket when your RC is charged over {{MIN_RC_PCT}}%. Depending on your Hive Power, this might use up a big chunk of your RC.",
       "enable_autoclaim_savings_info": "To claim your savings interest, Keychain will deposit or withdraw 0.001 HBD to/from your savings every 30 days"
     },
@@ -508,7 +508,10 @@
     },
     "settings": {
       "rpc": "RPC Nodes",
-      "automated_tasks": "Automated tasks",
+      "automated_tasks": {
+        "title": "Automated tasks",
+        "disclaimer": "Setup automated tasks that will run every hour"
+      },
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",
       "whitelisted": "Whitelisted operations",
