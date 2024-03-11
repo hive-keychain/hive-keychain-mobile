@@ -1,11 +1,11 @@
-import BACKGROUNDSQUARES from 'assets/new_UI/background_squares.svg';
+import BgSquares from 'assets/new_UI/background_squares.svg';
 import IndicatorActive from 'assets/new_UI/circle_indicator_active.svg';
 import IndicatorInactive from 'assets/new_UI/circle_indicator_inactive.svg';
 import IndicatorInactiveLight from 'assets/new_UI/circle_indicator_inactive_light.svg';
-import HANDIMAGE from 'assets/new_UI/hand_1.svg';
-import HIVEIMAGESIGNUPDARK from 'assets/new_UI/hive_logo_signup_dark.svg';
+import HandImage from 'assets/new_UI/hand_1.svg';
+import HiveImageSignupDark from 'assets/new_UI/hive_logo_signup_dark.svg';
 import HiveImageSignupLight from 'assets/new_UI/hive_logo_signup_light.svg';
-import PERSONIMAGE from 'assets/new_UI/person_1.svg';
+import PersonImage from 'assets/new_UI/person_1.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -41,27 +41,21 @@ import {Dimensions} from 'utils/common.types';
 import {hiveConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 
-const INTROSTEPS = 3;
-//TODO
-//  -> while coding this task: Fix intro : page is poorly aligned on smaller devices
-//    -> if not enough screen height to fit in both sizes(XL & S), remove the Keychain logo.
+const INTRO_STEPS = 3;
+
 const Introduction = ({navigation}: IntroductionNavProp) => {
   const scrollViewRef = useRef();
   const {height, width} = useWindowDimensions();
   const {theme} = useThemeContext();
   const spaced = getSpaceAdjustMultiplier(width, height);
-  const styles = getDimensionedStyles(
-    {height, width},
-    theme,
-    spaced.adjustMultiplier,
-  );
+  const styles = getDimensionedStyles({height, width}, theme);
 
   const renderLogos = (pageIndex: number) => {
     const renderBGImage = () => {
       if (pageIndex === 0) {
         return (
           <View style={[styles.flexAbsCentered]}>
-            <BACKGROUNDSQUARES {...styles.backgroundSquares} />
+            <BgSquares {...styles.backgroundSquares} />
           </View>
         );
       }
@@ -70,13 +64,13 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
       theme === Theme.LIGHT ? (
         <HiveImageSignupLight {...styles.imageHive} />
       ) : (
-        <HIVEIMAGESIGNUPDARK {...styles.imageHive} />
+        <HiveImageSignupDark {...styles.imageHive} />
       );
     const renderImages = () => {
       return (
         <View>
-          {pageIndex === 0 && <PERSONIMAGE {...styles.imageHive} />}
-          {pageIndex === 1 && <HANDIMAGE {...styles.imageHive} />}
+          {pageIndex === 0 && <PersonImage {...styles.imageHive} />}
+          {pageIndex === 1 && <HandImage {...styles.imageHive} />}
           {pageIndex === 2 && renderHIVEProperLogo()}
         </View>
       );
@@ -129,72 +123,32 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
       );
     };
     const circleArray: JSX.Element[] = [];
-    for (let i = 0; i < INTROSTEPS; i++) {
+    for (let i = 0; i < INTRO_STEPS; i++) {
       circleArray.push(createCircleAddKey(i, currentIndex === i));
     }
     return circleArray;
   };
-  //TODO cleanup
+
   const renderCustomLayout = (
     pageIndex: number,
     textElements: JSX.Element,
     buttons: JSX.Element,
   ) => {
     return (
-      <View
-        style={[
-          {flex: 1, justifyContent: 'center', width, height},
-          // getBorderTest('red'),
-        ]}>
-        <View
-          style={[
-            {
-              width: '100%',
-              height: height * 0.5,
-            },
-            // getBorderTest('yellow'),
-          ]}>
+      <View style={[styles.layoutContainer]}>
+        <View style={[styles.layoutTopContainer]}>
           {renderLogos(pageIndex)}
         </View>
-        <View
-          style={[
-            {
-              width: '100%',
-              height: height * 0.04,
-              alignItems: 'center',
-            },
-            // getBorderTest('blue'),
-          ]}>
+        <View style={[styles.layoutMiddleContainer]}>
           <View style={[styles.pageIndicatorsContainer]}>
             {drawPageIndicators(pageIndex).map((indicator) => {
               return indicator;
             })}
           </View>
         </View>
-        <View
-          style={[
-            {
-              width: '100%',
-              height: height * 0.46,
-              justifyContent: 'space-between',
-              paddingVertical: 20,
-            },
-            // getBorderTest('purple'),
-          ]}>
-          <View
-            style={[
-              {justifyContent: 'center'},
-              // getBorderTest('yellow'),
-            ]}>
-            {textElements}
-          </View>
-          <View
-            style={[
-              {justifyContent: 'flex-end'},
-              // getBorderTest('red'),
-            ]}>
-            {buttons}
-          </View>
+        <View style={[styles.layoutBottomContainer]}>
+          <View style={[{justifyContent: 'center'}]}>{textElements}</View>
+          <View style={[{justifyContent: 'flex-end'}]}>{buttons}</View>
         </View>
       </View>
     );
@@ -248,11 +202,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
                 {translate('intro.manage')}
               </Text>
             </>,
-            <View
-              style={[
-                {flex: 1, justifyContent: 'flex-end'},
-                // getBorderTest('yellow'),
-              ]}>
+            <View style={[{flex: 1, justifyContent: 'flex-end'}]}>
               <EllipticButton
                 title={translate('intro.existingAccount')}
                 onPress={() => {
@@ -277,11 +227,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
     </Background>
   );
 };
-const getDimensionedStyles = (
-  {width, height}: Dimensions,
-  theme: Theme,
-  adjustMultiplier: number,
-) =>
+const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     scrollableScreen: {
       width,
@@ -333,8 +279,6 @@ const getDimensionedStyles = (
       alignItems: 'center',
       alignContent: 'center',
     },
-    flexBetween70: {justifyContent: 'space-between', height: '70%'},
-    flexBetween60: {justifyContent: 'space-between', height: '60%'},
     flexAbsCentered: {
       position: 'absolute',
       top: -100,
@@ -360,6 +304,22 @@ const getDimensionedStyles = (
         width,
         headlines_primary_headline_2.fontSize,
       ),
+    },
+    layoutContainer: {flex: 1, justifyContent: 'center', width, height},
+    layoutTopContainer: {
+      width: '100%',
+      height: height * 0.5,
+    },
+    layoutMiddleContainer: {
+      width: '100%',
+      height: height * 0.04,
+      alignItems: 'center',
+    },
+    layoutBottomContainer: {
+      width: '100%',
+      height: height * 0.46,
+      justifyContent: 'space-between',
+      paddingVertical: 20,
     },
   });
 
