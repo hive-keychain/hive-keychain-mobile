@@ -36,7 +36,7 @@ import {Dimensions} from 'utils/common.types';
 import {getAccountPrice} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import StepTwo from '../create-account-step-two/StepTwo';
+import StepTwo from './CreateAccountConfirmation';
 
 interface SelectOption {
   label: string;

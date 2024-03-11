@@ -4,7 +4,7 @@ import Icon from 'components/hive/Icon';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import CreateAccountStepOne from 'screens/hive/createAccounts/create-account-step-one/CreateAccountStepOne';
+import CreateAccountStepOne from 'screens/hive/createAccounts/CreateAccountForm';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
