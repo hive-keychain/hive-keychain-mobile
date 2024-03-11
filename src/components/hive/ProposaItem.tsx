@@ -310,6 +310,8 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     marginRight: {marginRight: 5},
     funded: {
       backgroundColor: PRIMARY_RED_COLOR,
+      borderColor: undefined,
+      borderWidth: 0,
     },
   });
 
