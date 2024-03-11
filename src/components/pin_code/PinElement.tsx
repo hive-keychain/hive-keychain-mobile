@@ -33,13 +33,19 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
   const dimensionReducer = 0.2;
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width, height}, dimensionReducer, pressed);
-  const renderPinElements = () => {
+  const renderPinElements = (pressed: boolean) => {
     return (
       <View style={styles.pinElements}>
         {number || number === 0 ? (
-          <Text style={styles.number}>{number}</Text>
+          <Text style={[styles.number, pressed && styles.pressedText]}>
+            {number}
+          </Text>
         ) : null}
-        {helper ? <Text style={styles.helper}>{helper}</Text> : null}
+        {helper ? (
+          <Text style={[styles.helper, pressed && styles.pressedText]}>
+            {helper}
+          </Text>
+        ) : null}
         {back ? (
           theme === Theme.DARK ? (
             <BackspaceDark style={styles.backspace} {...styles.backSpaceIcon} />
@@ -54,17 +60,17 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
     );
   };
 
-  const renderWithGradients = (refNumber: number) => {
+  const renderWithGradients = (refNumber: number, pressed: boolean) => {
     return refNumber !== 10 && refNumber !== 12 ? (
       <LinearGradient
         style={styles.pinElements}
         start={{x: 1, y: 0.5}} //initially as {x: 1, y: 0.5}
         end={{x: 1, y: 1.8}} //initially as {x: 1, y: 1.8}
         colors={getColors(theme).gradientShapes}>
-        {renderPinElements()}
+        {renderPinElements(pressed)}
       </LinearGradient>
     ) : (
-      renderPinElements()
+      renderPinElements(pressed)
     );
   };
 
@@ -76,8 +82,14 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
           ? [styles.pinElements, styles.pinElementPressed]
           : styles.pinElements;
       }}>
-      {activeShape}
-      {renderWithGradients(refNumber)}
+      {({pressed}) => {
+        return (
+          <>
+            {activeShape}
+            {renderWithGradients(refNumber, pressed)}
+          </>
+        );
+      }}
     </Pressable>
   );
 };
@@ -129,4 +141,5 @@ const getStyles = (
       width: 35,
       height: 35,
     },
+    pressedText: {color: 'white'},
   });
