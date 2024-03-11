@@ -2,7 +2,7 @@ import {loadAccount} from 'actions/hive';
 import {ActiveAccount, Witness as WitnessInterface} from 'actions/interfaces';
 import Vote from 'assets/governance/arrow_circle_up.svg';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
-import CustomInput from 'components/form/CustomInput';
+import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
@@ -27,7 +27,6 @@ import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
-  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   getFontSizeSmallDevices,
   title_primary_title_1,
 } from 'src/styles/typography';
@@ -245,22 +244,14 @@ const Witness = ({
             Linking.openURL('https://hive.arcange.eu/witnesses')
           }
           additionnalTextStyle={{textDecorationLine: 'underline'} as TextStyle}
+          hideSeparator
         />
-        <CustomInput
+        <OperationInput
           placeholder={translate('governance.witness.search_placeholder')}
           rightIcon={<Icon theme={theme} name={Icons.SEARCH} />}
           autoCapitalize="none"
           value={filterValue}
           onChangeText={setFilterValue}
-          containerStyle={[
-            getCardStyle(theme).defaultCardItem,
-            styles.borderAligned,
-          ]}
-          inputStyle={[styles.text]}
-          inputContainerStyle={styles.inputContainer}
-          makeExpandable={
-            width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? true : false
-          }
         />
         <Separator height={15} />
         <View style={styles.switch}>

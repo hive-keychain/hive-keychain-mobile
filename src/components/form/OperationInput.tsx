@@ -105,6 +105,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       marginLeft: 0,
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
+      height: 48,
     },
     outerContainer: {
       display: 'flex',
