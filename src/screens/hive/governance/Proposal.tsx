@@ -1,15 +1,9 @@
 import {loadAccount} from 'actions/index';
-import {ActiveAccount} from 'actions/interfaces';
 import ProposalItem from 'components/hive/ProposaItem';
+import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import React, {useEffect, useState} from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {FlatList, StyleSheet, View, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
@@ -18,13 +12,12 @@ import {
   button_link_primary_medium,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
-import {translate} from 'utils/localize';
+import {RootState} from 'store';
+import {AsyncUtils} from 'utils/async.utils';
 import ProposalUtils, {Proposal as ProposalInterface} from 'utils/proposals';
 import ProxyUtils from 'utils/proxy';
 
-type Props = {
-  user: ActiveAccount;
-};
+type Props = {};
 
 const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
   const [proposals, setProposals] = useState<ProposalInterface[]>([]);
@@ -53,15 +46,20 @@ const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
     setLoading(false);
   };
 
+  const handleVoteUnvote = async () => {
+    await AsyncUtils.waitForXSeconds(3);
+    loadAccount(user.name);
+  };
+
   if (!isLoading)
     return (
       <View style={styles.container}>
         {displayingProxyVotes && (
-          <Text style={[styles.text]}>
-            {translate('governance.witness.has_proxy', {
-              proxy: user.account.proxy,
-            })}
-          </Text>
+          <Caption
+            text="governance.witness.has_proxy"
+            textParams={{proxy: user.account.proxy}}
+            hideSeparator
+          />
         )}
         <View>
           <FlatList
@@ -77,9 +75,7 @@ const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
                 displayingProxyVotes={displayingProxyVotes}
                 key={proposal.proposalId}
                 proposal={proposal}
-                onVoteUnvoteSuccessful={() => {
-                  loadAccount(user.name);
-                }}
+                onVoteUnvoteSuccessful={handleVoteUnvote}
                 theme={theme}
               />
             )}
@@ -100,7 +96,6 @@ const getDimensionedStyles = (width: number, height: number, theme: Theme) =>
     container: {
       width: '100%',
       flex: 1,
-      marginTop: 30,
     },
     proposalItemContainer: {
       marginBottom: 10,
@@ -114,7 +109,13 @@ const getDimensionedStyles = (width: number, height: number, theme: Theme) =>
     },
   });
 
-const connector = connect(undefined, {
+const mapStateToProps = (state: RootState) => {
+  return {
+    user: state.activeAccount,
+  };
+};
+
+const connector = connect(mapStateToProps, {
   loadAccount,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;

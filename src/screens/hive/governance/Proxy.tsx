@@ -1,5 +1,4 @@
 import {loadAccount} from 'actions/hive';
-import {ActiveAccount} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
@@ -17,12 +16,12 @@ import {
   getFontSizeSmallDevices,
   title_primary_title_1,
 } from 'src/styles/typography';
+import {RootState} from 'store';
+import {AsyncUtils} from 'utils/async.utils';
 import {setProxy} from 'utils/hive';
 import {translate} from 'utils/localize';
 
-type Props = {
-  user: ActiveAccount;
-};
+type Props = {};
 
 const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
   const [proxyUsername, setProxyUsername] = useState('');
@@ -46,10 +45,9 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
       Toast.show(
         translate('governance.proxy.success.set_proxy', {name: proxyUsername}),
       );
-      setTimeout(() => {
-        loadAccount(user.name);
-        setLoading(false);
-      }, 3000);
+      await AsyncUtils.waitForXSeconds(3);
+      loadAccount(user.name);
+      setLoading(false);
     } else {
       setLoading(false);
       Toast.show(translate('governance.proxy.error.set_proxy'));
@@ -69,10 +67,9 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
         proxy: '',
       })
     ) {
-      setTimeout(() => {
-        loadAccount(user.name);
-        setLoading(false);
-      }, 3000);
+      await AsyncUtils.waitForXSeconds(3);
+      loadAccount(user.name);
+      setLoading(false);
       Toast.show(translate('governance.proxy.success.clear_proxy'));
     } else {
       setLoading(false);
@@ -184,7 +181,13 @@ const getDimensionedStyles = (width: number, heigth: number, theme: Theme) =>
     },
   });
 
-const connector = connect(undefined, {
+const mapStateToProps = (state: RootState) => {
+  return {
+    user: state.activeAccount,
+  };
+};
+
+const connector = connect(mapStateToProps, {
   loadAccount,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;

@@ -73,8 +73,8 @@ const Governance = ({
               ranking={ranking}
               rankingError={hasError}
             />,
-            <Proxy user={user} />,
-            <Proposal user={user} />,
+            <Proxy />,
+            <Proposal />,
           ],
         };
         if (
