@@ -80,7 +80,7 @@ export default ({
               additionalInputContainerStyle,
             ]}
             {...props}
-            onFocus={onFocus}
+            onFocus={() => setIsFocused(true)}
           />
           {isFocused && autoCompleteValues && (
             <AutoCompleteBox

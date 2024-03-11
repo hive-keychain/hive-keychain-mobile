@@ -17,7 +17,6 @@ import {
 } from 'src/interfaces/autocomplete.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {getInputHeight} from 'src/styles/input';
 import {
   FontPoppinsName,
   fields_primary_text_2,
@@ -200,7 +199,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {
       position: 'absolute',
-      top: getInputHeight(width) + 5,
+      top: 48 + 5,
       bottom: undefined,
       width: '100%',
       height: 'auto',
