@@ -18,7 +18,11 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {LABEL_INDENT_SPACE, MARGIN_LEFT_RIGHT_MIN} from 'src/styles/spacing';
+import {
+  LABEL_INDENT_SPACE,
+  MARGIN_LEFT_RIGHT_MIN,
+  MARGIN_PADDING,
+} from 'src/styles/spacing';
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_3,
@@ -92,6 +96,7 @@ const AddCustomRPC = ({
       </View>
       <View style={styles.rpcItemContainer}>
         <DropdownModal
+          remeasure
           list={rpcList}
           selected={getItemDropDownSelected({uri: selectedRPC} as Rpc)}
           onSelected={(selectedItem) => onSelectedDropdown(selectedItem.value)}
@@ -99,6 +104,9 @@ const AddCustomRPC = ({
           additionalDropdowContainerStyle={[styles.dropdownWidth]}
           dropdownIconScaledSize={styles.dropdownIconDimensions}
           additionalListExpandedContainerStyle={styles.dropdownWidth}
+          additionalOverlayStyle={{
+            paddingHorizontal: MARGIN_PADDING,
+          }}
           drawLineBellowSelectedItem
           showSelectedIcon={
             <Icon

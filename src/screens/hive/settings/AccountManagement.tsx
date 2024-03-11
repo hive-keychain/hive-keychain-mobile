@@ -90,7 +90,7 @@ const AccountManagement = ({
       <SafeArea style={styles.safeArea}>
         <FocusAwareStatusBar />
         <ScrollView>
-          <UserDropdown copyButtonValue />
+          <UserDropdown copyButtonValue remeasure />
           <Separator height={10} />
           <Key
             type={KeyTypes.active}

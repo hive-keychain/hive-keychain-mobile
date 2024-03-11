@@ -64,6 +64,7 @@ interface Props {
   copyButtonValue?: boolean;
   selectedBgColor?: string;
   drawLineBellowSelectedItem?: boolean;
+  remeasure?: boolean;
 }
 
 const DropdownModal = ({
@@ -88,6 +89,7 @@ const DropdownModal = ({
   onRemove,
   drawLineBellowSelectedItem,
   additionalLineStyle,
+  remeasure,
 }: Props) => {
   const dropdownContainerRef = useRef();
   const [dropdownPageY, setDropdownPageY] = useState(0);
@@ -291,7 +293,15 @@ const DropdownModal = ({
             {capitalize(translate(dropdownTtitleTr))}
           </Text>
         )}
-        <View ref={dropdownContainerRef} onLayout={_measure}>
+        <View
+          ref={dropdownContainerRef}
+          onLayout={() => {
+            _measure();
+            if (remeasure)
+              setInterval(() => {
+                _measure();
+              }, 200);
+          }}>
           {renderDropdownTop()}
         </View>
         {bottomLabelInfo && (
