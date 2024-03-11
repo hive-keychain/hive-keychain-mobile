@@ -321,6 +321,8 @@ const Savings = ({
               />
             }
             additionalLineStyle={styles.bottomLineDropdownItem}
+            additionalTextStyle={getFormFontStyle(height, theme).title}
+            additionalItemLabelTextStyle={getFormFontStyle(height, theme).title}
           />
           <Separator />
           <OperationInput

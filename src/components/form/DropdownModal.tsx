@@ -49,6 +49,7 @@ interface Props {
   onRemove?: (item: string) => void;
   addExtraHeightFromElements?: number;
   additionalTextStyle?: StyleProp<TextStyle>;
+  additionalItemLabelTextStyle?: StyleProp<TextStyle>;
   additionalTitleTextStyle?: StyleProp<TextStyle>;
   dropdownIconScaledSize?: Dimensions;
   additionalDropdowContainerStyle?: StyleProp<ViewStyle>;
@@ -90,6 +91,7 @@ const DropdownModal = ({
   drawLineBellowSelectedItem,
   additionalLineStyle,
   remeasure,
+  additionalItemLabelTextStyle,
 }: Props) => {
   const dropdownContainerRef = useRef();
   const [dropdownPageY, setDropdownPageY] = useState(0);
@@ -208,7 +210,13 @@ const DropdownModal = ({
           ]}>
           <View style={[innerContainerStyle, innerContainerBgStyle]}>
             {item.icon}
-            <Text style={[styles.textBase, styles.smallerText, labelTextStyle]}>
+            <Text
+              style={[
+                styles.textBase,
+                styles.smallerText,
+                labelTextStyle,
+                additionalItemLabelTextStyle,
+              ]}>
               {item.label}
             </Text>
             {item.removable && (
