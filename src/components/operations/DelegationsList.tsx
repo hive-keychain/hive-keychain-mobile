@@ -4,6 +4,7 @@ import {IncomingDelegation} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import {Caption} from 'components/ui/Caption';
 import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
@@ -385,16 +386,7 @@ const DelegationsList = ({
           <Separator height={35} />
           {type === 'outgoing' && (
             <>
-              <Text
-                style={[
-                  styles.textBase,
-                  styles.opaque,
-                  styles.paddingHorizontal,
-                  styles.title,
-                ]}>
-                {translate('wallet.operations.delegation.outgoing_disclaimer')}
-              </Text>
-              <Separator height={10} />
+              <Caption text="wallet.operations.delegation.outgoing_disclaimer" />
               {pendingUndelegationsList.length > 0 && (
                 <View style={styles.flexRow}>
                   <Text style={[styles.textBase, styles.title]}>

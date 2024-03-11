@@ -5,6 +5,7 @@ import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import Icon from 'components/hive/Icon';
 import CollapsibleSettings from 'components/settings/CollapsibleSettings';
 import Background from 'components/ui/Background';
+import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
@@ -99,17 +100,7 @@ const Operations = ({
     <Background theme={theme}>
       <View style={styles.container}>
         <FocusAwareStatusBar />
-        <Text
-          style={[
-            styles.text,
-            styles.opacity,
-            styles.marginVertical,
-            styles.textOperations,
-            styles.paddingHorizontal,
-            {textAlign: 'center'},
-          ]}>
-          {translate('settings.settings.operations_info')}
-        </Text>
+        <Caption text="settings.settings.operations_info" hideSeparator />
         <DropdownModal
           list={getListFromAccount()}
           selected={getItemDropDownSelected(active.name!)}

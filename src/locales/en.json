@@ -306,7 +306,8 @@
         "title": "Unstake",
         "unstaking_token": "Unstaking {{currency}}",
         "unstaking": "Unstaking",
-        "cooldown_disclaimer": "Unstaking this token will take {{unstakingCooldown}} day",
+        "cooldown_disclaimer_multiple_days": "Unstaking this token will take {{unstakingCooldown}} days",
+        "cooldown_disclaimer_single_day": "Unstaking this token will take {{unstakingCooldown}} day",
         "token_pending_unstake": "Pending unstaking",
         "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient"
       },
@@ -507,12 +508,10 @@
     },
     "settings": {
       "rpc": "RPC Nodes",
+      "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",
       "whitelisted": "Whitelisted operations",
       "no_pref": "No whitelisted operations",
-      "disclaimer": [
-        "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain."
-      ],
       "user": "User settings",
       "operations": "Operations",
       "operations_info": "For a better experience, you can whitelist non-active authority operation when dApps requested them. you won’t receive a confirmation prompt for operations",

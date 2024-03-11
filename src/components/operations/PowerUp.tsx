@@ -1,6 +1,7 @@
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
@@ -123,12 +124,7 @@ const PowerUp = ({
       }
       childrenMiddle={
         <View style={{flex: 1}}>
-          <Separator height={35} />
-          <Text
-            style={[getFormFontStyle(height, theme).title, styles.infoText]}>
-            {translate('wallet.operations.powerup.info_text')}
-          </Text>
-          <Separator />
+          <Caption text="wallet.operations.powerup.info_text" />
           <OperationInput
             labelInput={translate('common.username')}
             placeholder={translate('common.username')}

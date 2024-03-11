@@ -1,6 +1,7 @@
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
@@ -192,16 +193,7 @@ const Delegation = ({
       }
       childrenMiddle={
         <View>
-          <Separator height={30} />
-          <Text
-            style={[
-              getFormFontStyle(height, theme).title,
-              styles.opaque,
-              styles.disclaimer,
-            ]}>
-            {translate('wallet.operations.delegation.delegation_disclaimer')}
-          </Text>
-          <Separator />
+          <Caption text="wallet.operations.delegation.delegation_disclaimer" />
           <OperationInput
             labelInput={translate('common.username')}
             placeholder={translate('common.username')}

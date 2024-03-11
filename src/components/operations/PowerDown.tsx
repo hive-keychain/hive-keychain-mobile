@@ -1,6 +1,7 @@
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
@@ -222,16 +223,7 @@ const PowerDown = ({
       }
       childrenMiddle={
         <View>
-          <Separator height={25} />
-          <Text
-            style={[
-              getFormFontStyle(height, theme).title,
-              styles.currentAvailableBalances,
-              styles.opaque,
-            ]}>
-            {translate('wallet.operations.powerdown.powerdown_text')}
-          </Text>
-          <Separator />
+          <Caption text="wallet.operations.powerdown.powerdown_text" />
           <View style={styles.flexRowBetween}>
             <OperationInput
               labelInput={translate('common.currency')}

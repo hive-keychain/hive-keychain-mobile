@@ -1,6 +1,7 @@
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {
@@ -160,12 +161,7 @@ const DelegateToken = ({
       }
       childrenMiddle={
         <View>
-          <Separator />
-          <Text
-            style={[getFormFontStyle(height, theme).title, styles.infoText]}>
-            {translate('wallet.operations.token_delegation.info')}
-          </Text>
-          <Separator />
+          <Caption text={`wallet.operations.token_delegation.info`} />
           <OperationInput
             labelInput={translate('common.username')}
             placeholder={translate('common.username')}
