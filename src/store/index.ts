@@ -35,15 +35,6 @@ const persistor = persistStore(store);
 
 const getSafeState = () => {
   const state: RootState = {...store.getState()};
-  let previousRpc = state.activeRpc;
-  if (
-    previousRpc &&
-    previousRpc.uri !== state.activeRpc?.uri &&
-    state.activeRpc
-  ) {
-    previousRpc = state.activeRpc;
-    saveCurrentRpc(state.activeRpc);
-  }
   state.accounts.forEach((e) => delete e.keys);
   delete state.activeAccount.keys;
   delete state.auth;
@@ -57,6 +48,16 @@ const getSafeState = () => {
   }
   return state;
 };
+
+let previousRpc = store.getState().activeRpc;
+
+store.subscribe(() => {
+  const {activeRpc} = store.getState();
+  if (previousRpc && previousRpc.uri !== activeRpc?.uri && activeRpc) {
+    previousRpc = activeRpc;
+    saveCurrentRpc(activeRpc);
+  }
+});
 
 export {getSafeState, persistor, store};
 
