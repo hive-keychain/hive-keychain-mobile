@@ -1,5 +1,5 @@
 import {loadAccount} from 'actions/hive';
-import {ActiveAccount, Witness as WitnessInterface} from 'actions/interfaces';
+import {Witness as WitnessInterface} from 'actions/interfaces';
 import Vote from 'assets/governance/arrow_circle_up.svg';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationInput from 'components/form/OperationInput';
@@ -30,6 +30,8 @@ import {
   getFontSizeSmallDevices,
   title_primary_title_1,
 } from 'src/styles/typography';
+import {RootState} from 'store';
+import {AsyncUtils} from 'utils/async.utils';
 import {getClient, voteForWitness} from 'utils/hive';
 import {translate} from 'utils/localize';
 import ProxyUtils from 'utils/proxy';
@@ -37,7 +39,6 @@ import {MAX_WITNESS_VOTE, WITNESS_DISABLED_KEY} from 'utils/witness.utils';
 import * as ValidUrl from 'valid-url';
 
 type Props = {
-  user: ActiveAccount;
   focus: number;
   theme: Theme;
   ranking: WitnessInterface[];
@@ -86,6 +87,8 @@ const Witness = ({
   };
 
   useEffect(() => {
+    console.log('reloaded user');
+    console.log(user);
     setVotedWitnesses(user.account.witness_votes);
     setRemainingVotes(MAX_WITNESS_VOTE - user.account.witnesses_voted_for);
   }, [user]);
@@ -127,6 +130,7 @@ const Witness = ({
           witness: witness.name,
           approve: false,
         });
+        await AsyncUtils.waitForXSeconds(3);
         loadAccount(user.name);
         Toast.show(
           translate('governance.witness.success.unvote_wit', {
@@ -151,6 +155,7 @@ const Witness = ({
           witness: witness.name,
           approve: true,
         });
+        await AsyncUtils.waitForXSeconds(3);
         loadAccount(user.name);
         Toast.show(
           translate('governance.witness.success.wit', {
@@ -384,6 +389,12 @@ const getDimensionedStyles = (width: number, height: number, theme: Theme) =>
     flexCentered: {flex: 1, justifyContent: 'center'},
   });
 
-const connector = connect(undefined, {loadAccount});
+const mapStateToProps = (state: RootState) => {
+  return {
+    user: state.activeAccount,
+  };
+};
+
+const connector = connect(mapStateToProps, {loadAccount});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(Witness);
