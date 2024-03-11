@@ -57,9 +57,6 @@ export const getDefault: () => Promise<string> = async () => {
 export const setRpc = async (rpcObj: Rpc | string) => {
   let rpc = typeof rpcObj === 'string' ? rpcObj : rpcObj.uri;
   testnet = typeof rpcObj === 'string' ? false : rpcObj.testnet || false;
-  if (rpc === 'DEFAULT') {
-    rpc = await getDefault();
-  }
   client = new Client(rpc);
   hiveTx.config.node = rpc;
   if (typeof rpcObj !== 'string') {

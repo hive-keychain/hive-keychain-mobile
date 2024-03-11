@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Rpc} from 'actions/interfaces';
 import axios from 'axios';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {rpcList} from './hiveUtils';
 
 export const getCustomRpcs = async (): Promise<Rpc[]> => {
   let customRpcs: Rpc[];
@@ -44,7 +45,7 @@ export const getCurrentRpc = async (): Promise<Rpc> => {
   let currentRpc = JSON.parse(
     await AsyncStorage.getItem(KeychainStorageKeyEnum.CURRENT_RPC),
   );
-  currentRpc = currentRpc ? currentRpc : {uri: 'DEFAULT', testnet: false};
+  currentRpc = currentRpc ? currentRpc : rpcList[0];
   if (currentRpc.uri.endsWith('/'))
     currentRpc = {
       ...currentRpc,
