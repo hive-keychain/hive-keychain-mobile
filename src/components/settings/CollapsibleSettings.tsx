@@ -8,7 +8,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
-import {wordsFromCamelCase} from 'utils/format';
+import {capitalize, wordsFromCamelCase} from 'utils/format';
 
 type Props = {
   domainPref: DomainPreference;
@@ -38,7 +38,7 @@ const CollapsibleSettings = ({
         {domainPref.whitelisted_requests.map((e) => (
           <View style={styles.whitelistContainer} key={e}>
             <Text style={[styles.whitelist, styles.font, styles.opacity]}>
-              {wordsFromCamelCase(e)}
+              {capitalize(wordsFromCamelCase(e))}
             </Text>
             <Icon
               name={Icons.REMOVE}
