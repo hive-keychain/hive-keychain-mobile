@@ -205,13 +205,13 @@ const RpcNodes = ({
             selected={getItemDropDownSelected(activeRpc)}
             onSelected={(selected) => onHandleSetRPC(selected.value)}
             onRemove={(item) => handleOnRemoveCustomRPC(item)}
-            additionalDropdowContainerStyle={[styles.dropdownWidth]}
+            additionalDropdowContainerStyle={[styles.dropdown]}
             dropdownIconScaledSize={styles.dropdownIconDimensions}
             additionalOverlayStyle={{
               paddingHorizontal: MARGIN_PADDING,
             }}
             drawLineBellowSelectedItem
-            additionalListExpandedContainerStyle={styles.dropdownWidth}
+            additionalListExpandedContainerStyle={styles.dropdown}
             showSelectedIcon={
               <Icon
                 name={Icons.CHECK}
@@ -409,7 +409,7 @@ const RpcNodes = ({
 
   return (
     <Background theme={theme}>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <FocusAwareStatusBar />
         <View
           style={{
@@ -430,7 +430,8 @@ const RpcNodes = ({
           <Separator />
           {!switchRPCAuto && renderRpcItem()}
         </View>
-        <ScrollView>
+        <View>
+          <Separator />
           {hiveEngineRPCList.length > 0 && (
             <AddCustomRPC
               theme={theme}
@@ -450,6 +451,7 @@ const RpcNodes = ({
               onSelectedDropdown={onHandleSelectHERpc}
             />
           )}
+          <Separator />
           {accountHistoryAPIList.length > 0 && (
             <AddCustomRPC
               theme={theme}
@@ -477,8 +479,8 @@ const RpcNodes = ({
               onSelectedDropdown={onHandleSelectAccountHistoryAPI}
             />
           )}
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     </Background>
   );
 };
@@ -509,9 +511,6 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       alignItems: 'center',
       marginBottom: MARGIN_LEFT_RIGHT_MIN,
     },
-    dropdownWidth: {
-      width: width * 0.77,
-    },
     addButton: {
       alignItems: 'center',
       borderRadius: 30,
@@ -540,6 +539,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       borderColor: getColors(theme).lineSeparatorStroke,
       alignSelf: 'center',
     },
+    dropdown: {width: 0.7 * width},
   });
 
 const mapStateToProps = (state: RootState) => ({

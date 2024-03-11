@@ -18,11 +18,7 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {
-  LABEL_INDENT_SPACE,
-  MARGIN_LEFT_RIGHT_MIN,
-  MARGIN_PADDING,
-} from 'src/styles/spacing';
+import {LABEL_INDENT_SPACE, MARGIN_LEFT_RIGHT_MIN} from 'src/styles/spacing';
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_3,
@@ -102,9 +98,6 @@ const AddCustomRPC = ({
           onRemove={onRemoveDropdownItem}
           additionalDropdowContainerStyle={[styles.dropdownWidth]}
           dropdownIconScaledSize={styles.dropdownIconDimensions}
-          additionalOverlayStyle={{
-            paddingHorizontal: MARGIN_PADDING,
-          }}
           additionalListExpandedContainerStyle={styles.dropdownWidth}
           drawLineBellowSelectedItem
           showSelectedIcon={
@@ -128,7 +121,7 @@ const AddCustomRPC = ({
         </TouchableOpacity>
       </View>
       {addNewRpc && (
-        <View style={[getCardStyle(theme).defaultCardItem]}>
+        <View style={[getCardStyle(theme).defaultCardItem, {width: '100%'}]}>
           <View style={styles.flexRow}>
             <Text style={styles.text}>
               {translate('settings.settings.add_rpc_title')}
@@ -213,7 +206,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       alignContent: 'center',
     },
     dropdownWidth: {
-      width: width * 0.77,
+      width: width * 0.7,
     },
     dropdownIconDimensions: {width: 15, height: 15},
     indent: {
