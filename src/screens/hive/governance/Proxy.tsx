@@ -1,7 +1,7 @@
 import {loadAccount} from 'actions/hive';
 import {ActiveAccount} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import CustomInput from 'components/form/CustomInput';
+import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
@@ -12,9 +12,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
-import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {getBorderTest} from 'src/styles/test';
 import {
   getFontSizeSmallDevices,
   title_primary_title_1,
@@ -89,9 +87,9 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
           <Loader animating />
         </View>
       )}
-      <View style={styles.flewBewteen}>
+      <View style={[styles.flewBewteen]}>
         {!loading && (
-          <View style={[{flex: 1}, getBorderTest('red')]}>
+          <View style={[{flex: 1}]}>
             <Caption
               text={
                 user.account.proxy.length > 0
@@ -99,26 +97,22 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
                   : 'governance.proxy.proxy_def'
               }
               hideSeparator
+              additionnalText={
+                user.account.proxy.length > 0
+                  ? 'governance.proxy.using_proxy'
+                  : undefined
+              }
+              additionnalTextParams={
+                user.account.proxy.length > 0 ? {name: user.account.proxy} : {}
+              }
             />
-            {user.account.proxy.length > 0 && (
-              <Caption
-                text="governance.proxy.using_proxy"
-                textParams={{name: user.account.proxy}}
-              />
-            )}
             {user.account.proxy.length === 0 && !loading && (
-              <CustomInput
+              <OperationInput
                 value={proxyUsername}
                 onChangeText={setProxyUsername}
                 leftIcon={<Icon name={Icons.AT} theme={theme} />}
                 placeholder={translate('governance.proxy.placeholder')}
                 autoCapitalize="none"
-                containerStyle={[
-                  getCardStyle(theme).defaultCardItem,
-                  styles.borderAligned,
-                ]}
-                inputStyle={[styles.text, {textAlignVertical: 'center'}]}
-                additionalInputContainerStyle={[styles.inputContainer]}
               />
             )}
           </View>
@@ -150,8 +144,6 @@ const getDimensionedStyles = (width: number, heigth: number, theme: Theme) =>
     container: {
       width: '100%',
       flex: 1,
-      marginTop: 30,
-      paddingHorizontal: width * 0.05,
     },
     text: {
       textAlignVertical: 'center',

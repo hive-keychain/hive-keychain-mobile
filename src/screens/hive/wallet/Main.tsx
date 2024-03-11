@@ -345,6 +345,7 @@ const Main = ({
                     {currency: getCurrency('HP')},
                   ].map((item, index) => (
                     <CurrencyToken
+                      key={`${item.currency}`}
                       theme={theme}
                       currencyName={item.currency}
                       itemIndex={index}
@@ -405,6 +406,7 @@ const Main = ({
                 </View>
                 {filteredUserTokenBalanceList.map((item, index) => (
                   <EngineTokenDisplay
+                    key={`engine-token-${item._id}`}
                     addBackground
                     token={item}
                     tokensList={tokens}

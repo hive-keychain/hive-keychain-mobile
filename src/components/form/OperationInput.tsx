@@ -48,6 +48,7 @@ export default (props: InputProps & OperationInputProps) => {
       {...props}
       containerStyle={styles.container}
       additionalInputContainerStyle={props.additionalInputContainerStyle}
+      inputColor={getColors(theme).secondaryText}
       autoCompleteValues={props.autoCompleteValues}
     />
   );
