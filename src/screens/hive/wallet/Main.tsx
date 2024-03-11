@@ -58,7 +58,10 @@ import {
   getColors,
 } from 'src/styles/colors';
 import {TOP_CONTAINER_SEPARATION} from 'src/styles/spacing';
-import {button_link_primary_medium} from 'src/styles/typography';
+import {
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
+  button_link_primary_medium,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {getCurrency} from 'utils/hive';
@@ -454,7 +457,7 @@ const Main = ({
                     )}
                 </>
               </View>
-              <View style={getCardStyle(theme).filledWrapper} />
+              <View style={[getCardStyle(theme).filledWrapper]} />
             </ScrollView>
           </View>
         </View>
@@ -501,7 +504,7 @@ const getDimensionedStyles = (
       alignItems: 'center',
     },
     dropdownContainer: {
-      width: 180,
+      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 150 : 180,
       alignSelf: 'flex-end',
     },
     marginRight: {
@@ -550,8 +553,8 @@ const getDimensionedStyles = (
     },
     smallIcon: {width: 10, height: 10},
     dropdownExpandedContainer: {
-      width: '65%',
       alignSelf: 'flex-end',
+      width: 'auto',
     },
     userdropdown: {
       backgroundColor: '#ffffff00',
