@@ -3,6 +3,7 @@ import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import PendingSavingsWithdrawalPageComponent from 'components/hive/PendingSavingsWithdrawalPage.component';
+import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
@@ -274,18 +275,9 @@ const Savings = ({
           {(currency !== 'HIVE' ||
             operationType !== SavingsOperations.deposit) && (
             <View>
-              <Separator />
-              <Text
-                style={[
-                  getFormFontStyle(height, theme).title,
-                  styles.opaque,
-                  styles.disclaimer,
-                  styles.paddingHorizontal,
-                ]}>
-                {translate(
-                  `wallet.operations.savings.${operationType}_disclaimer`,
-                )}
-              </Text>
+              <Caption
+                text={`wallet.operations.savings.${operationType}_disclaimer`}
+              />
             </View>
           )}
 

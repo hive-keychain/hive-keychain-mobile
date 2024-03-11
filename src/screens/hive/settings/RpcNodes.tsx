@@ -6,6 +6,7 @@ import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
+import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
@@ -421,13 +422,7 @@ const RpcNodes = ({
             width: '100%',
           }}>
           <Separator height={10} />
-          {//@ts-ignore
-          translate('settings.settings.disclaimer').map((disclaimer, i) => (
-            <Text key={i} style={[styles.textInfo, styles.paddingHorizontal]}>
-              {disclaimer}
-            </Text>
-          ))}
-          <Separator />
+          <Caption text="settings.settings.rpc_disclaimer" hideSeparator />
           <Text style={[styles.title, styles.text]}>
             {translate('settings.settings.hive_rpc')}
           </Text>

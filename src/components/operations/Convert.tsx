@@ -3,6 +3,7 @@ import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import PendingConvertions from 'components/hive/PendingConversions';
+import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
 import {TemplateStackProps} from 'navigators/Root.types';
@@ -204,19 +205,9 @@ const Convert = ({
       }
       childrenMiddle={
         <View>
-          <Separator />
-          <Text
-            style={[
-              getFormFontStyle(height, theme).title,
-              styles.opaque,
-              styles.disclaimer,
-              styles.paddingHorizontal,
-            ]}>
-            {translate(
-              `wallet.operations.convert.disclaimer_${currency.toLowerCase()}`,
-            )}
-          </Text>
-          <Separator />
+          <Caption
+            text={`wallet.operations.convert.disclaimer_${currency.toLowerCase()}`}
+          />
           <View style={styles.flexRowBetween}>
             <OperationInput
               labelInput={translate('common.currency')}

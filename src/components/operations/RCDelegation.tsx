@@ -2,6 +2,7 @@ import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
@@ -261,16 +262,7 @@ const RCDelegation = ({
       }
       childrenMiddle={
         <View>
-          <Separator height={30} />
-          <Text
-            style={[
-              getFormFontStyle(height, theme).title,
-              styles.opaque,
-              styles.disclaimer,
-            ]}>
-            {translate('wallet.operations.rc_delegation.disclaimer')}
-          </Text>
-          <Separator />
+          <Caption text="wallet.operations.rc_delegation.disclaimer" />
           <OperationInput
             labelInput={translate('common.username')}
             placeholder={translate('common.username')}

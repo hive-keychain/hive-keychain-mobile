@@ -3,10 +3,10 @@ import {ActiveAccount} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CustomInput from 'components/form/CustomInput';
 import Icon from 'components/hive/Icon';
+import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
-import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -14,6 +14,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
+import {getBorderTest} from 'src/styles/test';
 import {
   getFontSizeSmallDevices,
   title_primary_title_1,
@@ -90,23 +91,21 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
       )}
       <View style={styles.flewBewteen}>
         {!loading && (
-          <View style={{flex: 1}}>
-            <Text style={[styles.text, styles.textOpaque]}>
-              {translate(
+          <View style={[{flex: 1}, getBorderTest('red')]}>
+            <Caption
+              text={
                 user.account.proxy.length > 0
                   ? 'governance.proxy.has_proxy'
-                  : 'governance.proxy.proxy_def',
-              )}
-            </Text>
-            <Separator />
+                  : 'governance.proxy.proxy_def'
+              }
+              hideSeparator
+            />
             {user.account.proxy.length > 0 && (
-              <Text style={[styles.text, styles.textOpaque]}>
-                {translate('governance.proxy.using_proxy', {
-                  name: user.account.proxy,
-                })}
-              </Text>
+              <Caption
+                text="governance.proxy.using_proxy"
+                textParams={{name: user.account.proxy}}
+              />
             )}
-            <Separator />
             {user.account.proxy.length === 0 && !loading && (
               <CustomInput
                 value={proxyUsername}
@@ -186,7 +185,6 @@ const getDimensionedStyles = (width: number, heigth: number, theme: Theme) =>
     },
     flewBewteen: {
       flex: 1,
-      justifyContent: 'space-between',
     },
     flexEnd: {flex: 1, justifyContent: 'flex-end'},
     buttonText: {

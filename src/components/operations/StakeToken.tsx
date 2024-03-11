@@ -1,6 +1,7 @@
 import {loadAccount, loadUserTokens} from 'actions/index';
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
+import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {
@@ -149,12 +150,7 @@ const StakeToken = ({
       }
       childrenMiddle={
         <View style={styles.childrenMiddle}>
-          <Separator />
-          <Text
-            style={[getFormFontStyle(height, theme).title, styles.infoText]}>
-            {translate('wallet.operations.token_stake.info')}
-          </Text>
-          <Separator />
+          <Caption text="wallet.operations.token_stake.info" />
           <View style={styles.flexRowBetween}>
             <OperationInput
               labelInput={translate('common.currency')}

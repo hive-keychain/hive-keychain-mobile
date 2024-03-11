@@ -1,5 +1,6 @@
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
+import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {
@@ -150,19 +151,18 @@ const UnstakeToken = ({
       }
       childrenMiddle={
         <View style={styles.childrenMiddle}>
-          <Separator />
-          <Text
-            style={[getFormFontStyle(height, theme).title, styles.infoText]}>
-            {translate('wallet.operations.token_unstake.info')}
-          </Text>
-          <Text
-            style={[getFormFontStyle(height, theme).title, styles.infoText]}>
-            {translate('wallet.operations.token_unstake.cooldown_disclaimer', {
+          <Caption
+            text="wallet.operations.token_unstake.info"
+            additionnalText={`wallet.operations.token_unstake.${
+              tokenInfo.unstakingCooldown > 1
+                ? 'cooldown_disclaimer_multiple_days'
+                : 'cooldown_disclaimer_single_day'
+            }`}
+            additionnalTextParams={{
               unstakingCooldown: tokenInfo.unstakingCooldown,
-            })}
-            {tokenInfo.unstakingCooldown === 1 ? '' : 's'},
-          </Text>
-          <Separator />
+            }}
+          />
+
           <View style={styles.flexRowBetween}>
             <OperationInput
               labelInput={translate('common.currency')}

@@ -4,6 +4,7 @@ import ErrorSvg from 'assets/new_UI/error-circle.svg';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import PreloadedImage from 'components/ui/PreloadedImage';
 import RotationIconAnimated from 'components/ui/RotationIconAnimated';
@@ -553,13 +554,11 @@ const Swap = ({
             opacity: 1,
           }}
           childrenTop={
-            <View style={styles.marginHorizontal}>
+            <View style={{}}>
               <Separator />
-              <Text style={[styles.textBase, styles.opaque, styles.disclaimer]}>
-                {translate('wallet.operations.swap.disclaimer')}
-              </Text>
+              <Caption text="wallet.operations.swap.disclaimer" hideSeparator />
               <Separator height={25} />
-              <View style={styles.flexRowbetween}>
+              <View style={[styles.flexRowbetween, styles.marginHorizontal]}>
                 <Text style={[styles.textBase, styles.opaque]}>
                   {translate('wallet.operations.swap.swap_fee_title')}{' '}
                   {swapConfig.fee.amount} %

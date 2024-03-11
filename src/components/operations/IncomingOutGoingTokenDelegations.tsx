@@ -1,5 +1,6 @@
 import {loadAccount} from 'actions/index';
 import {TokenBalance} from 'actions/interfaces';
+import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
@@ -88,15 +89,13 @@ const IncomingOutGoingTokenDelegations = ({
           <Separator height={30} />
           {delegationType === 'Outgoing' && (
             <>
-              <Text style={styles.infoText}>
-                {translate(
-                  'wallet.operations.token_delegation.undelegation_cooldown_disclaimer',
-                  {
-                    symbol: token.symbol,
-                    undelegationCooldown: tokenInfo.undelegationCooldown,
-                  },
-                )}
-              </Text>
+              <Caption
+                text="wallet.operations.token_delegation.undelegation_cooldown_disclaimer"
+                textParams={{
+                  symbol: token.symbol,
+                  undelegationCooldown: tokenInfo.undelegationCooldown,
+                }}
+              />
               {parseFloat(token.pendingUndelegations) > 0 && (
                 <>
                   <Separator />
