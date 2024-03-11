@@ -515,7 +515,7 @@
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",
       "whitelisted": "Whitelisted operations",
-      "no_pref": "No whitelisted operations",
+      "no_pref": "No whitelisted operation",
       "user": "User settings",
       "operations": "Operations",
       "operations_info": "For a better experience, you can whitelist non-active authority operation when dApps requested them. you won’t receive a confirmation prompt for operations",

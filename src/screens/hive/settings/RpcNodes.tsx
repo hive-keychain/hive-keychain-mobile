@@ -427,7 +427,6 @@ const RpcNodes = ({
             subTitle="settings.settings.switch_auto_info"
           />
 
-          <Separator />
           {!switchRPCAuto && renderRpcItem()}
         </View>
         <View>
