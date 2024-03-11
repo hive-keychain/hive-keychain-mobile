@@ -38,7 +38,7 @@
     "username": "Username",
     "authorized_username": "Auth. Account",
     "confirm_key_remove": "Please confirm removal of key from Keychain",
-    "confirm_account_remove": "Please confirm you want to remove from Keychain.",
+    "confirm_account_remove": "Please confirm that you want to remove this account from Keychain.",
     "confirm": "Confirm",
     "added_account": "Account has been added successfully!",
     "cancel": "Cancel",
@@ -177,7 +177,7 @@
             "success": "Savings withdrawal canceled succesfully"
           }
         },
-        "confirm": {"info": "Please confirm your savings operation."},
+        "confirm": {"info": "Please confirm this savings operation."},
         "pending": "Withdrawing",
         "currency_savings_title": "{{currency}} Savings"
       },
@@ -193,7 +193,7 @@
         "sent": "Sent",
         "received": "Received",
         "confirm": {
-          "info": "Please confirm your transfer.\nThis cannot be undone",
+          "info": "Please confirm this transfer.\nThis cannot be undone",
           "from": "From",
           "to": "To",
           "amount": "Amount",
@@ -218,12 +218,12 @@
         "title": "Power up",
         "info_power_up": "Powered up {{amount}}",
         "info_text": "Power up HIVE to transform it in HP",
-        "confirm": {"info": "Please confirm your power up."}
+        "confirm": {"info": "Please confirm this power up."}
       },
       "powerdown": {
         "confirm": {
-          "info": "Please confirm your power down.",
-          "info_stop": "Please confirm you want to stop your power down."
+          "info": "Please confirm this power down.",
+          "info_stop": "Please confirm that you want to stop your power down."
         },
         "title": "Power down",
         "info_power_down": "Initiated a {{amount}} power down",
@@ -270,8 +270,8 @@
         "failed": {
           "rc_delegation_failed": "Rc Delegation failed"
         },
-        "confirmation": "Please confirm your RC delegation.",
-        "confirmation_cancel": "Please confirm you RC delegation cancellation.",
+        "confirmation": "Please confirm this RC delegation.",
+        "confirmation_cancel": "Please confirm this RC delegation cancellation.",
         "confirm_cancel_rc_delegation": "Confirm you want to cancel this RC delegation?"
       },
       "convert": {
@@ -294,7 +294,7 @@
         "title": "Transfer Token"
       },
       "token_stake": {
-        "confirm": {"info": "Please confirm you want to stake tokens."},
+        "confirm": {"info": "Please confirm that you want to stake tokens."},
         "title": "Stake",
         "titled": "Staked",
         "staking": "Staking",
@@ -302,7 +302,7 @@
         "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient"
       },
       "token_unstake": {
-        "confirm": {"info": "Please confirm you want to unstake tokens."},
+        "confirm": {"info": "Please confirm that you want to unstake tokens."},
         "title": "Unstake",
         "unstaking_token": "Unstaking {{currency}}",
         "unstaking": "Unstaking",
@@ -312,13 +312,13 @@
         "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient"
       },
       "token_delegation": {
-        "confirm": {"info": "Please confirm you want to delegate tokens."},
+        "confirm": {"info": "Please confirm this token delegation."},
         "title": "Delegate",
         "delegating": "Delegating",
         "delegating_token": "Delegating {{currency}}",
         "cancel_delegation": "Cancelling Delegation {{currency}}",
         "cancelling_delegation": "Cancelling Delegation",
-        "title_confirm_cancel_delegation": "Please confirm you want to cancel a {{amount}} {{currency}} Token Delegation",
+        "title_confirm_cancel_delegation": "Please confirm that you want to cancel a {{amount}} {{currency}} Token Delegation",
         "in": "Delegation in",
         "out": "Delegation out",
         "info_requirements": "Some tokens require stake to delegate",
