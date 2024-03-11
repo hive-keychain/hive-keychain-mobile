@@ -507,6 +507,7 @@
     },
     "settings": {
       "rpc": "RPC Nodes",
+      "automated_tasks": "Automated tasks",
       "global": "Global Settings",
       "whitelisted": "Whitelisted operations",
       "no_pref": "No whitelisted operations",

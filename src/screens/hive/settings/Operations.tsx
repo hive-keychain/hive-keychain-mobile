@@ -1,13 +1,12 @@
 import {loadAccount} from 'actions/hive';
 import {removePreference} from 'actions/preferences';
 import CustomSearchBar from 'components/form/CustomSearchBar';
-import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
+import UserDropdown from 'components/form/UserDropdown';
 import Icon from 'components/hive/Icon';
 import CollapsibleSettings from 'components/settings/CollapsibleSettings';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
-import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
@@ -22,7 +21,6 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {MARGIN_PADDING} from 'src/styles/spacing';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_2,
@@ -37,8 +35,6 @@ const Operations = ({
   preferences,
   active,
   removePreference,
-  accounts,
-  loadAccount,
 }: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions());
@@ -77,24 +73,6 @@ const Operations = ({
     );
   }, [searchValue, domainList]);
 
-  const getItemDropDownSelected = (username: string): DropdownModalItem => {
-    const selected = accounts.filter((acc) => acc.name === username)[0];
-    return {
-      label: selected.name,
-      value: selected.name,
-      icon: <UserProfilePicture username={username} style={styles.avatar} />,
-    };
-  };
-
-  const getListFromAccount = () =>
-    accounts.map((acc) => {
-      return {
-        label: acc.name,
-        value: acc.name,
-        icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
-      } as DropdownModalItem;
-    });
-
   return (
     <Background theme={theme}>
       <View style={styles.container}>
@@ -110,16 +88,7 @@ const Operations = ({
           ]}>
           {translate('settings.settings.operations_info')}
         </Text>
-        <DropdownModal
-          list={getListFromAccount()}
-          selected={getItemDropDownSelected(active.name!)}
-          onSelected={(selectedAccount) =>
-            loadAccount(selectedAccount.value, true)
-          }
-          additionalDropdowContainerStyle={styles.dropdownContainer}
-          additionalOverlayStyle={styles.dropdownOverlay}
-          dropdownIconScaledSize={{width: 15, height: 15}}
-        />
+        <UserDropdown />
         <CustomSearchBar
           theme={theme}
           additionalContainerStyle={[
@@ -165,7 +134,6 @@ const Operations = ({
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {flex: 1, paddingHorizontal: 16},
-    avatar: {width: 30, height: 30, borderRadius: 50},
     itemDropdown: {
       paddingHorizontal: 18,
     },
@@ -206,14 +174,6 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       alignItems: 'center',
       width: '100%',
     },
-    dropdownContainer: {
-      width: '100%',
-      padding: 0,
-      borderRadius: 30,
-    },
-    dropdownOverlay: {
-      paddingHorizontal: MARGIN_PADDING,
-    },
   });
 
 const connector = connect(
@@ -221,7 +181,6 @@ const connector = connect(
     return {
       preferences: state.preferences,
       active: state.activeAccount,
-      accounts: state.accounts,
     };
   },
   {removePreference, loadAccount},

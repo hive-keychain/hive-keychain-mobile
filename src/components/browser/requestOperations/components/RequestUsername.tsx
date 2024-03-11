@@ -1,11 +1,9 @@
 import {Account} from 'actions/interfaces';
-import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
+import UserDropdown from 'components/form/UserDropdown';
 import Separator from 'components/ui/Separator';
-import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {SMALLEST_SCREEN_WIDTH_SUPPORTED} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import RequestItem from './RequestItem';
@@ -16,27 +14,9 @@ type Props = {
   account: string;
   setAccount: (account: string) => void;
 };
-export default ({username, accounts, account, setAccount}: Props) => {
+export default ({username, setAccount}: Props) => {
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
-
-  const getListFromAccount = () =>
-    accounts.map((acc) => {
-      return {
-        label: acc.name,
-        value: acc.name,
-        icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
-      } as DropdownModalItem;
-    });
-
-  const getItemDropDownSelected = (username: string): DropdownModalItem => {
-    const selected = accounts.filter((acc) => acc.name === username)[0]!;
-    return {
-      label: selected.name,
-      value: selected.name,
-      icon: <UserProfilePicture username={username} style={styles.avatar} />,
-    };
-  };
 
   return username ? (
     <RequestItem
@@ -45,9 +25,7 @@ export default ({username, accounts, account, setAccount}: Props) => {
     />
   ) : (
     <View style={styles.container}>
-      <DropdownModal
-        list={getListFromAccount()}
-        selected={getItemDropDownSelected(account)}
+      <UserDropdown
         onSelected={(selectedAccount) => setAccount(selectedAccount.value)}
       />
       <Separator />
@@ -58,17 +36,7 @@ export default ({username, accounts, account, setAccount}: Props) => {
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     container: {width: '100%', marginTop: -30, marginBottom: 10, height: 60},
-    avatar: {width: 25, height: 25, borderRadius: 50},
-    dropdownContainer: {
-      width: 'auto',
-      padding: 0,
-      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 45 : 50,
-      borderRadius: 10,
-    },
-    dropdownListContainer: {
-      borderRadius: 10,
-      height: '100%',
-    },
+
     text: {
       fontSize: 13,
     },

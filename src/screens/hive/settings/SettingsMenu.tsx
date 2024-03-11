@@ -51,6 +51,19 @@ const SettingsMenu = () => {
           <Icon name={Icons.RPC} theme={theme} color={PRIMARY_RED_COLOR} />
         }
       />
+      <MenuItem
+        labelTranslationKey={'settings.settings.automated_tasks'}
+        theme={theme}
+        onPress={() =>
+          navigate('TemplateStack', {
+            titleScreen: translate('settings.settings.automated_tasks'),
+            component: <RpcNodes />,
+          } as TemplateStackProps)
+        }
+        iconImage={
+          <Icon name={Icons.RPC} theme={theme} color={PRIMARY_RED_COLOR} />
+        }
+      />
     </View>
   );
 };

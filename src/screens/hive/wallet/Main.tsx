@@ -14,7 +14,7 @@ import {
 import {loadTokens, loadTokensMarket} from 'actions/index';
 import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
-import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
+import UserDropdown from 'components/form/UserDropdown';
 import AccountValue from 'components/hive/AccountValue';
 import CurrencyToken from 'components/hive/CurrencyToken';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
@@ -25,7 +25,6 @@ import Claim from 'components/operations/ClaimRewards';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import UserProfilePicture from 'components/ui/UserProfilePicture';
 import WalletPage from 'components/ui/WalletPage';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
@@ -56,7 +55,6 @@ import {
   DARKER_RED_COLOR,
   NEUTRAL_WHITE_COLOR,
   OVERLAYICONBGCOLOR,
-  PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
 import {TOP_CONTAINER_SEPARATION} from 'src/styles/spacing';
@@ -232,15 +230,6 @@ const Main = ({
     }
   };
 
-  const getItemDropDownSelected = (username: string): DropdownModalItem => {
-    const selected = accounts.filter((acc) => acc.name === username)[0]!;
-    return {
-      label: selected.name,
-      value: selected.name,
-      icon: <UserProfilePicture username={username} style={styles.avatar} />,
-    };
-  };
-
   const onHandleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     showFloatingBar(
       event.nativeEvent.contentOffset.y === 0 ||
@@ -253,15 +242,6 @@ const Main = ({
   ) => {
     setLastScrollYValue(event.nativeEvent.contentOffset.y);
   };
-
-  const getListFromAccount = () =>
-    accounts.map((acc) => {
-      return {
-        label: acc.name,
-        value: acc.name,
-        icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
-      } as DropdownModalItem;
-    });
 
   const handleClickSettings = () => {
     navigate('TemplateStack', {
@@ -298,12 +278,7 @@ const Main = ({
               <StatusIndicator theme={theme} />
               <Claim theme={theme} />
               <View style={styles.marginRight}>
-                <DropdownModal
-                  list={getListFromAccount()}
-                  selected={getItemDropDownSelected(user.name)}
-                  onSelected={(selectedAccount) =>
-                    loadAccount(selectedAccount.value)
-                  }
+                <UserDropdown
                   dropdownIconScaledSize={styles.smallIcon}
                   additionalDropdowContainerStyle={styles.userdropdown}
                   additionalMainContainerDropdown={[styles.dropdownContainer]}
@@ -312,16 +287,6 @@ const Main = ({
                     styles.dropdownExpandedContainer
                   }
                   copyButtonValue
-                  showSelectedIcon={
-                    <Icon
-                      name={Icons.CHECK}
-                      theme={theme}
-                      width={15}
-                      height={15}
-                      strokeWidth={2}
-                      color={PRIMARY_RED_COLOR}
-                    />
-                  }
                 />
               </View>
             </View>

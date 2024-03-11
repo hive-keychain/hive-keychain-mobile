@@ -1,23 +1,20 @@
 import {addKey, forgetAccount, forgetKey, loadAccount} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
-import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
-import Icon from 'components/hive/Icon';
+import UserDropdown from 'components/form/UserDropdown';
 import Key from 'components/hive/Key';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
-import UserProfilePicture from 'components/ui/UserProfilePicture';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {MainNavigation} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {ScrollView, StyleSheet, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
 import {getButtonStyle} from 'src/styles/button';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getColors} from 'src/styles/colors';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {
   button_link_primary_medium,
@@ -32,43 +29,18 @@ const AccountManagement = ({
   account,
   forgetKey,
   forgetAccount,
-  addKey,
   navigation,
   accounts,
   loadAccount,
 }: PropsFromRedux & {navigation: MainNavigation}) => {
-  const [username, setUsername] = useState(account.name);
   useLockedPortrait(navigation);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      setUsername(account.name);
-    });
-    return unsubscribe;
-  }, [navigation, account.name]);
+  const username = account.name;
   if (!username) return null;
-
-  const getItemDropDownSelected = (username: string): DropdownModalItem => {
-    const selected = accounts.filter((acc) => acc.name === username)[0];
-    return {
-      label: selected.name,
-      value: selected.name,
-      icon: <UserProfilePicture username={username} style={styles.avatar} />,
-    };
-  };
 
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width, height});
-
-  const getListFromAccount = () =>
-    accounts.map((acc) => {
-      return {
-        label: acc.name,
-        value: acc.name,
-        icon: <UserProfilePicture username={acc.name} style={styles.avatar} />,
-      } as DropdownModalItem;
-    });
 
   const handleGotoConfirmationAccountRemoval = () => {
     if (username) {
@@ -118,28 +90,7 @@ const AccountManagement = ({
       <SafeArea style={styles.safeArea}>
         <FocusAwareStatusBar />
         <ScrollView>
-          <DropdownModal
-            list={getListFromAccount()}
-            selected={getItemDropDownSelected(username)}
-            onSelected={(selectedAccount) => {
-              loadAccount(selectedAccount.value);
-              setUsername(selectedAccount.value);
-            }}
-            dropdownIconScaledSize={{width: 15, height: 15}}
-            additionalDropdowContainerStyle={styles.dropdownContainer}
-            additionalOverlayStyle={styles.dropdownOverlay}
-            showSelectedIcon={
-              <Icon
-                name={Icons.CHECK}
-                theme={theme}
-                width={15}
-                height={15}
-                strokeWidth={2}
-                color={PRIMARY_RED_COLOR}
-              />
-            }
-            copyButtonValue
-          />
+          <UserDropdown copyButtonValue />
           <Separator height={10} />
           <Key
             type={KeyTypes.active}
