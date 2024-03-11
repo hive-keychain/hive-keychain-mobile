@@ -68,7 +68,6 @@ const Governance = ({
           ],
           components: [
             <Witness
-              user={user}
               focus={focus}
               theme={theme}
               ranking={ranking}
