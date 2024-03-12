@@ -554,7 +554,7 @@ const getDimensionedStyles = (
     smallIcon: {width: 10, height: 10},
     dropdownExpandedContainer: {
       alignSelf: 'flex-end',
-      width: 'auto',
+      width: '65%',
     },
     userdropdown: {
       backgroundColor: '#ffffff00',
