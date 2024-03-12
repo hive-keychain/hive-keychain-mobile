@@ -1,4 +1,6 @@
 import {loadAccount} from 'actions/index';
+import EllipticButton from 'components/form/EllipticButton';
+import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
 import {ConfirmationPageRoute} from 'navigators/Root.types';
@@ -13,13 +15,14 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonHeight} from 'src/styles/button';
-import {getColors} from 'src/styles/colors';
+import {getCardStyle} from 'src/styles/card';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {spacingStyle} from 'src/styles/spacing';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {resetStackAndNavigate} from 'utils/navigation';
-import OperationThemed from './OperationThemed';
 
 export type ConfirmationPageProps = {
   onSend: () => void;
@@ -43,21 +46,33 @@ const ConfirmationPage = ({
 } & PropsFromRedux) => {
   const {onSend, title, introText, warningText, data} = route.params;
   const [loading, setLoading] = useState(false);
-  console.log(route.params);
   const {width, height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({width, height}, theme);
+
+  const onConfirm = async () => {
+    setLoading(true);
+    Keyboard.dismiss();
+    await onSend();
+    setLoading(false);
+    loadAccount(user.name, true);
+    resetStackAndNavigate('WALLET');
+  };
+
   return (
-    <OperationThemed
-      childrenTop={<Separator height={50} />}
-      childrenMiddle={
-        <View>
-          <Caption text={title} hideSeparator />
-          <Separator />
-          {warningText && <Caption text={warningText} hideSeparator />}
+    <Background theme={theme}>
+      <View style={styles.confirmationPage}>
+        <Caption text={title} hideSeparator />
+        <Separator />
+        {warningText && <Caption text={warningText} hideSeparator />}
+        <View
+          style={[
+            getCardStyle(theme).defaultCardItem,
+            {marginHorizontal: 16, marginBottom: 0},
+          ]}>
           {data.map((e, i) => (
             <>
-              <View style={styles.justifyCenter}>
+              <View style={[styles.justifyCenter, styles.confirmItem]}>
                 <View style={[styles.flexRowBetween, styles.width95]}>
                   <Text style={[getFormFontStyle(width, theme).title]}>
                     {translate(e.title)}
@@ -78,28 +93,28 @@ const ConfirmationPage = ({
                   />
                 )}
               </View>
-              <Separator />
             </>
           ))}
         </View>
-      }
-      buttonTitle={'common.confirm'}
-      onNext={async () => {
-        setLoading(true);
-        Keyboard.dismiss();
-        await onSend();
-        setLoading(false);
-        loadAccount(user.name, true);
-        resetStackAndNavigate('WALLET');
-      }}
-      loading={loading}
-      additionalContentContainerStyle={styles.paddingHorizontal}
-    />
+        <View style={spacingStyle.fillSpace}></View>
+        <EllipticButton
+          title={translate('common.confirm')}
+          onPress={onConfirm}
+          isLoading={loading}
+          style={styles.confirmButton}
+        />
+      </View>
+    </Background>
   );
 };
 
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
+    confirmButton: {backgroundColor: PRIMARY_RED_COLOR},
+    confirmationPage: {flex: 1, marginBottom: 16},
+    confirmItem: {
+      marginVertical: 8,
+    },
     warning: {color: 'red'},
     flexRowBetween: {
       flexDirection: 'row',
@@ -121,13 +136,6 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       width: '95%',
     },
     justifyCenter: {justifyContent: 'center', alignItems: 'center'},
-    operationButtonsContainer: {
-      alignItems: 'center',
-      flexDirection: 'row',
-      marginBottom: 20,
-      justifyContent: 'space-around',
-      width: '100%',
-    },
     operationButton: {
       marginHorizontal: 0,
       height: getButtonHeight(width),

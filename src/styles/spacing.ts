@@ -1,5 +1,6 @@
 // Define widely used spacing throughout the App
 
+import {StyleSheet} from 'react-native';
 import {getSpaceMultiplier} from './sizeAdjuster';
 import {SMALLEST_SCREEN_WIDTH_SUPPORTED} from './typography';
 
@@ -26,6 +27,10 @@ export const getSpacing = (width = 0, height = 0) => {
     mainFixedMargin: 100, //static
   };
 };
+
+export const spacingStyle = StyleSheet.create({
+  fillSpace: {flex: 1},
+});
 
 export const getElementHeight = (screenWidth: number) => {
   return screenWidth <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 45 : 50;
