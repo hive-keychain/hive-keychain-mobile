@@ -147,6 +147,9 @@ const DropdownModal = ({
             marginLeft: MIN_SEPARATION_ELEMENTS,
           },
         ]}>
+        {isMatchingObjectSelected ? (
+          <View style={{width: 20}}>{showSelectedIcon}</View>
+        ) : null}
         {copyButtonValue && (
           <Icon
             theme={theme}
@@ -154,14 +157,11 @@ const DropdownModal = ({
             onClick={() => onHandleCopyValue(item.value)}
             width={16}
             height={16}
-            additionalContainerStyle={{marginRight: 4}}
+            additionalContainerStyle={{marginLeft: 4}}
             strokeWidth={2}
             color={PRIMARY_RED_COLOR}
           />
         )}
-        {isMatchingObjectSelected ? (
-          <View style={{width: 20}}>{showSelectedIcon}</View>
-        ) : null}
       </View>
     ) : null;
   };
