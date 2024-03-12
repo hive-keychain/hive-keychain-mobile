@@ -59,7 +59,7 @@ export default MyWitnessDataBlock;
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
-      width: '50%',
+      width: '49%',
       paddingHorizontal: 16,
       paddingVertical: 10,
     },

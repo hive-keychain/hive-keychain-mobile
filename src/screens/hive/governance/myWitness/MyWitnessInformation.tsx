@@ -7,7 +7,7 @@ import {getColors} from 'src/styles/colors';
 import {
   FontPoppinsName,
   button_link_primary_small,
-  fields_primary_text_2,
+  fields_primary_text_1,
 } from 'src/styles/typography';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
@@ -59,36 +59,69 @@ const MyWitnessInformation = ({theme, witnessInfo}: Props) => {
         />
       </View>
       <Separator />
-      <View style={[getCardStyle(theme).defaultCardItem, styles.marginBottom]}>
+      <View
+        style={[
+          getCardStyle(theme).defaultCardItem,
+          styles.marginBottom,
+          {paddingHorizontal: '8%'},
+        ]}>
         <Text style={[styles.textBase, styles.textBold, styles.textCentered]}>
           {translate('governance.my_witness.information_reward')}
         </Text>
         <Separator height={8} />
-        <View style={styles.flexRow}>
-          <Text style={[styles.textBase, styles.textBold]}>
-            {translate(
-              'governance.my_witness.information_reward_panel_last_week',
-            )}
-          </Text>
-          <Text style={[styles.textBase, styles.textBold]}>
-            {witnessInfo.rewards.lastWeekInHP}
-          </Text>
-          <Text style={[styles.textBase, styles.smallText, styles.textOpaque]}>
-            ≈ ${witnessInfo.rewards.lastWeekInUSD}
-          </Text>
-        </View>
-        <View style={styles.flexRow}>
-          <Text style={[styles.textBase, styles.textBold]}>
-            {translate(
-              'governance.my_witness.information_reward_panel_last_month',
-            )}
-          </Text>
-          <Text style={[styles.textBase, styles.textBold]}>
-            {witnessInfo.rewards.lastMonthInHP}
-          </Text>
-          <Text style={[styles.textBase, styles.smallText, styles.textOpaque]}>
-            ≈ ${witnessInfo.rewards.lastMonthInUSD}
-          </Text>
+
+        <View style={[{flexDirection: 'row', width: '100%'}]}>
+          <View
+            style={{
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              flex: 3,
+            }}>
+            <Text style={[styles.textBase, styles.textBold]}>
+              {translate(
+                'governance.my_witness.information_reward_panel_last_month',
+              )}
+            </Text>
+            <Text style={[styles.textBase, styles.textBold]}>
+              {translate(
+                'governance.my_witness.information_reward_panel_last_week',
+              )}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: 2,
+            }}>
+            <Text
+              style={[styles.textBase, styles.textBold, {textAlign: 'right'}]}>
+              {witnessInfo.rewards.lastWeekInHP}
+            </Text>
+            <Text
+              style={[styles.textBase, styles.textBold, {textAlign: 'center'}]}>
+              {witnessInfo.rewards.lastMonthInHP}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'column',
+              alignItems: 'flex-end',
+              justifyContent: 'center',
+              flex: 3,
+            }}>
+            <Text
+              style={[styles.textBase, styles.smallText, styles.textOpaque]}>
+              ≈ ${witnessInfo.rewards.lastWeekInUSD}
+            </Text>
+
+            <Text
+              style={[styles.textBase, styles.smallText, styles.textOpaque]}>
+              ≈ ${witnessInfo.rewards.lastMonthInUSD}
+            </Text>
+          </View>
         </View>
       </View>
     </>
@@ -97,9 +130,11 @@ const MyWitnessInformation = ({theme, witnessInfo}: Props) => {
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
+    rewardColumn: {},
     flexRowWrapped: {
       flexDirection: 'row',
       flexWrap: 'wrap',
+      justifyContent: 'space-between',
     },
     textBold: {
       fontFamily: FontPoppinsName.BOLD,
@@ -117,7 +152,7 @@ const getStyles = (theme: Theme) =>
     textOpaque: {opacity: 0.7},
     smallText: {
       color: getColors(theme).secondaryText,
-      ...fields_primary_text_2,
+      ...fields_primary_text_1,
     },
     marginBottom: {
       marginBottom: 15,

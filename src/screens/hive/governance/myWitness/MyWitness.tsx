@@ -77,20 +77,21 @@ const MyWitness = ({
 
   const getActiveSwitchStyle = (active: boolean) => {
     return active
-      ? {...styles.switctActive, ...shadowActiveSwitch}
+      ? {...styles.switchActive, ...shadowActiveSwitch}
       : styles.switchInactive;
   };
 
   if (isLoading && !hasError) {
     return (
-      <View style={styles.flexCentered}>
+      <View
+        style={{alignItems: 'center', justifyContent: 'center', width: '100%'}}>
         <Loader animating size={'large'} />
       </View>
     );
   } else if (!isLoading && hasError) {
     return (
-      <View style={styles.flexCentered}>
-        <Text style={[styles.textTitle, styles.textCentered]}>
+      <View style={{}}>
+        <Text style={[styles.textTitle]}>
           {translate('governance.witness.error.retrieving_witness_info')}
         </Text>
       </View>
@@ -98,10 +99,9 @@ const MyWitness = ({
   } else {
     return (
       <WalletPage>
-        <View style={styles.container}>
+        <View style={styles.myWitnessContainer}>
           {!editMode && (
-            <View style={styles.flexBewteen}>
-              <Separator height={5} />
+            <View style={styles.witnessInfoContainer}>
               <TouchableOpacity
                 style={[getCardStyle(theme).defaultCardItem, styles.switch]}
                 onPress={() => setDisplayInfo(!displayInfo)}>
@@ -122,18 +122,15 @@ const MyWitness = ({
                   </Text>
                 </View>
               </TouchableOpacity>
-              <View
-                style={[
-                  getCardStyle(theme).defaultCardItem,
-                  styles.userProfile,
-                ]}>
+              <Separator height={8} />
+              <View style={styles.userInfoCard}>
                 <UserProfilePicture
                   username={user.name!}
                   style={styles.avatar}
                 />
                 <View>
-                  <Text style={styles.usernameText}>{user.name!}</Text>
-                  <Text style={[styles.smallText, styles.textOpaque]}>
+                  <Text style={styles.usernameText}>@{user.name!}</Text>
+                  <Text style={[styles.smallText]}>
                     {ranking.active_rank}
                     {translate(
                       getOrdinalLabelTranslation(ranking.active_rank),
@@ -169,14 +166,20 @@ const MyWitness = ({
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
-    flexCentered: {flex: 1, justifyContent: 'center'},
+    myWitnessContainer: {
+      padding: 16,
+    },
+    witnessInfoContainer: {},
     textTitle: {
       lineHeight: 16,
       textAlignVertical: 'center',
       ...title_primary_title_1,
       color: getColors(theme).secondaryText,
     },
-    textCentered: {textAlign: 'center'},
+    userInfoCard: {
+      flexDirection: 'row',
+      ...(getCardStyle(theme).defaultCardItem as any),
+    },
     avatar: {
       width: 40,
       height: 40,
@@ -184,16 +187,11 @@ const getStyles = (theme: Theme) =>
       marginRight: 8,
     },
     switch: {
-      width: '30%',
+      width: 116,
       alignSelf: 'flex-end',
       borderRadius: 26,
       paddingVertical: 2,
       paddingHorizontal: 4,
-    },
-    container: {
-      width: '95%',
-      alignSelf: 'center',
-      height: '100%',
     },
     switcherContainer: {
       flexDirection: 'row',
@@ -208,7 +206,7 @@ const getStyles = (theme: Theme) =>
       color: getColors(theme).secondaryText,
       ...button_link_primary_medium,
     },
-    switctActive: {
+    switchActive: {
       borderRadius: 26,
       borderWidth: 1,
       width: 50,
@@ -230,19 +228,6 @@ const getStyles = (theme: Theme) =>
       alignItems: 'center',
       textAlign: 'center',
       textAlignVertical: 'center',
-    },
-    textOpaque: {opacity: 0.7},
-    userProfile: {
-      width: '40%',
-      alignSelf: 'flex-start',
-      flexDirection: 'row',
-      paddingHorizontal: 10,
-      paddingVertical: 10,
-      marginBottom: 0,
-    },
-    flexBewteen: {
-      justifyContent: 'space-between',
-      flex: 1,
     },
   });
 
