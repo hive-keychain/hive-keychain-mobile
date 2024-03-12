@@ -259,14 +259,15 @@ const Witness = ({
           onChangeText={setFilterValue}
         />
         <Separator height={15} />
-        <View style={styles.switch}>
+        <View style={[styles.listFilterPanel]}>
           <CheckBoxPanel
             checked={displayVotedOnly}
             onPress={() => {
               setDisplayVotedOnly(!displayVotedOnly);
             }}
             title="governance.witness.show_voted"
-            containerStyle={styles.checkbox}
+            smallText
+            containerStyle={{marginRight: 4}}
           />
           <CheckBoxPanel
             checked={hideNonActive}
@@ -274,7 +275,8 @@ const Witness = ({
               setHideNonActive(!hideNonActive);
             }}
             title="governance.witness.hide_inactive"
-            containerStyle={styles.checkbox}
+            smallText
+            containerStyle={{marginLeft: 4}}
           />
         </View>
         <FlatList
@@ -294,10 +296,17 @@ const Witness = ({
 
 const getDimensionedStyles = (width: number, height: number, theme: Theme) =>
   StyleSheet.create({
-    container: {
+    listFilterPanel: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
       width: '100%',
+      marginBottom: 6,
+    },
+    container: {
       flex: 1,
       justifyContent: 'center',
+      paddingHorizontal: 16,
     },
     text: {
       lineHeight: 16,
@@ -328,7 +337,6 @@ const getDimensionedStyles = (width: number, height: number, theme: Theme) =>
     withPadding: {paddingHorizontal: width * 0.02},
     vote: {flex: 1},
     switch: {
-      width: '100%',
       flexDirection: 'row',
       justifyContent: 'space-between',
       marginBottom: 15,

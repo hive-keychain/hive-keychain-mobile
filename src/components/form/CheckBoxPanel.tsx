@@ -25,11 +25,13 @@ type Props = {
   skipTranslation?: boolean;
   skipSubtitleTranslation?: boolean;
   containerStyle?: StyleProp<ViewStyle>;
+  smallText?: boolean;
 };
 const CheckBoxPanel = ({
   subTitle,
   skipSubtitleTranslation,
   containerStyle,
+  smallText,
   ...props
 }: Props) => {
   const {theme} = useThemeContext();
@@ -43,7 +45,7 @@ const CheckBoxPanel = ({
         styles.checkBoxContainer,
         containerStyle,
       ]}>
-      <CheckBox {...props} />
+      <CheckBox {...props} smallText={smallText} />
       {!!subTitle ? (
         <Text
           style={[
@@ -77,7 +79,7 @@ const getStyles = (theme: Theme, width: number) =>
       justifyContent: 'center',
       paddingHorizontal: 10,
       paddingVertical: 4,
-      width: '100%',
+      flex: 1,
     },
   });
 
