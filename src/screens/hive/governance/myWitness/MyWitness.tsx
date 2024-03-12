@@ -99,7 +99,7 @@ const MyWitness = ({
   } else {
     return (
       <WalletPage>
-        <View style={styles.myWitnessContainer}>
+        <View style={[styles.myWitnessContainer]}>
           {!editMode && (
             <View style={styles.witnessInfoContainer}>
               <TouchableOpacity
@@ -168,8 +168,9 @@ const getStyles = (theme: Theme) =>
   StyleSheet.create({
     myWitnessContainer: {
       padding: 16,
+      flexGrow: 1,
     },
-    witnessInfoContainer: {},
+    witnessInfoContainer: {flexGrow: 1},
     textTitle: {
       lineHeight: 16,
       textAlignVertical: 'center',

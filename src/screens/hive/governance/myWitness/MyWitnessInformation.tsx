@@ -21,7 +21,7 @@ interface Props {
 const MyWitnessInformation = ({theme, witnessInfo}: Props) => {
   const styles = getStyles(theme);
   return (
-    <>
+    <View>
       <View style={styles.flexRowWrapped}>
         <MyWitnessDataBlock
           theme={theme}
@@ -124,7 +124,7 @@ const MyWitnessInformation = ({theme, witnessInfo}: Props) => {
           </View>
         </View>
       </View>
-    </>
+    </View>
   );
 };
 

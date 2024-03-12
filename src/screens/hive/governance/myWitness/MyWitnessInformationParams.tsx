@@ -7,6 +7,7 @@ import {Theme} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
+import {spacingStyle} from 'src/styles/spacing';
 import {
   FontPoppinsName,
   button_link_primary_small,
@@ -29,13 +30,14 @@ const MyWitnessInformationParams = ({
 }: Props) => {
   const styles = getStyles(theme);
   return (
-    <>
+    <View style={[{flexGrow: 1}]}>
       <Text style={[styles.textBase, styles.textBold]}>
         {translate('governance.my_witness.information_signing_key')}
       </Text>
       <Text style={[styles.textBase, styles.smallText, styles.textOpaque]}>
         {witnessInfo.signingKey}
       </Text>
+      <Separator height={24} />
       <View style={styles.flexRowWrapped}>
         <MyWitnessDataBlock
           theme={theme}
@@ -44,16 +46,16 @@ const MyWitnessInformationParams = ({
         />
         <MyWitnessDataBlock
           theme={theme}
-          labelTranslationKey="governance.my_witness.information_account_creation_fee"
-          value={witnessInfo.params.accountCreationFeeFormatted}
-        />
-        <MyWitnessDataBlock
-          theme={theme}
           labelTranslationKey="governance.my_witness.information_hbd_interest_rate"
           value={`${witnessInfo.params.hbdInterestRate.toFixed(2)}%`}
         />
+        <MyWitnessDataBlock
+          theme={theme}
+          labelTranslationKey="governance.my_witness.information_account_creation_fee"
+          value={witnessInfo.params.accountCreationFeeFormatted}
+        />
       </View>
-      <Separator height={50} />
+      <View style={spacingStyle.fillSpace}></View>
       <View style={styles.marginBottom}>
         <ActiveOperationButton
           title={translate('common.edit')}
@@ -61,7 +63,7 @@ const MyWitnessInformationParams = ({
           isLoading={false}
           style={[getCardStyle(theme).defaultCardItem, styles.button]}
         />
-        <Separator height={10} />
+
         <ActiveOperationButton
           title={translate('governance.my_witness.disable_witness')}
           onPress={() => {
@@ -84,7 +86,7 @@ const MyWitnessInformationParams = ({
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
         />
       </View>
-    </>
+    </View>
   );
 };
 
@@ -93,6 +95,7 @@ const getStyles = (theme: Theme) =>
     flexRowWrapped: {
       flexDirection: 'row',
       flexWrap: 'wrap',
+      justifyContent: 'space-between',
     },
     textBold: {
       fontFamily: FontPoppinsName.BOLD,
