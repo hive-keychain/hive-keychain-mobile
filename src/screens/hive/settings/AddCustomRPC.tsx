@@ -12,6 +12,7 @@ import {
   TextStyle,
   TouchableOpacity,
   View,
+  ViewStyle,
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
@@ -46,6 +47,10 @@ interface Props {
   onRemoveDropdownItem: (item: string) => void;
   onSelectedDropdown: (item: string) => void;
   additionalTitleStyle?: StyleProp<TextStyle>;
+  additionalDropdowContainerStyle?: StyleProp<ViewStyle>;
+  additionalListExpandedContainerStyle?: StyleProp<ViewStyle>;
+  remeasure?: boolean;
+  selfCheckPos?: boolean;
 }
 const AddCustomRPC = ({
   theme,
@@ -64,6 +69,10 @@ const AddCustomRPC = ({
   onSelectedDropdown,
   tittleTranslationKey,
   additionalTitleStyle,
+  additionalDropdowContainerStyle,
+  additionalListExpandedContainerStyle,
+  remeasure,
+  selfCheckPos,
 }: Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, width, height);
@@ -96,14 +105,21 @@ const AddCustomRPC = ({
       </View>
       <View style={styles.rpcItemContainer}>
         <DropdownModal
-          remeasure
+          selfCheckPos={selfCheckPos}
+          remeasure={remeasure}
           list={rpcList}
           selected={getItemDropDownSelected({uri: selectedRPC} as Rpc)}
           onSelected={(selectedItem) => onSelectedDropdown(selectedItem.value)}
           onRemove={onRemoveDropdownItem}
-          additionalDropdowContainerStyle={[styles.dropdownWidth]}
+          additionalDropdowContainerStyle={[
+            styles.dropdownWidth,
+            additionalDropdowContainerStyle,
+          ]}
           dropdownIconScaledSize={styles.dropdownIconDimensions}
-          additionalListExpandedContainerStyle={styles.dropdownWidth}
+          additionalListExpandedContainerStyle={[
+            styles.dropdownWidth,
+            additionalListExpandedContainerStyle,
+          ]}
           additionalOverlayStyle={{
             paddingHorizontal: MARGIN_PADDING,
           }}
@@ -119,6 +135,9 @@ const AddCustomRPC = ({
             />
           }
           additionalLineStyle={styles.bottomLineDropdownItem}
+          additionalItemLabelTextStyle={{
+            fontSize: getFontSizeSmallDevices(width, 13),
+          }}
         />
         <TouchableOpacity
           style={[getCardStyle(theme).defaultCardItem, styles.addButton]}

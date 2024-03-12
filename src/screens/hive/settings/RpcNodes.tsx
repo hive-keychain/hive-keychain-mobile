@@ -32,6 +32,7 @@ import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum'
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
+  DROPDOWN_CONTENT_MAX_HEIGHT,
   LABEL_INDENT_SPACE,
   MARGIN_LEFT_RIGHT_MIN,
   MARGIN_PADDING,
@@ -433,6 +434,7 @@ const RpcNodes = ({
         <Separator />
         {hiveEngineRPCList.length > 0 && (
           <AddCustomRPC
+            remeasure
             theme={theme}
             rpcList={hiveEngineRPCList}
             tittleTranslationKey={'settings.settings.hive_engine_rpc'}
@@ -476,6 +478,11 @@ const RpcNodes = ({
             }
             onRemoveDropdownItem={onHandleRemoveAccountHistoryAPI}
             onSelectedDropdown={onHandleSelectAccountHistoryAPI}
+            remeasure
+            selfCheckPos
+            additionalListExpandedContainerStyle={{
+              maxHeight: DROPDOWN_CONTENT_MAX_HEIGHT,
+            }}
           />
         )}
       </ScrollView>

@@ -21,6 +21,7 @@ import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   CONTENT_MARGIN_PADDING,
+  DROPDOWN_CONTENT_MAX_HEIGHT,
   LABEL_INDENT_SPACE,
   MARGIN_LEFT_RIGHT_MIN,
   MARGIN_PADDING,
@@ -66,6 +67,7 @@ interface Props {
   selectedBgColor?: string;
   drawLineBellowSelectedItem?: boolean;
   remeasure?: boolean;
+  selfCheckPos?: boolean;
 }
 
 const DropdownModal = ({
@@ -92,6 +94,7 @@ const DropdownModal = ({
   additionalLineStyle,
   remeasure,
   additionalItemLabelTextStyle,
+  selfCheckPos,
 }: Props) => {
   const dropdownContainerRef = useRef();
   const [dropdownPageY, setDropdownPageY] = useState(0);
@@ -102,6 +105,7 @@ const DropdownModal = ({
   >(list);
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
+  const [renderDropdownListOnTop, setRenderDropdownListOnTop] = useState(false);
 
   const styles = getStyles(
     dropdownPageY,
@@ -279,10 +283,14 @@ const DropdownModal = ({
   );
 
   const _measure = useCallback(() => {
+    const heightPage = height;
     if (dropdownContainerRef && dropdownContainerRef?.current) {
       (dropdownContainerRef.current as any).measureInWindow(
         (pageX: any, pageY: any, width: any, height: any) => {
+          const dropdownListBottomPoint =
+            pageY + height + DROPDOWN_CONTENT_MAX_HEIGHT;
           setDropdownPageY(pageY);
+          setRenderDropdownListOnTop(dropdownListBottomPoint >= heightPage);
         },
       );
     }
@@ -334,6 +342,18 @@ const DropdownModal = ({
             styles.dropdownListContainer,
             styles.overlay,
             additionalOverlayStyle,
+            renderDropdownListOnTop && selfCheckPos
+              ? {
+                  top:
+                    dropdownPageY -
+                    DROPDOWN_CONTENT_MAX_HEIGHT -
+                    MARGIN_LEFT_RIGHT_MIN -
+                    MIN_SEPARATION_ELEMENTS,
+                  flexDirection: 'column-reverse',
+                  paddingVertical: 0,
+                  marginTop: 0,
+                }
+              : undefined,
           ]}>
           <>
             <View style={additionalMainContainerDropdown}>
@@ -398,7 +418,7 @@ const getStyles = (
       width: '100%',
       height: 'auto',
       maxHeight: 150,
-      paddingVertical: 8,
+      paddingVertical: MARGIN_LEFT_RIGHT_MIN,
     },
     textBase: {
       color: getColors(theme).secondaryText,

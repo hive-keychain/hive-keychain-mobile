@@ -19,6 +19,7 @@ export const MIN_SEPARATION_ELEMENTS = 4;
 export const MARGIN_PADDING = 16;
 export const CONTENT_MARGIN_PADDING = 10;
 export const MARGIN_LEFT_RIGHT_MIN = 8;
+export const DROPDOWN_CONTENT_MAX_HEIGHT = 150;
 
 export const getSpacing = (width = 0, height = 0) => {
   return {
