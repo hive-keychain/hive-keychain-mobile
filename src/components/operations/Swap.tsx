@@ -629,7 +629,7 @@ const Swap = ({
                   }}
                   bottomLabelInfo={`${translate(
                     'common.available',
-                  )}: ${parseFloat(startToken.value.balance).toFixed(3)}`}
+                  )}: ${withCommas(startToken.value.balance)}`}
                   drawLineBellowSelectedItem
                   showSelectedIcon={
                     <Icon
