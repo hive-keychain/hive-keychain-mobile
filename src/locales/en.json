@@ -37,7 +37,7 @@
     "value": "Value",
     "username": "Username",
     "authorized_username": "Auth. Account",
-    "confirm_key_remove": "Please confirm removal of key from Keychain",
+    "confirm_key_remove": "Please confirm that you want to remove this key from Keychain",
     "confirm_account_remove": "Please confirm that you want to remove this account from Keychain.",
     "confirm": "Confirm",
     "added_account": "Account has been added successfully!",
@@ -248,7 +248,7 @@
         "delegation_disclaimer": "You may delegate your Hive Power (HP) to another user. Click on the Outgoing amount to review or make change",
         "outgoing_disclaimer": "After being canceled, delegations take 5 days to return to your available Hive Power balance",
         "pending_undelegations": "Pending Undelegations",
-        "confirm_cancel_delegation": "Confirm you want to cancel this delegation?",
+        "confirm_cancel_delegation": "Please confirm that you want to cancel this delegation?",
         "confirm": {"info": "Please confirm the HP delegation."}
       },
       "rc_delegation": {
@@ -272,7 +272,7 @@
         },
         "confirmation": "Please confirm this RC delegation.",
         "confirmation_cancel": "Please confirm this RC delegation cancellation.",
-        "confirm_cancel_rc_delegation": "Confirm you want to cancel this RC delegation?"
+        "confirm_cancel_rc_delegation": "Please confirm that you want to cancel this RC delegation."
       },
       "convert": {
         "title": "Convert to {{to}}",

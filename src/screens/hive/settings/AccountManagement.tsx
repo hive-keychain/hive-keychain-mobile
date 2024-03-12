@@ -22,6 +22,7 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
+import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
@@ -75,7 +76,7 @@ const AccountManagement = ({
       data: [
         {
           title: 'common.key',
-          value: `${key}`,
+          value: capitalize(key),
         },
       ],
     };
