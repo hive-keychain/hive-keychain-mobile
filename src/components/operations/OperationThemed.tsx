@@ -78,7 +78,7 @@ const OperationThemed = ({
         <FocusAwareStatusBar />
         <View style={{flex: 1}}>
           {childrenTop}
-          <View style={{flex: 1}}>
+          <View style={{flex: 1, marginTop: 5}}>
             {inScrollView ? (
               <View style={[styles.container, {overflow: 'hidden'}]}>
                 <ScrollView
