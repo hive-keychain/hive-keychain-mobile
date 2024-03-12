@@ -39,6 +39,7 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.noStyle,
           headerTransparent: true,
+          animationEnabled: false,
           title: '',
         })}
       />
@@ -51,6 +52,7 @@ export default () => {
           title: translate('components.infoWalletQR.title'),
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
+          animationEnabled: false,
           headerRight: () => {
             return <MoreInformation type={Info.QR_WALLET} />;
           },
