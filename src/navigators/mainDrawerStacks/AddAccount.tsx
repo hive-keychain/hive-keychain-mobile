@@ -127,6 +127,7 @@ const getStyles = (
         width,
         {...headlines_primary_headline_2}.fontSize,
       ),
+      includeFontPadding: false,
       textAlignVertical: 'center',
     },
     marginLeft: {marginLeft: HEADER_ICON_MARGIN},

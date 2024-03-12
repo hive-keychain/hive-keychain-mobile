@@ -73,6 +73,8 @@ const getStyles = (
         width,
         {...headlines_primary_headline_2}.fontSize,
       ),
+      includeFontPadding: false,
+      textAlignVertical: 'center',
     },
     cardStyle: {
       paddingHorizontal: CARD_PADDING_HORIZONTAL,

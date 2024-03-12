@@ -10,14 +10,18 @@ import {
   TokensHistoryNavigationProps,
 } from 'navigators/Root.types';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {headlines_primary_headline_2} from 'src/styles/typography';
+import {
+  getFontSizeSmallDevices,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator<RootStackParam>();
@@ -25,7 +29,11 @@ const Stack = createStackNavigator<RootStackParam>();
 export default ({navigation, route}: TokensHistoryNavigationProps) => {
   const {theme} = useThemeContext();
   const {currency} = route.params;
-  const styles = getStyles(theme, useSafeAreaInsets());
+  const styles = getStyles(
+    theme,
+    useSafeAreaInsets(),
+    useWindowDimensions().width,
+  );
 
   return (
     <Stack.Navigator>
@@ -88,7 +96,11 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
   );
 };
 
-const getStyles = (theme: Theme, insets: EdgeInsets) =>
+const getStyles = (
+  theme: Theme,
+  insets: EdgeInsets,
+  width: Dimensions['width'],
+) =>
   StyleSheet.create({
     wrapperFixed: {
       top: 55,
@@ -127,6 +139,12 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
     headerTitle: {
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,
+      fontSize: getFontSizeSmallDevices(
+        width,
+        headlines_primary_headline_2.fontSize,
+      ),
+      textAlignVertical: 'center',
+      includeFontPadding: false,
     },
     header: {
       backgroundColor: getColors(theme).primaryBackground,

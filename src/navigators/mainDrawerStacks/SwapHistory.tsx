@@ -5,20 +5,28 @@ import SwapHistory from 'components/hive/SwapHistory';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {headlines_primary_headline_2} from 'src/styles/typography';
+import {
+  getFontSizeSmallDevices,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator();
 
 export default () => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, useSafeAreaInsets());
+  const styles = getStyles(
+    theme,
+    useSafeAreaInsets(),
+    useWindowDimensions().width,
+  );
 
   return (
     <Stack.Navigator>
@@ -54,7 +62,11 @@ export default () => {
   );
 };
 
-const getStyles = (theme: Theme, insets: EdgeInsets) =>
+const getStyles = (
+  theme: Theme,
+  insets: EdgeInsets,
+  width: Dimensions['width'],
+) =>
   StyleSheet.create({
     headerStyle: {
       shadowColor: 'transparent',
@@ -64,7 +76,13 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
     },
     headerTitle: {
       ...headlines_primary_headline_2,
+      fontSize: getFontSizeSmallDevices(
+        width,
+        headlines_primary_headline_2.fontSize,
+      ),
       color: getColors(theme).primaryText,
+      textAlignVertical: 'center',
+      includeFontPadding: false,
     },
     marginRight: {
       marginRight: HEADER_ICON_MARGIN,

@@ -19,6 +19,7 @@ import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
+  getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
@@ -151,6 +152,12 @@ const getStyles = (
     headerTitle: {
       ...headlines_primary_headline_2,
       color: getColors(theme).primaryText,
+      fontSize: getFontSizeSmallDevices(
+        width,
+        headlines_primary_headline_2.fontSize,
+      ),
+      textAlignVertical: 'center',
+      includeFontPadding: false,
     },
     cardStyle: {
       backgroundColor: getColors(theme).primaryBackground,
