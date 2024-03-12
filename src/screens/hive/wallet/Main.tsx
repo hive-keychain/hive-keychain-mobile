@@ -432,11 +432,7 @@ const Main = ({
                   {!userTokens.loading &&
                     filteredUserTokenBalanceList.length === 0 &&
                     orderedUserTokenBalanceList.length === 0 && (
-                      <View
-                        style={[
-                          getCardStyle(theme).filledWrapper,
-                          styles.filledWrapper,
-                        ]}>
+                      <View style={styles.extraContainerMiniLoader}>
                         <Text style={styles.no_tokens}>
                           {translate('wallet.no_tokens')}
                         </Text>
@@ -445,11 +441,7 @@ const Main = ({
                   {!userTokens.loading &&
                     orderedUserTokenBalanceList.length > 0 &&
                     filteredUserTokenBalanceList.length === 0 && (
-                      <View
-                        style={[
-                          getCardStyle(theme).filledWrapper,
-                          styles.filledWrapper,
-                        ]}>
+                      <View style={styles.extraContainerMiniLoader}>
                         <Text style={styles.no_tokens}>
                           {translate('wallet.no_tokens_filter')}
                         </Text>
