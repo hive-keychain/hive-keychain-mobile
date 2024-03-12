@@ -1,5 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import Icon from 'components/hive/Icon';
+import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
+import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
@@ -8,10 +9,13 @@ import AddAccountByAuth from 'screens/hive/addAccounts/AddAccountByAuth';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
+
+import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
+import CloseButton from 'components/ui/CloseButton';
+import CustomIconButton from 'components/ui/CustomIconButton';
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
@@ -30,21 +34,17 @@ export default () => {
       <AccountStack.Screen
         name="AddAccountFromWalletScreen"
         options={({navigation}) => ({
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
           headerLeft: () => (
-            <Icon
-              name={Icons.ARROW_LEFT}
+            <CustomIconButton
               theme={theme}
-              additionalContainerStyle={styles.marginLeft}
-              onClick={() => navigation.goBack()}
-              color={getColors(theme).iconBW}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
-          headerRight: () => (
-            <MoreInformation
-              additionalButtonStyle={[styles.marginRight]}
-              type={Info.KEYS}
-            />
-          ),
+          headerRight: () => <MoreInformation type={Info.KEYS} />,
           title: translate('navigation.add_account'),
           headerTitleAlign: 'center',
           headerStyle: styles.header,
@@ -58,25 +58,21 @@ export default () => {
         options={({navigation}) => ({
           title: '',
           headerLeft: () => (
-            <Icon
-              name={Icons.ARROW_LEFT}
+            <CustomIconButton
               theme={theme}
-              additionalContainerStyle={[styles.marginLeft]}
-              onClick={() => navigation.goBack()}
-              color={getColors(theme).iconBW}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
           headerRight: () => {
-            return (
-              <MoreInformation
-                additionalButtonStyle={[styles.marginRight]}
-                type={Info.QR_ACCOUNT}
-              />
-            );
+            return <MoreInformation type={Info.QR_ACCOUNT} />;
           },
           headerTitleAlign: 'center',
           headerStyle: styles.header,
           headerTitleStyle: styles.headerTitle,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
         })}
         component={ScanQR}
       />
@@ -84,29 +80,25 @@ export default () => {
         name="AddAccountFromWalletScreenByAuth"
         options={({navigation}) => ({
           headerLeft: () => (
-            <Icon
-              name={Icons.ARROW_LEFT}
+            <CustomIconButton
               theme={theme}
-              additionalContainerStyle={[styles.marginLeft]}
-              onClick={() => {
-                navigation.goBack();
-              }}
-              color={getColors(theme).iconBW}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
           headerRight: () => (
-            <Icon
-              name={Icons.CLOSE_CIRCLE}
+            <CloseButton
               theme={theme}
-              onClick={() => navigation.navigate('WALLET')}
-              additionalContainerStyle={[styles.marginRight]}
-              color={getColors(theme).iconBW}
+              onPress={() => navigation.navigate('WALLET')}
             />
           ),
           title: translate('navigation.add_account_by_auth'),
           headerTitleAlign: 'center',
           headerStyle: styles.header,
           headerTitleStyle: styles.headerTitle,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
         })}
         initialParams={{wallet: true}}
         component={AddAccountByAuth}
@@ -135,7 +127,14 @@ const getStyles = (
         width,
         {...headlines_primary_headline_2}.fontSize,
       ),
+      textAlignVertical: 'center',
     },
     marginLeft: {marginLeft: HEADER_ICON_MARGIN},
     marginRight: {marginRight: HEADER_ICON_MARGIN},
+    headerRightContainer: {
+      marginRight: HEADER_ICON_MARGIN,
+    },
+    headerLeftContainer: {
+      marginLeft: HEADER_ICON_MARGIN,
+    },
   });

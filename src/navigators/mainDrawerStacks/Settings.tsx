@@ -1,13 +1,17 @@
+import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import Icon from 'components/hive/Icon';
+import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
+import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
+import CloseButton from 'components/ui/CloseButton';
+import CustomIconButton from 'components/ui/CustomIconButton';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import SettingsMenu from 'screens/hive/settings/SettingsMenu';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
+import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {
   getFontSizeSmallDevices,
@@ -32,23 +36,21 @@ export default () => {
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           title: translate('navigation.settings'),
+          cardStyle: styles.card,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (
-            <Icon
-              name={Icons.CLOSE_CIRCLE}
+            <CloseButton
               theme={theme}
-              onClick={() => navigation.navigate('WALLET')}
-              color={getColors(theme).iconBW}
-              additionalContainerStyle={styles.padding}
+              onPress={() => navigation.navigate('WALLET')}
             />
           ),
-          cardStyle: styles.card,
           headerLeft: () => (
-            <Icon
-              name={Icons.ARROW_LEFT}
+            <CustomIconButton
               theme={theme}
-              onClick={() => navigation.navigate('WALLET')}
-              color={getColors(theme).iconBW}
-              additionalContainerStyle={styles.padding}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -83,5 +85,11 @@ const getStyles = (
     },
     padding: {
       paddingHorizontal: CARD_PADDING_HORIZONTAL,
+    },
+    headerRightContainer: {
+      marginRight: HEADER_ICON_MARGIN,
+    },
+    headerLeftContainer: {
+      marginLeft: HEADER_ICON_MARGIN,
     },
   });

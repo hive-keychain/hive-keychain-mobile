@@ -50,9 +50,11 @@ export default ({
   }
   return (
     <Icon
+      height={24}
+      width={24}
       name={Icons.INFO}
       theme={theme}
-      additionalContainerStyle={additionalButtonStyle}
+      additionalContainerStyle={[additionalButtonStyle]}
       onClick={() =>
         navigate('ModalScreen', {
           name: Info.COPY_KEYS,

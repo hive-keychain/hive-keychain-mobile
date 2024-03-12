@@ -1,12 +1,14 @@
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import Icon from 'components/hive/Icon';
+import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
+import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
+import CloseButton from 'components/ui/CloseButton';
+import CustomIconButton from 'components/ui/CustomIconButton';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import About from 'screens/hive/settings/About';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
@@ -35,21 +37,17 @@ export default () => {
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (
-            <Icon
-              name={Icons.CLOSE_CIRCLE}
+            <CloseButton
               theme={theme}
-              onClick={() => navigation.navigate('WALLET')}
-              color={getColors(theme).iconBW}
+              onPress={() => navigation.navigate('WALLET')}
             />
           ),
           headerLeft: () => (
-            <Icon
-              name={Icons.ARROW_LEFT}
+            <CustomIconButton
               theme={theme}
-              onClick={() =>
-                (navigation as DrawerNavigationHelpers).openDrawer()
-              }
-              color={getColors(theme).iconBW}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}

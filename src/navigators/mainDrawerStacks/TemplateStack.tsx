@@ -1,6 +1,7 @@
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import Icon from 'components/hive/Icon';
+import CloseButton from 'components/ui/CloseButton';
+import CustomIconButton from 'components/ui/CustomIconButton';
 import {
   RootStackParam,
   TemplateStackNavigationProps,
@@ -9,7 +10,6 @@ import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
@@ -18,6 +18,9 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
+
+import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
+import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 
 const Stack = createStackNavigator<RootStackParam>();
 
@@ -50,23 +53,21 @@ export default ({navigation, route}: TemplateStackNavigationProps) => {
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: !hideCloseButton
             ? () => (
-                <Icon
-                  name={Icons.CLOSE_CIRCLE}
+                <CloseButton
                   theme={theme}
-                  onClick={() => navigation.navigate('WALLET')}
-                  color={getColors(theme).iconBW}
+                  onPress={() => navigation.navigate('WALLET')}
                 />
               )
             : null,
           headerLeft: () => (
-            <Icon
-              name={Icons.ARROW_LEFT}
+            <CustomIconButton
               theme={theme}
-              onClick={() => {
+              onPress={() => {
                 if (extraActionOnBack) extraActionOnBack();
                 (navigation as DrawerNavigationHelpers).goBack();
               }}
-              color={getColors(theme).iconBW}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}

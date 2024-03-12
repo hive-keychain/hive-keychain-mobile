@@ -1,3 +1,4 @@
+import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
@@ -22,7 +23,6 @@ import {
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
 
 const Stack = createStackNavigator();
 
@@ -49,21 +49,21 @@ export default () => {
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           title: translate('components.infoWalletQR.title'),
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => {
-            return (
-              <MoreInformation
-                type={Info.QR_WALLET}
-                additionalButtonStyle={styles.marginRight}
-              />
-            );
+            return <MoreInformation type={Info.QR_WALLET} />;
           },
           headerLeft: () => (
-            <Icon
-              name={Icons.ARROW_LEFT}
+            <CustomIconButton
               theme={theme}
-              onClick={() => goBack()}
-              color={getColors(theme).iconBW}
-              additionalContainerStyle={styles.marginLeft}
+              onPress={() => {
+                (navigation as DrawerNavigationHelpers).navigate(
+                  'WalletScreen',
+                );
+              }}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -187,6 +187,12 @@ const getStyles = (
       marginRight: HEADER_ICON_MARGIN,
     },
     marginLeft: {
+      marginLeft: HEADER_ICON_MARGIN,
+    },
+    headerRightContainer: {
+      marginRight: HEADER_ICON_MARGIN,
+    },
+    headerLeftContainer: {
       marginLeft: HEADER_ICON_MARGIN,
     },
   });

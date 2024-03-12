@@ -1,13 +1,14 @@
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
-import Icon from 'components/hive/Icon';
+import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
+import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
+import CustomIconButton from 'components/ui/CustomIconButton';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import AccountManagement from 'screens/hive/settings/AccountManagement';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
@@ -34,19 +35,15 @@ export default () => {
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           title: translate('navigation.manage'),
-          headerRight: () => (
-            <MoreInformation
-              additionalButtonStyle={styles.marginRight}
-              type={Info.COPY_KEYS}
-            />
-          ),
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerRight: () => <MoreInformation type={Info.COPY_KEYS} />,
           headerLeft: () => (
-            <Icon
-              name={Icons.ARROW_LEFT}
+            <CustomIconButton
               theme={theme}
-              onClick={() => (navigation as DrawerNavigationHelpers).goBack()}
-              additionalContainerStyle={styles.marginLeft}
-              color={getColors(theme).iconBW}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
             />
           ),
         })}
@@ -83,4 +80,10 @@ const getStyles = (
     },
     marginRight: {marginRight: HEADER_ICON_MARGIN},
     marginLeft: {marginLeft: HEADER_ICON_MARGIN},
+    headerRightContainer: {
+      marginRight: HEADER_ICON_MARGIN,
+    },
+    headerLeftContainer: {
+      marginLeft: HEADER_ICON_MARGIN,
+    },
   });
