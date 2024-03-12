@@ -39,6 +39,7 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.noStyle,
           headerTransparent: true,
+          animationEnabled: false,
           title: '',
         })}
       />
@@ -49,6 +50,7 @@ export default () => {
           headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           title: translate('components.infoWalletQR.title'),
+          animationEnabled: false,
           headerRight: () => {
             return (
               <MoreInformation
