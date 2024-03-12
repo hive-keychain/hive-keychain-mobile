@@ -1,4 +1,5 @@
 import {loadAccount} from 'actions/index';
+import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
 import {ConfirmationPageRoute} from 'navigators/Root.types';
 import React, {useState} from 'react';
@@ -46,27 +47,14 @@ const ConfirmationPage = ({
   const {width, height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({width, height}, theme);
-  console.log(loading);
   return (
     <OperationThemed
       childrenTop={<Separator height={50} />}
       childrenMiddle={
         <View>
-          <Separator height={35} />
-          <Text style={[getFormFontStyle(width, theme).title, styles.info]}>
-            {translate(title)}
-          </Text>
+          <Caption text={title} hideSeparator />
           <Separator />
-          {warningText && (
-            <Text
-              style={[
-                getFormFontStyle(width, theme).infoLabel,
-                styles.warning,
-              ]}>
-              {warningText}
-            </Text>
-          )}
-          <Separator />
+          {warningText && <Caption text={warningText} hideSeparator />}
           {data.map((e, i) => (
             <>
               <View style={styles.justifyCenter}>
