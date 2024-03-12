@@ -1,4 +1,4 @@
-import {addKey, forgetAccount, forgetKey, loadAccount} from 'actions/index';
+import {addKey, forgetAccount, forgetKey} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import UserDropdown from 'components/form/UserDropdown';
@@ -32,7 +32,6 @@ const AccountManagement = ({
   forgetAccount,
   navigation,
   accounts,
-  loadAccount,
 }: PropsFromRedux & {navigation: MainNavigation}) => {
   useLockedPortrait(navigation);
 
@@ -47,8 +46,11 @@ const AccountManagement = ({
     if (username) {
       const confirmationData = {
         title: 'common.confirm_account_remove',
-        onSend: () => {
+        onConfirm: () => {
           forgetAccount(username);
+          setTimeout(() => {
+            navigate('WALLET');
+          }, 1000);
         },
         data: [
           {
@@ -70,8 +72,9 @@ const AccountManagement = ({
   ) => {
     const confirmationData = {
       title: 'common.confirm_key_remove',
-      onSend: () => {
+      onConfirm: () => {
         forgetKey(username, key);
+        navigate('AccountManagementScreen');
       },
       data: [
         {
@@ -170,7 +173,6 @@ const connector = connect(mapStateToProps, {
   forgetAccount,
   addKey,
   forgetKey,
-  loadAccount,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(AccountManagement);

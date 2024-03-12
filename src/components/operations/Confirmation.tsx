@@ -30,6 +30,7 @@ export type ConfirmationPageProps = {
   introText?: string;
   warningText?: string;
   data: ConfirmationData[];
+  onConfirm?: () => void;
 };
 
 type ConfirmationData = {
@@ -44,20 +45,29 @@ const ConfirmationPage = ({
 }: {
   route: ConfirmationPageRoute;
 } & PropsFromRedux) => {
-  const {onSend, title, introText, warningText, data} = route.params;
+  const {
+    onSend,
+    title,
+    introText,
+    warningText,
+    data,
+    onConfirm: onConfirmOverride,
+  } = route.params;
   const [loading, setLoading] = useState(false);
   const {width, height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({width, height}, theme);
 
-  const onConfirm = async () => {
-    setLoading(true);
-    Keyboard.dismiss();
-    await onSend();
-    setLoading(false);
-    loadAccount(user.name, true);
-    resetStackAndNavigate('WALLET');
-  };
+  const onConfirm =
+    onConfirmOverride ||
+    (async () => {
+      setLoading(true);
+      Keyboard.dismiss();
+      await onSend();
+      setLoading(false);
+      loadAccount(user.name, true);
+      resetStackAndNavigate('WALLET');
+    });
 
   return (
     <Background theme={theme}>
