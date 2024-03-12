@@ -660,7 +660,7 @@
   "navigation": {
     "log_out": "Logout",
     "accounts": "Accounts",
-    "add_account": "Add Accounts",
+    "add_account": "Add Account",
     "add_account_by_auth": "AUTH. ACCOUNT",
     "manage": "Manage Keys",
     "settings": "Settings",
