@@ -80,14 +80,26 @@ const OperationThemed = ({
           {childrenTop}
           <View style={{flex: 1}}>
             {inScrollView ? (
-              <ScrollView
-                contentContainerStyle={[styles.contentContainer]}
-                scrollEnabled={true}
-                keyboardShouldPersistTaps="handled">
-                {renderContent()}
-              </ScrollView>
+              <View style={[styles.container, {overflow: 'hidden'}]}>
+                <ScrollView
+                  contentContainerStyle={[
+                    styles.contentContainer,
+                    styles.container,
+                  ]}
+                  scrollEnabled={true}
+                  keyboardShouldPersistTaps="handled">
+                  {renderContent()}
+                </ScrollView>
+              </View>
             ) : (
-              <View style={[styles.contentContainer]}>{renderContent()}</View>
+              <View
+                style={[
+                  styles.contentContainer,
+                  styles.container,
+                  {borderColor: 'transparent'},
+                ]}>
+                {renderContent()}
+              </View>
             )}
           </View>
         </View>
@@ -102,13 +114,15 @@ const getStyles = (theme: Theme, insets: EdgeInsets, customOpacity?: number) =>
       top: theme === Theme.LIGHT ? -80 : 0,
       opacity: customOpacity ?? 1,
     },
-    contentContainer: {
-      flexGrow: 1,
+    container: {
+      borderColor: getColors(theme).cardBorderColorJustDark,
       borderTopLeftRadius: 40,
       borderTopRightRadius: 40,
       borderWidth: 1,
+      flexGrow: 1,
+    },
+    contentContainer: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
-      borderColor: getColors(theme).cardBorderColorJustDark,
       paddingHorizontal: CONTENT_MARGIN_PADDING,
       justifyContent: 'space-between',
       marginBottom: -insets.bottom,
