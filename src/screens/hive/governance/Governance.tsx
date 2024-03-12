@@ -19,10 +19,10 @@ import {
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
-import MyWitness from './MyWitness';
 import Proposal from './Proposal';
 import Proxy from './Proxy';
 import Witness from './Witness';
+import MyWitness from './myWitness/MyWitness';
 
 interface GovernanceToScreenToogleProps {
   menuLabels: string[];

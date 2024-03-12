@@ -5,6 +5,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
+  fields_primary_text_1,
   getFontSizeSmallDevices,
   headlines_primary_headline_3,
 } from 'src/styles/typography';
@@ -15,8 +16,15 @@ type Props = {
   onPress: () => void;
   checked: boolean;
   skipTranslation?: boolean;
+  smallText?: boolean;
 };
-const CheckBox = ({title, onPress, checked, skipTranslation}: Props) => {
+const CheckBox = ({
+  title,
+  onPress,
+  checked,
+  skipTranslation,
+  smallText,
+}: Props) => {
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
   const styles = getStyles(theme, width);
@@ -28,7 +36,7 @@ const CheckBox = ({title, onPress, checked, skipTranslation}: Props) => {
       checked={checked}
       title={skipTranslation ? title : translate(title)}
       containerStyle={styles.checkBox}
-      textStyle={styles.text}
+      textStyle={smallText ? styles.smallText : styles.text}
       checkedColor={PRIMARY_RED_COLOR}
       size={checkBoxSize}
     />
@@ -50,6 +58,12 @@ const getStyles = (theme: Theme, width: number) =>
       ...headlines_primary_headline_3,
       fontSize: getFontSizeSmallDevices(width, 15),
       paddingRight: 5,
+    },
+    smallText: {
+      color: getColors(theme).secondaryText,
+      ...fields_primary_text_1,
+      fontSize: getFontSizeSmallDevices(width, 12),
+      opacity: 0.7,
     },
   });
 

@@ -96,6 +96,7 @@ const getDimensionedStyles = (width: number, height: number, theme: Theme) =>
     container: {
       width: '100%',
       flex: 1,
+      marginHorizontal: 16,
     },
     proposalItemContainer: {
       marginBottom: 10,
