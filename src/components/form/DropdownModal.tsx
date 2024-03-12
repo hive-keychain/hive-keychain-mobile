@@ -206,7 +206,7 @@ const DropdownModal = ({
           style={[
             styles.dropdownItem,
             bgStyle,
-            isLastItem && index > 1 ? {paddingBottom: 20} : undefined,
+            isLastItem ? {paddingBottom: 20} : undefined,
           ]}>
           <View style={[innerContainerStyle, innerContainerBgStyle]}>
             {item.icon}
@@ -397,7 +397,7 @@ const getStyles = (
       bottom: undefined,
       width: '100%',
       height: 'auto',
-      maxHeight: 120,
+      maxHeight: 150,
       paddingVertical: 8,
     },
     textBase: {
