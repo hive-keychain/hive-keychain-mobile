@@ -8,10 +8,12 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {PADDING_LEFT_MAIN_MENU} from 'src/styles/spacing';
+import {
+  MARGIN_LEFT_RIGHT_MIN,
+  PADDING_LEFT_MAIN_MENU,
+} from 'src/styles/spacing';
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
@@ -36,22 +38,6 @@ export default ({
           onPress={() => props.navigation.closeDrawer()}
         />
         <Text style={styles.textHeader}>{translate('common.menu')}</Text>
-      </View>
-      <View style={styles.middleContainer}>
-        <View style={styles.flexRowCentered}>
-          <Text style={styles.textSubHeader}>
-            {translate('drawerFooter.madeBy_part_1')}
-          </Text>
-          <View style={styles.heartContainer}>
-            <FastImage source={HEART_PNG} style={styles.heartIcon} />
-          </View>
-          <Text style={[styles.textSubHeader]}>
-            {translate('drawerFooter.madeBy_part_2')}
-          </Text>
-        </View>
-        <Text style={[styles.textSubHeader, {textAlign: 'center'}]}>
-          {translate('drawerFooter.madeBy_part_3')}
-        </Text>
       </View>
       {/* <View style={[styles.bottomContainer]}>
         <View style={[{alignItems: 'center'}]}>
@@ -89,7 +75,7 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
       justifyContent: 'space-between',
       width: '55%',
       alignSelf: 'flex-start',
-      marginBottom: 15,
+      marginBottom: MARGIN_LEFT_RIGHT_MIN,
       height: 30,
     },
     middleContainer: {
