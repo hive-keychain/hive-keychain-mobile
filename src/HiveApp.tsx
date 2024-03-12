@@ -71,6 +71,7 @@ const App = ({
     initColorAPI();
     showFloatingBar(false);
     const rpc = await getCurrentRpc();
+    console.log('HiveApp.tsx', {currentRpcFound: rpc}); //TODO remove line
     setInitialRpc(rpc);
     await initActiveRpc(rpc);
   };
