@@ -8,7 +8,7 @@ import {translate} from 'utils/localize';
 import EllipticButton from './EllipticButton';
 
 type Props = {
-  method?: KeyTypes;
+  method?: KeyTypes | 'none';
   title: string;
   style: StyleProp<ViewStyle>;
   onPress: () => void;
@@ -22,7 +22,8 @@ const ActiveOperationButton = ({
   additionalTextStyle,
   ...props
 }: Props) => {
-  const disabled = !props.user.keys[method || KeyTypes.active];
+  const disabled =
+    method !== 'none' && !props.user.keys[method || KeyTypes.active];
   return (
     <>
       <EllipticButton
