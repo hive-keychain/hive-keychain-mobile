@@ -1,7 +1,6 @@
 import {combineReducers} from 'redux';
 import accountValueDisplay from './accountValueDisplay';
 import accounts from './accounts';
-import activeRpc from './active-rpc';
 import activeAccount from './activeAccount';
 import auth from './auth';
 import browser from './browser';
@@ -17,7 +16,7 @@ import lastAccount from './lastAccount';
 import message from './message';
 import phishingAccounts from './phishing';
 import preferences from './preferences';
-import rpcSwitcher from './rpc-switcher.reducer';
+import rpcSwitcher from './rpcSwitcher';
 import settings from './settings';
 import tokenHistory from './tokenHistory';
 import tokens from './tokens';
@@ -51,6 +50,5 @@ export default combineReducers({
   message,
   floatingBar,
   rpcSwitcher,
-  activeRpc,
   accountValueDisplay,
 });

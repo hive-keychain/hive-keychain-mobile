@@ -3,7 +3,6 @@ import reducers from 'reducers/index';
 import {applyMiddleware, createStore} from 'redux';
 import {persistReducer, persistStore} from 'redux-persist';
 import thunk from 'redux-thunk';
-import {saveCurrentRpc} from 'utils/rpc.utils';
 import transforms from './transforms';
 
 const persistConfig = {
@@ -48,16 +47,6 @@ const getSafeState = () => {
   }
   return state;
 };
-
-let previousRpc = store.getState().activeRpc;
-
-store.subscribe(() => {
-  const {activeRpc} = store.getState();
-  if (previousRpc && previousRpc.uri !== activeRpc?.uri && activeRpc) {
-    previousRpc = activeRpc;
-    saveCurrentRpc(activeRpc);
-  }
-});
 
 export {getSafeState, persistor, store};
 

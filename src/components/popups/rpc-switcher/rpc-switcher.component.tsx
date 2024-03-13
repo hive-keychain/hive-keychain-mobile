@@ -1,4 +1,4 @@
-import {setActiveRpc} from 'actions/index';
+import {setRpc} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
 import {setDisplayChangeRpcPopup} from 'actions/rpc-switcher';
 import OperationButton from 'components/form/EllipticButton';
@@ -18,18 +18,20 @@ interface Props {
 const RpcSwitcherComponent = ({
   rpcSwitcher,
   setDisplayChangeRpcPopup,
-  activeRpc,
+  rpc,
   initialRpc,
-  setActiveRpc,
+  setRpc,
 }: Props & PropsFromRedux) => {
   const onHandleSwitchRPC = () => {
     setDisplayChangeRpcPopup(false);
-    setActiveRpc(rpcSwitcher.rpc);
+    console.log('setting rpc from here ===================================');
+    setRpc(rpcSwitcher.rpc);
   };
 
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
-  return rpcSwitcher.display && rpcSwitcher.rpc && activeRpc ? (
+  console.log(rpcSwitcher.rpc, 'hoho', initialRpc);
+  return rpcSwitcher.display && rpcSwitcher.rpc && rpc ? (
     <View style={styles.popupBottom}>
       <Text style={[styles.white, {...button_link_primary_small}]}>
         {translate('settings.settings.rpc_not_responding_error', {
@@ -70,10 +72,10 @@ const connector = connect(
   (state: RootState) => {
     return {
       rpcSwitcher: state.rpcSwitcher,
-      activeRpc: state.activeRpc,
+      rpc: state.settings.rpc,
     };
   },
-  {setDisplayChangeRpcPopup, setActiveRpc},
+  {setDisplayChangeRpcPopup, setRpc},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

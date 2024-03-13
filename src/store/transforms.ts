@@ -8,7 +8,13 @@ const rpcTransformer = createTransform<Settings, Settings>(
     if (key === 'settings' && typeof outboundState.rpc === 'string') {
       return {
         ...outboundState,
-        rpc: {uri: outboundState.rpc, testnet: false},
+        rpc: {
+          uri:
+            outboundState.rpc === 'DEFAULT'
+              ? 'https://api.hive.blog'
+              : outboundState.rpc,
+          testnet: false,
+        },
       } as Settings;
     }
 

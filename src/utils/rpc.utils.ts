@@ -2,7 +2,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {Rpc} from 'actions/interfaces';
 import axios from 'axios';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {rpcList} from './hiveUtils';
 
 export const getCustomRpcs = async (): Promise<Rpc[]> => {
   let customRpcs: Rpc[];
@@ -36,23 +35,6 @@ export const deleteCustomRpc = async (rpcs: Rpc[], rpc: Rpc) => {
     KeychainStorageKeyEnum.CUSTOM_RPC_LIST,
     JSON.stringify(newRpcs),
   );
-};
-
-export const saveCurrentRpc = async (rpc: Rpc) => {
-  AsyncStorage.setItem(KeychainStorageKeyEnum.CURRENT_RPC, JSON.stringify(rpc));
-};
-export const getCurrentRpc = async (): Promise<Rpc> => {
-  let currentRpc = JSON.parse(
-    await AsyncStorage.getItem(KeychainStorageKeyEnum.CURRENT_RPC),
-  );
-  currentRpc = currentRpc ? currentRpc : rpcList[0];
-  if (currentRpc.uri.endsWith('/'))
-    currentRpc = {
-      ...currentRpc,
-      uri: currentRpc.uri.substring(0, currentRpc.uri.length - 1),
-    };
-
-  return currentRpc;
 };
 
 export const getRPCUri = (rpcObj: string | Rpc) => {

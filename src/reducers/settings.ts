@@ -11,7 +11,7 @@ import {
 
 export default (
   state: Settings = {
-    rpc: 'DEFAULT',
+    rpc: {uri: 'https://api.hive.blog', testnet: false},
     hiveEngineRpc: DEFAULT_HE_RPC_NODE,
     accountHistoryAPIRpc: DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
   },

@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {setActiveRpc} from 'actions/active-rpc';
 import {Rpc} from 'actions/interfaces';
-import {setAccountHistoryRpc, setHiveEngineRpc} from 'actions/settings';
+import {setAccountHistoryRpc, setHiveEngineRpc, setRpc} from 'actions/settings';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import CheckBox from 'components/form/CustomCheckBox';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
@@ -60,12 +59,12 @@ export const DEFAULT_ACCOUNT_HISTORY_RPC_NODE =
 
 const RpcNodes = ({
   settings,
-  activeRpc,
+  rpc,
   setHiveEngineRpc,
   setAccountHistoryRpc,
   activeHiveEngineRpc,
   activeAccountHistoryAPIRpc,
-  setActiveRpc,
+  setRpc,
 }: PropsFromRedux) => {
   //Hive RPC
   const [showAddCustomRPC, setShowAddCustomRPC] = useState(false);
@@ -153,7 +152,7 @@ const RpcNodes = ({
         newList.push({value: customRPC.uri, removable: true});
         setRpcFullList(newList);
         if (customRPCSetActive) {
-          setActiveRpc(customRPC);
+          setRpc(customRPC);
         }
         setCustomRPCSetActive(false);
         setShowAddCustomRPC(false);
@@ -175,7 +174,7 @@ const RpcNodes = ({
   };
 
   const handleOnRemoveCustomRPC = async (uri: string) => {
-    if (activeRpc.uri === uri) {
+    if (rpc.uri === uri) {
       onHandleSetRPC(DEFAULT_RPC);
     }
     await deleteCustomRpc(customRPCList, {uri});
@@ -184,7 +183,8 @@ const RpcNodes = ({
   };
 
   const onHandleSetRPC = (item: string) => {
-    setActiveRpc({uri: item} as Rpc);
+    console.log('=========== About to send ', item);
+    setRpc({uri: item} as Rpc);
   };
 
   const getItemDropDownSelected = (rpcItem: Rpc): DropdownModalItem => {
@@ -204,7 +204,7 @@ const RpcNodes = ({
           <DropdownModal
             remeasure
             list={rpcFullList}
-            selected={getItemDropDownSelected(activeRpc)}
+            selected={getItemDropDownSelected(rpc)}
             onSelected={(selected) => onHandleSetRPC(selected.value)}
             onRemove={(item) => handleOnRemoveCustomRPC(item)}
             additionalDropdowContainerStyle={[styles.dropdown]}
@@ -551,14 +551,14 @@ const mapStateToProps = (state: RootState) => ({
   settings: state.settings,
   accounts: state.accounts,
   active: state.activeAccount,
-  activeRpc: state.activeRpc,
+  rpc: state.settings.rpc,
   activeHiveEngineRpc: state.settings.hiveEngineRpc,
   activeAccountHistoryAPIRpc: state.settings.accountHistoryAPIRpc,
 });
 const connector = connect(mapStateToProps, {
   setHiveEngineRpc,
   setAccountHistoryRpc,
-  setActiveRpc,
+  setRpc,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(RpcNodes);
