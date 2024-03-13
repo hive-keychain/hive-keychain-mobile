@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import Image from 'react-native-fast-image';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {BORDERWHITISH, DARKBLUELIGHTER, getColors} from 'src/styles/colors';
@@ -69,26 +70,25 @@ export default ({
               }}>
               <View style={styles.titleContainer}>
                 <View style={styles.nameContainer}>
-                  <Image style={styles.icon} source={{uri: icon}} />
+                  <Image style={[styles.icon]} source={{uri: icon}} />
                   <Text
-                    style={[styles.textBase, styles.name, styles.contrastColor]}
-                    numberOfLines={1}>
+                    style={[
+                      styles.textBase,
+                      styles.name,
+                      styles.contrastColor,
+                      {marginBottom: -4},
+                    ]}>
                     {name}
                   </Text>
                 </View>
                 <TouchableOpacity
-                  style={styles.closeView}
                   onPress={() => {
                     onCloseTab(id);
                   }}>
-                  <Text
-                    style={[
-                      styles.close,
-                      styles.textBase,
-                      styles.contrastColor,
-                    ]}>
-                    x
-                  </Text>
+                  <Icon
+                    name="close"
+                    style={[styles.closeIcon, styles.contrastColor]}
+                  />
                 </TouchableOpacity>
               </View>
               <Image style={styles.screenshot} source={{uri: image}} />
@@ -157,10 +157,11 @@ const getStyles = (theme: Theme) =>
     icon: {width: 16, height: 16},
     name: {
       fontSize: 16,
-      textAlign: 'center',
+      textAlignVertical: 'bottom',
       flex: 1,
       marginHorizontal: 10,
     },
+    closeIcon: {fontSize: 20},
     close: {color: 'white', fontWeight: 'bold', fontSize: 18},
     closeView: {
       minWidth: 30,
