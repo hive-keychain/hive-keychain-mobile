@@ -24,13 +24,11 @@ const RpcSwitcherComponent = ({
 }: Props & PropsFromRedux) => {
   const onHandleSwitchRPC = () => {
     setDisplayChangeRpcPopup(false);
-    console.log('setting rpc from here ===================================');
     setRpc(rpcSwitcher.rpc);
   };
 
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
-  console.log(rpcSwitcher.rpc, 'hoho', initialRpc);
   return rpcSwitcher.display && rpcSwitcher.rpc && rpc ? (
     <View style={styles.popupBottom}>
       <Text style={[styles.white, {...button_link_primary_small}]}>

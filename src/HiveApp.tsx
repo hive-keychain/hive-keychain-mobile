@@ -73,7 +73,6 @@ const App = ({
   };
 
   const initActiveRpc = async (rpc: Rpc) => {
-    console.log('rpc:', rpc);
     const rpcStatusOk = await checkRpcStatus(rpc.uri);
     setDisplayChangeRpcPopup(!rpcStatusOk);
     if (rpcStatusOk) {
