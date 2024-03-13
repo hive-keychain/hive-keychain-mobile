@@ -27,6 +27,7 @@ import UnstakeToken, {
 } from 'components/operations/UnstakeToken';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
+import NavigatorTitle from 'components/ui/NavigatorTitle';
 import {OperationNavigationProps, RootStackParam} from 'navigators/Root.types';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
@@ -35,10 +36,6 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {
-  getFontSizeSmallDevices,
-  headlines_primary_headline_2,
-} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
@@ -122,9 +119,10 @@ export default ({navigation, route}: OperationNavigationProps) => {
         name="Operation"
         options={({navigation}) => ({
           headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
-          title: getTitle(),
+          headerTitle: () => (
+            <NavigatorTitle skipTranslation title={getTitle()} />
+          ),
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (
@@ -148,11 +146,9 @@ export default ({navigation, route}: OperationNavigationProps) => {
         name="ConfirmationPage"
         options={({navigation}) => ({
           headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
-          title: translate('common.confirm'),
+          headerTitle: () => <NavigatorTitle title={'common.confirm'} />,
           animationEnabled: false,
-
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (
@@ -188,16 +184,6 @@ const getStyles = (
       elevation: 0,
       shadowColor: 'transparent',
       height: STACK_HEADER_HEIGHT + insets.top,
-    },
-    headerTitle: {
-      ...headlines_primary_headline_2,
-      color: getColors(theme).primaryText,
-      fontSize: getFontSizeSmallDevices(
-        width,
-        headlines_primary_headline_2.fontSize,
-      ),
-      includeFontPadding: false,
-      textAlignVertical: 'center',
     },
     cardStyle: {
       backgroundColor: getColors(theme).primaryBackground,

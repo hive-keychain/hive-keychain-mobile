@@ -1,6 +1,7 @@
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
+import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -10,12 +11,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {
-  getFontSizeSmallDevices,
-  headlines_primary_headline_2,
-} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
-import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator();
 
@@ -30,9 +26,8 @@ export default () => {
         component={Tokens}
         options={({navigation}) => ({
           headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
-          title: translate('navigation.tokens'),
+          headerTitle: () => <NavigatorTitle title={'navigation.tokens'} />,
           headerRight: () => (
             <Icon
               name={Icons.CLOSE_CIRCLE}
@@ -70,16 +65,6 @@ const getStyles = (
       elevation: 0,
       shadowColor: 'transparent',
       height: STACK_HEADER_HEIGHT + insets.top,
-    },
-    headerTitle: {
-      ...headlines_primary_headline_2,
-      color: getColors(theme).primaryText,
-      fontSize: getFontSizeSmallDevices(
-        width,
-        {...headlines_primary_headline_2}.fontSize,
-      ),
-      textAlignVertical: 'center',
-      includeFontPadding: false,
     },
     cardStyle: {
       paddingHorizontal: CARD_PADDING_HORIZONTAL,

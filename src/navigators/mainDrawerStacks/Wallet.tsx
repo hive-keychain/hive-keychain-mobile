@@ -7,6 +7,7 @@ import {WalletHistoryComponent} from 'components/history/WalletHistoryComponent'
 import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import CustomIconButton from 'components/ui/CustomIconButton';
+import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -17,11 +18,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {
-  SMALLEST_SCREEN_WIDTH_SUPPORTED,
-  getFontSizeSmallDevices,
-  headlines_primary_headline_2,
-} from 'src/styles/typography';
+import {SMALLEST_SCREEN_WIDTH_SUPPORTED} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
@@ -48,9 +45,10 @@ export default () => {
         name="ScanQRFromWalletScreen"
         options={({navigation}) => ({
           headerStyle: styles.headerStyle,
-          headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
-          title: translate('components.infoWalletQR.title'),
+          headerTitle: () => (
+            <NavigatorTitle title={'components.infoWalletQR.title'} />
+          ),
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           animationEnabled: false,
@@ -76,10 +74,11 @@ export default () => {
         name="WalletHistoryScreen"
         options={({navigation}) => ({
           headerStyle: styles.headerStyle,
-          headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
           animationEnabled: false,
-          title: translate('navigation.wallet_history'),
+          headerTitle: () => (
+            <NavigatorTitle title={'navigation.wallet_history'} />
+          ),
           cardStyle: styles.cardStyle,
           headerRight: () => (
             <Icon
@@ -148,16 +147,6 @@ const getStyles = (
       borderWidth: 0,
       elevation: 0,
       shadowColor: 'transparent',
-    },
-    headerTitle: {
-      ...headlines_primary_headline_2,
-      color: getColors(theme).primaryText,
-      fontSize: getFontSizeSmallDevices(
-        width,
-        headlines_primary_headline_2.fontSize,
-      ),
-      textAlignVertical: 'center',
-      includeFontPadding: false,
     },
     cardStyle: {
       backgroundColor: getColors(theme).primaryBackground,

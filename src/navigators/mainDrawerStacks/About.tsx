@@ -63,7 +63,6 @@ const getStyles = (
       shadowColor: 'transparent',
       height: STACK_HEADER_HEIGHT + insets.top,
     },
-
     headerRightContainer: {
       marginRight: HEADER_ICON_MARGIN,
     },

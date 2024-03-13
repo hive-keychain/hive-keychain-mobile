@@ -5,6 +5,7 @@ import {CustomFilterBox} from 'components/form/CustomFilterBox';
 import {TokensHistoryComponent} from 'components/history/hive-engine/TokensHistory';
 import Icon from 'components/hive/Icon';
 import CustomIconButton from 'components/ui/CustomIconButton';
+import NavigatorTitle from 'components/ui/NavigatorTitle';
 import {
   RootStackParam,
   TokensHistoryNavigationProps,
@@ -17,10 +18,6 @@ import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {
-  getFontSizeSmallDevices,
-  headlines_primary_headline_2,
-} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
@@ -42,10 +39,14 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
         component={() => <TokensHistoryComponent {...route.params} />}
         options={() => ({
           headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle,
           animationEnabled: false,
           headerTitleAlign: 'center',
-          title: `${currency} ${translate('common.history')}`,
+          headerTitle: () => (
+            <NavigatorTitle
+              skipTranslation
+              title={`${currency} ${translate('common.history')}`}
+            />
+          ),
           headerRight: () => (
             <Icon
               name={Icons.SETTINGS_4}
@@ -136,16 +137,6 @@ const getStyles = (
       marginRight: HEADER_ICON_MARGIN,
     },
     marginLeft: {marginLeft: HEADER_ICON_MARGIN},
-    headerTitle: {
-      ...headlines_primary_headline_2,
-      color: getColors(theme).primaryText,
-      fontSize: getFontSizeSmallDevices(
-        width,
-        headlines_primary_headline_2.fontSize,
-      ),
-      textAlignVertical: 'center',
-      includeFontPadding: false,
-    },
     header: {
       backgroundColor: getColors(theme).primaryBackground,
       elevation: 0,

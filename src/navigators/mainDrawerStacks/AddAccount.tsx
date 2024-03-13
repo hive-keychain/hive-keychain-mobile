@@ -16,12 +16,8 @@ import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
-import {
-  getFontSizeSmallDevices,
-  headlines_primary_headline_2,
-} from 'src/styles/typography';
+import NavigatorTitle from 'components/ui/NavigatorTitle';
 import {Dimensions} from 'utils/common.types';
-import {translate} from 'utils/localize';
 import {AddAccountFromWalletParamList} from './AddAccount.types';
 
 const AccountStack = createStackNavigator<AddAccountFromWalletParamList>();
@@ -45,10 +41,11 @@ export default () => {
             />
           ),
           headerRight: () => <MoreInformation type={Info.KEYS} />,
-          title: translate('navigation.add_account'),
+          headerTitle: () => (
+            <NavigatorTitle title={'navigation.add_account'} />
+          ),
           headerTitleAlign: 'center',
           headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle,
         })}
         initialParams={{wallet: true}}
         component={AddAccountByKey}
@@ -70,7 +67,6 @@ export default () => {
           },
           headerTitleAlign: 'center',
           headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
         })}
@@ -93,10 +89,11 @@ export default () => {
               onPress={() => navigation.navigate('WALLET')}
             />
           ),
-          title: translate('navigation.add_account_by_auth'),
+          headerTitle: () => (
+            <NavigatorTitle title={'navigation.add_account_by_auth'} />
+          ),
           headerTitleAlign: 'center',
           headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
         })}
@@ -119,16 +116,6 @@ const getStyles = (
       elevation: 0,
       shadowColor: 'transparent',
       height: STACK_HEADER_HEIGHT + insets.top,
-    },
-    headerTitle: {
-      ...headlines_primary_headline_2,
-      color: getColors(theme).primaryText,
-      fontSize: getFontSizeSmallDevices(
-        width,
-        {...headlines_primary_headline_2}.fontSize,
-      ),
-      includeFontPadding: false,
-      textAlignVertical: 'center',
     },
     marginLeft: {marginLeft: HEADER_ICON_MARGIN},
     marginRight: {marginRight: HEADER_ICON_MARGIN},

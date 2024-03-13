@@ -4,6 +4,7 @@ import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import CustomIconButton from 'components/ui/CustomIconButton';
+import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -13,12 +14,7 @@ import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {
-  getFontSizeSmallDevices,
-  headlines_primary_headline_2,
-} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
-import {translate} from 'utils/localize';
 
 const Stack = createStackNavigator();
 
@@ -32,9 +28,8 @@ export default () => {
         component={AccountManagement}
         options={({navigation}) => ({
           headerStyle: styles.header,
-          headerTitleStyle: styles.headerTitle,
           headerTitleAlign: 'center',
-          title: translate('navigation.manage'),
+          headerTitle: () => <NavigatorTitle title={'navigation.manage'} />,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => <MoreInformation type={Info.COPY_KEYS} />,
@@ -65,16 +60,6 @@ const getStyles = (
 
       shadowColor: 'transparent',
       height: STACK_HEADER_HEIGHT + insets.top,
-    },
-    headerTitle: {
-      ...headlines_primary_headline_2,
-      color: getColors(theme).primaryText,
-      fontSize: getFontSizeSmallDevices(
-        width,
-        {...headlines_primary_headline_2}.fontSize,
-      ),
-      includeFontPadding: false,
-      textAlignVertical: 'center',
     },
     cardStyle: {
       paddingHorizontal: CARD_PADDING_HORIZONTAL,
