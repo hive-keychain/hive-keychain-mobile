@@ -1,7 +1,7 @@
 import Clipboard from '@react-native-community/clipboard';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   StyleProp,
@@ -13,13 +13,13 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import { Overlay } from 'react-native-elements';
+import {Overlay} from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
-import { Theme, useThemeContext } from 'src/context/theme.context';
-import { Icons } from 'src/enums/icons.enums';
-import { getCardStyle } from 'src/styles/card';
-import { PRIMARY_RED_COLOR, getColors } from 'src/styles/colors';
-import { inputStyle } from 'src/styles/input';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {getCardStyle} from 'src/styles/card';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {inputStyle} from 'src/styles/input';
 import {
   CONTENT_MARGIN_PADDING,
   DROPDOWN_CONTENT_MAX_HEIGHT,
@@ -33,9 +33,9 @@ import {
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
-import { Dimensions } from 'utils/common.types';
-import { capitalize } from 'utils/format';
-import { translate } from 'utils/localize';
+import {Dimensions} from 'utils/common.types';
+import {capitalize} from 'utils/format';
+import {translate} from 'utils/localize';
 import CustomSearchBar from './CustomSearchBar';
 
 export interface DropdownModalItem {
@@ -362,7 +362,9 @@ const DropdownModal = ({
                 }
               : undefined,
           ]}>
-          <>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => setIsListExpanded(!isListExpanded)}>
             <View style={additionalMainContainerDropdown}>
               {renderDropdownTop(true)}
             </View>
@@ -391,7 +393,7 @@ const DropdownModal = ({
               //TODO bellow add if empty when needed
               // ListEmptyComponent={renderEmpty}
             />
-          </>
+          </TouchableOpacity>
         </Overlay>
       )}
     </>
