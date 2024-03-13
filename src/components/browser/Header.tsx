@@ -35,7 +35,6 @@ import {RootState} from 'store';
 import {urlTransformer} from 'utils/browser';
 import {Dimensions} from 'utils/common.types';
 import {BrowserConfig} from 'utils/config';
-import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
 
 const HEART_PNG = require('assets/new_UI/heart.png');
@@ -181,7 +180,7 @@ const BrowserHeader = ({
     return (
       <View style={styles.container}>
         <Text style={[styles.textBase, styles.browser]}>
-          {capitalize(translate('navigation.tabs'))}
+          {translate('navigation.tabs')}
         </Text>
       </View>
     );
