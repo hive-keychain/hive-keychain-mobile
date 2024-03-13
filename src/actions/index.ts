@@ -52,7 +52,6 @@ export const lock = () => {
 
 export * from 'actions/accountValueDisplay';
 export * from 'actions/accounts';
-export * from 'actions/active-rpc';
 export * from 'actions/browser';
 export * from 'actions/hive';
 export * from 'actions/hive-uri';

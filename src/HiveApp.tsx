@@ -4,7 +4,7 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {showFloatingBar} from 'actions/floatingBar';
-import {forgetRequestedOperation, setActiveRpc} from 'actions/index';
+import {forgetRequestedOperation, setRpc as setRpcAction} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
 import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import Bridge from 'components/bridge';
@@ -33,10 +33,9 @@ import {processQRCodeOp} from 'utils/hive-uri';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
 import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
 import {useWorkingRPC} from 'utils/rpc-switcher.utils';
-import {checkRpcStatus, getCurrentRpc} from 'utils/rpc.utils';
+import {checkRpcStatus} from 'utils/rpc.utils';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
 import {FLOATINGBAR_ALLOWED_SCREENS} from './reference-data/FloatingScreenList';
-
 const Root = createStackNavigator<RootStackParam>();
 let rpc: string | undefined = '';
 
@@ -70,20 +69,16 @@ const App = ({
     );
     initColorAPI();
     showFloatingBar(false);
-    const rpc = await getCurrentRpc();
-    setInitialRpc(rpc);
-    await initActiveRpc(rpc);
+    await initActiveRpc(activeRpc);
   };
 
   const initActiveRpc = async (rpc: Rpc) => {
     const rpcStatusOk = await checkRpcStatus(rpc.uri);
     setDisplayChangeRpcPopup(!rpcStatusOk);
     if (rpcStatusOk) {
-      setActiveRpc(rpc);
       setRpc(rpc);
     } else {
       useWorkingRPC(rpc);
-      setRpc(rpc);
     }
   };
 
@@ -168,7 +163,7 @@ const App = ({
       {renderRootNavigator()}
       <MessageModal />
       <FloatingBar />
-      <RpcSwitcherComponent initialRpc={initialRpc} />
+      <RpcSwitcherComponent initialRpc={activeRpc} />
       <Bridge />
     </NavigationContainer>
   );
@@ -178,7 +173,7 @@ const mapStateToProps = (state: RootState) => {
   return {
     hasAccounts: state.lastAccount.has,
     auth: state.auth,
-    activeRpc: state.activeRpc,
+    activeRpc: state.settings.rpc,
     accounts: state.accounts,
     requestedOp: state.hiveUri.operation,
     rpcSwitcher: state.rpcSwitcher,
@@ -192,7 +187,7 @@ const connector = connect(mapStateToProps, {
   showFloatingBar,
   setDisplayChangeRpcPopup,
   setSwitchToRpc,
-  setActiveRpc,
+  setActiveRpc: setRpcAction,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

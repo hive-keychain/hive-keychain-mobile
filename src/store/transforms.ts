@@ -1,18 +1,29 @@
-import {Settings} from 'actions/interfaces';
+import {Rpc, Settings} from 'actions/interfaces';
 import {HAS_State} from 'reducers/hiveAuthenticationService';
 import createTransform from 'redux-persist/es/createTransform';
+import {DEFAULT_RPC} from 'utils/hiveUtils';
 
 const rpcTransformer = createTransform<Settings, Settings>(
-  (inboundState) => inboundState,
-  (outboundState, key) => {
-    if (key === 'settings' && typeof outboundState.rpc === 'string') {
+  (outboundState) => outboundState,
+  (inboundState, key) => {
+    if (key === 'settings') {
+      let rpc: Rpc | string = inboundState.rpc;
+      if (
+        (typeof rpc === 'string' && rpc === 'DEFAULT') ||
+        rpc?.uri === 'DEFAULT'
+      )
+        rpc = DEFAULT_RPC;
+      console.log('transforming');
       return {
-        ...outboundState,
-        rpc: {uri: outboundState.rpc, testnet: false},
+        ...inboundState,
+        rpc: {
+          uri: rpc.uri,
+          testnet: false,
+        },
       } as Settings;
     }
 
-    return outboundState;
+    return inboundState;
   },
   {whitelist: ['settings']},
 );

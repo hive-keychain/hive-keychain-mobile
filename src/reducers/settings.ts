@@ -8,10 +8,11 @@ import {
   DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
   DEFAULT_HE_RPC_NODE,
 } from 'screens/hive/settings/RpcNodes';
+import {DEFAULT_RPC} from 'utils/hiveUtils';
 
 export default (
   state: Settings = {
-    rpc: 'DEFAULT',
+    rpc: DEFAULT_RPC,
     hiveEngineRpc: DEFAULT_HE_RPC_NODE,
     accountHistoryAPIRpc: DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
   },

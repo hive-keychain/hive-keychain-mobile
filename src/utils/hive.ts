@@ -24,7 +24,6 @@ import {
   VoteOperation,
 } from '@hiveio/dhive';
 import {Rpc} from 'actions/interfaces';
-import api from 'api/keychain';
 import hiveTx, {call} from 'hive-tx';
 import {hiveEngine} from 'utils/config';
 import {
@@ -40,19 +39,10 @@ import {useWorkingRPC} from './rpc-switcher.utils';
 
 type BroadcastResult = {id: string};
 
-export const DEFAULT_RPC = 'https://api.hive.blog';
 const DEFAULT_CHAIN_ID =
   'beeab0de00000000000000000000000000000000000000000000000000000000';
-let client = new Client(DEFAULT_RPC);
+let client = new Client('https://api.hive.blog');
 let testnet = false;
-
-export const getDefault: () => Promise<string> = async () => {
-  try {
-    return (await api.get('/hive/rpc')).data.rpc;
-  } catch (e) {
-    return DEFAULT_RPC;
-  }
-};
 
 export const setRpc = async (rpcObj: Rpc | string) => {
   let rpc = typeof rpcObj === 'string' ? rpcObj : rpcObj.uri;

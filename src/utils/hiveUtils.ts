@@ -11,6 +11,7 @@ import {getClient, getData} from './hive';
 
 const HIVE_VOTING_MANA_REGENERATION_SECONDS = 432000;
 const HIVE_100_PERCENT = 10000;
+export const DEFAULT_RPC: Rpc = {uri: 'https://api.hive.blog', testnet: false};
 
 export const getVP = (account: ExtendedAccount) => {
   if (!account.name) {
@@ -170,20 +171,18 @@ export const getConversionRequests = async (
 export const getSavingsRequests = async (name: string) => {
   return await getClient().database.call('get_savings_withdraw_to', [name]);
 };
-//TODO bellow ask quentin if remove or leave commented as the ext.
+
 export const rpcList: Rpc[] = [
-  {uri: 'https://api.hive.blog/', testnet: false},
+  DEFAULT_RPC,
   {uri: 'https://api.deathwing.me', testnet: false},
-  {uri: 'https://api.openhive.network/', testnet: false},
-  {uri: 'https://anyx.io/', testnet: false},
-  {uri: 'https://api.pharesim.me/', testnet: false},
+  {uri: 'https://api.openhive.network', testnet: false},
+  {uri: 'https://anyx.io', testnet: false},
+  {uri: 'https://api.pharesim.me', testnet: false},
   {uri: 'https://hived.emre.sh', testnet: false},
-  // { uri: 'https://hived.hive-engine.com/', testnet: false },
   {uri: 'https://rpc.ausbit.dev', testnet: false},
   {uri: 'https://rpc.ecency.com', testnet: false},
   {uri: 'https://techcoderx.com', testnet: false},
-  {uri: 'https://hive-api.arcange.eu/', testnet: false},
-  // { uri: 'https://hived.privex.io/', testnet: false },
+  {uri: 'https://hive-api.arcange.eu', testnet: false},
   {
     uri: 'https://testnet.openhive.network',
     testnet: true,

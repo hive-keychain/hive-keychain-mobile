@@ -30,13 +30,13 @@ export interface Rpc {
   chainId?: string;
 }
 export interface Settings {
-  rpc: string | Rpc;
+  rpc: Rpc;
   hiveEngineRpc: string;
   accountHistoryAPIRpc: string;
 }
 
 export interface SettingsPayload {
-  rpc?: string | Rpc;
+  rpc?: Rpc;
   hiveEngineRpc?: string;
   accountHistoryAPIRpc?: string;
 }

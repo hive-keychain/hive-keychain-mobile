@@ -92,7 +92,7 @@ const Main = ({
   tokens,
   userTokens,
   tokensMarket,
-  activeRpc,
+  rpc,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -268,11 +268,11 @@ const Main = ({
   return (
     <WalletPage
       additionalBgSvgImageStyle={
-        !loadingUserAndGlobals && activeRpc && activeRpc.uri !== 'NULL'
+        !loadingUserAndGlobals && rpc && rpc.uri !== 'NULL'
           ? {top: '15%'}
           : undefined
       }>
-      {!loadingUserAndGlobals && activeRpc && activeRpc.uri !== 'NULL' ? (
+      {!loadingUserAndGlobals && rpc && rpc.uri !== 'NULL' ? (
         <View>
           <Separator height={TOP_CONTAINER_SEPARATION} />
           <View style={[styles.headerMenu]}>
@@ -570,7 +570,7 @@ const connector = connect(
       tokens: state.tokens,
       userTokens: state.userTokens,
       tokensMarket: state.tokensMarket,
-      activeRpc: state.activeRpc,
+      rpc: state.settings.rpc,
     };
   },
   {
