@@ -1,6 +1,7 @@
 import {Settings} from 'actions/interfaces';
 import {HAS_State} from 'reducers/hiveAuthenticationService';
 import createTransform from 'redux-persist/es/createTransform';
+import {DEFAULT_RPC} from 'utils/hiveUtils';
 
 const rpcTransformer = createTransform<Settings, Settings>(
   (inboundState) => inboundState,
@@ -11,7 +12,7 @@ const rpcTransformer = createTransform<Settings, Settings>(
         rpc: {
           uri:
             outboundState.rpc === 'DEFAULT'
-              ? 'https://api.hive.blog'
+              ? DEFAULT_RPC.uri
               : outboundState.rpc,
           testnet: false,
         },
