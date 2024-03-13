@@ -3,6 +3,7 @@ import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
@@ -30,7 +31,7 @@ const MyWitnessInformationParams = ({
 }: Props) => {
   const styles = getStyles(theme);
   return (
-    <View style={[{flexGrow: 1}]}>
+    <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <Text style={[styles.textBase, styles.textBold]}>
         {translate('governance.my_witness.information_signing_key')}
       </Text>
@@ -86,7 +87,7 @@ const MyWitnessInformationParams = ({
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

@@ -4,7 +4,7 @@ import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
@@ -14,6 +14,7 @@ import {
 } from 'src/interfaces/witness.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
+import {spacingStyle} from 'src/styles/spacing';
 import {
   button_link_primary_medium,
   title_primary_body_2,
@@ -84,7 +85,7 @@ const EditMyWitness = ({
   };
 
   return (
-    <View>
+    <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <Separator />
       <View style={styles.flexRowBetween}>
         <OperationInput
@@ -162,6 +163,7 @@ const EditMyWitness = ({
         inputStyle={[styles.text, styles.smallerText]}
       />
       <Separator />
+      <View style={spacingStyle.fillSpace} />
       <View style={styles.buttonsContainer}>
         <EllipticButton
           title={translate('common.cancel')}
@@ -183,7 +185,7 @@ const EditMyWitness = ({
           isLoading={loading}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

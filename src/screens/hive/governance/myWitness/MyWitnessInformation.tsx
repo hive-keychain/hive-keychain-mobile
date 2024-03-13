@@ -1,6 +1,6 @@
 import Separator from 'components/ui/Separator';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
@@ -21,7 +21,7 @@ interface Props {
 const MyWitnessInformation = ({theme, witnessInfo}: Props) => {
   const styles = getStyles(theme);
   return (
-    <View>
+    <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.flexRowWrapped}>
         <MyWitnessDataBlock
           theme={theme}
@@ -124,7 +124,7 @@ const MyWitnessInformation = ({theme, witnessInfo}: Props) => {
           </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
