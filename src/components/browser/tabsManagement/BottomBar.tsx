@@ -5,11 +5,7 @@ import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {
-  BACKGROUNDITEMDARKISH,
-  HIVEICONBGCOLOR,
-  getColors,
-} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {BrowserConfig} from 'utils/config';
 
 type Props = {
@@ -75,15 +71,13 @@ const getsStyles = (insets: EdgeInsets, theme: Theme) =>
       alignItems: 'center',
     },
     noSideButtons: {justifyContent: 'space-around'},
-    icon: {color: getColors(theme).icon, fontSize: 30},
+    icon: {color: PRIMARY_RED_COLOR, fontSize: 22},
     circleContainer: {
       padding: 2,
       borderRadius: 50,
-      backgroundColor:
-        theme === Theme.LIGHT ? HIVEICONBGCOLOR : BACKGROUNDITEMDARKISH,
-      width: 30,
-      height: 30,
-      borderColor: getColors(theme).icon,
+      borderColor: PRIMARY_RED_COLOR,
       borderWidth: 1,
+      width: 22,
+      height: 22,
     },
   });
