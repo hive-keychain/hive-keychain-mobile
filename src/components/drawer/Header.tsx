@@ -67,6 +67,7 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
       marginTop: 8,
       zIndex: 1,
       paddingLeft: PADDING_LEFT_MAIN_MENU,
+      marginBottom: 20,
     },
     topContainer: {
       flexDirection: 'row',
