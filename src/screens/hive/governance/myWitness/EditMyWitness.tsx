@@ -96,8 +96,6 @@ const EditMyWitness = ({
           additionalOuterContainerStyle={{
             width: '40%',
           }}
-          inputStyle={styles.text}
-          additionalInputContainerStyle={styles.zeroMarginHorizontal}
         />
         <OperationInput
           keyboardType="decimal-pad"
@@ -107,11 +105,9 @@ const EditMyWitness = ({
           placeholder={translate('common.enter_amount')}
           value={formParams.accountCreationFee.toString()}
           onChangeText={(text) => handleFormParams('accountCreationFee', text)}
-          additionalInputContainerStyle={styles.zeroMarginHorizontal}
           additionalOuterContainerStyle={{
             width: '54%',
           }}
-          inputStyle={styles.text}
         />
       </View>
       <Separator />
@@ -124,9 +120,6 @@ const EditMyWitness = ({
         )}
         value={formParams.maximumBlockSize.toString()}
         onChangeText={(text) => handleFormParams('maximumBlockSize', text)}
-        additionalInputContainerStyle={styles.zeroMarginHorizontal}
-        additionalOuterContainerStyle={styles.fullWidth}
-        inputStyle={styles.text}
       />
       <Separator />
       <OperationInput
@@ -138,9 +131,6 @@ const EditMyWitness = ({
         )}
         value={formParams.hbdInterestRate.toString()}
         onChangeText={(text) => handleFormParams('hbdInterestRate', text)}
-        additionalInputContainerStyle={styles.zeroMarginHorizontal}
-        additionalOuterContainerStyle={styles.fullWidth}
-        inputStyle={styles.text}
       />
       <Separator />
       <OperationInput
@@ -148,9 +138,6 @@ const EditMyWitness = ({
         placeholder={translate('governance.my_witness.information_signing_key')}
         value={formParams.signingKey}
         onChangeText={(text) => handleFormParams('signingKey', text)}
-        additionalInputContainerStyle={styles.zeroMarginHorizontal}
-        additionalOuterContainerStyle={styles.fullWidth}
-        inputStyle={[styles.text, styles.smallerText]}
       />
       <Separator />
       <OperationInput
@@ -158,9 +145,6 @@ const EditMyWitness = ({
         placeholder={translate('common.url')}
         value={formParams.url}
         onChangeText={(text) => handleFormParams('url', text)}
-        additionalInputContainerStyle={styles.zeroMarginHorizontal}
-        additionalOuterContainerStyle={styles.fullWidth}
-        inputStyle={[styles.text, styles.smallerText]}
       />
       <Separator />
       <View style={spacingStyle.fillSpace} />

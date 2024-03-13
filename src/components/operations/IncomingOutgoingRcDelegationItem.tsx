@@ -237,10 +237,6 @@ const IncomingOutgoingRcDelegationItem = ({
                 additionalOuterContainerStyle={{
                   width: '40%',
                 }}
-                inputStyle={styles.textBase}
-                additionalInputContainerStyle={{
-                  marginHorizontal: 0,
-                }}
               />
               <OperationInput
                 labelInput={capitalize(translate('common.amount'))}
@@ -253,16 +249,7 @@ const IncomingOutgoingRcDelegationItem = ({
                 keyboardType="decimal-pad"
                 textAlign="right"
                 value={editedAmountDelegation}
-                inputStyle={[styles.textBase, styles.paddingLeft]}
-                additionalBottomLabelTextStyle={[
-                  styles.textBase,
-                  styles.italic,
-                  styles.redText,
-                ]}
                 onChangeText={setEditedAmountDelegation}
-                additionalInputContainerStyle={{
-                  marginHorizontal: 0,
-                }}
                 additionalOuterContainerStyle={{
                   width: '54%',
                 }}

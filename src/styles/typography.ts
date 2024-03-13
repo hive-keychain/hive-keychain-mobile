@@ -140,7 +140,7 @@ export const getFontSizeSmallDevices = (
   smallestScreenWidth = SMALLEST_SCREEN_WIDTH_SUPPORTED,
 ) => {
   return screenWidth <= smallestScreenWidth
-    ? currentFontSize * 0.7
+    ? currentFontSize * 0.8
     : currentFontSize;
 };
 

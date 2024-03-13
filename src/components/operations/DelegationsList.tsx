@@ -264,11 +264,7 @@ const DelegationsList = ({
               keyboardType="decimal-pad"
               textAlign="right"
               value={editedAmountDelegation}
-              inputStyle={[styles.textBase, styles.paddingLeft]}
               onChangeText={setEditedAmountDelegation}
-              additionalInputContainerStyle={{
-                paddingVertical: 10,
-              }}
               additionalOuterContainerStyle={{
                 width: '54%',
               }}

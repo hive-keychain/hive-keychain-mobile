@@ -584,9 +584,12 @@ const Swap = ({
                   },
                 ]}>
                 <DropdownModal
+                  remeasure
+                  selfCheckPos
                   enableSearch
                   dropdownTtitleTr="common.token"
                   dropdownIconScaledSize={ICONMINDIMENSIONS}
+                  additionalDropdowContainerStyle={{paddingHorizontal: 8}}
                   selected={
                     {
                       value: startToken.value.symbol,
@@ -621,7 +624,6 @@ const Swap = ({
                       ),
                     } as DropdownModalItem;
                   })}
-                  additionalTitleTextStyle={{fontSize: 15}}
                   additionalMainContainerDropdown={{
                     width: '44%',
                     top: 0,
@@ -648,17 +650,9 @@ const Swap = ({
                   placeholder={'0'}
                   value={amount}
                   onChangeText={setAmount}
-                  additionalInputContainerStyle={{
-                    marginHorizontal: 0,
-                    height: 60,
-                    margin: 0,
+                  additionalOuterContainerStyle={{
+                    width: '54%',
                   }}
-                  additionalOuterContainerStyle={[
-                    {
-                      width: '54%',
-                    },
-                  ]}
-                  inputStyle={styles.textBase}
                   rightIcon={
                     <View style={styles.flexRowCenter}>
                       <Separator
@@ -691,9 +685,12 @@ const Swap = ({
               <Separator />
               <View style={styles.flexRowbetween}>
                 <DropdownModal
+                  remeasure
+                  selfCheckPos
                   enableSearch
                   dropdownTtitleTr="common.token"
                   dropdownIconScaledSize={ICONMINDIMENSIONS}
+                  additionalDropdowContainerStyle={{paddingHorizontal: 8}}
                   selected={
                     {
                       value: endToken.value.symbol,
@@ -729,7 +726,6 @@ const Swap = ({
                       ),
                     } as DropdownModalItem;
                   })}
-                  additionalTitleTextStyle={{fontSize: 15}}
                   additionalMainContainerDropdown={{
                     width: '44%',
                   }}
@@ -753,13 +749,9 @@ const Swap = ({
                   placeholder={'0'}
                   value={estimateValue ? withCommas(estimateValue) : ''}
                   onChangeText={(text) => {}}
-                  additionalInputContainerStyle={{
-                    marginHorizontal: 0,
-                  }}
                   additionalOuterContainerStyle={{
                     width: '54%',
                   }}
-                  inputStyle={styles.textBase}
                   rightIcon={
                     <View style={styles.flexRowCenter}>
                       <Separator
@@ -783,13 +775,6 @@ const Swap = ({
                     estimateValue,
                     endToken.value.symbol,
                   )}
-                  additionalBottomLabelContainerStyle={styles.positionAbsolute}
-                  additionalBottomLabelTextStyle={[
-                    styles.textBase,
-                    styles.italic,
-                    styles.smallerText,
-                    styles.opaque,
-                  ]}
                 />
               </View>
               <Separator height={40} />
@@ -827,15 +812,6 @@ const Swap = ({
                   onChangeText={(text) =>
                     setSlippage(text.trim().length === 0 ? 0 : parseFloat(text))
                   }
-                  additionalInputContainerStyle={{
-                    marginHorizontal: 0,
-                  }}
-                  additionalOuterContainerStyle={{
-                    width: '100%',
-                    marginBottom: 20,
-                  }}
-                  inputStyle={styles.textBase}
-                  additionalinfoIconActionColor={getColors(theme).secondaryText}
                 />
               )}
             </View>

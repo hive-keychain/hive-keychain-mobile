@@ -14,6 +14,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {AutoCompleteValuesType} from 'src/interfaces/autocomplete.interface';
 import {getColors} from 'src/styles/colors';
+import {inputStyle} from 'src/styles/input';
 import {LABEL_INDENT_SPACE} from 'src/styles/spacing';
 import {
   FontPoppinsName,
@@ -50,6 +51,7 @@ export default (props: InputProps & OperationInputProps) => {
       additionalInputContainerStyle={props.additionalInputContainerStyle}
       inputColor={getColors(theme).secondaryText}
       autoCompleteValues={props.autoCompleteValues}
+      inputStyle={inputStyle(theme, width).input}
     />
   );
 
@@ -120,7 +122,6 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       ),
     },
     labelInputContainer: {
-      marginBottom: 2,
       flexDirection: 'row',
       alignItems: 'center',
       flexWrap: 'wrap',
@@ -128,7 +129,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     smallerLabelSize: {
       marginLeft: 10,
       fontFamily: FontPoppinsName.ITALIC,
-      fontSize: getFontSizeSmallDevices(width, 13),
+      fontSize: 13,
       color: getColors(theme).primaryText,
     },
     marginLeft: {

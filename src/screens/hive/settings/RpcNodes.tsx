@@ -259,8 +259,6 @@ const RpcNodes = ({
         <OperationInput
           placeholder={translate('settings.settings.rpc_node')}
           value={customRPC.uri}
-          additionalInputContainerStyle={styles.input}
-          inputStyle={styles.text}
           onChangeText={(value) => handleSetCustomRPC(value, 'uri')}
         />
         <CheckBox

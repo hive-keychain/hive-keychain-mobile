@@ -23,6 +23,7 @@ import {MessageModalType} from 'src/enums/messageModal.enums';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {inputStyle} from 'src/styles/input';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {getRotateStyle} from 'src/styles/transform';
@@ -281,8 +282,7 @@ const Savings = ({
           )}
 
           <Separator />
-          <Text
-            style={[getFormFontStyle(height, theme).title, styles.marginLeft]}>
+          <Text style={[inputStyle(theme, width).label, styles.marginLeft]}>
             {translate('common.operation_type')}
           </Text>
           <DropdownModal
@@ -308,7 +308,7 @@ const Savings = ({
               },
             ]}
             dropdownIconScaledSize={{width: 15, height: 15}}
-            drawLineBellowSelectedItem
+            // drawLineBellowSelectedItem
             showSelectedIcon={
               <Icon
                 name={Icons.CHECK}
@@ -320,10 +320,6 @@ const Savings = ({
               />
             }
             additionalLineStyle={styles.bottomLineDropdownItem}
-            additionalTextStyle={getFormFontStyle(height, theme).input}
-            additionalItemLabelTextStyle={
-              getFormFontStyle(height, theme).labelInput
-            }
           />
           <Separator />
           <OperationInput
@@ -334,11 +330,6 @@ const Savings = ({
             onChangeText={(e) => {
               setTo(e.trim());
             }}
-            inputStyle={[
-              getFormFontStyle(height, theme).input,
-              styles.paddingLeft,
-            ]}
-            additionalLabelStyle={getFormFontStyle(height, theme).title}
           />
           <Separator />
           <View style={styles.flexRowBetween}>
@@ -347,17 +338,6 @@ const Savings = ({
               placeholder={currency}
               value={currency}
               editable={false}
-              additionalOuterContainerStyle={{
-                width: '40%',
-              }}
-              additionalInputContainerStyle={{
-                marginHorizontal: 0,
-              }}
-              inputStyle={[
-                getFormFontStyle(height, theme).input,
-                styles.paddingLeft,
-              ]}
-              additionalLabelStyle={getFormFontStyle(height, theme).title}
             />
             <OperationInput
               labelInput={capitalize(translate('common.amount'))}
@@ -365,15 +345,7 @@ const Savings = ({
               keyboardType="decimal-pad"
               textAlign="right"
               value={amount}
-              inputStyle={[
-                getFormFontStyle(height, theme).input,
-                styles.paddingLeft,
-              ]}
-              additionalLabelStyle={getFormFontStyle(height, theme).title}
               onChangeText={setAmount}
-              additionalInputContainerStyle={{
-                marginHorizontal: 0,
-              }}
               additionalOuterContainerStyle={{
                 width: '54%',
               }}

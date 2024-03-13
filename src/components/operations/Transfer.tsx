@@ -279,8 +279,6 @@ const Transfer = ({
               onChangeText={(e) => {
                 setTo(e.trim());
               }}
-              inputStyle={getFormFontStyle(height, theme).input}
-              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
             />
             <Separator />
             <View style={styles.flexRowBetween}>
@@ -292,13 +290,6 @@ const Transfer = ({
                 additionalOuterContainerStyle={{
                   width: '40%',
                 }}
-                additionalInputContainerStyle={{
-                  marginHorizontal: 0,
-                }}
-                inputStyle={getFormFontStyle(height, theme).input}
-                additionalLabelStyle={
-                  getFormFontStyle(height, theme).labelInput
-                }
               />
               <OperationInput
                 keyboardType="decimal-pad"
@@ -306,16 +297,9 @@ const Transfer = ({
                 placeholder={'0'}
                 value={amount}
                 onChangeText={setAmount}
-                additionalInputContainerStyle={{
-                  marginHorizontal: 0,
-                }}
                 additionalOuterContainerStyle={{
                   width: '54%',
                 }}
-                inputStyle={getFormFontStyle(height, theme).input}
-                additionalLabelStyle={
-                  getFormFontStyle(height, theme).labelInput
-                }
                 rightIcon={
                   <View style={styles.flexRowCenter}>
                     <Separator
@@ -347,8 +331,6 @@ const Transfer = ({
               placeholder={translate('wallet.operations.transfer.memo')}
               value={memo}
               onChangeText={setMemo}
-              inputStyle={getFormFontStyle(height, theme).input}
-              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
               rightIcon={
                 <View style={styles.flexRowCenter}>
                   <Separator
@@ -394,13 +376,6 @@ const Transfer = ({
                     value={recurrence}
                     onChangeText={setRecurrence}
                     keyboardType={'number-pad'}
-                    inputStyle={getFormFontStyle(height, theme).input}
-                    additionalLabelStyle={
-                      getFormFontStyle(height, theme).labelInput
-                    }
-                    additionalLabelExtraInfoTextStyle={
-                      getFormFontStyle(height, theme).infoLabel
-                    }
                   />
                   <Separator />
                   <OperationInput
@@ -416,13 +391,6 @@ const Transfer = ({
                     value={exec}
                     onChangeText={setExec}
                     keyboardType={'number-pad'}
-                    inputStyle={getFormFontStyle(height, theme).input}
-                    additionalLabelStyle={
-                      getFormFontStyle(height, theme).labelInput
-                    }
-                    additionalLabelExtraInfoTextStyle={
-                      getFormFontStyle(height, theme).infoLabel
-                    }
                   />
                 </OptionsToggle>
                 <Separator />

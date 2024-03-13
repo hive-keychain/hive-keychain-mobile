@@ -168,8 +168,6 @@ const AddCustomRPC = ({
           <OperationInput
             placeholder={placeHolderInput}
             value={input}
-            additionalInputContainerStyle={styles.input}
-            inputStyle={styles.text}
             onChangeText={onChangeInput}
           />
           <CheckBox

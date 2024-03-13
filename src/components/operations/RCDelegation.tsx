@@ -267,11 +267,6 @@ const RCDelegation = ({
             labelInput={translate('common.username')}
             placeholder={translate('common.username')}
             leftIcon={<Icon theme={theme} name={Icons.AT} />}
-            inputStyle={[
-              getFormFontStyle(height, theme).input,
-              styles.paddingLeft,
-            ]}
-            additionalLabelStyle={getFormFontStyle(height, theme).title}
             value={to}
             onChangeText={(e) => {
               setTo(e.trim());
@@ -287,14 +282,6 @@ const RCDelegation = ({
               additionalOuterContainerStyle={{
                 width: '40%',
               }}
-              inputStyle={[
-                getFormFontStyle(height, theme).input,
-                styles.paddingLeft,
-              ]}
-              additionalLabelStyle={getFormFontStyle(height, theme).title}
-              additionalInputContainerStyle={{
-                marginHorizontal: 0,
-              }}
             />
             <OperationInput
               labelInput={capitalize(translate('common.amount'))}
@@ -309,20 +296,7 @@ const RCDelegation = ({
               keyboardType="decimal-pad"
               textAlign="right"
               value={amount}
-              inputStyle={[
-                getFormFontStyle(height, theme).input,
-                styles.paddingLeft,
-              ]}
-              additionalLabelStyle={getFormFontStyle(height, theme).title}
-              additionalBottomLabelTextStyle={[
-                getFormFontStyle(height, theme, PRIMARY_RED_COLOR).smallLabel,
-                styles.italic,
-                styles.textRight,
-              ]}
               onChangeText={setAmount}
-              additionalInputContainerStyle={{
-                marginHorizontal: 0,
-              }}
               additionalOuterContainerStyle={{
                 width: '54%',
               }}

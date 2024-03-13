@@ -554,6 +554,7 @@ const getDimensionedStyles = (
       borderColor:
         theme === Theme.LIGHT ? NEUTRAL_WHITE_COLOR : DARKBLUELIGHTER,
       borderRadius: 11,
+      paddingHorizontal: 6,
     },
   });
 

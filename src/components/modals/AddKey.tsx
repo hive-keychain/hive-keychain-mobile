@@ -35,7 +35,6 @@ const AddKey = ({addKey, name, type, theme}: Props) => {
         autoCapitalize="none"
         value={key}
         onChangeText={setKey}
-        inputStyle={[styles.text, styles.smallerText]}
       />
 
       <Separator height={50} />

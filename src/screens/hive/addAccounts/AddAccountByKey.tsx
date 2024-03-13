@@ -115,7 +115,6 @@ const AddAccountByKey = ({
               placeholder={translate('common.username')}
               value={account}
               onChangeText={(textValue) => setAccount(textValue.toLowerCase())}
-              inputStyle={[styles.text, styles.smallerText]}
             />
             <Separator height={height / 15} />
 
@@ -124,7 +123,6 @@ const AddAccountByKey = ({
               placeholder={translate('common.privateKey')}
               value={key}
               onChangeText={setKey}
-              inputStyle={[styles.text, styles.smallerText]}
               rightIcon={
                 <Icon
                   name={Icons.SCANNER}

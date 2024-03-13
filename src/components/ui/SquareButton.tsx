@@ -7,10 +7,14 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {title_secondary_body_2} from 'src/styles/typography';
+import {
+  getFontSizeSmallDevices,
+  title_secondary_body_2,
+} from 'src/styles/typography';
 
 interface Props {
   icon: JSX.Element;
@@ -38,7 +42,8 @@ const SquareButton = ({
   additionalSecondaryLabelStyle,
 }: Props) => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, marginRight, marginBottom);
+  const {width} = useWindowDimensions();
+  const styles = getStyles(theme, marginRight, marginBottom, width);
   return (
     <TouchableOpacity
       key={`square-button-${primaryLabel}`}
@@ -71,7 +76,12 @@ const SquareButton = ({
   );
 };
 
-const getStyles = (theme: Theme, marginRight: number, marginBottom: number) =>
+const getStyles = (
+  theme: Theme,
+  marginRight: number,
+  marginBottom: number,
+  width: number,
+) =>
   StyleSheet.create({
     squareButton: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
@@ -95,6 +105,7 @@ const getStyles = (theme: Theme, marginRight: number, marginBottom: number) =>
       ...title_secondary_body_2,
       lineHeight: 15,
       paddingTop: 4,
+      fontSize: getFontSizeSmallDevices(width, title_secondary_body_2.fontSize),
     },
     alignedCenter: {
       alignItems: 'center',

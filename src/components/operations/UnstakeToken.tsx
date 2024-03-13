@@ -172,11 +172,6 @@ const UnstakeToken = ({
               additionalOuterContainerStyle={{
                 width: '40%',
               }}
-              inputStyle={getFormFontStyle(height, theme).input}
-              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
-              additionalInputContainerStyle={{
-                marginHorizontal: 0,
-              }}
             />
             <OperationInput
               keyboardType="decimal-pad"
@@ -184,14 +179,9 @@ const UnstakeToken = ({
               placeholder={'0'}
               value={amount}
               onChangeText={setAmount}
-              additionalInputContainerStyle={{
-                marginHorizontal: 0,
-              }}
               additionalOuterContainerStyle={{
                 width: '54%',
               }}
-              inputStyle={getFormFontStyle(height, theme).input}
-              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
               rightIcon={
                 <View style={styles.flexRowCenter}>
                   <Separator

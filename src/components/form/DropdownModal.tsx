@@ -1,7 +1,7 @@
 import Clipboard from '@react-native-community/clipboard';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   FlatList,
   StyleProp,
@@ -13,12 +13,13 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import {Overlay} from 'react-native-elements';
+import { Overlay } from 'react-native-elements';
 import SimpleToast from 'react-native-simple-toast';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {getCardStyle} from 'src/styles/card';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import { Theme, useThemeContext } from 'src/context/theme.context';
+import { Icons } from 'src/enums/icons.enums';
+import { getCardStyle } from 'src/styles/card';
+import { PRIMARY_RED_COLOR, getColors } from 'src/styles/colors';
+import { inputStyle } from 'src/styles/input';
 import {
   CONTENT_MARGIN_PADDING,
   DROPDOWN_CONTENT_MAX_HEIGHT,
@@ -32,9 +33,9 @@ import {
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
-import {capitalize} from 'utils/format';
-import {translate} from 'utils/localize';
+import { Dimensions } from 'utils/common.types';
+import { capitalize } from 'utils/format';
+import { translate } from 'utils/localize';
 import CustomSearchBar from './CustomSearchBar';
 
 export interface DropdownModalItem {
@@ -259,12 +260,18 @@ const DropdownModal = ({
           : undefined,
       ]}>
       {typeof selected === 'string' ? (
-        <Text style={[styles.textBase, additionalTextStyle]}>{selected}</Text>
+        <Text style={[inputStyle(theme, width).input, additionalTextStyle]}>
+          {selected}
+        </Text>
       ) : (
-        <View style={styles.flexRow}>
+        <View style={[styles.flexRow]}>
           {selected.icon}
           <Text
-            style={[styles.textBase, styles.marginLeft, additionalTextStyle]}>
+            style={[
+              inputStyle(theme, width).input,
+              styles.marginLeft,
+              additionalTextStyle,
+            ]}>
             {selected.label}
           </Text>
         </View>
@@ -302,7 +309,7 @@ const DropdownModal = ({
         {dropdownTtitleTr && (
           <Text
             style={[
-              styles.textBase,
+              inputStyle(theme, width).label,
               additionalTitleTextStyle,
               removeDropdownTitleIndent ? undefined : styles.indent,
             ]}>
@@ -437,13 +444,13 @@ const getStyles = (
       justifyContent: 'space-between',
     },
     marginLeft: {
-      marginLeft: MARGIN_LEFT_RIGHT_MIN,
+      marginLeft: 8,
     },
     dropdownContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      height: 60,
+      height: 48,
       marginBottom: 0,
       borderRadius: 25,
       width: '100%',

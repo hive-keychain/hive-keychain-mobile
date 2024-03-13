@@ -217,14 +217,6 @@ const Convert = ({
               additionalOuterContainerStyle={{
                 width: '40%',
               }}
-              inputStyle={[
-                getFormFontStyle(height, theme).input,
-                styles.paddingLeft,
-              ]}
-              additionalLabelStyle={getFormFontStyle(height, theme).title}
-              additionalInputContainerStyle={{
-                marginHorizontal: 0,
-              }}
             />
             <OperationInput
               labelInput={capitalize(translate('common.amount'))}
@@ -232,15 +224,7 @@ const Convert = ({
               keyboardType="decimal-pad"
               textAlign="right"
               value={amount}
-              inputStyle={[
-                getFormFontStyle(height, theme).input,
-                styles.paddingLeft,
-              ]}
-              additionalLabelStyle={getFormFontStyle(height, theme).title}
               onChangeText={setAmount}
-              additionalInputContainerStyle={{
-                marginHorizontal: 0,
-              }}
               additionalOuterContainerStyle={{
                 width: '54%',
               }}

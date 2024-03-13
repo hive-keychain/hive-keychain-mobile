@@ -132,8 +132,6 @@ const PowerUp = ({
             onChangeText={(e) => {
               setTo(e.trim());
             }}
-            inputStyle={getFormFontStyle(height, theme).input}
-            additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
           />
           <Separator />
           <View style={styles.flexRowBetween}>
@@ -145,11 +143,6 @@ const PowerUp = ({
               additionalOuterContainerStyle={{
                 width: '40%',
               }}
-              inputStyle={getFormFontStyle(height, theme).input}
-              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
-              additionalInputContainerStyle={{
-                marginHorizontal: 0,
-              }}
             />
             <OperationInput
               labelInput={capitalize(translate('common.amount'))}
@@ -157,12 +150,7 @@ const PowerUp = ({
               keyboardType="decimal-pad"
               textAlign="right"
               value={amount}
-              inputStyle={getFormFontStyle(height, theme).input}
-              additionalLabelStyle={getFormFontStyle(height, theme).labelInput}
               onChangeText={setAmount}
-              additionalInputContainerStyle={{
-                marginHorizontal: 0,
-              }}
               additionalOuterContainerStyle={{
                 width: '54%',
               }}

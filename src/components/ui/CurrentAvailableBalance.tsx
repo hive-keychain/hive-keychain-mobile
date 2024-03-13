@@ -1,6 +1,13 @@
 import Icon from 'components/hive/Icon';
 import React from 'react';
-import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
+  useWindowDimensions,
+} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {
@@ -9,7 +16,7 @@ import {
   ICONGRAYBGCOLOR,
   getColors,
 } from 'src/styles/colors';
-import {getFormFontStyle} from 'src/styles/typography';
+import {getFontSizeSmallDevices, getFormFontStyle} from 'src/styles/typography';
 import {formatBalanceCurrency} from 'utils/format';
 import {translate} from 'utils/localize';
 import SquareButton from './SquareButton';
@@ -39,7 +46,8 @@ const CurrentAvailableBalance = ({
   onRightClick,
   additionalLabelTitleStyle,
 }: Props) => {
-  const styles = getStyles(theme);
+  const {width} = useWindowDimensions();
+  const styles = getStyles(theme, width);
 
   const leftLabel = leftLabelTranslationKey
     ? translate(leftLabelTranslationKey)
@@ -111,7 +119,7 @@ const CurrentAvailableBalance = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -139,7 +147,7 @@ const getStyles = (theme: Theme) =>
       opacity: 0.7,
     },
     available: {
-      fontSize: 18,
+      fontSize: getFontSizeSmallDevices(width, 18),
     },
     whiteText: {
       color: '#FFF',

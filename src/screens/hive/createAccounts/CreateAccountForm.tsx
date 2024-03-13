@@ -231,7 +231,6 @@ const CreateAccountStepOne = ({
               )}
               value={accountName}
               onChangeText={setAccountName}
-              inputStyle={[styles.text, styles.smallerText]}
               leftIcon={<Icon name={Icons.AT} theme={theme} />}
               rightIcon={
                 isAvailableAccountName ? (

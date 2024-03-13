@@ -100,7 +100,6 @@ const AddAccountByAuth = ({
               placeholder={translate('common.username')}
               value={account}
               onChangeText={setAccount}
-              inputStyle={[styles.text, styles.smallerText]}
             />
             <Separator height={height / 15} />
             <OperationInput
@@ -108,7 +107,6 @@ const AddAccountByAuth = ({
               placeholder={translate('common.authorized_username')}
               value={authorizedAccount}
               onChangeText={setAuthorizedAccount}
-              inputStyle={[styles.text, styles.smallerText]}
               rightIcon={
                 <Icon
                   name={Icons.SCANNER}
