@@ -1,12 +1,12 @@
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
-import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {spacingStyle} from 'src/styles/spacing';
 import {
@@ -29,7 +29,8 @@ const MyWitnessInformationParams = ({
   witnessInfo,
   setEditMode,
 }: Props) => {
-  const styles = getStyles(theme);
+  const {width} = useWindowDimensions();
+  const styles = getStyles(theme, width);
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <Text style={[styles.textBase, styles.textBold]}>
@@ -58,11 +59,12 @@ const MyWitnessInformationParams = ({
       </View>
       <View style={spacingStyle.fillSpace}></View>
       <View style={styles.marginBottom}>
-        <ActiveOperationButton
+        <EllipticButton
           title={translate('common.edit')}
           onPress={setEditMode}
           isLoading={false}
-          style={[getCardStyle(theme).defaultCardItem, styles.button]}
+          style={[getButtonStyle(theme).secondaryButton, styles.editButton]}
+          additionalTextStyle={styles.editButtonText}
         />
 
         <ActiveOperationButton
@@ -91,7 +93,7 @@ const MyWitnessInformationParams = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     flexRowWrapped: {
       flexDirection: 'row',
@@ -118,6 +120,14 @@ const getStyles = (theme: Theme) =>
     },
     marginBottom: {
       marginBottom: 15,
+    },
+    editButton: {
+      width: '90%',
+      alignSelf: 'center',
+      marginBottom: 16,
+    },
+    editButtonText: {
+      color: getColors(theme).secondaryText,
     },
   });
 

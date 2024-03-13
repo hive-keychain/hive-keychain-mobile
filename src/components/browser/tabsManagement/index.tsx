@@ -1,4 +1,5 @@
 import {Tab} from 'actions/interfaces';
+import {Caption} from 'components/ui/Caption';
 import React, {MutableRefObject} from 'react';
 import {
   Dimensions,
@@ -14,7 +15,6 @@ import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {BORDERWHITISH, DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
-import {translate} from 'utils/localize';
 import TabsManagementBottomBar from './BottomBar';
 
 //TODO: put in config
@@ -53,9 +53,7 @@ export default ({
   return (
     <View style={[styles.container, show ? null : styles.hide]}>
       <ScrollView>
-        <Text style={[styles.textBase, styles.tip]}>
-          {translate('browser.switch_tabs_tip')}
-        </Text>
+        <Caption text="browser.switch_tabs_tip" hideSeparator />
         <View style={styles.subcontainer}>
           {tabs.map(({icon, image, name, id}) => (
             <TouchableOpacity
