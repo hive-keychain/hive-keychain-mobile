@@ -113,6 +113,10 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
     );
   };
 
+  const getShortenedId = (id: string) => {
+    return id.substring(0, 6) + '...' + id.slice(-6);
+  };
+
   const onHandleCopyID = (id: string) => {
     Clipboard.setString(id);
     SimpleToast.show(translate('toast.copied_id'), SimpleToast.LONG);
@@ -166,7 +170,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
             onPress={() => onHandleCopyID(item.id)}
             style={[styles.marginTop]}>
             <Text style={styles.textBase}>
-              {translate('common.id')} - {item.id}
+              {translate('common.id')} - {getShortenedId(item.id)}
             </Text>
           </TouchableOpacity>
         </View>

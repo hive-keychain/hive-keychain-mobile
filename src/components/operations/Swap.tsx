@@ -2,8 +2,10 @@ import {loadTokensMarket} from 'actions/index';
 import {showModal} from 'actions/message';
 import ErrorSvg from 'assets/new_UI/error-circle.svg';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
+import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import PreloadedImage from 'components/ui/PreloadedImage';
@@ -35,7 +37,7 @@ import {
 } from 'src/styles/colors';
 import {ICONMINDIMENSIONS} from 'src/styles/icon';
 import {getHorizontalLineStyle} from 'src/styles/line';
-import {MARGIN_PADDING} from 'src/styles/spacing';
+import {MARGIN_PADDING, spacingStyle} from 'src/styles/spacing';
 import {getRotateStyle} from 'src/styles/transform';
 import {
   FontPoppinsName,
@@ -461,80 +463,77 @@ const Swap = ({
       setLoadingConfirmationSwap(false);
     }
 
+    const getShortenedId = (id: string) => {
+      return id.substring(0, 6) + '...' + id.slice(-6);
+    };
+
     const onHandleBackButton = async () =>
       await SwapTokenUtils.cancelSwap(estimateId);
 
     navigate('TemplateStack', {
       titleScreen: translate('common.confirm_token_swap'),
       component: (
-        <OperationThemed
-          additionalContentContainerStyle={{
-            justifyContent: 'space-around',
-            alignContent: 'flex-start',
-          }}
-          childrenTop={
-            <>
-              <Text
-                style={[
-                  styles.textBase,
-                  styles.opaque,
-                  styles.marginHorizontal,
-                  styles.textCentered,
-                ]}>
-                {translate('wallet.operations.swap.swap_token_confirm_message')}
-              </Text>
-              <Separator />
-            </>
-          }
-          childrenMiddle={
-            <View style={{marginTop: 20}}>
-              <View style={getCardStyle(theme).defaultCardItem}>
-                <View style={styles.flexRowbetween}>
-                  <Text style={[styles.textBase, styles.biggerText]}>
-                    {translate('wallet.operations.swap.swap_id_title')}
-                  </Text>
-                  <Text style={[styles.textBase, styles.smallerText]}>
-                    {estimateId}
-                  </Text>
-                </View>
-                <Separator
-                  drawLine
-                  height={0.5}
-                  additionalLineStyle={styles.bottomLine}
-                />
-                <Separator height={10} />
-                <View style={styles.flexRowbetween}>
-                  <Text style={[styles.textBase, styles.biggerText]}>
-                    {translate('wallet.operations.swap.swap_estimation')}
-                  </Text>
-                  <Text style={[styles.textBase]}>{`${withCommas(amount)} ${
-                    startToken.value.symbol
-                  } => ${withCommas(estimateValue)} ${
-                    endToken.value.symbol
-                  }`}</Text>
-                </View>
-                <Separator
-                  drawLine
-                  height={0.5}
-                  additionalLineStyle={styles.bottomLine}
-                />
-                <Separator height={10} />
-                <View style={styles.flexRowbetween}>
-                  <Text style={[styles.textBase, styles.biggerText]}>
-                    {translate('wallet.operations.swap.slippage')}
-                  </Text>
-                  <Text style={[styles.textBase]}>
-                    {translate('wallet.operations.swap.swap_slippage_step', {
-                      slippage,
-                    })}
-                  </Text>
-                </View>
+        <Background theme={theme}>
+          <View style={{flexGrow: 1, paddingBottom: 16}}>
+            <Caption
+              text="wallet.operations.swap.swap_token_confirm_message"
+              hideSeparator
+            />
+            <View
+              style={[
+                getCardStyle(theme).defaultCardItem,
+                {marginHorizontal: 16, marginBottom: 0},
+              ]}>
+              <View style={styles.flexRowbetween}>
+                <Text style={[styles.textBase]}>
+                  {translate('wallet.operations.swap.swap_id_title')}
+                </Text>
+                <Text style={[styles.textBase]}>
+                  {getShortenedId(estimateId)}
+                </Text>
+              </View>
+              <Separator
+                drawLine
+                height={0.5}
+                additionalLineStyle={styles.bottomLine}
+              />
+              <Separator height={10} />
+              <View style={styles.flexRowbetween}>
+                <Text style={[styles.textBase]}>
+                  {translate('wallet.operations.swap.swap_estimation')}
+                </Text>
+                <Text style={[styles.textBase]}>{`${withCommas(amount)} ${
+                  startToken.value.symbol
+                } => ${withCommas(estimateValue)} ${
+                  endToken.value.symbol
+                }`}</Text>
+              </View>
+              <Separator
+                drawLine
+                height={0.5}
+                additionalLineStyle={styles.bottomLine}
+              />
+              <Separator height={10} />
+              <View style={styles.flexRowbetween}>
+                <Text style={[styles.textBase]}>
+                  {translate('wallet.operations.swap.slippage')}
+                </Text>
+                <Text style={[styles.textBase]}>
+                  {translate('wallet.operations.swap.swap_slippage_step', {
+                    slippage,
+                  })}
+                </Text>
               </View>
             </View>
-          }
-          buttonTitle={'common.confirm'}
-          onNext={() => processSwap(estimateId)}
-        />
+            <View style={spacingStyle.fillSpace}></View>
+            <EllipticButton
+              title={translate('common.confirm')}
+              onPress={() => processSwap(estimateId)}
+              isLoading={loading}
+              style={styles.confirmButton}
+            />
+          </View>
+        </Background>
       ),
       hideCloseButton: true,
       extraActionOnBack: onHandleBackButton,
@@ -887,8 +886,11 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     textBase: {
       color: getColors(theme).secondaryText,
       ...button_link_primary_small,
+      fontSize: getFontSizeSmallDevices(
+        width,
+        button_link_primary_small.fontSize,
+      ),
     },
-    disclaimer: {fontSize: getFontSizeSmallDevices(width, 14)},
     opaque: {
       opacity: 0.8,
     },
@@ -981,6 +983,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       borderColor: getColors(theme).lineSeparatorStroke,
       alignSelf: 'center',
     },
+    confirmButton: {backgroundColor: PRIMARY_RED_COLOR},
   });
 
 const connector = connect(
