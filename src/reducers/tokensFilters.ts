@@ -34,7 +34,7 @@ const tokensFilterReducer = (
     case UPDATE_TOKENS_FILTER:
       return {...state, ...payload};
     case CLEAR_TOKENS_FILTERS:
-      return {...DEFAULT_FILTER_TOKENS};
+      return DEFAULT_FILTER_TOKENS;
     default:
       return state;
   }
