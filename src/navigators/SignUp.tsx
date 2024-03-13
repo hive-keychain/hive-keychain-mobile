@@ -2,6 +2,7 @@ import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/s
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
+import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -15,10 +16,6 @@ import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {
-  getFontSizeSmallDevices,
-  headlines_primary_headline_2,
-} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
@@ -57,12 +54,10 @@ export default () => {
         name="ScanQRScreen"
         options={({navigation}) => ({
           headerBackTitle: translate('navigation.add_account'),
+          headerTitle: () => <NavigatorTitle title="navigation.add_account" />,
           headerStyle: styles.header,
           headerTintColor: 'white',
-          headerTitleStyle: styles.headerTitle,
-          headerTitleAlign: 'center',
           headerRightContainerStyle: styles.paddingRight,
-          title: translate('navigation.add_account'),
           headerRight: () => {
             return <MoreInformation type={Info.QR_ACCOUNT} />;
           },
@@ -95,16 +90,6 @@ const getStyles = (
       elevation: 0,
       shadowColor: 'transparent',
       height: STACK_HEADER_HEIGHT + insets.top,
-    },
-    headerTitle: {
-      ...headlines_primary_headline_2,
-      color: getColors(theme).primaryText,
-      fontSize: getFontSizeSmallDevices(
-        width,
-        {...headlines_primary_headline_2}.fontSize,
-      ),
-      includeFontPadding: false,
-      textAlignVertical: 'center',
     },
     marginLeft: {marginLeft: HEADER_ICON_MARGIN},
   });
