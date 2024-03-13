@@ -161,7 +161,6 @@ const Delegation = ({
             currentValue={totalHpIncoming}
             availableValue={totalHpOutgoing}
             additionalContainerStyle={styles.currentAvailableBalances}
-            setMaxAvailable={(value) => setAmount(value)}
             leftLabelTranslationKey="wallet.operations.delegation.total_incoming"
             rightLabelTranslationKey="wallet.operations.delegation.total_outgoing"
             onleftClick={() => onHandleNavigateToDelegations('incoming')}

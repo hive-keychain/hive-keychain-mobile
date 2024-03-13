@@ -117,7 +117,6 @@ const PowerUp = ({
             )} HP`}
             availableValue={availableHiveAmount}
             additionalContainerStyle={styles.currentAvailableBalances}
-            setMaxAvailable={(value) => setAmount(value)}
           />
           <Separator height={25} />
         </>

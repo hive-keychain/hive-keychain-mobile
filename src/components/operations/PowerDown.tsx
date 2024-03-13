@@ -164,7 +164,6 @@ const PowerDown = ({
               'HP',
             )}`}
             additionalContainerStyle={styles.currentAvailableBalances}
-            setMaxAvailable={(value) => setAmount(value)}
           />
           <Separator />
           {parseFloat(poweringDown.total_withdrawing) > 0 && (

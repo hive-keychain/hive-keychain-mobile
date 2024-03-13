@@ -21,7 +21,6 @@ interface Props {
   availableValue: string;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalLabelTitleStyle?: StyleProp<TextStyle>;
-  setMaxAvailable?: (value: string) => void;
   leftLabelTranslationKey?: string;
   rightLabelTranslationKey?: string;
   onleftClick?: () => void;
@@ -34,7 +33,6 @@ const CurrentAvailableBalance = ({
   currentValue,
   availableValue,
   additionalContainerStyle,
-  setMaxAvailable,
   leftLabelTranslationKey,
   rightLabelTranslationKey,
   onleftClick,
@@ -55,8 +53,6 @@ const CurrentAvailableBalance = ({
       onleftClick();
     } else if (side === 'right' && onRightClick) {
       onRightClick();
-    } else {
-      if (setMaxAvailable) setMaxAvailable(value);
     }
   };
 

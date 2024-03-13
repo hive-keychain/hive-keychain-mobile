@@ -216,7 +216,6 @@ const Savings = ({
             currentValue={currentBalance as string}
             availableValue={availableBalance as string}
             additionalContainerStyle={styles.currentAvailableBalances}
-            setMaxAvailable={(value) => setAmount(value)}
           />
           <Separator height={10} />
           {totalPendingSavingsWithdrawals > 0 && (
