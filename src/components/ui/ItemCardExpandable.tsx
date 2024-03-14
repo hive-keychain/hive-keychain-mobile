@@ -103,6 +103,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       ...fields_primary_text_1,
     },
     iconContainer: {
+      marginLeft: 2,
       width: width / 9,
       height: width / 8.5,
       justifyContent: 'center',

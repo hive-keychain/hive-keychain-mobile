@@ -49,6 +49,7 @@ import WalletAddIcon from 'assets/new_UI/linear_wallet-add.svg';
 import HASIcon from 'assets/new_UI/logo_HAS.svg';
 import LogoutIcon from 'assets/new_UI/logout.svg';
 import PolygonDown from 'assets/new_UI/polygon_down.svg';
+import PowerDownLight from 'assets/new_UI/power-down-light.svg';
 import PowerIcon from 'assets/new_UI/power-icon.svg';
 import PowerUpDownIcon from 'assets/new_UI/power-up-down.svg';
 import PowerUpIcon from 'assets/new_UI/power-up.svg';
@@ -522,6 +523,13 @@ const getIconFilePath = (
     case name === Icons.POWER_UP:
       return (
         <PowerUpIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.POWER_DOWN:
+      return (
+        <PowerDownLight
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
