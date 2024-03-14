@@ -554,9 +554,7 @@ const Swap = ({
           }}
           childrenTop={
             <View style={{}}>
-              <Separator />
               <Caption text="wallet.operations.swap.disclaimer" hideSeparator />
-              <Separator height={25} />
               <View style={[styles.flexRowbetween, styles.marginHorizontal]}>
                 <Text style={[styles.textBase, styles.opaque]}>
                   {translate('wallet.operations.swap.swap_fee_title')}{' '}
