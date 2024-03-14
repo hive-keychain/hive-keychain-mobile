@@ -163,8 +163,14 @@ const Delegation = ({
             additionalContainerStyle={styles.currentAvailableBalances}
             leftLabelTranslationKey="wallet.operations.delegation.total_incoming"
             rightLabelTranslationKey="wallet.operations.delegation.total_outgoing"
-            onleftClick={() => onHandleNavigateToDelegations('incoming')}
-            onRightClick={() => onHandleNavigateToDelegations('outgoing')}
+            onleftClick={() => {
+              if (parseFloat(totalHpIncoming))
+                onHandleNavigateToDelegations('incoming');
+            }}
+            onRightClick={() => {
+              if (parseFloat(totalHpOutgoing))
+                onHandleNavigateToDelegations('outgoing');
+            }}
           />
           <Separator />
           <TouchableOpacity

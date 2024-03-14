@@ -123,7 +123,7 @@ const RCDelegation = ({
   };
 
   const onHandleNavigateToRCDelegations = (type: 'incoming' | 'outgoing') => {
-    if (type === 'incoming') return;
+    if (type === 'incoming' || !parseFloat(totalOutgoing.gigaRcValue)) return;
     navigate('TemplateStack', {
       titleScreen: capitalize(type),
       component: (
