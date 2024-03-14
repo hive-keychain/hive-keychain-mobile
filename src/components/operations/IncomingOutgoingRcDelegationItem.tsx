@@ -242,7 +242,7 @@ const IncomingOutgoingRcDelegationItem = ({
                 labelInput={capitalize(translate('common.amount'))}
                 labelBottomExtraInfo={
                   equivalentHPAmount
-                    ? `(≈ ${equivalentHPAmount} ${getCurrency('HP')})`
+                    ? `≈ ${equivalentHPAmount} ${getCurrency('HP')}`
                     : undefined
                 }
                 placeholder={'0.000'}
@@ -282,18 +282,12 @@ const IncomingOutgoingRcDelegationItem = ({
                 styles.marginTop,
                 {justifyContent: 'center'},
               ]}>
-              <Icon
-                name={Icons.CHECK}
+              <ConfirmationInItem
                 theme={theme}
-                onClick={onRCDelegate}
-                {...styles.biggerIcon}
-              />
-              <Icon
-                name={Icons.CLOSE_CIRCLE}
-                theme={theme}
-                additionalContainerStyle={styles.marginLeft}
-                onClick={() => setEditMode(false)}
-                {...styles.biggerIcon}
+                onCancel={() => setEditMode(false)}
+                onConfirm={onRCDelegate}
+                isLoading={isLoading}
+                additionalConfirmTextStyle={styles.whiteText}
               />
             </View>
           </View>
@@ -356,9 +350,9 @@ const getStyles = (theme: Theme) =>
       marginLeft: 8,
     },
     marginRight: {
-      marginRight: 3,
+      marginRight: 16,
     },
-    marginLeft: {marginLeft: 4},
+    marginLeft: {marginLeft: 16},
     roundButton: {
       borderWidth: 1,
       borderColor: getColors(theme).quinaryCardBorderColor,
