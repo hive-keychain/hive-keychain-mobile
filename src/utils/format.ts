@@ -51,7 +51,6 @@ export const formatBalance = (balance: number) =>
     : withCommas(balance + '');
 
 export const formatBalanceCurrency = (balanceS: string) => {
-  console.log(balanceS);
   const balance = Number(balanceS.split(' ')[0].replace(/,/g, ''));
   const currency = balanceS.split(' ')[1];
   return `${formatBalance(balance)} ${currency ?? ''}`;
@@ -99,7 +98,6 @@ export const toFormattedHP = (
   vests: number,
   props?: DynamicGlobalProperties,
 ) => {
-  console.log({vests, t: typeof vests});
   return `${toHP(vests.toString(), props).toFixed(3)} HP`;
 };
 

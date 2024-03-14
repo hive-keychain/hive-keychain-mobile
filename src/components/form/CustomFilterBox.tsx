@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {
@@ -113,7 +114,7 @@ const FilterBox = ({
     }
   };
 
-  const styles = getStyles(theme, useWindowDimensions());
+  const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
   const preFixLocale =
     usingFilter === 'wallet'
       ? `${usingFilter}.filter`
@@ -229,7 +230,11 @@ const connector = connect(mapStateToProps, {
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
+const getStyles = (
+  theme: Theme,
+  {width, height}: ScaledSize,
+  insets: EdgeInsets,
+) =>
   StyleSheet.create({
     container: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
@@ -239,6 +244,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       justifyContent: 'space-evenly',
       paddingVertical: 10,
       maxWidth: width * 0.75,
+      marginTop: insets.top,
     },
     headerText: {
       marginVertical: 8,

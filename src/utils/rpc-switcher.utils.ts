@@ -17,10 +17,6 @@ export const useWorkingRPC = async (rpc?: Rpc) => {
   )) {
     if (await checkRpcStatus(rpc.uri)) {
       if (switchAuto) {
-        console.log(
-          'setting rpc from zhere ===================================',
-        );
-
         store.dispatch(setRpc(rpc));
       } else {
         store.dispatch(setSwitchToRpc(rpc));

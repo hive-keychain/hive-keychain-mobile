@@ -45,7 +45,6 @@ interface Props {
 const CurrencyToken = ({
   theme,
   currencyName,
-  clearWalletFilters,
   user,
   properties,
   itemIndex,
@@ -311,9 +310,7 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps, {
-  clearWalletFilters,
-});
+const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(CurrencyToken);

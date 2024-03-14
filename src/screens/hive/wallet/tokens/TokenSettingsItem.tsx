@@ -62,7 +62,7 @@ const TokenSettingsItem = ({
         uri: Img.resolveAssetSource(HiveEngine).uri,
       }}
       onError={() => {
-        console.log('default');
+        console.log('default image');
       }}
     />
   ) : (

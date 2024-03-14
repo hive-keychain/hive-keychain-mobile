@@ -6,7 +6,6 @@ import {
 } from './types';
 
 export const setRpc = (rpc: Rpc) => {
-  console.log('setRpc', rpc);
   const action: ActionPayload<SettingsPayload> = {
     type: SET_RPC,
     payload: {rpc},

@@ -6,6 +6,7 @@ import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -157,7 +158,7 @@ const WallettHistory = ({
   };
 
   const {theme} = useThemeContext();
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useSafeAreaInsets());
 
   const renderListItem = (transaction: Transaction) => {
     return (
@@ -331,7 +332,7 @@ const connector = connect(mapStateToProps, {
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, insets: EdgeInsets) =>
   StyleSheet.create({
     renderTransactions: {
       flex: 1,

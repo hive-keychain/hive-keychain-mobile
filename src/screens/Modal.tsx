@@ -19,7 +19,6 @@ export default ({navigation, route}: ModalNavigationProps) => {
   const name = route.params?.name;
   const data = route.params?.data;
   const fixedHeight = route.params?.fixedHeight;
-  console.log('gh', fixedHeight);
   let containerStyle = route.params?.modalContainerStyle;
   const wrapperFixedStyle = route.params?.additionalWrapperFixedStyle;
   const modalPosition = route.params?.modalPosition;
