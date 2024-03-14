@@ -3,12 +3,13 @@ import {addPreference} from 'actions/preferences';
 import CheckBox from 'components/form/CustomCheckBox';
 import OperationButton from 'components/form/EllipticButton';
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
+import {getCaptionStyle} from 'src/styles/text';
 import {title_primary_body_2} from 'src/styles/typography';
 import {urlTransformer} from 'utils/browser';
 import {beautifyErrorMessage} from 'utils/keychain';
@@ -70,15 +71,22 @@ const RequestOperation = ({
   let {domain, type, username} = data;
   domain = has ? domain : urlTransformer(domain).hostname;
   const styles = getStyles(theme);
-
+  const width = useWindowDimensions().width;
   const renderRequestSummary = () => (
     <ScrollView style={styles.container}>
-      <RequestMessage message={message} additionalTextStyle={styles.text} />
+      <RequestMessage
+        message={message}
+        additionalTextStyle={[
+          getCaptionStyle(width, theme),
+          {paddingHorizontal: 0},
+        ]}
+      />
       {children}
       {method !== KeyTypes.active &&
       type !== KeychainRequestTypes.addAccount ? (
         <View style={styles.keep}>
           <CheckBox
+            smallText
             checked={keep}
             onPress={() => {
               setKeep(!keep);
@@ -163,13 +171,6 @@ const getStyles = (theme: Theme) =>
       backgroundColor: getColors(theme).icon,
     },
     whiteText: {color: '#FFF'},
-    checkbox: {
-      backgroundColor: 'rgba(0,0,0,0)',
-      borderColor: 'rgba(0,0,0,0)',
-      borderRadius: 0,
-      padding: 0,
-      margin: 0,
-    },
   });
 const connector = connect(null, {addPreference});
 type TypesFromRedux = ConnectedProps<typeof connector>;

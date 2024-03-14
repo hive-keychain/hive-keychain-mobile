@@ -63,7 +63,7 @@ const getStyles = (theme: Theme, width: number) =>
     smallText: {
       color: getColors(theme).secondaryText,
       ...fields_primary_text_1,
-      fontSize: getFontSizeSmallDevices(width, 12),
+      fontSize: getFontSizeSmallDevices(width, 13),
       opacity: 0.7,
     },
   });

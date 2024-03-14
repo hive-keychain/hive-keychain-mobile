@@ -259,6 +259,7 @@ const RpcNodes = ({
           value={customRPC.uri}
           onChangeText={(value) => handleSetCustomRPC(value, 'uri')}
         />
+        <Separator />
         <CheckBox
           checked={customRPC.testnet}
           onPress={() => handleSetCustomRPC(!customRPC.testnet, 'testnet')}

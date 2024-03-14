@@ -585,11 +585,11 @@
       "claim_account_method_message": "I agree to use one account creation ticket from @{{account}} to create this account",
       "copy": "Copy",
       "create_account": "Create Account",
-      "cost": "Create a new account for {{price}} using account @{{account}}",
-      "need_accept_terms_condition": "You need to accept the terms and condition before creating account",
+      "cost": "Create a new account for {{price}} using @{{account}}",
+      "need_accept_terms_condition": "You need to accept the terms and conditions before creating the account",
       "create_account_successful": "Your account has been successfully created and added to your Keychain",
-      "create_account_failed": "Your account creation has failed. Please try again later",
-      "create_account_ticket": "{{tickets}} account creation ticket"
+      "create_account_failed": "The account creation has failed. Please try again later",
+      "create_account_ticket": "{{tickets}} account creation ticket(s)"
     },
     "copy_keys": {
       "title": "Copy a Key",

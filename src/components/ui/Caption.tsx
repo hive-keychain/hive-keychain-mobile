@@ -14,6 +14,7 @@ interface CaptionProps {
   hideSeparator?: boolean;
   additionnalTextStyle?: TextStyle;
   additionnalTextOnClick?: () => void;
+  skipTranslation?: boolean;
 }
 
 export const Caption = ({
@@ -24,6 +25,7 @@ export const Caption = ({
   hideSeparator = false,
   additionnalTextStyle,
   additionnalTextOnClick,
+  skipTranslation,
 }: CaptionProps) => {
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
@@ -35,7 +37,7 @@ export const Caption = ({
   return (
     <>
       <Text style={getCaptionStyle(width, theme)}>
-        {translate(text, textParams)}
+        {skipTranslation ? text : translate(text, textParams)}
       </Text>
       {additionnalText && (
         <Text
