@@ -18,7 +18,6 @@ import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {SMALLEST_SCREEN_WIDTH_SUPPORTED} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
@@ -94,9 +93,8 @@ export default () => {
                       usingFilter="wallet"
                     />
                   ),
-                  fixedHeight:
-                    width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.85 : 0.7,
-                  additionalWrapperFixedStyle: styles.wrapperFixed,
+                  fixedHeight: 0.7,
+                  additionalWrapperFixedStyle: [styles.wrapperFixed],
                   modalPosition: undefined,
                   modalContainerStyle: styles.modalContainer,
                   renderButtonElement: (
@@ -156,10 +154,11 @@ const getStyles = (
       bottom: undefined,
       left: undefined,
       right: 10,
+      justifyContent: 'flex-end',
+      width: 'auto',
     },
     modalContainer: {
-      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? '90%' : '70%',
-      alignSelf: 'flex-end',
+      width: 'auto',
       backgroundColor: 'none',
       borderWidth: 0,
     },

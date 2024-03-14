@@ -284,11 +284,12 @@ const getStyles = (
     },
     filterItemText: {
       textAlign: 'center',
+      textAlignVertical: 'center',
       padding: 10,
       ...button_link_primary_small,
-      lineHeight: 14.7,
       color: getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(width, 12),
+      includeFontPadding: false,
     },
     line: {
       height: 0,

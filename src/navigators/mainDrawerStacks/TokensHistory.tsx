@@ -18,6 +18,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
+import {SMALLEST_SCREEN_WIDTH_SUPPORTED} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
@@ -26,11 +27,8 @@ const Stack = createStackNavigator<RootStackParam>();
 export default ({navigation, route}: TokensHistoryNavigationProps) => {
   const {theme} = useThemeContext();
   const {currency} = route.params;
-  const styles = getStyles(
-    theme,
-    useSafeAreaInsets(),
-    useWindowDimensions().width,
-  );
+  const {width} = useWindowDimensions();
+  const styles = getStyles(theme, useSafeAreaInsets(), width);
 
   return (
     <Stack.Navigator>
@@ -61,7 +59,9 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
                       usingFilter="tokens"
                     />
                   ),
-                  additionalWrapperFixedStyle: styles.wrapperFixed,
+                  fixedHeight:
+                    width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.8 : 0.7,
+                  additionalWrapperFixedStyle: [styles.wrapperFixed],
                   modalPosition: undefined,
                   modalContainerStyle: styles.modalContainer,
                   renderButtonElement: (
@@ -108,10 +108,11 @@ const getStyles = (
       bottom: undefined,
       left: undefined,
       right: 10,
+      justifyContent: 'flex-end',
+      width: 'auto',
     },
     modalContainer: {
-      width: '95%',
-      alignSelf: 'flex-end',
+      width: 'auto',
       backgroundColor: 'none',
       borderWidth: 0,
     },
