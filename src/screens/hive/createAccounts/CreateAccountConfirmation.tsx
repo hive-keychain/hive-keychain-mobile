@@ -296,14 +296,15 @@ const StepTwo = ({
                 onPress={() => setPaymentUnderstanding(!paymentUnderstanding)}
                 title={getPaymentCheckboxLabel()}
                 skipTranslation
-                subTitle=""
-                skipSubtitleTranslation
+                smallText
+                containerStyle={styles.checkboxContainer}
               />
               <CheckBoxPanel
                 checked={safelyCopied}
                 onPress={() => setSafelyCopied(!safelyCopied)}
                 title="components.create_account.safely_copied_keys"
-                subTitle=""
+                smallText
+                containerStyle={styles.checkboxContainer}
               />
               <CheckBoxPanel
                 checked={notPrimaryStorageUnderstanding}
@@ -313,6 +314,8 @@ const StepTwo = ({
                   )
                 }
                 title="components.create_account.storage_understanding"
+                smallText
+                containerStyle={styles.checkboxContainer}
               />
             </View>
             <View style={[styles.buttonsContainer, styles.spacing]}>
@@ -363,8 +366,9 @@ const StepTwo = ({
 
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
+    checkboxContainer: {paddingVertical: 0, height: 60, flexGrow: 0},
     container: {
-      marginHorizontal: width * 0.06,
+      marginHorizontal: 16,
       flex: 1,
       justifyContent: 'space-between',
     },
@@ -379,16 +383,14 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     keysContainer: {
       maxHeight:
         height * (width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.3 : 0.5),
-      flex: 1,
+      flexGrow: 1,
       overflow: 'hidden',
       marginTop: 20,
     },
     checkboxesContainer: {
-      marginVertical: 10,
-      marginHorizontal: 10,
-      flex: 1,
+      marginTop: 16,
+      flexGrow: 1,
       justifyContent: 'center',
-      alignItems: 'center',
     },
     whiteText: {
       color: 'white',
