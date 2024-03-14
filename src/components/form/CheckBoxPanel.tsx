@@ -77,7 +77,6 @@ const getStyles = (theme: Theme, width: number) =>
       justifyContent: 'center',
       paddingHorizontal: 10,
       paddingVertical: 4,
-      flex: 1,
     },
   });
 
