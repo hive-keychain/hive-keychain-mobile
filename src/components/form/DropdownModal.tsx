@@ -217,9 +217,9 @@ const DropdownModal = ({
             {item.icon}
             <Text
               style={[
-                styles.textBase,
-                styles.smallerText,
+                inputStyle(theme, width).input,
                 labelTextStyle,
+                {marginLeft: 10},
                 additionalItemLabelTextStyle,
               ]}>
               {item.label}
