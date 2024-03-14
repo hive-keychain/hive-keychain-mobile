@@ -9,6 +9,7 @@ import {
   button_link_primary_small,
   fields_primary_text_1,
 } from 'src/styles/typography';
+import {formatBalance, formatBalanceCurrency} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import MyWitnessDataBlock from './MyWitnessDataBlock';
@@ -42,7 +43,6 @@ const MyWitnessInformation = ({theme, witnessInfo}: Props) => {
           theme={theme}
           labelTranslationKey="governance.my_witness.information_last_block"
           value={witnessInfo.lastBlock}
-          urlOnTitle={witnessInfo.lastBlockUrl}
         />
         <MyWitnessDataBlock
           theme={theme}
@@ -76,7 +76,7 @@ const MyWitnessInformation = ({theme, witnessInfo}: Props) => {
               flexDirection: 'column',
               alignItems: 'flex-start',
               justifyContent: 'center',
-              flex: 3,
+              flex: 2,
             }}>
             <Text style={[styles.textBase, styles.textBold]}>
               {translate(
@@ -94,15 +94,15 @@ const MyWitnessInformation = ({theme, witnessInfo}: Props) => {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              flex: 2,
+              flex: 3,
             }}>
             <Text
               style={[styles.textBase, styles.textBold, {textAlign: 'right'}]}>
-              {witnessInfo.rewards.lastWeekInHP}
+              {formatBalanceCurrency(witnessInfo.rewards.lastWeekInHP)}
             </Text>
             <Text
               style={[styles.textBase, styles.textBold, {textAlign: 'center'}]}>
-              {witnessInfo.rewards.lastMonthInHP}
+              {formatBalanceCurrency(witnessInfo.rewards.lastMonthInHP)}
             </Text>
           </View>
           <View
@@ -114,12 +114,12 @@ const MyWitnessInformation = ({theme, witnessInfo}: Props) => {
             }}>
             <Text
               style={[styles.textBase, styles.smallText, styles.textOpaque]}>
-              ≈ ${witnessInfo.rewards.lastWeekInUSD}
+              ≈ ${formatBalance(witnessInfo.rewards.lastWeekInUSD)}
             </Text>
 
             <Text
               style={[styles.textBase, styles.smallText, styles.textOpaque]}>
-              ≈ ${witnessInfo.rewards.lastMonthInUSD}
+              ≈ ${formatBalance(witnessInfo.rewards.lastMonthInUSD)}
             </Text>
           </View>
         </View>
