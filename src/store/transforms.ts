@@ -1,6 +1,10 @@
 import {Rpc, Settings} from 'actions/interfaces';
 import {HAS_State} from 'reducers/hiveAuthenticationService';
 import createTransform from 'redux-persist/es/createTransform';
+import {
+  DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
+  DEFAULT_HE_RPC_NODE,
+} from 'screens/hive/settings/RpcNodes';
 import {DEFAULT_RPC} from 'utils/hiveUtils';
 
 const rpcTransformer = createTransform<Settings, Settings>(
@@ -13,13 +17,15 @@ const rpcTransformer = createTransform<Settings, Settings>(
         rpc?.uri === 'DEFAULT'
       )
         rpc = DEFAULT_RPC;
-      console.log('transforming');
       return {
         ...inboundState,
         rpc: {
           uri: rpc.uri,
           testnet: false,
         },
+        hiveEngineRpc: inboundState.hiveEngineRpc || DEFAULT_HE_RPC_NODE,
+        accountHistoryAPIRpc:
+          inboundState.accountHistoryAPIRpc || DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
       } as Settings;
     }
 
