@@ -281,7 +281,7 @@ const Transfer = ({
               }}
             />
             <Separator />
-            <View style={styles.flexRowBetween}>
+            <View style={[styles.flexRowBetween, {zIndex: -1}]}>
               <OperationInput
                 labelInput={translate('common.currency')}
                 placeholder={currency}
@@ -326,31 +326,33 @@ const Transfer = ({
               />
             </View>
             <Separator />
-            <OperationInput
-              labelInput={capitalize(translate('common.memo'))}
-              placeholder={translate('wallet.operations.transfer.memo')}
-              value={memo}
-              onChangeText={setMemo}
-              rightIcon={
-                <View style={styles.flexRowCenter}>
-                  <Separator
-                    drawLine
-                    additionalLineStyle={getHorizontalLineStyle(
-                      theme,
-                      1,
-                      35,
-                      16,
-                    )}
-                  />
-                  <Icon
-                    name={isMemoEncrypted ? Icons.ENCRYPT : Icons.DECRYPT}
-                    theme={theme}
-                    onClick={() => setIsMemoEncrypted(!isMemoEncrypted)}
-                    color={PRIMARY_RED_COLOR}
-                  />
-                </View>
-              }
-            />
+            <View style={{zIndex: -1}}>
+              <OperationInput
+                labelInput={capitalize(translate('common.memo'))}
+                placeholder={translate('wallet.operations.transfer.memo')}
+                value={memo}
+                onChangeText={setMemo}
+                rightIcon={
+                  <View style={styles.flexRowCenter}>
+                    <Separator
+                      drawLine
+                      additionalLineStyle={getHorizontalLineStyle(
+                        theme,
+                        1,
+                        35,
+                        16,
+                      )}
+                    />
+                    <Icon
+                      name={isMemoEncrypted ? Icons.ENCRYPT : Icons.DECRYPT}
+                      theme={theme}
+                      onClick={() => setIsMemoEncrypted(!isMemoEncrypted)}
+                      color={PRIMARY_RED_COLOR}
+                    />
+                  </View>
+                }
+              />
+            </View>
             {!engine && (
               <View>
                 <Separator />
