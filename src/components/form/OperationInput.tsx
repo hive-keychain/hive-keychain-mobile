@@ -72,7 +72,7 @@ export default (props: InputProps & OperationInputProps) => {
             name={Icons.INFO}
             onClick={props.infoIconAction}
             additionalContainerStyle={styles.marginLeft}
-            color={props.additionalinfoIconActionColor}
+            color={inputStyle(theme, width).label.color}
           />
         )}
         {props.labelExtraInfo && (
