@@ -364,7 +364,12 @@ const DropdownModal = ({
           ]}>
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => setIsListExpanded(!isListExpanded)}>
+            onPress={() => setIsListExpanded(!isListExpanded)}
+            style={
+              renderDropdownListOnTop && selfCheckPos
+                ? {flexDirection: 'column-reverse'}
+                : undefined
+            }>
             <View style={additionalMainContainerDropdown}>
               {renderDropdownTop(true)}
             </View>
