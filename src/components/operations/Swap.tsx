@@ -814,6 +814,7 @@ const Swap = ({
                   }
                 />
               )}
+              <Separator height={16} />
             </View>
           }
           buttonTitle={'wallet.operations.swap.title'}
