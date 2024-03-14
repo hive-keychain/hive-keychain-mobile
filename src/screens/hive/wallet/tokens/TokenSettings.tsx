@@ -19,6 +19,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {Token} from 'src/interfaces/tokens.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getCaptionStyle} from 'src/styles/text';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {hiveEngineWebsiteURL} from 'utils/config';
@@ -99,18 +100,12 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
       <FocusAwareStatusBar />
       <Separator height={10} />
       <Text style={styles.padding}>
-        <Text style={[styles.textBase]}>
+        <Text style={[getCaptionStyle(width, theme)]}>
           {translate('wallet.operations.token_settings.tokens_settings_text')}{' '}
         </Text>
-        <Text style={[styles.textBase, styles.textWarning]}>
+        <Text style={[getCaptionStyle(width, theme), styles.link]}>
           {hiveEngineWebsiteURL}{' '}
         </Text>
-        <Icon
-          name={Icons.EXTERNAL_LINK}
-          theme={theme}
-          {...styles.iconLink}
-          color={PRIMARY_RED_COLOR}
-        />
       </Text>
       <Separator height={10} />
       <CustomSearchBar
@@ -200,8 +195,11 @@ const getStyles = (theme: Theme, height: number) =>
       width: 12,
       height: 12,
     },
-    textWarning: {
+    link: {
       color: PRIMARY_RED_COLOR,
+      textDecorationStyle: 'solid',
+      textDecorationColor: PRIMARY_RED_COLOR,
+      textDecorationLine: 'underline',
     },
     searchBar: {
       width: '100%',
