@@ -8,12 +8,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
-import {
-  PRIMARY_RED_COLOR,
-  RED_SHADOW_COLOR,
-  getColors,
-} from 'src/styles/colors';
-import {generateBoxShadowStyle} from 'src/styles/shadow';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   button_link_primary_medium,
   fields_primary_text_2,
@@ -65,20 +60,8 @@ const MyWitness = ({
 
   const styles = getStyles(theme);
 
-  const shadowActiveSwitch = generateBoxShadowStyle(
-    0,
-    13,
-    RED_SHADOW_COLOR,
-    1,
-    25,
-    30,
-    RED_SHADOW_COLOR,
-  );
-
   const getActiveSwitchStyle = (active: boolean) => {
-    return active
-      ? {...styles.switchActive, ...shadowActiveSwitch}
-      : styles.switchInactive;
+    return active ? styles.switchActive : styles.switchInactive;
   };
 
   if (isLoading && !hasError) {
@@ -106,20 +89,24 @@ const MyWitness = ({
                 style={[getCardStyle(theme).defaultCardItem, styles.switch]}
                 onPress={() => setDisplayInfo(!displayInfo)}>
                 <View style={styles.switcherContainer}>
-                  <Text
-                    style={[
-                      styles.smallText,
-                      getActiveSwitchStyle(displayInfo),
-                    ]}>
-                    {translate('governance.my_witness.info')}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.smallText,
-                      getActiveSwitchStyle(!displayInfo),
-                    ]}>
-                    {translate('governance.my_witness.param')}
-                  </Text>
+                  <View style={getActiveSwitchStyle(displayInfo)}>
+                    <Text
+                      style={[
+                        styles.smallText,
+                        displayInfo && {color: 'white'},
+                      ]}>
+                      {translate('governance.my_witness.info')}
+                    </Text>
+                  </View>
+                  <View style={getActiveSwitchStyle(!displayInfo)}>
+                    <Text
+                      style={[
+                        styles.smallText,
+                        !displayInfo && {color: 'white'},
+                      ]}>
+                      {translate('governance.my_witness.param')}
+                    </Text>
+                  </View>
                 </View>
               </TouchableOpacity>
               <Separator height={8} />
@@ -209,22 +196,18 @@ const getStyles = (theme: Theme) =>
     },
     switchActive: {
       borderRadius: 26,
-      borderWidth: 1,
       width: 50,
-      height: '100%',
+      padding: 4,
       backgroundColor: PRIMARY_RED_COLOR,
-      borderColor: '#00000000',
-      color: '#FFF',
+      borderColor: 'red',
       justifyContent: 'center',
       alignItems: 'center',
       textAlign: 'center',
       textAlignVertical: 'center',
-      padding: 4,
     },
     switchInactive: {
       padding: 4,
       width: 50,
-      height: '100%',
       justifyContent: 'center',
       alignItems: 'center',
       textAlign: 'center',
