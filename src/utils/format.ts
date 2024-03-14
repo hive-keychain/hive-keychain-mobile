@@ -172,3 +172,11 @@ export const getOrdinalLabelTranslation = (active_rank: string) => {
       return 'common.ordinal_th_label';
   }
 };
+
+export const beautifyIfJSON = (message: any) => {
+  try {
+    return JSON.stringify(JSON.parse(message), null, 1);
+  } catch (e) {
+    return message;
+  }
+};

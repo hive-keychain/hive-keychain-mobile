@@ -153,6 +153,7 @@ const AddCustomRPC = ({
             value={input}
             onChangeText={onChangeInput}
           />
+          <Separator />
           <CheckBox
             checked={checkedValue}
             onPress={onChangeCheckBox}

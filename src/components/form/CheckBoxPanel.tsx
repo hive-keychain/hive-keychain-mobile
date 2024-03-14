@@ -11,7 +11,10 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {inputStyle} from 'src/styles/input';
-import {fields_primary_text_1} from 'src/styles/typography';
+import {
+  fields_primary_text_1,
+  getFontSizeSmallDevices,
+} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import CheckBox from './CustomCheckBox';
 
@@ -70,7 +73,7 @@ const getStyles = (theme: Theme, width: number) =>
       opacity: 0.7,
     },
     smallerFont: {
-      fontSize: 12,
+      fontSize: getFontSizeSmallDevices(width, 12),
     },
 
     checkBoxContainer: {

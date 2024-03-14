@@ -66,7 +66,6 @@ const OperationThemed = ({
       )}
     </>
   );
-  console.log(useSafeAreaInsets().bottom);
   return (
     <Background
       theme={theme}
