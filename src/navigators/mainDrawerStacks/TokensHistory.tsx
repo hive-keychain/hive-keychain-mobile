@@ -117,7 +117,7 @@ const getStyles = (
     },
     overlayButtonElement: {
       position: 'absolute',
-      top: 10,
+      top: 10 + insets.top,
       bottom: undefined,
       right: 0,
       left: undefined,
