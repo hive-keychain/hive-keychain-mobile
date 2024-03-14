@@ -66,7 +66,7 @@ const OperationThemed = ({
       )}
     </>
   );
-
+  console.log(useSafeAreaInsets().bottom);
   return (
     <Background
       theme={theme}
@@ -80,8 +80,9 @@ const OperationThemed = ({
           {childrenTop}
           <View style={{flex: 1, marginTop: 5}}>
             {inScrollView ? (
-              <View style={[styles.container, {overflow: 'hidden'}]}>
+              <View style={[styles.mainContainer]}>
                 <ScrollView
+                  bounces={false}
                   contentContainerStyle={[
                     styles.contentContainer,
                     styles.container,
@@ -95,7 +96,7 @@ const OperationThemed = ({
               <View
                 style={[
                   styles.contentContainer,
-                  styles.container,
+                  styles.mainContainer,
                   {borderColor: 'transparent'},
                 ]}>
                 {renderContent()}
@@ -114,6 +115,15 @@ const getStyles = (theme: Theme, insets: EdgeInsets, customOpacity?: number) =>
       top: theme === Theme.LIGHT ? -80 : 0,
       opacity: customOpacity ?? 1,
     },
+    mainContainer: {
+      borderColor: getColors(theme).cardBorderColorJustDark,
+      borderTopLeftRadius: 40,
+      borderTopRightRadius: 40,
+      borderWidth: 1,
+      flexGrow: 1,
+      overflow: 'hidden',
+      marginBottom: -insets.bottom,
+    },
     container: {
       borderColor: getColors(theme).cardBorderColorJustDark,
       borderTopLeftRadius: 40,
@@ -125,7 +135,6 @@ const getStyles = (theme: Theme, insets: EdgeInsets, customOpacity?: number) =>
       backgroundColor: getColors(theme).secondaryCardBgColor,
       paddingHorizontal: CONTENT_MARGIN_PADDING,
       justifyContent: 'space-between',
-      marginBottom: -insets.bottom,
     },
   });
 

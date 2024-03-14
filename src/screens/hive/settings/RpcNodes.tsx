@@ -182,7 +182,6 @@ const RpcNodes = ({
   };
 
   const onHandleSetRPC = (item: string) => {
-    console.log('=========== About to send ', item);
     setRpc({uri: item} as Rpc);
   };
 

@@ -10,12 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {
-  PRIMARY_RED_COLOR,
-  RED_SHADOW_COLOR,
-  getColors,
-} from 'src/styles/colors';
-import {generateBoxShadowStyle} from 'src/styles/shadow';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   getFontSizeSmallDevices,
   title_primary_body_2,
@@ -58,21 +53,7 @@ const ScreenToggle = ({
             style={[
               styles.headerItemBase,
               i === active
-                ? [
-                    styles.headerElt,
-                    styles.headerActiveElt,
-                    addShadowItem
-                      ? generateBoxShadowStyle(
-                          0,
-                          13,
-                          RED_SHADOW_COLOR,
-                          1,
-                          25,
-                          30,
-                          RED_SHADOW_COLOR,
-                        )
-                      : undefined,
-                  ]
+                ? [styles.headerElt, styles.headerActiveElt]
                 : styles.headerElt,
             ]}>
             <Text

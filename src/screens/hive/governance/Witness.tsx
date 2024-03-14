@@ -87,8 +87,6 @@ const Witness = ({
   };
 
   useEffect(() => {
-    console.log('reloaded user');
-    console.log(user);
     setVotedWitnesses(user.account.witness_votes);
     setRemainingVotes(MAX_WITNESS_VOTE - user.account.witnesses_voted_for);
   }, [user]);

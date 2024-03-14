@@ -2,6 +2,7 @@ import {loadAccount} from 'actions/index';
 import ProposalItem from 'components/hive/ProposaItem';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
+import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, View, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
@@ -62,6 +63,7 @@ const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
           />
         )}
         <View>
+          <Separator />
           <FlatList
             data={proposals}
             keyExtractor={(proposal) => proposal.proposalId + ''}
