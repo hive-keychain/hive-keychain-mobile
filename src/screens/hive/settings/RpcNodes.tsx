@@ -264,11 +264,13 @@ const RpcNodes = ({
           checked={customRPC.testnet}
           onPress={() => handleSetCustomRPC(!customRPC.testnet, 'testnet')}
           title={'settings.settings.testnet'}
+          smallText
         />
         <CheckBox
           checked={customRPCSetActive}
           onPress={() => setCustomRPCSetActive(!customRPCSetActive)}
           title={'settings.settings.set_as_active'}
+          smallText
         />
       </View>
     );
@@ -430,57 +432,63 @@ const RpcNodes = ({
         </View>
         <Separator />
         {hiveEngineRPCList.length > 0 && (
-          <AddCustomRPC
-            remeasure
-            theme={theme}
-            rpcList={hiveEngineRPCList}
-            tittleTranslationKey={'settings.settings.hive_engine_rpc'}
-            selectedRPC={activeHiveEngineRpc}
-            placeHolderInput={translate('settings.settings.new_HE_rpc')}
-            input={newHERpc}
-            onChangeInput={(text) => setNewHERpc(text)}
-            checkBoxTitle={translate('settings.settings.set_as_active')}
-            onHandleSave={onHandleAddCustomHERpc}
-            onChangeCheckBox={() => setNewHERPCAsActive(!newHERPCAsActive)}
-            checkedValue={newHERPCAsActive}
-            addNewRpc={addNewHERpc}
-            setAddNewRpc={() => setAddNewHERpc(!addNewHERpc)}
-            onRemoveDropdownItem={onHandleRemoveCustomHERpc}
-            onSelectedDropdown={onHandleSelectHERpc}
-          />
+          <>
+            <Text style={[styles.title, styles.text]}>
+              {translate('settings.settings.hive_engine_rpc')}
+            </Text>
+            <AddCustomRPC
+              remeasure
+              theme={theme}
+              rpcList={hiveEngineRPCList}
+              selectedRPC={activeHiveEngineRpc}
+              placeHolderInput={translate('settings.settings.new_HE_rpc')}
+              input={newHERpc}
+              onChangeInput={(text) => setNewHERpc(text)}
+              checkBoxTitle={translate('settings.settings.set_as_active')}
+              onHandleSave={onHandleAddCustomHERpc}
+              onChangeCheckBox={() => setNewHERPCAsActive(!newHERPCAsActive)}
+              checkedValue={newHERPCAsActive}
+              addNewRpc={addNewHERpc}
+              setAddNewRpc={() => setAddNewHERpc(!addNewHERpc)}
+              onRemoveDropdownItem={onHandleRemoveCustomHERpc}
+              onSelectedDropdown={onHandleSelectHERpc}
+            />
+          </>
         )}
         <Separator />
         {accountHistoryAPIList.length > 0 && (
-          <AddCustomRPC
-            theme={theme}
-            rpcList={accountHistoryAPIList}
-            tittleTranslationKey={
-              'settings.settings.hive_engine_account_history_api'
-            }
-            selectedRPC={activeAccountHistoryAPIRpc}
-            placeHolderInput={translate(
-              'settings.settings.new_account_history_rpc',
-            )}
-            input={newAccountHistoryAPIRpc}
-            onChangeInput={(text) => setNewAccountHistoryAPIRpc(text)}
-            checkBoxTitle={translate('settings.settings.set_as_active')}
-            onHandleSave={onHandleAddCustomAccountHistoryAPI}
-            onChangeCheckBox={() =>
-              setNewAccountHistoryAPIAsActive(!newAccountHistoryAPIAsActive)
-            }
-            checkedValue={newAccountHistoryAPIAsActive}
-            addNewRpc={addNewAccountHistoryAPI}
-            setAddNewRpc={() =>
-              setAddNewAccountHistoryAPI(!addNewAccountHistoryAPI)
-            }
-            onRemoveDropdownItem={onHandleRemoveAccountHistoryAPI}
-            onSelectedDropdown={onHandleSelectAccountHistoryAPI}
-            remeasure
-            selfCheckPos
-            additionalListExpandedContainerStyle={{
-              maxHeight: DROPDOWN_CONTENT_MAX_HEIGHT,
-            }}
-          />
+          <>
+            <Text style={[styles.title, styles.text]}>
+              {translate('settings.settings.hive_engine_account_history_api')}
+            </Text>
+            <AddCustomRPC
+              theme={theme}
+              rpcList={accountHistoryAPIList}
+              selectedRPC={activeAccountHistoryAPIRpc}
+              placeHolderInput={translate(
+                'settings.settings.new_account_history_rpc',
+              )}
+              input={newAccountHistoryAPIRpc}
+              onChangeInput={(text) => setNewAccountHistoryAPIRpc(text)}
+              checkBoxTitle={translate('settings.settings.set_as_active')}
+              onHandleSave={onHandleAddCustomAccountHistoryAPI}
+              onChangeCheckBox={() =>
+                setNewAccountHistoryAPIAsActive(!newAccountHistoryAPIAsActive)
+              }
+              checkedValue={newAccountHistoryAPIAsActive}
+              addNewRpc={addNewAccountHistoryAPI}
+              setAddNewRpc={() =>
+                setAddNewAccountHistoryAPI(!addNewAccountHistoryAPI)
+              }
+              onRemoveDropdownItem={onHandleRemoveAccountHistoryAPI}
+              onSelectedDropdown={onHandleSelectAccountHistoryAPI}
+              remeasure
+              selfCheckPos
+              additionalListExpandedContainerStyle={{
+                maxHeight: DROPDOWN_CONTENT_MAX_HEIGHT,
+              }}
+            />
+          </>
         )}
       </ScrollView>
     </Background>
@@ -497,7 +505,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     text: {
       color: getColors(theme).secondaryText,
       ...headlines_primary_headline_3,
-      fontSize: getFontSizeSmallDevices(width, 15),
+      fontSize: getFontSizeSmallDevices(width, 13),
     },
     opacity: {
       opacity: 0.7,

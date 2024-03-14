@@ -9,7 +9,6 @@ import {
   StyleProp,
   StyleSheet,
   Text,
-  TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -33,7 +32,6 @@ import {translate} from 'utils/localize';
 interface Props {
   theme: Theme;
   rpcList: DropdownModalItem[];
-  tittleTranslationKey?: string;
   selectedRPC: string;
   placeHolderInput: string;
   checkBoxTitle: string;
@@ -46,7 +44,6 @@ interface Props {
   setAddNewRpc: () => void;
   onRemoveDropdownItem: (item: string) => void;
   onSelectedDropdown: (item: string) => void;
-  additionalTitleStyle?: StyleProp<TextStyle>;
   additionalDropdowContainerStyle?: StyleProp<ViewStyle>;
   additionalListExpandedContainerStyle?: StyleProp<ViewStyle>;
   remeasure?: boolean;
@@ -67,8 +64,6 @@ const AddCustomRPC = ({
   setAddNewRpc,
   onRemoveDropdownItem,
   onSelectedDropdown,
-  tittleTranslationKey,
-  additionalTitleStyle,
   additionalDropdowContainerStyle,
   additionalListExpandedContainerStyle,
   remeasure,
@@ -94,15 +89,6 @@ const AddCustomRPC = ({
         alignContent: 'center',
         width: '100%',
       }}>
-      <View
-        style={{
-          width: '100%',
-          justifyContent: 'flex-start',
-        }}>
-        <Text style={[styles.text, styles.indent, additionalTitleStyle]}>
-          {translate(tittleTranslationKey)}
-        </Text>
-      </View>
       <View style={styles.rpcItemContainer}>
         <DropdownModal
           selfCheckPos={selfCheckPos}
@@ -135,9 +121,6 @@ const AddCustomRPC = ({
             />
           }
           additionalLineStyle={styles.bottomLineDropdownItem}
-          additionalItemLabelTextStyle={{
-            fontSize: getFontSizeSmallDevices(width, 13),
-          }}
         />
         <TouchableOpacity
           style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
@@ -175,6 +158,7 @@ const AddCustomRPC = ({
             onPress={onChangeCheckBox}
             title={checkBoxTitle}
             skipTranslation
+            smallText
           />
         </View>
       )}

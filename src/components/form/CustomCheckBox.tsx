@@ -3,6 +3,7 @@ import {StyleSheet, useWindowDimensions} from 'react-native';
 import {CheckBox as CheckboxRNE} from 'react-native-elements';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {inputStyle} from 'src/styles/input';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   fields_primary_text_1,
@@ -56,7 +57,7 @@ const getStyles = (theme: Theme, width: number) =>
     text: {
       color: getColors(theme).secondaryText,
       ...headlines_primary_headline_3,
-      fontSize: getFontSizeSmallDevices(width, 15),
+      fontSize: inputStyle(theme, width).input.fontSize,
       paddingRight: 5,
     },
     smallText: {

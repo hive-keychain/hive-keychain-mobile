@@ -10,10 +10,8 @@ import {
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {
-  fields_primary_text_1,
-  getFontSizeSmallDevices,
-} from 'src/styles/typography';
+import {inputStyle} from 'src/styles/input';
+import {fields_primary_text_1} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import CheckBox from './CustomCheckBox';
 
@@ -68,7 +66,7 @@ const getStyles = (theme: Theme, width: number) =>
     textInfo: {
       color: getColors(theme).secondaryText,
       ...fields_primary_text_1,
-      fontSize: getFontSizeSmallDevices(width, 15),
+      fontSize: inputStyle(theme, width).input.fontSize,
       opacity: 0.7,
     },
     smallerFont: {
