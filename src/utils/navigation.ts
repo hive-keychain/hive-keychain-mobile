@@ -54,6 +54,7 @@ export const modalOptions = {
   },
   options: {
     headerShown: false,
+    animationEnabled: false,
     cardStyle: {backgroundColor: 'transparent'},
     cardOverlayEnabled: true,
     cardStyleInterpolator: ({current: {progress}}: any) => ({
