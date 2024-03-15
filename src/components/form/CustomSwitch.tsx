@@ -43,6 +43,7 @@ const CustomSwitch = ({
   return (
     <View style={[styles.container, justifyStyle, additionalContainerStyle]}>
       <TouchableOpacity
+        activeOpacity={1}
         style={[styles.iconContainer, additionalIconContainerStyle]}
         containerStyle={styles.touchableOpacityStyle}
         onPress={handleOnPress}>

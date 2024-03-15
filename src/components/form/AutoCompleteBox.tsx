@@ -131,8 +131,8 @@ const AutoCompleteBox = ({
     if (typeof (autoCompleteValues as string[])[0] === 'string') {
       return (autoCompleteValues as string[]).map((item, index) => (
         <TouchableOpacity
-          key={`${item}-${index}`}
           activeOpacity={1}
+          key={`${item}-${index}`}
           onPress={() => {
             handleOnChange(item);
           }}>
@@ -156,8 +156,8 @@ const AutoCompleteBox = ({
                   keyExtractor={(e) => e.value}
                   renderItem={({item: autoCompleteItem, index}) => (
                     <TouchableOpacity
-                      testID="automplete-item"
                       activeOpacity={1}
+                      testID="automplete-item"
                       onPress={() => handleOnChange(autoCompleteItem.value)}
                       style={getLastItemStyle(index, category, catIndex)}>
                       <Text

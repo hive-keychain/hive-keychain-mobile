@@ -60,6 +60,7 @@ const Survey = ({navigation}: Props): null => {
       ))}
       <View style={styles.buttonsView}>
         <TouchableOpacity
+          activeOpacity={1}
           style={[styles.button, styles.weak]}
           onPress={async () => {
             await AsyncStorage.setItem('SURVEY_ID', SurveyData.id + '');

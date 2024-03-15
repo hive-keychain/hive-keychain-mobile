@@ -169,6 +169,7 @@ const Tokens = ({
         </View>
         <View style={styles.containerInfoText}>
           <TouchableOpacity
+            activeOpacity={1}
             onPress={() => Linking.openURL(hiveEngineWebsiteURL)}>
             <Text style={[styles.textInfo, styles.textUnderlined]}>
               {hiveEngineWebsiteURL}

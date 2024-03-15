@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {getButtonBoxShadow} from 'src/styles/shadow';
 import {
   getFontSizeSmallDevices,
   title_secondary_body_2,
@@ -44,11 +45,19 @@ const SquareButton = ({
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
   const styles = getStyles(theme, marginRight, marginBottom, width);
+  const [isPressed, setIsPressed] = useState(false);
   return (
     <TouchableOpacity
+      activeOpacity={1}
       key={`square-button-${primaryLabel}`}
       onPress={onPress}
-      style={[styles.squareButton, additionalButtonContainerStyle]}>
+      style={[
+        styles.squareButton,
+        additionalButtonContainerStyle,
+        isPressed ? getButtonBoxShadow('#000') : {},
+      ]}
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}>
       <View style={styles.flexRowAligned}>
         {icon}
         <View>

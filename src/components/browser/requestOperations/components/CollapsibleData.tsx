@@ -10,7 +10,7 @@ type Props = {
 export default ({title, hidden, content}: Props) => {
   const [show, setShow] = useState(false);
   return (
-    <TouchableOpacity onPress={() => setShow(!show)}>
+    <TouchableOpacity activeOpacity={1} onPress={() => setShow(!show)}>
       {show ? (
         <RequestItem title={title} content={content} />
       ) : (

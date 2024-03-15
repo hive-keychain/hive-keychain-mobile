@@ -312,6 +312,7 @@ const Transfer = ({
                       )}
                     />
                     <TouchableOpacity
+                      activeOpacity={1}
                       onPress={() => setAmount(availableBalance)}>
                       <Text
                         style={

@@ -1,16 +1,18 @@
 import Loader from 'components/ui/Loader';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleProp,
   StyleSheet,
   Text,
   TextStyle,
   TouchableOpacity,
-  useWindowDimensions,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from 'react-native';
 import {BUTTON_MAX_HEIGHT, BUTTON_MAX_WIDTH} from 'src/styles/button';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {getButtonBoxShadow} from 'src/styles/shadow';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -19,17 +21,32 @@ interface Props {
   onPress: () => void;
   disabled?: boolean;
   additionalTextStyle?: StyleProp<TextStyle>;
+  isWarningButton?: boolean;
 }
 export default ({
   style,
   isLoading = false,
   title,
   additionalTextStyle,
+  isWarningButton,
   ...props
 }: Props) => {
   const styles = getDimensionedStyles(useWindowDimensions());
+
+  const [isPressed, setIsPressed] = useState(false);
   return !isLoading ? (
-    <TouchableOpacity {...props} style={[styles.button, style]}>
+    <TouchableOpacity
+      activeOpacity={1}
+      {...props}
+      style={[
+        styles.button,
+        style,
+        isPressed
+          ? getButtonBoxShadow(isWarningButton ? PRIMARY_RED_COLOR : '#000')
+          : {},
+      ]}
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}>
       <Text style={[styles.text, additionalTextStyle]}>{title}</Text>
     </TouchableOpacity>
   ) : (

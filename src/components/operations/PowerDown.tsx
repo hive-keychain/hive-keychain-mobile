@@ -255,6 +255,7 @@ const PowerDown = ({
                     )}
                   />
                   <TouchableOpacity
+                    activeOpacity={1}
                     onPress={() => setAmount(withCommas(available.toString()))}>
                     <Text
                       style={[

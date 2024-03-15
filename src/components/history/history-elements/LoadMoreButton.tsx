@@ -12,7 +12,7 @@ const LoadMoreButton = (props: LoadMoreProps) => {
       <Text style={styles.loadMoreText}>
         {translate('operations.history.load_more')}
       </Text>
-      <TouchableOpacity onPress={props.onTryLoadMore}>
+      <TouchableOpacity activeOpacity={1} onPress={props.onTryLoadMore}>
         <View style={[styles.circularContainer, {width: 20, height: 20}]}>
           <Text>+</Text>
         </View>

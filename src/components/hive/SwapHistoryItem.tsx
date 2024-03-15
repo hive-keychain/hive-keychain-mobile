@@ -124,6 +124,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
 
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={[getCardStyle(theme).defaultCardItem, styles.container]}
       onPress={() => setIsExpanded(!isExpanded)}>
       <View style={[styles.historyItemDetail]}>
@@ -167,6 +168,7 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
           )}
           {item.history.map((stepHistory) => renderStepItem(stepHistory))}
           <TouchableOpacity
+            activeOpacity={1}
             onPress={() => onHandleCopyID(item.id)}
             style={[styles.marginTop]}>
             <Text style={styles.textBase}>

@@ -241,6 +241,7 @@ const WallettHistory = ({
                         !loading &&
                         !bottomLoader && (
                           <TouchableOpacity
+                            activeOpacity={1}
                             style={styles.loadMorePanel}
                             onPress={() => tryToLoadMore()}>
                             <Text style={styles.textBase}>
@@ -292,6 +293,7 @@ const WallettHistory = ({
               <Loader animating />
               {filteringCounter > 40 ? (
                 <TouchableOpacity
+                  activeOpacity={1}
                   style={styles.centered}
                   onPress={forceResetFilters}>
                   <Text style={[styles.textBase, styles.alertText]}>

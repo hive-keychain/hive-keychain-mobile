@@ -31,6 +31,7 @@ export default ({
       style={[styles.container, showSideButtons ? null : styles.noSideButtons]}>
       {showSideButtons ? (
         <TouchableOpacity
+          activeOpacity={1}
           onPress={() => {
             onCloseAllTabs();
           }}>
@@ -49,6 +50,7 @@ export default ({
 
       {showSideButtons ? (
         <TouchableOpacity
+          activeOpacity={1}
           onPress={() => {
             onQuitManagement();
           }}>

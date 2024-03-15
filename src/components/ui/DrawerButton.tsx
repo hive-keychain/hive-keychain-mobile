@@ -16,6 +16,7 @@ export default ({navigation, theme}: Props) => {
 
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={styles.container}
       onPress={() => {
         navigation.openDrawer();

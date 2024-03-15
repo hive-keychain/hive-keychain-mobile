@@ -32,6 +32,7 @@ const ClaimRewards = ({
   )
     return (
       <TouchableOpacity
+        activeOpacity={1}
         style={styles.touchable}
         onPress={async () => {
           if (!keys.posting) {

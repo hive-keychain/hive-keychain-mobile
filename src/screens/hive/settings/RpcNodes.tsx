@@ -225,6 +225,7 @@ const RpcNodes = ({
             additionalLineStyle={styles.bottomLineDropdownItem}
           />
           <TouchableOpacity
+            activeOpacity={1}
             style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
             onPress={() => setShowAddCustomRPC(!showAddCustomRPC)}>
             <Text style={styles.text}>{showAddCustomRPC ? 'x' : '+'}</Text>

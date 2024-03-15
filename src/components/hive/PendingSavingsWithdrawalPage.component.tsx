@@ -94,7 +94,7 @@ const PendingSavingsWithdrawalPageComponent = ({
           <Text style={[styles.textBase, styles.smallerText]}>{`On ${moment(
             item.complete,
           ).format('L')}`}</Text>
-          <TouchableOpacity onPress={cancelSavingWithDraw}>
+          <TouchableOpacity activeOpacity={1} onPress={cancelSavingWithDraw}>
             <Icon name={Icons.REMOVE} theme={theme} />
           </TouchableOpacity>
         </View>

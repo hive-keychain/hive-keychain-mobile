@@ -84,6 +84,7 @@ const Balance = ({
   });
   return (
     <TouchableOpacity
+      activeOpacity={1}
       onPress={() => {
         if (setMax) {
           setMax(withCommas(parsedValue.toString()));

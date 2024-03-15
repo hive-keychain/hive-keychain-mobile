@@ -248,6 +248,7 @@ const DropdownModal = ({
 
   const renderDropdownTop = (showOpened?: boolean) => (
     <TouchableOpacity
+      activeOpacity={1}
       onPress={() => setIsListExpanded(!isListExpanded)}
       style={[
         getCardStyle(theme).defaultCardItem,

@@ -28,6 +28,7 @@ const ActiveOperationButton = ({
     <>
       <EllipticButton
         {...props}
+        isWarningButton
         style={style}
         onPress={() => {
           if (disabled) {

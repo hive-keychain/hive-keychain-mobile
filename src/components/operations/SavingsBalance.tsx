@@ -28,6 +28,7 @@ const SavingsBalance = ({currency, account, setMax}: Props) => {
   });
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={styles.container}
       onPress={() => {
         setMax(value.toFixed(3) + '');

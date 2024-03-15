@@ -138,6 +138,7 @@ const FilterBox = ({
           {Object.keys(filter.selectedTransactionTypes).map((filterKey) => {
             return (
               <TouchableOpacity
+                activeOpacity={1}
                 style={[
                   styles.filterItem,
                   getActiveFilterItemContainerStyle(filterKey),
@@ -159,6 +160,7 @@ const FilterBox = ({
       <Separator drawLine height={8} additionalLineStyle={styles.line} />
       <View style={styles.inOutContainer}>
         <TouchableOpacity
+          activeOpacity={1}
           style={[
             styles.filterItem,
             getActiveContainerStyleInOrOut('inSelected'),
@@ -176,6 +178,7 @@ const FilterBox = ({
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          activeOpacity={1}
           style={[
             styles.filterItem,
             getActiveContainerStyleInOrOut('outSelected'),

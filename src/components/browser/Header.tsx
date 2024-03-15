@@ -86,6 +86,7 @@ const BrowserHeader = ({
       if (activeUrl === BrowserConfig.HOMEPAGE_URL) return null;
       return favorites.find((e) => e.url === activeUrl) ? (
         <TouchableOpacity
+          activeOpacity={1}
           style={[getCardStyle(theme, 50).defaultCardItem, styles.favContainer]}
           onPress={() => {
             removeFromFavorites(activeUrl);
@@ -94,6 +95,7 @@ const BrowserHeader = ({
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
+          activeOpacity={1}
           style={[getCardStyle(theme, 50).defaultCardItem, styles.favContainer]}
           onPress={() => {
             addToFavorites(active);
