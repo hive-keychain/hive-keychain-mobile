@@ -2,10 +2,11 @@ import React from 'react';
 import {
   ImageBackground,
   ImageStyle,
+  KeyboardAvoidingView,
+  Platform,
   ScaledSize,
   StyleProp,
   StyleSheet,
-  View,
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
@@ -28,7 +29,9 @@ export default (props: BackgroundProps) => {
   const styles = getStyles(useWindowDimensions(), props.theme);
 
   return (
-    <View style={styles.mainContainer}>
+    <KeyboardAvoidingView
+      style={styles.mainContainer}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ImageBackground
         source={props.theme === Theme.LIGHT ? hexagonsLight : hexagonsDark}
         resizeMethod="scale"
@@ -39,7 +42,7 @@ export default (props: BackgroundProps) => {
           {props.children}
         </SafeArea>
       </ImageBackground>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
