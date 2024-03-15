@@ -1,7 +1,6 @@
 import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';
-import {PRIMARY_RED_COLOR, RED_SHADOW_COLOR, getColors} from './colors';
-import {generateBoxShadowStyle} from './shadow';
+import {PRIMARY_RED_COLOR, getColors} from './colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   getFontSizeSmallDevices,
@@ -43,15 +42,6 @@ export const getButtonStyle = (theme: Theme, screenWidth?: number) => {
         color: getColors(theme).secondaryTextInverted,
         height: screenWidth ? getButtonHeight(screenWidth) : BUTTON_MAX_HEIGHT,
       },
-      generateBoxShadowStyle(
-        0,
-        13,
-        RED_SHADOW_COLOR,
-        0.5,
-        10,
-        30,
-        RED_SHADOW_COLOR,
-      ),
     ],
     secondaryButton: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
