@@ -271,7 +271,7 @@ const getDimensionedStyles = (
     textOutLineButton: {
       ...button_link_primary_medium,
       fontSize: 13,
-      color: getColors(theme).secondaryText,
+      color: '#212838',
     },
     warningProceedButton: {
       backgroundColor: PRIMARY_RED_COLOR,
