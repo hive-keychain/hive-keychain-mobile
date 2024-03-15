@@ -264,9 +264,7 @@ const getDimensionedStyles = (
       opacity: 0.7,
     },
     outlineButton: {
-      borderColor: getColors(theme).borderContrast,
-      borderWidth: 1,
-      backgroundColor: '#00000000',
+      backgroundColor: '#FFFFFF',
       zIndex: 10,
       height: getButtonHeight(width),
     },
