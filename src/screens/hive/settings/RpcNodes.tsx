@@ -224,12 +224,14 @@ const RpcNodes = ({
             }
             additionalLineStyle={styles.bottomLineDropdownItem}
           />
-          <TouchableOpacity
-            activeOpacity={1}
-            style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
-            onPress={() => setShowAddCustomRPC(!showAddCustomRPC)}>
-            <Text style={styles.text}>{showAddCustomRPC ? 'x' : '+'}</Text>
-          </TouchableOpacity>
+          <View style={styles.addButtonContainer}>
+            <TouchableOpacity
+              activeOpacity={1}
+              style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
+              onPress={() => setShowAddCustomRPC(!showAddCustomRPC)}>
+              <Text style={styles.text}>{showAddCustomRPC ? 'x' : '+'}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         {showAddCustomRPC && renderAddCustomRPC()}
       </View>
@@ -512,16 +514,20 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       flexDirection: 'row',
       width: 'auto',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'flex-end',
       marginBottom: MARGIN_LEFT_RIGHT_MIN,
     },
+    addButtonContainer: {
+      justifyContent: 'flex-end',
+    },
+
     addButton: {
       alignItems: 'center',
       borderRadius: 30,
       paddingHorizontal: 0,
       paddingVertical: 0,
-      width: 50,
-      height: 50,
+      width: 48,
+      height: 48,
       justifyContent: 'center',
       marginBottom: 0,
     },
