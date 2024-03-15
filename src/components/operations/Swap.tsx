@@ -594,6 +594,7 @@ const Swap = ({
                         <PreloadedImage
                           uri={startToken.img}
                           symbol={startToken.value.symbol}
+                          key={startToken.value.symbol}
                           svgHeight={20}
                           svgWidth={20}
                         />
@@ -696,6 +697,7 @@ const Swap = ({
                           symbol={endToken.value.symbol}
                           svgHeight={20}
                           svgWidth={20}
+                          key={endToken.value.symbol}
                         />
                       ),
                     } as DropdownModalItem
