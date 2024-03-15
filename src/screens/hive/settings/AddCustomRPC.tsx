@@ -30,6 +30,7 @@ import {
 import {translate} from 'utils/localize';
 
 interface Props {
+  title: string;
   theme: Theme;
   rpcList: DropdownModalItem[];
   selectedRPC: string;
@@ -46,8 +47,6 @@ interface Props {
   onSelectedDropdown: (item: string) => void;
   additionalDropdowContainerStyle?: StyleProp<ViewStyle>;
   additionalListExpandedContainerStyle?: StyleProp<ViewStyle>;
-  remeasure?: boolean;
-  selfCheckPos?: boolean;
 }
 const AddCustomRPC = ({
   theme,
@@ -66,8 +65,7 @@ const AddCustomRPC = ({
   onSelectedDropdown,
   additionalDropdowContainerStyle,
   additionalListExpandedContainerStyle,
-  remeasure,
-  selfCheckPos,
+  title,
 }: Props) => {
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, width, height);
@@ -91,8 +89,7 @@ const AddCustomRPC = ({
       }}>
       <View style={styles.rpcItemContainer}>
         <DropdownModal
-          selfCheckPos={selfCheckPos}
-          remeasure={remeasure}
+          dropdownTitle={title}
           list={rpcList}
           selected={getItemDropDownSelected({uri: selectedRPC} as Rpc)}
           onSelected={(selectedItem) => onSelectedDropdown(selectedItem.value)}

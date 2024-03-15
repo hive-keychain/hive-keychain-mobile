@@ -39,12 +39,14 @@ const UserDropdown = ({
 
   return (
     <DropdownModal
+      hideLabel
       list={getListFromAccount()}
       selected={getItemDropDownSelected(activeAccount.name!)}
       onSelected={(selectedAccount) => loadAccount(selectedAccount.value, true)}
       additionalDropdowContainerStyle={styles.dropdownContainer}
       additionalOverlayStyle={styles.dropdownOverlay}
       dropdownIconScaledSize={{width: 15, height: 15}}
+      dropdownTitle="common.account"
       showSelectedIcon={
         <Icon
           name={Icons.CHECK}

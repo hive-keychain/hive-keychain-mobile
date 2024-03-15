@@ -200,7 +200,7 @@ const RpcNodes = ({
         }}>
         <View style={[styles.rpcItemContainer]}>
           <DropdownModal
-            remeasure
+            dropdownTitle="settings.settings.hive_rpc"
             list={rpcFullList}
             selected={getItemDropDownSelected(rpc)}
             onSelected={(selected) => onHandleSetRPC(selected.value)}
@@ -419,9 +419,9 @@ const RpcNodes = ({
           }}>
           <Separator height={10} />
           <Caption text="settings.settings.rpc_disclaimer" hideSeparator />
-          <Text style={[styles.title, styles.text]}>
+          {/* <Text style={[styles.title, styles.text]}>
             {translate('settings.settings.hive_rpc')}
-          </Text>
+          </Text> */}
           <CheckBoxPanel
             checked={switchRPCAuto}
             onPress={() => setSwitchRPCAuto(!switchRPCAuto)}
@@ -434,11 +434,8 @@ const RpcNodes = ({
         <Separator />
         {hiveEngineRPCList.length > 0 && (
           <>
-            <Text style={[styles.title, styles.text]}>
-              {translate('settings.settings.hive_engine_rpc')}
-            </Text>
             <AddCustomRPC
-              remeasure
+              title={'settings.settings.hive_engine_rpc'}
               theme={theme}
               rpcList={hiveEngineRPCList}
               selectedRPC={activeHiveEngineRpc}
@@ -459,10 +456,8 @@ const RpcNodes = ({
         <Separator />
         {accountHistoryAPIList.length > 0 && (
           <>
-            <Text style={[styles.title, styles.text]}>
-              {translate('settings.settings.hive_engine_account_history_api')}
-            </Text>
             <AddCustomRPC
+              title={'settings.settings.hive_engine_account_history_api'}
               theme={theme}
               rpcList={accountHistoryAPIList}
               selectedRPC={activeAccountHistoryAPIRpc}
@@ -483,8 +478,6 @@ const RpcNodes = ({
               }
               onRemoveDropdownItem={onHandleRemoveAccountHistoryAPI}
               onSelectedDropdown={onHandleSelectAccountHistoryAPI}
-              remeasure
-              selfCheckPos
               additionalListExpandedContainerStyle={{
                 maxHeight: DROPDOWN_CONTENT_MAX_HEIGHT,
               }}

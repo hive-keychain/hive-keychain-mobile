@@ -23,7 +23,6 @@ import {MessageModalType} from 'src/enums/messageModal.enums';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {inputStyle} from 'src/styles/input';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {getRotateStyle} from 'src/styles/transform';
@@ -283,9 +282,6 @@ const Savings = ({
           )}
 
           <Separator />
-          <Text style={[inputStyle(theme, width).label, styles.marginLeft]}>
-            {translate('common.operation_type')}
-          </Text>
           <DropdownModal
             selected={
               operationTypeList.filter(
@@ -309,7 +305,6 @@ const Savings = ({
               },
             ]}
             dropdownIconScaledSize={{width: 15, height: 15}}
-            // drawLineBellowSelectedItem
             showSelectedIcon={
               <Icon
                 name={Icons.CHECK}
@@ -321,6 +316,7 @@ const Savings = ({
               />
             }
             additionalLineStyle={styles.bottomLineDropdownItem}
+            dropdownTitle={'common.operation_type'}
           />
           <Separator />
           <OperationInput

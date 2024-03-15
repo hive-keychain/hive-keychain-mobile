@@ -109,9 +109,6 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
 
         {!success ? (
           <>
-            <Text style={[styles.text, styles.italic]}>
-              {translate('wallet.has.session.prompt')}
-            </Text>
             <DropdownModal
               selected={sessionTime}
               onSelected={(sessionItem) =>
@@ -123,6 +120,7 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
                   value: item,
                 } as DropdownModalItem;
               })}
+              dropdownTitle="wallet.has.session.prompt"
             />
           </>
         ) : (
