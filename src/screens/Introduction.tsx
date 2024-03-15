@@ -22,6 +22,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonHeight} from 'src/styles/button';
 import {
@@ -48,7 +49,11 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
   const {height, width} = useWindowDimensions();
   const {theme} = useThemeContext();
   const spaced = getSpaceAdjustMultiplier(width, height);
-  const styles = getDimensionedStyles({height, width}, theme);
+  const styles = getDimensionedStyles(
+    {height, width},
+    theme,
+    useSafeAreaInsets(),
+  );
 
   const renderLogos = (pageIndex: number) => {
     const renderBGImage = () => {
@@ -126,46 +131,40 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
     for (let i = 0; i < INTRO_STEPS; i++) {
       circleArray.push(createCircleAddKey(i, currentIndex === i));
     }
-    return circleArray;
+    return (
+      <View
+        style={{width: '100%', justifyContent: 'center', flexDirection: 'row'}}>
+        {circleArray}
+      </View>
+    );
   };
 
-  const renderCustomLayout = (
-    pageIndex: number,
-    textElements: JSX.Element,
-    buttons: JSX.Element,
-  ) => {
+  const renderCustomLayout = (pageIndex: number, textElements: JSX.Element) => {
     return (
       <View style={[styles.layoutContainer]}>
         <View style={[styles.layoutTopContainer]}>
           {renderLogos(pageIndex)}
         </View>
-        <View style={[styles.layoutMiddleContainer]}>
-          <View style={[styles.pageIndicatorsContainer]}>
-            {drawPageIndicators(pageIndex).map((indicator) => {
-              return indicator;
-            })}
-          </View>
-        </View>
-        <View style={[styles.layoutBottomContainer]}>
-          <View style={[{justifyContent: 'center'}]}>{textElements}</View>
-          <View style={[{justifyContent: 'flex-end'}]}>{buttons}</View>
-        </View>
+        <View style={[{justifyContent: 'center'}]}>{textElements}</View>
       </View>
     );
   };
 
   return (
     <Background theme={theme}>
-      <View style={{flex: 1}}>
+      <View style={styles.container}>
         <FocusAwareStatusBar
           backgroundColor={getColors(theme).primaryBackground}
           barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
         />
+        {drawPageIndicators(currentStep)}
         <ScrollView
           ref={scrollViewRef}
           style={{flex: 1}}
           horizontal={true}
+          bounces={false}
           scrollEventThrottle={0}
+          showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={handleMomentumScrollEnd}
           pagingEnabled={true}>
           {renderCustomLayout(
@@ -173,24 +172,12 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
             <Text style={[styles.text, styles.biggerText]}>
               {translate('intro.intro_text_1')}
             </Text>,
-            <EllipticButton
-              title={translate('common.next')}
-              onPress={handleNextStep}
-              style={styles.warningProceedButton}
-              additionalTextStyle={styles.textButtonFilled}
-            />,
           )}
           {renderCustomLayout(
             1,
             <Text style={[styles.text, styles.biggerText]}>
               {translate('intro.intro_text_2')}
             </Text>,
-            <EllipticButton
-              title={translate('common.next')}
-              onPress={handleNextStep}
-              style={styles.warningProceedButton}
-              additionalTextStyle={styles.textButtonFilled}
-            />,
           )}
           {renderCustomLayout(
             2,
@@ -202,7 +189,12 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
                 {translate('intro.manage')}
               </Text>
             </>,
-            <View style={[{flex: 1, justifyContent: 'flex-end'}]}>
+          )}
+        </ScrollView>
+
+        <View style={[{height: 120, justifyContent: 'flex-end'}]}>
+          {currentStep === 2 ? (
+            <>
               <EllipticButton
                 title={translate('intro.existingAccount')}
                 onPress={() => {
@@ -220,20 +212,38 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
                 style={styles.warningProceedButton}
                 additionalTextStyle={styles.textButtonFilled}
               />
-            </View>,
+            </>
+          ) : (
+            <EllipticButton
+              title={translate('common.next')}
+              onPress={handleNextStep}
+              style={styles.warningProceedButton}
+              additionalTextStyle={styles.textButtonFilled}
+            />
           )}
-        </ScrollView>
+        </View>
       </View>
     </Background>
   );
 };
-const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
+const getDimensionedStyles = (
+  {width, height}: Dimensions,
+  theme: Theme,
+  insets: EdgeInsets,
+) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+      paddingTop: 20,
+      paddingBottom: 20,
+      justifyContent: 'space-between',
+    },
     scrollableScreen: {
       width,
       height,
       justifyContent: 'space-between',
       alignItems: 'center',
+      backgroundColor: 'blue',
     },
     backgroundSquares: {
       width: width * 0.85,
@@ -305,21 +315,16 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
         headlines_primary_headline_2.fontSize,
       ),
     },
-    layoutContainer: {flex: 1, justifyContent: 'center', width, height},
-    layoutTopContainer: {
-      width: '100%',
-      height: height * 0.5,
-    },
-    layoutMiddleContainer: {
-      width: '100%',
-      height: height * 0.04,
+    layoutContainer: {
+      height: '100%',
+      width,
+      justifyContent: 'space-around',
+      flexDirection: 'column',
       alignItems: 'center',
     },
-    layoutBottomContainer: {
+    layoutTopContainer: {
       width: '100%',
-      height: height * 0.46,
-      justifyContent: 'space-between',
-      paddingVertical: 20,
+      height: 'auto',
     },
   });
 
