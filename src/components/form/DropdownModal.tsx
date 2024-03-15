@@ -1,7 +1,7 @@
 import Clipboard from '@react-native-community/clipboard';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   StyleProp,
@@ -20,21 +20,13 @@ import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {inputStyle} from 'src/styles/input';
-import {
-  CONTENT_MARGIN_PADDING,
-  DROPDOWN_CONTENT_MAX_HEIGHT,
-  LABEL_INDENT_SPACE,
-  MARGIN_LEFT_RIGHT_MIN,
-  MARGIN_PADDING,
-  MIN_SEPARATION_ELEMENTS,
-} from 'src/styles/spacing';
+import {LABEL_INDENT_SPACE, MIN_SEPARATION_ELEMENTS} from 'src/styles/spacing';
 import {
   FontPoppinsName,
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
-import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
 import CustomSearchBar from './CustomSearchBar';
 
@@ -59,7 +51,7 @@ interface Props {
   additionalListExpandedContainerStyle?: StyleProp<ViewStyle>;
   additionalOverlayStyle?: StyleProp<ViewStyle>;
   additionalLineStyle?: StyleProp<ViewStyle>;
-  dropdownTtitleTr?: string;
+  dropdownTitle?: string;
   removeDropdownTitleIndent?: boolean;
   enableSearch?: boolean;
   bottomLabelInfo?: string;
@@ -67,8 +59,7 @@ interface Props {
   copyButtonValue?: boolean;
   selectedBgColor?: string;
   drawLineBellowSelectedItem?: boolean;
-  remeasure?: boolean;
-  selfCheckPos?: boolean;
+  hideLabel?: boolean;
 }
 
 const DropdownModal = ({
@@ -77,7 +68,7 @@ const DropdownModal = ({
   additionalTextStyle,
   dropdownIconScaledSize,
   additionalDropdowContainerStyle,
-  dropdownTtitleTr,
+  dropdownTitle,
   additionalTitleTextStyle,
   removeDropdownTitleIndent,
   additionalMainContainerDropdown,
@@ -91,11 +82,9 @@ const DropdownModal = ({
   selectedBgColor,
   addExtraHeightFromElements,
   onRemove,
-  drawLineBellowSelectedItem,
   additionalLineStyle,
-  remeasure,
   additionalItemLabelTextStyle,
-  selfCheckPos,
+  hideLabel,
 }: Props) => {
   const dropdownContainerRef = useRef();
   const [dropdownPageY, setDropdownPageY] = useState(0);
@@ -172,15 +161,11 @@ const DropdownModal = ({
   };
 
   const renderDropdownItem = (item: DropdownModalItem, index: number) => {
-    const isLastItem = index === list.length - 1;
     const showSelectedBgOnItem =
       selectedBgColor && (selected === item.value || selected === item.label);
     const bgStyle = showSelectedBgOnItem
       ? ({
           backgroundColor: selectedBgColor,
-          borderRadius: 10,
-          paddingVertical: 8,
-          alignItems: 'center',
         } as ViewStyle)
       : null;
     const innerContainerStyle = {
@@ -203,16 +188,13 @@ const DropdownModal = ({
       : ({
           marginLeft: MIN_SEPARATION_ELEMENTS,
         } as ViewStyle);
+
     return (
-      <>
+      <View style={[{paddingVertical: 4}]}>
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => onHandleSelectedItem(item)}
-          style={[
-            styles.dropdownItem,
-            bgStyle,
-            isLastItem ? {paddingBottom: 20} : undefined,
-          ]}>
+          style={[styles.dropdownItem, bgStyle]}>
           <View style={[innerContainerStyle, innerContainerBgStyle]}>
             {item.icon}
             <Text
@@ -235,14 +217,15 @@ const DropdownModal = ({
           </View>
           {typeof item === 'object' ? renderCopyOrSelectedIcon(item) : null}
         </TouchableOpacity>
-        {drawLineBellowSelectedItem && !isLastItem && (
+        {index !== list.length - 1 && (
           <Separator
-            drawLine
-            additionalLineStyle={additionalLineStyle}
-            height={5}
+            additionalLineStyle={{
+              borderColor: getCardStyle(theme).borderTopCard.borderColor,
+            }}
+            height={0}
           />
         )}
-      </>
+      </View>
     );
   };
 
@@ -290,50 +273,25 @@ const DropdownModal = ({
     </TouchableOpacity>
   );
 
-  const _measure = useCallback(() => {
-    const heightPage = height;
-    if (dropdownContainerRef && dropdownContainerRef?.current) {
-      (dropdownContainerRef.current as any).measureInWindow(
-        (pageX: any, pageY: any, width: any, height: any) => {
-          const dropdownListBottomPoint =
-            pageY + height + DROPDOWN_CONTENT_MAX_HEIGHT;
-          setDropdownPageY(pageY);
-          setRenderDropdownListOnTop(dropdownListBottomPoint >= heightPage);
-        },
-      );
-    }
-  }, [height, width]);
-
   return (
     <>
       <View style={additionalMainContainerDropdown}>
-        {dropdownTtitleTr && (
+        {dropdownTitle && !hideLabel && (
           <Text
             style={[
               inputStyle(theme, width).label,
               additionalTitleTextStyle,
               removeDropdownTitleIndent ? undefined : styles.indent,
             ]}>
-            {capitalize(translate(dropdownTtitleTr))}
+            {translate(dropdownTitle)}
           </Text>
         )}
-        <View
-          ref={dropdownContainerRef}
-          onLayout={() => {
-            _measure();
-            if (remeasure)
-              setInterval(() => {
-                _measure();
-              }, 200);
-          }}>
-          {renderDropdownTop()}
-        </View>
+        <View ref={dropdownContainerRef}>{renderDropdownTop()}</View>
         {bottomLabelInfo && (
           <Text
             style={[
               styles.textBase,
               styles.italic,
-              styles.opaque,
               styles.smallerText,
               styles.positionAbsolute,
             ]}>
@@ -343,37 +301,29 @@ const DropdownModal = ({
       </View>
       {isListExpanded && (
         <Overlay
-          onBackdropPress={() => setIsListExpanded(!isListExpanded)}
+          onBackdropPress={() => {
+            setIsListExpanded(!isListExpanded);
+          }}
           isVisible={isListExpanded}
-          backdropStyle={styles.backdrop}
-          overlayStyle={[
-            styles.dropdownListContainer,
-            styles.overlay,
-            additionalOverlayStyle,
-            renderDropdownListOnTop && selfCheckPos
-              ? {
-                  top:
-                    dropdownPageY -
-                    DROPDOWN_CONTENT_MAX_HEIGHT -
-                    MARGIN_LEFT_RIGHT_MIN -
-                    MIN_SEPARATION_ELEMENTS,
-                  flexDirection: 'column-reverse',
-                  paddingVertical: 0,
-                  marginTop: 0,
-                }
-              : undefined,
-          ]}>
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setIsListExpanded(!isListExpanded)}
-            style={
-              renderDropdownListOnTop && selfCheckPos
-                ? {flexDirection: 'column-reverse'}
-                : undefined
-            }>
-            <View style={additionalMainContainerDropdown}>
-              {renderDropdownTop(true)}
-            </View>
+          overlayStyle={{
+            backgroundColor: getColors(theme).secondaryCardBgColor,
+            borderTopLeftRadius: 16,
+            borderTopRightRadius: 16,
+            width: '100%',
+            padding: 16,
+            position: 'absolute',
+            bottom: 0,
+            maxHeight: height / 2,
+            minHeight: height / 3,
+          }}>
+          <View
+            style={{
+              width: '100%',
+            }}>
+            <Text
+              style={[{alignSelf: 'center'}, inputStyle(theme, width).label]}>
+              {translate(dropdownTitle)}
+            </Text>
             <FlatList
               ListHeaderComponent={
                 enableSearch ? (
@@ -385,21 +335,29 @@ const DropdownModal = ({
                   />
                 ) : null
               }
-              style={[
-                getCardStyle(theme).defaultCardItem,
-                styles.dropdownListContainer,
-                additionalListExpandedContainerStyle,
-              ]}
+              ListEmptyComponent={
+                <View
+                  style={[
+                    {
+                      flexGrow: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginTop: 16,
+                    },
+                  ]}>
+                  <Text style={[inputStyle(theme, width).label]}>
+                    {translate(
+                      'wallet.operations.token_settings.empty_results',
+                    )}
+                  </Text>
+                </View>
+              }
               data={filteredDropdownList}
               keyExtractor={(item) => item.label}
               renderItem={(item) => renderDropdownItem(item.item, item.index)}
-              contentContainerStyle={{
-                alignContent: 'center',
-              }}
-              //TODO bellow add if empty when needed
-              // ListEmptyComponent={renderEmpty}
+              contentContainerStyle={{}}
             />
-          </TouchableOpacity>
+          </View>
         </Overlay>
       )}
     </>
@@ -414,27 +372,6 @@ const getStyles = (
   addExtraY?: number,
 ) =>
   StyleSheet.create({
-    overlay: {
-      backgroundColor: '#00000000',
-      width: '100%',
-      height: 'auto',
-      maxHeight: undefined,
-      marginTop: 0,
-      top: dropdownPageY + (addExtraY ?? 0),
-      position: 'absolute',
-      zIndex: 10,
-      elevation: 0,
-      paddingHorizontal: MARGIN_PADDING + CONTENT_MARGIN_PADDING,
-      paddingTop: 0,
-    },
-    dropdownListContainer: {
-      marginTop: MIN_SEPARATION_ELEMENTS,
-      bottom: undefined,
-      width: '100%',
-      height: 'auto',
-      maxHeight: 150,
-      paddingVertical: MARGIN_LEFT_RIGHT_MIN,
-    },
     textBase: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
@@ -491,19 +428,10 @@ const getStyles = (
     italic: {
       fontFamily: FontPoppinsName.ITALIC,
     },
-    opaque: {
-      opacity: 0.6,
-    },
     positionAbsolute: {
       position: 'absolute',
       bottom: -24,
       alignSelf: 'center',
-    },
-    backdrop: {
-      flex: 1,
-      width: '100%',
-      height: '100%',
-      backgroundColor: '#00000078',
     },
   });
 

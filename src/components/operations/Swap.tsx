@@ -582,10 +582,8 @@ const Swap = ({
                   },
                 ]}>
                 <DropdownModal
-                  remeasure
-                  selfCheckPos
                   enableSearch
-                  dropdownTtitleTr="common.token"
+                  dropdownTitle="common.token"
                   dropdownIconScaledSize={ICONMINDIMENSIONS}
                   additionalDropdowContainerStyle={{paddingHorizontal: 8}}
                   selected={
@@ -684,10 +682,8 @@ const Swap = ({
               <Separator />
               <View style={styles.flexRowbetween}>
                 <DropdownModal
-                  remeasure
-                  selfCheckPos
                   enableSearch
-                  dropdownTtitleTr="common.token"
+                  dropdownTitle="common.token"
                   dropdownIconScaledSize={ICONMINDIMENSIONS}
                   additionalDropdowContainerStyle={{paddingHorizontal: 8}}
                   selected={

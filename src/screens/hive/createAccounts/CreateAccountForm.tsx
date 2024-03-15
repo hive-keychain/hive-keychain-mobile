@@ -206,6 +206,7 @@ const CreateAccountStepOne = ({
                   additionalDropdowContainerStyle={styles.dropdown}
                   additionalOverlayStyle={styles.paddingHorizontal}
                   dropdownIconScaledSize={styles.icon}
+                  dropdownTitle="common.accounts"
                 />
               </>
             )}
