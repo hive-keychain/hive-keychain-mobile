@@ -14,6 +14,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
+import Animated, {SlideInDown, SlideOutDown} from 'react-native-reanimated';
 import SimpleToast from 'react-native-simple-toast';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -29,7 +30,6 @@ import {
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import CustomSearchBar from './CustomSearchBar';
-
 export interface DropdownModalItem {
   value: string;
   label?: string;
@@ -61,6 +61,7 @@ interface Props {
   drawLineBellowSelectedItem?: boolean;
   hideLabel?: boolean;
 }
+const ReanimatedView = Animated.createAnimatedComponent(View);
 
 const DropdownModal = ({
   selected,
@@ -93,6 +94,7 @@ const DropdownModal = ({
   const [filteredDropdownList, setFilteredDropdownList] = useState<
     DropdownModalItem[]
   >(list);
+  const [isClosing, setIsClosing] = useState(false);
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const [renderDropdownListOnTop, setRenderDropdownListOnTop] = useState(false);
@@ -120,7 +122,8 @@ const DropdownModal = ({
 
   const onHandleSelectedItem = (item: DropdownModalItem) => {
     onSelected(item);
-    setIsListExpanded(false);
+    setTimeout(() => setIsListExpanded(false), 300);
+    setIsClosing(true);
   };
 
   const onHandleCopyValue = (username: string) => {
@@ -232,7 +235,10 @@ const DropdownModal = ({
   const renderDropdownTop = (showOpened?: boolean) => (
     <TouchableOpacity
       activeOpacity={1}
-      onPress={() => setIsListExpanded(!isListExpanded)}
+      onPress={() => {
+        setIsListExpanded(!isListExpanded);
+        setIsClosing(false);
+      }}
       style={[
         getCardStyle(theme).defaultCardItem,
         styles.dropdownContainer,
@@ -302,62 +308,75 @@ const DropdownModal = ({
       {isListExpanded && (
         <Overlay
           onBackdropPress={() => {
-            setIsListExpanded(!isListExpanded);
+            setTimeout(() => setIsListExpanded(!isListExpanded), 300);
+            setIsClosing(true);
           }}
           isVisible={isListExpanded}
           overlayStyle={{
-            backgroundColor: getColors(theme).secondaryCardBgColor,
-            borderTopLeftRadius: 16,
-            borderTopRightRadius: 16,
             width: '100%',
-            padding: 16,
             position: 'absolute',
             bottom: 0,
+            backgroundColor: 'transparent',
+            padding: 0,
             maxHeight: height / 2,
             minHeight: height / 3,
+            shadowColor: 'transparent',
           }}>
-          <View
-            style={{
-              width: '100%',
-            }}>
-            <Text
-              style={[{alignSelf: 'center'}, inputStyle(theme, width).label]}>
-              {translate(dropdownTitle)}
-            </Text>
-            <FlatList
-              ListHeaderComponent={
-                enableSearch ? (
-                  <CustomSearchBar
-                    theme={theme}
-                    value={searchValue}
-                    onChangeText={(text) => setSearchValue(text)}
-                    additionalContainerStyle={styles.searchContainer}
-                  />
-                ) : null
-              }
-              ListEmptyComponent={
-                <View
-                  style={[
-                    {
-                      flexGrow: 1,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      marginTop: 16,
-                    },
-                  ]}>
-                  <Text style={[inputStyle(theme, width).label]}>
-                    {translate(
-                      'wallet.operations.token_settings.empty_results',
-                    )}
-                  </Text>
-                </View>
-              }
-              data={filteredDropdownList}
-              keyExtractor={(item) => item.label}
-              renderItem={(item) => renderDropdownItem(item.item, item.index)}
-              contentContainerStyle={{}}
-            />
-          </View>
+          {!isClosing && (
+            <ReanimatedView
+              entering={SlideInDown}
+              exiting={SlideOutDown}
+              style={{
+                backgroundColor: getColors(theme).secondaryCardBgColor,
+                borderTopLeftRadius: 16,
+                padding: 16,
+                height: '100%',
+                borderTopRightRadius: 16,
+                width: '100%',
+              }}>
+              <Text
+                style={[
+                  {alignSelf: 'center', marginBottom: 10},
+                  inputStyle(theme, width).label,
+                ]}>
+                {translate(dropdownTitle)}
+              </Text>
+              {enableSearch && (
+                <CustomSearchBar
+                  theme={theme}
+                  value={searchValue}
+                  onChangeText={(text) => setSearchValue(text)}
+                  additionalContainerStyle={styles.searchContainer}
+                />
+              )}
+              <FlatList
+                keyboardDismissMode="none"
+                ListHeaderComponent={<Separator />}
+                ListFooterComponent={<Separator />}
+                ListEmptyComponent={
+                  <View
+                    style={[
+                      {
+                        flexGrow: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginTop: 16,
+                      },
+                    ]}>
+                    <Text style={[inputStyle(theme, width).label]}>
+                      {translate(
+                        'wallet.operations.token_settings.empty_results',
+                      )}
+                    </Text>
+                  </View>
+                }
+                data={filteredDropdownList}
+                keyExtractor={(item) => item.label}
+                renderItem={(item) => renderDropdownItem(item.item, item.index)}
+                contentContainerStyle={{}}
+              />
+            </ReanimatedView>
+          )}
         </Overlay>
       )}
     </>
