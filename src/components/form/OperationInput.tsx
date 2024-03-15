@@ -16,11 +16,7 @@ import {AutoCompleteValuesType} from 'src/interfaces/autocomplete.interface';
 import {getColors} from 'src/styles/colors';
 import {inputStyle} from 'src/styles/input';
 import {LABEL_INDENT_SPACE} from 'src/styles/spacing';
-import {
-  FontPoppinsName,
-  body_primary_body_1,
-  getFontSizeSmallDevices,
-} from 'src/styles/typography';
+import {FontPoppinsName} from 'src/styles/typography';
 import CustomInput from './CustomInput';
 
 interface OperationInputProps {
@@ -60,7 +56,7 @@ export default (props: InputProps & OperationInputProps) => {
       <View style={styles.labelInputContainer}>
         <Text
           style={[
-            styles.labelStyle,
+            inputStyle(theme, width).label,
             props.additionalLabelStyle,
             props.removeLabelInputIndent ? undefined : styles.labelIndent,
           ]}>
@@ -112,14 +108,6 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     outerContainer: {
       display: 'flex',
       width: '100%',
-    },
-    labelStyle: {
-      ...body_primary_body_1,
-      color: getColors(theme).secondaryText,
-      fontSize: getFontSizeSmallDevices(
-        width,
-        {...body_primary_body_1}.fontSize,
-      ),
     },
     labelInputContainer: {
       flexDirection: 'row',

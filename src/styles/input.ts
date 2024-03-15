@@ -1,9 +1,9 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, TextStyle} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from './colors';
 import {
+  FontPoppinsName,
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
-  body_primary_body_1,
   getFontSizeSmallDevices,
 } from './typography';
 
@@ -29,14 +29,12 @@ export const inputStyle = (theme: Theme, width: number) => {
     input: {
       fontSize: getFontSizeSmallDevices(width, 16),
       color: getColors(theme).secondaryText,
-    },
+    } as TextStyle,
     label: {
-      ...body_primary_body_1,
+      fontFamily: FontPoppinsName.SEMI_BOLD,
       color: getColors(theme).secondaryText,
-      fontSize: getFontSizeSmallDevices(
-        width,
-        {...body_primary_body_1}.fontSize,
-      ),
+      fontSize: getFontSizeSmallDevices(width, 15),
+      fontWeight: '600',
     },
   });
 };
