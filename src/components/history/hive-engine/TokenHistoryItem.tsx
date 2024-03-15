@@ -34,6 +34,7 @@ import {
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {RootState} from 'store';
+import {formatBalanceCurrency} from 'utils/format';
 import {translate} from 'utils/localize';
 
 interface TokenHistoryItemProps {
@@ -64,8 +65,7 @@ const TokenHistoryItem = ({
         />
       );
     }
-    transaction.amount =
-      parseFloat(transaction.amount) + ' ' + transaction.symbol;
+    transaction.amount = formatBalanceCurrency(transaction.amount);
     switch (transaction.operation) {
       case OperationsHiveEngine.COMMENT_AUTHOR_REWARD: {
         const t = transaction as AuthorCurationTransaction;
@@ -109,17 +109,16 @@ const TokenHistoryItem = ({
         if (t.from === activeAccountName) {
           labelDataList = [
             {
-              label: 'info_transfer_out.part_1',
+              label: 'info_transfer_out',
               data: {
                 amount: t.amount,
+                to: t.to,
               },
             },
-            {label: 'info_transfer_out.part_2', data: {to: t.to}},
           ];
         } else {
           labelDataList = [
-            {label: 'info_transfer_in.part_1', data: {amount: t.amount}},
-            {label: 'info_transfer_in.part_2', data: {from: t.from}},
+            {label: 'info_transfer_in', data: {amount: t.amount, from: t.from}},
           ];
         }
         return returnWithList(labelDataList);
@@ -232,12 +231,18 @@ const TokenHistoryItem = ({
       }
       case OperationsHiveEngine.TOKEN_ISSUE:
         labelDataList = [
-          {label: 'info_issue', data: {amount: transaction.amount}},
+          {
+            label: 'info_issue',
+            data: {amount: formatBalanceCurrency(transaction.amount)},
+          },
         ];
         return returnWithList(labelDataList);
       case OperationsHiveEngine.HIVE_PEGGED_BUY:
         labelDataList = [
-          {label: 'info_pegged_buy', data: {amount: transaction.amount}},
+          {
+            label: 'info_pegged_buy',
+            data: {amount: formatBalanceCurrency(transaction.amount)},
+          },
         ];
         return returnWithList(labelDataList);
 

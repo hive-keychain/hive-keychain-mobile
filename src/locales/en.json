@@ -336,14 +336,8 @@
         "info_author_reward": "Received {{amount}} as author reward",
         "info_comment_curation_reward": "Received {{amount}} as comment curation reward",
         "info_mining_lottery": "Received {{amount}} from mining lottery ({{poolId}})",
-        "info_transfer_out": {
-          "part_1": "Sent {{amount}} ",
-          "part_2": "To @{{to}}"
-        },
-        "info_transfer_in": {
-          "part_1": "Received {{amount}}",
-          "part_2": "from @{{from}}"
-        },
+        "info_transfer_out": "Sent {{amount}} to @{{to}}",
+        "info_transfer_in": "Received {{amount}} from @{{from}}",
         "info_delegation_out": "Delegated {{amount}} to @{{delegatee}}",
         "info_delegation_in": "@{{delegator}} delegated {{amount}}",
         "info_start_cancel_delegation_out": "Canceled a {{amount}} delegation to @{{delegatee}}",
@@ -354,10 +348,7 @@
         "info_stake": "Staked {{amount}}",
         "info_start_unstake": "Started to unstake {{amount}}",
         "info_unstake_done": "{{amount}} unstaked",
-        "info_issue": {
-          "part_1": "Received",
-          "amount": "{{amount}}"
-        },
+        "info_issue": "Received {{amount}}",
         "info_pegged_buy": "Bought {{amount}}",
         "info": "View token information and choose which tokens to display. learn more about custom tokens on the HIVE blockchain at",
         "total_value": "Total Value",
@@ -480,6 +471,7 @@
       "filter_out": "Out",
       "filters_title": "Filters",
       "clear_filters": "Clear",
+      "claim_account": "Claim Account",
       "filter_title": "Filter"
     }
   },
