@@ -58,6 +58,7 @@ export default () => {
           headerStyle: styles.header,
           headerTintColor: 'white',
           headerRightContainerStyle: styles.paddingRight,
+          animationEnabled: false,
           headerRight: () => {
             return <MoreInformation type={Info.QR_ACCOUNT} />;
           },
