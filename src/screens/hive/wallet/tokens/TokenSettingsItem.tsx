@@ -79,6 +79,7 @@ const TokenSettingsItem = ({
 
   return (
     <TouchableOpacity
+      activeOpacity={1}
       onPress={setChecked}
       style={[getCardStyle(theme).defaultCardItem, styles.container]}
       key={token.symbol}>

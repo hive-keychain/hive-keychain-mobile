@@ -46,6 +46,7 @@ const SquareButton = ({
   const styles = getStyles(theme, marginRight, marginBottom, width);
   return (
     <TouchableOpacity
+      activeOpacity={1}
       key={`square-button-${primaryLabel}`}
       onPress={onPress}
       style={[styles.squareButton, additionalButtonContainerStyle]}>

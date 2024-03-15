@@ -41,6 +41,7 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
         <Separator height={30} />
         <View style={styles.container}>
           <TouchableOpacity
+            activeOpacity={1}
             onPress={() => {
               if (pressed < 4) {
                 setPressed(pressed + 1);

@@ -27,6 +27,7 @@ const DAppCard = ({dApp, updateTabUrl, theme}: Props) => {
   const styles = getStyles(useWindowDimensions(), theme);
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={[getCardStyle(theme).defaultCardItem, styles.container]}
       onPress={() => {
         let url = dApp.url;

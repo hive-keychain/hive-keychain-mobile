@@ -663,6 +663,7 @@ const Swap = ({
                         )}
                       />
                       <TouchableOpacity
+                        activeOpacity={1}
                         onPress={() => setAmount(startToken.value.balance)}>
                         <Text style={[styles.textBase, styles.redText]}>
                           {translate('common.max').toUpperCase()}

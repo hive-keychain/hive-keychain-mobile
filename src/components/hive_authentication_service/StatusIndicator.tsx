@@ -44,6 +44,7 @@ const StatusIndicator = ({
 
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={styles.container}
       onLongPress={() => {
         navigate('ModalScreen', {

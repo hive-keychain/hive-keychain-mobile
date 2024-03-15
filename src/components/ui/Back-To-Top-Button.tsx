@@ -28,7 +28,7 @@ export const BackToTopButton = (props: BackToTopButtonProps) => {
 
   return (
     <View style={styles.overlayButton}>
-      <TouchableOpacity onPress={scrollToTop}>
+      <TouchableOpacity activeOpacity={1} onPress={scrollToTop}>
         <Icon name={Icons.ARROW_UP} theme={props.theme} color="#FFF" />
       </TouchableOpacity>
     </View>

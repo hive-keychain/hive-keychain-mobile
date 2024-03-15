@@ -148,6 +148,7 @@ const AddAccountByKey = ({
             <Separator height={height / 22} />
             {allowAddByAuth && (
               <TouchableOpacity
+                activeOpacity={1}
                 onPress={() => navigate('AddAccountFromWalletScreenByAuth')}>
                 <Text style={[styles.text, styles.textUnderlined]}>
                   {translate('common.use_authorized_account_instead')}

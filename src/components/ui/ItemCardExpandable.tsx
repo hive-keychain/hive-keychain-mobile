@@ -41,6 +41,7 @@ const ItemCardExpandable = ({
   const styles = getStyles(theme, useWindowDimensions());
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={[getCardStyle(theme).defaultCardItem, styles.container]}
       onPress={setToggle}>
       <View style={styles.main}>

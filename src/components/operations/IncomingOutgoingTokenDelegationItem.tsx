@@ -83,6 +83,7 @@ const IncomingOutGoingTokenDelegationItem = ({
   };
   return (
     <TouchableOpacity
+      activeOpacity={1}
       onPress={() => setIsExpanded(!isExpanded)}
       style={[styles.container, isExpanded ? styles.expandedContainer : null]}>
       {isOutGoingDelegation ? (
@@ -117,6 +118,7 @@ const IncomingOutGoingTokenDelegationItem = ({
               {!showCancelConfirmationDelegation ? (
                 <View style={styles.buttonRowContainer}>
                   <TouchableOpacity
+                    activeOpacity={1}
                     style={styles.button}
                     onPress={() => {
                       setShowCancelConfirmationDelegation(true);

@@ -166,6 +166,7 @@ const PowerUp = ({
                     )}
                   />
                   <TouchableOpacity
+                    activeOpacity={1}
                     onPress={() =>
                       setAmount(availableHiveAmount.split(' ')[0])
                     }>

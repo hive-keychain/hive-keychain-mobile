@@ -140,7 +140,10 @@ const UrlModal = ({
           />
         ) : null}
         {url.length ? (
-          <TouchableOpacity style={styles.option} onPress={() => setUrl('')}>
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.option}
+            onPress={() => setUrl('')}>
             <Text style={[styles.textBase, styles.eraseText]}>x</Text>
           </TouchableOpacity>
         ) : null}
@@ -154,7 +157,7 @@ const UrlModal = ({
           theme={theme}
         />
         {history.length ? (
-          <TouchableOpacity onPress={clearHistory}>
+          <TouchableOpacity activeOpacity={1} onPress={clearHistory}>
             <Text style={[styles.textBase, styles.clearHistory]}>
               {translate('browser.history.clear')}
             </Text>

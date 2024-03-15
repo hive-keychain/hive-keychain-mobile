@@ -64,6 +64,7 @@ const AccountValue = ({
 
   return (
     <TouchableOpacity
+      activeOpacity={1}
       onLongPress={() => {
         let index = accountValueDisplay + 1;
         if (index === 3) index = 0;

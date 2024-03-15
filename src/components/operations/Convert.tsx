@@ -157,6 +157,7 @@ const Convert = ({
           <Separator />
           {totalPendingConvertions > 0 && (
             <TouchableOpacity
+              activeOpacity={1}
               onPress={() => {
                 navigate('TemplateStack', {
                   titleScreen: capitalize(
@@ -240,6 +241,7 @@ const Convert = ({
                     )}
                   />
                   <TouchableOpacity
+                    activeOpacity={1}
                     onPress={() => setAmount(availableBalance.toString())}>
                     <Text
                       style={[

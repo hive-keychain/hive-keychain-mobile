@@ -77,7 +77,11 @@ const Message = ({
       transparent={true}
       animationType="fade">
       <View style={[styles.mainContainer]}>
-        <TouchableOpacity style={{flex: 1}} onPress={() => resetModal()} />
+        <TouchableOpacity
+          activeOpacity={1}
+          style={{flex: 1}}
+          onPress={() => resetModal()}
+        />
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             {renderIcon()}

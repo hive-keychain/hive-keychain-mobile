@@ -18,6 +18,7 @@ export default ({data, onSubmit, theme, indexItem}: Props) => {
   const styles = getStyles(theme);
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={[getCardStyle(theme).defaultCardItem, styles.card]}
       onPress={() => onSubmit(url)}
       key={`${url}-${indexItem}`}>

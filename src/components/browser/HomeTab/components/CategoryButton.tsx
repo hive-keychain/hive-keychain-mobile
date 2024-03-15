@@ -24,6 +24,7 @@ const CategoryButton = ({category, setCategory}: Props) => {
 
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={[styles.category, {backgroundColor: category.color}]}
       onPress={() => {
         setCategory(category.title);

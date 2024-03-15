@@ -18,7 +18,10 @@ export default function CustomIconButton({
   additionalContainerStyle,
 }: Props) {
   return (
-    <TouchableOpacity style={additionalContainerStyle} onPress={onPress}>
+    <TouchableOpacity
+      activeOpacity={1}
+      style={additionalContainerStyle}
+      onPress={onPress}>
       {theme === Theme.LIGHT ? lightThemeIcon : darkThemeIcon}
     </TouchableOpacity>
   );

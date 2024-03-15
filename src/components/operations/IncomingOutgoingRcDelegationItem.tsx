@@ -143,6 +143,7 @@ const IncomingOutgoingRcDelegationItem = ({
 
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={[getCardStyle(theme, 28).defaultCardItem]}
       onPress={() => onHandleSelectedItem(item)}>
       <View style={styles.container}>
@@ -185,6 +186,7 @@ const IncomingOutgoingRcDelegationItem = ({
           />
           <View style={styles.buttonRowContainer}>
             <TouchableOpacity
+              activeOpacity={1}
               style={[styles.button, styles.marginRight]}
               onPress={() => setEditMode(true)}>
               <Icon
@@ -196,6 +198,7 @@ const IncomingOutgoingRcDelegationItem = ({
               <Text style={styles.buttonText}>{translate('common.edit')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              activeOpacity={1}
               style={styles.button}
               onPress={() => setShowCancelConfirmationRCDelegation(true)}>
               <Icon
@@ -265,6 +268,7 @@ const IncomingOutgoingRcDelegationItem = ({
                       )}
                     />
                     <TouchableOpacity
+                      activeOpacity={1}
                       onPress={() =>
                         setEditedAmountDelegation(available.gigaRcValue)
                       }>

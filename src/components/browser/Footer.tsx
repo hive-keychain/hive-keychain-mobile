@@ -111,7 +111,7 @@ const Footer = ({
         {...styles.icon}
         color={PRIMARY_RED_COLOR}
       />
-      <TouchableOpacity onPress={manageTabs}>
+      <TouchableOpacity activeOpacity={1} onPress={manageTabs}>
         <View style={styles.manage}>
           <Text style={[styles.textBase, styles.redColor]}>{tabs}</Text>
         </View>

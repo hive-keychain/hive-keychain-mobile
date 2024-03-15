@@ -57,6 +57,7 @@ export default ({
         <View style={styles.subcontainer}>
           {tabs.map(({icon, image, name, id}) => (
             <TouchableOpacity
+              activeOpacity={1}
               key={id}
               style={[
                 getCardStyle(theme).defaultCardItem,
@@ -80,6 +81,7 @@ export default ({
                   </Text>
                 </View>
                 <TouchableOpacity
+                  activeOpacity={1}
                   onPress={() => {
                     onCloseTab(id);
                   }}>

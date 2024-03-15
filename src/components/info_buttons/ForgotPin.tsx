@@ -20,6 +20,7 @@ export default () => {
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   return (
     <TouchableOpacity
+      activeOpacity={1}
       onPress={() => {
         navigate('ModalScreen', {
           name: '',

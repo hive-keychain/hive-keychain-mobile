@@ -173,6 +173,7 @@ const CurrencyToken = ({
     <View style={getCardStyle(theme).wrapperCardItem}>
       <View style={styles.container} key={`currency-token-${currencyName}`}>
         <TouchableOpacity
+          activeOpacity={1}
           onPress={() => {
             onPress();
             setIsExpanded(!isExpanded);

@@ -300,6 +300,7 @@ const TokenHistoryItem = ({
   return label ? (
     <View>
       <TouchableOpacity
+        activeOpacity={1}
         disabled={!memo}
         style={styles.container}
         onPress={() => {

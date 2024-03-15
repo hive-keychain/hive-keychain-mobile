@@ -45,6 +45,7 @@ const ScreenToggle = ({
         {menu.map((menuItem, i) => (
           <TouchableOpacity
             activeOpacity={1}
+            activeOpacity={1}
             onPress={() => {
               setActive(i);
               setToggleElement(menuItem);

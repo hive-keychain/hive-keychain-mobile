@@ -180,6 +180,7 @@ const DelegationsList = ({
     return (
       <View style={[getCardStyle(theme, 28).defaultCardItem]}>
         <TouchableOpacity
+          activeOpacity={1}
           onPress={() => onHandleSelectedOutgoingItem(item)}
           style={styles.container}>
           <View style={styles.row}>
@@ -217,6 +218,7 @@ const DelegationsList = ({
             />
             <View style={styles.buttonRowContainer}>
               <TouchableOpacity
+                activeOpacity={1}
                 style={[styles.button, styles.marginRight]}
                 onPress={() => setEditMode(true)}>
                 <Icon
@@ -231,6 +233,7 @@ const DelegationsList = ({
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                activeOpacity={1}
                 style={styles.button}
                 onPress={() => setShowCancelConfirmationDelegation(true)}>
                 <Icon
@@ -280,6 +283,7 @@ const DelegationsList = ({
                     )}
                   />
                   <TouchableOpacity
+                    activeOpacity={1}
                     onPress={() =>
                       setEditedAmountDelegation(available.toString())
                     }>

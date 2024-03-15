@@ -193,7 +193,9 @@ const UnstakeToken = ({
                       16,
                     )}
                   />
-                  <TouchableOpacity onPress={() => setAmount(balance)}>
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => setAmount(balance)}>
                     <Text
                       style={
                         getFormFontStyle(height, theme, PRIMARY_RED_COLOR).input

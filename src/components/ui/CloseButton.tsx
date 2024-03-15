@@ -16,7 +16,10 @@ export default function CloseButton({
   additionalContainerStyle,
 }: Props) {
   return (
-    <TouchableOpacity style={additionalContainerStyle} onPress={onPress}>
+    <TouchableOpacity
+      activeOpacity={1}
+      style={additionalContainerStyle}
+      onPress={onPress}>
       {theme === Theme.LIGHT ? <CloseIconLight /> : <CloseIconDark />}
     </TouchableOpacity>
   );

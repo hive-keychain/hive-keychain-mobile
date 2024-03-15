@@ -86,6 +86,7 @@ const MyWitness = ({
           {!editMode && (
             <View style={styles.witnessInfoContainer}>
               <TouchableOpacity
+                activeOpacity={1}
                 style={[getCardStyle(theme).defaultCardItem, styles.switch]}
                 onPress={() => setDisplayInfo(!displayInfo)}>
                 <View style={styles.switcherContainer}>

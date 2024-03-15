@@ -183,7 +183,10 @@ const TokenDisplay = ({
   );
 
   return (
-    <TouchableOpacity onPress={handleToogle} style={styles.container}>
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={handleToogle}
+      style={styles.container}>
       <View style={styles.flexRowBetween}>
         <View style={{flexDirection: 'row'}}>
           <View style={styles.logo}>{logo}</View>
@@ -224,6 +227,7 @@ const TokenDisplay = ({
         <View style={styles.expandedItemContainer}>
           {tokenInfo && (
             <TouchableOpacity
+              activeOpacity={1}
               onPress={() =>
                 Linking.openURL(`https://peakd.com/@${tokenInfo.issuer}`)
               }>

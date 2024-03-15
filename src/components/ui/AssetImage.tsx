@@ -87,7 +87,7 @@ const AssetImage = (props: AssetImageprops) => {
   };
 
   return props.onClick ? (
-    <TouchableOpacity onPress={props.onClick}>
+    <TouchableOpacity activeOpacity={1} onPress={props.onClick}>
       {getImageFilePath(props.nameImage)}
     </TouchableOpacity>
   ) : (

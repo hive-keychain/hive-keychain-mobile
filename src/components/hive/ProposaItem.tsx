@@ -111,6 +111,7 @@ const ProposalItem = ({
   return (
     <View style={[style, styles.container]}>
       <TouchableOpacity
+        activeOpacity={1}
         style={styles.firstLine}
         onPressOut={() => {
           if (isPressVote) {
@@ -139,7 +140,9 @@ const ProposalItem = ({
       </TouchableOpacity>
       <View style={styles.secondLine}>
         <View style={styles.user}>
-          <TouchableOpacity onLongPress={() => goToCreator(proposal.creator)}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onLongPress={() => goToCreator(proposal.creator)}>
             <FastImage
               source={{
                 uri: `https://images.hive.blog/u/${proposal.creator}/avatar`,

@@ -236,6 +236,7 @@ const RCDelegation = ({
           />
           <Separator />
           <TouchableOpacity
+            activeOpacity={1}
             onPress={() => setAmount(available.gigaRcValue)}
             style={[
               getCardStyle(theme, 30).defaultCardItem,
@@ -312,6 +313,7 @@ const RCDelegation = ({
                     )}
                   />
                   <TouchableOpacity
+                    activeOpacity={1}
                     onPress={() => setAmount(available.gigaRcValue)}>
                     <Text
                       style={[
@@ -329,6 +331,7 @@ const RCDelegation = ({
             {[5, 10, 50, 100].map((value) => {
               return (
                 <TouchableOpacity
+                  activeOpacity={1}
                   onPress={() => onHandlePreset(value)}
                   key={`preset-rc-delegation-${value}`}
                   style={[getCardStyle(theme).roundedCardItem, styles.button]}>

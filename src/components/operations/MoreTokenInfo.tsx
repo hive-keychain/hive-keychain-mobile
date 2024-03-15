@@ -152,7 +152,7 @@ const MoreTokenInfo = ({
           isHiveEngine
         />
         <Separator height={20} />
-        <TouchableOpacity onPress={handleClickIssuer}>
+        <TouchableOpacity activeOpacity={1} onPress={handleClickIssuer}>
           <Text>By @{tokenInfo.issuer}</Text>
         </TouchableOpacity>
         <Separator height={20} />
@@ -193,6 +193,7 @@ const MoreTokenInfo = ({
                 </Text>
               </Text>
               <TouchableOpacity
+                activeOpacity={1}
                 onPress={() =>
                   handleIncomingOutGoingTokenDelegations('Incoming')
                 }>
@@ -212,6 +213,7 @@ const MoreTokenInfo = ({
                 </Text>
               </Text>
               <TouchableOpacity
+                activeOpacity={1}
                 onPress={() =>
                   handleIncomingOutGoingTokenDelegations('Outgoing')
                 }>

@@ -221,6 +221,7 @@ const Savings = ({
           <Separator height={10} />
           {totalPendingSavingsWithdrawals > 0 && (
             <TouchableOpacity
+              activeOpacity={1}
               onPress={() => {
                 navigate('TemplateStack', {
                   titleScreen: capitalize(
@@ -360,7 +361,9 @@ const Savings = ({
                       16,
                     )}
                   />
-                  <TouchableOpacity onPress={() => handleSetMax()}>
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => handleSetMax()}>
                     <Text
                       style={[
                         getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
