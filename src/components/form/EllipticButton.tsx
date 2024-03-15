@@ -34,14 +34,13 @@ export default ({
   const styles = getDimensionedStyles(useWindowDimensions());
 
   const [isPressed, setIsPressed] = useState(false);
-  const finalStyle: StyleProp<ViewStyle> = [styles.button, style];
-  console.log(JSON.stringify(finalStyle));
   return !isLoading ? (
     <TouchableOpacity
       activeOpacity={1}
       {...props}
       style={[
-        finalStyle,
+        styles.button,
+        style,
         isPressed
           ? getButtonBoxShadow(isWarningButton ? PRIMARY_RED_COLOR : '#000')
           : {},
