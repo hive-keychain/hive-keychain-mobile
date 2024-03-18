@@ -18,6 +18,7 @@ import {
   RED_SHADOW_COLOR,
   getColors,
 } from 'src/styles/colors';
+import {inputStyle} from 'src/styles/input';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
@@ -134,6 +135,7 @@ const FilterBox = ({
             styles.filterSearchText,
           ]}
         />
+        <Separator />
         <View style={[styles.filterItemContainer]}>
           {Object.keys(filter.selectedTransactionTypes).map((filterKey) => {
             return (
@@ -331,6 +333,7 @@ const getStyles = (
     },
     filterSearchText: {
       textAlign: 'left',
+      fontSize: inputStyle(theme, width).input.fontSize,
     },
   });
 
