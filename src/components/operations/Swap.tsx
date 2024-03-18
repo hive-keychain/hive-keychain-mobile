@@ -783,7 +783,7 @@ const Swap = ({
                   style={[
                     styles.textBase,
                     {...body_primary_body_1},
-                    {fontSize: 16},
+                    {fontSize: getFontSizeSmallDevices(width, 16)},
                   ]}>
                   {translate('wallet.operations.swap.advanced_settings_title')}
                 </Text>
