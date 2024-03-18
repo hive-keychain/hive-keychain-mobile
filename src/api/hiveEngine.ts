@@ -36,7 +36,7 @@ export const hiveEngineGet = async <T>(
       .then((res: any) => {
         clearTimeout(id);
         resolve((res.result as unknown) as T);
-        console.log(`hiveEngineGet Resolved after: ${Date.now() - start} ms`);
+        // console.log(`hiveEngineGet Resolved after: ${Date.now() - start} ms`);
       })
       .catch((reason: any) => {
         console.log(`hiveEngineGet Aborted after: ${Date.now() - start} ms`);

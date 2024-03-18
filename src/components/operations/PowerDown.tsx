@@ -81,15 +81,16 @@ const PowerDown = ({
 
   const onPowerDown = async () => {
     try {
+      const amt = amount.length ? amount : '0';
       await powerDown(user.keys.active!, {
         vesting_shares: sanitizeAmount(
-          fromHP(sanitizeAmount(amount), properties.globals!).toString(),
+          fromHP(sanitizeAmount(amt), properties.globals!).toString(),
           'VESTS',
           6,
         ),
         account: user.account.name,
       });
-      if (parseFloat(amount.replace(',', '.')) !== 0) {
+      if (parseFloat(amt.replace(',', '.')) !== 0) {
         showModal('toast.powerdown_success', MessageModalType.SUCCESS);
       } else {
         showModal('toast.stop_powerdown_success', MessageModalType.SUCCESS);
