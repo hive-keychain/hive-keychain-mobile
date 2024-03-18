@@ -298,7 +298,7 @@ const getDimensionedStyles = (width: number, height: number, theme: Theme) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      width: '100%',
+      flexGrow: 1,
       marginBottom: 6,
     },
     container: {
