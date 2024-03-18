@@ -49,6 +49,11 @@ const StakeToken = ({
 }: Props) => {
   const [amount, setAmount] = useState('');
 
+  const {height} = useWindowDimensions();
+  const {theme} = useThemeContext();
+  const {color} = getCurrencyProperties(currency);
+  const styles = getDimensionedStyles(color, theme);
+
   const onStakeToken = async () => {
     try {
       const tokenOperationResult: any = await stakeToken(
@@ -123,11 +128,6 @@ const StakeToken = ({
     }
   };
 
-  const {height} = useWindowDimensions();
-  const {theme} = useThemeContext();
-  const {color} = getCurrencyProperties(currency);
-  const styles = getDimensionedStyles(color, theme);
-
   return (
     <OperationThemed
       childrenTop={
@@ -138,9 +138,6 @@ const StakeToken = ({
             account={user.account}
             isHiveEngine
             globalProperties={properties.globals}
-            setMax={(value: string) => {
-              setAmount(value);
-            }}
             tokenLogo={tokenLogo}
             tokenBalance={balance}
             theme={theme}
@@ -183,7 +180,9 @@ const StakeToken = ({
                   />
                   <TouchableOpacity
                     activeOpacity={1}
-                    onPress={() => setAmount(balance)}>
+                    onPress={() => {
+                      setAmount(parseFloat(balance).toFixed(3));
+                    }}>
                     <Text
                       style={
                         getFormFontStyle(height, theme, PRIMARY_RED_COLOR).input

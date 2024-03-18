@@ -300,7 +300,7 @@
         "titled": "Staked",
         "staking": "Staking",
         "staking_token": "Staking {{currency}}",
-        "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient"
+        "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient."
       },
       "token_unstake": {
         "confirm": {"info": "Please confirm that you want to unstake tokens."},
@@ -310,7 +310,7 @@
         "cooldown_disclaimer_multiple_days": "Unstaking this token will take {{unstakingCooldown}} days",
         "cooldown_disclaimer_single_day": "Unstaking this token will take {{unstakingCooldown}} day",
         "token_pending_unstake": "Pending unstaking",
-        "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient"
+        "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient."
       },
       "token_delegation": {
         "confirm": {"info": "Please confirm this token delegation."},
