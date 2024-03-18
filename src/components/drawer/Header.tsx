@@ -67,7 +67,7 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
       marginTop: 8,
       zIndex: 1,
       paddingLeft: PADDING_LEFT_MAIN_MENU,
-      marginBottom: 20,
+      // marginBottom: 16,
     },
     topContainer: {
       flexDirection: 'row',
@@ -77,7 +77,7 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
       width: '55%',
       alignSelf: 'flex-start',
       marginBottom: MARGIN_LEFT_RIGHT_MIN,
-      height: 30,
+      // height: 30,
     },
     middleContainer: {
       width: '70%',

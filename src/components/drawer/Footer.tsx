@@ -4,7 +4,7 @@ import DiscordLogo from 'assets/new_UI/discord_logo.svg';
 import HiveLogo from 'assets/new_UI/hive_logo.svg';
 import ThreadsLogo from 'assets/new_UI/threads_logo.svg';
 import EllipticButton from 'components/form/EllipticButton';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Linking,
   ScaledSize,
@@ -18,10 +18,8 @@ import {Theme} from 'src/context/theme.context';
 import {
   BACKGROUNDITEMDARKISH,
   PRIMARY_RED_COLOR,
-  RED_SHADOW_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {
   button_link_primary_medium,
   getFontSizeSmallDevices,
@@ -32,71 +30,67 @@ import {translate} from 'utils/localize';
 
 export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
   const styles = getStyles(theme, useWindowDimensions());
-  const showVoteForWitness = () => {
-    if (
-      !user.account.name ||
-      user.account.proxy?.length ||
-      (user.account?.witness_votes &&
-        user.account.witness_votes?.includes('stoodkev'))
-      // &&
-      // user.account.witness_votes?.includes('cedricguillas')
-    )
-      return <View style={{flex: 1}} />;
-    else {
-      const account = user.account.witness_votes.includes('stoodkev')
-        ? 'cedricguillas'
-        : 'stoodkev';
-      return (
-        <EllipticButton
-          title={translate('drawerFooter.vote', {account})}
-          style={[
-            styles.warningProceedButton,
-            generateBoxShadowStyle(
-              0,
-              5,
-              RED_SHADOW_COLOR,
-              1,
-              10,
-              15,
-              RED_SHADOW_COLOR,
-            ),
-          ]}
-          additionalTextStyle={styles.buttonText}
-          onPress={async () => {
-            try {
-              if (!user.keys[KeyTypes.active]) {
-                Toast.show(translate('drawerFooter.errorActive'), Toast.LONG);
-                return;
-              }
-              if (user.account.witness_votes.length === 30) {
-                Toast.show(translate('drawerFooter.error30'), Toast.LONG);
-                return;
-              }
-              await voteForWitness(user.keys[KeyTypes.active], {
-                account: user.name,
-                witness: account,
-                approve: true,
-              });
-              //@ts-ignore
-              store.dispatch(loadAccount(user.name));
-              Toast.show(translate('drawerFooter.thanks'), Toast.LONG);
-            } catch (e) {
-              Toast.show(
-                translate('drawerFooter.error') + JSON.stringify(e),
-                Toast.LONG,
-              );
-            }
-          }}
-        />
+
+  const [showVoteWitnessButton, setShowVoteWitnessButton] = useState(false);
+
+  useEffect(() => {
+    if (user && user.account && user.account.witness_votes) {
+      setShowVoteWitnessButton(
+        user.account.proxy?.length === 0 &&
+          !(
+            user.account.witness_votes &&
+            user.account.witness_votes.includes('stoodkev')
+          ),
       );
     }
+  }, [user]);
+
+  const showVoteForWitness = () => {
+    const account = user.account.witness_votes.includes('stoodkev')
+      ? 'cedricguillas'
+      : 'stoodkev';
+    return (
+      <EllipticButton
+        title={translate('drawerFooter.vote', {account})}
+        style={[styles.warningProceedButton]}
+        additionalTextStyle={styles.buttonText}
+        isWarningButton
+        onPress={async () => {
+          try {
+            if (!user.keys[KeyTypes.active]) {
+              Toast.show(translate('drawerFooter.errorActive'), Toast.LONG);
+              return;
+            }
+            if (user.account.witness_votes.length === 30) {
+              Toast.show(translate('drawerFooter.error30'), Toast.LONG);
+              return;
+            }
+            await voteForWitness(user.keys[KeyTypes.active], {
+              account: user.name,
+              witness: account,
+              approve: true,
+            });
+            //@ts-ignore
+            store.dispatch(loadAccount(user.name));
+            Toast.show(translate('drawerFooter.thanks'), Toast.LONG);
+          } catch (e) {
+            Toast.show(
+              translate('drawerFooter.error') + JSON.stringify(e),
+              Toast.LONG,
+            );
+          }
+        }}
+      />
+    );
   };
 
   return (
-    <View style={styles.footer}>
-      <View style={styles.footerVoteButtonContainer}>
-        {showVoteForWitness()}
-      </View>
+    <View style={[styles.footer]}>
+      {showVoteWitnessButton && (
+        <View style={styles.footerVoteButtonContainer}>
+          {showVoteForWitness()}
+        </View>
+      )}
       <View style={styles.footerIconsContainer}>
         <TouchableOpacity
           activeOpacity={1}
@@ -160,8 +154,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
     },
     footerVoteButtonContainer: {
       width: '100%',
-      marginTop: 20,
-      marginBottom: 30,
+      marginTop: 16,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -169,6 +162,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       flexDirection: 'row',
       width: '65%',
       justifyContent: 'space-evenly',
+      marginTop: 32,
     },
     footerLogo: {
       bottom: 4,
