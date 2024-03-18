@@ -75,11 +75,7 @@ const ConfirmationPage = ({
         <Caption text={title} hideSeparator />
         <Separator />
         {warningText && <Caption text={warningText} hideSeparator />}
-        <View
-          style={[
-            getCardStyle(theme).defaultCardItem,
-            {marginHorizontal: 16, marginBottom: 0},
-          ]}>
+        <View style={[getCardStyle(theme).defaultCardItem, {marginBottom: 0}]}>
           {data.map((e, i) => (
             <>
               <View style={[styles.justifyCenter, styles.confirmItem]}>
@@ -121,7 +117,7 @@ const ConfirmationPage = ({
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     confirmButton: {backgroundColor: PRIMARY_RED_COLOR},
-    confirmationPage: {flex: 1, marginBottom: 16},
+    confirmationPage: {flex: 1, marginBottom: 16, paddingHorizontal: 16},
     confirmItem: {
       marginVertical: 8,
     },
