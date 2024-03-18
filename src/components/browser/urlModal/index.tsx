@@ -19,7 +19,7 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {MARGIN_PADDING} from 'src/styles/spacing';
-import {title_primary_body_2} from 'src/styles/typography';
+import {title_primary_body_3} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import UrlAutocomplete from './UrlAutocomplete';
 
@@ -190,13 +190,15 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
     },
     textBase: {
       color: getColors(theme).secondaryText,
-      ...title_primary_body_2,
+      ...title_primary_body_3,
+      fontFamily: 'normal',
     },
     urlInput: {
       flex: 1,
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
       borderWidth: 1,
+      height: 50,
       borderRadius: 15,
       paddingLeft: MARGIN_PADDING,
     },
