@@ -232,7 +232,7 @@ const DropdownModal = ({
     );
   };
 
-  const renderDropdownTop = (showOpened?: boolean) => (
+  const renderSelectedValue = (showOpened?: boolean) => (
     <TouchableOpacity
       activeOpacity={1}
       onPress={() => {
@@ -250,16 +250,24 @@ const DropdownModal = ({
           : undefined,
       ]}>
       {typeof selected === 'string' ? (
-        <Text style={[inputStyle(theme, width).input, additionalTextStyle]}>
+        <Text
+          style={[
+            inputStyle(theme, width).input,
+            {flex: 1},
+            additionalTextStyle,
+          ]}
+          numberOfLines={1}>
           {selected}
         </Text>
       ) : (
-        <View style={[styles.flexRow]}>
-          {selected.icon}
+        <View style={[styles.flexRow, {flex: 1}]}>
+          <View>{selected.icon}</View>
           <Text
+            numberOfLines={1}
             style={[
               inputStyle(theme, width).input,
               styles.marginLeft,
+              {flex: 1},
               additionalTextStyle,
             ]}>
             {selected.label}
@@ -292,7 +300,7 @@ const DropdownModal = ({
             {translate(dropdownTitle)}
           </Text>
         )}
-        <View ref={dropdownContainerRef}>{renderDropdownTop()}</View>
+        <View ref={dropdownContainerRef}>{renderSelectedValue()}</View>
         {bottomLabelInfo && (
           <Text
             style={[
@@ -405,7 +413,7 @@ const getStyles = (
     flexRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
+      width,
     },
     marginLeft: {
       marginLeft: 8,
@@ -417,7 +425,6 @@ const getStyles = (
       height: 48,
       marginBottom: 0,
       borderRadius: 25,
-      width: '100%',
       zIndex: 30,
       paddingVertical: 0,
       marginTop: 0,
