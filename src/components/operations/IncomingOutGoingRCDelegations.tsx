@@ -1,7 +1,13 @@
 import {loadAccount} from 'actions/index';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {
@@ -10,7 +16,11 @@ import {
 } from 'src/interfaces/rc-delegation.interface';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
-import {FontPoppinsName, title_primary_body_2} from 'src/styles/typography';
+import {
+  FontPoppinsName,
+  getFontSizeSmallDevices,
+  title_primary_body_2,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {formatBalance} from 'utils/format';
 import {getCurrency} from 'utils/hive';
@@ -35,7 +45,8 @@ const IncomingOutGoingRCDelegations = ({
   const [rcDelegations, setRcDelegations] = useState<RcDelegation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const {theme} = useThemeContext();
-  const styles = getStyles(theme);
+  const {width} = useWindowDimensions();
+  const styles = getStyles(theme, width);
 
   useEffect(() => {
     init();
@@ -103,7 +114,7 @@ const IncomingOutGoingRCDelegations = ({
     />
   );
 };
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     flexRowBetween: {
       flexDirection: 'row',
@@ -114,13 +125,14 @@ const getStyles = (theme: Theme) =>
       ...title_primary_body_2,
       color: getColors(theme).secondaryText,
       flexDirection: 'column',
-      fontSize: 15,
+      fontSize: getFontSizeSmallDevices(width, 15),
       textAlign: 'right',
     },
     opaque: {opacity: 0.6},
     italicText: {
       fontFamily: FontPoppinsName.ITALIC,
       textAlign: 'right',
+      fontSize: getFontSizeSmallDevices(width, 14),
     },
     bottomLine: {
       borderColor: getColors(theme).lineSeparatorStroke,

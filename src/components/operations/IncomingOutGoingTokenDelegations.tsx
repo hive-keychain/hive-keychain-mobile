@@ -4,12 +4,20 @@ import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
-import {FlatList, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getColors} from 'src/styles/colors';
 import {
+  getFontSizeSmallDevices,
   title_primary_body_2,
   title_primary_title_1,
 } from 'src/styles/typography';
@@ -46,6 +54,8 @@ const IncomingOutGoingTokenDelegations = ({
   const [loading, setLoading] = useState(false);
   const [delegationList, setDelegationList] = useState<TokenDelegation[]>([]);
 
+  const {width} = useWindowDimensions();
+
   useEffect(() => {
     setLoading(true);
     init();
@@ -79,14 +89,13 @@ const IncomingOutGoingTokenDelegations = ({
 
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(token.symbol);
-  const styles = getDimensionedStyles(color, theme);
+  const styles = getDimensionedStyles(color, theme, width);
 
   return (
     <OperationThemed
       childrenTop={<Separator />}
       childrenMiddle={
         <View>
-          <Separator height={30} />
           {delegationType === 'Outgoing' && (
             <>
               <Caption
@@ -148,9 +157,13 @@ const IncomingOutGoingTokenDelegations = ({
   );
 };
 
-const getDimensionedStyles = (color: string, theme: Theme) =>
+const getDimensionedStyles = (color: string, theme: Theme, width: number) =>
   StyleSheet.create({
-    currency: {fontWeight: 'bold', fontSize: 18, color},
+    currency: {
+      fontWeight: 'bold',
+      fontSize: getFontSizeSmallDevices(width, 15),
+      color,
+    },
     flex: {
       flex: 1,
       justifyContent: 'center',
@@ -163,7 +176,7 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
     title: {
       ...title_primary_body_2,
       color: getColors(theme).secondaryText,
-      fontSize: 15,
+      fontSize: getFontSizeSmallDevices(width, 15),
     },
     infoText: {
       color: getColors(theme).septenaryText,

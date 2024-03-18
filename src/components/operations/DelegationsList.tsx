@@ -16,6 +16,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
@@ -27,6 +28,7 @@ import {getHorizontalLineStyle, getSeparatorLineStyle} from 'src/styles/line';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {getRotateStyle} from 'src/styles/transform';
 import {
+  getFontSizeSmallDevices,
   title_primary_body_2,
   title_secondary_body_3,
 } from 'src/styles/typography';
@@ -78,6 +80,9 @@ const DelegationsList = ({
   const [editedAmountDelegation, setEditedAmountDelegation] = useState('');
   const [editMode, setEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const {width} = useWindowDimensions();
+  const styles = getDimensionedStyles(theme, width);
 
   useEffect(() => {
     if (user) {
@@ -135,8 +140,6 @@ const DelegationsList = ({
     setEditMode(false);
   };
 
-  const styles = getDimensionedStyles(theme);
-
   const renderOutgoingItem = (item: VestingDelegation) => {
     const onDelegate = async (isCancellingDelegation: boolean) => {
       setIsLoading(true);
@@ -184,8 +187,7 @@ const DelegationsList = ({
           onPress={() => onHandleSelectedOutgoingItem(item)}
           style={styles.container}>
           <View style={styles.row}>
-            <Icon theme={theme} name={Icons.AT} />
-            <Text style={styles.textBase}> {`${item.delegatee}`}</Text>
+            <Text style={styles.textBase}> {`@${item.delegatee}`}</Text>
           </View>
           <View style={styles.rightContainer}>
             <Text style={styles.textBase}>{`${withCommas(
@@ -383,7 +385,6 @@ const DelegationsList = ({
       childrenTop={<Separator height={40} />}
       childrenMiddle={
         <View>
-          <Separator height={35} />
           {type === 'outgoing' && (
             <>
               <Caption text="wallet.operations.delegation.outgoing_disclaimer" />
@@ -419,7 +420,7 @@ const DelegationsList = ({
   );
 };
 
-const getDimensionedStyles = (theme: Theme) =>
+const getDimensionedStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     container: {
       display: 'flex',
@@ -443,8 +444,9 @@ const getDimensionedStyles = (theme: Theme) =>
     textBase: {
       ...title_primary_body_2,
       color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(width, 12),
     },
-    title: {fontSize: 15},
+    title: {fontSize: getFontSizeSmallDevices(width, 15), paddingHorizontal: 4},
     row: {flexDirection: 'row'},
     opaque: {opacity: 0.7},
     paddingHorizontal: {paddingHorizontal: 10},
