@@ -121,13 +121,11 @@ const DropdownModal = ({
   }, [searchValue, list]);
 
   const onHandleSelectedItem = (item: DropdownModalItem) => {
-    setIsClosing(true);
     setTimeout(() => {
       setIsListExpanded(false);
       setTimeout(() => onSelected(item), 100);
     }, 300);
   };
-  console.log('isclosing', isClosing);
   const onHandleCopyValue = (username: string) => {
     Clipboard.setString(username);
     SimpleToast.show(translate('toast.copied_username'), SimpleToast.LONG);
