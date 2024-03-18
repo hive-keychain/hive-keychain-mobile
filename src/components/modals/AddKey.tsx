@@ -2,9 +2,14 @@ import {addKey} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
-import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {Keyboard, StyleSheet, Text} from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
@@ -21,14 +26,14 @@ type Props = PropsFromRedux & {name: string; type: KeyTypes; theme: Theme};
 
 const AddKey = ({addKey, name, type, theme}: Props) => {
   const [key, setKey] = useState('');
+  const {width} = useWindowDimensions();
   const styles = getStyles(theme);
   return (
-    <>
-      <Separator height={30} />
+    <View
+      style={{justifyContent: 'space-between', flex: 1, paddingVertical: 24}}>
       <Text style={styles.title}>
         {translate('settings.keys.add_keyType', {type})}
       </Text>
-      <Separator />
       <OperationInput
         labelInput={translate('common.privateKey')}
         placeholder={translate('common.privateKey')}
@@ -36,8 +41,6 @@ const AddKey = ({addKey, name, type, theme}: Props) => {
         value={key}
         onChangeText={setKey}
       />
-
-      <Separator height={50} />
       <EllipticButton
         title={translate('common.save')}
         onPress={() => {
@@ -45,10 +48,11 @@ const AddKey = ({addKey, name, type, theme}: Props) => {
           Keyboard.dismiss();
           goBack();
         }}
-        style={getButtonStyle(theme).warningStyleButton}
+        style={getButtonStyle(theme, width).warningStyleButton}
+        isWarningButton
         additionalTextStyle={{...button_link_primary_medium}}
       />
-    </>
+    </View>
   );
 };
 
