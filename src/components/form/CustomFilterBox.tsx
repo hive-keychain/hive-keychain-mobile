@@ -13,13 +13,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {
-  PRIMARY_RED_COLOR,
-  RED_SHADOW_COLOR,
-  getColors,
-} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {inputStyle} from 'src/styles/input';
-import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   button_link_primary_medium,
@@ -31,6 +26,7 @@ import {TokenHistoryFilter} from 'src/types/tokens.history.types';
 import {WalletHistoryFilter} from 'src/types/wallet.history.types';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
+import {goBack} from 'utils/navigation';
 import CustomSearchBar from './CustomSearchBar';
 import EllipticButton from './EllipticButton';
 
@@ -199,23 +195,19 @@ const FilterBox = ({
         </TouchableOpacity>
       </View>
       <Separator height={10} />
-      <EllipticButton
-        title={translate('wallet.filter.clear_filters')}
-        onPress={() => handleClearFilter()}
-        style={[
-          styles.warningProceedButton,
-          generateBoxShadowStyle(
-            0,
-            13,
-            RED_SHADOW_COLOR,
-            1,
-            25,
-            20,
-            RED_SHADOW_COLOR,
-          ),
-        ]}
-        additionalTextStyle={styles.buttonText}
-      />
+      <View style={styles.buttonsContainer}>
+        <EllipticButton
+          title={translate('wallet.filter.clear_filters')}
+          onPress={() => handleClearFilter()}
+          style={[{marginRight: 4, flex: 1}]}
+        />
+        <EllipticButton
+          title={translate('common.ok')}
+          onPress={() => goBack()}
+          style={[styles.warningProceedButton, {marginLeft: 4, flex: 1}]}
+          isWarningButton
+        />
+      </View>
     </View>
   );
 };
@@ -241,6 +233,10 @@ const getStyles = (
   insets: EdgeInsets,
 ) =>
   StyleSheet.create({
+    buttonsContainer: {
+      flexDirection: 'row',
+      paddingHorizontal: 16,
+    },
     container: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderWidth: 1,
@@ -279,13 +275,13 @@ const getStyles = (
       flexWrap: 'wrap',
     },
     filterItem: {
-      borderColor: getColors(theme).tertiaryCardBorderColor,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
       borderWidth: 1,
       borderRadius: 18.8,
       marginRight: 4,
       marginBottom: 4,
       width: 'auto',
-      minHeight: 40,
+      minHeight: 20,
     },
     filterItemText: {
       textAlign: 'center',
@@ -302,7 +298,6 @@ const getStyles = (
       alignSelf: 'center',
       margin: 0,
       marginVertical: 8,
-      borderWidth: 0.4,
       borderColor: getColors(theme).tertiaryCardBorderColor,
     },
     inOutContainer: {
@@ -313,9 +308,7 @@ const getStyles = (
     },
     warningProceedButton: {
       backgroundColor: PRIMARY_RED_COLOR,
-      width: '55%',
       alignSelf: 'center',
-      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 30 : 40,
       marginVertical: 8,
     },
     activeFilterItem: {
