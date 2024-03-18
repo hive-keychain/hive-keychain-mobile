@@ -237,7 +237,6 @@ const RCDelegation = ({
           <Separator />
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => setAmount(available.gigaRcValue)}
             style={[
               getCardStyle(theme, 30).defaultCardItem,
               styles.marginPadding,
