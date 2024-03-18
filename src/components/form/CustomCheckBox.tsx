@@ -47,7 +47,7 @@ const CheckBox = ({
 const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     checkBox: {
-      width: '99%',
+      width: '100%',
       margin: 0,
       paddingLeft: 0,
       backgroundColor: '#00000000',
