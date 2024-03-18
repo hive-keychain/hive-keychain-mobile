@@ -30,6 +30,7 @@
     "warning_private_key_in_memo": "Please do not send any sentitive information about your keys in a memo."
   },
   "common": {
+    "accounts": "Accounts",
     "started_a": "Started a",
     "initiated_a": "Initiated a",
     "dapp_title": "dApp",

@@ -46,7 +46,7 @@ const UserDropdown = ({
       additionalDropdowContainerStyle={styles.dropdownContainer}
       additionalOverlayStyle={styles.dropdownOverlay}
       dropdownIconScaledSize={{width: 15, height: 15}}
-      dropdownTitle="common.account"
+      dropdownTitle="common.accounts"
       showSelectedIcon={
         <Icon
           name={Icons.CHECK}
