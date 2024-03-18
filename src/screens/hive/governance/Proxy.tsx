@@ -86,7 +86,7 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
       )}
       <View style={[styles.flewBewteen]}>
         {!loading && (
-          <View style={[{flex: 1}]}>
+          <View style={[{flex: 1, paddingHorizontal: 16}]}>
             <Caption
               text={
                 user.account.proxy.length > 0
