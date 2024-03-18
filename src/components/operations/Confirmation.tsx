@@ -16,7 +16,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonHeight} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getColors} from 'src/styles/colors';
 import {spacingStyle} from 'src/styles/spacing';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
@@ -107,7 +107,7 @@ const ConfirmationPage = ({
           title={translate('common.confirm')}
           onPress={onConfirm}
           isLoading={loading}
-          style={styles.confirmButton}
+          isWarningButton
         />
       </View>
     </Background>
@@ -116,7 +116,6 @@ const ConfirmationPage = ({
 
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
-    confirmButton: {backgroundColor: PRIMARY_RED_COLOR},
     confirmationPage: {flex: 1, marginBottom: 16, paddingHorizontal: 16},
     confirmItem: {
       marginVertical: 8,

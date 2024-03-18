@@ -14,7 +14,7 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonHeight, getButtonStyle} from 'src/styles/button';
+import {getButtonHeight} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
@@ -89,8 +89,7 @@ const Message = ({
             <EllipticButton
               title={translate('common.close')}
               onPress={() => resetModal()}
-              style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-              additionalTextStyle={styles.buttonText}
+              isWarningButton
             />
           </View>
         </View>

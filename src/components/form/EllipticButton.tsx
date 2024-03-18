@@ -51,6 +51,7 @@ export default ({
         getButtonStyle(theme, width).secondaryButton,
         styles.outlineButton,
         style,
+        isWarningButton ? {backgroundColor: PRIMARY_RED_COLOR} : {},
         isPressed
           ? getButtonBoxShadow(isWarningButton ? PRIMARY_RED_COLOR : '#000')
           : {},
