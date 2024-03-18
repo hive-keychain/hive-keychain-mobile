@@ -1,6 +1,7 @@
 import {loadAccount} from 'actions/index';
 import OperationThemed from 'components/operations/OperationThemed';
 import {SavingsOperations} from 'components/operations/Savings';
+import {Caption} from 'components/ui/Caption';
 import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
@@ -117,17 +118,11 @@ const PendingSavingsWithdrawalPageComponent = ({
       childrenMiddle={
         <>
           <Separator />
-          <Text style={[styles.disclaimer, styles.textBase, styles.opaque]}>
-            {translate(
-              'wallet.operations.savings.pending_withdraw.pending_disclaimer',
-              {currency},
-            )}
-          </Text>
-          <Separator
-            drawLine
-            height={10}
-            additionalLineStyle={styles.bottomLine}
+          <Caption
+            text="wallet.operations.savings.pending_withdraw.pending_disclaimer"
+            textParams={{currency}}
           />
+          <Separator height={16} />
           <ScrollView
             horizontal={true}
             contentContainerStyle={{width: '100%', height: '100%'}}>
