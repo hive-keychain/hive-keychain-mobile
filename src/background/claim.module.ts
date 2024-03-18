@@ -1,5 +1,6 @@
 import {Asset} from '@hiveio/dhive';
 import AsyncStorage from '@react-native-community/async-storage';
+import {loadAccount} from 'actions/index';
 import moment from 'moment';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState, store} from 'store';
@@ -129,6 +130,12 @@ const iterateClaimRewards = async (users: string[]) => {
         userAccount.reward_vesting_balance,
         activeAccount.keys.posting!,
       );
+      if (
+        activeAccount.name ===
+        ((await store.getState()) as RootState).activeAccount.name
+      ) {
+        store.dispatch<any>(loadAccount(activeAccount.name));
+      }
     }
   }
 };
