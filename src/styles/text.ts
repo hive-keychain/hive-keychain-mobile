@@ -9,6 +9,6 @@ export const getCaptionStyle = (width: number, theme: Theme) => {
     fontFamily: FontPoppinsName.REGULAR,
     color: getColors(theme).primaryText,
     paddingHorizontal: 16,
-    marginTop: 24,
+    marginTop: 16,
   } as TextStyle;
 };

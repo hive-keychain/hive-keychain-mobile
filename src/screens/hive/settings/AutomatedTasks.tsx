@@ -1,10 +1,11 @@
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import UserDropdown from 'components/form/UserDropdown';
 import Background from 'components/ui/Background';
+import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
@@ -79,9 +80,10 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
   return (
     <Background theme={theme}>
       <View style={styles.container}>
-        <Text style={styles.title}>
-          {translate('settings.settings.automated_tasks.disclaimer')}
-        </Text>
+        <Caption
+          text={'settings.settings.automated_tasks.disclaimer'}
+          hideSeparator
+        />
         <FocusAwareStatusBar />
         <UserDropdown />
         <Separator />
@@ -129,7 +131,6 @@ const getStyles = (theme: Theme) =>
     title: {
       ...title_primary_title_1,
       color: getColors(theme).primaryText,
-      marginBottom: 20,
     },
   });
 
