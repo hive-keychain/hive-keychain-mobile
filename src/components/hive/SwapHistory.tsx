@@ -92,7 +92,12 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
           <FocusAwareStatusBar />
           <Separator height={50} />
           {autoRefreshCountdown ? (
-            <View style={[styles.flexRowRight, styles.marginRight]}>
+            <View
+              style={[
+                styles.flexRowRight,
+                styles.marginRight,
+                {marginTop: 12},
+              ]}>
               <Text style={[styles.textBase, styles.smallMarginRight]}>
                 {translate('wallet.operations.swap.swap_refresh_countdown', {
                   count: autoRefreshCountdown,

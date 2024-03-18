@@ -115,6 +115,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       flexDirection: 'row',
       alignItems: 'center',
       flexWrap: 'wrap',
+      flex: 1,
     },
     smallerLabelSize: {
       marginLeft: 10,

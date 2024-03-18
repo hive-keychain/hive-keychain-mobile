@@ -768,7 +768,7 @@ const Swap = ({
                       />
                     </View>
                   }
-                  labelBottomExtraInfo={getTokenUSDPrice(
+                  labelExtraInfo={getTokenUSDPrice(
                     estimateValue,
                     endToken.value.symbol,
                   )}
@@ -779,7 +779,12 @@ const Swap = ({
                 activeOpacity={1}
                 onPress={() => setIsAdvanceSettingOpen(!isAdvanceSettingOpen)}
                 style={[styles.flexRowbetween, {marginBottom: 12}]}>
-                <Text style={[styles.textBase, {...body_primary_body_1}]}>
+                <Text
+                  style={[
+                    styles.textBase,
+                    {...body_primary_body_1},
+                    {fontSize: 16},
+                  ]}>
                   {translate('wallet.operations.swap.advanced_settings_title')}
                 </Text>
                 <Icon
