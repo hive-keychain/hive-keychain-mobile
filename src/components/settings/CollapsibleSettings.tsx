@@ -30,30 +30,31 @@ const CollapsibleSettings = ({
   theme,
 }: Props) => {
   const styles = getStyles(index, theme);
-
-  return (
-    <View style={getCardStyle(theme).defaultCardItem}>
-      <Text style={[styles.domain, styles.font]}>{domainPref.domain}</Text>
-      <View style={styles.whitelistsContainer}>
-        {domainPref.whitelisted_requests.map((e) => (
-          <View style={styles.whitelistContainer} key={e}>
-            <Text style={[styles.whitelist, styles.font, styles.opacity]}>
-              {capitalize(wordsFromCamelCase(e))}
-            </Text>
-            <Icon
-              name={Icons.REMOVE}
-              theme={theme}
-              onClick={() => {
-                removePreference(username, domainPref.domain, e);
-              }}
-              {...styles.removeIcon}
-              color={PRIMARY_RED_COLOR}
-            />
-          </View>
-        ))}
+  if (!domainPref.whitelisted_requests.length) return null;
+  else
+    return (
+      <View style={getCardStyle(theme).defaultCardItem}>
+        <Text style={[styles.domain, styles.font]}>{domainPref.domain}</Text>
+        <View style={styles.whitelistsContainer}>
+          {domainPref.whitelisted_requests.map((e) => (
+            <View style={styles.whitelistContainer} key={e}>
+              <Text style={[styles.whitelist, styles.font, styles.opacity]}>
+                {capitalize(wordsFromCamelCase(e))}
+              </Text>
+              <Icon
+                name={Icons.REMOVE}
+                theme={theme}
+                onClick={() => {
+                  removePreference(username, domainPref.domain, e);
+                }}
+                {...styles.removeIcon}
+                color={PRIMARY_RED_COLOR}
+              />
+            </View>
+          ))}
+        </View>
       </View>
-    </View>
-  );
+    );
 };
 
 const getStyles = (index: number, theme: Theme) =>
