@@ -119,8 +119,7 @@ const ProposalItem = ({
           } else {
             setExpandablePanelOpened(!isExpandablePanelOpened);
           }
-        }}
-        activeOpacity={1}>
+        }}>
         <View style={styles.title}>
           <Text
             onLongPress={() => goTo(proposal.link)}
@@ -150,11 +149,13 @@ const ProposalItem = ({
               style={styles.avatar}
             />
           </TouchableOpacity>
-          <Text
-            onLongPress={() => goToCreator(proposal.creator)}
-            style={[styles.username, styles.textOpaque]}>
-            {translate('governance.proposal.by', {name: proposal.creator})}
-          </Text>
+          <View style={{justifyContent: 'center'}}>
+            <Text
+              onLongPress={() => goToCreator(proposal.creator)}
+              style={[styles.username, styles.textOpaque]}>
+              {translate('governance.proposal.by', {name: proposal.creator})}
+            </Text>
+          </View>
         </View>
         <View style={styles.voteButton}>
           {!isvoting && (
