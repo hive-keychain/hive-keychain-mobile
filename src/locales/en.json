@@ -586,8 +586,7 @@
     },
     "copy_keys": {
       "title": "Copy a Key",
-      "text1": "If you need to copy a public or private key. Just do a long press on top of the visible key",
-      "text2": "After a brief moment, the app will display a message letting you know that the key has been copied to the clipboard."
+      "text1": "If you need to copy a public or private key, perform a long press on the key."
     }
   },
   "toast": {
