@@ -1,8 +1,11 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {title_primary_body_2} from 'src/styles/typography';
+import {
+  getFontSizeSmallDevices,
+  title_primary_body_2,
+} from 'src/styles/typography';
 
 type Props = {
   title: string;
@@ -10,10 +13,11 @@ type Props = {
 };
 export default ({title, content}: Props) => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme);
+  const {width} = useWindowDimensions();
+  const styles = getStyles(theme, width);
   return (
     <View style={styles.container}>
-      {getTitle({title, theme})}
+      {getTitle({title, theme, width})}
       <Text style={[styles.textBase, styles.content, styles.opaque]}>
         {content}
       </Text>
@@ -21,16 +25,24 @@ export default ({title, content}: Props) => {
   );
 };
 
-export const getTitle = ({title, theme}: {title: string; theme: Theme}) => {
-  const styles = getStyles(theme);
+export const getTitle = ({
+  title,
+  theme,
+  width,
+}: {
+  title: string;
+  theme: Theme;
+  width: number;
+}) => {
+  const styles = getStyles(theme, width);
   return <Text style={[styles.textBase, styles.title]}>{title}</Text>;
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     container: {paddingVertical: 5},
-    title: {fontSize: 14},
-    content: {fontSize: 14},
+    title: {fontSize: getFontSizeSmallDevices(width, 14)},
+    content: {fontSize: getFontSizeSmallDevices(width, 14)},
     textBase: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,

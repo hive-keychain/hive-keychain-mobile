@@ -4,6 +4,7 @@ import Separator from 'components/ui/Separator';
 import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {getFontSizeSmallDevices} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import RequestItem from './RequestItem';
@@ -38,6 +39,6 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     container: {width: '100%', marginTop: -30, marginBottom: 10, height: 60},
 
     text: {
-      fontSize: 13,
+      fontSize: getFontSizeSmallDevices(width, 13),
     },
   });
