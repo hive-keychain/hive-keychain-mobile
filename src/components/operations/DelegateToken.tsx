@@ -20,7 +20,6 @@ import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import AccountUtils from 'utils/account.utils';
 import {capitalize} from 'utils/format';
 import {delegateToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
@@ -103,9 +102,7 @@ const DelegateToken = ({
   };
 
   const onDelegateConfirmation = async () => {
-    if (!(await AccountUtils.doesAccountExist(to))) {
-      return Toast.show(translate('toast.no_such_account'), Toast.LONG);
-    } else if (!to || !amount) {
+    if (!to || !amount) {
       Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
     } else if (+amount > parseFloat(balance as string)) {
       Toast.show(
