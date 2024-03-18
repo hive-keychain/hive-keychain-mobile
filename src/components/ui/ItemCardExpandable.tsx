@@ -93,7 +93,7 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
     },
     width140: {
       width: width / 3,
-      paddingHorizontal: 8,
+      paddingHorizontal: 12,
     },
     main: {
       display: 'flex',
