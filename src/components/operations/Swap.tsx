@@ -530,7 +530,7 @@ const Swap = ({
               title={translate('common.confirm')}
               onPress={() => processSwap(estimateId)}
               isLoading={loading}
-              style={styles.confirmButton}
+              isWarningButton
             />
           </View>
         </Background>
@@ -962,7 +962,6 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       borderColor: getColors(theme).lineSeparatorStroke,
       alignSelf: 'center',
     },
-    confirmButton: {backgroundColor: PRIMARY_RED_COLOR},
   });
 
 const connector = connect(

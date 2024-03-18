@@ -47,6 +47,7 @@ export const getButtonStyle = (theme: Theme, screenWidth?: number) => {
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderWidth: 1,
       borderColor: getColors(theme).cardBorderColorJustDark,
+      height: screenWidth ? getButtonHeight(screenWidth) : BUTTON_MAX_HEIGHT,
     } as StyleProp<ViewStyle>,
     getOperationButtonStylesheet: () =>
       StyleSheet.create({

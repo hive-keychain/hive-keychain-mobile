@@ -2,7 +2,14 @@ import {KeyTypes} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import EllipticButton from 'components/form/EllipticButton';
 import React from 'react';
-import {StyleProp, StyleSheet, Text, TextStyle, View} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
@@ -30,6 +37,7 @@ const ConfirmationInItem = ({
   additionalConfirmTextStyle,
   keyType = KeyTypes.active,
 }: Props) => {
+  const {width} = useWindowDimensions();
   const styles = getStyles(theme);
   return (
     <View style={[styles.container]}>
@@ -49,20 +57,20 @@ const ConfirmationInItem = ({
               title={translate('common.cancel')}
               onPress={onCancel}
               style={[
-                getButtonStyle(theme).secondaryButton,
+                getButtonStyle(theme, width).secondaryButton,
                 styles.button,
                 styles.cancelButton,
               ]}
-              additionalTextStyle={styles.textBase}
+              // additionalTextStyle={styles.textBase}
             />
             <ActiveOperationButton
               title={translate('common.confirm')}
               onPress={onConfirm}
-              style={[getButtonStyle(theme).warningStyleButton, styles.button]}
-              additionalTextStyle={[
-                styles.textBase,
-                additionalConfirmTextStyle,
+              style={[
+                getButtonStyle(theme, width).warningStyleButton,
+                styles.button,
               ]}
+              additionalTextStyle={[additionalConfirmTextStyle]}
               isLoading={isLoading}
               method={keyType}
             />

@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleProp, StyleSheet, TextStyle, ViewStyle} from 'react-native';
-import {InputProps} from 'react-native-elements';
-import {IconNode} from 'react-native-elements/dist/icons/Icon';
+import {IconNode, InputProps} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
 import {DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {button_link_primary_small} from 'src/styles/typography';
