@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleProp, View, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 
 interface Props {
   height?: number;
@@ -7,16 +7,18 @@ interface Props {
   additionalLineStyle?: StyleProp<ViewStyle>;
 }
 const Separator = ({height = 20, drawLine, additionalLineStyle}: Props) => {
-  const lineStyle = {
-    borderWidth: 0.5,
-    borderColor: 'black',
-    margin: 10,
-  };
+  const lineStyle = StyleSheet.create({
+    line: {
+      borderColor: 'black',
+      margin: 10,
+      borderTopWidth: 0.5,
+    },
+  });
   return (
     <View
       style={[
         {marginTop: height},
-        drawLine ? lineStyle : null,
+        drawLine ? lineStyle.line : null,
         additionalLineStyle,
       ]}
     />
