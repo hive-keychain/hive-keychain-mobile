@@ -6,6 +6,7 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
@@ -16,7 +17,6 @@ import {RootState} from 'store';
 import AutomatedTasksUtils from 'utils/automatedTasks.utils';
 import {ClaimsConfig} from 'utils/config';
 import {translate} from 'utils/localize';
-
 const AutomatedTasks = ({active}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
@@ -34,14 +34,11 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
   >(undefined);
 
   useEffect(() => {
-    setClaimRewards(false);
-    setClaimAccounts(false);
-    setClaimSavings(false);
     setClaimAccountErrorMessage(undefined);
     setClaimSavingsErrorMessage(undefined);
     setClaimRewardsErrorMessage(undefined);
     init();
-  }, [active.name]);
+  }, [active]);
 
   const init = async () => {
     const values = await AutomatedTasksUtils.getClaims(active.name!);
@@ -91,7 +88,8 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
           checked={claimRewards}
           onPress={
             claimRewardsErrorMessage
-              ? null
+              ? () =>
+                  Toast.show(translate(claimRewardsErrorMessage), Toast.LONG)
               : () => saveClaims(!claimRewards, claimAccounts, claimSavings)
           }
           title="wallet.claim.enable_autoclaim_rewards"
@@ -101,7 +99,8 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
           checked={claimAccounts && !isClaimedAccountDisabled}
           onPress={
             claimAccountErrorMessage || isClaimedAccountDisabled
-              ? null
+              ? () =>
+                  Toast.show(translate(claimAccountErrorMessage), Toast.LONG)
               : () => saveClaims(claimRewards, !claimAccounts, claimSavings)
           }
           title="wallet.claim.enable_autoclaim_accounts"
@@ -114,7 +113,8 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
           checked={claimSavings}
           onPress={
             claimSavingsErrorMessage
-              ? null
+              ? () =>
+                  Toast.show(translate(claimSavingsErrorMessage), Toast.LONG)
               : () => saveClaims(claimRewards, claimAccounts, !claimSavings)
           }
           title="wallet.claim.enable_autoclaim_savings"

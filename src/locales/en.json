@@ -635,11 +635,10 @@
     "copied_id": "ID has been copied to Clipboard!",
     "copied_username": "Username has been copied to Clipboard!",
     "claims": {
-      "need_active_key_for_claim_savings": "You need to add your active key to Keychain to claim savings",
-      "need_active_key_for_claim_accounts": "You need to add your active key to Keychain to claim accounts",
-      "need_posting_key_to_claim_rewards": "You need to add your posting key to Keychain to claim accounts",
-      "not_enough_rc_to_claim_account": "You don't have enough RC to claim an account.",
-      "insufficient_hp_claim_accounts": "Insufficient HP to claim accounts."
+      "need_active_key_for_claim_savings": "You need to add your active key to Keychain to claim your savings interests",
+      "need_active_key_for_claim_accounts": "You need to add your active key to Keychain to claim account creation tickets",
+      "need_posting_key_to_claim_rewards": "You need to add your posting key to Keychain to claim your rewards",
+      "not_enough_rc_to_claim_account": "You don't have enough RC to claim account creation tickets"
     },
     "rpc_node_added_success": "RPC added succesfully",
     "rpc_node_removed_success": "RPC removed succesfully",
