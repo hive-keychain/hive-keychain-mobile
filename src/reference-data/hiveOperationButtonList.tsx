@@ -23,7 +23,7 @@ import {navigate} from 'utils/navigation';
 export const getHiveButtonList = (user: ActiveAccount, theme: Theme) => {
   const styles = getButtonStyle(
     theme,
-    useWindowDimensions().height,
+    useWindowDimensions().width,
   ).getOperationButtonStylesheet();
   return [
     <SquareButton
