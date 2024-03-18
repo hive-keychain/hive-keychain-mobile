@@ -1,8 +1,8 @@
 import {Asset} from '@hiveio/dhive';
 import {Account} from 'actions/interfaces';
-import DropdownModal from 'components/form/DropdownModal';
 import OperationButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
+import UserDropdown from 'components/form/UserDropdown';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -49,7 +49,6 @@ const CreateAccountStepOne = ({
   navigation,
   accounts,
 }: PropsFromRedux & {navigation: GovernanceNavigation}) => {
-  const [selectedAccount, setSelectedAccount] = useState('');
   const [accountOptions, setAccountOptions] = useState<SelectOption[]>();
   const [price, setPrice] = useState(3);
   const [accountName, setAccountName] = useState('');
@@ -77,8 +76,8 @@ const CreateAccountStepOne = ({
 
   useEffect(() => {
     setLoadingData(true);
-    onSelectedAccountChange(selectedAccount);
-  }, [selectedAccount]);
+    onSelectedAccountChange(user.name);
+  }, [user.name]);
 
   useEffect(() => {
     if (accountName.trim().length > 3) {
@@ -124,11 +123,6 @@ const CreateAccountStepOne = ({
       });
     }
     setAccountOptions(options);
-    setSelectedAccount(user.name!);
-  };
-
-  const onSelected = (value: any) => {
-    setSelectedAccount(value);
   };
 
   const getPriceLabel = () => {
@@ -161,14 +155,14 @@ const CreateAccountStepOne = ({
 
   const goToNextPage = async () => {
     if (await validateAccountName()) {
-      const account = await AccountUtils.getAccount(selectedAccount);
-      const balance = Asset.fromString(account[0].balance.toString());
+      const account = user.account;
+      const balance = Asset.fromString(account.balance.toString());
       if (
         creationType === AccountCreationType.USING_TICKET ||
         (creationType === AccountCreationType.BUYING && balance.amount >= 3)
       ) {
         const usedAccount = accounts.find(
-          (localAccount: Account) => localAccount.name === selectedAccount,
+          (localAccount: Account) => localAccount.name === user.name,
         );
         navigate('TemplateStack', {
           titleScreen: translate('navigation.create_account'),
@@ -193,30 +187,17 @@ const CreateAccountStepOne = ({
         <FocusAwareStatusBar />
         <View style={styles.container}>
           <View style={styles.content}>
-            {selectedAccount.length > 0 && accountOptions && (
+            {user.name && accountOptions && (
               <>
-                <DropdownModal
-                  list={accountOptions}
-                  selected={accountOptions.find(
-                    (item) => item.label === selectedAccount,
-                  )}
-                  onSelected={(selectedAccount) =>
-                    onSelected(selectedAccount.value)
-                  }
-                  additionalDropdowContainerStyle={styles.dropdown}
-                  additionalOverlayStyle={styles.paddingHorizontal}
-                  dropdownIconScaledSize={styles.icon}
-                  dropdownTitle="common.accounts"
-                  hideLabel
-                />
+                <UserDropdown />
               </>
             )}
             <Separator height={15} />
-            {selectedAccount.length > 0 && accountOptions && !loadingData && (
+            {user.name && accountOptions && !loadingData && (
               <Text style={[styles.text, styles.centeredText, styles.opacity]}>
                 {translate('components.create_account.cost', {
                   price: getPriceLabel(),
-                  account: selectedAccount,
+                  account: user.name,
                 })}
               </Text>
             )}
