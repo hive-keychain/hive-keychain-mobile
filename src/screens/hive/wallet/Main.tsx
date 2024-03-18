@@ -363,7 +363,9 @@ const Main = ({
                       styles.flexRow,
                       isSearchOpen ? styles.paddingVertical : undefined,
                     ]}>
-                    {isSearchOpen && (
+                    <HiveEngineLogo height={23} width={23} />
+                    <View style={styles.separatorContainer} />
+                    {isSearchOpen ? (
                       <CustomSearchBar
                         theme={theme}
                         value={searchValue}
@@ -387,24 +389,25 @@ const Main = ({
                           />
                         }
                       />
+                    ) : (
+                      <>
+                        <Icon
+                          name={Icons.SEARCH}
+                          theme={theme}
+                          additionalContainerStyle={styles.search}
+                          onClick={() => {
+                            setIsSearchOpen(true);
+                          }}
+                          width={18}
+                          height={18}
+                        />
+                        <Icon
+                          name={Icons.SETTINGS_2}
+                          theme={theme}
+                          onClick={handleClickSettings}
+                        />
+                      </>
                     )}
-                    <HiveEngineLogo height={23} width={23} />
-                    <View style={styles.separatorContainer} />
-                    <Icon
-                      name={Icons.SEARCH}
-                      theme={theme}
-                      additionalContainerStyle={styles.search}
-                      onClick={() => {
-                        setIsSearchOpen(true);
-                      }}
-                      width={18}
-                      height={18}
-                    />
-                    <Icon
-                      name={Icons.SETTINGS_2}
-                      theme={theme}
-                      onClick={handleClickSettings}
-                    />
                   </View>
                 </View>
                 {filteredUserTokenBalanceList.map((item, index) => (
@@ -471,7 +474,6 @@ const getDimensionedStyles = (
       flexDirection: 'row',
       alignItems: 'center',
       paddingHorizontal: 4,
-      justifyContent: 'space-between',
       paddingVertical: 8,
     },
     rowWrapper: {
