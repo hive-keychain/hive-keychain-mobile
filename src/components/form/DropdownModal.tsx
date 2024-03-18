@@ -413,7 +413,8 @@ const getStyles = (
     flexRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      width,
+      flexGrow: 1,
+      justifyContent: 'flex-end',
     },
     marginLeft: {
       marginLeft: 8,
