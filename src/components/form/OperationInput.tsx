@@ -33,9 +33,10 @@ interface OperationInputProps {
   removeLabelInputIndent?: boolean;
   autoCompleteValues?: AutoCompleteValuesType;
   additionalinfoIconActionColor?: string;
+  trim?: boolean;
 }
 
-export default (props: InputProps & OperationInputProps) => {
+export default ({trim = true, ...props}: InputProps & OperationInputProps) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, width, height);
@@ -48,6 +49,7 @@ export default (props: InputProps & OperationInputProps) => {
       inputColor={getColors(theme).secondaryText}
       autoCompleteValues={props.autoCompleteValues}
       inputStyle={inputStyle(theme, width).input}
+      value={trim ? props.value.trim() : props.value}
     />
   );
 
