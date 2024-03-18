@@ -175,7 +175,6 @@ const Delegation = ({
           <Separator />
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => setAmount(withCommas(available.toString()))}
             style={[
               getCardStyle(theme, 30).defaultCardItem,
               {marginHorizontal: 15, paddingVertical: 10},
