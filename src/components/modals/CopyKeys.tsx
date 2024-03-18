@@ -22,12 +22,6 @@ export default () => {
       <Text style={styles.textContent}>
         {translate('components.copy_keys.text1')}
       </Text>
-      <Separator height={20} />
-      <Text style={styles.textContent}>
-        <Text style={styles.textContent}>
-          {translate('components.copy_keys.text2')}
-        </Text>
-      </Text>
     </>
   );
 };
