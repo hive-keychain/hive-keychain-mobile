@@ -79,7 +79,7 @@ const Operations = ({
       <View style={styles.container}>
         <FocusAwareStatusBar />
         <Caption text="settings.settings.operations_info" hideSeparator />
-        <UserDropdown remeasure />
+        <UserDropdown />
         <CustomSearchBar
           theme={theme}
           additionalContainerStyle={[
