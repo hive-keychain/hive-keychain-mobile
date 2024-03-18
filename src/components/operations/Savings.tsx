@@ -335,6 +335,9 @@ const Savings = ({
               placeholder={currency}
               value={currency}
               editable={false}
+              additionalOuterContainerStyle={{
+                width: '40%',
+              }}
             />
             <OperationInput
               labelInput={capitalize(translate('common.amount'))}
