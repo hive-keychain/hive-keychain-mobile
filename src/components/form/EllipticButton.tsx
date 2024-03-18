@@ -10,7 +10,11 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import {BUTTON_MAX_HEIGHT, BUTTON_MAX_WIDTH} from 'src/styles/button';
+import {
+  BUTTON_MAX_HEIGHT,
+  BUTTON_MAX_WIDTH,
+  getButtonHeight,
+} from 'src/styles/button';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getButtonBoxShadow} from 'src/styles/shadow';
 
@@ -64,7 +68,7 @@ const getDimensionedStyles = ({width}: {width: number}) => {
       width: BUTTON_MAX_WIDTH,
       color: 'black',
       backgroundColor: 'black',
-      height: BUTTON_MAX_HEIGHT,
+      height: width ? getButtonHeight(width) : BUTTON_MAX_HEIGHT,
       borderRadius: 25,
       alignItems: 'center',
       justifyContent: 'center',

@@ -833,7 +833,7 @@
     "madeBy_part_1": "Made with",
     "madeBy_part_2": "by Keychain",
     "madeBy_part_3": "team",
-    "vote": "Vote @{{account}} for Witness",
+    "vote": "Vote for @{{account}} as witness",
     "thanks": "Thanks for your support ❤",
     "error30": "You already vote for 30 witnesses. You will need to unvote one to vote for a new one.",
     "errorActive": "You need an active key to vote for witnesses",

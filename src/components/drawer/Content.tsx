@@ -45,14 +45,14 @@ const HeaderContent = (props: Props) => {
   newState.routes = newState.routes.filter(
     (route) => !hiddenRoutesInMain.includes(route.name),
   );
-  const {theme, setTheme, toggleTheme} = useContext(ThemeContext);
+  const {theme, toggleTheme} = useContext(ThemeContext);
 
   return (
     <DrawerContentScrollView
       {...props}
-      contentContainerStyle={styles.contentContainer}>
+      contentContainerStyle={[styles.contentContainer]}>
       <DrawerHeader theme={theme} props={props} />
-      <ScrollView>
+      <ScrollView style={[{flex: 1}]}>
         <MenuItem
           labelTranslationKey="navigation.accounts"
           theme={theme}
@@ -76,13 +76,6 @@ const HeaderContent = (props: Props) => {
           drawBottomLine
         />
 
-        {/* <MenuItem
-          labelTranslationKey="navigation.tokens"
-          theme={theme}
-          onPress={() => navigation.navigate('Tokens')}
-          iconImage={<Icon name={Icons.TOKENS} theme={theme} />}
-          drawBottomLine
-        /> */}
         <MenuItem
           labelTranslationKey="navigation.governance"
           theme={theme}
