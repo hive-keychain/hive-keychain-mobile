@@ -257,7 +257,7 @@ const getDimensionedStyles = (
     },
     text: {
       color: getColors(theme).secondaryText,
-      marginHorizontal: 10,
+      marginHorizontal: 16,
       ...title_primary_title_1,
       textAlign: 'center',
       alignSelf: 'stretch',
