@@ -72,13 +72,13 @@ const addAuthorizedAccount = async (
     );
   }
 
-  if (activeAuth && activeAuth[1] >= activeKeyInfo.weight_threshold) {
+  if (activeAuth) {
     keys.active = existingAccounts.filter(
       (account) => account.name === authorizedAccount,
     )[0].keys.active;
     keys.activePubkey = `@${authorizedAccount}`;
   }
-  if (postingAuth && postingAuth[1] >= postingKeyInfo.weight_threshold) {
+  if (postingAuth) {
     keys.posting = existingAccounts.filter(
       (account) => account.name === authorizedAccount,
     )[0].keys.posting;
