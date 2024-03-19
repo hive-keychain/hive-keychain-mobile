@@ -1,9 +1,12 @@
 import Clipboard from '@react-native-community/clipboard';
+import {useHeaderHeight} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
+  Keyboard,
+  Platform,
   StyleProp,
   StyleSheet,
   Text,
@@ -15,6 +18,7 @@ import {
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
 import Animated, {SlideInDown, SlideOutDown} from 'react-native-reanimated';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -98,7 +102,8 @@ const DropdownModal = ({
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const [renderDropdownListOnTop, setRenderDropdownListOnTop] = useState(false);
-
+  const headerHeight = useHeaderHeight();
+  const insets = useSafeAreaInsets();
   const styles = getStyles(
     dropdownPageY,
     width,
@@ -119,7 +124,27 @@ const DropdownModal = ({
       setFilteredDropdownList(list);
     }
   }, [searchValue, list]);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      (event) => {
+        setKeyboardHeight(event.endCoordinates.height);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardHeight(0);
+      },
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
   const onHandleSelectedItem = (item: DropdownModalItem) => {
     setTimeout(() => {
       setIsListExpanded(false);
@@ -329,6 +354,7 @@ const DropdownModal = ({
             maxHeight: height / 2,
             minHeight: height / 3,
             shadowColor: 'transparent',
+            marginBottom: Platform.OS === 'ios' ? keyboardHeight : 0,
           }}>
           {!isClosing && (
             <ReanimatedView
@@ -359,6 +385,7 @@ const DropdownModal = ({
               )}
               <FlatList
                 keyboardDismissMode="none"
+                keyboardShouldPersistTaps="handled"
                 ListHeaderComponent={<Separator />}
                 ListFooterComponent={<Separator />}
                 ListEmptyComponent={
