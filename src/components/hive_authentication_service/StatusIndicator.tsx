@@ -47,14 +47,14 @@ const StatusIndicator = ({
       activeOpacity={1}
       style={styles.container}
       onLongPress={() => {
-        navigate('ModalScreen', {
-          name: ModalComponent.HAS_INFO,
-        });
-      }}
-      onPress={() => {
         if (status === ConnectionStatus.DISCONNECTED) {
           restartHASSockets();
         }
+      }}
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: ModalComponent.HAS_INFO,
+        });
       }}>
       <Indicator theme={theme} status={status} />
     </TouchableOpacity>

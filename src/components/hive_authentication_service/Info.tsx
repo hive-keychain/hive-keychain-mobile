@@ -5,7 +5,6 @@ import Separator from 'components/ui/Separator';
 import React from 'react';
 import {Image, StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
   FontPoppinsName,
@@ -15,6 +14,7 @@ import {
 } from 'src/styles/typography';
 import {clearHAS} from 'utils/hiveAuthenticationService';
 import {translate} from 'utils/localize';
+import {goBack} from 'utils/navigation';
 import StatusIndicator, {ConnectionStatus, Indicator} from './StatusIndicator';
 const TitleDarkPNG = require('assets/new_UI/has_title_dark.png');
 
@@ -56,12 +56,13 @@ const HASInfo = () => {
           status={ConnectionStatus.VOID}
           rootString={'wallet.has.info.indicator.grey'}
           theme={theme}
+          press
         />
         <IndicatorDescription
           status={ConnectionStatus.CONNECTED}
           rootString={'wallet.has.info.indicator.green'}
           theme={theme}
-          longPress
+          press
         />
         <IndicatorDescription
           status={ConnectionStatus.DISCONNECTED}
@@ -75,9 +76,10 @@ const HASInfo = () => {
           title={translate('common.clear_all')}
           onPress={() => {
             clearHAS();
+            goBack();
           }}
-          style={getButtonStyle(theme, height).warningStyleButton}
           additionalTextStyle={styles.buttonText}
+          isWarningButton
         />
       </View>
     </Operation>
