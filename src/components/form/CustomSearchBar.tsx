@@ -1,8 +1,15 @@
 import React from 'react';
-import {StyleProp, StyleSheet, TextStyle, ViewStyle} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  ViewStyle,
+  useWindowDimensions,
+} from 'react-native';
 import {IconNode, InputProps} from 'react-native-elements';
 import {Theme} from 'src/context/theme.context';
 import {DARKBLUELIGHTER, getColors} from 'src/styles/colors';
+import {inputStyle} from 'src/styles/input';
 import {button_link_primary_small} from 'src/styles/typography';
 import CustomInput from './CustomInput';
 
@@ -23,7 +30,8 @@ const CustomSearchBar = ({
   additionalCustomInputStyle,
   ...restProps
 }: Props & InputProps) => {
-  const styles = getStyles(theme);
+  const {width} = useWindowDimensions();
+  const styles = getStyles(theme, width);
 
   return (
     <CustomInput
@@ -46,7 +54,7 @@ const CustomSearchBar = ({
 
 export default CustomSearchBar;
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     container: {
       marginLeft: 0,
@@ -59,7 +67,9 @@ const getStyles = (theme: Theme) =>
     inputText: {
       ...button_link_primary_small,
       color: getColors(theme).secondaryText,
-      textAlignVertical: 'center',
+      fontSize: inputStyle(theme, width).input.fontSize,
+      textAlignVertical: 'bottom',
+      lineHeight: inputStyle(theme, width).input.fontSize,
     },
     noMarginHorizontal: {
       marginHorizontal: 0,
