@@ -1,5 +1,5 @@
 import {loadAccount} from 'actions/index';
-import ProposalItem from 'components/hive/ProposaItem';
+import ProposalItem from 'components/hive/ProposalItem';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';

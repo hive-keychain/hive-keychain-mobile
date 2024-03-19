@@ -113,7 +113,7 @@ const ProposalItem = ({
       <TouchableOpacity
         activeOpacity={1}
         style={styles.firstLine}
-        onPressOut={() => {
+        onPress={() => {
           if (isPressVote) {
             setIsPressVote(false);
           } else {
