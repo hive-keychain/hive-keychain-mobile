@@ -37,7 +37,6 @@ export default (props: BackgroundProps) => {
         style={[styles.container, props.containerStyle]}
         enabled={Platform.OS === 'ios' ? true : false}
         behavior={'padding'}
-        contentContainerStyle={{padding: 200}}
         keyboardVerticalOffset={height + insets.bottom}>
         <ImageBackground
           source={props.theme === Theme.LIGHT ? hexagonsLight : hexagonsDark}
