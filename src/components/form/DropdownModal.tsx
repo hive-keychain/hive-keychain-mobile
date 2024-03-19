@@ -359,6 +359,7 @@ const DropdownModal = ({
               )}
               <FlatList
                 keyboardDismissMode="none"
+                keyboardShouldPersistTaps="handled"
                 ListHeaderComponent={<Separator />}
                 ListFooterComponent={<Separator />}
                 ListEmptyComponent={

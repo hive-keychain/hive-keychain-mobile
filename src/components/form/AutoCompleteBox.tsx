@@ -153,6 +153,7 @@ const AutoCompleteBox = ({
                 <FlatList
                   nativeID="flatlist-automplete"
                   data={category.values}
+                  keyboardShouldPersistTaps="handled"
                   keyExtractor={(e) => e.value}
                   renderItem={({item: autoCompleteItem, index}) => (
                     <TouchableOpacity
