@@ -72,8 +72,7 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
       active.name!,
     );
   };
-  const isClaimedAccountDisabled =
-    active.rc.max_rc < ClaimsConfig.freeAccount.MIN_RC * 1.5;
+
   return (
     <Background theme={theme}>
       <View style={styles.container}>
@@ -96,9 +95,9 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
           subTitle="wallet.claim.enable_autoclaim_rewards_info"
         />
         <CheckBoxPanel
-          checked={claimAccounts && !isClaimedAccountDisabled}
+          checked={claimAccounts}
           onPress={
-            claimAccountErrorMessage || isClaimedAccountDisabled
+            claimAccountErrorMessage
               ? () =>
                   Toast.show(translate(claimAccountErrorMessage), Toast.LONG)
               : () => saveClaims(claimRewards, !claimAccounts, claimSavings)
