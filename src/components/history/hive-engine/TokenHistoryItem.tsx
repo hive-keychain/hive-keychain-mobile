@@ -1,4 +1,3 @@
-import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
 import CustomAmountLabel, {
   LabelDataType,
 } from 'components/form/CustomAmountLabel';
@@ -315,16 +314,23 @@ const TokenHistoryItem = ({
           <View style={styles.rowContainerSpaced}>
             <View style={[styles.row]}>
               {useIcon && (
-                <Icon
-                  name={getTokenIconName(transaction.operation)}
-                  theme={theme}
-                  additionalContainerStyle={styles.iconContainer}
-                  bgImage={<BackgroundIconRed />}
-                  color={PRIMARY_RED_COLOR}
-                />
+                <View
+                  style={{
+                    backgroundColor: '#E313371A',
+                    padding: 8,
+                    borderRadius: 16,
+                    borderTopRightRadius: 0,
+                  }}>
+                  <Icon
+                    name={getTokenIconName(transaction.operation)}
+                    theme={theme}
+                    additionalContainerStyle={styles.iconContainer}
+                    color={PRIMARY_RED_COLOR}
+                  />
+                </View>
               )}
-              <View style={styles.width140}>{label}</View>
-              <Text style={[{marginHorizontal: 15}, styles.text]}>{date}</Text>
+              <View style={styles.label}>{label}</View>
+              <Text style={[styles.text, {marginRight: 4}]}>{date}</Text>
             </View>
           </View>
         </View>
@@ -393,7 +399,7 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
     padding: {
       padding: 8,
     },
-    width140: {width: 140},
+    label: {flex: 1, marginHorizontal: 8},
   });
 
 export const TokenHistoryItemComponent = connector(TokenHistoryItem);
