@@ -32,11 +32,12 @@ export default (props: BackgroundProps) => {
   const height = useHeaderHeight();
   const insets = useSafeAreaInsets();
   return (
-    <SafeArea style={[styles.container, props.containerStyle]}>
+    <SafeArea style={[styles.mainContainer]}>
       <KeyboardAvoidingView
-        style={[styles.mainContainer]}
+        style={[styles.container, props.containerStyle]}
         enabled={Platform.OS === 'ios' ? true : false}
         behavior={'padding'}
+        contentContainerStyle={{padding: 200}}
         keyboardVerticalOffset={height + insets.bottom}>
         <ImageBackground
           source={props.theme === Theme.LIGHT ? hexagonsLight : hexagonsDark}
