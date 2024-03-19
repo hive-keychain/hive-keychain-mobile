@@ -38,7 +38,6 @@ const PreloadedImage = ({
       case getCurrency('HIVE'):
         return <FallBackHIVE {...svgStyles} />;
       default:
-        console.log('Rendering fallback!!'); //TODO remove line
         return <FallBackHE {...svgStyles} />;
     }
   };
