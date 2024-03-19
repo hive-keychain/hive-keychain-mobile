@@ -6,17 +6,39 @@ import {
   Page,
   TabFields,
 } from 'actions/interfaces';
-import Home from 'assets/browser/home.svg';
-import Favorite from 'assets/browser/icon_favorite.svg';
-import NotFavorite from 'assets/browser/icon_favorite_default.svg';
-import DrawerButton from 'components/ui/DrawerButton';
+import CustomSearchBar from 'components/form/CustomSearchBar';
+import Icon from 'components/hive/Icon';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import GestureRecognizer from 'react-native-swipe-gestures';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {getCardStyle} from 'src/styles/card';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getInputContainerHeight} from 'src/styles/input';
+import {
+  SMALLEST_SCREEN_WIDTH_SUPPORTED,
+  body_primary_body_1,
+  button_link_primary_small,
+} from 'src/styles/typography';
+import {RootState} from 'store';
 import {urlTransformer} from 'utils/browser';
+import {Dimensions} from 'utils/common.types';
 import {BrowserConfig} from 'utils/config';
 import {translate} from 'utils/localize';
+
+const HEART_PNG = require('assets/new_UI/heart.png');
+const HEART_EMPTY_PNG = require('assets/new_UI/heart-empty.png');
 
 type Props = {
   browser: Browser;
@@ -27,6 +49,8 @@ type Props = {
   swipeToTab: (right: boolean) => void;
   landscape: boolean;
   navigation: DrawerNavigationProp<any>;
+  theme: Theme;
+  activeTabs: number;
 };
 
 const BrowserHeader = ({
@@ -38,14 +62,17 @@ const BrowserHeader = ({
   removeFromFavorites,
   swipeToTab,
   landscape,
-}: Props) => {
+  theme,
+  activeTabs,
+}: Props & PropsFromRedux) => {
   const {HEADER_HEIGHT} = BrowserConfig;
   const insets = useSafeAreaInsets();
-  const styles = getStyles(HEADER_HEIGHT, insets, landscape);
+  const styles = getStyles(useWindowDimensions(), insets, landscape, theme);
 
   const goHome = () => {
     updateTab(activeTab, {url: BrowserConfig.HOMEPAGE_URL});
   };
+
   if (
     tabs &&
     activeTab &&
@@ -54,105 +81,221 @@ const BrowserHeader = ({
   ) {
     const active = tabs.find((e) => e.id === activeTab);
     const activeUrl = active.url;
+
     const renderFavoritesButton = () => {
       if (activeUrl === BrowserConfig.HOMEPAGE_URL) return null;
       return favorites.find((e) => e.url === activeUrl) ? (
         <TouchableOpacity
-          style={[styles.icon]}
+          activeOpacity={1}
+          style={[getCardStyle(theme, 50).defaultCardItem, styles.favContainer]}
           onPress={() => {
             removeFromFavorites(activeUrl);
           }}>
-          <Favorite width={17} height={16} color="#E5E5E5" />
+          <FastImage source={HEART_PNG} style={styles.icons} />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
-          style={[styles.icon]}
+          activeOpacity={1}
+          style={[getCardStyle(theme, 50).defaultCardItem, styles.favContainer]}
           onPress={() => {
             addToFavorites(active);
           }}>
-          <NotFavorite width={17} height={16} color="#E5E5E5" />
+          <FastImage source={HEART_EMPTY_PNG} style={styles.icons} />
         </TouchableOpacity>
       );
     };
+
     return (
       <GestureRecognizer
-        style={styles.container}
+        style={[styles.gesture]}
         onSwipeLeft={() => {
           swipeToTab(false);
         }}
         onSwipeRight={() => {
           swipeToTab(true);
         }}>
-        <View style={styles.topBar}>
-          <TouchableOpacity style={styles.icon} onPress={goHome}>
-            <Home width={17} height={16} color="#E5E5E5" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.textContainer}
-            onPress={() => {
-              startSearch(true);
-            }}>
-            <Text
-              style={
-                activeUrl !== BrowserConfig.HOMEPAGE_URL
-                  ? styles.url
-                  : styles.search
-              }
-              numberOfLines={1}>
-              {activeUrl !== BrowserConfig.HOMEPAGE_URL
-                ? urlTransformer(activeUrl).hostname +
-                  urlTransformer(activeUrl).pathname
-                : translate('browser.search')}
-            </Text>
-          </TouchableOpacity>
-          {renderFavoritesButton()}
+        <FocusAwareStatusBar backgroundColor={'transparent'} />
+        <View style={[styles.topBar]}>
+          {activeUrl !== BrowserConfig.HOMEPAGE_URL ? (
+            <>
+              <CustomSearchBar
+                theme={theme}
+                leftIcon={
+                  activeUrl !== BrowserConfig.HOMEPAGE_URL ? (
+                    <Icon
+                      theme={theme}
+                      name={Icons.HOME_BROWSER}
+                      onClick={goHome}
+                      color={PRIMARY_RED_COLOR}
+                      {...styles.icons}
+                    />
+                  ) : null
+                }
+                rightIcon={
+                  <Icon
+                    name={Icons.SEARCH}
+                    theme={theme}
+                    onClick={() => startSearch(true)}
+                    color={PRIMARY_RED_COLOR}
+                    {...styles.icons}
+                  />
+                }
+                value={
+                  activeUrl !== BrowserConfig.HOMEPAGE_URL
+                    ? urlTransformer(activeUrl).hostname +
+                      urlTransformer(activeUrl).pathname
+                    : translate('browser.search')
+                }
+                onChangeText={(text) => {}}
+                onFocus={() => {
+                  startSearch(true);
+                }}
+                disableFocus
+                additionalContainerStyle={styles.searchBarContainer}
+              />
+              {renderFavoritesButton()}
+            </>
+          ) : (
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => startSearch(true)}
+              style={[
+                getCardStyle(theme).defaultCardItem,
+                styles.fakeSearchBar,
+              ]}>
+              <Text style={[styles.fakeSearchBarText]}>
+                {translate('browser.search')}
+              </Text>
+              <Icon
+                name={Icons.SEARCH}
+                theme={theme}
+                onClick={() => startSearch(true)}
+                color={PRIMARY_RED_COLOR}
+                {...styles.icons}
+              />
+            </TouchableOpacity>
+          )}
         </View>
-
-        <DrawerButton navigation={navigation} />
       </GestureRecognizer>
     );
   } else {
     return (
       <View style={styles.container}>
-        <Text style={styles.browser}>{translate('navigation.browser')}</Text>
-        <DrawerButton navigation={navigation} />
+        <Text style={[styles.textBase, styles.browser]}>
+          {translate('navigation.tabs')}
+        </Text>
       </View>
     );
   }
 };
 
-const getStyles = (height: number, insets: EdgeInsets, landscape: boolean) =>
+const getStyles = (
+  {width, height}: Dimensions,
+  insets: EdgeInsets,
+  landscape: boolean,
+  theme: Theme,
+) =>
   StyleSheet.create({
+    gesture: {width: '100%', height: 'auto'},
     container: {
-      height: height + insets.top,
-      backgroundColor: 'black',
       width: '100%',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'center',
       alignItems: 'center',
-      paddingTop: insets.top,
-      paddingLeft: 20,
-      paddingBottom: 7,
     },
     topBar: {
-      height: 32,
-      backgroundColor: '#535353',
       borderRadius: 6,
-      flex: 1,
-      flexDirection: 'row',
       alignItems: 'center',
-    },
-    textContainer: {
-      lineHeight: 32,
-      flex: 1,
+      paddingVertical: 10,
+      height: 'auto',
+      width: '100%',
+      paddingHorizontal: 16,
       flexDirection: 'row',
-      alignItems: 'center',
+      marginTop: 8,
     },
-    url: {color: 'white', fontSize: 18, flex: 1},
-    search: {fontSize: 18, flex: 1, color: '#E5E5E5', fontStyle: 'italic'},
-    browser: {color: 'white', fontSize: 18, fontWeight: 'bold'},
-    icon: {paddingHorizontal: 10},
-    drawerButton: {alignSelf: 'center'},
+    paddingHorizontal: {
+      paddingHorizontal: 15,
+    },
+    paddingBottom: {paddingBottom: 15},
+    browser: {fontSize: 16, marginVertical: 10},
+    flexRowBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
+    flexRowCentered: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
+    tabsIndicator: {
+      borderColor: getColors(theme).icon,
+      borderWidth: 2,
+      width: 28,
+      height: 28,
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    textBase: {
+      ...body_primary_body_1,
+      color: getColors(theme).secondaryText,
+    },
+    redColor: {
+      color: PRIMARY_RED_COLOR,
+    },
+    flexContainer: {
+      width: '90%',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    marginLeft: {marginLeft: 8},
+    favContainer: {
+      width: getInputContainerHeight(width),
+      height: getInputContainerHeight(width),
+      marginBottom: 0,
+      justifyContent: 'center',
+      alignContent: 'center',
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+      marginLeft: 10,
+      alignSelf: 'center',
+    },
+    marginBottom: {
+      marginBottom: 8,
+    },
+    icons: {
+      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 16 : 18,
+      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 16 : 18,
+      alignSelf: 'center',
+    },
+    searchBarContainer: {
+      borderRadius: 30,
+      height: getInputContainerHeight(width),
+      paddingHorizontal: 16,
+      flex: 1,
+    },
+    fakeSearchBar: {
+      borderRadius: 30,
+      height: getInputContainerHeight(width),
+      paddingHorizontal: 16,
+      flex: 1,
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexDirection: 'row',
+      paddingVertical: 4,
+    },
+    fakeSearchBarText: {
+      ...button_link_primary_small,
+      color:
+        theme === Theme.LIGHT
+          ? 'rgba(33, 40, 56, 0.30)'
+          : 'rgba(255, 255, 255, 0.30)',
+    },
   });
 
-export default BrowserHeader;
+const mapStateToProps = (state: RootState) => {
+  return {};
+};
+const connector = connect(mapStateToProps, {});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(BrowserHeader);

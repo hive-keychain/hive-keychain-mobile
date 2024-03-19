@@ -24,7 +24,6 @@ import {
   VoteOperation,
 } from '@hiveio/dhive';
 import {Rpc} from 'actions/interfaces';
-import api from 'api/keychain';
 import hiveTx, {call} from 'hive-tx';
 import {hiveEngine} from 'utils/config';
 import {
@@ -36,29 +35,18 @@ import {
   RequestRemoveAccountAuthority,
   RequestRemoveKeyAuthority,
 } from './keychain.types';
+import {useWorkingRPC} from './rpc-switcher.utils';
 
 type BroadcastResult = {id: string};
 
-const DEFAULT_RPC = 'https://api.hive.blog';
 const DEFAULT_CHAIN_ID =
   'beeab0de00000000000000000000000000000000000000000000000000000000';
-let client = new Client(DEFAULT_RPC);
+let client = new Client('https://api.hive.blog');
 let testnet = false;
-
-const getDefault: () => Promise<string> = async () => {
-  try {
-    return (await api.get('/hive/rpc')).data.rpc;
-  } catch (e) {
-    return DEFAULT_RPC;
-  }
-};
 
 export const setRpc = async (rpcObj: Rpc | string) => {
   let rpc = typeof rpcObj === 'string' ? rpcObj : rpcObj.uri;
   testnet = typeof rpcObj === 'string' ? false : rpcObj.testnet || false;
-  if (rpc === 'DEFAULT') {
-    rpc = await getDefault();
-  }
   client = new Client(rpc);
   hiveTx.config.node = rpc;
   if (typeof rpcObj !== 'string') {
@@ -560,12 +548,12 @@ export const getData = async (
   const response = await call(method, params);
   if (response?.result) {
     return key ? response.result[key] : response.result;
-  } else
-    throw new Error(
-      `Error while retrieving data from ${method} : ${JSON.stringify(
-        response.error,
-      )}`,
-    );
+  } else useWorkingRPC();
+  throw new Error(
+    `Error while retrieving data from ${method} : ${JSON.stringify(
+      response.error,
+    )}`,
+  );
 };
 
 export default hive;

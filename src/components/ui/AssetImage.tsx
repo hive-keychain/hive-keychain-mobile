@@ -1,15 +1,17 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import BinanceSVG from 'src/assets/images/binance.svg';
-import BlocktradesSVG from 'src/assets/images/blocktrades.svg';
-import Cryptex24SVG from 'src/assets/images/cryptex24.svg';
-import GateioSVG from 'src/assets/images/gateio.svg';
-import HuobiSVG from 'src/assets/images/huobi.svg';
-import IonomySVG from 'src/assets/images/ionomy.svg';
-import MexcSVG from 'src/assets/images/mexc.svg';
-import ProbitSVG from 'src/assets/images/probit.svg';
-import TransakSVG from 'src/assets/images/transak.svg';
-import UpbitSVG from 'src/assets/images/upbit.svg';
+import Binance from 'src/assets/buy/binance.svg';
+import GateioDark from 'src/assets/buy/dark/gateio.svg';
+import HuobiDark from 'src/assets/buy/dark/huobi.svg';
+import IonomyDark from 'src/assets/buy/dark/ionomy.svg';
+import MexcDark from 'src/assets/buy/dark/mexc.svg';
+import GateioLight from 'src/assets/buy/light/gateio.svg';
+import HuobiLight from 'src/assets/buy/light/huobi.svg';
+import IonomyLight from 'src/assets/buy/light/ionomy.svg';
+import MexcLight from 'src/assets/buy/light/mexc.svg';
+import Upbit from 'src/assets/buy/upbit.svg';
+import TransakSVG from 'src/assets/new_UI/transak-logo-rounded.svg';
+import {Theme} from 'src/context/theme.context';
 import SvgContainer, {
   ContainerStylesProps,
   contentSVGProps,
@@ -18,90 +20,74 @@ import SvgContainer, {
 interface AssetImageprops {
   onClick?: () => void;
   nameImage: string;
+  withoutSVGContainer?: boolean;
   containerStyles?: ContainerStylesProps;
+  theme: Theme;
 }
 
 const AssetImage = (props: AssetImageprops) => {
   const getImageFilePath = (fileName: string) => {
+    let component;
     switch (fileName) {
       case 'binance':
-        return (
-          <SvgContainer
-            containerStyles={props.containerStyles}
-            svgFile={<BinanceSVG {...contentSVGProps} />}
-          />
-        );
-      case 'blocktrades':
-        return (
-          <SvgContainer
-            containerStyles={props.containerStyles}
-            svgFile={<BlocktradesSVG {...contentSVGProps} />}
-          />
-        );
+        component = <Binance {...contentSVGProps} />;
+
+        break;
       case 'transak':
-        return (
-          <SvgContainer
-            containerStyles={props.containerStyles}
-            svgFile={<TransakSVG {...contentSVGProps} />}
-          />
-        );
+        component = <TransakSVG {...contentSVGProps} />;
+
+        break;
       case 'upbit':
-        return (
-          <SvgContainer
-            containerStyles={props.containerStyles}
-            svgFile={<UpbitSVG {...contentSVGProps} />}
-          />
-        );
+        component = <Upbit {...contentSVGProps} />;
+
+        break;
       case 'gateio':
-        return (
-          <SvgContainer
-            containerStyles={props.containerStyles}
-            svgFile={<GateioSVG {...contentSVGProps} />}
-          />
-        );
+        component =
+          props.theme === Theme.DARK ? (
+            <GateioDark {...contentSVGProps} />
+          ) : (
+            <GateioLight {...contentSVGProps} />
+          );
+
+        break;
       case 'ionomy':
-        return (
-          <SvgContainer
-            containerStyles={props.containerStyles}
-            svgFile={<IonomySVG {...contentSVGProps} />}
-          />
-        );
+        component =
+          props.theme === Theme.DARK ? (
+            <IonomyDark {...contentSVGProps} />
+          ) : (
+            <IonomyLight {...contentSVGProps} />
+          );
+        break;
+
       case 'huobi':
-        return (
-          <SvgContainer
-            containerStyles={props.containerStyles}
-            svgFile={<HuobiSVG {...contentSVGProps} />}
-          />
-        );
+        component =
+          props.theme === Theme.DARK ? (
+            <HuobiDark {...contentSVGProps} />
+          ) : (
+            <HuobiLight {...contentSVGProps} />
+          );
+        break;
       case 'mexc':
-        return (
-          <SvgContainer
-            containerStyles={props.containerStyles}
-            svgFile={<MexcSVG {...contentSVGProps} />}
-          />
-        );
-      case 'probit':
-        return (
-          <SvgContainer
-            containerStyles={props.containerStyles}
-            svgFile={<ProbitSVG {...contentSVGProps} />}
-          />
-        );
-      case 'cryptex24':
-        return (
-          <SvgContainer
-            containerStyles={props.containerStyles}
-            svgFile={<Cryptex24SVG {...contentSVGProps} />}
-          />
-        );
-      default:
-        console.log('Please check as not found image svg!');
-        return null;
+        component =
+          props.theme === Theme.DARK ? (
+            <MexcDark {...contentSVGProps} />
+          ) : (
+            <MexcLight {...contentSVGProps} />
+          );
+        break;
     }
+    return props.withoutSVGContainer ? (
+      component
+    ) : (
+      <SvgContainer
+        containerStyles={props.containerStyles}
+        svgFile={component}
+      />
+    );
   };
 
   return props.onClick ? (
-    <TouchableOpacity onPress={props.onClick}>
+    <TouchableOpacity activeOpacity={1} onPress={props.onClick}>
       {getImageFilePath(props.nameImage)}
     </TouchableOpacity>
   ) : (

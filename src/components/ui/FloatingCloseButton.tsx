@@ -16,6 +16,7 @@ const FloatingCloseButton = ({
 }: FloatingCloseButtonProps) => {
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={style ?? defaultStyle.container}
       aria-label={ariaLabel}
       onPress={onPressHandler}>

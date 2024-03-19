@@ -11,7 +11,7 @@ export type AddAccFromWalletNavigation = StackNavigationProp<
   AddAccountFromWalletParamList,
   'AddAccountFromWalletScreen'
 >;
-type AddAccFromWalletNavigationRoute = RouteProp<
+export type AddAccFromWalletNavigationRoute = RouteProp<
   AddAccountFromWalletParamList,
   'AddAccountFromWalletScreen'
 >;

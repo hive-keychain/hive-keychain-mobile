@@ -1,13 +1,17 @@
-import CustomPicker from 'components/form/CustomPicker';
+import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
 import {useHasExpiration} from 'hooks/useHasExpiration';
 import {ModalNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {getButtonStyle} from 'src/styles/button';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {FontPoppinsName, body_primary_body_3} from 'src/styles/typography';
 import {RootState} from 'store';
 import HAS from 'utils/hiveAuthenticationService';
 import {HAS_AuthPayload} from 'utils/hiveAuthenticationService/payloads.types';
@@ -37,6 +41,13 @@ export enum SessionTime {
   MONTH = '1 Month',
 }
 
+const SESSION_LIST = [
+  SessionTime.HOUR,
+  SessionTime.DAY,
+  SessionTime.WEEK,
+  SessionTime.MONTH,
+];
+
 const HASAuthRequest = ({data, accounts, navigation}: Props) => {
   const [success, setSuccess] = useState(false);
   const [sessionTime, setSessionTime] = useState(SessionTime.DAY);
@@ -51,6 +62,9 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
 
   useHasExpiration(data.expire, data.onExpire);
 
+  const {theme} = useThemeContext();
+  const styles = getStyles(theme);
+
   return (
     <Operation
       logo={
@@ -64,12 +78,15 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
         />
       }
       title={translate('wallet.has.auth.title')}
-      onClose={data.onForceCloseModal}>
-      <>
+      onClose={data.onForceCloseModal}
+      additionalHeaderTitleStyle={[styles.text, styles.title]}>
+      <View style={styles.paddingHorizontal}>
         <Separator height={30} />
-        <Text style={styles.uuid}>{translate('wallet.has.uuid', data)}</Text>
+        <Text style={[styles.text, styles.uuid]}>
+          {translate('wallet.has.uuid', data)}
+        </Text>
         <Separator />
-        <Text>
+        <Text style={styles.text}>
           {success
             ? translate('wallet.has.auth.success', {
                 account: data.account,
@@ -83,7 +100,7 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
         {accounts.find((e) => e.name === data.account) ? null : (
           <>
             <Separator />
-            <Text style={styles.error}>
+            <Text style={[styles.text, styles.error]}>
               {translate('wallet.has.connect.no_username', data)}
             </Text>
           </>
@@ -92,20 +109,18 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
 
         {!success ? (
           <>
-            <Text style={{fontStyle: 'italic'}}>
-              {translate('wallet.has.session.prompt')}
-            </Text>
-            <CustomPicker
-              selectedValue={sessionTime}
-              onSelected={setSessionTime}
-              iosTextStyle={styles.text}
-              prompt={translate('wallet.has.session.prompt')}
-              list={[
-                SessionTime.HOUR,
-                SessionTime.DAY,
-                SessionTime.WEEK,
-                SessionTime.MONTH,
-              ]}
+            <DropdownModal
+              selected={sessionTime}
+              onSelected={(sessionItem) =>
+                setSessionTime(sessionItem.value as SessionTime)
+              }
+              list={SESSION_LIST.map((item) => {
+                return {
+                  label: item,
+                  value: item,
+                } as DropdownModalItem;
+              })}
+              dropdownTitle="wallet.has.session.prompt"
             />
           </>
         ) : (
@@ -127,21 +142,38 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
                 }
               : onConfirm
           }
-          style={styles.button}
+          style={getButtonStyle(theme).warningStyleButton}
+          additionalTextStyle={[styles.text, styles.textButton]}
         />
-      </>
+      </View>
     </Operation>
   );
 };
 
-const styles = StyleSheet.create({
-  button: {backgroundColor: '#68A0B4'},
-  error: {color: '#A3112A'},
-  uuid: {fontWeight: 'bold'},
-  text: {
-    fontSize: 14,
-  },
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    button: {backgroundColor: '#68A0B4'},
+    error: {color: PRIMARY_RED_COLOR},
+    uuid: {fontFamily: FontPoppinsName.SEMI_BOLD},
+    text: {
+      ...body_primary_body_3,
+      color: getColors(theme).secondaryText,
+      fontSize: 14,
+    },
+    italic: {
+      fontFamily: FontPoppinsName.ITALIC,
+    },
+    textButton: {
+      color: 'white',
+    },
+    paddingHorizontal: {
+      paddingHorizontal: 15,
+    },
+    title: {
+      fontFamily: FontPoppinsName.SEMI_BOLD,
+      fontSize: 16,
+    },
+  });
 
 const connector = connect((state: RootState) => {
   return {

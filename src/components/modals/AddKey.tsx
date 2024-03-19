@@ -1,54 +1,74 @@
 import {addKey} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
-import KeyIcon from 'assets/addAccount/icon_key.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
-import Operation from 'components/operations/Operation';
-import KeychainLogo from 'components/ui/KeychainLogo';
-import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {Keyboard, StyleSheet} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
+import {
+  Keyboard,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
+import {getButtonStyle} from 'src/styles/button';
+import {getColors} from 'src/styles/colors';
+import {
+  body_primary_body_1,
+  button_link_primary_medium,
+  headlines_primary_headline_1,
+} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 
-type Props = PropsFromRedux & {name: string; type: KeyTypes};
+type Props = PropsFromRedux & {name: string; type: KeyTypes; theme: Theme};
 
-const AddKey = ({addKey, name, type}: Props) => {
+const AddKey = ({addKey, name, type, theme}: Props) => {
   const [key, setKey] = useState('');
+  const {width} = useWindowDimensions();
+  const styles = getStyles(theme);
   return (
-    <Operation
-      title={translate('settings.keys.add')}
-      logo={<KeychainLogo width={40} />}>
-      <>
-        <Separator />
-        <OperationInput
-          placeholder={translate('common.privateKey').toUpperCase()}
-          leftIcon={<KeyIcon />}
-          autoCapitalize="none"
-          value={key}
-          onChangeText={setKey}
-        />
-
-        <Separator height={40} />
-        <EllipticButton
-          title={translate('common.save')}
-          onPress={() => {
-            addKey(name, type, key);
-            Keyboard.dismiss();
-            goBack();
-          }}
-          style={styles.button}
-        />
-      </>
-    </Operation>
+    <View
+      style={{justifyContent: 'space-between', flex: 1, paddingVertical: 24}}>
+      <Text style={styles.title}>
+        {translate('settings.keys.add_keyType', {type})}
+      </Text>
+      <OperationInput
+        labelInput={translate('common.privateKey')}
+        placeholder={translate('common.privateKey')}
+        autoCapitalize="none"
+        value={key}
+        onChangeText={setKey}
+      />
+      <EllipticButton
+        title={translate('common.save')}
+        onPress={() => {
+          addKey(name, type, key);
+          Keyboard.dismiss();
+          goBack();
+        }}
+        style={getButtonStyle(theme, width).warningStyleButton}
+        isWarningButton
+        additionalTextStyle={{...button_link_primary_medium}}
+      />
+    </View>
   );
 };
 
-const styles = StyleSheet.create({
-  button: {backgroundColor: '#68A0B4'},
-  currency: {fontWeight: 'bold', fontSize: 18},
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    text: {color: getColors(theme).secondaryText, ...body_primary_body_1},
+    title: {
+      color: getColors(theme).secondaryText,
+      ...headlines_primary_headline_1,
+      fontSize: 18,
+      textAlign: 'center',
+    },
+    smallerText: {
+      fontSize: 13,
+    },
+  });
 
 const connector = connect(null, {addKey});
 type PropsFromRedux = ConnectedProps<typeof connector>;

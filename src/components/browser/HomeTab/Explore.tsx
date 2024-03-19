@@ -1,53 +1,123 @@
 import {Account} from 'actions/interfaces';
-import Back from 'assets/browser/icon_arrow_back.svg';
-import React, {useState} from 'react';
+import Loader from 'components/ui/Loader';
+import React, {useEffect, useState} from 'react';
 import {
   Linking,
   Platform,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  useWindowDimensions,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
-import {BrowserConfig} from 'utils/config';
+import {useChainContext} from 'src/context/multichain.context';
+import {Theme} from 'src/context/theme.context';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {
+  MARGIN_LEFT_RIGHT_MIN,
+  MIN_SEPARATION_ELEMENTS,
+} from 'src/styles/spacing';
+import {
+  body_primary_body_1,
+  getFontSizeSmallDevices,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
+import {EcosystemUtils} from 'utils/ecosystem.utils';
 import {translate} from 'utils/localize';
-import CategoryButton, {
-  Category as CategoryType,
-} from './components/CategoryButton';
 import DAppCard from './components/DAppCard';
+
+export interface DApp {
+  name: string;
+  description: string;
+  icon: string;
+  url: string;
+  appendUsername?: boolean;
+  categories: string[];
+}
+
+export interface DAppCategory {
+  category: string;
+  dapps: DApp[];
+}
+
+export interface EcosystemCategoryProps {
+  category: DAppCategory;
+}
 
 type Props = {
   updateTabUrl: (link: string) => void;
   accounts: Account[];
+  theme: Theme;
 };
 
-export default ({updateTabUrl, accounts}: Props) => {
-  let {categories} = BrowserConfig.HomeTab;
-  if (Platform.OS === 'ios') {
-    categories = categories.filter((e) => e.title !== 'gaming');
-  }
-  const styles = getStyles(useWindowDimensions().width);
-  const [category, setCategory] = useState<string>(null);
-  if (!category) {
-    return (
-      <ScrollView style={styles.container}>
-        {categories.map((cat: CategoryType) => (
-          <CategoryButton
-            category={cat}
-            key={cat.title}
-            setCategory={setCategory}
-          />
+export default ({updateTabUrl, accounts, theme}: Props) => {
+  const {chain} = useChainContext();
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loadingDapps, setLoadingDapps] = useState(true);
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  const init = async () => {
+    const tcategories: DAppCategory[] = (
+      await EcosystemUtils.getDappList(chain)
+    ).data;
+    const tempTabs: any = [];
+    for (const tcategory of tcategories) {
+      if (!(Platform.OS === 'ios' && tcategory.category === 'gaming'))
+        tempTabs.push({
+          id: tcategory.category,
+          title: `browser.home.categories.${tcategory.category}`,
+          dapps: tcategory.dapps,
+        });
+    }
+    setCategories(tempTabs);
+    setLoadingDapps(false);
+  };
+
+  const styles = getStyles(useWindowDimensions(), theme);
+
+  return !loadingDapps ? (
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollviewContentContainer}>
+        {categories.map((cat: any) => (
+          <View key={cat.id}>
+            <Text style={styles.categoryTitle}>{translate(cat.title)}</Text>
+            <ScrollView horizontal style={styles.scroll}>
+              <View style={styles.cards}>
+                {cat.dapps
+                  .filter((e: DApp) => {
+                    if (Platform.OS === 'ios') {
+                      return (
+                        e.categories.includes(cat.id) &&
+                        !e.categories.includes('gaming')
+                      );
+                    } else {
+                      return e.categories.includes(cat.id);
+                    }
+                  })
+                  .map((e: DApp) => (
+                    <DAppCard
+                      key={e.name}
+                      dApp={e}
+                      updateTabUrl={updateTabUrl}
+                      theme={theme}
+                    />
+                  ))}
+              </View>
+            </ScrollView>
+          </View>
         ))}
         <View style={styles.footer}>
-          <Text style={styles.text}>
-            Can't see your favorite Hive dApp in here?
+          <Text style={[styles.textBase, styles.text]}>
+            {translate('browser.home.cant_see_dapps.part_1')}
           </Text>
-          <Text style={styles.text}>
-            Contact us on{' '}
+          <Text style={[styles.textBase, styles.text]}>
+            {translate('browser.home.cant_see_dapps.part_2')}
             <Text
-              style={{fontWeight: 'bold'}}
+              style={[styles.textBase, styles.text, styles.redColor]}
               onPress={() => {
                 Linking.openURL('https://discord.gg/tUHtyev2xF');
               }}>
@@ -57,84 +127,59 @@ export default ({updateTabUrl, accounts}: Props) => {
           </Text>
         </View>
       </ScrollView>
-    );
-  } else {
-    return (
-      <ScrollView style={styles.scroll}>
-        <View style={styles.title}>
-          <TouchableOpacity
-            style={styles.back}
-            onPress={() => {
-              setCategory(null);
-            }}>
-            <Back />
-          </TouchableOpacity>
-          <Text style={styles.categoryTitle}>
-            {translate(`browser.home.categories.${category}`).toUpperCase()}
-          </Text>
-        </View>
-        <View style={styles.cards}>
-          {BrowserConfig.HomeTab.dApps
-            .filter((e) => {
-              if (Platform.OS === 'ios') {
-                return (
-                  e.categories.includes(category) &&
-                  !e.categories.includes('gaming')
-                );
-              } else {
-                return e.categories.includes(category);
-              }
-            })
-            .map((e) => (
-              <DAppCard key={e.name} dApp={e} updateTabUrl={updateTabUrl} />
-            ))}
-          {BrowserConfig.HomeTab.dApps.filter((e) =>
-            e.categories.includes(category),
-          ).length %
-            3 ===
-          2 ? (
-            <View style={{width: '30%'}}></View>
-          ) : null}
-        </View>
-      </ScrollView>
-    );
-  }
+    </View>
+  ) : (
+    <View style={[{flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
+      <Loader animating size={'small'} />
+    </View>
+  );
 };
 
-const getStyles = (width: number) =>
+const getStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     container: {
       flexDirection: 'column',
-      backgroundColor: '#E5EEF7',
       flex: 1,
-      marginTop: 50,
+      borderTopLeftRadius: 40,
+      marginTop: 10,
+      borderTopRightRadius: 40,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+      overflow: 'hidden',
+    },
+    scrollviewContentContainer: {
+      paddingLeft: MARGIN_LEFT_RIGHT_MIN,
+      marginTop: 25,
+      overflow: 'hidden',
     },
     footer: {
-      flex: 1,
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
+      marginBottom: 30,
     },
-    text: {fontSize: 16},
-    scroll: {marginHorizontal: 0.03 * width, marginTop: 20},
-    title: {flexDirection: 'row', alignItems: 'center'},
-    back: {
-      width: 47,
-      height: 47,
-      backgroundColor: '#393939',
-      borderRadius: 10,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginRight: 30,
+    text: {fontSize: getFontSizeSmallDevices(width, 13)},
+    scroll: {
+      marginBottom: 20,
+    },
+    textBase: {
+      color: getColors(theme).secondaryText,
+      ...body_primary_body_1,
     },
     categoryTitle: {
-      fontSize: 20,
-      color: 'black',
+      ...headlines_primary_headline_2,
+      color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        width,
+        {...headlines_primary_headline_2}.fontSize,
+      ),
+      paddingLeft: MIN_SEPARATION_ELEMENTS,
     },
     cards: {
       marginTop: 30,
       flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-between',
+    },
+    redColor: {
+      color: PRIMARY_RED_COLOR,
     },
   });

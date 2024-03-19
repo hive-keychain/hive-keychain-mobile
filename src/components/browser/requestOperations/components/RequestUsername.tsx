@@ -1,7 +1,11 @@
 import {Account} from 'actions/interfaces';
-import UserPicker from 'components/form/UserPicker';
+import UserDropdown from 'components/form/UserDropdown';
+import Separator from 'components/ui/Separator';
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {getFontSizeSmallDevices} from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import RequestItem from './RequestItem';
 
@@ -11,7 +15,10 @@ type Props = {
   account: string;
   setAccount: (account: string) => void;
 };
-export default ({username, accounts, account, setAccount}: Props) => {
+export default ({username, setAccount}: Props) => {
+  const {theme} = useThemeContext();
+  const styles = getDimensionedStyles(useWindowDimensions(), theme);
+
   return username ? (
     <RequestItem
       title={translate('request.item.username')}
@@ -19,17 +26,19 @@ export default ({username, accounts, account, setAccount}: Props) => {
     />
   ) : (
     <View style={styles.container}>
-      <UserPicker
-        accounts={accounts.map((e) => e.name)}
-        username={account}
-        onAccountSelected={(acc) => {
-          setAccount(acc);
-        }}
+      <UserDropdown
+        onSelected={(selectedAccount) => setAccount(selectedAccount.value)}
       />
+      <Separator />
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {width: '100%', marginTop: -30},
-});
+const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
+  StyleSheet.create({
+    container: {width: '100%', marginTop: -30, marginBottom: 10, height: 60},
+
+    text: {
+      fontSize: getFontSizeSmallDevices(width, 13),
+    },
+  });

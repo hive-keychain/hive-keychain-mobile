@@ -1,9 +1,20 @@
-import Information from 'assets/addAccount/icon_info.svg';
+import Icon from 'components/hive/Icon';
+import CopyKeys from 'components/modals/CopyKeys';
 import InfoQR from 'components/modals/InfoQR';
 import InfoWalletQR from 'components/modals/InfoWalletQR';
 import MoreInformation from 'components/modals/MoreInformation';
+import {ModalScreenProps} from 'navigators/Root.types';
 import React from 'react';
-import {StyleSheet, TouchableOpacity, useWindowDimensions} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+  useWindowDimensions,
+} from 'react-native';
+import {useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {getColors} from 'src/styles/colors';
+import {getModalBaseStyle} from 'src/styles/modal';
 import {Width} from 'utils/common.types';
 import {navigate} from 'utils/navigation';
 
@@ -11,8 +22,16 @@ export enum Info {
   KEYS = 'KEYS',
   QR_ACCOUNT = 'QR_ACCOUNT',
   QR_WALLET = 'QR_WALLET',
+  COPY_KEYS = 'COPY_KEYS',
 }
-export default ({type}: {type: string}) => {
+export default ({
+  type,
+  additionalButtonStyle,
+}: {
+  type: string;
+  additionalButtonStyle?: StyleProp<ViewStyle>;
+}) => {
+  const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions());
   let content = <></>;
   switch (type) {
@@ -23,20 +42,40 @@ export default ({type}: {type: string}) => {
       content = <InfoQR />;
       break;
     case Info.QR_WALLET:
-      content = <InfoWalletQR />;
+      content = <InfoWalletQR theme={theme} />;
+      break;
+    case Info.COPY_KEYS:
+      content = <CopyKeys />;
       break;
   }
   return (
-    <TouchableOpacity
-      onPress={() => {
-        navigate('ModalScreen', {modalContent: content});
-      }}>
-      <Information style={styles.info} fill="#d9e3ed" />
-    </TouchableOpacity>
+    <Icon
+      height={24}
+      width={24}
+      name={Icons.INFO}
+      theme={theme}
+      additionalContainerStyle={[additionalButtonStyle]}
+      onClick={() =>
+        navigate('ModalScreen', {
+          name: Info.COPY_KEYS,
+          modalContent: content,
+          modalContainerStyle: [
+            getModalBaseStyle(theme).roundedTop,
+            styles.moreInfoModal,
+          ],
+          fixedHeight: 0.35,
+        } as ModalScreenProps)
+      }
+      color={getColors(theme).iconBW}
+    />
   );
 };
 
 const getDimensionedStyles = ({width}: Width) =>
   StyleSheet.create({
-    info: {marginRight: width * 0.05},
+    moreInfoModal: {
+      paddingHorizontal: 25,
+      paddingTop: 25,
+      paddingBottom: 45,
+    },
   });

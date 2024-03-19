@@ -1,27 +1,53 @@
-import {RadioButton} from 'components/form/CustomRadioGroup';
+import CheckBox from 'components/form/CustomCheckBox';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {
+  body_primary_body_1,
+  getFontSizeSmallDevices,
+} from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 
 type Props = {
   children: JSX.Element[];
   title: string;
   callback: (toggled: boolean) => void;
   toggled: boolean;
+  theme: Theme;
+  additionalTitleStyle?: StyleProp<TextStyle>;
 };
+/**
+ * Note: Using a checkbox, to toogle children components
+ */
+const OptionsToggle = ({
+  children,
+  title,
+  toggled,
+  callback,
+  theme,
+  additionalTitleStyle,
+}: Props) => {
+  const styles = getStyles(theme, useWindowDimensions());
+  const {width} = useWindowDimensions();
 
-const OptionsToggle = ({children, title, toggled, callback}: Props) => {
   return (
-    <View style={{flex: 1}}>
+    <View style={styles.container}>
       <View style={styles.header}>
-        <RadioButton
-          onSelect={() => {
+        <CheckBox
+          checked={toggled}
+          onPress={() => {
             callback(!toggled);
           }}
-          selected={toggled}
-          style={styles.toggleButton}
-          radioStyle={{width: 60}}
+          title={title}
+          skipTranslation
         />
-        <Text style={styles.title}>{title}</Text>
       </View>
       <View style={toggled ? styles.toggled : styles.untoggled}>
         {children}
@@ -30,27 +56,31 @@ const OptionsToggle = ({children, title, toggled, callback}: Props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  toggled: {display: 'flex'},
-  untoggled: {display: 'none'},
-  toggleButton: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#77B9D1',
-  },
-  toggleButtonText: {
-    color: '#77B9D1',
-    fontWeight: '800',
-    fontSize: 18,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  title: {color: 'black'},
-});
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
+  StyleSheet.create({
+    container: {
+      // height: 'auto',
+    },
+    toggled: {},
+    untoggled: {display: 'none'},
+    header: {
+      flexDirection: 'row',
+    },
+    title: {
+      ...body_primary_body_1,
+      color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(
+        width,
+        {...body_primary_body_1}.fontSize,
+      ),
+    },
+    checkbox: {
+      backgroundColor: 'rgba(0,0,0,0)',
+      borderColor: getColors(theme).senaryCardBorderColor,
+      borderRadius: 20,
+      padding: 0,
+      margin: 0,
+    },
+  });
 
 export default OptionsToggle;

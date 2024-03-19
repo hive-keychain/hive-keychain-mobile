@@ -1,21 +1,32 @@
-import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {ImageStyle, StatusBar, StyleProp, StyleSheet} from 'react-native';
+import {useThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import Background from './Background';
 
 type Props = {
   children: JSX.Element;
+  additionalBgSvgImageStyle?: StyleProp<ImageStyle>;
 };
 
-export default ({children}: Props) => {
+export default ({children, additionalBgSvgImageStyle}: Props) => {
+  const {theme} = useThemeContext();
   return (
-    <SafeArea style={styles.bgd}>
-      <FocusAwareStatusBar barStyle="light-content" backgroundColor="#A3112A" />
-      {children}
-    </SafeArea>
+    <Background
+      theme={theme}
+      additionalBgSvgImageStyle={additionalBgSvgImageStyle}>
+      <SafeArea style={styles.bgd}>
+        <StatusBar
+          barStyle={getColors(theme).barStyle}
+          backgroundColor={getColors(theme).primaryBackground}
+        />
+        {children}
+      </SafeArea>
+    </Background>
   );
 };
 
 const styles = StyleSheet.create({
-  bgd: {width: '100%', height: '100%', backgroundColor: 'white'},
+  bgd: {width: '100%', height: '100%'},
 });

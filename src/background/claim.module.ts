@@ -1,5 +1,6 @@
 import {Asset} from '@hiveio/dhive';
 import AsyncStorage from '@react-native-community/async-storage';
+import {loadAccount} from 'actions/index';
 import moment from 'moment';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState, store} from 'store';
@@ -28,7 +29,7 @@ const alarmHandler = async () => {
     allClaims[`${item[0]}`] = item[1] ? JSON.parse(item[1]) : false;
   });
 
-  const allClaimsAccounts = allClaims[KeychainStorageKeyEnum.CLAIM_REWARDS];
+  const allClaimsAccounts = allClaims[KeychainStorageKeyEnum.CLAIM_ACCOUNTS];
   const allClaimsRewards = allClaims[KeychainStorageKeyEnum.CLAIM_REWARDS];
   const allClaimsSavings = allClaims[KeychainStorageKeyEnum.CLAIM_SAVINGS];
   if (
@@ -129,6 +130,12 @@ const iterateClaimRewards = async (users: string[]) => {
         userAccount.reward_vesting_balance,
         activeAccount.keys.posting!,
       );
+      if (
+        activeAccount.name ===
+        ((await store.getState()) as RootState).activeAccount.name
+      ) {
+        store.dispatch<any>(loadAccount(activeAccount.name));
+      }
     }
   }
 };

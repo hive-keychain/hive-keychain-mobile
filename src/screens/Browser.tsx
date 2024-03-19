@@ -1,3 +1,4 @@
+import {showFloatingBar} from 'actions/floatingBar';
 import {
   addTab,
   addToFavorites,
@@ -13,10 +14,12 @@ import {
 } from 'actions/index';
 import Browser from 'components/browser';
 import ProposalReminder from 'components/popups/proposal-reminder';
+import SafeArea from 'components/ui/SafeArea';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React from 'react';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
+import {useThemeContext} from 'src/context/theme.context';
 import {RootState} from 'store';
 
 const BrowserScreen = ({
@@ -32,6 +35,7 @@ const BrowserScreen = ({
   addToFavorites,
   removeFromFavorites,
   setBrowserFocus,
+  showFloatingBar,
   navigation,
   route,
   showManagementScreen,
@@ -55,9 +59,12 @@ const BrowserScreen = ({
   //   return unsubscribe;
   // }, [navigation]);
 
+  const {theme} = useThemeContext();
+
   return (
-    <>
+    <SafeArea>
       <Browser
+        theme={theme}
         accounts={accounts}
         navigation={navigation}
         route={route}
@@ -74,9 +81,10 @@ const BrowserScreen = ({
         setBrowserFocus={setBrowserFocus}
         showManagementScreen={showManagementScreen}
         preferences={preferences}
+        showFloatingBar={showFloatingBar}
       />
       <ProposalReminder navigation={navigation} />
-    </>
+    </SafeArea>
   );
 };
 
@@ -100,6 +108,7 @@ const connector = connect(mapStateToProps, {
   removeFromFavorites,
   setBrowserFocus,
   showManagementScreen,
+  showFloatingBar,
 });
 
 export type BrowserPropsFromRedux = ConnectedProps<typeof connector>;

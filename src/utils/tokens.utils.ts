@@ -1,4 +1,6 @@
-import hsc from 'api/hiveEngine';
+import {TokenBalance} from 'actions/interfaces';
+import hsc, {hiveEngineGet} from 'api/hiveEngine';
+import {Token, TokenMarket} from 'src/interfaces/tokens.interface';
 
 export interface TransactionConfirmationResult {
   confirmed: boolean;
@@ -49,10 +51,87 @@ const delayRefresh = async (): Promise<void> => {
   });
 };
 
-const BlockchainTransactionUtils = {
+export const getUserBalance = (account: string) => {
+  return hiveEngineGet<TokenBalance[]>({
+    contract: 'tokens',
+    table: 'balances',
+    query: {account: account},
+    indexes: [],
+    limit: 1000,
+    offset: 0,
+  });
+};
+
+export const getAllTokens = async (): Promise<Token[]> => {
+  let tokens = [];
+  let offset = 0;
+  do {
+    const newTokens = await getTokens(offset);
+    tokens.push(...newTokens);
+    offset += 1000;
+  } while (tokens.length % 1000 === 0);
+  return tokens;
+};
+
+const getTokens = async (offset: number) => {
+  return (
+    await hiveEngineGet<any[]>({
+      contract: 'tokens',
+      table: 'tokens',
+      query: {},
+      limit: 1000,
+      offset: offset,
+      indexes: [],
+    })
+  ).map((t: any) => {
+    return {
+      ...t,
+      metadata: JSON.parse(t.metadata),
+    };
+  });
+};
+
+export const getTokenInfo = async (symbol: string): Promise<Token> => {
+  return (
+    await hiveEngineGet<any[]>({
+      contract: 'tokens',
+      table: 'tokens',
+      query: {symbol: symbol},
+      limit: 1000,
+      offset: 0,
+      indexes: [],
+    })
+  ).map((t: any) => {
+    return {
+      ...t,
+      metadata: JSON.parse(t.metadata),
+    };
+  })[0];
+};
+
+export const getTokenPrecision = async (symbol: string) => {
+  if (symbol === 'HBD' || symbol === 'HIVE') {
+    return 3;
+  }
+  const token = await getTokenInfo(symbol);
+  return token.precision;
+};
+
+export const getHiveEngineTokenPrice = (
+  {symbol}: Partial<TokenBalance>,
+  market: TokenMarket[],
+) => {
+  const tokenMarket = market.find((t) => t.symbol === symbol);
+  const price = tokenMarket
+    ? parseFloat(tokenMarket.lastPrice)
+    : symbol === 'SWAP.HIVE'
+    ? 1
+    : 0;
+  return price;
+};
+
+export const BlockchainTransactionUtils = {
   tryConfirmTransaction,
   delayRefresh,
   getDelayedTransactionInfo,
 };
-
-export default BlockchainTransactionUtils;

@@ -12,6 +12,12 @@ export type MainDrawerStackParam = {
   SettingsScreen: undefined;
   ABOUT: undefined;
   Governance: undefined;
+  Tokens: undefined;
+  TokensHistory: undefined;
+  Operation: undefined;
+  TemplateStack: undefined;
+  SwapBuyStack: undefined;
+  SwapHistory: undefined;
 };
 
 export type BrowserNavigation = StackNavigationProp<

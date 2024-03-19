@@ -1,72 +1,134 @@
 import React from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
-import {Width} from 'utils/common.types';
+import {
+  ScaledSize,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {DARKER_RED_COLOR, getColors} from 'src/styles/colors';
+import {
+  fields_primary_text_2,
+  getFontSizeSmallDevices,
+  title_secondary_body_3,
+  title_secondary_title_2,
+} from 'src/styles/typography';
+import Icon from './Icon';
 
 type Props = {
-  color: string;
+  IconBgcolor: string;
   percent: number;
   name: string;
+  theme: Theme;
+  iconName: Icons;
+  bgColor: string;
   secondary?: string;
 };
-const PercentageDisplay = ({color, percent, name, secondary}: Props) => {
-  const styles = getDimensionedStyles({
-    color,
+const PercentageDisplay = ({
+  IconBgcolor,
+  percent,
+  name,
+  secondary,
+  theme,
+  iconName,
+  bgColor,
+}: Props) => {
+  const styles = getDimensionedStyles(
+    useWindowDimensions(),
+    IconBgcolor,
     percent,
-    ...useWindowDimensions(),
-  });
+    theme,
+    bgColor,
+  );
 
   return (
     <View style={styles.container}>
+      <Icon
+        color={'#FFF'}
+        theme={theme}
+        name={iconName}
+        additionalContainerStyle={styles.iconContainer}
+        width={22}
+        height={22}
+      />
       <View style={styles.textWrapper}>
-        <Text style={styles.name}>{name.toUpperCase()}</Text>
-        <Text style={styles.percent}>{`${percent.toFixed(0)} %`}</Text>
-        <Text style={styles.secondary}>{secondary}</Text>
-      </View>
-      <View style={styles.greyBar}>
-        <View style={styles.filler} />
+        <View style={{flexGrow: 1}}>
+          <Text style={styles.name}>{name}</Text>
+          <View style={[styles.textWrapper]}>
+            <Text style={[styles.percent]}>
+              {`${percent.toFixed(0)}`}
+              <Text style={[{...title_secondary_body_3}]}> % </Text>
+
+              <Text style={styles.secondary}>{secondary}</Text>
+            </Text>
+          </View>
+        </View>
       </View>
     </View>
   );
 };
 
-const getDimensionedStyles = ({
-  width,
-  color,
-  percent,
-}: Width & {color: string; percent: number}) =>
+const getDimensionedStyles = (
+  {width, height}: ScaledSize,
+  IconBgcolor: string,
+  percent: number,
+  theme: Theme,
+  bgColor: string,
+) =>
   StyleSheet.create({
     textWrapper: {
       display: 'flex',
       flexDirection: 'row',
-      width: '100%',
-      marginBottom: 10,
+      flexGrow: 1,
+    },
+    justifyBetween: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      flexGrow: 1,
+      maxWidth: '90%',
     },
     name: {
-      color: '#7E8C9A',
-      fontSize: 14,
+      color: '#FFF',
+      opacity: 0.7,
+      ...title_secondary_body_3,
+      fontSize: getFontSizeSmallDevices(
+        width,
+        {...title_secondary_body_3}.fontSize,
+      ),
     },
-    percent: {color: 'black', fontWeight: 'bold'},
-    secondary: {
-      color: color,
-      fontWeight: 'bold',
-      textAlign: 'right',
-      flex: 1,
-      width: '100%',
+    percent: {
+      color: '#FFF',
+      ...title_secondary_title_2,
+      fontSize: getFontSizeSmallDevices(width, 30),
+      lineHeight: 30,
     },
     container: {
       display: 'flex',
-      flexDirection: 'column',
-      width: 0.42 * width,
+      flexDirection: 'row',
+      width: '48%',
+      borderColor: getColors(theme).cardBorderColorJustDark,
+      borderWidth: theme === Theme.DARK && bgColor !== DARKER_RED_COLOR ? 1 : 0,
+      borderRadius: 13,
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+      backgroundColor: bgColor,
     },
-    greyBar: {
-      height: 2,
-      width: 0.42 * width,
-      backgroundColor: '#D7E9F8',
+    iconContainer: {
+      backgroundColor: IconBgcolor,
+      borderRadius: 12,
+      padding: 3,
+      width: 35,
+      height: 35,
+      marginRight: 5,
     },
-    filler: {
-      height: 2,
-      width: (width * 0.42 * percent) / 100,
-      backgroundColor: color,
+    secondary: {
+      color: '#FFF',
+      paddingLeft: 10,
+      ...fields_primary_text_2,
+      textAlignVertical: 'bottom',
+      fontSize: getFontSizeSmallDevices(width, fields_primary_text_2.fontSize),
     },
   });
 

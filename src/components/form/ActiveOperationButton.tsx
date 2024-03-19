@@ -1,33 +1,46 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
-import {StyleProp, ViewStyle} from 'react-native';
+import {StyleProp, TextStyle, ViewStyle} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import EllipticButton from './EllipticButton';
 
 type Props = {
-  method?: KeyTypes;
+  method?: KeyTypes | 'none';
   title: string;
   style: StyleProp<ViewStyle>;
   onPress: () => void;
   isLoading: boolean;
+  additionalTextStyle?: StyleProp<TextStyle>;
 } & PropsFromRedux;
-const ActiveOperationButton = ({method, onPress, style, ...props}: Props) => {
-  const disabled = !props.user.keys[method || KeyTypes.active];
+const ActiveOperationButton = ({
+  method,
+  onPress,
+  style,
+  additionalTextStyle,
+  ...props
+}: Props) => {
+  const disabled =
+    method !== 'none' && !props.user.keys[method || KeyTypes.active];
   return (
     <>
       <EllipticButton
         {...props}
-        style={[style, disabled ? {backgroundColor: '#AAA'} : undefined]}
+        isWarningButton
+        style={style}
         onPress={() => {
           if (disabled) {
-            SimpleToast.show(translate('wallet.add_active'), SimpleToast.LONG);
+            SimpleToast.show(
+              translate(`wallet.add_${method || KeyTypes.active}`),
+              SimpleToast.LONG,
+            );
           } else {
             onPress();
           }
         }}
+        additionalTextStyle={additionalTextStyle}
       />
     </>
   );

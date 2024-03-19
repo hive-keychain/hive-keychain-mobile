@@ -1,177 +1,244 @@
-import {loadAccount, loadUserTokens} from 'actions/index';
-import {KeyTypes, Token} from 'actions/interfaces';
-import Delegate from 'assets/wallet/icon_delegate_dark.svg';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
+import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {Keyboard, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
-import IconBack from 'src/assets/Icon_arrow_back_black.svg';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {MessageModalType} from 'src/enums/messageModal.enums';
+import {Token} from 'src/interfaces/tokens.interface';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getHorizontalLineStyle} from 'src/styles/line';
+import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
+import {capitalize} from 'utils/format';
 import {unstakeToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
-import BlockchainTransactionUtils from 'utils/tokens.utils';
+import {navigate} from 'utils/navigation';
+import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import Balance from './Balance';
-import Operation from './Operation';
+import {ConfirmationPageProps} from './Confirmation';
+import OperationThemed from './OperationThemed';
 
-type Props = PropsFromRedux & {
+export interface UnstakeTokenOperationProps {
   currency: string;
   tokenLogo: JSX.Element;
   balance: string;
   tokenInfo: Token;
   gobackAction?: () => void;
-};
+}
+
+type Props = PropsFromRedux & UnstakeTokenOperationProps;
 
 const UnstakeToken = ({
   currency,
   user,
   balance,
-  loadAccount,
   properties,
   tokenLogo,
   tokenInfo,
-  loadUserTokens,
-  gobackAction,
+  showModal,
 }: Props) => {
   const [amount, setAmount] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const onUnstakeToken = async () => {
-    if (!user.keys.active) {
-      return Toast.show(
-        translate('common.missing_key', {key: KeyTypes.active}),
-      );
-    }
-
-    if (parseFloat(amount) <= 0) {
-      return Toast.show(translate('common.need_positive_amount'), Toast.LONG);
-    }
-
-    setLoading(true);
-    Keyboard.dismiss();
-
-    const tokenOperationResult: any = await unstakeToken(
-      user.keys.active,
-      user.name!,
-      {
-        symbol: currency,
-        quantity: sanitizeAmount(amount),
-      },
-    );
-
-    if (tokenOperationResult && tokenOperationResult.tx_id) {
-      let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
-        tokenOperationResult.tx_id,
+    try {
+      const tokenOperationResult: any = await unstakeToken(
+        user.keys.active,
+        user.name!,
+        {
+          symbol: currency,
+          quantity: sanitizeAmount(amount),
+        },
       );
 
-      if (confirmationResult && confirmationResult.confirmed) {
-        if (confirmationResult.error) {
-          Toast.show(
-            translate('toast.hive_engine_error', {
+      if (tokenOperationResult && tokenOperationResult.tx_id) {
+        let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
+          tokenOperationResult.tx_id,
+        );
+
+        if (confirmationResult && confirmationResult.confirmed) {
+          if (confirmationResult.error) {
+            showModal('toast.hive_engine_error', MessageModalType.ERROR, {
               error: confirmationResult.error,
-            }),
-            Toast.LONG,
-          );
+            });
+          } else {
+            showModal('toast.token_unstake_success', MessageModalType.SUCCESS, {
+              currency,
+            });
+          }
         } else {
-          Toast.show(
-            translate('toast.token_unstake_success', {currency}),
-            Toast.LONG,
-          );
+          showModal('toast.token_timeout', MessageModalType.ERROR);
         }
       } else {
-        Toast.show(translate('toast.token_timeout'), Toast.LONG);
+        showModal('toast.tokens_operation_failed', MessageModalType.ERROR, {
+          tokenOperation: 'unstake',
+        });
       }
-    } else {
-      Toast.show(
-        translate('toast.tokens_operation_failed', {tokenOperation: 'unstake'}),
-        Toast.LONG,
+    } catch (e) {
+      showModal(
+        `Error : ${(e as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
       );
     }
-
-    setLoading(false);
-    loadAccount(user.account.name, true);
-    loadUserTokens(user.name!);
-    goBack();
   };
 
+  const onUnstakeTokenConfirmation = () => {
+    if (!amount) {
+      Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
+    } else if (+amount > parseFloat(balance)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      const confirmationData: ConfirmationPageProps = {
+        onSend: onUnstakeToken,
+        title: 'wallet.operations.token_unstake.confirm.info',
+        data: [
+          {
+            title: 'common.account',
+            value: `@${user.account.name}`,
+          },
+
+          {
+            title: 'wallet.operations.transfer.confirm.amount',
+            value: `${amount} ${currency}`,
+          },
+        ],
+      };
+      navigate('ConfirmationPage', confirmationData);
+    }
+  };
+
+  const {height} = useWindowDimensions();
+  const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
-  const styles = getDimensionedStyles(color);
-
-  const renderIconComponent = () => {
-    return gobackAction ? (
-      <View style={styles.rowContainer}>
-        <TouchableOpacity onPress={gobackAction} style={styles.goBackButton}>
-          <IconBack />
-        </TouchableOpacity>
-      </View>
-    ) : (
-      <Delegate />
-    );
-  };
+  const styles = getDimensionedStyles(color, theme);
 
   return (
-    <Operation
-      logo={renderIconComponent()}
-      title={translate('wallet.operations.token_unstake.unstaking_token', {
-        currency,
-      })}>
-      <>
-        <Text>
-          {translate('wallet.operations.token_unstake.cooldown_disclaimer', {
-            unstakingCooldown: tokenInfo.unstakingCooldown,
-          })}
-          {tokenInfo.unstakingCooldown === 1 ? '' : 's'}
-        </Text>
-        <Separator />
-        <Balance
-          currency={currency}
-          account={user.account}
-          isHiveEngine
-          globalProperties={properties.globals}
-          setMax={(value: string) => {
-            setAmount(value);
-          }}
-          tokenLogo={tokenLogo}
-          tokenBalance={balance}
-        />
-        <Separator />
-        <OperationInput
-          placeholder={'0.000'}
-          keyboardType="decimal-pad"
-          rightIcon={<Text style={styles.currency}>{currency}</Text>}
-          textAlign="right"
-          value={amount}
-          onChangeText={setAmount}
-        />
+    <OperationThemed
+      childrenTop={
+        <>
+          <Separator />
+          <Balance
+            currency={currency}
+            account={user.account}
+            isHiveEngine
+            globalProperties={properties.globals}
+            setMax={(value: string) => {
+              setAmount(value);
+            }}
+            tokenLogo={tokenLogo}
+            tokenBalance={balance}
+            theme={theme}
+          />
+          <Separator />
+        </>
+      }
+      childrenMiddle={
+        <View style={styles.childrenMiddle}>
+          <Caption
+            text="wallet.operations.token_unstake.info"
+            additionnalText={`wallet.operations.token_unstake.${
+              tokenInfo.unstakingCooldown > 1
+                ? 'cooldown_disclaimer_multiple_days'
+                : 'cooldown_disclaimer_single_day'
+            }`}
+            additionnalTextParams={{
+              unstakingCooldown: tokenInfo.unstakingCooldown,
+            }}
+          />
 
-        <Separator height={40} />
-        <ActiveOperationButton
-          title={translate('common.unstake')}
-          onPress={onUnstakeToken}
-          style={styles.button}
-          isLoading={loading}
-        />
-      </>
-    </Operation>
+          <View style={styles.flexRowBetween}>
+            <OperationInput
+              labelInput={translate('common.currency')}
+              placeholder={currency}
+              value={currency}
+              editable={false}
+              additionalOuterContainerStyle={{
+                width: '40%',
+              }}
+            />
+            <OperationInput
+              keyboardType="decimal-pad"
+              labelInput={capitalize(translate('common.amount'))}
+              placeholder={'0'}
+              value={amount}
+              onChangeText={setAmount}
+              additionalOuterContainerStyle={{
+                width: '54%',
+              }}
+              rightIcon={
+                <View style={styles.flexRowCenter}>
+                  <Separator
+                    drawLine
+                    additionalLineStyle={getHorizontalLineStyle(
+                      theme,
+                      1,
+                      35,
+                      16,
+                    )}
+                  />
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => setAmount(balance)}>
+                    <Text
+                      style={
+                        getFormFontStyle(height, theme, PRIMARY_RED_COLOR).input
+                      }>
+                      {translate('common.max').toUpperCase()}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              }
+            />
+          </View>
+        </View>
+      }
+      buttonTitle={'common.unstake'}
+      onNext={onUnstakeTokenConfirmation}
+    />
   );
 };
 
-const getDimensionedStyles = (color: string) =>
+const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
-    button: {backgroundColor: '#68A0B4'},
-    currency: {fontWeight: 'bold', fontSize: 18, color},
+    button: {marginBottom: 20},
     rowContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
     },
-    goBackButton: {
-      margin: 7,
+    childrenMiddle: {
+      paddingHorizontal: 10,
+    },
+    flexRowBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    flexRowCenter: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
+    },
+    infoText: {
+      color: getColors(theme).septenaryText,
+      opacity: theme === Theme.DARK ? 0.6 : 1,
+      paddingHorizontal: 15,
     },
   });
 
@@ -182,7 +249,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {loadAccount, loadUserTokens},
+  {showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

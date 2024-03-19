@@ -1,22 +1,34 @@
+import Icon from 'components/hive/Icon';
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {RootState} from 'store';
-import {clearHAS, restartHASSockets} from 'utils/hiveAuthenticationService';
+import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';
-const LOGO_DARK = require('assets/has/logo-dark.png');
 
-//TODO: Use all connection statuses. This will be useful when different servers work with Hive Auth.
 export enum ConnectionStatus {
   VOID,
   DISCONNECTED,
   PARTIALLY_CONNECTED,
   CONNECTED,
 }
-const StatusIndicator = ({has}: PropsFromRedux) => {
+
+interface Props {
+  theme: Theme;
+  additionalContainerStyle?: StyleProp<ViewStyle>;
+}
+
+const StatusIndicator = ({
+  has,
+  theme,
+  additionalContainerStyle,
+}: PropsFromRedux & Props) => {
   let status = ConnectionStatus.VOID;
+
   if (has.instances.length) {
     const connected = has.instances.filter((e) => e.init && e.connected).length;
     if (connected === 0) {
@@ -28,79 +40,53 @@ const StatusIndicator = ({has}: PropsFromRedux) => {
     }
   }
 
-  const styles = getStyles(status);
+  const styles = getStyles(status, theme);
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.hasContainer}
-        onPress={() => {
-          navigate('ModalScreen', {
-            name: ModalComponent.HAS_INFO,
-          });
-        }}>
-        <Image source={LOGO_DARK} style={{height: 30, width: 30}} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          if (status === ConnectionStatus.DISCONNECTED) {
-            restartHASSockets();
-          }
-        }}
-        onLongPress={() => {
-          clearHAS();
-        }}
-        style={styles.indicatorView}>
-        <Indicator status={status} />
-      </TouchableOpacity>
+    <TouchableOpacity
+      activeOpacity={1}
+      style={styles.container}
+      onLongPress={() => {
+        if (status === ConnectionStatus.DISCONNECTED) {
+          restartHASSockets();
+        }
+      }}
+      onPress={() => {
+        navigate('ModalScreen', {
+          name: ModalComponent.HAS_INFO,
+        });
+      }}>
+      <Indicator theme={theme} status={status} />
+    </TouchableOpacity>
+  );
+};
+
+export const Indicator = ({
+  status,
+  theme,
+}: {
+  status: ConnectionStatus;
+  theme: Theme;
+}) => {
+  const styles = getStyles(status, theme);
+  return (
+    <View style={styles.indicator}>
+      <Icon theme={theme} name={Icons.LOGO_HAS} width={15} height={15} />
     </View>
   );
 };
 
-export const Indicator = ({status}: {status: ConnectionStatus}) => {
-  const styles = getStyles(status);
-  return (
-    <View
-      style={
-        status === ConnectionStatus.CONNECTED ? styles.indicatorShadow : null
-      }>
-      <View style={styles.indicator}></View>
-    </View>
-  );
-};
-
-const getStyles = (status: ConnectionStatus) =>
+const getStyles = (status: ConnectionStatus, theme: Theme) =>
   StyleSheet.create({
     container: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      width: 70,
-    },
-    hasContainer: {
-      width: 25,
-      height: 25,
-      justifyContent: 'center',
-    },
-    indicatorView: {
-      width: 25,
-      height: 25,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    indicatorShadow: {
-      width: 20,
-      height: 20,
-      borderRadius: 10,
-      borderColor: getStatusColor(status),
-      borderWidth: 2,
-      justifyContent: 'center',
-      alignItems: 'center',
+      marginRight: 8,
     },
     indicator: {
-      backgroundColor: getStatusColor(status),
-      width: 12,
-      height: 12,
-      borderRadius: 6,
+      borderColor: getStatusColor(status),
+      padding: 4,
+      borderRadius: 50,
+      borderWidth: 2,
+      backgroundColor: '#FFF',
     },
   });
 

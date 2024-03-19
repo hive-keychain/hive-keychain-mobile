@@ -3,6 +3,7 @@ import {signBuffer} from 'components/bridge';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {urlTransformer} from 'utils/browser';
+import {beautifyIfJSON} from 'utils/format';
 import {
   RequestError,
   RequestId,
@@ -68,7 +69,7 @@ export default ({
       <RequestItem title={translate('request.item.method')} content={method} />
       <RequestItem
         title={translate('request.item.message')}
-        content={message}
+        content={beautifyIfJSON(message)}
       />
     </RequestOperation>
   );

@@ -1,22 +1,21 @@
 import {Tab as TabType} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useState} from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
 import Orientation, {OrientationType} from 'react-native-orientation-locker';
 import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
+import {Theme} from 'src/context/theme.context';
 import {BrowserConfig} from 'utils/config';
 import Header from './Header';
 import Tab from './Tab';
 import TabsManagement from './tabsManagement';
 import UrlModal from './urlModal';
+
+interface Props {
+  theme: Theme;
+}
 
 const Browser = ({
   accounts,
@@ -35,7 +34,9 @@ const Browser = ({
   navigation,
   setBrowserFocus,
   showManagementScreen,
-}: BrowserPropsFromRedux & BrowserNavigationProps) => {
+  showFloatingBar,
+  theme,
+}: BrowserPropsFromRedux & BrowserNavigationProps & Props) => {
   const {showManagement, activeTab, tabs, history, favorites} = browser;
   const currentActiveTabData = tabs.find((t) => t.id === activeTab);
   const url = currentActiveTabData
@@ -49,13 +50,6 @@ const Browser = ({
   useEffect(() => {
     setSearchUrl(url);
   }, [url]);
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      StatusBar.setHidden(true);
-    });
-
-    return unsubscribe;
-  }, [navigation]);
 
   useEffect(() => {
     setBrowserFocus(false);
@@ -79,6 +73,7 @@ const Browser = ({
         setDeviceOrientation(orientation);
       }
     });
+
     return () => {
       Orientation.removeAllListeners();
     };
@@ -173,65 +168,73 @@ const Browser = ({
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <Header
-        browser={browser}
-        navigation={navigation}
-        route={route}
-        updateTab={updateTab}
-        startSearch={toggleVisibility}
-        addToFavorites={addToFavorites}
-        removeFromFavorites={removeFromFavorites}
-        swipeToTab={swipeToTab}
-        landscape={orientation.startsWith('LANDSCAPE')}
-      />
-      <TabsManagement
-        tabs={tabs}
-        activeTab={activeTab}
-        onSelectTab={onSelectTab}
-        onCloseTab={onCloseTab}
-        onCloseAllTabs={onCloseAllTabs}
-        onAddTab={onAddTab}
-        onQuitManagement={onQuitManagement}
-        show={showManagement}
-      />
-      {tabs.map((tab) => (
-        <Tab
-          accounts={accounts}
-          data={tab}
-          active={tab.id === activeTab}
-          key={tab.id}
-          updateTab={updateTab}
+    <>
+      <KeyboardAvoidingView
+        style={[styles.container]}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <Header
+          browser={browser}
+          //@ts-ignore
           navigation={navigation}
-          addToHistory={addToHistory}
-          history={history}
-          manageTabs={manageTabs}
-          isManagingTab={showManagement}
-          preferences={preferences}
-          favorites={favorites}
-          addTab={onAddTab}
-          tabsNumber={browser.tabs.length}
-          orientation={orientation}
-          isUrlModalOpen={isVisible}
+          route={route}
+          updateTab={updateTab}
+          startSearch={toggleVisibility}
+          addToFavorites={addToFavorites}
+          removeFromFavorites={removeFromFavorites}
+          swipeToTab={swipeToTab}
+          landscape={orientation.startsWith('LANDSCAPE')}
+          theme={theme}
+          activeTabs={browser.tabs.length}
         />
-      ))}
-      <UrlModal
-        isVisible={isVisible}
-        toggle={toggleVisibility}
-        onNewSearch={onNewSearch}
-        history={history}
-        url={searchUrl}
-        setUrl={setSearchUrl}
-        clearHistory={clearHistory}
-      />
-    </KeyboardAvoidingView>
+        <TabsManagement
+          tabs={tabs}
+          activeTab={activeTab}
+          onSelectTab={onSelectTab}
+          onCloseTab={onCloseTab}
+          onCloseAllTabs={onCloseAllTabs}
+          onAddTab={onAddTab}
+          onQuitManagement={onQuitManagement}
+          show={showManagement}
+          theme={theme}
+        />
+        {tabs.map((tab) => (
+          <Tab
+            accounts={accounts}
+            data={tab}
+            active={tab.id === activeTab}
+            key={tab.id}
+            updateTab={updateTab}
+            navigation={navigation}
+            addToHistory={addToHistory}
+            history={history}
+            manageTabs={manageTabs}
+            isManagingTab={showManagement}
+            preferences={preferences}
+            favorites={favorites}
+            addTab={onAddTab}
+            tabsNumber={browser.tabs.length}
+            orientation={orientation}
+            isUrlModalOpen={isVisible}
+            theme={theme}
+          />
+        ))}
+        <UrlModal
+          isVisible={isVisible}
+          toggle={toggleVisibility}
+          onNewSearch={onNewSearch}
+          history={history}
+          url={searchUrl === 'about:blank' ? '' : searchUrl}
+          setUrl={setSearchUrl}
+          clearHistory={clearHistory}
+          theme={theme}
+        />
+      </KeyboardAvoidingView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {flexGrow: 1},
+  container: {width: '100%', height: '100%'},
 });
 
 export default Browser;

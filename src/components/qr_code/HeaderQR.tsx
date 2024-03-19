@@ -10,6 +10,7 @@ type Props = {
 export default ({navigation}: Props) => {
   return (
     <TouchableOpacity
+      activeOpacity={1}
       style={styles.qr}
       onPress={() => {
         navigation.navigate('ScanQRFromWalletScreen', {wallet: true});

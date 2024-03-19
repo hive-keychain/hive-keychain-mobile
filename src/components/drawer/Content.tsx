@@ -1,19 +1,23 @@
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
-  DrawerItem,
   DrawerItemList,
 } from '@react-navigation/drawer';
 import {closeAllTabs, lock} from 'actions/index';
+import SwitchDarkIcon from 'assets/new_UI/moon.svg';
+import SwitchLightIcon from 'assets/new_UI/sun.svg';
 import DrawerFooter from 'components/drawer/Footer';
 import DrawerHeader from 'components/drawer/Header';
-import React, {useEffect, useState} from 'react';
+import CustomSwitch from 'components/form/CustomSwitch';
+import Icon from 'components/hive/Icon';
+import React, {useContext} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
+import {Theme, ThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {RootState} from 'store';
-import {translate} from 'utils/localize';
+import MenuItem from './drawer-content-item/MenuItem';
 
 type Props = PropsFromRedux & DrawerContentComponentProps;
 
@@ -23,131 +27,123 @@ const hiddenRoutesInMain = [
   'AccountManagementScreen',
   'WALLET',
   'BrowserScreen',
+  'Governance',
+  'SettingsScreen',
+  'ABOUT',
+  'Accounts',
+  'Tokens',
+  'TokensHistory',
+  'Operation',
+  'TemplateStack',
+  'SwapBuyStack',
+  'SwapHistory',
 ];
 
 const HeaderContent = (props: Props) => {
   const {user, lock, navigation, itemStyle, state, ...rest} = props;
-  const [isAccountMenuExpanded, setIsAccountMenuExpanded] = useState(false);
-  const [subMenuSelectedScreenName, setSubMenuSelectedScreenName] = useState(
-    '',
-  );
-  const subMenuList = [
-    {
-      labelTranslationKey: 'navigation.manage',
-      screenName: 'AccountManagementScreen',
-    },
-    {
-      labelTranslationKey: 'navigation.add_account',
-      screenName: 'AddAccountStack',
-    },
-    {
-      labelTranslationKey: 'navigation.create_account',
-      screenName: 'CreateAccountScreen',
-    },
-  ];
-
   const newState = {...state};
   newState.routes = newState.routes.filter(
     (route) => !hiddenRoutesInMain.includes(route.name),
   );
-
-  const handleSetMenuExpanded = () => {
-    if (isAccountMenuExpanded && subMenuSelectedScreenName.length) return;
-    setIsAccountMenuExpanded(!isAccountMenuExpanded);
-    if (!isAccountMenuExpanded) setSubMenuSelectedScreenName('');
-  };
-
-  useEffect(() => {
-    if (newState.index < 5 && isAccountMenuExpanded) {
-      setIsAccountMenuExpanded(false);
-    }
-  }, [newState.index]);
+  const {theme, toggleTheme} = useContext(ThemeContext);
 
   return (
     <DrawerContentScrollView
       {...props}
-      contentContainerStyle={styles.contentContainer}>
-      <ScrollView
-        style={{flex: 1, height: '100%'}}
-        contentContainerStyle={{
-          justifyContent: 'space-between',
-          height: '100%',
-        }}>
-        <>
-          <DrawerHeader username={user.name} />
-          <DrawerItem
-            {...props}
-            label={translate('navigation.wallet')}
-            onPress={() => {
-              navigation.navigate('WALLET');
-            }}
-            style={itemStyle}
-            focused={newState.index === 0 && !isAccountMenuExpanded}
-          />
-          <TouchableOpacity
-            onLongPress={() => {
-              props.closeAllTabs();
-              SimpleToast.show('Browser data was deleted');
-            }}>
-            <DrawerItem
-              {...props}
-              label={translate('navigation.browser')}
-              onPress={() => {
-                navigation.navigate('BrowserScreen');
-              }}
-              focused={newState.index === 1 && !isAccountMenuExpanded}
-              style={itemStyle}
+      contentContainerStyle={[styles.contentContainer]}>
+      <DrawerHeader theme={theme} props={props} />
+      <ScrollView style={[{flex: 1}]}>
+        <MenuItem
+          labelTranslationKey="navigation.accounts"
+          theme={theme}
+          onPress={() => navigation.navigate('Accounts')}
+          iconImage={
+            <Icon
+              name={Icons.ACCOUNTS}
+              theme={theme}
+              color={PRIMARY_RED_COLOR}
             />
-          </TouchableOpacity>
+          }
+          drawBottomLine
+        />
+        <MenuItem
+          labelTranslationKey="navigation.settings"
+          theme={theme}
+          onPress={() => navigation.navigate('SettingsScreen')}
+          iconImage={
+            <Icon name={Icons.CANDLE} theme={theme} color={PRIMARY_RED_COLOR} />
+          }
+          drawBottomLine
+        />
 
-          <DrawerItem
-            {...props}
-            label={translate('navigation.accounts')}
-            onPress={() => handleSetMenuExpanded()}
-            focused={isAccountMenuExpanded}
-            style={itemStyle}
-          />
-          {isAccountMenuExpanded &&
-            subMenuList.map((subMenu) => (
-              <DrawerItem
-                {...props}
-                style={[{paddingLeft: 20}]}
-                key={`${subMenu.screenName}-sub-item-accounts`}
-                label={translate(subMenu.labelTranslationKey)}
-                onPress={() => {
-                  setSubMenuSelectedScreenName(subMenu.screenName);
-                  navigation.navigate(subMenu.screenName);
-                }}
-                focused={
-                  subMenuSelectedScreenName === subMenu.screenName &&
-                  isAccountMenuExpanded
-                }
-              />
-            ))}
-          <DrawerItemList
-            state={{
-              ...newState,
-              index: isAccountMenuExpanded ? -1 : newState.index - 2,
-            }}
-            navigation={navigation}
-            itemStyle={itemStyle}
-            {...rest}
-          />
-          <DrawerItem
-            {...props}
-            label={translate('navigation.log_out')}
-            onPress={() => {
-              lock();
-              navigation.closeDrawer();
-            }}
-          />
-        </>
-        <DrawerFooter user={user} />
+        <MenuItem
+          labelTranslationKey="navigation.governance"
+          theme={theme}
+          onPress={() => navigation.navigate('Governance')}
+          iconImage={
+            <Icon
+              name={Icons.GOVERNANCE}
+              theme={theme}
+              color={PRIMARY_RED_COLOR}
+            />
+          }
+          drawBottomLine
+        />
+        <MenuItem
+          labelTranslationKey="navigation.theme_setting"
+          theme={theme}
+          onPress={() => toggleTheme()}
+          iconImage={
+            <Icon name={Icons.THEME} theme={theme} color={PRIMARY_RED_COLOR} />
+          }
+          leftSideComponent={
+            <CustomSwitch
+              currentValue={theme}
+              iconLeftSide={<SwitchLightIcon width={24} height={24} />}
+              iconRightSide={<SwitchDarkIcon width={24} height={24} />}
+              valueLeft={Theme.LIGHT}
+              valueRight={Theme.DARK}
+            />
+          }
+          drawBottomLine
+        />
+        <MenuItem
+          labelTranslationKey="navigation.about"
+          theme={theme}
+          onPress={() => navigation.navigate('ABOUT')}
+          iconImage={
+            <Icon name={Icons.INFO} theme={theme} color={PRIMARY_RED_COLOR} />
+          }
+          drawBottomLine
+        />
+        <MenuItem
+          labelTranslationKey="navigation.log_out"
+          theme={theme}
+          onPress={() => {
+            lock();
+            navigation.closeDrawer();
+          }}
+          iconImage={
+            <Icon name={Icons.LOGOUT} theme={theme} color={PRIMARY_RED_COLOR} />
+          }
+        />
+        <DrawerItemList
+          state={{
+            ...newState,
+          }}
+          navigation={navigation}
+          itemStyle={itemStyle}
+          {...rest}
+        />
       </ScrollView>
+      <DrawerFooter user={user} theme={theme} />
     </DrawerContentScrollView>
   );
 };
-const styles = StyleSheet.create({contentContainer: {height: '100%', flex: 1}});
+const styles = StyleSheet.create({
+  contentContainer: {height: '100%', flex: 1, zIndex: 0},
+  marginRight: {marginRight: 10},
+});
 const mapStateToProps = (state: RootState) => ({
   user: state.activeAccount,
 });

@@ -1,44 +1,40 @@
-import {loadAccount} from 'actions/index';
-import SendArrowBlue from 'assets/wallet/icon_send_blue.svg';
-import AccountLogoDark from 'assets/wallet/icon_username_dark.svg';
+import {showModal} from 'actions/message';
 import {encodeMemo} from 'components/bridge';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import CustomRadioGroup from 'components/form/CustomRadioGroup';
-import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
+import Icon from 'components/hive/Icon';
 import OptionsToggle from 'components/ui/OptionsToggle';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
-import {
-  Keyboard,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
-import Toast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {default as Toast} from 'react-native-simple-toast';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
+import {AutoCompleteValues} from 'src/interfaces/autocomplete.interface';
+import {getButtonHeight} from 'src/styles/button';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {getHorizontalLineStyle} from 'src/styles/line';
+import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {beautifyTransferError} from 'utils/format';
+import {Dimensions} from 'utils/common.types';
+import {FavoriteUserUtils} from 'utils/favorite-user.utils';
+import {beautifyTransferError, capitalize} from 'utils/format';
 import {recurrentTransfer, sendToken, transfer} from 'utils/hive';
 import {tryConfirmTransaction} from 'utils/hiveEngine';
-import {getCurrencyProperties} from 'utils/hiveReact';
 import {
   getAccountKeys,
   sanitizeAmount,
   sanitizeUsername,
 } from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
 import {getTransferWarning} from 'utils/transferValidator';
 import Balance from './Balance';
-import Operation from './Operation';
+import OperationThemed from './OperationThemed';
 
-const PUBLIC = translate('common.public').toUpperCase();
-const PRIVATE = translate('common.private').toUpperCase();
-
-type TransferOperationProps = {
+export type TransferOperationProps = {
   currency: string;
   engine: boolean;
   tokenBalance: string;
@@ -48,11 +44,12 @@ type Props = PropsFromRedux & TransferOperationProps;
 const Transfer = ({
   currency,
   user,
-  loadAccount,
   engine,
   tokenBalance,
   tokenLogo,
   phishingAccounts,
+  showModal,
+  localAccounts,
 }: Props) => {
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
@@ -60,14 +57,33 @@ const Transfer = ({
   const [recurrence, setRecurrence] = useState('');
   const [exec, setExec] = useState('');
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState(1);
-  const [privacy, setPrivacy] = useState(PUBLIC);
   const [isRecurrent, setRecurrent] = useState(false);
+  const [isMemoEncrypted, setIsMemoEncrypted] = useState<boolean>(false);
+  const [autocompleteFavoriteUsers, setAutocompleteFavoriteUsers] = useState<
+    AutoCompleteValues
+  >({
+    categories: [],
+  });
+  const [availableBalance, setAvailableBalance] = useState('');
+  const {theme} = useThemeContext();
+
+  useEffect(() => {
+    loadAutocompleteTransferUsernames();
+  }, []);
+
+  const loadAutocompleteTransferUsernames = async () => {
+    const autoCompleteListByCategories: AutoCompleteValues = await FavoriteUserUtils.getAutocompleteListByCategories(
+      user.name!,
+      localAccounts,
+      {addExchanges: true, token: currency.toUpperCase()},
+    );
+    setAutocompleteFavoriteUsers(autoCompleteListByCategories);
+  };
 
   const sendTransfer = async () => {
     setLoading(true);
     let finalMemo = memo;
-    if (privacy === PRIVATE) {
+    if (isMemoEncrypted) {
       const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
       finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
     }
@@ -93,254 +109,348 @@ const Transfer = ({
 
   const transferToken = async () => {
     setLoading(true);
+    let finalMemo = memo;
+    if (isMemoEncrypted) {
+      const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
+      finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
+    }
 
     return await sendToken(user.keys.active, user.name, {
       symbol: currency,
       to: sanitizeUsername(to),
       quantity: sanitizeAmount(amount),
-      memo: memo,
+      memo: finalMemo,
     });
   };
 
   const onSend = async () => {
-    Keyboard.dismiss();
     try {
+      if (isMemoEncrypted && !user.keys.memo)
+        return showModal(
+          translate('toast.missing_memo_key', {account: user.name!}),
+          MessageModalType.ERROR,
+        );
       if (!engine) {
         await sendTransfer();
-        Toast.show(
-          translate(
-            isRecurrent
-              ? 'toast.recurrent_transfer_success'
-              : 'toast.transfer_success',
-          ),
-          Toast.LONG,
+        showModal(
+          isRecurrent
+            ? 'toast.recurrent_transfer_success'
+            : 'toast.transfer_success',
+          MessageModalType.SUCCESS,
         );
       } else {
         const {id} = await transferToken();
         const {confirmed} = await tryConfirmTransaction(id);
-        Toast.show(
+        showModal(
           confirmed
-            ? translate('toast.transfer_token_confirmed')
-            : translate('toast.transfer_token_unconfirmed'),
-          Toast.LONG,
+            ? 'toast.transfer_token_confirmed'
+            : 'toast.transfer_token_unconfirmed',
+          MessageModalType.SUCCESS,
         );
       }
-      loadAccount(user.account.name, true);
-      goBack();
     } catch (e) {
-      Toast.show(
+      showModal(
         beautifyTransferError(e as any, {
           to,
           currency,
           username: user.account.name,
         }),
-        Toast.LONG,
+        MessageModalType.ERROR,
+        undefined,
+        true,
       );
-      setLoading(false);
     }
   };
-  const {color} = getCurrencyProperties(currency);
-  const {height} = useWindowDimensions();
 
-  const styles = getDimensionedStyles(color, height);
-  if (step === 1) {
-    return (
-      <Operation
-        logo={<SendArrowBlue />}
-        title={translate('wallet.operations.transfer.title')}>
-        <ScrollView>
-          <Separator />
-          <Balance
-            currency={currency}
-            account={user.account}
-            tokenBalance={tokenBalance}
-            tokenLogo={tokenLogo}
-            isHiveEngine={engine}
-            setMax={(value: string) => {
-              setAmount(value);
-            }}
-          />
-          <Separator />
-          <OperationInput
-            placeholder={translate('common.username').toUpperCase()}
-            leftIcon={<AccountLogoDark />}
-            autoCapitalize="none"
-            value={to}
-            onChangeText={(e) => {
-              setTo(e.trim());
-            }}
-          />
-          <Separator />
-          <OperationInput
-            placeholder={'0.000'}
-            keyboardType="decimal-pad"
-            rightIcon={<Text style={styles.currency}>{currency}</Text>}
-            textAlign="right"
-            value={amount}
-            onChangeText={setAmount}
-          />
-          <Separator />
-          <OperationInput
-            placeholder={translate('wallet.operations.transfer.memo')}
-            value={memo}
-            onChangeText={setMemo}
-          />
-          <Separator />
-          <CustomRadioGroup
-            list={[PUBLIC, PRIVATE]}
-            selected={privacy}
-            onSelect={setPrivacy}
-          />
-          <Separator height={20} />
-          <OptionsToggle
-            title="Recurrent transfers"
-            toggled={isRecurrent}
-            callback={(toggled) => {
-              setRecurrent(toggled);
-            }}>
-            <Separator />
-            <OperationInput
-              placeholder={translate('wallet.operations.transfer.recurrence')}
-              value={recurrence}
-              onChangeText={setRecurrence}
-              keyboardType={'number-pad'}
-              rightIcon={<Text>Hours</Text>}
-              leftIcon={<Text>Every</Text>}
-            />
-            <Separator />
-            <OperationInput
-              placeholder={translate('wallet.operations.transfer.executions')}
-              value={exec}
-              onChangeText={setExec}
-              keyboardType={'number-pad'}
-              rightIcon={<Text>times</Text>}
-            />
-          </OptionsToggle>
-          <Separator height={20} />
-          <ActiveOperationButton
-            title={translate('common.send')}
-            onPress={() => {
-              if (!amount.length || !to.length) {
-                Toast.show(
-                  translate('wallet.operations.transfer.warning.missing_info'),
-                );
-              } else {
-                setStep(2);
-              }
-            }}
-            style={styles.send}
-            isLoading={loading}
-          />
-        </ScrollView>
-      </Operation>
-    );
-  } else {
-    return (
-      <Operation
-        logo={<SendArrowBlue />}
-        title={translate('wallet.operations.transfer.title')}>
-        <ScrollView>
-          <Separator height={30} />
-          <Text style={styles.warning}>
-            {
+  const onTransferConfirmation = () => {
+    if (
+      !amount.length ||
+      !to.length ||
+      (isRecurrent &&
+        (exec.trim().length === 0 || recurrence.trim().length === 0))
+    ) {
+      Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
+    } else if (+amount > parseFloat(availableBalance)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      //TODO : Call confirmation page
+      const confirmationData = {
+        title: 'wallet.operations.transfer.confirm.info',
+        onSend,
+        warningText: getTransferWarning(
+          phishingAccounts,
+          to,
+          currency,
+          !!memo,
+          memo,
+        ).warning,
+        data: [
+          {
+            title: 'wallet.operations.transfer.confirm.from',
+            value: `@${user.account.name}`,
+          },
+          {
+            value: `@${to} ${
               getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
-                .warning
-            }
-          </Text>
-          <Separator />
-          <Text style={styles.title}>
-            {translate('wallet.operations.transfer.confirm.from')}
-          </Text>
-          <Text>{`@${user.account.name}`}</Text>
-          <Separator />
-          <Text style={styles.title}>
-            {translate('wallet.operations.transfer.confirm.to')}
-          </Text>
-          <Text>{`@${to} ${
-            getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
-              .exchange
-              ? '(exchange)'
-              : ''
-          }`}</Text>
-          <Separator />
-          <Text style={styles.title}>
-            {translate('wallet.operations.transfer.confirm.amount')}
-          </Text>
-          <Text>{`${amount} ${currency}`}</Text>
+                .exchange
+                ? '(exchange)'
+                : ''
+            }`,
+            title: 'wallet.operations.transfer.confirm.to',
+          },
+          {
+            title: 'wallet.operations.transfer.confirm.amount',
+            value: `${amount} ${currency}`,
+          },
+        ],
+      };
+      if (memo.length)
+        confirmationData.data.push({
+          title: 'wallet.operations.transfer.confirm.memo',
+          value: `${
+            memo.trim().length > 25 ? memo.substring(0, 22) + '...' : memo
+          } ${isMemoEncrypted ? '(encrypted)' : ''}`,
+        });
+      if (isRecurrent)
+        confirmationData.data.push(
+          ...[
+            {
+              title: 'wallet.operations.transfer.confirm.recurrence',
+              value: translate(
+                'wallet.operations.transfer.confirm.recurrenceData',
+                {
+                  exec,
+                  recurrence,
+                },
+              ),
+            },
+          ],
+        );
+      //TODO : put navigation screens in enum
+      navigate('ConfirmationPage', confirmationData);
+    }
+  };
 
-          {memo.length ? (
-            <>
-              <Separator />
-              <Text style={styles.title}>
-                {translate('wallet.operations.transfer.confirm.memo')}
-              </Text>
-              <Text>{`${memo} ${
-                privacy === PRIVATE ? '(encrypted)' : ''
-              }`}</Text>
-            </>
-          ) : null}
-          <Separator />
-          {isRecurrent ? (
-            <>
-              <Text style={styles.title}>
-                {translate('wallet.operations.transfer.confirm.recurrence')}
-              </Text>
-              <Text>
-                {translate(
-                  'wallet.operations.transfer.confirm.recurrenceData',
-                  {exec, recurrence},
-                )}
-              </Text>
-            </>
-          ) : null}
-          <Separator height={40} />
-          <View style={styles.buttonsContainer}>
-            <EllipticButton
-              title={translate('common.back')}
-              style={styles.back}
-              onPress={() => {
-                setStep(1);
+  const {width, height} = useWindowDimensions();
+
+  const styles = getDimensionedStyles({width, height}, theme);
+
+  return (
+    <View style={{flex: 1}}>
+      <OperationThemed
+        childrenTop={
+          <>
+            <Separator />
+            <Balance
+              currency={currency}
+              account={user.account}
+              tokenBalance={tokenBalance}
+              tokenLogo={tokenLogo}
+              isHiveEngine={engine}
+              setMax={(value: string) => {
+                setAmount(value);
+                setAvailableBalance(value);
+              }}
+              //TODO fix bellow!! ask quentin
+              setAvailableBalance={(available) =>
+                setAvailableBalance(available)
+              }
+              theme={theme}
+            />
+            <Separator />
+          </>
+        }
+        childrenMiddle={
+          <View>
+            <Separator height={35} />
+            <OperationInput
+              testID="username-input-testID"
+              nativeID="username-input"
+              autoCompleteValues={autocompleteFavoriteUsers}
+              labelInput={translate('common.to')}
+              placeholder={translate('common.username')}
+              leftIcon={<Icon name={Icons.AT} theme={theme} />}
+              autoCapitalize="none"
+              value={to}
+              onChangeText={(e) => {
+                setTo(e.trim());
               }}
             />
-            <ActiveOperationButton
-              title={translate('common.confirm')}
-              onPress={onSend}
-              style={styles.confirm}
-              isLoading={loading}
-            />
+            <Separator />
+            <View style={[styles.flexRowBetween, {zIndex: -1}]}>
+              <OperationInput
+                labelInput={translate('common.currency')}
+                placeholder={currency}
+                value={currency}
+                editable={false}
+                additionalOuterContainerStyle={{
+                  width: '40%',
+                }}
+              />
+              <OperationInput
+                keyboardType="decimal-pad"
+                labelInput={capitalize(translate('common.amount'))}
+                placeholder={'0'}
+                value={amount}
+                onChangeText={setAmount}
+                additionalOuterContainerStyle={{
+                  width: '54%',
+                }}
+                rightIcon={
+                  <View style={styles.flexRowCenter}>
+                    <Separator
+                      drawLine
+                      additionalLineStyle={getHorizontalLineStyle(
+                        theme,
+                        1,
+                        35,
+                        16,
+                      )}
+                    />
+                    <TouchableOpacity
+                      activeOpacity={1}
+                      onPress={() => setAmount(availableBalance)}>
+                      <Text
+                        style={
+                          getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
+                            .input
+                        }>
+                        {translate('common.max').toUpperCase()}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                }
+              />
+            </View>
+            <Separator />
+            <View style={{zIndex: -1}}>
+              <OperationInput
+                labelInput={capitalize(translate('common.memo'))}
+                placeholder={translate('wallet.operations.transfer.memo')}
+                value={memo}
+                onChangeText={setMemo}
+                rightIcon={
+                  <View style={styles.flexRowCenter}>
+                    <Separator
+                      drawLine
+                      additionalLineStyle={getHorizontalLineStyle(
+                        theme,
+                        1,
+                        35,
+                        16,
+                      )}
+                    />
+                    <Icon
+                      name={isMemoEncrypted ? Icons.ENCRYPT : Icons.DECRYPT}
+                      theme={theme}
+                      onClick={() => setIsMemoEncrypted(!isMemoEncrypted)}
+                      color={PRIMARY_RED_COLOR}
+                    />
+                  </View>
+                }
+              />
+            </View>
+            {!engine && (
+              <View>
+                <Separator />
+                <OptionsToggle
+                  theme={theme}
+                  title={translate('common.recurrent_transfer')}
+                  toggled={isRecurrent}
+                  additionalTitleStyle={getFormFontStyle(height, theme).title}
+                  callback={(toggled) => {
+                    setRecurrent(toggled);
+                  }}>
+                  <Separator />
+                  <OperationInput
+                    labelInput={translate(
+                      'wallet.operations.transfer.frequency',
+                    )}
+                    labelExtraInfo={translate(
+                      'wallet.operations.transfer.frequency_minimum',
+                    )}
+                    placeholder={translate(
+                      'wallet.operations.transfer.frequency',
+                    )}
+                    value={recurrence}
+                    onChangeText={setRecurrence}
+                    keyboardType={'number-pad'}
+                  />
+                  <Separator />
+                  <OperationInput
+                    labelInput={translate(
+                      'wallet.operations.transfer.iterations',
+                    )}
+                    labelExtraInfo={translate(
+                      'wallet.operations.transfer.iterations_minimum',
+                    )}
+                    placeholder={translate(
+                      'wallet.operations.transfer.iterations',
+                    )}
+                    value={exec}
+                    onChangeText={setExec}
+                    keyboardType={'number-pad'}
+                  />
+                </OptionsToggle>
+                <Separator />
+              </View>
+            )}
           </View>
-        </ScrollView>
-      </Operation>
-    );
-  }
+        }
+        buttonTitle={'common.send'}
+        onNext={onTransferConfirmation}
+        additionalContentContainerStyle={styles.paddingHorizontal}
+      />
+    </View>
+  );
 };
 
-const getDimensionedStyles = (color: string, width: number) =>
+const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
-    send: {backgroundColor: '#68A0B4'},
-    confirm: {
-      backgroundColor: '#68A0B4',
-      width: width / 5,
-      marginHorizontal: 0,
-    },
-    warning: {color: 'red', fontWeight: 'bold'},
-    back: {backgroundColor: '#7E8C9A', width: width / 5, marginHorizontal: 0},
-    currency: {fontWeight: 'bold', fontSize: 18, color},
-    title: {fontWeight: 'bold', fontSize: 16},
-    buttonsContainer: {
-      display: 'flex',
+    warning: {color: 'red'},
+    flexRowCenter: {
       flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
+    },
+    flexRowBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    info: {
+      opacity: 0.7,
+    },
+    operationButtonsContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginBottom: 20,
       justifyContent: 'space-around',
+      width: '100%',
+    },
+    operationButton: {
+      width: '48%',
+      marginHorizontal: 0,
+      height: getButtonHeight(width),
+    },
+
+    paddingHorizontal: {
+      paddingHorizontal: 18,
     },
   });
+
 const connector = connect(
   (state: RootState) => {
     return {
       user: state.activeAccount,
+      localAccounts: state.accounts,
       phishingAccounts: state.phishingAccounts,
     };
   },
-  {loadAccount},
+  {showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

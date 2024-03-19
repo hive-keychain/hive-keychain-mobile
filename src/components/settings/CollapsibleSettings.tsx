@@ -1,7 +1,14 @@
 import {ActionPayload} from 'actions/interfaces';
-import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import Icon from 'components/hive/Icon';
+import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import {DomainPreference, PreferencePayload} from 'reducers/preferences.types';
+import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {getCardStyle} from 'src/styles/card';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {title_primary_body_2} from 'src/styles/typography';
+import {capitalize, wordsFromCamelCase} from 'utils/format';
 
 type Props = {
   domainPref: DomainPreference;
@@ -12,6 +19,7 @@ type Props = {
     domain: string,
     request: string,
   ) => ActionPayload<PreferencePayload>;
+  theme: Theme;
 };
 
 const CollapsibleSettings = ({
@@ -19,63 +27,57 @@ const CollapsibleSettings = ({
   index,
   removePreference,
   username,
+  theme,
 }: Props) => {
-  const [isCollapsed, collapse] = useState(true);
-  const styles = getStyles(index);
-  const renderCollapsed = () => {
-    if (isCollapsed) return false;
-    else
-      return (
+  const styles = getStyles(index, theme);
+  if (!domainPref.whitelisted_requests.length) return null;
+  else
+    return (
+      <View style={getCardStyle(theme).defaultCardItem}>
+        <Text style={[styles.domain, styles.font]}>{domainPref.domain}</Text>
         <View style={styles.whitelistsContainer}>
           {domainPref.whitelisted_requests.map((e) => (
             <View style={styles.whitelistContainer} key={e}>
-              <Text style={styles.whitelist}>{e.toUpperCase()}</Text>
-              <TouchableOpacity
-                onPress={() => {
+              <Text style={[styles.whitelist, styles.font, styles.opacity]}>
+                {capitalize(wordsFromCamelCase(e))}
+              </Text>
+              <Icon
+                name={Icons.REMOVE}
+                theme={theme}
+                onClick={() => {
                   removePreference(username, domainPref.domain, e);
-                }}>
-                <Text style={styles.whitelistClose}>X</Text>
-              </TouchableOpacity>
+                }}
+                {...styles.removeIcon}
+                color={PRIMARY_RED_COLOR}
+              />
             </View>
           ))}
         </View>
-      );
-  };
-  return (
-    <>
-      <TouchableOpacity
-        style={styles.collapsible}
-        onPress={() => {
-          collapse(!isCollapsed);
-        }}>
-        <Text style={styles.domain}>{domainPref.domain.toUpperCase()}</Text>
-        <Text style={styles.domain}>▼</Text>
-      </TouchableOpacity>
-      {renderCollapsed()}
-    </>
-  );
+      </View>
+    );
 };
 
-const getStyles = (index: number) =>
+const getStyles = (index: number, theme: Theme) =>
   StyleSheet.create({
-    collapsible: {
-      backgroundColor: index % 2 === 0 ? 'lightgrey' : '#E5EEF7',
-      marginHorizontal: -20,
-      paddingVertical: 10,
-      paddingHorizontal: 30,
+    opacity: {
+      opacity: 0.7,
+    },
+    font: {
+      ...title_primary_body_2,
+    },
+    domain: {color: getColors(theme).secondaryText},
+    whitelist: {color: getColors(theme).secondaryText},
+    whitelistsContainer: {flexDirection: 'column'},
+    whitelistContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-    },
-    domain: {color: 'black'},
-    whitelist: {color: 'black', paddingHorizontal: 50, paddingVertical: 5},
-    whitelistClose: {
-      color: 'black',
-      fontWeight: 'bold',
-      paddingHorizontal: 50,
       paddingVertical: 5,
+      alignItems: 'center',
     },
-    whitelistsContainer: {flexDirection: 'column'},
-    whitelistContainer: {flexDirection: 'row', justifyContent: 'space-between'},
+    removeIcon: {
+      width: 15,
+      height: 15,
+    },
   });
 
 export default CollapsibleSettings;

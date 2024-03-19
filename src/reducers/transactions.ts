@@ -20,7 +20,6 @@ export default (
     case INIT_TRANSACTIONS:
       return {loading: false, list: payload[0]!, lastUsedStart: payload![1]};
     case ADD_TRANSACTIONS:
-      console.log(state.lastUsedStart);
       return {
         ...state,
         list: ArrayUtils.mergeWithoutDuplicate(state.list, payload![0], 'key'),
