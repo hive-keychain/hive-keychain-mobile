@@ -102,7 +102,7 @@
     "received": "Received",
     "sent": "Sent",
     "invalid_url": "Please use a valid URL",
-    "clear_all": "Clear all",
+    "clear_all": "Clear all connections",
     "select": "Select",
     "overdraw_balance_error": "Your {{currency}} balance is insufficient",
     "swap_sending_token_successful": "Your swap is on the way! Thank you for using our service!",
@@ -437,14 +437,15 @@
         "t2": "To connect to a desktop dApp, use the QR Code scanner. On mobile, simply chose 'Sign in with Hive' on your favorite dApp.",
         "h3": "Hive Auth Indicator",
         "indicator": {
-          "grey": {"title": "No connection"},
+          "grey": {"title": "No connection", "press": "Open info panel"},
           "red": {
             "title": "Disconnected",
-            "press": "Try reconnecting",
-            "longPress": "Delete all sessions and disconnect"
+            "press": "Open info panel",
+            "longPress": "Try reconnecting"
           },
           "green": {
             "title": "Connected",
+            "press": "Open info panel",
             "longPress": "Delete all sessions and disconnect"
           },
           "press": "Press",

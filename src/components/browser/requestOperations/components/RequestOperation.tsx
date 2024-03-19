@@ -1,13 +1,14 @@
 import {KeyTypes} from 'actions/interfaces';
 import {addPreference} from 'actions/preferences';
-import CheckBox from 'components/form/CustomCheckBox';
+import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationButton from 'components/form/EllipticButton';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {getButtonStyle} from 'src/styles/button';
+import {getButtonHeight, getButtonStyle} from 'src/styles/button';
+import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {getCaptionStyle} from 'src/styles/text';
 import {title_primary_body_2} from 'src/styles/typography';
@@ -70,22 +71,25 @@ const RequestOperation = ({
   const [keep, setKeep] = useState(false);
   let {domain, type, username} = data;
   domain = has ? domain : urlTransformer(domain).hostname;
-  const styles = getStyles(theme);
   const width = useWindowDimensions().width;
+  const styles = getStyles(theme, width);
+
   const renderRequestSummary = () => (
     <ScrollView style={styles.container}>
-      <RequestMessage
-        message={message}
-        additionalTextStyle={[
-          getCaptionStyle(width, theme),
-          {paddingHorizontal: 0},
-        ]}
-      />
-      {children}
+      {message && message.length > 0 && (
+        <RequestMessage
+          message={message}
+          additionalTextStyle={[
+            getCaptionStyle(width, theme),
+            {paddingHorizontal: 0, marginTop: 0},
+          ]}
+        />
+      )}
+      <View style={getCardStyle(theme).defaultCardItem}>{children}</View>
       {method !== KeyTypes.active &&
       type !== KeychainRequestTypes.addAccount ? (
         <View style={styles.keep}>
-          <CheckBox
+          <CheckBoxPanel
             smallText
             checked={keep}
             onPress={() => {
@@ -97,10 +101,6 @@ const RequestOperation = ({
               type,
             })}
             skipTranslation
-            // containerStyle={[styles.checkbox]}
-            // checkedColor={PRIMARY_RED_COLOR}
-            // size={22}
-            // textStyle={[styles.text, styles.smallerText]}
           />
         </View>
       ) : (
@@ -153,19 +153,16 @@ const RequestOperation = ({
   return renderRequestSummary();
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
-    button: {marginTop: 40, marginBottom: 20},
-    keep: {marginTop: 40, flexDirection: 'row'},
+    button: {marginTop: 16, marginBottom: 16, height: getButtonHeight(width)},
+    keep: {marginTop: 16, flexDirection: 'row'},
     text: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
     },
     container: {
-      paddingHorizontal: 15,
-    },
-    smallerText: {
-      fontSize: 12,
+      paddingHorizontal: 12,
     },
     bgColor: {
       backgroundColor: getColors(theme).icon,

@@ -17,7 +17,7 @@ import {navigate} from 'utils/navigation';
 export const getHPButtonList = (theme: Theme, delegatee: string) => {
   const styles = getButtonStyle(
     theme,
-    useWindowDimensions().height,
+    useWindowDimensions().width,
   ).getOperationButtonStylesheet();
   return [
     <SquareButton

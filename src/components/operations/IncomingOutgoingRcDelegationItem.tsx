@@ -5,7 +5,13 @@ import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
@@ -58,7 +64,9 @@ const IncomingOutgoingRcDelegationItem = ({
     string | undefined
   >();
 
-  const styles = getStyles(theme);
+  const {width} = useWindowDimensions();
+
+  const styles = getStyles(theme, width);
 
   const onHandleSelectedItem = (item: RcDelegation) => {
     setSelectedItem(selectedItem ? undefined : item);
@@ -148,8 +156,7 @@ const IncomingOutgoingRcDelegationItem = ({
       onPress={() => onHandleSelectedItem(item)}>
       <View style={styles.container}>
         <View style={styles.row}>
-          <Icon theme={theme} name={Icons.AT} {...styles.icon} />
-          <Text style={styles.textBase}> {`${item.delegatee}`}</Text>
+          <Text style={styles.textBase}> {`@${item.delegatee}`}</Text>
         </View>
         <View style={styles.rightContainer}>
           <View>
@@ -238,12 +245,12 @@ const IncomingOutgoingRcDelegationItem = ({
                 value={translate('wallet.operations.rc_delegation.giga_rc')}
                 editable={false}
                 additionalOuterContainerStyle={{
-                  width: '40%',
+                  width: '30%',
                 }}
               />
               <OperationInput
                 labelInput={capitalize(translate('common.amount'))}
-                labelBottomExtraInfo={
+                labelExtraInfo={
                   equivalentHPAmount
                     ? `≈ ${equivalentHPAmount} ${getCurrency('HP')}`
                     : undefined
@@ -254,7 +261,7 @@ const IncomingOutgoingRcDelegationItem = ({
                 value={editedAmountDelegation}
                 onChangeText={setEditedAmountDelegation}
                 additionalOuterContainerStyle={{
-                  width: '54%',
+                  width: '68%',
                 }}
                 rightIcon={
                   <View style={styles.flexRowCenter}>
@@ -304,7 +311,7 @@ const IncomingOutgoingRcDelegationItem = ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     container: {
       display: 'flex',
@@ -324,7 +331,6 @@ const getStyles = (theme: Theme) =>
       color: getColors(theme).secondaryText,
       textAlign: 'right',
     },
-    title: {fontSize: 15},
     row: {flexDirection: 'row'},
     opaque: {opacity: 0.7},
     paddingHorizontal: {paddingHorizontal: 10},

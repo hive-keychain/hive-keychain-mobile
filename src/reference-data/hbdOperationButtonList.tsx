@@ -22,7 +22,7 @@ import {navigate} from 'utils/navigation';
 export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
   const styles = getButtonStyle(
     theme,
-    useWindowDimensions().height,
+    useWindowDimensions().width,
   ).getOperationButtonStylesheet();
   return [
     <SquareButton
