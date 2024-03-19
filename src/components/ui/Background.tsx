@@ -1,3 +1,4 @@
+import {useHeaderHeight} from '@react-navigation/stack';
 import React from 'react';
 import {
   ImageBackground,
@@ -10,6 +11,7 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import SafeArea from './SafeArea';
@@ -27,22 +29,25 @@ interface BackgroundProps {
 
 export default (props: BackgroundProps) => {
   const styles = getStyles(useWindowDimensions(), props.theme);
-
+  const height = useHeaderHeight();
+  const insets = useSafeAreaInsets();
   return (
-    <KeyboardAvoidingView
-      style={styles.mainContainer}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <ImageBackground
-        source={props.theme === Theme.LIGHT ? hexagonsLight : hexagonsDark}
-        resizeMethod="scale"
-        resizeMode="stretch"
-        style={[styles.container]}
-        imageStyle={[styles.bgSvgStyle, props.additionalBgSvgImageStyle]}>
-        <SafeArea style={[styles.container, {zIndex: 1}, props.containerStyle]}>
+    <SafeArea style={[styles.container, {zIndex: 1}, props.containerStyle]}>
+      <KeyboardAvoidingView
+        style={styles.mainContainer}
+        enabled={Platform.OS === 'ios' ? true : false}
+        behavior={'padding'}
+        keyboardVerticalOffset={height + insets.bottom}>
+        <ImageBackground
+          source={props.theme === Theme.LIGHT ? hexagonsLight : hexagonsDark}
+          resizeMethod="scale"
+          resizeMode="stretch"
+          style={[styles.container]}
+          imageStyle={[styles.bgSvgStyle, props.additionalBgSvgImageStyle]}>
           {props.children}
-        </SafeArea>
-      </ImageBackground>
-    </KeyboardAvoidingView>
+        </ImageBackground>
+      </KeyboardAvoidingView>
+    </SafeArea>
   );
 };
 
