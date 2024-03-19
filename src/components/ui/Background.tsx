@@ -32,9 +32,9 @@ export default (props: BackgroundProps) => {
   const height = useHeaderHeight();
   const insets = useSafeAreaInsets();
   return (
-    <SafeArea style={[styles.container, {zIndex: 1}, props.containerStyle]}>
+    <SafeArea style={[styles.container, props.containerStyle]}>
       <KeyboardAvoidingView
-        style={styles.mainContainer}
+        style={[styles.mainContainer]}
         enabled={Platform.OS === 'ios' ? true : false}
         behavior={'padding'}
         keyboardVerticalOffset={height + insets.bottom}>
