@@ -52,6 +52,7 @@ export default ({
     inputColor,
     textAlign,
   });
+  //@ts-ignore
   const ref: MutableRefObject<Input> = useRef(null);
   const handleOnBlur = () => {
     setTimeout(() => {
