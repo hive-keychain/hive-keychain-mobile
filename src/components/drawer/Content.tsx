@@ -52,7 +52,7 @@ const HeaderContent = (props: Props) => {
       {...props}
       contentContainerStyle={[styles.contentContainer]}>
       <DrawerHeader theme={theme} props={props} />
-      <ScrollView style={[{flex: 1}]}>
+      <ScrollView style={[{flex: 1, marginTop: 10}]}>
         <MenuItem
           labelTranslationKey="navigation.accounts"
           theme={theme}
