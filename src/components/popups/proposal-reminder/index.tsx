@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addTab} from 'actions/browser';
 import EllipticButton from 'components/form/EllipticButton';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
