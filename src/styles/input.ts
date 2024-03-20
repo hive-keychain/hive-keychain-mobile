@@ -34,6 +34,7 @@ export const inputStyle = (theme: Theme, width: number) => {
       fontFamily: FontPoppinsName.SEMI_BOLD,
       color: getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(width, 15),
+      marginBottom: 3,
       fontWeight: '600',
     },
   });
