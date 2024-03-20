@@ -13,7 +13,6 @@ import React from 'react';
 import {ScrollView, StyleSheet, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {
@@ -122,8 +121,8 @@ const AccountManagement = ({
           />
           <Separator height={20} />
           <EllipticButton
-            style={getButtonStyle(theme).warningStyleButton}
             title={translate('common.forget_account')}
+            isWarningButton
             onPress={handleGotoConfirmationAccountRemoval}
             additionalTextStyle={styles.operationButtonText}
           />

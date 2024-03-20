@@ -2,7 +2,7 @@ import {addAccount} from 'actions/index';
 import {showModal} from 'actions/message';
 import TitleLogoLight from 'assets/new_UI/img_import_dark.svg';
 import TitleLogoDark from 'assets/new_UI/img_import_light.svg';
-import Button from 'components/form/EllipticButton';
+import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
@@ -21,7 +21,6 @@ import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
@@ -121,14 +120,12 @@ const AddAccountByAuth = ({
               }
             />
           </View>
-          <View style={styles.bottomContainer}>
-            <Button
-              title={translate('common.import')}
-              onPress={onImportKeysByAuth}
-              style={[getButtonStyle(theme, height).warningStyleButton]}
-              additionalTextStyle={styles.buttonText}
-            />
-          </View>
+          <EllipticButton
+            title={translate('common.import')}
+            onPress={onImportKeysByAuth}
+            additionalTextStyle={styles.buttonText}
+            isWarningButton
+          />
         </View>
       </>
     </Background>

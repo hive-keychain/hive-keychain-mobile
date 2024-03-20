@@ -24,7 +24,6 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
@@ -141,8 +140,8 @@ const AddAccountByKey = ({
             <OperationButton
               title={translate('common.import')}
               onPress={onImportKeys}
-              style={[getButtonStyle(theme, height).warningStyleButton]}
               additionalTextStyle={styles.buttonText}
+              isWarningButton
               isLoading={loadingImportAccount}
             />
             <Separator height={height / 22} />
