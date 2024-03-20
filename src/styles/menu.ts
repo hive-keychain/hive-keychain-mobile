@@ -11,6 +11,7 @@ export const getMenuCardStyle = (theme: Theme) => {
     paddingVertical: 12,
     paddingHorizontal: 14,
     marginHorizontal: 16,
+    marginTop: 30,
   } as ViewStyle;
 };
 
