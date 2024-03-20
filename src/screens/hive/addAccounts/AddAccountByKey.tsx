@@ -86,7 +86,7 @@ const AddAccountByKey = ({
 
   return (
     <Background theme={theme}>
-      <ScrollView contentContainerStyle={styles.topContainer}>
+      <ScrollView contentContainerStyle={styles.container}>
         <CustomIconButton
           lightThemeIcon={<TitleLogoLight />}
           darkThemeIcon={<TitleLogoDark />}
@@ -163,7 +163,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       ...body_primary_body_1,
       fontSize: getFontSizeSmallDevices(width, 16),
     },
-    topContainer: {
+    container: {
       width: '100%',
       alignItems: 'center',
       flexGrow: 1,
