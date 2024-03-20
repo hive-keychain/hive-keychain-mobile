@@ -78,29 +78,18 @@ const OperationThemed = ({
         <View style={{flex: 1}}>
           {childrenTop}
           <View style={{flex: 1, marginTop: 5}}>
-            {inScrollView ? (
-              <View style={[styles.mainContainer]}>
-                <ScrollView
-                  bounces={false}
-                  contentContainerStyle={[
-                    styles.contentContainer,
-                    styles.container,
-                  ]}
-                  scrollEnabled={true}
-                  keyboardShouldPersistTaps="handled">
-                  {renderContent()}
-                </ScrollView>
-              </View>
-            ) : (
-              <View
-                style={[
+            <View style={[styles.mainContainer]}>
+              <ScrollView
+                bounces={false}
+                contentContainerStyle={[
                   styles.contentContainer,
-                  styles.mainContainer,
-                  {borderColor: 'transparent'},
-                ]}>
+                  styles.container,
+                ]}
+                scrollEnabled={inScrollView}
+                keyboardShouldPersistTaps="handled">
                 {renderContent()}
-              </View>
-            )}
+              </ScrollView>
+            </View>
           </View>
         </View>
       </>
