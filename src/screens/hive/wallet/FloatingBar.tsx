@@ -1,4 +1,5 @@
 import {showFloatingBar} from 'actions/floatingBar';
+import {closeAllTabs} from 'actions/index';
 import Icon from 'components/hive/Icon';
 import React, {useEffect, useRef, useState} from 'react';
 import {
@@ -11,6 +12,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -36,7 +38,7 @@ const Floating = ({
   showTags,
   isLoadingScreen,
   isDrawerOpen,
-  showFloatingBar,
+  closeAllTabs,
   rpc,
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
@@ -116,7 +118,7 @@ const Floating = ({
           name={Icons.WALLET_ADD}
           color={getActiveIconColor('ecosystem')}
           {...getIconDimensions(width)}
-          onClick={() => onHandlePressButton('ecosystem')}
+          onPress={() => onHandlePressButton('ecosystem')}
         />
         {showTags && (
           <Text style={[styles.textBase, styles.marginTop]}>
@@ -130,7 +132,12 @@ const Floating = ({
           color={getActiveIconColor('browser')}
           name={Icons.GLOBAL}
           {...getIconDimensions(width)}
-          onClick={() => onHandlePressButton('browser')}
+          onPress={() => onHandlePressButton('browser')}
+          onLongPress={() => {
+            console.log('closing all tabs');
+            SimpleToast.show(translate('browser.clear_all'), SimpleToast.LONG);
+            closeAllTabs();
+          }}
         />
         {showTags && (
           <Text style={[styles.textBase, styles.marginTop]}>
@@ -144,7 +151,7 @@ const Floating = ({
           name={Icons.SCANNER}
           color={getActiveIconColor('scan_qr')}
           {...getIconDimensions(width)}
-          onClick={() => onHandlePressButton('scan_qr')}
+          onPress={() => onHandlePressButton('scan_qr')}
         />
         {showTags && (
           <Text style={[styles.textBase, styles.marginTop]}>
@@ -158,7 +165,7 @@ const Floating = ({
           color={getActiveIconColor('swap_buy')}
           name={Icons.SWAP}
           {...getIconDimensions(width)}
-          onClick={() => onHandlePressButton('swap_buy')}
+          onPress={() => onHandlePressButton('swap_buy')}
         />
         {showTags && (
           <Text style={[styles.textBase, styles.marginTop]}>
@@ -218,7 +225,7 @@ const connector = connect(
       rpc: state.settings.rpc,
     };
   },
-  {showFloatingBar},
+  {showFloatingBar, closeAllTabs},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

@@ -111,7 +111,7 @@ const AddAccountByAuth = ({
                 <Icon
                   name={Icons.SCANNER}
                   theme={theme}
-                  onClick={() => {
+                  onPress={() => {
                     (navigation as AddAccFromWalletNavigation).navigate(
                       'ScanQRScreen',
                       {wallet: true},

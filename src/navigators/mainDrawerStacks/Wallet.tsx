@@ -83,7 +83,7 @@ export default () => {
             <Icon
               name={Icons.SETTINGS_4}
               theme={theme}
-              onClick={() =>
+              onPress={() =>
                 navigation.navigate('ModalScreen', {
                   name: 'FilterScreen',
                   modalContent: (

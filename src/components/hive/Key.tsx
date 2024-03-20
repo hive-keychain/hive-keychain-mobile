@@ -176,7 +176,7 @@ const RemoveKey = ({
     <Icon
       name={Icons.REMOVE}
       theme={theme}
-      onClick={forgetKey}
+      onPress={forgetKey}
       color={PRIMARY_RED_COLOR}
     />
   );
@@ -211,7 +211,7 @@ const ViewKey = ({toggle, isPKShown, theme}: ViewKeyProps) => {
       name={isPKShown ? Icons.NOT_SEE : Icons.SEE}
       theme={theme}
       color={PRIMARY_RED_COLOR}
-      onClick={toggle}
+      onPress={toggle}
     />
   );
 };

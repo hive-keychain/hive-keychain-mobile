@@ -198,7 +198,7 @@ const Witness = ({
               <Icon
                 name={Icons.OPEN}
                 theme={theme}
-                onClick={() => Linking.openURL(witness.url)}
+                onPress={() => Linking.openURL(witness.url)}
                 {...styles.iconBigger}
               />
             </View>

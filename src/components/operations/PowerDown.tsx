@@ -211,7 +211,7 @@ const PowerDown = ({
                 <Icon
                   theme={theme}
                   name={Icons.GIFT_DELETE}
-                  onClick={() => {
+                  onPress={() => {
                     onPowerDownConfirmation(true);
                   }}
                 />

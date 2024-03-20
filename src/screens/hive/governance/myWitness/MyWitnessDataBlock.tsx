@@ -37,7 +37,7 @@ const MyWitnessDataBlock = ({
           <Icon
             theme={theme}
             name={Icons.EXTERNAL_LINK}
-            onClick={() => Linking.openURL(urlOnTitle)}
+            onPress={() => Linking.openURL(urlOnTitle)}
             {...styles.icon}
           />
         )}

@@ -624,7 +624,7 @@ const getIconFilePath = (
 };
 
 interface IconProps {
-  onClick?: () => void;
+  onPress?: () => void;
   onLongPress?: () => void;
   name: Icons;
   subType?: string;
@@ -666,13 +666,13 @@ const Icon = (props: IconProps) => {
     );
   }
 
-  return props.onClick ? (
+  return props.onPress ? (
     <Pressable
       style={({pressed}) => [
         styleProps.style,
         pressed ? props.additionalPressedStyle : null,
       ]}
-      onPress={() => props.onClick()}
+      onPress={() => props.onPress()}
       onLongPress={props.onLongPress ? () => props.onLongPress() : null}>
       {iconComponent}
     </Pressable>

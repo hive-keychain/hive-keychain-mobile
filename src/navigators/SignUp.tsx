@@ -67,7 +67,7 @@ export default () => {
               name={Icons.ARROW_LEFT}
               theme={theme}
               additionalContainerStyle={[styles.marginLeft]}
-              onClick={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
               color={getColors(theme).iconBW}
             />
           ),

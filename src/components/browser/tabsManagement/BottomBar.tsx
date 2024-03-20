@@ -42,7 +42,7 @@ export default ({
         theme={theme}
         name={Icons.ADD_BROWSER}
         additionalContainerStyle={[styles.circleContainer]}
-        onClick={() => {
+        onPress={() => {
           onAddTab();
         }}
         {...styles.icon}

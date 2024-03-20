@@ -68,7 +68,7 @@ export default ({trim = true, ...props}: InputProps & OperationInputProps) => {
           <Icon
             theme={theme}
             name={Icons.INFO}
-            onClick={props.infoIconAction}
+            onPress={props.infoIconAction}
             additionalContainerStyle={styles.marginLeft}
             color={inputStyle(theme, width).label.color}
           />

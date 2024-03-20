@@ -347,7 +347,7 @@ const Transfer = ({
                     <Icon
                       name={isMemoEncrypted ? Icons.ENCRYPT : Icons.DECRYPT}
                       theme={theme}
-                      onClick={() => setIsMemoEncrypted(!isMemoEncrypted)}
+                      onPress={() => setIsMemoEncrypted(!isMemoEncrypted)}
                       color={PRIMARY_RED_COLOR}
                     />
                   </View>

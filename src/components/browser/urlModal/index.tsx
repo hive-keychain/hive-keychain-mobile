@@ -19,7 +19,7 @@ import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {MARGIN_PADDING} from 'src/styles/spacing';
-import {title_primary_body_3} from 'src/styles/typography';
+import {FontPoppinsName, title_primary_body_3} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import UrlAutocomplete from './UrlAutocomplete';
 
@@ -98,7 +98,7 @@ const UrlModal = ({
           theme={theme}
           width={16}
           height={16}
-          onClick={() => toggle(false)}
+          onPress={() => toggle(false)}
           additionalContainerStyle={styles.backButton}
           color={PRIMARY_RED_COLOR}
         />
@@ -123,7 +123,7 @@ const UrlModal = ({
             theme={theme}
             width={16}
             height={16}
-            onClick={() => Share.share({message: url})}
+            onPress={() => Share.share({message: url})}
             additionalContainerStyle={styles.option}
             color={PRIMARY_RED_COLOR}
           />
@@ -134,7 +134,7 @@ const UrlModal = ({
             theme={theme}
             width={16}
             height={16}
-            onClick={() => Clipboard.setString(url)}
+            onPress={() => Clipboard.setString(url)}
             additionalContainerStyle={styles.option}
             color={PRIMARY_RED_COLOR}
           />
@@ -191,7 +191,7 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
     textBase: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_3,
-      fontFamily: 'normal',
+      fontFamily: FontPoppinsName.REGULAR,
     },
     urlInput: {
       flex: 1,

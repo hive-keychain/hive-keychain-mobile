@@ -76,7 +76,7 @@ const Footer = ({
             ? '#939292b3'
             : '#93929263'
         }
-        onClick={goBack}
+        onPress={goBack}
       />
       <Icon
         theme={theme}
@@ -89,20 +89,20 @@ const Footer = ({
             ? '#939292b3'
             : '#93929263'
         }
-        onClick={goForward}
+        onPress={goForward}
       />
       <Icon
         theme={theme}
         name={Icons.ADD_BROWSER}
         additionalContainerStyle={[styles.circleContainer]}
-        onClick={addTab}
+        onPress={addTab}
         {...styles.icon}
         color={PRIMARY_RED_COLOR}
       />
       <Icon
         theme={theme}
         name={Icons.ROTATE_RIGHT_BROWSER}
-        onClick={reload}
+        onPress={reload}
         onLongPress={() => {
           clearCache();
           SimpleToast.show('Cache cleared');
@@ -120,7 +120,7 @@ const Footer = ({
         theme={theme}
         name={Icons.WALLET_ADD}
         {...styles.icon}
-        onClick={() => resetStackAndNavigate('WALLET')}
+        onPress={() => resetStackAndNavigate('WALLET')}
         color={PRIMARY_RED_COLOR}
       />
     </View>

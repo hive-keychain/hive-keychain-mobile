@@ -176,7 +176,7 @@ const DropdownModal = ({
           <Icon
             theme={theme}
             name={Icons.COPY}
-            onClick={() => onHandleCopyValue(item.value)}
+            onPress={() => onHandleCopyValue(item.value)}
             width={16}
             height={16}
             additionalContainerStyle={{marginLeft: 4}}
@@ -238,7 +238,7 @@ const DropdownModal = ({
               <Icon
                 theme={theme}
                 name={Icons.REMOVE}
-                onClick={() => onRemove(item.value)}
+                onPress={() => onRemove(item.value)}
                 color={showSelectedBgOnItem ? 'white' : PRIMARY_RED_COLOR}
               />
             )}

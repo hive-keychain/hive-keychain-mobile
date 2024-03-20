@@ -32,7 +32,7 @@ export default () => {
             <Icon
               name={Icons.CLOSE_CIRCLE}
               theme={theme}
-              onClick={() => navigation.navigate('WALLET')}
+              onPress={() => navigation.navigate('WALLET')}
               color={getColors(theme).iconBW}
             />
           ),
@@ -41,7 +41,7 @@ export default () => {
             <Icon
               name={Icons.ARROW_LEFT}
               theme={theme}
-              onClick={() =>
+              onPress={() =>
                 (navigation as DrawerNavigationHelpers).openDrawer()
               }
               color={getColors(theme).iconBW}

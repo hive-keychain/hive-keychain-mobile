@@ -211,7 +211,7 @@ const TokenDisplay = ({
             <Icon
               key={`show-token-history-${currency}`}
               name={Icons.BACK_TIME}
-              onClick={onHandleGoToTokenHistory}
+              onPress={onHandleGoToTokenHistory}
               additionalContainerStyle={[
                 styles.squareButton,
                 styles.containerMarginLeft,
@@ -292,7 +292,7 @@ const TokenDisplay = ({
                     styles.containerMarginLeft,
                     styles.invertXAxis,
                   ]}
-                  onClick={onGoToIncoming}
+                  onPress={onGoToIncoming}
                   color={PRIMARY_RED_COLOR}
                 />
               </View>
@@ -321,7 +321,7 @@ const TokenDisplay = ({
                   width={15}
                   height={15}
                   additionalContainerStyle={[styles.containerMarginLeft]}
-                  onClick={onGoToOutgoing}
+                  onPress={onGoToOutgoing}
                   color={PRIMARY_RED_COLOR}
                 />
               </View>

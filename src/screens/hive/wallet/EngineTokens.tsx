@@ -151,7 +151,7 @@ const EngineTokens = ({
                     <Icon
                       name={Icons.SEARCH}
                       theme={theme}
-                      onClick={() => {
+                      onPress={() => {
                         setSearchValue('');
                         setIsSearchOpen(false);
                       }}
@@ -165,14 +165,14 @@ const EngineTokens = ({
                 name={Icons.SEARCH}
                 theme={theme}
                 additionalContainerStyle={styles.search}
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                onPress={() => setIsSearchOpen(!isSearchOpen)}
                 width={18}
                 height={18}
               />
               <Icon
                 name={Icons.SETTINGS_2}
                 theme={theme}
-                onClick={handleClickSettings}
+                onPress={handleClickSettings}
               />
             </View>
             {isSearchOpen && <Separator height={5} />}

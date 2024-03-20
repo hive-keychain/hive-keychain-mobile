@@ -207,7 +207,7 @@ const CurrencyToken = ({
               <Icon
                 key={`show-token-history-${currencyName}`}
                 name={Icons.BACK_TIME}
-                onClick={onHandleGoToWalletHistory}
+                onPress={onHandleGoToWalletHistory}
                 additionalContainerStyle={styles.squareButton}
                 theme={theme}
                 color={PRIMARY_RED_COLOR}

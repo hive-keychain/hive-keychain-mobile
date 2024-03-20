@@ -55,7 +55,7 @@ export default ({
       name={Icons.INFO}
       theme={theme}
       additionalContainerStyle={[additionalButtonStyle]}
-      onClick={() =>
+      onPress={() =>
         navigate('ModalScreen', {
           name: Info.COPY_KEYS,
           modalContent: content,

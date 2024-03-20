@@ -139,7 +139,7 @@ const AddCustomRPC = ({
             <Icon
               theme={theme}
               name={Icons.RAM}
-              onClick={onHandleSave}
+              onPress={onHandleSave}
               color={PRIMARY_RED_COLOR}
             />
           </View>

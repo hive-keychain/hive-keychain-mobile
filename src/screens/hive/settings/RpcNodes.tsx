@@ -248,7 +248,7 @@ const RpcNodes = ({
           <Icon
             theme={theme}
             name={Icons.RAM}
-            onClick={handleAddCustomRPC}
+            onPress={handleAddCustomRPC}
             color={PRIMARY_RED_COLOR}
           />
         </View>

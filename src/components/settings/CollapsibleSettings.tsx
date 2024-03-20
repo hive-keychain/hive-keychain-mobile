@@ -44,7 +44,7 @@ const CollapsibleSettings = ({
               <Icon
                 name={Icons.REMOVE}
                 theme={theme}
-                onClick={() => {
+                onPress={() => {
                   removePreference(username, domainPref.domain, e);
                 }}
                 {...styles.removeIcon}

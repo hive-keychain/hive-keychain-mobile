@@ -32,7 +32,7 @@ const RotationIconAnimated = ({theme, onPressIcon, animate, color}: Props) => {
       <Icon
         theme={theme}
         name={Icons.ROTATE_RIGHT_BROWSER}
-        onClick={onPressIcon}
+        onPress={onPressIcon}
         color={color}
       />
     </Animated.View>

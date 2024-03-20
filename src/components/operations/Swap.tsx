@@ -564,7 +564,7 @@ const Swap = ({
                   theme={theme}
                   name={Icons.BACK_TIME}
                   additionalContainerStyle={[styles.squareButton]}
-                  onClick={() => navigate('SwapHistory')}
+                  onPress={() => navigate('SwapHistory')}
                   color={PRIMARY_RED_COLOR}
                 />
               </View>
@@ -676,7 +676,7 @@ const Swap = ({
               <Icon
                 theme={theme}
                 name={Icons.REPEAT}
-                onClick={swapStartAndEnd}
+                onPress={swapStartAndEnd}
                 additionalContainerStyle={styles.autoWidthCentered}
                 color={PRIMARY_RED_COLOR}
               />

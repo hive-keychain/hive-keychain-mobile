@@ -382,7 +382,7 @@ const Main = ({
                             theme={theme}
                             width={18}
                             height={18}
-                            onClick={() => {
+                            onPress={() => {
                               setSearchValue('');
                               setIsSearchOpen(false);
                             }}
@@ -395,7 +395,7 @@ const Main = ({
                           name={Icons.SEARCH}
                           theme={theme}
                           additionalContainerStyle={styles.search}
-                          onClick={() => {
+                          onPress={() => {
                             setIsSearchOpen(true);
                           }}
                           width={18}
@@ -404,7 +404,7 @@ const Main = ({
                         <Icon
                           name={Icons.SETTINGS_2}
                           theme={theme}
-                          onClick={handleClickSettings}
+                          onPress={handleClickSettings}
                         />
                       </>
                     )}

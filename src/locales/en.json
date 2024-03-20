@@ -804,6 +804,7 @@
   },
   "browser": {
     "search": "Search or enter url",
+    "clear_all": "All your browser tabs have been closed",
     "history": {"clear": "Clear History"},
     "home": {
       "title": "HOME",

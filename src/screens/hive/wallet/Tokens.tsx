@@ -188,7 +188,7 @@ const Tokens = ({
           <Icon
             name={Icons.SETTINGS_2}
             theme={theme}
-            onClick={() => {
+            onPress={() => {
               navigate('TemplateStack', {
                 titleScreen: translate(
                   'wallet.operations.token_settings.title',

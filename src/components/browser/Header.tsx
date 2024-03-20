@@ -125,7 +125,7 @@ const BrowserHeader = ({
                     <Icon
                       theme={theme}
                       name={Icons.HOME_BROWSER}
-                      onClick={goHome}
+                      onPress={goHome}
                       color={PRIMARY_RED_COLOR}
                       {...styles.icons}
                     />
@@ -135,7 +135,7 @@ const BrowserHeader = ({
                   <Icon
                     name={Icons.SEARCH}
                     theme={theme}
-                    onClick={() => startSearch(true)}
+                    onPress={() => startSearch(true)}
                     color={PRIMARY_RED_COLOR}
                     {...styles.icons}
                   />
@@ -169,7 +169,7 @@ const BrowserHeader = ({
               <Icon
                 name={Icons.SEARCH}
                 theme={theme}
-                onClick={() => startSearch(true)}
+                onPress={() => startSearch(true)}
                 color={PRIMARY_RED_COLOR}
                 {...styles.icons}
               />
