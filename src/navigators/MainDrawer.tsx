@@ -45,6 +45,7 @@ export default () => {
         }}
         component={BrowserStack}
       />
+
       <Drawer.Screen
         name="Governance"
         options={{

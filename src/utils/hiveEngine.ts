@@ -1,7 +1,8 @@
-import {TokenBalance, TokenMarket} from 'actions/interfaces';
+import {Token, TokenBalance, TokenMarket} from 'actions/interfaces';
 import hsc from 'api/hiveEngine';
 import {decodeMemo} from 'components/bridge';
 import {translate} from './localize';
+
 type sscjsResult = {logs: string};
 
 export interface TokenDelegation {
@@ -21,7 +22,6 @@ export const tryConfirmTransaction = async (trxId: string) => {
       break;
     }
   }
-
   var error = null;
   if (result && result.logs) {
     var logs = JSON.parse(result.logs);
@@ -106,4 +106,45 @@ export const getOutgoingTokenDelegations = async (
     from: username,
     symbol: symbol,
   });
+};
+
+export const getAllTokens = async (): Promise<Token[]> => {
+  return (await hsc.find('tokens', 'tokens', {}, 1000, 0, [])).map((t: any) => {
+    return {
+      ...t,
+      metadata: JSON.parse(t.metadata),
+    };
+  });
+};
+
+export const getTokenInfo = async (symbol: string): Promise<Token> => {
+  return (
+    await hsc.find('tokens', 'tokens', {symbol: symbol}, 1000, 0, [])
+  ).map((t: any) => {
+    return {
+      ...t,
+      metadata: JSON.parse(t.metadata),
+    };
+  })[0];
+};
+
+export const getTokenPrecision = async (symbol: string) => {
+  if (symbol === 'HBD' || symbol === 'HIVE') {
+    return 3;
+  }
+  const token = await getTokenInfo(symbol);
+  return token.precision;
+};
+
+export const getHiveEngineTokenPrice = (
+  {symbol}: Partial<TokenBalance>,
+  market: TokenMarket[],
+) => {
+  const tokenMarket = market.find((t) => t.symbol === symbol);
+  const price = tokenMarket
+    ? parseFloat(tokenMarket.lastPrice)
+    : symbol === 'SWAP.HIVE'
+    ? 1
+    : 0;
+  return price;
 };

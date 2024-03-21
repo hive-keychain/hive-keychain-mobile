@@ -11,6 +11,7 @@
       android:icon="@mipmap/ic_launcher"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -56,6 +57,36 @@
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
     </activity>
+
+      <!-- Widget registration -->
+      <receiver android:name=".WidgetCurrencyListProvider"
+          android:exported="false"
+          android:label="@string/widget_currency_list_receiver_label_name">
+        <intent-filter>
+          <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+          <action android:name="com.mobilekeychain.WidgetCurrencyListProvider.ACTION_WIDGET_REFRESH"/>
+        </intent-filter>
+        <meta-data
+            android:name="android.appwidget.provider"
+            android:resource="@xml/widget_currency_list" />
+      </receiver>
+      <receiver android:name=".WidgetAccountBalanceListProvider"
+          android:exported="false"
+          android:label="@string/widget_account_balance_list_receiver_label_name">
+        <intent-filter>
+          <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+        </intent-filter>
+        <meta-data android:name="android.appwidget.provider"
+            android:resource="@xml/widget_account_balance_list"/>
+      </receiver>
+      <!-- End Widget registration -->
+
+      <!-- Widget Services related-->
+      <service android:name=".WidgetCurrencyListService"
+        android:permission="android.permission.BIND_REMOTEVIEWS" />
+      <service android:name=".WidgetAccountBalanceListService"
+          android:permission="android.permission.BIND_REMOTEVIEWS" />
+      <!-- End Widget Services related-->
     </application>
 
 </manifest>
