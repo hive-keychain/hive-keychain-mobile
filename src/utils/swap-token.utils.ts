@@ -25,10 +25,6 @@ const getSwapTokenStartList = async (account: ExtendedAccount) => {
   userTokenList = userTokenList.sort((a, b) =>
     b.symbol.toLowerCase() > a.symbol.toLowerCase() ? -1 : 1,
   );
-<<<<<<< HEAD
-
-=======
->>>>>>> refactor/widget-v2
   if (Asset.fromString(account.balance.toString()).amount > 0) {
     userTokenList.unshift({
       account: account.name,
