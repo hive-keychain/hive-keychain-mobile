@@ -21,7 +21,6 @@ type Props = {
   isHiveEngine?: boolean;
   tokenBalance?: string;
   tokenLogo?: JSX.Element;
-  setMax?: (value: string) => void;
   setAvailableBalance?: (value: string) => void;
   theme?: Theme;
 };
@@ -34,7 +33,6 @@ const Balance = ({
   isHiveEngine,
   tokenBalance,
   tokenLogo,
-  setMax,
   theme,
   setAvailableBalance,
 }: Props) => {
@@ -83,13 +81,7 @@ const Balance = ({
     theme,
   });
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={() => {
-        if (setMax) {
-          setMax(withCommas(parsedValue.toString()));
-        }
-      }}>
+    <TouchableOpacity activeOpacity={1}>
       <View>
         <Text style={[styles.textBalance, styles.centeredText]}>
           {withCommas(parsedValue.toString())} {` ${currency}`}

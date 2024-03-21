@@ -19,7 +19,7 @@ import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize} from 'utils/format';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
 import {stakeToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
@@ -102,7 +102,7 @@ const StakeToken = ({
   const onStakeConfirmation = () => {
     if (!amount) {
       Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
-    } else if (+amount > parseFloat(balance)) {
+    } else if (+amount > +getCleanAmountValue(balance)) {
       Toast.show(
         translate('common.overdraw_balance_error', {
           currency,
@@ -120,7 +120,7 @@ const StakeToken = ({
 
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${amount} ${currency}`,
+            value: `${withCommas(amount)} ${currency}`,
           },
         ],
       };
@@ -181,7 +181,9 @@ const StakeToken = ({
                   <TouchableOpacity
                     activeOpacity={1}
                     onPress={() => {
-                      setAmount(parseFloat(balance).toFixed(3));
+                      setAmount(
+                        parseFloat(getCleanAmountValue(balance)).toFixed(3),
+                      );
                     }}>
                     <Text
                       style={

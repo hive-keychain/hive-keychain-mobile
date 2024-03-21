@@ -24,7 +24,13 @@ import {getHorizontalLineStyle} from 'src/styles/line';
 import {FontJosefineSansName, getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
-import {capitalize, fromHP, toHP, withCommas} from 'utils/format';
+import {
+  capitalize,
+  fromHP,
+  getCleanAmountValue,
+  toHP,
+  withCommas,
+} from 'utils/format';
 import {getCurrency, powerDown} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
@@ -108,7 +114,7 @@ const PowerDown = ({
   const onPowerDownConfirmation = (isCancel = false) => {
     if (!isCancel && !amount) {
       Toast.show(translate('wallet.operations.convert.warning.missing_info'));
-    } else if (+amount > parseFloat(available as string)) {
+    } else if (+amount > +getCleanAmountValue(available + '')) {
       Toast.show(
         translate('common.overdraw_balance_error', {
           currency,
@@ -134,7 +140,7 @@ const PowerDown = ({
               },
               {
                 title: 'wallet.operations.transfer.confirm.amount',
-                value: `${amount} ${currency}`,
+                value: `${withCommas(amount)} ${currency}`,
               },
             ],
       };
@@ -257,7 +263,9 @@ const PowerDown = ({
                   />
                   <TouchableOpacity
                     activeOpacity={1}
-                    onPress={() => setAmount(withCommas(available.toString()))}>
+                    onPress={() =>
+                      setAmount(getCleanAmountValue(available.toString()))
+                    }>
                     <Text
                       style={[
                         getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
