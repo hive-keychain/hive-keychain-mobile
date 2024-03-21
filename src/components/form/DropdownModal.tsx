@@ -414,8 +414,7 @@ const getStyles = (
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderWidth: 1,
       width: 'auto',
-      height: 40,
-      marginBottom: 8,
+      height: 50,
     },
     italic: {
       fontFamily: FontPoppinsName.ITALIC,
