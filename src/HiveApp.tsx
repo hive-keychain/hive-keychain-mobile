@@ -109,18 +109,6 @@ const App = ({
     rpc = activeRpc?.uri;
   }, [activeRpc]);
 
-  useEffect(() => {
-    console.log('auth', auth);
-  }, [auth]);
-
-  useEffect(() => {
-    console.log('hasacc', hasAccounts);
-  }, [hasAccounts]);
-
-  useEffect(() => {
-    console.log('total rerendering');
-  }, []);
-
   const renderMainNavigator = () => {
     if (!hasAccounts) {
       // No accounts, sign up process
