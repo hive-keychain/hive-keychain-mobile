@@ -40,6 +40,7 @@ import {
   NativeModules,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -126,6 +127,7 @@ const Main = ({
   const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
 
   React.useEffect(() => {
+    if (Platform.OS === 'ios') return;
     const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
     let eventListener = eventEmitter.addListener('command_event', (event) => {
       if (event && Object.values(event).length >= 1) {
