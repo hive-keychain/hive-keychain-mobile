@@ -81,6 +81,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
       containerStyle={containerStyle}
       additionalWrapperFixedStyle={wrapperFixedStyle}
       modalPosition={modalPosition}
+      theme={theme}
       buttonElement={buttonElement}>
       <StatusBar
         barStyle={getColors(theme).barStyle}

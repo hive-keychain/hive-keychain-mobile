@@ -22,6 +22,8 @@ import Icon from 'components/hive/Icon';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
+import WhatsNew from 'components/popups/whats-new/WhatsNew';
+import WidgetConfiguration from 'components/popups/widget-configuration/WidgetConfiguration';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
@@ -34,6 +36,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
+  NativeEventEmitter,
+  NativeModules,
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
@@ -70,6 +74,7 @@ import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
+import {WidgetUtils} from 'utils/widget.utils';
 import TokenSettings from './tokens/TokenSettings';
 
 const Main = ({
@@ -116,6 +121,36 @@ const Main = ({
   const [lastScrollYValue, setLastScrollYValue] = useState(0);
   const [isHiveEngineLoading, setIsHiveEngineLoading] = useState(true);
   const mainScrollRef = useRef();
+
+  const [eventReceived, setEventReceived] = useState(null);
+  const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
+
+  React.useEffect(() => {
+    const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
+    let eventListener = eventEmitter.addListener('command_event', (event) => {
+      if (event && Object.values(event).length >= 1) {
+        setEventReceived(event);
+      }
+    });
+    if (eventReceived) {
+      if (eventReceived.currency) {
+        const {currency: command} = eventReceived;
+        if (command === 'update_values_currency_list') {
+          WidgetUtils.sendWidgetData('currency_list');
+        }
+      } else if (eventReceived.navigateTo) {
+        //IF implementation needed in the future
+        const {navigateTo: route} = eventReceived;
+        navigation.navigate(route);
+      } else if (eventReceived.configureWidgets) {
+        const {configureWidgets} = eventReceived;
+        setShowWidgetConfiguration(Boolean(configureWidgets));
+      }
+    }
+    return () => {
+      eventListener.remove();
+    };
+  }, [eventReceived]);
 
   useEffect(() => {
     loadTokens();
@@ -455,6 +490,11 @@ const Main = ({
               <View style={[getCardStyle(theme).filledWrapper]} />
             </ScrollView>
           </View>
+          <WhatsNew navigation={navigation} />
+          <WidgetConfiguration
+            show={showWidgetConfiguration}
+            setShow={setShowWidgetConfiguration}
+          />
         </View>
       ) : (
         <Loader animatedLogo />

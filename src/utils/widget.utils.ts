@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {WidgetAccountBalanceToShow} from 'components/popups/widget-configuration/widget-configuration';
+import {WidgetAccountBalanceToShow} from 'components/popups/widget-configuration/WidgetConfiguration';
 import {NativeModules} from 'react-native';
 import {
   WidgetAsyncStorageItem,

@@ -1,12 +1,17 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import OperationButton from 'components/form/EllipticButton';
+import CheckBox from 'components/form/CustomCheckBox';
+import EllipticButton from 'components/form/EllipticButton';
 import Icon from 'components/hive/Icon';
 import Operation from 'components/operations/Operation';
+import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text} from 'react-native';
-import {CheckBox} from 'react-native-elements';
+import {StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {WidgetAsyncStorageItem} from 'src/enums/widgets.enum';
+import {getColors} from 'src/styles/colors';
+import {getModalBaseStyle} from 'src/styles/modal';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
@@ -31,13 +36,13 @@ const WidgetConfiguration = ({
     WidgetAccountBalanceToShow[]
   >([]);
   const [loadingData, setLoadingData] = useState(false);
-
+  const {theme} = useThemeContext();
   useEffect(() => {
     if (show) {
       init();
     }
   }, [show, accounts]);
-
+  const styles = getStyles(useThemeContext().theme);
   const init = async () => {
     const accountsStoredToShow = await AsyncStorage.getItem(
       WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
@@ -61,6 +66,10 @@ const WidgetConfiguration = ({
         name: 'Whats_new_popup',
         modalContent: renderContent(),
         onForceCloseModal: handleClose,
+        modalContainerStyle: [
+          getModalBaseStyle(theme).roundedTop,
+          styles.modal,
+        ],
       });
     }
   }, [show, loadingData, accountsToShow]);
@@ -92,12 +101,11 @@ const WidgetConfiguration = ({
     return (
       <Operation
         title={translate('popup.widget_configuration.title')}
-        logo={<Icon name="settings" />}
+        logo={
+          <Icon name={Icons.SETTINGS_2} color={getColors(theme).primaryText} />
+        }
         onClose={handleClose}>
-        <>
-          <Text style={[styles.title, styles.marginTop]}>
-            {translate('popup.widget_configuration.sub_title')}
-          </Text>
+        <View style={styles.rootContainer}>
           <Text style={[styles.text, styles.centeredText]}>
             {translate('popup.widget_configuration.intro')}
           </Text>
@@ -110,54 +118,61 @@ const WidgetConfiguration = ({
                   toogleShowAccount(accountToShow.name, !accountToShow.show)
                 }
                 title={`@${accountToShow.name}`}
+                skipTranslation
               />
             );
           })}
-          <OperationButton
-            style={[styles.button, styles.marginVertical]}
-            title={'SAVE'}
+          <Separator />
+          <EllipticButton
+            title={translate('common.save')}
+            isWarningButton
             onPress={handleSaveWidgetConfiguration}
             isLoading={loadingData}
           />
-        </>
+        </View>
       </Operation>
     );
   };
   return null;
 };
 
-const styles = StyleSheet.create({
-  rootContainer: {
-    width: '100%',
-  },
-  title: {
-    textAlign: 'center',
-    color: 'black',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  text: {fontSize: 16, marginBottom: 10},
-  image: {
-    marginBottom: 30,
-    aspectRatio: 1.6,
-    alignSelf: 'center',
-    width: '100%',
-  },
-  marginTop: {
-    marginTop: 18,
-  },
-  marginVertical: {
-    marginVertical: 10,
-  },
-  button: {
-    width: '100%',
-    marginHorizontal: 0,
-  },
-  centeredText: {
-    textAlign: 'center',
-  },
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    rootContainer: {
+      width: '100%',
+      padding: 16,
+    },
+    title: {
+      textAlign: 'center',
+      color: getColors(theme).primaryText,
+      fontSize: 16,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+    text: {fontSize: 16, marginBottom: 10, color: getColors(theme).primaryText},
+    image: {
+      marginBottom: 30,
+      aspectRatio: 1.6,
+      alignSelf: 'center',
+      width: '100%',
+    },
+    marginTop: {
+      marginTop: 18,
+    },
+    marginVertical: {
+      marginVertical: 10,
+    },
+    button: {
+      width: '100%',
+      marginHorizontal: 0,
+    },
+    centeredText: {
+      textAlign: 'center',
+    },
+    modal: {
+      padding: 16,
+    },
+  });
 
 const mapStateToProps = (state: RootState) => {
   return {
