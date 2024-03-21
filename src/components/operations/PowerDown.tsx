@@ -1,123 +1,324 @@
-import {loadAccount} from 'actions/index';
-import Hp from 'assets/wallet/icon_hp_dark.svg';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
+import Icon from 'components/hive/Icon';
+import {Caption} from 'components/ui/Caption';
+import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
-import {Keyboard, StyleSheet, Text} from 'react-native';
+import moment from 'moment';
+import React, {useEffect, useState} from 'react';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
+import {getCardStyle} from 'src/styles/card';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {getHorizontalLineStyle} from 'src/styles/line';
+import {FontJosefineSansName, getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {fromHP, toHP, withCommas} from 'utils/format';
-import {powerDown} from 'utils/hive';
+import AccountUtils from 'utils/account.utils';
+import {capitalize, fromHP, toHP, withCommas} from 'utils/format';
+import {getCurrency, powerDown} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
-import Balance from './Balance';
-import Operation from './Operation';
+import {navigate} from 'utils/navigation';
+import {ConfirmationPageProps} from './Confirmation';
+import OperationThemed from './OperationThemed';
 
-type Props = PropsFromRedux & {currency?: string};
-const PowerDown = ({currency = 'HP', user, loadAccount, properties}: Props) => {
+export interface PowerDownOperationProps {
+  currency?: string;
+}
+
+type Props = PropsFromRedux & PowerDownOperationProps;
+const PowerDown = ({
+  currency = 'HP',
+  user,
+  showModal,
+  properties,
+  delegations,
+}: Props) => {
   const [amount, setAmount] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [current, setCurrent] = useState<string | number>('...');
+  const [available, setAvailable] = useState<string | number>('...');
 
-  const renderPDIndicator = () => {
-    if (parseFloat(user.account.to_withdraw as string) !== 0) {
-      return (
-        <Text>
-          <Text style={styles.bold}>Current power down : </Text>
-          {`${withCommas(
-            toHP(user.account.withdrawn as string, properties.globals) /
-              1000000 +
-              '',
-            1,
-          )} / ${withCommas(
-            toHP(user.account.to_withdraw as string, properties.globals) /
-              1000000 +
-              '',
-            1,
-          )} HP`}
-        </Text>
+  useEffect(() => {
+    const hiveBalance = Number((user.account.balance as string).split(' ')[0]);
+
+    let totalOutgoingVestingShares = 0;
+    for (const delegation of delegations.outgoing) {
+      totalOutgoingVestingShares += parseFloat(
+        delegation.vesting_shares.toString().split(' ')[0],
       );
-    } else {
-      return null;
     }
-  };
-  const onPowerDown = async () => {
-    setLoading(true);
-    Keyboard.dismiss();
 
+    const hpBalance = (
+      toHP(
+        (
+          parseFloat(
+            user.account.vesting_shares.toString().replace('VESTS', ''),
+          ) - totalOutgoingVestingShares
+        ).toString(),
+        properties.globals,
+      ) - 5
+    ).toFixed(3);
+
+    setAvailable(Math.max(Number(hpBalance), 0));
+    setCurrent(hiveBalance);
+  }, [user, delegations]);
+
+  const poweringDown = AccountUtils.getPowerDown(
+    user.account,
+    properties.globals,
+  );
+
+  const onPowerDown = async () => {
     try {
+      const amt = amount.length ? amount : '0';
       await powerDown(user.keys.active!, {
         vesting_shares: sanitizeAmount(
-          fromHP(sanitizeAmount(amount), properties.globals!).toString(),
+          fromHP(sanitizeAmount(amt), properties.globals!).toString(),
           'VESTS',
           6,
         ),
         account: user.account.name,
       });
-      loadAccount(user.account.name, true);
-      goBack();
-      if (parseFloat(amount.replace(',', '.')) !== 0) {
-        Toast.show(translate('toast.powerdown_success'), Toast.LONG);
+      if (parseFloat(amt.replace(',', '.')) !== 0) {
+        showModal('toast.powerdown_success', MessageModalType.SUCCESS);
       } else {
-        Toast.show(translate('toast.stop_powerdown_success'), Toast.LONG);
+        showModal('toast.stop_powerdown_success', MessageModalType.SUCCESS);
       }
     } catch (e) {
-      Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
-    } finally {
-      setLoading(false);
+      showModal(
+        `Error : ${(e as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
+      );
     }
   };
+
+  const onPowerDownConfirmation = (isCancel = false) => {
+    if (!isCancel && !amount) {
+      Toast.show(translate('wallet.operations.convert.warning.missing_info'));
+    } else if (+amount > parseFloat(available as string)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      const confirmationData: ConfirmationPageProps = {
+        onSend: onPowerDown,
+        title: `wallet.operations.powerdown.confirm.info${
+          isCancel ? '_stop' : ''
+        }`,
+        data: isCancel
+          ? [
+              {
+                title: 'common.account',
+                value: `@${user.name}`,
+              },
+            ]
+          : [
+              {
+                title: 'common.account',
+                value: `@${user.name}`,
+              },
+              {
+                title: 'wallet.operations.transfer.confirm.amount',
+                value: `${amount} ${currency}`,
+              },
+            ],
+      };
+      navigate('ConfirmationPage', confirmationData);
+    }
+  };
+  const {height} = useWindowDimensions();
+  const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
-  const styles = getDimensionedStyles(color);
+  const styles = getDimensionedStyles(color, theme);
+
   return (
-    <Operation
-      logo={<Hp />}
-      title={translate('wallet.operations.powerdown.title')}>
-      <>
-        <Separator />
-        <Balance
-          currency={currency}
-          account={user.account}
-          pd
-          globalProperties={properties.globals}
-          setMax={(value: string) => {
-            setAmount(value);
-          }}
-        />
-
-        <Separator />
-        {renderPDIndicator()}
-        <Separator />
-
-        <OperationInput
-          placeholder={'0.000'}
-          keyboardType="decimal-pad"
-          rightIcon={<Text style={styles.currency}>{currency}</Text>}
-          textAlign="right"
-          value={amount}
-          onChangeText={setAmount}
-        />
-
-        <Separator height={40} />
-        <ActiveOperationButton
-          title={translate('common.send')}
-          onPress={onPowerDown}
-          style={styles.button}
-          isLoading={loading}
-        />
-      </>
-    </Operation>
+    <OperationThemed
+      additionalContentContainerStyle={{paddingHorizontal: 20}}
+      additionalBgSvgImageStyle={{
+        top: -40,
+      }}
+      childrenTop={
+        <>
+          <Separator />
+          <CurrentAvailableBalance
+            height={height}
+            theme={theme}
+            currentValue={`${withCommas(current as string)} ${getCurrency(
+              'HIVE',
+            )}`}
+            availableValue={`${withCommas(available as string)} ${getCurrency(
+              'HP',
+            )}`}
+            additionalContainerStyle={styles.currentAvailableBalances}
+          />
+          <Separator />
+          {parseFloat(poweringDown.total_withdrawing) > 0 && (
+            <View
+              style={[
+                getCardStyle(theme, 30).defaultCardItem,
+                styles.marginHorizontal,
+              ]}>
+              <View style={styles.flexRowBetween}>
+                <View>
+                  <Text
+                    style={[
+                      getFormFontStyle(height, theme).smallLabel,
+                      styles.josefineFont,
+                      styles.opaque,
+                    ]}>
+                    {translate('wallet.operations.powerdown.powering_down')}
+                  </Text>
+                  <Text
+                    style={[
+                      getFormFontStyle(height, theme).input,
+                      styles.josefineFont,
+                    ]}>
+                    {poweringDown.total_withdrawing} {getCurrency('HP')}
+                  </Text>
+                </View>
+                <View>
+                  <Text
+                    style={[
+                      getFormFontStyle(height, theme).smallLabel,
+                      styles.josefineFont,
+                      styles.opaque,
+                    ]}>
+                    {translate('wallet.operations.powerdown.next_power_down')}
+                  </Text>
+                  <Text
+                    style={[
+                      getFormFontStyle(height, theme).input,
+                      styles.josefineFont,
+                    ]}>
+                    {moment(poweringDown.next_vesting_withdrawal).format('L')}
+                  </Text>
+                </View>
+                <Icon
+                  theme={theme}
+                  name={Icons.GIFT_DELETE}
+                  onPress={() => {
+                    onPowerDownConfirmation(true);
+                  }}
+                />
+              </View>
+            </View>
+          )}
+          <Separator height={25} />
+        </>
+      }
+      childrenMiddle={
+        <View>
+          <Caption text="wallet.operations.powerdown.powerdown_text" />
+          <View style={styles.flexRowBetween}>
+            <OperationInput
+              labelInput={translate('common.currency')}
+              placeholder={currency}
+              value={currency}
+              editable={false}
+              additionalOuterContainerStyle={{
+                width: '40%',
+              }}
+            />
+            <OperationInput
+              labelInput={capitalize(translate('common.amount'))}
+              placeholder={'0'}
+              keyboardType="decimal-pad"
+              textAlign="right"
+              value={amount}
+              onChangeText={setAmount}
+              additionalOuterContainerStyle={{
+                width: '54%',
+              }}
+              rightIcon={
+                <View style={styles.flexRowCenter}>
+                  <Separator
+                    drawLine
+                    additionalLineStyle={getHorizontalLineStyle(
+                      theme,
+                      1,
+                      35,
+                      16,
+                    )}
+                  />
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => setAmount(withCommas(available.toString()))}>
+                    <Text
+                      style={[
+                        getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
+                          .input,
+                      ]}>
+                      {translate('common.max').toUpperCase()}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              }
+            />
+          </View>
+        </View>
+      }
+      buttonTitle={`wallet.operations.powerdown.title`}
+      onNext={onPowerDownConfirmation}
+    />
   );
 };
 
-const getDimensionedStyles = (color: string) =>
+const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
-    button: {backgroundColor: '#68A0B4'},
-    currency: {fontWeight: 'bold', fontSize: 18, color},
-    bold: {fontWeight: 'bold'},
+    currentAvailableBalances: {
+      paddingHorizontal: 15,
+    },
+    josefineFont: {
+      fontFamily: FontJosefineSansName.MEDIUM,
+    },
+    opaque: {
+      opacity: 0.7,
+    },
+    flexRowBetween: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    marginHorizontal: {marginHorizontal: 15},
+    paddingLeft: {
+      paddingLeft: 10,
+    },
+    flexRowCenter: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
+    },
+    redText: {color: PRIMARY_RED_COLOR},
+    operationButtonsContainer: {
+      alignItems: 'center',
+      flexDirection: 'row',
+      marginBottom: 20,
+      justifyContent: 'space-around',
+      width: '100%',
+    },
+    operationButton: {
+      width: '48%',
+      marginHorizontal: 0,
+    },
+    operationButtonConfirmation: {
+      backgroundColor: '#FFF',
+    },
+    textCentered: {textAlign: 'center'},
   });
 
 const connector = connect(
@@ -125,9 +326,10 @@ const connector = connect(
     return {
       user: state.activeAccount,
       properties: state.properties,
+      delegations: state.delegations,
     };
   },
-  {loadAccount},
+  {showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

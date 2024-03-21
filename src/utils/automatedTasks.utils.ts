@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ActiveAccount} from 'actions/interfaces';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {ClaimsConfig} from './config';
@@ -106,7 +106,7 @@ const canClaimAccountErrorMessage = (
 ): string | undefined => {
   if (!activeAccount.keys.active) {
     return 'toast.claims.need_active_key_for_claim_accounts';
-  } else if (activeAccount.rc.max_mana < ClaimsConfig.freeAccount.MIN_RC) {
+  } else if (activeAccount.rc.max_rc < ClaimsConfig.freeAccount.MIN_RC * 1.5) {
     return 'toast.claims.not_enough_rc_to_claim_account';
   }
 };

@@ -1,4 +1,5 @@
 global.process = require('process');
+export const hiveEngineWebsiteURL = 'https://hive-engine.com/';
 
 export const hiveEngine = {
   CHAIN_ID: 'ssc-mainnet-hive',
@@ -101,7 +102,7 @@ export const BrowserConfig = {
         name: 'Hive-Engine',
         description: 'Create Tokens & Smart Contracts on Hive.',
         icon: 'https://avatars.githubusercontent.com/u/51540775?s=200&v=4',
-        url: 'https://hive-engine.com/',
+        url: hiveEngineWebsiteURL,
         categories: ['finance'],
       },
       {
@@ -281,25 +282,15 @@ export const KeychainConfig = {
   ],
 };
 
-//TODO Notes for bellow.
-//10.0.1.5:5050 | localhost:5050
-//having the device connected to the computer.
-export const SwapsConfig = {
-  autoRefreshPeriodSec: 30,
-  autoRefreshHistoryPeriodSec: 10,
-  baseURL:
-    global.process.env.NODE_ENV === 'development'
-      ? 'http://10.0.1.5:5050'
-      : 'https://swap.hive-keychain.com',
+export const WitnessesConfig = {
+  feedWarningLimitInHours: 5,
 };
 
-export const ClaimsConfig = {
-  FREQUENCY: 10,
-  freeAccount: {
-    MIN_RC_PCT: 85,
-    MIN_RC: 9484331370472,
-  },
-  savings: {
-    delay: 30,
-  },
+export const SwapsConfig = {
+  autoRefreshPeriodSec: +(process.env.DEV_SWAP_AUTO_REFRESH ?? 30),
+  autoRefreshHistoryPeriodSec: +(process.env.DEV_SWAP_AUTO_REFRESH ?? 10),
+  baseURL:
+    process.env.KEYCHAIN_SWAP_API_DEV === 'true'
+      ? 'http://localhost:5050'
+      : 'https://swap.hive-keychain.com',
 };

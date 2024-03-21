@@ -1,13 +1,15 @@
+import {ModalPosition} from 'navigators/Root.types';
 import React from 'react';
 import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  StyleProp,
   StyleSheet,
   View,
+  ViewStyle,
 } from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
-import LinearGradient from 'react-native-linear-gradient';
 import {Dimensions as Dim} from 'utils/common.types';
 
 type Props = {
@@ -15,8 +17,18 @@ type Props = {
   boxBackgroundColor?: string;
   outsideClick: () => void;
   fixedHeight?: number;
+  containerStyle?: StyleProp<ViewStyle>;
+  additionalWrapperFixedStyle?: StyleProp<ViewStyle>;
+  additionalMainContainerStyle?: StyleProp<ViewStyle>;
+  additionalClickeableAreaStyle?: StyleProp<ViewStyle>;
+  modalPosition?: ModalPosition;
+  buttonElement?: JSX.Element;
 };
 type InnerProps = {height: number; width: number};
+
+/**
+ * Note: fixedHeight(0 - 1 range, i.e: 0.3)
+ */
 class CustomModal extends React.Component<Props, {}> implements InnerProps {
   height;
   width;
@@ -35,29 +47,31 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
       height: this.height,
       width: this.width,
       fixedHeight: this.fixedHeight,
+      modalPosition: this.props.modalPosition,
     });
     return (
       <KeyboardAvoidingView
         style={styles.fullHeight}
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
-        <View style={styles.mainContainer}>
+        <View
+          style={[
+            styles.mainContainer,
+            this.props.additionalMainContainerStyle,
+          ]}>
           <TouchableWithoutFeedback
-            style={{height: '100%'}}
+            style={[{height: '100%'}, this.props.additionalClickeableAreaStyle]}
             onPress={() => {
               this.props.outsideClick();
-            }}></TouchableWithoutFeedback>
+            }}>
+            {this.props.buttonElement}
+          </TouchableWithoutFeedback>
           <View
-            style={
-              this.fixedHeight ? styles.modalWrapperFixed : styles.modalWrapper
-            }>
-            <View style={styles.modalContainer}>
-              <LinearGradient
-                start={{x: 0, y: 0}}
-                end={{x: 0, y: 1}}
-                colors={['white', '#B9C9D6']}
-                style={styles.gradient}>
-                {this.props.children}
-              </LinearGradient>
+            style={[
+              this.fixedHeight ? styles.modalWrapperFixed : styles.modalWrapper,
+              this.props.additionalWrapperFixedStyle,
+            ]}>
+            <View style={[styles.modalContainer, this.props.containerStyle]}>
+              {this.props.children}
             </View>
           </View>
         </View>
@@ -72,14 +86,17 @@ class StyleSheetFactory {
     width,
     height,
     fixedHeight,
-  }: Dim & {modalHeight: number; fixedHeight: number}) {
-    console.log(fixedHeight);
+    modalPosition,
+  }: Dim & {
+    modalHeight: number;
+    fixedHeight: number;
+  } & {modalPosition: ModalPosition}) {
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
       mainContainer: {
         flex: 1,
         backgroundColor: 'transparent',
-        justifyContent: 'flex-end',
+        justifyContent: modalPosition ?? 'flex-end',
       },
       modalWrapper: {
         position: 'absolute',
@@ -99,7 +116,11 @@ class StyleSheetFactory {
         right: 0,
         justifyContent: 'center',
         alignItems: 'center',
-        height: fixedHeight * height,
+        minHeight: fixedHeight * height,
+        height: 'auto',
+        maxHeight: 0.85 * height,
+
+        width: '100%',
       },
       modalContainer: {
         backgroundColor: 'white',
@@ -109,16 +130,6 @@ class StyleSheetFactory {
         borderColor: 'white',
         borderStyle: 'solid',
         borderRadius: 10,
-      },
-      gradient: {
-        width: '100%',
-        height: '100%',
-        flex: 0,
-        margin: 0,
-        borderRadius: 10,
-        padding: 0,
-        paddingHorizontal: width * 0.05,
-        paddingVertical: width * 0.05,
       },
     });
 

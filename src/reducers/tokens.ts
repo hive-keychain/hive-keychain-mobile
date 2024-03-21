@@ -1,5 +1,6 @@
-import {ActionPayload, Token} from 'actions/interfaces';
+import {ActionPayload} from 'actions/interfaces';
 import {LOAD_TOKENS} from 'actions/types';
+import {Token} from 'src/interfaces/tokens.interface';
 
 export default (
   state: Token[] = [],

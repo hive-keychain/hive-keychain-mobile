@@ -1,17 +1,30 @@
 import {loadAccount} from 'actions/hive';
-import ClaimIcon from 'assets/wallet/icon_reward.svg';
+import Icon from 'components/hive/Icon';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {RootState} from 'store';
 import {toHP} from 'utils/format';
 import {claimRewards} from 'utils/hive';
 import {translate} from 'utils/localize';
 
-const ClaimRewards = ({active, props, loadAccount}: PropsFromRedux) => {
+interface Props {
+  theme: Theme;
+}
+
+const ClaimRewards = ({
+  active,
+  props,
+  loadAccount,
+  theme,
+}: PropsFromRedux & Props) => {
   const {account, keys, name} = active;
+  const styles = getStyles(theme);
   if (
     parseFloat(account.reward_hbd_balance + '') ||
     parseFloat(account.reward_hive_balance + '') ||
@@ -19,6 +32,7 @@ const ClaimRewards = ({active, props, loadAccount}: PropsFromRedux) => {
   )
     return (
       <TouchableOpacity
+        activeOpacity={1}
         style={styles.touchable}
         onPress={async () => {
           if (!keys.posting) {
@@ -62,7 +76,13 @@ const ClaimRewards = ({active, props, loadAccount}: PropsFromRedux) => {
             );
           }
         }}>
-        <ClaimIcon width={25} height={25} />
+        <Icon
+          theme={theme}
+          name={Icons.INTEREST}
+          color={PRIMARY_RED_COLOR}
+          width={15}
+          height={15}
+        />
       </TouchableOpacity>
     );
   else return null;
@@ -78,8 +98,18 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps, {loadAccount});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-const styles = StyleSheet.create({
-  touchable: {alignItems: 'center', marginRight: 20},
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    touchable: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 8,
+      borderRadius: 50,
+      padding: 4,
+      borderWidth: 2,
+      borderColor: 'white',
+      backgroundColor: 'white',
+    },
+  });
 
 export default connector(ClaimRewards);

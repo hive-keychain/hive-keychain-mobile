@@ -1,10 +1,14 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleProp, StyleSheet, Text, TextStyle, View} from 'react-native';
 
-export default ({message}: {message: string}) => {
+interface Props {
+  additionalTextStyle?: StyleProp<TextStyle>;
+}
+
+export default ({message, additionalTextStyle}: {message: string} & Props) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.msg}>{message}</Text>
+      <Text style={[styles.msg, additionalTextStyle]}>{message}</Text>
     </View>
   );
 };

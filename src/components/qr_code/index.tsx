@@ -16,6 +16,8 @@ const QRCode = ({onSuccess}: Props) => {
       topViewStyle={styles.zeroView}
       bottomViewStyle={styles.zeroView}
       cameraStyle={styles.cameraContainer}
+      reactivate={true}
+      reactivateTimeout={2000}
       customMarker={<Marker />}
     />
   );

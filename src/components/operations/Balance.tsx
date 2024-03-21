@@ -1,10 +1,16 @@
 import {DynamicGlobalProperties, ExtendedAccount} from '@hiveio/dhive';
 import React from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Width} from 'utils/common.types';
-import {formatBalance, toHP} from 'utils/format';
-import {getCurrencyProperties} from 'utils/hiveReact';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {
+  FontPoppinsName,
+  getFontSizeSmallDevices,
+  headerH2Primary,
+} from 'src/styles/typography';
+import {toHP, withCommas} from 'utils/format';
+import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 
 type Props = {
@@ -16,6 +22,8 @@ type Props = {
   tokenBalance?: string;
   tokenLogo?: JSX.Element;
   setMax?: (value: string) => void;
+  setAvailableBalance?: (value: string) => void;
+  theme?: Theme;
 };
 
 const Balance = ({
@@ -27,82 +35,105 @@ const Balance = ({
   tokenBalance,
   tokenLogo,
   setMax,
+  theme,
+  setAvailableBalance,
 }: Props) => {
-  let {color, value, logo} = getCurrencyProperties(currency, account);
-  let parsedValue = parseFloat(value as string);
+  const getParsedValue = (
+    currency: string,
+    account: ExtendedAccount,
+    isHiveEngine?: boolean,
+  ) => {
+    let tempBalance;
+    switch (true) {
+      case isHiveEngine:
+        tempBalance = +tokenBalance!;
+        break;
+      case currency === getCurrency('HIVE'):
+        tempBalance = parseFloat((account.balance as string).split(' ')[0]);
+        break;
+      case currency === getCurrency('HBD'):
+        tempBalance = parseFloat((account.hbd_balance as string).split(' ')[0]);
+        break;
+      case currency === getCurrency('HP'):
+        let hpBalance = toHP(
+          (account.vesting_balance as string).split(' ')[0],
+          globalProperties,
+        );
+        if (pd) {
+          hpBalance =
+            hpBalance -
+            parseFloat(
+              (account.delegated_vesting_shares as string).split(' ')[0],
+            );
+        }
+        tempBalance = hpBalance;
+        break;
+    }
+    if (setAvailableBalance)
+      setAvailableBalance(withCommas(tempBalance.toString()));
+    return tempBalance;
+  };
 
-  if (pd && value) {
-    parsedValue =
-      parseFloat(value as string) -
-      parseFloat(account.delegated_vesting_shares as string);
-    parsedValue = toHP(value as string, globalProperties);
-  }
-  if (isHiveEngine) {
-    parsedValue = +tokenBalance!;
-    logo = tokenLogo!;
-  }
+  let parsedValue = getParsedValue(currency, account, isHiveEngine);
+
+  const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({
-    color,
-    ...useWindowDimensions(),
+    width,
+    height,
+    theme,
   });
   return (
     <TouchableOpacity
-      style={styles.container}
+      activeOpacity={1}
       onPress={() => {
         if (setMax) {
-          setMax(parsedValue.toFixed(3) + '');
+          setMax(withCommas(parsedValue.toString()));
         }
       }}>
-      <View style={styles.main}>
-        <View style={styles.left}>
-          <View style={styles.logo}>{logo}</View>
-          <Text style={styles.name}>
-            {(pd
-              ? translate('common.available')
-              : translate('common.balance')
-            ).toUpperCase()}
-          </Text>
-        </View>
-        <Text style={styles.amount}>
-          {formatBalance(parsedValue)}
-          <Text style={styles.currency}>{` ${currency}`}</Text>
+      <View>
+        <Text style={[styles.textBalance, styles.centeredText]}>
+          {withCommas(parsedValue.toString())} {` ${currency}`}
+        </Text>
+        <Text style={[styles.balanceText, styles.centeredText]}>
+          {translate('common.balance')}
         </Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-const getDimensionedStyles = ({width, color}: Width & {color?: string}) =>
+const getDimensionedStyles = ({
+  width,
+  height,
+  theme,
+}: {
+  width: number;
+  height: number;
+  theme: Theme;
+}) =>
   StyleSheet.create({
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      borderRadius: 10,
-      width: '100%',
-      backgroundColor: '#DCE4EA',
-      paddingHorizontal: width * 0.05,
-      paddingVertical: width * 0.03,
-    },
-    main: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    left: {display: 'flex', flexDirection: 'row', alignItems: 'center'},
     logo: {justifyContent: 'center', alignItems: 'center'},
-    name: {
-      marginLeft: width * 0.03,
-      fontSize: 15,
-      color: '#404950',
-    },
-    amount: {fontSize: 17},
-    currency: {color},
     row: {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+    },
+    textBalance: {
+      ...headerH2Primary,
+      color: getColors(theme).primaryText,
+      height: headerH2Primary.fontSize,
+      lineHeight: headerH2Primary.fontSize + 5,
+      textAlignVertical: 'auto',
+      fontSize: getFontSizeSmallDevices(width, headerH2Primary.fontSize),
+    },
+    centeredText: {
+      textAlign: 'center',
+    },
+    balanceText: {
+      color: getColors(theme).quinaryText,
+      fontFamily: FontPoppinsName.REGULAR,
+      fontSize: 20,
     },
   });
 

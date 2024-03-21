@@ -39,6 +39,7 @@ const FallbackComponent = (props: Props) => (
            : ''
        }`}</Text>
       <TouchableOpacity
+        activeOpacity={1}
         style={styles.button}
         onPress={() => {
           Clipboard.setString(
@@ -48,7 +49,10 @@ const FallbackComponent = (props: Props) => (
         <Text style={styles.buttonText}>Copy Stack</Text>
       </TouchableOpacity>
       <Separator />
-      <TouchableOpacity style={styles.button} onPress={props.resetError}>
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.button}
+        onPress={props.resetError}>
         <Text style={styles.buttonText}>Restart</Text>
       </TouchableOpacity>
     </View>

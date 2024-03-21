@@ -1,29 +1,71 @@
+import {useHeaderHeight} from '@react-navigation/stack';
 import React from 'react';
-import {ImageBackground, StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {
+  ImageBackground,
+  ImageStyle,
+  KeyboardAvoidingView,
+  Platform,
+  ScaledSize,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+  useWindowDimensions,
+} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
 import SafeArea from './SafeArea';
 
-const imageBgd = require('assets/background.png');
+const hexagonsLight = require('assets/new_UI/hexagons-bg-light.png');
+const hexagonsDark = require('assets/new_UI/hexagons-bg-dark.png');
 
 interface BackgroundProps {
+  children: JSX.Element;
+  theme: Theme;
   style?: StyleProp<ViewStyle>;
   containerStyle?: StyleProp<ViewStyle>;
-  children: JSX.Element;
+  additionalBgSvgImageStyle?: StyleProp<ImageStyle>;
 }
 
 export default (props: BackgroundProps) => {
+  const styles = getStyles(useWindowDimensions(), props.theme);
+  const height = useHeaderHeight();
+  const insets = useSafeAreaInsets();
   return (
-    <ImageBackground
-      {...props}
-      source={imageBgd}
-      style={[styles.imageBgd, props.style]}>
-      <SafeArea style={[styles.container, props.containerStyle]}>
-        {props.children}
-      </SafeArea>
-    </ImageBackground>
+    <SafeArea style={[styles.mainContainer]}>
+      <KeyboardAvoidingView
+        style={[styles.container, props.containerStyle]}
+        enabled={Platform.OS === 'ios' ? true : false}
+        behavior={'padding'}
+        keyboardVerticalOffset={height + insets.bottom}>
+        <ImageBackground
+          source={props.theme === Theme.LIGHT ? hexagonsLight : hexagonsDark}
+          resizeMethod="scale"
+          resizeMode="stretch"
+          style={[styles.container]}
+          imageStyle={[styles.bgSvgStyle, props.additionalBgSvgImageStyle]}>
+          {props.children}
+        </ImageBackground>
+      </KeyboardAvoidingView>
+    </SafeArea>
   );
 };
 
-const styles = StyleSheet.create({
-  imageBgd: {width: '100%', height: '100%'},
-  container: {flex: 1},
-});
+const getStyles = ({width, height}: ScaledSize, theme: Theme) =>
+  StyleSheet.create({
+    mainContainer: {
+      flex: 1,
+      backgroundColor: getColors(theme).primaryBackground,
+    },
+    container: {
+      flex: 1,
+    },
+    bgSvgStyle: {
+      position: 'absolute',
+      top: undefined,
+      bottom: 0,
+      width: width,
+      height: width * 0.6,
+      alignSelf: 'center',
+    },
+  });

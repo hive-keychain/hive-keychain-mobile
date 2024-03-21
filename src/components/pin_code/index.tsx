@@ -1,24 +1,49 @@
-//import IntentLauncher from '@yz1311/react-native-intent-launcher';
 import EllipticButton from 'components/form/EllipticButton';
-import CustomModal from 'components/modals/CustomModal';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import {SignupNavigation} from 'navigators/Signup.types';
 import {UnlockNavigation} from 'navigators/Unlock.types';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+  useWindowDimensions,
+} from 'react-native';
 import {Text} from 'react-native-elements';
 import IntentLauncher from 'react-native-intent-launcher';
 import Toast from 'react-native-simple-toast';
+import {Theme} from 'src/context/theme.context';
+import {
+  PRIMARY_RED_COLOR,
+  RED_SHADOW_COLOR,
+  getColors,
+} from 'src/styles/colors';
+import {generateBoxShadowStyle} from 'src/styles/shadow';
+import {getSpaceAdjustMultiplier, getSpacing} from 'src/styles/spacing';
+import {
+  body_primary_body_3,
+  button_link_primary_medium,
+  headlines_primary_headline_1,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
+import {Width} from 'utils/common.types';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 import PinCompletionIndicator from './PinCompletionIndicator';
 import PinElement from './PinElement';
+
 interface Props {
   children: JSX.Element;
+  infoPin?: JSX.Element;
+  infoPinContainerStyle?: StyleProp<ViewStyle>;
   signup?: boolean;
   title: string;
   confirm?: string;
   submit: (pin: string, callback?: (unsafe?: boolean) => void) => void;
   navigation: UnlockNavigation | SignupNavigation;
+  theme: Theme;
 }
 
 const PinCode = ({
@@ -28,7 +53,13 @@ const PinCode = ({
   confirm,
   submit,
   navigation,
+  theme,
+  infoPin,
+  infoPinContainerStyle,
 }: Props) => {
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width});
+  const spaced = getSpaceAdjustMultiplier(width, height);
   interface PinItem {
     refNumber: number;
     number?: number;
@@ -99,6 +130,67 @@ const PinCode = ({
     }
   }, [code, confirmCode, signup, submit]);
 
+  useEffect(() => {
+    if (visible) {
+      navigate('ModalScreen', {
+        modalContent: (
+          <View
+            style={{
+              height: '100%',
+              width: '100%',
+            }}>
+            <Text style={styles.h4}>
+              {translate('components.pinCode.unsupportedBiometrics.title')}
+            </Text>
+            <Separator />
+            <Text style={styles.text}>
+              {translate('components.pinCode.unsupportedBiometrics.text1')}
+            </Text>
+            <Separator />
+            <Text style={styles.text}>
+              {translate('components.pinCode.unsupportedBiometrics.text2')}
+            </Text>
+            <Separator height={40} />
+            <EllipticButton
+              title={translate(
+                'components.pinCode.unsupportedBiometrics.button',
+              )}
+              onPress={() => {
+                IntentLauncher.startActivity({
+                  action: 'android.settings.SECURITY_SETTINGS',
+                });
+                setVisible(false);
+              }}
+              style={[
+                styles.warningProceedButton,
+                generateBoxShadowStyle(
+                  0,
+                  13,
+                  RED_SHADOW_COLOR,
+                  1,
+                  25,
+                  30,
+                  RED_SHADOW_COLOR,
+                ),
+              ]}
+              additionalTextStyle={{...button_link_primary_medium}}
+            />
+          </View>
+        ),
+
+        modalContainerStyle: {
+          backgroundColor: getColors(theme).primaryBackground,
+          borderColor: getColors(theme).cardBorderColor,
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
+          borderWidth: 1,
+          borderRadius: 22,
+        } as StyleProp<ViewStyle>,
+        fixedHeight: 0.4,
+      });
+    }
+  }, [visible]);
+
   const onPressElement = (number: number | undefined, back?: boolean) => {
     if (step === 0) {
       if ((number || number === 0) && code.length !== 6) {
@@ -124,76 +216,85 @@ const PinCode = ({
   }
   return (
     <View style={styles.bgd}>
-      <Separator />
-      {children}
-      <Separator />
-      <Text h4 style={styles.sub}>
-        {h4}
-      </Text>
-      <Separator height={30} />
-      <PinCompletionIndicator code={step === 0 ? code : confirmCode} />
-      <Separator height={50} />
-      <View style={styles.container}>
-        {config.map((row, i) => (
-          <View key={i.toString()} style={styles.row}>
-            {row.map((elt, j: number) => (
-              <PinElement
-                key={j.toString()}
-                onPressElement={onPressElement}
-                {...elt}
-              />
-            ))}
-          </View>
-        ))}
+      <FocusAwareStatusBar
+        backgroundColor={getColors(theme).primaryBackground}
+        barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
+      />
+      <View style={[styles.centeredView]}>
+        <Separator height={height * spaced.spaceBase} />
+        {children}
       </View>
-      {visible && (
-        <CustomModal
-          bottomHalf={true}
-          outsideClick={() => {
-            setVisible(false);
-          }}>
-          <Text style={styles.h4}>
-            {translate('components.pinCode.unsupportedBiometrics.title')}
-          </Text>
-          <Separator />
-          <Text>
-            {translate('components.pinCode.unsupportedBiometrics.text1')}
-          </Text>
-          <Separator />
-          <Text>
-            {translate('components.pinCode.unsupportedBiometrics.text2')}
-          </Text>
-          <Separator height={50} />
-          <EllipticButton
-            title={translate('components.pinCode.unsupportedBiometrics.button')}
-            onPress={() => {
-              IntentLauncher.startActivity({
-                action: 'android.settings.SECURITY_SETTINGS',
-              });
-              setVisible(false);
-            }}
+      <View>
+        <View style={styles.centeredView}>
+          <Text style={styles.sub}>{h4}</Text>
+          <Separator height={height * spaced.spaceBase} />
+          <PinCompletionIndicator
+            code={step === 0 ? code : confirmCode}
+            theme={theme}
           />
-        </CustomModal>
-      )}
+        </View>
+        <Separator height={height * spaced.adjustMultiplier * 0.02} />
+        <View style={styles.container}>
+          {config.map((row, i) => (
+            <View key={i.toString()} style={styles.row}>
+              {row.map((elt, j: number) => (
+                <PinElement
+                  key={j.toString()}
+                  onPressElement={onPressElement}
+                  {...elt}
+                />
+              ))}
+            </View>
+          ))}
+          {infoPin && <View style={infoPinContainerStyle}>{infoPin}</View>}
+        </View>
+      </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  h4: {fontWeight: 'bold', fontSize: 18},
-  bgd: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  sub: {color: 'white'},
-  container: {
-    width: '80%',
-    marginLeft: '10%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  row: {display: 'flex', flexDirection: 'row'},
-});
+const getStyles = (theme: Theme, {width}: Width) =>
+  StyleSheet.create({
+    h4: {
+      ...headlines_primary_headline_2,
+      color: getColors(theme).secondaryText,
+      textAlign: 'center',
+      marginTop: 10,
+    },
+    bgd: {
+      display: 'flex',
+      flex: 1,
+      justifyContent: 'space-evenly',
+      alignItems: 'center',
+    },
+    sub: {
+      color: getColors(theme).secondaryText,
+      opacity: 0.7,
+      ...headlines_primary_headline_1,
+    },
+    container: {
+      width: '80%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    warningProceedButton: {
+      backgroundColor: PRIMARY_RED_COLOR,
+    },
+    text: {
+      ...body_primary_body_3,
+      textAlign: 'center',
+      marginHorizontal: getSpacing(width).mainMarginHorizontal,
+      color: getColors(theme).secondaryText,
+    },
+    centeredView: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  });
 
 export default PinCode;

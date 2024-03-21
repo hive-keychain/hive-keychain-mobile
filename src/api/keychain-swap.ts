@@ -18,7 +18,7 @@ const get = async (url: string): Promise<any> => {
         code: 500,
         message: err.message,
         reason: {
-          template: 'swapTokens.swap_server_unavailable',
+          template: 'swap_server_unavailable',
         },
       };
     }

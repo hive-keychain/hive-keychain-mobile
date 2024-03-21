@@ -1,11 +1,17 @@
 import {KeyTypes} from 'actions/interfaces';
 import {addPreference} from 'actions/preferences';
-import {RadioButton} from 'components/form/CustomRadioGroup';
+import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationButton from 'components/form/EllipticButton';
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {getButtonHeight, getButtonStyle} from 'src/styles/button';
+import {getCardStyle} from 'src/styles/card';
+import {getColors} from 'src/styles/colors';
+import {getCaptionStyle} from 'src/styles/text';
+import {title_primary_body_2} from 'src/styles/typography';
 import {urlTransformer} from 'utils/browser';
 import {beautifyErrorMessage} from 'utils/keychain';
 import {
@@ -59,37 +65,51 @@ const RequestOperation = ({
   selectedUsername,
   has,
 }: Props) => {
+  const {theme} = useThemeContext();
   const {request_id, ...data} = request;
   const [loading, setLoading] = useState(false);
   const [keep, setKeep] = useState(false);
   let {domain, type, username} = data;
   domain = has ? domain : urlTransformer(domain).hostname;
+  const width = useWindowDimensions().width;
+  const styles = getStyles(theme, width);
 
   const renderRequestSummary = () => (
-    <ScrollView>
-      <RequestMessage message={message} />
-      {children}
+    <ScrollView style={styles.container}>
+      {message && message.length > 0 && (
+        <RequestMessage
+          message={message}
+          additionalTextStyle={[
+            getCaptionStyle(width, theme),
+            {paddingHorizontal: 0, marginTop: 0},
+          ]}
+        />
+      )}
+      <View style={getCardStyle(theme).defaultCardItem}>{children}</View>
       {method !== KeyTypes.active &&
       type !== KeychainRequestTypes.addAccount ? (
         <View style={styles.keep}>
-          <RadioButton
-            selected={keep}
-            label={translate(`request.keep${has ? '_has' : ''}`, {
+          <CheckBoxPanel
+            smallText
+            checked={keep}
+            onPress={() => {
+              setKeep(!keep);
+            }}
+            title={translate(`request.keep${has ? '_has' : ''}`, {
               domain,
               username: username || selectedUsername,
               type,
             })}
-            style={styles.radio}
-            onSelect={() => {
-              setKeep(!keep);
-            }}
+            containerStyle={{paddingRight: 16}}
+            skipTranslation
           />
         </View>
       ) : (
         <></>
       )}
       <OperationButton
-        style={styles.button}
+        style={[getButtonStyle(theme).warningStyleButton, styles.button]}
+        additionalTextStyle={[styles.text, styles.whiteText]}
         title={translate('request.confirm')}
         isLoading={loading}
         onPress={async () => {
@@ -134,11 +154,22 @@ const RequestOperation = ({
   return renderRequestSummary();
 };
 
-const styles = StyleSheet.create({
-  button: {marginTop: 40},
-  keep: {marginTop: 40, flexDirection: 'row'},
-  radio: {marginLeft: 0},
-});
+const getStyles = (theme: Theme, width: number) =>
+  StyleSheet.create({
+    button: {marginTop: 16, marginBottom: 16, height: getButtonHeight(width)},
+    keep: {marginTop: 16, flexDirection: 'row'},
+    text: {
+      color: getColors(theme).secondaryText,
+      ...title_primary_body_2,
+    },
+    container: {
+      paddingHorizontal: 12,
+    },
+    bgColor: {
+      backgroundColor: getColors(theme).icon,
+    },
+    whiteText: {color: '#FFF'},
+  });
 const connector = connect(null, {addPreference});
 type TypesFromRedux = ConnectedProps<typeof connector>;
 export default connector(RequestOperation);

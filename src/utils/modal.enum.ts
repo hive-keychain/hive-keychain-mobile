@@ -4,4 +4,5 @@ export enum ModalComponent {
   HAS_CHALLENGE = 'HAS_CHALLENGE',
   HAS_ERROR = 'HAS_ERROR',
   HAS_INFO = 'HAS_INFO',
+  SWAP_INFO = 'SWAP_INFO',
 }

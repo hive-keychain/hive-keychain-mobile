@@ -1,4 +1,5 @@
-import {DynamicGlobalProperties} from '@hiveio/dhive';
+import {Asset, DynamicGlobalProperties} from '@hiveio/dhive';
+import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
 import {translate} from 'utils/localize';
 import {HiveErrorMessage} from './keychain.types';
 
@@ -12,6 +13,17 @@ export const toHP = (vests: string, props?: DynamicGlobalProperties) =>
     ? (parseFloat(vests) * parseFloat(props.total_vesting_fund_hive + '')) /
       parseFloat(props.total_vesting_shares + '')
     : 0;
+
+export const getUSDFromVests = (
+  vestAmount: Number,
+  globalProperties: GlobalProperties,
+  currencyPrices: CurrencyPrices,
+) => {
+  return (
+    toHP(vestAmount.toString(), globalProperties.globals!) *
+    currencyPrices.hive.usd!
+  ).toFixed(2);
+};
 
 export const fromHP = (hp: string, props: DynamicGlobalProperties) =>
   (parseFloat(hp) / parseFloat(props.total_vesting_fund_hive + '')) *
@@ -34,10 +46,22 @@ export const signedNumber = (nb: number) =>
   nb > 0 ? `+ ${nb}` : `${nb.toString().replace('-', '- ')}`;
 
 export const formatBalance = (balance: number) =>
-  balance > 1000 ? withCommas(balance + '', 0) : withCommas(balance + '');
+  balance > 1000 || balance < -1000
+    ? withCommas(balance + '', 0)
+    : withCommas(balance + '');
+
+export const formatBalanceCurrency = (balanceS: string) => {
+  const balance = Number(balanceS.split(' ')[0].replace(/,/g, ''));
+  const currency = balanceS.split(' ')[1];
+  return `${formatBalance(balance)} ${currency ?? ''}`;
+};
 
 export const capitalize = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
+
+export const wordsFromCamelCase = (sentence: string) => {
+  return sentence.split(/(?=[A-Z])/).join(' ');
+};
 
 export const beautifyTransferError = (
   err: HiveErrorMessage,
@@ -63,6 +87,22 @@ export const getSymbol = (nai: string) => {
   if (nai === '@@000000013') return 'HBD';
   if (nai === '@@000000021') return 'HIVE';
   if (nai === '@@000000037') return 'HP';
+};
+
+export const getAmountFromNai = (obj: any) => {
+  const res = fromNaiAndSymbol(obj);
+  return Asset.fromString(res).amount;
+};
+
+export const toFormattedHP = (
+  vests: number,
+  props?: DynamicGlobalProperties,
+) => {
+  return `${toHP(vests.toString(), props).toFixed(3)} HP`;
+};
+
+export const fromNaiAndSymbol = (obj: any) => {
+  return `${(obj.amount / 1000).toFixed(obj.precision)} ${getSymbol(obj.nai)}`;
 };
 
 export const nFormatter = (num: number, digits: number) => {
@@ -117,4 +157,26 @@ export const removeHtmlTags = (str: string) => {
 
 export const getValFromString = (string: string): number => {
   return parseFloat(string.split(' ')[0]);
+};
+
+export const getOrdinalLabelTranslation = (active_rank: string) => {
+  const result = parseFloat(active_rank) % 10;
+  switch (result) {
+    case 1:
+      return 'common.ordinal_st_label';
+    case 2:
+      return 'common.ordinal_nd_label';
+    case 3:
+      return 'common.ordinal_rd_label';
+    default:
+      return 'common.ordinal_th_label';
+  }
+};
+
+export const beautifyIfJSON = (message: any) => {
+  try {
+    return JSON.stringify(JSON.parse(message), null, 1);
+  } catch (e) {
+    return message;
+  }
 };

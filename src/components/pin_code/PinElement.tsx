@@ -1,13 +1,22 @@
-import Backspace from 'assets/backspace.svg';
+import BackspaceDark from 'assets/new_UI/backspace_dark_theme.svg';
+import BackspaceLight from 'assets/new_UI/backspace_light_theme.svg';
 import React from 'react';
 import {
-  Dimensions,
-  StyleProp,
+  Pressable,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  ViewStyle,
+  View,
+  useWindowDimensions,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {
+  getFontSizeSmallDevices,
+  headerH3Primary,
+  title_primary_body_2,
+} from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
 
 interface Props {
   number?: number;
@@ -18,46 +27,119 @@ interface Props {
 }
 
 export default ({number, refNumber, helper, back, onPressElement}: Props) => {
-  const style: StyleProp<ViewStyle> = {};
-  if (refNumber > 3) {
-    style.borderTopWidth = 1;
-  }
-  if (refNumber < 10) {
-    style.borderBottomWidth = 1;
-  }
-  if (refNumber % 3 !== 0) {
-    style.borderRightWidth = 1;
-  }
-  if (refNumber % 3 !== 1) {
-    style.borderLeftWidth = 1;
-  }
-  style.height =
-    refNumber < 10
-      ? Math.round(Dimensions.get('window').width * 0.25)
-      : Math.round(Dimensions.get('window').width * 0.125);
+  const {theme} = useThemeContext();
+  const [activeShape, setActiveshape] = React.useState(null);
+  const [pressed, setPressed] = React.useState(false);
+  const dimensionReducer = 0.2;
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width, height}, dimensionReducer, pressed);
+  const renderPinElements = (pressed: boolean) => {
+    return (
+      <View style={styles.pinElements}>
+        {number || number === 0 ? (
+          <Text style={[styles.number, pressed && styles.pressedText]}>
+            {number}
+          </Text>
+        ) : null}
+        {helper ? (
+          <Text style={[styles.helper, pressed && styles.pressedText]}>
+            {helper}
+          </Text>
+        ) : null}
+        {back ? (
+          theme === Theme.DARK ? (
+            <BackspaceDark style={styles.backspace} {...styles.backSpaceIcon} />
+          ) : (
+            <BackspaceLight
+              style={styles.backspace}
+              {...styles.backSpaceIcon}
+            />
+          )
+        ) : null}
+      </View>
+    );
+  };
+
+  const renderWithGradients = (refNumber: number, pressed: boolean) => {
+    return refNumber !== 10 && refNumber !== 12 ? (
+      <LinearGradient
+        style={styles.pinElements}
+        start={{x: 1, y: 0.5}} //initially as {x: 1, y: 0.5}
+        end={{x: 1, y: 1.8}} //initially as {x: 1, y: 1.8}
+        colors={getColors(theme).gradientShapes}>
+        {renderPinElements(pressed)}
+      </LinearGradient>
+    ) : (
+      renderPinElements(pressed)
+    );
+  };
+
   return (
-    <TouchableOpacity
-      disabled={refNumber === 10}
+    <Pressable
       onPress={() => onPressElement(number, back)}
-      style={{...styles.pinElements, ...style}}>
-      {number || number === 0 ? (
-        <Text style={styles.number}>{number}</Text>
-      ) : null}
-      {helper ? <Text style={styles.helper}>{helper}</Text> : null}
-      {back ? <Backspace /> : null}
-    </TouchableOpacity>
+      style={({pressed}) => {
+        return pressed && refNumber !== 12
+          ? [styles.pinElements, styles.pinElementPressed]
+          : styles.pinElements;
+      }}>
+      {({pressed}) => {
+        return (
+          <>
+            {activeShape}
+            {renderWithGradients(refNumber, pressed)}
+          </>
+        );
+      }}
+    </Pressable>
   );
 };
 
-const styles = StyleSheet.create({
-  pinElements: {
-    width: '30%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: 'rgba(255,255,255,0.3)',
-    borderWidth: 0,
-  },
-  number: {color: 'white', fontSize: 24},
-  helper: {color: 'white', fontSize: 14},
-});
+const getStyles = (
+  theme: Theme,
+  {width, height}: Dimensions,
+  dimensionReducer: number,
+  pressed: boolean,
+) =>
+  StyleSheet.create({
+    pinElements: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
+      margin: 8,
+      width: width * dimensionReducer,
+      height: Math.round(width * dimensionReducer),
+      borderRadius: width * dimensionReducer,
+      transition: 2,
+    },
+    pinElementPressed: {
+      backgroundColor: getColors(theme).primaryRedShape,
+    },
+    number: {
+      flex: 0.65,
+      color: !pressed ? getColors(theme).secondaryText : '#FFF',
+      ...headerH3Primary,
+      includeFontPadding: false,
+      textAlign: 'center',
+      textAlignVertical: 'center',
+      fontSize: getFontSizeSmallDevices(width, headerH3Primary.fontSize),
+    },
+    helper: {
+      color: !pressed ? getColors(theme).secondaryText : '#FFF',
+      ...title_primary_body_2,
+      fontSize: getFontSizeSmallDevices(width, title_primary_body_2.fontSize),
+    },
+    backspace: {
+      top: undefined,
+      bottom: 0,
+      position: 'absolute',
+      right: 0,
+      width: 40,
+      height: 40,
+    },
+    backSpaceIcon: {
+      width: 35,
+      height: 35,
+    },
+    pressedText: {color: 'white'},
+  });

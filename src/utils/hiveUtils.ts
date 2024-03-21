@@ -6,10 +6,12 @@ import {
   Rpc,
 } from 'actions/interfaces';
 import api from 'api/keychain';
-import {getClient} from './hive';
+import {PendingOutgoingUndelegation} from 'src/interfaces/delegations.interface';
+import {getClient, getData} from './hive';
 
 const HIVE_VOTING_MANA_REGENERATION_SECONDS = 432000;
 const HIVE_100_PERCENT = 10000;
+export const DEFAULT_RPC: Rpc = {uri: 'https://api.hive.blog', testnet: false};
 
 export const getVP = (account: ExtendedAccount) => {
   if (!account.name) {
@@ -113,6 +115,22 @@ export const getDelegators = async (name: string) => {
     .sort((a, b) => b.vesting_shares - a.vesting_shares);
 };
 
+export const getPendingOutgoingUndelegation = async (name: string) => {
+  const pendingDelegations = await getData(
+    'database_api.find_vesting_delegation_expirations',
+    {account: name},
+    'delegations',
+  );
+  return pendingDelegations.map((pendingUndelegation: any) => {
+    return {
+      delegator: pendingUndelegation.delegator,
+      expiration_date: pendingUndelegation.expiration,
+      vesting_shares:
+        parseInt(pendingUndelegation.vesting_shares.amount) / 1000000,
+    } as PendingOutgoingUndelegation;
+  });
+};
+
 export const getDelegatees = async (name: string) => {
   return (await getClient().database.getVestingDelegations(name, '', 1000))
     .filter((e) => parseFloat(e.vesting_shares + '') !== 0)
@@ -122,13 +140,15 @@ export const getDelegatees = async (name: string) => {
     );
 };
 
-export const getConversionRequests = async (name: string) => {
+export const getConversionRequests = async (
+  name: string,
+  filterResults?: 'HBD' | 'HIVE',
+) => {
   const [hbdConversions, hiveConversions] = await Promise.all([
     getClient().database.call('get_conversion_requests', [name]),
     getClient().database.call('get_collateralized_conversion_requests', [name]),
   ]);
-
-  return [
+  const result = [
     ...hiveConversions.map((e: CollateralizedConversion) => ({
       amount: e.collateral_amount,
       conversion_date: e.conversion_date,
@@ -143,6 +163,9 @@ export const getConversionRequests = async (name: string) => {
       new Date(a.conversion_date).getTime() -
       new Date(b.conversion_date).getTime(),
   );
+  return filterResults
+    ? result.filter((item) => item.amount.split(' ')[1] === filterResults)
+    : result;
 };
 
 export const getSavingsRequests = async (name: string) => {
@@ -150,17 +173,12 @@ export const getSavingsRequests = async (name: string) => {
 };
 
 export const rpcList: Rpc[] = [
-  {uri: 'DEFAULT', testnet: false},
+  DEFAULT_RPC,
   {uri: 'https://api.deathwing.me', testnet: false},
-  {uri: 'https://api.hive.blog', testnet: false},
   {uri: 'https://api.openhive.network', testnet: false},
-  {uri: 'https://api.hivekings.com', testnet: false},
   {uri: 'https://anyx.io', testnet: false},
   {uri: 'https://api.pharesim.me', testnet: false},
   {uri: 'https://hived.emre.sh', testnet: false},
-  {uri: 'https://hived.hive-engine.com', testnet: false},
-  {uri: 'https://hived.privex.io', testnet: false},
-  {uri: 'https://hive.roelandp.nl', testnet: false},
   {uri: 'https://rpc.ausbit.dev', testnet: false},
   {uri: 'https://rpc.ecency.com', testnet: false},
   {uri: 'https://techcoderx.com', testnet: false},

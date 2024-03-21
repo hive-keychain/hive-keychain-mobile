@@ -1,6 +1,7 @@
 import {Authority, ExtendedAccount} from '@hiveio/dhive';
 import {AccountKeys} from 'actions/interfaces';
 import hive, {getClient} from 'utils/hive';
+import {translate} from './localize';
 
 const isMemoWif = (publicKey: string, memo: string) => {
   return publicKey === memo;
@@ -130,6 +131,10 @@ export default async (
 ): Promise<AccountKeys | null> => {
   try {
     const account = (await getClient().database.getAccounts([username]))[0];
+    if (!account)
+      throw new Error(
+        translate('toast.account_not_in_hive', {account: username}),
+      );
     const publicKey = getPublicKeyFromPrivateKeyString(pwd);
     if (pwd.startsWith('STM')) {
       throw 'This is a public key! Please enter a private key or your master key.';

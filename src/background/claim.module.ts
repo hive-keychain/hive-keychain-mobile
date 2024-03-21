@@ -1,14 +1,15 @@
-import {Asset} from '@hiveio/dhive';
-import AsyncStorage from '@react-native-community/async-storage';
+import { Asset } from '@hiveio/dhive';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loadAccount } from 'actions/index';
 import moment from 'moment';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {RootState, store} from 'store';
+import { KeychainStorageKeyEnum } from 'src/reference-data/keychainStorageKeyEnum';
+import { RootState, store } from 'store';
 import AccountUtils from 'utils/account.utils';
 import AutomatedTasksUtils from 'utils/automatedTasks.utils';
-import {ClaimsConfig} from 'utils/config';
-import {RewardsUtils} from 'utils/rewards.utils';
-import {SavingsUtils} from 'utils/savings.utils';
-import {ActiveAccountModule} from './active-account.module';
+import { ClaimsConfig } from 'utils/config';
+import { RewardsUtils } from 'utils/rewards.utils';
+import { SavingsUtils } from 'utils/savings.utils';
+import { ActiveAccountModule } from './active-account.module';
 
 const start = async () => {
   console.log(`Will autoclaim every ${ClaimsConfig.FREQUENCY}mn`);
@@ -28,7 +29,7 @@ const alarmHandler = async () => {
     allClaims[`${item[0]}`] = item[1] ? JSON.parse(item[1]) : false;
   });
 
-  const allClaimsAccounts = allClaims[KeychainStorageKeyEnum.CLAIM_REWARDS];
+  const allClaimsAccounts = allClaims[KeychainStorageKeyEnum.CLAIM_ACCOUNTS];
   const allClaimsRewards = allClaims[KeychainStorageKeyEnum.CLAIM_REWARDS];
   const allClaimsSavings = allClaims[KeychainStorageKeyEnum.CLAIM_SAVINGS];
   if (
@@ -129,6 +130,12 @@ const iterateClaimRewards = async (users: string[]) => {
         userAccount.reward_vesting_balance,
         activeAccount.keys.posting!,
       );
+      if (
+        activeAccount.name ===
+        ((await store.getState()) as RootState).activeAccount.name
+      ) {
+        store.dispatch<any>(loadAccount(activeAccount.name));
+      }
     }
   }
 };

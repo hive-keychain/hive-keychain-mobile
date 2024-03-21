@@ -1,9 +1,14 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Carousel from 'components/carousel/carousel';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
+import {ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {getColors} from 'src/styles/colors';
+import {getModalBaseStyle} from 'src/styles/modal';
+import {headlines_primary_headline_2} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {VersionLogUtils} from 'utils/version-log.utils';
@@ -33,6 +38,7 @@ export function isPrefetched(url: string) {
 const WhatsNew = ({navigation}: Props): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
   const locale = 'en'; // later use getUILanguage()
+  const {theme} = useThemeContext();
 
   useEffect(() => {
     init();
@@ -42,7 +48,6 @@ const WhatsNew = ({navigation}: Props): null => {
     const lastVersionSeen = await AsyncStorage.getItem(
       KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
     );
-
     const versionLog = await VersionLogUtils.getLastVersion();
     const extensionVersion = VersionLogUtils.getCurrentMobileAppVersion()
       .version.split('.')
@@ -64,12 +69,12 @@ const WhatsNew = ({navigation}: Props): null => {
         for (const feature of whatsNewContent.features[locale]) {
           await prefetchImage(feature.image);
         }
-
         navigate('ModalScreen', {
           name: 'Whats_new_popup',
           modalContent: renderContent(),
           onForceCloseModal: () => {},
-        });
+          modalContainerStyle: getModalBaseStyle(theme).roundedTop,
+        } as ModalScreenProps);
       }
     })();
   }, [whatsNewContent]);
@@ -78,6 +83,8 @@ const WhatsNew = ({navigation}: Props): null => {
     await WhatsNewUtils.saveLastSeen();
     navigation.goBack();
   };
+
+  const styles = getStyles(theme);
 
   const renderContent = () => {
     return (
@@ -96,6 +103,7 @@ const WhatsNew = ({navigation}: Props): null => {
           }}
           content={whatsNewContent}
           locale={locale}
+          theme={theme}
         />
       </View>
     );
@@ -103,24 +111,21 @@ const WhatsNew = ({navigation}: Props): null => {
   return null;
 };
 
-const styles = StyleSheet.create({
-  rootContainer: {
-    width: '100%',
-  },
-  whatsNewTitle: {
-    textAlign: 'center',
-    color: 'black',
-    fontSize: 15,
-    fontWeight: 'bold',
-    textDecorationLine: 'underline',
-    marginBottom: 10,
-  },
-  image: {
-    marginBottom: 30,
-    aspectRatio: 1.6,
-    alignSelf: 'center',
-    width: '100%',
-  },
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    rootContainer: {flex: 1, marginTop: 15},
+    whatsNewTitle: {
+      textAlign: 'center',
+      color: getColors(theme).secondaryText,
+      ...headlines_primary_headline_2,
+      fontSize: 18,
+    },
+    image: {
+      marginBottom: 30,
+      aspectRatio: 1.6,
+      alignSelf: 'center',
+      width: '100%',
+    },
+  });
 
 export default WhatsNew;

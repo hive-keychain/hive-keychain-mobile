@@ -1,7 +1,6 @@
 import Clipboard from '@react-native-community/clipboard';
 import {ActionPayload, BrowserPayload, Page} from 'actions/interfaces';
-import Copy from 'assets/browser/copy.svg';
-import ShareIcon from 'assets/browser/share.svg';
+import Icon from 'components/hive/Icon';
 import React, {MutableRefObject, useRef} from 'react';
 import {
   NativeSyntheticEvent,
@@ -16,6 +15,11 @@ import {
 import {ScrollView} from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {MARGIN_PADDING} from 'src/styles/spacing';
+import {FontPoppinsName, title_primary_body_3} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import UrlAutocomplete from './UrlAutocomplete';
 
@@ -29,6 +33,7 @@ type Props = {
   setUrl: (string: string) => void;
   history: Page[];
   clearHistory: () => ActionPayload<BrowserPayload>;
+  theme: Theme;
 };
 const UrlModal = ({
   isVisible,
@@ -38,10 +43,11 @@ const UrlModal = ({
   setUrl,
   history,
   clearHistory,
+  theme,
 }: Props) => {
   const urlInput: MutableRefObject<TextInput> = useRef();
   const insets = useSafeAreaInsets();
-  const styles = getStyles(insets);
+  const styles = getStyles(insets, theme);
   if (isVisible && urlInput) {
     setTimeout(() => {
       const {current} = urlInput;
@@ -77,7 +83,7 @@ const UrlModal = ({
   return (
     <Modal
       isVisible={isVisible}
-      style={styles.urlModal}
+      style={[styles.urlModal]}
       onBackdropPress={dismissModal}
       onBackButtonPress={dismissModal}
       animationIn="slideInDown"
@@ -87,6 +93,15 @@ const UrlModal = ({
       animationOutTiming={SLIDE_TIME}
       useNativeDriver>
       <View style={styles.urlModalContent}>
+        <Icon
+          name={Icons.BACK}
+          theme={theme}
+          width={16}
+          height={16}
+          onPress={() => toggle(false)}
+          additionalContainerStyle={styles.backButton}
+          color={PRIMARY_RED_COLOR}
+        />
         <TextInput
           keyboardType="web-search"
           ref={urlInput}
@@ -97,36 +112,53 @@ const UrlModal = ({
           onSubmitEditing={onSubmitUrlFromInput}
           placeholder={translate('browser.search')}
           returnKeyType="go"
-          style={styles.urlInput}
+          style={[styles.textBase, styles.urlInput]}
           value={url}
           selectTextOnFocus
+          placeholderTextColor={getColors(theme).secondaryText}
         />
         {url.length ? (
-          <TouchableOpacity
-            style={styles.option}
-            onPress={() => Share.share({message: url})}>
-            <ShareIcon width={16} height={16} />
-          </TouchableOpacity>
+          <Icon
+            name={Icons.SHARE}
+            theme={theme}
+            width={16}
+            height={16}
+            onPress={() => Share.share({message: url})}
+            additionalContainerStyle={styles.option}
+            color={PRIMARY_RED_COLOR}
+          />
+        ) : null}
+        {url.length ? (
+          <Icon
+            name={Icons.COPY}
+            theme={theme}
+            width={16}
+            height={16}
+            onPress={() => Clipboard.setString(url)}
+            additionalContainerStyle={styles.option}
+            color={PRIMARY_RED_COLOR}
+          />
         ) : null}
         {url.length ? (
           <TouchableOpacity
+            activeOpacity={1}
             style={styles.option}
-            onPress={() => Clipboard.setString(url)}>
-            <Copy width={16} height={16} />
-          </TouchableOpacity>
-        ) : null}
-        {url.length ? (
-          <TouchableOpacity style={styles.option} onPress={() => setUrl('')}>
-            <Text style={styles.eraseText}>X</Text>
+            onPress={() => setUrl('')}>
+            <Text style={[styles.textBase, styles.eraseText]}>x</Text>
           </TouchableOpacity>
         ) : null}
       </View>
 
-      <ScrollView>
-        <UrlAutocomplete onSubmit={onSubmitUrl} input={url} history={history} />
+      <ScrollView style={[styles.containerHistory]}>
+        <UrlAutocomplete
+          onSubmit={onSubmitUrl}
+          input={url}
+          history={history}
+          theme={theme}
+        />
         {history.length ? (
-          <TouchableOpacity onPress={clearHistory}>
-            <Text style={styles.clearHistory}>
+          <TouchableOpacity activeOpacity={1} onPress={clearHistory}>
+            <Text style={[styles.textBase, styles.clearHistory]}>
               {translate('browser.history.clear')}
             </Text>
           </TouchableOpacity>
@@ -136,7 +168,7 @@ const UrlModal = ({
   );
 };
 
-const getStyles = (insets: EdgeInsets) =>
+const getStyles = (insets: EdgeInsets, theme: Theme) =>
   StyleSheet.create({
     urlModal: {
       height: '100%',
@@ -144,10 +176,11 @@ const getStyles = (insets: EdgeInsets) =>
       margin: 0,
       paddingTop: insets.top,
       justifyContent: 'flex-start',
-      backgroundColor: 'white',
+      backgroundColor: getColors(theme).secondaryCardBgColor,
     },
-    option: {alignSelf: 'center', marginLeft: 20},
-    eraseText: {fontWeight: 'bold', fontSize: 16},
+    option: {alignSelf: 'center', marginLeft: 15},
+    backButton: {alignSelf: 'center', marginRight: 15},
+    eraseText: {fontSize: 16, color: PRIMARY_RED_COLOR},
     urlModalContent: {
       flexDirection: 'row',
       borderColor: 'lightgrey',
@@ -155,11 +188,30 @@ const getStyles = (insets: EdgeInsets) =>
       padding: 20,
       margin: 0,
     },
-    urlInput: {flex: 1},
+    textBase: {
+      color: getColors(theme).secondaryText,
+      ...title_primary_body_3,
+      fontFamily: FontPoppinsName.REGULAR,
+    },
+    urlInput: {
+      flex: 1,
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+      borderWidth: 1,
+      height: 50,
+      borderRadius: 15,
+      paddingLeft: MARGIN_PADDING,
+    },
     clearHistory: {
       marginLeft: 20,
       marginTop: 20,
+      marginBottom: 20,
       fontWeight: 'bold',
+    },
+    containerHistory: {
+      backgroundColor: getColors(theme).secondaryCardBgColor,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+      paddingHorizontal: 10,
     },
   });
 

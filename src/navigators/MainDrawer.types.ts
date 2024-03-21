@@ -12,7 +12,12 @@ export type MainDrawerStackParam = {
   SettingsScreen: undefined;
   ABOUT: undefined;
   Governance: undefined;
-  SwapTokens: undefined;
+  Tokens: undefined;
+  TokensHistory: undefined;
+  Operation: undefined;
+  TemplateStack: undefined;
+  SwapBuyStack: undefined;
+  SwapHistory: undefined;
 };
 
 export type BrowserNavigation = StackNavigationProp<
@@ -57,9 +62,4 @@ export type AboutNavigation = StackNavigationProp<
 export type SettingsNavigation = StackNavigationProp<
   MainDrawerStackParam,
   'SettingsScreen'
->;
-
-export type SwapTokensNavigation = StackNavigationProp<
-  MainDrawerStackParam,
-  'SwapTokens'
 >;

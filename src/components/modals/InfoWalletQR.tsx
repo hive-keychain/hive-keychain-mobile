@@ -1,22 +1,32 @@
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {
+  FontPoppinsName,
+  button_link_primary_small,
+} from 'src/styles/typography';
 import {Height} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
-export default () => {
-  const styles = getDimensionedStyles(useWindowDimensions());
+export default ({theme}: {theme: Theme}) => {
+  const styles = getDimensionedStyles(useWindowDimensions(), theme);
   return (
     <>
-      <Text style={styles.h4}>
+      <Text style={[styles.textBase, styles.bold, styles.h4]}>
         {translate('components.infoWalletQR.title')}
       </Text>
       <Separator />
-      <Text>{translate('components.infoWalletQR.text1')}</Text>
+      <Text style={styles.textBase}>
+        {translate('components.infoWalletQR.text1')}
+      </Text>
       <Separator height={10} />
-      <Text>{translate('components.infoWalletQR.text2')}</Text>
+      <Text style={styles.textBase}>
+        {translate('components.infoWalletQR.text2')}
+      </Text>
       <Separator height={10} />
-      <Text>
+      <Text style={styles.textBase}>
         {translate('components.infoWalletQR.text3')}{' '}
         <Text style={styles.bold}>
           {translate('components.infoWalletQR.text4')}
@@ -26,9 +36,13 @@ export default () => {
   );
 };
 
-const getDimensionedStyles = ({height}: Height) =>
+const getDimensionedStyles = ({height}: Height, theme: Theme) =>
   StyleSheet.create({
-    h4: {fontWeight: 'bold', fontSize: 18},
-    bold: {fontWeight: 'bold'},
+    h4: {fontSize: 18},
+    bold: {fontFamily: FontPoppinsName.BOLD},
     modal: {height: height * 0.45, marginTop: height * 0.45},
+    textBase: {
+      color: getColors(theme).secondaryText,
+      ...button_link_primary_small,
+    },
   });

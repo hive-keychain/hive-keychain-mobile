@@ -1,4 +1,5 @@
 import hsc, {hiveEngineAPI} from 'api/hiveEngine';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {AppThunk} from 'src/hooks/redux';
 import {
   OperationsHiveEngine,
@@ -9,7 +10,9 @@ import {
 } from 'src/interfaces/tokens.interface';
 import {RootState, store} from 'store';
 import {decodeMemoIfNeeded} from 'utils/hiveEngine';
+import {getAllTokens, getUserBalance} from 'utils/tokens.utils';
 import {ActionPayload} from './interfaces';
+import {showModal} from './message';
 import {
   CLEAR_TOKEN_HISTORY,
   CLEAR_USER_TOKENS,
@@ -20,9 +23,10 @@ import {
 } from './types';
 
 export const loadTokens = (): AppThunk => async (dispatch) => {
+  const tokens = await getAllTokens();
   const action: ActionPayload<Token[]> = {
     type: LOAD_TOKENS,
-    payload: await hsc.find('tokens', 'tokens', {}, 1000, 0, []),
+    payload: tokens,
   };
   dispatch(action);
 };
@@ -42,19 +46,21 @@ export const loadUserTokens = (account: string): AppThunk => async (
     dispatch({
       type: CLEAR_USER_TOKENS,
     });
-    let tokensBalance: TokenBalance[] = await hsc.find('tokens', 'balances', {
-      account,
-    });
-    tokensBalance = tokensBalance
-      .filter((t) => parseFloat(t.balance) !== 0)
-      .sort((a, b) => parseFloat(b.balance) - parseFloat(a.balance));
+
+    let tokensBalance: TokenBalance[] = await getUserBalance(account);
+    tokensBalance = tokensBalance.sort(
+      (a, b) => parseFloat(b.balance) - parseFloat(a.balance),
+    );
     const action: ActionPayload<TokenBalance[]> = {
       type: LOAD_USER_TOKENS,
       payload: tokensBalance,
     };
     dispatch(action);
   } catch (e) {
-    console.log(e);
+    if (e.message && e.message.includes('timeout')) {
+      dispatch(showModal('toast.tokens_timeout', MessageModalType.ERROR));
+    }
+    console.log('loadUserTokens Error: ', e);
   }
 };
 

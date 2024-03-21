@@ -1,15 +1,24 @@
 import Loader from 'components/ui/Loader';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleProp,
   StyleSheet,
   Text,
   TextStyle,
   TouchableOpacity,
-  useWindowDimensions,
   View,
   ViewStyle,
+  useWindowDimensions,
 } from 'react-native';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {
+  BUTTON_MAX_WIDTH,
+  getButtonHeight,
+  getButtonStyle,
+} from 'src/styles/button';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getButtonBoxShadow} from 'src/styles/shadow';
+import {button_link_primary_small} from 'src/styles/typography';
 
 interface Props {
   style?: StyleProp<ViewStyle>;
@@ -18,18 +27,46 @@ interface Props {
   onPress: () => void;
   disabled?: boolean;
   additionalTextStyle?: StyleProp<TextStyle>;
+  isWarningButton?: boolean;
 }
 export default ({
   style,
   isLoading = false,
   title,
   additionalTextStyle,
+  isWarningButton,
   ...props
 }: Props) => {
-  const styles = getDimensionedStyles(useWindowDimensions());
+  const {width} = useWindowDimensions();
+  const {theme} = useThemeContext();
+  const styles = getDimensionedStyles(width, theme);
+
+  const [isPressed, setIsPressed] = useState(false);
   return !isLoading ? (
-    <TouchableOpacity {...props} style={[styles.button, style]}>
-      <Text style={[styles.text, additionalTextStyle]}>{title}</Text>
+    <TouchableOpacity
+      activeOpacity={1}
+      {...props}
+      style={[
+        styles.button,
+        getButtonStyle(theme, width).secondaryButton,
+        styles.outlineButton,
+        style,
+        isWarningButton ? {backgroundColor: PRIMARY_RED_COLOR} : {},
+        isPressed
+          ? getButtonBoxShadow(isWarningButton ? PRIMARY_RED_COLOR : '#000')
+          : {},
+      ]}
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}>
+      <Text
+        style={[
+          styles.text,
+          styles.textOutLineButton,
+          isWarningButton ? {color: 'white'} : {},
+          additionalTextStyle,
+        ]}>
+        {title}
+      </Text>
     </TouchableOpacity>
   ) : (
     <View style={[style, styles.loader]}>
@@ -38,18 +75,26 @@ export default ({
   );
 };
 
-const getDimensionedStyles = ({width}: {width: number}) => {
+const getDimensionedStyles = (width: number, theme: Theme) => {
   return StyleSheet.create({
     text: {color: 'white', fontSize: 16},
+    textOutLineButton: {
+      color: getColors(theme).secondaryText,
+      ...button_link_primary_small,
+    },
+    outlineButton: {
+      zIndex: 10,
+      height: getButtonHeight(width),
+      borderWidth: 1,
+      borderColor: getColors(theme).quaternaryCardBorderColor,
+    },
     button: {
-      marginHorizontal: width * 0.1,
-      width: '80%',
-      color: 'black',
-      backgroundColor: 'black',
-      height: 50,
+      width: BUTTON_MAX_WIDTH,
+      height: getButtonHeight(width),
       borderRadius: 25,
       alignItems: 'center',
       justifyContent: 'center',
+      alignSelf: 'center',
     },
     loader: {
       backgroundColor: 'transparent',

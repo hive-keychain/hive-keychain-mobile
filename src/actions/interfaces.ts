@@ -5,6 +5,7 @@ import {
   VestingDelegation,
 } from '@hiveio/dhive';
 import {Manabar} from '@hiveio/dhive/lib/chain/rc';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {RcDelegationsInfo} from '../interfaces/rc-delegation.interface';
 
 export interface ActionPayload<T> {
@@ -29,11 +30,15 @@ export interface Rpc {
   chainId?: string;
 }
 export interface Settings {
-  rpc: string | Rpc;
+  rpc: Rpc;
+  hiveEngineRpc: string;
+  accountHistoryAPIRpc: string;
 }
 
 export interface SettingsPayload {
-  rpc?: string | Rpc;
+  rpc?: Rpc;
+  hiveEngineRpc?: string;
+  accountHistoryAPIRpc?: string;
 }
 
 export interface Page {
@@ -218,6 +223,19 @@ export interface AccountKeys {
 export interface Account {
   name: string;
   keys: AccountKeys;
+}
+
+export interface MessageModalPayload {
+  key: string;
+  type: MessageModalType;
+  params?: {};
+  skipTranslation?: boolean;
+}
+
+export interface FloatingBarPayload {
+  show: boolean;
+  isLoadingScreen: boolean;
+  isDrawerOpened: boolean;
 }
 
 export interface AccountsPayload {

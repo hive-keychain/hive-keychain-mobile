@@ -1,5 +1,9 @@
 import {loadAccount} from 'actions/hive';
-import Toast from 'react-native-simple-toast';
+import {
+  default as SimpleToast,
+  default as Toast,
+} from 'react-native-simple-toast';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {AppThunk} from 'src/hooks/redux';
 import {encryptJson} from 'utils/encrypt';
 import validateKeys from 'utils/keyValidation';
@@ -15,6 +19,7 @@ import {
   KeyTypes,
   PubKeyTypes,
 } from './interfaces';
+import {showModal} from './message';
 import {
   ADD_ACCOUNT,
   FORGET_ACCOUNT,
@@ -88,20 +93,39 @@ export const forgetAccount = (username: string): AppThunk => async (
 
 export const forgetKey = (username: string, key: KeyTypes): AppThunk => async (
   dispatch,
+  getState,
 ) => {
-  dispatch(
-    updateAccounts((account: Account) => {
-      if (account.name === username) {
-        const keys = {...account.keys};
-        delete keys[key];
-        const pubKey: PubKeyTypes = PubKeyTypes[key];
-        delete keys[pubKey];
-        return {...account, keys};
-      } else {
-        return account;
-      }
-    }),
-  );
+  const keysLenght =
+    Object.keys(
+      getState().accounts.filter((acc) => acc.name === username)[0].keys,
+    ).length / 2;
+
+  if (keysLenght === 1) {
+    dispatch(forgetAccount(username));
+    SimpleToast.show(
+      translate('toast.account_removed', {account: username}),
+      SimpleToast.LONG,
+    );
+  } else {
+    dispatch(
+      updateAccounts((account: Account) => {
+        if (account.name === username) {
+          const keys = {...account.keys};
+          delete keys[key];
+          const pubKey: PubKeyTypes = PubKeyTypes[key];
+          delete keys[pubKey];
+          return {...account, keys};
+        } else {
+          return account;
+        }
+      }),
+    );
+    dispatch(
+      showModal('toast.keys.key_removed', MessageModalType.SUCCESS, {
+        type: key,
+      }),
+    );
+  }
 };
 
 export const addKey = (
@@ -111,9 +135,11 @@ export const addKey = (
 ): AppThunk => async (dispatch) => {
   const keys = await validateKeys(username, key);
   if (!keys) {
-    Toast.show(translate('toast.keys.not_a_key'));
+    dispatch(showModal('toast.keys.not_a_key', MessageModalType.ERROR));
   } else if (!keys[type]) {
-    Toast.show(translate('toast.keys.not_wanted_key', {type}));
+    dispatch(
+      showModal('toast.keys.not_wanted_key', MessageModalType.ERROR, {type}),
+    );
   } else {
     dispatch(
       updateAccounts((account: Account) => {
@@ -123,6 +149,9 @@ export const addKey = (
           return account;
         }
       }),
+    );
+    dispatch(
+      showModal('toast.keys.key_added', MessageModalType.SUCCESS, {type}),
     );
   }
 };

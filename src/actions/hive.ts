@@ -10,6 +10,7 @@ import {
 import {getPrices} from 'utils/price';
 import TransactionUtils from 'utils/transactions.utils';
 import {getPhishingAccounts} from 'utils/transferValidator';
+import {loadUserTokens} from './hiveEngine';
 import {
   ActionPayload,
   DelegationsPayload,
@@ -19,6 +20,7 @@ import {
   ACTIVE_ACCOUNT,
   ACTIVE_ACCOUNT_RC,
   ADD_TRANSACTIONS,
+  CLEAR_USER_TOKENS,
   CLEAR_USER_TRANSACTIONS,
   FETCH_CONVERSION_REQUESTS,
   FETCH_DELEGATEES,
@@ -29,8 +31,6 @@ import {
   GLOBAL_PROPS,
   INIT_TRANSACTIONS,
 } from './types';
-//TODO check on this
-//end check
 
 export const loadAccount = (
   name: string,
@@ -42,6 +42,10 @@ export const loadAccount = (
       name,
     },
   });
+  dispatch({
+    type: CLEAR_USER_TOKENS,
+  });
+  dispatch(loadUserTokens(name));
   dispatch(getAccountRC(name));
   if (initTransactions) {
     dispatch(initAccountTransactions(name));
@@ -169,10 +173,11 @@ export const fetchPhishingAccounts = (): AppThunk => async (dispatch) => {
   });
 };
 
-export const fetchConversionRequests = (name: string): AppThunk => async (
-  dispatch,
-) => {
-  const conversions = await getConversionRequests(name);
+export const fetchConversionRequests = (
+  name: string,
+  filterResults?: 'HBD' | 'HIVE',
+): AppThunk => async (dispatch) => {
+  const conversions = await getConversionRequests(name, filterResults);
   dispatch({
     type: FETCH_CONVERSION_REQUESTS,
     payload: conversions,

@@ -1,24 +1,24 @@
 import {Asset, ExtendedAccount} from '@hiveio/dhive';
-import {ActiveAccount} from 'actions/interfaces';
-import hsc from 'api/hiveEngine';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ActiveAccount, TokenBalance} from 'actions/interfaces';
 import {KeychainSwapApi} from 'api/keychain-swap';
-import {IStep, ISwap, SwapStatus} from 'hive-keychain-commons';
+import {
+  IStep,
+  ISwap,
+  SwapStatus,
+} from 'hive-keychain-commons/lib/swaps/swap.interface';
 import {
   SwapConfig,
   SwapServerStatus,
 } from 'src/interfaces/swap-token.interface';
-import {TokenBalance} from 'src/interfaces/tokens.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {BaseCurrencies} from './currency.utils';
 import {withCommas} from './format';
-import {sendToken, transfer} from './hive';
-import {getTokenInfo} from './hiveEngine';
-import {getFromKeychain, saveOnKeychain} from './keychainStorage';
+import {getCurrency, sendToken, transfer} from './hive';
+import {sanitizeAmount, sanitizeUsername} from './hiveUtils';
+import {getTokenInfo, getUserBalance} from './tokens.utils';
 
 const getSwapTokenStartList = async (account: ExtendedAccount) => {
-  let userTokenList: TokenBalance[] = await hsc.find('tokens', 'balances', {
-    account: account.name,
-  });
+  let userTokenList: TokenBalance[] = await getUserBalance(account.name);
   userTokenList = userTokenList.filter(
     (token) => parseFloat(token.balance) > 0,
   );
@@ -29,7 +29,7 @@ const getSwapTokenStartList = async (account: ExtendedAccount) => {
     userTokenList.unshift({
       account: account.name,
       balance: Asset.fromString(account.balance.toString()).amount.toString(),
-      symbol: BaseCurrencies.HIVE.toUpperCase(),
+      symbol: getCurrency('HIVE'),
     } as TokenBalance);
   }
   if (Asset.fromString(account.hbd_balance.toString()).amount > 0) {
@@ -38,7 +38,7 @@ const getSwapTokenStartList = async (account: ExtendedAccount) => {
       balance: Asset.fromString(
         account.hbd_balance.toString(),
       ).amount.toString(),
-      symbol: BaseCurrencies.HBD.toUpperCase(),
+      symbol: getCurrency('HBD'),
     } as TokenBalance);
   }
 
@@ -97,30 +97,32 @@ const processSwap = async (
   activeAccount: ActiveAccount,
   swapAccount: string,
 ) => {
-  if (
-    startToken === BaseCurrencies.HBD.toUpperCase() ||
-    startToken === BaseCurrencies.HIVE.toUpperCase()
-  ) {
-    const status = await transfer(activeAccount.keys.active!, {
-      from: activeAccount.name!,
-      to: swapAccount,
-      amount: `${amount.toFixed(3)} ${startToken}`,
-      memo: estimateId,
-    });
-    return status;
+  if (startToken === getCurrency('HBD') || startToken === getCurrency('HIVE')) {
+    try {
+      const status: any = await transfer(activeAccount.keys.active!, {
+        from: activeAccount.name!,
+        to: sanitizeUsername(swapAccount),
+        amount: sanitizeAmount(amount, startToken),
+        memo: estimateId,
+      });
+      return true;
+    } catch (error) {
+      console.log('Swap, transfer currency error:', {error});
+      return false;
+    }
   } else {
     const tokenInfo = await getTokenInfo(startToken);
-    const status = await sendToken(
-      activeAccount.keys.active!,
-      activeAccount.name!,
+    const status: any = await sendToken(
+      activeAccount.keys.active,
+      activeAccount.name,
       {
         symbol: startToken,
-        to: swapAccount,
-        quantity: `${amount.toFixed(tokenInfo.precision)}`,
+        to: sanitizeUsername(swapAccount),
+        quantity: sanitizeAmount(`${amount.toFixed(tokenInfo.precision)}`),
         memo: estimateId,
       },
     );
-    return status;
+    return status && status.tx_id ? status : null;
   }
 };
 
@@ -164,13 +166,13 @@ const getConfig = async (): Promise<SwapConfig> => {
 };
 
 const saveLastUsed = async (from: string, to: string) => {
-  await saveOnKeychain(
+  await AsyncStorage.setItem(
     KeychainStorageKeyEnum.SWAP_LAST_USED_TOKENS,
     JSON.stringify({from, to}),
   );
 };
 const getLastUsed = async () => {
-  const lastUsed = await getFromKeychain(
+  const lastUsed = await AsyncStorage.getItem(
     KeychainStorageKeyEnum.SWAP_LAST_USED_TOKENS,
   );
   if (!lastUsed) return {from: null, to: null};
@@ -180,7 +182,7 @@ const getLastUsed = async () => {
 const setAsInitiated = async (swapId: ISwap['id']) => {
   const res = await KeychainSwapApi.post(`token-swap/${swapId}/confirm`, {});
   if (!res.result) {
-    throw new Error(`Couldn't set as initiated`);
+    console.log(`Swap Error: Couldn't set as initiated`);
   }
 };
 

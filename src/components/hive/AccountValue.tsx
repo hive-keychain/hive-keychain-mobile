@@ -1,45 +1,114 @@
 import {ExtendedAccount} from '@hiveio/dhive';
+import {setAccountValueDisplay} from 'actions/index';
 import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
-import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {
+  body_primary_body_1,
+  getFontSizeSmallDevices,
+  headerH2Primary,
+} from 'src/styles/typography';
+import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
 import {withCommas} from 'utils/format';
 import {getAccountValue} from 'utils/price';
 
 type Props = {
   prices: CurrencyPrices;
   account: ExtendedAccount;
+  title: string;
   properties: GlobalProperties;
-};
-const AccountValue = ({prices, account, properties}: Props) => {
-  let accountValue = '...';
-  if (prices.bitcoin && account && properties.globals) {
-    accountValue = getAccountValue(account, prices, properties.globals) + '';
-    accountValue = isNaN(+accountValue)
-      ? '...'
-      : `$ ${withCommas(accountValue, 2)}`;
-  }
+  theme: Theme;
+} & PropsFromRedux;
+const AccountValue = ({
+  prices,
+  account,
+  properties,
+  theme,
+  title,
+  accountValueDisplay,
+  setAccountValueDisplay,
+  userTokens,
+  tokensMarket,
+}: Props) => {
+  const [accountValue, setAccountValue] = useState([]);
+  useEffect(() => {
+    if (prices.bitcoin && account && properties.globals) {
+      const accVal =
+        getAccountValue(
+          account,
+          prices,
+          properties.globals,
+          userTokens,
+          tokensMarket,
+        ) + '';
+      if (isNaN(+accVal)) {
+        setAccountValue(['...']);
+        return;
+      } else {
+        setAccountValue([
+          `$ ${withCommas(accVal, 0)}`,
+          `${withCommas(parseFloat(accVal) / prices.hive.usd + '', 0)} HIVE`,
+          `* * *`,
+        ]);
+      }
+    }
+  }, [prices, properties, account]);
+
+  const styles = getStyles(theme, useWindowDimensions());
+  const regexp = new RegExp(/\d/, 'ig');
+
   return (
     <TouchableOpacity
+      activeOpacity={1}
       onLongPress={() => {
-        if (account.name === 'stoodkev') {
-          //@ts-ignore
-          //throw new Error('test error');
-          user.crash.test();
-        }
+        let index = accountValueDisplay + 1;
+        if (index === 3) index = 0;
+        setAccountValueDisplay(index);
       }}>
-      <Text style={styles.accountValue}>{accountValue}</Text>
+      <Text style={[styles.title, styles.textBase, styles.textCentered]}>
+        {title}
+      </Text>
+      <Text style={[styles.accountValue, styles.textBase]}>
+        {accountValue[accountValueDisplay]}
+      </Text>
     </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
-  accountValue: {
-    color: '#626F79',
-    fontSize: 28,
-    textAlign: 'center',
-    width: '100%',
-  },
-});
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
+  StyleSheet.create({
+    accountValue: {
+      ...headerH2Primary,
+      fontSize: getFontSizeSmallDevices(width, 40),
+      textAlign: 'center',
+    },
+    title: {
+      ...body_primary_body_1,
+      opacity: 0.6,
+      fontSize: getFontSizeSmallDevices(width, body_primary_body_1.fontSize),
+    },
+    textBase: {
+      color: getColors(theme).secondaryText,
+    },
+    textCentered: {
+      textAlign: 'center',
+    },
+  });
 
-export default AccountValue;
+const connector = connect(
+  (state: RootState) => ({
+    accountValueDisplay: state.accountValueDisplay,
+    userTokens: state.userTokens.list,
+    tokensMarket: state.tokensMarket,
+  }),
+  {
+    setAccountValueDisplay,
+  },
+);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(AccountValue);

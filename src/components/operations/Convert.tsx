@@ -1,47 +1,80 @@
-import {fetchConversionRequests, loadAccount} from 'actions/index';
-import Hive from 'assets/wallet/icon_hive.svg';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
+import {fetchConversionRequests} from 'actions/index';
+import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
+import Icon from 'components/hive/Icon';
+import PendingConvertions from 'components/hive/PendingConversions';
+import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
+import moment from 'moment';
+import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {
-  FlatList,
-  Keyboard,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
+import {getCardStyle} from 'src/styles/card';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {getHorizontalLineStyle} from 'src/styles/line';
+import {getRotateStyle} from 'src/styles/transform';
+import {FontJosefineSansName, getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
+import {capitalize} from 'utils/format';
 import {collateralizedConvert, convert} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {navigate} from 'utils/navigation';
 import Balance from './Balance';
-import Operation from './Operation';
+import {ConfirmationPageProps} from './Confirmation';
+import OperationThemed from './OperationThemed';
 
-type Props = PropsFromRedux & {currency: string};
+export interface ConvertOperationProps {
+  currency: 'HBD' | 'HIVE';
+}
+
+type Props = PropsFromRedux & ConvertOperationProps;
 const Convert = ({
   user,
-  loadAccount,
+  showModal,
   fetchConversionRequests,
   conversions,
   currency,
 }: Props) => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showConversionsList, setShowConversionsList] = useState(false);
+  const [totalPendingConvertions, setTotalPendingConvertions] = useState(0);
+  const [availableBalance, setAvailableBalance] = useState('');
 
   useEffect(() => {
-    fetchConversionRequests(user.name!);
+    fetchConversionRequests(user.name!, currency);
   }, [user.name, fetchConversionRequests]);
 
+  useEffect(() => {
+    if (conversions.length > 0) {
+      setTotalPendingConvertions(
+        conversions
+          .filter(
+            (conversion) =>
+              moment(conversion.conversion_date).isAfter() &&
+              conversion.amount.split(' ')[1] === currency,
+          )
+          .reduce(
+            (acc, current) => acc + parseFloat(current.amount.split(' ')[0]),
+            0,
+          ),
+      );
+    }
+  }, [conversions]);
+
   const onConvert = async () => {
-    Keyboard.dismiss();
-    setLoading(true);
     try {
       if (currency === 'HBD') {
         await convert(user.keys.active!, {
@@ -56,106 +89,183 @@ const Convert = ({
           requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
         });
       }
-      loadAccount(user.account.name, true);
-      goBack();
-      Toast.show(translate('toast.convert_success', {currency}), Toast.LONG);
+      showModal('toast.convert_success', MessageModalType.SUCCESS, {
+        currency,
+      });
     } catch (e) {
-      Toast.show(`Error : ${(e as any).message}`, Toast.LONG);
-    } finally {
-      setLoading(false);
+      showModal(
+        `Error : ${(e as any).message}`,
+        MessageModalType.ERROR,
+        null,
+        true,
+      );
     }
   };
-  const {color} = getCurrencyProperties(currency);
-  const styles = getDimensionedStyles(color);
-  return (
-    <Operation
-      logo={<Hive />}
-      title={translate('wallet.operations.convert.title', {
-        to: currency === 'HIVE' ? 'HBD' : 'HIVE',
-      })}>
-      <>
-        <Separator />
-        <Balance
-          currency={currency}
-          account={user.account}
-          setMax={(value: string) => {
-            setAmount(value);
-          }}
-        />
-        <Separator />
-        <Text style={styles.disclaimer}>
-          {translate(
-            `wallet.operations.convert.disclaimer_${currency.toLowerCase()}`,
-          )}
-        </Text>
-        <Separator />
-        <OperationInput
-          placeholder={'0.000'}
-          keyboardType="numeric"
-          rightIcon={<Text style={styles.currency}>{currency}</Text>}
-          textAlign="right"
-          value={amount}
-          onChangeText={setAmount}
-        />
-        <Separator />
-        <TouchableOpacity
-          onPress={() => {
-            setShowConversionsList(!showConversionsList);
-          }}>
-          <Text
-            style={
-              styles.conversions
-            }>{`${conversions.length} conversions`}</Text>
-        </TouchableOpacity>
-        <Separator />
-        {showConversionsList ? (
-          <FlatList
-            data={conversions}
-            style={styles.conversionContainer}
-            renderItem={({item}) => {
-              const [amt, currency] = item.amount.split(' ');
-              return (
-                <View style={styles.conversionRow}>
-                  <Text>
-                    {amt}{' '}
-                    <Text
-                      style={currency === 'HBD' ? styles.green : styles.red}>
-                      {currency}
-                    </Text>
-                  </Text>
-                  <Text>-</Text>
-                  <Text>
-                    {item.conversion_date
-                      .replace('T', ' ')
-                      .replace('-', '/')
-                      .replace('-', '/')}
-                  </Text>
-                </View>
-              );
-            }}
-            keyExtractor={(conversion) => conversion.id + ''}
-          />
-        ) : null}
 
-        <Separator />
-        <ActiveOperationButton
-          title={translate('wallet.operations.convert.button')}
-          onPress={onConvert}
-          style={styles.button}
-          isLoading={loading}
-        />
-      </>
-    </Operation>
+  const onConvertConfirmation = () => {
+    if (!amount) {
+      Toast.show(translate('wallet.operations.convert.warning.missing_info'));
+    } else if (+amount > parseFloat(availableBalance as string)) {
+      Toast.show(
+        translate('common.overdraw_balance_error', {
+          currency,
+        }),
+      );
+    } else {
+      const confirmationData: ConfirmationPageProps = {
+        onSend: onConvert,
+        title: 'wallet.operations.convert.confirm.info',
+        data: [
+          {
+            title: 'common.account',
+            value: `@${user.account.name}`,
+          },
+          {
+            title: 'wallet.operations.transfer.confirm.amount',
+            value: `${amount} ${currency}`,
+          },
+        ],
+      };
+      navigate('ConfirmationPage', confirmationData);
+    }
+  };
+
+  const {height} = useWindowDimensions();
+  const {theme} = useThemeContext();
+  const {color} = getCurrencyProperties(currency);
+  const styles = getDimensionedStyles(color, theme);
+
+  return (
+    <OperationThemed
+      additionalContentContainerStyle={styles.paddingHorizontal}
+      additionalBgSvgImageStyle={{
+        top: -40,
+      }}
+      childrenTop={
+        <>
+          <Separator />
+          <Balance
+            theme={theme}
+            currency={currency}
+            account={user.account}
+            setMax={(value: string) => {
+              setAmount(value);
+              setAvailableBalance(value);
+            }}
+            setAvailableBalance={(available) => setAvailableBalance(available)}
+          />
+          <Separator />
+          {totalPendingConvertions > 0 && (
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => {
+                navigate('TemplateStack', {
+                  titleScreen: capitalize(
+                    translate(`wallet.operations.convert.pending`),
+                  ),
+                  component: (
+                    <PendingConvertions
+                      currency={currency}
+                      currentPendingConvertionList={conversions}
+                    />
+                  ),
+                } as TemplateStackProps);
+              }}
+              style={[
+                getCardStyle(theme).defaultCardItem,
+                styles.displayAction,
+              ]}>
+              <View>
+                <Text
+                  style={[
+                    getFormFontStyle(height, theme).smallLabel,
+                    styles.josefineFont,
+                    styles.opaque,
+                  ]}>
+                  {capitalize(translate(`common.pending`))}
+                </Text>
+                <Text
+                  style={[
+                    getFormFontStyle(height, theme).input,
+                    styles.josefineFont,
+                  ]}>
+                  {totalPendingConvertions} {currency}
+                </Text>
+              </View>
+              <Icon
+                theme={theme}
+                name={Icons.EXPAND_THIN}
+                additionalContainerStyle={getRotateStyle('90')}
+                width={13}
+                height={13}
+              />
+            </TouchableOpacity>
+          )}
+          <Separator height={25} />
+        </>
+      }
+      childrenMiddle={
+        <View>
+          <Caption
+            text={`wallet.operations.convert.disclaimer_${currency.toLowerCase()}`}
+          />
+          <View style={styles.flexRowBetween}>
+            <OperationInput
+              labelInput={translate('common.currency')}
+              placeholder={currency}
+              value={currency}
+              editable={false}
+              additionalOuterContainerStyle={{
+                width: '40%',
+              }}
+            />
+            <OperationInput
+              labelInput={capitalize(translate('common.amount'))}
+              placeholder={'0'}
+              keyboardType="decimal-pad"
+              textAlign="right"
+              value={amount}
+              onChangeText={setAmount}
+              additionalOuterContainerStyle={{
+                width: '54%',
+              }}
+              rightIcon={
+                <View style={styles.flexRowCenter}>
+                  <Separator
+                    drawLine
+                    additionalLineStyle={getHorizontalLineStyle(
+                      theme,
+                      1,
+                      35,
+                      16,
+                    )}
+                  />
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => setAmount(availableBalance.toString())}>
+                    <Text
+                      style={[
+                        getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
+                          .input,
+                      ]}>
+                      {translate('common.max').toUpperCase()}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              }
+            />
+          </View>
+          <Separator />
+        </View>
+      }
+      buttonTitle={'wallet.operations.convert.button'}
+      onNext={onConvertConfirmation}
+    />
   );
 };
 
-const getDimensionedStyles = (color: string) =>
+const getDimensionedStyles = (color: string, theme: Theme) =>
   StyleSheet.create({
-    button: {backgroundColor: '#68A0B4'},
-    currency: {fontWeight: 'bold', fontSize: 18, color},
-    conversions: {
-      fontWeight: 'bold',
-    },
     conversionRow: {
       width: '70%',
       display: 'flex',
@@ -165,9 +275,35 @@ const getDimensionedStyles = (color: string) =>
     conversionContainer: {
       height: 80,
     },
-    green: {color: '#005C09'},
-    red: {color: '#A3112A'},
-    disclaimer: {textAlign: 'justify'},
+    disclaimer: {textAlign: 'justify', fontSize: 14},
+    displayAction: {
+      marginHorizontal: 15,
+      borderRadius: 26,
+      paddingHorizontal: 21,
+      paddingVertical: 13,
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+    },
+    josefineFont: {
+      fontFamily: FontJosefineSansName.MEDIUM,
+    },
+    opaque: {
+      opacity: 0.7,
+    },
+    paddingHorizontal: {paddingHorizontal: 15},
+    flexRowCenter: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
+    },
+    flexRowBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    paddingLeft: {
+      paddingLeft: 10,
+    },
   });
 
 const connector = connect(
@@ -178,7 +314,7 @@ const connector = connect(
     };
   },
   {
-    loadAccount,
+    showModal,
     fetchConversionRequests,
   },
 );

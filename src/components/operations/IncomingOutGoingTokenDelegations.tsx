@@ -1,26 +1,41 @@
 import {loadAccount} from 'actions/index';
-import {Token, TokenBalance} from 'actions/interfaces';
-import Delegate from 'assets/wallet/icon_delegate_dark.svg';
+import {TokenBalance} from 'actions/interfaces';
+import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {connect, ConnectedProps} from 'react-redux';
-import IconBack from 'src/assets/Icon_arrow_back_black.svg';
-import {RootState} from 'store';
 import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Token} from 'src/interfaces/tokens.interface';
+import {getColors} from 'src/styles/colors';
+import {
+  getFontSizeSmallDevices,
+  title_primary_body_2,
+  title_primary_title_1,
+} from 'src/styles/typography';
+import {RootState} from 'store';
+import {capitalize} from 'utils/format';
+import {
+  TokenDelegation,
   getIncomingTokenDelegations,
   getOutgoingTokenDelegations,
-  TokenDelegation,
 } from 'utils/hiveEngine';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
-import Balance from './Balance';
-import IncomingOutGoingTokenDelegationItem from './Incoming-outgoing-token-delegation-item';
-import Operation from './Operation';
+import IncomingOutGoingTokenDelegationItem from './IncomingOutgoingTokenDelegationItem';
+import {TokenDelegationType} from './MoreTokenInfo';
+import OperationThemed from './OperationThemed';
 
 type Props = PropsFromRedux & {
-  delegationType: string;
+  delegationType: TokenDelegationType;
   total: string;
   token: TokenBalance;
   tokenLogo: JSX.Element;
@@ -35,12 +50,11 @@ const IncomingOutGoingTokenDelegations = ({
   tokenLogo,
   user,
   tokenInfo,
-  loadAccount,
-  properties,
-  gobackAction,
 }: Props) => {
   const [loading, setLoading] = useState(false);
   const [delegationList, setDelegationList] = useState<TokenDelegation[]>([]);
+
+  const {width} = useWindowDimensions();
 
   useEffect(() => {
     setLoading(true);
@@ -50,7 +64,7 @@ const IncomingOutGoingTokenDelegations = ({
   const init = async () => {
     let delegations: TokenDelegation[];
 
-    if (delegationType === 'incoming') {
+    if (delegationType === 'Incoming') {
       delegations = await getIncomingTokenDelegations(user.name!, token.symbol);
     } else {
       delegations = await getOutgoingTokenDelegations(user.name!, token.symbol);
@@ -68,87 +82,107 @@ const IncomingOutGoingTokenDelegations = ({
         tokenLogo={tokenLogo}
         token={token}
         tokenInfo={tokenInfo}
+        theme={theme}
       />
     );
   };
 
+  const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(token.symbol);
-  const styles = getDimensionedStyles(color);
-
-  const renderIconComponent = () => {
-    return gobackAction ? (
-      <View style={styles.rowContainer}>
-        <TouchableOpacity onPress={gobackAction} style={styles.goBackButton}>
-          <IconBack />
-        </TouchableOpacity>
-      </View>
-    ) : (
-      <Delegate />
-    );
-  };
+  const styles = getDimensionedStyles(color, theme, width);
 
   return (
-    <Operation
-      logo={renderIconComponent()}
-      title={translate(`wallet.operations.token_delegation.${delegationType}`)}>
-      <>
-        {delegationType === 'outgoing' && (
-          <Text style={{marginTop: 5}}>
-            {translate(
-              'wallet.operations.token_delegation.undelegation_cooldown_disclaimer',
-              {
-                symbol: token.symbol,
-                undelegationCooldown: tokenInfo.undelegationCooldown,
-              },
-            )}
-          </Text>
-        )}
-        <Separator />
-        <Balance
-          currency={token.symbol}
-          account={user.account}
-          globalProperties={properties.globals}
-          isHiveEngine
-          tokenLogo={tokenLogo}
-          tokenBalance={total}
-        />
-        {loading && (
-          <View style={styles.flex}>
-            <Loader animating={true} />
+    <OperationThemed
+      childrenTop={<Separator />}
+      childrenMiddle={
+        <View>
+          {delegationType === 'Outgoing' && (
+            <>
+              <Caption
+                text="wallet.operations.token_delegation.undelegation_cooldown_disclaimer"
+                textParams={{
+                  symbol: token.symbol,
+                  undelegationCooldown: tokenInfo.undelegationCooldown,
+                }}
+              />
+              {parseFloat(token.pendingUndelegations) > 0 && (
+                <>
+                  <Separator />
+                  <View style={styles.flexRowBetween}>
+                    <Text style={styles.title}>
+                      {translate(
+                        'wallet.operations.token_delegation.token_pending_undelegation',
+                      )}
+                    </Text>
+                    <Text style={styles.title}>
+                      {token.pendingUndelegations} {token.symbol}
+                    </Text>
+                  </View>
+                </>
+              )}
+            </>
+          )}
+          <Separator />
+          <View style={styles.flexRowBetween}>
+            <Text style={styles.title}>{capitalize(delegationType)}</Text>
+            <Text style={styles.title}>
+              {total} {token.symbol}
+            </Text>
           </View>
-        )}
-        <Separator />
-        {!loading && delegationList.length > 0 && (
-          <FlatList
-            data={delegationList}
-            renderItem={(tokenDelegation) =>
-              renderListItem(tokenDelegation.item)
-            }
-            keyExtractor={(tokenDelegation) =>
-              tokenDelegation.created.toString()
-            }
-          />
-        )}
-      </>
-    </Operation>
+
+          {loading && (
+            <View style={styles.flex}>
+              <Loader animating={true} />
+            </View>
+          )}
+          <Separator />
+          {!loading && delegationList.length > 0 && (
+            <ScrollView
+              horizontal={true}
+              contentContainerStyle={{width: '100%', height: '100%'}}>
+              <FlatList
+                data={delegationList}
+                renderItem={(tokenDelegation) =>
+                  renderListItem(tokenDelegation.item)
+                }
+                keyExtractor={(tokenDelegation) =>
+                  tokenDelegation.created.toString()
+                }
+              />
+            </ScrollView>
+          )}
+        </View>
+      }
+    />
   );
 };
 
-const getDimensionedStyles = (color: string) =>
+const getDimensionedStyles = (color: string, theme: Theme, width: number) =>
   StyleSheet.create({
-    currency: {fontWeight: 'bold', fontSize: 18, color},
-    rowContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    goBackButton: {
-      margin: 7,
+    currency: {
+      fontWeight: 'bold',
+      fontSize: getFontSizeSmallDevices(width, 15),
+      color,
     },
     flex: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    flexRowBetween: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    title: {
+      ...title_primary_body_2,
+      color: getColors(theme).secondaryText,
+      fontSize: getFontSizeSmallDevices(width, 15),
+    },
+    infoText: {
+      color: getColors(theme).septenaryText,
+      opacity: theme === Theme.DARK ? 0.6 : 1,
+      ...title_primary_title_1,
+      paddingHorizontal: 5,
     },
   });
 
