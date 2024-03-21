@@ -109,26 +109,41 @@ const App = ({
     rpc = activeRpc?.uri;
   }, [activeRpc]);
 
-  const renderNavigator = () => {
+  useEffect(() => {
+    console.log('auth', auth);
+  }, [auth]);
+
+  useEffect(() => {
+    console.log('hasacc', hasAccounts);
+  }, [hasAccounts]);
+
+  useEffect(() => {
+    console.log('total rerendering');
+  }, []);
+
+  const renderMainNavigator = () => {
     if (!hasAccounts) {
       // No accounts, sign up process
-      return <SignUpStack />;
+      return (
+        <Root.Screen name="Main" component={SignUpStack} options={noHeader} />
+      );
     } else if (!auth.mk) {
-      // has account but not authenticated yet -> Unlock
-      return <UnlockStack />;
+      // Login process
+      return (
+        <Root.Screen name="Main" component={UnlockStack} options={noHeader} />
+      );
     } else {
-      return <MainDrawer />;
+      // Main page
+      return (
+        <Root.Screen name="Main" component={MainDrawer} options={noHeader} />
+      );
     }
   };
 
   const renderRootNavigator = () => {
     return (
       <Root.Navigator>
-        <Root.Screen
-          name="Main"
-          component={renderNavigator}
-          options={noHeader}
-        />
+        {renderMainNavigator()}
         <Root.Screen name="ModalScreen" component={Modal} {...modalOptions} />
       </Root.Navigator>
     );
