@@ -481,6 +481,7 @@
     "keys": {
       "add": "Add Key",
       "add_keyType": "Add {{type}} Key",
+      "show_qr_code": "Show QR Code",
       "disclaimer": [
         {
           "text": "To receive funds, simply share your account name (displayed above) with the sender.",
