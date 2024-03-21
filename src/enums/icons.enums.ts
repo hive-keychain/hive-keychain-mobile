@@ -29,6 +29,7 @@ export enum Icons {
   DONE = 'done',
   // EDIT = 'edit',
   ERROR = 'error',
+  SUCCESS = 'success',
   // EXPAND_MORE = 'expand_more',
 
   EXPORT = 'file_download',

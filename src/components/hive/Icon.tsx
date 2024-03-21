@@ -67,10 +67,12 @@ import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
 import ConvertIcon from 'src/assets/new_UI/convert.svg';
 import DelegateTokenIcon from 'src/assets/new_UI/delegate-token.svg';
+import ErrorSVG from 'src/assets/new_UI/error-mark.svg';
 import ExpandMoreIcon from 'src/assets/new_UI/expand_more.svg';
 import ClaimIcon from 'src/assets/new_UI/gift.svg';
 import SavingsIcon from 'src/assets/new_UI/savings.svg';
 import TransferIcon from 'src/assets/new_UI/send.svg';
+import Success from 'src/assets/new_UI/success-mark.svg';
 import AutomatedTasks from 'src/assets/settings/automated-tasks.svg';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -609,6 +611,20 @@ const getIconFilePath = (
     case name === Icons.AUTOMATED_TASKS:
       return (
         <AutomatedTasks
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.SUCCESS:
+      return (
+        <Success
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.ERROR:
+      return (
+        <ErrorSVG
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
