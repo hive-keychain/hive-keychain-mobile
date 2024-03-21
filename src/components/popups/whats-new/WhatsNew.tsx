@@ -45,21 +45,21 @@ const WhatsNew = ({navigation}: Props): null => {
   }, []);
 
   const init = async () => {
-    const lastVersionSeen = await AsyncStorage.getItem(
+    const lastVersionStorage = await AsyncStorage.getItem(
       KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
     );
-    const versionLog = await VersionLogUtils.getLastVersion();
-    const extensionVersion = VersionLogUtils.getCurrentMobileAppVersion()
+    const lastVersionAPI = await VersionLogUtils.getLastVersion();
+    const mobileAppVersion = VersionLogUtils.getCurrentMobileAppVersion()
       .version.split('.')
       .splice(0, 2)
       .join('.');
-    if (!lastVersionSeen) {
+    if (!lastVersionStorage) {
       WhatsNewUtils.saveLastSeen();
     } else if (
-      extensionVersion !== lastVersionSeen &&
-      versionLog.version === extensionVersion
+      mobileAppVersion !== lastVersionStorage &&
+      lastVersionAPI.version === mobileAppVersion
     ) {
-      setWhatsNewContent(versionLog);
+      setWhatsNewContent(lastVersionAPI);
     }
   };
 
@@ -70,7 +70,7 @@ const WhatsNew = ({navigation}: Props): null => {
           await prefetchImage(feature.image);
         }
         navigate('ModalScreen', {
-          name: 'Whats_new_popup',
+          name: 'WhatsNewPopup',
           modalContent: renderContent(),
           onForceCloseModal: () => {},
           modalContainerStyle: getModalBaseStyle(theme).roundedTop,

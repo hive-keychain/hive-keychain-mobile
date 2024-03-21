@@ -1,17 +1,16 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import CheckBox from 'components/form/CustomCheckBox';
+import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import EllipticButton from 'components/form/EllipticButton';
-import Icon from 'components/hive/Icon';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
 import {WidgetAsyncStorageItem} from 'src/enums/widgets.enum';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
+import {getFontSizeSmallDevices} from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
@@ -42,7 +41,10 @@ const WidgetConfiguration = ({
       init();
     }
   }, [show, accounts]);
-  const styles = getStyles(useThemeContext().theme);
+  const styles = getStyles(
+    useThemeContext().theme,
+    useWindowDimensions().width,
+  );
   const init = async () => {
     const accountsStoredToShow = await AsyncStorage.getItem(
       WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
@@ -63,7 +65,7 @@ const WidgetConfiguration = ({
   useEffect(() => {
     if (show) {
       navigate('ModalScreen', {
-        name: 'Whats_new_popup',
+        name: 'WidgetConfiguration',
         modalContent: renderContent(),
         onForceCloseModal: handleClose,
         modalContainerStyle: [
@@ -101,9 +103,6 @@ const WidgetConfiguration = ({
     return (
       <Operation
         title={translate('popup.widget_configuration.title')}
-        logo={
-          <Icon name={Icons.SETTINGS_2} color={getColors(theme).primaryText} />
-        }
         onClose={handleClose}>
         <View style={styles.rootContainer}>
           <Text style={[styles.text, styles.centeredText]}>
@@ -111,7 +110,7 @@ const WidgetConfiguration = ({
           </Text>
           {accountsToShow.map((accountToShow) => {
             return (
-              <CheckBox
+              <CheckBoxPanel
                 key={accountToShow.name}
                 checked={accountToShow.show}
                 onPress={() =>
@@ -136,7 +135,7 @@ const WidgetConfiguration = ({
   return null;
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     rootContainer: {
       width: '100%',
@@ -149,7 +148,11 @@ const getStyles = (theme: Theme) =>
       fontWeight: 'bold',
       marginBottom: 10,
     },
-    text: {fontSize: 16, marginBottom: 10, color: getColors(theme).primaryText},
+    text: {
+      fontSize: getFontSizeSmallDevices(width, 14),
+      marginBottom: 10,
+      color: getColors(theme).primaryText,
+    },
     image: {
       marginBottom: 30,
       aspectRatio: 1.6,

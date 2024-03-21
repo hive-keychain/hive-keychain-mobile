@@ -933,9 +933,9 @@
       "got_it": "Got it!"
     },
     "widget_configuration": {
-      "title": "Widget Configuration",
+      "title": "Portfolio Widget",
       "sub_title": "Widget Account Balance Configuration",
-      "intro": "Choose which accounts will be shown in the Widget."
+      "intro": "Choose which accounts will be shown in the portfolio widget."
     }
   },
   "multichain": {
