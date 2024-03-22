@@ -53,6 +53,7 @@ export const lock = () => {
 export * from 'actions/accountValueDisplay';
 export * from 'actions/accounts';
 export * from 'actions/browser';
+export * from 'actions/colors';
 export * from 'actions/hive';
 export * from 'actions/hive-uri';
 export * from 'actions/hiveEngine';

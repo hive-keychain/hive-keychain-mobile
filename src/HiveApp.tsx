@@ -4,7 +4,11 @@ import {
 } from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {showFloatingBar} from 'actions/floatingBar';
-import {forgetRequestedOperation, setRpc as setRpcAction} from 'actions/index';
+import {
+  forgetRequestedOperation,
+  getTokensBackgroundColors,
+  setRpc as setRpcAction,
+} from 'actions/index';
 import {Rpc} from 'actions/interfaces';
 import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import Bridge from 'components/bridge';
@@ -14,7 +18,7 @@ import {getToggleElement} from 'hooks/toggle';
 import MainDrawer from 'navigators/MainDrawer';
 import SignUpStack from 'navigators/SignUp';
 import UnlockStack from 'navigators/Unlock';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import RNBootSplash from 'react-native-bootsplash';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
@@ -26,7 +30,6 @@ import {
 import {FloatingBar} from 'screens/hive/wallet/FloatingBar';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
-import {downloadColors} from 'utils/colors';
 import {setRpc} from 'utils/hive';
 import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 import {processQRCodeOp} from 'utils/hive-uri';
@@ -47,16 +50,12 @@ const App = ({
   requestedOp,
   forgetRequestedOperation,
   showFloatingBar,
-  rpcSwitcher,
   setDisplayChangeRpcPopup,
-  setSwitchToRpc,
   hiveEngineRpc,
   accountHistoryAPIRpc,
-  setActiveRpc,
+  getTokensBackgroundColors,
 }: PropsFromRedux) => {
-  let routeNameRef: React.MutableRefObject<string> = useRef();
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
-  const [initialRpc, setInitialRpc] = useState<Rpc>();
 
   useEffect(() => {
     initApplication();
@@ -67,7 +66,7 @@ const App = ({
     HiveEngineConfigUtils.setActiveAccountHistoryApi(
       accountHistoryAPIRpc ?? DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
     );
-    initColorAPI();
+    getTokensBackgroundColors();
     showFloatingBar(false);
     await initActiveRpc(activeRpc);
   };
@@ -80,10 +79,6 @@ const App = ({
     } else {
       useWorkingRPC(rpc);
     }
-  };
-
-  const initColorAPI = async () => {
-    await downloadColors();
   };
 
   useEffect(() => {
@@ -191,6 +186,7 @@ const connector = connect(mapStateToProps, {
   setDisplayChangeRpcPopup,
   setSwitchToRpc,
   setActiveRpc: setRpcAction,
+  getTokensBackgroundColors,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

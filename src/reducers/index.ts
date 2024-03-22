@@ -4,6 +4,7 @@ import accounts from './accounts';
 import activeAccount from './activeAccount';
 import auth from './auth';
 import browser from './browser';
+import colors from './colors';
 import conversions from './conversions';
 import currencyPrices from './currencyPrices';
 import delegations from './delegations';
@@ -53,4 +54,5 @@ export default combineReducers({
   rpcSwitcher,
   accountValueDisplay,
   ecosystem,
+  colors,
 });

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import Image from 'react-native-fast-image';
+import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
@@ -18,7 +19,8 @@ import {
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
-import {getBackgroundColorFromBackend} from 'utils/colors';
+import {RootState} from 'store';
+import {Colors, getTokenBackgroundColor} from 'utils/colors';
 import {nFormatter} from 'utils/format';
 import {translate} from 'utils/localize';
 
@@ -40,7 +42,8 @@ const TokenSettingsItem = ({
   addBackground,
   checkedValue,
   setChecked,
-}: TokenSettingsItemProps) => {
+  colors,
+}: TokenSettingsItemProps & PropsFromRedux) => {
   const [hasError, setHasError] = useState(false);
 
   const styles = getStyles(
@@ -48,6 +51,7 @@ const TokenSettingsItem = ({
     widthDevice,
     heightDevice,
     token.symbol,
+    colors,
     addBackground,
   );
 
@@ -122,6 +126,7 @@ const getStyles = (
   width: number,
   height: number,
   symbol: string,
+  colors: Colors,
   addBackground?: boolean,
 ) =>
   StyleSheet.create({
@@ -162,7 +167,7 @@ const getStyles = (
     },
     iconContainerBaseWithBg: {
       backgroundColor: addBackground
-        ? getBackgroundColorFromBackend(symbol, theme)
+        ? getTokenBackgroundColor(colors, symbol, theme)
         : undefined,
     },
     row: {
@@ -173,4 +178,11 @@ const getStyles = (
     textAlignedRight: {textAlign: 'right'},
   });
 
-export default TokenSettingsItem;
+const mapStateToProps = (state: RootState) => {
+  return {colors: state.colors};
+};
+
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(TokenSettingsItem);
