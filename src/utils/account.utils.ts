@@ -169,6 +169,9 @@ const getPowerDown = (
   return {withdrawn, total_withdrawing, next_vesting_withdrawal};
 };
 
+const generateQRCode = (account: ActiveAccount) => {
+  return JSON.stringify({name: account.name, keys: account.keys});
+};
 const AccountUtils = {
   addAuthorizedAccount,
   doesAccountExist,
@@ -177,6 +180,7 @@ const AccountUtils = {
   getRCMana,
   claimAccounts,
   getPowerDown,
+  generateQRCode,
 };
 
 export default AccountUtils;

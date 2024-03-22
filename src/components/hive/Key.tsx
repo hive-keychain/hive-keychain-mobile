@@ -207,12 +207,13 @@ const CopyKey = ({
 type ViewKeyProps = {toggle: () => void; isPKShown: boolean; theme: Theme};
 const ViewKey = ({toggle, isPKShown, theme}: ViewKeyProps) => {
   return (
-    <Icon
-      name={isPKShown ? Icons.NOT_SEE : Icons.SEE}
-      theme={theme}
-      color={PRIMARY_RED_COLOR}
-      onPress={toggle}
-    />
+    <TouchableOpacity activeOpacity={1} onPress={toggle}>
+      <Icon
+        name={isPKShown ? Icons.NOT_SEE : Icons.SEE}
+        theme={theme}
+        color={PRIMARY_RED_COLOR}
+      />
+    </TouchableOpacity>
   );
 };
 

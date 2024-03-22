@@ -4,6 +4,7 @@ import EllipticButton from 'components/form/EllipticButton';
 import UserDropdown from 'components/form/UserDropdown';
 import Key from 'components/hive/Key';
 import Background from 'components/ui/Background';
+import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
@@ -11,7 +12,7 @@ import SlidingOverlay from 'components/ui/SlidingOverlay';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {MainNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, useWindowDimensions} from 'react-native';
+import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -22,6 +23,7 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
@@ -122,11 +124,11 @@ const AccountManagement = ({
             theme={theme}
           />
           <Separator height={20} />
-          {/* <EllipticButton
+          <EllipticButton
             title={translate('settings.keys.show_qr_code')}
             onPress={() => setShowQrCode(true)}
             additionalTextStyle={styles.operationButtonText}
-          /> */}
+          />
           <Separator />
           <EllipticButton
             title={translate('common.forget_account')}
@@ -136,12 +138,34 @@ const AccountManagement = ({
           />
           <Separator height={25} />
         </ScrollView>
-        <SlidingOverlay setShowOverlay={setShowQrCode} showOverlay={showQrCode}>
-          <QRCode
-            value="`keychain://add_account=${AccountUtils.generateQRCode(
-                  account!,
-                )}`"
-          />
+        <SlidingOverlay
+          setShowOverlay={setShowQrCode}
+          showOverlay={showQrCode}
+          maxHeightPercent={0.7}
+          title="settings.keys.qr.title">
+          <ScrollView>
+            <Caption text="settings.keys.qr.caption" hideSeparator justify />
+            <View style={styles.qrCardContainer}>
+              <View style={styles.qrCard}>
+                <QRCode
+                  size={200}
+                  fgColor={getColors(theme).primaryText}
+                  bgColor={'transparent'}
+                  value={`keychain://add_account=${AccountUtils.generateQRCode(
+                    account!,
+                  )}`}
+                />
+              </View>
+            </View>
+            <Separator />
+            <EllipticButton
+              title={translate('common.close')}
+              isWarningButton
+              onPress={() => {
+                setShowQrCode(false);
+              }}
+            />
+          </ScrollView>
         </SlidingOverlay>
       </SafeArea>
     </Background>
@@ -151,6 +175,19 @@ const AccountManagement = ({
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     safeArea: {paddingHorizontal: 16},
+    qrCardContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      marginTop: -10,
+    },
+    qrCard: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: 10,
+      borderColor: getColors(theme).primaryText,
+      borderWidth: 2,
+      borderRadius: 16,
+    },
     cardKey: {
       borderWidth: 1,
       backgroundColor: getColors(theme).secondaryCardBgColor,

@@ -1,23 +1,39 @@
 import React, {useEffect, useState} from 'react';
-import {Keyboard, Platform, View, useWindowDimensions} from 'react-native';
+import {
+  Keyboard,
+  Platform,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {Overlay} from 'react-native-elements';
 import Animated, {SlideInDown, SlideOutDown} from 'react-native-reanimated';
 import {useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {inputStyle} from 'src/styles/input';
+import {translate} from 'utils/localize';
 
 const ReanimatedView = Animated.createAnimatedComponent(View);
 type Props = {
   children: JSX.Element[] | JSX.Element;
   showOverlay: boolean;
   setShowOverlay: (e: boolean) => void;
+  title: string;
+  maxHeightPercent?: number;
 };
 
-const SlidingOverlay = ({children, showOverlay, setShowOverlay}: Props) => {
+const SlidingOverlay = ({
+  children,
+  showOverlay,
+  setShowOverlay,
+  title,
+  maxHeightPercent,
+}: Props) => {
   const {height} = useWindowDimensions();
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const {theme} = useThemeContext();
   const [isClosing, setIsClosing] = useState(false);
-
+  const {width} = useWindowDimensions();
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -54,7 +70,7 @@ const SlidingOverlay = ({children, showOverlay, setShowOverlay}: Props) => {
         bottom: 0,
         backgroundColor: 'transparent',
         padding: 0,
-        maxHeight: height / 2,
+        maxHeight: maxHeightPercent * height || height / 2,
         minHeight: height / 3,
         shadowColor: 'transparent',
         marginBottom: Platform.OS === 'ios' ? keyboardHeight : 0,
@@ -66,11 +82,20 @@ const SlidingOverlay = ({children, showOverlay, setShowOverlay}: Props) => {
           style={{
             backgroundColor: getColors(theme).secondaryCardBgColor,
             borderTopLeftRadius: 16,
+            borderWidth: 1,
+            borderColor: getColors(theme).quaternaryCardBorderColor,
             padding: 16,
             height: '100%',
             borderTopRightRadius: 16,
             width: '100%',
           }}>
+          <Text
+            style={[
+              {alignSelf: 'center', marginBottom: 10},
+              inputStyle(theme, width).label,
+            ]}>
+            {translate(title)}
+          </Text>
           {children}
         </ReanimatedView>
       )}

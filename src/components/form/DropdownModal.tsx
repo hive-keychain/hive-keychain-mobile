@@ -310,14 +310,8 @@ const DropdownModal = ({
       </View>
       <SlidingOverlay
         showOverlay={isListExpanded}
-        setShowOverlay={setIsListExpanded}>
-        <Text
-          style={[
-            {alignSelf: 'center', marginBottom: 10},
-            inputStyle(theme, width).label,
-          ]}>
-          {translate(dropdownTitle)}
-        </Text>
+        setShowOverlay={setIsListExpanded}
+        title={dropdownTitle}>
         {enableSearch && (
           <CustomSearchBar
             theme={theme}
