@@ -275,11 +275,6 @@ const Main = ({
       event.nativeEvent.contentOffset.y === 0 ||
         event.nativeEvent.contentOffset.y < lastScrollYValue,
     );
-  };
-
-  const onHandleEndScroll = (
-    event: NativeSyntheticEvent<NativeScrollEvent>,
-  ) => {
     setLastScrollYValue(event.nativeEvent.contentOffset.y);
   };
 
@@ -340,7 +335,7 @@ const Main = ({
             }}>
             <ScrollView
               ref={mainScrollRef}
-              onScrollEndDrag={onHandleEndScroll}
+              scrollEventThrottle={200}
               onScroll={onHandleScroll}>
               <View style={styles.rowWrapper}>
                 <PercentageDisplay
