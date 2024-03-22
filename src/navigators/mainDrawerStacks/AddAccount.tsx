@@ -32,6 +32,7 @@ export default () => {
         options={({navigation}) => ({
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
+          animationEnabled: false,
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
@@ -75,6 +76,7 @@ export default () => {
       <AccountStack.Screen
         name="AddAccountFromWalletScreenByAuth"
         options={({navigation}) => ({
+          animationEnabled: false,
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
