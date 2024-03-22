@@ -36,7 +36,7 @@ const Browser = ({
   showManagementScreen,
   showFloatingBar,
   theme,
-}: BrowserPropsFromRedux & BrowserNavigationProps & Props) => {
+}: Partial<BrowserPropsFromRedux> & BrowserNavigationProps & Props) => {
   const {showManagement, activeTab, tabs, history, favorites} = browser;
   const currentActiveTabData = tabs.find((t) => t.id === activeTab);
   const url = currentActiveTabData

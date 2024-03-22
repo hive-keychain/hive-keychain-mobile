@@ -7,6 +7,7 @@ import browser from './browser';
 import conversions from './conversions';
 import currencyPrices from './currencyPrices';
 import delegations from './delegations';
+import ecosystem from './ecosystem';
 import floatingBar from './floatingBar';
 import properties from './globalProperties';
 import historyFilters from './historyFilters';
@@ -51,4 +52,5 @@ export default combineReducers({
   floatingBar,
   rpcSwitcher,
   accountValueDisplay,
+  ecosystem,
 });
