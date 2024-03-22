@@ -28,7 +28,6 @@
     "@react-native-firebase/app": "^19.0.1",
     "@react-native-firebase/crashlytics": "^19.0.1",
     "@react-native-module/get-random-values": "^1.8.4",
-    "@react-native-picker/picker": "^1.9.4",
     "@react-navigation/compat": "^5.3.10",
     "@react-navigation/drawer": "^5.11.4",
     "@react-navigation/native": "^5.9.8",

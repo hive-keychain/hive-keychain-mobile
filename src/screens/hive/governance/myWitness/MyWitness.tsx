@@ -57,7 +57,6 @@ const MyWitness = ({
       setIsLoading(false);
     }
   };
-
   const styles = getStyles(theme);
 
   const getActiveSwitchStyle = (active: boolean) => {
@@ -71,9 +70,10 @@ const MyWitness = ({
         <Loader animating size={'large'} />
       </View>
     );
-  } else if (!isLoading && hasError) {
+  } else if (hasError) {
     return (
-      <View style={{}}>
+      <View
+        style={{alignItems: 'center', justifyContent: 'center', width: '100%'}}>
         <Text style={[styles.textTitle]}>
           {translate('governance.witness.error.retrieving_witness_info')}
         </Text>
