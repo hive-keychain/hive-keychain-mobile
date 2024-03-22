@@ -47,14 +47,17 @@ export const getHiveEngineTokenValue = (
   market: TokenMarket[],
   minVolume = 0,
 ) => {
+  if (balance.symbol === 'SWAP.HIVE') return parseFloat(balance.balance) * 1;
   const {price, volume} = getHiveEngineTokenTradingInfo(balance, market);
   const withVolumeAccounted =
     minVolume <= parseFloat(volume)
-      ? parseFloat(balance.balance) * price +
-        parseFloat(balance.stake) * price +
-        parseFloat(balance.pendingUnstake) * price
+      ? (parseFloat(balance.balance) +
+          parseFloat(balance.stake) +
+          parseFloat(balance.pendingUnstake) +
+          parseFloat(balance.pendingUndelegations) +
+          parseFloat(balance.delegationsOut)) *
+        price
       : 0;
-
   return withVolumeAccounted;
 };
 

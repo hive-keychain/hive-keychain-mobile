@@ -36,7 +36,7 @@ const EngineTokenDisplay = ({
   toggled,
   setToggle,
   addBackground,
-  price,
+  hivePrice,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -90,12 +90,12 @@ const EngineTokenDisplay = ({
         currency={token.symbol}
         color="black"
         balance={parseFloat(token.balance)}
-        totalValue={getHiveEngineTokenValue(token, market)}
+        totalValue={getHiveEngineTokenValue(token, market) * hivePrice}
         toggled={toggled}
         setToggle={setToggle}
         price={{
           usd: tokenMarket
-            ? +formatBalance(parseFloat(tokenMarket.lastPrice) * price)
+            ? +formatBalance(parseFloat(tokenMarket.lastPrice) * hivePrice)
             : 0,
           usd_24h_change: parseFloat(
             tokenMarket ? tokenMarket.priceChangePercent : '0',
@@ -145,7 +145,7 @@ const getDimensionedStyles = (
   });
 
 const mapStateToProps = (state: RootState) => {
-  return {price: state.currencyPrices.hive.usd};
+  return {hivePrice: state.currencyPrices.hive.usd};
 };
 
 const connector = connect(mapStateToProps);

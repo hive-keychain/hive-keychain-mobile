@@ -22,7 +22,6 @@ export const getAccountValue = (
   tokenMarket: TokenMarket[],
 ) => {
   if (!hive_dollar.usd || !hive.usd) return 0;
-
   return (
     (parseFloat(hbd_balance as string) +
       parseFloat(savings_hbd_balance as string)) *
@@ -32,7 +31,11 @@ export const getAccountValue = (
       parseFloat(savings_balance as string)) *
       hive.usd +
     userTokens
-      .map((userToken) => getHiveEngineTokenValue(userToken, tokenMarket))
+      .map((userToken) => {
+        const tokenInHive = getHiveEngineTokenValue(userToken, tokenMarket);
+        const tokenInUSD = tokenInHive * hive.usd;
+        return tokenInUSD;
+      })
       .reduce((a, b) => a + b, 0)
   ).toFixed(3);
 };

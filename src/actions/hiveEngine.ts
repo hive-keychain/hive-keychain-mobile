@@ -32,9 +32,17 @@ export const loadTokens = (): AppThunk => async (dispatch) => {
 };
 
 export const loadTokensMarket = (): AppThunk => async (dispatch) => {
+  let tokensMarket: TokenMarket[] = [];
+  let offset = 0;
+  let tokens;
+  do {
+    tokens = await hsc.find('market', 'metrics', {}, 1000, offset, []);
+    offset += 1000;
+    tokensMarket = [...tokensMarket, ...tokens];
+  } while (tokens.length === 1000);
   const action: ActionPayload<TokenMarket[]> = {
     type: LOAD_TOKENS_MARKET,
-    payload: await hsc.find('market', 'metrics', {}, 1000, 0, []),
+    payload: tokensMarket,
   };
   dispatch(action);
 };
