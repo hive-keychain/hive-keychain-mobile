@@ -301,7 +301,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.POLYGON_DOWN:
+    case name === Icons.CARRET_UP:
       return (
         <PolygonDown
           style={[
