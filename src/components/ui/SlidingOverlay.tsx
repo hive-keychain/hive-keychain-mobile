@@ -7,7 +7,7 @@ import {getColors} from 'src/styles/colors';
 
 const ReanimatedView = Animated.createAnimatedComponent(View);
 type Props = {
-  children: JSX.Element[];
+  children: JSX.Element[] | JSX.Element;
   showOverlay: boolean;
   setShowOverlay: (e: boolean) => void;
 };
