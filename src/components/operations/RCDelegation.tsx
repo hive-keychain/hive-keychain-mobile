@@ -34,7 +34,12 @@ import {
   getFormFontStyle,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, formatBalanceCurrency, withCommas} from 'utils/format';
+import {
+  capitalize,
+  formatBalanceCurrency,
+  getCleanAmountValue,
+  withCommas,
+} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -139,7 +144,9 @@ const RCDelegation = ({
   const onRCDelegateConfirmation = () => {
     if (!to || !amount) {
       Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
-    } else if (+amount > parseFloat(available.gigaRcValue as string)) {
+    } else if (
+      +amount > +getCleanAmountValue(available.gigaRcValue as string)
+    ) {
       Toast.show(
         translate('common.overdraw_balance_error', {
           currency: 'RC',
@@ -160,7 +167,7 @@ const RCDelegation = ({
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${amount} GRC`,
+            value: `${withCommas(amount)} GRC`,
           },
         ],
       };
@@ -313,7 +320,9 @@ const RCDelegation = ({
                   />
                   <TouchableOpacity
                     activeOpacity={1}
-                    onPress={() => setAmount(available.gigaRcValue)}>
+                    onPress={() =>
+                      setAmount(getCleanAmountValue(available.gigaRcValue))
+                    }>
                     <Text
                       style={[
                         getFormFontStyle(height, theme, PRIMARY_RED_COLOR)

@@ -26,7 +26,7 @@ import {getHorizontalLineStyle} from 'src/styles/line';
 import {getRotateStyle} from 'src/styles/transform';
 import {FontJosefineSansName, getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize} from 'utils/format';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
 import {collateralizedConvert, convert} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
@@ -105,7 +105,7 @@ const Convert = ({
   const onConvertConfirmation = () => {
     if (!amount) {
       Toast.show(translate('wallet.operations.convert.warning.missing_info'));
-    } else if (+amount > parseFloat(availableBalance as string)) {
+    } else if (+amount > +getCleanAmountValue(availableBalance)) {
       Toast.show(
         translate('common.overdraw_balance_error', {
           currency,
@@ -122,7 +122,7 @@ const Convert = ({
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${amount} ${currency}`,
+            value: `${withCommas(amount)} ${currency}`,
           },
         ],
       };
@@ -148,10 +148,6 @@ const Convert = ({
             theme={theme}
             currency={currency}
             account={user.account}
-            setMax={(value: string) => {
-              setAmount(value);
-              setAvailableBalance(value);
-            }}
             setAvailableBalance={(available) => setAvailableBalance(available)}
           />
           <Separator />
@@ -242,7 +238,9 @@ const Convert = ({
                   />
                   <TouchableOpacity
                     activeOpacity={1}
-                    onPress={() => setAmount(availableBalance.toString())}>
+                    onPress={() =>
+                      setAmount(getCleanAmountValue(availableBalance))
+                    }>
                     <Text
                       style={[
                         getFormFontStyle(height, theme, PRIMARY_RED_COLOR)

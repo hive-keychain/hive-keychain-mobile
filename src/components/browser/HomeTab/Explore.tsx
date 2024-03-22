@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
+import {ConnectedProps, connect} from 'react-redux';
 import {useChainContext} from 'src/context/multichain.context';
 import {Theme} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
@@ -22,8 +23,8 @@ import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
+import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
-import {EcosystemUtils} from 'utils/ecosystem.utils';
 import {translate} from 'utils/localize';
 import DAppCard from './components/DAppCard';
 
@@ -36,13 +37,13 @@ export interface DApp {
   categories: string[];
 }
 
-export interface DAppCategory {
+export interface dAppCategory {
   category: string;
   dapps: DApp[];
 }
 
 export interface EcosystemCategoryProps {
-  category: DAppCategory;
+  category: dAppCategory;
 }
 
 type Props = {
@@ -51,26 +52,28 @@ type Props = {
   theme: Theme;
 };
 
-export default ({updateTabUrl, accounts, theme}: Props) => {
+const Explore = ({
+  updateTabUrl,
+  accounts,
+  theme,
+  ecosystem,
+}: Props & PropsFromRedux) => {
   const {chain} = useChainContext();
   const [categories, setCategories] = useState<any[]>([]);
   const [loadingDapps, setLoadingDapps] = useState(true);
 
   useEffect(() => {
     init();
-  }, []);
+  }, [ecosystem]);
 
   const init = async () => {
-    const tcategories: DAppCategory[] = (
-      await EcosystemUtils.getDappList(chain)
-    ).data;
     const tempTabs: any = [];
-    for (const tcategory of tcategories) {
-      if (!(Platform.OS === 'ios' && tcategory.category === 'gaming'))
+    for (const tmpCategory of ecosystem) {
+      if (!(Platform.OS === 'ios' && tmpCategory.category === 'gaming'))
         tempTabs.push({
-          id: tcategory.category,
-          title: `browser.home.categories.${tcategory.category}`,
-          dapps: tcategory.dapps,
+          id: tmpCategory.category,
+          title: `browser.home.categories.${tmpCategory.category}`,
+          dapps: tmpCategory.dapps,
         });
     }
     setCategories(tempTabs);
@@ -183,3 +186,11 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
       color: PRIMARY_RED_COLOR,
     },
   });
+
+const connector = connect((state: RootState) => {
+  return {
+    ecosystem: state.ecosystem,
+  };
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(Explore);

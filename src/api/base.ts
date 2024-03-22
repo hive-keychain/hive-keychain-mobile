@@ -3,7 +3,7 @@ const get = async (url: string): Promise<any> => {
     try {
       fetch(url, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type': 'application/json'},
       })
         .then((res) => {
           if (res && res.status === 200) {
@@ -27,7 +27,7 @@ const post = async (url: string, body: any): Promise<any> => {
     try {
       fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(body),
       })
         .then((res) => {

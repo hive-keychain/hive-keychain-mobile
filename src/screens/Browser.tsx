@@ -7,6 +7,7 @@ import {
   clearHistory,
   closeAllTabs,
   closeTab,
+  getEcosystem,
   removeFromFavorites,
   setBrowserFocus,
   showManagementScreen,
@@ -16,9 +17,10 @@ import Browser from 'components/browser';
 import ProposalReminder from 'components/popups/proposal-reminder';
 import SafeArea from 'components/ui/SafeArea';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
-import React from 'react';
+import React, {useEffect} from 'react';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
+import {useChainContext} from 'src/context/multichain.context';
 import {useThemeContext} from 'src/context/theme.context';
 import {RootState} from 'store';
 
@@ -39,8 +41,10 @@ const BrowserScreen = ({
   navigation,
   route,
   showManagementScreen,
+  getEcosystem,
   preferences,
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
+  const {chain} = useChainContext();
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       Orientation.getAutoRotateState((s) => {
@@ -51,6 +55,10 @@ const BrowserScreen = ({
     });
     return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+    getEcosystem(chain);
+  }, []);
   // React.useEffect(() => {
   //   const unsubscribe = navigation.addListener('blur', () => {
   //     Orientation.lockToPortrait();
@@ -109,6 +117,7 @@ const connector = connect(mapStateToProps, {
   setBrowserFocus,
   showManagementScreen,
   showFloatingBar,
+  getEcosystem,
 });
 
 export type BrowserPropsFromRedux = ConnectedProps<typeof connector>;

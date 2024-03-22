@@ -1,7 +1,6 @@
 import {resetModal} from 'actions/message';
-import BigCheckSVG from 'assets/new_UI/Illustration.svg';
-import ErrorSvg from 'assets/new_UI/error-circle.svg';
 import EllipticButton from 'components/form/EllipticButton';
+import Icon from 'components/hive/Icon';
 import React, {useEffect} from 'react';
 import {
   Modal,
@@ -13,6 +12,7 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonHeight} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
@@ -65,9 +65,9 @@ const Message = ({
     };
     switch (messageModal.type) {
       case MessageModalType.SUCCESS:
-        return <BigCheckSVG style={styles.svgImage} {...iconDimensions} />;
+        return <Icon name={Icons.SUCCESS} {...iconDimensions} />;
       case MessageModalType.ERROR:
-        return <ErrorSvg style={styles.svgImage} {...iconDimensions} />;
+        return <Icon name={Icons.ERROR} {...iconDimensions} />;
     }
   };
 
@@ -84,7 +84,7 @@ const Message = ({
         />
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {renderIcon()}
+            <View style={styles.svgImage}>{renderIcon()}</View>
             <Text style={[styles.text, styles.marginVertical]}>{message}</Text>
             <EllipticButton
               title={translate('common.close')}

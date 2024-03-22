@@ -19,7 +19,7 @@ import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize} from 'utils/format';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
 import {unstakeToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
@@ -98,7 +98,7 @@ const UnstakeToken = ({
   const onUnstakeTokenConfirmation = () => {
     if (!amount) {
       Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
-    } else if (+amount > parseFloat(balance)) {
+    } else if (+amount > +getCleanAmountValue(balance)) {
       Toast.show(
         translate('common.overdraw_balance_error', {
           currency,
@@ -116,7 +116,7 @@ const UnstakeToken = ({
 
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${amount} ${currency}`,
+            value: `${withCommas(amount)} ${currency}`,
           },
         ],
       };
@@ -139,9 +139,6 @@ const UnstakeToken = ({
             account={user.account}
             isHiveEngine
             globalProperties={properties.globals}
-            setMax={(value: string) => {
-              setAmount(value);
-            }}
             tokenLogo={tokenLogo}
             tokenBalance={balance}
             theme={theme}
@@ -195,7 +192,7 @@ const UnstakeToken = ({
                   />
                   <TouchableOpacity
                     activeOpacity={1}
-                    onPress={() => setAmount(balance)}>
+                    onPress={() => setAmount(getCleanAmountValue(balance))}>
                     <Text
                       style={
                         getFormFontStyle(height, theme, PRIMARY_RED_COLOR).input

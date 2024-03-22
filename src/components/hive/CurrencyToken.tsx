@@ -16,6 +16,7 @@ import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
 import {getHPButtonList} from 'src/reference-data/hpOperationButtonList';
 import {getCardStyle} from 'src/styles/card';
 import {
+  GREEN_SUCCESS,
   HBDICONBGCOLOR,
   HIVEICONBGCOLOR,
   PRIMARY_RED_COLOR,
@@ -24,6 +25,7 @@ import {
 import {
   body_primary_body_2,
   button_link_primary_medium,
+  fields_primary_text_2,
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {RootState} from 'store';
@@ -47,7 +49,7 @@ const CurrencyToken = ({
   currencyName,
   user,
   properties,
-  itemIndex,
+  price,
   onPress,
 }: Props & PropsFromRedux) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -169,6 +171,56 @@ const CurrencyToken = ({
     }
   };
 
+  const getTokenPrice = () => {
+    let variation, coinPrice, isPositive;
+
+    if (currencyName === 'HIVE') {
+      coinPrice = price.hive.usd;
+      variation = price.hive.usd_24h_change;
+      isPositive = price.hive.usd_24h_change >= 0;
+    } else if (currencyName === 'HBD') {
+      coinPrice = price.hive_dollar.usd;
+      variation = price.hive_dollar.usd_24h_change;
+      isPositive = price.hive_dollar.usd_24h_change >= 0;
+    } else return null;
+    return (
+      <>
+        <Separator />
+        <View style={styles.tokenInformationRow}>
+          <Text style={[styles.priceText]}>Price</Text>
+          <View style={{flexDirection: 'row'}}>
+            <Text
+              style={[
+                styles.priceText,
+                {marginRight: 10},
+              ]}>{`$ ${coinPrice.toFixed(2)}`}</Text>
+            <Text
+              style={[
+                styles.priceText,
+                {
+                  color: isPositive ? GREEN_SUCCESS : PRIMARY_RED_COLOR,
+                },
+              ]}>
+              {`${Math.abs(variation).toFixed(2)}%`}
+            </Text>
+            <View
+              style={{
+                justifyContent: 'center',
+                paddingBottom: -1,
+                transform: !isPositive ? [{rotate: '180deg'}] : undefined,
+              }}>
+              <Icon
+                name={Icons.CARRET_UP}
+                color={isPositive ? GREEN_SUCCESS : PRIMARY_RED_COLOR}
+                height={10}
+              />
+            </View>
+          </View>
+        </View>
+      </>
+    );
+  };
+
   return (
     <View style={getCardStyle(theme).wrapperCardItem}>
       <View style={styles.container} key={`currency-token-${currencyName}`}>
@@ -187,7 +239,7 @@ const CurrencyToken = ({
           </View>
           <View style={isExpanded ? styles.rowContainer : undefined}>
             <View>
-              <Text style={[styles.textAmount, styles.alignedRitgh]}>
+              <Text style={[styles.textAmount, styles.alignedRight]}>
                 {value ? formatBalance(value) : 0}
               </Text>
               {subValue && (
@@ -195,7 +247,7 @@ const CurrencyToken = ({
                   style={[
                     styles.textAmount,
                     styles.opaque,
-                    styles.alignedRitgh,
+                    styles.alignedRight,
                   ]}>
                   {preFixSubValue ? preFixSubValue : ''}{' '}
                   {formatBalance(parseFloat(subValue))} (
@@ -217,6 +269,7 @@ const CurrencyToken = ({
         </TouchableOpacity>
         {isExpanded && (
           <View>
+            {getTokenPrice()}
             <Separator drawLine additionalLineStyle={styles.line} />
             <View style={styles.rowWrappedContainer}>{buttons}</View>
           </View>
@@ -269,7 +322,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     opaque: {
       opacity: 0.5,
     },
-    alignedRitgh: {
+    alignedRight: {
       textAlign: 'right',
     },
     line: {
@@ -302,12 +355,26 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     hbdIconBgColor: {
       backgroundColor: HBDICONBGCOLOR,
     },
+    priceText: {
+      ...fields_primary_text_2,
+      color: getColors(theme).secondaryText,
+      fontSize: 12,
+      fontWeight: '400',
+      opacity: 0.7,
+    },
+    tokenInformationRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+      marginVertical: 4,
+    },
   });
 
 const mapStateToProps = (state: RootState) => {
   return {
     user: state.activeAccount,
     properties: state.properties,
+    price: state.currencyPrices,
   };
 };
 

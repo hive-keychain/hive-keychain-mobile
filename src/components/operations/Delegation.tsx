@@ -27,7 +27,13 @@ import {
   title_primary_body_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, fromHP, toHP, withCommas} from 'utils/format';
+import {
+  capitalize,
+  fromHP,
+  getCleanAmountValue,
+  toHP,
+  withCommas,
+} from 'utils/format';
 import {delegate, getCurrency} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
@@ -84,7 +90,7 @@ const Delegation = ({
   const onDelegateConfirmation = () => {
     if (!to || !amount) {
       Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
-    } else if (+amount > parseFloat(available as string)) {
+    } else if (+amount > +getCleanAmountValue(available)) {
       Toast.show(
         translate('common.overdraw_balance_error', {
           currency,
@@ -105,7 +111,7 @@ const Delegation = ({
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${amount} ${currency}`,
+            value: `${withCommas(amount)} ${currency}`,
           },
         ],
       };
@@ -138,7 +144,7 @@ const Delegation = ({
     user.account.delegated_vesting_shares as string,
     properties.globals,
   );
-  const available = Math.max(totalHp - totalOutgoing - 5, 0).toFixed(4);
+  const available = Math.max(totalHp - totalOutgoing - 5, 0).toFixed(3);
 
   const onHandleNavigateToDelegations = (type: 'incoming' | 'outgoing') => {
     navigate('TemplateStack', {
@@ -242,7 +248,7 @@ const Delegation = ({
                   />
                   <TouchableOpacity
                     activeOpacity={1}
-                    onPress={() => setAmount(withCommas(available))}>
+                    onPress={() => setAmount(getCleanAmountValue(available))}>
                     <Text
                       style={[
                         getFormFontStyle(height, theme, PRIMARY_RED_COLOR)

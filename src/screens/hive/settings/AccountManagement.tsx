@@ -7,10 +7,12 @@ import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
+import SlidingOverlay from 'components/ui/SlidingOverlay';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {MainNavigation} from 'navigators/Root.types';
-import React from 'react';
+import React, {useState} from 'react';
 import {ScrollView, StyleSheet, useWindowDimensions} from 'react-native';
+import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
@@ -40,7 +42,7 @@ const AccountManagement = ({
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width, height});
-
+  const [showQrCode, setShowQrCode] = useState(false);
   const handleGotoConfirmationAccountRemoval = () => {
     if (username) {
       const confirmationData = {
@@ -120,6 +122,12 @@ const AccountManagement = ({
             theme={theme}
           />
           <Separator height={20} />
+          {/* <EllipticButton
+            title={translate('settings.keys.show_qr_code')}
+            onPress={() => setShowQrCode(true)}
+            additionalTextStyle={styles.operationButtonText}
+          /> */}
+          <Separator />
           <EllipticButton
             title={translate('common.forget_account')}
             isWarningButton
@@ -128,6 +136,13 @@ const AccountManagement = ({
           />
           <Separator height={25} />
         </ScrollView>
+        <SlidingOverlay setShowOverlay={setShowQrCode} showOverlay={showQrCode}>
+          <QRCode
+            value="`keychain://add_account=${AccountUtils.generateQRCode(
+                  account!,
+                )}`"
+          />
+        </SlidingOverlay>
       </SafeArea>
     </Background>
   );

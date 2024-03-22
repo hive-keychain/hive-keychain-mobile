@@ -56,6 +56,10 @@ export const formatBalanceCurrency = (balanceS: string) => {
   return `${formatBalance(balance)} ${currency ?? ''}`;
 };
 
+export const getCleanAmountValue = (numberWithComma: string) => {
+  return numberWithComma.split(' ')[0].replace(/,/g, '');
+};
+
 export const capitalize = (string: string) =>
   string.charAt(0).toUpperCase() + string.slice(1);
 

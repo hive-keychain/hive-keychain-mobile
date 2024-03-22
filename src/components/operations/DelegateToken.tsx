@@ -20,7 +20,7 @@ import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize} from 'utils/format';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
 import {delegateToken} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
@@ -104,7 +104,7 @@ const DelegateToken = ({
   const onDelegateConfirmation = async () => {
     if (!to || !amount) {
       Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
-    } else if (+amount > parseFloat(balance as string)) {
+    } else if (+amount > +getCleanAmountValue(balance)) {
       Toast.show(
         translate('common.overdraw_balance_error', {
           currency,
@@ -125,7 +125,7 @@ const DelegateToken = ({
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${amount} ${currency}`,
+            value: `${withCommas(amount)} ${currency}`,
           },
         ],
       };
@@ -147,9 +147,6 @@ const DelegateToken = ({
             currency={currency}
             account={user.account}
             isHiveEngine
-            setMax={(value: string) => {
-              setAmount(value);
-            }}
             tokenLogo={tokenLogo}
             tokenBalance={balance}
             theme={theme}
@@ -200,7 +197,7 @@ const DelegateToken = ({
                   />
                   <TouchableOpacity
                     activeOpacity={1}
-                    onPress={() => setAmount(balance)}>
+                    onPress={() => setAmount(getCleanAmountValue(balance))}>
                     <Text
                       style={
                         getFormFontStyle(height, theme, PRIMARY_RED_COLOR).input

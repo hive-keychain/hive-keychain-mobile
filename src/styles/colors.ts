@@ -33,6 +33,7 @@ export const OVERLAYICONBGCOLOR = 'rgba(255, 255, 255, 0.17)';
 export const HIVEICONBGCOLOR = '#FDEBEE';
 export const HBDICONBGCOLOR = '#DFF6E1';
 export const ICONGRAYBGCOLOR = 'rgba(255, 255, 255, 0.17)';
+export const GREEN_SUCCESS = '#2aa034';
 
 export const getColors = (theme: Theme) => {
   return {

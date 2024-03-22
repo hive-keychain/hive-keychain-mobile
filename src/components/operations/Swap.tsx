@@ -1,6 +1,6 @@
 import {loadTokensMarket} from 'actions/index';
 import {showModal} from 'actions/message';
-import ErrorSvg from 'assets/new_UI/error-circle.svg';
+import ErrorSvg from 'assets/new_UI/error-mark.svg';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
