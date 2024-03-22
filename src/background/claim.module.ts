@@ -133,10 +133,9 @@ const iterateClaimRewards = async (users: string[]) => {
       const appActiveAccount = ((await store.getState()) as RootState)
         .activeAccount.name;
       if (activeAccount.name === appActiveAccount) {
-        console.log('reloading active account after claiming');
-        store.dispatch<any>(loadAccount(activeAccount.name));
-      } else {
-        console.log('not reloading', activeAccount.name, appActiveAccount);
+        setTimeout(() => {
+          store.dispatch<any>(loadAccount(activeAccount.name));
+        }, 3000);
       }
     }
   }
