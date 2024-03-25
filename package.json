@@ -1,6 +1,6 @@
 {
   "name": "mobile-keychain",
-  "version": "1.12.4",
+  "version": "2.0.6",
   "private": true,
   "scripts": {
     "android": "react-native run-android --variant devDebug --appIdSuffix dev --main-activity com.zoontek.rnbootsplash.RNBootSplashActivity",
@@ -17,7 +17,9 @@
     "clean": "watchman watch-del-all &&npm run dep-clean && npm run android-clean && npm run start -- --reset-cache",
     "generate-splash": "rsvg-convert -w 320 src/assets/new_UI/keychain_logo_powered_dark_theme.svg > src/assets/new_UI/keychain_logo_powered_dark_theme.png && npx react-native generate-bootsplash src/assets/new_UI/keychain_logo_powered_dark_theme.png --background-color=212838 --logo-width=320",
     "postinstall": "patch-package",
-    "show-on-error-notes": "echo 'Files needed:\nAndroid/gradle.properties'"
+    "show-on-error-notes": "echo 'Files needed:\nAndroid/gradle.properties'",
+    "bump": "npx react-native bump-version --type patch",
+    "bump:minor": "npx react-native bump-version --type minor"
   },
   "dependencies": {
     "@hiveio/dhive": "^1.2.5",
@@ -114,6 +116,7 @@
     "patch-package": "^6.4.7",
     "prettier": "2.0.2",
     "react-native": "0.68.6",
+    "react-native-cli-bump-version": "^1.5.0",
     "react-test-renderer": "16.13.1",
     "typescript": "^4.3.2"
   },
