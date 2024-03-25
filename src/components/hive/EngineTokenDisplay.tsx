@@ -98,6 +98,8 @@ const EngineTokenDisplay = ({
         price={{
           usd: tokenMarket
             ? +formatBalance(parseFloat(tokenMarket.lastPrice) * hivePrice)
+            : tokenInfo.symbol === 'SWAP.HIVE'
+            ? +formatBalance(hivePrice)
             : 0,
           usd_24h_change: parseFloat(
             tokenMarket ? tokenMarket.priceChangePercent : '0',

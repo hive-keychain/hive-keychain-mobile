@@ -82,7 +82,7 @@ const TokenDisplay = ({
     change: price ? price.usd_24h_change! + '' : '0',
     theme,
   });
-  const tokenTotalValue = value ? formatBalance(totalValue) : 0;
+  const tokenTotalValue = totalValue ? formatBalance(totalValue) : 0;
 
   const renderAsSquareButton = (
     icon: JSX.Element,

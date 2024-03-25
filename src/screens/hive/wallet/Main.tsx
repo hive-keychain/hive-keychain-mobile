@@ -158,6 +158,7 @@ const Main = ({
     loadTokens();
     loadTokensMarket();
   }, [loadTokens, loadTokensMarket]);
+
   useEffect(() => {
     if (!userTokens.loading) {
       let list = userTokens.list.sort((a, b) => {
@@ -175,7 +176,7 @@ const Main = ({
       setFilteredUserTokenBalanceList([]);
       setIsHiveEngineLoading(true);
     }
-  }, [userTokens, hiddenTokens]);
+  }, [userTokens.loading, hiddenTokens, tokensMarket]);
 
   useEffect(() => {
     if (
