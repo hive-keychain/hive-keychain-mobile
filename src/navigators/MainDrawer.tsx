@@ -33,6 +33,7 @@ export default () => {
       drawerStyle={styles.drawer}
       drawerPosition="left"
       screenOptions={{swipeEnabled: false}}
+      drawerType="front"
       drawerContentOptions={{
         inactiveTintColor: getColors(theme).secondaryText,
         itemStyle: styles.item,

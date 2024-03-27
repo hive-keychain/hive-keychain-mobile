@@ -1,0 +1,109 @@
+diff --git a/node_modules/@react-navigation/drawer/lib/module/views/Drawer.js b/node_modules/@react-navigation/drawer/lib/module/views/Drawer.js
+index 62e1955..0ff75fc 100644
+--- a/node_modules/@react-navigation/drawer/lib/module/views/Drawer.js
++++ b/node_modules/@react-navigation/drawer/lib/module/views/Drawer.js
+@@ -3,9 +3,9 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
+ function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+ 
+ import * as React from 'react';
+-import { StyleSheet, I18nManager, Platform, Keyboard, StatusBar, View, InteractionManager, TouchableWithoutFeedback } from 'react-native';
++import { I18nManager, InteractionManager, Keyboard, Platform, StatusBar, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+ import Animated from 'react-native-reanimated';
+-import { PanGestureHandler, TapGestureHandler, GestureState } from './GestureHandler';
++import { GestureState, PanGestureHandler, TapGestureHandler } from './GestureHandler';
+ import Overlay from './Overlay';
+ const {
+   Clock,
+@@ -362,7 +362,7 @@ export default class DrawerView extends React.Component {
+     }, /*#__PURE__*/React.createElement(Animated.View, {
+       style: [styles.content, {
+         transform: [{
+-          translateX: contentTranslateX
++          translateX: contentTranslateX*-2
+         }]
+       }, sceneContainerStyle]
+     }, /*#__PURE__*/React.createElement(View, {
+diff --git a/node_modules/@react-navigation/drawer/src/views/Drawer.tsx b/node_modules/@react-navigation/drawer/src/views/Drawer.tsx
+index 6a70f2f..6fa4c5f 100644
+--- a/node_modules/@react-navigation/drawer/src/views/Drawer.tsx
++++ b/node_modules/@react-navigation/drawer/src/views/Drawer.tsx
+@@ -1,22 +1,22 @@
+ import * as React from 'react';
+ import {
+-  StyleSheet,
+-  ViewStyle,
+-  LayoutChangeEvent,
+   I18nManager,
+-  Platform,
++  InteractionManager,
+   Keyboard,
++  LayoutChangeEvent,
++  Platform,
+   StatusBar,
+   StyleProp,
+-  View,
+-  InteractionManager,
++  StyleSheet,
+   TouchableWithoutFeedback,
++  View,
++  ViewStyle,
+ } from 'react-native';
+ import Animated from 'react-native-reanimated';
+ import {
++  GestureState,
+   PanGestureHandler,
+   TapGestureHandler,
+-  GestureState,
+ } from './GestureHandler';
+ import Overlay from './Overlay';
+ 
+@@ -467,8 +467,8 @@ export default class DrawerView extends React.Component<Props> {
+ 
+   private translateX = cond(
+     eq(this.drawerPosition, DIRECTION_RIGHT),
+-    min(max(multiply(this.drawerWidth, -1), this.dragX), 0),
+-    max(min(this.drawerWidth, this.dragX), 0)
++    min(max(multiply(this.drawerWidth, -2), multiply(this.dragX,2)), 0),
++    max(min(multiply(this.drawerWidth, 2), multiply(this.dragX,2)), 0)
+   );
+ 
+   private progress = cond(
+@@ -573,7 +573,7 @@ export default class DrawerView extends React.Component<Props> {
+         ? I18nManager.isRTL
+           ? multiply(
+               sub(this.containerWidth, this.drawerWidth),
+-              isRight ? 1 : -1
++              isRight ? 2 : -2
+             )
+           : ANIMATED_ZERO
+         : this.translateX;
+@@ -618,7 +618,7 @@ export default class DrawerView extends React.Component<Props> {
+           <Animated.View
+             style={[
+               styles.content,
+-              { transform: [{ translateX: contentTranslateX }] },
++              { transform: [{ translateX: contentTranslateX}] },
+               sceneContainerStyle as any,
+             ]}
+           >
+@@ -676,6 +676,7 @@ export default class DrawerView extends React.Component<Props> {
+             accessibilityViewIsModal={isOpen && drawerType !== 'permanent'}
+             removeClippedSubviews={Platform.OS !== 'ios'}
+             onLayout={this.handleDrawerLayout}
++            
+             style={[
+               styles.container,
+               {
+@@ -686,10 +687,10 @@ export default class DrawerView extends React.Component<Props> {
+                 ? // Without this, the `left`/`right` values don't get reset
+                   isRight
+                   ? { right: 0 }
+-                  : { left: 0 }
++                  : { left: -this.drawerWidth }
+                 : [
+                     styles.nonPermanent,
+-                    isRight ? { right: offset } : { left: offset },
++                    isRight ? { right: offset } : { left: multiply(2,offset) },
+                     { zIndex: drawerType === 'back' ? -1 : 0 },
+                   ],
+               drawerStyle as any,
