@@ -1,14 +1,16 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative '../node_modules/react-native-permissions/scripts/setup'
 
 platform :ios, '12.0'
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'mobileKeychain' do
   config = use_native_modules!
+  
   permissions_path = '../node_modules/react-native-permissions/ios'
-  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
   use_frameworks! :linkage => :static
+  setup_permissions(['Camera'])
   use_react_native!(:path => config["reactNativePath"])
  
 
