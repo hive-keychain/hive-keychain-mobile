@@ -191,7 +191,7 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
     textBase: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_3,
-      fontSize: 13,
+      fontSize: 14,
       fontFamily: FontPoppinsName.REGULAR,
     },
     urlInput: {
