@@ -2,7 +2,7 @@ import {Tab as TabType} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useState} from 'react';
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
-import Orientation, {OrientationType} from 'react-native-orientation-locker';
+import Orientation from 'react-native-orientation-locker';
 import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
@@ -66,11 +66,11 @@ const Browser = ({
       if (Platform.OS === 'android' && orientation !== 'PORTRAIT') {
         Orientation.getAutoRotateState((s) => {
           if (s) {
-            setDeviceOrientation(orientation);
+            setOrientation(orientation);
           }
         });
       } else {
-        setDeviceOrientation(orientation);
+        setOrientation(orientation);
       }
     });
 
@@ -78,10 +78,6 @@ const Browser = ({
       Orientation.removeAllListeners();
     };
   }, []);
-
-  const setDeviceOrientation = (orientation: OrientationType) => {
-    setOrientation(orientation);
-  };
 
   const manageTabs = (
     {url, icon, id}: TabType,
