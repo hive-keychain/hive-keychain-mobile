@@ -302,16 +302,13 @@ export default ({
           collapsable={false}>
           <WebView
             source={{
-              uri: url === BrowserConfig.HOMEPAGE_URL ? null : url,
+              uri: url === BrowserConfig.HOMEPAGE_URL ? undefined : url,
             }}
             domStorageEnabled={true}
             allowFileAccess={true}
             allowUniversalAccessFromFileURLs={true}
             mixedContentMode={'always'}
             ref={tabRef}
-            // sharedCookiesEnabled={
-            //   url.includes('risingstargame.com') ? false : true
-            // }
             injectedJavaScriptBeforeContentLoaded={hive_keychain}
             mediaPlaybackRequiresUserAction={false}
             onMessage={onMessage}

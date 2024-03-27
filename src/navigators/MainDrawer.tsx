@@ -32,6 +32,7 @@ export default () => {
     <Drawer.Navigator
       drawerStyle={styles.drawer}
       drawerPosition="left"
+      screenOptions={{swipeEnabled: false}}
       drawerContentOptions={{
         inactiveTintColor: getColors(theme).secondaryText,
         itemStyle: styles.item,
