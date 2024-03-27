@@ -108,7 +108,16 @@ export const changeTab = (id: number) => {
   };
 };
 
-export const updateTab = (id: number, data: TabFields) => {
+let acceptUpdateTab = true;
+export const updateTab = (id: number, data: TabFields, stall?: boolean) => {
+  console.log('updating tab', data.url);
+  if (!acceptUpdateTab) return {type: 'ABORTED'};
+  if (stall) {
+    acceptUpdateTab = false;
+    setTimeout(() => {
+      acceptUpdateTab = true;
+    }, 1000);
+  }
   const action: ActionPayload<BrowserPayload> = {
     type: UPDATE_BROWSER_TAB,
     payload: {id, data},

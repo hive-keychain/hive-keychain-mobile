@@ -148,7 +148,7 @@ const Browser = ({
   };
 
   const onNewSearch = (url: string) => {
-    updateTab(activeTab, {...currentActiveTabData, url});
+    updateTab(activeTab, {...currentActiveTabData, url}, true);
   };
 
   const swipeToTab = (right: boolean) => {

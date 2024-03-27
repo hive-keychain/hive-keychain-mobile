@@ -203,6 +203,7 @@ export default ({
         break;
       case 'WV_INFO':
         const {icon, name, url} = data as TabFields;
+        console.log(urlTransformer(url).host, urlTransformer(tabData.url).host);
         if (
           urlTransformer(url).host !== urlTransformer(tabData.url).host ||
           !shouldUpdateWvInfo ||

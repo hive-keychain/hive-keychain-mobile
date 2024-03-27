@@ -72,6 +72,7 @@ const UrlModal = ({
     } else {
       const hasProtocol = url.match(/^[a-z]*:\/\//);
       const sanitizedURL = hasProtocol ? url : `https://${url}`;
+      console.log('on new search,', sanitizedURL);
       onNewSearch(sanitizedURL);
     }
   };
