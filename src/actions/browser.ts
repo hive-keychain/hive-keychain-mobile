@@ -110,7 +110,6 @@ export const changeTab = (id: number) => {
 
 let acceptUpdateTab = true;
 export const updateTab = (id: number, data: TabFields, stall?: boolean) => {
-  console.log('updating tab', data.url);
   if (!acceptUpdateTab) return {type: 'ABORTED'};
   if (stall) {
     acceptUpdateTab = false;
