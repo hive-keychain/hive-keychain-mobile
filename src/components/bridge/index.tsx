@@ -4,7 +4,8 @@ import {WebView} from 'react-native-webview';
 import html from './html';
 
 let self: Bridge;
-
+// https://github.com/react-native-webview/react-native-webview/issues/3368
+// Before updating library
 type InnerProps = {
   pendingMethods: object;
   webref: WebView;
