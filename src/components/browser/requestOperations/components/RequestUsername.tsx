@@ -36,7 +36,7 @@ export default ({username, setAccount}: Props) => {
 
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
-    container: {width: '100%', marginTop: -30, marginBottom: 10, height: 60},
+    container: {width: '100%', marginBottom: 10, height: 60},
 
     text: {
       fontSize: getFontSizeSmallDevices(width, 13),
