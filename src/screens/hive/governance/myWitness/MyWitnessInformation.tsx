@@ -80,12 +80,12 @@ const MyWitnessInformation = ({theme, witnessInfo}: Props) => {
             }}>
             <Text style={[styles.textBase, styles.textBold]}>
               {translate(
-                'governance.my_witness.information_reward_panel_last_month',
+                'governance.my_witness.information_reward_panel_last_week',
               )}
             </Text>
             <Text style={[styles.textBase, styles.textBold]}>
               {translate(
-                'governance.my_witness.information_reward_panel_last_week',
+                'governance.my_witness.information_reward_panel_last_month',
               )}
             </Text>
           </View>
