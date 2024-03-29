@@ -43,6 +43,7 @@ export const handleUrl = (url: string, qr: boolean = false) => {
       const op = url.replace('hive://sign/op/', '');
       const stringOp = Buffer.from(op, 'base64').toString();
       const opJson = JSON.parse(stringOp);
+      console.log(opJson);
       processQRCodeOp(opJson);
     }
   } else if (isURL(url)) {
