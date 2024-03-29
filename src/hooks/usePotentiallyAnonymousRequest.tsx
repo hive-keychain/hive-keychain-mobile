@@ -2,7 +2,7 @@ import {Account, KeyTypes, PubKeyTypes} from 'actions/interfaces';
 import RequestUsername from 'components/browser/requestOperations/components/RequestUsername';
 import React, {useState} from 'react';
 import {getRequiredWifType, getValidAuthorityAccounts} from 'utils/keychain';
-import {KeychainRequest} from 'utils/keychain.types';
+import {KeychainRequest, KeychainRequestTypes} from 'utils/keychain.types';
 
 export default (request: KeychainRequest, accounts: Account[]) => {
   const {username} = request;
@@ -46,6 +46,11 @@ export default (request: KeychainRequest, accounts: Account[]) => {
         accounts={accounts}
         account={account}
         setAccount={setAccount}
+        enforce={
+          request.type === KeychainRequestTypes.transfer
+            ? request.enforce
+            : true
+        }
       />
     ),
   };

@@ -1,6 +1,7 @@
 import {Account} from 'actions/interfaces';
-import UserDropdown from 'components/form/UserDropdown';
+import DropdownModal from 'components/form/DropdownModal';
 import Separator from 'components/ui/Separator';
+import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -14,19 +15,33 @@ type Props = {
   accounts: Account[];
   account: string;
   setAccount: (account: string) => void;
+  enforce: boolean;
 };
-export default ({username, setAccount}: Props) => {
+
+export default ({username, setAccount, enforce, accounts, account}: Props) => {
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
 
-  return username ? (
+  const toDropdownFormat = (account: string) => {
+    return {
+      value: account,
+      label: account,
+      icon: <UserProfilePicture username={account} style={styles.avatar} />,
+    };
+  };
+
+  return username && enforce ? (
     <RequestItem
       title={translate('request.item.username')}
       content={`@${username}`}
     />
   ) : (
     <View style={styles.container}>
-      <UserDropdown
+      <DropdownModal
+        list={accounts.map((e) => toDropdownFormat(e.name))}
+        dropdownTitle="common.accounts"
+        hideLabel
+        selected={toDropdownFormat(account)}
         onSelected={(selectedAccount) => setAccount(selectedAccount.value)}
       />
       <Separator />
@@ -37,7 +52,7 @@ export default ({username, setAccount}: Props) => {
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     container: {width: '100%', marginBottom: 10, height: 60},
-
+    avatar: {width: 30, height: 30, borderRadius: 50},
     text: {
       fontSize: getFontSizeSmallDevices(width, 13),
     },
