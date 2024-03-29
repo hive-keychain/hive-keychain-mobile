@@ -36,6 +36,7 @@ import Footer from './Footer';
 import HomeTab from './HomeTab';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
+import {DESKTOP_MODE} from './bridges/DesktopMode';
 import {hive_keychain} from './bridges/HiveKeychainBridge';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import RequestErr from './requestOperations/components/RequestError';
@@ -92,6 +93,7 @@ export default ({
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
   const [shouldUpdateWvInfo, setShouldUpdateWvInfo] = useState(true);
+  const [desktopMode, setDesktopMode] = useState(false);
   const insets = useSafeAreaInsets();
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
   useEffect(() => {
@@ -278,6 +280,7 @@ export default ({
       });
     }
   };
+
   return (
     <View
       style={[styles.container, !active || isManagingTab ? styles.hide : null]}>
@@ -310,6 +313,7 @@ export default ({
             mixedContentMode={'always'}
             ref={tabRef}
             injectedJavaScriptBeforeContentLoaded={hive_keychain}
+            injectedJavaScript={desktopMode ? DESKTOP_MODE : undefined}
             mediaPlaybackRequiresUserAction={false}
             onMessage={onMessage}
             javaScriptEnabled
@@ -337,6 +341,11 @@ export default ({
           goForward={goForward}
           reload={reload}
           clearCache={clearCache}
+          desktopMode={desktopMode}
+          toggleDesktopMode={() => {
+            setDesktopMode(!desktopMode);
+            tabRef.current.reload();
+          }}
           addTab={() => {
             addTab(
               isManagingTab,

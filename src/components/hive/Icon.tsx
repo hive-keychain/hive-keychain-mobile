@@ -67,9 +67,11 @@ import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
 import ConvertIcon from 'src/assets/new_UI/convert.svg';
 import DelegateTokenIcon from 'src/assets/new_UI/delegate-token.svg';
+import Desktop from 'src/assets/new_UI/desktop.svg';
 import ErrorSVG from 'src/assets/new_UI/error-mark.svg';
 import ExpandMoreIcon from 'src/assets/new_UI/expand_more.svg';
 import ClaimIcon from 'src/assets/new_UI/gift.svg';
+import Mobile from 'src/assets/new_UI/mobile.svg';
 import SavingsIcon from 'src/assets/new_UI/savings.svg';
 import TransferIcon from 'src/assets/new_UI/send.svg';
 import Success from 'src/assets/new_UI/success-mark.svg';
@@ -625,6 +627,20 @@ const getIconFilePath = (
     case name === Icons.ERROR:
       return (
         <ErrorSVG
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.MOBILE:
+      return (
+        <Mobile
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.DESKTOP:
+      return (
+        <Desktop
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
