@@ -369,6 +369,6 @@ export default ({
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, flexDirection: 'column'},
+  container: {flexGrow: 1, flexDirection: 'column'},
   hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
 });
