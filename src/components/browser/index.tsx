@@ -122,6 +122,7 @@ const Browser = ({
     isManagingTab: boolean,
     tab: TabType,
     view: MutableRefObject<View>,
+    newUrl = BrowserConfig.HOMEPAGE_URL,
   ) => {
     if (!isManagingTab) {
       const {id, url, icon} = tab;
@@ -131,14 +132,14 @@ const Browser = ({
       }).then(
         (uri) => {
           updateTab(id, {id, url, icon, image: uri});
-          addTab(BrowserConfig.HOMEPAGE_URL);
+          addTab(newUrl);
         },
         (error) => {
           console.error(error);
         },
       );
     } else {
-      addTab(BrowserConfig.HOMEPAGE_URL);
+      addTab(newUrl);
       showManagementScreen(false);
     }
   };

@@ -60,6 +60,7 @@ type Props = {
     isManagingTab: boolean,
     tab: Tab,
     webview: MutableRefObject<View>,
+    url?: string,
   ) => void;
   tabsNumber: number;
   orientation: string;
@@ -328,6 +329,14 @@ export default ({
             }}
             onHttpError={(error) => {
               console.log('HttpError', error);
+            }}
+            onOpenWindow={(event) => {
+              addTab(
+                false,
+                {url, icon, id},
+                tabParentRef,
+                event.nativeEvent.targetUrl,
+              );
             }}
             useWebView2
           />
