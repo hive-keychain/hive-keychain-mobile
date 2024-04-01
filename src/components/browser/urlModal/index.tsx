@@ -150,7 +150,9 @@ const UrlModal = ({
         ) : null}
       </View>
 
-      <ScrollView style={[styles.containerHistory]}>
+      <ScrollView
+        style={[styles.containerHistory]}
+        keyboardShouldPersistTaps="handled">
         <UrlAutocomplete
           onSubmit={onSubmitUrl}
           input={url}
