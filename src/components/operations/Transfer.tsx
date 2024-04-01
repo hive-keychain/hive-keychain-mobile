@@ -335,6 +335,7 @@ const Transfer = ({
                 labelInput={capitalize(translate('common.memo'))}
                 placeholder={translate('wallet.operations.transfer.memo')}
                 value={memo}
+                trim={false}
                 onChangeText={setMemo}
                 rightIcon={
                   <View style={styles.flexRowCenter}>
