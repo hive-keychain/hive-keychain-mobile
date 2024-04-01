@@ -100,7 +100,7 @@ const RequestOperation = ({
               username: username || selectedUsername,
               type,
             })}
-            containerStyle={{paddingRight: 16}}
+            containerStyle={{paddingRight: 16, flex: 1, flexGrow: 1}}
             skipTranslation
           />
         </View>

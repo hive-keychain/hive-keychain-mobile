@@ -265,7 +265,7 @@ const Witness = ({
             }}
             title="governance.witness.show_voted"
             smallText
-            containerStyle={{marginRight: 4}}
+            containerStyle={{marginRight: 4, flex: 1}}
           />
           <CheckBoxPanel
             checked={hideNonActive}
@@ -274,7 +274,7 @@ const Witness = ({
             }}
             title="governance.witness.hide_inactive"
             smallText
-            containerStyle={{marginLeft: 4}}
+            containerStyle={{marginLeft: 4, flex: 1}}
           />
         </View>
         <FlatList

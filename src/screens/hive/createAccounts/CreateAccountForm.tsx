@@ -18,7 +18,6 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {
@@ -226,7 +225,7 @@ const CreateAccountStepOne = ({
             <OperationButton
               title={translate('common.next')}
               onPress={() => goToNextPage()}
-              style={[getButtonStyle(theme).warningStyleButton]}
+              isWarningButton
               additionalTextStyle={{...button_link_primary_medium}}
             />
           </View>

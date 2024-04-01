@@ -366,7 +366,12 @@ const StepTwo = ({
 
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
-    checkboxContainer: {paddingVertical: 0, height: 60, flexGrow: 0},
+    checkboxContainer: {
+      paddingVertical: 0,
+      height: 60,
+      flexGrow: 1,
+      paddingRight: 10,
+    },
     container: {
       marginHorizontal: 16,
       flex: 1,
