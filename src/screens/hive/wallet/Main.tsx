@@ -131,9 +131,6 @@ const Main = ({
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     updateUserWallet(user.name);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
   }, [user.name]);
 
   useEffect(() => {
@@ -163,6 +160,13 @@ const Main = ({
       eventListener.remove();
     };
   }, [eventReceived]);
+
+  useEffect(() => {
+    // Stop the page refreshing after all is fetched
+    if (!userTokens.loading && user.account?.active) {
+      setRefreshing(false);
+    }
+  }, [user, userTokens.loading]);
 
   useEffect(() => {
     loadTokens();
