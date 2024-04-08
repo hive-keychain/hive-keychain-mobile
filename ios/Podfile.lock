@@ -1,6 +1,6 @@
 PODS:
   - boost (1.76.0)
-  - BVLinearGradient (2.6.2):
+  - BVLinearGradient (2.8.3):
     - React-Core
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.68.6)
@@ -361,7 +361,7 @@ PODS:
     - React-Core
   - react-native-get-random-values (1.8.4):
     - React-Core
-  - react-native-orientation-locker (1.5.0):
+  - react-native-orientation-locker (1.6.0):
     - React-Core
   - react-native-safe-area-context (2.0.3):
     - React
@@ -370,9 +370,9 @@ PODS:
     - Toast (~> 4.0.0)
   - react-native-version-info (1.1.1):
     - React-Core
-  - react-native-view-shot (3.5.0):
+  - react-native-view-shot (3.8.0):
     - React-Core
-  - react-native-webview (13.8.2):
+  - react-native-webview (13.8.4):
     - React-Core
   - React-perflogger (0.68.6)
   - React-RCTActionSheet (0.68.6):
@@ -441,7 +441,7 @@ PODS:
     - React-perflogger (= 0.68.6)
   - RNBootSplash (3.2.7):
     - React-Core
-  - RNCAsyncStorage (1.23.0):
+  - RNCAsyncStorage (1.23.1):
     - React-Core
   - RNCClipboard (1.5.1):
     - React-Core
@@ -465,7 +465,7 @@ PODS:
     - RNFBApp
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNKeychain (8.1.1):
+  - RNKeychain (8.2.0):
     - React-Core
   - RNLocalize (1.4.3):
     - React-Core
@@ -717,7 +717,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
-  BVLinearGradient: 34a999fda29036898a09c6a6b728b0b4189e1a44
+  BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   FBLazyVector: 74b042924fe14da854ac4e87cefc417f583b22b1
   FBReactNativeSpec: cc0037b9914b9b1d92a15f179bc3e2e2c7cc0c6f
@@ -754,12 +754,12 @@ SPEC CHECKSUMS:
   React-logger: cec52b3f8fb0be0d47b2cb75dec69de60f2de3b6
   react-native-camera: b8cc03e2feec0c04403d0998e37cf519d8fd4c6f
   react-native-get-random-values: ffa0d20db4c7b54a06986d6f85877e64ca9760d2
-  react-native-orientation-locker: 851f6510d8046ea2f14aa169b1e01fcd309a94ba
+  react-native-orientation-locker: 4409c5b12b65f942e75449872b4f078b6f27af81
   react-native-safe-area-context: 14c793e8b0bfe51e74dcdbe75dd14ee7498b88b8
   react-native-simple-toast: 8ee5d23f0b92b935ab7434cdb65159ce12dfb4b7
   react-native-version-info: a106f23009ac0db4ee00de39574eb546682579b9
-  react-native-view-shot: 792829857bbb23a9c8acdad9a640554bdee397a3
-  react-native-webview: ce342f05cdb3cc4ee78b633546ea97e4cf9a8900
+  react-native-view-shot: 6b7ed61d77d88580fed10954d45fad0eb2d47688
+  react-native-webview: 17d6151e9c25e90a2755e5a2b393c47e5d16f157
   React-perflogger: 46620fc6d1c3157b60ed28434e08f7fd7f3f3353
   React-RCTActionSheet: b1f7e72a0ba760ec684df335c61f730b5179f5ff
   React-RCTAnimation: d73b62d42867ab608dfb10e100d8b91106275b18
@@ -773,7 +773,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: d5498cfb7059bf8397b6416db4777843f3f4c1e7
   ReactCommon: 1974dab5108c79b40199f12a4833d2499b9f6303
   RNBootSplash: f31eba8f6d496e2029859e06e5582cac4607256d
-  RNCAsyncStorage: e31a32913b3b5d8a42621be993a8f51c34073f1f
+  RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
@@ -781,7 +781,7 @@ SPEC CHECKSUMS:
   RNFBApp: 3fd1f8d5b50cfaf718255e1faef207827c561d47
   RNFBCrashlytics: dd05f898ec9b048dc97865da1cefa6a18e36bda1
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
+  RNKeychain: bfe3d12bf4620fe488771c414530bf16e88f3678
   RNLocalize: 7c7aeda16c01db7a0918981c14875c0a53be9b79
   RNPermissions: 5a2dafe37c8e0a3fa1d6e0783a1490b1b7fd92d6
   RNReactNativeSharedGroupPreferences: 29092869fc2e40d5baca5e15d82fa5c24a668977

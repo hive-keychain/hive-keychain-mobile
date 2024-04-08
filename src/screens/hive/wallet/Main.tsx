@@ -32,7 +32,7 @@ import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
@@ -41,6 +41,7 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   Platform,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -125,8 +126,17 @@ const Main = ({
 
   const [eventReceived, setEventReceived] = useState(null);
   const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-  React.useEffect(() => {
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    updateUserWallet(user.name);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, [user.name]);
+
+  useEffect(() => {
     if (Platform.OS === 'ios') return;
     const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
     let eventListener = eventEmitter.addListener('command_event', (event) => {
@@ -336,6 +346,9 @@ const Main = ({
             }}>
             <ScrollView
               ref={mainScrollRef}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
               scrollEventThrottle={200}
               onScroll={onHandleScroll}>
               <View style={styles.rowWrapper}>
