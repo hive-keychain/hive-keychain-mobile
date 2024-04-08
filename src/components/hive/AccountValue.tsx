@@ -57,7 +57,7 @@ const AccountValue = ({
         ]);
       }
     }
-  }, [prices, properties, account]);
+  }, [prices, properties, account, userTokens]);
 
   const styles = getStyles(theme, useWindowDimensions());
   const regexp = new RegExp(/\d/, 'ig');
