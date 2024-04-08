@@ -138,8 +138,8 @@ android {
         applicationId "com.mobilekeychain"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 101
-        versionName "2.0.15"
+        versionCode 102
+        versionName "2.0.16"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
     }
