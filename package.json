@@ -53,7 +53,7 @@
     "react-native-fast-image": "^8.3.4",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-intent-launcher": "github:EldhoseKuriakose/react-native-intent-launcher#compile-issue",
-    "react-native-keychain": "^8.0.0",
+    "react-native-keychain": "8.1.1",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-localize": "^1.4.3",
     "react-native-modal": "^11.7.0",

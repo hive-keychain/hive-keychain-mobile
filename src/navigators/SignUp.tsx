@@ -47,6 +47,7 @@ export default () => {
         name="AddAccountByKeyScreen"
         options={{
           headerShown: false,
+          animationEnabled: false,
         }}
         component={AddAccountByKey}
       />
