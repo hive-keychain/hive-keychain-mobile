@@ -121,7 +121,9 @@
     "menu": "Menu",
     "users": "Users",
     "local_accounts": "Local Accounts",
-    "exchanges": "Exchanges"
+    "exchanges": "Exchanges",
+    "yes": "Yes",
+    "no": "No"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -941,6 +943,9 @@
       "title": "Portfolio Widget",
       "sub_title": "Widget Account Balance Configuration",
       "intro": "Choose which accounts will be shown in the portfolio widget."
+    },
+    "tutorial": {
+      "intro": "Would you like to see the Onboard tutorial?"
     }
   },
   "multichain": {
