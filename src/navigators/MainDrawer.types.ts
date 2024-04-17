@@ -18,6 +18,7 @@ export type MainDrawerStackParam = {
   TemplateStack: undefined;
   SwapBuyStack: undefined;
   SwapHistory: undefined;
+  Help: undefined;
 };
 
 export type BrowserNavigation = StackNavigationProp<

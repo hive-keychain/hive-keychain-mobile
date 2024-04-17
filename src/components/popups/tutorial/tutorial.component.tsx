@@ -69,22 +69,18 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
     }
   }, [show]);
 
-  const handleClick = async (
-    option: 'tutorial_seen' | 'tutorial_opted_out',
-  ) => {
-    const hidePopup = async (
-      option: 'tutorial_seen' | 'tutorial_opted_out',
-    ) => {
-      await AsyncStorage.setItem(KeychainStorageKeyEnum.SKIP_TUTORIAL, option);
+  const handleClick = async (option: 'skip' | 'show') => {
+    const hidePopup = async () => {
+      await AsyncStorage.setItem(KeychainStorageKeyEnum.SKIP_TUTORIAL, 'true');
       setShow(false);
     };
 
-    if (option === 'tutorial_seen') {
-      addTab(tutorialBaseUrl);
-      await hidePopup(option);
+    if (option === 'show') {
+      addTab(tutorialBaseUrl + '/mobile');
+      await hidePopup();
       return navigation.navigate('BrowserScreen');
     }
-    await hidePopup(option);
+    await hidePopup();
     navigation.goBack();
   };
 
@@ -103,13 +99,13 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
         <View style={styles.buttonsContainer}>
           <EllipticButton
             title={translate('common.skip')}
-            onPress={() => handleClick('tutorial_opted_out')}
+            onPress={() => handleClick('skip')}
             style={[styles.outlineButton]}
             additionalTextStyle={styles.textButtonFilled}
           />
           <EllipticButton
             title={translate('common.show')}
-            onPress={() => handleClick('tutorial_seen')}
+            onPress={() => handleClick('show')}
             style={[
               styles.warningProceedButton,
               generateBoxShadowStyle(

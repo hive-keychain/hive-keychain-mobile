@@ -666,6 +666,7 @@
     "manage": "Manage Keys",
     "settings": "Settings",
     "about": "About",
+    "help": "Help",
     "wallet": "WALLET",
     "browser": "BROWSER",
     "tabs": "Opened tabs",
@@ -681,7 +682,9 @@
       "swap": "Swap"
     },
     "swap_buy": "Swap & Buy",
-    "swap_history": "Swap History"
+    "swap_history": "Swap History",
+    "support": "Contact Support",
+    "tutorial": "Tutorial"
   },
   "request": {
     "title": {
