@@ -123,7 +123,9 @@
     "local_accounts": "Local Accounts",
     "exchanges": "Exchanges",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "skip": "Skip",
+    "show": "Show"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -945,7 +947,8 @@
       "intro": "Choose which accounts will be shown in the portfolio widget."
     },
     "tutorial": {
-      "intro": "Would you like to see the Onboard tutorial?"
+      "title": "Welcome to Keychain!",
+      "description": "If you are new to Keychain, or Hive in general, please check our onboarding tutorial.\nYou can always access it later on in Settings > Help > Tutorial."
     }
   },
   "multichain": {

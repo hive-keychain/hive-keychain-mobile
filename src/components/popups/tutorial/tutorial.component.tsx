@@ -4,7 +4,8 @@ import EllipticButton from 'components/form/EllipticButton';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
@@ -17,16 +18,22 @@ import {
 import {getModalBaseStyle} from 'src/styles/modal';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {
+  body_primary_body_1,
   button_link_primary_medium,
+  getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
+import {tutorialBaseUrl} from 'utils/config';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
 interface Props {
   navigation: WalletNavigation;
 }
+
+const TUTORIAL_POPUP_IMAGE = require('assets/new_UI/onboarding_mobile.png');
 
 const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
   const [show, setShow] = useState(false);
@@ -39,7 +46,8 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
   const init = async (clearWhileTesting?: boolean) => {
     //TODO bellow remove clear
     if (clearWhileTesting) {
-      await AsyncStorage.setItem(KeychainStorageKeyEnum.SKIP_TUTORIAL, null);
+      console.log('CLEARED SKIP_TUTORIAL');
+      await AsyncStorage.removeItem(KeychainStorageKeyEnum.SKIP_TUTORIAL, null);
       return;
     }
     const skipTutorial = await AsyncStorage.getItem(
@@ -57,7 +65,6 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
         modalContent: renderContent(),
         onForceCloseModal: () => {},
         modalContainerStyle: getModalBaseStyle(theme).roundedTop,
-        fixedHeight: 0.3,
       } as ModalScreenProps);
     }
   }, [show]);
@@ -73,7 +80,7 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
     };
 
     if (option === 'tutorial_seen') {
-      addTab(`http://192.168.56.1:3000/mobile`);
+      addTab(tutorialBaseUrl);
       await hidePopup(option);
       return navigation.navigate('BrowserScreen');
     }
@@ -81,21 +88,27 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
     navigation.goBack();
   };
 
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, useWindowDimensions());
 
   const renderContent = () => {
     return (
       <View aria-label="whats-new-component" style={styles.rootContainer}>
-        <Text style={styles.intro}>{translate('popup.tutorial.intro')}</Text>
+        <Text style={[styles.baseText, styles.title]}>
+          {translate('popup.tutorial.title')}
+        </Text>
+        <FastImage source={TUTORIAL_POPUP_IMAGE} style={styles.image} />
+        <Text style={[styles.baseText, styles.description]}>
+          {translate('popup.tutorial.description')}
+        </Text>
         <View style={styles.buttonsContainer}>
           <EllipticButton
-            title={translate('common.no')}
+            title={translate('common.skip')}
             onPress={() => handleClick('tutorial_opted_out')}
             style={[styles.outlineButton]}
             additionalTextStyle={styles.textButtonFilled}
           />
           <EllipticButton
-            title={translate('common.yes')}
+            title={translate('common.show')}
             onPress={() => handleClick('tutorial_seen')}
             style={[
               styles.warningProceedButton,
@@ -118,34 +131,42 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
   return null;
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
   StyleSheet.create({
     rootContainer: {
       flex: 1,
-      marginTop: 15,
       paddingHorizontal: 16,
-      justifyContent: 'center',
+      justifyContent: 'space-evenly',
       alignItems: 'center',
+      height: screenDimensions.height * 0.8,
     },
-    intro: {
-      textAlign: 'center',
+    baseText: {
       color: getColors(theme).secondaryText,
+    },
+    title: {
+      textAlign: 'center',
       ...headlines_primary_headline_2,
-      fontSize: 18,
+      fontSize: getFontSizeSmallDevices(screenDimensions.width, 18),
+    },
+    description: {
+      ...body_primary_body_1,
+      fontSize: getFontSizeSmallDevices(
+        screenDimensions.width,
+        body_primary_body_1.fontSize,
+      ),
     },
     buttonsContainer: {
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'space-between',
+      justifyContent: 'space-evenly',
       width: '100%',
-      height: 100,
-      marginBottom: 20,
+      height: 60,
     },
     image: {
-      marginBottom: 30,
       aspectRatio: 1.6,
       alignSelf: 'center',
       width: '100%',
+      borderRadius: 16,
     },
     warningProceedButton: {
       backgroundColor: PRIMARY_RED_COLOR,

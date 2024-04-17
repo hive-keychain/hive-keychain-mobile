@@ -1,5 +1,7 @@
 global.process = require('process');
 export const hiveEngineWebsiteURL = 'https://hive-engine.com/';
+export const tutorialBaseUrl =
+  process.env.DEV_TUTORIAL ?? 'https://tutorial.hive-keychain.com';
 
 export const hiveEngine = {
   CHAIN_ID: 'ssc-mainnet-hive',
