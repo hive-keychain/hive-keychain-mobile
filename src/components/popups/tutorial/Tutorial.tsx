@@ -42,13 +42,7 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
     init();
   }, []);
 
-  const init = async (clearWhileTesting?: boolean) => {
-    //TODO bellow remove clear
-    if (clearWhileTesting) {
-      console.log('CLEARED SKIP_TUTORIAL');
-      await AsyncStorage.removeItem(KeychainStorageKeyEnum.SKIP_TUTORIAL, null);
-      return;
-    }
+  const init = async () => {
     const skipTutorial = await AsyncStorage.getItem(
       KeychainStorageKeyEnum.SKIP_TUTORIAL,
     );
