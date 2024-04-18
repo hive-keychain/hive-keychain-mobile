@@ -32,7 +32,6 @@ import {navigate} from 'utils/navigation';
 interface Props {
   navigation: WalletNavigation;
 }
-AsyncStorage.removeItem(KeychainStorageKeyEnum.SKIP_TUTORIAL);
 const TUTORIAL_POPUP_IMAGE = require('assets/new_UI/onboarding_mobile.png');
 
 const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
