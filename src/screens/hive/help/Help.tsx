@@ -15,7 +15,7 @@ const Help = ({addTab}: PropsFromRedux) => {
   const {theme} = useThemeContext();
 
   const gotoBrowser = () => {
-    addTab(tutorialBaseUrl + '/mobile');
+    addTab(tutorialBaseUrl + '/#/mobile');
     navigate('BrowserScreen');
   };
 

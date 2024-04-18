@@ -22,7 +22,7 @@ import Icon from 'components/hive/Icon';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
-import {TutorialPopup} from 'components/popups/tutorial/tutorial.component';
+import {TutorialPopup} from 'components/popups/tutorial/Tutorial';
 import WhatsNew from 'components/popups/whats-new/WhatsNew';
 import WidgetConfiguration from 'components/popups/widget-configuration/WidgetConfiguration';
 import DrawerButton from 'components/ui/DrawerButton';
