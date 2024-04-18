@@ -32,7 +32,7 @@ import {navigate} from 'utils/navigation';
 interface Props {
   navigation: WalletNavigation;
 }
-
+AsyncStorage.removeItem(KeychainStorageKeyEnum.SKIP_TUTORIAL);
 const TUTORIAL_POPUP_IMAGE = require('assets/new_UI/onboarding_mobile.png');
 
 const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
@@ -76,7 +76,7 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
     };
 
     if (option === 'show') {
-      addTab(tutorialBaseUrl + '/mobile');
+      addTab(tutorialBaseUrl + '/#/mobile');
       await hidePopup();
       return navigation.navigate('BrowserScreen');
     }
