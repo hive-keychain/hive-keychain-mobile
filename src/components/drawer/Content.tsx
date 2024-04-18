@@ -121,9 +121,8 @@ const HeaderContent = (props: Props) => {
           labelTranslationKey="navigation.help"
           theme={theme}
           onPress={() => navigation.navigate('Help')}
-          //TODO add final icon bellow
           iconImage={
-            <Icon name={Icons.INFO} theme={theme} color={PRIMARY_RED_COLOR} />
+            <Icon name={Icons.HELP} theme={theme} color={PRIMARY_RED_COLOR} />
           }
           drawBottomLine
         />

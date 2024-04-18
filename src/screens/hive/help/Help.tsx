@@ -1,11 +1,12 @@
 import {addTab} from 'actions/browser';
-import SupportIcon from 'assets/new_UI/support.svg';
 import MenuItem from 'components/drawer/drawer-content-item/MenuItem';
+import Icon from 'components/hive/Icon';
 import React from 'react';
 import {Linking, StatusBar, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {useThemeContext} from 'src/context/theme.context';
-import {getColors} from 'src/styles/colors';
+import {Icons} from 'src/enums/icons.enums';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getMenuCardStyle} from 'src/styles/menu';
 import {RootState} from 'store';
 import {tutorialBaseUrl} from 'utils/config';
@@ -29,15 +30,18 @@ const Help = ({addTab}: PropsFromRedux) => {
         labelTranslationKey={'navigation.support'}
         theme={theme}
         onPress={() => Linking.openURL('https://discord.com/invite/3Sex2qYtXP')}
-        iconImage={<SupportIcon />}
+        iconImage={
+          <Icon name={Icons.SUPPORT} theme={theme} color={PRIMARY_RED_COLOR} />
+        }
         drawBottomLine={true}
       />
       <MenuItem
         labelTranslationKey={'navigation.tutorial'}
         theme={theme}
         onPress={() => gotoBrowser()}
-        //TODO bellow change icon
-        iconImage={<SupportIcon />}
+        iconImage={
+          <Icon name={Icons.TUTORIAL} theme={theme} color={PRIMARY_RED_COLOR} />
+        }
       />
     </View>
   );
