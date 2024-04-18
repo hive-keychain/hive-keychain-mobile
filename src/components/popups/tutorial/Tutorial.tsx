@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addTab} from 'actions/browser';
+import TUTORIAL_POPUP_IMAGE from 'assets/new_UI/onboarding_mobile.png';
 import EllipticButton from 'components/form/EllipticButton';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {ModalScreenProps} from 'navigators/Root.types';
@@ -32,7 +33,6 @@ import {navigate} from 'utils/navigation';
 interface Props {
   navigation: WalletNavigation;
 }
-const TUTORIAL_POPUP_IMAGE = require('assets/new_UI/onboarding_mobile.png');
 
 const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
   const [show, setShow] = useState(false);
