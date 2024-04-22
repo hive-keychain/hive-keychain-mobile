@@ -37,6 +37,7 @@ export default ({
   additionalTextStyle,
   isWarningButton,
   onPress,
+  preventDoublons,
   ...props
 }: Props) => {
   const {width} = useWindowDimensions();
@@ -60,8 +61,10 @@ export default ({
           : {},
       ]}
       onPress={() => {
-        if (disableButton) return;
-        setDisableButton(true);
+        if (preventDoublons) {
+          if (disableButton) return;
+          setDisableButton(true);
+        }
         onPress();
       }}
       onPressIn={() => setIsPressed(true)}
