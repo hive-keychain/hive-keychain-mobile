@@ -186,6 +186,7 @@ const Transfer = ({
       const confirmationData = {
         title: 'wallet.operations.transfer.confirm.info',
         onSend,
+        skipWarningTranslation: true,
         warningText: getTransferWarning(
           phishingAccounts,
           to,

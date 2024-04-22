@@ -29,6 +29,7 @@ export type ConfirmationPageProps = {
   title: string;
   introText?: string;
   warningText?: string;
+  skipWarningTranslation?: boolean;
   data: ConfirmationData[];
   onConfirm?: () => void;
 };
@@ -51,6 +52,7 @@ const ConfirmationPage = ({
     introText,
     warningText,
     data,
+    skipWarningTranslation,
     onConfirm: onConfirmOverride,
   } = route.params;
   const [loading, setLoading] = useState(false);
@@ -74,7 +76,13 @@ const ConfirmationPage = ({
       <View style={styles.confirmationPage}>
         <Caption text={title} hideSeparator />
         <Separator />
-        {warningText && <Caption text={warningText} hideSeparator />}
+        {warningText && (
+          <Caption
+            text={warningText}
+            hideSeparator
+            skipTranslation={skipWarningTranslation}
+          />
+        )}
         <View style={[getCardStyle(theme).defaultCardItem, {marginBottom: 0}]}>
           {data.map((e, i) => (
             <>
