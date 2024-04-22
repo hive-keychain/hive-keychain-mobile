@@ -106,6 +106,7 @@ const Swap = ({
   const [autoRefreshCountdown, setAutoRefreshCountdown] = useState<
     number | null
   >(null);
+  const [disableProcessButton, setDisableProcessButton] = useState(false);
 
   useEffect(() => {
     init();
@@ -445,6 +446,8 @@ const Swap = ({
     setLoadingConfirmationSwap(true);
     let estimateId: string;
     try {
+      if (disableProcessButton) return;
+      setDisableProcessButton(true);
       estimateId = await SwapTokenUtils.saveEstimate(
         estimate!,
         slippage,
@@ -528,7 +531,10 @@ const Swap = ({
             <View style={spacingStyle.fillSpace}></View>
             <EllipticButton
               title={translate('common.confirm')}
-              onPress={() => processSwap(estimateId)}
+              preventDoublons
+              onPress={() => {
+                processSwap(estimateId);
+              }}
               isLoading={loading}
               isWarningButton
             />
