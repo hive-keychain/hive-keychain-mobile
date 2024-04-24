@@ -64,6 +64,8 @@ export enum Icons {
   SHOW_CHART = 'show_chart',
   SUBMIT = 'input',
   SUPPORT = 'contact_support',
+  HELP = 'help',
+  TUTORIAL = 'tutorial',
   TIMELAPSE = 'timelapse',
   // TOKENS = 'generating_tokens',
   TWITTER = 'twitter.svg',

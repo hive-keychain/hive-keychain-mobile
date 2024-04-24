@@ -121,7 +121,11 @@
     "menu": "Menu",
     "users": "Users",
     "local_accounts": "Local Accounts",
-    "exchanges": "Exchanges"
+    "exchanges": "Exchanges",
+    "yes": "Yes",
+    "no": "No",
+    "skip": "Skip",
+    "show": "Show"
   },
   "wallet": {
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
@@ -662,6 +666,7 @@
     "manage": "Manage Keys",
     "settings": "Settings",
     "about": "About",
+    "help": "Help",
     "wallet": "WALLET",
     "browser": "BROWSER",
     "tabs": "Opened tabs",
@@ -677,7 +682,9 @@
       "swap": "Swap"
     },
     "swap_buy": "Swap & Buy",
-    "swap_history": "Swap History"
+    "swap_history": "Swap History",
+    "support": "Contact Support",
+    "tutorial": "Tutorial"
   },
   "request": {
     "title": {
@@ -941,6 +948,10 @@
       "title": "Portfolio Widget",
       "sub_title": "Widget Account Balance Configuration",
       "intro": "Choose which accounts will be shown in the portfolio widget."
+    },
+    "tutorial": {
+      "title": "Welcome to Keychain!",
+      "description": "If you are new to Keychain, or Hive in general, please check our onboarding tutorial.\nYou can always access it later on in Settings > Help > Tutorial."
     }
   },
   "multichain": {

@@ -6,6 +6,7 @@ import ArrowUpIcon from 'assets/new_UI/arrow-up.svg';
 import AtIcon from 'assets/new_UI/at.svg';
 import BackTimeIcon from 'assets/new_UI/back_time.svg';
 import BankIcon from 'assets/new_UI/bank.svg';
+import TutorialIcon from 'assets/new_UI/book.svg';
 import CandleIcon from 'assets/new_UI/candle.svg';
 import CategoryIcon from 'assets/new_UI/category.svg';
 import DecryptIcon from 'assets/new_UI/decrypt.svg';
@@ -16,6 +17,7 @@ import EyeSlashIcon from 'assets/new_UI/eye-slash.svg';
 import GiftDeleteIcon from 'assets/new_UI/gift-delete.svg';
 import HBDCurrencyLogo from 'assets/new_UI/hbd-currency-logo.svg';
 import HeartIcon from 'assets/new_UI/heart.svg';
+import HelpIcon from 'assets/new_UI/help.svg';
 import HiveCurrencyLogo from 'assets/new_UI/hive-currency-logo.svg';
 import HiveAlternative from 'assets/new_UI/hive_alternative.svg';
 import ImportIcon from 'assets/new_UI/import.svg';
@@ -58,6 +60,7 @@ import SearchIcon from 'assets/new_UI/search.svg';
 import Settings2Icon from 'assets/new_UI/setting-2.svg';
 import Settings4Icon from 'assets/new_UI/setting-4.svg';
 import SpeedometerIcon from 'assets/new_UI/speedometer.svg';
+import SupportIcon from 'assets/new_UI/support.svg';
 import React from 'react';
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import AddCircleOutlineIcon from 'src/assets/icons/svgs/add_circle_outline.svg';
@@ -641,6 +644,27 @@ const getIconFilePath = (
     case name === Icons.DESKTOP:
       return (
         <Desktop
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.HELP:
+      return (
+        <HelpIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.TUTORIAL:
+      return (
+        <TutorialIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.SUPPORT:
+      return (
+        <SupportIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

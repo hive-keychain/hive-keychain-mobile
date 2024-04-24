@@ -37,6 +37,7 @@ const hiddenRoutesInMain = [
   'TemplateStack',
   'SwapBuyStack',
   'SwapHistory',
+  'Help',
 ];
 
 const HeaderContent = (props: Props) => {
@@ -113,6 +114,15 @@ const HeaderContent = (props: Props) => {
           onPress={() => navigation.navigate('ABOUT')}
           iconImage={
             <Icon name={Icons.INFO} theme={theme} color={PRIMARY_RED_COLOR} />
+          }
+          drawBottomLine
+        />
+        <MenuItem
+          labelTranslationKey="navigation.help"
+          theme={theme}
+          onPress={() => navigation.navigate('Help')}
+          iconImage={
+            <Icon name={Icons.HELP} theme={theme} color={PRIMARY_RED_COLOR} />
           }
           drawBottomLine
         />

@@ -15,6 +15,7 @@ import Accounts from './mainDrawerStacks/Accounts';
 import AddAccount from './mainDrawerStacks/AddAccount';
 import CreateAccount from './mainDrawerStacks/CreateAccount';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
+import Help from './mainDrawerStacks/Help';
 import Operation from './mainDrawerStacks/Operation';
 import SwapBuyStack from './mainDrawerStacks/SwapBuyStack';
 import SwapHistory from './mainDrawerStacks/SwapHistory';
@@ -69,6 +70,13 @@ export default () => {
           title: translate('navigation.about'),
         }}
         component={AboutStack}
+      />
+      <Drawer.Screen
+        name="Help"
+        options={{
+          title: translate('navigation.help'),
+        }}
+        component={Help}
       />
       <Drawer.Screen name="Accounts" component={Accounts} />
       <Drawer.Screen
