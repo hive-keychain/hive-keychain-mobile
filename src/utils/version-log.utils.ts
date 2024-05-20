@@ -13,7 +13,7 @@ const getCurrentMobileAppVersion = (): AppInfo => {
 };
 
 const getLastVersion = async () => {
-  const response = await api.get('/hive/last-version-mobile');
+  const response = await api.get('/last-version-mobile');
   return response.data;
 };
 
