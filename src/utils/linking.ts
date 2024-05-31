@@ -52,6 +52,19 @@ export const handleUrl = (url: string, qr: boolean = false) => {
     }
     //@ts-ignore
     store.dispatch(addTabFromLinking(url));
+  } else if (url.startsWith('keychain://add_accounts=')) {
+    const accountData = url.replace('keychain://add_accounts=', '');
+    const accountDataStr = Buffer.from(accountData, 'base64').toString();
+    //TODO:
+    //  - create array to store all, don't allow dup.
+    //  - after having same total count, follow handleAddAccountQR to add accounts.
+    //  - test & continue with the rest of ticket.
+    try {
+      const dataAccounts = JSON.parse(accountDataStr);
+      console.log({dataAccounts});
+    } catch (error) {
+      console.log('Error getting QR data accounts', {error});
+    }
   } else [handleAddAccountQR(url)];
 };
 
