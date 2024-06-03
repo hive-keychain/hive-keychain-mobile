@@ -236,6 +236,7 @@ export interface FloatingBarPayload {
   show: boolean;
   isLoadingScreen: boolean;
   isDrawerOpened: boolean;
+  isProposalRequestDisplayed: boolean;
 }
 
 export interface AccountsPayload {

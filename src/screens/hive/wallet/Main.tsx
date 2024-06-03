@@ -25,6 +25,7 @@ import Claim from 'components/operations/ClaimRewards';
 import {TutorialPopup} from 'components/popups/tutorial/Tutorial';
 import WhatsNew from 'components/popups/whats-new/WhatsNew';
 import WidgetConfiguration from 'components/popups/widget-configuration/WidgetConfiguration';
+import {ProposalVotingSectionComponent} from 'components/proposal-voting/proposalVoting';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
@@ -320,202 +321,208 @@ const Main = ({
           ? {top: '15%'}
           : undefined
       }>
-      {!loadingUserAndGlobals && rpc && rpc.uri !== 'NULL' ? (
-        <View>
-          <Separator height={TOP_CONTAINER_SEPARATION} />
-          <View style={[styles.headerMenu]}>
-            <DrawerButton navigation={navigation as any} theme={theme} />
-            <View style={[styles.innerHeader]}>
-              <StatusIndicator theme={theme} />
-              <Claim theme={theme} />
-              <View style={styles.marginRight}>
-                <UserDropdown
-                  dropdownIconScaledSize={styles.smallIcon}
-                  additionalDropdowContainerStyle={styles.userdropdown}
-                  additionalMainContainerDropdown={[styles.dropdownContainer]}
-                  additionalOverlayStyle={[styles.dropdownOverlay]}
-                  additionalListExpandedContainerStyle={
-                    styles.dropdownExpandedContainer
-                  }
-                  copyButtonValue
-                />
+      <>
+        {!loadingUserAndGlobals && rpc && rpc.uri !== 'NULL' ? (
+          <View>
+            <Separator height={TOP_CONTAINER_SEPARATION} />
+            <View style={[styles.headerMenu]}>
+              <DrawerButton navigation={navigation as any} theme={theme} />
+              <View style={[styles.innerHeader]}>
+                <StatusIndicator theme={theme} />
+                <Claim theme={theme} />
+                <View style={styles.marginRight}>
+                  <UserDropdown
+                    dropdownIconScaledSize={styles.smallIcon}
+                    additionalDropdowContainerStyle={styles.userdropdown}
+                    additionalMainContainerDropdown={[styles.dropdownContainer]}
+                    additionalOverlayStyle={[styles.dropdownOverlay]}
+                    additionalListExpandedContainerStyle={
+                      styles.dropdownExpandedContainer
+                    }
+                    copyButtonValue
+                  />
+                </View>
               </View>
             </View>
-          </View>
-          <Separator />
-          <View
-            style={{
-              borderRadius: 20,
-              overflow: 'hidden',
-              height: '100%',
-            }}>
-            <ScrollView
-              ref={mainScrollRef}
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }
-              scrollEventThrottle={200}
-              onScroll={onHandleScroll}>
-              <View style={styles.rowWrapper}>
-                <PercentageDisplay
-                  name={translate('wallet.vp')}
-                  percent={getVP(user.account) || 100}
-                  IconBgcolor={OVERLAYICONBGCOLOR}
-                  theme={theme}
-                  iconName={Icons.SEND_SQUARE}
-                  bgColor={BACKGROUNDITEMDARKISH}
-                  secondary={`$${
-                    getVotingDollarsPerAccount(
-                      100,
-                      properties,
-                      user.account,
-                      false,
-                    ) || '0'
-                  }`}
-                />
-                <PercentageDisplay
-                  iconName={Icons.SPEEDOMETER}
-                  bgColor={DARKER_RED_COLOR}
-                  name={translate('wallet.rc')}
-                  percent={user.rc.percentage || 100}
-                  IconBgcolor={OVERLAYICONBGCOLOR}
-                  theme={theme}
-                />
-              </View>
-              <Separator />
-              <AccountValue
-                account={user.account}
-                prices={prices}
-                properties={properties}
-                theme={theme}
-                title={translate('common.estimated_account_value')}
-              />
-              <Separator />
-              <View style={getCardStyle(theme).borderTopCard}>
-                <View>
-                  {[
-                    {currency: getCurrency('HIVE')},
-                    {currency: getCurrency('HBD')},
-                    {currency: getCurrency('HP')},
-                  ].map((item, index) => (
-                    <CurrencyToken
-                      key={`${item.currency}`}
-                      theme={theme}
-                      currencyName={item.currency}
-                      itemIndex={index}
-                      onPress={() => handleClickToView(index, 0)}
-                    />
-                  ))}
+            <Separator />
+            <View
+              style={{
+                borderRadius: 20,
+                overflow: 'hidden',
+                height: '100%',
+              }}>
+              <ScrollView
+                ref={mainScrollRef}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                scrollEventThrottle={200}
+                onScroll={onHandleScroll}>
+                <View style={styles.rowWrapper}>
+                  <PercentageDisplay
+                    name={translate('wallet.vp')}
+                    percent={getVP(user.account) || 100}
+                    IconBgcolor={OVERLAYICONBGCOLOR}
+                    theme={theme}
+                    iconName={Icons.SEND_SQUARE}
+                    bgColor={BACKGROUNDITEMDARKISH}
+                    secondary={`$${
+                      getVotingDollarsPerAccount(
+                        100,
+                        properties,
+                        user.account,
+                        false,
+                      ) || '0'
+                    }`}
+                  />
+                  <PercentageDisplay
+                    iconName={Icons.SPEEDOMETER}
+                    bgColor={DARKER_RED_COLOR}
+                    name={translate('wallet.rc')}
+                    percent={user.rc.percentage || 100}
+                    IconBgcolor={OVERLAYICONBGCOLOR}
+                    theme={theme}
+                  />
                 </View>
-
-                <View style={[getCardStyle(theme).wrapperCardItem]}>
-                  <View
-                    style={[
-                      styles.flexRow,
-                      isSearchOpen ? styles.paddingVertical : undefined,
-                    ]}>
-                    <HiveEngineLogo height={23} width={23} />
-                    <View style={styles.separatorContainer} />
-                    {isSearchOpen ? (
-                      <CustomSearchBar
+                <Separator />
+                <AccountValue
+                  account={user.account}
+                  prices={prices}
+                  properties={properties}
+                  theme={theme}
+                  title={translate('common.estimated_account_value')}
+                />
+                <Separator />
+                <View style={getCardStyle(theme).borderTopCard}>
+                  <View>
+                    {[
+                      {currency: getCurrency('HIVE')},
+                      {currency: getCurrency('HBD')},
+                      {currency: getCurrency('HP')},
+                    ].map((item, index) => (
+                      <CurrencyToken
+                        key={`${item.currency}`}
                         theme={theme}
-                        value={searchValue}
-                        onChangeText={(text) => {
-                          setSearchValue(text);
-                        }}
-                        additionalContainerStyle={[
-                          styles.searchContainer,
-                          isSearchOpen ? styles.borderLight : undefined,
-                        ]}
-                        rightIcon={
+                        currencyName={item.currency}
+                        itemIndex={index}
+                        onPress={() => handleClickToView(index, 0)}
+                      />
+                    ))}
+                  </View>
+
+                  <View style={[getCardStyle(theme).wrapperCardItem]}>
+                    <View
+                      style={[
+                        styles.flexRow,
+                        isSearchOpen ? styles.paddingVertical : undefined,
+                      ]}>
+                      <HiveEngineLogo height={23} width={23} />
+                      <View style={styles.separatorContainer} />
+                      {isSearchOpen ? (
+                        <CustomSearchBar
+                          theme={theme}
+                          value={searchValue}
+                          onChangeText={(text) => {
+                            setSearchValue(text);
+                          }}
+                          additionalContainerStyle={[
+                            styles.searchContainer,
+                            isSearchOpen ? styles.borderLight : undefined,
+                          ]}
+                          rightIcon={
+                            <Icon
+                              name={Icons.SEARCH}
+                              theme={theme}
+                              width={18}
+                              height={18}
+                              onPress={() => {
+                                setSearchValue('');
+                                setIsSearchOpen(false);
+                              }}
+                            />
+                          }
+                        />
+                      ) : (
+                        <>
                           <Icon
                             name={Icons.SEARCH}
                             theme={theme}
+                            additionalContainerStyle={styles.search}
+                            onPress={() => {
+                              setIsSearchOpen(true);
+                            }}
                             width={18}
                             height={18}
-                            onPress={() => {
-                              setSearchValue('');
-                              setIsSearchOpen(false);
-                            }}
                           />
-                        }
-                      />
-                    ) : (
-                      <>
-                        <Icon
-                          name={Icons.SEARCH}
-                          theme={theme}
-                          additionalContainerStyle={styles.search}
-                          onPress={() => {
-                            setIsSearchOpen(true);
-                          }}
-                          width={18}
-                          height={18}
-                        />
-                        <Icon
-                          name={Icons.SETTINGS_2}
-                          theme={theme}
-                          onPress={handleClickSettings}
-                        />
-                      </>
-                    )}
-                  </View>
-                </View>
-                {filteredUserTokenBalanceList.map((item, index) => (
-                  <EngineTokenDisplay
-                    key={`engine-token-${item._id}`}
-                    addBackground
-                    token={item}
-                    tokensList={tokens}
-                    market={tokensMarket}
-                    toggled={toggled === item._id}
-                    setToggle={() => {
-                      if (toggled === item._id) setToggled(null);
-                      else setToggled(item._id);
-                      handleClickToView(index, 1);
-                    }}
-                  />
-                ))}
-
-                <>
-                  {isHiveEngineLoading && (
-                    <View style={styles.extraContainerMiniLoader}>
-                      <Loader size={'small'} animating />
+                          <Icon
+                            name={Icons.SETTINGS_2}
+                            theme={theme}
+                            onPress={handleClickSettings}
+                          />
+                        </>
+                      )}
                     </View>
-                  )}
-                  {!userTokens.loading &&
-                    filteredUserTokenBalanceList.length === 0 &&
-                    orderedUserTokenBalanceList.length === 0 && (
+                  </View>
+                  {filteredUserTokenBalanceList.map((item, index) => (
+                    <EngineTokenDisplay
+                      key={`engine-token-${item._id}`}
+                      addBackground
+                      token={item}
+                      tokensList={tokens}
+                      market={tokensMarket}
+                      toggled={toggled === item._id}
+                      setToggle={() => {
+                        if (toggled === item._id) setToggled(null);
+                        else setToggled(item._id);
+                        handleClickToView(index, 1);
+                      }}
+                    />
+                  ))}
+
+                  <>
+                    {isHiveEngineLoading && (
                       <View style={styles.extraContainerMiniLoader}>
-                        <Text style={styles.no_tokens}>
-                          {translate('wallet.no_tokens')}
-                        </Text>
+                        <Loader size={'small'} animating />
                       </View>
                     )}
-                  {!userTokens.loading &&
-                    orderedUserTokenBalanceList.length > 0 &&
-                    filteredUserTokenBalanceList.length === 0 && (
-                      <View style={styles.extraContainerMiniLoader}>
-                        <Text style={styles.no_tokens}>
-                          {translate('wallet.no_tokens_filter')}
-                        </Text>
-                      </View>
-                    )}
-                </>
-              </View>
-              <View style={[getCardStyle(theme).filledWrapper]} />
-            </ScrollView>
+                    {!userTokens.loading &&
+                      filteredUserTokenBalanceList.length === 0 &&
+                      orderedUserTokenBalanceList.length === 0 && (
+                        <View style={styles.extraContainerMiniLoader}>
+                          <Text style={styles.no_tokens}>
+                            {translate('wallet.no_tokens')}
+                          </Text>
+                        </View>
+                      )}
+                    {!userTokens.loading &&
+                      orderedUserTokenBalanceList.length > 0 &&
+                      filteredUserTokenBalanceList.length === 0 && (
+                        <View style={styles.extraContainerMiniLoader}>
+                          <Text style={styles.no_tokens}>
+                            {translate('wallet.no_tokens_filter')}
+                          </Text>
+                        </View>
+                      )}
+                  </>
+                </View>
+                <View style={[getCardStyle(theme).filledWrapper]} />
+              </ScrollView>
+            </View>
+            <WhatsNew navigation={navigation} />
+            <WidgetConfiguration
+              show={showWidgetConfiguration}
+              setShow={setShowWidgetConfiguration}
+            />
+            <TutorialPopup navigation={navigation} />
           </View>
-          <WhatsNew navigation={navigation} />
-          <WidgetConfiguration
-            show={showWidgetConfiguration}
-            setShow={setShowWidgetConfiguration}
-          />
-          <TutorialPopup navigation={navigation} />
-        </View>
-      ) : (
-        <Loader animatedLogo />
-      )}
+        ) : (
+          <Loader animatedLogo />
+        )}
+        <ProposalVotingSectionComponent loaded={!loadingUserAndGlobals} />
+      </>
     </WalletPage>
   );
 };

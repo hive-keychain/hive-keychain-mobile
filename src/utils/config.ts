@@ -70,3 +70,8 @@ export const SwapsConfig = {
       ? 'http://localhost:5050'
       : 'https://swap.hive-keychain.com',
 };
+
+export const ProposalConfig = {
+  KEYCHAIN_PROPOSAL: 306,
+  PROPOSAL_MIN_VOTE_DIFFERENCE_HIDE_POPUP: 8 * 10 ** 6,
+};

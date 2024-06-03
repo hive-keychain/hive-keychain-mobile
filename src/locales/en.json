@@ -128,6 +128,13 @@
     "show": "Show"
   },
   "wallet": {
+    "proposal": {
+      "request": "Please consider supporting our proposal",
+      "vote": "Vote",
+      "read": "Read",
+      "vote_success": "Vote successful! Thank you for supporting Keychain development through our DHF proposal",
+      "vote_fail": "There was an error while voting for the proposal!"
+    },
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
     "rc": "Resource Credits",
     "vp": "Voting Mana",
