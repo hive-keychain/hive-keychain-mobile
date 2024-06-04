@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {treatHASRequest} from 'actions/hiveAuthenticationService';
 import {addAccount, addTabFromLinking} from 'actions/index';
 import {Account} from 'actions/interfaces';
@@ -14,13 +13,12 @@ import {KeyUtils} from './key.utils';
 import {validateFromObject} from './keyValidation';
 import {goBack, resetStackAndNavigate} from './navigation';
 
-const importedQRAccounts: {
+let flagCurrentlyProcessing = false;
+let qr_data_accounts: {
   data: string;
   index: number;
   total: number;
 }[] = [];
-
-let totalAccountsToAwait = 0;
 
 export default async () => {
   Linking.addEventListener('url', ({url}) => {
@@ -63,55 +61,21 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
     //@ts-ignore
     store.dispatch(addTabFromLinking(url));
   } else if (url.startsWith('keychain://add_accounts=')) {
-    //TODO resetting code block
-    // if (qr) {
-    //   await AsyncStorage.removeItem('qr_accounts_to_import');
-    //   console.log('Reseted storage!');
-    //   return;
-    // }
-    //end reseeting
-
+    if (flagCurrentlyProcessing) {
+      return;
+    }
     const accountData = url.replace('keychain://add_accounts=', '');
     const accountDataStr = Buffer.from(accountData, 'base64').toString();
     try {
       const dataAccounts = JSON.parse(accountDataStr);
-      if (dataAccounts) {
-        //TODO bellow add key enum
-        const tempStoredAccounts = await AsyncStorage.getItem(
-          'qr_accounts_to_import',
-        );
-        if (tempStoredAccounts) {
-          const parsedTempStoredAccounts = JSON.parse(tempStoredAccounts);
-          //same check as final, check also for same indexes?
-          if (parsedTempStoredAccounts.length === dataAccounts.total) {
-            console.log('First check, go process!');
-            console.log({parsedTempStoredAccounts}); //TODO remove line
-            await handleAddAccountsQR(parsedTempStoredAccounts);
-          }
-          if (
-            !parsedTempStoredAccounts.find(
-              (p: any) => p.index === dataAccounts.index,
-            )
-          ) {
-            const updatedParsedTempAccounts = [
-              ...parsedTempStoredAccounts,
-              dataAccounts,
-            ];
-            await AsyncStorage.setItem(
-              'qr_accounts_to_import',
-              JSON.stringify(updatedParsedTempAccounts),
-            );
-            if (updatedParsedTempAccounts.length === dataAccounts.total) {
-              console.log('Last check, go process!');
-              console.log({updatedParsedTempAccounts}); //TODO remove line
-              await handleAddAccountsQR(updatedParsedTempAccounts);
-            }
-          }
-        } else {
-          await AsyncStorage.setItem(
-            'qr_accounts_to_import',
-            JSON.stringify([dataAccounts]),
-          );
+      if (
+        dataAccounts &&
+        !qr_data_accounts.find((q) => q.index === dataAccounts.index)
+      ) {
+        qr_data_accounts.push(dataAccounts);
+        if (dataAccounts.total === qr_data_accounts.length) {
+          flagCurrentlyProcessing = true;
+          await handleAddAccountsQR(qr_data_accounts);
         }
       }
     } catch (error) {
@@ -128,12 +92,9 @@ const handleAddAccountsQR = async (
   }[],
   wallet = true,
 ) => {
-  const accountsToAdd = [];
   for (const dataAcc of dataAccounts) {
-    console.log({dataAcc}); //TODO remove line
     const objects: string[] = JSON.parse(dataAcc.data);
     const objectsAccounts: Account[] = objects.map((o) => JSON.parse(o));
-    console.log({objectsAccounts}); //TODO remove line
     for (const objAcc of objectsAccounts) {
       let keys = {};
       if (
@@ -158,28 +119,21 @@ const handleAddAccountsQR = async (
             translate('toast.no_accounts_no_auth', {username: objAcc.name}),
             SimpleToast.LONG,
           );
-          return;
+          break;
         }
       } else {
         keys = await validateFromObject(objAcc);
       }
       if (wallet && KeyUtils.hasKeys(keys)) {
         store.dispatch<any>(addAccount(objAcc.name, keys, false, false, true));
-        // accountsToAdd.push({
-        //   name: objAcc.name,
-        //   keys: objAcc.keys,
-        // });
-        //TODO bellow addAccounts.
-        // store.dispatch<any>(addAccount(obj.name, keys, wallet, true));
       } else {
-        return;
+        break;
       }
     }
   }
-  await AsyncStorage.removeItem('qr_accounts_to_import');
-  console.log('Added accounts, reset on storage!'); //TODO remove line
-  resetStackAndNavigate('WALLET');
-  // console.log({accountsToAdd}); //TODO remove line
+  qr_data_accounts = [];
+  flagCurrentlyProcessing = false;
+  return resetStackAndNavigate('WALLET');
 };
 
 export const handleAddAccountQR = async (data: string, wallet = true) => {

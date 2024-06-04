@@ -221,7 +221,8 @@ const Main = ({
   }, [searchValue]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
-    loadAccount(lastAccount || accounts[0].name);
+    if (lastAccount || accounts.length)
+      loadAccount(lastAccount || accounts[0].name);
     loadProperties();
     loadPrices();
     fetchPhishingAccounts();

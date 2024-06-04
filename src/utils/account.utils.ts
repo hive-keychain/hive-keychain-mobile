@@ -24,10 +24,13 @@ const addAuthorizedAccount = async (
       .includes(username)
   ) {
     if (simpleToast) {
-      simpleToast.show(translate('toast.account_already'), simpleToast.LONG);
+      simpleToast.show(
+        translate('toast.account_already', {account: username}),
+        simpleToast.LONG,
+      );
       return;
     }
-    throw new Error(translate('toast.account_already'));
+    throw new Error(translate('toast.account_already', {account: username}));
   }
   if (
     !existingAccounts

@@ -37,7 +37,7 @@ export const addAccount = (
   const mk = getState().auth.mk;
   const previousAccounts = getState().accounts;
   if (previousAccounts.find((e) => e.name === name)) {
-    Toast.show(translate('toast.account_already'));
+    Toast.show(translate('toast.account_already', {account: name}));
     if (multipleAccounts) return;
     if (wallet) {
       qr ? resetStackAndNavigate('WALLET') : navigate('WALLET');
@@ -59,8 +59,7 @@ export const addAccount = (
 
   await saveOnKeychain('accounts', encrypted);
   if (multipleAccounts) {
-    //TODO add tr key
-    Toast.show(`Added @${name}`);
+    Toast.show(translate('toast.added_account', {account: name}));
     return;
   }
   if (wallet) {
