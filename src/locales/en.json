@@ -597,6 +597,10 @@
     "copy_keys": {
       "title": "Copy a Key",
       "text1": "If you need to copy a public or private key, perform a long press on the key."
+    },
+    "export_qr_accounts": {
+      "qr_exported_set_disclaimer1": "This QR Code contains all your private keys for this set of accounts, and should only be used to import your keys to the Hive Keychain mobile App.",
+      "qr_disclaimer2": "DO NOT share it with anyone!"
     }
   },
   "toast": {
