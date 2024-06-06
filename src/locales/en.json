@@ -663,6 +663,7 @@
     "log_out": "Logout",
     "accounts": "Accounts",
     "add_account": "Add Account",
+    "export_accounts_qr": "Export Accounts",
     "add_account_by_auth": "Auth. Account",
     "manage": "Manage Keys",
     "settings": "Settings",
