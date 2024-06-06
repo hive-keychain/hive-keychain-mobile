@@ -6,6 +6,7 @@ export type MainDrawerStackParam = {
   BrowserScreen: {icon: string};
   Accounts: undefined;
   AccountManagementScreen: undefined;
+  ExportAccountsQRScreen: undefined;
   AddAccountStack: undefined;
   AddAccountByAuth: undefined;
   CreateAccountScreen: undefined;
