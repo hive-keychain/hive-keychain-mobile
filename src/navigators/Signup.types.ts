@@ -4,6 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 export type SignupStackParamList = {
   IntroductionScreen: undefined;
   CreateAccountScreen: undefined;
+  CreateAccountPeerToPeerScreen: undefined;
   SignupScreen: undefined;
   AddAccountByKeyScreen: undefined;
   ScanQRScreen: undefined;

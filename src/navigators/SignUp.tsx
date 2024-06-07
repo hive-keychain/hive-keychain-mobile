@@ -8,9 +8,10 @@ import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
-import CreateAccount from 'screens/hive/CreateAccount';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
+import CreateAccount from 'screens/hive/createAccounts/CreateAccount';
+import CreateAccountPeerToPeer from 'screens/hive/createAccountsPeerToPeer/CreateAccountPeerToPeer';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
@@ -40,8 +41,51 @@ export default () => {
       />
       <Stack.Screen
         name="CreateAccountScreen"
-        options={noHeader}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTintColor: 'white',
+          headerRightContainerStyle: styles.paddingRight,
+          animationEnabled: false,
+          title: '',
+          headerLeft: () => (
+            <Icon
+              name={Icons.ARROW_LEFT}
+              theme={theme}
+              additionalContainerStyle={[styles.marginLeft]}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              color={getColors(theme).iconBW}
+            />
+          ),
+        })}
         component={CreateAccount}
+      />
+      <Stack.Screen
+        name="CreateAccountPeerToPeerScreen"
+        options={({navigation}) => ({
+          headerBackTitle: translate('navigation.create_account_peer_to_peer'),
+          headerTitle: () => (
+            <NavigatorTitle title="navigation.create_account_peer_to_peer" />
+          ),
+          headerStyle: styles.header,
+          headerTintColor: 'white',
+          headerRightContainerStyle: styles.paddingRight,
+          animationEnabled: false,
+          headerRight: () => {
+            return (
+              <MoreInformation type={Info.ACCOUNT_CREATION_PEER_TO_PEER} />
+            );
+          },
+          headerLeft: () => (
+            <Icon
+              name={Icons.ARROW_LEFT}
+              theme={theme}
+              additionalContainerStyle={[styles.marginLeft]}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              color={getColors(theme).iconBW}
+            />
+          ),
+        })}
+        component={CreateAccountPeerToPeer}
       />
       <Stack.Screen
         name="AddAccountByKeyScreen"

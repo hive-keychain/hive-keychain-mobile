@@ -13,7 +13,6 @@ import Separator from 'components/ui/Separator';
 import {IntroductionNavProp} from 'navigators/Signup.types';
 import React, {useEffect, useRef} from 'react';
 import {
-  Linking,
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
@@ -39,7 +38,6 @@ import {
   title_primary_title_1,
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
-import {hiveConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 
 const INTRO_STEPS = 3;
@@ -207,7 +205,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
               <EllipticButton
                 title={translate('intro.createAccount')}
                 onPress={() => {
-                  Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
+                  navigation.navigate('CreateAccountScreen');
                 }}
                 style={styles.warningProceedButton}
                 additionalTextStyle={styles.textButtonFilled}

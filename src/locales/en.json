@@ -9,6 +9,10 @@
     "existingAccount": "Existing Account",
     "createAccount": "New Account"
   },
+  "createAccount": {
+    "on_boarding_title": "Create on hive.io",
+    "peer_to_peer_on_boarding_title": "Create with a friend"
+  },
   "addAccountByKey": {"text": "Add your existing HIVE account to Keychain"},
   "addAccountByAuth": {
     "text": "Add the new account by specifying an account that has authority over it, and that is already saved in Hive Keychain."
@@ -552,6 +556,13 @@
       "text3": "(Use your Master Key to unlock all app features).",
       "text4": "If you use a Master Key, it will NOT be saved and will only be used to generate your other Keys. You may add/edit Accounts or Keys at any time."
     },
+    "accountCreationPeerToPeer": {
+      "title": "Peer to Peer onboarding, thanks to a good friend!",
+      "text1": "As soon as you choose a valid username and click on Create",
+      "text2": "the app will give you your keys, PLEASE STORE them in a safe place.",
+      "text3": "Then after confirm that the keys are safely stored,",
+      "text4": "You will get a QR code, show it to your friend to proceed with Account Creation."
+    },
     "infoQR": {
       "title": "Import via QR Code",
       "text1": "You can import an account instantly by scanning its corresponding QR Code.",
@@ -679,6 +690,7 @@
     "tabs": "Opened tabs",
     "governance": "Governance",
     "create_account": "Create Account",
+    "create_account_peer_to_peer": "Friend Onboarding",
     "tokens": "Tokens",
     "theme_setting": "Theme",
     "wallet_history": "Wallet History",
