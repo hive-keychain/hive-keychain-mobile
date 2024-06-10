@@ -21,6 +21,7 @@ import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
 import {SignupStackParamList} from './Signup.types';
+import TemplateStack from './mainDrawerStacks/TemplateStack';
 
 const Stack = createStackNavigator<SignupStackParamList>();
 
@@ -58,6 +59,11 @@ export default () => {
           ),
         })}
         component={CreateAccount}
+      />
+      <Stack.Screen
+        name="TemplateStackScreen"
+        options={{...noHeader, animationEnabled: false}}
+        component={TemplateStack}
       />
       <Stack.Screen
         name="CreateAccountPeerToPeerScreen"

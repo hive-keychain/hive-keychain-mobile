@@ -8,6 +8,7 @@ export type SignupStackParamList = {
   SignupScreen: undefined;
   AddAccountByKeyScreen: undefined;
   ScanQRScreen: undefined;
+  TemplateStackScreen: undefined;
 };
 
 export type SignupNavigation = StackNavigationProp<

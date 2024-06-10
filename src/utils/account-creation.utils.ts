@@ -8,6 +8,7 @@ import {createClaimedAccount, createNewAccount} from './hive';
 export enum AccountCreationType {
   USING_TICKET = 'USING_TICKET',
   BUYING = 'BUYING',
+  PEER_TO_PEER = 'PEER_TO_PEER',
 }
 
 export interface GeneratedKey {

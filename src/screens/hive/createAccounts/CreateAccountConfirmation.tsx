@@ -3,7 +3,10 @@ import {addAccount} from 'actions/accounts';
 import {Account} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
-import OperationButton from 'components/form/EllipticButton';
+import {
+  default as EllipticButton,
+  default as OperationButton,
+} from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
@@ -18,6 +21,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
+import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
@@ -35,6 +39,7 @@ import {
   AccountCreationUtils,
   GeneratedKeys,
 } from 'utils/account-creation.utils';
+import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {resetStackAndNavigate} from 'utils/navigation';
@@ -72,10 +77,13 @@ const StepTwo = ({
     setNotPrimaryStorageUnderstanding,
   ] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [qrData, setQrData] = useState<string | undefined>();
 
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
+  const [waitingForPeerResponse, setWaitingForPeerResponse] = useState(true);
+  const [flagWarningColor, setFlagWarningColor] = useState(false);
 
   useEffect(() => {
     const masterKey = AccountCreationUtils.generateMasterKey();
@@ -216,7 +224,12 @@ const StepTwo = ({
 
   const copyAllKeys = () => {
     Clipboard.setString(
-      generateKeysTextVersion() + addExtraInfoToClipboard(selectedAccount.name),
+      generateKeysTextVersion() +
+        addExtraInfoToClipboard(
+          creationType === AccountCreationType.PEER_TO_PEER
+            ? 'peer_to_peer'
+            : selectedAccount.name,
+        ),
     );
     SimpleToast.show(translate('toast.copied_text'));
   };
@@ -233,6 +246,8 @@ const StepTwo = ({
           'components.create_account.claim_account_method_message',
           {account: selectedAccount.name},
         );
+      case AccountCreationType.PEER_TO_PEER:
+        return translate('components.create_account.peer_to_peer_message');
     }
   };
 
@@ -244,29 +259,43 @@ const StepTwo = ({
     ) {
       setLoading(true);
       try {
-        if (!selectedAccount.keys.active)
-          throw new Error(
-            translate('common.missing_key', {key: KeychainKeyTypes.active}),
+        if (creationType !== AccountCreationType.PEER_TO_PEER) {
+          if (!selectedAccount.keys.active)
+            throw new Error(
+              translate('common.missing_key', {key: KeychainKeyTypes.active}),
+            );
+          const result = await AccountCreationUtils.createAccount(
+            creationType as AccountCreationType,
+            accountName,
+            selectedAccount.name!,
+            selectedAccount.keys.active!,
+            AccountCreationUtils.generateAccountAuthorities(generatedKeys),
+            price,
+            generatedKeys,
           );
-        const result = await AccountCreationUtils.createAccount(
-          creationType as AccountCreationType,
-          accountName,
-          selectedAccount.name!,
-          selectedAccount.keys.active!,
-          AccountCreationUtils.generateAccountAuthorities(generatedKeys),
-          price,
-          generatedKeys,
-        );
-        if (result) {
-          SimpleToast.show(
-            translate('components.create_account.create_account_successful'),
-          );
-          addAccount(result.name, result.keys, true, false);
-          resetStackAndNavigate('WALLET');
+          if (result) {
+            SimpleToast.show(
+              translate('components.create_account.create_account_successful'),
+            );
+            addAccount(result.name, result.keys, true, false);
+            resetStackAndNavigate('WALLET');
+          } else {
+            SimpleToast.show(
+              translate('components.create_account.create_account_failed'),
+            );
+          }
         } else {
-          SimpleToast.show(
-            translate('components.create_account.create_account_failed'),
-          );
+          const encodedDataAsString = Buffer.from(
+            JSON.stringify({
+              n: accountName,
+              o: generatedKeys.owner.public,
+              a: generatedKeys.active.public,
+              p: generatedKeys.posting.public,
+              m: generatedKeys.memo.public,
+            }),
+          ).toString('base64');
+          const fullData = 'keychain://create_account=' + encodedDataAsString;
+          setQrData(fullData);
         }
       } catch (err) {
         SimpleToast.show(err.message);
@@ -283,81 +312,160 @@ const StepTwo = ({
 
   const checkBoxSize = width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 14 : 24;
 
+  const renderButton = () =>
+    creationType === AccountCreationType.PEER_TO_PEER ? (
+      <EllipticButton
+        title={translate('common.show_qr')}
+        onPress={createAccount}
+        isWarningButton
+        additionalTextStyle={[
+          styles.buttonText,
+          styles.dynamicTextSize,
+          styles.whiteText,
+        ]}
+        style={styles.button}
+      />
+    ) : (
+      <ActiveOperationButton
+        isLoading={loading}
+        style={[styles.button, getButtonStyle(theme).warningStyleButton]}
+        onPress={createAccount}
+        title={translate('components.create_account.create_account')}
+        additionalTextStyle={[
+          styles.buttonText,
+          styles.dynamicTextSize,
+          styles.whiteText,
+        ]}
+      />
+    );
+
+  useEffect(() => {
+    if (qrData) {
+      const interval = setInterval(async () => {
+        if (await AccountUtils.doesAccountExist(accountName)) {
+          setWaitingForPeerResponse(false);
+          return console.log('AccountCreated, //TODO load account'); //TODO change line
+        }
+        setFlagWarningColor((prev) => !prev);
+        return console.log('Waiting for payment!'); //TODO remove line
+      }, 3000);
+
+      return () => clearInterval(interval);
+    }
+  }, [qrData]);
+
   return (
     <Background theme={theme}>
       <View style={{flex: 1, width: '100%', height: '100%'}}>
         <FocusAwareStatusBar />
-        {keysTextVersion.length > 0 && !loadingMasterKey && (
-          <View style={styles.container}>
-            <ScrollView style={styles.keysContainer}>{renderKeys()}</ScrollView>
-            <View style={[styles.checkboxesContainer]}>
-              <CheckBoxPanel
-                checked={paymentUnderstanding}
-                onPress={() => setPaymentUnderstanding(!paymentUnderstanding)}
-                title={getPaymentCheckboxLabel()}
-                skipTranslation
-                smallText
-                containerStyle={styles.checkboxContainer}
-              />
-              <CheckBoxPanel
-                checked={safelyCopied}
-                onPress={() => setSafelyCopied(!safelyCopied)}
-                title="components.create_account.safely_copied_keys"
-                smallText
-                containerStyle={styles.checkboxContainer}
-              />
-              <CheckBoxPanel
-                checked={notPrimaryStorageUnderstanding}
-                onPress={() =>
-                  setNotPrimaryStorageUnderstanding(
-                    !notPrimaryStorageUnderstanding,
-                  )
-                }
-                title="components.create_account.storage_understanding"
-                smallText
-                containerStyle={styles.checkboxContainer}
+        {creationType === AccountCreationType.PEER_TO_PEER && qrData ? (
+          <View style={styles.qrContainer}>
+            {waitingForPeerResponse && (
+              <Text
+                style={[
+                  {color: flagWarningColor ? 'green' : 'white'},
+                  styles.dynamicTextSize,
+                ]}>
+                Waiting...
+              </Text>
+            )}
+            <View
+              style={{
+                //TODO add styles to function bellow
+                backgroundColor: 'white',
+                width: 'auto',
+                height: 'auto',
+                padding: 30,
+                borderRadius: 12,
+              }}>
+              <QRCode
+                size={240}
+                style={{backgroundColor: 'white'}}
+                value={qrData}
               />
             </View>
-            <View style={[styles.buttonsContainer, styles.spacing]}>
-              <OperationButton
-                style={[
-                  styles.button,
-                  {
-                    backgroundColor:
-                      theme === Theme.DARK
-                        ? getColors(theme).cardBgColor
-                        : 'white',
-                  },
-                ]}
-                title={translate('components.create_account.copy')}
-                onPress={() => copyAllKeys()}
-                additionalTextStyle={[
-                  styles.buttonText,
-                  styles.dynamicTextSize,
-                  styles.copyButtonText,
-                ]}
-              />
-              <ActiveOperationButton
-                isLoading={loading}
-                style={[
-                  styles.button,
-                  getButtonStyle(theme).warningStyleButton,
-                ]}
-                onPress={createAccount}
-                title={translate('components.create_account.create_account')}
-                additionalTextStyle={[
-                  styles.buttonText,
-                  styles.dynamicTextSize,
-                  styles.whiteText,
-                ]}
-              />
+            <View style={{paddingHorizontal: 16, marginTop: 12}}>
+              <Text style={[styles.buttonText, styles.dynamicTextSize]}>
+                {/* //TODO add tr */}
+                1. Show this QR to your On Boarding friend.
+              </Text>
+              <Text style={[styles.buttonText, styles.dynamicTextSize]}>
+                2. Tell your friend to scan it, using the Mobile Keychain.
+              </Text>
+              <Text style={[styles.buttonText, styles.dynamicTextSize]}>
+                3. Once he successfully onboard you, the app will sign you!
+              </Text>
+              <Text style={[styles.buttonText, styles.dynamicTextSize]}>
+                Please be patience until the process is done!
+              </Text>
             </View>
           </View>
-        )}
-        {loadingMasterKey && (
-          <View style={styles.loadingContainer}>
-            <Loader animating size={'small'} />
-          </View>
+        ) : (
+          <>
+            {keysTextVersion.length > 0 && !loadingMasterKey && (
+              <View style={styles.container}>
+                <ScrollView style={styles.keysContainer}>
+                  {renderKeys()}
+                </ScrollView>
+                <View style={[styles.checkboxesContainer]}>
+                  <CheckBoxPanel
+                    checked={paymentUnderstanding}
+                    onPress={() =>
+                      setPaymentUnderstanding(!paymentUnderstanding)
+                    }
+                    title={getPaymentCheckboxLabel()}
+                    skipTranslation
+                    smallText
+                    containerStyle={styles.checkboxContainer}
+                  />
+                  <CheckBoxPanel
+                    checked={safelyCopied}
+                    onPress={() => setSafelyCopied(!safelyCopied)}
+                    title="components.create_account.safely_copied_keys"
+                    smallText
+                    containerStyle={styles.checkboxContainer}
+                  />
+                  <CheckBoxPanel
+                    checked={notPrimaryStorageUnderstanding}
+                    onPress={() =>
+                      setNotPrimaryStorageUnderstanding(
+                        !notPrimaryStorageUnderstanding,
+                      )
+                    }
+                    title="components.create_account.storage_understanding"
+                    smallText
+                    containerStyle={styles.checkboxContainer}
+                  />
+                </View>
+                <View style={[styles.buttonsContainer, styles.spacing]}>
+                  <OperationButton
+                    style={[
+                      styles.button,
+                      {
+                        backgroundColor:
+                          theme === Theme.DARK
+                            ? getColors(theme).cardBgColor
+                            : 'white',
+                      },
+                    ]}
+                    title={translate('components.create_account.copy')}
+                    onPress={() => copyAllKeys()}
+                    additionalTextStyle={[
+                      styles.buttonText,
+                      styles.dynamicTextSize,
+                      styles.copyButtonText,
+                    ]}
+                  />
+                  {renderButton()}
+                </View>
+              </View>
+            )}
+            {loadingMasterKey && (
+              <View style={styles.loadingContainer}>
+                <Loader animating size={'small'} />
+              </View>
+            )}
+          </>
         )}
       </View>
     </Background>
@@ -461,6 +569,14 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    qrContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100%',
+      width: '100%',
     },
   });
 

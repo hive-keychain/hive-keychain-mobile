@@ -1,6 +1,7 @@
 import HandImage from 'assets/new_UI/hand_1.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import KeychainLogo from 'components/ui/KeychainLogo';
 import Separator from 'components/ui/Separator';
 import React from 'react';
@@ -25,6 +26,7 @@ const CreateAccount = () => {
   return (
     <Background theme={theme} containerStyle={styles.container}>
       <View style={styles.pageContainer}>
+        <FocusAwareStatusBar />
         <View style={styles.imgContainer}>
           <View style={[styles.keychainLogoContainer]}>
             <KeychainLogo
