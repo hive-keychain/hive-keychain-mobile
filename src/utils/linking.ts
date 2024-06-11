@@ -1,6 +1,7 @@
 import {treatHASRequest} from 'actions/hiveAuthenticationService';
 import {addAccount, addTabFromLinking} from 'actions/index';
 import {translate} from 'i18n-js';
+import {CreateAccountFromWalletParamList} from 'navigators/mainDrawerStacks/CreateAccount.types';
 import {Linking} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {RootState, store} from 'store';
@@ -10,25 +11,22 @@ import {HASConfig} from './config';
 import {processQRCodeOp} from './hive-uri';
 import {KeyUtils} from './key.utils';
 import {validateFromObject} from './keyValidation';
-import {goBack} from './navigation';
+import {goBack, navigate} from './navigation';
 
 export default async () => {
   Linking.addEventListener('url', ({url}) => {
     if (url) {
-      console.log({url}); //TODO remove line
       handleUrl(url);
     }
   });
 
   const initialUrl = await Linking.getInitialURL();
-  console.log({initialUrl}); //TODO remove line
   if (initialUrl) {
     handleUrl(initialUrl);
   }
 };
 
 export const handleUrl = (url: string, qr: boolean = false) => {
-  console.log({url});
   if (url.startsWith(HASConfig.protocol)) {
     if (url.startsWith(HASConfig.auth_req)) {
       const buf = Buffer.from(url.replace(HASConfig.auth_req, ''), 'base64');
@@ -50,16 +48,30 @@ export const handleUrl = (url: string, qr: boolean = false) => {
       processQRCodeOp(opJson);
     }
   } else if (url.startsWith('keychain://create_account=')) {
-    console.log('Create Account!'); //TODO remove line
     const buf = url.replace('keychain://create_account=', '');
-    const data = JSON.parse(Buffer.from(buf, 'base64').toString());
-    console.log({data});
-    //TODO bellow
-    //Load confirmation window with the operation, similar to
-    //  -> src/screens/hive/createAccounts/CreateAccountConfirmation.tsx line 267
-    //  -> wait for result, if success present modal message.
-    //  - in the "other side" as soon as the account exists, we will try to add it
-    //    using the keys that user has.
+    try {
+      const data = JSON.parse(Buffer.from(buf, 'base64').toString());
+      const {n, o, a, p, m} = data;
+      navigate('CreateAccountScreen', {
+        screen: 'CreateAccountFromWalletScreenPageOne',
+        params: {
+          wallet: true,
+          newPeerToPeerData: {
+            name: n,
+            publicKeys: {
+              owner: o,
+              active: a,
+              posting: p,
+              memo: m,
+            },
+          },
+        } as CreateAccountFromWalletParamList['CreateAccountFromWalletScreenPageOne'],
+      });
+    } catch (error) {
+      console.log('Error processing QR Create Accounts data, please check!', {
+        error,
+      });
+    }
   } else if (isURL(url)) {
     if (qr) {
       goBack();

@@ -25,6 +25,7 @@
     "posting_key": "Posting Key",
     "memo_key": "Memo Key",
     "private": "Private",
+    "owner": "Owner",
     "public": "Public",
     "posting": "Posting",
     "active": "Active",
@@ -424,6 +425,15 @@
         "swap_refresh_countdown": "Refreshing in {{count}}s",
         "swap_slippage_step": "{{slippage}}% (for each step)",
         "swap_no_history": "Your swap history is empty"
+      },
+      "create_account": {
+        "peer_to_peer": {
+          "info": "Please verify the information bellow, to on board a new HIVE user.\nThis action cannot be undone!",
+          "creation_method": "Creation method",
+          "delegating_title": "Delegating",
+          "delegating_amount": "Amount {{amount}} {{currency}}",
+          "account_creator": "Create account using"
+        }
       }
     },
     "has": {
@@ -612,7 +622,9 @@
       "need_accept_terms_condition": "You need to accept the terms and conditions before creating the account",
       "create_account_successful": "Your account has been successfully created and added to your Keychain",
       "create_account_failed": "The account creation has failed. Please try again later",
-      "create_account_ticket": "{{tickets}} account creation ticket(s)"
+      "create_account_ticket": "{{tickets}} account creation ticket(s)",
+      "create_account_onboarding_message": "You are onboarding this user @{{name}}, Please choose bellow if you want to delegate HP or RC to this user.",
+      "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created! Thanks for using this feature!"
     },
     "copy_keys": {
       "title": "Copy a Key",

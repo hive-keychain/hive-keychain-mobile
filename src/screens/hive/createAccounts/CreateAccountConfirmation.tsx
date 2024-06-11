@@ -28,6 +28,7 @@ import {getButtonStyle} from 'src/styles/button';
 import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
+  body_primary_body_1,
   body_primary_body_2,
   button_link_primary_small,
   getFontSizeSmallDevices,
@@ -285,6 +286,8 @@ const StepTwo = ({
             );
           }
         } else {
+          //TODO important related to the QRcode presentation:
+          //  check all current QRcode component design and use the same, but having in mind the white bg.
           const encodedDataAsString = Buffer.from(
             JSON.stringify({
               n: accountName,
@@ -309,8 +312,6 @@ const StepTwo = ({
       return;
     }
   };
-
-  const checkBoxSize = width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 14 : 24;
 
   const renderButton = () =>
     creationType === AccountCreationType.PEER_TO_PEER ? (
@@ -339,15 +340,33 @@ const StepTwo = ({
       />
     );
 
+  const handleLoadNewAccount = () => {
+    console.log('Loading The New Account!'); //TODO change line
+    addAccount(
+      accountName,
+      {
+        posting: generatedKeys.posting.private,
+        postingPubkey: generatedKeys.posting.public,
+        active: generatedKeys.active.private,
+        activePubkey: generatedKeys.active.public,
+        memo: generatedKeys.memo.private,
+        memoPubkey: generatedKeys.memo.public,
+      },
+      true,
+      false,
+    );
+    resetStackAndNavigate('WALLET');
+  };
+
   useEffect(() => {
     if (qrData) {
       const interval = setInterval(async () => {
         if (await AccountUtils.doesAccountExist(accountName)) {
           setWaitingForPeerResponse(false);
-          return console.log('AccountCreated, //TODO load account'); //TODO change line
+          handleLoadNewAccount();
+          return;
         }
         setFlagWarningColor((prev) => !prev);
-        return console.log('Waiting for payment!'); //TODO remove line
       }, 3000);
 
       return () => clearInterval(interval);
@@ -364,7 +383,7 @@ const StepTwo = ({
               <Text
                 style={[
                   {color: flagWarningColor ? 'green' : 'white'},
-                  styles.dynamicTextSize,
+                  body_primary_body_1,
                 ]}>
                 Waiting...
               </Text>
