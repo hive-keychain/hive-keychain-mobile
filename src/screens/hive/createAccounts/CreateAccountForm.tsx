@@ -1,5 +1,6 @@
 import {Asset} from '@hiveio/dhive';
 import {Account} from 'actions/interfaces';
+import {showModal} from 'actions/message';
 import OperationButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import UserDropdown from 'components/form/UserDropdown';
@@ -17,6 +18,7 @@ import {TemplateStackProps} from 'navigators/Root.types';
 import {CreateAccountFromWalletNavigationProps} from 'navigators/mainDrawerStacks/CreateAccount.types';
 import React, {useEffect, useState} from 'react';
 import {
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -30,6 +32,7 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {CreateDataAccountOnBoarding} from 'src/interfaces/create-accounts.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -48,9 +51,13 @@ import {
 } from 'utils/account-creation.utils';
 import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
-import {capitalize, getCleanAmountValue, toHP} from 'utils/format';
-import {getCurrency} from 'utils/hive';
-import {getAccountPrice} from 'utils/hiveUtils';
+import {capitalize, fromHP, getCleanAmountValue, toHP} from 'utils/format';
+import {delegate, getCurrency} from 'utils/hive';
+import {
+  getAccountPrice,
+  sanitizeAmount,
+  sanitizeUsername,
+} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
@@ -68,6 +75,7 @@ const CreateAccountStepOne = ({
   route,
   accounts,
   properties,
+  showModal,
 }: PropsFromRedux & CreateAccountFromWalletNavigationProps) => {
   const [accountOptions, setAccountOptions] = useState<SelectOption[]>();
   const [price, setPrice] = useState(3);
@@ -99,7 +107,7 @@ const CreateAccountStepOne = ({
       const {name, publicKeys} = params.newPeerToPeerData;
       setAccountName(name);
       setOnBoardingUserData({name, publicKeys});
-      //get availables //TODO move this to a util? ask stoodkev
+      //TODO move this to a util? ask stoodkev
       const totalHp = toHP(
         user.account.vesting_shares as string,
         properties.globals,
@@ -205,13 +213,22 @@ const CreateAccountStepOne = ({
     }
   };
 
-  const onSend = async () => {
+  const onConfirm = async () => {
     if (!user.keys.active) {
       SimpleToast.show(
         translate('common.missing_key', {key: KeychainKeyTypes.active}),
         SimpleToast.LONG,
       );
       return;
+    }
+    if (+onBoardingDelegations.rcAmount > 0) {
+      if (!user.keys.posting) {
+        SimpleToast.show(
+          translate('common.missing_key', {key: KeychainKeyTypes.posting}),
+          SimpleToast.LONG,
+        );
+        return;
+      }
     }
     const result = await AccountCreationUtils.createAccount(
       creationType as AccountCreationType,
@@ -229,22 +246,53 @@ const CreateAccountStepOne = ({
       price,
     );
     if (result) {
-      SimpleToast.show(
-        translate(
-          'components.create_account.create_account_on_boarding_successful',
-          {accountName},
-        ),
-      );
-      //TODO:
-      //  - adjust the initial behaviour to get the PIN + MK first.
-      //    - this is needed 7 mandatory to addAccount when created in the new user's side.
-      //  - check wif account exists & somehow:
-      //  - if any to delegate, delegate amounts. Possible in one OP?
+      if (await AccountUtils.doesAccountExist(onBoardingUserData.name)) {
+        let delegationFlag = false;
+        if (+onBoardingDelegations.hpAmount > 0) {
+          delegationFlag = true;
+          console.log(
+            `Processing ${onBoardingDelegations.hpAmount} HP Delegation to @${onBoardingUserData.name}...`,
+          ); //TODO remove line
+          const hpDelegationResult = await delegate(user.keys.active, {
+            vesting_shares: sanitizeAmount(
+              fromHP(
+                sanitizeAmount(onBoardingDelegations.hpAmount),
+                properties.globals,
+              ).toString(),
+              'VESTS',
+              6,
+            ),
+            delegatee: sanitizeUsername(onBoardingUserData.name),
+            delegator: user.account.name,
+          });
+        }
+        if (+onBoardingDelegations.rcAmount > 0) {
+          delegationFlag = true;
+          console.log(
+            `Processing ${onBoardingDelegations.rcAmount} GRC Delegation to @${onBoardingUserData.name}...`,
+          ); //TODO remove line
+          const rcDelegationResult = await RcDelegationsUtils.sendDelegation(
+            RcDelegationsUtils.gigaRcToRc(
+              parseFloat(onBoardingDelegations.rcAmount),
+            ),
+            onBoardingUserData.name,
+            user.name!,
+            user.keys.posting!,
+          );
+        }
+        const successKey = delegationFlag
+          ? 'components.create_account.create_account_on_boarding_with_delegations_successful'
+          : 'components.create_account.create_account_on_boarding_successful';
+        showModal(successKey, MessageModalType.SUCCESS, {
+          accountName: onBoardingUserData.name,
+        });
+      }
     } else {
       SimpleToast.show(
         translate('components.create_account.create_account_failed'),
       );
     }
+    return;
   };
 
   const reduceStringKey = (pubKey: string) => {
@@ -281,7 +329,7 @@ const CreateAccountStepOne = ({
       ) {
         const confirmationData: ConfirmationPageProps = {
           title: 'wallet.operations.create_account.peer_to_peer.info',
-          onSend,
+          onSend: () => {},
           skipWarningTranslation: true,
           data: [
             {
@@ -317,9 +365,7 @@ const CreateAccountStepOne = ({
               value: `${reduceStringKey(onBoardingUserData.publicKeys.memo)}`,
             },
           ],
-          onConfirm: () => {
-            navigate('WALLET');
-          },
+          onConfirm: onConfirm,
         };
         if (+onBoardingDelegations.hpAmount > 0) {
           confirmationData.data.push({
@@ -340,7 +386,7 @@ const CreateAccountStepOne = ({
               'wallet.operations.create_account.peer_to_peer.delegating_title',
             value: translate(
               'wallet.operations.create_account.peer_to_peer.delegating_amount',
-              {amount: onBoardingDelegations.rcAmount, currency: 'RC'},
+              {amount: onBoardingDelegations.rcAmount, currency: 'GRC'},
             ),
           });
         }
@@ -348,34 +394,34 @@ const CreateAccountStepOne = ({
           screen: 'ConfirmationPage',
           params: confirmationData,
         });
-        return;
-      } else {
-        return Toast.show(translate('toast.account_creation_not_enough_found'));
-      }
-    }
-    if (await validateAccountName()) {
-      const account = user.account;
-      const balance = Asset.fromString(account.balance.toString());
-      if (
-        creationType === AccountCreationType.USING_TICKET ||
-        (creationType === AccountCreationType.BUYING && balance.amount >= 3)
-      ) {
-        const usedAccount = accounts.find(
-          (localAccount: Account) => localAccount.name === user.name,
-        );
-        navigate('TemplateStack', {
-          titleScreen: translate('navigation.create_account'),
-          component: (
-            <StepTwo
-              selectedAccount={usedAccount}
-              accountName={accountName}
-              creationType={creationType}
-              price={price}
-            />
-          ),
-        } as TemplateStackProps);
       } else {
         Toast.show(translate('toast.account_creation_not_enough_found'));
+      }
+    } else {
+      if (await validateAccountName()) {
+        const account = user.account;
+        const balance = Asset.fromString(account.balance.toString());
+        if (
+          creationType === AccountCreationType.USING_TICKET ||
+          (creationType === AccountCreationType.BUYING && balance.amount >= 3)
+        ) {
+          const usedAccount = accounts.find(
+            (localAccount: Account) => localAccount.name === user.name,
+          );
+          navigate('TemplateStack', {
+            titleScreen: translate('navigation.create_account'),
+            component: (
+              <StepTwo
+                selectedAccount={usedAccount}
+                accountName={accountName}
+                creationType={creationType}
+                price={price}
+              />
+            ),
+          } as TemplateStackProps);
+        } else {
+          Toast.show(translate('toast.account_creation_not_enough_found'));
+        }
       }
     }
   };
@@ -386,7 +432,7 @@ const CreateAccountStepOne = ({
     currency: 'HP' | 'GRC',
     available: string,
   ) => {
-    //TODO add tr to caption
+    //TODO add tr to caption if accepted
     const value =
       delegating === 'hpAmount'
         ? onBoardingDelegations.hpAmount
@@ -458,101 +504,95 @@ const CreateAccountStepOne = ({
 
   return (
     <Background theme={theme}>
-      <>
+      <ScrollView contentContainerStyle={styles.container}>
         <FocusAwareStatusBar />
-        <View style={styles.container}>
-          <View style={styles.content}>
-            {user.name && accountOptions && (
-              <>
-                <UserDropdown />
-              </>
+        <View style={styles.content}>
+          {user.name && accountOptions && (
+            <>
+              <UserDropdown />
+            </>
+          )}
+          <Separator height={15} />
+          {user.name && accountOptions && !loadingData && (
+            <Text style={[styles.text, styles.centeredText, styles.opacity]}>
+              {translate('components.create_account.cost', {
+                price: getPriceLabel(),
+                account: user.name,
+              })}
+            </Text>
+          )}
+          {loadingData && (
+            <View style={styles.flexCentered}>
+              <Loader animating size={'small'} />
+            </View>
+          )}
+          <Separator height={25} />
+          <OperationInput
+            disabled={!!onBoardingUserData}
+            labelInput={translate('common.username')}
+            placeholder={translate(
+              'components.create_account.new_account_username',
             )}
-            <Separator height={15} />
-            {user.name && accountOptions && !loadingData && (
-              <Text style={[styles.text, styles.centeredText, styles.opacity]}>
-                {translate('components.create_account.cost', {
-                  price: getPriceLabel(),
-                  account: user.name,
-                })}
+            value={accountName}
+            onChangeText={setAccountName}
+            leftIcon={<Icon name={Icons.AT} theme={theme} />}
+            rightIcon={
+              isAvailableAccountName ? (
+                <Icon name={Icons.CHECK} theme={theme} />
+              ) : null
+            }
+          />
+          {!loadingData && onBoardingUserData && (
+            <View style={styles.marginVertical}>
+              <Text
+                style={[styles.text, styles.paddingHorizontal, styles.opacity]}>
+                {translate(
+                  'components.create_account.create_account_onboarding_message',
+                  {name: onBoardingUserData.name},
+                )}
               </Text>
-            )}
-            {loadingData && (
-              <View style={styles.flexCentered}>
-                <Loader animating size={'small'} />
-              </View>
-            )}
-            <Separator height={25} />
-            <OperationInput
-              disabled={!!onBoardingUserData}
-              labelInput={translate('common.username')}
-              placeholder={translate(
-                'components.create_account.new_account_username',
-              )}
-              value={accountName}
-              onChangeText={setAccountName}
-              leftIcon={<Icon name={Icons.AT} theme={theme} />}
-              rightIcon={
-                isAvailableAccountName ? (
-                  <Icon name={Icons.CHECK} theme={theme} />
-                ) : null
-              }
-            />
-            {!loadingData && onBoardingUserData && (
-              <View style={styles.marginVertical}>
-                <Text
-                  style={[
-                    styles.text,
-                    styles.paddingHorizontal,
-                    styles.opacity,
-                  ]}>
-                  {translate(
-                    'components.create_account.create_account_onboarding_message',
-                    {name: onBoardingUserData.name},
-                  )}
-                </Text>
-                <OptionsToggle
-                  theme={theme}
-                  title={`${translate('common.delegate')} ${getCurrency('HP')}`}
-                  toggled={delegateHP}
-                  additionalTitleStyle={getFormFontStyle(height, theme).title}
-                  callback={(toggled) => {
-                    setDelegateHP(toggled);
-                  }}>
-                  {renderCustomPanel(
-                    'You may delegate HP for this new user.',
-                    'hpAmount',
-                    'HP',
-                    availableHP,
-                  )}
-                </OptionsToggle>
-                <OptionsToggle
-                  theme={theme}
-                  title={`${translate('common.delegate')} RC`}
-                  toggled={delegateRC}
-                  additionalTitleStyle={getFormFontStyle(height, theme).title}
-                  callback={(toggled) => {
-                    setDelegateRC(toggled);
-                  }}>
-                  {renderCustomPanel(
-                    'You may delegate RC for this new user.',
-                    'rcAmount',
-                    'GRC',
-                    availableGRC,
-                  )}
-                </OptionsToggle>
-              </View>
-            )}
-          </View>
-          <View style={styles.buttonContainer}>
-            <OperationButton
-              title={translate('common.next')}
-              onPress={() => goToNextPage()}
-              isWarningButton
-              additionalTextStyle={{...button_link_primary_medium}}
-            />
-          </View>
+              <OptionsToggle
+                theme={theme}
+                title={`${translate('common.delegate')} ${getCurrency('HP')}`}
+                toggled={delegateHP}
+                additionalTitleStyle={getFormFontStyle(height, theme).title}
+                callback={(toggled) => {
+                  setDelegateHP(toggled);
+                }}>
+                {renderCustomPanel(
+                  'You may delegate HP for this new user.',
+                  'hpAmount',
+                  'HP',
+                  availableHP,
+                )}
+              </OptionsToggle>
+              <OptionsToggle
+                theme={theme}
+                title={`${translate('common.delegate')} RC`}
+                toggled={delegateRC}
+                additionalTitleStyle={getFormFontStyle(height, theme).title}
+                callback={(toggled) => {
+                  setDelegateRC(toggled);
+                }}>
+                {renderCustomPanel(
+                  'You may delegate RC for this new user.',
+                  'rcAmount',
+                  'GRC',
+                  availableGRC,
+                )}
+              </OptionsToggle>
+            </View>
+          )}
         </View>
-      </>
+        <View style={styles.buttonContainer}>
+          <OperationButton
+            title={translate('common.next')}
+            onPress={() => goToNextPage()}
+            isWarningButton
+            additionalTextStyle={{...button_link_primary_medium}}
+          />
+        </View>
+      </ScrollView>
     </Background>
   );
 };
@@ -560,18 +600,19 @@ const CreateAccountStepOne = ({
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
     container: {
-      flex: 1,
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       paddingHorizontal: 16,
-      height: '100%',
       flexGrow: 1,
     },
     content: {
-      flex: 1,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
       width: '100%',
+      height: 'auto',
       marginTop: 30,
-      flexGrow: 1,
     },
     button: {
       width: '100%',
@@ -580,6 +621,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     buttonContainer: {
       marginBottom: 25,
       width: '100%',
+      height: 'auto',
     },
     text: {color: getColors(theme).secondaryText, ...body_primary_body_1},
     centeredText: {textAlign: 'center'},
@@ -635,13 +677,16 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     },
   });
 
-const connector = connect((state: RootState) => {
-  return {
+const connector = connect(
+  (state: RootState) => ({
     user: state.activeAccount,
     accounts: state.accounts,
     properties: state.properties,
-  };
-});
+  }),
+  {
+    showModal,
+  },
+);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(CreateAccountStepOne);

@@ -6,6 +6,7 @@ import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import ChooseAccountOption from 'screens/ChooseAccount';
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
@@ -39,6 +40,11 @@ export default () => {
         name="SignupScreen"
         options={{...noHeader, animationEnabled: false}}
         component={Signup}
+      />
+      <Stack.Screen
+        name="ChooseAccountOptionsScreen"
+        options={{...noHeader, animationEnabled: false}}
+        component={ChooseAccountOption}
       />
       <Stack.Screen
         name="CreateAccountScreen"
@@ -95,10 +101,22 @@ export default () => {
       />
       <Stack.Screen
         name="AddAccountByKeyScreen"
-        options={{
-          headerShown: false,
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTintColor: 'white',
+          headerRightContainerStyle: styles.paddingRight,
           animationEnabled: false,
-        }}
+          title: '',
+          headerLeft: () => (
+            <Icon
+              name={Icons.ARROW_LEFT}
+              theme={theme}
+              additionalContainerStyle={[styles.marginLeft]}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              color={getColors(theme).iconBW}
+            />
+          ),
+        })}
         component={AddAccountByKey}
       />
       <Stack.Screen

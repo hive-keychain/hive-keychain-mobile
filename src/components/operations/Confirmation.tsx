@@ -31,7 +31,7 @@ export type ConfirmationPageProps = {
   warningText?: string;
   skipWarningTranslation?: boolean;
   data: ConfirmationData[];
-  onConfirm?: () => void;
+  onConfirm?: () => Promise<void>;
 };
 
 type ConfirmationData = {
@@ -60,22 +60,36 @@ const ConfirmationPage = ({
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({width, height}, theme);
 
-  const onConfirm =
-    onConfirmOverride ||
-    (async () => {
+  const onConfirm = async () => {
+    if (onConfirmOverride) {
+      setLoading(true);
+      await onConfirmOverride();
+      setLoading(false);
+      resetStackAndNavigate('WALLET');
+    } else {
       setLoading(true);
       Keyboard.dismiss();
       await onSend();
       setLoading(false);
       loadAccount(user.name, true);
       resetStackAndNavigate('WALLET');
-    });
+    }
+  };
+  // onConfirmOverride ||
+  // (async () => {
+  //   setLoading(true);
+  //   Keyboard.dismiss();
+  //   await onSend();
+  //   setLoading(false);
+  //   loadAccount(user.name, true);
+  //   resetStackAndNavigate('WALLET');
+  // });
 
   return (
     <Background theme={theme}>
       <View style={styles.confirmationPage}>
         <Caption text={title} hideSeparator />
-        <Separator />
+        {/* <Separator /> */}
         {warningText && (
           <Caption
             text={warningText}

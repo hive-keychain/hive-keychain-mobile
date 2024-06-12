@@ -9,7 +9,6 @@ import PersonImage from 'assets/new_UI/person_1.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import Separator from 'components/ui/Separator';
 import {IntroductionNavProp} from 'navigators/Signup.types';
 import React, {useEffect, useRef} from 'react';
 import {
@@ -194,9 +193,22 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           {currentStep === 2 ? (
             <>
               <EllipticButton
-                title={translate('intro.existingAccount')}
+                //TODO add tr
+                title={"I'm ready to set my pin"}
                 onPress={() => {
                   navigation.navigate('SignupScreen');
+                }}
+                style={styles.outlineButton}
+                additionalTextStyle={styles.textOutLineButton}
+              />
+              {/* //TODO bellow, reuse this in the next screen which gets called
+              //  after setting the pin
+              //  -> src/actions/index.ts
+              //    -> line 12 (navigate('AddAccountByKeyScreen');) */}
+              {/* <EllipticButton
+                title={translate('intro.existingAccount')}
+                onPress={() => {
+                  navigation.navigate('SignupScreen'); //'AddAccountByKeyScreen'
                 }}
                 style={styles.outlineButton}
                 additionalTextStyle={styles.textOutLineButton}
@@ -209,7 +221,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
                 }}
                 style={styles.warningProceedButton}
                 additionalTextStyle={styles.textButtonFilled}
-              />
+              /> */}
             </>
           ) : (
             <EllipticButton

@@ -6,6 +6,7 @@ export type SignupStackParamList = {
   CreateAccountScreen: undefined;
   CreateAccountPeerToPeerScreen: undefined;
   SignupScreen: undefined;
+  ChooseAccountOptionsScreen: undefined;
   AddAccountByKeyScreen: undefined;
   ScanQRScreen: undefined;
   TemplateStackScreen: undefined;

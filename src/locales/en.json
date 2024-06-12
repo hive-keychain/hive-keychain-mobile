@@ -432,7 +432,7 @@
           "creation_method": "Creation method",
           "delegating_title": "Delegating",
           "delegating_amount": "Amount {{amount}} {{currency}}",
-          "account_creator": "Create account using"
+          "account_creator": "Creator"
         }
       }
     },
@@ -623,8 +623,9 @@
       "create_account_successful": "Your account has been successfully created and added to your Keychain",
       "create_account_failed": "The account creation has failed. Please try again later",
       "create_account_ticket": "{{tickets}} account creation ticket(s)",
-      "create_account_onboarding_message": "You are onboarding this user @{{name}}, Please choose bellow if you want to delegate HP or RC to this user.",
-      "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created! Thanks for using this feature!"
+      "create_account_onboarding_message": "You are onboarding @{{name}}, please choose bellow if you want to delegate:\nHP or RC to this user.",
+      "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created! Thanks for using this feature!",
+      "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!\nThanks for using this feature!"
     },
     "copy_keys": {
       "title": "Copy a Key",

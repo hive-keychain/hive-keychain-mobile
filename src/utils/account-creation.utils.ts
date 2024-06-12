@@ -93,6 +93,8 @@ const createAccount = async (
         memoPubkey: generatedKeys.memo.public,
       },
     } as Account;
+  } else if (success && !generatedKeys) {
+    return true;
   } else {
     return false;
   }

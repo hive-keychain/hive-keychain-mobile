@@ -274,11 +274,16 @@ const StepTwo = ({
             price,
             generatedKeys,
           );
-          if (result) {
+          if (result && (result as Account).keys) {
             SimpleToast.show(
               translate('components.create_account.create_account_successful'),
             );
-            addAccount(result.name, result.keys, true, false);
+            addAccount(
+              (result as Account).name,
+              (result as Account).keys,
+              true,
+              false,
+            );
             resetStackAndNavigate('WALLET');
           } else {
             SimpleToast.show(
@@ -341,7 +346,6 @@ const StepTwo = ({
     );
 
   const handleLoadNewAccount = () => {
-    console.log('Loading The New Account!'); //TODO change line
     addAccount(
       accountName,
       {
@@ -379,6 +383,7 @@ const StepTwo = ({
         <FocusAwareStatusBar />
         {creationType === AccountCreationType.PEER_TO_PEER && qrData ? (
           <View style={styles.qrContainer}>
+            {/* //TODO add tr for waiting if accepted */}
             {waitingForPeerResponse && (
               <Text
                 style={[
@@ -388,15 +393,7 @@ const StepTwo = ({
                 Waiting...
               </Text>
             )}
-            <View
-              style={{
-                //TODO add styles to function bellow
-                backgroundColor: 'white',
-                width: 'auto',
-                height: 'auto',
-                padding: 30,
-                borderRadius: 12,
-              }}>
+            <View style={styles.qrCodeImg}>
               <QRCode
                 size={240}
                 style={{backgroundColor: 'white'}}
@@ -405,7 +402,7 @@ const StepTwo = ({
             </View>
             <View style={{paddingHorizontal: 16, marginTop: 12}}>
               <Text style={[styles.buttonText, styles.dynamicTextSize]}>
-                {/* //TODO add tr */}
+                {/* //TODO add tr if accepted */}
                 1. Show this QR to your On Boarding friend.
               </Text>
               <Text style={[styles.buttonText, styles.dynamicTextSize]}>
@@ -503,6 +500,13 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       marginHorizontal: 16,
       flex: 1,
       justifyContent: 'space-between',
+    },
+    qrCodeImg: {
+      backgroundColor: 'white',
+      width: 'auto',
+      height: 'auto',
+      padding: 30,
+      borderRadius: 12,
     },
     button: {
       width: '45%',

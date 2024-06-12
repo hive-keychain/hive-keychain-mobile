@@ -5,12 +5,17 @@ import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {button_link_primary_medium} from 'src/styles/typography';
+import {getColors} from 'src/styles/colors';
+import {
+  FontPoppinsName,
+  button_link_primary_medium,
+  title_primary_title_1,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {
   AccountCreationType,
@@ -79,23 +84,42 @@ const CreateAccountPeerToPeer = ({user}: PropsFromRedux) => {
   return (
     <Background theme={theme} containerStyle={styles.container}>
       <View style={styles.content}>
-        <OperationInput
-          labelInput={translate('common.username')}
-          placeholder={translate(
-            'components.create_account.new_account_username',
-          )}
-          value={accountName}
-          onChangeText={setAccountName}
-          leftIcon={<Icon name={Icons.AT} theme={theme} />}
-          rightIcon={
-            isAvailableAccountName ? (
-              <Icon name={Icons.CHECK} theme={theme} />
-            ) : (
-              <Icon name={Icons.CLOSE_CIRCLE} theme={theme} />
-            )
-          }
-          additionalInputContainerStyle={styles.input}
-        />
+        <View style={styles.topContent}>
+          {/* //TODO add to tr */}
+          <Text style={styles.text}>
+            Thank you for using Keychain On Boarding!
+          </Text>
+          <Text style={styles.text}>
+            You will create an account & your friend will pay for it.
+          </Text>
+          <Text style={styles.text}>
+            As soon as you choose a valid Hive account name, the system will
+            show you the keys.
+          </Text>
+          <Text style={[styles.text, styles.textBold]}>
+            Please store this data in a safe location!
+          </Text>
+          <Text style={styles.text}>Go ahead, and follow the steps.</Text>
+          <View style={styles.inputContainer}>
+            <OperationInput
+              labelInput={translate('common.username')}
+              placeholder={translate(
+                'components.create_account.new_account_username',
+              )}
+              value={accountName}
+              onChangeText={setAccountName}
+              leftIcon={<Icon name={Icons.AT} theme={theme} />}
+              rightIcon={
+                isAvailableAccountName ? (
+                  <Icon name={Icons.CHECK} theme={theme} />
+                ) : (
+                  <Icon name={Icons.CLOSE_CIRCLE} theme={theme} />
+                )
+              }
+              additionalInputContainerStyle={styles.input}
+            />
+          </View>
+        </View>
         <View style={styles.buttonContainer}>
           <EllipticButton
             title={translate('common.next')}
@@ -120,15 +144,31 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       display: 'flex',
       flex: 1,
       flexDirection: 'column',
+      justifyContent: 'space-between',
       width: '100%',
-      justifyContent: 'center',
     },
     input: {
       width: '100%',
     },
     buttonContainer: {
-      marginVertical: 25,
+      marginBottom: 20,
       width: '100%',
+    },
+    topContent: {
+      marginTop: 30,
+    },
+    textBold: {
+      fontFamily: FontPoppinsName.BOLD,
+    },
+    text: {
+      color: getColors(theme).secondaryText,
+      marginHorizontal: 16,
+      ...title_primary_title_1,
+      alignSelf: 'stretch',
+      opacity: 0.7,
+    },
+    inputContainer: {
+      marginTop: 20,
     },
   });
 
