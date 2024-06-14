@@ -87,19 +87,13 @@ const CreateAccountPeerToPeer = ({user}: PropsFromRedux) => {
         <View style={styles.topContent}>
           {/* //TODO add to tr */}
           <Text style={styles.text}>
-            Thank you for using Keychain On Boarding!
+            You are about to create your account through friend onboarding.
           </Text>
           <Text style={styles.text}>
-            You will create an account & your friend will pay for it.
+            Your keys will be created locally, after which your friend will help
+            you create the account by scanning a QR Code.
           </Text>
-          <Text style={styles.text}>
-            As soon as you choose a valid Hive account name, the system will
-            show you the keys.
-          </Text>
-          <Text style={[styles.text, styles.textBold]}>
-            Please store this data in a safe location!
-          </Text>
-          <Text style={styles.text}>Go ahead, and follow the steps.</Text>
+          <Text style={styles.text}>Start by choosing a unique username.</Text>
           <View style={styles.inputContainer}>
             <OperationInput
               labelInput={translate('common.username')}
