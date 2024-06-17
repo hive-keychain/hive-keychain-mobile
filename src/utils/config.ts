@@ -58,6 +58,12 @@ export const ClaimsConfig = {
   },
 };
 
+export const MultisigConfig = {
+  baseURL:
+    process.env.MULTISIG_BACKEND_SERVER ||
+    'https://api-multisig.hive-keychain.com',
+};
+
 export const WitnessesConfig = {
   feedWarningLimitInHours: 5,
 };

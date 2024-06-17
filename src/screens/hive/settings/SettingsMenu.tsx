@@ -11,6 +11,7 @@ import {getMenuCardStyle} from 'src/styles/menu';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import AutomatedTasks from './AutomatedTasks';
+import Multisig from './Multisig';
 import Operations from './Operations';
 import RpcNodes from './RpcNodes';
 
@@ -67,6 +68,26 @@ const SettingsMenu = () => {
             name={Icons.AUTOMATED_TASKS}
             theme={theme}
             color={PRIMARY_RED_COLOR}
+          />
+        }
+        drawBottomLine
+      />
+      <MenuItem
+        labelTranslationKey={'settings.settings.multisig.title'}
+        theme={theme}
+        onPress={() =>
+          navigate('TemplateStack', {
+            titleScreen: translate('settings.settings.multisig.title'),
+            component: <Multisig />,
+          } as TemplateStackProps)
+        }
+        iconImage={
+          <Icon
+            name={Icons.MULTISIG}
+            theme={theme}
+            color={PRIMARY_RED_COLOR}
+            width={45}
+            height={45}
           />
         }
       />
