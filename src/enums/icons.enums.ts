@@ -163,4 +163,5 @@ export enum Icons {
   HOME_BROWSER = 'HOME_BROWSER',
   DESKTOP = 'DESKTOP',
   MOBILE = 'MOBILE',
+  MULTISIG = 'MULTISIG',
 }

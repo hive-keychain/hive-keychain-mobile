@@ -522,6 +522,9 @@
         "title": "Automated tasks",
         "disclaimer": "Setup automated tasks that will run every hour"
       },
+      "multisig": {
+        "title": "Multisig"
+      },
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",
       "whitelisted": "Whitelisted operations",

@@ -69,6 +69,28 @@ const SettingsMenu = () => {
             color={PRIMARY_RED_COLOR}
           />
         }
+        drawBottomLine
+      />
+      <MenuItem
+        labelTranslationKey={'settings.settings.multisig.title'}
+        theme={theme}
+        onPress={() =>
+          navigate('TemplateStack', {
+            titleScreen: translate('settings.settings.multisig.title'),
+            //TODO bellow code component
+            component: <AutomatedTasks />,
+          } as TemplateStackProps)
+        }
+        iconImage={
+          <Icon
+            name={Icons.MULTISIG}
+            theme={theme}
+            color={PRIMARY_RED_COLOR}
+            width={45}
+            height={45}
+          />
+        }
+        drawBottomLine
       />
     </View>
   );
