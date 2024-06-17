@@ -11,6 +11,7 @@ import {getMenuCardStyle} from 'src/styles/menu';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import AutomatedTasks from './AutomatedTasks';
+import Multisig from './Multisig';
 import Operations from './Operations';
 import RpcNodes from './RpcNodes';
 
@@ -77,8 +78,7 @@ const SettingsMenu = () => {
         onPress={() =>
           navigate('TemplateStack', {
             titleScreen: translate('settings.settings.multisig.title'),
-            //TODO bellow code component
-            component: <AutomatedTasks />,
+            component: <Multisig />,
           } as TemplateStackProps)
         }
         iconImage={
@@ -90,7 +90,6 @@ const SettingsMenu = () => {
             height={45}
           />
         }
-        drawBottomLine
       />
     </View>
   );

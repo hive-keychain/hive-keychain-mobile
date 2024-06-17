@@ -523,7 +523,13 @@
         "disclaimer": "Setup automated tasks that will run every hour"
       },
       "multisig": {
-        "title": "Multisig"
+        "title": "Multisig",
+        "multisig_intro": "Enable Hive Multisig to listen to multisig requests for this account. This is an advanced feature, only use it if you know what you are doing.",
+        "more_info_blog": "Find more information about multisig in this blog.",
+        "more_info_multisig": "To modify your account into a multisig account, use the Hive Multisig dApp.",
+        "enable_multisig": "Enable multisig",
+        "enable_active_key_multisig": "Enable active key multisig",
+        "enable_posting_key_multisig": "Enable posting key multisig"
       },
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",
