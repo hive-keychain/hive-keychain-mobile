@@ -132,7 +132,7 @@
     "no": "No",
     "skip": "Skip",
     "show": "Show",
-    "show_qr": "Show QR",
+    "generate_qr": "Generate QR",
     "let_us_go": "Let's go!",
     "choose_available_options": "Please choose one of the available options",
     "add_account_to_keychain": "Import an existent account or enjoy the account creation features."
@@ -628,7 +628,8 @@
       "create_account_ticket": "{{tickets}} account creation ticket(s)",
       "create_account_onboarding_message": "You are onboarding @{{name}}, please choose bellow if you want to delegate:\nHP or RC to this user.",
       "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created! Thanks for using this feature!",
-      "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!\nThanks for using this feature!"
+      "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!\nThanks for using this feature!",
+      "peer_to_peer_waiting_text": "Please ask the person onboarding you to scan this QR Code to create your account. Keep this page opened until the account is created."
     },
     "copy_keys": {
       "title": "Copy a Key",

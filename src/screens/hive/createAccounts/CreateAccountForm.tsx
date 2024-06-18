@@ -107,7 +107,6 @@ const CreateAccountStepOne = ({
       const {name, publicKeys} = params.newPeerToPeerData;
       setAccountName(name);
       setOnBoardingUserData({name, publicKeys});
-      //TODO move this to a util? ask stoodkev
       const totalHp = toHP(
         user.account.vesting_shares as string,
         properties.globals,
@@ -250,9 +249,6 @@ const CreateAccountStepOne = ({
         let delegationFlag = false;
         if (+onBoardingDelegations.hpAmount > 0) {
           delegationFlag = true;
-          console.log(
-            `Processing ${onBoardingDelegations.hpAmount} HP Delegation to @${onBoardingUserData.name}...`,
-          ); //TODO remove line
           const hpDelegationResult = await delegate(user.keys.active, {
             vesting_shares: sanitizeAmount(
               fromHP(
@@ -268,9 +264,6 @@ const CreateAccountStepOne = ({
         }
         if (+onBoardingDelegations.rcAmount > 0) {
           delegationFlag = true;
-          console.log(
-            `Processing ${onBoardingDelegations.rcAmount} GRC Delegation to @${onBoardingUserData.name}...`,
-          ); //TODO remove line
           const rcDelegationResult = await RcDelegationsUtils.sendDelegation(
             RcDelegationsUtils.gigaRcToRc(
               parseFloat(onBoardingDelegations.rcAmount),

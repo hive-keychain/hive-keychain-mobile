@@ -14,6 +14,7 @@ import {getColors} from 'src/styles/colors';
 import {
   FontPoppinsName,
   button_link_primary_medium,
+  getFontSizeSmallDevices,
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
@@ -165,6 +166,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       ...title_primary_title_1,
       alignSelf: 'stretch',
       opacity: 0.7,
+      fontSize: getFontSizeSmallDevices(width, title_primary_title_1.fontSize),
     },
     inputContainer: {
       marginTop: 20,
