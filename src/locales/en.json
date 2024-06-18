@@ -634,6 +634,13 @@
     "copy_keys": {
       "title": "Copy a Key",
       "text1": "If you need to copy a public or private key, perform a long press on the key."
+    },
+    "createAccountPeerToPeer": {
+      "text1": "Thank you for using Keychain On Boarding!",
+      "text2": "You will create an account & your friend will pay for it.",
+      "text3": "As soon as you choose a valid Hive account name, the system will show you the keys.",
+      "text4": "Please store this data in a safe location!",
+      "text5": "Go ahead, and follow the steps."
     }
   },
   "toast": {

@@ -46,7 +46,6 @@ const CreateAccountPeerToPeer = ({user}: PropsFromRedux) => {
     setIsAvailableAccountName(isAvailable);
   };
 
-  //TODO move to a util bellow?
   const validateAccountName = async () => {
     if (accountName.length < 3) {
       Toast.show(translate('toast.username_too_short'));
@@ -85,21 +84,21 @@ const CreateAccountPeerToPeer = ({user}: PropsFromRedux) => {
     <Background theme={theme} containerStyle={styles.container}>
       <View style={styles.content}>
         <View style={styles.topContent}>
-          {/* //TODO add to tr */}
           <Text style={styles.text}>
-            Thank you for using Keychain On Boarding!
+            {translate('components.createAccountPeerToPeer.text1')}
           </Text>
           <Text style={styles.text}>
-            You will create an account & your friend will pay for it.
+            {translate('components.createAccountPeerToPeer.text2')}
           </Text>
           <Text style={styles.text}>
-            As soon as you choose a valid Hive account name, the system will
-            show you the keys.
+            {translate('components.createAccountPeerToPeer.text3')}
           </Text>
           <Text style={[styles.text, styles.textBold]}>
-            Please store this data in a safe location!
+            {translate('components.createAccountPeerToPeer.text4')}
           </Text>
-          <Text style={styles.text}>Go ahead, and follow the steps.</Text>
+          <Text style={styles.text}>
+            {translate('components.createAccountPeerToPeer.text5')}
+          </Text>
           <View style={styles.inputContainer}>
             <OperationInput
               labelInput={translate('common.username')}
