@@ -1,8 +1,7 @@
-import PersonImage from 'assets/new_UI/person_1.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
+import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import KeychainLogo from 'components/ui/KeychainLogo';
 import Separator from 'components/ui/Separator';
 import {SignupNavProp} from 'navigators/Signup.types';
 import React from 'react';
@@ -15,10 +14,7 @@ import {
   PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {
-  SMALLEST_SCREEN_WIDTH_SUPPORTED,
-  button_link_primary_medium,
-} from 'src/styles/typography';
+import {button_link_primary_medium} from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
@@ -37,9 +33,11 @@ const ChooseAccountOption = ({navigation}: SignupNavProp) => {
           backgroundColor={getColors(theme).primaryBackground}
           barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
         />
-        <View style={styles.imagesContainer}>
-          <KeychainLogo using_new_ui theme={theme} width={150} />
-          <PersonImage {...styles.imageHive} />
+        <View style={styles.captionContainer}>
+          <Caption
+            text={'common.choose_available_options'}
+            additionnalText={'common.add_account_to_keychain'}
+          />
         </View>
         <View style={styles.buttonsContainer}>
           <EllipticButton
@@ -88,10 +86,6 @@ const getDimensionedStyles = (
     buttonsContainer: {
       marginVertical: 20,
     },
-    imageHive: {
-      width: width * (width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.55 : 0.65),
-      height: width * (width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.55 : 0.65),
-    },
     outlineButton: {
       backgroundColor: '#FFFFFF',
       zIndex: 10,
@@ -111,6 +105,7 @@ const getDimensionedStyles = (
       fontSize: 13,
       color: NEUTRAL_WHITE_COLOR,
     },
+    captionContainer: {paddingHorizontal: 18, alignSelf: 'center'},
   });
 
 export default ChooseAccountOption;

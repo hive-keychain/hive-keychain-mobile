@@ -10,6 +10,7 @@
     "createAccount": "New Account"
   },
   "createAccount": {
+    "caption": "You may choose to create an account on your own or a friend will invite you.",
     "on_boarding_title": "Create on hive.io",
     "peer_to_peer_on_boarding_title": "Create with a friend"
   },
@@ -131,7 +132,10 @@
     "no": "No",
     "skip": "Skip",
     "show": "Show",
-    "show_qr": "Show QR"
+    "show_qr": "Show QR",
+    "let_us_go": "Let's go!",
+    "choose_available_options": "Please choose one of the available options",
+    "add_account_to_keychain": "Import an existent account or enjoy the account creation features."
   },
   "wallet": {
     "proposal": {

@@ -193,35 +193,13 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           {currentStep === 2 ? (
             <>
               <EllipticButton
-                //TODO add tr
-                title={"I'm ready to set my pin"}
+                title={translate('common.let_us_go')}
                 onPress={() => {
                   navigation.navigate('SignupScreen');
                 }}
                 style={styles.outlineButton}
                 additionalTextStyle={styles.textOutLineButton}
               />
-              {/* //TODO bellow, reuse this in the next screen which gets called
-              //  after setting the pin
-              //  -> src/actions/index.ts
-              //    -> line 12 (navigate('AddAccountByKeyScreen');) */}
-              {/* <EllipticButton
-                title={translate('intro.existingAccount')}
-                onPress={() => {
-                  navigation.navigate('SignupScreen'); //'AddAccountByKeyScreen'
-                }}
-                style={styles.outlineButton}
-                additionalTextStyle={styles.textOutLineButton}
-              />
-              <Separator height={height * 0.015} />
-              <EllipticButton
-                title={translate('intro.createAccount')}
-                onPress={() => {
-                  navigation.navigate('CreateAccountScreen');
-                }}
-                style={styles.warningProceedButton}
-                additionalTextStyle={styles.textButtonFilled}
-              /> */}
             </>
           ) : (
             <EllipticButton
