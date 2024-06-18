@@ -131,7 +131,9 @@ const StepTwo = ({
       }
       setNotPrimaryStorageUnderstanding(false);
       setSafelyCopied(false);
-      setPaymentUnderstanding(false);
+      setPaymentUnderstanding(
+        creationType === AccountCreationType.PEER_TO_PEER,
+      );
     }
   }, [generatedKeys]);
 
@@ -247,8 +249,6 @@ const StepTwo = ({
           'components.create_account.claim_account_method_message',
           {account: selectedAccount.name},
         );
-      case AccountCreationType.PEER_TO_PEER:
-        return translate('components.create_account.peer_to_peer_message');
     }
   };
 
@@ -424,16 +424,18 @@ const StepTwo = ({
                   {renderKeys()}
                 </ScrollView>
                 <View style={[styles.checkboxesContainer]}>
-                  <CheckBoxPanel
-                    checked={paymentUnderstanding}
-                    onPress={() =>
-                      setPaymentUnderstanding(!paymentUnderstanding)
-                    }
-                    title={getPaymentCheckboxLabel()}
-                    skipTranslation
-                    smallText
-                    containerStyle={styles.checkboxContainer}
-                  />
+                  {creationType !== AccountCreationType.PEER_TO_PEER && (
+                    <CheckBoxPanel
+                      checked={paymentUnderstanding}
+                      onPress={() =>
+                        setPaymentUnderstanding(!paymentUnderstanding)
+                      }
+                      title={getPaymentCheckboxLabel()}
+                      skipTranslation
+                      smallText
+                      containerStyle={styles.checkboxContainer}
+                    />
+                  )}
                   <CheckBoxPanel
                     checked={safelyCopied}
                     onPress={() => setSafelyCopied(!safelyCopied)}

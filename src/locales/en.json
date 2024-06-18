@@ -619,7 +619,6 @@
       "storage_understanding": "I understand that Keychain should not be considered as the primary place of storage for my keys",
       "buy_method_message": "I agree to pay {{price}} HIVE with account @{{account}} to create this account",
       "claim_account_method_message": "I agree to use one account creation ticket from @{{account}} to create this account",
-      "peer_to_peer_message": "I agree that my on boarding friend will pay for this account creation.",
       "copy": "Copy",
       "create_account": "Create Account",
       "cost": "Create a new account for {{price}} using @{{account}}",
