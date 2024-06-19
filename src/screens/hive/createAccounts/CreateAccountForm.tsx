@@ -5,6 +5,7 @@ import OperationButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import UserDropdown from 'components/form/UserDropdown';
 import Icon from 'components/hive/Icon';
+import RcHpSelectorPanel from 'components/hive/RcHpSelectorPanel';
 import {ConfirmationPageProps} from 'components/operations/Confirmation';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -491,6 +492,13 @@ const CreateAccountStepOne = ({
             }
           />
         </View>
+        {delegating === 'rcAmount' && (
+          <RcHpSelectorPanel
+            valueLabelList={[5, 10, 50, 100]}
+            //TODO finish bellow
+            onHandlePreset={(value) => {}}
+          />
+        )}
       </View>
     );
   };
