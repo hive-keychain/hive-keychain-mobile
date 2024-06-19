@@ -3,10 +3,11 @@ import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
-import Toast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -27,7 +28,7 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import StepTwoAccountCreation from '../createAccounts/CreateAccountConfirmation';
 
-const CreateAccountPeerToPeer = ({user}: PropsFromRedux) => {
+const CreateAccountPeerToPeer = ({}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
@@ -47,25 +48,13 @@ const CreateAccountPeerToPeer = ({user}: PropsFromRedux) => {
     setIsAvailableAccountName(isAvailable);
   };
 
-  const validateAccountName = async () => {
-    if (accountName.length < 3) {
-      Toast.show(translate('toast.username_too_short'));
-      return false;
-    }
-    if (!AccountCreationUtils.validateUsername(accountName)) {
-      Toast.show(translate('toast.account_name_not_valid'));
-      return false;
-    }
-    if (await AccountCreationUtils.checkAccountNameAvailable(accountName)) {
-      return true;
-    } else {
-      Toast.show(translate('toast.account_username_already_used'));
-      return false;
-    }
-  };
-
   const goToNextPage = async () => {
-    if (await validateAccountName()) {
+    if (
+      await AccountCreationUtils.validateNewAccountName(
+        accountName,
+        SimpleToast,
+      )
+    ) {
       navigate('TemplateStackScreen', {
         titleScreen: translate('navigation.create_account'),
         component: (
@@ -84,6 +73,7 @@ const CreateAccountPeerToPeer = ({user}: PropsFromRedux) => {
   return (
     <Background theme={theme} containerStyle={styles.container}>
       <View style={styles.content}>
+        <FocusAwareStatusBar />
         <View style={styles.topContent}>
           <Text style={styles.text}>
             {translate('components.createAccountPeerToPeer.text1')}
@@ -174,9 +164,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   });
 
 const connector = connect((state: RootState) => {
-  return {
-    user: state.activeAccount,
-  };
+  return {};
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

@@ -53,7 +53,7 @@ export interface RCDelegationOperationProps {
   //TODO fill when needed.
 }
 
-const DEFAULT_VALUE: RCDelegationValue = {
+export const DEFAULT_RC_DELEGATION_VALUE: RCDelegationValue = {
   hpValue: '...',
   gigaRcValue: '...',
 };
@@ -64,12 +64,14 @@ const RCDelegation = ({
   showModal,
 }: RCDelegationOperationProps & PropsFromRedux) => {
   const [totalIncoming, setTotalIncoming] = useState<RCDelegationValue>(
-    DEFAULT_VALUE,
+    DEFAULT_RC_DELEGATION_VALUE,
   );
   const [totalOutgoing, setTotalOutgoing] = useState<RCDelegationValue>(
-    DEFAULT_VALUE,
+    DEFAULT_RC_DELEGATION_VALUE,
   );
-  const [available, setAvailable] = useState<RCDelegationValue>(DEFAULT_VALUE);
+  const [available, setAvailable] = useState<RCDelegationValue>(
+    DEFAULT_RC_DELEGATION_VALUE,
+  );
   const [isCancel, setIsCancel] = useState<boolean>(false);
   const [amount, setAmount] = useState('');
   const [equivalentHPAmount, setEquivalentHPAmount] = useState<

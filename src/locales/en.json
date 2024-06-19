@@ -432,11 +432,12 @@
       },
       "create_account": {
         "peer_to_peer": {
-          "info": "Please verify the information bellow, to on board a new HIVE user.\nThis action cannot be undone!",
+          "info": "Please verify the information below, to onboard a new Hive user.\nThis action cannot be undone!",
           "creation_method": "Creation method",
           "delegating_title": "Delegating",
-          "delegating_amount": "Amount {{amount}} {{currency}}",
-          "account_creator": "Creator"
+          "delegating_amount": "{{amount}} {{currency}}",
+          "account_creator": "Creator",
+          "delegate_hp_rc_caption": "You may delegate {{currency}} for this new user."
         }
       }
     },

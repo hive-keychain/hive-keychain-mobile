@@ -257,7 +257,6 @@ const Transfer = ({
               tokenBalance={tokenBalance}
               tokenLogo={tokenLogo}
               isHiveEngine={engine}
-              //TODO fix bellow!! ask quentin
               setAvailableBalance={(available) =>
                 setAvailableBalance(available)
               }

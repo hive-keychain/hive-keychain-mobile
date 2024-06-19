@@ -28,7 +28,6 @@ import {
   PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {getSpaceAdjustMultiplier} from 'src/styles/spacing';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   button_link_primary_medium,
@@ -45,7 +44,6 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
   const scrollViewRef = useRef();
   const {height, width} = useWindowDimensions();
   const {theme} = useThemeContext();
-  const spaced = getSpaceAdjustMultiplier(width, height);
   const styles = getDimensionedStyles(
     {height, width},
     theme,
@@ -226,18 +224,8 @@ const getDimensionedStyles = (
       paddingBottom: 20,
       justifyContent: 'space-between',
     },
-    scrollableScreen: {
-      width,
-      height,
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      backgroundColor: 'blue',
-    },
     backgroundSquares: {
       width: width * 0.85,
-    },
-    imageLogo: {
-      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 30 : 100,
     },
     imageHive: {
       width: width * (width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.65 : 0.75),
@@ -280,19 +268,9 @@ const getDimensionedStyles = (
       top: -100,
       alignSelf: 'center',
     },
-    pageIndicatorsContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      alignSelf: 'center',
-      flex: 1,
-    },
     indicatorCircle: {
       width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 8 : 12,
       height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 8 : 12,
-    },
-    dynamicTextSize: {
-      fontSize: getFontSizeSmallDevices(width, 16),
     },
     biggerText: {
       ...headlines_primary_headline_2,
