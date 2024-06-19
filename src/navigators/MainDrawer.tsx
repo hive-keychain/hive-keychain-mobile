@@ -100,7 +100,13 @@ export default () => {
           unmountOnBlur: true,
         }}
       />
-      <Drawer.Screen name="TemplateStack" component={TemplateStack} />
+      <Drawer.Screen
+        name="TemplateStack"
+        component={TemplateStack}
+        options={{
+          unmountOnBlur: true,
+        }}
+      />
       <Drawer.Screen
         name="SwapBuyStack"
         component={SwapBuyStack}

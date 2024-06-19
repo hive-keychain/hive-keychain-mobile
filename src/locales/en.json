@@ -9,6 +9,11 @@
     "existingAccount": "Existing Account",
     "createAccount": "New Account"
   },
+  "createAccount": {
+    "caption": "You may choose to create an account on your own or a friend will invite you.",
+    "on_boarding_title": "Create on hive.io",
+    "peer_to_peer_on_boarding_title": "Create with a friend"
+  },
   "addAccountByKey": {"text": "Add your existing HIVE account to Keychain"},
   "addAccountByAuth": {
     "text": "Add the new account by specifying an account that has authority over it, and that is already saved in Hive Keychain."
@@ -21,6 +26,7 @@
     "posting_key": "Posting Key",
     "memo_key": "Memo Key",
     "private": "Private",
+    "owner": "Owner",
     "public": "Public",
     "posting": "Posting",
     "active": "Active",
@@ -125,7 +131,11 @@
     "yes": "Yes",
     "no": "No",
     "skip": "Skip",
-    "show": "Show"
+    "show": "Show",
+    "generate_qr": "Generate QR",
+    "let_us_go": "Let's go!",
+    "choose_available_options": "Please choose one of the available options",
+    "add_account_to_keychain": "Import an existent account or enjoy the account creation features."
   },
   "wallet": {
     "proposal": {
@@ -419,6 +429,16 @@
         "swap_refresh_countdown": "Refreshing in {{count}}s",
         "swap_slippage_step": "{{slippage}}% (for each step)",
         "swap_no_history": "Your swap history is empty"
+      },
+      "create_account": {
+        "peer_to_peer": {
+          "info": "Please verify the information below, to onboard a new Hive user.\nThis action cannot be undone!",
+          "creation_method": "Creation method",
+          "delegating_title": "Delegating",
+          "delegating_amount": "{{amount}} {{currency}}",
+          "account_creator": "Creator",
+          "delegate_hp_rc_caption": "You may delegate {{currency}} for this new user."
+        }
       }
     },
     "has": {
@@ -552,6 +572,13 @@
       "text3": "(Use your Master Key to unlock all app features).",
       "text4": "If you use a Master Key, it will NOT be saved and will only be used to generate your other Keys. You may add/edit Accounts or Keys at any time."
     },
+    "accountCreationPeerToPeer": {
+      "title": "Peer to Peer onboarding, thanks to a good friend!",
+      "text1": "As soon as you choose a valid username and click on Create",
+      "text2": "the app will give you your keys, PLEASE STORE them in a safe place.",
+      "text3": "Then after confirm that the keys are safely stored,",
+      "text4": "You will get a QR code, show it to your friend to proceed with Account Creation."
+    },
     "infoQR": {
       "title": "Import via QR Code",
       "text1": "You can import an account instantly by scanning its corresponding QR Code.",
@@ -570,7 +597,7 @@
       "text4": "Settings > Add Account"
     },
     "forgotPIN": {
-      "title": "Forgot PIN?",
+      "title": "Reset wallet?",
       "text": "If you forgot your PIN, you can reset Keychain \n and clear your data but will have to enter all your keys again.",
       "button": "Reset Key"
     },
@@ -599,11 +626,22 @@
       "need_accept_terms_condition": "You need to accept the terms and conditions before creating the account",
       "create_account_successful": "Your account has been successfully created and added to your Keychain",
       "create_account_failed": "The account creation has failed. Please try again later",
-      "create_account_ticket": "{{tickets}} account creation ticket(s)"
+      "create_account_ticket": "{{tickets}} account creation ticket(s)",
+      "create_account_onboarding_message": "You are onboarding @{{name}}, please choose bellow if you want to delegate:\nHP or RC to this user.",
+      "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created! Thanks for using this feature!",
+      "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!\nThanks for using this feature!",
+      "peer_to_peer_waiting_text": "Please ask the person onboarding you to scan this QR Code to create your account. Keep this page opened until the account is created."
     },
     "copy_keys": {
       "title": "Copy a Key",
       "text1": "If you need to copy a public or private key, perform a long press on the key."
+    },
+    "createAccountPeerToPeer": {
+      "text1": "Thank you for using Keychain On Boarding!",
+      "text2": "You will create an account & your friend will pay for it.",
+      "text3": "As soon as you choose a valid Hive account name, the system will show you the keys.",
+      "text4": "Please store this data in a safe location!",
+      "text5": "Go ahead, and follow the steps."
     }
   },
   "toast": {
@@ -679,6 +717,7 @@
     "tabs": "Opened tabs",
     "governance": "Governance",
     "create_account": "Create Account",
+    "create_account_peer_to_peer": "Friend Onboarding",
     "tokens": "Tokens",
     "theme_setting": "Theme",
     "wallet_history": "Wallet History",

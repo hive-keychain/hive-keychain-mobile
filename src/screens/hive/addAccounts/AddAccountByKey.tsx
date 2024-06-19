@@ -7,6 +7,7 @@ import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import CustomIconButton from 'components/ui/CustomIconButton';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {AddAccFromWalletNavigation} from 'navigators/mainDrawerStacks/AddAccount.types';
@@ -87,6 +88,10 @@ const AddAccountByKey = ({
   return (
     <Background theme={theme}>
       <ScrollView contentContainerStyle={styles.container}>
+        <FocusAwareStatusBar
+          backgroundColor={getColors(theme).primaryBackground}
+          barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
+        />
         <CustomIconButton
           lightThemeIcon={<TitleLogoLight />}
           darkThemeIcon={<TitleLogoDark />}

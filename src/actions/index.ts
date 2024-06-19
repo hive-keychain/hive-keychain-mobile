@@ -9,7 +9,7 @@ import {AccountsPayload, ActionPayload, NullableString} from './interfaces';
 import {INIT_ACCOUNTS, LOCK, SIGN_UP, UNLOCK} from './types';
 
 export const signUp = (pwd: string) => {
-  navigate('AddAccountByKeyScreen');
+  navigate('ChooseAccountOptionsScreen');
   const action: ActionPayload<NullableString> = {type: SIGN_UP, payload: pwd};
   return action;
 };

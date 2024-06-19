@@ -4,28 +4,30 @@ import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import ChooseAccountOption from 'screens/ChooseAccount';
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
-import CreateAccount from 'screens/hive/CreateAccount';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
+import CreateAccount from 'screens/hive/createAccounts/CreateAccount';
+import CreateAccountPeerToPeer from 'screens/hive/createAccountsPeerToPeer/CreateAccountPeerToPeer';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
 import {SignupStackParamList} from './Signup.types';
+import TemplateStack from './mainDrawerStacks/TemplateStack';
 
 const Stack = createStackNavigator<SignupStackParamList>();
 
 export default () => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
+  const styles = getStyles(theme, useSafeAreaInsets());
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -39,16 +41,81 @@ export default () => {
         component={Signup}
       />
       <Stack.Screen
+        name="ChooseAccountOptionsScreen"
+        options={{...noHeader, animationEnabled: false}}
+        component={ChooseAccountOption}
+      />
+      <Stack.Screen
         name="CreateAccountScreen"
-        options={noHeader}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTintColor: 'white',
+          headerRightContainerStyle: styles.paddingRight,
+          animationEnabled: false,
+          title: '',
+          headerLeft: () => (
+            <Icon
+              name={Icons.ARROW_LEFT}
+              theme={theme}
+              additionalContainerStyle={[styles.marginLeft]}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              color={getColors(theme).iconBW}
+            />
+          ),
+        })}
         component={CreateAccount}
       />
       <Stack.Screen
-        name="AddAccountByKeyScreen"
-        options={{
-          headerShown: false,
+        name="TemplateStackScreen"
+        options={{...noHeader, animationEnabled: false}}
+        component={TemplateStack}
+      />
+      <Stack.Screen
+        name="CreateAccountPeerToPeerScreen"
+        options={({navigation}) => ({
+          headerBackTitle: translate('navigation.create_account_peer_to_peer'),
+          headerTitle: () => (
+            <NavigatorTitle title="navigation.create_account_peer_to_peer" />
+          ),
+          headerStyle: styles.header,
+          headerTintColor: 'white',
+          headerRightContainerStyle: styles.paddingRight,
           animationEnabled: false,
-        }}
+          headerRight: () => {
+            return (
+              <MoreInformation type={Info.ACCOUNT_CREATION_PEER_TO_PEER} />
+            );
+          },
+          headerLeft: () => (
+            <Icon
+              name={Icons.ARROW_LEFT}
+              theme={theme}
+              additionalContainerStyle={[styles.marginLeft]}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              color={getColors(theme).iconBW}
+            />
+          ),
+        })}
+        component={CreateAccountPeerToPeer}
+      />
+      <Stack.Screen
+        name="AddAccountByKeyScreen"
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTintColor: 'white',
+          headerRightContainerStyle: styles.paddingRight,
+          animationEnabled: false,
+          title: '',
+          headerLeft: () => (
+            <Icon
+              name={Icons.ARROW_LEFT}
+              theme={theme}
+              additionalContainerStyle={[styles.marginLeft]}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              color={getColors(theme).iconBW}
+            />
+          ),
+        })}
         component={AddAccountByKey}
       />
       <Stack.Screen
@@ -79,11 +146,7 @@ export default () => {
   );
 };
 
-const getStyles = (
-  theme: Theme,
-  {width, height}: Dimensions,
-  insets: EdgeInsets,
-) =>
+const getStyles = (theme: Theme, insets: EdgeInsets) =>
   StyleSheet.create({
     paddingRight: {paddingRight: HEADER_ICON_MARGIN},
     header: {
