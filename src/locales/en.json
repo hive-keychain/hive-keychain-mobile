@@ -541,7 +541,10 @@
       "hive_engine_rpc": "Hive-Engine RPC",
       "hive_engine_account_history_api": "Hive-Engine account history API",
       "rpc_node_already_exists": "RPC node already exists! Please choose another one",
-      "rpc_not_responding_error": "{{currentRPC}} node is not responding. Do you want to switch to {{uri}} ?"
+      "rpc_not_responding_error": "{{currentRPC}} node is not responding. Do you want to switch to {{uri}} ?",
+      "notifications": {
+        "title": "Notifications"
+      }
     }
   },
   "components": {

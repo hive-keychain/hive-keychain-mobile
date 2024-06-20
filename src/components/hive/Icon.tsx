@@ -50,6 +50,7 @@ import CheckIcon from 'assets/new_UI/linear_tick-circle.svg';
 import WalletAddIcon from 'assets/new_UI/linear_wallet-add.svg';
 import HASIcon from 'assets/new_UI/logo_HAS.svg';
 import LogoutIcon from 'assets/new_UI/logout.svg';
+import NotificationsIcon from 'assets/new_UI/notifications.svg';
 import PolygonDown from 'assets/new_UI/polygon_down.svg';
 import PowerDownLight from 'assets/new_UI/power-down-light.svg';
 import PowerIcon from 'assets/new_UI/power-icon.svg';
@@ -665,6 +666,13 @@ const getIconFilePath = (
     case name === Icons.SUPPORT:
       return (
         <SupportIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.NOTIFICATIONS:
+      return (
+        <NotificationsIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />
