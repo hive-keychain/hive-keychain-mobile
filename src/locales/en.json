@@ -543,7 +543,9 @@
       "rpc_node_already_exists": "RPC node already exists! Please choose another one",
       "rpc_not_responding_error": "{{currentRPC}} node is not responding. Do you want to switch to {{uri}} ?",
       "notifications": {
-        "title": "Notifications"
+        "title": "Notifications",
+        "disclaimer": "Configure your Peak Open Projects notifications. Be aware that changes might take time to be applied, and that this is an experimental feature.\nIf you want to use advance notifications settings, please use the extension.",
+        "activated": "Activated"
       }
     }
   },

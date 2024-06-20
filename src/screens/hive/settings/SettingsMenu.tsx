@@ -12,6 +12,7 @@ import {getBadgeStyle} from 'src/styles/text';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import AutomatedTasks from './AutomatedTasks';
+import Notifications from './Notifications';
 import Operations from './Operations';
 import RpcNodes from './RpcNodes';
 
@@ -78,11 +79,7 @@ const SettingsMenu = () => {
         onPress={() =>
           navigate('TemplateStack', {
             titleScreen: translate('settings.settings.notifications.title'),
-            component: (
-              <View>
-                <Text>TODO NOW!!!</Text>
-              </View>
-            ),
+            component: <Notifications />,
           } as TemplateStackProps)
         }
         iconImage={
