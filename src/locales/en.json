@@ -611,6 +611,7 @@
       "text1": "If you need to copy a public or private key, perform a long press on the key."
     },
     "notifications": {
+      "mark_as_read": "Notifications marked as read!",
       "notification_set_all_as_read": "Set all as read",
       "notification_follow": "@{{0}} started following @{{1}}",
       "notification_unfollow": "@{{0}} stopped following @{{1}}",
@@ -638,7 +639,8 @@
       "wallet_info_power_up": "Powered up {{0}}",
       "wallet_info_power_up_other_account": "@{{0}} powered up {{1}} for @{{2}}",
       "notification_vote": "@{{0}} has voted for {{2}}",
-      "bgd_ops_pd": "Started a {{0}} HP power down on @{{1}}.",
+      "bgd_ops_pd": "Started a {{0}} power down on @{{1}}.",
+      "notification_cancelled_powerdown": "@{{1}} cancelled a power down of {{0}}",
       "notification_recurrent_transfer": "@{{0}} started a {{1}} recurrent transfer to @{{2}} ({{3}} executions every {{4}} hours)",
       "notification_fill_convert": "@{{0}} has completed a conversion : {{1}} to {{2}}",
       "notification_author_reward": "@{{0}} has received {{1}}, {{2}}, {{3}} as an author reward for {{4}}",

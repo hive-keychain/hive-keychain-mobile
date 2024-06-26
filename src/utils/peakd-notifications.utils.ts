@@ -658,13 +658,15 @@ const getNotifications = async (
         break;
       }
       case 'withdraw_vesting': {
-        message = 'bgd_ops_pd';
+        message =
+          parseFloat(payload.vesting_shares.split(' ')[0]) === 0
+            ? 'notification_cancelled_powerdown'
+            : 'bgd_ops_pd';
         messageParams = [
           toFormattedHP(
             payload.vesting_shares.toString().replace('VESTS', ''),
             globalProperties,
           ),
-          ,
           payload.account,
         ];
         break;
