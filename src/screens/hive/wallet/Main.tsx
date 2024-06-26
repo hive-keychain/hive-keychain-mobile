@@ -19,6 +19,7 @@ import AccountValue from 'components/hive/AccountValue';
 import CurrencyToken from 'components/hive/CurrencyToken';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import Icon from 'components/hive/Icon';
+import Notifications from 'components/hive/Notifications';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
@@ -127,6 +128,7 @@ const Main = ({
   const mainScrollRef = useRef();
 
   const [eventReceived, setEventReceived] = useState(null);
+  const [notificationEvent, setNotificationEvent] = useState(null);
   const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -329,6 +331,7 @@ const Main = ({
               <DrawerButton navigation={navigation as any} theme={theme} />
               <View style={[styles.innerHeader]}>
                 <StatusIndicator theme={theme} />
+                <Notifications />
                 <Claim theme={theme} />
                 <View style={styles.marginRight}>
                   <UserDropdown

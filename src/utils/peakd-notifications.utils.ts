@@ -1,4 +1,5 @@
 import {Asset, DynamicGlobalProperties} from '@hiveio/dhive';
+import {ActiveAccount} from 'actions/interfaces';
 import {PeakDNotificationsApi} from 'api/peakd-notifications';
 import moment from 'moment';
 import {
@@ -6,6 +7,7 @@ import {
   NotificationType,
 } from 'src/interfaces/notifications.interface';
 import {fromNaiAndSymbol, toFormattedHP, withCommas} from './format';
+import {broadcastJson} from './hive';
 
 const operationFieldList = [
   // {
@@ -455,111 +457,8 @@ const prefixMap = {
 };
 
 const getAccountConfig = async (username: string) => {
-  return PeakDNotificationsApi.get(`users/${username}`);
+  return await PeakDNotificationsApi.get(`users/${username}`);
 };
-
-//   const initializeForm = (config: NotificationConfig): NotificationConfigForm => {
-//     const configForm: NotificationConfigForm = [];
-
-//     config.forEach((configItem, indexConfigItem) => {
-//       const configFormItem: NotificationConfigFormItem = {
-//         // id: indexConfigItem,
-//         operation: configItem.operation,
-//         conditions: [],
-//       };
-//       if (configItem.conditions) {
-//         Object.keys(configItem.conditions).forEach((field, indexCondition) => {
-//           configFormItem.conditions?.push({
-//             // id: indexCondition,
-//             field: field,
-//             operand: configItem.conditions
-//               ? Object.keys(configItem.conditions[field])[0]
-//               : '',
-//             value: configItem.conditions
-//               ? Object.values(configItem.conditions[field])[0]
-//               : '',
-//           });
-//         });
-//       }
-//       configForm.push(configFormItem);
-//     });
-
-//     return configForm as NotificationConfigForm;
-//   };
-
-//   const formatConfigForm = (form: NotificationConfigForm) => {
-//     const config: NotificationConfig = [];
-//     for (const item of form) {
-//       const criteria = {
-//         operation: item.operation,
-//         conditions: {} as NotificationConfigConditions,
-//       };
-//       for (const condition of item.conditions) {
-//         if (condition.field.length > 0 && condition.operand.length > 0)
-//           criteria.conditions[condition.field] = {
-//             [condition.operand]: condition.value,
-//           };
-//       }
-//       config.push(criteria);
-//     }
-//     return config;
-//   };
-
-//   const getSuggestedConfig = (username: string) => {
-//     const configForm: NotificationConfigForm = [];
-//     configForm.push({
-//       operation: 'transfer',
-//       conditions: [{ field: 'to', operand: '==', value: username }],
-//     });
-//     configForm.push({
-//       operation: 'comment',
-//       conditions: [{ field: 'body', operand: 'regex', value: `@${username}` }],
-//     });
-//     configForm.push({
-//       operation: 'comment',
-//       conditions: [
-//         { field: 'parent_author', operand: '==', value: `${username}` },
-//       ],
-//     });
-//     configForm.push({
-//       operation: 'recurrent_transfer',
-//       conditions: [{ field: 'to', operand: '==', value: username }],
-//     });
-//     configForm.push({
-//       operation: 'delegate_vesting_shares',
-//       conditions: [{ field: 'delegatee', operand: '==', value: username }],
-//     });
-//     configForm.push({
-//       operation: 'custom_json',
-//       conditions: [{ field: 'id', operand: '==', value: 'follow' }],
-//     });
-//     configForm.push({
-//       operation: 'custom_json',
-//       conditions: [{ field: 'id', operand: '==', value: 'reblog' }],
-//     });
-//     for (const sub of suggestedConfig) {
-//       configForm.push({
-//         operation: sub as NotificationOperationName,
-//         conditions: [{ field: '', operand: '', value: '' }],
-//       });
-//     }
-
-//     return configForm;
-//   };
-
-//   const saveConfiguration = async (
-//     form: NotificationConfigForm,
-//     account: LocalAccount,
-//   ) => {
-//     const config = formatConfigForm(form);
-//     return await CustomJsonUtils.send(
-//       ['update_account', { config }],
-//       account.name,
-//       account.keys.posting!,
-//       KeyType.POSTING,
-//       'notify',
-//     );
-//   };
 
 const getNotifications = async (
   username: string,
@@ -591,6 +490,8 @@ const getNotifications = async (
     let messageParams: string[] = [];
     let message: string = `notification_${notif.operation}`;
     let externalUrl;
+    const prefixTranslations = 'components.notifications.';
+    //TODO test each notification using keychain.test
     switch (notif.operation_type) {
       case 'custom_json': {
         const json = payload.json[1];
@@ -616,10 +517,10 @@ const getNotifications = async (
         const amount = withCommas(payload.amount, 3);
         if (payload.to === username) {
           messageParams = [amount, payload.from];
-          message = 'popup_html_wallet_info_transfer_in';
+          message = 'wallet_info_transfer_in';
         } else {
           messageParams = [amount, payload.to];
-          message = 'popup_html_wallet_info_transfer_out';
+          message = 'wallet_info_transfer_out';
         }
         break;
       }
@@ -627,10 +528,10 @@ const getNotifications = async (
         const amount = withCommas(payload.amount, 3);
         if (payload.to === username) {
           messageParams = [amount, payload.from, payload.remaining_executions];
-          message = 'popup_html_wallet_info_fill_recurrent_transfer_in';
+          message = 'wallet_info_fill_recurrent_transfer_in';
         } else {
           messageParams = [amount, payload.to, payload.remaining_executions];
-          message = 'popup_html_wallet_info_fill_recurrent_transfer_out';
+          message = 'wallet_info_fill_recurrent_transfer_out';
         }
 
         break;
@@ -665,7 +566,7 @@ const getNotifications = async (
         break;
       }
       case 'claim_account': {
-        message = 'popup_html_wallet_info_claim_account';
+        message = 'wallet_info_claim_account';
         break;
       }
       case 'comment': {
@@ -728,13 +629,13 @@ const getNotifications = async (
         break;
       }
       case 'transfer_from_savings': {
-        message = 'popup_html_wallet_info_withdraw_savings';
+        message = 'wallet_info_withdraw_savings';
         const amount = withCommas(payload.amount, 3);
         messageParams = [amount];
         break;
       }
       case 'transfer_to_savings': {
-        message = 'popup_html_wallet_info_deposit_savings';
+        message = 'wallet_info_deposit_savings';
         const amount = withCommas(payload.amount, 3);
         messageParams = [amount];
         break;
@@ -742,10 +643,10 @@ const getNotifications = async (
       case 'transfer_to_vesting': {
         const amount = withCommas(payload.amount, 3);
         if (payload.to === username) {
-          message = 'popup_html_wallet_info_power_up';
+          message = 'wallet_info_power_up';
           messageParams = [amount];
         } else {
-          message = 'popup_html_wallet_info_power_up_other_account';
+          message = 'wallet_info_power_up_other_account';
           messageParams = [payload.from, amount, payload.to];
         }
         break;
@@ -957,47 +858,41 @@ const getNotifications = async (
           ? `https://hivehub.dev/tx/${notif.trx_id}`
           : undefined,
       externalUrl: externalUrl,
-      message: message,
-      messageParams: messageParams,
+      message: prefixTranslations + message,
+      messageParams: Object.assign({}, messageParams),
       read: !!notif.read_at,
     });
   }
   return notifications;
 };
 
-//   const markAllAsRead = async (activeAccount: ActiveAccount) => {
-//     return await CustomJsonUtils.send(
-//       [
-//         'setLastRead',
-//         {
-//           date: new Date(),
-//         },
-//       ],
-//       activeAccount.name!,
-//       activeAccount.keys.posting!,
-//       KeyType.POSTING,
-//       'notify',
-//     );
-//   };
-
-//   const deleteAccountConfig = async (activeAccount: ActiveAccount) => {
-//     return await CustomJsonUtils.send(
-//       ['delete_account', {}],
-//       activeAccount.name!,
-//       activeAccount.keys.posting!,
-//       KeyType.POSTING,
-//       'notify',
-//     );
-//   };
-
-//   const saveDefaultConfig = async (activeAccount: ActiveAccount) => {
-//     // const config = getDefaultConfig();
-//     const config = getSuggestedConfig(activeAccount.name!);
-//     return saveConfiguration(config, {
-//       keys: activeAccount.keys,
-//       name: activeAccount.name!,
-//     } as LocalAccount);
-//   };
+const markAllAsRead = async (activeAccount: ActiveAccount) => {
+  return await broadcastJson(
+    activeAccount.keys.posting!,
+    activeAccount.name!,
+    'notify',
+    false,
+    [
+      'setLastRead',
+      {
+        date: new Date(),
+      },
+    ],
+  );
+  //TODO cleanup bellow
+  // return await CustomJsonUtils.send(
+  //   [
+  //     'setLastRead',
+  //     {
+  //       date: new Date(),
+  //     },
+  //   ],
+  //   activeAccount.name!,
+  //   activeAccount.keys.posting!,
+  //   KeyType.POSTING,
+  //   'notify',
+  // );
+};
 
 export const PeakDNotificationsUtils = {
   defaultActiveSubs,
@@ -1006,11 +901,6 @@ export const PeakDNotificationsUtils = {
   operandList,
   getAccountConfig,
   operationFieldList,
-  // initializeForm,
-  // saveConfiguration,
   getNotifications,
-  // markAllAsRead,
-  // deleteAccountConfig,
-  // saveDefaultConfig,
-  // getSuggestedConfig,
+  markAllAsRead,
 };
