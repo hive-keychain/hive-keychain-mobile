@@ -492,11 +492,20 @@ const getNotifications = async (
     let externalUrl;
     const prefixTranslations = 'components.notifications.';
     //TODO test each notification using keychain.test
+    console.log('type:', {t: notif.operation_type}); //TODO remove line
     switch (notif.operation_type) {
-      case 'custom_json': {
+      case 'custom_json.follow': {
         const json = payload.json[1];
-        switch (notif.custom_json_id) {
-          case 'follow':
+        console.log('follow:', {json}); //TODO remove line
+        //TODO keep working below to fix follow and test reblog
+        if (json.following && json.what.includes('blog')) {
+          message = 'notification_follow';
+          messageParams = [json.follower, json.following];
+          break;
+        }
+        //TODO remove bellow after refactoring
+        switch (json) {
+          case json.following && json.blog:
             message =
               json.what.length > 0
                 ? 'notification_follow'

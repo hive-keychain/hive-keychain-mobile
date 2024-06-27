@@ -1,5 +1,11 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
@@ -9,6 +15,7 @@ interface BackToTopButtonProps {
   element: any;
   theme: Theme;
   isScrollView?: boolean;
+  additionalOverlayButtonStyle?: StyleProp<ViewStyle>;
 }
 
 export const BackToTopButton = (props: BackToTopButtonProps) => {
@@ -18,7 +25,11 @@ export const BackToTopButton = (props: BackToTopButtonProps) => {
         if (!props.isScrollView) {
           props.element.current.scrollToIndex({animated: true, index: 0});
         } else {
-          props.element.current.scrollTo({x: 0, y: 0, animated: true});
+          props.element.current.scrollTo({
+            x: 0,
+            y: 0,
+            animated: true,
+          });
         }
       } catch (error) {
         console.log('Error scrolling list: ', {error});
@@ -27,11 +38,14 @@ export const BackToTopButton = (props: BackToTopButtonProps) => {
   };
 
   return (
-    <View style={styles.overlayButton}>
-      <TouchableOpacity activeOpacity={1} onPress={scrollToTop}>
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={scrollToTop}
+      style={[styles.overlayButton, props.additionalOverlayButtonStyle]}>
+      <View>
         <Icon name={Icons.ARROW_UP} theme={props.theme} color="#FFF" />
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 
@@ -43,7 +57,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     right: 10,
-    // borderWidth: 1,
     width: 45,
     height: 45,
     backgroundColor: PRIMARY_RED_COLOR,

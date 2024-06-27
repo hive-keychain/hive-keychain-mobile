@@ -1,4 +1,5 @@
 import EllipticButton from 'components/form/EllipticButton';
+import {BackToTopButton} from 'components/ui/Back-To-Top-Button';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
@@ -6,6 +7,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   Linking,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -39,6 +41,8 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
   const [hasMoreData, setHasMoreData] = useState(false);
   const [allRead, setAllRead] = useState(false);
   const [settingNotifications, setSettingNotifications] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
   const flatListRef = useRef();
 
   const {width} = useWindowDimensions();
@@ -85,23 +89,43 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
     );
   };
 
+  const handleScroll = (event: any) => {
+    const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
+    if (isLoadingMore) return;
+    setDisplayedScrollToTop(innerScrollViewY >= 50);
+  };
+
+  const handleLoadMore = async () => {
+    setIsLoadingMore(true);
+    const {notifs, hasMore} = await NotificationsUtils.getNotifications(
+      user.name!,
+      properties!,
+      notifications,
+    );
+    setNotifications(notifs);
+    setHasMoreData(hasMore);
+    setIsLoadingMore(false);
+  };
+
   const renderItem = (notification: Notification) => {
     return (
-      <TouchableOpacity
-        activeOpacity={1}
-        onPress={() => handleClick(notification)}
-        style={styles.itemContainer}>
-        {!notification.read && <View style={styles.unread} />}
-        <View>
-          <Text style={styles.textBase}>
-            {translate(notification.message, notification.messageParams)}
-          </Text>
-          <Text style={[styles.textBase, styles.dateText]}>
-            {moment(notification.createdAt).fromNow()}
-          </Text>
-        </View>
-        <Separator drawLine height={5} />
-      </TouchableOpacity>
+      <>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => handleClick(notification)}
+          style={styles.itemContainer}>
+          {!notification.read && <View style={styles.unread} />}
+          <View>
+            <Text style={styles.textBase}>
+              {translate(notification.message, notification.messageParams)}
+            </Text>
+            <Text style={[styles.textBase, styles.dateText]}>
+              {moment(notification.createdAt).fromNow()}
+            </Text>
+          </View>
+        </TouchableOpacity>
+        <Separator drawLine height={5} additionalLineStyle={styles.line} />
+      </>
     );
   };
 
@@ -129,78 +153,45 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
           ]}
           onBackdropPress={() => setNotificationPanelOpen(false)}>
           {!settingNotifications && (
-            <FlatList
-              ref={flatListRef}
-              data={notifications}
-              initialNumToRender={20}
-              scrollEnabled
-              onEndReachedThreshold={0.5}
-              renderItem={(item) => renderItem(item.item)}
-              keyExtractor={(notification) => notification.id}
-              //TODO complete bellow
-              // style={styles.transactionsList}
-              // onScroll={handleScroll}
-              // onEndReached={() => {
-              //   if (
-              //     transactions.list.length &&
-              //     transactions.list[transactions.list.length - 1].last
-              //   ) {
-              //     const isLast =
-              //       transactions.list[transactions.list.length - 1].last;
-              //     if (!isLast && displayedTransactions.length > 8) {
-              //       tryToLoadMore();
-              //     }
-              //   }
-              // }}
-              // ListFooterComponent={() => {
-              //   return (
-              //     <>
-              //       {transactions.list[transactions.list.length - 1]?.last ===
-              //         false &&
-              //         transactions.lastUsedStart !== 0 &&
-              //         !loading &&
-              //         !bottomLoader && (
-              //           <TouchableOpacity
-              //             activeOpacity={1}
-              //             style={styles.loadMorePanel}
-              //             onPress={() => tryToLoadMore()}>
-              //             <Text style={styles.textBase}>
-              //               {translate('wallet.operations.history.load_more')}
-              //             </Text>
-              //             <Icon
-              //               name={Icons.ADD_CIRCLE_OUTLINE}
-              //               theme={theme}
-              //               additionalContainerStyle={{marginLeft: 5}}
-              //             />
-              //           </TouchableOpacity>
-              //         )}
-              //       {/* BOTTOM LOADER */}
-              //       {!loading && bottomLoader && (
-              //         <View style={styles.centeredContainer}>
-              //           <Loader animating size={'small'} />
-              //         </View>
-              //       )}
-              //       {/* END BOTTOM LOADER */}
-              //     </>
-              //   );
-              // }}
-              ListHeaderComponent={() => {
-                return !allRead ? (
-                  <>
-                    <EllipticButton
-                      title={translate(
-                        'components.notifications.notification_set_all_as_read',
-                      )}
-                      onPress={markAllAsRead}
-                      style={[
-                        getButtonStyle(theme, width).outline,
-                        styles.actionButton,
-                      ]}
-                    />
-                    <Separator height={8} />
-                  </>
-                ) : null;
-              }}
+            <ScrollView ref={flatListRef} onScroll={handleScroll}>
+              <ScrollView horizontal contentContainerStyle={{flex: 1}}>
+                <FlatList
+                  data={notifications}
+                  initialNumToRender={20}
+                  scrollEnabled
+                  onEndReachedThreshold={0.5}
+                  renderItem={(item) => renderItem(item.item)}
+                  keyExtractor={(notification) => notification.id}
+                  ListHeaderComponent={() => {
+                    return !allRead ? (
+                      <>
+                        <EllipticButton
+                          title={translate(
+                            'components.notifications.notification_set_all_as_read',
+                          )}
+                          onPress={markAllAsRead}
+                          style={[
+                            getButtonStyle(theme, width).outline,
+                            styles.actionButton,
+                          ]}
+                        />
+                        <Separator height={8} />
+                      </>
+                    ) : null;
+                  }}
+                  onEndReached={() => {
+                    if (hasMoreData) handleLoadMore();
+                  }}
+                />
+              </ScrollView>
+            </ScrollView>
+          )}
+          {!settingNotifications && displayScrollToTop && (
+            <BackToTopButton
+              theme={theme}
+              element={flatListRef}
+              additionalOverlayButtonStyle={{right: 1, bottom: 1}}
+              isScrollView
             />
           )}
           {settingNotifications && (
@@ -232,6 +223,7 @@ const getStyles = (theme: Theme, width: Dimensions['width']) =>
     textBase: {
       ...button_link_primary_small,
       color: getColors(theme).primaryText,
+      fontSize: getFontSizeSmallDevices(width, 12),
     },
     dateText: {
       fontFamily: FontPoppinsName.ITALIC,
@@ -260,6 +252,9 @@ const getStyles = (theme: Theme, width: Dimensions['width']) =>
       flexDirection: 'row',
       alignItems: 'center',
       paddingLeft: 12,
+    },
+    line: {
+      borderColor: getColors(theme).borderContrast,
     },
   });
 
