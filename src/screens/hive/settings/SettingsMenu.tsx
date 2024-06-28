@@ -93,7 +93,9 @@ const SettingsMenu = () => {
         }
         leftSideComponent={
           <View style={getBadgeStyle(width, theme).container}>
-            <Text style={getBadgeStyle(width, theme).text}>experimental</Text>
+            <Text style={getBadgeStyle(width, theme).text}>
+              {translate('common.experimental').toLowerCase()}
+            </Text>
           </View>
         }
         additionalLeftSideComponentStyle={{alignSelf: 'flex-end'}}

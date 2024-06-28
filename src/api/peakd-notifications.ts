@@ -1,8 +1,8 @@
+import {PeakdNotificationsConfig} from 'utils/config';
 import {BaseApi} from './base';
 
 const buildUrl = (url: string) => {
-  const baseURL = 'https://notifications.hivehub.dev';
-  return `${baseURL}/${url}`;
+  return `${PeakdNotificationsConfig.baseURL}/${url}`;
 };
 
 const get = async (url: string): Promise<any> => {

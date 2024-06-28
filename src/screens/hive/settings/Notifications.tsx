@@ -15,11 +15,6 @@ import {title_primary_title_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {PeakDNotificationsUtils} from 'utils/peakd-notifications.utils';
 
-//TODO to erase after finishing feature
-//  if you decide to use SSE, please comment lines 40 until 47 in android/app/src/debug/java/com/mobilekeychain/ReactNativeFlipper.java
-//  known issue: https://github.com/facebook/flipper/issues/2495
-//  -> this allows you to work with SSE connections in dev mode.
-
 const Notifications = ({active}: PropsFromRedux) => {
   const [isActive, setActive] = useState(false);
   const [userHasConfig, setUserHasConfig] = useState<boolean>();

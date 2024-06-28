@@ -440,17 +440,6 @@ const defaultActiveSubs = [
   'sm_unlock_assets',
 ];
 
-const suggestedConfig = [
-  'fill_convert_request',
-  'interest',
-  'fill_order',
-  'fill_transfer_from_savings',
-  'fill_collateralized_convert_request',
-  'fill_recurrent_transfer',
-  'failed_recurrent_transfer',
-  'fill_vesting_withdraw',
-];
-
 const prefixMap = {
   core: '',
   splinterlands: 'sm_',
@@ -491,32 +480,23 @@ const getNotifications = async (
     let message: string = `notification_${notif.operation}`;
     let externalUrl;
     const prefixTranslations = 'components.notifications.';
-    //TODO test each notification using keychain.test
-    console.log('type:', {t: notif.operation_type}); //TODO remove line
     switch (notif.operation_type) {
       case 'custom_json.follow': {
         const json = payload.json[1];
-        console.log('follow:', {json}); //TODO remove line
-        //TODO keep working below to fix follow and test reblog
         if (json.following && json.what.includes('blog')) {
           message = 'notification_follow';
           messageParams = [json.follower, json.following];
           break;
+        } else {
+          message = 'notification_unfollow';
+          messageParams = [json.follower, json.following];
+          break;
         }
-        //TODO remove bellow after refactoring
-        switch (json) {
-          case json.following && json.blog:
-            message =
-              json.what.length > 0
-                ? 'notification_follow'
-                : 'notification_unfollow';
-            messageParams = [json.follower, json.following];
-            break;
-          case 'reblog':
-            message = 'notification_reblog';
-            messageParams = [json.account, json.author, json.permlink];
-            break;
-        }
+      }
+      case 'custom_json.reblog': {
+        const json = payload.json[1];
+        message = 'notification_reblog';
+        messageParams = [json.account, json.author, json.permlink];
         break;
       }
       case 'transfer': {
@@ -890,19 +870,6 @@ const markAllAsRead = async (activeAccount: ActiveAccount) => {
       },
     ],
   );
-  //TODO cleanup bellow
-  // return await CustomJsonUtils.send(
-  //   [
-  //     'setLastRead',
-  //     {
-  //       date: new Date(),
-  //     },
-  //   ],
-  //   activeAccount.name!,
-  //   activeAccount.keys.posting!,
-  //   KeyType.POSTING,
-  //   'notify',
-  // );
 };
 
 export const PeakDNotificationsUtils = {

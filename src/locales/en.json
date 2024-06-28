@@ -125,7 +125,8 @@
     "yes": "Yes",
     "no": "No",
     "skip": "Skip",
-    "show": "Show"
+    "show": "Show",
+    "experimental": "Experimental"
   },
   "wallet": {
     "proposal": {
