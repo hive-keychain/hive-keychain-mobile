@@ -8,7 +8,7 @@ import {
 import {saveRequestedOperation} from 'actions/hive-uri';
 import RequestError from 'components/browser/requestOperations/components/RequestError';
 import React from 'react';
-import {store} from 'store';
+import {RootState, store} from 'store';
 import {validateAuthority} from './keychain';
 import {
   KeychainRequestTypes,
@@ -36,7 +36,9 @@ export const processQRCodeOp = async (op: Operation) => {
         type: KeychainRequestTypes.transfer,
         amount: (+amount).toFixed(3) + '',
         currency,
-        username: transferOp.from,
+        username:
+          transferOp.from ??
+          (store.getState() as RootState).activeAccount.name!,
         to: transferOp.to,
         memo: transferOp.memo,
         enforce: !!transferOp.enforce,
