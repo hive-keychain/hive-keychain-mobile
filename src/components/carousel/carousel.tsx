@@ -2,33 +2,16 @@ import IndicatorActive from 'assets/new_UI/circle_indicator_active.svg';
 import IndicatorInactive from 'assets/new_UI/circle_indicator_inactive.svg';
 import IndicatorInactiveLight from 'assets/new_UI/circle_indicator_inactive_light.svg';
 import EllipticButton from 'components/form/EllipticButton';
-import {
-  Feature,
-  WhatsNewContent,
-} from 'components/popups/whats-new/whats-new.interface';
 import React, {useState} from 'react';
-import {
-  Image,
-  Linking,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {
   NEUTRAL_WHITE_COLOR,
   PRIMARY_RED_COLOR,
   RED_SHADOW_COLOR,
-  getColors,
 } from 'src/styles/colors';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
-import {
-  body_primary_body_3,
-  button_link_primary_medium,
-  headlines_primary_headline_2,
-} from 'src/styles/typography';
-import {translate} from 'utils/localize';
+import {button_link_primary_medium} from 'src/styles/typography';
 
 interface Props {
   buttonsConfig: {
@@ -37,16 +20,21 @@ interface Props {
     lastTitle: string;
     lastSlideAction?: () => void | any;
   };
-  content: WhatsNewContent;
-  locale: string;
+  carouselContent: any[];
+  renderItem: (item: any) => React.JSX.Element;
   theme: Theme;
 }
 
-const Carousel = ({buttonsConfig, content, locale, theme}: Props) => {
+const Carousel = ({
+  buttonsConfig,
+  theme,
+  carouselContent,
+  renderItem,
+}: Props) => {
   const [index, setIndex] = useState(0);
 
   const handleOnPressNextButton = () => {
-    if (content.features[locale][index + 1]) {
+    if (carouselContent[index + 1]) {
       setIndex((prevIndex) => prevIndex + 1);
     } else {
       if (buttonsConfig.lastSlideAction) {
@@ -58,7 +46,7 @@ const Carousel = ({buttonsConfig, content, locale, theme}: Props) => {
   };
 
   const getCurrentTitleOnNextSlideButton = () => {
-    if (index === content.features[locale].length - 1) {
+    if (index === carouselContent.length - 1) {
       return buttonsConfig.lastTitle;
     } else {
       return buttonsConfig.nextTitle;
@@ -89,46 +77,19 @@ const Carousel = ({buttonsConfig, content, locale, theme}: Props) => {
     return circleArray;
   };
 
-  const handleOnClick = (content: WhatsNewContent, feature: Feature) => {
-    if (feature.externalUrl) {
-      Linking.openURL(feature.externalUrl);
-    } else {
-      Linking.openURL(`${content.url}#${feature.anchor}`);
-    }
-  };
-
-  const renderItem = (feature: Feature) => {
-    return (
-      <View style={styles.itemContainer}>
-        <Image
-          style={styles.image}
-          source={{uri: feature.image}}
-          resizeMode={'contain'}
-        />
-        <Text style={styles.titleText}>{feature.title}</Text>
-        <Text style={styles.descriptionText}>{feature.description}</Text>
-        <Text
-          style={styles.readMoreText}
-          onPress={() => handleOnClick(content, feature)}>
-          {feature.overrideReadMoreLabel ?? translate('common.popup_read_more')}
-        </Text>
-      </View>
-    );
-  };
-
   const styles = getStyles(theme);
 
   return (
     <View style={styles.container}>
       <SafeAreaView>
         <View style={[styles.pageIndicatorsContainer]}>
-          {drawPageIndicators(content.features[locale].length, index).map(
+          {drawPageIndicators(carouselContent.length, index).map(
             (indicator) => {
               return indicator;
             },
           )}
         </View>
-        {renderItem(content.features[locale][index])}
+        {carouselContent.map((item) => renderItem(item))}
         <EllipticButton
           title={getCurrentTitleOnNextSlideButton()}
           onPress={() => handleOnPressNextButton()}
@@ -157,30 +118,6 @@ const getStyles = (theme: Theme) =>
       height: '90%',
       width: '90%',
       alignSelf: 'center',
-    },
-    itemContainer: {
-      alignItems: 'center',
-      flexDirection: 'column',
-    },
-    titleText: {
-      marginBottom: 8,
-      color: getColors(theme).secondaryText,
-      ...headlines_primary_headline_2,
-      fontSize: 14,
-    },
-    descriptionText: {
-      ...body_primary_body_3,
-      color: getColors(theme).secondaryText,
-      fontSize: 13,
-      marginBottom: 8,
-      textAlign: 'center',
-    },
-    readMoreText: {
-      textDecorationLine: 'underline',
-      ...body_primary_body_3,
-      color: PRIMARY_RED_COLOR,
-      fontSize: 15,
-      marginBottom: 8,
     },
     image: {
       marginBottom: 30,

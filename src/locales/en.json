@@ -959,6 +959,13 @@
     "tutorial": {
       "title": "Welcome to Keychain!",
       "description": "If you are new to Keychain, or Hive in general, please check our onboarding tutorial.\nYou can always access it later on in Settings > Help > Tutorial."
+    },
+    "vesting_routes": {
+      "vesting_routes_title": "Your vesting routes have changed",
+      "vesting_routes_warning_message": "If you didn't change them, please seek assistance on the Hive discord channel",
+      "vesting_route_account_item_label": "Account",
+      "vesting_route_account_item_old_route_title": "Old Route",
+      "vesting_route_account_item_new_route_title": "New Route"
     }
   },
   "multichain": {
