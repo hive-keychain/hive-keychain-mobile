@@ -40,6 +40,7 @@ export function isPrefetched(url: string) {
 }
 const WhatsNew = ({navigation}: Props): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
+  const [index, setIndex] = useState(0);
   const locale = 'en'; // later use getUILanguage()
   const {theme} = useThemeContext();
 

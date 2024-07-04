@@ -1,8 +1,14 @@
 import Carousel from 'components/carousel/carousel';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {ModalScreenProps} from 'navigators/Root.types';
-import React, {useEffect} from 'react';
-import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Linking,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {
@@ -39,6 +45,7 @@ const VestingRoutes = ({
   setVestingRoutesDifferences,
 }: Props & PropsFromRedux): null => {
   const {theme} = useThemeContext();
+  const [moveNext, setMoveNext] = useState<number>(0);
 
   useEffect(() => {
     if (vestingRoutesDifferences && vestingRoutesDifferences.length > 0) {
@@ -49,7 +56,7 @@ const VestingRoutes = ({
         modalContainerStyle: getModalBaseStyle(theme).roundedTop,
       } as ModalScreenProps);
     }
-  }, [vestingRoutesDifferences]);
+  }, [vestingRoutesDifferences, moveNext]);
 
   const handleClose = async () => {
     setVestingRoutesDifferences(undefined);
@@ -62,23 +69,48 @@ const VestingRoutes = ({
     return (
       <View aria-label="vesting-routes-component" style={styles.rootContainer}>
         <Text style={[styles.baseText, styles.title]}>
-          {translate('popup.vesting_routes.vesting_routes_title')}
+          {translate('popup.vesting_routes.title')}
         </Text>
-        <Text style={[styles.baseText, styles.description]}>
-          {translate('popup.vesting_routes.vesting_routes_warning_message')}
+        <Text style={{marginBottom: 12}}>
+          <Text style={[styles.baseText, styles.description]}>
+            {translate('popup.vesting_routes.warning_message')}
+          </Text>
+          <Text
+            style={[styles.baseText, styles.description, styles.highlight]}
+            onPress={() => {
+              Linking.openURL('https://discord.gg/UpXnBQtJw7');
+            }}>
+            {translate('common.discord_server')}
+          </Text>
         </Text>
-        <Carousel
-          buttonsConfig={{
-            prevTitle: 'prev',
-            nextTitle: 'next',
-            lastTitle: 'last',
-          }}
-          carouselContent={vestingRoutesDifferences}
-          renderItem={(item) => (
-            <VestingRoutesItemComponent accountVestingRouteDifference={item} />
-          )}
-          theme={theme}
-        />
+        {vestingRoutesDifferences && (
+          <Carousel
+            buttonsConfig={{
+              prevTitle: 'not_used',
+              nextTitle: 'not_used',
+              lastTitle: 'not_used',
+            }}
+            carouselContent={vestingRoutesDifferences}
+            renderItem={(item) => (
+              <VestingRoutesItemComponent
+                accountVestingRouteDifference={item}
+                nextCarouselSlide={() => {
+                  setMoveNext(1);
+                }}
+                isLast={
+                  item.account ===
+                  vestingRoutesDifferences[vestingRoutesDifferences.length - 1]
+                    .account
+                }
+                clearDisplayWrongVestingRoutes={handleClose}
+              />
+            )}
+            theme={theme}
+            hideButtons
+            moveNext={moveNext}
+            resetMoveNext={() => setMoveNext(0)}
+          />
+        )}
       </View>
     );
   };
@@ -88,11 +120,12 @@ const VestingRoutes = ({
 const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
   StyleSheet.create({
     rootContainer: {
+      display: 'flex',
       flex: 1,
       paddingHorizontal: 16,
-      justifyContent: 'space-evenly',
+      paddingTop: 20,
       alignItems: 'center',
-      height: screenDimensions.height * 0.8,
+      height: screenDimensions.height * 0.75,
     },
     baseText: {
       color: getColors(theme).secondaryText,
@@ -108,6 +141,7 @@ const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
         screenDimensions.width,
         body_primary_body_1.fontSize,
       ),
+      marginTop: 12,
     },
     buttonsContainer: {
       display: 'flex',
@@ -135,6 +169,9 @@ const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
       ...button_link_primary_medium,
       fontSize: 13,
       color: NEUTRAL_WHITE_COLOR,
+    },
+    highlight: {
+      color: PRIMARY_RED_COLOR,
     },
   });
 

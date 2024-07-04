@@ -2,8 +2,9 @@ import IndicatorActive from 'assets/new_UI/circle_indicator_active.svg';
 import IndicatorInactive from 'assets/new_UI/circle_indicator_inactive.svg';
 import IndicatorInactiveLight from 'assets/new_UI/circle_indicator_inactive_light.svg';
 import EllipticButton from 'components/form/EllipticButton';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
+import GestureRecognizer from 'react-native-swipe-gestures';
 import {Theme} from 'src/context/theme.context';
 import {
   NEUTRAL_WHITE_COLOR,
@@ -23,6 +24,10 @@ interface Props {
   carouselContent: any[];
   renderItem: (item: any) => React.JSX.Element;
   theme: Theme;
+  hideButtons?: boolean;
+  moveNext?: number;
+  resetMoveNext?: () => void;
+  enableSwap?: boolean;
 }
 
 const Carousel = ({
@@ -30,8 +35,19 @@ const Carousel = ({
   theme,
   carouselContent,
   renderItem,
+  hideButtons,
+  moveNext,
+  resetMoveNext,
+  enableSwap,
 }: Props) => {
   const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (moveNext === 1) {
+      setIndex((prevIndex) => prevIndex + 1);
+      resetMoveNext();
+    }
+  }, [moveNext]);
 
   const handleOnPressNextButton = () => {
     if (carouselContent[index + 1]) {
@@ -77,10 +93,25 @@ const Carousel = ({
     return circleArray;
   };
 
+  const handleSwipeLeft = () => {
+    if (carouselContent[index + 1] && enableSwap) {
+      setIndex((prevIndex) => prevIndex + 1);
+    }
+  };
+
+  const handleSwipeRight = () => {
+    if (carouselContent[index - 1] && enableSwap) {
+      setIndex((prevIndex) => prevIndex - 1);
+    }
+  };
+
   const styles = getStyles(theme);
 
   return (
-    <View style={styles.container}>
+    <GestureRecognizer
+      style={styles.container}
+      onSwipeLeft={handleSwipeLeft}
+      onSwipeRight={handleSwipeRight}>
       <SafeAreaView>
         <View style={[styles.pageIndicatorsContainer]}>
           {drawPageIndicators(carouselContent.length, index).map(
@@ -89,26 +120,28 @@ const Carousel = ({
             },
           )}
         </View>
-        {carouselContent.map((item) => renderItem(item))}
-        <EllipticButton
-          title={getCurrentTitleOnNextSlideButton()}
-          onPress={() => handleOnPressNextButton()}
-          style={[
-            styles.warningProceedButton,
-            generateBoxShadowStyle(
-              0,
-              13,
-              RED_SHADOW_COLOR,
-              1,
-              25,
-              30,
-              RED_SHADOW_COLOR,
-            ),
-          ]}
-          additionalTextStyle={styles.textButtonFilled}
-        />
+        {renderItem(carouselContent[index])}
+        {!hideButtons && (
+          <EllipticButton
+            title={getCurrentTitleOnNextSlideButton()}
+            onPress={() => handleOnPressNextButton()}
+            style={[
+              styles.warningProceedButton,
+              generateBoxShadowStyle(
+                0,
+                13,
+                RED_SHADOW_COLOR,
+                1,
+                25,
+                30,
+                RED_SHADOW_COLOR,
+              ),
+            ]}
+            additionalTextStyle={styles.textButtonFilled}
+          />
+        )}
       </SafeAreaView>
-    </View>
+    </GestureRecognizer>
   );
 };
 
@@ -118,15 +151,6 @@ const getStyles = (theme: Theme) =>
       height: '90%',
       width: '90%',
       alignSelf: 'center',
-    },
-    image: {
-      marginBottom: 30,
-      aspectRatio: 2,
-      alignSelf: 'center',
-      width: '80%',
-      borderColor: PRIMARY_RED_COLOR,
-      borderWidth: 1,
-      borderRadius: 16,
     },
     swapByImageIndicatorsContainer: {
       flexDirection: 'column',

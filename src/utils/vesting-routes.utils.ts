@@ -50,6 +50,7 @@ const getLastVestingRoutes = async () => {
   const result: UserVestingRoute[] | null = JSON.parse(
     await AsyncStorage.getItem(KeychainStorageKeyEnum.LAST_VESTING_ROUTES),
   );
+  console.log({result}); //TODO remove line
   return result ?? null;
 };
 
