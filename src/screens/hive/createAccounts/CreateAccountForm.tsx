@@ -5,7 +5,9 @@ import OperationButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import UserDropdown from 'components/form/UserDropdown';
 import Icon from 'components/hive/Icon';
+import RcHpSelectorPanel from 'components/hive/RcHpSelectorPanel';
 import {ConfirmationPageProps} from 'components/operations/Confirmation';
+import {DEFAULT_RC_DELEGATION_VALUE} from 'components/operations/RCDelegation';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
@@ -34,11 +36,11 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {CreateDataAccountOnBoarding} from 'src/interfaces/create-accounts.interface';
+import {RCDelegationValue} from 'src/interfaces/rc-delegation.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {
-  FontPoppinsName,
   body_primary_body_1,
   button_link_primary_medium,
   getFormFontStyle,
@@ -51,7 +53,14 @@ import {
 } from 'utils/account-creation.utils';
 import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
-import {capitalize, fromHP, getCleanAmountValue, toHP} from 'utils/format';
+import {
+  capitalize,
+  formatBalanceCurrency,
+  fromHP,
+  getCleanAmountValue,
+  toHP,
+  withCommas,
+} from 'utils/format';
 import {delegate, getCurrency} from 'utils/hive';
 import {
   getAccountPrice,
@@ -93,7 +102,13 @@ const CreateAccountStepOne = ({
   const [delegateHP, setDelegateHP] = useState(false);
   const [delegateRC, setDelegateRC] = useState(false);
   const [availableHP, setAvailableHP] = useState('0');
-  const [availableGRC, setAvailableGRC] = useState('0');
+  const [availableRC, setAvailableRC] = useState<RCDelegationValue>(
+    DEFAULT_RC_DELEGATION_VALUE,
+  );
+  const [amount, setAmount] = useState('');
+  const [equivalentHPAmount, setEquivalentHPAmount] = useState<
+    string | undefined
+  >();
 
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -107,7 +122,6 @@ const CreateAccountStepOne = ({
       const {name, publicKeys} = params.newPeerToPeerData;
       setAccountName(name);
       setOnBoardingUserData({name, publicKeys});
-      //TODO move this to a util? ask stoodkev
       const totalHp = toHP(
         user.account.vesting_shares as string,
         properties.globals,
@@ -119,12 +133,29 @@ const CreateAccountStepOne = ({
       const tempAvailableHP = Math.max(totalHp - totalOutgoing - 5, 0).toFixed(
         3,
       );
-      const tempAvailableGRC = (user.rc.max_rc * user.rc.percentage) / 100;
-      setAvailableGRC(RcDelegationsUtils.rcToGigaRc(tempAvailableGRC));
+      const tempAvailableRC = (user.rc.max_rc * user.rc.percentage) / 100;
+      setAvailableRC({
+        hpValue: RcDelegationsUtils.rcToHp(
+          tempAvailableRC.toString(),
+          properties,
+        ),
+        gigaRcValue: RcDelegationsUtils.rcToGigaRc(tempAvailableRC),
+      });
       setAvailableHP(tempAvailableHP);
     }
     initPrice();
   }, []);
+
+  const setToPresetValue = (value: number) => {
+    return {
+      gigaRcValue: RcDelegationsUtils.hpToGigaRc(value.toString(), properties),
+      hpValue: value.toFixed(3),
+    };
+  };
+
+  const onHandlePreset = (value: number) => {
+    setAmount(setToPresetValue(value).gigaRcValue);
+  };
 
   const initPrice = async () => {
     setPrice(await getAccountPrice());
@@ -144,6 +175,20 @@ const CreateAccountStepOne = ({
       checkAccountName();
     }
   }, [accountName]);
+
+  useEffect(() => {
+    if (amount.trim().length > 0 && parseFloat(amount) > 0) {
+      setEquivalentHPAmount(
+        withCommas(RcDelegationsUtils.gigaRcToHp(amount, properties)),
+      );
+      setOnBoardingDelegations({
+        ...onBoardingDelegations,
+        rcAmount: amount,
+      });
+    } else if (parseFloat(amount) === 0) {
+      setEquivalentHPAmount(undefined);
+    }
+  }, [amount]);
 
   const checkAccountName = async () => {
     const isAvailable = await AccountCreationUtils.checkAccountNameAvailable(
@@ -196,23 +241,6 @@ const CreateAccountStepOne = ({
     }
   };
 
-  const validateAccountName = async () => {
-    if (accountName.length < 3) {
-      Toast.show(translate('toast.username_too_short'));
-      return false;
-    }
-    if (!AccountCreationUtils.validateUsername(accountName)) {
-      Toast.show(translate('toast.account_name_not_valid'));
-      return false;
-    }
-    if (await AccountCreationUtils.checkAccountNameAvailable(accountName)) {
-      return true;
-    } else {
-      Toast.show(translate('toast.account_username_already_used'));
-      return false;
-    }
-  };
-
   const onConfirm = async () => {
     if (!user.keys.active) {
       SimpleToast.show(
@@ -250,9 +278,6 @@ const CreateAccountStepOne = ({
         let delegationFlag = false;
         if (+onBoardingDelegations.hpAmount > 0) {
           delegationFlag = true;
-          console.log(
-            `Processing ${onBoardingDelegations.hpAmount} HP Delegation to @${onBoardingUserData.name}...`,
-          ); //TODO remove line
           const hpDelegationResult = await delegate(user.keys.active, {
             vesting_shares: sanitizeAmount(
               fromHP(
@@ -268,9 +293,6 @@ const CreateAccountStepOne = ({
         }
         if (+onBoardingDelegations.rcAmount > 0) {
           delegationFlag = true;
-          console.log(
-            `Processing ${onBoardingDelegations.rcAmount} GRC Delegation to @${onBoardingUserData.name}...`,
-          ); //TODO remove line
           const rcDelegationResult = await RcDelegationsUtils.sendDelegation(
             RcDelegationsUtils.gigaRcToRc(
               parseFloat(onBoardingDelegations.rcAmount),
@@ -306,7 +328,7 @@ const CreateAccountStepOne = ({
     if (onBoardingUserData) {
       if (
         +onBoardingDelegations.rcAmount >
-        +getCleanAmountValue(availableGRC as string)
+        +getCleanAmountValue(availableRC.gigaRcValue as string)
       ) {
         return Toast.show(
           translate('common.overdraw_balance_error', {
@@ -344,7 +366,7 @@ const CreateAccountStepOne = ({
             {
               title:
                 'wallet.operations.create_account.peer_to_peer.creation_method',
-              value: creationType,
+              value: capitalize(creationType.split('_')[1].toLowerCase()),
             },
             {
               title: `keys.owner`,
@@ -398,7 +420,9 @@ const CreateAccountStepOne = ({
         Toast.show(translate('toast.account_creation_not_enough_found'));
       }
     } else {
-      if (await validateAccountName()) {
+      if (
+        await AccountCreationUtils.validateNewAccountName(accountName, Toast)
+      ) {
         const account = user.account;
         const balance = Asset.fromString(account.balance.toString());
         if (
@@ -426,28 +450,38 @@ const CreateAccountStepOne = ({
     }
   };
 
-  const renderCustomPanel = (
-    caption: string,
-    delegating: 'hpAmount' | 'rcAmount',
-    currency: 'HP' | 'GRC',
-    available: string,
-  ) => {
-    //TODO add tr to caption if accepted
+  const renderCustomPanel = (currency: 'HP' | 'G RC', available: string) => {
     const value =
-      delegating === 'hpAmount'
+      currency === 'HP'
         ? onBoardingDelegations.hpAmount
         : onBoardingDelegations.rcAmount;
 
     const handleSetAmount = (textValue: string) => {
+      const updated =
+        currency === 'HP' ? {hpAmount: textValue} : {rcAmount: textValue};
       setOnBoardingDelegations({
         ...onBoardingDelegations,
-        [delegating]: textValue,
+        ...updated,
       });
     };
 
+    const getLabelExtraInfo = () =>
+      currency === 'G RC'
+        ? equivalentHPAmount
+          ? `≈ ${formatBalanceCurrency(equivalentHPAmount)} ${getCurrency(
+              'HP',
+            )}`
+          : undefined
+        : undefined;
+
     return (
       <View>
-        <Text style={[styles.text, styles.paddingHorizontal]}>{caption}</Text>
+        <Text style={[styles.text, styles.paddingHorizontal]}>
+          {translate(
+            'wallet.operations.create_account.peer_to_peer.delegate_hp_rc_caption',
+            {currency},
+          )}
+        </Text>
         <Text
           style={[
             styles.text,
@@ -468,6 +502,7 @@ const CreateAccountStepOne = ({
           />
           <OperationInput
             labelInput={capitalize(translate('common.amount'))}
+            labelExtraInfo={getLabelExtraInfo()}
             placeholder={'0'}
             keyboardType="decimal-pad"
             textAlign="right"
@@ -498,6 +533,12 @@ const CreateAccountStepOne = ({
             }
           />
         </View>
+        {currency === 'G RC' && (
+          <RcHpSelectorPanel
+            valueLabelList={[5, 10, 50, 100]}
+            onHandlePreset={onHandlePreset}
+          />
+        )}
       </View>
     );
   };
@@ -559,12 +600,7 @@ const CreateAccountStepOne = ({
                 callback={(toggled) => {
                   setDelegateHP(toggled);
                 }}>
-                {renderCustomPanel(
-                  'You may delegate HP for this new user.',
-                  'hpAmount',
-                  'HP',
-                  availableHP,
-                )}
+                {renderCustomPanel('HP', availableHP)}
               </OptionsToggle>
               <OptionsToggle
                 theme={theme}
@@ -574,12 +610,7 @@ const CreateAccountStepOne = ({
                 callback={(toggled) => {
                   setDelegateRC(toggled);
                 }}>
-                {renderCustomPanel(
-                  'You may delegate RC for this new user.',
-                  'rcAmount',
-                  'GRC',
-                  availableGRC,
-                )}
+                {renderCustomPanel('G RC', availableRC.gigaRcValue)}
               </OptionsToggle>
             </View>
           )}
@@ -614,10 +645,6 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       height: 'auto',
       marginTop: 30,
     },
-    button: {
-      width: '100%',
-      height: height * 0.08,
-    },
     buttonContainer: {
       marginBottom: 25,
       width: '100%',
@@ -625,22 +652,11 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     },
     text: {color: getColors(theme).secondaryText, ...body_primary_body_1},
     centeredText: {textAlign: 'center'},
-    additionalPickerStyle: {
-      color: getColors(theme).secondaryText,
-      fontFamily: FontPoppinsName.ITALIC,
-    },
     marginVertical: {
       marginVertical: height / 30,
     },
-    uniqueFontSize: {
-      fontSize: 17,
-      fontWeight: 'bold',
-    },
     opacity: {
       opacity: 0.7,
-    },
-    smallerText: {
-      fontSize: 13,
     },
     profilePicture: {
       width: 30,
@@ -656,9 +672,6 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       flexDirection: 'row',
       alignItems: 'center',
       alignContent: 'center',
-    },
-    dropdown: {
-      width: '100%',
     },
     paddingHorizontal: {
       paddingHorizontal: MARGIN_PADDING,

@@ -10,6 +10,7 @@
     "createAccount": "New Account"
   },
   "createAccount": {
+    "caption": "You may choose to create an account on your own or a friend will invite you.",
     "on_boarding_title": "Create on hive.io",
     "peer_to_peer_on_boarding_title": "Create with a friend"
   },
@@ -131,7 +132,10 @@
     "no": "No",
     "skip": "Skip",
     "show": "Show",
-    "show_qr": "Show QR"
+    "generate_qr": "Generate QR",
+    "let_us_go": "Let's go!",
+    "choose_available_options": "Please choose one of the available options",
+    "add_account_to_keychain": "Import an existent account or enjoy the account creation features."
   },
   "wallet": {
     "proposal": {
@@ -428,11 +432,12 @@
       },
       "create_account": {
         "peer_to_peer": {
-          "info": "Please verify the information bellow, to on board a new HIVE user.\nThis action cannot be undone!",
+          "info": "Please verify the information below, to onboard a new Hive user.\nThis action cannot be undone!",
           "creation_method": "Creation method",
           "delegating_title": "Delegating",
-          "delegating_amount": "Amount {{amount}} {{currency}}",
-          "account_creator": "Creator"
+          "delegating_amount": "{{amount}} {{currency}}",
+          "account_creator": "Creator",
+          "delegate_hp_rc_caption": "You may delegate {{currency}} for this new user."
         }
       }
     },
@@ -615,7 +620,6 @@
       "storage_understanding": "I understand that Keychain should not be considered as the primary place of storage for my keys",
       "buy_method_message": "I agree to pay {{price}} HIVE with account @{{account}} to create this account",
       "claim_account_method_message": "I agree to use one account creation ticket from @{{account}} to create this account",
-      "peer_to_peer_message": "I agree that my on boarding friend will pay for this account creation.",
       "copy": "Copy",
       "create_account": "Create Account",
       "cost": "Create a new account for {{price}} using @{{account}}",
@@ -625,11 +629,19 @@
       "create_account_ticket": "{{tickets}} account creation ticket(s)",
       "create_account_onboarding_message": "You are onboarding @{{name}}, please choose bellow if you want to delegate:\nHP or RC to this user.",
       "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created! Thanks for using this feature!",
-      "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!\nThanks for using this feature!"
+      "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!\nThanks for using this feature!",
+      "peer_to_peer_waiting_text": "Please ask the person onboarding you to scan this QR Code to create your account. Keep this page opened until the account is created."
     },
     "copy_keys": {
       "title": "Copy a Key",
       "text1": "If you need to copy a public or private key, perform a long press on the key."
+    },
+    "createAccountPeerToPeer": {
+      "text1": "Thank you for using Keychain On Boarding!",
+      "text2": "You will create an account & your friend will pay for it.",
+      "text3": "As soon as you choose a valid Hive account name, the system will show you the keys.",
+      "text4": "Please store this data in a safe location!",
+      "text5": "Go ahead, and follow the steps."
     }
   },
   "toast": {

@@ -7,6 +7,7 @@ import {ConfirmationPageRoute} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {
   Keyboard,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -61,35 +62,23 @@ const ConfirmationPage = ({
   const styles = getDimensionedStyles({width, height}, theme);
 
   const onConfirm = async () => {
+    setLoading(true);
+    Keyboard.dismiss();
     if (onConfirmOverride) {
-      setLoading(true);
       await onConfirmOverride();
-      setLoading(false);
-      resetStackAndNavigate('WALLET');
     } else {
-      setLoading(true);
-      Keyboard.dismiss();
       await onSend();
-      setLoading(false);
       loadAccount(user.name, true);
-      resetStackAndNavigate('WALLET');
     }
+    setLoading(false);
+    resetStackAndNavigate('WALLET');
   };
-  // onConfirmOverride ||
-  // (async () => {
-  //   setLoading(true);
-  //   Keyboard.dismiss();
-  //   await onSend();
-  //   setLoading(false);
-  //   loadAccount(user.name, true);
-  //   resetStackAndNavigate('WALLET');
-  // });
 
   return (
     <Background theme={theme}>
-      <View style={styles.confirmationPage}>
+      <ScrollView contentContainerStyle={styles.confirmationPage}>
         <Caption text={title} hideSeparator />
-        {/* <Separator /> */}
+        <Separator />
         {warningText && (
           <Caption
             text={warningText}
@@ -125,20 +114,26 @@ const ConfirmationPage = ({
           ))}
         </View>
         <View style={spacingStyle.fillSpace}></View>
+        <Separator />
         <EllipticButton
           title={translate('common.confirm')}
           onPress={onConfirm}
           isLoading={loading}
           isWarningButton
         />
-      </View>
+        <Separator />
+      </ScrollView>
     </Background>
   );
 };
 
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
-    confirmationPage: {flex: 1, marginBottom: 16, paddingHorizontal: 16},
+    confirmationPage: {
+      flexGrow: 1,
+      marginBottom: 16,
+      paddingHorizontal: 16,
+    },
     confirmItem: {
       marginVertical: 8,
     },

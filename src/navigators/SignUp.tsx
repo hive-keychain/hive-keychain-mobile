@@ -4,7 +4,7 @@ import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import ChooseAccountOption from 'screens/ChooseAccount';
 import Introduction from 'screens/Introduction';
@@ -18,7 +18,6 @@ import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
 import {SignupStackParamList} from './Signup.types';
@@ -28,7 +27,7 @@ const Stack = createStackNavigator<SignupStackParamList>();
 
 export default () => {
   const {theme} = useThemeContext();
-  const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
+  const styles = getStyles(theme, useSafeAreaInsets());
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -147,11 +146,7 @@ export default () => {
   );
 };
 
-const getStyles = (
-  theme: Theme,
-  {width, height}: Dimensions,
-  insets: EdgeInsets,
-) =>
+const getStyles = (theme: Theme, insets: EdgeInsets) =>
   StyleSheet.create({
     paddingRight: {paddingRight: HEADER_ICON_MARGIN},
     header: {

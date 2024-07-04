@@ -3,10 +3,11 @@ import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
+import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
-import Toast from 'react-native-simple-toast';
+import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -14,6 +15,7 @@ import {getColors} from 'src/styles/colors';
 import {
   FontPoppinsName,
   button_link_primary_medium,
+  getFontSizeSmallDevices,
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
@@ -26,7 +28,7 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import StepTwoAccountCreation from '../createAccounts/CreateAccountConfirmation';
 
-const CreateAccountPeerToPeer = ({user}: PropsFromRedux) => {
+const CreateAccountPeerToPeer = ({}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
@@ -46,26 +48,13 @@ const CreateAccountPeerToPeer = ({user}: PropsFromRedux) => {
     setIsAvailableAccountName(isAvailable);
   };
 
-  //TODO move to a util bellow?
-  const validateAccountName = async () => {
-    if (accountName.length < 3) {
-      Toast.show(translate('toast.username_too_short'));
-      return false;
-    }
-    if (!AccountCreationUtils.validateUsername(accountName)) {
-      Toast.show(translate('toast.account_name_not_valid'));
-      return false;
-    }
-    if (await AccountCreationUtils.checkAccountNameAvailable(accountName)) {
-      return true;
-    } else {
-      Toast.show(translate('toast.account_username_already_used'));
-      return false;
-    }
-  };
-
   const goToNextPage = async () => {
-    if (await validateAccountName()) {
+    if (
+      await AccountCreationUtils.validateNewAccountName(
+        accountName,
+        SimpleToast,
+      )
+    ) {
       navigate('TemplateStackScreen', {
         titleScreen: translate('navigation.create_account'),
         component: (
@@ -84,16 +73,23 @@ const CreateAccountPeerToPeer = ({user}: PropsFromRedux) => {
   return (
     <Background theme={theme} containerStyle={styles.container}>
       <View style={styles.content}>
+        <FocusAwareStatusBar />
         <View style={styles.topContent}>
-          {/* //TODO add to tr */}
           <Text style={styles.text}>
-            You are about to create your account through friend onboarding.
+            {translate('components.createAccountPeerToPeer.text1')}
           </Text>
           <Text style={styles.text}>
-            Your keys will be created locally, after which your friend will help
-            you create the account by scanning a QR Code.
+            {translate('components.createAccountPeerToPeer.text2')}
           </Text>
-          <Text style={styles.text}>Start by choosing a unique username.</Text>
+          <Text style={styles.text}>
+            {translate('components.createAccountPeerToPeer.text3')}
+          </Text>
+          <Text style={[styles.text, styles.textBold]}>
+            {translate('components.createAccountPeerToPeer.text4')}
+          </Text>
+          <Text style={styles.text}>
+            {translate('components.createAccountPeerToPeer.text5')}
+          </Text>
           <View style={styles.inputContainer}>
             <OperationInput
               labelInput={translate('common.username')}
@@ -160,6 +156,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       ...title_primary_title_1,
       alignSelf: 'stretch',
       opacity: 0.7,
+      fontSize: getFontSizeSmallDevices(width, title_primary_title_1.fontSize),
     },
     inputContainer: {
       marginTop: 20,
@@ -167,9 +164,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   });
 
 const connector = connect((state: RootState) => {
-  return {
-    user: state.activeAccount,
-  };
+  return {};
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

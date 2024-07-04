@@ -8,6 +8,7 @@ import {
   default as OperationButton,
 } from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
+import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import {KeychainKeyTypes} from 'hive-keychain-commons';
@@ -28,7 +29,6 @@ import {getButtonStyle} from 'src/styles/button';
 import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
-  body_primary_body_1,
   body_primary_body_2,
   button_link_primary_small,
   getFontSizeSmallDevices,
@@ -83,8 +83,6 @@ const StepTwo = ({
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
-  const [waitingForPeerResponse, setWaitingForPeerResponse] = useState(true);
-  const [flagWarningColor, setFlagWarningColor] = useState(false);
 
   useEffect(() => {
     const masterKey = AccountCreationUtils.generateMasterKey();
@@ -131,7 +129,9 @@ const StepTwo = ({
       }
       setNotPrimaryStorageUnderstanding(false);
       setSafelyCopied(false);
-      setPaymentUnderstanding(false);
+      setPaymentUnderstanding(
+        creationType === AccountCreationType.PEER_TO_PEER,
+      );
     }
   }, [generatedKeys]);
 
@@ -247,8 +247,6 @@ const StepTwo = ({
           'components.create_account.claim_account_method_message',
           {account: selectedAccount.name},
         );
-      case AccountCreationType.PEER_TO_PEER:
-        return translate('components.create_account.peer_to_peer_message');
     }
   };
 
@@ -291,8 +289,6 @@ const StepTwo = ({
             );
           }
         } else {
-          //TODO important related to the QRcode presentation:
-          //  check all current QRcode component design and use the same, but having in mind the white bg.
           const encodedDataAsString = Buffer.from(
             JSON.stringify({
               n: accountName,
@@ -321,7 +317,7 @@ const StepTwo = ({
   const renderButton = () =>
     creationType === AccountCreationType.PEER_TO_PEER ? (
       <EllipticButton
-        title={translate('common.show_qr')}
+        title={translate('common.generate_qr')}
         onPress={createAccount}
         isWarningButton
         additionalTextStyle={[
@@ -366,11 +362,9 @@ const StepTwo = ({
     if (qrData) {
       const interval = setInterval(async () => {
         if (await AccountUtils.doesAccountExist(accountName)) {
-          setWaitingForPeerResponse(false);
           handleLoadNewAccount();
           return;
         }
-        setFlagWarningColor((prev) => !prev);
       }, 3000);
 
       return () => clearInterval(interval);
@@ -379,41 +373,19 @@ const StepTwo = ({
 
   return (
     <Background theme={theme}>
-      <View style={{flex: 1, width: '100%', height: '100%'}}>
+      <View style={styles.containerQrPage}>
         <FocusAwareStatusBar />
         {creationType === AccountCreationType.PEER_TO_PEER && qrData ? (
           <View style={styles.qrContainer}>
-            {/* //TODO add tr for waiting if accepted */}
-            {waitingForPeerResponse && (
-              <Text
-                style={[
-                  {color: flagWarningColor ? 'green' : 'white'},
-                  body_primary_body_1,
-                ]}>
-                Waiting...
-              </Text>
-            )}
+            <View style={{paddingHorizontal: 18, marginBottom: 8}}>
+              <Caption text="components.create_account.peer_to_peer_waiting_text" />
+            </View>
             <View style={styles.qrCodeImg}>
               <QRCode
                 size={240}
                 style={{backgroundColor: 'white'}}
                 value={qrData}
               />
-            </View>
-            <View style={{paddingHorizontal: 16, marginTop: 12}}>
-              <Text style={[styles.buttonText, styles.dynamicTextSize]}>
-                {/* //TODO add tr if accepted */}
-                1. Show this QR to your On Boarding friend.
-              </Text>
-              <Text style={[styles.buttonText, styles.dynamicTextSize]}>
-                2. Tell your friend to scan it, using the Mobile Keychain.
-              </Text>
-              <Text style={[styles.buttonText, styles.dynamicTextSize]}>
-                3. Once he successfully onboard you, the app will sign you!
-              </Text>
-              <Text style={[styles.buttonText, styles.dynamicTextSize]}>
-                Please be patience until the process is done!
-              </Text>
             </View>
           </View>
         ) : (
@@ -424,16 +396,18 @@ const StepTwo = ({
                   {renderKeys()}
                 </ScrollView>
                 <View style={[styles.checkboxesContainer]}>
-                  <CheckBoxPanel
-                    checked={paymentUnderstanding}
-                    onPress={() =>
-                      setPaymentUnderstanding(!paymentUnderstanding)
-                    }
-                    title={getPaymentCheckboxLabel()}
-                    skipTranslation
-                    smallText
-                    containerStyle={styles.checkboxContainer}
-                  />
+                  {creationType !== AccountCreationType.PEER_TO_PEER && (
+                    <CheckBoxPanel
+                      checked={paymentUnderstanding}
+                      onPress={() =>
+                        setPaymentUnderstanding(!paymentUnderstanding)
+                      }
+                      title={getPaymentCheckboxLabel()}
+                      skipTranslation
+                      smallText
+                      containerStyle={styles.checkboxContainer}
+                    />
+                  )}
                   <CheckBoxPanel
                     checked={safelyCopied}
                     onPress={() => setSafelyCopied(!safelyCopied)}
@@ -494,7 +468,13 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       paddingVertical: 0,
       height: 60,
       flexGrow: 1,
-      paddingRight: 10,
+    },
+    containerQrPage: {
+      display: 'flex',
+      flex: 1,
+      width: '100%',
+      height: '100%',
+      justifyContent: 'center',
     },
     container: {
       marginHorizontal: 16,
@@ -538,7 +518,6 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     checkbox: {
       backgroundColor: getColors(theme).cardBgColor,
       width: '100%',
-      padding: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 10 : 18,
       borderColor: getColors(theme).senaryCardBorderColor,
       borderRadius: 20,
     },
@@ -596,7 +575,6 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     qrContainer: {
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
       alignItems: 'center',
       height: '100%',
       width: '100%',
