@@ -286,12 +286,7 @@ const Main = ({
     const tempVestingRoutesDifferences = await VestingRoutesUtils.getWrongVestingRoutes(
       accounts,
     );
-    console.log({tempVestingRoutesDifferences});
     setVestingRoutesDifferences(tempVestingRoutesDifferences);
-    //TODO remove code below
-    for (const r of tempVestingRoutesDifferences) {
-      console.log({r: r.differences});
-    }
   };
 
   const loadHiddenTokens = async () => {

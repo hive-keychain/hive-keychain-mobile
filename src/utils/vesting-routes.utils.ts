@@ -50,7 +50,6 @@ const getLastVestingRoutes = async () => {
   const result: UserVestingRoute[] | null = JSON.parse(
     await AsyncStorage.getItem(KeychainStorageKeyEnum.LAST_VESTING_ROUTES),
   );
-  console.log({result}); //TODO remove line
   return result ?? null;
 };
 
@@ -136,7 +135,10 @@ const getWrongVestingRoutes = async (localAccounts: Account[]) => {
       });
     }
   }
-  return accountsVestingRoutesDifferences.length > 0
+
+  return accountsVestingRoutesDifferences &&
+    accountsVestingRoutesDifferences.length > 0 &&
+    accountsVestingRoutesDifferences.some((a) => a.differences.length > 0)
     ? accountsVestingRoutesDifferences
     : undefined;
 };
@@ -163,18 +165,6 @@ const sendVestingRoute = async (
       autoVest,
     ),
   ]);
-  //TODO cleanup below
-  // return HiveTxUtils.sendOperation(
-  //   [
-  //     VestingRoutesUtils.getVestingRouteOperation(
-  //       fromAccount,
-  //       toAccount,
-  //       percent,
-  //       autoVest,
-  //     ),
-  //   ],
-  //   activeKey,
-  // );
 };
 
 const getVestingRouteOperation = (

@@ -152,12 +152,6 @@ const getStyles = (theme: Theme) =>
       width: '90%',
       alignSelf: 'center',
     },
-    swapByImageIndicatorsContainer: {
-      flexDirection: 'column',
-      width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
     pageIndicatorsContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
