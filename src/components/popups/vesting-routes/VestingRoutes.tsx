@@ -45,7 +45,7 @@ const VestingRoutes = ({
   setVestingRoutesDifferences,
 }: Props & PropsFromRedux): null => {
   const {theme} = useThemeContext();
-  const [moveNext, setMoveNext] = useState<number>(0);
+  const [moveNext, setMoveNext] = useState<boolean>(false);
 
   useEffect(() => {
     if (vestingRoutesDifferences && vestingRoutesDifferences.length > 0) {
@@ -90,12 +90,12 @@ const VestingRoutes = ({
               nextTitle: 'not_used',
               lastTitle: 'not_used',
             }}
-            carouselContent={vestingRoutesDifferences}
+            content={vestingRoutesDifferences}
             renderItem={(item) => (
               <VestingRoutesItemComponent
                 accountVestingRouteDifference={item}
                 nextCarouselSlide={() => {
-                  setMoveNext(1);
+                  setMoveNext(true);
                 }}
                 isLast={
                   item.account ===
@@ -108,7 +108,7 @@ const VestingRoutes = ({
             theme={theme}
             hideButtons
             moveNext={moveNext}
-            resetMoveNext={() => setMoveNext(0)}
+            resetMoveNext={() => setMoveNext(false)}
           />
         )}
       </View>

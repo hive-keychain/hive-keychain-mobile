@@ -41,7 +41,7 @@ const VestingRoutesItem = ({
   const [isLoadingRevertAction, setIsLoadingRevertAction] = useState(false);
   const {theme} = useThemeContext();
 
-  const styles = getStyles(theme, useWindowDimensions());
+  const styles = getStyles(theme, useWindowDimensions(), differences.length);
 
   const renderVestingItemDetails = (
     vestingRoute: VestingRoute,
@@ -180,11 +180,16 @@ const VestingRoutesItem = ({
   );
 };
 
-const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
+const getStyles = (
+  theme: Theme,
+  screenDimensions: Dimensions,
+  vestingRoutesItemCount: number,
+) =>
   StyleSheet.create({
     carouselItemContainer: {
       marginBottom: 20,
       height: '85%',
+      justifyContent: 'center',
     },
     textBase: {
       color: getColors(theme).secondaryText,
@@ -204,12 +209,16 @@ const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
     },
     oldRoute: {marginLeft: 16},
     newRoute: {marginRight: 16},
-    vestingItemListContainer: {},
+    vestingItemListContainer: {
+      width: '100%',
+      height: vestingRoutesItemCount > 1 ? 'auto' : '100%',
+      display: 'flex',
+      justifyContent: 'center',
+    },
     vestingActionButtonsContainer: {
       width: '100%',
       display: 'flex',
       flexDirection: 'row',
-      marginBottom: 12,
       justifyContent: 'space-between',
     },
     button: {backgroundColor: '#68A0B4', width: 100},
@@ -227,7 +236,7 @@ const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
       fontSize: 12,
     },
     vestingRouteCardItem: {
-      marginTop: 8,
+      marginBottom: vestingRoutesItemCount > 1 ? 8 : 0,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',

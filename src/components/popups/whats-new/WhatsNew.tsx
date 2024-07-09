@@ -132,7 +132,7 @@ const WhatsNew = ({navigation}: Props): null => {
             lastTitle: translate('popup.whats_new.got_it'),
             lastSlideAction: finish,
           }}
-          carouselContent={whatsNewContent.features[locale]}
+          content={whatsNewContent.features[locale]}
           renderItem={renderItem}
           theme={theme}
         />

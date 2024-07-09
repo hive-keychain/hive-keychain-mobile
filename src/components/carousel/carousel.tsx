@@ -21,36 +21,36 @@ interface Props {
     lastTitle: string;
     lastSlideAction?: () => void | any;
   };
-  carouselContent: any[];
+  content: any[];
   renderItem: (item: any) => React.JSX.Element;
   theme: Theme;
   hideButtons?: boolean;
-  moveNext?: number;
+  moveNext?: boolean;
   resetMoveNext?: () => void;
-  enableSwap?: boolean;
+  enableSwipe?: boolean;
 }
 
 const Carousel = ({
   buttonsConfig,
   theme,
-  carouselContent,
+  content,
   renderItem,
   hideButtons,
   moveNext,
   resetMoveNext,
-  enableSwap,
+  enableSwipe,
 }: Props) => {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (moveNext === 1) {
+    if (moveNext) {
       setIndex((prevIndex) => prevIndex + 1);
       resetMoveNext();
     }
   }, [moveNext]);
 
   const handleOnPressNextButton = () => {
-    if (carouselContent[index + 1]) {
+    if (content[index + 1]) {
       setIndex((prevIndex) => prevIndex + 1);
     } else {
       if (buttonsConfig.lastSlideAction) {
@@ -62,7 +62,7 @@ const Carousel = ({
   };
 
   const getCurrentTitleOnNextSlideButton = () => {
-    if (index === carouselContent.length - 1) {
+    if (index === content.length - 1) {
       return buttonsConfig.lastTitle;
     } else {
       return buttonsConfig.nextTitle;
@@ -94,13 +94,13 @@ const Carousel = ({
   };
 
   const handleSwipeLeft = () => {
-    if (carouselContent[index + 1] && enableSwap) {
+    if (content[index + 1] && enableSwipe) {
       setIndex((prevIndex) => prevIndex + 1);
     }
   };
 
   const handleSwipeRight = () => {
-    if (carouselContent[index - 1] && enableSwap) {
+    if (content[index - 1] && enableSwipe) {
       setIndex((prevIndex) => prevIndex - 1);
     }
   };
@@ -113,14 +113,14 @@ const Carousel = ({
       onSwipeLeft={handleSwipeLeft}
       onSwipeRight={handleSwipeRight}>
       <SafeAreaView>
-        <View style={[styles.pageIndicatorsContainer]}>
-          {drawPageIndicators(carouselContent.length, index).map(
-            (indicator) => {
+        {content.length > 1 && (
+          <View style={[styles.pageIndicatorsContainer]}>
+            {drawPageIndicators(content.length, index).map((indicator) => {
               return indicator;
-            },
-          )}
-        </View>
-        {renderItem(carouselContent[index])}
+            })}
+          </View>
+        )}
+        {renderItem(content[index])}
         {!hideButtons && (
           <EllipticButton
             title={getCurrentTitleOnNextSlideButton()}
