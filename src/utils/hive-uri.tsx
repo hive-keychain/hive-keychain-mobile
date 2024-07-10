@@ -93,8 +93,10 @@ export const processQRCodeOp = async (op: Operation) => {
   }
 
   const accounts = await store.getState().accounts;
+
   if (accounts && accounts.length) {
     const validity = validateAuthority(accounts, request);
+
     if (validity.valid) {
       const payload = {
         request,

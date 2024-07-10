@@ -8,7 +8,7 @@ export default (request: KeychainRequest, accounts: Account[]) => {
   const {username} = request;
   const method = getRequiredWifType(request);
   let initAcc;
-  if (username) {
+  if (username && accounts.find((u) => u.name === username).keys.active) {
     initAcc = username;
   } else {
     accounts = getValidAuthorityAccounts(
