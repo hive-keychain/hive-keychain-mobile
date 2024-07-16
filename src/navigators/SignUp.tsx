@@ -1,11 +1,11 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
-import {createStackNavigator} from '@react-navigation/stack';
+import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
+import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
-import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
+import MoreInformation, { Info } from 'components/info_buttons/MoreInfo';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import { StyleSheet } from 'react-native';
+import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 import ChooseAccountOption from 'screens/ChooseAccount';
 import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
@@ -13,14 +13,14 @@ import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import ScanQR from 'screens/hive/addAccounts/ScanQR';
 import CreateAccount from 'screens/hive/createAccounts/CreateAccount';
 import CreateAccountPeerToPeer from 'screens/hive/createAccountsPeerToPeer/CreateAccountPeerToPeer';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {getColors} from 'src/styles/colors';
-import {HEADER_ICON_MARGIN} from 'src/styles/headers';
-import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
-import {translate} from 'utils/localize';
-import {noHeader} from 'utils/navigation';
-import {SignupStackParamList} from './Signup.types';
+import { Theme, useThemeContext } from 'src/context/theme.context';
+import { Icons } from 'src/enums/icons.enums';
+import { getColors } from 'src/styles/colors';
+import { HEADER_ICON_MARGIN } from 'src/styles/headers';
+import { STACK_HEADER_HEIGHT } from 'src/styles/spacing';
+import { translate } from 'utils/localize';
+import { noHeader } from 'utils/navigation';
+import { SignupStackParamList } from './Signup.types';
 import TemplateStack from './mainDrawerStacks/TemplateStack';
 
 const Stack = createStackNavigator<SignupStackParamList>();
@@ -42,7 +42,17 @@ export default () => {
       />
       <Stack.Screen
         name="ChooseAccountOptionsScreen"
-        options={{...noHeader, animationEnabled: false}}
+        options={({navigation}) => 
+          ({
+            headerStyle: styles.header,
+            headerTintColor: 'white',
+            headerBackTitle: translate('navigation.choose_first_account'),
+             headerTitle: () => (
+              <NavigatorTitle title="navigation.choose_first_account" />
+            ),
+            animationEnabled: false,
+            headerLeft: null
+          })}
         component={ChooseAccountOption}
       />
       <Stack.Screen
@@ -50,9 +60,12 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTintColor: 'white',
-          headerRightContainerStyle: styles.paddingRight,
+          headerBackTitle: translate('navigation.create_an_account'),
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+              <NavigatorTitle title="navigation.create_an_account" />
+          ),
           animationEnabled: false,
-          title: '',
           headerLeft: () => (
             <Icon
               name={Icons.ARROW_LEFT}
@@ -103,9 +116,12 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.header,
           headerTintColor: 'white',
-          headerRightContainerStyle: styles.paddingRight,
+          headerTitleAlign: 'center',
           animationEnabled: false,
-          title: '',
+          headerBackTitle: translate('navigation.choose_an_existing_account'),
+          headerTitle: () => (
+            <NavigatorTitle title="navigation.choose_an_existing_account" />
+          ),
           headerLeft: () => (
             <Icon
               name={Icons.ARROW_LEFT}

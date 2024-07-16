@@ -438,7 +438,8 @@
           "creation_method": "Creation method",
           "delegating_title": "Delegating",
           "delegating_amount": "{{amount}} {{currency}}",
-          "account_creator": "Creator"
+          "account_creator": "Creator",
+          "account_sucessfully_created": "Great! Welcome {{accountName}}"
         }
       }
     },
@@ -718,7 +719,10 @@
     "tabs": "Opened tabs",
     "governance": "Governance",
     "create_account": "Create Account",
+    "create_an_account": "Create an account",
     "create_account_peer_to_peer": "Friend Onboarding",
+    "choose_first_account": "Choose your first account!",
+    "choose_an_existing_account": "Add an account",
     "tokens": "Tokens",
     "theme_setting": "Theme",
     "wallet_history": "Wallet History",

@@ -1,18 +1,18 @@
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
-import {Caption} from 'components/ui/Caption';
+import { Caption } from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import React from 'react';
-import {Linking, StyleSheet, View, useWindowDimensions} from 'react-native';
-import {useThemeContext} from 'src/context/theme.context';
-import {getButtonHeight} from 'src/styles/button';
-import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
-import {NEUTRAL_WHITE_COLOR, PRIMARY_RED_COLOR} from 'src/styles/colors';
-import {button_link_primary_medium} from 'src/styles/typography';
-import {hiveConfig} from 'utils/config';
-import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import { Linking, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { useThemeContext } from 'src/context/theme.context';
+import { getButtonHeight } from 'src/styles/button';
+import { CARD_PADDING_HORIZONTAL } from 'src/styles/card';
+import { NEUTRAL_WHITE_COLOR, PRIMARY_RED_COLOR } from 'src/styles/colors';
+import { button_link_primary_medium, getFontSizeSmallDevices } from 'src/styles/typography';
+import { hiveConfig } from 'utils/config';
+import { translate } from 'utils/localize';
+import { navigate } from 'utils/navigation';
 
 const CreateAccount = () => {
   const {theme} = useThemeContext();
@@ -32,10 +32,10 @@ const CreateAccount = () => {
             onPress={() => {
               Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
             }}
-            style={styles.warningProceedButton}
-            additionalTextStyle={styles.textButtonFilled}
+            style={styles.outlineButton}
+            additionalTextStyle={styles.textOutLineButton}
           />
-          <Separator height={height * 0.04} />
+          <Separator height={height * 0.015} />
           <EllipticButton
             title={translate('createAccount.peer_to_peer_on_boarding_title')}
             onPress={() => {
@@ -62,7 +62,6 @@ const getStyles = (width: number) =>
       display: 'flex',
       flex: 1,
       padding: CARD_PADDING_HORIZONTAL,
-      justifyContent: 'center',
     },
     warningProceedButton: {
       backgroundColor: PRIMARY_RED_COLOR,
@@ -70,7 +69,7 @@ const getStyles = (width: number) =>
     },
     textButtonFilled: {
       ...button_link_primary_medium,
-      fontSize: 13,
+      fontSize: getFontSizeSmallDevices(width,13),
       color: NEUTRAL_WHITE_COLOR,
     },
     buttonsContainer: {
@@ -84,6 +83,16 @@ const getStyles = (width: number) =>
       paddingHorizontal: 18,
       alignSelf: 'center',
       marginBottom: 24,
+    },
+    outlineButton: {
+      backgroundColor: '#FFFFFF',
+      zIndex: 10,
+      height: getButtonHeight(width),
+    },
+    textOutLineButton: {
+      ...button_link_primary_medium,
+      fontSize: getFontSizeSmallDevices(width,13),
+      color: '#212838',
     },
   });
 

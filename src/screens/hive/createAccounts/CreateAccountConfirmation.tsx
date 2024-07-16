@@ -1,6 +1,7 @@
-import {PrivateKey} from '@hiveio/dhive';
-import {addAccount} from 'actions/accounts';
-import {Account} from 'actions/interfaces';
+import { PrivateKey } from '@hiveio/dhive';
+import { addAccount } from 'actions/accounts';
+import { Account } from 'actions/interfaces';
+import { showModal } from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import {
@@ -8,10 +9,10 @@ import {
   default as OperationButton,
 } from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
-import {Caption} from 'components/ui/Caption';
+import { Caption } from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Clipboard,
   ScrollView,
@@ -22,10 +23,11 @@ import {
 } from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import QRCode from 'react-qr-code';
-import {ConnectedProps, connect} from 'react-redux';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {getButtonStyle} from 'src/styles/button';
-import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
+import { ConnectedProps, connect } from 'react-redux';
+import { Theme, useThemeContext } from 'src/context/theme.context';
+import { MessageModalType } from 'src/enums/messageModal.enums';
+import { getButtonStyle } from 'src/styles/button';
+import { BACKGROUNDDARKBLUE, getColors } from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_2,
@@ -33,16 +35,16 @@ import {
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
-import {RootState} from 'store';
+import { RootState } from 'store';
 import {
   AccountCreationType,
   AccountCreationUtils,
   GeneratedKeys,
 } from 'utils/account-creation.utils';
 import AccountUtils from 'utils/account.utils';
-import {Dimensions} from 'utils/common.types';
-import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation';
+import { Dimensions } from 'utils/common.types';
+import { translate } from 'utils/localize';
+import { navigate, resetStackAndNavigate } from 'utils/navigation';
 
 const DEFAULT_EMPTY_KEYS = {
   owner: {public: '', private: ''},
@@ -65,6 +67,7 @@ const StepTwo = ({
   accountName,
   creationType,
   price,
+  showModal
 }: PropsFromRedux & Props) => {
   const [masterKey, setMasterKey] = useState('');
   const [generatedKeys, setGeneratedKeys] = useState(DEFAULT_EMPTY_KEYS);
@@ -356,7 +359,10 @@ const StepTwo = ({
       true,
       false,
     );
-    resetStackAndNavigate('WALLET');
+    showModal('wallet.operations.create_account.peer_to_peer.account_sucessfully_created',MessageModalType.SUCCESS, {
+      accountName
+    });
+    navigate('WALLET');
   };
 
   useEffect(() => {
@@ -588,7 +594,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {addAccount},
+  {addAccount, showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
