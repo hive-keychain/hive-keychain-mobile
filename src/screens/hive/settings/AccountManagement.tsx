@@ -27,7 +27,7 @@ import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
-import {navigate, resetStackAndNavigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 
 const AccountManagement = ({
   account,
@@ -77,7 +77,7 @@ const AccountManagement = ({
       title: 'common.confirm_key_remove',
       onConfirm: () => {
         forgetKey(username, key);
-        resetStackAndNavigate('WALLET');
+        goBack();
       },
       data: [
         {
