@@ -1,7 +1,7 @@
 import Carousel from 'components/carousel/carousel';
-import {WalletNavigation} from 'navigators/MainDrawer.types';
-import {ModalScreenProps} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
+import { WalletNavigation } from 'navigators/MainDrawer.types';
+import { ModalScreenProps } from 'navigators/Root.types';
+import React, { useEffect, useState } from 'react';
 import {
   Linking,
   StyleSheet,
@@ -9,26 +9,24 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {ConnectedProps, connect} from 'react-redux';
-import {Theme, useThemeContext} from 'src/context/theme.context';
+import { ConnectedProps, connect } from 'react-redux';
+import { Theme, useThemeContext } from 'src/context/theme.context';
 import {
-  NEUTRAL_WHITE_COLOR,
   PRIMARY_RED_COLOR,
-  getColors,
+  getColors
 } from 'src/styles/colors';
-import {getModalBaseStyle} from 'src/styles/modal';
+import { getModalBaseStyle } from 'src/styles/modal';
 import {
   body_primary_body_1,
-  button_link_primary_medium,
   getFontSizeSmallDevices,
-  headlines_primary_headline_2,
+  headlines_primary_headline_2
 } from 'src/styles/typography';
-import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {translate} from 'utils/localize';
-import {goBack, navigate} from 'utils/navigation';
-import {VestingRoutesItemComponent} from './VestingRoutesItem';
-import {AccountVestingRoutesDifferences} from './vesting-routes.interface';
+import { RootState } from 'store';
+import { Dimensions } from 'utils/common.types';
+import { translate } from 'utils/localize';
+import { goBack, navigate } from 'utils/navigation';
+import { AccountVestingRoutesDifferences } from './vesting-routes.interface';
+import { VestingRoutesItemComponent } from './VestingRoutesItem';
 
 interface Props {
   navigation: WalletNavigation;
@@ -67,11 +65,12 @@ const VestingRoutes = ({
 
   const renderContent = () => {
     return (
-      <View aria-label="vesting-routes-component" style={styles.rootContainer}>
-        <Text style={[styles.baseText, styles.title]}>
+      <View aria-label="vesting-routes-component" style={[styles.rootContainer]}>
+        <View style={styles.paddingTop}>
+        <Text style={[styles.baseText, styles.title, styles.marginBottom]}>
           {translate('popup.vesting_routes.title')}
         </Text>
-        <Text style={{marginBottom: 12}}>
+        <Text style={{textAlign: 'center'}}>
           <Text style={[styles.baseText, styles.description]}>
             {translate('popup.vesting_routes.warning_message')}
           </Text>
@@ -83,7 +82,9 @@ const VestingRoutes = ({
             {translate('common.discord_server')}
           </Text>
         </Text>
+        </View>
         {vestingRoutesDifferences && (
+          <View style={[styles.carouselContainer]}>
           <Carousel
             buttonsConfig={{
               prevTitle: 'not_used',
@@ -110,6 +111,7 @@ const VestingRoutes = ({
             moveNext={moveNext}
             resetMoveNext={() => setMoveNext(false)}
           />
+          </View>
         )}
       </View>
     );
@@ -121,11 +123,10 @@ const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
   StyleSheet.create({
     rootContainer: {
       display: 'flex',
-      flex: 1,
       paddingHorizontal: 16,
-      paddingTop: 20,
       alignItems: 'center',
-      height: screenDimensions.height * 0.75,
+      justifyContent: 'space-evenly',
+      height: screenDimensions.height * 0.6,
     },
     baseText: {
       color: getColors(theme).secondaryText,
@@ -141,38 +142,13 @@ const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
         screenDimensions.width,
         body_primary_body_1.fontSize,
       ),
-      marginTop: 12,
-    },
-    buttonsContainer: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-evenly',
-      width: '100%',
-      height: 60,
-    },
-    image: {
-      aspectRatio: 1.6,
-      alignSelf: 'center',
-      width: '100%',
-      borderRadius: 16,
-    },
-    warningProceedButton: {
-      backgroundColor: PRIMARY_RED_COLOR,
-      width: '40%',
-    },
-    outlineButton: {
-      borderColor: getColors(theme).borderContrast,
-      borderWidth: 1,
-      width: '40%',
-    },
-    textButtonFilled: {
-      ...button_link_primary_medium,
-      fontSize: 13,
-      color: NEUTRAL_WHITE_COLOR,
     },
     highlight: {
       color: PRIMARY_RED_COLOR,
     },
+    carouselContainer: {display: 'flex', height: '60%', width: '100%', flexGrow: 1, justifyContent: 'center'},
+     marginBottom: {marginBottom: 12},
+     paddingTop: {paddingTop: 20}
   });
 
 const connector = connect((state: RootState) => {
