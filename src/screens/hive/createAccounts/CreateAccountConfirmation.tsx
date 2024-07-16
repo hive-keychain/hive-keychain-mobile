@@ -11,7 +11,6 @@ import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
-import {KeychainKeyTypes} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
 import {
   Clipboard,
@@ -261,7 +260,9 @@ const StepTwo = ({
         if (creationType !== AccountCreationType.PEER_TO_PEER) {
           if (!selectedAccount.keys.active)
             throw new Error(
-              translate('common.missing_key', {key: KeychainKeyTypes.active}),
+              translate('common.missing_key', {
+                key: translate('keys.active').toLowerCase(),
+              }),
             );
           const result = await AccountCreationUtils.createAccount(
             creationType as AccountCreationType,

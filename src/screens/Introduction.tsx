@@ -191,7 +191,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           {currentStep === 2 ? (
             <>
               <EllipticButton
-                title={translate('common.let_us_go')}
+                title={translate('common.lets_go')}
                 onPress={() => {
                   navigation.navigate('SignupScreen');
                 }}

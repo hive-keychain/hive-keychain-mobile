@@ -34,10 +34,7 @@ const ChooseAccountOption = ({navigation}: SignupNavProp) => {
           barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
         />
         <View style={styles.captionContainer}>
-          <Caption
-            text={'common.choose_available_options'}
-            additionnalText={'common.add_account_to_keychain'}
-          />
+          <Caption text={'signup.first_account'} />
         </View>
         <View style={styles.buttonsContainer}>
           <EllipticButton

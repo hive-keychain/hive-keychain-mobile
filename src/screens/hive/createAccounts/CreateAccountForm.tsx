@@ -14,7 +14,6 @@ import Loader from 'components/ui/Loader';
 import OptionsToggle from 'components/ui/OptionsToggle';
 import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
-import {KeychainKeyTypes} from 'hive-keychain-commons';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {TemplateStackProps} from 'navigators/Root.types';
 import {CreateAccountFromWalletNavigationProps} from 'navigators/mainDrawerStacks/CreateAccount.types';
@@ -244,7 +243,9 @@ const CreateAccountStepOne = ({
   const onConfirm = async () => {
     if (!user.keys.active) {
       SimpleToast.show(
-        translate('common.missing_key', {key: KeychainKeyTypes.active}),
+        translate('common.missing_key', {
+          key: translate('keys.active').toLowerCase(),
+        }),
         SimpleToast.LONG,
       );
       return;
@@ -252,7 +253,9 @@ const CreateAccountStepOne = ({
     if (+onBoardingDelegations.rcAmount > 0) {
       if (!user.keys.posting) {
         SimpleToast.show(
-          translate('common.missing_key', {key: KeychainKeyTypes.posting}),
+          translate('common.missing_key', {
+            key: translate('keys.posting').toLowerCase(),
+          }),
           SimpleToast.LONG,
         );
         return;
@@ -476,12 +479,6 @@ const CreateAccountStepOne = ({
 
     return (
       <View>
-        <Text style={[styles.text, styles.paddingHorizontal]}>
-          {translate(
-            'wallet.operations.create_account.peer_to_peer.delegate_hp_rc_caption',
-            {currency},
-          )}
-        </Text>
         <Text
           style={[
             styles.text,

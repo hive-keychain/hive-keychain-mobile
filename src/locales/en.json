@@ -1,6 +1,10 @@
 {
   "unlock": {"enterPIN": "Enter your PIN", "authenticate": "Authenticate"},
-  "signup": {"confirm": "Confirm your PIN", "choose": "Choose your PIN"},
+  "signup": {
+    "confirm": "Confirm your PIN",
+    "choose": "Choose your PIN",
+    "first_account": "Let's get you started! Create your first Hive account or import an existing one."
+  },
   "intro": {
     "intro_text_1": "The ultimate HIVE wallet",
     "intro_text_2": "Manage Hive assets, and\nconnect to Hive\napplications",
@@ -132,10 +136,8 @@
     "no": "No",
     "skip": "Skip",
     "show": "Show",
-    "generate_qr": "Generate QR",
-    "let_us_go": "Let's go!",
-    "choose_available_options": "Please choose one of the available options",
-    "add_account_to_keychain": "Import an existent account or enjoy the account creation features."
+    "generate_qr": "Generate QR Code",
+    "lets_go": "Let's go!"
   },
   "wallet": {
     "proposal": {
@@ -436,8 +438,7 @@
           "creation_method": "Creation method",
           "delegating_title": "Delegating",
           "delegating_amount": "{{amount}} {{currency}}",
-          "account_creator": "Creator",
-          "delegate_hp_rc_caption": "You may delegate {{currency}} for this new user."
+          "account_creator": "Creator"
         }
       }
     },
@@ -615,7 +616,7 @@
       "add_account": "+ ADD NEW ACCOUNT"
     },
     "create_account": {
-      "new_account_username": "New Account username",
+      "new_account_username": "New account username",
       "safely_copied_keys": "I have safely copied my keys and saved them outside of Keychain",
       "storage_understanding": "I understand that Keychain should not be considered as the primary place of storage for my keys",
       "buy_method_message": "I agree to pay {{price}} HIVE with account @{{account}} to create this account",
@@ -627,21 +628,21 @@
       "create_account_successful": "Your account has been successfully created and added to your Keychain",
       "create_account_failed": "The account creation has failed. Please try again later",
       "create_account_ticket": "{{tickets}} account creation ticket(s)",
-      "create_account_onboarding_message": "You are onboarding @{{name}}, please choose bellow if you want to delegate:\nHP or RC to this user.",
-      "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created! Thanks for using this feature!",
-      "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!\nThanks for using this feature!",
-      "peer_to_peer_waiting_text": "Please ask the person onboarding you to scan this QR Code to create your account. Keep this page opened until the account is created."
+      "create_account_onboarding_message": "You are onboarding @{{name}}, please choose below if you want to delegate them HP or RC.",
+      "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created!",
+      "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!",
+      "peer_to_peer_waiting_text": "Please ask your friend to scan this QR Code to create your account. Keep this page opened until the account is created."
     },
     "copy_keys": {
       "title": "Copy a Key",
       "text1": "If you need to copy a public or private key, perform a long press on the key."
     },
     "createAccountPeerToPeer": {
-      "text1": "Thank you for using Keychain On Boarding!",
-      "text2": "You will create an account & your friend will pay for it.",
-      "text3": "As soon as you choose a valid Hive account name, the system will show you the keys.",
-      "text4": "Please store this data in a safe location!",
-      "text5": "Go ahead, and follow the steps."
+      "text1": "Thank you for using Keychain Onboarding!",
+      "text2": "Start by choosing a Hive account name.",
+      "text3": "The App will then generate your private keys",
+      "text4": "Please store these keys in a safe offline location!",
+      "text5": "After that, a QR Code will be created. Show it to your friend to proceed with the account creation."
     }
   },
   "toast": {
