@@ -41,7 +41,6 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
   useEffect(() => {
     init();
   }, []);
-
   const init = async () => {
     const skipTutorial = await AsyncStorage.getItem(
       KeychainStorageKeyEnum.SKIP_TUTORIAL,
@@ -94,7 +93,7 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
             title={translate('common.skip')}
             onPress={() => handleClick('skip')}
             style={[styles.outlineButton]}
-            additionalTextStyle={styles.textButtonFilled}
+            additionalTextStyle={styles.textButtonFilledSkip}
           />
           <EllipticButton
             title={translate('common.show')}
@@ -170,6 +169,11 @@ const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
       ...button_link_primary_medium,
       fontSize: 13,
       color: NEUTRAL_WHITE_COLOR,
+    },
+    textButtonFilledSkip: {
+      ...button_link_primary_medium,
+      fontSize: 13,
+      color: getColors(theme).primaryText,
     },
   });
 
