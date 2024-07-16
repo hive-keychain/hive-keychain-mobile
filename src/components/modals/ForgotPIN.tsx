@@ -70,7 +70,7 @@ const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
             RED_SHADOW_COLOR,
           ),
         ]}
-        additionalTextStyle={{...button_link_primary_medium}}
+        additionalTextStyle={{...button_link_primary_medium, color: 'white'}}
       />
     </View>
   );
