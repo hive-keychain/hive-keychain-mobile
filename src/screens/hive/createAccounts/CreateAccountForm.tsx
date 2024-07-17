@@ -7,7 +7,6 @@ import UserDropdown from 'components/form/UserDropdown';
 import Icon from 'components/hive/Icon';
 import RcHpSelectorPanel from 'components/hive/RcHpSelectorPanel';
 import { ConfirmationPageProps } from 'components/operations/Confirmation';
-import { DEFAULT_RC_DELEGATION_VALUE } from 'components/operations/RCDelegation';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
@@ -35,7 +34,6 @@ import { Theme, useThemeContext } from 'src/context/theme.context';
 import { Icons } from 'src/enums/icons.enums';
 import { MessageModalType } from 'src/enums/messageModal.enums';
 import { CreateDataAccountOnBoarding } from 'src/interfaces/create-accounts.interface';
-import { RCDelegationValue } from 'src/interfaces/rc-delegation.interface';
 import { PRIMARY_RED_COLOR, getColors } from 'src/styles/colors';
 import { getHorizontalLineStyle } from 'src/styles/line';
 import { MARGIN_PADDING } from 'src/styles/spacing';
@@ -98,16 +96,30 @@ const CreateAccountStepOne = ({
     rcAmount: string;
   }>({hpAmount: '0', rcAmount: '0'});
   const [delegateHP, setDelegateHP] = useState(false);
-  const [delegateRC, setDelegateRC] = useState(false);
-  const [availableHP, setAvailableHP] = useState('0');
-  const [availableRC, setAvailableRC] = useState<RCDelegationValue>(
-    DEFAULT_RC_DELEGATION_VALUE,
-  );
-  const [amount, setAmount] = useState('');
-
+  const [delegateRC, setDelegateRC] = useState(false); 
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
+
+  const totalHp = toHP(
+    user.account.vesting_shares as string,
+    properties.globals,
+  );
+  const totalOutgoing = toHP(
+    user.account.delegated_vesting_shares as string,
+    properties.globals,
+  );
+  const availableHP = Math.max(totalHp - totalOutgoing - 5, 0).toFixed(
+    3,
+  );
+  const tempAvailableRC = (user.rc.max_rc * user.rc.percentage) / 100;
+  const availableRC = {
+    hpValue: RcDelegationsUtils.rcToHp(
+      tempAvailableRC.toString(),
+      properties,
+    ),
+    gigaRcValue: RcDelegationsUtils.rcToGigaRc(tempAvailableRC)
+  };;
 
   useLockedPortrait(navigation);
 
@@ -117,40 +129,9 @@ const CreateAccountStepOne = ({
       const {name, publicKeys} = params.newPeerToPeerData;
       setAccountName(name);
       setOnBoardingUserData({name, publicKeys});
-      const totalHp = toHP(
-        user.account.vesting_shares as string,
-        properties.globals,
-      );
-      const totalOutgoing = toHP(
-        user.account.delegated_vesting_shares as string,
-        properties.globals,
-      );
-      const tempAvailableHP = Math.max(totalHp - totalOutgoing - 5, 0).toFixed(
-        3,
-      );
-      const tempAvailableRC = (user.rc.max_rc * user.rc.percentage) / 100;
-      setAvailableRC({
-        hpValue: RcDelegationsUtils.rcToHp(
-          tempAvailableRC.toString(),
-          properties,
-        ),
-        gigaRcValue: RcDelegationsUtils.rcToGigaRc(tempAvailableRC),
-      });
-      setAvailableHP(tempAvailableHP);
     }
     initPrice();
   }, []);
-
-  const setToPresetValue = (value: number) => {
-    return {
-      gigaRcValue: RcDelegationsUtils.hpToGigaRc(value.toString(), properties),
-      hpValue: value.toFixed(3),
-    };
-  };
-
-  const onHandlePreset = (value: number) => {
-    setAmount(setToPresetValue(value).gigaRcValue);
-  };
 
   const initPrice = async () => {
     setPrice(await getAccountPrice());
@@ -170,15 +151,6 @@ const CreateAccountStepOne = ({
       checkAccountName();
     }
   }, [accountName]);
-
-  useEffect(() => {
-    if (amount.trim().length > 0 && parseFloat(amount) > 0) {
-      setOnBoardingDelegations({
-        ...onBoardingDelegations,
-        rcAmount: amount,
-      });
-    }
-  }, [amount]);
 
   const checkAccountName = async () => {
     const isAvailable = await AccountCreationUtils.checkAccountNameAvailable(
@@ -515,7 +487,9 @@ const CreateAccountStepOne = ({
         {currency === 'G RC' && (
           <RcHpSelectorPanel
             valueLabelList={[5, 10, 50, 100]}
-            onHandlePreset={onHandlePreset}
+            onHandlePreset={
+              (presetValueHp) => handleSetAmount(presetValueHp.toString())
+            }
           />
         )}
       </View>
