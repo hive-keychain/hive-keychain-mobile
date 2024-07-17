@@ -1,23 +1,23 @@
-import { KeyTypes } from 'actions/interfaces';
+import {KeyTypes} from 'actions/interfaces';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import EllipticButton from 'components/form/EllipticButton';
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import React, {useState} from 'react';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {ScrollView} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
-import { ConnectedProps, connect } from 'react-redux';
-import { Theme, useThemeContext } from 'src/context/theme.context';
-import { getCardStyle } from 'src/styles/card';
-import { getColors } from 'src/styles/colors';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {getCardStyle} from 'src/styles/card';
+import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_3,
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import { RootState } from 'store';
-import { Dimensions } from 'utils/common.types';
-import { translate } from 'utils/localize';
-import { VestingRoutesUtils } from 'utils/vesting-routes.utils';
+import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
+import {translate} from 'utils/localize';
+import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
 import {
   AccountVestingRoutesDifferences,
   VestingRoute,
@@ -41,8 +41,8 @@ const VestingRoutesItem = ({
   const {account, differences} = accountVestingRouteDifference;
   const [isLoadingRevertAction, setIsLoadingRevertAction] = useState(false);
   const {theme} = useThemeContext();
-  const {width,height} = useWindowDimensions();
-  const styles = getStyles(theme, {width,height}, differences.length);
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width, height}, differences.length);
 
   const renderVestingItemDetails = (
     vestingRoute: VestingRoute,
@@ -125,20 +125,29 @@ const VestingRoutesItem = ({
         {translate('popup.vesting_routes.account_item_label') + ': @'}
         {account}
       </Text>
-      <View style={styles.vestingRoutesTitlesContainer}>
-        <Text
-          style={[styles.textBase, styles.vestingRouteTitle, styles.oldRoute]}>
-          {translate('popup.vesting_routes.account_item_old_route_title')}
-        </Text>
 
-        <Text
-          style={[styles.textBase, styles.vestingRouteTitle, styles.newRoute]}>
-          {translate('popup.vesting_routes.account_item_new_route_title')}
-        </Text>
-      </View>
       <ScrollView
         contentContainerStyle={[styles.vestingItemListContainer]}
         key={`${account}-vesting-item-list-container`}>
+        <View style={styles.vestingRoutesTitlesContainer}>
+          <Text
+            style={[
+              styles.textBase,
+              styles.vestingRouteTitle,
+              styles.oldRoute,
+            ]}>
+            {translate('popup.vesting_routes.account_item_old_route_title')}
+          </Text>
+
+          <Text
+            style={[
+              styles.textBase,
+              styles.vestingRouteTitle,
+              styles.newRoute,
+            ]}>
+            {translate('popup.vesting_routes.account_item_new_route_title')}
+          </Text>
+        </View>
         {differences.map(({oldRoute, newRoute}) => {
           const id = oldRoute?.toAccount ?? newRoute?.toAccount;
           return (
@@ -193,25 +202,28 @@ const getStyles = (
       height: '100%',
       width: '100%',
       flexGrow: 1,
-      paddingBottom: 10
+      paddingBottom: 10,
     },
     textBase: {
       color: getColors(theme).secondaryText,
     },
     accountTitle: {
       ...headlines_primary_headline_2,
-      fontSize: getFontSizeSmallDevices(screenDimensions.width,16),
+      fontSize: getFontSizeSmallDevices(screenDimensions.width, 16),
       textAlign: 'center',
     },
     vestingRoutesTitlesContainer: {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: vestingRoutesItemCount > 1 ? 10 : 0
+      marginBottom: 10,
     },
     vestingRouteTitle: {
       ...body_primary_body_3,
-      fontSize: getFontSizeSmallDevices(screenDimensions.width,body_primary_body_3.fontSize),
+      fontSize: getFontSizeSmallDevices(
+        screenDimensions.width,
+        body_primary_body_3.fontSize,
+      ),
     },
     oldRoute: {marginLeft: 16},
     newRoute: {marginRight: 16},
@@ -219,14 +231,14 @@ const getStyles = (
       width: '100%',
       display: 'flex',
       justifyContent: vestingRoutesItemCount === 1 ? 'center' : 'flex-start',
-      flex: vestingRoutesItemCount === 1 ? 1 : 0
-     
+      flex: vestingRoutesItemCount === 1 ? 1 : 0,
     },
     vestingActionButtonsContainer: {
       width: '100%',
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      marginTop: 10,
     },
     button: {backgroundColor: '#68A0B4', width: '35%'},
     vestingItemDetailsContainer: {
@@ -240,7 +252,7 @@ const getStyles = (
     },
     title: {
       ...body_primary_body_3,
-      fontSize: getFontSizeSmallDevices(screenDimensions.width,12),
+      fontSize: getFontSizeSmallDevices(screenDimensions.width, 12),
     },
     vestingRouteCardItem: {
       marginBottom: vestingRoutesItemCount > 1 ? 8 : 0,
@@ -251,7 +263,9 @@ const getStyles = (
       paddingHorizontal: 8,
     },
     widerButton: {width: '60%'},
-    buttonDynamicText: {fontSize: getFontSizeSmallDevices(screenDimensions.width,12)}
+    buttonDynamicText: {
+      fontSize: getFontSizeSmallDevices(screenDimensions.width, 12),
+    },
   });
 
 const connector = connect((state: RootState) => {
