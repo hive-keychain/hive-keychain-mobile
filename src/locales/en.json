@@ -492,6 +492,8 @@
     "keys": {
       "add": "Add Key",
       "add_keyType": "Add {{type}} Key",
+      "remove": "Remove a key",
+      "remove_info": "You are about to remove the {{type}} key for account @{{username}}.",
       "show_qr_code": "Show QR Code",
       "qr": {
         "title": "Export your keys!",

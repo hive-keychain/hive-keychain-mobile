@@ -147,9 +147,7 @@ export default ({
             onPress={() => {
               navigation.navigate('ModalScreen', {
                 name: 'AddKeyModal',
-                modalContent: (
-                  <AddKey type={type} name={account.name} theme={theme} />
-                ),
+                modalContent: <AddKey type={type} name={account.name} />,
                 modalContainerStyle: [
                   getModalBaseStyle(theme).roundedTop,
                   styles.paddingHorizontal,
