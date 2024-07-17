@@ -54,11 +54,10 @@ import AccountUtils from 'utils/account.utils';
 import { Dimensions } from 'utils/common.types';
 import {
   capitalize,
-  formatBalanceCurrency,
   fromHP,
   getCleanAmountValue,
   toHP,
-  withCommas,
+  withCommas
 } from 'utils/format';
 import { delegate, getCurrency } from 'utils/hive';
 import {
@@ -105,9 +104,6 @@ const CreateAccountStepOne = ({
     DEFAULT_RC_DELEGATION_VALUE,
   );
   const [amount, setAmount] = useState('');
-  const [equivalentHPAmount, setEquivalentHPAmount] = useState<
-    string | undefined
-  >();
 
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -177,15 +173,10 @@ const CreateAccountStepOne = ({
 
   useEffect(() => {
     if (amount.trim().length > 0 && parseFloat(amount) > 0) {
-      setEquivalentHPAmount(
-        withCommas(RcDelegationsUtils.gigaRcToHp(amount, properties)),
-      );
       setOnBoardingDelegations({
         ...onBoardingDelegations,
         rcAmount: amount,
       });
-    } else if (parseFloat(amount) === 0) {
-      setEquivalentHPAmount(undefined);
     }
   }, [amount]);
 
@@ -462,25 +453,11 @@ const CreateAccountStepOne = ({
     const handleSetAmount = (textValue: string) => {
       const updated =
         currency === 'HP' ? {hpAmount: textValue} : {rcAmount: textValue};
-        if(currency === 'G RC'){
-          setEquivalentHPAmount(
-            withCommas(RcDelegationsUtils.gigaRcToHp(textValue, properties)),
-          );
-        }
       setOnBoardingDelegations({
         ...onBoardingDelegations,
         ...updated,
       });
     };
-
-    const getLabelExtraInfo = () =>
-      currency === 'G RC'
-        ? equivalentHPAmount
-          ? `≈ ${formatBalanceCurrency(equivalentHPAmount)} ${getCurrency(
-              'HP',
-            )}`
-          : undefined
-        : undefined;
 
     return (
       <View>
@@ -504,7 +481,7 @@ const CreateAccountStepOne = ({
           />
           <OperationInput
             labelInput={capitalize(translate('common.amount'))}
-            labelExtraInfo={getLabelExtraInfo()}
+            labelExtraInfo={currency === 'G RC' ? `${withCommas(RcDelegationsUtils.gigaRcToHp(value, properties))} ${getCurrency('HP')}` : undefined}
             placeholder={'0'}
             keyboardType="decimal-pad"
             textAlign="right"
