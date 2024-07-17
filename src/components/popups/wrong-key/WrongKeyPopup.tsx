@@ -1,0 +1,213 @@
+import {loadAccount} from 'actions/index';
+import {Account} from 'actions/interfaces';
+import EllipticButton from 'components/form/EllipticButton';
+import Operation from 'components/operations/Operation';
+import Separator from 'components/ui/Separator';
+import {ModalScreenProps} from 'navigators/Root.types';
+import React, {useEffect} from 'react';
+import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {getModalBaseStyle} from 'src/styles/modal';
+import {
+  getFontSizeSmallDevices,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
+import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
+import {translate} from 'utils/localize';
+import {goBack, navigate} from 'utils/navigation';
+
+export interface WrongKeysOnUser {
+  [key: string]: string[];
+}
+interface Props {
+  displayWrongKeyPopup: WrongKeysOnUser | undefined;
+  setDisplayWrongKeyPopup: React.Dispatch<
+    React.SetStateAction<WrongKeysOnUser | undefined>
+  >;
+}
+
+const WrongKeyPopup = ({
+  displayWrongKeyPopup,
+  setDisplayWrongKeyPopup,
+  loadAccount,
+  //   navigateTo,
+  //   loadActiveAccount,
+  accounts,
+}: Props & PropsFromRedux): null => {
+  const accountFound = displayWrongKeyPopup
+    ? Object.keys(displayWrongKeyPopup)[0]
+    : '';
+  const wrongKeysFound = displayWrongKeyPopup
+    ? Object.values(displayWrongKeyPopup)[0]
+    : [];
+  const {theme} = useThemeContext();
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width, height});
+
+  useEffect(() => {
+    if (displayWrongKeyPopup) {
+      navigate('ModalScreen', {
+        name: 'WrongKeyPopup',
+        modalContent: renderContent(),
+        onForceCloseModal: handleClose,
+        modalContainerStyle: [
+          getModalBaseStyle(theme).roundedTop,
+          styles.modal,
+        ],
+        fixedHeight: 0.4,
+      } as ModalScreenProps);
+    }
+  }, [displayWrongKeyPopup, accountFound]);
+
+  const skipKeyCheckOnAccount = async () => {
+    // let prevNoKeyCheck = await LocalStorageUtils.getValueFromLocalStorage(
+    //   LocalStorageKeyEnum.NO_KEY_CHECK,
+    // );
+    // if (prevNoKeyCheck) {
+    //   prevNoKeyCheck = { ...displayWrongKeyPopup, ...prevNoKeyCheck };
+    // }
+    // LocalStorageUtils.saveValueInLocalStorage(
+    //   LocalStorageKeyEnum.NO_KEY_CHECK,
+    //   prevNoKeyCheck ?? displayWrongKeyPopup,
+    // );
+    setDisplayWrongKeyPopup(undefined);
+  };
+
+  const loadAccountGotoManage = async () => {
+    // let actualNoKeyCheck = await LocalStorageUtils.getValueFromLocalStorage(
+    //   LocalStorageKeyEnum.NO_KEY_CHECK,
+    // );
+    // if (actualNoKeyCheck && actualNoKeyCheck[accountFound!]) {
+    //   delete actualNoKeyCheck[accountFound!];
+    // }
+    // LocalStorageUtils.saveValueInLocalStorage(
+    //   LocalStorageKeyEnum.NO_KEY_CHECK,
+    //   actualNoKeyCheck,
+    // );
+    loadAccount(
+      accounts.find((account: Account) => account.name === accountFound!).name!,
+    );
+    navigate('AccountManagementScreen');
+  };
+
+  const handleClose = () => {
+    setDisplayWrongKeyPopup(undefined);
+    goBack();
+  };
+
+  const renderContent = () => {
+    return (
+      <Operation
+        title={translate('popup.wrong_key.title', {
+          plural: wrongKeysFound.length > 1 ? 's' : '',
+        })}
+        additionalHeaderTitleStyle={styles.operationTitle}
+        onClose={handleClose}
+        additionalContentStyle={styles.operationContentContainer}>
+        <View style={[styles.rootContainer]}>
+          <Text style={[styles.text]}>
+            {translate('popup.wrong_key.intro', {
+              account: accountFound,
+              keyNames: wrongKeysFound.join(', '),
+              plural1: wrongKeysFound.length > 1 ? 's' : '',
+              plural2: wrongKeysFound.length > 1 ? 's' : '',
+            })}
+          </Text>
+          <Separator height={30} />
+          <View style={styles.buttonsContainer}>
+            <EllipticButton
+              title={translate('popup.wrong_key.button_action.do_nothing')}
+              onPress={() => {}}
+              style={styles.button}
+            />
+            <EllipticButton
+              title={translate('popup.wrong_key.button_action.replace')}
+              isWarningButton
+              onPress={loadAccountGotoManage}
+              style={styles.button}
+            />
+          </View>
+        </View>
+      </Operation>
+    );
+  };
+  return null;
+};
+//TODO check unused & cleanup
+const getStyles = (theme: Theme, {width, height}: Dimensions) =>
+  StyleSheet.create({
+    rootContainer: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingHorizontal: 16,
+    },
+    title: {
+      textAlign: 'center',
+      color: getColors(theme).primaryText,
+      fontWeight: 'bold',
+      marginBottom: 10,
+      fontSize: getFontSizeSmallDevices(width, 16),
+    },
+    text: {
+      fontSize: getFontSizeSmallDevices(width, 14),
+      marginBottom: 10,
+      color: getColors(theme).primaryText,
+    },
+    image: {
+      marginBottom: 30,
+      aspectRatio: 1.6,
+      alignSelf: 'center',
+      width: '100%',
+    },
+    marginTop: {
+      marginTop: 18,
+    },
+    marginVertical: {
+      marginVertical: 10,
+    },
+    button: {
+      width: '45%',
+      marginHorizontal: 0,
+    },
+    centeredText: {
+      textAlign: 'center',
+    },
+    modal: {
+      padding: 16,
+      paddingBottom: 0,
+      display: 'flex',
+      justifyContent: 'center',
+      flexDirection: 'column',
+      alignContent: 'center',
+      flex: 1,
+    },
+    buttonsContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      width: '100%',
+      justifyContent: 'space-between',
+    },
+    operationContentContainer: {flex: 1, justifyContent: 'center'},
+    operationTitle: {
+      ...headlines_primary_headline_2,
+      fontSize: getFontSizeSmallDevices(
+        width,
+        headlines_primary_headline_2.fontSize,
+      ),
+    },
+  });
+
+const mapStateToProps = (state: RootState) => {
+  return {
+    user: state.activeAccount,
+    accounts: state.accounts,
+  };
+};
+
+const connector = connect(mapStateToProps, {loadAccount});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(WrongKeyPopup);

@@ -22,6 +22,7 @@ type Props = {
   onClose?: () => void;
   additionalHeaderContainerStyle?: StyleProp<ViewStyle>;
   additionalHeaderTitleStyle?: StyleProp<TextStyle>;
+  additionalContentStyle?: StyleProp<ViewStyle>;
 };
 export default ({
   children,
@@ -30,6 +31,7 @@ export default ({
   onClose,
   additionalHeaderContainerStyle,
   additionalHeaderTitleStyle,
+  additionalContentStyle,
 }: Props) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
@@ -45,7 +47,9 @@ export default ({
           onPress={() => (onClose ? onClose() : goBack())}
         />
       </View>
-      <ScrollView>{children}</ScrollView>
+      <ScrollView contentContainerStyle={additionalContentStyle}>
+        {children}
+      </ScrollView>
     </>
   );
 };
