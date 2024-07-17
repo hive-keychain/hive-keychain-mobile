@@ -1,34 +1,34 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {addTab} from 'actions/browser';
+import { addTab } from 'actions/browser';
 import TUTORIAL_POPUP_IMAGE from 'assets/new_UI/onboarding_mobile.png';
 import EllipticButton from 'components/form/EllipticButton';
-import {WalletNavigation} from 'navigators/MainDrawer.types';
-import {ModalScreenProps} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import { WalletNavigation } from 'navigators/MainDrawer.types';
+import { ModalScreenProps } from 'navigators/Root.types';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import {ConnectedProps, connect} from 'react-redux';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import { ConnectedProps, connect } from 'react-redux';
+import { Theme, useThemeContext } from 'src/context/theme.context';
+import { KeychainStorageKeyEnum } from 'src/reference-data/keychainStorageKeyEnum';
 import {
   NEUTRAL_WHITE_COLOR,
   PRIMARY_RED_COLOR,
   RED_SHADOW_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {getModalBaseStyle} from 'src/styles/modal';
-import {generateBoxShadowStyle} from 'src/styles/shadow';
+import { getModalBaseStyle } from 'src/styles/modal';
+import { generateBoxShadowStyle } from 'src/styles/shadow';
 import {
   body_primary_body_1,
   button_link_primary_medium,
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {tutorialBaseUrl} from 'utils/config';
-import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
+import { RootState } from 'store';
+import { Dimensions } from 'utils/common.types';
+import { tutorialBaseUrl } from 'utils/config';
+import { translate } from 'utils/localize';
+import { navigate } from 'utils/navigation';
 
 interface Props {
   navigation: WalletNavigation;
@@ -46,7 +46,9 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
       KeychainStorageKeyEnum.SKIP_TUTORIAL,
     );
     if (!skipTutorial) {
-      setShow(true);
+      setTimeout(() => {
+        setShow(true);
+      }, 3000);
     }
   };
 
