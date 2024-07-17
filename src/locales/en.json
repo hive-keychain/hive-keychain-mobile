@@ -440,7 +440,7 @@
           "delegating_title": "Delegating",
           "delegating_amount": "{{amount}} {{currency}}",
           "account_creator": "Creator",
-          "account_sucessfully_created": "Great! Welcome {{accountName}}"
+          "account_sucessfully_created": "You're all set! Welcome @{{accountName}}!"
         }
       }
     },
