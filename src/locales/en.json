@@ -6,15 +6,15 @@
     "first_account": "Let's get you started! Create your first Hive account or import an existing one."
   },
   "intro": {
-    "intro_text_1": "The ultimate HIVE wallet",
+    "intro_text_1": "The ultimate Hive wallet!",
     "intro_text_2": "Manage Hive assets, and\nconnect to Hive\napplications",
-    "text": "HIVE powers a growing ecosystem of Web 3.0 websites and applications.",
+    "text": "Hive powers a growing ecosystem of Web 3.0 websites and applications.",
     "manage": "Let's get your started with a Hive account!",
     "existingAccount": "Existing Account",
     "createAccount": "New Account"
   },
   "createAccount": {
-    "caption": "You may choose to create an account on your own or a friend will invite you.",
+    "caption": "You may choose to create an account on your own or with the help of a friend.",
     "on_boarding_title": "Create on hive.io",
     "peer_to_peer_on_boarding_title": "Create with a friend"
   },
@@ -644,7 +644,7 @@
     "createAccountPeerToPeer": {
       "text1": "Thank you for using Keychain Onboarding!",
       "text2": "Start by choosing a Hive account name.",
-      "text3": "The App will then generate your private keys",
+      "text3": "The App will then generate your private keys.",
       "text4": "Please store these keys in a safe offline location!",
       "text5": "After that, a QR Code will be created. Show it to your friend to proceed with the account creation."
     }

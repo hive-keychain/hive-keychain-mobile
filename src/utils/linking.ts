@@ -11,7 +11,7 @@ import {HASConfig} from './config';
 import {processQRCodeOp} from './hive-uri';
 import {KeyUtils} from './key.utils';
 import {validateFromObject} from './keyValidation';
-import {goBack, navigate} from './navigation';
+import {goBack, goBackAndNavigate} from './navigation';
 
 export default async () => {
   Linking.addEventListener('url', ({url}) => {
@@ -52,7 +52,7 @@ export const handleUrl = (url: string, qr: boolean = false) => {
     try {
       const data = JSON.parse(Buffer.from(buf, 'base64').toString());
       const {n, o, a, p, m} = data;
-      navigate('CreateAccountScreen', {
+      goBackAndNavigate('CreateAccountScreen', {
         screen: 'CreateAccountFromWalletScreenPageOne',
         params: {
           wallet: true,
