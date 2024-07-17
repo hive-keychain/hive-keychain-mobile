@@ -2,33 +2,17 @@ import IndicatorActive from 'assets/new_UI/circle_indicator_active.svg';
 import IndicatorInactive from 'assets/new_UI/circle_indicator_inactive.svg';
 import IndicatorInactiveLight from 'assets/new_UI/circle_indicator_inactive_light.svg';
 import EllipticButton from 'components/form/EllipticButton';
-import {
-  Feature,
-  WhatsNewContent,
-} from 'components/popups/whats-new/whats-new.interface';
-import React, {useState} from 'react';
-import {
-  Image,
-  Linking,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
+import GestureRecognizer from 'react-native-swipe-gestures';
 import {Theme} from 'src/context/theme.context';
 import {
   NEUTRAL_WHITE_COLOR,
   PRIMARY_RED_COLOR,
   RED_SHADOW_COLOR,
-  getColors,
 } from 'src/styles/colors';
 import {generateBoxShadowStyle} from 'src/styles/shadow';
-import {
-  body_primary_body_3,
-  button_link_primary_medium,
-  headlines_primary_headline_2,
-} from 'src/styles/typography';
-import {translate} from 'utils/localize';
+import {button_link_primary_medium} from 'src/styles/typography';
 
 interface Props {
   buttonsConfig: {
@@ -37,16 +21,36 @@ interface Props {
     lastTitle: string;
     lastSlideAction?: () => void | any;
   };
-  content: WhatsNewContent;
-  locale: string;
+  content: any[];
+  renderItem: (item: any) => React.JSX.Element;
   theme: Theme;
+  hideButtons?: boolean;
+  moveNext?: boolean;
+  resetMoveNext?: () => void;
+  enableSwipe?: boolean;
 }
 
-const Carousel = ({buttonsConfig, content, locale, theme}: Props) => {
+const Carousel = ({
+  buttonsConfig,
+  theme,
+  content,
+  renderItem,
+  hideButtons,
+  moveNext,
+  resetMoveNext,
+  enableSwipe,
+}: Props) => {
   const [index, setIndex] = useState(0);
 
+  useEffect(() => {
+    if (moveNext) {
+      setIndex((prevIndex) => prevIndex + 1);
+      resetMoveNext();
+    }
+  }, [moveNext]);
+
   const handleOnPressNextButton = () => {
-    if (content.features[locale][index + 1]) {
+    if (content[index + 1]) {
       setIndex((prevIndex) => prevIndex + 1);
     } else {
       if (buttonsConfig.lastSlideAction) {
@@ -58,7 +62,7 @@ const Carousel = ({buttonsConfig, content, locale, theme}: Props) => {
   };
 
   const getCurrentTitleOnNextSlideButton = () => {
-    if (index === content.features[locale].length - 1) {
+    if (index === content.length - 1) {
       return buttonsConfig.lastTitle;
     } else {
       return buttonsConfig.nextTitle;
@@ -89,65 +93,55 @@ const Carousel = ({buttonsConfig, content, locale, theme}: Props) => {
     return circleArray;
   };
 
-  const handleOnClick = (content: WhatsNewContent, feature: Feature) => {
-    if (feature.externalUrl) {
-      Linking.openURL(feature.externalUrl);
-    } else {
-      Linking.openURL(`${content.url}#${feature.anchor}`);
+  const handleSwipeLeft = () => {
+    if (content[index + 1] && enableSwipe) {
+      setIndex((prevIndex) => prevIndex + 1);
     }
   };
 
-  const renderItem = (feature: Feature) => {
-    return (
-      <View style={styles.itemContainer}>
-        <Image
-          style={styles.image}
-          source={{uri: feature.image}}
-          resizeMode={'contain'}
-        />
-        <Text style={styles.titleText}>{feature.title}</Text>
-        <Text style={styles.descriptionText}>{feature.description}</Text>
-        <Text
-          style={styles.readMoreText}
-          onPress={() => handleOnClick(content, feature)}>
-          {feature.overrideReadMoreLabel ?? translate('common.popup_read_more')}
-        </Text>
-      </View>
-    );
+  const handleSwipeRight = () => {
+    if (content[index - 1] && enableSwipe) {
+      setIndex((prevIndex) => prevIndex - 1);
+    }
   };
 
   const styles = getStyles(theme);
 
   return (
-    <View style={styles.container}>
+    <GestureRecognizer
+      style={styles.container}
+      onSwipeLeft={handleSwipeLeft}
+      onSwipeRight={handleSwipeRight}>
       <SafeAreaView>
-        <View style={[styles.pageIndicatorsContainer]}>
-          {drawPageIndicators(content.features[locale].length, index).map(
-            (indicator) => {
+        {content.length > 1 && (
+          <View style={[styles.pageIndicatorsContainer]}>
+            {drawPageIndicators(content.length, index).map((indicator) => {
               return indicator;
-            },
-          )}
-        </View>
-        {renderItem(content.features[locale][index])}
-        <EllipticButton
-          title={getCurrentTitleOnNextSlideButton()}
-          onPress={() => handleOnPressNextButton()}
-          style={[
-            styles.warningProceedButton,
-            generateBoxShadowStyle(
-              0,
-              13,
-              RED_SHADOW_COLOR,
-              1,
-              25,
-              30,
-              RED_SHADOW_COLOR,
-            ),
-          ]}
-          additionalTextStyle={styles.textButtonFilled}
-        />
+            })}
+          </View>
+        )}
+        {renderItem(content[index])}
+        {!hideButtons && (
+          <EllipticButton
+            title={getCurrentTitleOnNextSlideButton()}
+            onPress={() => handleOnPressNextButton()}
+            style={[
+              styles.warningProceedButton,
+              generateBoxShadowStyle(
+                0,
+                13,
+                RED_SHADOW_COLOR,
+                1,
+                25,
+                30,
+                RED_SHADOW_COLOR,
+              ),
+            ]}
+            additionalTextStyle={styles.textButtonFilled}
+          />
+        )}
       </SafeAreaView>
-    </View>
+    </GestureRecognizer>
   );
 };
 
@@ -157,45 +151,6 @@ const getStyles = (theme: Theme) =>
       height: '90%',
       width: '90%',
       alignSelf: 'center',
-    },
-    itemContainer: {
-      alignItems: 'center',
-      flexDirection: 'column',
-    },
-    titleText: {
-      marginBottom: 8,
-      color: getColors(theme).secondaryText,
-      ...headlines_primary_headline_2,
-      fontSize: 14,
-    },
-    descriptionText: {
-      ...body_primary_body_3,
-      color: getColors(theme).secondaryText,
-      fontSize: 13,
-      marginBottom: 8,
-      textAlign: 'center',
-    },
-    readMoreText: {
-      textDecorationLine: 'underline',
-      ...body_primary_body_3,
-      color: PRIMARY_RED_COLOR,
-      fontSize: 15,
-      marginBottom: 8,
-    },
-    image: {
-      marginBottom: 30,
-      aspectRatio: 2,
-      alignSelf: 'center',
-      width: '80%',
-      borderColor: PRIMARY_RED_COLOR,
-      borderWidth: 1,
-      borderRadius: 16,
-    },
-    swapByImageIndicatorsContainer: {
-      flexDirection: 'column',
-      width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
     },
     pageIndicatorsContainer: {
       flexDirection: 'row',
