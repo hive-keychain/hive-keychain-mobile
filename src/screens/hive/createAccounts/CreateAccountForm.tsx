@@ -1,12 +1,12 @@
-import { Asset } from '@hiveio/dhive';
-import { Account } from 'actions/interfaces';
-import { showModal } from 'actions/message';
+import {Asset} from '@hiveio/dhive';
+import {Account} from 'actions/interfaces';
+import {showModal} from 'actions/message';
 import OperationButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import UserDropdown from 'components/form/UserDropdown';
 import Icon from 'components/hive/Icon';
 import RcHpSelectorPanel from 'components/hive/RcHpSelectorPanel';
-import { ConfirmationPageProps } from 'components/operations/Confirmation';
+import {ConfirmationPageProps} from 'components/operations/Confirmation';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
@@ -14,9 +14,9 @@ import OptionsToggle from 'components/ui/OptionsToggle';
 import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import useLockedPortrait from 'hooks/useLockedPortrait';
-import { TemplateStackProps } from 'navigators/Root.types';
-import { CreateAccountFromWalletNavigationProps } from 'navigators/mainDrawerStacks/CreateAccount.types';
-import React, { useEffect, useState } from 'react';
+import {TemplateStackProps} from 'navigators/Root.types';
+import {CreateAccountFromWalletNavigationProps} from 'navigators/mainDrawerStacks/CreateAccount.types';
+import React, {useEffect, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -29,43 +29,43 @@ import {
   default as SimpleToast,
   default as Toast,
 } from 'react-native-simple-toast';
-import { ConnectedProps, connect } from 'react-redux';
-import { Theme, useThemeContext } from 'src/context/theme.context';
-import { Icons } from 'src/enums/icons.enums';
-import { MessageModalType } from 'src/enums/messageModal.enums';
-import { CreateDataAccountOnBoarding } from 'src/interfaces/create-accounts.interface';
-import { PRIMARY_RED_COLOR, getColors } from 'src/styles/colors';
-import { getHorizontalLineStyle } from 'src/styles/line';
-import { MARGIN_PADDING } from 'src/styles/spacing';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {MessageModalType} from 'src/enums/messageModal.enums';
+import {CreateDataAccountOnBoarding} from 'src/interfaces/create-accounts.interface';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getHorizontalLineStyle} from 'src/styles/line';
+import {MARGIN_PADDING} from 'src/styles/spacing';
 import {
   body_primary_body_1,
   button_link_primary_medium,
   getFormFontStyle,
 } from 'src/styles/typography';
-import { RootState } from 'store';
+import {RootState} from 'store';
 import {
   AccountCreationType,
   AccountCreationUtils,
   GeneratedKey,
 } from 'utils/account-creation.utils';
 import AccountUtils from 'utils/account.utils';
-import { Dimensions } from 'utils/common.types';
+import {Dimensions} from 'utils/common.types';
 import {
   capitalize,
   fromHP,
   getCleanAmountValue,
   toHP,
-  withCommas
+  withCommas,
 } from 'utils/format';
-import { delegate, getCurrency } from 'utils/hive';
+import {delegate, getCurrency} from 'utils/hive';
 import {
   getAccountPrice,
   sanitizeAmount,
   sanitizeUsername,
 } from 'utils/hiveUtils';
-import { translate } from 'utils/localize';
-import { navigate } from 'utils/navigation';
-import { RcDelegationsUtils } from 'utils/rc-delegations.utils';
+import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
+import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
 import StepTwo from './CreateAccountConfirmation';
 
 interface SelectOption {
@@ -96,7 +96,7 @@ const CreateAccountStepOne = ({
     rcAmount: string;
   }>({hpAmount: '0', rcAmount: '0'});
   const [delegateHP, setDelegateHP] = useState(false);
-  const [delegateRC, setDelegateRC] = useState(false); 
+  const [delegateRC, setDelegateRC] = useState(false);
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
@@ -109,17 +109,12 @@ const CreateAccountStepOne = ({
     user.account.delegated_vesting_shares as string,
     properties.globals,
   );
-  const availableHP = Math.max(totalHp - totalOutgoing - 5, 0).toFixed(
-    3,
-  );
+  const availableHP = Math.max(totalHp - totalOutgoing - 5, 0).toFixed(3);
   const tempAvailableRC = (user.rc.max_rc * user.rc.percentage) / 100;
   const availableRC = {
-    hpValue: RcDelegationsUtils.rcToHp(
-      tempAvailableRC.toString(),
-      properties,
-    ),
-    gigaRcValue: RcDelegationsUtils.rcToGigaRc(tempAvailableRC)
-  };;
+    hpValue: RcDelegationsUtils.rcToHp(tempAvailableRC.toString(), properties),
+    gigaRcValue: RcDelegationsUtils.rcToGigaRc(tempAvailableRC),
+  };
 
   useLockedPortrait(navigation);
 
@@ -453,7 +448,13 @@ const CreateAccountStepOne = ({
           />
           <OperationInput
             labelInput={capitalize(translate('common.amount'))}
-            labelExtraInfo={currency === 'G RC' ? `${withCommas(RcDelegationsUtils.gigaRcToHp(value, properties))} ${getCurrency('HP')}` : undefined}
+            labelExtraInfo={
+              currency === 'G RC'
+                ? `≈ ${withCommas(
+                    RcDelegationsUtils.gigaRcToHp(value, properties),
+                  )} ${getCurrency('HP')}`
+                : undefined
+            }
             placeholder={'0'}
             keyboardType="decimal-pad"
             textAlign="right"
@@ -487,8 +488,8 @@ const CreateAccountStepOne = ({
         {currency === 'G RC' && (
           <RcHpSelectorPanel
             valueLabelList={[5, 10, 50, 100]}
-            onHandlePreset={
-              (presetValueHp) => handleSetAmount(presetValueHp.toString())
+            onHandlePreset={(presetValueHp) =>
+              handleSetAmount(presetValueHp.toString())
             }
           />
         )}
