@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextStyle,
   View,
+  ViewStyle,
   useWindowDimensions,
 } from 'react-native';
 import {Theme} from 'src/context/theme.context';
@@ -16,12 +17,13 @@ import {
 import {Dimensions} from 'utils/common.types';
 
 type Props = {
-  children: JSX.Element[];
+  children: JSX.Element[] | JSX.Element;
   title: string;
   callback: (toggled: boolean) => void;
   toggled: boolean;
   theme: Theme;
   additionalTitleStyle?: StyleProp<TextStyle>;
+  additionalContainerStyle?: StyleProp<ViewStyle>;
 };
 /**
  * Note: Using a checkbox, to toogle children components
@@ -33,12 +35,13 @@ const OptionsToggle = ({
   callback,
   theme,
   additionalTitleStyle,
+  additionalContainerStyle,
 }: Props) => {
   const styles = getStyles(theme, useWindowDimensions());
   const {width} = useWindowDimensions();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, additionalContainerStyle]}>
       <View style={styles.header}>
         <CheckBox
           checked={toggled}

@@ -4,10 +4,12 @@ import {Account} from 'actions/interfaces';
 import {Key} from 'src/interfaces/keys.interface';
 import AccountUtils from './account.utils';
 import {createClaimedAccount, createNewAccount} from './hive';
+import {translate} from './localize';
 
 export enum AccountCreationType {
   USING_TICKET = 'USING_TICKET',
   BUYING = 'BUYING',
+  PEER_TO_PEER = 'PEER_TO_PEER',
 }
 
 export interface GeneratedKey {
@@ -92,6 +94,8 @@ const createAccount = async (
         memoPubkey: generatedKeys.memo.public,
       },
     } as Account;
+  } else if (success && !generatedKeys) {
+    return true;
   } else {
     return false;
   }
@@ -136,10 +140,28 @@ const generateAccountAuthorities = (
   };
 };
 
+const validateNewAccountName = async (username: string, simpleToast: any) => {
+  if (username.length < 3) {
+    simpleToast.show(translate('toast.username_too_short'));
+    return false;
+  }
+  if (!AccountCreationUtils.validateUsername(username)) {
+    simpleToast.show(translate('toast.account_name_not_valid'));
+    return false;
+  }
+  if (await AccountCreationUtils.checkAccountNameAvailable(username)) {
+    return true;
+  } else {
+    simpleToast.show(translate('toast.account_username_already_used'));
+    return false;
+  }
+};
+
 export const AccountCreationUtils = {
   checkAccountNameAvailable,
   generateMasterKey,
   validateUsername,
   createAccount,
   generateAccountAuthorities,
+  validateNewAccountName,
 };

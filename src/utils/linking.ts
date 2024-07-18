@@ -1,6 +1,7 @@
 import {treatHASRequest} from 'actions/hiveAuthenticationService';
 import {addAccount, addTabFromLinking} from 'actions/index';
 import {translate} from 'i18n-js';
+import {CreateAccountFromWalletParamList} from 'navigators/mainDrawerStacks/CreateAccount.types';
 import {Linking} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {RootState, store} from 'store';
@@ -10,7 +11,7 @@ import {HASConfig} from './config';
 import {processQRCodeOp} from './hive-uri';
 import {KeyUtils} from './key.utils';
 import {validateFromObject} from './keyValidation';
-import {goBack} from './navigation';
+import {goBack, goBackAndNavigate} from './navigation';
 
 export default async () => {
   Linking.addEventListener('url', ({url}) => {
@@ -46,13 +47,39 @@ export const handleUrl = (url: string, qr: boolean = false) => {
       console.log(opJson);
       processQRCodeOp(opJson);
     }
+  } else if (url.startsWith('keychain://create_account=')) {
+    const buf = url.replace('keychain://create_account=', '');
+    try {
+      const data = JSON.parse(Buffer.from(buf, 'base64').toString());
+      const {n, o, a, p, m} = data;
+      goBackAndNavigate('CreateAccountScreen', {
+        screen: 'CreateAccountFromWalletScreenPageOne',
+        params: {
+          wallet: true,
+          newPeerToPeerData: {
+            name: n,
+            publicKeys: {
+              owner: o,
+              active: a,
+              posting: p,
+              memo: m,
+            },
+          },
+        } as CreateAccountFromWalletParamList['CreateAccountFromWalletScreenPageOne'],
+      });
+    } catch (error) {
+      console.log('Error processing QR Create Accounts data, please check!', {
+        error,
+      });
+    }
   } else if (isURL(url)) {
     if (qr) {
       goBack();
     }
     //@ts-ignore
     store.dispatch(addTabFromLinking(url));
-  } else [handleAddAccountQR(url)];
+  } else if (url.startsWith('keychain://add_account='))
+    [handleAddAccountQR(url)];
 };
 
 export const handleAddAccountQR = async (data: string, wallet = true) => {
