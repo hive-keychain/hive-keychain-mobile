@@ -77,8 +77,16 @@ export default ({
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, width, height);
 
-  const isWrongKey =
-    wrongKeysFound && wrongKeysFound[account.name].includes(type.toString());
+  const getIsWrongKey = () => {
+    if (
+      wrongKeysFound &&
+      Object.keys(wrongKeysFound).length &&
+      wrongKeysFound.hasOwnProperty(account.name)
+    ) {
+      return wrongKeysFound[account.name].includes(type.toString());
+    }
+    return false;
+  };
 
   return (
     <View style={containerStyle}>
@@ -90,16 +98,14 @@ export default ({
             })}
             :
           </Text>
-          {isWrongKey && (
-            <View style={{marginLeft: 4}}>
+          {getIsWrongKey() && (
+            <View style={styles.smallMarginLeft}>
               <CustomToolTip
-                //TODO add to tr if approved
-                skipTranslation
-                message="This key doesn't seem to match your account. You won't be able to perform transactions with it. If you've changed it, remove this key and replace it with the new one."
+                message={'popup.wrong_key.key_info_tooltip'}
                 iconColor={PRIMARY_RED_COLOR}
-                width={width * 0.6}
-                height={height * 0.3}
-                textStyle={styles.keyType}
+                width={width * 0.65}
+                height={height * 0.25}
+                textStyle={[styles.keyType, styles.paddingText]}
                 containerStyle={{
                   backgroundColor: getColors(theme).cardBgLighter,
                 }}
@@ -315,4 +321,8 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     paddingHorizontal: {
       paddingHorizontal: 16,
     },
+    paddingText: {
+      paddingHorizontal: 8,
+    },
+    smallMarginLeft: {marginLeft: 4},
   });

@@ -27,7 +27,6 @@ const checkWrongKeyOnAccount = (
     return foundWrongKey;
   }
   const keyType = key.split('Pubkey')[0];
-  console.log('checkWrongKeyOnAccount', {keyType}); //TODO remove line
   if (
     keyType === KeychainKeyTypesLC.active ||
     keyType === KeychainKeyTypesLC.posting

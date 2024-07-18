@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addKey, forgetAccount, forgetKey} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
@@ -19,7 +18,6 @@ import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {MARGIN_PADDING} from 'src/styles/spacing';
@@ -64,19 +62,11 @@ const AccountManagement = ({
       const selectedLocalAccount = accounts.find(
         (localAccount) => localAccount.name === username,
       );
-      let noKeyCheck: WrongKeysOnUser = JSON.parse(
-        await AsyncStorage.getItem(KeychainStorageKeyEnum.NO_KEY_CHECK),
-      );
-      if (!noKeyCheck) {
-        noKeyCheck = {[selectedLocalAccount.name]: []};
-      }
-
       const foundWrongKey = KeyUtils.checkKeysOnAccount(
         selectedLocalAccount,
         account.account,
-        noKeyCheck,
+        {[selectedLocalAccount.name]: []},
       );
-      console.log('AccountManagement', {foundWrongKey}); //TODO remove line
       if (foundWrongKey[username].length > 0) {
         setWrongKeysFound(foundWrongKey);
       } else {

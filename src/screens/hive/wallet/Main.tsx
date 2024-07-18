@@ -301,20 +301,16 @@ const Main = ({
     setVestingRoutesDifferences(tempVestingRoutesDifferences);
   };
 
-  //TODO below move all of this to C:\Users\saturno\Downloads\Keychain\hive-keychain-mobile\src\components\popups\wrong-key\WrongKeyPopup.tsx
   const initCheckKeysOnAccounts = async (localAccounts: Account[]) => {
     try {
       const accountNames = localAccounts.map((acc) => acc.name!);
       const extendedAccountsList = await AccountUtils.getAccounts(accountNames);
-
       let noKeyCheck: WrongKeysOnUser = JSON.parse(
         await AsyncStorage.getItem(KeychainStorageKeyEnum.NO_KEY_CHECK),
       );
-      console.log({noKeyCheck}); //TODO remove line
       if (!noKeyCheck) {
         noKeyCheck = {[localAccounts[0].name!]: []};
       }
-
       for (let i = 0; i < extendedAccountsList.length; i++) {
         const account = localAccounts[i];
         const extendedAccount = extendedAccountsList[i];
@@ -323,10 +319,8 @@ const Main = ({
           extendedAccount,
           noKeyCheck,
         );
-
         if (foundWrongKey[account.name!]?.length > 0) {
           setDisplayWrongKeyPopup(foundWrongKey);
-          console.log({foundWrongKey}); //TODO remove line
           break;
         }
       }
@@ -584,7 +578,9 @@ const Main = ({
             />
             <WrongKeyPopup
               displayWrongKeyPopup={displayWrongKeyPopup}
-              setDisplayWrongKeyPopup={setDisplayWrongKeyPopup}
+              setDisplayWrongKeyPopup={(value) =>
+                setDisplayWrongKeyPopup(value)
+              }
             />
           </View>
         ) : (

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {loadAccount} from 'actions/index';
 import {Account} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
@@ -8,6 +9,7 @@ import React, {useEffect} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {
@@ -24,17 +26,13 @@ export interface WrongKeysOnUser {
 }
 interface Props {
   displayWrongKeyPopup: WrongKeysOnUser | undefined;
-  setDisplayWrongKeyPopup: React.Dispatch<
-    React.SetStateAction<WrongKeysOnUser | undefined>
-  >;
+  setDisplayWrongKeyPopup: (value: WrongKeysOnUser | undefined) => void;
 }
 
 const WrongKeyPopup = ({
   displayWrongKeyPopup,
   setDisplayWrongKeyPopup,
   loadAccount,
-  //   navigateTo,
-  //   loadActiveAccount,
   accounts,
 }: Props & PropsFromRedux): null => {
   const accountFound = displayWrongKeyPopup
@@ -63,30 +61,30 @@ const WrongKeyPopup = ({
   }, [displayWrongKeyPopup, accountFound]);
 
   const skipKeyCheckOnAccount = async () => {
-    // let prevNoKeyCheck = await LocalStorageUtils.getValueFromLocalStorage(
-    //   LocalStorageKeyEnum.NO_KEY_CHECK,
-    // );
-    // if (prevNoKeyCheck) {
-    //   prevNoKeyCheck = { ...displayWrongKeyPopup, ...prevNoKeyCheck };
-    // }
-    // LocalStorageUtils.saveValueInLocalStorage(
-    //   LocalStorageKeyEnum.NO_KEY_CHECK,
-    //   prevNoKeyCheck ?? displayWrongKeyPopup,
-    // );
-    setDisplayWrongKeyPopup(undefined);
+    let prevNoKeyCheck = JSON.parse(
+      await AsyncStorage.getItem(KeychainStorageKeyEnum.NO_KEY_CHECK),
+    );
+    if (prevNoKeyCheck) {
+      prevNoKeyCheck = {...displayWrongKeyPopup, ...prevNoKeyCheck};
+    }
+    await AsyncStorage.setItem(
+      KeychainStorageKeyEnum.NO_KEY_CHECK,
+      JSON.stringify(prevNoKeyCheck ?? displayWrongKeyPopup),
+    );
+    handleClose();
   };
 
   const loadAccountGotoManage = async () => {
-    // let actualNoKeyCheck = await LocalStorageUtils.getValueFromLocalStorage(
-    //   LocalStorageKeyEnum.NO_KEY_CHECK,
-    // );
-    // if (actualNoKeyCheck && actualNoKeyCheck[accountFound!]) {
-    //   delete actualNoKeyCheck[accountFound!];
-    // }
-    // LocalStorageUtils.saveValueInLocalStorage(
-    //   LocalStorageKeyEnum.NO_KEY_CHECK,
-    //   actualNoKeyCheck,
-    // );
+    let actualNoKeyCheck = JSON.parse(
+      await AsyncStorage.getItem(KeychainStorageKeyEnum.NO_KEY_CHECK),
+    );
+    if (actualNoKeyCheck && actualNoKeyCheck[accountFound!]) {
+      delete actualNoKeyCheck[accountFound!];
+    }
+    await AsyncStorage.setItem(
+      KeychainStorageKeyEnum.NO_KEY_CHECK,
+      JSON.stringify(actualNoKeyCheck),
+    );
     loadAccount(
       accounts.find((account: Account) => account.name === accountFound!).name!,
     );
@@ -120,7 +118,7 @@ const WrongKeyPopup = ({
           <View style={styles.buttonsContainer}>
             <EllipticButton
               title={translate('popup.wrong_key.button_action.do_nothing')}
-              onPress={() => {}}
+              onPress={skipKeyCheckOnAccount}
               style={styles.button}
             />
             <EllipticButton
@@ -136,7 +134,7 @@ const WrongKeyPopup = ({
   };
   return null;
 };
-//TODO check unused & cleanup
+
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     rootContainer: {
@@ -157,12 +155,6 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       marginBottom: 10,
       color: getColors(theme).primaryText,
     },
-    image: {
-      marginBottom: 30,
-      aspectRatio: 1.6,
-      alignSelf: 'center',
-      width: '100%',
-    },
     marginTop: {
       marginTop: 18,
     },
@@ -172,9 +164,6 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     button: {
       width: '45%',
       marginHorizontal: 0,
-    },
-    centeredText: {
-      textAlign: 'center',
     },
     modal: {
       padding: 16,
