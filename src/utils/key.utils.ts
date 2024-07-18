@@ -1,7 +1,7 @@
-import { ExtendedAccount } from '@hiveio/dhive';
-import { AccountKeys } from 'actions/interfaces';
-import { WrongKeysOnUser } from 'components/popups/wrong-key/WrongKeyPopup';
-import { KeychainKeyTypesLC } from 'hive-keychain-commons';
+import {ExtendedAccount} from '@hiveio/dhive';
+import {Account, AccountKeys} from 'actions/interfaces';
+import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
+import {KeychainKeyTypesLC} from 'hive-keychain-commons';
 
 const isAuthorizedAccount = (key: string): boolean => {
   return key.toString().startsWith('@');
@@ -27,13 +27,56 @@ const checkWrongKeyOnAccount = (
     return foundWrongKey;
   }
   const keyType = key.split('Pubkey')[0];
-  if (keyType === KeychainKeyTypesLC.active || keyType === KeychainKeyTypesLC.posting) {
-    if (!extendedAccount[keyType].key_auths.find(keyAuth => keyAuth[0] === value)) {
+  console.log('checkWrongKeyOnAccount', {keyType}); //TODO remove line
+  if (
+    keyType === KeychainKeyTypesLC.active ||
+    keyType === KeychainKeyTypesLC.posting
+  ) {
+    if (
+      !extendedAccount[keyType].key_auths.find(
+        (keyAuth) => keyAuth[0] === value,
+      )
+    ) {
       foundWrongKey[accountName].push(keyType);
     }
-  } else if (keyType === KeychainKeyTypesLC.memo && extendedAccount['memo_key'] !== value) {
+  } else if (
+    keyType === KeychainKeyTypesLC.memo &&
+    extendedAccount['memo_key'] !== value
+  ) {
     foundWrongKey[accountName].push(keyType);
   }
+  return foundWrongKey;
+};
+
+const checkKeysOnAccount = (
+  account: Account,
+  extendedAccount: any,
+  noKeyCheck: WrongKeysOnUser,
+) => {
+  const {name: accountName, keys} = account;
+  let foundWrongKey: WrongKeysOnUser = {[accountName!]: []};
+
+  if (!noKeyCheck.hasOwnProperty(accountName!)) {
+    noKeyCheck = {...noKeyCheck, [accountName!]: []};
+  }
+
+  Object.entries(keys).forEach(([key, value]) => {
+    if (!value.length) return;
+
+    const isKeyInNoCheckList = !!noKeyCheck[accountName!].find(
+      (keyName: string) => keyName === key.split('Pubkey')[0],
+    );
+
+    foundWrongKey = KeyUtils.checkWrongKeyOnAccount(
+      key,
+      value,
+      accountName!,
+      extendedAccount,
+      foundWrongKey,
+      isKeyInNoCheckList,
+    );
+  });
+
   return foundWrongKey;
 };
 
@@ -41,5 +84,6 @@ export const KeyUtils = {
   isAuthorizedAccount,
   hasKeys,
   keysCount,
-  checkWrongKeyOnAccount
+  checkWrongKeyOnAccount,
+  checkKeysOnAccount,
 };
