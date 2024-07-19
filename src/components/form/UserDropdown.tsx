@@ -22,8 +22,8 @@ const UserDropdown = ({
   const getItemDropDownSelected = (username: string): DropdownModalItem => {
     const selected = accounts.filter((acc) => acc.name === username)[0];
     return {
-      label: selected.name,
-      value: selected.name,
+      label: selected?.name,
+      value: selected?.name,
       icon: <UserProfilePicture username={username} style={styles.avatar} />,
     };
   };
