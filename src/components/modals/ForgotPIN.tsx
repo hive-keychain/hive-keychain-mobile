@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {forgetAccounts} from 'actions/index';
 import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
@@ -5,6 +6,7 @@ import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {
   getColors,
   PRIMARY_RED_COLOR,
@@ -54,8 +56,12 @@ const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
       </View>
       <EllipticButton
         title={translate('components.forgotPIN.button')}
-        onPress={() => {
+        onPress={async () => {
           goBack();
+          await AsyncStorage.multiRemove([
+            KeychainStorageKeyEnum.SKIP_TUTORIAL,
+            KeychainStorageKeyEnum.NO_KEY_CHECK,
+          ]);
           forgetAccounts();
         }}
         style={[

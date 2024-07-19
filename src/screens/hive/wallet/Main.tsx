@@ -138,6 +138,8 @@ const Main = ({
     AccountVestingRoutesDifferences[] | undefined
   >();
 
+  const [popupList, setPopupList] = useState<string[]>([]);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     updateUserWallet(user.name);
@@ -259,6 +261,12 @@ const Main = ({
     setIsDrawerOpen(isDrawerOpen);
   }, [isDrawerOpen]);
 
+  //TODO remove block below
+  useEffect(() => {
+    console.log({popupList});
+  }, [popupList]);
+  //end block
+
   useEffect(() => {
     const handler = (nextAppState: AppStateStatus) => {
       if (
@@ -326,6 +334,18 @@ const Main = ({
         sectionIndex: sectionIndex,
         viewPosition: 1,
       });
+    }
+  };
+  //TODO test in real device + with onboarding account
+  const handlePopupList = (name: string, remove?: boolean) => {
+    if (!remove && !popupList.includes(name)) {
+      setPopupList((prev) => [...prev, name]);
+    } else if (remove && popupList.includes(name)) {
+      setTimeout(() => {
+        const tempList = [...popupList];
+        tempList.shift();
+        setPopupList(tempList);
+      }, 1500);
     }
   };
 
@@ -526,18 +546,31 @@ const Main = ({
                 <View style={[getCardStyle(theme).filledWrapper]} />
               </ScrollView>
             </View>
-            <WhatsNew navigation={navigation} />
+            <WhatsNew
+              navigation={navigation}
+              addPopupToList={handlePopupList}
+              show={popupList[0] === 'whatsnew'}
+            />
             <WidgetConfiguration
               show={showWidgetConfiguration}
               setShow={setShowWidgetConfiguration}
             />
-            <TutorialPopup navigation={navigation} />
+            <TutorialPopup
+              navigation={navigation}
+              addPopupToList={handlePopupList}
+              show={popupList[0] === 'tutorial'}
+            />
             <VestingRoutesPopup
               vestingRoutesDifferences={vestingRoutesDifferences}
               setVestingRoutesDifferences={setVestingRoutesDifferences}
               navigation={navigation}
+              addPopupToList={handlePopupList}
+              show={popupList[0] === 'vestingroutes'}
             />
-            <WrongKeyPopup />
+            <WrongKeyPopup
+              addPopupToList={handlePopupList}
+              show={popupList[0] === 'wrongkey'}
+            />
           </View>
         ) : (
           <Loader animatedLogo />

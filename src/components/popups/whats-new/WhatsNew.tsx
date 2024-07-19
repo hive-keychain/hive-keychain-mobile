@@ -20,6 +20,8 @@ import {Feature, WhatsNewContent} from './whats-new.interface';
 
 interface Props {
   navigation: WalletNavigation;
+  addPopupToList: (name: string, remove?: boolean) => void;
+  show: boolean;
 }
 
 interface PrefetchImageProps {
@@ -38,9 +40,8 @@ export function prefetchImage(url: string) {
 export function isPrefetched(url: string) {
   return prefetchedImages[url] !== undefined;
 }
-const WhatsNew = ({navigation}: Props): null => {
+const WhatsNew = ({navigation, addPopupToList, show}: Props): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
-  const [index, setIndex] = useState(0);
   const locale = 'en'; // later use getUILanguage()
   const {theme} = useThemeContext();
 
@@ -63,13 +64,14 @@ const WhatsNew = ({navigation}: Props): null => {
       mobileAppVersion !== lastVersionStorage &&
       lastVersionAPI.version === mobileAppVersion
     ) {
+      addPopupToList('whatsnew');
       setWhatsNewContent(lastVersionAPI);
     }
   };
 
   useEffect(() => {
     (async () => {
-      if (whatsNewContent) {
+      if (whatsNewContent && show) {
         for (const feature of whatsNewContent.features[locale]) {
           await prefetchImage(feature.image);
         }
@@ -81,10 +83,11 @@ const WhatsNew = ({navigation}: Props): null => {
         } as ModalScreenProps);
       }
     })();
-  }, [whatsNewContent]);
+  }, [whatsNewContent, show]);
 
   const finish = async () => {
     await WhatsNewUtils.saveLastSeen();
+    addPopupToList('whatsnew', true);
     navigation.goBack();
   };
 

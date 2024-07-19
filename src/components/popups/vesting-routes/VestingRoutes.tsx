@@ -1,7 +1,7 @@
 import Carousel from 'components/carousel/carousel';
-import { WalletNavigation } from 'navigators/MainDrawer.types';
-import { ModalScreenProps } from 'navigators/Root.types';
-import React, { useEffect, useState } from 'react';
+import {WalletNavigation} from 'navigators/MainDrawer.types';
+import {ModalScreenProps} from 'navigators/Root.types';
+import React, {useEffect, useState} from 'react';
 import {
   Linking,
   StyleSheet,
@@ -9,24 +9,21 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import { ConnectedProps, connect } from 'react-redux';
-import { Theme, useThemeContext } from 'src/context/theme.context';
-import {
-  PRIMARY_RED_COLOR,
-  getColors
-} from 'src/styles/colors';
-import { getModalBaseStyle } from 'src/styles/modal';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getModalBaseStyle} from 'src/styles/modal';
 import {
   body_primary_body_1,
   getFontSizeSmallDevices,
-  headlines_primary_headline_2
+  headlines_primary_headline_2,
 } from 'src/styles/typography';
-import { RootState } from 'store';
-import { Dimensions } from 'utils/common.types';
-import { translate } from 'utils/localize';
-import { goBack, navigate } from 'utils/navigation';
-import { AccountVestingRoutesDifferences } from './vesting-routes.interface';
-import { VestingRoutesItemComponent } from './VestingRoutesItem';
+import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
+import {translate} from 'utils/localize';
+import {goBack, navigate} from 'utils/navigation';
+import {AccountVestingRoutesDifferences} from './vesting-routes.interface';
+import {VestingRoutesItemComponent} from './VestingRoutesItem';
 
 interface Props {
   navigation: WalletNavigation;
@@ -34,6 +31,8 @@ interface Props {
   setVestingRoutesDifferences: (
     value: AccountVestingRoutesDifferences[],
   ) => void;
+  addPopupToList: (name: string, remove?: boolean) => void;
+  show: boolean;
 }
 
 const VestingRoutes = ({
@@ -41,12 +40,22 @@ const VestingRoutes = ({
   accounts,
   vestingRoutesDifferences,
   setVestingRoutesDifferences,
+  addPopupToList,
+  show,
 }: Props & PropsFromRedux): null => {
   const {theme} = useThemeContext();
   const [moveNext, setMoveNext] = useState<boolean>(false);
 
   useEffect(() => {
-    if (vestingRoutesDifferences && vestingRoutesDifferences.length > 0) {
+    addPopupToList('vestingroutes');
+  }, []);
+
+  useEffect(() => {
+    if (
+      vestingRoutesDifferences &&
+      vestingRoutesDifferences.length > 0 &&
+      show
+    ) {
       navigate('ModalScreen', {
         name: 'VestingRoutesPopup',
         modalContent: renderContent(),
@@ -54,9 +63,10 @@ const VestingRoutes = ({
         modalContainerStyle: getModalBaseStyle(theme).roundedTop,
       } as ModalScreenProps);
     }
-  }, [vestingRoutesDifferences, moveNext]);
+  }, [vestingRoutesDifferences, moveNext, show]);
 
   const handleClose = async () => {
+    addPopupToList('vestingroutes', true);
     setVestingRoutesDifferences(undefined);
     goBack();
   };
@@ -65,52 +75,55 @@ const VestingRoutes = ({
 
   const renderContent = () => {
     return (
-      <View aria-label="vesting-routes-component" style={[styles.rootContainer]}>
+      <View
+        aria-label="vesting-routes-component"
+        style={[styles.rootContainer]}>
         <View style={styles.paddingTop}>
-        <Text style={[styles.baseText, styles.title, styles.marginBottom]}>
-          {translate('popup.vesting_routes.title')}
-        </Text>
-        <Text style={{textAlign: 'center'}}>
-          <Text style={[styles.baseText, styles.description]}>
-            {translate('popup.vesting_routes.warning_message')}
+          <Text style={[styles.baseText, styles.title, styles.marginBottom]}>
+            {translate('popup.vesting_routes.title')}
           </Text>
-          <Text
-            style={[styles.baseText, styles.description, styles.highlight]}
-            onPress={() => {
-              Linking.openURL('https://discord.gg/UpXnBQtJw7');
-            }}>
-            {translate('common.discord_server')}
+          <Text style={{textAlign: 'center'}}>
+            <Text style={[styles.baseText, styles.description]}>
+              {translate('popup.vesting_routes.warning_message')}
+            </Text>
+            <Text
+              style={[styles.baseText, styles.description, styles.highlight]}
+              onPress={() => {
+                Linking.openURL('https://discord.gg/UpXnBQtJw7');
+              }}>
+              {translate('common.discord_server')}
+            </Text>
           </Text>
-        </Text>
         </View>
         {vestingRoutesDifferences && (
           <View style={[styles.carouselContainer]}>
-          <Carousel
-            buttonsConfig={{
-              prevTitle: 'not_used',
-              nextTitle: 'not_used',
-              lastTitle: 'not_used',
-            }}
-            content={vestingRoutesDifferences}
-            renderItem={(item) => (
-              <VestingRoutesItemComponent
-                accountVestingRouteDifference={item}
-                nextCarouselSlide={() => {
-                  setMoveNext(true);
-                }}
-                isLast={
-                  item.account ===
-                  vestingRoutesDifferences[vestingRoutesDifferences.length - 1]
-                    .account
-                }
-                clearDisplayWrongVestingRoutes={handleClose}
-              />
-            )}
-            theme={theme}
-            hideButtons
-            moveNext={moveNext}
-            resetMoveNext={() => setMoveNext(false)}
-          />
+            <Carousel
+              buttonsConfig={{
+                prevTitle: 'not_used',
+                nextTitle: 'not_used',
+                lastTitle: 'not_used',
+              }}
+              content={vestingRoutesDifferences}
+              renderItem={(item) => (
+                <VestingRoutesItemComponent
+                  accountVestingRouteDifference={item}
+                  nextCarouselSlide={() => {
+                    setMoveNext(true);
+                  }}
+                  isLast={
+                    item.account ===
+                    vestingRoutesDifferences[
+                      vestingRoutesDifferences.length - 1
+                    ].account
+                  }
+                  clearDisplayWrongVestingRoutes={handleClose}
+                />
+              )}
+              theme={theme}
+              hideButtons
+              moveNext={moveNext}
+              resetMoveNext={() => setMoveNext(false)}
+            />
           </View>
         )}
       </View>
@@ -146,9 +159,15 @@ const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
     highlight: {
       color: PRIMARY_RED_COLOR,
     },
-    carouselContainer: {display: 'flex', height: '60%', width: '100%', flexGrow: 1, justifyContent: 'center'},
-     marginBottom: {marginBottom: 12},
-     paddingTop: {paddingTop: 20}
+    carouselContainer: {
+      display: 'flex',
+      height: '60%',
+      width: '100%',
+      flexGrow: 1,
+      justifyContent: 'center',
+    },
+    marginBottom: {marginBottom: 12},
+    paddingTop: {paddingTop: 20},
   });
 
 const connector = connect((state: RootState) => {

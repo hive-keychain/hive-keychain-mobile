@@ -1,41 +1,48 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addTab } from 'actions/browser';
+import {addTab} from 'actions/browser';
 import TUTORIAL_POPUP_IMAGE from 'assets/new_UI/onboarding_mobile.png';
 import EllipticButton from 'components/form/EllipticButton';
-import { WalletNavigation } from 'navigators/MainDrawer.types';
-import { ModalScreenProps } from 'navigators/Root.types';
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import {WalletNavigation} from 'navigators/MainDrawer.types';
+import {ModalScreenProps} from 'navigators/Root.types';
+import React, {useEffect} from 'react';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { ConnectedProps, connect } from 'react-redux';
-import { Theme, useThemeContext } from 'src/context/theme.context';
-import { KeychainStorageKeyEnum } from 'src/reference-data/keychainStorageKeyEnum';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {
   NEUTRAL_WHITE_COLOR,
   PRIMARY_RED_COLOR,
   RED_SHADOW_COLOR,
   getColors,
 } from 'src/styles/colors';
-import { getModalBaseStyle } from 'src/styles/modal';
-import { generateBoxShadowStyle } from 'src/styles/shadow';
+import {getModalBaseStyle} from 'src/styles/modal';
+import {generateBoxShadowStyle} from 'src/styles/shadow';
 import {
   body_primary_body_1,
   button_link_primary_medium,
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import { RootState } from 'store';
-import { Dimensions } from 'utils/common.types';
-import { tutorialBaseUrl } from 'utils/config';
-import { translate } from 'utils/localize';
-import { navigate } from 'utils/navigation';
+import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
+import {tutorialBaseUrl} from 'utils/config';
+import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 
 interface Props {
   navigation: WalletNavigation;
+  addPopupToList: (name: string, remove?: boolean) => void;
+  show: boolean;
 }
 
-const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
-  const [show, setShow] = useState(false);
+const Tutorial = ({
+  navigation,
+  addTab,
+  addPopupToList,
+  show,
+}: Props & PropsFromRedux): null => {
+  // const [show, setShow] = useState(false);
   const {theme} = useThemeContext();
 
   useEffect(() => {
@@ -47,12 +54,18 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
     );
     if (!skipTutorial) {
       setTimeout(() => {
-        setShow(true);
+        addPopupToList('tutorial');
       }, 3000);
+      //TODO check after testing the following case:
+      //  - create a new account onboarding acc
+      // setTimeout(() => {
+      //   setShow(true);
+      // }, 3000);
     }
   };
 
   useEffect(() => {
+    console.log({show}); //TODO remove line
     if (show) {
       navigate('ModalScreen', {
         name: 'TutorialPopup',
@@ -66,7 +79,8 @@ const Tutorial = ({navigation, addTab}: Props & PropsFromRedux): null => {
   const handleClick = async (option: 'skip' | 'show') => {
     const hidePopup = async () => {
       await AsyncStorage.setItem(KeychainStorageKeyEnum.SKIP_TUTORIAL, 'true');
-      setShow(false);
+      // setShow(false);
+      addPopupToList('tutorial', true);
     };
 
     if (option === 'show') {

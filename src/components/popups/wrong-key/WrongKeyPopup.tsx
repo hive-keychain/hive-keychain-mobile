@@ -26,11 +26,16 @@ import {goBack, navigate} from 'utils/navigation';
 export interface WrongKeysOnUser {
   [key: string]: string[];
 }
-interface Props {}
+interface Props {
+  addPopupToList: (name: string, remove?: boolean) => void;
+  show: boolean;
+}
 
 const WrongKeyPopup = ({
   loadAccount,
   accounts,
+  addPopupToList,
+  show,
 }: Props & PropsFromRedux): null => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -66,6 +71,7 @@ const WrongKeyPopup = ({
           noKeyCheck,
         );
         if (foundWrongKey[account.name!]?.length > 0) {
+          addPopupToList('wrongkey');
           setDisplayWrongKeyPopup(foundWrongKey);
           break;
         }
@@ -75,7 +81,7 @@ const WrongKeyPopup = ({
     }
   };
   useEffect(() => {
-    if (displayWrongKeyPopup) {
+    if (displayWrongKeyPopup && show) {
       navigate('ModalScreen', {
         name: 'WrongKeyPopup',
         modalContent: renderContent(),
@@ -87,7 +93,7 @@ const WrongKeyPopup = ({
         fixedHeight: 0.4,
       } as ModalScreenProps);
     }
-  }, [displayWrongKeyPopup, accountFound]);
+  }, [displayWrongKeyPopup, accountFound, show]);
 
   const skipKeyCheckOnAccount = async () => {
     let prevNoKeyCheck = JSON.parse(
@@ -121,6 +127,7 @@ const WrongKeyPopup = ({
   };
 
   const handleClose = () => {
+    addPopupToList('wrongkey', true);
     setDisplayWrongKeyPopup(undefined);
     goBack();
   };
