@@ -27,6 +27,7 @@ import {VestingRoutesPopup} from 'components/popups/vesting-routes/VestingRoutes
 import {AccountVestingRoutesDifferences} from 'components/popups/vesting-routes/vesting-routes.interface';
 import WhatsNew from 'components/popups/whats-new/WhatsNew';
 import WidgetConfiguration from 'components/popups/widget-configuration/WidgetConfiguration';
+import WrongKeyPopup from 'components/popups/wrong-key/WrongKeyPopup';
 import {ProposalVotingSectionComponent} from 'components/proposal-voting/proposalVoting';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
@@ -536,6 +537,7 @@ const Main = ({
               setVestingRoutesDifferences={setVestingRoutesDifferences}
               navigation={navigation}
             />
+            <WrongKeyPopup />
           </View>
         ) : (
           <Loader animatedLogo />
