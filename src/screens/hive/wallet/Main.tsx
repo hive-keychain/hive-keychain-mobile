@@ -12,7 +12,6 @@ import {
   loadProperties,
 } from 'actions/hive';
 import {loadTokens, loadTokensMarket} from 'actions/index';
-import {Account} from 'actions/interfaces';
 import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import UserDropdown from 'components/form/UserDropdown';
@@ -28,9 +27,7 @@ import {VestingRoutesPopup} from 'components/popups/vesting-routes/VestingRoutes
 import {AccountVestingRoutesDifferences} from 'components/popups/vesting-routes/vesting-routes.interface';
 import WhatsNew from 'components/popups/whats-new/WhatsNew';
 import WidgetConfiguration from 'components/popups/widget-configuration/WidgetConfiguration';
-import WrongKeyPopup, {
-  WrongKeysOnUser,
-} from 'components/popups/wrong-key/WrongKeyPopup';
+import WrongKeyPopup from 'components/popups/wrong-key/WrongKeyPopup';
 import {ProposalVotingSectionComponent} from 'components/proposal-voting/proposalVoting';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
@@ -77,13 +74,11 @@ import {
   button_link_primary_medium,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
 import {getCurrency} from 'utils/hive';
 import {restartHASSockets} from 'utils/hiveAuthenticationService';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
-import {KeyUtils} from 'utils/key.utils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
@@ -141,11 +136,6 @@ const Main = ({
 
   const [vestingRoutesDifferences, setVestingRoutesDifferences] = useState<
     AccountVestingRoutesDifferences[] | undefined
-  >();
-
-  //TODO below move all of this to C:\Users\saturno\Downloads\Keychain\hive-keychain-mobile\src\components\popups\wrong-key\WrongKeyPopup.tsx
-  const [displayWrongKeyPopup, setDisplayWrongKeyPopup] = useState<
-    WrongKeysOnUser | undefined
   >();
 
   const onRefresh = useCallback(() => {
@@ -221,7 +211,6 @@ const Main = ({
       setLoadingUserAndGlobals(false);
       setisLoadingScreen(false);
       initCheckVestingRoutes();
-      initCheckKeysOnAccounts(accounts);
       if (!userTokens.loading) {
         loadHiddenTokens();
       }
@@ -299,34 +288,6 @@ const Main = ({
       accounts,
     );
     setVestingRoutesDifferences(tempVestingRoutesDifferences);
-  };
-
-  const initCheckKeysOnAccounts = async (localAccounts: Account[]) => {
-    try {
-      const accountNames = localAccounts.map((acc) => acc.name!);
-      const extendedAccountsList = await AccountUtils.getAccounts(accountNames);
-      let noKeyCheck: WrongKeysOnUser = JSON.parse(
-        await AsyncStorage.getItem(KeychainStorageKeyEnum.NO_KEY_CHECK),
-      );
-      if (!noKeyCheck) {
-        noKeyCheck = {[localAccounts[0].name!]: []};
-      }
-      for (let i = 0; i < extendedAccountsList.length; i++) {
-        const account = localAccounts[i];
-        const extendedAccount = extendedAccountsList[i];
-        const foundWrongKey = KeyUtils.checkKeysOnAccount(
-          account,
-          extendedAccount,
-          noKeyCheck,
-        );
-        if (foundWrongKey[account.name!]?.length > 0) {
-          setDisplayWrongKeyPopup(foundWrongKey);
-          break;
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const loadHiddenTokens = async () => {
@@ -576,12 +537,7 @@ const Main = ({
               setVestingRoutesDifferences={setVestingRoutesDifferences}
               navigation={navigation}
             />
-            <WrongKeyPopup
-              displayWrongKeyPopup={displayWrongKeyPopup}
-              setDisplayWrongKeyPopup={(value) =>
-                setDisplayWrongKeyPopup(value)
-              }
-            />
+            <WrongKeyPopup />
           </View>
         ) : (
           <Loader animatedLogo />

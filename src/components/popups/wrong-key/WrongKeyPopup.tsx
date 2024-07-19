@@ -5,7 +5,7 @@ import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
 import {ModalScreenProps} from 'navigators/Root.types';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -17,34 +17,63 @@ import {
   headlines_primary_headline_2,
 } from 'src/styles/typography';
 import {RootState} from 'store';
+import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
+import {KeyUtils} from 'utils/key.utils';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
 
 export interface WrongKeysOnUser {
   [key: string]: string[];
 }
-interface Props {
-  displayWrongKeyPopup: WrongKeysOnUser | undefined;
-  setDisplayWrongKeyPopup: (value: WrongKeysOnUser | undefined) => void;
-}
+interface Props {}
 
 const WrongKeyPopup = ({
-  displayWrongKeyPopup,
-  setDisplayWrongKeyPopup,
   loadAccount,
   accounts,
 }: Props & PropsFromRedux): null => {
+  const {theme} = useThemeContext();
+  const {width, height} = useWindowDimensions();
+  const styles = getStyles(theme, {width, height});
+  const [displayWrongKeyPopup, setDisplayWrongKeyPopup] = useState<
+    WrongKeysOnUser | undefined
+  >();
   const accountFound = displayWrongKeyPopup
     ? Object.keys(displayWrongKeyPopup)[0]
     : '';
   const wrongKeysFound = displayWrongKeyPopup
     ? Object.values(displayWrongKeyPopup)[0]
     : [];
-  const {theme} = useThemeContext();
-  const {width, height} = useWindowDimensions();
-  const styles = getStyles(theme, {width, height});
-
+  useEffect(() => {
+    initCheckKeysOnAccounts(accounts);
+  }, [accounts]);
+  const initCheckKeysOnAccounts = async (localAccounts: Account[]) => {
+    try {
+      const accountNames = localAccounts.map((acc) => acc.name!);
+      const extendedAccountsList = await AccountUtils.getAccounts(accountNames);
+      let noKeyCheck: WrongKeysOnUser = JSON.parse(
+        await AsyncStorage.getItem(KeychainStorageKeyEnum.NO_KEY_CHECK),
+      );
+      if (!noKeyCheck) {
+        noKeyCheck = {[localAccounts[0].name!]: []};
+      }
+      for (let i = 0; i < extendedAccountsList.length; i++) {
+        const account = localAccounts[i];
+        const extendedAccount = extendedAccountsList[i];
+        const foundWrongKey = KeyUtils.checkKeysOnAccount(
+          account,
+          extendedAccount,
+          noKeyCheck,
+        );
+        if (foundWrongKey[account.name!]?.length > 0) {
+          setDisplayWrongKeyPopup(foundWrongKey);
+          break;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     if (displayWrongKeyPopup) {
       navigate('ModalScreen', {
