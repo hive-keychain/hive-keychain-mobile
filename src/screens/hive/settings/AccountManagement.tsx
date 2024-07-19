@@ -3,6 +3,7 @@ import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import UserDropdown from 'components/form/UserDropdown';
 import Key from 'components/hive/Key';
+import RemoveKey from 'components/modals/RemoveKey';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -10,13 +11,14 @@ import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import SlidingOverlay from 'components/ui/SlidingOverlay';
 import useLockedPortrait from 'hooks/useLockedPortrait';
-import {MainNavigation} from 'navigators/Root.types';
+import {MainNavigation, ModalScreenProps} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
+import {getModalBaseStyle} from 'src/styles/modal';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {
   button_link_primary_medium,
@@ -25,7 +27,6 @@ import {
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
-import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
@@ -45,6 +46,7 @@ const AccountManagement = ({
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width, height});
   const [showQrCode, setShowQrCode] = useState(false);
+
   const handleGotoConfirmationAccountRemoval = () => {
     if (username) {
       const confirmationData = {
@@ -73,23 +75,15 @@ const AccountManagement = ({
     username: string,
     key: KeyTypes,
   ) => {
-    const confirmationData = {
-      title: 'common.confirm_key_remove',
-      onConfirm: () => {
-        forgetKey(username, key);
-        navigate('AccountManagementScreen');
-      },
-      data: [
-        {
-          title: 'common.key',
-          value: capitalize(key),
-        },
+    navigation.navigate('ModalScreen', {
+      name: 'RemoveKeyModal',
+      modalContent: <RemoveKey type={key} name={username} />,
+      modalContainerStyle: [
+        getModalBaseStyle(theme).roundedTop,
+        styles.paddingHorizontal,
       ],
-    };
-    navigate('Operation', {
-      screen: 'ConfirmationPage',
-      params: confirmationData,
-    });
+      fixedHeight: 0.4,
+    } as ModalScreenProps);
   };
 
   return (
@@ -213,6 +207,9 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     },
     dropdownOverlay: {
       paddingHorizontal: MARGIN_PADDING,
+    },
+    paddingHorizontal: {
+      paddingHorizontal: 16,
     },
   });
 

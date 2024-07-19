@@ -2,6 +2,7 @@ import {treatHASRequest} from 'actions/hiveAuthenticationService';
 import {addAccount, addTabFromLinking} from 'actions/index';
 import {Account} from 'actions/interfaces';
 import {translate} from 'i18n-js';
+import {CreateAccountFromWalletParamList} from 'navigators/mainDrawerStacks/CreateAccount.types';
 import {Linking} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {RootState, store} from 'store';
@@ -11,7 +12,7 @@ import {HASConfig} from './config';
 import {processQRCodeOp} from './hive-uri';
 import {KeyUtils} from './key.utils';
 import {validateFromObject} from './keyValidation';
-import {goBack, resetStackAndNavigate} from './navigation';
+import {goBack, goBackAndNavigate, resetStackAndNavigate} from './navigation';
 
 let flagCurrentlyProcessing = false;
 let qr_data_accounts: {
@@ -54,6 +55,31 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
       console.log(opJson);
       processQRCodeOp(opJson);
     }
+  } else if (url.startsWith('keychain://create_account=')) {
+    const buf = url.replace('keychain://create_account=', '');
+    try {
+      const data = JSON.parse(Buffer.from(buf, 'base64').toString());
+      const {n, o, a, p, m} = data;
+      goBackAndNavigate('CreateAccountScreen', {
+        screen: 'CreateAccountFromWalletScreenPageOne',
+        params: {
+          wallet: true,
+          newPeerToPeerData: {
+            name: n,
+            publicKeys: {
+              owner: o,
+              active: a,
+              posting: p,
+              memo: m,
+            },
+          },
+        } as CreateAccountFromWalletParamList['CreateAccountFromWalletScreenPageOne'],
+      });
+    } catch (error) {
+      console.log('Error processing QR Create Accounts data, please check!', {
+        error,
+      });
+    }
   } else if (isURL(url)) {
     if (qr) {
       goBack();
@@ -81,7 +107,9 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
     } catch (error) {
       console.log('Error getting QR data accounts', {error});
     }
-  } else [handleAddAccountQR(url)];
+  } else if (url.startsWith('keychain://add_account='))
+    [handleAddAccountQR(url)];
+  else [handleAddAccountQR(url)];
 };
 
 const handleAddAccountsQR = async (

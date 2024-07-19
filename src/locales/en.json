@@ -1,13 +1,22 @@
 {
   "unlock": {"enterPIN": "Enter your PIN", "authenticate": "Authenticate"},
-  "signup": {"confirm": "Confirm your PIN", "choose": "Choose your PIN"},
+  "signup": {
+    "confirm": "Confirm your PIN",
+    "choose": "Choose your PIN",
+    "first_account": "Let's get you started! Create your first Hive account or import an existing one."
+  },
   "intro": {
-    "intro_text_1": "The ultimate HIVE wallet",
+    "intro_text_1": "The ultimate Hive wallet!",
     "intro_text_2": "Manage Hive assets, and\nconnect to Hive\napplications",
-    "text": "HIVE powers a growing ecosystem of Web 3.0 websites and applications.",
+    "text": "Hive powers a growing ecosystem of Web 3.0 websites and applications.",
     "manage": "Let's get your started with a Hive account!",
     "existingAccount": "Existing Account",
     "createAccount": "New Account"
+  },
+  "createAccount": {
+    "caption": "You may choose to create an account on your own or with the help of a friend.",
+    "on_boarding_title": "Create on hive.io",
+    "peer_to_peer_on_boarding_title": "Create with a friend"
   },
   "addAccountByKey": {"text": "Add your existing HIVE account to Keychain"},
   "addAccountByAuth": {
@@ -21,6 +30,7 @@
     "posting_key": "Posting Key",
     "memo_key": "Memo Key",
     "private": "Private",
+    "owner": "Owner",
     "public": "Public",
     "posting": "Posting",
     "active": "Active",
@@ -125,9 +135,19 @@
     "yes": "Yes",
     "no": "No",
     "skip": "Skip",
-    "show": "Show"
+    "show": "Show",
+    "generate_qr": "Generate QR Code",
+    "lets_go": "Let's go!",
+    "discord_server": "Discord Server"
   },
   "wallet": {
+    "proposal": {
+      "request": "Please consider supporting our proposal",
+      "vote": "Vote",
+      "read": "Read",
+      "vote_success": "Vote successful! Thank you for supporting Keychain development through our DHF proposal",
+      "vote_fail": "There was an error while voting for the proposal!"
+    },
     "menu": {"hive": "Hive", "history": "History", "tokens": "Tokens"},
     "rc": "Resource Credits",
     "vp": "Voting Mana",
@@ -412,6 +432,16 @@
         "swap_refresh_countdown": "Refreshing in {{count}}s",
         "swap_slippage_step": "{{slippage}}% (for each step)",
         "swap_no_history": "Your swap history is empty"
+      },
+      "create_account": {
+        "peer_to_peer": {
+          "info": "Please verify the information below, to onboard a new Hive user.\nThis action cannot be undone!",
+          "creation_method": "Creation method",
+          "delegating_title": "Delegating",
+          "delegating_amount": "{{amount}} {{currency}}",
+          "account_creator": "Creator",
+          "account_sucessfully_created": "You're all set! Welcome @{{accountName}}!"
+        }
       }
     },
     "has": {
@@ -485,6 +515,8 @@
     "keys": {
       "add": "Add Key",
       "add_keyType": "Add {{type}} Key",
+      "remove": "Remove a key",
+      "remove_info": "You are about to remove the {{type}} key for account @{{username}}.",
       "show_qr_code": "Show QR Code",
       "qr": {
         "title": "Export your keys!",
@@ -545,6 +577,13 @@
       "text3": "(Use your Master Key to unlock all app features).",
       "text4": "If you use a Master Key, it will NOT be saved and will only be used to generate your other Keys. You may add/edit Accounts or Keys at any time."
     },
+    "accountCreationPeerToPeer": {
+      "title": "Peer to Peer onboarding, thanks to a good friend!",
+      "text1": "As soon as you choose a valid username and click on Create",
+      "text2": "the app will give you your keys, PLEASE STORE them in a safe place.",
+      "text3": "Then after confirm that the keys are safely stored,",
+      "text4": "You will get a QR code, show it to your friend to proceed with Account Creation."
+    },
     "infoQR": {
       "title": "Import via QR Code",
       "text1": "You can import an account instantly by scanning its corresponding QR Code.",
@@ -563,7 +602,7 @@
       "text4": "Settings > Add Account"
     },
     "forgotPIN": {
-      "title": "Forgot PIN?",
+      "title": "Reset wallet?",
       "text": "If you forgot your PIN, you can reset Keychain \n and clear your data but will have to enter all your keys again.",
       "button": "Reset Key"
     },
@@ -581,7 +620,7 @@
       "add_account": "+ ADD NEW ACCOUNT"
     },
     "create_account": {
-      "new_account_username": "New Account username",
+      "new_account_username": "New account username",
       "safely_copied_keys": "I have safely copied my keys and saved them outside of Keychain",
       "storage_understanding": "I understand that Keychain should not be considered as the primary place of storage for my keys",
       "buy_method_message": "I agree to pay {{price}} HIVE with account @{{account}} to create this account",
@@ -592,7 +631,11 @@
       "need_accept_terms_condition": "You need to accept the terms and conditions before creating the account",
       "create_account_successful": "Your account has been successfully created and added to your Keychain",
       "create_account_failed": "The account creation has failed. Please try again later",
-      "create_account_ticket": "{{tickets}} account creation ticket(s)"
+      "create_account_ticket": "{{tickets}} account creation ticket",
+      "create_account_onboarding_message": "You are onboarding @{{name}}, please choose below if you want to delegate them HP or RC.",
+      "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created!",
+      "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!",
+      "peer_to_peer_waiting_text": "Please ask your friend to scan this QR Code to create your account. Keep this page opened until the account is created."
     },
     "copy_keys": {
       "title": "Copy a Key",
@@ -601,6 +644,13 @@
     "export_qr_accounts": {
       "qr_exported_set_disclaimer1": "This QR Code contains all your private keys for this set of accounts, and should only be used to import your keys to the Hive Keychain mobile App.",
       "qr_disclaimer2": "DO NOT share it with anyone!"
+    },
+    "createAccountPeerToPeer": {
+      "text1": "Thank you for using Keychain Onboarding!",
+      "text2": "Start by choosing a Hive account name.",
+      "text3": "The App will then generate your private keys.",
+      "text4": "Please store these keys in a safe offline location!",
+      "text5": "After that, a QR Code will be created. Show it to your friend to proceed with the account creation."
     }
   },
   "toast": {
@@ -678,6 +728,10 @@
     "tabs": "Opened tabs",
     "governance": "Governance",
     "create_account": "Create Account",
+    "create_an_account": "Create an account",
+    "create_account_peer_to_peer": "Friend Onboarding",
+    "choose_first_account": "Choose your first account!",
+    "choose_an_existing_account": "Add an account",
     "tokens": "Tokens",
     "theme_setting": "Theme",
     "wallet_history": "Wallet History",
@@ -958,6 +1012,23 @@
     "tutorial": {
       "title": "Welcome to Keychain!",
       "description": "If you are new to Keychain, or Hive in general, please check our onboarding tutorial.\nYou can always access it later on in Settings > Help > Tutorial."
+    },
+    "vesting_routes": {
+      "title": "Your vesting routes have changed",
+      "warning_message": "If you didn't change them, please seek assistance on the Hive ",
+      "account_item_label": "Account",
+      "account_item_old_route_title": "Old Route",
+      "account_item_new_route_title": "New Route",
+      "account_item_button_skip_label": "These changes were intentional",
+      "account_item_button_revert_label": "Revert All",
+      "item_details_non_existent_label": "None",
+      "item_details_autovest_title": "Auto vest: ",
+      "item_details_percent_title": "Percent: ",
+      "item_details_to_title": "To: ",
+      "item_details_from_title": "From: ",
+      "toast": {
+        "handled_successfully": "Your vesting routes have been secured!"
+      }
     }
   },
   "multichain": {

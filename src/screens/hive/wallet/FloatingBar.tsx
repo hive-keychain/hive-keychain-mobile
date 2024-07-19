@@ -40,11 +40,17 @@ const Floating = ({
   isDrawerOpen,
   closeAllTabs,
   rpc,
+  isProposalRequestDisplayed,
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-  const styles = getStyles(theme, {width, height}, useSafeAreaInsets());
+  const styles = getStyles(
+    theme,
+    {width, height},
+    useSafeAreaInsets(),
+    isProposalRequestDisplayed,
+  );
   const anim = useRef(new Animated.Value(0)).current;
   const [isTop, setIsTop] = useState(false);
 
@@ -181,11 +187,12 @@ const getStyles = (
   theme: Theme,
   {width, height}: Dimensions,
   insets: EdgeInsets,
+  isProposalRequestDisplayed: boolean,
 ) =>
   StyleSheet.create({
     container: {
       position: 'absolute',
-      bottom: 0,
+      bottom: isProposalRequestDisplayed ? 80 : 0,
       width: '95%',
       marginBottom: 0,
       alignSelf: 'center',
@@ -220,6 +227,7 @@ const connector = connect(
   (state: RootState) => {
     return {
       show: state.floatingBar.show,
+      isProposalRequestDisplayed: state.floatingBar.isProposalRequestDisplayed,
       isLoadingScreen: state.floatingBar.isLoadingScreen,
       isDrawerOpen: state.floatingBar.isDrawerOpened,
       rpc: state.settings.rpc,

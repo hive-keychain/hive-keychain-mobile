@@ -9,11 +9,9 @@ import PersonImage from 'assets/new_UI/person_1.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import Separator from 'components/ui/Separator';
 import {IntroductionNavProp} from 'navigators/Signup.types';
 import React, {useEffect, useRef} from 'react';
 import {
-  Linking,
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
@@ -30,7 +28,6 @@ import {
   PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
-import {getSpaceAdjustMultiplier} from 'src/styles/spacing';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   button_link_primary_medium,
@@ -39,7 +36,6 @@ import {
   title_primary_title_1,
 } from 'src/styles/typography';
 import {Dimensions} from 'utils/common.types';
-import {hiveConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 
 const INTRO_STEPS = 3;
@@ -48,7 +44,6 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
   const scrollViewRef = useRef();
   const {height, width} = useWindowDimensions();
   const {theme} = useThemeContext();
-  const spaced = getSpaceAdjustMultiplier(width, height);
   const styles = getDimensionedStyles(
     {height, width},
     theme,
@@ -196,21 +191,12 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
           {currentStep === 2 ? (
             <>
               <EllipticButton
-                title={translate('intro.existingAccount')}
+                title={translate('common.lets_go')}
                 onPress={() => {
                   navigation.navigate('SignupScreen');
                 }}
                 style={styles.outlineButton}
                 additionalTextStyle={styles.textOutLineButton}
-              />
-              <Separator height={height * 0.015} />
-              <EllipticButton
-                title={translate('intro.createAccount')}
-                onPress={() => {
-                  Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
-                }}
-                style={styles.warningProceedButton}
-                additionalTextStyle={styles.textButtonFilled}
               />
             </>
           ) : (
@@ -238,18 +224,8 @@ const getDimensionedStyles = (
       paddingBottom: 20,
       justifyContent: 'space-between',
     },
-    scrollableScreen: {
-      width,
-      height,
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      backgroundColor: 'blue',
-    },
     backgroundSquares: {
       width: width * 0.85,
-    },
-    imageLogo: {
-      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 30 : 100,
     },
     imageHive: {
       width: width * (width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.65 : 0.75),
@@ -292,19 +268,9 @@ const getDimensionedStyles = (
       top: -100,
       alignSelf: 'center',
     },
-    pageIndicatorsContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      alignSelf: 'center',
-      flex: 1,
-    },
     indicatorCircle: {
       width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 8 : 12,
       height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 8 : 12,
-    },
-    dynamicTextSize: {
-      fontSize: getFontSizeSmallDevices(width, 16),
     },
     biggerText: {
       ...headlines_primary_headline_2,
