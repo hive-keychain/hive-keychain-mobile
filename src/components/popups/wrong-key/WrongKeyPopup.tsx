@@ -107,12 +107,19 @@ const WrongKeyPopup = ({
         additionalContentStyle={styles.operationContentContainer}>
         <View style={[styles.rootContainer]}>
           <Text style={[styles.text]}>
-            {translate('popup.wrong_key.intro', {
-              account: accountFound,
-              keyNames: wrongKeysFound.join(', '),
-              plural1: wrongKeysFound.length > 1 ? 's' : '',
-              plural2: wrongKeysFound.length > 1 ? 's' : '',
-            })}
+            {translate(
+              `popup.wrong_key.intro${
+                wrongKeysFound.length > 1 ? '_plural' : ''
+              }`,
+              {
+                account: accountFound,
+                keyNames:
+                  wrongKeysFound.length > 1
+                    ? wrongKeysFound.slice(0, -1).join(', ')
+                    : wrongKeysFound[0],
+                lastKeyName: wrongKeysFound[wrongKeysFound.length - 1],
+              },
+            )}
           </Text>
           <Separator height={30} />
           <View style={styles.buttonsContainer}>

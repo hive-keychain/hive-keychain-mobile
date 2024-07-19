@@ -982,7 +982,9 @@
     },
     "wrong_key": {
       "title": "Wrong key{{plural}} found",
-      "intro": "Your account @{{account}} has wrong {{keyNames}} key{{plural1}}.\n\nWould you like to update the key{{plural2}} right now?",
+      "intro": "Your account @{{account}} has a wrong {{keyNames}} key.\n\nWould you like to update this key right now?",
+      "intro_plural": "Your account @{{account}} has wrong {{keyNames}}, and {{lastKeyName}} keys.\n\nWould you like to update these keys right now?",
+
       "button_action": {
         "do_nothing": "Do nothing",
         "replace": "Replace"
