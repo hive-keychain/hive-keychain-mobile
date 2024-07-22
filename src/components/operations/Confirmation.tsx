@@ -33,6 +33,7 @@ export type ConfirmationPageProps = {
   skipWarningTranslation?: boolean;
   data: ConfirmationData[];
   onConfirm?: () => Promise<void>;
+  extraHeader?: React.JSX.Element;
 };
 
 type ConfirmationData = {
@@ -55,6 +56,7 @@ const ConfirmationPage = ({
     data,
     skipWarningTranslation,
     onConfirm: onConfirmOverride,
+    extraHeader,
   } = route.params;
   const [loading, setLoading] = useState(false);
   const {width, height} = useWindowDimensions();
@@ -77,6 +79,7 @@ const ConfirmationPage = ({
   return (
     <Background theme={theme}>
       <ScrollView contentContainerStyle={styles.confirmationPage}>
+        {extraHeader}
         <Caption text={title} hideSeparator />
         <Separator />
         {warningText && (

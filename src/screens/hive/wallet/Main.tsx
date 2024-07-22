@@ -231,6 +231,7 @@ const Main = ({
   }, [searchValue]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
+    if (!accounts.length) return;
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();
     loadPrices();

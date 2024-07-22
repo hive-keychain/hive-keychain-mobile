@@ -4,15 +4,23 @@ import EllipticButton from 'components/form/EllipticButton';
 import UserDropdown from 'components/form/UserDropdown';
 import Key from 'components/hive/Key';
 import RemoveKey from 'components/modals/RemoveKey';
+import ConfirmationPage, {
+  ConfirmationPageProps,
+} from 'components/operations/Confirmation';
 import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import NavigatorTitle from 'components/ui/NavigatorTitle';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import SlidingOverlay from 'components/ui/SlidingOverlay';
 import useLockedPortrait from 'hooks/useLockedPortrait';
-import {MainNavigation, ModalScreenProps} from 'navigators/Root.types';
+import {
+  ConfirmationPageRoute,
+  MainNavigation,
+  ModalScreenProps,
+} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import QRCode from 'react-qr-code';
@@ -91,11 +99,25 @@ const AccountManagement = ({
             value: `@${username}`,
           },
         ],
-      };
-      navigate('Operation', {
-        screen: 'ConfirmationPage',
-        params: confirmationData,
-      });
+        extraHeader: (
+          <>
+            <Separator />
+            <NavigatorTitle title="common.confirm" />
+            <Separator />
+          </>
+        ),
+      } as ConfirmationPageProps;
+
+      navigation.navigate('ModalScreen', {
+        name: 'ConfirmationPageModal',
+        modalContent: (
+          <ConfirmationPage
+            route={{params: confirmationData} as ConfirmationPageRoute}
+          />
+        ),
+        modalContainerStyle: [getModalBaseStyle(theme).roundedTop],
+        fixedHeight: 0.5,
+      } as ModalScreenProps);
     }
   };
 
@@ -103,15 +125,23 @@ const AccountManagement = ({
     username: string,
     key: KeyTypes,
   ) => {
-    navigation.navigate('ModalScreen', {
-      name: 'RemoveKeyModal',
-      modalContent: <RemoveKey type={key} name={username} />,
-      modalContainerStyle: [
-        getModalBaseStyle(theme).roundedTop,
-        styles.paddingHorizontal,
-      ],
-      fixedHeight: 0.4,
-    } as ModalScreenProps);
+    if (
+      Object.keys(accounts.find((a) => a.name === username)!.keys).length /
+        2 ===
+      1
+    ) {
+      handleGotoConfirmationAccountRemoval();
+    } else {
+      navigation.navigate('ModalScreen', {
+        name: 'RemoveKeyModal',
+        modalContent: <RemoveKey type={key} name={username} />,
+        modalContainerStyle: [
+          getModalBaseStyle(theme).roundedTop,
+          styles.paddingHorizontal,
+        ],
+        fixedHeight: 0.4,
+      } as ModalScreenProps);
+    }
   };
 
   return (
