@@ -33,7 +33,6 @@ import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {NotificationsUtils} from 'utils/notifications.utils';
-import {PeakDNotificationsUtils} from 'utils/peakd-notifications.utils';
 import Icon from './Icon';
 
 const Notifications = ({user, properties}: PropsFromRedux) => {
@@ -54,17 +53,12 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
   }, [user]);
 
   const init = async (username: string) => {
-    setNotifications([]);
-    setHasMoreData(false);
-    const userConfig = await PeakDNotificationsUtils.getAccountConfig(username);
-    if (userConfig) {
-      const {notifs, hasMore} = await NotificationsUtils.getNotifications(
-        username,
-        properties,
-      );
-      setNotifications(notifs);
-      setHasMoreData(hasMore);
-    }
+    const {notifs, hasMore} = await NotificationsUtils.getNotifications(
+      username,
+      properties,
+    );
+    setNotifications(notifs);
+    setHasMoreData(hasMore);
   };
 
   const handleClick = (notification: Notification) => {
@@ -229,7 +223,7 @@ const getStyles = (theme: Theme, width: Dimensions['width']) =>
       width: '100%',
     },
     cardOverlay: {
-      width: '90%',
+      width: '100%',
       height: '80%',
     },
     textBase: {
