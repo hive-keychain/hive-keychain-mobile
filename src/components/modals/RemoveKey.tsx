@@ -1,15 +1,8 @@
-import {addKey} from 'actions/index';
+import {forgetKey} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
-import OperationInput from 'components/form/OperationInput';
-import React, {useState} from 'react';
-import {
-  Keyboard,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
@@ -24,29 +17,20 @@ import {goBack} from 'utils/navigation';
 
 type Props = PropsFromRedux & {name: string; type: KeyTypes};
 
-const AddKey = ({addKey, name, type}: Props) => {
-  const [key, setKey] = useState('');
+const RemoveKey = ({forgetKey, name, type}: Props) => {
   const {width} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
   return (
-    <View
-      style={{justifyContent: 'space-between', flex: 1, paddingVertical: 24}}>
-      <Text style={styles.title}>
-        {translate('settings.keys.add_keyType', {type})}
+    <View style={styles.container}>
+      <Text style={styles.title}>{translate('settings.keys.remove')}</Text>
+      <Text style={[styles.text, styles.smallerText]}>
+        {translate('settings.keys.remove_info', {username: name, type})}
       </Text>
-      <OperationInput
-        labelInput={translate('common.privateKey')}
-        placeholder={translate('common.privateKey')}
-        autoCapitalize="none"
-        value={key}
-        onChangeText={setKey}
-      />
       <EllipticButton
-        title={translate('common.save')}
+        title={translate('common.confirm')}
         onPress={() => {
-          addKey(name, type, key);
-          Keyboard.dismiss();
+          forgetKey(name, type);
           goBack();
         }}
         style={getButtonStyle(theme, width).warningStyleButton}
@@ -59,9 +43,10 @@ const AddKey = ({addKey, name, type}: Props) => {
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
-    text: {color: getColors(theme).secondaryText, ...body_primary_body_1},
+    container: {justifyContent: 'space-between', flex: 1, paddingVertical: 24},
+    text: {color: getColors(theme).primaryText, ...body_primary_body_1},
     title: {
-      color: getColors(theme).secondaryText,
+      color: getColors(theme).primaryText,
       ...headlines_primary_headline_1,
       fontSize: 18,
       textAlign: 'center',
@@ -71,7 +56,7 @@ const getStyles = (theme: Theme) =>
     },
   });
 
-const connector = connect(null, {addKey});
+const connector = connect(null, {forgetKey});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(AddKey);
+export default connector(RemoveKey);

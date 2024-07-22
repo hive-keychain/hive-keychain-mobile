@@ -24,8 +24,11 @@ import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
 import {TutorialPopup} from 'components/popups/tutorial/Tutorial';
+import {VestingRoutesPopup} from 'components/popups/vesting-routes/VestingRoutes';
+import {AccountVestingRoutesDifferences} from 'components/popups/vesting-routes/vesting-routes.interface';
 import WhatsNew from 'components/popups/whats-new/WhatsNew';
 import WidgetConfiguration from 'components/popups/widget-configuration/WidgetConfiguration';
+import WrongKeyPopup from 'components/popups/wrong-key/WrongKeyPopup';
 import {ProposalVotingSectionComponent} from 'components/proposal-voting/proposalVoting';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
@@ -79,6 +82,7 @@ import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
+import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
 import {WidgetUtils} from 'utils/widget.utils';
 import TokenSettings from './tokens/TokenSettings';
 
@@ -131,6 +135,10 @@ const Main = ({
   const [notificationEvent, setNotificationEvent] = useState(null);
   const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  const [vestingRoutesDifferences, setVestingRoutesDifferences] = useState<
+    AccountVestingRoutesDifferences[] | undefined
+  >();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -204,6 +212,7 @@ const Main = ({
     ) {
       setLoadingUserAndGlobals(false);
       setisLoadingScreen(false);
+      initCheckVestingRoutes();
       if (!userTokens.loading) {
         loadHiddenTokens();
       }
@@ -224,6 +233,7 @@ const Main = ({
   }, [searchValue]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
+    if (!accounts.length) return;
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();
     loadPrices();
@@ -271,11 +281,17 @@ const Main = ({
       appState.current = nextAppState;
     };
     AppState.addEventListener('change', handler);
-
     return () => {
       AppState.removeEventListener('change', handler);
     };
   }, []);
+
+  const initCheckVestingRoutes = async () => {
+    const tempVestingRoutesDifferences = await VestingRoutesUtils.getWrongVestingRoutes(
+      accounts,
+    );
+    setVestingRoutesDifferences(tempVestingRoutesDifferences);
+  };
 
   const loadHiddenTokens = async () => {
     let customHiddenTokens = null;
@@ -520,6 +536,12 @@ const Main = ({
               setShow={setShowWidgetConfiguration}
             />
             <TutorialPopup navigation={navigation} />
+            <VestingRoutesPopup
+              vestingRoutesDifferences={vestingRoutesDifferences}
+              setVestingRoutesDifferences={setVestingRoutesDifferences}
+              navigation={navigation}
+            />
+            <WrongKeyPopup />
           </View>
         ) : (
           <Loader animatedLogo />

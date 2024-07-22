@@ -1,6 +1,7 @@
 import Icon from 'components/hive/Icon';
 import CopyKeys from 'components/modals/CopyKeys';
 import InfoQR from 'components/modals/InfoQR';
+import InfoTemplate from 'components/modals/InfoTemplate';
 import InfoWalletQR from 'components/modals/InfoWalletQR';
 import MoreInformation from 'components/modals/MoreInformation';
 import {ModalScreenProps} from 'navigators/Root.types';
@@ -23,6 +24,7 @@ export enum Info {
   QR_ACCOUNT = 'QR_ACCOUNT',
   QR_WALLET = 'QR_WALLET',
   COPY_KEYS = 'COPY_KEYS',
+  ACCOUNT_CREATION_PEER_TO_PEER = 'ACCOUNT_CREATION_PEER_TO_PEER',
 }
 export default ({
   type,
@@ -37,6 +39,9 @@ export default ({
   switch (type) {
     case Info.KEYS:
       content = <MoreInformation />;
+      break;
+    case Info.ACCOUNT_CREATION_PEER_TO_PEER:
+      content = <InfoTemplate info={'account_creation_peer_to_peer'} />;
       break;
     case Info.QR_ACCOUNT:
       content = <InfoQR />;
