@@ -22,10 +22,9 @@ const RemoveKey = ({forgetKey, name, type}: Props) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
   return (
-    <View
-      style={{justifyContent: 'space-between', flex: 1, paddingVertical: 24}}>
+    <View style={styles.container}>
       <Text style={styles.title}>{translate('settings.keys.remove')}</Text>
-      <Text>
+      <Text style={[styles.text, styles.smallerText]}>
         {translate('settings.keys.remove_info', {username: name, type})}
       </Text>
       <EllipticButton
@@ -44,9 +43,10 @@ const RemoveKey = ({forgetKey, name, type}: Props) => {
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
-    text: {color: getColors(theme).secondaryText, ...body_primary_body_1},
+    container: {justifyContent: 'space-between', flex: 1, paddingVertical: 24},
+    text: {color: getColors(theme).primaryText, ...body_primary_body_1},
     title: {
-      color: getColors(theme).secondaryText,
+      color: getColors(theme).primaryText,
       ...headlines_primary_headline_1,
       fontSize: 18,
       textAlign: 'center',
