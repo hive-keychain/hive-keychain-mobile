@@ -23,6 +23,7 @@ import {Notification} from 'src/interfaces/notifications.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {getHeaderTitleStyle} from 'src/styles/headers';
 import {
   FontPoppinsName,
   button_link_primary_small,
@@ -39,7 +40,6 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
   const [notifications, setNotifications] = useState<Notification[]>();
   const [isNotificationPanelOpen, setNotificationPanelOpen] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(false);
-  const [allRead, setAllRead] = useState(false);
   const [settingNotifications, setSettingNotifications] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
@@ -163,21 +163,28 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
                   renderItem={(item) => renderItem(item.item)}
                   keyExtractor={(notification) => notification.id}
                   ListHeaderComponent={() => {
-                    return !allRead ? (
+                    return (
                       <>
-                        <EllipticButton
-                          title={translate(
-                            'components.notifications.notification_set_all_as_read',
-                          )}
-                          onPress={markAllAsRead}
-                          style={[
-                            getButtonStyle(theme, width).outline,
-                            styles.actionButton,
-                          ]}
-                        />
-                        <Separator height={8} />
+                        <View style={styles.header}>
+                          <Text style={getHeaderTitleStyle(theme, width)}>
+                            {translate('settings.settings.notifications.title')}
+                          </Text>
+                          {notifications.find((e) => !e.read) ? (
+                            <EllipticButton
+                              title={translate(
+                                'components.notifications.notification_set_all_as_read',
+                              )}
+                              onPress={markAllAsRead}
+                              style={[
+                                getButtonStyle(theme, width).outline,
+                                styles.actionButton,
+                              ]}
+                            />
+                          ) : null}
+                        </View>
+                        <Separator />
                       </>
-                    ) : null;
+                    );
                   }}
                   onEndReached={() => {
                     if (hasMoreData) handleLoadMore();
@@ -190,7 +197,7 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
             <BackToTopButton
               theme={theme}
               element={flatListRef}
-              additionalOverlayButtonStyle={{right: 1, bottom: 1}}
+              additionalOverlayButtonStyle={{right: 5, bottom: 5}}
               isScrollView
             />
           )}
@@ -216,8 +223,13 @@ const getStyles = (theme: Theme, width: Dimensions['width']) =>
       borderColor: 'white',
       backgroundColor: 'white',
     },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
+    },
     cardOverlay: {
-      width: '80%',
+      width: '90%',
       height: '80%',
     },
     textBase: {
@@ -231,8 +243,7 @@ const getStyles = (theme: Theme, width: Dimensions['width']) =>
     },
     actionButton: {
       height: 35,
-      width: '50%',
-      alignSelf: 'flex-end',
+      width: '40%',
     },
     loaderContainer: {
       flex: 1,
