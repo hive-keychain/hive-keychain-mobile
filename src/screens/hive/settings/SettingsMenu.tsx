@@ -94,7 +94,7 @@ const SettingsMenu = () => {
         leftSideComponent={
           <View style={getBadgeStyle(width, theme).container}>
             <Text style={getBadgeStyle(width, theme).text}>
-              {translate('common.experimental').toLowerCase()}
+              {translate('common.experimental')}
             </Text>
           </View>
         }
