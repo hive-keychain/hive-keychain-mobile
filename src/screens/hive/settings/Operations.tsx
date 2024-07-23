@@ -23,7 +23,6 @@ import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {
-  SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_2,
   body_primary_body_3,
   getFontSizeSmallDevices,
@@ -86,6 +85,7 @@ const Operations = ({
             getCardStyle(theme).defaultCardItem,
             styles.searchBar,
           ]}
+          additionalCustomInputStyle={{height: 45}}
           rightIcon={<Icon name={Icons.SEARCH} theme={theme} />}
           value={searchValue}
           onChangeText={(text) => setSearchValue(text)}
@@ -149,7 +149,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       borderRadius: 33,
       marginVertical: 10,
       width: '100%',
-      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 45 : 50,
+      height: 45,
     },
     opacity: {
       opacity: 0.7,
