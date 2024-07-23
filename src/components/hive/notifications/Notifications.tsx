@@ -1,6 +1,12 @@
 import {ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, TouchableOpacity, useWindowDimensions} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -61,7 +67,7 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
       <>
         <TouchableOpacity
           activeOpacity={1}
-          style={styles.touchable}
+          style={styles.notificationIconContainer}
           onPress={() => {
             showNotificationsModal();
           }}>
@@ -73,6 +79,13 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
             height={45}
             additionalContainerStyle={[{width: 25, height: 25}]}
           />
+          {notifications.filter((notif) => !notif.read).length > 0 && (
+            <View style={styles.count}>
+              <Text style={styles.countText}>
+                {notifications.filter((notif) => !notif.read).length}
+              </Text>
+            </View>
+          )}
         </TouchableOpacity>
       </>
     );
@@ -81,7 +94,8 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
 
 const getStyles = (theme: Theme, width: Dimensions['width']) =>
   StyleSheet.create({
-    touchable: {
+    notificationIconContainer: {
+      position: 'relative',
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: 8,
@@ -89,6 +103,22 @@ const getStyles = (theme: Theme, width: Dimensions['width']) =>
       borderWidth: 2,
       borderColor: 'white',
       backgroundColor: 'white',
+    },
+    count: {
+      position: 'absolute',
+      top: -9,
+      right: -9,
+      height: 20,
+      width: 20,
+      borderRadius: 10,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: PRIMARY_RED_COLOR,
+    },
+    countText: {
+      fontSize: 9,
+      color: 'white',
     },
     header: {
       flexDirection: 'row',
