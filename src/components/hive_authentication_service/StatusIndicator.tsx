@@ -71,7 +71,7 @@ export const Indicator = ({
   const styles = getStyles(status, theme);
   return (
     <View style={styles.indicator}>
-      <Icon theme={theme} name={Icons.LOGO_HAS} width={15} height={15} />
+      <Icon theme={theme} name={Icons.LOGO_HAS} width={18} height={18} />
     </View>
   );
 };
@@ -84,8 +84,11 @@ const getStyles = (status: ConnectionStatus, theme: Theme) =>
     indicator: {
       borderColor: getStatusColor(status),
       padding: 4,
-      borderRadius: 50,
+      borderRadius: 13,
       borderWidth: 2,
+      marginTop: 1,
+      height: 25,
+      width: 25,
       backgroundColor: '#FFF',
     },
   });

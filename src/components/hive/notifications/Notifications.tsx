@@ -77,7 +77,7 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
             color={PRIMARY_RED_COLOR}
             width={45}
             height={45}
-            additionalContainerStyle={[{width: 25, height: 25}]}
+            additionalContainerStyle={[{width: 24, height: 24}]}
           />
           {notifications.filter((notif) => !notif.read).length > 0 && (
             <View style={styles.count}>
@@ -100,8 +100,8 @@ const getStyles = (theme: Theme, width: Dimensions['width']) =>
       justifyContent: 'center',
       marginRight: 8,
       borderRadius: 50,
-      borderWidth: 2,
-      borderColor: 'white',
+      width: 25,
+      height: 25,
       backgroundColor: 'white',
     },
     count: {
