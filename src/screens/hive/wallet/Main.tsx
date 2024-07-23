@@ -19,14 +19,16 @@ import AccountValue from 'components/hive/AccountValue';
 import CurrencyToken from 'components/hive/CurrencyToken';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import Icon from 'components/hive/Icon';
+import Notifications from 'components/hive/notifications/Notifications';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
 import {TutorialPopup} from 'components/popups/tutorial/Tutorial';
-import {VestingRoutesPopup} from 'components/popups/vesting-routes/VestingRoutes';
 import {AccountVestingRoutesDifferences} from 'components/popups/vesting-routes/vesting-routes.interface';
+import {VestingRoutesPopup} from 'components/popups/vesting-routes/VestingRoutes';
 import WhatsNew from 'components/popups/whats-new/WhatsNew';
 import WidgetConfiguration from 'components/popups/widget-configuration/WidgetConfiguration';
+import WrongKeyPopup from 'components/popups/wrong-key/WrongKeyPopup';
 import {ProposalVotingSectionComponent} from 'components/proposal-voting/proposalVoting';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
@@ -130,6 +132,7 @@ const Main = ({
   const mainScrollRef = useRef();
 
   const [eventReceived, setEventReceived] = useState(null);
+  const [notificationEvent, setNotificationEvent] = useState(null);
   const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -230,8 +233,8 @@ const Main = ({
   }, [searchValue]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
-    if (lastAccount || accounts.length)
-      loadAccount(lastAccount || accounts[0].name);
+    if (!accounts.length) return;
+    loadAccount(lastAccount || accounts[0].name);
     loadProperties();
     loadPrices();
     fetchPhishingAccounts();
@@ -344,6 +347,7 @@ const Main = ({
               <DrawerButton navigation={navigation as any} theme={theme} />
               <View style={[styles.innerHeader]}>
                 <StatusIndicator theme={theme} />
+                <Notifications />
                 <Claim theme={theme} />
                 <View style={styles.marginRight}>
                   <UserDropdown
@@ -537,6 +541,7 @@ const Main = ({
               setVestingRoutesDifferences={setVestingRoutesDifferences}
               navigation={navigation}
             />
+            <WrongKeyPopup />
           </View>
         ) : (
           <Loader animatedLogo />

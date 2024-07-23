@@ -46,7 +46,7 @@ export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
   }, [user]);
 
   const showVoteForWitness = () => {
-    const account = user.account.witness_votes.includes('stoodkev')
+    const account = user.account.witness_votes?.includes('stoodkev')
       ? 'cedricguillas'
       : 'stoodkev';
     return (

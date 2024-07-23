@@ -83,6 +83,9 @@ export default () => {
       <Drawer.Screen
         name="AccountManagementScreen"
         component={AccountManagementStack}
+        options={{
+          unmountOnBlur: true,
+        }}
       />
       <Drawer.Screen
         name="ExportAccountsQRScreen"

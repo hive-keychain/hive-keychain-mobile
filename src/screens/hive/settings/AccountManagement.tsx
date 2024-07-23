@@ -4,15 +4,24 @@ import EllipticButton from 'components/form/EllipticButton';
 import UserDropdown from 'components/form/UserDropdown';
 import Key from 'components/hive/Key';
 import RemoveKey from 'components/modals/RemoveKey';
+import ConfirmationPage, {
+  ConfirmationPageProps,
+} from 'components/operations/Confirmation';
+import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import NavigatorTitle from 'components/ui/NavigatorTitle';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import SlidingOverlay from 'components/ui/SlidingOverlay';
 import useLockedPortrait from 'hooks/useLockedPortrait';
-import {MainNavigation, ModalScreenProps} from 'navigators/Root.types';
-import React, {useState} from 'react';
+import {
+  ConfirmationPageRoute,
+  MainNavigation,
+  ModalScreenProps,
+} from 'navigators/Root.types';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
@@ -27,6 +36,7 @@ import {
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
+import {KeyUtils} from 'utils/key.utils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 
@@ -37,6 +47,10 @@ const AccountManagement = ({
   navigation,
   accounts,
 }: PropsFromRedux & {navigation: MainNavigation}) => {
+  const [wrongKeysFound, setWrongKeysFound] = useState<
+    WrongKeysOnUser | undefined
+  >();
+
   useLockedPortrait(navigation);
 
   const username = account.name;
@@ -46,6 +60,28 @@ const AccountManagement = ({
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width, height});
   const [showQrCode, setShowQrCode] = useState(false);
+
+  useEffect(() => {
+    initCheckKeysOnAccount(account.name);
+  }, [account, username]);
+
+  const initCheckKeysOnAccount = async (username: string) => {
+    if (username) {
+      const selectedLocalAccount = accounts.find(
+        (localAccount) => localAccount.name === username,
+      );
+      const foundWrongKey = KeyUtils.checkKeysOnAccount(
+        selectedLocalAccount,
+        account.account,
+        {[selectedLocalAccount.name]: []},
+      );
+      if (foundWrongKey[username].length > 0) {
+        setWrongKeysFound(foundWrongKey);
+      } else {
+        setWrongKeysFound(undefined);
+      }
+    }
+  };
 
   const handleGotoConfirmationAccountRemoval = () => {
     if (username) {
@@ -63,11 +99,25 @@ const AccountManagement = ({
             value: `@${username}`,
           },
         ],
-      };
-      navigate('Operation', {
-        screen: 'ConfirmationPage',
-        params: confirmationData,
-      });
+        extraHeader: (
+          <>
+            <Separator />
+            <NavigatorTitle title="common.confirm" />
+            <Separator />
+          </>
+        ),
+      } as ConfirmationPageProps;
+
+      navigation.navigate('ModalScreen', {
+        name: 'ConfirmationPageModal',
+        modalContent: (
+          <ConfirmationPage
+            route={{params: confirmationData} as ConfirmationPageRoute}
+          />
+        ),
+        modalContainerStyle: [getModalBaseStyle(theme).roundedTop],
+        fixedHeight: 0.5,
+      } as ModalScreenProps);
     }
   };
 
@@ -75,15 +125,23 @@ const AccountManagement = ({
     username: string,
     key: KeyTypes,
   ) => {
-    navigation.navigate('ModalScreen', {
-      name: 'RemoveKeyModal',
-      modalContent: <RemoveKey type={key} name={username} />,
-      modalContainerStyle: [
-        getModalBaseStyle(theme).roundedTop,
-        styles.paddingHorizontal,
-      ],
-      fixedHeight: 0.4,
-    } as ModalScreenProps);
+    if (
+      Object.keys(accounts.find((a) => a.name === username)!.keys).length /
+        2 ===
+      1
+    ) {
+      handleGotoConfirmationAccountRemoval();
+    } else {
+      navigation.navigate('ModalScreen', {
+        name: 'RemoveKeyModal',
+        modalContent: <RemoveKey type={key} name={username} />,
+        modalContainerStyle: [
+          getModalBaseStyle(theme).roundedTop,
+          styles.paddingHorizontal,
+        ],
+        fixedHeight: 0.4,
+      } as ModalScreenProps);
+    }
   };
 
   return (
@@ -100,6 +158,7 @@ const AccountManagement = ({
             forgetKey={handleGotoConfirmationKeyRemoval}
             navigation={navigation}
             theme={theme}
+            wrongKeysFound={wrongKeysFound}
           />
           <Key
             type={KeyTypes.posting}
@@ -108,6 +167,7 @@ const AccountManagement = ({
             forgetKey={handleGotoConfirmationKeyRemoval}
             navigation={navigation}
             theme={theme}
+            wrongKeysFound={wrongKeysFound}
           />
           <Key
             type={KeyTypes.memo}
@@ -116,6 +176,7 @@ const AccountManagement = ({
             forgetKey={handleGotoConfirmationKeyRemoval}
             navigation={navigation}
             theme={theme}
+            wrongKeysFound={wrongKeysFound}
           />
           <Separator height={20} />
           <EllipticButton

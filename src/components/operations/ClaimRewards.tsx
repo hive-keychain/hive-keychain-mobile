@@ -106,8 +106,8 @@ const getStyles = (theme: Theme) =>
       marginRight: 8,
       borderRadius: 50,
       padding: 4,
-      borderWidth: 2,
-      borderColor: 'white',
+      height: 25,
+      width: 25,
       backgroundColor: 'white',
     },
   });
