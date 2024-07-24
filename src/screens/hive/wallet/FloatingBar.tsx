@@ -27,6 +27,7 @@ import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
+import {PlatformsUtils} from 'utils/platforms.utils';
 
 export type FloatingBarLink = 'ecosystem' | 'browser' | 'scan_qr' | 'swap_buy';
 interface Props {
@@ -165,20 +166,22 @@ const Floating = ({
           </Text>
         )}
       </View>
-      <View style={[styles.itemContainer, getActiveStyle('swap_buy')]}>
-        <Icon
-          theme={theme}
-          color={getActiveIconColor('swap_buy')}
-          name={Icons.SWAP}
-          {...getIconDimensions(width)}
-          onPress={() => onHandlePressButton('swap_buy')}
-        />
-        {showTags && (
-          <Text style={[styles.textBase, styles.marginTop]}>
-            {translate('navigation.floating_bar.swap')}
-          </Text>
-        )}
-      </View>
+      {PlatformsUtils.hideOniOS(
+        <View style={[styles.itemContainer, getActiveStyle('swap_buy')]}>
+          <Icon
+            theme={theme}
+            color={getActiveIconColor('swap_buy')}
+            name={Icons.SWAP}
+            {...getIconDimensions(width)}
+            onPress={() => onHandlePressButton('swap_buy')}
+          />
+          {showTags && (
+            <Text style={[styles.textBase, styles.marginTop]}>
+              {translate('navigation.floating_bar.swap')}
+            </Text>
+          )}
+        </View>,
+      )}
     </Animated.View>
   ) : null;
 };

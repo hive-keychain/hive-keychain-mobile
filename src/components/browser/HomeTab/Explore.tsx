@@ -29,6 +29,7 @@ import {translate} from 'utils/localize';
 import DAppCard from './components/DAppCard';
 
 export interface DApp {
+  hideOniOS: boolean;
   name: string;
   description: string;
   icon: string;
@@ -69,7 +70,15 @@ const Explore = ({
   const init = async () => {
     const tempTabs: any = [];
     for (const tmpCategory of ecosystem) {
-      if (!(Platform.OS === 'ios' && tmpCategory.category === 'gaming'))
+      if (
+        !(
+          Platform.OS === 'ios' &&
+          (tmpCategory.category === 'gaming' ||
+            !tmpCategory.dapps.filter(
+              (e) => !e.hideOniOS && !e.categories.includes('gaming'),
+            ).length)
+        )
+      )
         tempTabs.push({
           id: tmpCategory.category,
           title: `browser.home.categories.${tmpCategory.category}`,
@@ -95,7 +104,8 @@ const Explore = ({
                     if (Platform.OS === 'ios') {
                       return (
                         e.categories.includes(cat.id) &&
-                        !e.categories.includes('gaming')
+                        !e.categories.includes('gaming') &&
+                        !e.hideOniOS
                       );
                     } else {
                       return e.categories.includes(cat.id);
