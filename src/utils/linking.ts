@@ -1,7 +1,6 @@
 import {treatHASRequest} from 'actions/hiveAuthenticationService';
 import {addAccount, addTabFromLinking} from 'actions/index';
 import {Account} from 'actions/interfaces';
-import {translate} from 'i18n-js';
 import {CreateAccountFromWalletParamList} from 'navigators/mainDrawerStacks/CreateAccount.types';
 import {Linking} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
@@ -12,6 +11,7 @@ import {HASConfig} from './config';
 import {processQRCodeOp} from './hive-uri';
 import {KeyUtils} from './key.utils';
 import {validateFromObject} from './keyValidation';
+import {translate} from './localize';
 import {goBack, goBackAndNavigate, resetStackAndNavigate} from './navigation';
 
 let flagCurrentlyProcessing = false;
@@ -99,10 +99,29 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
         !qr_data_accounts.find((q) => q.index === dataAccounts.index)
       ) {
         qr_data_accounts.push(dataAccounts);
+        if (
+          dataAccounts.total > 1 &&
+          qr_data_accounts.length < dataAccounts.total
+        ) {
+          SimpleToast.show(
+            translate('toast.export_qr_accounts.scan_next', {
+              index: dataAccounts.index,
+              total: dataAccounts.total,
+            }),
+          );
+        }
         if (dataAccounts.total === qr_data_accounts.length) {
+          SimpleToast.show(
+            translate('toast.export_qr_accounts.scan_completed'),
+          );
           flagCurrentlyProcessing = true;
           await handleAddAccountsQR(qr_data_accounts);
         }
+      } else if (
+        dataAccounts &&
+        qr_data_accounts.find((q) => q.index === dataAccounts.index)
+      ) {
+        SimpleToast.show(translate('toast.export_qr_accounts.already_scanned'));
       }
     } catch (error) {
       console.log('Error getting QR data accounts', {error});
