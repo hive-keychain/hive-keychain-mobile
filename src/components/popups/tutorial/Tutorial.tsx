@@ -24,6 +24,7 @@ import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
+import {PopupScreenNameType} from 'src/types/popupHandler.types';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {tutorialBaseUrl} from 'utils/config';
@@ -32,17 +33,16 @@ import {navigate} from 'utils/navigation';
 
 interface Props {
   navigation: WalletNavigation;
-  addPopupToList: (name: string, remove?: boolean) => void;
+  handlePopupList: (name: PopupScreenNameType, remove?: boolean) => void;
   show: boolean;
 }
 
 const Tutorial = ({
   navigation,
   addTab,
-  addPopupToList,
+  handlePopupList,
   show,
 }: Props & PropsFromRedux): null => {
-  // const [show, setShow] = useState(false);
   const {theme} = useThemeContext();
 
   useEffect(() => {
@@ -54,18 +54,12 @@ const Tutorial = ({
     );
     if (!skipTutorial) {
       setTimeout(() => {
-        addPopupToList('tutorial');
+        handlePopupList('tutorial');
       }, 3000);
-      //TODO check after testing the following case:
-      //  - create a new account onboarding acc
-      // setTimeout(() => {
-      //   setShow(true);
-      // }, 3000);
     }
   };
 
   useEffect(() => {
-    console.log({show}); //TODO remove line
     if (show) {
       navigate('ModalScreen', {
         name: 'TutorialPopup',
@@ -79,8 +73,7 @@ const Tutorial = ({
   const handleClick = async (option: 'skip' | 'show') => {
     const hidePopup = async () => {
       await AsyncStorage.setItem(KeychainStorageKeyEnum.SKIP_TUTORIAL, 'true');
-      // setShow(false);
-      addPopupToList('tutorial', true);
+      handlePopupList('tutorial', true);
     };
 
     if (option === 'show') {

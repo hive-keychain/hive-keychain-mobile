@@ -18,6 +18,7 @@ import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
+import {PopupScreenNameType} from 'src/types/popupHandler.types';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
@@ -31,7 +32,7 @@ interface Props {
   setVestingRoutesDifferences: (
     value: AccountVestingRoutesDifferences[],
   ) => void;
-  addPopupToList: (name: string, remove?: boolean) => void;
+  handlePopupList: (name: PopupScreenNameType, remove?: boolean) => void;
   show: boolean;
 }
 
@@ -40,33 +41,29 @@ const VestingRoutes = ({
   accounts,
   vestingRoutesDifferences,
   setVestingRoutesDifferences,
-  addPopupToList,
+  handlePopupList,
   show,
 }: Props & PropsFromRedux): null => {
   const {theme} = useThemeContext();
   const [moveNext, setMoveNext] = useState<boolean>(false);
 
   useEffect(() => {
-    addPopupToList('vestingroutes');
-  }, []);
-
-  useEffect(() => {
-    if (
-      vestingRoutesDifferences &&
-      vestingRoutesDifferences.length > 0 &&
-      show
-    ) {
-      navigate('ModalScreen', {
-        name: 'VestingRoutesPopup',
-        modalContent: renderContent(),
-        onForceCloseModal: handleClose,
-        modalContainerStyle: getModalBaseStyle(theme).roundedTop,
-      } as ModalScreenProps);
+    if (vestingRoutesDifferences && vestingRoutesDifferences.length > 0) {
+      if (!show) {
+        handlePopupList('vestingroutes');
+      } else {
+        navigate('ModalScreen', {
+          name: 'VestingRoutesPopup',
+          modalContent: renderContent(),
+          onForceCloseModal: () => {},
+          modalContainerStyle: getModalBaseStyle(theme).roundedTop,
+        } as ModalScreenProps);
+      }
     }
   }, [vestingRoutesDifferences, moveNext, show]);
 
   const handleClose = async () => {
-    addPopupToList('vestingroutes', true);
+    handlePopupList('vestingroutes', true);
     setVestingRoutesDifferences(undefined);
     goBack();
   };

@@ -16,6 +16,7 @@ import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
+import {PopupScreenNameType} from 'src/types/popupHandler.types';
 import {RootState} from 'store';
 import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
@@ -27,14 +28,14 @@ export interface WrongKeysOnUser {
   [key: string]: string[];
 }
 interface Props {
-  addPopupToList: (name: string, remove?: boolean) => void;
+  handlePopupList: (name: PopupScreenNameType, remove?: boolean) => void;
   show: boolean;
 }
 
 const WrongKeyPopup = ({
   loadAccount,
   accounts,
-  addPopupToList,
+  handlePopupList,
   show,
 }: Props & PropsFromRedux): null => {
   const {theme} = useThemeContext();
@@ -71,7 +72,7 @@ const WrongKeyPopup = ({
           noKeyCheck,
         );
         if (foundWrongKey[account.name!]?.length > 0) {
-          addPopupToList('wrongkey');
+          handlePopupList('wrongkey');
           setDisplayWrongKeyPopup(foundWrongKey);
           break;
         }
@@ -85,7 +86,7 @@ const WrongKeyPopup = ({
       navigate('ModalScreen', {
         name: 'WrongKeyPopup',
         modalContent: renderContent(),
-        onForceCloseModal: handleClose,
+        onForceCloseModal: () => {},
         modalContainerStyle: [
           getModalBaseStyle(theme).roundedTop,
           styles.modal,
@@ -127,7 +128,7 @@ const WrongKeyPopup = ({
   };
 
   const handleClose = () => {
-    addPopupToList('wrongkey', true);
+    handlePopupList('wrongkey', true);
     setDisplayWrongKeyPopup(undefined);
     goBack();
   };

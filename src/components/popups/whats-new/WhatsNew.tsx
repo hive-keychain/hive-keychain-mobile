@@ -12,6 +12,7 @@ import {
   body_primary_body_3,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
+import {PopupScreenNameType} from 'src/types/popupHandler.types';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {VersionLogUtils} from 'utils/version-log.utils';
@@ -20,7 +21,7 @@ import {Feature, WhatsNewContent} from './whats-new.interface';
 
 interface Props {
   navigation: WalletNavigation;
-  addPopupToList: (name: string, remove?: boolean) => void;
+  handlePopupList: (name: PopupScreenNameType, remove?: boolean) => void;
   show: boolean;
 }
 
@@ -40,7 +41,7 @@ export function prefetchImage(url: string) {
 export function isPrefetched(url: string) {
   return prefetchedImages[url] !== undefined;
 }
-const WhatsNew = ({navigation, addPopupToList, show}: Props): null => {
+const WhatsNew = ({navigation, handlePopupList, show}: Props): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
   const locale = 'en'; // later use getUILanguage()
   const {theme} = useThemeContext();
@@ -58,13 +59,14 @@ const WhatsNew = ({navigation, addPopupToList, show}: Props): null => {
       .version.split('.')
       .splice(0, 2)
       .join('.');
+
     if (!lastVersionStorage) {
       WhatsNewUtils.saveLastSeen();
     } else if (
       mobileAppVersion !== lastVersionStorage &&
       lastVersionAPI.version === mobileAppVersion
     ) {
-      addPopupToList('whatsnew');
+      handlePopupList('whatsnew');
       setWhatsNewContent(lastVersionAPI);
     }
   };
@@ -87,7 +89,7 @@ const WhatsNew = ({navigation, addPopupToList, show}: Props): null => {
 
   const finish = async () => {
     await WhatsNewUtils.saveLastSeen();
-    addPopupToList('whatsnew', true);
+    handlePopupList('whatsnew', true);
     navigation.goBack();
   };
 

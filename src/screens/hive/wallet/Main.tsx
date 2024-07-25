@@ -73,6 +73,7 @@ import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   button_link_primary_medium,
 } from 'src/styles/typography';
+import {PopupScreenNameType} from 'src/types/popupHandler.types';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {getCurrency} from 'utils/hive';
@@ -138,7 +139,7 @@ const Main = ({
     AccountVestingRoutesDifferences[] | undefined
   >();
 
-  const [popupList, setPopupList] = useState<string[]>([]);
+  const [popupList, setPopupList] = useState<PopupScreenNameType[]>([]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -262,12 +263,6 @@ const Main = ({
     setIsDrawerOpen(isDrawerOpen);
   }, [isDrawerOpen]);
 
-  //TODO remove block below
-  useEffect(() => {
-    console.log({popupList});
-  }, [popupList]);
-  //end block
-
   useEffect(() => {
     const handler = (nextAppState: AppStateStatus) => {
       if (
@@ -337,16 +332,17 @@ const Main = ({
       });
     }
   };
-  //TODO test in real device + with onboarding account
-  const handlePopupList = (name: string, remove?: boolean) => {
+
+  const handlePopupList = (name: PopupScreenNameType, remove?: boolean) => {
     if (!remove && !popupList.includes(name)) {
-      setPopupList((prev) => [...prev, name]);
-    } else if (remove && popupList.includes(name)) {
+      setPopupList((prev) => [name, ...prev]);
+    }
+    if (remove && popupList.includes(name)) {
       setTimeout(() => {
         const tempList = [...popupList];
         tempList.shift();
         setPopupList(tempList);
-      }, 1500);
+      }, 2000);
     }
   };
 
@@ -549,7 +545,7 @@ const Main = ({
             </View>
             <WhatsNew
               navigation={navigation}
-              addPopupToList={handlePopupList}
+              handlePopupList={handlePopupList}
               show={popupList[0] === 'whatsnew'}
             />
             <WidgetConfiguration
@@ -558,18 +554,18 @@ const Main = ({
             />
             <TutorialPopup
               navigation={navigation}
-              addPopupToList={handlePopupList}
+              handlePopupList={handlePopupList}
               show={popupList[0] === 'tutorial'}
             />
             <VestingRoutesPopup
               vestingRoutesDifferences={vestingRoutesDifferences}
               setVestingRoutesDifferences={setVestingRoutesDifferences}
               navigation={navigation}
-              addPopupToList={handlePopupList}
+              handlePopupList={handlePopupList}
               show={popupList[0] === 'vestingroutes'}
             />
             <WrongKeyPopup
-              addPopupToList={handlePopupList}
+              handlePopupList={handlePopupList}
               show={popupList[0] === 'wrongkey'}
             />
           </View>
