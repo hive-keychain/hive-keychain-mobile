@@ -1,10 +1,11 @@
+import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import SafeArea from 'components/ui/SafeArea';
+import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
-import {ThrottleSettings, throttle} from 'lodash';
 import {MainNavigation} from 'navigators/Root.types';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
@@ -45,28 +46,7 @@ const ExportQRAccounts = ({
   const qrCodeRef = useRef<View>(null);
 
   useEffect(() => {
-    throttledRefresh(pageIndex, accountsDataQR);
-  }, [pageIndex, accountsDataQR]);
-
-  const throttledRefresh = useMemo(() => {
-    return throttle(
-      (newPageIndex, newaccountsDataQR) => {
-        if (newPageIndex === newaccountsDataQR.length - 1) {
-          setPageIndex(0);
-        } else {
-          setPageIndex((newPageIndex) => newPageIndex + 1);
-        }
-      },
-      2000,
-      {leading: false} as ThrottleSettings,
-    );
-  }, []);
-
-  useEffect(() => {
     exportAllAccountsQR();
-    return () => {
-      throttledRefresh.cancel();
-    };
   }, []);
 
   const exportAllAccountsQR = () => {
@@ -96,6 +76,22 @@ const ExportQRAccounts = ({
     return Buffer.from(value).toString('base64');
   };
 
+  const moveNext = () => {
+    if (pageIndex === accountsDataQR.length - 1) {
+      setPageIndex(0);
+    } else {
+      setPageIndex((newPageIndex) => newPageIndex + 1);
+    }
+  };
+
+  const movePrevious = () => {
+    if (pageIndex === 0) {
+      setPageIndex(0);
+    } else {
+      setPageIndex((newPageIndex) => newPageIndex - 1);
+    }
+  };
+
   return (
     <Background theme={theme}>
       <SafeArea style={styles.safeArea}>
@@ -116,7 +112,17 @@ const ExportQRAccounts = ({
                 ]}>
                 {translate('components.export_qr_accounts.qr_disclaimer2')}
               </Text>
-              <View>
+              <View style={{alignItems: 'center'}}>
+                <View>
+                  <Text style={[styles.textBase, styles.qrAccounts]}>
+                    {accountsDataQR[pageIndex].index}/
+                    {accountsDataQR[pageIndex].total} : @
+                    {JSON.parse(accountsDataQR[pageIndex].data)
+                      .map((e: string) => JSON.parse(e).name)
+                      .join(', @')}
+                  </Text>
+                </View>
+                <Separator height={10} />
                 <View ref={qrCodeRef}></View>
                 <QRCode
                   fgColor={getColors(theme).primaryText}
@@ -125,6 +131,20 @@ const ExportQRAccounts = ({
                   value={`${QR_CONTENT_PREFIX}${encode(
                     JSON.stringify(accountsDataQR[pageIndex]),
                   )}`}
+                />
+              </View>
+              <Separator height={16} />
+              <View style={styles.buttonsContainer}>
+                <EllipticButton
+                  style={styles.button}
+                  title={translate('common.previous')}
+                  onPress={movePrevious}
+                />
+                <EllipticButton
+                  style={styles.button}
+                  title={translate('common.next')}
+                  onPress={moveNext}
+                  isWarningButton
                 />
               </View>
             </View>
@@ -155,13 +175,26 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       marginTop: 10,
     },
     disclaimer_two: {
-      marginBottom: 24,
+      marginBottom: 10,
     },
     qrCard: {
       display: 'flex',
       alignItems: 'center',
       padding: 10,
       width: '100%',
+    },
+    qrAccounts: {
+      textAlign: 'center',
+    },
+    button: {
+      width: '40%',
+    },
+    buttonsContainer: {
+      width: '100%',
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      display: 'flex',
+      alignItems: 'center',
     },
   });
 
