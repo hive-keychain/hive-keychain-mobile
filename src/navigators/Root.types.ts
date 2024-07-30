@@ -34,6 +34,7 @@ export interface ModalScreenProps {
   modalContainerStyle?: StyleProp<ViewStyle>;
   additionalWrapperFixedStyle?: StyleProp<ViewStyle>;
   modalPosition?: ModalPosition;
+  bottomHalf?: boolean;
   renderButtonElement?: JSX.Element;
 }
 

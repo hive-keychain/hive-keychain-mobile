@@ -1,24 +1,38 @@
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
-import { Caption } from 'components/ui/Caption';
+import {Caption} from 'components/ui/Caption';
+import CloseButton from 'components/ui/CloseButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import React from 'react';
-import { Linking, StyleSheet, View, useWindowDimensions } from 'react-native';
-import { useThemeContext } from 'src/context/theme.context';
-import { getButtonHeight } from 'src/styles/button';
-import { CARD_PADDING_HORIZONTAL } from 'src/styles/card';
-import { NEUTRAL_WHITE_COLOR, PRIMARY_RED_COLOR } from 'src/styles/colors';
-import { button_link_primary_medium, getFontSizeSmallDevices } from 'src/styles/typography';
-import { hiveConfig } from 'utils/config';
-import { translate } from 'utils/localize';
-import { navigate } from 'utils/navigation';
+import {
+  Linking,
+  Platform,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import {Text} from 'react-native-elements';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import WebView from 'react-native-webview';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {getButtonHeight} from 'src/styles/button';
+import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
+import {NEUTRAL_WHITE_COLOR, PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {
+  button_link_primary_medium,
+  getFontSizeSmallDevices,
+  title_secondary_title_2,
+} from 'src/styles/typography';
+import {hiveConfig} from 'utils/config';
+import {translate} from 'utils/localize';
+import {goBack, navigate} from 'utils/navigation';
 
 const CreateAccount = () => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-
-  const styles = getStyles(width);
+  const insets = useSafeAreaInsets();
+  const styles = getStyles(width, insets);
   return (
     <Background theme={theme} containerStyle={styles.container}>
       <View style={styles.pageContainer}>
@@ -30,7 +44,29 @@ const CreateAccount = () => {
           <EllipticButton
             title={translate('createAccount.on_boarding_title')}
             onPress={() => {
-              Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
+              if (Platform.OS === 'android')
+                Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
+              else
+                navigate('ModalScreen', {
+                  name: `CreateAccountOnHiveio`,
+                  modalContent: (
+                    <>
+                      <View style={styles.webviewContainer}>
+                        <Text style={title_secondary_title_2}>Hive.io</Text>
+                        <CloseButton
+                          theme={Theme.LIGHT}
+                          onPress={() => {
+                            goBack();
+                          }}
+                          additionalContainerStyle={{paddingTop: 5}}
+                        />
+                      </View>
+                      <WebView source={{uri: hiveConfig.CREATE_ACCOUNT_URL}} />
+                    </>
+                  ),
+                  bottomHalf: false,
+                  additionalWrapperFixedStyle: {maxHeight: '100%'},
+                });
             }}
             style={styles.outlineButton}
             additionalTextStyle={styles.textOutLineButton}
@@ -50,7 +86,7 @@ const CreateAccount = () => {
   );
 };
 
-const getStyles = (width: number) =>
+const getStyles = (width: number, insets: EdgeInsets) =>
   StyleSheet.create({
     container: {
       display: 'flex',
@@ -69,7 +105,7 @@ const getStyles = (width: number) =>
     },
     textButtonFilled: {
       ...button_link_primary_medium,
-      fontSize: getFontSizeSmallDevices(width,13),
+      fontSize: getFontSizeSmallDevices(width, 13),
       color: NEUTRAL_WHITE_COLOR,
     },
     buttonsContainer: {
@@ -91,8 +127,16 @@ const getStyles = (width: number) =>
     },
     textOutLineButton: {
       ...button_link_primary_medium,
-      fontSize: getFontSizeSmallDevices(width,13),
+      fontSize: getFontSizeSmallDevices(width, 13),
       color: '#212838',
+    },
+    webviewContainer: {
+      backgroundColor: 'white',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingTop: insets.top,
+      paddingHorizontal: 20,
     },
   });
 
