@@ -6,6 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {showFloatingBar} from 'actions/floatingBar';
 import {
   forgetRequestedOperation,
+  getSettings,
   getTokensBackgroundColors,
   setRpc as setRpcAction,
 } from 'actions/index';
@@ -54,10 +55,12 @@ const App = ({
   hiveEngineRpc,
   accountHistoryAPIRpc,
   getTokensBackgroundColors,
+  getSettings,
 }: PropsFromRedux) => {
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
 
   useEffect(() => {
+    getSettings();
     initApplication();
   }, []);
 
@@ -187,6 +190,7 @@ const connector = connect(mapStateToProps, {
   setSwitchToRpc,
   setActiveRpc: setRpcAction,
   getTokensBackgroundColors,
+  getSettings,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
