@@ -14,7 +14,7 @@
     "createAccount": "New Account"
   },
   "createAccount": {
-    "caption": "You may choose to create an account on your own or with the help of a friend.",
+    "caption": "Choose your favorite account creation method.",
     "on_boarding_title": "Create on hive.io",
     "peer_to_peer_on_boarding_title": "Create with a friend"
   },
