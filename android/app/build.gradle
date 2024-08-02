@@ -136,10 +136,10 @@ android {
 
     defaultConfig {
         applicationId "com.mobilekeychain"
-        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 114
-        versionName "2.2.3"
+        minSdkVersion 24
+        versionCode 115
+        versionName "2.2.6"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
     }
@@ -147,11 +147,13 @@ android {
     productFlavors {
         prod {
             dimension "version"
+        minSdkVersion 21
         }
         dev {
             dimension "version"
             versionNameSuffix "-dev"
             applicationIdSuffix ".dev"
+            minSdkVersion 24
         }
     }
     splits {
