@@ -229,7 +229,6 @@ const getStyles = (
 
 const connector = connect(
   (state: RootState) => {
-    console.log(state.settings);
     return {
       show: state.floatingBar.show,
       isProposalRequestDisplayed: state.floatingBar.isProposalRequestDisplayed,
