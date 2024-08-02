@@ -137,7 +137,6 @@ android {
     defaultConfig {
         applicationId "com.mobilekeychain"
         targetSdkVersion rootProject.ext.targetSdkVersion
-        minSdkVersion 24
         versionCode 115
         versionName "2.2.4"
         multiDexEnabled true
