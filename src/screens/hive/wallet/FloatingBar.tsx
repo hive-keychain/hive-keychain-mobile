@@ -55,7 +55,6 @@ const Floating = ({
   );
   const anim = useRef(new Animated.Value(0)).current;
   const [isTop, setIsTop] = useState(false);
-  console.log('show', showSwap);
   const getActiveStyle = (link: FloatingBarLink) =>
     activeLink === link ? styles.active : undefined;
 
