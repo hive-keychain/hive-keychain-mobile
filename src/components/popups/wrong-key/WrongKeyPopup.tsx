@@ -6,11 +6,17 @@ import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
 import {ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import {
+  Linking,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {getColors} from 'src/styles/colors';
+import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {
   getFontSizeSmallDevices,
@@ -65,6 +71,7 @@ const WrongKeyPopup = ({
           extendedAccount,
           noKeyCheck,
         );
+
         if (foundWrongKey[account.name!]?.length > 0) {
           setDisplayWrongKeyPopup(foundWrongKey);
           break;
@@ -150,6 +157,18 @@ const WrongKeyPopup = ({
               },
             )}
           </Text>
+          <Text style={styles.baseText}>
+            {translate('popup.vesting_routes.warning_message')}
+            <Text
+              style={[styles.baseText, styles.highlight]}
+              onPress={() => {
+                Linking.openURL('https://discord.gg/UpXnBQtJw7');
+              }}>
+              {translate('common.discord_server')}
+            </Text>
+            .
+          </Text>
+
           <Separator height={30} />
           <View style={styles.buttonsContainer}>
             <EllipticButton
@@ -178,6 +197,12 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       alignItems: 'center',
       justifyContent: 'center',
       paddingHorizontal: 16,
+    },
+    baseText: {
+      color: getColors(theme).secondaryText,
+    },
+    highlight: {
+      color: PRIMARY_RED_COLOR,
     },
     title: {
       textAlign: 'center',
