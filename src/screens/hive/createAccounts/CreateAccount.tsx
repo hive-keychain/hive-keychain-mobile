@@ -9,12 +9,13 @@ import {
   Linking,
   Platform,
   StyleSheet,
-  View,
   useWindowDimensions,
+  View,
 } from 'react-native';
 import {Text} from 'react-native-elements';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import WebView from 'react-native-webview';
+import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonHeight} from 'src/styles/button';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
@@ -24,11 +25,13 @@ import {
   getFontSizeSmallDevices,
   title_secondary_title_2,
 } from 'src/styles/typography';
+import {RootState} from 'store';
 import {hiveConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
+import {PlatformsUtils} from 'utils/platforms.utils';
 
-const CreateAccount = () => {
+const CreateAccount = ({showExternalOnboarding}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -41,36 +44,41 @@ const CreateAccount = () => {
           <Caption text={'createAccount.caption'} />
         </View>
         <View style={[styles.buttonsContainer]}>
-          <EllipticButton
-            title={translate('createAccount.on_boarding_title')}
-            onPress={() => {
-              if (Platform.OS === 'android')
-                Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
-              else
-                navigate('ModalScreen', {
-                  name: `CreateAccountOnHiveio`,
-                  modalContent: (
-                    <>
-                      <View style={styles.webviewContainer}>
-                        <Text style={title_secondary_title_2}>Hive.io</Text>
-                        <CloseButton
-                          theme={Theme.LIGHT}
-                          onPress={() => {
-                            goBack();
-                          }}
-                          additionalContainerStyle={{paddingTop: 5}}
+          {PlatformsUtils.showDependingOnPlatform(
+            <EllipticButton
+              title={translate('createAccount.on_boarding_title')}
+              onPress={() => {
+                if (Platform.OS === 'android')
+                  Linking.openURL(hiveConfig.CREATE_ACCOUNT_URL);
+                else
+                  navigate('ModalScreen', {
+                    name: `CreateAccountOnHiveio`,
+                    modalContent: (
+                      <>
+                        <View style={styles.webviewContainer}>
+                          <Text style={title_secondary_title_2}>Hive.io</Text>
+                          <CloseButton
+                            theme={Theme.LIGHT}
+                            onPress={() => {
+                              goBack();
+                            }}
+                            additionalContainerStyle={{paddingTop: 5}}
+                          />
+                        </View>
+                        <WebView
+                          source={{uri: hiveConfig.CREATE_ACCOUNT_URL}}
                         />
-                      </View>
-                      <WebView source={{uri: hiveConfig.CREATE_ACCOUNT_URL}} />
-                    </>
-                  ),
-                  bottomHalf: false,
-                  additionalWrapperFixedStyle: {maxHeight: '100%'},
-                });
-            }}
-            style={styles.outlineButton}
-            additionalTextStyle={styles.textOutLineButton}
-          />
+                      </>
+                    ),
+                    bottomHalf: false,
+                    additionalWrapperFixedStyle: {maxHeight: '100%'},
+                  });
+              }}
+              style={styles.outlineButton}
+              additionalTextStyle={styles.textOutLineButton}
+            />,
+            showExternalOnboarding,
+          )}
           <Separator height={height * 0.015} />
           <EllipticButton
             title={translate('createAccount.peer_to_peer_on_boarding_title')}
@@ -140,4 +148,13 @@ const getStyles = (width: number, insets: EdgeInsets) =>
     },
   });
 
-export default CreateAccount;
+const connector = connect((state: RootState) => {
+  return {
+    showExternalOnboarding:
+      state.settings.mobileSettings?.platformRelevantFeatures
+        ?.externalOnboarding,
+  };
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(CreateAccount);

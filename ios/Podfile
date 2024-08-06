@@ -11,7 +11,7 @@ target 'mobileKeychain' do
   permissions_path = '../node_modules/react-native-permissions/ios'
   use_frameworks! :linkage => :static
   setup_permissions(['Camera'])
-  use_react_native!(:path => config["reactNativePath"])
+  use_react_native!(:path => config[:reactNativePath])
  
 
 

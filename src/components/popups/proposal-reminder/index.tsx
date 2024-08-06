@@ -57,7 +57,7 @@ const ProposalReminder = ({
     const notified = await getNotifiedVoters();
     if (
       !notified.includes(user.name) &&
-      !user.account.proxy.length &&
+      !user.account?.proxy?.length &&
       toHP(user.account.vesting_shares.toString(), globalProps) > 100 &&
       !(await hasVotedForProposal(user.name, KEYCHAIN_PROPOSAL))
     ) {

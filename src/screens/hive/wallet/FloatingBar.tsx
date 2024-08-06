@@ -42,6 +42,7 @@ const Floating = ({
   closeAllTabs,
   rpc,
   isProposalRequestDisplayed,
+  showSwap,
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const {theme} = useThemeContext();
@@ -54,7 +55,6 @@ const Floating = ({
   );
   const anim = useRef(new Animated.Value(0)).current;
   const [isTop, setIsTop] = useState(false);
-
   const getActiveStyle = (link: FloatingBarLink) =>
     activeLink === link ? styles.active : undefined;
 
@@ -166,7 +166,7 @@ const Floating = ({
           </Text>
         )}
       </View>
-      {PlatformsUtils.hideOniOS(
+      {PlatformsUtils.showDependingOnPlatform(
         <View style={[styles.itemContainer, getActiveStyle('swap_buy')]}>
           <Icon
             theme={theme}
@@ -181,6 +181,7 @@ const Floating = ({
             </Text>
           )}
         </View>,
+        showSwap,
       )}
     </Animated.View>
   ) : null;
@@ -234,6 +235,7 @@ const connector = connect(
       isLoadingScreen: state.floatingBar.isLoadingScreen,
       isDrawerOpen: state.floatingBar.isDrawerOpened,
       rpc: state.settings.rpc,
+      showSwap: state.settings.mobileSettings?.platformRelevantFeatures?.swap,
     };
   },
   {showFloatingBar, closeAllTabs},

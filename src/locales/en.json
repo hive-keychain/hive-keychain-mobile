@@ -14,7 +14,7 @@
     "createAccount": "New Account"
   },
   "createAccount": {
-    "caption": "You may choose to create an account on your own or with the help of a friend.",
+    "caption": "Choose your favorite account creation method.",
     "on_boarding_title": "Create on hive.io",
     "peer_to_peer_on_boarding_title": "Create with a friend"
   },
@@ -1076,7 +1076,7 @@
     },
     "vesting_routes": {
       "title": "Your vesting routes have changed",
-      "warning_message": "If you didn't change them, please seek assistance on the Hive ",
+      "warning_message": "If you didn't change them yourself, please seek assistance on the Hive ",
       "account_item_label": "Account",
       "account_item_old_route_title": "Old Route",
       "account_item_new_route_title": "New Route",
