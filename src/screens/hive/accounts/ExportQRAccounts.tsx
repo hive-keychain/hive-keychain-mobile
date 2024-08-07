@@ -113,7 +113,7 @@ const ExportQRAccounts = ({
                 {translate('components.export_qr_accounts.qr_disclaimer2')}
               </Text>
               <View style={{alignItems: 'center'}}>
-                <View>
+                <View style={{height: 50}}>
                   <Text style={[styles.textBase, styles.qrAccounts]}>
                     {accountsDataQR[pageIndex].index}/
                     {accountsDataQR[pageIndex].total} : @
@@ -136,12 +136,15 @@ const ExportQRAccounts = ({
               <Separator height={16} />
               <View style={styles.buttonsContainer}>
                 <EllipticButton
-                  style={styles.button}
+                  style={[styles.button, pageIndex === 0 && styles.hidden]}
                   title={translate('common.previous')}
                   onPress={movePrevious}
                 />
                 <EllipticButton
-                  style={styles.button}
+                  style={[
+                    styles.button,
+                    pageIndex === accountsDataQR.length - 1 && styles.hidden,
+                  ]}
                   title={translate('common.next')}
                   onPress={moveNext}
                   isWarningButton
@@ -164,6 +167,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       justifyContent: 'center',
       width: '100%',
     },
+    hidden: {opacity: 0},
     textBase: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_3,
@@ -190,7 +194,8 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       width: '40%',
     },
     buttonsContainer: {
-      width: '100%',
+      width: '85%',
+      marginTop: 20,
       justifyContent: 'space-between',
       flexDirection: 'row',
       display: 'flex',
