@@ -181,11 +181,13 @@ const generateQRCodeFromAccount = (account: Account) => {
   let acc: Account = {name: account.name, keys: {}};
   if (KeyUtils.isExportable(account.keys.active, account.keys.activePubkey)) {
     acc.keys.active = account.keys.active;
-    acc.keys.activePubkey = account.keys.activePubkey;
+    if (account.keys.activePubkey?.startsWith('@'))
+      acc.keys.activePubkey = account.keys.activePubkey;
   }
   if (KeyUtils.isExportable(account.keys.posting, account.keys.postingPubkey)) {
     acc.keys.posting = account.keys.posting;
-    acc.keys.postingPubkey = account.keys.postingPubkey;
+    if (account.keys.postingPubkey?.startsWith('@'))
+      acc.keys.postingPubkey = account.keys.postingPubkey;
   }
   if (KeyUtils.isExportable(account.keys.memo, account.keys.memoPubkey)) {
     acc.keys.memo = account.keys.memo;
