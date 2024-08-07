@@ -139,9 +139,9 @@ export default ({
                 ? translate('keys.using_authorized_account', {
                     authorizedAccount: publicKey,
                   })
-                : publicKey.substring(0, 15) +
+                : publicKey?.substring(0, 15) +
                   '...' +
-                  publicKey.substring(publicKey.length - 15, publicKey.length)}
+                  publicKey?.substring(publicKey.length - 15, publicKey.length)}
             </Text>
           </CopyKey>
           <Separator height={20} />

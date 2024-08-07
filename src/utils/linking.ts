@@ -52,7 +52,6 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
       const op = url.replace('hive://sign/op/', '');
       const stringOp = Buffer.from(op, 'base64').toString();
       const opJson = JSON.parse(stringOp);
-      console.log(opJson);
       processQRCodeOp(opJson);
     }
   } else if (url.startsWith('keychain://create_account=')) {
@@ -151,16 +150,24 @@ const handleAddAccountsQR = async (
           KeyUtils.isAuthorizedAccount(objAcc.keys.postingPubkey))
       ) {
         const localAccounts = ((await store.getState()) as RootState).accounts;
-
-        for (let i = 0; i < localAccounts.length; i++) {
-          const element = localAccounts[i];
-          keys = await AccountUtils.addAuthorizedAccount(
-            objAcc.name,
-            element.name,
-            localAccounts,
-            SimpleToast,
-          );
-        }
+        const authorizedAccount = objAcc.keys.activePubkey?.startsWith('@')
+          ? objAcc.keys.activePubkey?.replace('@', '')
+          : objAcc.keys.postingPubkey?.replace('@', '');
+        const regularKeys = await validateFromObject({
+          name: objAcc.name,
+          keys: {
+            posting: !objAcc.keys.postingPubkey && objAcc.keys.posting,
+            active: !objAcc.keys.activePubkey && objAcc.keys.active,
+            memo: objAcc.keys.memo,
+          },
+        });
+        const authorizedKeys = await AccountUtils.addAuthorizedAccount(
+          objAcc.name,
+          authorizedAccount,
+          localAccounts,
+          SimpleToast,
+        );
+        keys = {...authorizedKeys, ...regularKeys};
         if (!KeyUtils.hasKeys(keys)) {
           SimpleToast.show(
             translate('toast.no_accounts_no_auth', {username: objAcc.name}),
