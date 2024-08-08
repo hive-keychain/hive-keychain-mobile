@@ -4,6 +4,7 @@ import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
+import Spoiler from 'components/ui/Spoiler';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
@@ -83,45 +84,61 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
         <FocusAwareStatusBar />
         <UserDropdown />
         <Separator />
-        <CheckBoxPanel
-          checked={claimRewards}
-          onPress={
-            claimRewardsErrorMessage
-              ? () =>
-                  Toast.show(translate(claimRewardsErrorMessage), Toast.LONG)
-              : () => saveClaims(!claimRewards, claimAccounts, claimSavings)
-          }
-          containerStyle={{flexGrow: undefined}}
-          title="wallet.claim.enable_autoclaim_rewards"
-          subTitle="wallet.claim.enable_autoclaim_rewards_info"
-        />
-        <CheckBoxPanel
-          checked={claimAccounts}
-          onPress={
-            claimAccountErrorMessage
-              ? () =>
-                  Toast.show(translate(claimAccountErrorMessage), Toast.LONG)
-              : () => saveClaims(claimRewards, !claimAccounts, claimSavings)
-          }
-          title="wallet.claim.enable_autoclaim_accounts"
-          containerStyle={{flexGrow: undefined}}
-          subTitle={translate('wallet.claim.enable_autoclaim_accounts_info', {
-            MIN_RC_PCT: ClaimsConfig.freeAccount.MIN_RC_PCT,
-          })}
-          skipSubtitleTranslation
-        />
-        <CheckBoxPanel
-          checked={claimSavings}
-          containerStyle={{flexGrow: undefined}}
-          onPress={
-            claimSavingsErrorMessage
-              ? () =>
-                  Toast.show(translate(claimSavingsErrorMessage), Toast.LONG)
-              : () => saveClaims(claimRewards, claimAccounts, !claimSavings)
-          }
-          title="wallet.claim.enable_autoclaim_savings"
-          subTitle="wallet.claim.enable_autoclaim_savings_info"
-        />
+        <Spoiler initiallyOpened title="HIVE">
+          <>
+            <CheckBoxPanel
+              checked={claimRewards}
+              onPress={
+                claimRewardsErrorMessage
+                  ? () =>
+                      Toast.show(
+                        translate(claimRewardsErrorMessage),
+                        Toast.LONG,
+                      )
+                  : () => saveClaims(!claimRewards, claimAccounts, claimSavings)
+              }
+              containerStyle={{flexGrow: undefined}}
+              title="wallet.claim.enable_autoclaim_rewards"
+              subTitle="wallet.claim.enable_autoclaim_rewards_info"
+            />
+            <CheckBoxPanel
+              checked={claimAccounts}
+              onPress={
+                claimAccountErrorMessage
+                  ? () =>
+                      Toast.show(
+                        translate(claimAccountErrorMessage),
+                        Toast.LONG,
+                      )
+                  : () => saveClaims(claimRewards, !claimAccounts, claimSavings)
+              }
+              title="wallet.claim.enable_autoclaim_accounts"
+              containerStyle={{flexGrow: undefined}}
+              subTitle={translate(
+                'wallet.claim.enable_autoclaim_accounts_info',
+                {
+                  MIN_RC_PCT: ClaimsConfig.freeAccount.MIN_RC_PCT,
+                },
+              )}
+              skipSubtitleTranslation
+            />
+            <CheckBoxPanel
+              checked={claimSavings}
+              containerStyle={{flexGrow: undefined}}
+              onPress={
+                claimSavingsErrorMessage
+                  ? () =>
+                      Toast.show(
+                        translate(claimSavingsErrorMessage),
+                        Toast.LONG,
+                      )
+                  : () => saveClaims(claimRewards, claimAccounts, !claimSavings)
+              }
+              title="wallet.claim.enable_autoclaim_savings"
+              subTitle="wallet.claim.enable_autoclaim_savings_info"
+            />
+          </>
+        </Spoiler>
       </View>
     </Background>
   );
