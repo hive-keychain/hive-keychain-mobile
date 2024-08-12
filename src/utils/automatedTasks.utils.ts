@@ -111,6 +111,51 @@ const canClaimAccountErrorMessage = (
   }
 };
 
+const saveUserAutoStake = async (username: string, value: boolean) => {
+  try {
+    const autoStake = await AsyncStorage.getItem(
+      KeychainStorageKeyEnum.HE_AUTO_STAKE,
+    );
+    let autoStakeUsers: any = autoStake ? JSON.parse(autoStake) : {};
+    if (Object.keys(autoStakeUsers).length > 0) {
+      autoStakeUsers[username] = value;
+    } else {
+      autoStakeUsers = {
+        ...autoStakeUsers,
+        [username]: value,
+      };
+    }
+    AsyncStorage.setItem(
+      KeychainStorageKeyEnum.HE_AUTO_STAKE,
+      JSON.stringify(autoStakeUsers),
+    );
+  } catch (e) {}
+};
+
+const getUserAutoStake = async (username: string) => {
+  try {
+    const autoStake = JSON.parse(
+      await AsyncStorage.getItem(KeychainStorageKeyEnum.HE_AUTO_STAKE),
+    );
+    return autoStake && autoStake[username] ? true : false;
+  } catch (e) {
+    return false;
+  }
+};
+
+const getUserAutoStakeList = async (username: string) => {
+  try {
+    const autoStakeList = JSON.parse(
+      await AsyncStorage.getItem(KeychainStorageKeyEnum.HE_AUTO_STAKE),
+    );
+    return autoStakeList && autoStakeList[username]
+      ? autoStakeList[username]
+      : [];
+  } catch (e) {
+    return [];
+  }
+};
+
 const AutomatedTasksUtils = {
   getClaims,
   saveClaims,
@@ -118,6 +163,9 @@ const AutomatedTasksUtils = {
   canClaimSavingsErrorMessage,
   canClaimAccountErrorMessage,
   canClaimRewardsErrorMessage,
+  getUserAutoStakeList,
+  getUserAutoStake,
+  saveUserAutoStake,
 };
 
 export default AutomatedTasksUtils;

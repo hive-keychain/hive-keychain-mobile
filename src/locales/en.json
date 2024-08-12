@@ -546,7 +546,11 @@
       "rpc": "RPC Nodes",
       "automated_tasks": {
         "title": "Automated tasks",
-        "disclaimer": "Setup automated tasks that will run every hour"
+        "disclaimer": "Setup automated tasks that will run every hour",
+        "he_auto": {
+          "title": "Auto Staking",
+          "subtitle": "Automatically staking your tokens can increase your gains"
+        }
       },
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",

@@ -1,24 +1,30 @@
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
+import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import UserDropdown from 'components/form/UserDropdown';
+import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import Spoiler from 'components/ui/Spoiler';
+import SwapCurrencyImage from 'components/ui/SwapCurrencyImage';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import Toast from 'react-native-simple-toast';
-import {ConnectedProps, connect} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
+import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {ICONMINDIMENSIONS} from 'src/styles/icon';
 import {title_primary_title_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import AutomatedTasksUtils from 'utils/automatedTasks.utils';
 import {ClaimsConfig} from 'utils/config';
 import {translate} from 'utils/localize';
-const AutomatedTasks = ({active}: PropsFromRedux) => {
+
+const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
   const [claimRewards, setClaimRewards] = useState(false);
@@ -33,7 +39,10 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
   const [claimRewardsErrorMessage, setClaimRewardsErrorMessage] = useState<
     string
   >(undefined);
-
+  const [enabledAutoStake, setEnabledAutoStake] = useState(false);
+  const [autoStakeTokenList, setAutoStakeTokenList] = useState<
+    DropdownModalItem[]
+  >([]);
   useEffect(() => {
     setClaimAccountErrorMessage(undefined);
     setClaimSavingsErrorMessage(undefined);
@@ -55,6 +64,14 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
     setClaimRewardsErrorMessage(
       AutomatedTasksUtils.canClaimRewardsErrorMessage(active),
     );
+    setEnabledAutoStake(
+      await AutomatedTasksUtils.getUserAutoStake(active.name!),
+    );
+  };
+
+  const handleSetAutoStake = async (enable: boolean) => {
+    setEnabledAutoStake(enable);
+    await AutomatedTasksUtils.saveUserAutoStake(active.name!, enable);
   };
 
   const saveClaims = async (
@@ -76,7 +93,7 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
 
   return (
     <Background theme={theme}>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Caption
           text={'settings.settings.automated_tasks.disclaimer'}
           hideSeparator
@@ -139,7 +156,78 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
             />
           </>
         </Spoiler>
-      </View>
+        <Separator />
+        <Spoiler title="Hive Engine">
+          <>
+            <CheckBoxPanel
+              title="settings.settings.automated_tasks.he_auto.title"
+              checked={enabledAutoStake}
+              onPress={() => {
+                handleSetAutoStake(!enabledAutoStake);
+              }}
+              subTitle="settings.settings.automated_tasks.he_auto.subtitle"
+            />
+            {enabledAutoStake && (
+              <View>
+                <View>
+                  <DropdownModal
+                    enableSearch
+                    dropdownTitle="common.token"
+                    dropdownIconScaledSize={ICONMINDIMENSIONS}
+                    additionalDropdowContainerStyle={{paddingHorizontal: 8}}
+                    selected={
+                      {
+                        value: undefined,
+                        label: 'Select a token',
+                        icon: null,
+                      } as DropdownModalItem
+                    }
+                    onSelected={(item) => {
+                      if (
+                        !autoStakeTokenList?.find((a) => a.value === item.value)
+                      ) {
+                        const copyAutoStakeList = [...autoStakeTokenList];
+                        copyAutoStakeList.unshift(item);
+                        // setAndSaveAutoStakeTokenList(copyAutoStakeList);
+                      }
+                    }}
+                    list={tokens
+                      .filter((token) => token.stakingEnabled)
+                      .map((token) => {
+                        return {
+                          value: token.symbol,
+                          label: token.symbol,
+                          icon: (
+                            <SwapCurrencyImage
+                              uri={token.metadata.icon}
+                              symbol={token.symbol}
+                              svgHeight={20}
+                              svgWidth={20}
+                            />
+                          ),
+                        } as DropdownModalItem;
+                      })}
+                    drawLineBellowSelectedItem
+                    showSelectedIcon={
+                      <Icon
+                        name={Icons.CHECK}
+                        theme={theme}
+                        width={18}
+                        height={18}
+                        strokeWidth={2}
+                        color={PRIMARY_RED_COLOR}
+                      />
+                    }
+                    additionalLineStyle={styles.bottomLineDropdownItem}
+                  />
+                </View>
+                <View></View>
+              </View>
+            )}
+          </>
+        </Spoiler>
+        <Separator />
+      </ScrollView>
     </Background>
   );
 };
@@ -151,10 +239,17 @@ const getStyles = (theme: Theme) =>
       ...title_primary_title_1,
       color: getColors(theme).primaryText,
     },
+    bottomLineDropdownItem: {
+      borderWidth: 1,
+      width: '85%',
+      borderColor: getColors(theme).lineSeparatorStroke,
+      alignSelf: 'center',
+    },
   });
 
 const mapStateToProps = (state: RootState) => ({
   active: state.activeAccount,
+  tokens: state.tokens,
 });
 
 const connector = connect(mapStateToProps);
