@@ -165,7 +165,7 @@ const Browser = ({
   };
 
   return (
-    <>
+    <View style={styles.container}>
       <KeyboardAvoidingView
         style={[styles.container]}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -226,12 +226,16 @@ const Browser = ({
           theme={theme}
         />
       </KeyboardAvoidingView>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {width: '100%', height: '100%'},
+  container: {
+    width: '100%',
+    height: '100%',
+    flexGrow: 1,
+  },
 });
 
 export default Browser;
