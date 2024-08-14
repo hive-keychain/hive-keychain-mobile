@@ -1,5 +1,5 @@
 import {WitnessUpdateOperation} from '@hiveio/dhive';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
 import keychain from 'api/keychain';
 import moment from 'moment';
@@ -51,8 +51,8 @@ export const getWitnessInfo = async (
       ),
       3,
     ),
-    blockMissed: resultFromBlockchain.total_missed,
-    lastBlock: resultFromBlockchain.last_confirmed_block_num,
+    blockMissed: resultFromBlockchain.total_missed || 0,
+    lastBlock: resultFromBlockchain.last_confirmed_block_num || 0,
     lastBlockUrl: `https://hiveblocks.com/b/${resultFromBlockchain.last_confirmed_block_num}`,
     priceFeed: fromNaiAndSymbol(resultFromBlockchain.hbd_exchange_rate.base),
     priceFeedUpdatedAt: moment(lastFeedUpdate),
@@ -72,33 +72,33 @@ export const getWitnessInfo = async (
       hbdInterestRate: resultFromBlockchain.props.hbd_interest_rate / 100,
     },
     rewards: {
-      lastMonthValue: resultFromAPI.data.lastMonthValue,
+      lastMonthValue: resultFromAPI.data.lastMonthValue || 0,
       lastMonthInHP: toFormattedHP(
-        resultFromAPI.data.lastMonthValue,
+        resultFromAPI.data.lastMonthValue || 0,
         globalProperties.globals!,
       ),
       lastMonthInUSD: getUSDFromVests(
-        resultFromAPI.data.lastMonthValue,
+        resultFromAPI.data.lastMonthValue || 0,
         globalProperties,
         currencyPrices,
       ),
-      lastWeekValue: resultFromAPI.data.lastWeekValue,
+      lastWeekValue: resultFromAPI.data.lastWeekValue || 0,
       lastWeekInHP: toFormattedHP(
-        resultFromAPI.data.lastWeekValue,
+        resultFromAPI.data.lastWeekValue || 0,
         globalProperties.globals!,
       ),
       lastWeekInUSD: getUSDFromVests(
-        resultFromAPI.data.lastWeekValue,
+        resultFromAPI.data.lastWeekValue || 0,
         globalProperties,
         currencyPrices,
       ),
-      lastYearValue: resultFromAPI.data.lastYearValue,
+      lastYearValue: resultFromAPI.data.lastYearValue || 0,
       lastYearInHP: toFormattedHP(
-        resultFromAPI.data.lastYearValue,
+        resultFromAPI.data.lastYearValue || 0,
         globalProperties.globals!,
       ),
       lastYearInUSD: getUSDFromVests(
-        resultFromAPI.data.lastYearValue,
+        resultFromAPI.data.lastYearValue || 0,
         globalProperties,
         currencyPrices,
       ),

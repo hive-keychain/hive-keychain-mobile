@@ -30,6 +30,8 @@ type Props = {
   addTab: () => void;
   tabs: number;
   theme: Theme;
+  desktopMode: boolean;
+  toggleDesktopMode: () => void;
 };
 const Footer = ({
   canGoBack,
@@ -43,6 +45,8 @@ const Footer = ({
   tabs,
   clearCache,
   theme,
+  desktopMode,
+  toggleDesktopMode,
 }: Props & PropsFromRedux) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(height, insets, theme);
@@ -109,6 +113,14 @@ const Footer = ({
           reload();
         }}
         {...styles.icon}
+        color={PRIMARY_RED_COLOR}
+      />
+      <Icon
+        theme={theme}
+        name={desktopMode ? Icons.MOBILE : Icons.DESKTOP}
+        onPress={toggleDesktopMode}
+        width={26}
+        height={26}
         color={PRIMARY_RED_COLOR}
       />
       <TouchableOpacity activeOpacity={1} onPress={manageTabs}>

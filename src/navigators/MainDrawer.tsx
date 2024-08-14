@@ -15,6 +15,7 @@ import Accounts from './mainDrawerStacks/Accounts';
 import AddAccount from './mainDrawerStacks/AddAccount';
 import CreateAccount from './mainDrawerStacks/CreateAccount';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
+import Help from './mainDrawerStacks/Help';
 import Operation from './mainDrawerStacks/Operation';
 import SwapBuyStack from './mainDrawerStacks/SwapBuyStack';
 import SwapHistory from './mainDrawerStacks/SwapHistory';
@@ -32,6 +33,8 @@ export default () => {
     <Drawer.Navigator
       drawerStyle={styles.drawer}
       drawerPosition="left"
+      screenOptions={{swipeEnabled: false}}
+      drawerType="front"
       drawerContentOptions={{
         inactiveTintColor: getColors(theme).secondaryText,
         itemStyle: styles.item,
@@ -45,6 +48,7 @@ export default () => {
         }}
         component={BrowserStack}
       />
+
       <Drawer.Screen
         name="Governance"
         options={{
@@ -67,10 +71,20 @@ export default () => {
         }}
         component={AboutStack}
       />
+      <Drawer.Screen
+        name="Help"
+        options={{
+          title: translate('navigation.help'),
+        }}
+        component={Help}
+      />
       <Drawer.Screen name="Accounts" component={Accounts} />
       <Drawer.Screen
         name="AccountManagementScreen"
         component={AccountManagementStack}
+        options={{
+          unmountOnBlur: true,
+        }}
       />
       <Drawer.Screen name="AddAccountStack" component={AddAccount} />
       <Drawer.Screen
@@ -89,7 +103,13 @@ export default () => {
           unmountOnBlur: true,
         }}
       />
-      <Drawer.Screen name="TemplateStack" component={TemplateStack} />
+      <Drawer.Screen
+        name="TemplateStack"
+        component={TemplateStack}
+        options={{
+          unmountOnBlur: true,
+        }}
+      />
       <Drawer.Screen
         name="SwapBuyStack"
         component={SwapBuyStack}

@@ -1,4 +1,5 @@
 import {AppThunk} from 'src/hooks/redux';
+import {EcosystemUtils} from 'utils/ecosystem.utils';
 import {navigate} from 'utils/navigation';
 import {ActionPayload, BrowserPayload, Page, TabFields} from './interfaces';
 import {
@@ -9,6 +10,7 @@ import {
   CLEAR_BROWSER_HISTORY,
   CLOSE_ALL_BROWSER_TABS,
   CLOSE_BROWSER_TAB,
+  GET_ECOSYSTEM,
   REMOVE_FROM_BROWSER_FAVORITES,
   SET_ACTIVE_BROWSER_TAB,
   UPDATE_BROWSER_TAB,
@@ -106,7 +108,15 @@ export const changeTab = (id: number) => {
   };
 };
 
-export const updateTab = (id: number, data: TabFields) => {
+let acceptUpdateTab = true;
+export const updateTab = (id: number, data: TabFields, stall?: boolean) => {
+  if (!acceptUpdateTab) return {type: 'ABORTED'};
+  if (stall) {
+    acceptUpdateTab = false;
+    setTimeout(() => {
+      acceptUpdateTab = true;
+    }, 1000);
+  }
   const action: ActionPayload<BrowserPayload> = {
     type: UPDATE_BROWSER_TAB,
     payload: {id, data},
@@ -120,4 +130,12 @@ export const showManagementScreen = (showManagement: boolean) => {
     payload: {showManagement},
   };
   return action;
+};
+
+export const getEcosystem = (chain: string): AppThunk => async (dispatch) => {
+  const eco = await EcosystemUtils.getDappList(chain);
+  dispatch({
+    type: GET_ECOSYSTEM,
+    payload: eco,
+  });
 };

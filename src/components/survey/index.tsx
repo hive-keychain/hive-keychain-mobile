@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import EllipticButton from 'components/form/EllipticButton';
 import moment from 'moment';
 import {WalletNavigation} from 'navigators/MainDrawer.types';

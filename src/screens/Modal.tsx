@@ -23,19 +23,20 @@ export default ({navigation, route}: ModalNavigationProps) => {
   const wrapperFixedStyle = route.params?.additionalWrapperFixedStyle;
   const modalPosition = route.params?.modalPosition;
   const buttonElement = route.params?.renderButtonElement;
+  const bottomHalf = route.params?.bottomHalf;
 
   if (!onForceCloseModal && data?.onForceCloseModal) {
     onForceCloseModal = data.onForceCloseModal;
   }
 
   if (
-    (name &&
-      (name.toLowerCase().includes('operation') ||
-        name.includes(ModalComponent.HAS_INFO) ||
-        name.includes(ModalComponent.SWAP_INFO))) ||
-    name.includes(ModalComponent.BROADCAST) ||
-    name.includes(ModalComponent.HAS_AUTH) ||
-    name.includes(ModalComponent.HAS_ERROR)
+    name &&
+    (name.toLowerCase().includes('operation') ||
+      name.includes(ModalComponent.HAS_INFO) ||
+      name.includes(ModalComponent.SWAP_INFO) ||
+      name.includes(ModalComponent.BROADCAST) ||
+      name.includes(ModalComponent.HAS_AUTH) ||
+      name.includes(ModalComponent.HAS_ERROR))
   ) {
     containerStyle = {
       borderWidth: 1,
@@ -77,10 +78,11 @@ export default ({navigation, route}: ModalNavigationProps) => {
         })
       }
       fixedHeight={fixedHeight}
-      bottomHalf={true}
+      bottomHalf={bottomHalf === undefined ? true : bottomHalf}
       containerStyle={containerStyle}
       additionalWrapperFixedStyle={wrapperFixedStyle}
       modalPosition={modalPosition}
+      theme={theme}
       buttonElement={buttonElement}>
       <StatusBar
         barStyle={getColors(theme).barStyle}

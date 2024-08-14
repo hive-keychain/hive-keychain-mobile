@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Rpc} from 'actions/interfaces';
 import {setAccountHistoryRpc, setHiveEngineRpc, setRpc} from 'actions/settings';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';

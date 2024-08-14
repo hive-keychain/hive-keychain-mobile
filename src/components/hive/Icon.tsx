@@ -6,6 +6,7 @@ import ArrowUpIcon from 'assets/new_UI/arrow-up.svg';
 import AtIcon from 'assets/new_UI/at.svg';
 import BackTimeIcon from 'assets/new_UI/back_time.svg';
 import BankIcon from 'assets/new_UI/bank.svg';
+import TutorialIcon from 'assets/new_UI/book.svg';
 import CandleIcon from 'assets/new_UI/candle.svg';
 import CategoryIcon from 'assets/new_UI/category.svg';
 import DecryptIcon from 'assets/new_UI/decrypt.svg';
@@ -16,6 +17,7 @@ import EyeSlashIcon from 'assets/new_UI/eye-slash.svg';
 import GiftDeleteIcon from 'assets/new_UI/gift-delete.svg';
 import HBDCurrencyLogo from 'assets/new_UI/hbd-currency-logo.svg';
 import HeartIcon from 'assets/new_UI/heart.svg';
+import HelpIcon from 'assets/new_UI/help.svg';
 import HiveCurrencyLogo from 'assets/new_UI/hive-currency-logo.svg';
 import HiveAlternative from 'assets/new_UI/hive_alternative.svg';
 import ImportIcon from 'assets/new_UI/import.svg';
@@ -48,6 +50,7 @@ import CheckIcon from 'assets/new_UI/linear_tick-circle.svg';
 import WalletAddIcon from 'assets/new_UI/linear_wallet-add.svg';
 import HASIcon from 'assets/new_UI/logo_HAS.svg';
 import LogoutIcon from 'assets/new_UI/logout.svg';
+import NotificationsIcon from 'assets/new_UI/notifications.svg';
 import PolygonDown from 'assets/new_UI/polygon_down.svg';
 import PowerDownLight from 'assets/new_UI/power-down-light.svg';
 import PowerIcon from 'assets/new_UI/power-icon.svg';
@@ -58,6 +61,7 @@ import SearchIcon from 'assets/new_UI/search.svg';
 import Settings2Icon from 'assets/new_UI/setting-2.svg';
 import Settings4Icon from 'assets/new_UI/setting-4.svg';
 import SpeedometerIcon from 'assets/new_UI/speedometer.svg';
+import SupportIcon from 'assets/new_UI/support.svg';
 import React from 'react';
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
 import AddCircleOutlineIcon from 'src/assets/icons/svgs/add_circle_outline.svg';
@@ -67,10 +71,14 @@ import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
 import ConvertIcon from 'src/assets/new_UI/convert.svg';
 import DelegateTokenIcon from 'src/assets/new_UI/delegate-token.svg';
+import Desktop from 'src/assets/new_UI/desktop.svg';
+import ErrorSVG from 'src/assets/new_UI/error-mark.svg';
 import ExpandMoreIcon from 'src/assets/new_UI/expand_more.svg';
 import ClaimIcon from 'src/assets/new_UI/gift.svg';
+import Mobile from 'src/assets/new_UI/mobile.svg';
 import SavingsIcon from 'src/assets/new_UI/savings.svg';
 import TransferIcon from 'src/assets/new_UI/send.svg';
+import Success from 'src/assets/new_UI/success-mark.svg';
 import AutomatedTasks from 'src/assets/settings/automated-tasks.svg';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -299,7 +307,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.POLYGON_DOWN:
+    case name === Icons.CARRET_UP:
       return (
         <PolygonDown
           style={[
@@ -609,6 +617,62 @@ const getIconFilePath = (
     case name === Icons.AUTOMATED_TASKS:
       return (
         <AutomatedTasks
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.SUCCESS:
+      return (
+        <Success
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.ERROR:
+      return (
+        <ErrorSVG
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.MOBILE:
+      return (
+        <Mobile
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.DESKTOP:
+      return (
+        <Desktop
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.HELP:
+      return (
+        <HelpIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.TUTORIAL:
+      return (
+        <TutorialIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.SUPPORT:
+      return (
+        <SupportIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.NOTIFICATIONS:
+      return (
+        <NotificationsIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

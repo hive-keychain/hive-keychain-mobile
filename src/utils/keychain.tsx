@@ -30,7 +30,15 @@ export const validateAuthority = (
         valid: false,
         error: translate('request.error.no_account', {account: username}),
       };
-    } else if (!account.keys[wifType]) {
+    } else if (
+      accounts.length > 1 &&
+      !accounts.filter((e) => !!e.keys[wifType]).length
+    ) {
+      return {
+        valid: false,
+        error: translate('request.error.no_active_auth'),
+      };
+    } else if (!account.keys[wifType] && accounts.length === 1) {
       return {
         valid: false,
         error: translate('request.error.no_auth', {

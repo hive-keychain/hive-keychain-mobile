@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addTab} from 'actions/browser';
 import EllipticButton from 'components/form/EllipticButton';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
@@ -57,7 +57,7 @@ const ProposalReminder = ({
     const notified = await getNotifiedVoters();
     if (
       !notified.includes(user.name) &&
-      !user.account.proxy.length &&
+      !user.account?.proxy?.length &&
       toHP(user.account.vesting_shares.toString(), globalProps) > 100 &&
       !(await hasVotedForProposal(user.name, KEYCHAIN_PROPOSAL))
     ) {

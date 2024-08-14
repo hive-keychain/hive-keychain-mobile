@@ -10,6 +10,8 @@ import {
   ViewStyle,
 } from 'react-native';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {Theme} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
 import {Dimensions as Dim} from 'utils/common.types';
 
 type Props = {
@@ -23,6 +25,7 @@ type Props = {
   additionalClickeableAreaStyle?: StyleProp<ViewStyle>;
   modalPosition?: ModalPosition;
   buttonElement?: JSX.Element;
+  theme: Theme;
 };
 type InnerProps = {height: number; width: number};
 
@@ -33,21 +36,25 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
   height;
   width;
   fixedHeight;
+  theme;
   constructor(props: Props) {
     super(props);
     const {height, width} = Dimensions.get('window');
     this.height = height;
     this.width = width;
     this.fixedHeight = props.fixedHeight;
+    this.theme = props.theme;
   }
   render() {
     let modalHeight = this.props.bottomHalf ? this.height / 2 : this.height;
+
     let styles = StyleSheetFactory.getSheet({
       modalHeight: modalHeight,
       height: this.height,
       width: this.width,
       fixedHeight: this.fixedHeight,
       modalPosition: this.props.modalPosition,
+      theme: this.theme,
     });
     return (
       <KeyboardAvoidingView
@@ -87,9 +94,11 @@ class StyleSheetFactory {
     height,
     fixedHeight,
     modalPosition,
+    theme,
   }: Dim & {
     modalHeight: number;
     fixedHeight: number;
+    theme: Theme;
   } & {modalPosition: ModalPosition}) {
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
@@ -123,13 +132,14 @@ class StyleSheetFactory {
         width: '100%',
       },
       modalContainer: {
-        backgroundColor: 'white',
+        backgroundColor: getColors(theme).primaryBackground,
         width: '100%',
         height: '100%',
         borderWidth: 1,
-        borderColor: 'white',
+        borderColor: 'transparent',
         borderStyle: 'solid',
-        borderRadius: 10,
+        borderTopEndRadius: 10,
+        borderTopStartRadius: 10,
       },
     });
 

@@ -29,6 +29,7 @@ export enum Icons {
   DONE = 'done',
   // EDIT = 'edit',
   ERROR = 'error',
+  SUCCESS = 'success',
   // EXPAND_MORE = 'expand_more',
 
   EXPORT = 'file_download',
@@ -36,6 +37,7 @@ export enum Icons {
   HIDDEN = 'visibility_off',
   HISTORY = 'history',
   HIVE = 'hive-brands.svg',
+  HBD = 'hbd_green.svg',
   INBOX = 'inbox',
   // INFO = 'info',
   // IMPORT = 'file_upload',
@@ -62,6 +64,8 @@ export enum Icons {
   SHOW_CHART = 'show_chart',
   SUBMIT = 'input',
   SUPPORT = 'contact_support',
+  HELP = 'help',
+  TUTORIAL = 'tutorial',
   TIMELAPSE = 'timelapse',
   // TOKENS = 'generating_tokens',
   TWITTER = 'twitter.svg',
@@ -105,7 +109,7 @@ export enum Icons {
   IMPORT = 'IMPORT',
   BACK_TIME = 'BACK_TIME',
   ARROW_UP = 'ARROW_UP',
-  POLYGON_DOWN = 'POLYGON_DOWN',
+  CARRET_UP = 'POLYGON_DOWN',
   DOUBLE_ARROW = 'DOUBLE_ARROW',
   DELEGATE = 'DELEGATE',
 
@@ -157,4 +161,7 @@ export enum Icons {
   REPEAT = 'REPEAT',
   REPEAT_CIRCLE = 'REPEAT_CIRCLE',
   HOME_BROWSER = 'HOME_BROWSER',
+  DESKTOP = 'DESKTOP',
+  MOBILE = 'MOBILE',
+  NOTIFICATIONS = 'NOTIFICATIONS',
 }

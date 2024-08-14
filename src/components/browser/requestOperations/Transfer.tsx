@@ -41,7 +41,9 @@ export default ({
         username: getUsername(),
         to,
       })}
-      errorMessage={beautifyTransferError}
+      errorMessage={(error, data) =>
+        beautifyTransferError(error, {...data, username: getUsername()})
+      }
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}

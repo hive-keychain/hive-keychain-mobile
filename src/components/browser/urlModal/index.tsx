@@ -72,6 +72,7 @@ const UrlModal = ({
     } else {
       const hasProtocol = url.match(/^[a-z]*:\/\//);
       const sanitizedURL = hasProtocol ? url : `https://${url}`;
+      console.log('on new search,', sanitizedURL);
       onNewSearch(sanitizedURL);
     }
   };
@@ -149,7 +150,9 @@ const UrlModal = ({
         ) : null}
       </View>
 
-      <ScrollView style={[styles.containerHistory]}>
+      <ScrollView
+        style={[styles.containerHistory]}
+        keyboardShouldPersistTaps="handled">
         <UrlAutocomplete
           onSubmit={onSubmitUrl}
           input={url}
@@ -191,6 +194,7 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
     textBase: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_3,
+      fontSize: 14,
       fontFamily: FontPoppinsName.REGULAR,
     },
     urlInput: {

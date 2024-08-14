@@ -1,5 +1,5 @@
 import {Asset, ExtendedAccount} from '@hiveio/dhive';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ActiveAccount, TokenBalance} from 'actions/interfaces';
 import {KeychainSwapApi} from 'api/keychain-swap';
 import {
@@ -25,7 +25,6 @@ const getSwapTokenStartList = async (account: ExtendedAccount) => {
   userTokenList = userTokenList.sort((a, b) =>
     b.symbol.toLowerCase() > a.symbol.toLowerCase() ? -1 : 1,
   );
-
   if (Asset.fromString(account.balance.toString()).amount > 0) {
     userTokenList.unshift({
       account: account.name,

@@ -1,4 +1,3 @@
-//import IntentLauncher from '@yz1311/react-native-intent-launcher';
 import EllipticButton from 'components/form/EllipticButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';

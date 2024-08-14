@@ -2,7 +2,7 @@ import {addAccount} from 'actions/index';
 import {showModal} from 'actions/message';
 import TitleLogoLight from 'assets/new_UI/img_import_dark.svg';
 import TitleLogoDark from 'assets/new_UI/img_import_light.svg';
-import Button from 'components/form/EllipticButton';
+import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
@@ -15,13 +15,13 @@ import {
 } from 'navigators/mainDrawerStacks/AddAccount.types';
 import {AddAccNavigationProps} from 'navigators/Signup.types';
 import React, {useState} from 'react';
-import {StatusBar, StyleSheet, useWindowDimensions, View} from 'react-native';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import {Text} from 'react-native-elements';
+import {ScrollView} from 'react-native-gesture-handler';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
@@ -76,61 +76,53 @@ const AddAccountByAuth = ({
 
   return (
     <Background theme={theme}>
-      <>
-        <StatusBar
-          barStyle={getColors(theme).barStyle}
-          backgroundColor={getColors(theme).primaryBackground}
+      <ScrollView contentContainerStyle={styles.topContainer}>
+        <Separator height={30} />
+        <CustomIconButton
+          lightThemeIcon={<TitleLogoLight />}
+          darkThemeIcon={<TitleLogoDark />}
+          onPress={() => {}}
+          theme={theme}
         />
-        <View style={styles.container}>
-          <View style={styles.topContainer}>
-            <Separator height={30} />
-            <CustomIconButton
-              lightThemeIcon={<TitleLogoLight />}
-              darkThemeIcon={<TitleLogoDark />}
-              onPress={() => {}}
+        <Separator height={height / 22} />
+        <Text style={[styles.text, styles.opacity, styles.centeredText]}>
+          {translate('addAccountByAuth.text')}
+        </Text>
+        <Separator height={height / 22} />
+        <OperationInput
+          labelInput={translate('common.username')}
+          placeholder={translate('common.username')}
+          value={account}
+          onChangeText={setAccount}
+        />
+        <Separator height={height / 22} />
+        <OperationInput
+          labelInput={translate('common.authorized_username')}
+          placeholder={translate('common.authorized_username')}
+          value={authorizedAccount}
+          onChangeText={setAuthorizedAccount}
+          rightIcon={
+            <Icon
+              name={Icons.SCANNER}
               theme={theme}
+              onPress={() => {
+                (navigation as AddAccFromWalletNavigation).navigate(
+                  'ScanQRScreen',
+                  {wallet: true},
+                );
+              }}
             />
-            <Separator height={height / 15} />
-            <Text style={[styles.text, styles.opacity, styles.centeredText]}>
-              {translate('addAccountByAuth.text')}
-            </Text>
-            <Separator height={height / 15} />
-            <OperationInput
-              labelInput={translate('common.username')}
-              placeholder={translate('common.username')}
-              value={account}
-              onChangeText={setAccount}
-            />
-            <Separator height={height / 15} />
-            <OperationInput
-              labelInput={translate('common.authorized_username')}
-              placeholder={translate('common.authorized_username')}
-              value={authorizedAccount}
-              onChangeText={setAuthorizedAccount}
-              rightIcon={
-                <Icon
-                  name={Icons.SCANNER}
-                  theme={theme}
-                  onPress={() => {
-                    (navigation as AddAccFromWalletNavigation).navigate(
-                      'ScanQRScreen',
-                      {wallet: true},
-                    );
-                  }}
-                />
-              }
-            />
-          </View>
-          <View style={styles.bottomContainer}>
-            <Button
-              title={translate('common.import')}
-              onPress={onImportKeysByAuth}
-              style={[getButtonStyle(theme, height).warningStyleButton]}
-              additionalTextStyle={styles.buttonText}
-            />
-          </View>
+          }
+        />
+        <View style={styles.bottomContainer}>
+          <EllipticButton
+            title={translate('common.import')}
+            onPress={onImportKeysByAuth}
+            additionalTextStyle={styles.buttonText}
+            isWarningButton
+          />
         </View>
-      </>
+      </ScrollView>
     </Background>
   );
 };
@@ -139,7 +131,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {alignItems: 'center', justifyContent: 'space-between', flex: 1},
     topContainer: {
-      flex: 1,
+      flexGrow: 1,
       width: '100%',
       alignItems: 'center',
       paddingHorizontal: 16,
@@ -160,6 +152,9 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       marginBottom: 15,
       width: '100%',
       alignItems: 'center',
+      minHeight: height / 5,
+      flexGrow: 1,
+      justifyContent: 'flex-end',
     },
     smallerText: {
       fontSize: 13,

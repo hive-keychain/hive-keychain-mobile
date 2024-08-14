@@ -5,6 +5,7 @@ import {
   VestingDelegation,
 } from '@hiveio/dhive';
 import {Manabar} from '@hiveio/dhive/lib/chain/rc';
+import {PlatformOSType} from 'react-native';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {RcDelegationsInfo} from '../interfaces/rc-delegation.interface';
 
@@ -33,12 +34,17 @@ export interface Settings {
   rpc: Rpc;
   hiveEngineRpc: string;
   accountHistoryAPIRpc: string;
+  mobileSettings: MobileSettings;
 }
 
+export interface MobileSettings {
+  platformRelevantFeatures: {[e: string]: PlatformOSType[]};
+}
 export interface SettingsPayload {
   rpc?: Rpc;
   hiveEngineRpc?: string;
   accountHistoryAPIRpc?: string;
+  mobileSettings?: MobileSettings;
 }
 
 export interface Page {
@@ -236,6 +242,7 @@ export interface FloatingBarPayload {
   show: boolean;
   isLoadingScreen: boolean;
   isDrawerOpened: boolean;
+  isProposalRequestDisplayed: boolean;
 }
 
 export interface AccountsPayload {

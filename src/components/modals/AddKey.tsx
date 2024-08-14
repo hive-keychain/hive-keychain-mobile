@@ -11,7 +11,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme} from 'src/context/theme.context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
@@ -22,11 +22,12 @@ import {
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 
-type Props = PropsFromRedux & {name: string; type: KeyTypes; theme: Theme};
+type Props = PropsFromRedux & {name: string; type: KeyTypes};
 
-const AddKey = ({addKey, name, type, theme}: Props) => {
+const AddKey = ({addKey, name, type}: Props) => {
   const [key, setKey] = useState('');
   const {width} = useWindowDimensions();
+  const {theme} = useThemeContext();
   const styles = getStyles(theme);
   return (
     <View

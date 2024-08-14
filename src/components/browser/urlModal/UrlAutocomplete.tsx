@@ -2,9 +2,10 @@ import {Page} from 'actions/interfaces';
 import Fuse from 'fuse.js';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {store} from 'store';
-import {BrowserConfig} from 'utils/config';
+import {RootState, store} from 'store';
+import {DApp} from '../HomeTab/Explore';
 import HistoryItem from './HistoryItem';
 
 type Props = {
@@ -13,13 +14,26 @@ type Props = {
   input: string;
   theme: Theme;
 };
-export default ({input, onSubmit, history, theme}: Props) => {
+const UrlAutocomplete = ({
+  input,
+  onSubmit,
+  history,
+  theme,
+  ecosystem,
+}: Props & PropsFromRedux) => {
   const [candidates, setCandidates] = useState([]);
 
   useEffect(() => {
+    const flatEcosystem: DApp[] = ecosystem.reduce((a, b): DApp[] => {
+      return [
+        ...a,
+        ...b.dapps.filter((dapp) => !a.find((e) => e.name === dapp.name)),
+      ];
+    }, []);
+
     const dApps = [
       ...history,
-      ...BrowserConfig.HomeTab.dApps
+      ...flatEcosystem
         .map((e) => ({
           url:
             e.url +
@@ -50,7 +64,7 @@ export default ({input, onSubmit, history, theme}: Props) => {
     } else {
       setCandidates([]);
     }
-  }, [input, history]);
+  }, [input, history, ecosystem]);
   if (candidates.length)
     return (
       <View style={styles.wrapper}>
@@ -84,3 +98,12 @@ export default ({input, onSubmit, history, theme}: Props) => {
 const styles = StyleSheet.create({
   wrapper: {marginTop: 20},
 });
+
+const connector = connect((state: RootState) => {
+  return {
+    ecosystem: state.ecosystem,
+  };
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(UrlAutocomplete);

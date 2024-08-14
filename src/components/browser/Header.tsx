@@ -152,6 +152,7 @@ const BrowserHeader = ({
                 }}
                 disableFocus
                 additionalContainerStyle={styles.searchBarContainer}
+                additionalCustomInputStyle={{fontSize: 13}}
               />
               {renderFavoritesButton()}
             </>
@@ -263,8 +264,8 @@ const getStyles = (
       marginBottom: 8,
     },
     icons: {
-      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 16 : 18,
-      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 16 : 18,
+      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 14 : 16,
+      height: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 14 : 16,
       alignSelf: 'center',
     },
     searchBarContainer: {
@@ -272,6 +273,7 @@ const getStyles = (
       height: getInputContainerHeight(width),
       paddingHorizontal: 16,
       flex: 1,
+      fontSize: 13,
     },
     fakeSearchBar: {
       borderRadius: 30,
@@ -285,6 +287,7 @@ const getStyles = (
     },
     fakeSearchBarText: {
       ...button_link_primary_small,
+      fontSize: 13,
       color:
         theme === Theme.LIGHT
           ? 'rgba(33, 40, 56, 0.30)'

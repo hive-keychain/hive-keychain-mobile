@@ -39,6 +39,7 @@ import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {Dimensions} from 'utils/common.types';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
+import {resetStackAndNavigate} from 'utils/navigation';
 
 const Stack = createStackNavigator<RootStackParam>();
 
@@ -154,7 +155,9 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => {
+                resetStackAndNavigate('WALLET');
+              }}
             />
           ),
           headerLeft: () => (

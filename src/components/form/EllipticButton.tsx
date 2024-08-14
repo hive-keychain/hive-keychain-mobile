@@ -28,6 +28,7 @@ interface Props {
   disabled?: boolean;
   additionalTextStyle?: StyleProp<TextStyle>;
   isWarningButton?: boolean;
+  preventDoublons?: boolean;
 }
 export default ({
   style,
@@ -35,12 +36,15 @@ export default ({
   title,
   additionalTextStyle,
   isWarningButton,
+  onPress,
+  preventDoublons,
   ...props
 }: Props) => {
   const {width} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(width, theme);
 
+  const [disableButton, setDisableButton] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   return !isLoading ? (
     <TouchableOpacity
@@ -56,6 +60,13 @@ export default ({
           ? getButtonBoxShadow(isWarningButton ? PRIMARY_RED_COLOR : '#000')
           : {},
       ]}
+      onPress={() => {
+        if (preventDoublons) {
+          if (disableButton) return;
+          setDisableButton(true);
+        }
+        onPress();
+      }}
       onPressIn={() => setIsPressed(true)}
       onPressOut={() => setIsPressed(false)}>
       <Text

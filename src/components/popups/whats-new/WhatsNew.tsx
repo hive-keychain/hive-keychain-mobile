@@ -1,19 +1,22 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Carousel from 'components/carousel/carousel';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, Linking, StyleSheet, Text, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
-import {headlines_primary_headline_2} from 'src/styles/typography';
+import {
+  body_primary_body_3,
+  headlines_primary_headline_2,
+} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {VersionLogUtils} from 'utils/version-log.utils';
 import {WhatsNewUtils} from 'utils/whats-new.utils';
-import {WhatsNewContent} from './whats-new.interface';
+import {Feature, WhatsNewContent} from './whats-new.interface';
 
 interface Props {
   navigation: WalletNavigation;
@@ -37,6 +40,7 @@ export function isPrefetched(url: string) {
 }
 const WhatsNew = ({navigation}: Props): null => {
   const [whatsNewContent, setWhatsNewContent] = useState<WhatsNewContent>();
+  const [index, setIndex] = useState(0);
   const locale = 'en'; // later use getUILanguage()
   const {theme} = useThemeContext();
 
@@ -45,21 +49,21 @@ const WhatsNew = ({navigation}: Props): null => {
   }, []);
 
   const init = async () => {
-    const lastVersionSeen = await AsyncStorage.getItem(
+    const lastVersionStorage = await AsyncStorage.getItem(
       KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
     );
-    const versionLog = await VersionLogUtils.getLastVersion();
-    const extensionVersion = VersionLogUtils.getCurrentMobileAppVersion()
+    const lastVersionAPI = await VersionLogUtils.getLastVersion();
+    const mobileAppVersion = VersionLogUtils.getCurrentMobileAppVersion()
       .version.split('.')
       .splice(0, 2)
       .join('.');
-    if (!lastVersionSeen) {
+    if (!lastVersionStorage) {
       WhatsNewUtils.saveLastSeen();
     } else if (
-      extensionVersion !== lastVersionSeen &&
-      versionLog.version === extensionVersion
+      mobileAppVersion !== lastVersionStorage &&
+      lastVersionAPI.version === mobileAppVersion
     ) {
-      setWhatsNewContent(versionLog);
+      setWhatsNewContent(lastVersionAPI);
     }
   };
 
@@ -70,7 +74,7 @@ const WhatsNew = ({navigation}: Props): null => {
           await prefetchImage(feature.image);
         }
         navigate('ModalScreen', {
-          name: 'Whats_new_popup',
+          name: 'WhatsNewPopup',
           modalContent: renderContent(),
           onForceCloseModal: () => {},
           modalContainerStyle: getModalBaseStyle(theme).roundedTop,
@@ -85,6 +89,33 @@ const WhatsNew = ({navigation}: Props): null => {
   };
 
   const styles = getStyles(theme);
+
+  const handleOnClickItem = (content: WhatsNewContent, feature: Feature) => {
+    if (feature.externalUrl) {
+      Linking.openURL(feature.externalUrl);
+    } else {
+      Linking.openURL(`${content.url}#${feature.anchor}`);
+    }
+  };
+
+  const renderItem = (feature: Feature) => {
+    return (
+      <View key={`carousel-item-${feature.title}`} style={styles.itemContainer}>
+        <Image
+          style={styles.image}
+          source={{uri: feature.image}}
+          resizeMode={'contain'}
+        />
+        <Text style={styles.titleText}>{feature.title}</Text>
+        <Text style={styles.descriptionText}>{feature.description}</Text>
+        <Text
+          style={styles.readMoreText}
+          onPress={() => handleOnClickItem(whatsNewContent, feature)}>
+          {feature.overrideReadMoreLabel ?? translate('common.popup_read_more')}
+        </Text>
+      </View>
+    );
+  };
 
   const renderContent = () => {
     return (
@@ -101,8 +132,8 @@ const WhatsNew = ({navigation}: Props): null => {
             lastTitle: translate('popup.whats_new.got_it'),
             lastSlideAction: finish,
           }}
-          content={whatsNewContent}
-          locale={locale}
+          content={whatsNewContent.features[locale]}
+          renderItem={renderItem}
           theme={theme}
         />
       </View>
@@ -125,6 +156,30 @@ const getStyles = (theme: Theme) =>
       aspectRatio: 1.6,
       alignSelf: 'center',
       width: '100%',
+    },
+    itemContainer: {
+      alignItems: 'center',
+      flexDirection: 'column',
+    },
+    titleText: {
+      marginBottom: 8,
+      color: getColors(theme).secondaryText,
+      ...headlines_primary_headline_2,
+      fontSize: 14,
+    },
+    descriptionText: {
+      ...body_primary_body_3,
+      color: getColors(theme).secondaryText,
+      fontSize: 13,
+      marginBottom: 8,
+      textAlign: 'center',
+    },
+    readMoreText: {
+      textDecorationLine: 'underline',
+      ...body_primary_body_3,
+      color: PRIMARY_RED_COLOR,
+      fontSize: 15,
+      marginBottom: 8,
     },
   });
 

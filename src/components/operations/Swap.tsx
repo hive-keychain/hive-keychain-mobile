@@ -1,6 +1,6 @@
 import {loadTokensMarket} from 'actions/index';
 import {showModal} from 'actions/message';
-import ErrorSvg from 'assets/new_UI/error-circle.svg';
+import ErrorSvg from 'assets/new_UI/error-mark.svg';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
@@ -8,9 +8,9 @@ import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
-import PreloadedImage from 'components/ui/PreloadedImage';
 import RotationIconAnimated from 'components/ui/RotationIconAnimated';
 import Separator from 'components/ui/Separator';
+import SwapCurrencyImage from 'components/ui/SwapCurrencyImage';
 import {IStep} from 'hive-keychain-commons';
 import {ThrottleSettings, throttle} from 'lodash';
 import {TemplateStackProps} from 'navigators/Root.types';
@@ -106,6 +106,7 @@ const Swap = ({
   const [autoRefreshCountdown, setAutoRefreshCountdown] = useState<
     number | null
   >(null);
+  const [disableProcessButton, setDisableProcessButton] = useState(false);
 
   useEffect(() => {
     init();
@@ -445,6 +446,8 @@ const Swap = ({
     setLoadingConfirmationSwap(true);
     let estimateId: string;
     try {
+      if (disableProcessButton) return;
+      setDisableProcessButton(true);
       estimateId = await SwapTokenUtils.saveEstimate(
         estimate!,
         slippage,
@@ -528,7 +531,10 @@ const Swap = ({
             <View style={spacingStyle.fillSpace}></View>
             <EllipticButton
               title={translate('common.confirm')}
-              onPress={() => processSwap(estimateId)}
+              preventDoublons
+              onPress={() => {
+                processSwap(estimateId);
+              }}
               isLoading={loading}
               isWarningButton
             />
@@ -591,7 +597,7 @@ const Swap = ({
                       value: startToken.value.symbol,
                       label: startToken.label,
                       icon: (
-                        <PreloadedImage
+                        <SwapCurrencyImage
                           uri={startToken.img}
                           symbol={startToken.value.symbol}
                           key={startToken.value.symbol}
@@ -612,7 +618,7 @@ const Swap = ({
                       value: startToken.value.symbol,
                       label: startToken.label,
                       icon: (
-                        <PreloadedImage
+                        <SwapCurrencyImage
                           uri={startToken.img}
                           symbol={startToken.value.symbol}
                           svgHeight={20}
@@ -692,7 +698,7 @@ const Swap = ({
                       value: endToken.value.symbol,
                       label: endToken.label,
                       icon: (
-                        <PreloadedImage
+                        <SwapCurrencyImage
                           uri={endToken.img}
                           symbol={endToken.value.symbol}
                           svgHeight={20}
@@ -714,7 +720,7 @@ const Swap = ({
                       value: endToken.value.symbol,
                       label: endToken.label,
                       icon: (
-                        <PreloadedImage
+                        <SwapCurrencyImage
                           uri={endToken.img}
                           symbol={endToken.value.symbol}
                           svgHeight={20}

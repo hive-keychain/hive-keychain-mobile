@@ -2,6 +2,7 @@ import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import RcHpSelectorPanel from 'components/hive/RcHpSelectorPanel';
 import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
@@ -34,7 +35,12 @@ import {
   getFormFontStyle,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, formatBalanceCurrency, withCommas} from 'utils/format';
+import {
+  capitalize,
+  formatBalanceCurrency,
+  getCleanAmountValue,
+  withCommas,
+} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
@@ -47,7 +53,7 @@ export interface RCDelegationOperationProps {
   //TODO fill when needed.
 }
 
-const DEFAULT_VALUE: RCDelegationValue = {
+export const DEFAULT_RC_DELEGATION_VALUE: RCDelegationValue = {
   hpValue: '...',
   gigaRcValue: '...',
 };
@@ -58,12 +64,14 @@ const RCDelegation = ({
   showModal,
 }: RCDelegationOperationProps & PropsFromRedux) => {
   const [totalIncoming, setTotalIncoming] = useState<RCDelegationValue>(
-    DEFAULT_VALUE,
+    DEFAULT_RC_DELEGATION_VALUE,
   );
   const [totalOutgoing, setTotalOutgoing] = useState<RCDelegationValue>(
-    DEFAULT_VALUE,
+    DEFAULT_RC_DELEGATION_VALUE,
   );
-  const [available, setAvailable] = useState<RCDelegationValue>(DEFAULT_VALUE);
+  const [available, setAvailable] = useState<RCDelegationValue>(
+    DEFAULT_RC_DELEGATION_VALUE,
+  );
   const [isCancel, setIsCancel] = useState<boolean>(false);
   const [amount, setAmount] = useState('');
   const [equivalentHPAmount, setEquivalentHPAmount] = useState<
@@ -139,7 +147,9 @@ const RCDelegation = ({
   const onRCDelegateConfirmation = () => {
     if (!to || !amount) {
       Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
-    } else if (+amount > parseFloat(available.gigaRcValue as string)) {
+    } else if (
+      +amount > +getCleanAmountValue(available.gigaRcValue as string)
+    ) {
       Toast.show(
         translate('common.overdraw_balance_error', {
           currency: 'RC',
@@ -160,7 +170,7 @@ const RCDelegation = ({
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${amount} GRC`,
+            value: `${withCommas(amount)} GRC`,
           },
         ],
       };
@@ -313,7 +323,9 @@ const RCDelegation = ({
                   />
                   <TouchableOpacity
                     activeOpacity={1}
-                    onPress={() => setAmount(available.gigaRcValue)}>
+                    onPress={() =>
+                      setAmount(getCleanAmountValue(available.gigaRcValue))
+                    }>
                     <Text
                       style={[
                         getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
@@ -326,22 +338,10 @@ const RCDelegation = ({
               }
             />
           </View>
-          <View style={[styles.delegationValuesButtons]}>
-            {[5, 10, 50, 100].map((value) => {
-              return (
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() => onHandlePreset(value)}
-                  key={`preset-rc-delegation-${value}`}
-                  style={[getCardStyle(theme).roundedCardItem, styles.button]}>
-                  <Text
-                    style={
-                      getFormFontStyle(height, theme).smallLabel
-                    }>{`${value.toString()} ${getCurrency('HP')}`}</Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
+          <RcHpSelectorPanel
+            valueLabelList={[5, 10, 50, 100]}
+            onHandlePreset={onHandlePreset}
+          />
         </View>
       }
       method={KeyTypes.posting}
@@ -391,14 +391,6 @@ const getStyles = (theme: Theme) =>
       fontFamily: FontPoppinsName.ITALIC,
     },
     flexRow: {flexDirection: 'row', justifyContent: 'space-between'},
-    delegationValuesButtons: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      width: '100%',
-      justifyContent: 'space-evenly',
-      marginVertical: 24,
-    },
-    button: {width: 60, justifyContent: 'center', alignItems: 'center'},
     operationButtonsContainer: {
       alignItems: 'center',
       flexDirection: 'row',

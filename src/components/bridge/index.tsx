@@ -4,7 +4,8 @@ import {WebView} from 'react-native-webview';
 import html from './html';
 
 let self: Bridge;
-
+// https://github.com/react-native-webview/react-native-webview/issues/3368
+// Before updating library
 type InnerProps = {
   pendingMethods: object;
   webref: WebView;
@@ -21,10 +22,12 @@ class Bridge extends Component implements InnerProps {
 
   sendMessage(methodName: string, params: any[]) {
     const id = Math.random().toString(36).substr(2, 9); //just unique id
+    console.log('sending message', methodName, params);
     const paramsJoined = params
-      .map((e) => e.replace(/\\/g, '\\\\'))
+      .map((e) => e.replace(/\\/g, '\\\\').replace(/'/g, "\\'"))
+
       .join("','");
-    console.log({params, paramsJoined}); //TODO Quentin: this part needs checking please
+    console.log('params', `'${paramsJoined}`);
     const js = `
         returnValue = window.${methodName}('${paramsJoined}');
         returnObject = JSON.stringify({id: "${id}", data: returnValue});

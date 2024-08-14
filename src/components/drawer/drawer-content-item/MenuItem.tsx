@@ -29,6 +29,7 @@ interface PropsDrawerContentItem {
   drawBottomLine?: boolean;
   additionalContainerStyle?: StyleProp<ViewStyle>;
   additionalPressedStyle?: StyleProp<ViewStyle>;
+  additionalLeftSideComponentStyle?: StyleProp<ViewStyle>;
 }
 
 type Props = PropsDrawerContentItem;
@@ -45,7 +46,11 @@ const MenuItem = (props: Props) => {
       style={[styles.container, props.additionalContainerStyle]}>
       <View style={styles.iconContainer}>{props.iconImage}</View>
       <View style={[styles.flexShrinkHeightFixed]}>
-        <View style={[styles.flexRowStart]}>
+        <View
+          style={[
+            styles.flexRowStart,
+            props.leftSideComponent ? styles.flexBetween : null,
+          ]}>
           <Pressable
             style={({pressed}) =>
               pressed ? props.additionalPressedStyle : null
@@ -56,7 +61,13 @@ const MenuItem = (props: Props) => {
             </Text>
           </Pressable>
           {props.leftSideComponent && (
-            <View style={[styles.marginLeft25]}>{props.leftSideComponent}</View>
+            <View
+              style={[
+                styles.marginLeft25,
+                props.additionalLeftSideComponentStyle,
+              ]}>
+              {props.leftSideComponent}
+            </View>
           )}
         </View>
         {props.drawBottomLine && (
@@ -131,4 +142,5 @@ const getStyles = (
       alignItems: 'center',
       justifyContent: 'flex-start',
     },
+    flexBetween: {justifyContent: 'space-between', width: '100%'},
   });

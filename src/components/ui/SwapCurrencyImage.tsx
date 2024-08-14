@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import {ImageStyle, StyleProp, StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
+import {ConnectedProps, connect} from 'react-redux';
 import FallBackHBD from 'src/assets/new_UI/hbd-currency-logo.svg';
 import FallBackHIVE from 'src/assets/new_UI/hive-currency-logo.svg';
 import FallBackHE from 'src/assets/new_UI/hive-engine.svg';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {getBackgroundColorFromBackend} from 'utils/colors';
+import {RootState} from 'store';
+import {getTokenBackgroundColor} from 'utils/colors';
 import {getCurrency} from 'utils/hive';
 
 interface Props {
@@ -16,13 +18,14 @@ interface Props {
   svgHeight?: number;
 }
 
-const PreloadedImage = ({
+const SwapCurrencyImage = ({
   uri,
   symbol,
   additionalContainerStyle,
   svgHeight,
   svgWidth,
-}: Props) => {
+  colors,
+}: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
   const [errorOnLoad, setErrorOnLoad] = useState(false);
   const styles = getStyles();
@@ -49,7 +52,8 @@ const PreloadedImage = ({
       case getCurrency('HIVE'):
         return 'rgb(253, 235, 238)';
       default:
-        return getBackgroundColorFromBackend(symbol, theme);
+        console.log(getTokenBackgroundColor(colors, symbol, theme));
+        return getTokenBackgroundColor(colors, symbol, theme);
     }
   };
 
@@ -86,4 +90,11 @@ const getStyles = () =>
     },
   });
 
-export default PreloadedImage;
+const mapStateToProps = (state: RootState) => {
+  return {colors: state.colors};
+};
+
+const connector = connect(mapStateToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(SwapCurrencyImage);

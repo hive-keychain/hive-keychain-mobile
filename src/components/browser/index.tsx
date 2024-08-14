@@ -2,7 +2,7 @@ import {Tab as TabType} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useState} from 'react';
 import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
-import Orientation, {OrientationType} from 'react-native-orientation-locker';
+import Orientation from 'react-native-orientation-locker';
 import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
@@ -36,7 +36,7 @@ const Browser = ({
   showManagementScreen,
   showFloatingBar,
   theme,
-}: BrowserPropsFromRedux & BrowserNavigationProps & Props) => {
+}: Partial<BrowserPropsFromRedux> & BrowserNavigationProps & Props) => {
   const {showManagement, activeTab, tabs, history, favorites} = browser;
   const currentActiveTabData = tabs.find((t) => t.id === activeTab);
   const url = currentActiveTabData
@@ -66,11 +66,11 @@ const Browser = ({
       if (Platform.OS === 'android' && orientation !== 'PORTRAIT') {
         Orientation.getAutoRotateState((s) => {
           if (s) {
-            setDeviceOrientation(orientation);
+            setOrientation(orientation);
           }
         });
       } else {
-        setDeviceOrientation(orientation);
+        setOrientation(orientation);
       }
     });
 
@@ -78,10 +78,6 @@ const Browser = ({
       Orientation.removeAllListeners();
     };
   }, []);
-
-  const setDeviceOrientation = (orientation: OrientationType) => {
-    setOrientation(orientation);
-  };
 
   const manageTabs = (
     {url, icon, id}: TabType,
@@ -126,6 +122,7 @@ const Browser = ({
     isManagingTab: boolean,
     tab: TabType,
     view: MutableRefObject<View>,
+    newUrl = BrowserConfig.HOMEPAGE_URL,
   ) => {
     if (!isManagingTab) {
       const {id, url, icon} = tab;
@@ -135,14 +132,14 @@ const Browser = ({
       }).then(
         (uri) => {
           updateTab(id, {id, url, icon, image: uri});
-          addTab(BrowserConfig.HOMEPAGE_URL);
+          addTab(newUrl);
         },
         (error) => {
           console.error(error);
         },
       );
     } else {
-      addTab(BrowserConfig.HOMEPAGE_URL);
+      addTab(newUrl);
       showManagementScreen(false);
     }
   };
@@ -152,7 +149,7 @@ const Browser = ({
   };
 
   const onNewSearch = (url: string) => {
-    updateTab(activeTab, {...currentActiveTabData, url});
+    updateTab(activeTab, {...currentActiveTabData, url}, true);
   };
 
   const swipeToTab = (right: boolean) => {
@@ -168,7 +165,7 @@ const Browser = ({
   };
 
   return (
-    <>
+    <View style={styles.container}>
       <KeyboardAvoidingView
         style={[styles.container]}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -229,12 +226,16 @@ const Browser = ({
           theme={theme}
         />
       </KeyboardAvoidingView>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {width: '100%', height: '100%'},
+  container: {
+    width: '100%',
+    height: '100%',
+    flexGrow: 1,
+  },
 });
 
 export default Browser;

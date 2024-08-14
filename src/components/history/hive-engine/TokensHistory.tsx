@@ -238,9 +238,6 @@ const getStyles = (theme: Theme) =>
       fontSize: 18,
       marginLeft: 10,
     },
-    marginBottom: {
-      marginBottom: 5,
-    },
     textBold: {
       ...button_link_primary_medium,
     },
@@ -248,11 +245,12 @@ const getStyles = (theme: Theme) =>
       height: '100%',
       borderTopLeftRadius: 25,
       borderTopRightRadius: 25,
-      paddingTop: 25,
       backgroundColor: getColors(theme).secondaryCardBgColor,
+      overflow: 'hidden',
     },
     listContainer: {
-      paddingHorizontal: 25,
+      paddingHorizontal: 10,
+      paddingTop: 10,
       backgroundColor: getColors(theme).secondaryCardBgColor,
     },
     textBase: {

@@ -33,7 +33,7 @@ import {
   title_secondary_body_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {fromHP, toHP, withCommas} from 'utils/format';
+import {fromHP, getCleanAmountValue, toHP, withCommas} from 'utils/format';
 import {delegate, getCurrency} from 'utils/hive';
 import {
   getPendingOutgoingUndelegation,
@@ -287,7 +287,9 @@ const DelegationsList = ({
                   <TouchableOpacity
                     activeOpacity={1}
                     onPress={() =>
-                      setEditedAmountDelegation(available.toString())
+                      setEditedAmountDelegation(
+                        getCleanAmountValue(available.toString()),
+                      )
                     }>
                     <Text style={[styles.textBase, styles.redText]}>
                       {translate('common.max').toUpperCase()}

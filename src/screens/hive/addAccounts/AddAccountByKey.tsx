@@ -2,7 +2,7 @@ import {addAccount} from 'actions/index';
 import {showModal} from 'actions/message';
 import TitleLogoLight from 'assets/new_UI/img_import_dark.svg';
 import TitleLogoDark from 'assets/new_UI/img_import_light.svg';
-import OperationButton from 'components/form/EllipticButton';
+import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
@@ -19,12 +19,12 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {Text} from 'react-native-elements';
+import {ScrollView} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
   body_primary_body_1,
@@ -87,97 +87,91 @@ const AddAccountByKey = ({
 
   return (
     <Background theme={theme}>
-      <View style={styles.flex}>
-        <FocusAwareStatusBar />
-        <View style={styles.container}>
-          <View style={styles.topContainer}>
-            <CustomIconButton
-              lightThemeIcon={<TitleLogoLight />}
-              darkThemeIcon={<TitleLogoDark />}
-              onPress={() => {}}
-              theme={theme}
-              additionalContainerStyle={styles.marginTop}
-            />
-            <Separator height={height / 15} />
-            <Text
-              style={[
-                styles.text,
-                styles.opacity,
-                styles.paddingHorizontal,
-                styles.centeredText,
-              ]}>
-              {translate('addAccountByKey.text')}
-            </Text>
-            <Separator height={height / 15} />
-            <OperationInput
-              autoCapitalize={'none'}
-              labelInput={translate('common.username')}
-              placeholder={translate('common.username')}
-              value={account}
-              onChangeText={(textValue) => setAccount(textValue.toLowerCase())}
-            />
-            <Separator height={height / 15} />
+      <ScrollView contentContainerStyle={styles.container}>
+        <FocusAwareStatusBar
+          backgroundColor={getColors(theme).primaryBackground}
+          barStyle={theme === Theme.DARK ? 'light-content' : 'dark-content'}
+        />
+        <CustomIconButton
+          lightThemeIcon={<TitleLogoLight />}
+          darkThemeIcon={<TitleLogoDark />}
+          onPress={() => {}}
+          theme={theme}
+          additionalContainerStyle={styles.marginTop}
+        />
+        <Separator height={height / 22} />
+        <Text
+          style={[
+            styles.text,
+            styles.opacity,
+            styles.paddingHorizontal,
+            styles.centeredText,
+          ]}>
+          {translate('addAccountByKey.text')}
+        </Text>
+        <Separator height={height / 22} />
+        <OperationInput
+          autoCapitalize={'none'}
+          labelInput={translate('common.username')}
+          placeholder={translate('common.username')}
+          value={account}
+          onChangeText={(textValue) => setAccount(textValue.toLowerCase())}
+        />
+        <Separator height={height / 22} />
 
-            <OperationInput
-              labelInput={translate('common.privateKey')}
-              placeholder={translate('common.privateKey')}
-              value={key}
-              onChangeText={setKey}
-              rightIcon={
-                <Icon
-                  name={Icons.SCANNER}
-                  theme={theme}
-                  onPress={() => {
-                    (navigation as AddAccFromWalletNavigation).navigate(
-                      'ScanQRScreen',
-                      {wallet: true},
-                    );
-                  }}
-                />
-              }
+        <OperationInput
+          labelInput={translate('common.privateKey')}
+          placeholder={translate('common.privateKey')}
+          value={key}
+          onChangeText={setKey}
+          rightIcon={
+            <Icon
+              name={Icons.SCANNER}
+              theme={theme}
+              onPress={() => {
+                (navigation as AddAccFromWalletNavigation).navigate(
+                  'ScanQRScreen',
+                  {wallet: true},
+                );
+              }}
             />
-          </View>
-          <View style={styles.bottomContainer}>
-            <OperationButton
-              title={translate('common.import')}
-              onPress={onImportKeys}
-              style={[getButtonStyle(theme, height).warningStyleButton]}
-              additionalTextStyle={styles.buttonText}
-              isLoading={loadingImportAccount}
-            />
-            <Separator height={height / 22} />
-            {allowAddByAuth && (
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => navigate('AddAccountFromWalletScreenByAuth')}>
-                <Text style={[styles.text, styles.textUnderlined]}>
-                  {translate('common.use_authorized_account_instead')}
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
+          }
+        />
+        <View style={styles.bottomContainer}>
+          <EllipticButton
+            title={translate('common.import')}
+            onPress={onImportKeys}
+            additionalTextStyle={styles.buttonText}
+            isWarningButton
+            isLoading={loadingImportAccount}
+          />
+          <Separator height={height / 22} />
+          {allowAddByAuth && (
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => navigate('AddAccountFromWalletScreenByAuth')}>
+              <Text style={[styles.text, styles.textUnderlined]}>
+                {translate('common.use_authorized_account_instead')}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
-      </View>
+      </ScrollView>
     </Background>
   );
 };
 
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
-    flex: {flex: 1},
-    container: {
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      height: '100%',
-    },
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_1,
       fontSize: getFontSizeSmallDevices(width, 16),
     },
-    topContainer: {
+    container: {
       width: '100%',
       alignItems: 'center',
+      flexGrow: 1,
       paddingHorizontal: 16,
     },
     smallerText: {
@@ -197,6 +191,9 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       marginBottom: 10,
       width: '100%',
       alignItems: 'center',
+      minHeight: height / 5,
+      flexGrow: 1,
+      justifyContent: 'flex-end',
     },
     marginTop: {marginTop: 25},
     buttonText: {

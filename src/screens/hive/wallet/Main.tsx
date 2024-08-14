@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsDrawerOpen} from '@react-navigation/drawer';
 import {
   setIsDrawerOpen,
@@ -19,9 +19,17 @@ import AccountValue from 'components/hive/AccountValue';
 import CurrencyToken from 'components/hive/CurrencyToken';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import Icon from 'components/hive/Icon';
+import Notifications from 'components/hive/notifications/Notifications';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
+import {TutorialPopup} from 'components/popups/tutorial/Tutorial';
+import {AccountVestingRoutesDifferences} from 'components/popups/vesting-routes/vesting-routes.interface';
+import {VestingRoutesPopup} from 'components/popups/vesting-routes/VestingRoutes';
+import WhatsNew from 'components/popups/whats-new/WhatsNew';
+import WidgetConfiguration from 'components/popups/widget-configuration/WidgetConfiguration';
+import WrongKeyPopup from 'components/popups/wrong-key/WrongKeyPopup';
+import {ProposalVotingSectionComponent} from 'components/proposal-voting/proposalVoting';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
@@ -30,12 +38,16 @@ import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
+  NativeEventEmitter,
+  NativeModules,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -70,6 +82,8 @@ import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
+import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
+import {WidgetUtils} from 'utils/widget.utils';
 import TokenSettings from './tokens/TokenSettings';
 
 const Main = ({
@@ -117,10 +131,60 @@ const Main = ({
   const [isHiveEngineLoading, setIsHiveEngineLoading] = useState(true);
   const mainScrollRef = useRef();
 
+  const [eventReceived, setEventReceived] = useState(null);
+  const [notificationEvent, setNotificationEvent] = useState(null);
+  const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const [vestingRoutesDifferences, setVestingRoutesDifferences] = useState<
+    AccountVestingRoutesDifferences[] | undefined
+  >();
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    updateUserWallet(user.name);
+  }, [user.name]);
+
+  useEffect(() => {
+    if (Platform.OS === 'ios') return;
+    const eventEmitter = new NativeEventEmitter(NativeModules.ToastExample);
+    let eventListener = eventEmitter.addListener('command_event', (event) => {
+      if (event && Object.values(event).length >= 1) {
+        setEventReceived(event);
+      }
+    });
+    if (eventReceived) {
+      if (eventReceived.currency) {
+        const {currency: command} = eventReceived;
+        if (command === 'update_values_currency_list') {
+          WidgetUtils.sendWidgetData('currency_list');
+        }
+      } else if (eventReceived.navigateTo) {
+        //IF implementation needed in the future
+        const {navigateTo: route} = eventReceived;
+        navigation.navigate(route);
+      } else if (eventReceived.configureWidgets) {
+        const {configureWidgets} = eventReceived;
+        setShowWidgetConfiguration(Boolean(configureWidgets));
+      }
+    }
+    return () => {
+      eventListener.remove();
+    };
+  }, [eventReceived]);
+
+  useEffect(() => {
+    // Stop the page refreshing after all is fetched
+    if (!userTokens.loading && user.account?.active) {
+      setRefreshing(false);
+    }
+  }, [user, userTokens.loading]);
+
   useEffect(() => {
     loadTokens();
     loadTokensMarket();
   }, [loadTokens, loadTokensMarket]);
+
   useEffect(() => {
     if (!userTokens.loading) {
       let list = userTokens.list.sort((a, b) => {
@@ -138,7 +202,7 @@ const Main = ({
       setFilteredUserTokenBalanceList([]);
       setIsHiveEngineLoading(true);
     }
-  }, [userTokens, hiddenTokens]);
+  }, [userTokens.loading, hiddenTokens, tokensMarket]);
 
   useEffect(() => {
     if (
@@ -148,6 +212,7 @@ const Main = ({
     ) {
       setLoadingUserAndGlobals(false);
       setisLoadingScreen(false);
+      initCheckVestingRoutes();
       if (!userTokens.loading) {
         loadHiddenTokens();
       }
@@ -168,6 +233,7 @@ const Main = ({
   }, [searchValue]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
+    if (!accounts.length) return;
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();
     loadPrices();
@@ -214,12 +280,18 @@ const Main = ({
 
       appState.current = nextAppState;
     };
-    AppState.addEventListener('change', handler);
-
+    const state = AppState.addEventListener('change', handler);
     return () => {
-      AppState.removeEventListener('change', handler);
+      state.remove();
     };
   }, []);
+
+  const initCheckVestingRoutes = async () => {
+    const tempVestingRoutesDifferences = await VestingRoutesUtils.getChangedVestingRoutes(
+      accounts,
+    );
+    setVestingRoutesDifferences(tempVestingRoutesDifferences);
+  };
 
   const loadHiddenTokens = async () => {
     let customHiddenTokens = null;
@@ -238,11 +310,6 @@ const Main = ({
       event.nativeEvent.contentOffset.y === 0 ||
         event.nativeEvent.contentOffset.y < lastScrollYValue,
     );
-  };
-
-  const onHandleEndScroll = (
-    event: NativeSyntheticEvent<NativeScrollEvent>,
-  ) => {
     setLastScrollYValue(event.nativeEvent.contentOffset.y);
   };
 
@@ -272,193 +339,215 @@ const Main = ({
           ? {top: '15%'}
           : undefined
       }>
-      {!loadingUserAndGlobals && rpc && rpc.uri !== 'NULL' ? (
-        <View>
-          <Separator height={TOP_CONTAINER_SEPARATION} />
-          <View style={[styles.headerMenu]}>
-            <DrawerButton navigation={navigation as any} theme={theme} />
-            <View style={[styles.innerHeader]}>
-              <StatusIndicator theme={theme} />
-              <Claim theme={theme} />
-              <View style={styles.marginRight}>
-                <UserDropdown
-                  dropdownIconScaledSize={styles.smallIcon}
-                  additionalDropdowContainerStyle={styles.userdropdown}
-                  additionalMainContainerDropdown={[styles.dropdownContainer]}
-                  additionalOverlayStyle={[styles.dropdownOverlay]}
-                  additionalListExpandedContainerStyle={
-                    styles.dropdownExpandedContainer
-                  }
-                  copyButtonValue
-                />
+      <>
+        {!loadingUserAndGlobals && rpc && rpc.uri !== 'NULL' ? (
+          <View>
+            <Separator height={TOP_CONTAINER_SEPARATION} />
+            <View style={[styles.headerMenu]}>
+              <DrawerButton navigation={navigation as any} theme={theme} />
+              <View style={[styles.innerHeader]}>
+                <StatusIndicator theme={theme} />
+                <Notifications />
+                <Claim theme={theme} />
+                <View style={styles.marginRight}>
+                  <UserDropdown
+                    dropdownIconScaledSize={styles.smallIcon}
+                    additionalDropdowContainerStyle={styles.userdropdown}
+                    additionalMainContainerDropdown={[styles.dropdownContainer]}
+                    additionalOverlayStyle={[styles.dropdownOverlay]}
+                    additionalListExpandedContainerStyle={
+                      styles.dropdownExpandedContainer
+                    }
+                    copyButtonValue
+                  />
+                </View>
               </View>
             </View>
-          </View>
-          <Separator />
-          <View
-            style={{
-              borderRadius: 20,
-              overflow: 'hidden',
-              height: '100%',
-            }}>
-            <ScrollView
-              ref={mainScrollRef}
-              onScrollEndDrag={onHandleEndScroll}
-              onScroll={onHandleScroll}>
-              <View style={styles.rowWrapper}>
-                <PercentageDisplay
-                  name={translate('wallet.vp')}
-                  percent={getVP(user.account) || 100}
-                  IconBgcolor={OVERLAYICONBGCOLOR}
-                  theme={theme}
-                  iconName={Icons.SEND_SQUARE}
-                  bgColor={BACKGROUNDITEMDARKISH}
-                  secondary={`$${
-                    getVotingDollarsPerAccount(
-                      100,
-                      properties,
-                      user.account,
-                      false,
-                    ) || '0'
-                  }`}
-                />
-                <PercentageDisplay
-                  iconName={Icons.SPEEDOMETER}
-                  bgColor={DARKER_RED_COLOR}
-                  name={translate('wallet.rc')}
-                  percent={user.rc.percentage || 100}
-                  IconBgcolor={OVERLAYICONBGCOLOR}
-                  theme={theme}
-                />
-              </View>
-              <Separator />
-              <AccountValue
-                account={user.account}
-                prices={prices}
-                properties={properties}
-                theme={theme}
-                title={translate('common.estimated_account_value')}
-              />
-              <Separator />
-              <View style={getCardStyle(theme).borderTopCard}>
-                <View>
-                  {[
-                    {currency: getCurrency('HIVE')},
-                    {currency: getCurrency('HBD')},
-                    {currency: getCurrency('HP')},
-                  ].map((item, index) => (
-                    <CurrencyToken
-                      key={`${item.currency}`}
-                      theme={theme}
-                      currencyName={item.currency}
-                      itemIndex={index}
-                      onPress={() => handleClickToView(index, 0)}
-                    />
-                  ))}
+            <Separator />
+            <View
+              style={{
+                borderRadius: 20,
+                overflow: 'hidden',
+                height: '100%',
+              }}>
+              <ScrollView
+                ref={mainScrollRef}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                  />
+                }
+                scrollEventThrottle={200}
+                onScroll={onHandleScroll}>
+                <View style={styles.rowWrapper}>
+                  <PercentageDisplay
+                    name={translate('wallet.vp')}
+                    percent={getVP(user.account) || 100}
+                    IconBgcolor={OVERLAYICONBGCOLOR}
+                    theme={theme}
+                    iconName={Icons.SEND_SQUARE}
+                    bgColor={BACKGROUNDITEMDARKISH}
+                    secondary={`$${
+                      getVotingDollarsPerAccount(
+                        100,
+                        properties,
+                        user.account,
+                        false,
+                      ) || '0'
+                    }`}
+                  />
+                  <PercentageDisplay
+                    iconName={Icons.SPEEDOMETER}
+                    bgColor={DARKER_RED_COLOR}
+                    name={translate('wallet.rc')}
+                    percent={user.rc.percentage || 100}
+                    IconBgcolor={OVERLAYICONBGCOLOR}
+                    theme={theme}
+                  />
                 </View>
-
-                <View style={[getCardStyle(theme).wrapperCardItem]}>
-                  <View
-                    style={[
-                      styles.flexRow,
-                      isSearchOpen ? styles.paddingVertical : undefined,
-                    ]}>
-                    <HiveEngineLogo height={23} width={23} />
-                    <View style={styles.separatorContainer} />
-                    {isSearchOpen ? (
-                      <CustomSearchBar
+                <Separator />
+                <AccountValue
+                  account={user.account}
+                  prices={prices}
+                  properties={properties}
+                  theme={theme}
+                  title={translate('common.estimated_account_value')}
+                />
+                <Separator />
+                <View style={getCardStyle(theme).borderTopCard}>
+                  <View>
+                    {[
+                      {currency: getCurrency('HIVE')},
+                      {currency: getCurrency('HBD')},
+                      {currency: getCurrency('HP')},
+                    ].map((item, index) => (
+                      <CurrencyToken
+                        key={`${item.currency}`}
                         theme={theme}
-                        value={searchValue}
-                        onChangeText={(text) => {
-                          setSearchValue(text);
-                        }}
-                        additionalContainerStyle={[
-                          styles.searchContainer,
-                          isSearchOpen ? styles.borderLight : undefined,
-                        ]}
-                        rightIcon={
+                        currencyName={item.currency}
+                        itemIndex={index}
+                        onPress={() => handleClickToView(index, 0)}
+                      />
+                    ))}
+                  </View>
+
+                  <View style={[getCardStyle(theme).wrapperCardItem]}>
+                    <View
+                      style={[
+                        styles.flexRow,
+                        isSearchOpen ? styles.paddingVertical : undefined,
+                      ]}>
+                      <HiveEngineLogo height={23} width={23} />
+                      <View style={styles.separatorContainer} />
+                      {isSearchOpen ? (
+                        <CustomSearchBar
+                          theme={theme}
+                          value={searchValue}
+                          onChangeText={(text) => {
+                            setSearchValue(text);
+                          }}
+                          additionalContainerStyle={[
+                            styles.searchContainer,
+                            isSearchOpen ? styles.borderLight : undefined,
+                          ]}
+                          rightIcon={
+                            <Icon
+                              name={Icons.SEARCH}
+                              theme={theme}
+                              width={18}
+                              height={18}
+                              onPress={() => {
+                                setSearchValue('');
+                                setIsSearchOpen(false);
+                              }}
+                            />
+                          }
+                        />
+                      ) : (
+                        <>
                           <Icon
                             name={Icons.SEARCH}
                             theme={theme}
+                            additionalContainerStyle={styles.search}
+                            onPress={() => {
+                              setIsSearchOpen(true);
+                            }}
                             width={18}
                             height={18}
-                            onPress={() => {
-                              setSearchValue('');
-                              setIsSearchOpen(false);
-                            }}
                           />
-                        }
-                      />
-                    ) : (
-                      <>
-                        <Icon
-                          name={Icons.SEARCH}
-                          theme={theme}
-                          additionalContainerStyle={styles.search}
-                          onPress={() => {
-                            setIsSearchOpen(true);
-                          }}
-                          width={18}
-                          height={18}
-                        />
-                        <Icon
-                          name={Icons.SETTINGS_2}
-                          theme={theme}
-                          onPress={handleClickSettings}
-                        />
-                      </>
-                    )}
-                  </View>
-                </View>
-                {filteredUserTokenBalanceList.map((item, index) => (
-                  <EngineTokenDisplay
-                    key={`engine-token-${item._id}`}
-                    addBackground
-                    token={item}
-                    tokensList={tokens}
-                    market={tokensMarket}
-                    toggled={toggled === item._id}
-                    setToggle={() => {
-                      if (toggled === item._id) setToggled(null);
-                      else setToggled(item._id);
-                      handleClickToView(index, 1);
-                    }}
-                  />
-                ))}
-
-                <>
-                  {isHiveEngineLoading && (
-                    <View style={styles.extraContainerMiniLoader}>
-                      <Loader size={'small'} animating />
+                          <Icon
+                            name={Icons.SETTINGS_2}
+                            theme={theme}
+                            onPress={handleClickSettings}
+                          />
+                        </>
+                      )}
                     </View>
-                  )}
-                  {!userTokens.loading &&
-                    filteredUserTokenBalanceList.length === 0 &&
-                    orderedUserTokenBalanceList.length === 0 && (
+                  </View>
+                  {filteredUserTokenBalanceList.map((item, index) => (
+                    <EngineTokenDisplay
+                      key={`engine-token-${item._id}`}
+                      addBackground
+                      token={item}
+                      tokensList={tokens}
+                      market={tokensMarket}
+                      toggled={toggled === item._id}
+                      setToggle={() => {
+                        if (toggled === item._id) setToggled(null);
+                        else setToggled(item._id);
+                        handleClickToView(index, 1);
+                      }}
+                    />
+                  ))}
+
+                  <>
+                    {isHiveEngineLoading && (
                       <View style={styles.extraContainerMiniLoader}>
-                        <Text style={styles.no_tokens}>
-                          {translate('wallet.no_tokens')}
-                        </Text>
+                        <Loader size={'small'} animating />
                       </View>
                     )}
-                  {!userTokens.loading &&
-                    orderedUserTokenBalanceList.length > 0 &&
-                    filteredUserTokenBalanceList.length === 0 && (
-                      <View style={styles.extraContainerMiniLoader}>
-                        <Text style={styles.no_tokens}>
-                          {translate('wallet.no_tokens_filter')}
-                        </Text>
-                      </View>
-                    )}
-                </>
-              </View>
-              <View style={[getCardStyle(theme).filledWrapper]} />
-            </ScrollView>
+                    {!userTokens.loading &&
+                      filteredUserTokenBalanceList.length === 0 &&
+                      orderedUserTokenBalanceList.length === 0 && (
+                        <View style={styles.extraContainerMiniLoader}>
+                          <Text style={styles.no_tokens}>
+                            {translate('wallet.no_tokens')}
+                          </Text>
+                        </View>
+                      )}
+                    {!userTokens.loading &&
+                      orderedUserTokenBalanceList.length > 0 &&
+                      filteredUserTokenBalanceList.length === 0 && (
+                        <View style={styles.extraContainerMiniLoader}>
+                          <Text style={styles.no_tokens}>
+                            {translate('wallet.no_tokens_filter')}
+                          </Text>
+                        </View>
+                      )}
+                  </>
+                </View>
+                <View style={[getCardStyle(theme).filledWrapper]} />
+              </ScrollView>
+            </View>
+            <WhatsNew navigation={navigation} />
+            <WidgetConfiguration
+              show={showWidgetConfiguration}
+              setShow={setShowWidgetConfiguration}
+            />
+            <TutorialPopup navigation={navigation} />
+            <VestingRoutesPopup
+              vestingRoutesDifferences={vestingRoutesDifferences}
+              setVestingRoutesDifferences={setVestingRoutesDifferences}
+              navigation={navigation}
+            />
+            <WrongKeyPopup />
           </View>
-        </View>
-      ) : (
-        <Loader animatedLogo />
-      )}
+        ) : (
+          <Loader animatedLogo />
+        )}
+        <ProposalVotingSectionComponent loaded={!loadingUserAndGlobals} />
+      </>
     </WalletPage>
   );
 };

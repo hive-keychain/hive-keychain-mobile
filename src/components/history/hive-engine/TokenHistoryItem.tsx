@@ -387,7 +387,7 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
     separator: {marginVertical: 3, borderBottomWidth: 1},
     iconContainer: {
       width: width / 9,
-      height: width / 8.5,
+      height: width / 10,
       justifyContent: 'center',
       alignItems: 'center',
       alignContent: 'center',

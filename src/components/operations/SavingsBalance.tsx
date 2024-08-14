@@ -15,10 +15,9 @@ import {translate} from 'utils/localize';
 type Props = {
   currency: string;
   account: ExtendedAccount;
-  setMax: (value: string) => void;
 };
 
-const SavingsBalance = ({currency, account, setMax}: Props) => {
+const SavingsBalance = ({currency, account}: Props) => {
   let value: number = null;
   if (currency === 'HIVE') {
     value = parseFloat(account.savings_balance + '');
@@ -27,12 +26,7 @@ const SavingsBalance = ({currency, account, setMax}: Props) => {
     ...useWindowDimensions(),
   });
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      style={styles.container}
-      onPress={() => {
-        setMax(value.toFixed(3) + '');
-      }}>
+    <TouchableOpacity activeOpacity={1} style={styles.container}>
       <View style={styles.main}>
         <View style={styles.left}>
           <View style={styles.logo}>

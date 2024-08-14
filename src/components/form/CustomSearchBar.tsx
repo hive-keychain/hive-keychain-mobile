@@ -1,12 +1,14 @@
 import React from 'react';
 import {
+  Platform,
   StyleProp,
   StyleSheet,
   TextStyle,
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import {IconNode, InputProps} from 'react-native-elements';
+import {InputProps} from 'react-native-elements';
+import {IconNode} from 'react-native-elements/dist/icons/Icon';
 import {Theme} from 'src/context/theme.context';
 import {DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {inputStyle} from 'src/styles/input';
@@ -69,7 +71,11 @@ const getStyles = (theme: Theme, width: number) =>
       color: getColors(theme).secondaryText,
       fontSize: inputStyle(theme, width).input.fontSize,
       textAlignVertical: 'bottom',
-      lineHeight: inputStyle(theme, width).input.fontSize,
+      lineHeight:
+        Platform.OS === 'android'
+          ? inputStyle(theme, width).input.fontSize
+          : undefined,
+      marginLeft: 5,
     },
     noMarginHorizontal: {
       marginHorizontal: 0,

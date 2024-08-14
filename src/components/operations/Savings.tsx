@@ -33,7 +33,7 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
-import {capitalize} from 'utils/format';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
 import {depositToSavings, withdrawFromSavings} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
@@ -58,6 +58,7 @@ const Savings = ({
   operation,
   userSavingsWithdrawRequests,
   showModal,
+  apr,
 }: Props) => {
   const [to, setTo] = useState(user.name!);
   const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
@@ -164,7 +165,12 @@ const Savings = ({
   const onSavingsConfirmation = () => {
     if (!to || !amount) {
       Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
-    } else if (+amount > parseFloat(availableBalance as string)) {
+    } else if (
+      (+amount > +getCleanAmountValue(availableBalance as string) &&
+        operationType === SavingsOperations.deposit) ||
+      (+amount > +getCleanAmountValue(currentBalance as string) &&
+        operationType === SavingsOperations.withdraw)
+    ) {
       Toast.show(
         translate('common.overdraw_balance_error', {
           currency,
@@ -190,7 +196,7 @@ const Savings = ({
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${amount} ${currency}`,
+            value: `${withCommas(amount)} ${currency}`,
           },
         ],
       };
@@ -200,8 +206,9 @@ const Savings = ({
 
   const handleSetMax = () => {
     if (operationType === SavingsOperations.deposit) {
-      setAmount((availableBalance as string).split(' ')[0]);
-    } else setAmount((currentBalance as string).split(' ')[0]);
+      setAmount(getCleanAmountValue(availableBalance as string).split(' ')[0]);
+    } else
+      setAmount(getCleanAmountValue(currentBalance as string).split(' ')[0]);
   };
 
   return (
@@ -276,7 +283,11 @@ const Savings = ({
             operationType !== SavingsOperations.deposit) && (
             <View>
               <Caption
-                text={`wallet.operations.savings.${operationType}_disclaimer`}
+                text={translate(
+                  `wallet.operations.savings.${operationType}_disclaimer`,
+                  {apr},
+                )}
+                skipTranslation
               />
             </View>
           )}
@@ -451,6 +462,7 @@ const connector = connect(
       user: state.activeAccount,
       userSavingsWithdrawRequests:
         state.activeAccount.account.savings_withdraw_requests,
+      apr: state.properties.globals.hbd_interest_rate / 100,
     };
   },
   {showModal},

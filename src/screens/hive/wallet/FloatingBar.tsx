@@ -27,6 +27,7 @@ import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
+import {PlatformsUtils} from 'utils/platforms.utils';
 
 export type FloatingBarLink = 'ecosystem' | 'browser' | 'scan_qr' | 'swap_buy';
 interface Props {
@@ -40,14 +41,20 @@ const Floating = ({
   isDrawerOpen,
   closeAllTabs,
   rpc,
+  isProposalRequestDisplayed,
+  showSwap,
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-  const styles = getStyles(theme, {width, height}, useSafeAreaInsets());
+  const styles = getStyles(
+    theme,
+    {width, height},
+    useSafeAreaInsets(),
+    isProposalRequestDisplayed,
+  );
   const anim = useRef(new Animated.Value(0)).current;
   const [isTop, setIsTop] = useState(false);
-
   const getActiveStyle = (link: FloatingBarLink) =>
     activeLink === link ? styles.active : undefined;
 
@@ -159,20 +166,23 @@ const Floating = ({
           </Text>
         )}
       </View>
-      <View style={[styles.itemContainer, getActiveStyle('swap_buy')]}>
-        <Icon
-          theme={theme}
-          color={getActiveIconColor('swap_buy')}
-          name={Icons.SWAP}
-          {...getIconDimensions(width)}
-          onPress={() => onHandlePressButton('swap_buy')}
-        />
-        {showTags && (
-          <Text style={[styles.textBase, styles.marginTop]}>
-            {translate('navigation.floating_bar.swap')}
-          </Text>
-        )}
-      </View>
+      {PlatformsUtils.showDependingOnPlatform(
+        <View style={[styles.itemContainer, getActiveStyle('swap_buy')]}>
+          <Icon
+            theme={theme}
+            color={getActiveIconColor('swap_buy')}
+            name={Icons.SWAP}
+            {...getIconDimensions(width)}
+            onPress={() => onHandlePressButton('swap_buy')}
+          />
+          {showTags && (
+            <Text style={[styles.textBase, styles.marginTop]}>
+              {translate('navigation.floating_bar.swap')}
+            </Text>
+          )}
+        </View>,
+        showSwap,
+      )}
     </Animated.View>
   ) : null;
 };
@@ -181,11 +191,12 @@ const getStyles = (
   theme: Theme,
   {width, height}: Dimensions,
   insets: EdgeInsets,
+  isProposalRequestDisplayed: boolean,
 ) =>
   StyleSheet.create({
     container: {
       position: 'absolute',
-      bottom: 0,
+      bottom: isProposalRequestDisplayed ? 80 : 0,
       width: '95%',
       marginBottom: 0,
       alignSelf: 'center',
@@ -220,9 +231,11 @@ const connector = connect(
   (state: RootState) => {
     return {
       show: state.floatingBar.show,
+      isProposalRequestDisplayed: state.floatingBar.isProposalRequestDisplayed,
       isLoadingScreen: state.floatingBar.isLoadingScreen,
       isDrawerOpen: state.floatingBar.isDrawerOpened,
       rpc: state.settings.rpc,
+      showSwap: state.settings.mobileSettings?.platformRelevantFeatures?.swap,
     };
   },
   {showFloatingBar, closeAllTabs},

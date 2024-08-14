@@ -10,6 +10,7 @@ import validateKeys from 'utils/keyValidation';
 import {clearKeychain, saveOnKeychain} from 'utils/keychainStorage';
 import {translate} from 'utils/localize';
 import {navigate, resetStackAndNavigate} from 'utils/navigation';
+import {WidgetUtils} from 'utils/widget.utils';
 import {
   Account,
   AccountKeys,
@@ -48,6 +49,12 @@ export const addAccount = (
   dispatch(action);
   const accounts = [...previousAccounts, {name, keys}];
   const encrypted = encryptJson({list: accounts}, mk);
+
+  await WidgetUtils.addAccountBalanceList(
+    name,
+    accounts.map((acc) => acc.name),
+  );
+
   await saveOnKeychain('accounts', encrypted);
   if (wallet) {
     dispatch(loadAccount(name));
@@ -55,11 +62,12 @@ export const addAccount = (
   }
 };
 
-export const forgetAccounts = (): AppThunk => (dispatch) => {
+export const forgetAccounts = (): AppThunk => async (dispatch) => {
   clearKeychain('accounts');
   dispatch({
     type: FORGET_ACCOUNTS,
   });
+  await WidgetUtils.clearAccountBalanceList();
 };
 
 export const forgetAccount = (username: string): AppThunk => async (
@@ -77,6 +85,7 @@ export const forgetAccount = (username: string): AppThunk => async (
       payload: {name: username},
     };
     dispatch(action);
+    await WidgetUtils.removeAccountBalanceList(username);
   } else {
     dispatch(forgetAccounts());
   }

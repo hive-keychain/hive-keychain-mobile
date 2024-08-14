@@ -36,6 +36,7 @@ import Footer from './Footer';
 import HomeTab from './HomeTab';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
+import {DESKTOP_MODE} from './bridges/DesktopMode';
 import {hive_keychain} from './bridges/HiveKeychainBridge';
 import {BRIDGE_WV_INFO} from './bridges/WebviewInfo';
 import RequestErr from './requestOperations/components/RequestError';
@@ -59,6 +60,7 @@ type Props = {
     isManagingTab: boolean,
     tab: Tab,
     webview: MutableRefObject<View>,
+    url?: string,
   ) => void;
   tabsNumber: number;
   orientation: string;
@@ -92,6 +94,7 @@ export default ({
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
   const [shouldUpdateWvInfo, setShouldUpdateWvInfo] = useState(true);
+  const [desktopMode, setDesktopMode] = useState(false);
   const insets = useSafeAreaInsets();
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
   useEffect(() => {
@@ -278,6 +281,7 @@ export default ({
       });
     }
   };
+
   return (
     <View
       style={[styles.container, !active || isManagingTab ? styles.hide : null]}>
@@ -302,17 +306,15 @@ export default ({
           collapsable={false}>
           <WebView
             source={{
-              uri: url === BrowserConfig.HOMEPAGE_URL ? null : url,
+              uri: url === BrowserConfig.HOMEPAGE_URL ? undefined : url,
             }}
             domStorageEnabled={true}
             allowFileAccess={true}
             allowUniversalAccessFromFileURLs={true}
             mixedContentMode={'always'}
             ref={tabRef}
-            // sharedCookiesEnabled={
-            //   url.includes('risingstargame.com') ? false : true
-            // }
             injectedJavaScriptBeforeContentLoaded={hive_keychain}
+            injectedJavaScript={desktopMode ? DESKTOP_MODE : undefined}
             mediaPlaybackRequiresUserAction={false}
             onMessage={onMessage}
             javaScriptEnabled
@@ -328,6 +330,14 @@ export default ({
             onHttpError={(error) => {
               console.log('HttpError', error);
             }}
+            onOpenWindow={(event) => {
+              addTab(
+                false,
+                {url, icon, id},
+                tabParentRef,
+                event.nativeEvent.targetUrl,
+              );
+            }}
             useWebView2
           />
         </View>
@@ -340,6 +350,11 @@ export default ({
           goForward={goForward}
           reload={reload}
           clearCache={clearCache}
+          desktopMode={desktopMode}
+          toggleDesktopMode={() => {
+            setDesktopMode(!desktopMode);
+            tabRef.current.reload();
+          }}
           addTab={() => {
             addTab(
               isManagingTab,
@@ -363,6 +378,6 @@ export default ({
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, flexDirection: 'column'},
+  container: {flexGrow: 1, flexDirection: 'column'},
   hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
 });

@@ -75,6 +75,7 @@ export default ({
             containerStyle={[styles.container, containerStyle]}
             inputStyle={styles.input}
             leftIconContainerStyle={styles.leftIcon}
+            ref={ref}
             rightIconContainerStyle={styles.rightIcon}
             inputContainerStyle={[
               styles.inputContainer,
@@ -86,7 +87,10 @@ export default ({
           {isFocused && autoCompleteValues && (
             <AutoCompleteBox
               autoCompleteValues={autoCompleteValues}
-              handleOnChange={props.onChangeText}
+              handleOnChange={(string) => {
+                props.onChangeText(string);
+                ref.current.blur();
+              }}
               filterValue={props.value}
             />
           )}

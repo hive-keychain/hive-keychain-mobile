@@ -20,7 +20,12 @@ import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {FavoriteUserUtils} from 'utils/favorite-user.utils';
-import {beautifyTransferError, capitalize} from 'utils/format';
+import {
+  beautifyTransferError,
+  capitalize,
+  getCleanAmountValue,
+  withCommas,
+} from 'utils/format';
 import {recurrentTransfer, sendToken, transfer} from 'utils/hive';
 import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {
@@ -170,7 +175,7 @@ const Transfer = ({
         (exec.trim().length === 0 || recurrence.trim().length === 0))
     ) {
       Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
-    } else if (+amount > parseFloat(availableBalance)) {
+    } else if (+amount > +getCleanAmountValue(availableBalance)) {
       Toast.show(
         translate('common.overdraw_balance_error', {
           currency,
@@ -181,6 +186,7 @@ const Transfer = ({
       const confirmationData = {
         title: 'wallet.operations.transfer.confirm.info',
         onSend,
+        skipWarningTranslation: true,
         warningText: getTransferWarning(
           phishingAccounts,
           to,
@@ -204,7 +210,7 @@ const Transfer = ({
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${amount} ${currency}`,
+            value: `${withCommas(amount)} ${currency}`,
           },
         ],
       };
@@ -251,11 +257,6 @@ const Transfer = ({
               tokenBalance={tokenBalance}
               tokenLogo={tokenLogo}
               isHiveEngine={engine}
-              setMax={(value: string) => {
-                setAmount(value);
-                setAvailableBalance(value);
-              }}
-              //TODO fix bellow!! ask quentin
               setAvailableBalance={(available) =>
                 setAvailableBalance(available)
               }
@@ -313,7 +314,9 @@ const Transfer = ({
                     />
                     <TouchableOpacity
                       activeOpacity={1}
-                      onPress={() => setAmount(availableBalance)}>
+                      onPress={() =>
+                        setAmount(getCleanAmountValue(availableBalance))
+                      }>
                       <Text
                         style={
                           getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
@@ -332,6 +335,7 @@ const Transfer = ({
                 labelInput={capitalize(translate('common.memo'))}
                 placeholder={translate('wallet.operations.transfer.memo')}
                 value={memo}
+                trim={false}
                 onChangeText={setMemo}
                 rightIcon={
                   <View style={styles.flexRowCenter}>

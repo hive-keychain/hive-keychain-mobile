@@ -30,7 +30,7 @@ import {
   title_secondary_body_3,
 } from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, withCommas} from 'utils/format';
+import {capitalize, getCleanAmountValue, withCommas} from 'utils/format';
 import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
@@ -277,7 +277,9 @@ const IncomingOutgoingRcDelegationItem = ({
                     <TouchableOpacity
                       activeOpacity={1}
                       onPress={() =>
-                        setEditedAmountDelegation(available.gigaRcValue)
+                        setEditedAmountDelegation(
+                          getCleanAmountValue(available.gigaRcValue),
+                        )
                       }>
                       <Text style={[styles.textBase, styles.redText]}>
                         {translate('common.max').toUpperCase()}

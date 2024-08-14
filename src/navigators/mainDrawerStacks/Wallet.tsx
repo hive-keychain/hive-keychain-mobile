@@ -104,7 +104,7 @@ export default () => {
                         theme={theme}
                         additionalContainerStyle={styles.iconButton}
                       />
-                      <Icon theme={theme} name={Icons.POLYGON_DOWN} />
+                      <Icon theme={theme} name={Icons.CARRET_UP} />
                     </View>
                   ),
                 })

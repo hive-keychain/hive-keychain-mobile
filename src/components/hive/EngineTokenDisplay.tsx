@@ -14,7 +14,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
 import {RootState} from 'store';
-import {getBackgroundColorFromBackend} from 'utils/colors';
+import {Colors, getTokenBackgroundColor} from 'utils/colors';
 import {Width} from 'utils/common.types';
 import {formatBalance} from 'utils/format';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
@@ -36,7 +36,8 @@ const EngineTokenDisplay = ({
   toggled,
   setToggle,
   addBackground,
-  price,
+  hivePrice,
+  colors,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -44,6 +45,7 @@ const EngineTokenDisplay = ({
     {width},
     theme,
     token.symbol,
+    colors,
     addBackground,
   );
   const [hasError, setHasError] = useState(false);
@@ -90,12 +92,14 @@ const EngineTokenDisplay = ({
         currency={token.symbol}
         color="black"
         balance={parseFloat(token.balance)}
-        totalValue={getHiveEngineTokenValue(token, market)}
+        totalValue={getHiveEngineTokenValue(token, market) * hivePrice}
         toggled={toggled}
         setToggle={setToggle}
         price={{
           usd: tokenMarket
-            ? +formatBalance(parseFloat(tokenMarket.lastPrice) * price)
+            ? +formatBalance(parseFloat(tokenMarket.lastPrice) * hivePrice)
+            : tokenInfo.symbol === 'SWAP.HIVE'
+            ? +formatBalance(hivePrice)
             : 0,
           usd_24h_change: parseFloat(
             tokenMarket ? tokenMarket.priceChangePercent : '0',
@@ -124,6 +128,7 @@ const getDimensionedStyles = (
   {width}: Width,
   theme: Theme,
   symbol: string,
+  colors: Colors,
   addBackground?: boolean,
 ) =>
   StyleSheet.create({
@@ -139,13 +144,13 @@ const getDimensionedStyles = (
     },
     iconContainerBaseWithBg: {
       backgroundColor: addBackground
-        ? getBackgroundColorFromBackend(symbol, theme)
+        ? getTokenBackgroundColor(colors, symbol, theme)
         : undefined,
     },
   });
 
 const mapStateToProps = (state: RootState) => {
-  return {price: state.currencyPrices.hive.usd};
+  return {hivePrice: state.currencyPrices.hive.usd, colors: state.colors};
 };
 
 const connector = connect(mapStateToProps);

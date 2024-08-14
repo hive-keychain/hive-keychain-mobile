@@ -21,7 +21,7 @@ import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle, title_primary_body_2} from 'src/styles/typography';
 import {RootState} from 'store';
-import {capitalize, toHP, withCommas} from 'utils/format';
+import {capitalize, getCleanAmountValue, toHP, withCommas} from 'utils/format';
 import {powerUp} from 'utils/hive';
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
@@ -73,7 +73,7 @@ const PowerUp = ({
   const onPowerUpConfirmation = () => {
     if (!to || !amount) {
       Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
-    } else if (+amount > parseFloat(availableHiveAmount)) {
+    } else if (+amount > +getCleanAmountValue(availableHiveAmount)) {
       Toast.show(
         translate('common.overdraw_balance_error', {
           currency,
@@ -94,7 +94,7 @@ const PowerUp = ({
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${amount} ${currency}`,
+            value: `${withCommas(amount)} ${currency}`,
           },
         ],
       };
@@ -168,7 +168,7 @@ const PowerUp = ({
                   <TouchableOpacity
                     activeOpacity={1}
                     onPress={() =>
-                      setAmount(availableHiveAmount.split(' ')[0])
+                      setAmount(getCleanAmountValue(availableHiveAmount))
                     }>
                     <Text
                       style={

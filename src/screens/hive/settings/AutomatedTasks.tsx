@@ -91,6 +91,7 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
                   Toast.show(translate(claimRewardsErrorMessage), Toast.LONG)
               : () => saveClaims(!claimRewards, claimAccounts, claimSavings)
           }
+          containerStyle={{flexGrow: undefined}}
           title="wallet.claim.enable_autoclaim_rewards"
           subTitle="wallet.claim.enable_autoclaim_rewards_info"
         />
@@ -103,6 +104,7 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
               : () => saveClaims(claimRewards, !claimAccounts, claimSavings)
           }
           title="wallet.claim.enable_autoclaim_accounts"
+          containerStyle={{flexGrow: undefined}}
           subTitle={translate('wallet.claim.enable_autoclaim_accounts_info', {
             MIN_RC_PCT: ClaimsConfig.freeAccount.MIN_RC_PCT,
           })}
@@ -110,6 +112,7 @@ const AutomatedTasks = ({active}: PropsFromRedux) => {
         />
         <CheckBoxPanel
           checked={claimSavings}
+          containerStyle={{flexGrow: undefined}}
           onPress={
             claimSavingsErrorMessage
               ? () =>
