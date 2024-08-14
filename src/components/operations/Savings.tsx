@@ -58,6 +58,7 @@ const Savings = ({
   operation,
   userSavingsWithdrawRequests,
   showModal,
+  apr,
 }: Props) => {
   const [to, setTo] = useState(user.name!);
   const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
@@ -282,7 +283,11 @@ const Savings = ({
             operationType !== SavingsOperations.deposit) && (
             <View>
               <Caption
-                text={`wallet.operations.savings.${operationType}_disclaimer`}
+                text={translate(
+                  `wallet.operations.savings.${operationType}_disclaimer`,
+                  {apr},
+                )}
+                skipTranslation
               />
             </View>
           )}
@@ -457,6 +462,7 @@ const connector = connect(
       user: state.activeAccount,
       userSavingsWithdrawRequests:
         state.activeAccount.account.savings_withdraw_requests,
+      apr: state.properties.globals.hbd_interest_rate / 100,
     };
   },
   {showModal},
