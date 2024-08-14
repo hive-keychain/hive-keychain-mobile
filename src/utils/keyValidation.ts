@@ -130,7 +130,8 @@ export default async (
   pwd: string,
 ): Promise<AccountKeys | null> => {
   try {
-    const account = (await getClient().database.getAccounts([username]))[0];
+    const accounts = await getClient().database.getAccounts([username.trim()]);
+    const account = accounts[0];
     if (!account)
       throw new Error(
         translate('toast.account_not_in_hive', {account: username}),
@@ -144,6 +145,7 @@ export default async (
     }
     return derivateFromMasterPassword(username, account, pwd);
   } catch (e) {
+    console.log('hihi', e);
     throw new Error(e);
   }
 };
