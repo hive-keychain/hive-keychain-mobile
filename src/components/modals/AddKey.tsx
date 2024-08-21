@@ -45,7 +45,7 @@ const AddKey = ({addKey, name, type}: Props) => {
       <EllipticButton
         title={translate('common.save')}
         onPress={() => {
-          addKey(name, type, key);
+          addKey(name, type, key.trim());
           Keyboard.dismiss();
           goBack();
         }}
