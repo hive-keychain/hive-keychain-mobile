@@ -58,10 +58,10 @@ const AddAccountByKey = ({
         translate('toast.error_missing_fields'),
         SimpleToast.LONG,
       );
-    const accountName = account.toLowerCase();
+    const accountName = account.toLowerCase().trim();
     try {
       setLoadingImportAccount(true);
-      const keys = await validateNewAccount(accountName.toLowerCase(), key);
+      const keys = await validateNewAccount(accountName, key.trim());
 
       if (keys) {
         const wallet = route.params ? route.params.wallet : false;
