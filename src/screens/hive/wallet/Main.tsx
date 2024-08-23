@@ -208,7 +208,7 @@ const Main = ({
     if (
       properties.globals &&
       Object.keys(properties.globals).length > 0 &&
-      user.name
+      user.account?.name
     ) {
       setLoadingUserAndGlobals(false);
       setisLoadingScreen(false);
@@ -217,7 +217,7 @@ const Main = ({
         loadHiddenTokens();
       }
     }
-  }, [properties, user.name]);
+  }, [properties, user.account?.name]);
 
   useEffect(() => {
     const filtered = orderedUserTokenBalanceList.filter(
