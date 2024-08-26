@@ -56,6 +56,7 @@ export const ClaimsConfig = {
   savings: {
     delay: 30,
   },
+  autoStakeTokens: {FREQUENCY: 60},
 };
 
 export const WitnessesConfig = {
