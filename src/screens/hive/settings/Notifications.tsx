@@ -13,6 +13,7 @@ import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {title_primary_title_1} from 'src/styles/typography';
 import {RootState} from 'store';
+import {navigate} from 'utils/navigation';
 import {PeakDNotificationsUtils} from 'utils/peakd-notifications.utils';
 
 const Notifications = ({active}: PropsFromRedux) => {
@@ -45,7 +46,15 @@ const Notifications = ({active}: PropsFromRedux) => {
           <Separator />
           <CheckBoxPanel
             checked={isActive}
-            onPress={() => {}}
+            onPress={async () => {
+              if (!isActive) {
+                await PeakDNotificationsUtils.saveDefaultConfig(active);
+              } else {
+                setReady(false);
+                await PeakDNotificationsUtils.deleteAccountConfig(active);
+              }
+              navigate('WalletScreen');
+            }}
             title="settings.settings.notifications.activated"
           />
         </View>

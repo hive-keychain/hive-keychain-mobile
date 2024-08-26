@@ -4,11 +4,24 @@ import {PeakDNotificationsApi} from 'api/peakd-notifications';
 import moment from 'moment';
 import {
   Notification,
+  NotificationConfig,
+  NotificationConfigConditions,
+  NotificationConfigForm,
+  NotificationOperationName,
   NotificationType,
 } from 'src/interfaces/notifications.interface';
 import {fromNaiAndSymbol, toFormattedHP, withCommas} from './format';
 import {broadcastJson} from './hive';
-
+const suggestedConfig = [
+  'fill_convert_request',
+  'interest',
+  'fill_order',
+  'fill_transfer_from_savings',
+  'fill_collateralized_convert_request',
+  'fill_recurrent_transfer',
+  'failed_recurrent_transfer',
+  'fill_vesting_withdraw',
+];
 const operationFieldList = [
   // {
   //   name: 'account_create',
@@ -872,6 +885,97 @@ const markAllAsRead = async (activeAccount: ActiveAccount) => {
   );
 };
 
+const deleteAccountConfig = async (activeAccount: ActiveAccount) => {
+  console.log(activeAccount, 'a');
+  return await broadcastJson(
+    activeAccount.keys.posting!,
+    activeAccount.name!,
+    'notify',
+    false,
+    ['delete_account', {}],
+  );
+};
+
+const saveDefaultConfig = async (activeAccount: ActiveAccount) => {
+  console.log(activeAccount.keys, 'b');
+
+  // const config = getDefaultConfig();
+  const config = getSuggestedConfig(activeAccount.name!);
+  return saveConfiguration(config, activeAccount);
+};
+
+const formatConfigForm = (form: NotificationConfigForm) => {
+  const config: NotificationConfig = [];
+  for (const item of form) {
+    const criteria = {
+      operation: item.operation,
+      conditions: {} as NotificationConfigConditions,
+    };
+    for (const condition of item.conditions) {
+      if (condition.field.length > 0 && condition.operand.length > 0)
+        criteria.conditions[condition.field] = {
+          [condition.operand]: condition.value,
+        };
+    }
+    config.push(criteria);
+  }
+  return config;
+};
+
+const saveConfiguration = async (
+  form: NotificationConfigForm,
+  account: ActiveAccount,
+) => {
+  const config = formatConfigForm(form);
+  return await broadcastJson(
+    account.keys.posting!,
+    account.name,
+    'notify',
+    false,
+    ['update_account', {config}],
+  );
+};
+
+const getSuggestedConfig = (username: string) => {
+  const configForm: NotificationConfigForm = [];
+  configForm.push({
+    operation: 'transfer',
+    conditions: [{field: 'to', operand: '==', value: username}],
+  });
+  configForm.push({
+    operation: 'comment',
+    conditions: [{field: 'body', operand: 'regex', value: `@${username}`}],
+  });
+  configForm.push({
+    operation: 'comment',
+    conditions: [{field: 'parent_author', operand: '==', value: `${username}`}],
+  });
+  configForm.push({
+    operation: 'recurrent_transfer',
+    conditions: [{field: 'to', operand: '==', value: username}],
+  });
+  configForm.push({
+    operation: 'delegate_vesting_shares',
+    conditions: [{field: 'delegatee', operand: '==', value: username}],
+  });
+  configForm.push({
+    operation: 'custom_json',
+    conditions: [{field: 'id', operand: '==', value: 'follow'}],
+  });
+  configForm.push({
+    operation: 'custom_json',
+    conditions: [{field: 'id', operand: '==', value: 'reblog'}],
+  });
+  for (const sub of suggestedConfig) {
+    configForm.push({
+      operation: sub as NotificationOperationName,
+      conditions: [{field: '', operand: '', value: ''}],
+    });
+  }
+
+  return configForm;
+};
+
 export const PeakDNotificationsUtils = {
   defaultActiveSubs,
   conditionNames,
@@ -881,4 +985,6 @@ export const PeakDNotificationsUtils = {
   operationFieldList,
   getNotifications,
   markAllAsRead,
+  deleteAccountConfig,
+  saveDefaultConfig,
 };
