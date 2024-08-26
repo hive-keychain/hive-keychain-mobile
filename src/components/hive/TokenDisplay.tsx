@@ -366,7 +366,7 @@ const TokenDisplay = ({
                 additionalContainerStyle={[styles.marginRight]}
                 color={PRIMARY_RED_COLOR}
               />,
-              translate('common.send'),
+              translate('common.transfer'),
               onTransfer,
             )}
             {tokenInfo &&

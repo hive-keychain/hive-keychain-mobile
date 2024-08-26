@@ -48,7 +48,7 @@ export const getHBDButtonList = (user: ActiveAccount, theme: Theme) => {
           {...styles.icon}
         />
       }
-      primaryLabel={translate('common.send')}
+      primaryLabel={translate('common.transfer')}
     />,
     <SquareButton
       additionalButtonContainerStyle={styles.buttonContainer}
