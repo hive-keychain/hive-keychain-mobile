@@ -549,6 +549,7 @@
         "disclaimer": "Setup automated tasks that will run every hour",
         "he_auto": {
           "title": "Auto Staking",
+          "list_title": "Tokens set for automatic staking",
           "subtitle": "Automatically staking your tokens can increase your gains"
         }
       },

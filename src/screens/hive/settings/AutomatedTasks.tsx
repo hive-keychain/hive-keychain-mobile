@@ -8,16 +8,26 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import Spoiler from 'components/ui/Spoiler';
 import SwapCurrencyImage from 'components/ui/SwapCurrencyImage';
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
+import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+  ViewStyle,
+} from 'react-native';
 import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
+import {CARD_PADDING_HORIZONTAL, getCardStyle} from 'src/styles/card';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {ICONMINDIMENSIONS} from 'src/styles/icon';
+import {inputStyle} from 'src/styles/input';
 import {title_primary_title_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import AutomatedTasksUtils from 'utils/automatedTasks.utils';
@@ -27,6 +37,7 @@ import {translate} from 'utils/localize';
 const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
+  const {width} = useWindowDimensions();
   const [claimRewards, setClaimRewards] = useState(false);
   const [claimAccounts, setClaimAccounts] = useState(false);
   const [claimSavings, setClaimSavings] = useState(false);
@@ -49,6 +60,7 @@ const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
     setClaimRewardsErrorMessage(undefined);
     init();
   }, [active]);
+  const ref: MutableRefObject<ScrollView> = useRef(null);
 
   const init = async () => {
     const values = await AutomatedTasksUtils.getClaims(active.name!);
@@ -66,6 +78,24 @@ const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
     );
     setEnabledAutoStake(
       await AutomatedTasksUtils.getUserAutoStake(active.name!),
+    );
+    const previousList = await AutomatedTasksUtils.getUserAutoStakeList(
+      active.name!,
+      tokens,
+    );
+
+    setAutoStakeTokenList(
+      previousList.map((token) => {
+        token.icon = (
+          <SwapCurrencyImage
+            uri={(token.icon as unknown) as string}
+            symbol={token.value}
+            svgHeight={20}
+            svgWidth={20}
+          />
+        );
+        return token;
+      }),
     );
   };
 
@@ -91,9 +121,80 @@ const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
     );
   };
 
+  const setAndSaveAutoStakeTokenList = async (
+    autoStakeData: DropdownModalItem[],
+  ) => {
+    setAutoStakeTokenList(autoStakeData);
+    await AutomatedTasksUtils.updateAutoStakeTokenList(
+      active.name!,
+      autoStakeData,
+    );
+  };
+
+  const renderItem = (item: DropdownModalItem, index: number) => {
+    const innerContainerStyle = {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: item.removable ? '100%' : 'auto',
+      alignItems: 'center',
+      alignContent: 'center',
+    } as ViewStyle;
+    const innerContainerBgStyle = {
+      alignContent: 'space-between',
+      flex: 1,
+    } as ViewStyle;
+
+    const labelTextStyle = {
+      color: 'white',
+    } as ViewStyle;
+
+    return (
+      <View style={[{paddingVertical: 4}]}>
+        <TouchableOpacity activeOpacity={1} style={[styles.tokenItem]}>
+          <View style={[innerContainerStyle, innerContainerBgStyle]}>
+            <View style={{flexDirection: 'row'}}>
+              {item.icon}
+              <Text
+                style={[
+                  inputStyle(theme, width).input,
+                  labelTextStyle,
+                  {marginLeft: 10},
+                ]}>
+                {item.label}
+              </Text>
+            </View>
+            <Icon
+              theme={theme}
+              name={Icons.REMOVE}
+              onPress={() => handleRemoveItem(item)}
+              color={PRIMARY_RED_COLOR}
+            />
+          </View>
+        </TouchableOpacity>
+        {index !== autoStakeTokenList.length - 1 && (
+          <Separator
+            additionalLineStyle={{
+              borderColor: getCardStyle(theme).borderTopCard.borderColor,
+            }}
+            height={0}
+          />
+        )}
+      </View>
+    );
+  };
+
+  const handleRemoveItem = async (item: DropdownModalItem) => {
+    if (autoStakeTokenList.find((a) => a.value === item.value)) {
+      const copyAutoStakeList = [...autoStakeTokenList].filter(
+        (i) => i.value !== item.value,
+      );
+      await setAndSaveAutoStakeTokenList(copyAutoStakeList);
+    }
+  };
+
   return (
     <Background theme={theme}>
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} ref={ref}>
         <Caption
           text={'settings.settings.automated_tasks.disclaimer'}
           hideSeparator
@@ -188,11 +289,18 @@ const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
                       ) {
                         const copyAutoStakeList = [...autoStakeTokenList];
                         copyAutoStakeList.unshift(item);
-                        // setAndSaveAutoStakeTokenList(copyAutoStakeList);
+                        setAndSaveAutoStakeTokenList(copyAutoStakeList);
+                        ref.current.scrollToEnd();
                       }
                     }}
                     list={tokens
-                      .filter((token) => token.stakingEnabled)
+                      .filter(
+                        (token) =>
+                          token.stakingEnabled &&
+                          !autoStakeTokenList.find(
+                            (e) => e.value === token.symbol,
+                          ),
+                      )
                       .map((token) => {
                         return {
                           value: token.symbol,
@@ -221,7 +329,30 @@ const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
                     additionalLineStyle={styles.bottomLineDropdownItem}
                   />
                 </View>
-                <View></View>
+                <Separator />
+                {autoStakeTokenList.length > 0 && enabledAutoStake && (
+                  <>
+                    <Text
+                      style={[
+                        inputStyle(theme, width).label,
+                        {marginLeft: 10},
+                      ]}>
+                      {translate(
+                        'settings.settings.automated_tasks.he_auto.list_title',
+                      )}
+                    </Text>
+                    <View style={getCardStyle(theme).defaultCardItem}>
+                      {/* className="auto-stake-token-list"> */}
+                      <FlatList
+                        keyboardDismissMode="none"
+                        keyboardShouldPersistTaps="handled"
+                        data={autoStakeTokenList}
+                        keyExtractor={(item) => item.label}
+                        renderItem={(item) => renderItem(item.item, item.index)}
+                      />
+                    </View>
+                  </>
+                )}
               </View>
             )}
           </>
@@ -244,6 +375,13 @@ const getStyles = (theme: Theme) =>
       width: '85%',
       borderColor: getColors(theme).lineSeparatorStroke,
       alignSelf: 'center',
+    },
+    tokenItem: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 6,
+      marginTop: 6,
     },
   });
 

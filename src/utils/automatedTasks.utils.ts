@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ActiveAccount} from 'actions/interfaces';
+import {DropdownModalItem} from 'components/form/DropdownModal';
+import {Token} from 'src/interfaces/tokens.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {ClaimsConfig} from './config';
 
@@ -113,8 +115,8 @@ const canClaimAccountErrorMessage = (
 
 const saveUserAutoStake = async (username: string, value: boolean) => {
   try {
-    const autoStake = await AsyncStorage.getItem(
-      KeychainStorageKeyEnum.HE_AUTO_STAKE,
+    const autoStake = JSON.parse(
+      await AsyncStorage.getItem(KeychainStorageKeyEnum.HE_AUTO_STAKE),
     );
     let autoStakeUsers: any = autoStake ? JSON.parse(autoStake) : {};
     if (Object.keys(autoStakeUsers).length > 0) {
@@ -143,17 +145,52 @@ const getUserAutoStake = async (username: string) => {
   }
 };
 
-const getUserAutoStakeList = async (username: string) => {
+const getUserAutoStakeList = async (
+  username: string,
+  tokens: Token[],
+): Promise<DropdownModalItem[]> => {
   try {
     const autoStakeList = JSON.parse(
-      await AsyncStorage.getItem(KeychainStorageKeyEnum.HE_AUTO_STAKE),
+      await AsyncStorage.getItem(
+        KeychainStorageKeyEnum.LAYER_TWO_AUTO_STAKE_TOKENS,
+      ),
     );
-    return autoStakeList && autoStakeList[username]
-      ? autoStakeList[username]
-      : [];
+    const savedTokens =
+      autoStakeList && autoStakeList[username] ? autoStakeList[username] : [];
+    return savedTokens.map((savedToken: {symbol: string}) => {
+      const tk = tokens.find((e) => e.symbol === savedToken.symbol);
+      return {label: tk.symbol, value: tk.symbol, icon: tk.metadata.icon};
+    });
   } catch (e) {
     return [];
   }
+};
+
+const updateAutoStakeTokenList = async (
+  username: string,
+  list: DropdownModalItem[],
+) => {
+  const reMappedList = list.map((c) => {
+    return {symbol: c.value};
+  });
+  const currentList = JSON.parse(
+    await AsyncStorage.getItem(
+      KeychainStorageKeyEnum.LAYER_TWO_AUTO_STAKE_TOKENS,
+    ),
+  );
+  let autoStakeList: any = currentList ?? {};
+  if (Object.keys(autoStakeList).length > 0) {
+    autoStakeList[username] = reMappedList;
+  } else {
+    autoStakeList = {
+      ...autoStakeList,
+      [username]: reMappedList,
+    };
+  }
+  AsyncStorage.setItem(
+    KeychainStorageKeyEnum.LAYER_TWO_AUTO_STAKE_TOKENS,
+    JSON.stringify(autoStakeList),
+  );
 };
 
 const AutomatedTasksUtils = {
@@ -166,6 +203,7 @@ const AutomatedTasksUtils = {
   getUserAutoStakeList,
   getUserAutoStake,
   saveUserAutoStake,
+  updateAutoStakeTokenList,
 };
 
 export default AutomatedTasksUtils;

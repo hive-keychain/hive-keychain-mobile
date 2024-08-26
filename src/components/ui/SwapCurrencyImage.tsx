@@ -52,7 +52,6 @@ const SwapCurrencyImage = ({
       case getCurrency('HIVE'):
         return 'rgb(253, 235, 238)';
       default:
-        console.log(getTokenBackgroundColor(colors, symbol, theme));
         return getTokenBackgroundColor(colors, symbol, theme);
     }
   };
