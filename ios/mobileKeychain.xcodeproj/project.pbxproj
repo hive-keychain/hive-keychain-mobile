@@ -935,7 +935,11 @@
 				DEVELOPMENT_TEAM = 357S8L8T5N;
 				INFOPLIST_FILE = mobileKeychain/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+<<<<<<< HEAD
 				MARKETING_VERSION = 2.3.0;
+=======
+				MARKETING_VERSION = 2.2.12;
+>>>>>>> dev
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
