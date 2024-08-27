@@ -1,4 +1,4 @@
-import {OperationName, TransferOperation} from '@hiveio/dhive';
+import {TransferOperation} from '@hiveio/dhive';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {WalletHistoryComponentProps} from 'components/history/WalletHistoryComponent';
@@ -141,9 +141,6 @@ export type ConfirmationPageRoute = RouteProp<
   RootStackParam,
   'ConfirmationPage'
 >;
-export type ReceiveTransferProps = [
-  OperationName,
-  Partial<TransferOperation[1]>,
-];
+export type ReceiveTransferProps = ['transfer', Partial<TransferOperation[1]>];
 
 export type ReceiveTransferRoute = RouteProp<RootStackParam, 'ReceiveTransfer'>;

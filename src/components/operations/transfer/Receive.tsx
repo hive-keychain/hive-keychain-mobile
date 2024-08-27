@@ -1,20 +1,56 @@
+import {showModal} from 'actions/message';
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
 import {encodeOp} from 'hive-uri';
-import {ReceiveTransferRoute} from 'navigators/Root.types';
-import React from 'react';
+import {
+  ReceiveTransferProps,
+  ReceiveTransferRoute,
+} from 'navigators/Root.types';
+import React, {useEffect} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import QRCode from 'react-qr-code';
+import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getColors} from 'src/styles/colors';
 import {getFormFontStyle} from 'src/styles/typography';
+import {RootState} from 'store';
 import {translate} from 'utils/localize';
+import {resetStackAndNavigate} from 'utils/navigation';
+import {TokenUtils} from 'utils/tokens.utils';
+import TransactionUtils from 'utils/transactions.utils';
 
-const Receive = ({route}: {route: ReceiveTransferRoute}) => {
+const Receive = ({
+  route,
+  showModal,
+}: {route: ReceiveTransferRoute} & PropsFromRedux) => {
   const theme = useThemeContext().theme;
   const params = route.params;
   const {width} = useWindowDimensions();
   const styles = getStyles(theme);
+  useEffect(() => {
+    const date = new Date();
+    const interval = setInterval(async () => {
+      const currency = (params[1].amount as string).split(' ')[1];
+      let res;
+      if (currency === 'HIVE' || currency === 'HBD') {
+        res = await TransactionUtils.searchForTransaction(
+          params as ReceiveTransferProps,
+          date,
+        );
+      } else {
+        res = await TokenUtils.searchForTransaction(
+          params as ReceiveTransferProps,
+          date,
+        );
+      }
+      if (res) {
+        clearInterval(interval);
+        showModal('toast.receive_success', MessageModalType.SUCCESS);
+        resetStackAndNavigate('WALLET');
+      }
+    }, 3000);
+  }, []);
   return (
     <Background theme={theme}>
       <View
@@ -110,4 +146,12 @@ const getStyles = (theme: Theme) =>
     justifyCenter: {justifyContent: 'center', alignItems: 'center'},
   });
 
-export default Receive;
+const connector = connect(
+  (state: RootState) => {
+    return {};
+  },
+  {showModal},
+);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(Receive);
