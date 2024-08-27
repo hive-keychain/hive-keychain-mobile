@@ -106,7 +106,6 @@ export const processQRCodeOp = async (op: Operation) => {
     default:
       break;
   }
-  console.log('req', request);
   const accounts = await store.getState().accounts;
 
   if (accounts && accounts.length) {

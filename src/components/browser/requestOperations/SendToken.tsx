@@ -1,6 +1,10 @@
 import {KeyTypes} from 'actions/interfaces';
+import {encodeMemo} from 'components/bridge';
+import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
+import SimpleToast from 'react-native-simple-toast';
 import {sendToken} from 'utils/hive';
+import {getAccountKeys} from 'utils/hiveUtils';
 import {RequestId, RequestSendToken} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
@@ -21,6 +25,12 @@ export default ({
   const {request_id, ...data} = request;
   const {username, amount, to, currency, memo} = data;
 
+  const {
+    getUsername,
+    getAccountKey,
+    getAccountMemoKey,
+    RequestUsername,
+  } = usePotentiallyAnonymousRequest(request, accounts);
   return (
     <RequestOperation
       sendResponse={sendResponse}
@@ -31,25 +41,42 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async () => {
-        const account = accounts.find((e) => e.name === request.username);
-        const key = account.keys.active;
-        return await sendToken(key, username, {
+        let finalMemo = memo;
+        if (memo.length && memo[0] === '#') {
+          if (!getAccountMemoKey()) {
+            SimpleToast.show(translate('request.error.transfer.encrypt'));
+            return;
+          }
+          const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
+          finalMemo = await encodeMemo(
+            getAccountMemoKey(),
+            receiverMemoKey,
+            memo,
+          );
+        }
+        return await sendToken(getAccountKey(), getUsername(), {
           symbol: currency,
           to: to,
           quantity: amount,
-          memo: memo,
+          memo: finalMemo,
         });
       }}>
-      <RequestItem
-        title={translate('request.item.username')}
-        content={`@${username}`}
-      />
+      <RequestUsername />
       <RequestItem title={translate('request.item.to')} content={`@${to}`} />
       <RequestItem
         title={translate('request.item.amount')}
         content={`${amount} ${currency}`}
       />
-      <RequestItem title={translate('request.item.memo')} content={memo} />
+      <RequestItem
+        title={translate('request.item.memo')}
+        content={
+          memo.length
+            ? memo[0] === '#'
+              ? `${memo.substring(1)} (${translate('common.encrypted')})`
+              : memo
+            : translate('common.none')
+        }
+      />
     </RequestOperation>
   );
 };

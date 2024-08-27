@@ -68,6 +68,9 @@ const Transfer = ({
   const [loading, setLoading] = useState(false);
   const [isRecurrent, setRecurrent] = useState(false);
   const [isMemoEncrypted, setIsMemoEncrypted] = useState<boolean>(false);
+  const [isMemoEncryptedReceive, setIsMemoEncryptedReceive] = useState<boolean>(
+    false,
+  );
   const [autocompleteFavoriteUsers, setAutocompleteFavoriteUsers] = useState<
     AutoCompleteValues
   >({
@@ -189,7 +192,7 @@ const Transfer = ({
       {
         to: user.name,
         amount: `${(+amountReceive).toFixed(3)} ${currency}`,
-        memo: memoReceive,
+        memo: (isMemoEncryptedReceive ? '#' : '') + memoReceive,
       },
     ]);
   };
@@ -439,9 +442,11 @@ const Transfer = ({
                 additionalLineStyle={getHorizontalLineStyle(theme, 1, 35, 16)}
               />
               <Icon
-                name={isMemoEncrypted ? Icons.ENCRYPT : Icons.DECRYPT}
+                name={isMemoEncryptedReceive ? Icons.ENCRYPT : Icons.DECRYPT}
                 theme={theme}
-                onPress={() => setIsMemoEncrypted(!isMemoEncrypted)}
+                onPress={() =>
+                  setIsMemoEncryptedReceive(!isMemoEncryptedReceive)
+                }
                 color={PRIMARY_RED_COLOR}
               />
             </View>
