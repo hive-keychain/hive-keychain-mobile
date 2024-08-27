@@ -40,6 +40,7 @@
     "fuse.js": "^6.4.6",
     "hive-keychain-commons": "github:hive-keychain/hive-keychain-commons",
     "hive-tx": "^4.0.1",
+    "hive-uri": "^0.2.5",
     "i18n-js": "^3.8.0",
     "lodash": "^4.17.21",
     "lodash.memoize": "^4.1.2",

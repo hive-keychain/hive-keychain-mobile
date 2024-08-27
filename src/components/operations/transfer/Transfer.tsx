@@ -1,3 +1,4 @@
+import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import {encodeMemo} from 'components/bridge';
 import OperationInput from 'components/form/OperationInput';
@@ -37,8 +38,8 @@ import {
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {getTransferWarning} from 'utils/transferValidator';
-import Balance from './Balance';
-import OperationThemed from './OperationThemed';
+import Balance from '../Balance';
+import OperationThemed from '../OperationThemed';
 
 export type TransferOperationProps = {
   currency: string;
@@ -182,12 +183,15 @@ const Transfer = ({
       );
       return;
     }
-    navigate('ReceiveTransfer', {
-      to: user.name,
-      amount: amountReceive,
-      memo: memoReceive,
-      currency,
-    });
+    console.log(currency);
+    navigate('ReceiveTransfer', [
+      'transfer',
+      {
+        to: user.name,
+        amount: `${(+amountReceive).toFixed(3)} ${currency}`,
+        memo: memoReceive,
+      },
+    ]);
   };
 
   const onSendConfirmation = () => {
@@ -485,6 +489,7 @@ const Transfer = ({
         buttonTitle={'common.next'}
         onNext={onTransferConfirmation}
         additionalContentContainerStyle={styles.paddingHorizontal}
+        method={toggleIndex === 0 ? KeyTypes.active : 'none'}
       />
     </View>
   );
