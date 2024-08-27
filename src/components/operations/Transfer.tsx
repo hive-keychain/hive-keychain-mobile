@@ -3,6 +3,7 @@ import {encodeMemo} from 'components/bridge';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import OptionsToggle from 'components/ui/OptionsToggle';
+import ScreenToggle from 'components/ui/ScreenToggle';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
@@ -59,6 +60,8 @@ const Transfer = ({
   const [to, setTo] = useState('');
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
+  const [amountReceive, setAmountReceive] = useState('');
+  const [memoReceive, setMemoReceive] = useState('');
   const [recurrence, setRecurrence] = useState('');
   const [exec, setExec] = useState('');
   const [loading, setLoading] = useState(false);
@@ -70,6 +73,7 @@ const Transfer = ({
     categories: [],
   });
   const [availableBalance, setAvailableBalance] = useState('');
+  const [toggleIndex, setToggleIndex] = useState(0);
   const {theme} = useThemeContext();
 
   useEffect(() => {
@@ -166,8 +170,27 @@ const Transfer = ({
       );
     }
   };
-
   const onTransferConfirmation = () => {
+    if (toggleIndex === 0) onSendConfirmation();
+    else onReceiveConfirmation();
+  };
+
+  const onReceiveConfirmation = () => {
+    if (!amountReceive.length) {
+      Toast.show(
+        translate('wallet.operations.transfer.warning.missing_amount'),
+      );
+      return;
+    }
+    navigate('ReceiveTransfer', {
+      to: user.name,
+      amount: amountReceive,
+      memo: memoReceive,
+      currency,
+    });
+  };
+
+  const onSendConfirmation = () => {
     if (
       !amount.length ||
       !to.length ||
@@ -240,6 +263,189 @@ const Transfer = ({
       navigate('ConfirmationPage', confirmationData);
     }
   };
+  const renderSend = () => (
+    <View>
+      <Separator height={35} />
+      <OperationInput
+        testID="username-input-testID"
+        nativeID="username-input"
+        autoCompleteValues={autocompleteFavoriteUsers}
+        labelInput={translate('common.to')}
+        placeholder={translate('common.username')}
+        leftIcon={<Icon name={Icons.AT} theme={theme} />}
+        autoCapitalize="none"
+        value={to}
+        onChangeText={(e) => {
+          setTo(e.trim());
+        }}
+      />
+      <Separator />
+      <View style={[styles.flexRowBetween, {zIndex: -1}]}>
+        <OperationInput
+          labelInput={translate('common.currency')}
+          placeholder={currency}
+          value={currency}
+          editable={false}
+          additionalOuterContainerStyle={{
+            width: '40%',
+          }}
+        />
+        <OperationInput
+          keyboardType="decimal-pad"
+          labelInput={capitalize(translate('common.amount'))}
+          placeholder={'0'}
+          value={amount}
+          onChangeText={setAmount}
+          additionalOuterContainerStyle={{
+            width: '54%',
+          }}
+          rightIcon={
+            <View style={styles.flexRowCenter}>
+              <Separator
+                drawLine
+                additionalLineStyle={getHorizontalLineStyle(theme, 1, 35, 16)}
+              />
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() =>
+                  setAmount(getCleanAmountValue(availableBalance))
+                }>
+                <Text
+                  style={
+                    getFormFontStyle(height, theme, PRIMARY_RED_COLOR).input
+                  }>
+                  {translate('common.max').toUpperCase()}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          }
+        />
+      </View>
+      <Separator />
+      <View style={{zIndex: -1}}>
+        <OperationInput
+          labelInput={capitalize(translate('common.memo'))}
+          placeholder={translate('wallet.operations.transfer.memo')}
+          value={memo}
+          trim={false}
+          onChangeText={setMemo}
+          rightIcon={
+            <View style={styles.flexRowCenter}>
+              <Separator
+                drawLine
+                additionalLineStyle={getHorizontalLineStyle(theme, 1, 35, 16)}
+              />
+              <Icon
+                name={isMemoEncrypted ? Icons.ENCRYPT : Icons.DECRYPT}
+                theme={theme}
+                onPress={() => setIsMemoEncrypted(!isMemoEncrypted)}
+                color={PRIMARY_RED_COLOR}
+              />
+            </View>
+          }
+        />
+      </View>
+      {!engine && (
+        <View>
+          <Separator />
+          <OptionsToggle
+            theme={theme}
+            title={translate('common.recurrent_transfer')}
+            toggled={isRecurrent}
+            additionalTitleStyle={getFormFontStyle(height, theme).title}
+            callback={(toggled) => {
+              setRecurrent(toggled);
+            }}>
+            <Separator />
+            <OperationInput
+              labelInput={translate('wallet.operations.transfer.frequency')}
+              labelExtraInfo={translate(
+                'wallet.operations.transfer.frequency_minimum',
+              )}
+              placeholder={translate('wallet.operations.transfer.frequency')}
+              value={recurrence}
+              onChangeText={setRecurrence}
+              keyboardType={'number-pad'}
+            />
+            <Separator />
+            <OperationInput
+              labelInput={translate('wallet.operations.transfer.iterations')}
+              labelExtraInfo={translate(
+                'wallet.operations.transfer.iterations_minimum',
+              )}
+              placeholder={translate('wallet.operations.transfer.iterations')}
+              value={exec}
+              onChangeText={setExec}
+              keyboardType={'number-pad'}
+            />
+          </OptionsToggle>
+          <Separator />
+        </View>
+      )}
+    </View>
+  );
+
+  const renderReceive = () => (
+    <View>
+      <Separator height={35} />
+      <OperationInput
+        testID="username-input-testID"
+        nativeID="username-input"
+        disabled
+        autoCompleteValues={autocompleteFavoriteUsers}
+        labelInput={translate('common.to')}
+        leftIcon={<Icon name={Icons.AT} theme={theme} />}
+        autoCapitalize="none"
+        value={user.name}
+      />
+      <Separator />
+      <View style={[styles.flexRowBetween, {zIndex: -1}]}>
+        <OperationInput
+          labelInput={translate('common.currency')}
+          placeholder={currency}
+          value={currency}
+          editable={false}
+          additionalOuterContainerStyle={{
+            width: '40%',
+          }}
+        />
+        <OperationInput
+          keyboardType="decimal-pad"
+          labelInput={capitalize(translate('common.amount'))}
+          placeholder={'0'}
+          value={amountReceive}
+          onChangeText={setAmountReceive}
+          additionalOuterContainerStyle={{
+            width: '54%',
+          }}
+        />
+      </View>
+      <Separator />
+      <View style={{zIndex: -1}}>
+        <OperationInput
+          labelInput={capitalize(translate('common.memo'))}
+          placeholder={translate('wallet.operations.transfer.memo')}
+          value={memoReceive}
+          trim={false}
+          onChangeText={setMemoReceive}
+          rightIcon={
+            <View style={styles.flexRowCenter}>
+              <Separator
+                drawLine
+                additionalLineStyle={getHorizontalLineStyle(theme, 1, 35, 16)}
+              />
+              <Icon
+                name={isMemoEncrypted ? Icons.ENCRYPT : Icons.DECRYPT}
+                theme={theme}
+                onPress={() => setIsMemoEncrypted(!isMemoEncrypted)}
+                color={PRIMARY_RED_COLOR}
+              />
+            </View>
+          }
+        />
+      </View>
+    </View>
+  );
 
   const {width, height} = useWindowDimensions();
 
@@ -266,146 +472,17 @@ const Transfer = ({
           </>
         }
         childrenMiddle={
-          <View>
-            <Separator height={35} />
-            <OperationInput
-              testID="username-input-testID"
-              nativeID="username-input"
-              autoCompleteValues={autocompleteFavoriteUsers}
-              labelInput={translate('common.to')}
-              placeholder={translate('common.username')}
-              leftIcon={<Icon name={Icons.AT} theme={theme} />}
-              autoCapitalize="none"
-              value={to}
-              onChangeText={(e) => {
-                setTo(e.trim());
-              }}
-            />
-            <Separator />
-            <View style={[styles.flexRowBetween, {zIndex: -1}]}>
-              <OperationInput
-                labelInput={translate('common.currency')}
-                placeholder={currency}
-                value={currency}
-                editable={false}
-                additionalOuterContainerStyle={{
-                  width: '40%',
-                }}
-              />
-              <OperationInput
-                keyboardType="decimal-pad"
-                labelInput={capitalize(translate('common.amount'))}
-                placeholder={'0'}
-                value={amount}
-                onChangeText={setAmount}
-                additionalOuterContainerStyle={{
-                  width: '54%',
-                }}
-                rightIcon={
-                  <View style={styles.flexRowCenter}>
-                    <Separator
-                      drawLine
-                      additionalLineStyle={getHorizontalLineStyle(
-                        theme,
-                        1,
-                        35,
-                        16,
-                      )}
-                    />
-                    <TouchableOpacity
-                      activeOpacity={1}
-                      onPress={() =>
-                        setAmount(getCleanAmountValue(availableBalance))
-                      }>
-                      <Text
-                        style={
-                          getFormFontStyle(height, theme, PRIMARY_RED_COLOR)
-                            .input
-                        }>
-                        {translate('common.max').toUpperCase()}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                }
-              />
-            </View>
-            <Separator />
-            <View style={{zIndex: -1}}>
-              <OperationInput
-                labelInput={capitalize(translate('common.memo'))}
-                placeholder={translate('wallet.operations.transfer.memo')}
-                value={memo}
-                trim={false}
-                onChangeText={setMemo}
-                rightIcon={
-                  <View style={styles.flexRowCenter}>
-                    <Separator
-                      drawLine
-                      additionalLineStyle={getHorizontalLineStyle(
-                        theme,
-                        1,
-                        35,
-                        16,
-                      )}
-                    />
-                    <Icon
-                      name={isMemoEncrypted ? Icons.ENCRYPT : Icons.DECRYPT}
-                      theme={theme}
-                      onPress={() => setIsMemoEncrypted(!isMemoEncrypted)}
-                      color={PRIMARY_RED_COLOR}
-                    />
-                  </View>
-                }
-              />
-            </View>
-            {!engine && (
-              <View>
-                <Separator />
-                <OptionsToggle
-                  theme={theme}
-                  title={translate('common.recurrent_transfer')}
-                  toggled={isRecurrent}
-                  additionalTitleStyle={getFormFontStyle(height, theme).title}
-                  callback={(toggled) => {
-                    setRecurrent(toggled);
-                  }}>
-                  <Separator />
-                  <OperationInput
-                    labelInput={translate(
-                      'wallet.operations.transfer.frequency',
-                    )}
-                    labelExtraInfo={translate(
-                      'wallet.operations.transfer.frequency_minimum',
-                    )}
-                    placeholder={translate(
-                      'wallet.operations.transfer.frequency',
-                    )}
-                    value={recurrence}
-                    onChangeText={setRecurrence}
-                    keyboardType={'number-pad'}
-                  />
-                  <Separator />
-                  <OperationInput
-                    labelInput={translate(
-                      'wallet.operations.transfer.iterations',
-                    )}
-                    labelExtraInfo={translate(
-                      'wallet.operations.transfer.iterations_minimum',
-                    )}
-                    placeholder={translate(
-                      'wallet.operations.transfer.iterations',
-                    )}
-                    value={exec}
-                    onChangeText={setExec}
-                    keyboardType={'number-pad'}
-                  />
-                </OptionsToggle>
-                <Separator />
-              </View>
-            )}
-          </View>
+          <ScreenToggle
+            menu={[translate('common.send'), translate('common.receive')]}
+            components={[renderSend(), renderReceive()]}
+            toUpperCase={false}
+            onIndexChanged={(i: number) => {
+              setToggleIndex(i);
+            }}
+            theme={theme}
+          />
         }
-        buttonTitle={'common.send'}
+        buttonTitle={'common.next'}
         onNext={onTransferConfirmation}
         additionalContentContainerStyle={styles.paddingHorizontal}
       />
