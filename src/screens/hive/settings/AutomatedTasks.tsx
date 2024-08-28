@@ -144,22 +144,13 @@ const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
       flex: 1,
     } as ViewStyle;
 
-    const labelTextStyle = {
-      color: 'white',
-    } as ViewStyle;
-
     return (
       <View style={[{paddingVertical: 4}]}>
         <TouchableOpacity activeOpacity={1} style={[styles.tokenItem]}>
           <View style={[innerContainerStyle, innerContainerBgStyle]}>
             <View style={{flexDirection: 'row'}}>
               {item.icon}
-              <Text
-                style={[
-                  inputStyle(theme, width).input,
-                  labelTextStyle,
-                  {marginLeft: 10},
-                ]}>
+              <Text style={[inputStyle(theme, width).input, {marginLeft: 10}]}>
                 {item.label}
               </Text>
             </View>
