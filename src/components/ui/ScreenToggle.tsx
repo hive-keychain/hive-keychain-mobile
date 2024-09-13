@@ -49,7 +49,7 @@ const ScreenToggle = ({
             activeOpacity={1}
             onPress={() => {
               setActive(i);
-              onIndexChanged(i);
+              if (onIndexChanged) onIndexChanged(i);
               setToggleElement(menuItem);
             }}
             key={menuItem}
