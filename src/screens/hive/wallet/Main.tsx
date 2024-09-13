@@ -379,7 +379,10 @@ const Main = ({
                   />
                 }
                 scrollEventThrottle={200}
-                onScroll={onHandleScroll}>
+                onScroll={onHandleScroll}
+                onMomentumScrollEnd={() => {
+                  showFloatingBar(true);
+                }}>
                 <View style={styles.rowWrapper}>
                   <PercentageDisplay
                     name={translate('wallet.vp')}
