@@ -325,6 +325,7 @@ export default ({
             mediaPlaybackRequiresUserAction={false}
             onMessage={onMessage}
             javaScriptEnabled
+            geolocationEnabled
             allowsInlineMediaPlayback
             allowsFullscreenVideo
             onLoadEnd={onLoadEnd}
