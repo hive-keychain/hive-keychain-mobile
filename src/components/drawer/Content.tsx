@@ -25,6 +25,7 @@ const hiddenRoutesInMain = [
   'CreateAccountScreen',
   'AddAccountStack',
   'AccountManagementScreen',
+  'ExportAccountsQRScreen',
   'WALLET',
   'BrowserScreen',
   'Governance',

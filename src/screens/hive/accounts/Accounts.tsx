@@ -5,6 +5,7 @@ import MenuItem from 'components/drawer/drawer-content-item/MenuItem';
 import React from 'react';
 import {StatusBar, View} from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
 import {getMenuCardStyle} from 'src/styles/menu';
 import {navigate} from 'utils/navigation';
@@ -36,6 +37,13 @@ const Accounts = () => {
         theme={theme}
         onPress={() => navigate('AccountManagementScreen')}
         iconImage={<ManageKeysIcon />}
+      />
+      <MenuItem
+        labelTranslationKey={'navigation.export_accounts_qr'}
+        theme={theme}
+        onPress={() => navigate('ExportAccountsQRScreen')}
+        iconImage={<ManageKeysIcon />}
+        iconName={Icons.SCANNER}
       />
     </View>
   );
