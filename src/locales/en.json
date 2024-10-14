@@ -646,6 +646,8 @@
       "create_account_successful": "Your account has been successfully created and added to your Keychain",
       "create_account_failed": "The account creation has failed. Please try again later",
       "create_account_ticket": "{{tickets}} account creation ticket",
+      "ticket": "Ticket",
+      "buying": "Buying",
       "create_account_onboarding_message": "You are onboarding @{{name}}, please choose below if you want to delegate them HP or RC.",
       "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created!",
       "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!",

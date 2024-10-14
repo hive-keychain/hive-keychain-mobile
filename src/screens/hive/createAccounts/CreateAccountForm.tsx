@@ -327,12 +327,10 @@ const CreateAccountStepOne = ({
             {
               title:
                 'wallet.operations.create_account.peer_to_peer.creation_method',
-              value: capitalize(
-                creationType
-                  .split('_')
-                  [
-                    creationType === AccountCreationType.USING_TICKET ? 1 : 0
-                  ].toLowerCase(),
+              value: translate(
+                creationType === AccountCreationType.USING_TICKET
+                  ? 'components.create_account.ticket'
+                  : 'components.create_account.buying',
               ),
             },
             {
