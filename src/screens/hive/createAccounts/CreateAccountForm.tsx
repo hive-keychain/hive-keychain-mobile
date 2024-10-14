@@ -327,7 +327,13 @@ const CreateAccountStepOne = ({
             {
               title:
                 'wallet.operations.create_account.peer_to_peer.creation_method',
-              value: capitalize(creationType.split('_')[1].toLowerCase()),
+              value: capitalize(
+                creationType
+                  .split('_')
+                  [
+                    creationType === AccountCreationType.USING_TICKET ? 1 : 0
+                  ].toLowerCase(),
+              ),
             },
             {
               title: `keys.owner`,
