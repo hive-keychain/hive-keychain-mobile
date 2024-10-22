@@ -67,7 +67,7 @@ export const Caption = ({
           height={separatorHeight}
           drawLine={!hideSeparator}
           additionalLineStyle={{
-            borderColor: getColors(theme).cardBorderColor,
+            borderColor: getColors(theme).secondaryCardBorderColor,
           }}
         />
       }

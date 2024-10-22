@@ -8,15 +8,14 @@ export default (request: KeychainRequest, accounts: Account[]) => {
   const {username} = request;
   const method = getRequiredWifType(request);
   let initAcc;
-  if (username) {
-    initAcc = username;
-  } else {
-    accounts = getValidAuthorityAccounts(
-      accounts,
-      method.toLowerCase() as KeyTypes,
-    );
-    initAcc = accounts[0].name;
-  }
+  accounts = getValidAuthorityAccounts(
+    accounts,
+    method.toLowerCase() as KeyTypes,
+  );
+  initAcc =
+    username && accounts.find((u) => u.name === username)?.keys?.active
+      ? username
+      : accounts[0].name;
   const [account, setAccount] = useState(initAcc);
 
   const getAccountKey = () => {

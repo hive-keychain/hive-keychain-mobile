@@ -2,6 +2,7 @@ import Icon from 'components/hive/Icon';
 import React from 'react';
 import {StyleProp, Text, ViewStyle} from 'react-native';
 import {Tooltip} from 'react-native-elements';
+import {Icons} from 'src/enums/icons.enums';
 import {translate} from 'utils/localize';
 
 type Props = {
@@ -13,6 +14,9 @@ type Props = {
   height?: number;
   iconWidth?: number;
   iconHeight?: number;
+  iconColor?: string;
+  overlayColor?: string;
+  pointerColor?: string;
 };
 
 const CustomToolTip = ({
@@ -24,9 +28,13 @@ const CustomToolTip = ({
   height,
   iconHeight,
   iconWidth,
+  iconColor,
+  overlayColor,
+  pointerColor,
 }: Props) => {
   return (
     <Tooltip
+      skipAndroidStatusBar
       popover={
         <Text style={textStyle}>
           {skipTranslation ? message : translate(message)}
@@ -34,8 +42,15 @@ const CustomToolTip = ({
       }
       width={width ?? 150}
       height={height ?? 40}
-      containerStyle={containerStyle}>
-      <Icon name="info" width={iconWidth} height={iconHeight} />
+      containerStyle={containerStyle}
+      overlayColor={overlayColor}
+      pointerColor={pointerColor}>
+      <Icon
+        name={Icons.INFO}
+        color={iconColor}
+        width={iconWidth}
+        height={iconHeight}
+      />
     </Tooltip>
   );
 };

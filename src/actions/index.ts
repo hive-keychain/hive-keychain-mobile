@@ -9,7 +9,7 @@ import {AccountsPayload, ActionPayload, NullableString} from './interfaces';
 import {INIT_ACCOUNTS, LOCK, SIGN_UP, UNLOCK} from './types';
 
 export const signUp = (pwd: string) => {
-  navigate('AddAccountByKeyScreen');
+  navigate('ChooseAccountOptionsScreen');
   const action: ActionPayload<NullableString> = {type: SIGN_UP, payload: pwd};
   return action;
 };
@@ -29,7 +29,7 @@ export const unlock = (
         payload: {accounts: accounts.list},
       };
       dispatch(init);
-      BackGroundUtils.init();
+      BackGroundUtils.init(accounts.list);
     }
     if (getState().browser.shouldFocus) {
       navigate('BrowserScreen');
@@ -50,8 +50,8 @@ export const lock = () => {
   return action;
 };
 
-export * from 'actions/accountValueDisplay';
 export * from 'actions/accounts';
+export * from 'actions/accountValueDisplay';
 export * from 'actions/browser';
 export * from 'actions/colors';
 export * from 'actions/hive';

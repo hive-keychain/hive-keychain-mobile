@@ -56,6 +56,7 @@ export const ClaimsConfig = {
   savings: {
     delay: 30,
   },
+  autoStakeTokens: {FREQUENCY: 60},
 };
 
 export const MultisigConfig = {
@@ -80,4 +81,8 @@ export const SwapsConfig = {
 export const ProposalConfig = {
   KEYCHAIN_PROPOSAL: 306,
   PROPOSAL_MIN_VOTE_DIFFERENCE_HIDE_POPUP: 8 * 10 ** 6,
+};
+
+export const PeakdNotificationsConfig = {
+  baseURL: 'https://notifications.hivehub.dev',
 };

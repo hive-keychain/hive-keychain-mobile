@@ -1,11 +1,13 @@
 buildscript {
     ext {
-        buildToolsVersion = "33.0.0"
+        buildToolsVersion = "30.0.3"
+        compileSdkVersion = 34
+        targetSdkVersion = 34
         minSdkVersion = 21
-        compileSdkVersion = 33
-        targetSdkVersion = 33
-
-        if (System.properties['os.arch'] == "aarch64") {
+        kotlin_version = '1.5.21'
+        compose_version = '1.2.0-alpha08'
+        compose_tool_version = '1.0.1'
+            if (System.properties['os.arch'] == "aarch64") {
             // For M1 Users we need to use the NDK 24 which added support for aarch64
             ndkVersion = "24.0.8215888"
         } else {
@@ -18,11 +20,12 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.4")
+        classpath("com.android.tools.build:gradle:7.4.0")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("de.undercouch:gradle-download-task:4.1.2")
-        classpath ('com.google.gms:google-services:4.3.10')
+        classpath ('com.google.gms:google-services:4.3.14')
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.20'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -33,20 +36,7 @@ allprojects {
     repositories {
         //references:   https://stackoverflow.com/questions/63358372/task-react-native-reanimatedcompiledebugjavawithjavac-failed
         //              https://github.com/facebook/react-native/issues/35210
-        exclusiveContent {
-           // We get React Native's Android binaries exclusively through npm,
-           // from a local Maven repo inside node_modules/react-native/.
-           // (The use of exclusiveContent prevents looking elsewhere like Maven Central
-           // and potentially getting a wrong version.)
-           filter {
-               includeGroup "com.facebook.react"
-           }
-           forRepository {
-               maven {
-                   url "$rootDir/../node_modules/react-native/android"
-               }
-           }
-        }
+       
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url("$rootDir/../node_modules/react-native/android")

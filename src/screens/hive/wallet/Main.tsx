@@ -19,12 +19,16 @@ import AccountValue from 'components/hive/AccountValue';
 import CurrencyToken from 'components/hive/CurrencyToken';
 import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import Icon from 'components/hive/Icon';
+import Notifications from 'components/hive/notifications/Notifications';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
 import {TutorialPopup} from 'components/popups/tutorial/Tutorial';
+import {AccountVestingRoutesDifferences} from 'components/popups/vesting-routes/vesting-routes.interface';
+import {VestingRoutesPopup} from 'components/popups/vesting-routes/VestingRoutes';
 import WhatsNew from 'components/popups/whats-new/WhatsNew';
 import WidgetConfiguration from 'components/popups/widget-configuration/WidgetConfiguration';
+import WrongKeyPopup from 'components/popups/wrong-key/WrongKeyPopup';
 import {ProposalVotingSectionComponent} from 'components/proposal-voting/proposalVoting';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
@@ -79,6 +83,7 @@ import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
+import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
 import {WidgetUtils} from 'utils/widget.utils';
 import TokenSettings from './tokens/TokenSettings';
 
@@ -128,8 +133,13 @@ const Main = ({
   const mainScrollRef = useRef();
 
   const [eventReceived, setEventReceived] = useState(null);
+  const [notificationEvent, setNotificationEvent] = useState(null);
   const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+  const [vestingRoutesDifferences, setVestingRoutesDifferences] = useState<
+    AccountVestingRoutesDifferences[] | undefined
+  >();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -207,15 +217,16 @@ const Main = ({
     if (
       properties.globals &&
       Object.keys(properties.globals).length > 0 &&
-      user.name
+      user.account?.name
     ) {
       setLoadingUserAndGlobals(false);
       setisLoadingScreen(false);
+      initCheckVestingRoutes();
       if (!userTokens.loading) {
         loadHiddenTokens();
       }
     }
-  }, [properties, user.name]);
+  }, [properties, user.account?.name]);
 
   useEffect(() => {
     const filtered = orderedUserTokenBalanceList.filter(
@@ -231,6 +242,7 @@ const Main = ({
   }, [searchValue]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
+    if (!accounts.length) return;
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();
     loadPrices();
@@ -277,12 +289,18 @@ const Main = ({
 
       appState.current = nextAppState;
     };
-    AppState.addEventListener('change', handler);
-
+    const state = AppState.addEventListener('change', handler);
     return () => {
-      AppState.removeEventListener('change', handler);
+      state.remove();
     };
   }, []);
+
+  const initCheckVestingRoutes = async () => {
+    const tempVestingRoutesDifferences = await VestingRoutesUtils.getChangedVestingRoutes(
+      accounts,
+    );
+    setVestingRoutesDifferences(tempVestingRoutesDifferences);
+  };
 
   const loadHiddenTokens = async () => {
     let customHiddenTokens = null;
@@ -338,6 +356,7 @@ const Main = ({
               <DrawerButton navigation={navigation as any} theme={theme} />
               <View style={[styles.innerHeader]}>
                 <StatusIndicator theme={theme} />
+                <Notifications />
                 <Claim theme={theme} />
                 <View style={styles.marginRight}>
                   <UserDropdown
@@ -369,7 +388,10 @@ const Main = ({
                   />
                 }
                 scrollEventThrottle={200}
-                onScroll={onHandleScroll}>
+                onScroll={onHandleScroll}
+                onMomentumScrollEnd={() => {
+                  showFloatingBar(true);
+                }}>
                 <View style={styles.rowWrapper}>
                   <PercentageDisplay
                     name={translate('wallet.vp')}
@@ -526,6 +548,12 @@ const Main = ({
               setShow={setShowWidgetConfiguration}
             />
             <TutorialPopup navigation={navigation} />
+            <VestingRoutesPopup
+              vestingRoutesDifferences={vestingRoutesDifferences}
+              setVestingRoutesDifferences={setVestingRoutesDifferences}
+              navigation={navigation}
+            />
+            <WrongKeyPopup />
           </View>
         ) : (
           <Loader animatedLogo />

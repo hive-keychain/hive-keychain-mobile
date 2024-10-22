@@ -21,7 +21,10 @@ import Savings, {SavingOperationProps} from 'components/operations/Savings';
 import StakeToken, {
   StakeTokenOperationProps,
 } from 'components/operations/StakeToken';
-import Transfer, {TransferOperationProps} from 'components/operations/Transfer';
+import Receive from 'components/operations/transfer/Receive';
+import Transfer, {
+  TransferOperationProps,
+} from 'components/operations/transfer/Transfer';
 import UnstakeToken, {
   UnstakeTokenOperationProps,
 } from 'components/operations/UnstakeToken';
@@ -39,6 +42,7 @@ import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {Dimensions} from 'utils/common.types';
 import {capitalize} from 'utils/format';
 import {translate} from 'utils/localize';
+import {resetStackAndNavigate} from 'utils/navigation';
 
 const Stack = createStackNavigator<RootStackParam>();
 
@@ -143,6 +147,34 @@ export default ({navigation, route}: OperationNavigationProps) => {
         {() => renderOperation()}
       </Stack.Screen>
       <Stack.Screen
+        name="ReceiveTransfer"
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => <NavigatorTitle title={'common.receive'} />,
+          animationEnabled: false,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => {
+                resetStackAndNavigate('WALLET');
+              }}
+            />
+          ),
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+        component={Receive}
+      />
+      <Stack.Screen
         name="ConfirmationPage"
         options={({navigation}) => ({
           headerStyle: styles.header,
@@ -154,7 +186,9 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => {
+                resetStackAndNavigate('WALLET');
+              }}
             />
           ),
           headerLeft: () => (

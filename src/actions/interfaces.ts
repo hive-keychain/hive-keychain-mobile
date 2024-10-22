@@ -5,6 +5,7 @@ import {
   VestingDelegation,
 } from '@hiveio/dhive';
 import {Manabar} from '@hiveio/dhive/lib/chain/rc';
+import {PlatformOSType} from 'react-native';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {RcDelegationsInfo} from '../interfaces/rc-delegation.interface';
 
@@ -33,12 +34,17 @@ export interface Settings {
   rpc: Rpc;
   hiveEngineRpc: string;
   accountHistoryAPIRpc: string;
+  mobileSettings: MobileSettings;
 }
 
+export interface MobileSettings {
+  platformRelevantFeatures: {[e: string]: PlatformOSType[]};
+}
 export interface SettingsPayload {
   rpc?: Rpc;
   hiveEngineRpc?: string;
   accountHistoryAPIRpc?: string;
+  mobileSettings?: MobileSettings;
 }
 
 export interface Page {
@@ -204,6 +210,11 @@ export type CollateralizedConversion = {
 export interface Currency {
   usd_24h_change?: number;
   usd?: number;
+}
+
+export interface HiveEngineCurrency {
+  usd_24h_change?: number;
+  usd?: string;
 }
 
 export interface CurrencyPrices {

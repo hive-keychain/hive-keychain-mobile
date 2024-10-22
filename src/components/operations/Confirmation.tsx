@@ -7,6 +7,7 @@ import {ConfirmationPageRoute} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {
   Keyboard,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -31,7 +32,8 @@ export type ConfirmationPageProps = {
   warningText?: string;
   skipWarningTranslation?: boolean;
   data: ConfirmationData[];
-  onConfirm?: () => void;
+  onConfirm?: () => Promise<void>;
+  extraHeader?: React.JSX.Element;
 };
 
 type ConfirmationData = {
@@ -54,26 +56,30 @@ const ConfirmationPage = ({
     data,
     skipWarningTranslation,
     onConfirm: onConfirmOverride,
+    extraHeader,
   } = route.params;
   const [loading, setLoading] = useState(false);
   const {width, height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({width, height}, theme);
 
-  const onConfirm =
-    onConfirmOverride ||
-    (async () => {
-      setLoading(true);
-      Keyboard.dismiss();
+  const onConfirm = async () => {
+    setLoading(true);
+    Keyboard.dismiss();
+    if (onConfirmOverride) {
+      await onConfirmOverride();
+    } else {
       await onSend();
-      setLoading(false);
       loadAccount(user.name, true);
-      resetStackAndNavigate('WALLET');
-    });
+    }
+    setLoading(false);
+    resetStackAndNavigate('WALLET');
+  };
 
   return (
     <Background theme={theme}>
-      <View style={styles.confirmationPage}>
+      <ScrollView contentContainerStyle={styles.confirmationPage}>
+        {extraHeader}
         <Caption text={title} hideSeparator />
         <Separator />
         {warningText && (
@@ -111,20 +117,26 @@ const ConfirmationPage = ({
           ))}
         </View>
         <View style={spacingStyle.fillSpace}></View>
+        <Separator />
         <EllipticButton
           title={translate('common.confirm')}
           onPress={onConfirm}
           isLoading={loading}
           isWarningButton
         />
-      </View>
+        <Separator />
+      </ScrollView>
     </Background>
   );
 };
 
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
-    confirmationPage: {flex: 1, marginBottom: 16, paddingHorizontal: 16},
+    confirmationPage: {
+      flexGrow: 1,
+      marginBottom: 16,
+      paddingHorizontal: 16,
+    },
     confirmItem: {
       marginVertical: 8,
     },

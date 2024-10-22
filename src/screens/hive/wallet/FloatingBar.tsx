@@ -27,6 +27,7 @@ import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
+import {PlatformsUtils} from 'utils/platforms.utils';
 
 export type FloatingBarLink = 'ecosystem' | 'browser' | 'scan_qr' | 'swap_buy';
 interface Props {
@@ -41,6 +42,7 @@ const Floating = ({
   closeAllTabs,
   rpc,
   isProposalRequestDisplayed,
+  showSwap,
 }: Props & PropsFromRedux) => {
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const {theme} = useThemeContext();
@@ -53,7 +55,6 @@ const Floating = ({
   );
   const anim = useRef(new Animated.Value(0)).current;
   const [isTop, setIsTop] = useState(false);
-
   const getActiveStyle = (link: FloatingBarLink) =>
     activeLink === link ? styles.active : undefined;
 
@@ -165,20 +166,23 @@ const Floating = ({
           </Text>
         )}
       </View>
-      <View style={[styles.itemContainer, getActiveStyle('swap_buy')]}>
-        <Icon
-          theme={theme}
-          color={getActiveIconColor('swap_buy')}
-          name={Icons.SWAP}
-          {...getIconDimensions(width)}
-          onPress={() => onHandlePressButton('swap_buy')}
-        />
-        {showTags && (
-          <Text style={[styles.textBase, styles.marginTop]}>
-            {translate('navigation.floating_bar.swap')}
-          </Text>
-        )}
-      </View>
+      {PlatformsUtils.showDependingOnPlatform(
+        <View style={[styles.itemContainer, getActiveStyle('swap_buy')]}>
+          <Icon
+            theme={theme}
+            color={getActiveIconColor('swap_buy')}
+            name={Icons.SWAP}
+            {...getIconDimensions(width)}
+            onPress={() => onHandlePressButton('swap_buy')}
+          />
+          {showTags && (
+            <Text style={[styles.textBase, styles.marginTop]}>
+              {translate('navigation.floating_bar.swap')}
+            </Text>
+          )}
+        </View>,
+        showSwap,
+      )}
     </Animated.View>
   ) : null;
 };
@@ -231,6 +235,7 @@ const connector = connect(
       isLoadingScreen: state.floatingBar.isLoadingScreen,
       isDrawerOpen: state.floatingBar.isDrawerOpened,
       rpc: state.settings.rpc,
+      showSwap: state.settings.mobileSettings?.platformRelevantFeatures?.swap,
     };
   },
   {showFloatingBar, closeAllTabs},

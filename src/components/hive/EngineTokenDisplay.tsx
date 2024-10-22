@@ -97,10 +97,10 @@ const EngineTokenDisplay = ({
         setToggle={setToggle}
         price={{
           usd: tokenMarket
-            ? +formatBalance(parseFloat(tokenMarket.lastPrice) * hivePrice)
+            ? formatBalance(parseFloat(tokenMarket.lastPrice) * hivePrice)
             : tokenInfo.symbol === 'SWAP.HIVE'
-            ? +formatBalance(hivePrice)
-            : 0,
+            ? formatBalance(hivePrice)
+            : '0',
           usd_24h_change: parseFloat(
             tokenMarket ? tokenMarket.priceChangePercent : '0',
           ),

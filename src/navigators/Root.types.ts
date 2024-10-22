@@ -1,3 +1,4 @@
+import {TransferOperation} from '@hiveio/dhive';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {WalletHistoryComponentProps} from 'components/history/WalletHistoryComponent';
@@ -11,8 +12,8 @@ import {PowerUpOperationProps} from 'components/operations/PowerUp';
 import {RCDelegationOperationProps} from 'components/operations/RCDelegation';
 import {SavingOperationProps} from 'components/operations/Savings';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
-import {TransferOperationProps} from 'components/operations/Transfer';
 import {UnstakeTokenOperationProps} from 'components/operations/UnstakeToken';
+import {TransferOperationProps} from 'components/operations/transfer/Transfer';
 import {StyleProp, ViewStyle} from 'react-native';
 
 export type ModalPosition =
@@ -34,6 +35,7 @@ export interface ModalScreenProps {
   modalContainerStyle?: StyleProp<ViewStyle>;
   additionalWrapperFixedStyle?: StyleProp<ViewStyle>;
   modalPosition?: ModalPosition;
+  bottomHalf?: boolean;
   renderButtonElement?: JSX.Element;
 }
 
@@ -77,6 +79,7 @@ export type RootStackParam = {
   SwapBuyStack: undefined;
   SwapHistory: undefined;
   ConfirmationPage: ConfirmationPageProps;
+  ReceiveTransfer: ReceiveTransferProps;
 };
 
 export type MainNavigation = StackNavigationProp<RootStackParam, 'Main'>;
@@ -138,3 +141,6 @@ export type ConfirmationPageRoute = RouteProp<
   RootStackParam,
   'ConfirmationPage'
 >;
+export type ReceiveTransferProps = ['transfer', Partial<TransferOperation[1]>];
+
+export type ReceiveTransferRoute = RouteProp<RootStackParam, 'ReceiveTransfer'>;

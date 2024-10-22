@@ -1,13 +1,22 @@
 {
   "unlock": {"enterPIN": "Enter your PIN", "authenticate": "Authenticate"},
-  "signup": {"confirm": "Confirm your PIN", "choose": "Choose your PIN"},
+  "signup": {
+    "confirm": "Confirm your PIN",
+    "choose": "Choose your PIN",
+    "first_account": "Let's get you started! Create your first Hive account or import an existing one."
+  },
   "intro": {
-    "intro_text_1": "The ultimate HIVE wallet",
+    "intro_text_1": "The ultimate Hive wallet!",
     "intro_text_2": "Manage Hive assets, and\nconnect to Hive\napplications",
-    "text": "HIVE powers a growing ecosystem of Web 3.0 websites and applications.",
+    "text": "Hive powers a growing ecosystem of Web 3.0 websites and applications.",
     "manage": "Let's get your started with a Hive account!",
     "existingAccount": "Existing Account",
     "createAccount": "New Account"
+  },
+  "createAccount": {
+    "caption": "Choose your favorite account creation method.",
+    "on_boarding_title": "Create on hive.io",
+    "peer_to_peer_on_boarding_title": "Create with a friend"
   },
   "addAccountByKey": {"text": "Add your existing HIVE account to Keychain"},
   "addAccountByAuth": {
@@ -21,6 +30,7 @@
     "posting_key": "Posting Key",
     "memo_key": "Memo Key",
     "private": "Private",
+    "owner": "Owner",
     "public": "Public",
     "posting": "Posting",
     "active": "Active",
@@ -51,7 +61,9 @@
     "amount": "amount",
     "enter_amount": "enter amount",
     "memo": "memo",
+    "transfer": "Transfer",
     "send": "Send",
+    "receive": "Receive",
     "save": "Save",
     "balance": "Balance",
     "available": "Available",
@@ -125,7 +137,11 @@
     "yes": "Yes",
     "no": "No",
     "skip": "Skip",
-    "show": "Show"
+    "show": "Show",
+    "experimental": "Experimental",
+    "generate_qr": "Generate QR Code",
+    "lets_go": "Let's go!",
+    "discord_server": "Discord Server"
   },
   "wallet": {
     "proposal": {
@@ -170,7 +186,7 @@
         "deposit": "Deposit Funds",
         "withdraw": "Withdraw Funds",
         "withdraw_disclaimer": "Note: Withdrawing funds from savings will take 3.5 days.",
-        "deposit_disclaimer": "Depositing HBD to savings currently yields a 20% APR determined by the witnesses.",
+        "deposit_disclaimer": "Depositing HBD to savings currently yields a {{apr}}% APR determined by the witnesses.",
         "withdraw_button": "Withdraw",
         "deposit_button": "Deposit",
         "prompt": "Select a currency",
@@ -218,6 +234,7 @@
           "exchange_currency": "This exchange account does not accept {{currency}} deposits.",
           "exchange_memo": "Make sure you add a memo when transfering to an exchange account.",
           "missing_info": "Please fill the username and amount to proceed",
+          "missing_amount": "Please fill the requested amount to proceed",
           "insufficient": "Please fill the username and amount to proceed"
         },
         "started_recurrent_transfer": "Started a recurrent transfer of {{amount}}",
@@ -419,6 +436,16 @@
         "swap_refresh_countdown": "Refreshing in {{count}}s",
         "swap_slippage_step": "{{slippage}}% (for each step)",
         "swap_no_history": "Your swap history is empty"
+      },
+      "create_account": {
+        "peer_to_peer": {
+          "info": "Please verify the information below, to onboard a new Hive user.\nThis action cannot be undone!",
+          "creation_method": "Creation method",
+          "delegating_title": "Delegating",
+          "delegating_amount": "{{amount}} {{currency}}",
+          "account_creator": "Creator",
+          "account_sucessfully_created": "You're all set! Welcome @{{accountName}}!"
+        }
       }
     },
     "has": {
@@ -492,6 +519,8 @@
     "keys": {
       "add": "Add Key",
       "add_keyType": "Add {{type}} Key",
+      "remove": "Remove a key",
+      "remove_info": "You are about to remove the {{type}} key for account @{{username}}.",
       "show_qr_code": "Show QR Code",
       "qr": {
         "title": "Export your keys!",
@@ -520,7 +549,12 @@
       "rpc": "RPC Nodes",
       "automated_tasks": {
         "title": "Automated tasks",
-        "disclaimer": "Setup automated tasks that will run every hour"
+        "disclaimer": "Setup automated tasks that will run every hour",
+        "he_auto": {
+          "title": "Auto Staking",
+          "list_title": "Tokens set for automatic staking",
+          "subtitle": "Automatically staking your tokens can increase your gains"
+        }
       },
       "multisig": {
         "title": "Multisig",
@@ -549,8 +583,13 @@
       "new_account_history_rpc": "New account history RPC",
       "hive_engine_rpc": "Hive-Engine RPC",
       "hive_engine_account_history_api": "Hive-Engine account history API",
-      "rpc_node_already_exists": "RPC node already exists! Please choose another one",
-      "rpc_not_responding_error": "{{currentRPC}} node is not responding. Do you want to switch to {{uri}} ?"
+      "rpc_node_already_exists": "This RPC node already exists! Please choose another one",
+      "rpc_not_responding_error": "{{currentRPC}} node is not responding. Do you want to switch to {{uri}} ?",
+      "notifications": {
+        "title": "Notifications",
+        "disclaimer": "Configure your Peak Open Projects notifications. Be aware that changes might take some time to be applied, and that this is an experimental feature.\nIf you want to use advanced notification settings, please set them up within the browser extension.",
+        "activated": "Activated"
+      }
     }
   },
   "components": {
@@ -560,6 +599,13 @@
       "text2": "You may use your Posting, Active, or Master Key to import your account.",
       "text3": "(Use your Master Key to unlock all app features).",
       "text4": "If you use a Master Key, it will NOT be saved and will only be used to generate your other Keys. You may add/edit Accounts or Keys at any time."
+    },
+    "accountCreationPeerToPeer": {
+      "title": "Peer to Peer onboarding, thanks to a good friend!",
+      "text1": "As soon as you choose a valid username and click on Create",
+      "text2": "the app will give you your keys, PLEASE STORE them in a safe place.",
+      "text3": "Then after confirm that the keys are safely stored,",
+      "text4": "You will get a QR code, show it to your friend to proceed with Account Creation."
     },
     "infoQR": {
       "title": "Import via QR Code",
@@ -579,7 +625,7 @@
       "text4": "Settings > Add Account"
     },
     "forgotPIN": {
-      "title": "Forgot PIN?",
+      "title": "Reset wallet?",
       "text": "If you forgot your PIN, you can reset Keychain \n and clear your data but will have to enter all your keys again.",
       "button": "Reset Key"
     },
@@ -597,7 +643,7 @@
       "add_account": "+ ADD NEW ACCOUNT"
     },
     "create_account": {
-      "new_account_username": "New Account username",
+      "new_account_username": "New account username",
       "safely_copied_keys": "I have safely copied my keys and saved them outside of Keychain",
       "storage_understanding": "I understand that Keychain should not be considered as the primary place of storage for my keys",
       "buy_method_message": "I agree to pay {{price}} HIVE with account @{{account}} to create this account",
@@ -608,14 +654,77 @@
       "need_accept_terms_condition": "You need to accept the terms and conditions before creating the account",
       "create_account_successful": "Your account has been successfully created and added to your Keychain",
       "create_account_failed": "The account creation has failed. Please try again later",
-      "create_account_ticket": "{{tickets}} account creation ticket(s)"
+      "create_account_ticket": "{{tickets}} account creation ticket",
+      "ticket": "Ticket",
+      "buying": "Buying",
+      "create_account_onboarding_message": "You are onboarding @{{name}}, please choose below if you want to delegate them HP or RC.",
+      "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created!",
+      "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!",
+      "peer_to_peer_waiting_text": "Please ask your friend to scan this QR Code to create your account. Keep this page opened until the account is created."
     },
     "copy_keys": {
       "title": "Copy a Key",
       "text1": "If you need to copy a public or private key, perform a long press on the key."
+    },
+    "notifications": {
+      "mark_as_read": "The notifications have been marked as read!",
+      "notification_set_all_as_read": "Set as read",
+      "notification_follow": "@{{0}} started following @{{1}}",
+      "notification_unfollow": "@{{0}} stopped following @{{1}}",
+      "notification_reblog": "@{{0}} reblogged @{{1}}'s post",
+      "wallet_info_transfer_in": "Received {{0}} from @{{1}}",
+      "wallet_info_transfer_out": "Sent {{0}} to @{{1}}",
+      "wallet_info_fill_recurrent_transfer_in": "Received {{0}} from @{{1}} ({{2}} remaining)",
+      "wallet_info_fill_recurrent_transfer_out": "Sent {{0}} to @{{1}} ({{2}} remaining)",
+      "wallet_info_recurrent_transfer_out": "Started recurrent transfer of {{0}} to @{{1}} (every {{2}} hours - {{3}} times)",
+      "notification_account_update": "@{{0}}'s notification settings have been updated",
+      "notification_account_witness_proxy": "@{{0}} has set @{{1}} as a proxy",
+      "notification_account_witness_vote": "@{{0}} has voted for @{{1}} as a witness",
+      "notification_account_witness_unvote": "@{{0}} has unvoted @{{1}} as a witness",
+      "notification_change_recovery_account": "@{{0}} has changed recovery account to @{{1}}. This change will be effective in 30 days",
+      "wallet_info_claim_account": "Claimed account",
+      "notification_answer": "@{{0}} replied to {{2}}",
+      "notification_mention": "@{{0}} mentioned @{{1}} in {{3}}",
+      "notification_delegation": "@{{0}} delegated {{1}} to @{{2}}",
+      "notification_cancel_delegation": "@{{0}} has canceled a delegation to @{{1}}",
+      "notification_requested_account_recovery": "@{{0}} has requested recovery to @{{1}}",
+      "notification_recovered_account": "@{{0}} has been recovered",
+      "notification_set_power_down_route": "Power down route has been changed from @{{0}} to @{{1}}",
+      "wallet_info_withdraw_savings": "Started a {{0}} withdrawal from savings",
+      "wallet_info_deposit_savings": "Deposit of {{0}} into savings",
+      "wallet_info_power_up": "Powered up {{0}} HIVE",
+      "wallet_info_power_up_other_account": "@{{0}} powered up {{1}} for @{{2}}",
+      "notification_vote": "@{{0}} has voted for {{2}}",
+      "bgd_ops_pd": "Started a {{0}} power down on @{{1}}.",
+      "notification_cancelled_powerdown": "@{{1}} cancelled a power down.",
+      "notification_recurrent_transfer": "@{{0}} started a {{1}} recurrent transfer to @{{2}} ({{3}} executions every {{4}} hours)",
+      "notification_fill_convert": "@{{0}} has completed a conversion : {{1}} to {{2}}",
+      "notification_author_reward": "@{{0}} has received {{1}}, {{2}}, {{3}} as an author reward for {{4}}",
+      "notification_curation_reward": "@{{0}} has received {{1}} as a curation reward for {{3}}",
+      "notification_comment_reward": "@{{0}} has received {{1}} as an comment reward for {{2}}",
+      "notification_hbd_interest": "@{{0}} received {{1}} as interest",
+      "notification_fill_power_down": "@{{0}} received {{1}} as part of power down",
+      "notification_fill_power_down_other_account": "@{{0}} received {{1}} as part of power down of @{{2}}",
+      "notification_fill_order": "@{{0}} has filled an order from @{{1}} on the market. Bought {{2}} for {{3}}",
+      "notification_fill_transfer_from_savings": "@{{0}} completed a withdrawal from savings of {{1}}",
+      "notification_fill_transfer_from_savings_from_other_account": "@{{0}} completed a withdrawal from savings of {{1}} to @{{2}}",
+      "notification_returned_vesting_delegation": "@{{0}} completed an undelegation. {{1}} are once again available",
+      "notification_comment_benefactor_reward": "@{{0}} has received {{1}}, {{2}}, {{3}} as an comment benefactor reward for {{5}}",
+      "notification_producer_reward": "@{{0}} received {{1}} as a producer rewards",
+      "notification_changed_recovery_account": "@{{0}}'s recovery account has been change from @{{1}} to @{{2}}",
+      "notification_fill_collateralized_convert_request": "@{{0}} has completed a conversion : {{1}} to {{2}}",
+      "notification_failed_recurrent_transfer": "{{0}} recurrent transfer from @{{1}} to @{{2}} has failed"
+    },
+    "createAccountPeerToPeer": {
+      "text1": "Thank you for using Keychain Onboarding!",
+      "text2": "Start by choosing a Hive account name.",
+      "text3": "The App will then generate your private keys.",
+      "text4": "Please store these keys in a safe offline location!",
+      "text5": "After that, a QR Code will be created. Show it to your friend to proceed with the account creation."
     }
   },
   "toast": {
+    "receive_success": "The transfer has been received successfully",
     "error_witness_account_update": "Error while updating witness account @{{account}}",
     "noMatch": "The PIN codes do not match",
     "authFailed": "Authentication failed",
@@ -688,6 +797,10 @@
     "tabs": "Opened tabs",
     "governance": "Governance",
     "create_account": "Create Account",
+    "create_an_account": "Create an account",
+    "create_account_peer_to_peer": "Friend Onboarding",
+    "choose_first_account": "Choose your first account!",
+    "choose_an_existing_account": "Add an account",
     "tokens": "Tokens",
     "theme_setting": "Theme",
     "wallet_history": "Wallet History",
@@ -968,6 +1081,34 @@
     "tutorial": {
       "title": "Welcome to Keychain!",
       "description": "If you are new to Keychain, or Hive in general, please check our onboarding tutorial.\nYou can always access it later on in Settings > Help > Tutorial."
+    },
+    "vesting_routes": {
+      "title": "Your vesting routes have changed",
+      "warning_message": "If you didn't change them yourself, please seek assistance on the Hive ",
+      "account_item_label": "Account",
+      "account_item_old_route_title": "Old Route",
+      "account_item_new_route_title": "New Route",
+      "account_item_button_skip_label": "These changes were intentional",
+      "account_item_button_revert_label": "Revert All",
+      "item_details_non_existent_label": "None",
+      "item_details_autovest_title": "Auto vest: ",
+      "item_details_percent_title": "Percent: ",
+      "item_details_to_title": "To: ",
+      "item_details_from_title": "From: ",
+      "toast": {
+        "handled_successfully": "Your vesting routes have been secured!"
+      }
+    },
+    "wrong_key": {
+      "title": "Wrong key{{plural}} found",
+      "intro": "Your account @{{account}} has a wrong {{keyNames}} key.\n\nWould you like to update this key right now?",
+      "intro_plural": "Your account @{{account}} has wrong {{keyNames}}, and {{lastKeyName}} keys.\n\nWould you like to update these keys right now?",
+
+      "button_action": {
+        "do_nothing": "Do nothing",
+        "replace": "Replace"
+      },
+      "key_info_tooltip": "This key doesn't seem to match your account. You won't be able to perform transactions with it. If you've changed it, remove this key and replace it with the new one."
     }
   },
   "multichain": {

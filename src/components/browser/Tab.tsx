@@ -9,7 +9,7 @@ import {
 } from 'actions/interfaces';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
 import {
@@ -106,6 +106,13 @@ export default ({
       }, 2100);
     }
   }, [isUrlModalOpen]);
+
+  useEffect(() => {
+    // On iOS the page needs to be reloaded when changing orientation to apply desktop mode.
+    if (desktopMode && active && !isManagingTab && Platform.OS === 'ios') {
+      tabRef.current.reload();
+    }
+  }, [orientation]);
   const goBack = () => {
     if (!canGoBack) {
       return;
@@ -318,6 +325,7 @@ export default ({
             mediaPlaybackRequiresUserAction={false}
             onMessage={onMessage}
             javaScriptEnabled
+            geolocationEnabled
             allowsInlineMediaPlayback
             allowsFullscreenVideo
             onLoadEnd={onLoadEnd}

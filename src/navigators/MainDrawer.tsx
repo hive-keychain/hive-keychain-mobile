@@ -82,6 +82,9 @@ export default () => {
       <Drawer.Screen
         name="AccountManagementScreen"
         component={AccountManagementStack}
+        options={{
+          unmountOnBlur: true,
+        }}
       />
       <Drawer.Screen name="AddAccountStack" component={AddAccount} />
       <Drawer.Screen
@@ -100,7 +103,13 @@ export default () => {
           unmountOnBlur: true,
         }}
       />
-      <Drawer.Screen name="TemplateStack" component={TemplateStack} />
+      <Drawer.Screen
+        name="TemplateStack"
+        component={TemplateStack}
+        options={{
+          unmountOnBlur: true,
+        }}
+      />
       <Drawer.Screen
         name="SwapBuyStack"
         component={SwapBuyStack}

@@ -2,6 +2,8 @@ import Clipboard from '@react-native-community/clipboard';
 import {Account, KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import AddKey from 'components/modals/AddKey';
+import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
+import CustomToolTip from 'components/ui/CustomToolTip';
 import Separator from 'components/ui/Separator';
 import {MainNavigation, ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
@@ -18,7 +20,11 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+import {
+  BLACK_OVERLAY_TRANSPARENT,
+  PRIMARY_RED_COLOR,
+  getColors,
+} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {
   button_link_primary_medium,
@@ -35,6 +41,7 @@ type Props = {
   forgetKey: (username: string, key: KeyTypes) => void;
   navigation: MainNavigation;
   theme: Theme;
+  wrongKeysFound?: WrongKeysOnUser;
 };
 export default ({
   type,
@@ -43,13 +50,14 @@ export default ({
   containerStyle,
   navigation,
   theme,
+  wrongKeysFound,
 }: Props) => {
   if (!account) {
     return null;
   }
 
-  const privateKey = account.keys[type];
-  const publicKey = account.keys[`${type}Pubkey` as KeyTypes];
+  const privateKey = account.keys?.[type];
+  const publicKey = account.keys?.[`${type}Pubkey` as KeyTypes];
   const [isPKShown, showPK] = useState(false);
   const [isAuthorizedAccount, setIsAuthorizedAccount] = useState(false);
 
@@ -69,15 +77,44 @@ export default ({
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, width, height);
 
+  const getIsWrongKey = () => {
+    if (
+      wrongKeysFound &&
+      Object.keys(wrongKeysFound).length &&
+      wrongKeysFound.hasOwnProperty(account.name)
+    ) {
+      return wrongKeysFound[account.name].includes(type.toString());
+    }
+    return false;
+  };
+
   return (
     <View style={containerStyle}>
       <View style={styles.row}>
-        <Text style={styles.keyAuthority}>
-          {translate('keys.key_type', {
-            type: translate(`keys.${type}`),
-          })}
-          :
-        </Text>
+        <View style={styles.rowKey}>
+          <Text style={styles.keyAuthority}>
+            {translate('keys.key_type', {
+              type: translate(`keys.${type}`),
+            })}
+            :
+          </Text>
+          {getIsWrongKey() && (
+            <View style={styles.smallMarginLeft}>
+              <CustomToolTip
+                message={'popup.wrong_key.key_info_tooltip'}
+                iconColor={PRIMARY_RED_COLOR}
+                width={width * 0.65}
+                height={height * 0.25}
+                textStyle={[styles.keyType, styles.paddingText]}
+                containerStyle={{
+                  backgroundColor: getColors(theme).cardBgLighter,
+                }}
+                overlayColor={BLACK_OVERLAY_TRANSPARENT}
+                pointerColor={getColors(theme).cardBgLighter}
+              />
+            </View>
+          )}
+        </View>
         {privateKey && (
           <RemoveKey
             forgetKey={() => {
@@ -147,9 +184,7 @@ export default ({
             onPress={() => {
               navigation.navigate('ModalScreen', {
                 name: 'AddKeyModal',
-                modalContent: (
-                  <AddKey type={type} name={account.name} theme={theme} />
-                ),
+                modalContent: <AddKey type={type} name={account.name} />,
                 modalContainerStyle: [
                   getModalBaseStyle(theme).roundedTop,
                   styles.paddingHorizontal,
@@ -239,6 +274,12 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
+    rowKey: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     keyType: {
       color: getColors(theme).secondaryText,
       ...button_link_primary_medium,
@@ -280,4 +321,8 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     paddingHorizontal: {
       paddingHorizontal: 16,
     },
+    paddingText: {
+      paddingHorizontal: 8,
+    },
+    smallMarginLeft: {marginLeft: 4},
   });

@@ -49,7 +49,7 @@ const ProposalVotingSection = ({
 
       const hasVoted =
         (await ProposalUtils.hasVotedForProposal(account.name!)) ||
-        !!account.proxy.length ||
+        !!account?.proxy?.length ||
         toHP(account.vesting_shares.toString(), globalProperties) < 100;
       sethasVoted(hasVoted);
       updateFloatingBar(
