@@ -2,6 +2,8 @@ import {ExtendedAccount} from '@hiveio/dhive';
 import {Account, AccountKeys} from 'actions/interfaces';
 import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
 import {KeychainKeyTypesLC} from 'hive-keychain-commons';
+import {Key} from 'src/interfaces/keys.interface';
+import {getPublicKeyFromPrivateKeyString} from './keyValidation';
 
 const isAuthorizedAccount = (key: string): boolean => {
   return key.toString().startsWith('@');
@@ -79,10 +81,56 @@ const checkKeysOnAccount = (
   return foundWrongKey;
 };
 
+const isUsingMultisig = (
+  key: Key,
+  transactionAccount: ExtendedAccount,
+  initiatorAccountName: string,
+  method: KeychainKeyTypesLC,
+): boolean => {
+  const publicKey = getPublicKeyFromPrivateKeyString(key?.toString()!);
+  switch (method) {
+    case KeychainKeyTypesLC.active: {
+      const accAuth = transactionAccount.active.account_auths.find(
+        ([auth, w]) => auth === initiatorAccountName,
+      );
+      const keyAuth = transactionAccount.active.key_auths.find(
+        ([keyAuth, w]) => keyAuth === publicKey,
+      );
+      if (
+        (accAuth && accAuth[1] < transactionAccount.active.weight_threshold) ||
+        (keyAuth && keyAuth[1] < transactionAccount.active.weight_threshold)
+      ) {
+        return true;
+      }
+      return false;
+    }
+    case KeychainKeyTypesLC.posting:
+      {
+        const accAuth = transactionAccount.posting.account_auths.find(
+          ([auth, w]) => auth === initiatorAccountName,
+        );
+        const keyAuth = transactionAccount.posting.key_auths.find(
+          ([keyAuth, w]) => keyAuth === publicKey,
+        );
+        if (
+          (accAuth &&
+            accAuth[1] < transactionAccount.posting.weight_threshold) ||
+          (keyAuth && keyAuth[1] < transactionAccount.posting.weight_threshold)
+        ) {
+          return true;
+        }
+      }
+      return false;
+  }
+
+  return true;
+};
+
 export const KeyUtils = {
   isAuthorizedAccount,
   hasKeys,
   keysCount,
   checkWrongKeyOnAccount,
   checkKeysOnAccount,
+  isUsingMultisig,
 };

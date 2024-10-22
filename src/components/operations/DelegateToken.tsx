@@ -16,6 +16,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {KeyType} from 'src/interfaces/keys.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
@@ -128,6 +129,7 @@ const DelegateToken = ({
             value: `${withCommas(amount)} ${currency}`,
           },
         ],
+        keyType: KeyType.ACTIVE,
       };
       navigate('ConfirmationPage', confirmationData);
     }

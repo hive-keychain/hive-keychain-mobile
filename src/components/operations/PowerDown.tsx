@@ -18,6 +18,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {KeyType} from 'src/interfaces/keys.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -123,6 +124,7 @@ const PowerDown = ({
     } else {
       const confirmationData: ConfirmationPageProps = {
         onSend: onPowerDown,
+        keyType: KeyType.ACTIVE,
         title: `wallet.operations.powerdown.confirm.info${
           isCancel ? '_stop' : ''
         }`,

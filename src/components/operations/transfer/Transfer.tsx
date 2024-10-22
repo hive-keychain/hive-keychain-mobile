@@ -15,6 +15,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {AutoCompleteValues} from 'src/interfaces/autocomplete.interface';
+import {KeyType} from 'src/interfaces/keys.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -39,6 +40,7 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {getTransferWarning} from 'utils/transferValidator';
 import Balance from '../Balance';
+import {ConfirmationPageProps} from '../Confirmation';
 import OperationThemed from '../OperationThemed';
 
 export type TransferOperationProps = {
@@ -211,7 +213,7 @@ const Transfer = ({
       );
     } else {
       //TODO : Call confirmation page
-      const confirmationData = {
+      const confirmationData: ConfirmationPageProps = {
         title: 'wallet.operations.transfer.confirm.info',
         onSend,
         skipWarningTranslation: true,
@@ -241,6 +243,7 @@ const Transfer = ({
             value: `${withCommas(amount)} ${currency}`,
           },
         ],
+        keyType: KeyType.ACTIVE,
       };
       if (memo.length)
         confirmationData.data.push({

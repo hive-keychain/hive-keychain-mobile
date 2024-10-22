@@ -20,6 +20,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {KeyType} from 'src/interfaces/keys.interface';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
@@ -179,6 +180,7 @@ const Savings = ({
     } else {
       const confirmationData: ConfirmationPageProps = {
         onSend: onSavings,
+        keyType: KeyType.ACTIVE,
         title: 'wallet.operations.savings.confirm.info',
         data: [
           {

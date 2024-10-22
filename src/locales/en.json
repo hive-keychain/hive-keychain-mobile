@@ -1111,6 +1111,9 @@
       "key_info_tooltip": "This key doesn't seem to match your account. You won't be able to perform transactions with it. If you've changed it, remove this key and replace it with the new one."
     }
   },
+  "multisig": {
+    "disclaimer_message": "Multisig detected : This transaction will be sent to the Hive Multisig server"
+  },
   "multichain": {
     "switch_chain": "Switch Chain"
   }

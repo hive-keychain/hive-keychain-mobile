@@ -15,6 +15,7 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {KeyType} from 'src/interfaces/keys.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
@@ -111,6 +112,7 @@ const StakeToken = ({
     } else {
       const confirmationData: ConfirmationPageProps = {
         onSend: onStakeToken,
+        keyType: KeyType.ACTIVE,
         title: 'wallet.operations.token_stake.confirm.info',
         data: [
           {

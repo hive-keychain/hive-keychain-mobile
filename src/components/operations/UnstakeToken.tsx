@@ -14,6 +14,7 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {KeyType} from 'src/interfaces/keys.interface';
 import {Token} from 'src/interfaces/tokens.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -107,6 +108,7 @@ const UnstakeToken = ({
     } else {
       const confirmationData: ConfirmationPageProps = {
         onSend: onUnstakeToken,
+        keyType: KeyType.ACTIVE,
         title: 'wallet.operations.token_unstake.confirm.info',
         data: [
           {

@@ -4,8 +4,9 @@ import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
 import {ConfirmationPageRoute} from 'navigators/Root.types';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  Image,
   Keyboard,
   ScrollView,
   StyleSheet,
@@ -15,6 +16,7 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {KeyType} from 'src/interfaces/keys.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
@@ -22,8 +24,11 @@ import {spacingStyle} from 'src/styles/spacing';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
+import {KeyUtils} from 'utils/key.utils';
+import {KeychainKeyTypesLC} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {resetStackAndNavigate} from 'utils/navigation';
+const LOGO_MULTISIG = require('assets/wallet/multisig.png');
 
 export type ConfirmationPageProps = {
   onSend: () => void;
@@ -34,6 +39,7 @@ export type ConfirmationPageProps = {
   data: ConfirmationData[];
   onConfirm?: () => Promise<void>;
   extraHeader?: React.JSX.Element;
+  keyType: KeyType;
 };
 
 type ConfirmationData = {
@@ -53,16 +59,28 @@ const ConfirmationPage = ({
     title,
     introText,
     warningText,
+    keyType,
     data,
     skipWarningTranslation,
     onConfirm: onConfirmOverride,
     extraHeader,
   } = route.params;
   const [loading, setLoading] = useState(false);
+  const [isMultisig, setIsMultisig] = useState(false);
   const {width, height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({width, height}, theme);
 
+  useEffect(() => {
+    setIsMultisig(
+      KeyUtils.isUsingMultisig(
+        user.keys[keyType.toLowerCase() as KeychainKeyTypesLC],
+        user.account,
+        user.name,
+        keyType.toLowerCase() as KeychainKeyTypesLC,
+      ),
+    );
+  }, []);
   const onConfirm = async () => {
     setLoading(true);
     Keyboard.dismiss();
@@ -80,8 +98,23 @@ const ConfirmationPage = ({
     <Background theme={theme}>
       <ScrollView contentContainerStyle={styles.confirmationPage}>
         {extraHeader}
+        {isMultisig && (
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginHorizontal: 15,
+            }}>
+            <Image
+              source={LOGO_MULTISIG}
+              style={{width: 50, height: 30, marginTop: 10}}
+            />
+            <Caption text={'multisig.disclaimer_message'} hideSeparator />
+          </View>
+        )}
         <Caption text={title} hideSeparator />
-        <Separator />
+
         {warningText && (
           <Caption
             text={warningText}

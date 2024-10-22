@@ -20,6 +20,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {KeyType} from 'src/interfaces/keys.interface';
 import {RCDelegationValue} from 'src/interfaces/rc-delegation.interface';
 import {getCardStyle} from 'src/styles/card';
 import {
@@ -158,6 +159,7 @@ const RCDelegation = ({
     } else {
       const confirmationData: ConfirmationPageProps = {
         onSend: onRCDelegate,
+        keyType: KeyType.POSTING,
         title: 'wallet.operations.rc_delegation.confirm.info',
         data: [
           {
