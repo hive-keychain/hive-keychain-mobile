@@ -12,11 +12,8 @@ import {getBadgeStyle} from 'src/styles/text';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import AutomatedTasks from './AutomatedTasks';
-<<<<<<< HEAD
 import Multisig from './Multisig';
-=======
 import Notifications from './Notifications';
->>>>>>> dev
 import Operations from './Operations';
 import RpcNodes from './RpcNodes';
 
