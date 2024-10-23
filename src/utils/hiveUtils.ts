@@ -223,3 +223,8 @@ export const getAccountPrice = async () => {
   const price = await getClient().database.call('get_chain_properties', []);
   return Asset.fromString(price.account_creation_fee.toString()).amount;
 };
+
+export const getAccount = async (username: string) => {
+  const accounts = await getClient().database.getAccounts([username]);
+  return accounts[0];
+};

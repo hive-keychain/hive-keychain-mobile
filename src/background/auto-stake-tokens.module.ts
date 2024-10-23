@@ -98,11 +98,16 @@ const iterateAutoStakeAccounts = async (
       );
       let tokenOperationResult;
       for (const token of tokensBalance) {
-        tokenOperationResult = await stakeToken(acc.keys.active!, acc.name!, {
-          to: sanitizeUsername(acc.name!),
-          symbol: token.symbol,
-          quantity: sanitizeAmount(token.balance),
-        });
+        tokenOperationResult = await stakeToken(
+          acc.keys.active!,
+          acc.name!,
+          {
+            to: sanitizeUsername(acc.name!),
+            symbol: token.symbol,
+            quantity: sanitizeAmount(token.balance),
+          },
+          {},
+        );
         if (tokenOperationResult.id) {
           console.info(
             `autostake module staked ${token.balance} ${token.symbol} using @${acc.name}`,

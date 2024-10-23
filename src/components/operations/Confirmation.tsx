@@ -214,6 +214,7 @@ const ConfirmationPage = ({
           <View style={{flex: 1}}>
             {Object.entries(twoFABots).map(([botName, code]) => (
               <OperationInput
+                keyboardType="numeric"
                 labelInput={translate('multisig.bot_two_fa_code', {
                   account: user.name,
                 })}

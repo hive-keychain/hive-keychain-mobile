@@ -401,3 +401,10 @@ export const beautifyErrorMessage = (err: HiveErrorMessage) => {
   }
   return `${translate('request.error.ops')} : ${error}`;
 };
+
+export const sleep = (ms: number) => {
+  //sleep
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+};

@@ -3,7 +3,9 @@ import {Account, AccountKeys} from 'actions/interfaces';
 import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
 import {KeychainKeyTypesLC} from 'hive-keychain-commons';
 import {Key} from 'src/interfaces/keys.interface';
+import {RootState, store} from 'store';
 import {getData} from './hive';
+import {KeychainKeyTypes} from './keychain.types';
 import {getPublicKeyFromPrivateKeyString} from './keyValidation';
 
 const isAuthorizedAccount = (key: string): boolean => {
@@ -131,6 +133,17 @@ const getKeyReferences = (keys: string[]) => {
   return getData('condenser_api.get_key_references', [keys]);
 };
 
+const isKeyActiveOrPosting = async (key: Key, account: ExtendedAccount) => {
+  const localAccount = (store.getState() as RootState).accounts.find(
+    (la) => la.name === account.name,
+  );
+  if (localAccount?.keys.active === key) {
+    return KeychainKeyTypes.active;
+  } else {
+    return KeychainKeyTypes.posting;
+  }
+};
+
 export const KeyUtils = {
   isAuthorizedAccount,
   hasKeys,
@@ -139,4 +152,5 @@ export const KeyUtils = {
   checkKeysOnAccount,
   getKeyReferences,
   isUsingMultisig,
+  isKeyActiveOrPosting,
 };

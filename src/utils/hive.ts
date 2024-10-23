@@ -24,9 +24,9 @@ import {
   UpdateProposalVotesOperation,
   VoteOperation,
 } from '@hiveio/dhive';
-import {sleep} from '@hiveio/dhive/lib/utils';
 import {Rpc} from 'actions/interfaces';
 import hiveTx, {call, Transaction as HiveTransaction} from 'hive-tx';
+import {requestMultisigSignatures} from 'src/background/multisig.module';
 import {
   HiveTxBroadcastErrorResponse,
   HiveTxBroadcastResult,
@@ -34,7 +34,11 @@ import {
   TransactionResult,
 } from 'src/interfaces/hive-tx.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {RootState, store} from 'store';
 import {hiveEngine} from 'utils/config';
+import {getAccount} from './hiveUtils';
+import {KeyUtils} from './key.utils';
+import {sleep} from './keychain';
 import {
   KeychainKeyTypes,
   KeychainKeyTypesLC,
@@ -44,6 +48,7 @@ import {
   RequestRemoveAccountAuthority,
   RequestRemoveKeyAuthority,
 } from './keychain.types';
+import {MultisigUtils} from './multisig.utils';
 import {useWorkingRPC} from './rpc-switcher.utils';
 
 type BroadcastResult = {id: string};
@@ -567,20 +572,42 @@ export const broadcast = async (
   arr: Operation[],
   options?: TransactionOptions,
 ) => {
-  const tx = new hiveTx.Transaction();
-  await tx.create(arr);
-  tx.sign(hiveTx.PrivateKey.from(key));
   try {
-    const broadcast = await tx.broadcast();
-    const {error, result} = broadcast as {
-      error: Error;
-      result: object;
-    };
-    if (error) {
-      console.log(error);
-      throw error;
+    const tx = new hiveTx.Transaction();
+    const transaction = await tx.create(arr);
+    const signedTx = tx.sign(hiveTx.PrivateKey.from(key));
+    if (options.multisig) {
+      const username = MultisigUtils.getUsernameFromTransaction(transaction);
+      const transactionAccount = await getAccount(username!.toString());
+
+      const acc = (store.getState() as RootState).accounts.find(
+        (account) =>
+          account.keys.posting === key || account.keys.active === key,
+      );
+      const initiatorAccount = await getAccount(acc?.name!);
+      const method = await KeyUtils.isKeyActiveOrPosting(key, initiatorAccount);
+
+      requestMultisigSignatures({
+        transaction,
+        key,
+        initiatorAccount,
+        transactionAccount,
+        signature: signedTx.signatures[0],
+        method,
+        options,
+      });
     } else {
-      return result;
+      const broadcast = await tx.broadcast();
+      const {error, result} = broadcast as {
+        error: Error;
+        result: object;
+      };
+      if (error) {
+        console.log(error);
+        throw error;
+      } else {
+        return result;
+      }
     }
   } catch (e) {
     console.log('hive-tx error', JSON.stringify(e));

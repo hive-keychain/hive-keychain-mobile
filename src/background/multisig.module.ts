@@ -1,5 +1,4 @@
 import {SignedTransaction} from '@hiveio/dhive';
-import {sleep} from '@hiveio/dhive/lib/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {signBuffer} from 'components/bridge';
 import {KeychainKeyTypes, KeychainKeyTypesLC} from 'hive-keychain-commons';
@@ -30,9 +29,9 @@ import {
   getTransaction,
 } from 'utils/hive';
 import {KeyUtils} from 'utils/key.utils';
+import {sleep} from 'utils/keychain';
 import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation';
 import {MultisigUtils} from 'utils/multisig.utils';
-const signature = require('@hiveio/hive-js/lib/auth/ecc');
 
 let socket: Socket;
 let shouldReconnectSocket: boolean = false;
@@ -161,6 +160,7 @@ const requestSignatures = async (
     await createConnectionIfNeeded(data);
     const message = await getRequestSignatureMessage(data);
     try {
+      console.log('emitting message', message);
       socket.volatile.emit(
         SocketMessageCommand.REQUEST_SIGNATURE,
         message,
@@ -415,15 +415,17 @@ const getRequestSignatureMessage = async (
   data: MultisigRequestSignatures,
 ): Promise<RequestSignatureMessage> => {
   return new Promise(async (resolve, reject) => {
+    console.log('before pot sig');
     const potentialSigners = await MultisigUtils.getPotentialSigners(
       data.transactionAccount,
       data.key,
       data.method,
     );
-
+    console.log('potentialSigners', potentialSigners);
     const signers: RequestSignatureSigner[] = [];
     for (const [receiverPubKey, weight] of potentialSigners) {
       const metaData: TransactionOptionsMetadata = data.options.metaData ?? {};
+      console.log('metaData', metaData);
       const usernames = await KeyUtils.getKeyReferences([receiverPubKey]);
       let twoFACodes = {};
       if (data.options?.metaData?.twoFACodes) {
@@ -434,6 +436,7 @@ const getRequestSignatureMessage = async (
             receiverPubKey,
           ),
         };
+        console.log('twoFACodes', twoFACodes);
       }
 
       signers.push({
