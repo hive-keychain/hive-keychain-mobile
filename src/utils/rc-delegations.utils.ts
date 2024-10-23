@@ -1,6 +1,7 @@
 import {Asset} from '@hiveio/dhive';
 import {GlobalProperties} from 'actions/interfaces';
 import {Key} from 'src/interfaces/keys.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {RcDelegation} from 'src/interfaces/rc-delegation.interface';
 import {broadcastJson, getData} from './hive';
 
@@ -30,8 +31,9 @@ const cancelDelegation = async (
   delegatee: string,
   username: string,
   postingKey: Key,
+  options: TransactionOptions,
 ) => {
-  return sendDelegation(0, delegatee, username, postingKey);
+  return sendDelegation(0, delegatee, username, postingKey, options);
 };
 /* istanbul ignore next */
 const sendDelegation = async (
@@ -39,15 +41,23 @@ const sendDelegation = async (
   delegatee: string,
   username: string,
   postingKey: Key,
+  options: TransactionOptions,
 ) => {
-  return await broadcastJson(postingKey, username, 'rc', false, [
-    'delegate_rc',
-    {
-      from: username,
-      delegatees: [delegatee],
-      max_rc: value,
-    },
-  ]);
+  return await broadcastJson(
+    postingKey,
+    username,
+    'rc',
+    false,
+    [
+      'delegate_rc',
+      {
+        from: username,
+        delegatees: [delegatee],
+        max_rc: value,
+      },
+    ],
+    options,
+  );
 };
 
 const getHivePerVests = (properties: GlobalProperties) => {

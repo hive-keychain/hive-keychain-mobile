@@ -17,6 +17,15 @@ export interface MultisigAccountConfig {
 export interface MultisigConfig {
   [account: string]: MultisigAccountConfig;
 }
+
+export interface TransactionOptions {
+  multisig?: boolean;
+  metaData?: TransactionOptionsMetadata;
+}
+export interface TransactionOptionsMetadata {
+  twoFACodes?: {[botName: string]: string};
+}
+
 //TODO check bellow what will be used or not to cleanup
 export enum SocketMessageCommand {
   SIGNER_DISCONNECT = 'signer_disconnect',
@@ -27,6 +36,7 @@ export enum SocketMessageCommand {
   REQUEST_LOCK = 'request_lock',
   NOTIFY_TRANSACTION_BROADCASTED = 'notify_transaction_broadcasted',
   TRANSACTION_BROADCASTED_NOTIFICATION = 'transaction_broadcasted_notification',
+  TRANSACTION_ERROR_NOTIFICATION = 'transaction_error_notification',
 }
 
 export interface SocketMessage {
@@ -94,6 +104,7 @@ export interface RequestSignatureSigner {
   encryptedTransaction: string; // Encrypted transaction with signer key
   publicKey: string;
   weight: string;
+  metaData?: any;
 }
 
 export interface SignTransactionMessage extends SocketMessagePayload {
@@ -134,7 +145,6 @@ export interface Signer {
 
 export interface MultisigData {
   data: MultisigDataType;
-  multisigStep: MultisigStep;
 }
 
 export type MultisigDataType =
@@ -167,13 +177,7 @@ export interface MultisigRequestSignatures {
   transactionAccount: ExtendedAccount;
   signature: string;
   method: KeychainKeyTypes;
-}
-
-export enum MultisigStep {
-  ACCEPT_REJECT_TRANSACTION = 'ACCEPT_REJECT_TRANSACTION',
-  NOTIFY_TRANSACTION_BROADCASTED = 'NOTIFY_TRANSACTION_BROADCASTED',
-  SIGN_TRANSACTION_FEEDBACK = 'SIGN_TRANSACTION_FEEDBACK',
-  UNLOCK_WALLET = 'UNLOCK_WALLET',
+  options: TransactionOptions;
 }
 
 export interface ConnectDisconnectMessage {

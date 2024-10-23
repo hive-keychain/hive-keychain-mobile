@@ -3,6 +3,7 @@ import {Account, AccountKeys} from 'actions/interfaces';
 import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
 import {KeychainKeyTypesLC} from 'hive-keychain-commons';
 import {Key} from 'src/interfaces/keys.interface';
+import {getData} from './hive';
 import {getPublicKeyFromPrivateKeyString} from './keyValidation';
 
 const isAuthorizedAccount = (key: string): boolean => {
@@ -126,11 +127,16 @@ const isUsingMultisig = (
   return true;
 };
 
+const getKeyReferences = (keys: string[]) => {
+  return getData('condenser_api.get_key_references', [keys]);
+};
+
 export const KeyUtils = {
   isAuthorizedAccount,
   hasKeys,
   keysCount,
   checkWrongKeyOnAccount,
   checkKeysOnAccount,
+  getKeyReferences,
   isUsingMultisig,
 };

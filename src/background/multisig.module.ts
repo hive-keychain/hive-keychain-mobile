@@ -1,23 +1,48 @@
+import {SignedTransaction} from '@hiveio/dhive';
+import {sleep} from '@hiveio/dhive/lib/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {signBuffer} from 'components/bridge';
+import {KeychainKeyTypes, KeychainKeyTypesLC} from 'hive-keychain-commons';
+import SimpleToast from 'react-native-simple-toast';
 import {Socket, io} from 'socket.io-client';
 import {
   ConnectDisconnectMessage,
   MultisigAccountConfig,
   MultisigConfig,
+  MultisigDisplayMessageData,
+  MultisigRequestSignatures,
+  NotifyTxBroadcastedMessage,
+  RequestSignatureMessage,
+  RequestSignatureSigner,
+  SignTransactionMessage,
+  SignatureRequest,
+  Signer,
   SignerConnectMessage,
   SignerConnectResponse,
   SocketMessageCommand,
+  TransactionOptionsMetadata,
 } from 'src/interfaces/multisig.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {MultisigConfig as ConfigMultisig} from 'utils/config';
+import {RootState, store} from 'store';
+import {MultisigConfig as MultisigConfiguration} from 'utils/config';
+import {
+  broadcastAndConfirmTransactionWithSignature,
+  getTransaction,
+} from 'utils/hive';
+import {KeyUtils} from 'utils/key.utils';
+import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation';
+import {MultisigUtils} from 'utils/multisig.utils';
+const signature = require('@hiveio/hive-js/lib/auth/ecc');
 
 let socket: Socket;
 let shouldReconnectSocket: boolean = false;
 let connectedPublicKeys: SignerConnectMessage[] = [];
-const start = async () => {
-  console.log(`Starting multisig`);
+const lockedRequests: number[] = [];
 
-  socket = io(ConfigMultisig.baseURL, {
+const start = async () => {
+  console.info(`Starting multisig`);
+
+  socket = io(MultisigConfiguration.baseURL, {
     transports: ['websocket'],
     reconnection: true,
     autoConnect: false,
@@ -35,113 +60,153 @@ const start = async () => {
         (config.active.isEnabled || config.posting.isEnabled),
     )
   ) {
-    console.log('Some accounts need connection');
+    console.info('Some accounts need connection');
     shouldReconnectSocket = true;
     if (!socket.connected) socket.connect();
     connectSocket(multisigConfig);
   } else {
-    console.log('Multisig hasnt been enabled for any account');
-  }
-
-  // setupPopupListener();
-  // setupRefreshConnections();
-};
-
-const checkMultisigCommand = async (
-  command: string,
-  message: ConnectDisconnectMessage,
-) => {
-  switch (command) {
-    case 'MULTISIG_REFRESH_CONNECTIONS':
-      await setupRefreshConnections(message);
-      break;
-    default:
-      break;
+    console.info('Multisig hasnt been enabled for any account');
   }
 };
 
-const setupRefreshConnections = async (message: ConnectDisconnectMessage) => {
-  console.log('setupRefreshConnections', {message}); //TODO remove line
+export const refreshConnections = async (value: ConnectDisconnectMessage) => {
   const multisigConfig: MultisigConfig = JSON.parse(
     await AsyncStorage.getItem(KeychainStorageKeyEnum.MULTISIG_CONFIG),
   );
-  const accountMultisigConfig = multisigConfig[message.account];
-  if (message.connect) {
+  const accountMultisigConfig = multisigConfig[value.account];
+  if (value.connect) {
     if (!socket.connected) socket.connect();
+    await sleep(1000);
+    connectSocket(multisigConfig);
     shouldReconnectSocket = true;
-    connectToBackend(message.account, accountMultisigConfig);
+    connectToBackend(value.account, accountMultisigConfig);
   } else {
-    if (message.publicKey && message.publicKey.length > 0) {
-      disconnectFromBackend(message.account, message.publicKey);
+    if (value.publicKey && value.publicKey.length > 0) {
+      disconnectFromBackend(value.account, value.publicKey);
     } else {
       disconnectFromBackend(
-        message.account,
+        value.account,
         accountMultisigConfig.active.publicKey,
       );
       disconnectFromBackend(
-        message.account,
+        value.account,
         accountMultisigConfig.posting.publicKey,
       );
     }
   }
 };
 
-//TODO bellow uncomment & implement
-// const setupPopupListener = () => {
-//   chrome.runtime.onMessage.addListener(
-//     async (
-//       backgroundMessage: BackgroundMessage,
-//       sender: chrome.runtime.MessageSender,
-//       sendResp: (response?: any) => void,
-//     ) => {
-//       if (
-//         backgroundMessage.command ===
-//         BackgroundCommand.MULTISIG_REQUEST_SIGNATURES
-//       ) {
-//         const data = backgroundMessage.value as MultisigRequestSignatures;
-//         requestSignatures(data, true);
-//       }
-//     },
-//   );
-// };
+export const requestMultisigSignatures = async (
+  data: MultisigRequestSignatures,
+) => {
+  await createConnectionIfNeeded(data);
+  requestSignatures(data, true);
+};
 
-// const requestSignatures = async (
-//   data: MultisigRequestSignatures,
-//   useRuntimeMessages?: boolean,
-// ) => {
-//   return new Promise(async (resolve, reject) => {
-//     const message = await getRequestSignatureMessage(data);
-//     try {
-//       socket.volatile.emit(
-//         SocketMessageCommand.REQUEST_SIGNATURE,
-//         message,
-//         withTimeout(
-//           async (message: string) => {
-//             console.log(message);
-//             if (useRuntimeMessages) {
-//               chrome.runtime.sendMessage({
-//                 command: BackgroundCommand.MULTISIG_REQUEST_SIGNATURES_RESPONSE,
-//                 value: {
-//                   message: 'multisig_transaction_sent_to_signers',
-//                 },
-//               });
-//             } else {
-//               // resolve('multisig_transaction_sent_to_signers');
-//               // in this case try to wait for broadcast notification
-//               const txId = await waitForBroadcastToBeDone();
-//               resolve(txId);
-//             }
-//           },
-//           () => {
-//             console.log('timeout in socketio');
-//           },
-//         ),
-//       );
-//     } catch (err) {
-//       console.log({err});
-//     }
-//   });
-// };
+// When the socket has not been initialized because multisig is not enabled for any account
+// this allows to create a connection on the go to wait for a multisig response
+const createConnectionIfNeeded = async (data: MultisigRequestSignatures) => {
+  if (!socket.connected) {
+    shouldReconnectSocket = true;
+    socket.connect();
+    connectSocket({});
+    await sleep(1000);
+  }
+
+  const config: MultisigConfig =
+    JSON.parse(
+      await AsyncStorage.getItem(KeychainStorageKeyEnum.MULTISIG_CONFIG),
+    ) || {};
+  if (
+    !config[data.initiatorAccount.name]?.[
+      data.method?.toLowerCase() as 'posting' | 'active'
+    ].isEnabled
+  ) {
+    const config = {
+      isEnabled: true,
+      posting:
+        data.method.toLowerCase() === 'posting'
+          ? {
+              isEnabled: true,
+              publicKey: getPublicKeyFromPrivateKeyString(data.key!)!,
+              message: signBuffer(
+                data.key?.toString()!,
+                data.initiatorAccount.name!,
+              ),
+            }
+          : {isEnabled: false, message: '', publicKey: ''},
+      active:
+        data.method.toLowerCase() === 'active'
+          ? {
+              isEnabled: true,
+              publicKey: getPublicKeyFromPrivateKeyString(data.key!)!,
+              message: signBuffer(
+                data.key?.toString()!,
+                data.initiatorAccount.name!,
+              ),
+            }
+          : {isEnabled: false, message: '', publicKey: ''},
+    } as MultisigAccountConfig;
+    await connectToBackend(data.initiatorAccount.name, config);
+
+    await sleep(1000);
+  }
+};
+
+const requestSignatures = async (
+  data: MultisigRequestSignatures,
+  useRuntimeMessages?: boolean,
+) => {
+  return new Promise(async (resolve, reject) => {
+    await createConnectionIfNeeded(data);
+    const message = await getRequestSignatureMessage(data);
+    try {
+      socket.volatile.emit(
+        SocketMessageCommand.REQUEST_SIGNATURE,
+        message,
+        withTimeout(
+          async (message: string) => {
+            console.log({multisigRequestSignatureResponse: message});
+            if (useRuntimeMessages) {
+              //TODO: Handle signature response
+              // chrome.runtime.sendMessage({
+              //   command: BackgroundCommand.MULTISIG_REQUEST_SIGNATURES_RESPONSE,
+              //   value: {
+              //     message: 'multisig_transaction_sent_to_signers',
+              //   },
+              // });
+            } else {
+              // resolve('multisig_transaction_sent_to_signers');
+              // in this case try to wait for broadcast notification
+              try {
+                const {txId, id} = (await waitForBroadcastToBeDone()) as {
+                  txId: string;
+                  id: number;
+                };
+                if (!lockedRequests.includes(id)) {
+                  lockedRequests.push(id);
+                  resolve(txId);
+                }
+              } catch (err) {
+                //TODO : Resolve error
+                // chrome.runtime.sendMessage({
+                //   command: DialogCommand.SEND_DIALOG_ERROR,
+                //   msg: {display_msg: await chrome.i18n.getMessage(err)},
+                // });
+                resolve({error: {message: err}});
+              }
+            }
+          },
+          () => {
+            console.info('timeout in socketio');
+          },
+        ),
+      );
+    } catch (err) {
+      console.error({err});
+    }
+  });
+};
 
 const initAccountsConnections = async (multisigConfig: MultisigConfig) => {
   for (const accountName of Object.keys(multisigConfig)) {
@@ -154,106 +219,121 @@ const initAccountsConnections = async (multisigConfig: MultisigConfig) => {
 
 const connectSocket = (multisigConfig: MultisigConfig) => {
   socket.on('connect', () => {
+    console.info('Connected to socket');
+
     keepAlive();
     initAccountsConnections(multisigConfig);
   });
   socket.on('error', (err: any) => {
-    console.log('Error in socket', err);
+    console.error('Error in socket', err);
   });
   socket.on('disconnect', (ev: any) => {
-    console.log('Disconnected from socket');
+    console.info('Disconnected from socket');
+    socket.connect();
   });
 
-  //TODO bellow uncomment & fix
-  // socket.on(
-  //   SocketMessageCommand.REQUEST_SIGN_TRANSACTION,
-  //   async (signatureRequest: SignatureRequest) => {
-  //     const signer = signatureRequest.signers.find((signer: Signer) => {
-  //       return signer.publicKey === signatureRequest.targetedPublicKey;
-  //     });
+  socket.on(
+    SocketMessageCommand.REQUEST_SIGN_TRANSACTION,
+    async (signatureRequest: SignatureRequest) => {
+      const signer = signatureRequest.signers.find((signer: Signer) => {
+        return signer.publicKey === signatureRequest.targetedPublicKey;
+      });
 
-  //     if (!signer) {
-  //       return;
-  //     }
+      if (!signer) {
+        return;
+      }
 
-  //     const signedTransaction = await MultisigModule.processSignatureRequest(
-  //       signatureRequest,
-  //       signer,
-  //     );
+      const signedTransaction = await MultisigModule.processSignatureRequest(
+        signatureRequest,
+        signer,
+      );
 
-  //     chrome.runtime.sendMessage({
-  //       command: MultisigDialogCommand.MULTISIG_SEND_DATA_TO_POPUP,
-  //       value: {
-  //         multisigStep: MultisigStep.SIGN_TRANSACTION_FEEDBACK,
-  //         data: {
-  //           message: 'multisig_dialog_transaction_signed_successfully',
-  //           success: true,
-  //           signer: signer,
-  //         } as MultisigDisplayMessageData,
-  //       },
-  //     } as MultisigDialogMessage);
+      SimpleToast.show(
+        'multisig.transaction_signed_successfully',
+        SimpleToast.LONG,
+      );
 
-  //     if (signedTransaction) {
-  //       socket.emit(
-  //         SocketMessageCommand.SIGN_TRANSACTION,
-  //         {
-  //           signature: signedTransaction.signatures[0],
-  //           signerId: signer.id,
-  //           signatureRequestId: signatureRequest.id,
-  //         } as SignTransactionMessage,
-  //         async (signatures: string[]) => {
-  //           console.log(
-  //             `Should try to broadcast ${JSON.stringify(signedTransaction)}`,
-  //           );
-  //           const txResult = await HiveTxUtils.broadcastAndConfirmTransactionWithSignature(
-  //             {
-  //               expiration: signedTransaction.expiration,
-  //               extensions: signedTransaction.extensions,
-  //               operations: signedTransaction.operations,
-  //               ref_block_num: signedTransaction.ref_block_num,
-  //               ref_block_prefix: signedTransaction.ref_block_prefix,
-  //             },
-  //             signatures,
-  //             true,
-  //           );
-  //           if (txResult?.confirmed) {
-  //             socket.emit(
-  //               SocketMessageCommand.NOTIFY_TRANSACTION_BROADCASTED,
-  //               {
-  //                 signatureRequestId: signatureRequest.id,
-  //                 txId: txResult.tx_id,
-  //               } as NotifyTxBroadcastedMessage,
-  //               () => {
-  //                 console.log(`Notified`);
-  //               },
-  //             );
-  //           }
-  //         },
-  //       );
-  //     } else {
-  //       //TODO  check if need to return if no rejected
-  //     }
-  //   },
-  // );
+      if (signedTransaction) {
+        socket.emit(
+          SocketMessageCommand.SIGN_TRANSACTION,
+          {
+            signature: signedTransaction.signatures[0],
+            signerId: signer.id,
+            signatureRequestId: signatureRequest.id,
+          } as SignTransactionMessage,
+          async (signatures: string[]) => {
+            console.info(
+              `Should try to broadcast ${JSON.stringify(signedTransaction)}`,
+            );
+            const txResult = await broadcastAndConfirmTransactionWithSignature(
+              {
+                expiration: signedTransaction.expiration,
+                extensions: signedTransaction.extensions,
+                operations: signedTransaction.operations,
+                ref_block_num: signedTransaction.ref_block_num,
+                ref_block_prefix: signedTransaction.ref_block_prefix,
+              },
+              signatures,
+              true,
+            );
+            if (txResult?.confirmed) {
+              socket.emit(
+                SocketMessageCommand.NOTIFY_TRANSACTION_BROADCASTED,
+                {
+                  signatureRequestId: signatureRequest.id,
+                  txId: txResult.tx_id,
+                } as NotifyTxBroadcastedMessage,
+                () => {
+                  console.info(`Notified`);
+                },
+              );
+            }
+          },
+        );
+      } else {
+        //TODO  check if need to return if no rejected
+      }
+    },
+  );
 
-  //TODO bellow uncomment & fix
-  // socket.on(
-  //   SocketMessageCommand.TRANSACTION_BROADCASTED_NOTIFICATION,
-  //   async (signatureRequest: SignatureRequest, txId: string) => {
-  //     Logger.log(`signature request ${signatureRequest.id} was broadcasted`);
-  //     const transaction = await HiveTxUtils.getTransaction(txId);
-  //     delete transaction.signatures;
-  //     openWindow({
-  //       multisigStep: MultisigStep.NOTIFY_TRANSACTION_BROADCASTED,
-  //       data: {
-  //         message: 'multisig_dialog_transaction_broadcasted',
-  //         success: true,
-  //         txId: txId,
-  //         transaction: transaction,
-  //       } as MultisigDisplayMessageData,
-  //     });
-  //   },
-  // );
+  socket.on(
+    SocketMessageCommand.TRANSACTION_BROADCASTED_NOTIFICATION,
+    async (signatureRequest: SignatureRequest, txId: string) => {
+      console.log(
+        `signature request ${signatureRequest.id} was broadcasted`,
+        txId,
+      );
+      const transaction = await getTransaction(txId);
+      delete transaction.signatures;
+      if (!lockedRequests.includes(signatureRequest.id)) {
+        lockedRequests.push(signatureRequest.id);
+        //TODO: Handle broadcast success
+        console.log({
+          multisigStep: 'MultisigStep.NOTIFY_TRANSACTION_BROADCASTED',
+          data: {
+            message: 'multisig_dialog_transaction_broadcasted',
+            success: true,
+            txId: txId,
+            transaction: transaction,
+          } as MultisigDisplayMessageData,
+        });
+      }
+    },
+  );
+  socket.on(SocketMessageCommand.TRANSACTION_ERROR_NOTIFICATION, async (e) => {
+    await sleep(200);
+    if (!lockedRequests.includes(e.signatureRequest.id)) {
+      lockedRequests.push(e.signatureRequest.id);
+      //TODO: Show error
+      console.log({
+        multisigStep: ' MultisigStep.NOTIFY_ERROR',
+        data: {
+          message: e.error.message,
+          success: false,
+        } as MultisigDisplayMessageData,
+      });
+    }
+  });
 
   if (socket) {
     socket.connect();
@@ -264,7 +344,7 @@ const disconnectFromBackend = async (
   accountName: string,
   publicKey: string,
 ) => {
-  console.log(
+  console.info(
     `Trying to disconnect @${accountName} (${publicKey}) from backend`,
   );
   connectedPublicKeys = connectedPublicKeys.filter(
@@ -277,7 +357,7 @@ const connectToBackend = async (
   accountName: string,
   accountConfig: MultisigAccountConfig,
 ) => {
-  console.log(`Connecting @${accountName} to the multisig backend server`);
+  console.info(`Connecting @${accountName} to the multisig backend server`);
   const signerConnectMessages: SignerConnectMessage[] = [];
   if (
     accountConfig.active?.isEnabled &&
@@ -307,7 +387,6 @@ const connectToBackend = async (
     SocketMessageCommand.SIGNER_CONNECT,
     signerConnectMessages,
     (signerConnectResponse: SignerConnectResponse) => {
-      //TODO: Add signing after the fact
       for (const signer of signerConnectMessages) {
         if (
           !(
@@ -329,302 +408,266 @@ const keepAlive = () => {
     } else {
       clearInterval(keepAliveIntervalId);
     }
-  }, 20 * 1000);
+  }, 10 * 1000);
 };
 
-// const getRequestSignatureMessage = async (
-//   data: MultisigRequestSignatures,
-// ): Promise<RequestSignatureMessage> => {
-//   return new Promise(async (resolve, reject) => {
-//     const potentialSigners = await MultisigUtils.getPotentialSigners(
-//       data.transactionAccount,
-//       data.key,
-//       data.method,
-//     );
+const getRequestSignatureMessage = async (
+  data: MultisigRequestSignatures,
+): Promise<RequestSignatureMessage> => {
+  return new Promise(async (resolve, reject) => {
+    const potentialSigners = await MultisigUtils.getPotentialSigners(
+      data.transactionAccount,
+      data.key,
+      data.method,
+    );
 
-//     const signers: RequestSignatureSigner[] = [];
-//     for (const [receiverPubKey, weight] of potentialSigners) {
-//       signers.push({
-//         encryptedTransaction: await encodeTransaction(
-//           data.transaction,
-//           data.key!.toString(),
-//           receiverPubKey,
-//         ),
-//         publicKey: receiverPubKey,
-//         weight: weight.toString(),
-//       });
-//     }
+    const signers: RequestSignatureSigner[] = [];
+    for (const [receiverPubKey, weight] of potentialSigners) {
+      const metaData: TransactionOptionsMetadata = data.options.metaData ?? {};
+      const usernames = await KeyUtils.getKeyReferences([receiverPubKey]);
+      let twoFACodes = {};
+      if (data.options?.metaData?.twoFACodes) {
+        twoFACodes = {
+          [usernames[0]]: await encodeMetadata(
+            data.options?.metaData?.twoFACodes[usernames[0]],
+            data.key!.toString(),
+            receiverPubKey,
+          ),
+        };
+      }
 
-//     const publicKey = KeysUtils.getPublicKeyFromPrivateKeyString(
-//       data.key!.toString(),
-//     )!;
+      signers.push({
+        encryptedTransaction: await encodeTransaction(
+          data.transaction,
+          data.key!.toString(),
+          receiverPubKey,
+        ),
+        publicKey: receiverPubKey,
+        weight: weight.toString(),
+        metaData: {...metaData, twoFACodes: twoFACodes},
+      });
+    }
 
-//     const keyAuths =
-//       data.method === KeychainKeyTypes.active
-//         ? data.initiatorAccount.active.key_auths
-//         : data.initiatorAccount.posting.key_auths;
+    const publicKey = getPublicKeyFromPrivateKeyString(data.key!.toString())!;
 
-//     const keyAuth = keyAuths.find(
-//       ([key, weight]) => key.toString() === publicKey.toString(),
-//     );
+    const keyAuths =
+      data.method === KeychainKeyTypes.active
+        ? data.initiatorAccount.active.key_auths
+        : data.initiatorAccount.posting.key_auths;
 
-//     const transactionAccountThreshold =
-//       data.method === KeychainKeyTypes.active
-//         ? data.initiatorAccount.active.weight_threshold
-//         : data.initiatorAccount.posting.weight_threshold;
+    const keyAuth = keyAuths.find(
+      ([key, weight]) => key.toString() === publicKey.toString(),
+    );
 
-//     const request: RequestSignatureMessage = {
-//       initialSigner: {
-//         publicKey: publicKey,
-//         signature: data.signature,
-//         username: data.initiatorAccount.name,
-//         weight: keyAuth![1],
-//       },
-//       signatureRequest: {
-//         expirationDate: data.transaction.expiration,
-//         keyType: data.method,
-//         signers: signers,
-//         threshold: transactionAccountThreshold,
-//       },
-//     };
+    const transactionAccountThreshold =
+      data.method === KeychainKeyTypes.active
+        ? data.initiatorAccount.active.weight_threshold
+        : data.initiatorAccount.posting.weight_threshold;
 
-//     resolve(request);
-//   });
-// };
+    const request: RequestSignatureMessage = {
+      initialSigner: {
+        publicKey: publicKey,
+        signature: data.signature,
+        username: data.initiatorAccount.name,
+        weight: keyAuth![1],
+      },
+      signatureRequest: {
+        expirationDate: data.transaction.expiration,
+        keyType: data.method,
+        signers: signers,
+        threshold: transactionAccountThreshold,
+      },
+    };
 
-// const processSignatureRequest = async (
-//   signatureRequest: SignatureRequest,
-//   signer: Signer,
-// ): Promise<SignedTransaction | undefined> => {
-//   if (signer) {
-//     const username = connectedPublicKeys.find(
-//       (c) => c.publicKey === signer.publicKey,
-//     )?.username;
+    resolve(request);
+  });
+};
 
-//     let mk = await MkModule.getMk();
-//     let openNewWindow = true;
-//     if (!mk) {
-//       mk = await unlockWallet(signer);
-//       openNewWindow = false;
-//     }
+const processSignatureRequest = async (
+  signatureRequest: SignatureRequest,
+  signer: Signer,
+): Promise<SignedTransaction | undefined> => {
+  if (signer) {
+    const username = connectedPublicKeys.find(
+      (c) => c.publicKey === signer.publicKey,
+    )?.username;
 
-//     const localAccounts = await BgdAccountsUtils.getAccountsFromLocalStorage(
-//       mk,
-//     );
-//     const localAccount = localAccounts.find((la) => la.name === username);
-//     const key = localAccount?.keys[
-//       signatureRequest.keyType.toLowerCase() as KeychainKeyTypesLC
-//     ]?.toString()!;
-//     const decodedTransaction = await decryptRequest(signer, key);
-//     if (decodedTransaction) {
-//       const signedTransaction = await requestSignTransactionFromUser(
-//         decodedTransaction,
-//         signer,
-//         signatureRequest,
-//         key,
-//         openNewWindow,
-//       );
-//       return signedTransaction;
-//     } else {
-//       return;
-//     }
-//   }
-// };
+    const accounts = (store.getState() as RootState).accounts;
+    const localAccount = accounts.find((la) => la.name === username);
+    const key = localAccount?.keys[
+      signatureRequest.keyType.toLowerCase() as KeychainKeyTypesLC
+    ]?.toString()!;
+    const decodedTransaction = await decryptRequest(signer, key);
+    if (decodedTransaction) {
+      const signedTransaction = await requestSignTransactionFromUser(
+        decodedTransaction,
+        signer,
+        signatureRequest,
+        key,
+      );
+      return signedTransaction;
+    } else {
+      return;
+    }
+  }
+};
 
-// const unlockWallet = async (signer: Signer) => {
-//   return new Promise((resolve, reject) => {
-//     const onReceiveMK = async (
-//       backgroundMessage: BackgroundMessage,
-//       sender: chrome.runtime.MessageSender,
-//       sendResp: (response?: any) => void,
-//     ) => {
-//       if (
-//         backgroundMessage.command === BackgroundCommand.MULTISIG_UNLOCK_WALLET
-//       ) {
-//         if (backgroundMessage.value) {
-//           try {
-//             if (await MkUtils.login(backgroundMessage.value)) {
-//               resolve(backgroundMessage.value);
-//               chrome.runtime.onMessage.removeListener(onReceiveMK);
-//             } else {
-//               chrome.runtime.sendMessage({
-//                 command: MultisigDialogCommand.MULTISIG_SEND_DATA_TO_POPUP,
-//                 value: {
-//                   multisigStep: MultisigStep.UNLOCK_WALLET,
-//                   data: {feedback: 'wrong_password'},
-//                 },
-//               });
-//             }
-//           } catch (err) {
-//             chrome.runtime.sendMessage({
-//               command: MultisigDialogCommand.MULTISIG_SEND_DATA_TO_POPUP,
-//               value: {
-//                 multisigStep: MultisigStep.UNLOCK_WALLET,
-//                 data: {feedback: 'wrong_password'},
-//               },
-//             });
-//           }
-//         } else {
-//           resolve(undefined);
-//         }
-//       }
-//     };
-//     chrome.runtime.onMessage.addListener(onReceiveMK);
+const requestSignTransactionFromUser = (
+  decodedTransaction: any,
+  signer: Signer,
+  signatureRequest: SignatureRequest,
+  key: string,
+  openNewWindow?: boolean,
+): Promise<SignedTransaction | undefined> => {
+  console.log(
+    'requestSignTransacitonFromUser',
+    decodedTransaction,
+    signer,
+    signatureRequest,
+    key,
+  );
+  return new Promise(async (resolve, reject) => {
+    //TODO: Implement
+    //   const onReceivedMultisigAcceptResponse = async (
+    //     backgroundMessage: BackgroundMessage,
+    //     sender: chrome.runtime.MessageSender,
+    //     sendResp: (response?: any) => void,
+    //   ) => {
+    //     if (
+    //       backgroundMessage.command ===
+    //         BackgroundCommand.MULTISIG_ACCEPT_RESPONSE &&
+    //       backgroundMessage.value?.multisigData.data.signer.id === signer.id
+    //     ) {
+    //       if (backgroundMessage.value.accepted) {
+    //         const signedTransaction = await HiveTxUtils.signTransaction(
+    //           decodedTransaction,
+    //           key,
+    //         );
+    //         resolve(signedTransaction as SignedTransaction);
+    //         chrome.runtime.onMessage.removeListener(
+    //           onReceivedMultisigAcceptResponse,
+    //         );
+    //       } else {
+    //         resolve(undefined);
+    //       }
+    //     }
+    //   };
+    //   chrome.runtime.onMessage.addListener(onReceivedMultisigAcceptResponse);
+    //   const usernames = await KeysUtils.getKeyReferences([signer.publicKey]);
+    //   if (openNewWindow) {
+    //     openWindow({
+    //       multisigStep: MultisigStep.ACCEPT_REJECT_TRANSACTION,
+    //       data: {
+    //         username: usernames[0],
+    //         signer,
+    //         signatureRequest,
+    //         decodedTransaction,
+    //       } as MultisigAcceptRejectTxData,
+    //     });
+    //   } else {
+    //     //TODO: Complete here
+    //     console.log({
+    //       command: 'MultisigDialogCommand.MULTISIG_SEND_DATA_TO_POPUP',
+    //       value: {
+    //         multisigStep: MultisigStep.ACCEPT_REJECT_TRANSACTION,
+    //         data: {
+    //           username: usernames[0],
+    //           signer,
+    //           signatureRequest,
+    //           decodedTransaction,
+    //         } as MultisigAcceptRejectTxData,
+    //       },
+    //     });
+    //   }
+  });
+};
 
-//     openWindow({
-//       multisigStep: MultisigStep.UNLOCK_WALLET,
-//       data: {signer: signer} as MultisigDataType,
-//     });
-//   });
-// };
+const decryptRequest = async (signer: Signer, key: string) => {
+  return await MultisigUtils.decodeTransaction(
+    signer.encryptedTransaction,
+    key,
+  );
+};
 
-// const requestSignTransactionFromUser = (
-//   decodedTransaction: any,
-//   signer: Signer,
-//   signatureRequest: SignatureRequest,
-//   key: string,
-//   openNewWindow?: boolean,
-// ): Promise<SignedTransaction | undefined> => {
-//   return new Promise(async (resolve, reject) => {
-//     const onReceivedMultisigAcceptResponse = async (
-//       backgroundMessage: BackgroundMessage,
-//       sender: chrome.runtime.MessageSender,
-//       sendResp: (response?: any) => void,
-//     ) => {
-//       if (
-//         backgroundMessage.command ===
-//           BackgroundCommand.MULTISIG_ACCEPT_RESPONSE &&
-//         backgroundMessage.value?.multisigData.data.signer.id === signer.id
-//       ) {
-//         if (backgroundMessage.value.accepted) {
-//           const signedTransaction = await HiveTxUtils.signTransaction(
-//             decodedTransaction,
-//             key,
-//           );
-//           resolve(signedTransaction as SignedTransaction);
-//           chrome.runtime.onMessage.removeListener(
-//             onReceivedMultisigAcceptResponse,
-//           );
-//         } else {
-//           resolve(undefined);
-//         }
-//       }
-//     };
-//     chrome.runtime.onMessage.addListener(onReceivedMultisigAcceptResponse);
-//     const usernames = await KeysUtils.getKeyReferences([signer.publicKey]);
+const encodeTransaction = async (
+  transaction: any,
+  key: string,
+  receiverPublicKey: string,
+): Promise<string> => {
+  return await MultisigUtils.encodeTransaction(
+    transaction,
+    key,
+    receiverPublicKey,
+  );
+};
 
-//     if (openNewWindow) {
-//       openWindow({
-//         multisigStep: MultisigStep.ACCEPT_REJECT_TRANSACTION,
-//         data: {
-//           username: usernames[0],
-//           signer,
-//           signatureRequest,
-//           decodedTransaction,
-//         } as MultisigAcceptRejectTxData,
-//       });
-//     } else {
-//       chrome.runtime.sendMessage({
-//         command: MultisigDialogCommand.MULTISIG_SEND_DATA_TO_POPUP,
-//         value: {
-//           multisigStep: MultisigStep.ACCEPT_REJECT_TRANSACTION,
-//           data: {
-//             username: usernames[0],
-//             signer,
-//             signatureRequest,
-//             decodedTransaction,
-//           } as MultisigAcceptRejectTxData,
-//         },
-//       });
-//     }
-//   });
-// };
+const encodeMetadata = async (
+  metaData: any,
+  key: string,
+  receiverPublicKey: string,
+): Promise<string> => {
+  return await MultisigUtils.encodeMetadata(metaData, key, receiverPublicKey);
+};
 
-// const decryptRequest = async (signer: Signer, key: string) => {
-//   return await MultisigUtils.decodeTransaction(
-//     signer.encryptedTransaction,
-//     key,
-//   );
-// };
+const withTimeout = (
+  onSuccess: any,
+  onTimeout: any,
+  timeout: number = 5000,
+) => {
+  let called = false;
 
-// const encodeTransaction = async (
-//   transaction: any,
-//   key: string,
-//   receiverPublicKey: string,
-// ): Promise<string> => {
-//   return await MultisigUtils.encodeTransaction(
-//     transaction,
-//     key,
-//     receiverPublicKey,
-//   );
-// };
+  const timer = setTimeout(() => {
+    if (called) return;
+    called = true;
+    onTimeout();
+  }, timeout);
 
-// const notifyTransactionBroadcasted = (signatureRequest: SignatureRequest) => {};
+  return (...args: any) => {
+    if (called) return;
+    called = true;
+    clearTimeout(timer);
+    onSuccess.apply(this, args);
+  };
+};
 
-// const openWindow = (data: MultisigData): void => {
-//   chrome.windows.getCurrent(async (currentWindow) => {
-//     const win: chrome.windows.CreateData = {
-//       url: chrome.runtime.getURL('multisig-dialog.html'),
-//       type: 'popup',
-//       height: 600,
-//       width: 435,
-//       left: currentWindow.width! - 350 + currentWindow.left!,
-//       top: currentWindow.top!,
-//       focused: true,
-//     };
-//     // Except on Firefox
-//     //@ts-ignore
-//     if (typeof InstallTrigger === undefined) win.focused = true;
-//     chrome.windows.create(win, (window) => {
-//       waitUntilDialogIsReady(100, MultisigDialogCommand.READY_MULTISIG, () => {
-//         chrome.runtime.sendMessage({
-//           command: MultisigDialogCommand.MULTISIG_SEND_DATA_TO_POPUP,
-//           value: data,
-//         } as MultisigDialogMessage);
-//       });
-//     });
-//   });
-// };
+const waitForBroadcastToBeDone = async () => {
+  return new Promise((resolve, reject) => {
+    const broadcastedListener = async (
+      signatureRequest: SignatureRequest,
+      txId: string,
+    ) => {
+      socket.off(
+        SocketMessageCommand.TRANSACTION_ERROR_NOTIFICATION,
+        notifyError,
+      );
+      socket.off(
+        SocketMessageCommand.TRANSACTION_BROADCASTED_NOTIFICATION,
+        broadcastedListener,
+      );
+      resolve({txId, id: signatureRequest.id});
+    };
 
-// const withTimeout = (
-//   onSuccess: any,
-//   onTimeout: any,
-//   timeout: number = 5000,
-// ) => {
-//   let called = false;
-
-//   const timer = setTimeout(() => {
-//     if (called) return;
-//     called = true;
-//     onTimeout();
-//   }, timeout);
-
-//   return (...args: any) => {
-//     if (called) return;
-//     called = true;
-//     clearTimeout(timer);
-//     onSuccess.apply(this, args);
-//   };
-// };
-
-// const waitForBroadcastToBeDone = async () => {
-//   return new Promise((resolve, reject) => {
-//     const broadcastedListener = async (
-//       signatureRequest: SignatureRequest,
-//       txId: string,
-//     ) => {
-//       socket.off(
-//         SocketMessageCommand.TRANSACTION_BROADCASTED_NOTIFICATION,
-//         broadcastedListener,
-//       );
-//       resolve(txId);
-//     };
-//     socket.on(
-//       SocketMessageCommand.TRANSACTION_BROADCASTED_NOTIFICATION,
-//       broadcastedListener,
-//     );
-//   });
-// };
+    const notifyError = async (res: any) => {
+      socket.off(
+        SocketMessageCommand.TRANSACTION_ERROR_NOTIFICATION,
+        notifyError,
+      );
+      socket.off(
+        SocketMessageCommand.TRANSACTION_BROADCASTED_NOTIFICATION,
+        broadcastedListener,
+      );
+      if (!lockedRequests.includes(res.signatureRequest.id)) {
+        lockedRequests.push(res.signatureRequest.id);
+        reject(res.error.message);
+      }
+    };
+    socket.on(
+      SocketMessageCommand.TRANSACTION_BROADCASTED_NOTIFICATION,
+      broadcastedListener,
+    );
+    socket.on(SocketMessageCommand.TRANSACTION_ERROR_NOTIFICATION, notifyError);
+  });
+};
 
 setInterval(() => {
   if (shouldReconnectSocket && (!socket || !socket.connected)) {
@@ -635,7 +678,7 @@ setInterval(() => {
 
 export const MultisigModule = {
   start,
-  checkMultisigCommand,
-  // processSignatureRequest,
-  // requestSignatures,
+  processSignatureRequest,
+  requestSignatures,
+  encodeMetadata,
 };

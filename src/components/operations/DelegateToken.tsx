@@ -17,6 +17,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {KeyType} from 'src/interfaces/keys.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
@@ -57,7 +58,7 @@ const DelegateToken = ({
   const [to, setTo] = useState(sendTo || '');
   const [amount, setAmount] = useState(delegateAmount || '');
 
-  const onDelegateToken = async () => {
+  const onDelegateToken = async (options: TransactionOptions) => {
     try {
       const tokenOperationResult: any = await delegateToken(
         user.keys.active,
@@ -67,6 +68,7 @@ const DelegateToken = ({
           symbol: currency,
           quantity: sanitizeAmount(amount),
         },
+        options,
       );
 
       if (tokenOperationResult && tokenOperationResult.tx_id) {

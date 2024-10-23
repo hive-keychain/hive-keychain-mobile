@@ -16,6 +16,7 @@ import {
   Operation,
   RecurrentTransferOperation,
   RemoveProposalOperation,
+  Transaction,
   TransferFromSavingsOperation,
   TransferOperation,
   TransferToSavingsOperation,
@@ -23,8 +24,16 @@ import {
   UpdateProposalVotesOperation,
   VoteOperation,
 } from '@hiveio/dhive';
+import {sleep} from '@hiveio/dhive/lib/utils';
 import {Rpc} from 'actions/interfaces';
-import hiveTx, {call} from 'hive-tx';
+import hiveTx, {call, Transaction as HiveTransaction} from 'hive-tx';
+import {
+  HiveTxBroadcastErrorResponse,
+  HiveTxBroadcastResult,
+  HiveTxBroadcastSuccessResponse,
+  TransactionResult,
+} from 'src/interfaces/hive-tx.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {hiveEngine} from 'utils/config';
 import {
   KeychainKeyTypes,
@@ -72,15 +81,20 @@ export const getCurrency = (baseCurrency: 'HIVE' | 'HBD' | 'HP') => {
 
 export const getClient = () => client;
 
-export const transfer = async (key: string, obj: TransferOperation[1]) => {
-  return await broadcast(key, [['transfer', obj]]);
+export const transfer = async (
+  key: string,
+  obj: TransferOperation[1],
+  options?: TransactionOptions,
+) => {
+  return await broadcast(key, [['transfer', obj]], options);
 };
 
 export const recurrentTransfer = async (
   key: string,
   obj: RecurrentTransferOperation[1],
+  options?: TransactionOptions,
 ) => {
-  return await broadcast(key, [['recurrent_transfer', obj]]);
+  return await broadcast(key, [['recurrent_transfer', obj]], options);
 };
 
 export const broadcastJson = async (
@@ -89,21 +103,31 @@ export const broadcastJson = async (
   id: string,
   active: boolean,
   json: object | string,
+  options?: TransactionOptions,
 ) => {
-  return await broadcast(key, [
+  return await broadcast(
+    key,
     [
-      'custom_json',
-      {
-        required_auths: active ? [username] : [],
-        required_posting_auths: !active ? [username] : [],
-        json: typeof json === 'object' ? JSON.stringify(json) : json,
-        id,
-      },
+      [
+        'custom_json',
+        {
+          required_auths: active ? [username] : [],
+          required_posting_auths: !active ? [username] : [],
+          json: typeof json === 'object' ? JSON.stringify(json) : json,
+          id,
+        },
+      ],
     ],
-  ]);
+    options,
+  );
 };
 
-export const sendToken = async (key: string, username: string, obj: object) => {
+export const sendToken = async (
+  key: string,
+  username: string,
+  obj: object,
+  options?: TransactionOptions,
+) => {
   const result = (await broadcastJson(
     key,
     username,
@@ -114,6 +138,7 @@ export const sendToken = async (key: string, username: string, obj: object) => {
       contractAction: 'transfer',
       contractPayload: obj,
     },
+    options,
   )) as BroadcastResult;
   return result;
 };
@@ -122,6 +147,7 @@ export const stakeToken = async (
   key: string,
   username: string,
   obj: object,
+  options: TransactionOptions,
 ) => {
   const result = (await broadcastJson(
     key,
@@ -133,6 +159,7 @@ export const stakeToken = async (
       contractAction: 'stake',
       contractPayload: obj,
     },
+    options,
   )) as BroadcastResult;
   return result;
 };
@@ -141,6 +168,7 @@ export const unstakeToken = async (
   key: string,
   username: string,
   obj: object,
+  options: TransactionOptions,
 ) => {
   const result = (await broadcastJson(
     key,
@@ -152,6 +180,7 @@ export const unstakeToken = async (
       contractAction: 'unstake',
       contractPayload: obj,
     },
+    options,
   )) as BroadcastResult;
   return result;
 };
@@ -160,6 +189,7 @@ export const delegateToken = async (
   key: string,
   username: string,
   obj: object,
+  options: TransactionOptions,
 ) => {
   const result = (await broadcastJson(
     key,
@@ -171,6 +201,7 @@ export const delegateToken = async (
       contractAction: 'delegate',
       contractPayload: obj,
     },
+    options,
   )) as BroadcastResult;
   return result;
 };
@@ -197,44 +228,57 @@ export const cancelDelegateToken = async (
 export const powerUp = async (
   key: string,
   obj: TransferToVestingOperation[1],
+  options: TransactionOptions,
 ) => {
-  return await broadcast(key, [['transfer_to_vesting', obj]]);
+  return await broadcast(key, [['transfer_to_vesting', obj]], options);
 };
 
-export const powerDown = async (key: string, obj: object) => {
-  return await broadcast(key, [['withdraw_vesting', obj]]);
+export const powerDown = async (
+  key: string,
+  obj: object,
+  options: TransactionOptions,
+) => {
+  return await broadcast(key, [['withdraw_vesting', obj]], options);
 };
 
 export const delegate = async (
   key: string,
   obj: DelegateVestingSharesOperation[1],
+  options: TransactionOptions,
 ) => {
-  return await broadcast(key, [['delegate_vesting_shares', obj]]);
+  return await broadcast(key, [['delegate_vesting_shares', obj]], options);
 };
 
-export const convert = async (key: string, obj: ConvertOperation[1]) => {
-  return await broadcast(key, [['convert', obj]]);
+export const convert = async (
+  key: string,
+  obj: ConvertOperation[1],
+  options: TransactionOptions,
+) => {
+  return await broadcast(key, [['convert', obj]], options);
 };
 
 export const collateralizedConvert = async (
   key: string,
   obj: CollateralizedConvertOperation[1],
+  options: TransactionOptions,
 ) => {
-  return await broadcast(key, [['collateralized_convert', obj]]);
+  return await broadcast(key, [['collateralized_convert', obj]], options);
 };
 
 export const depositToSavings = async (
   key: string,
   obj: TransferToSavingsOperation[1],
+  options: TransactionOptions,
 ) => {
-  return await broadcast(key, [['transfer_to_savings', obj]]);
+  return await broadcast(key, [['transfer_to_savings', obj]], options);
 };
 
 export const withdrawFromSavings = async (
   key: string,
   obj: TransferFromSavingsOperation[1],
+  options: TransactionOptions,
 ) => {
-  return await broadcast(key, [['transfer_from_savings', obj]]);
+  return await broadcast(key, [['transfer_from_savings', obj]], options);
 };
 
 export const cancelPendingSavings = async (
@@ -518,7 +562,11 @@ export const removeProposal = async (
   return await broadcast(key, [['remove_proposal', obj]]);
 };
 
-export const broadcast = async (key: string, arr: Operation[]) => {
+export const broadcast = async (
+  key: string,
+  arr: Operation[],
+  options?: TransactionOptions,
+) => {
   const tx = new hiveTx.Transaction();
   await tx.create(arr);
   tx.sign(hiveTx.PrivateKey.from(key));
@@ -540,6 +588,72 @@ export const broadcast = async (key: string, arr: Operation[]) => {
   }
 };
 
+export const broadcastAndConfirmTransactionWithSignature = async (
+  transaction: Transaction,
+  signature: string | string[],
+  confirmation?: boolean,
+): Promise<TransactionResult | undefined> => {
+  let hiveTransaction = new HiveTransaction(transaction);
+  if (typeof signature === 'string') {
+    hiveTransaction.addSignature(signature);
+  } else {
+    for (const si of signature) {
+      hiveTransaction.addSignature(si);
+    }
+  }
+  let response;
+  try {
+    console.log(hiveTransaction);
+    response = await hiveTransaction.broadcast();
+    if ((response as HiveTxBroadcastSuccessResponse).result) {
+      const transactionResult: HiveTxBroadcastResult = (response as HiveTxBroadcastSuccessResponse)
+        .result;
+      return {
+        id: transactionResult.tx_id,
+        tx_id: transactionResult.tx_id,
+        confirmed: confirmation
+          ? await confirmTransaction(transactionResult.tx_id)
+          : false,
+      } as TransactionResult;
+    }
+  } catch (err) {
+    console.error(err);
+    throw new Error('html_popup_error_while_broadcasting');
+  }
+  response = response as HiveTxBroadcastErrorResponse;
+  if (response.error) {
+    console.error('Error during broadcast', response.error);
+    throw response.error;
+  }
+};
+
+const confirmTransaction = async (transactionId: string) => {
+  let response = null;
+  const MAX_RETRY_COUNT = 6;
+  let retryCount = 0;
+  do {
+    response = await call('transaction_status_api.find_transaction', {
+      transaction_id: transactionId,
+    });
+    await sleep(1000);
+    retryCount++;
+  } while (
+    ['within_mempool', 'unknown'].includes(response.result.status) &&
+    retryCount < MAX_RETRY_COUNT
+  );
+  if (
+    ['within_reversible_block', 'within_irreversible_block'].includes(
+      response.result.status,
+    )
+  ) {
+    console.info('Transaction confirmed');
+    return true;
+  } else {
+    console.error(`Transaction failed with status: ${response.result.status}`);
+    return false;
+  }
+};
+
 export const getData = async (
   method: string,
   params: any[] | object,
@@ -554,6 +668,11 @@ export const getData = async (
       response.error,
     )}`,
   );
+};
+
+export const getTransaction = async (txId: string) => {
+  await sleep(3000);
+  return getData('condenser_api.get_transaction', [txId]);
 };
 
 export default hive;

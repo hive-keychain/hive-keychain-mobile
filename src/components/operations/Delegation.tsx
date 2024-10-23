@@ -19,6 +19,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {KeyType} from 'src/interfaces/keys.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -62,17 +63,21 @@ const Delegation = ({
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const onDelegate = async () => {
+  const onDelegate = async (options: TransactionOptions) => {
     try {
-      await delegate(user.keys.active, {
-        vesting_shares: sanitizeAmount(
-          fromHP(sanitizeAmount(amount), properties.globals).toString(),
-          'VESTS',
-          6,
-        ),
-        delegatee: sanitizeUsername(to),
-        delegator: user.account.name,
-      });
+      await delegate(
+        user.keys.active,
+        {
+          vesting_shares: sanitizeAmount(
+            fromHP(sanitizeAmount(amount), properties.globals).toString(),
+            'VESTS',
+            6,
+          ),
+          delegatee: sanitizeUsername(to),
+          delegator: user.account.name,
+        },
+        options,
+      );
       if (parseFloat(amount.replace(',', '.')) !== 0) {
         showModal('toast.delegation_success', MessageModalType.SUCCESS);
       } else {

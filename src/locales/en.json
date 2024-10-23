@@ -1112,7 +1112,8 @@
     }
   },
   "multisig": {
-    "disclaimer_message": "Multisig detected : This transaction will be sent to the Hive Multisig server"
+    "disclaimer_message": "Multisig detected : This transaction will be sent to the Hive Multisig server",
+    "bot_two_fa_code": "@{{account}} One Time Password:"
   },
   "multichain": {
     "switch_chain": "Switch Chain"
