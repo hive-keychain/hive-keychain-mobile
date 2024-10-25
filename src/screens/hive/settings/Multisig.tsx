@@ -6,20 +6,11 @@ import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
-import {
-  Linking,
-  NativeEventEmitter,
-  NativeModules,
-  StyleSheet,
-  TextStyle,
-  View,
-} from 'react-native';
+import {Linking, StyleSheet, TextStyle, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
+import {MultisigModule} from 'src/background/multisig.module';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {
-  ConnectDisconnectMessage,
-  MultisigAccountConfig,
-} from 'src/interfaces/multisig.interface';
+import {MultisigAccountConfig} from 'src/interfaces/multisig.interface';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {title_primary_title_1} from 'src/styles/typography';
@@ -72,7 +63,7 @@ const Multisig = ({active}: PropsFromRedux) => {
     await MultisigUtils.saveMultisigConfig(active.name!, newConfig);
     console.log('saveMultisigEnabled', {isEnabled});
     if (!isEnabled) {
-      notifyBackground({
+      MultisigModule.refreshConnections({
         account: active.name!,
         connect: isEnabled,
       });
@@ -96,7 +87,7 @@ const Multisig = ({active}: PropsFromRedux) => {
 
     setMultisigAccountConfig(newConfig);
     await MultisigUtils.saveMultisigConfig(active.name!, newConfig);
-    notifyBackground({
+    MultisigModule.refreshConnections({
       account: active.name!,
       connect: isEnabled,
       publicKey: multisigAccountConfig.active.publicKey,
@@ -119,20 +110,11 @@ const Multisig = ({active}: PropsFromRedux) => {
     };
     setMultisigAccountConfig(newConfig);
     await MultisigUtils.saveMultisigConfig(active.name!, newConfig);
-    notifyBackground({
+    MultisigModule.refreshConnections({
       account: active.name!,
       connect: isEnabled,
       publicKey: multisigAccountConfig.posting.publicKey,
       message: multisigAccountConfig.posting.message,
-    });
-  };
-
-  const notifyBackground = (message: ConnectDisconnectMessage) => {
-    new NativeEventEmitter(NativeModules.ToastExample).emit('command_event', {
-      multisig: {
-        command: 'MULTISIG_REFRESH_CONNECTIONS',
-        message,
-      },
     });
   };
 

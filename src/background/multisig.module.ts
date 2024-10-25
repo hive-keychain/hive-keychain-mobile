@@ -70,7 +70,7 @@ const start = async () => {
   }
 };
 
-export const refreshConnections = async (value: ConnectDisconnectMessage) => {
+const refreshConnections = async (value: ConnectDisconnectMessage) => {
   const multisigConfig: MultisigConfig = JSON.parse(
     await AsyncStorage.getItem(KeychainStorageKeyEnum.MULTISIG_CONFIG),
   );
@@ -697,4 +697,5 @@ export const MultisigModule = {
   processSignatureRequest,
   requestSignatures,
   encodeMetadata,
+  refreshConnections,
 };
