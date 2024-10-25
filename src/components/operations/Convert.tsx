@@ -99,6 +99,7 @@ const Convert = ({
           options,
         );
       }
+      if (options.multisig) return;
       showModal('toast.convert_success', MessageModalType.SUCCESS, {
         currency,
       });

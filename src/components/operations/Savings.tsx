@@ -157,6 +157,8 @@ const Savings = ({
           options,
         );
       }
+      if (options.multisig) return;
+
       if (operationType === SavingsOperations.deposit) {
         showModal('toast.savings_deposit_success', MessageModalType.SUCCESS, {
           amount: `${(+amount).toFixed(3)} ${currency}`,

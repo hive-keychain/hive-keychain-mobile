@@ -102,6 +102,8 @@ const PowerDown = ({
         },
         options,
       );
+      if (options.multisig) return;
+
       if (parseFloat(amt.replace(',', '.')) !== 0) {
         showModal('toast.powerdown_success', MessageModalType.SUCCESS);
       } else {

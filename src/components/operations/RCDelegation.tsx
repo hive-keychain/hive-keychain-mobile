@@ -192,6 +192,7 @@ const RCDelegation = ({
         user.keys.posting!,
         options,
       );
+      if (options.multisig) return;
 
       if (success) {
         if (!isCancel) {

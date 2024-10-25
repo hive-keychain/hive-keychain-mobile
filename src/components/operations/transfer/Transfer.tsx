@@ -159,6 +159,7 @@ const Transfer = ({
         );
       if (!engine) {
         await sendTransfer(options);
+        if (options.multisig) return;
         showModal(
           isRecurrent
             ? 'toast.recurrent_transfer_success'
@@ -168,6 +169,7 @@ const Transfer = ({
       } else {
         const {id} = await transferToken(options);
         const {confirmed} = await tryConfirmTransaction(id);
+        if (options.multisig) return;
         showModal(
           confirmed
             ? 'toast.transfer_token_confirmed'

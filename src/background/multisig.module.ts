@@ -1,9 +1,11 @@
 import {SignedTransaction} from '@hiveio/dhive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {showModal} from 'actions/message';
 import {signBuffer} from 'components/bridge';
 import {KeychainKeyTypes, KeychainKeyTypesLC} from 'hive-keychain-commons';
 import SimpleToast from 'react-native-simple-toast';
 import {Socket, io} from 'socket.io-client';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {
   ConnectDisconnectMessage,
   MultisigAccountConfig,
@@ -168,14 +170,9 @@ const requestSignatures = async (
           async (message: string) => {
             console.log({multisigRequestSignatureResponse: message});
             if (useRuntimeMessages) {
-              //TODO: Handle signature response
-              // chrome.runtime.sendMessage({
-              //   command: BackgroundCommand.MULTISIG_REQUEST_SIGNATURES_RESPONSE,
-              //   value: {
-              //     message: 'multisig_transaction_sent_to_signers',
-              //   },
-              // });
+              SimpleToast.show(message);
             } else {
+              console.log('transaction sent to signers');
               // resolve('multisig_transaction_sent_to_signers');
               // in this case try to wait for broadcast notification
               try {
@@ -188,6 +185,7 @@ const requestSignatures = async (
                   resolve(txId);
                 }
               } catch (err) {
+                console.log('catching error', err);
                 //TODO : Resolve error
                 // chrome.runtime.sendMessage({
                 //   command: DialogCommand.SEND_DIALOG_ERROR,
@@ -324,6 +322,7 @@ const connectSocket = (multisigConfig: MultisigConfig) => {
     await sleep(200);
     if (!lockedRequests.includes(e.signatureRequest.id)) {
       lockedRequests.push(e.signatureRequest.id);
+      openModal(`multisig.${e.error.message}`, MessageModalType.ERROR);
       //TODO: Show error
       console.log({
         multisigStep: ' MultisigStep.NOTIFY_ERROR',
@@ -678,6 +677,10 @@ setInterval(() => {
     start();
   }
 }, 60 * 1000);
+
+const openModal = (key: string, type: MessageModalType) => {
+  store.dispatch(showModal(key, type));
+};
 
 export const MultisigModule = {
   start,

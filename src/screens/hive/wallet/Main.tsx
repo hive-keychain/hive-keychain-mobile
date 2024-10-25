@@ -56,7 +56,6 @@ import {
 } from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
-import {MultisigModule} from 'src/background/multisig.module';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {TokenBalance} from 'src/interfaces/tokens.interface';
@@ -133,7 +132,6 @@ const Main = ({
   const mainScrollRef = useRef();
 
   const [eventReceived, setEventReceived] = useState(null);
-  const [notificationEvent, setNotificationEvent] = useState(null);
   const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -167,20 +165,12 @@ const Main = ({
       } else if (eventReceived.configureWidgets) {
         const {configureWidgets} = eventReceived;
         setShowWidgetConfiguration(Boolean(configureWidgets));
-      } else if (eventReceived.multisig) {
-        const {command, message} = eventReceived.multisig;
-        console.log({command, message}); //TODO remove line
-        checkCommand(command, message);
       }
     }
     return () => {
       eventListener.remove();
     };
   }, [eventReceived]);
-
-  const checkCommand = async (command: string, message: any) => {
-    await MultisigModule.checkMultisigCommand(command, message);
-  };
 
   useEffect(() => {
     // Stop the page refreshing after all is fetched

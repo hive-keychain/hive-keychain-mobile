@@ -78,6 +78,8 @@ const Delegation = ({
         },
         options,
       );
+      if (options.multisig) return;
+
       if (parseFloat(amount.replace(',', '.')) !== 0) {
         showModal('toast.delegation_success', MessageModalType.SUCCESS);
       } else {

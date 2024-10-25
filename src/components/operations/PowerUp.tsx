@@ -65,6 +65,8 @@ const PowerUp = ({
         },
         options,
       );
+      if (options.multisig) return;
+
       showModal('toast.powerup_success', MessageModalType.SUCCESS);
     } catch (e) {
       showModal(

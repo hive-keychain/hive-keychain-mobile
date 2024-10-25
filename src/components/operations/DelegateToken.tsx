@@ -70,6 +70,7 @@ const DelegateToken = ({
         },
         options,
       );
+      if (options.multisig) return;
 
       if (tokenOperationResult && tokenOperationResult.tx_id) {
         let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
