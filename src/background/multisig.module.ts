@@ -305,6 +305,11 @@ const connectSocket = (multisigConfig: MultisigConfig) => {
       delete transaction.signatures;
       if (!lockedRequests.includes(signatureRequest.id)) {
         lockedRequests.push(signatureRequest.id);
+        openModal(
+          'multisig.transaction_broadcasted',
+          MessageModalType.MULTISIG_SUCCESS,
+          {txId},
+        );
         //TODO: Handle broadcast success
         console.log({
           multisigStep: 'MultisigStep.NOTIFY_TRANSACTION_BROADCASTED',
@@ -678,8 +683,13 @@ setInterval(() => {
   }
 }, 60 * 1000);
 
-const openModal = (key: string, type: MessageModalType) => {
-  store.dispatch(showModal(key, type));
+const openModal = (
+  key: string,
+  type: MessageModalType,
+  params?: any,
+  skipTranslation?: boolean,
+) => {
+  store.dispatch(showModal(key, type, params, skipTranslation));
 };
 
 export const MultisigModule = {
