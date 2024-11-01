@@ -156,19 +156,20 @@ const RequestOperation = ({
 
 const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
-    button: {marginTop: 16, marginBottom: 16, height: getButtonHeight(width)},
     keep: {marginTop: 16, flexDirection: 'row'},
     text: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
     },
+    button: {marginTop: 16, marginBottom: 16, height: getButtonHeight(width)},
+    whiteText: {color: '#FFF'},
+
     container: {
       paddingHorizontal: 12,
     },
     bgColor: {
       backgroundColor: getColors(theme).icon,
     },
-    whiteText: {color: '#FFF'},
   });
 const connector = connect(null, {addPreference});
 type TypesFromRedux = ConnectedProps<typeof connector>;

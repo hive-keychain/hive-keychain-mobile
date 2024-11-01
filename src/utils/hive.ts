@@ -630,7 +630,6 @@ export const broadcastAndConfirmTransactionWithSignature = async (
   }
   let response;
   try {
-    console.log(hiveTransaction);
     response = await hiveTransaction.broadcast();
     if ((response as HiveTxBroadcastSuccessResponse).result) {
       const transactionResult: HiveTxBroadcastResult = (response as HiveTxBroadcastSuccessResponse)

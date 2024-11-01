@@ -843,12 +843,14 @@
       "removeKeyAuthority": "Remove Key",
       "addAccount": "Add Account",
       "convert": "Convert",
-      "recurrentTransfer": "Recurrent Transfers"
+      "recurrentTransfer": "Recurrent Transfers",
+      "multisig": "Multisig"
     },
     "message": {
       "decode": "The website {{domain}} would like to verify that you have access to the private {{method}} key for the account: @{{username}}",
       "signBuffer": "The website {{domain}} would like to sign a message using the {{method}} key for the account: @{{username}}",
-      "signBufferNoUsername": "The website {{domain}} would like to sign a message using the {{method}} key."
+      "signBufferNoUsername": "The website {{domain}} would like to sign a message using the {{method}} key.",
+      "multisig": "You received a multisig signature request"
     },
     "item": {
       "username": "Username",
@@ -887,7 +889,9 @@
       "memo_key": "Memo Key",
       "receiver": "Receiver",
       "duration": "Duration",
-      "daily_pay": "Daily Pay"
+      "daily_pay": "Daily Pay",
+      "initiator": "Initiator",
+      "key": "Key"
     },
     "error": {
       "no_account": "The current website is trying to send a request to Hive Keychain for account @{{account}} which has not been added to the wallet.",
@@ -1116,7 +1120,8 @@
     "bot_two_fa_code": "@{{account}} One Time Password:",
     "error_otp_not_verified": "Your One Time Password is incorrect. Please try again",
     "error_otp_already_used": "Your One Time Password has already been used. Please use the next one.",
-    "transaction_broadcasted": "The multisig transaction has been broadcasted successfully"
+    "transaction_broadcasted": "The multisig transaction has been broadcasted successfully",
+    "transaction_signed_successfully": "The multisig transaction has been signed successfully"
   },
   "multichain": {
     "switch_chain": "Switch Chain"
