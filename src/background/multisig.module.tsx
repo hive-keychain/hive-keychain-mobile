@@ -35,6 +35,7 @@ import {
 import {KeyUtils} from 'utils/key.utils';
 import {sleep} from 'utils/keychain';
 import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation';
+import {translate} from 'utils/localize';
 import {MultisigUtils} from 'utils/multisig.utils';
 import {goBack, navigate} from 'utils/navigation';
 
@@ -248,7 +249,7 @@ const connectSocket = (multisigConfig: MultisigConfig) => {
       );
 
       SimpleToast.show(
-        'multisig.transaction_signed_successfully',
+        translate('multisig.transaction_signed_successfully'),
         SimpleToast.LONG,
       );
       if (signedTransaction) {
