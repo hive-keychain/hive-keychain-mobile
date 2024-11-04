@@ -48,6 +48,7 @@
     "moment": "^2.29.4",
     "node-libs-browser": "^2.2.1",
     "react": "^18.3.1",
+    "react-native-avoid-softinput": "^3.1.6",
     "react-native-bootsplash": "^3.2.6",
     "react-native-camera": "^3.39.0",
     "react-native-elements": "^3.4.3",

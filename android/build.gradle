@@ -4,7 +4,8 @@ buildscript {
         compileSdkVersion = 34
         targetSdkVersion = 34
         minSdkVersion = 21
-        kotlin_version = '1.5.21'
+        kotlin_version = "1.6.20"
+        kotlinVersion = "$kotlin_version"
         compose_version = '1.2.0-alpha08'
         compose_tool_version = '1.0.1'
         ndkVersion = "25.0.8775105"
@@ -20,7 +21,7 @@ buildscript {
         classpath("de.undercouch:gradle-download-task:4.1.2")
         classpath ('com.google.gms:google-services:4.3.14')
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.20'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
