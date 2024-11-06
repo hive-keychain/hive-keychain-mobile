@@ -3,9 +3,12 @@ import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
 import {ModalNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {connect, ConnectedProps} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {getColors} from 'src/styles/colors';
+import {body_primary_body_3} from 'src/styles/typography';
 import {RootState} from 'store';
 import HAS from 'utils/hiveAuthenticationService';
 import {HAS_Session} from 'utils/hiveAuthenticationService/has.types';
@@ -38,6 +41,8 @@ enum ChallengeState {
 }
 const HASChallengeRequest = ({data, accounts, navigation}: Props) => {
   const [state, setState] = useState(ChallengeState.ASK);
+  const {theme} = useThemeContext();
+  const styles = getStyles(theme);
   const onConfirm = () => {
     data.callback(data.has, data, true, data.session, (success: boolean) => {
       setState(success ? ChallengeState.SUCCESS : ChallengeState.ERROR);
@@ -68,11 +73,13 @@ const HASChallengeRequest = ({data, accounts, navigation}: Props) => {
       logo={<FastImage source={LOGO_LIGHT} style={{width: 30, height: 30}} />}
       title={translate('request.title.decode')}
       onClose={data.onForceCloseModal}>
-      <>
+      <View style={styles.paddingHorizontal}>
         <Separator height={30} />
-        <Text style={styles.uuid}>{translate('wallet.has.uuid', data)}</Text>
+        <Text style={[styles.text, styles.uuid]}>
+          {translate('wallet.has.uuid', data)}
+        </Text>
         <Separator />
-        <Text>{showText()}</Text>
+        <Text style={styles.text}>{showText()}</Text>
         {accounts.find((e) => e.name === data.account) ? null : (
           <>
             <Separator />
@@ -106,16 +113,25 @@ const HASChallengeRequest = ({data, accounts, navigation}: Props) => {
           }
           style={styles.button}
         />
-      </>
+      </View>
     </Operation>
   );
 };
 
-const styles = StyleSheet.create({
-  button: {backgroundColor: '#68A0B4'},
-  error: {color: '#A3112A'},
-  uuid: {fontWeight: 'bold'},
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    button: {backgroundColor: '#68A0B4'},
+    error: {color: '#A3112A'},
+    uuid: {fontWeight: 'bold'},
+    text: {
+      ...body_primary_body_3,
+      color: getColors(theme).secondaryText,
+      fontSize: 14,
+    },
+    paddingHorizontal: {
+      paddingHorizontal: 15,
+    },
+  });
 
 const connector = connect((state: RootState) => {
   return {
