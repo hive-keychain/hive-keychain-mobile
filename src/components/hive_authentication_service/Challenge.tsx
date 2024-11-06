@@ -8,7 +8,7 @@ import FastImage from 'react-native-fast-image';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {body_primary_body_3} from 'src/styles/typography';
+import {body_primary_body_3, FontPoppinsName} from 'src/styles/typography';
 import {RootState} from 'store';
 import HAS from 'utils/hiveAuthenticationService';
 import {HAS_Session} from 'utils/hiveAuthenticationService/has.types';
@@ -72,6 +72,7 @@ const HASChallengeRequest = ({data, accounts, navigation}: Props) => {
     <Operation
       logo={<FastImage source={LOGO_LIGHT} style={{width: 30, height: 30}} />}
       title={translate('request.title.decode')}
+      additionalHeaderTitleStyle={[styles.text, styles.title]}
       onClose={data.onForceCloseModal}>
       <View style={styles.paddingHorizontal}>
         <Separator height={30} />
@@ -130,6 +131,10 @@ const getStyles = (theme: Theme) =>
     },
     paddingHorizontal: {
       paddingHorizontal: 15,
+    },
+    title: {
+      fontFamily: FontPoppinsName.SEMI_BOLD,
+      fontSize: 16,
     },
   });
 
