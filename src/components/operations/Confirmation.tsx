@@ -4,8 +4,9 @@ import OperationInput from 'components/form/OperationInput';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
+import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
 import {ConfirmationPageRoute} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   Keyboard,
@@ -26,10 +27,7 @@ import {spacingStyle} from 'src/styles/spacing';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
-import {KeyUtils} from 'utils/key.utils';
-import {KeychainKeyTypes, KeychainKeyTypesLC} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import {MultisigUtils} from 'utils/multisig.utils';
 import {resetStackAndNavigate} from 'utils/navigation';
 const LOGO_MULTISIG = require('assets/wallet/multisig.png');
 
@@ -69,74 +67,14 @@ const ConfirmationPage = ({
     extraHeader,
   } = route.params;
   const [loading, setLoading] = useState(false);
-  const [isMultisig, setIsMultisig] = useState(false);
-  const [twoFABots, setTwoFABots] = useState<{[botName: string]: string}>({});
 
   const {width, height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({width, height}, theme);
-
-  useEffect(() => {
-    checkForMultsig();
-  }, []);
-
-  const checkForMultsig = async () => {
-    let useMultisig = false;
-    switch (keyType) {
-      case KeyType.ACTIVE: {
-        if (user.keys.active) {
-          useMultisig = KeyUtils.isUsingMultisig(
-            user.keys.active,
-            user.account,
-            user.keys.activePubkey?.startsWith('@')
-              ? user.keys.activePubkey.replace('@', '')
-              : user.account.name,
-            keyType.toLowerCase() as KeychainKeyTypesLC,
-          );
-          setIsMultisig(useMultisig);
-          if (useMultisig) {
-            const accounts = await MultisigUtils.get2FAAccounts(
-              user.account,
-              KeychainKeyTypes.active,
-            );
-
-            accounts.forEach((acc) =>
-              setTwoFABots((old) => {
-                return {...old, [acc]: ''};
-              }),
-            );
-          }
-        }
-        break;
-      }
-      case KeyType.POSTING: {
-        if (user.keys.posting) {
-          useMultisig = KeyUtils.isUsingMultisig(
-            user.keys.posting,
-            user.account,
-            user.keys.postingPubkey?.startsWith('@')
-              ? user.keys.postingPubkey.replace('@', '')
-              : user.account.name,
-            keyType.toLowerCase() as KeychainKeyTypesLC,
-          );
-          setIsMultisig(useMultisig);
-
-          if (useMultisig) {
-            const accounts = await MultisigUtils.get2FAAccounts(
-              user.account,
-              KeychainKeyTypes.posting,
-            );
-            accounts.forEach((acc) =>
-              setTwoFABots((old) => {
-                return {...old, [acc]: ''};
-              }),
-            );
-          }
-        }
-        break;
-      }
-    }
-  };
+  const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultsig(
+    keyType,
+    user,
+  );
 
   const onConfirm = async () => {
     setLoading(true);

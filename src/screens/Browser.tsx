@@ -64,13 +64,11 @@ const BrowserScreen = ({
       if (Platform.OS === 'android') {
         AvoidSoftInput.setAdjustResize();
         AvoidSoftInput.setEnabled(true);
-        console.log('resize');
       }
       return () => {
         if (Platform.OS === 'android') {
           AvoidSoftInput.setEnabled(false);
           AvoidSoftInput.setAdjustPan();
-          console.log('pan');
         }
       };
     }, []),

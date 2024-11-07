@@ -2,8 +2,16 @@ import {KeyTypes} from 'actions/interfaces';
 import {addPreference} from 'actions/preferences';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationButton from 'components/form/EllipticButton';
+import {Caption} from 'components/ui/Caption';
+import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -12,6 +20,7 @@ import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {getCaptionStyle} from 'src/styles/text';
 import {title_primary_body_2} from 'src/styles/typography';
+import {RootState} from 'store';
 import {urlTransformer} from 'utils/browser';
 import {beautifyErrorMessage} from 'utils/keychain';
 import {
@@ -25,6 +34,7 @@ import {
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 import RequestMessage from './RequestMessage';
+const LOGO_MULTISIG = require('assets/wallet/multisig.png');
 
 type Props = {
   has?: boolean;
@@ -64,6 +74,7 @@ const RequestOperation = ({
   addPreference,
   selectedUsername,
   has,
+  accounts,
 }: Props) => {
   const {theme} = useThemeContext();
   const {request_id, ...data} = request;
@@ -72,7 +83,16 @@ const RequestOperation = ({
   let {domain, type, username} = data;
   domain = has ? domain : urlTransformer(domain).hostname;
   const width = useWindowDimensions().width;
+
+  const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultsig(
+    method,
+    undefined,
+    username,
+    accounts,
+  );
+
   const styles = getStyles(theme, width);
+  console.log(isMultisig);
 
   const renderRequestSummary = () => (
     <ScrollView style={styles.container}>
@@ -84,6 +104,21 @@ const RequestOperation = ({
             {paddingHorizontal: 0, marginTop: 0},
           ]}
         />
+      )}
+      {isMultisig && (
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginHorizontal: 15,
+          }}>
+          <Image
+            source={LOGO_MULTISIG}
+            style={{width: 50, height: 30, marginTop: 10}}
+          />
+          <Caption text={'multisig.disclaimer_message'} hideSeparator />
+        </View>
       )}
       <View style={getCardStyle(theme).defaultCardItem}>{children}</View>
       {method !== KeyTypes.active &&
@@ -171,7 +206,9 @@ const getStyles = (theme: Theme, width: number) =>
       backgroundColor: getColors(theme).icon,
     },
   });
-const connector = connect(null, {addPreference});
+const connector = connect((state: RootState) => ({accounts: state.accounts}), {
+  addPreference,
+});
 type TypesFromRedux = ConnectedProps<typeof connector>;
 export default connector(RequestOperation);
 
