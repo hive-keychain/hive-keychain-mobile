@@ -281,7 +281,7 @@ export const depositToSavings = async (
 export const withdrawFromSavings = async (
   key: string,
   obj: TransferFromSavingsOperation[1],
-  options: TransactionOptions,
+  options?: TransactionOptions,
 ) => {
   return await broadcast(key, [['transfer_from_savings', obj]], options);
 };
@@ -289,40 +289,49 @@ export const withdrawFromSavings = async (
 export const cancelPendingSavings = async (
   key: string,
   obj: CancelTransferFromSavingsOperation[1],
+  options?: TransactionOptions,
 ) => {
-  return await broadcast(key, [['cancel_transfer_from_savings', obj]]);
+  return await broadcast(key, [['cancel_transfer_from_savings', obj]], options);
 };
 
-export const vote = async (key: string, obj: VoteOperation[1]) => {
-  return await broadcast(key, [['vote', obj]]);
+export const vote = async (
+  key: string,
+  obj: VoteOperation[1],
+  options?: TransactionOptions,
+) => {
+  return await broadcast(key, [['vote', obj]], options);
 };
 
 export const voteForWitness = async (
   key: string,
   obj: AccountWitnessVoteOperation[1],
+  options?: TransactionOptions,
 ) => {
-  return await broadcast(key, [['account_witness_vote', obj]]);
+  return await broadcast(key, [['account_witness_vote', obj]], options);
 };
 
 export const setProxy = async (
   key: string,
   obj: AccountWitnessProxyOperation[1],
+  options?: TransactionOptions,
 ) => {
-  return await broadcast(key, [['account_witness_proxy', obj]]);
+  return await broadcast(key, [['account_witness_proxy', obj]], options);
 };
 
 export const createClaimedAccount = async (
   key: string,
   obj: CreateClaimedAccountOperation[1],
+  options?: TransactionOptions,
 ) => {
-  return await broadcast(key, [['create_claimed_account', obj]]);
+  return await broadcast(key, [['create_claimed_account', obj]], options);
 };
 
 export const createNewAccount = async (
   key: string,
   obj: AccountCreateOperation[1],
+  options?: TransactionOptions,
 ) => {
-  return await broadcast(key, [['account_create', obj]]);
+  return await broadcast(key, [['account_create', obj]], options);
 };
 
 export const post = async (
@@ -334,6 +343,7 @@ export const post = async (
     parent_username,
     ...data
   }: RequestPost,
+  options?: TransactionOptions,
 ) => {
   const arr: Operation[] = [
     [
@@ -352,7 +362,7 @@ export const post = async (
       JSON.parse(comment_options) as CommentOptionsOperation[1],
     ]);
   }
-  return await broadcast(key, arr);
+  return await broadcast(key, arr, options);
 };
 
 export const signTx = (key: string, tx: object) => {
@@ -369,6 +379,7 @@ export const addAccountAuth = async (
     role = KeychainKeyTypes.posting,
     weight,
   }: RequestAddAccountAuthority,
+  options: TransactionOptions,
 ) => {
   const userAccount = (await getClient().database.getAccounts([username]))[0];
   const roleLC = role.toLowerCase() as KeychainKeyTypesLC;
@@ -399,14 +410,18 @@ export const addAccountAuth = async (
       : userAccount.posting;
 
   /** Add authority on user account */
-  return await accountUpdate(key, {
-    account: userAccount.name,
-    owner: undefined,
-    active,
-    posting,
-    memo_key: userAccount.memo_key,
-    json_metadata: userAccount.json_metadata,
-  });
+  return await accountUpdate(
+    key,
+    {
+      account: userAccount.name,
+      owner: undefined,
+      active,
+      posting,
+      memo_key: userAccount.memo_key,
+      json_metadata: userAccount.json_metadata,
+    },
+    options,
+  );
 };
 
 export const removeAccountAuth = async (
@@ -416,6 +431,7 @@ export const removeAccountAuth = async (
     authorizedUsername,
     role = KeychainKeyTypes.posting,
   }: RequestRemoveAccountAuthority,
+  options: TransactionOptions,
 ) => {
   const userAccount = (await getClient().database.getAccounts([username]))[0];
   const roleLC = role.toLowerCase() as KeychainKeyTypesLC;
@@ -439,14 +455,18 @@ export const removeAccountAuth = async (
   const posting =
     roleLC === KeychainKeyTypesLC.posting ? updatedAuthority : undefined;
 
-  return await accountUpdate(key, {
-    account: userAccount.name,
-    owner: undefined,
-    active,
-    posting,
-    memo_key: userAccount.memo_key,
-    json_metadata: userAccount.json_metadata,
-  });
+  return await accountUpdate(
+    key,
+    {
+      account: userAccount.name,
+      owner: undefined,
+      active,
+      posting,
+      memo_key: userAccount.memo_key,
+      json_metadata: userAccount.json_metadata,
+    },
+    options,
+  );
 };
 
 export const addKeyAuth = async (
@@ -457,6 +477,7 @@ export const addKeyAuth = async (
     role = KeychainKeyTypes.posting,
     weight,
   }: RequestAddKeyAuthority,
+  options: TransactionOptions,
 ) => {
   const roleLC = role.toLowerCase() as KeychainKeyTypesLC;
 
@@ -484,14 +505,18 @@ export const addKeyAuth = async (
     roleLC === KeychainKeyTypesLC.posting ? updatedAuthority : undefined;
 
   /** Add authority on user account */
-  return accountUpdate(key, {
-    account: userAccount.name,
-    owner: undefined,
-    active,
-    posting,
-    memo_key: userAccount.memo_key,
-    json_metadata: userAccount.json_metadata,
-  });
+  return accountUpdate(
+    key,
+    {
+      account: userAccount.name,
+      owner: undefined,
+      active,
+      posting,
+      memo_key: userAccount.memo_key,
+      json_metadata: userAccount.json_metadata,
+    },
+    options,
+  );
 };
 
 export const removeKeyAuth = async (
@@ -501,6 +526,7 @@ export const removeKeyAuth = async (
     authorizedKey,
     role = KeychainKeyTypes.posting,
   }: RequestRemoveKeyAuthority,
+  options: TransactionOptions,
 ) => {
   const userAccount = (await getClient().database.getAccounts([username]))[0];
   const roleLC = role.toLowerCase() as KeychainKeyTypesLC;
@@ -525,32 +551,42 @@ export const removeKeyAuth = async (
   const posting =
     roleLC === KeychainKeyTypesLC.posting ? updatedAuthority : undefined;
 
-  return accountUpdate(key, {
-    account: userAccount.name,
-    owner: undefined,
-    active,
-    posting,
-    memo_key: userAccount.memo_key,
-    json_metadata: userAccount.json_metadata,
-  });
+  return accountUpdate(
+    key,
+    {
+      account: userAccount.name,
+      owner: undefined,
+      active,
+      posting,
+      memo_key: userAccount.memo_key,
+      json_metadata: userAccount.json_metadata,
+    },
+    options,
+  );
 };
 
-const accountUpdate = async (key: string, obj: AccountUpdateOperation[1]) => {
-  return await broadcast(key, [['account_update', obj]]);
+const accountUpdate = async (
+  key: string,
+  obj: AccountUpdateOperation[1],
+  options: TransactionOptions,
+) => {
+  return await broadcast(key, [['account_update', obj]], options);
 };
 
 export const updateProposalVote = async (
   key: string,
   obj: UpdateProposalVotesOperation[1],
+  options?: TransactionOptions,
 ) => {
-  return await broadcast(key, [['update_proposal_votes', obj]]);
+  return await broadcast(key, [['update_proposal_votes', obj]], options);
 };
 
 export const createProposal = async (
   key: string,
   obj: CreateProposalOperation[1],
+  options?: TransactionOptions,
 ) => {
-  return await broadcast(key, [['create_proposal', obj]]);
+  return await broadcast(key, [['create_proposal', obj]], options);
 };
 
 export const claimRewards = async (
@@ -563,8 +599,9 @@ export const claimRewards = async (
 export const removeProposal = async (
   key: string,
   obj: RemoveProposalOperation[1],
+  options?: TransactionOptions,
 ) => {
-  return await broadcast(key, [['remove_proposal', obj]]);
+  return await broadcast(key, [['remove_proposal', obj]], options);
 };
 
 export const broadcast = async (
@@ -576,7 +613,7 @@ export const broadcast = async (
     const tx = new hiveTx.Transaction();
     const transaction = await tx.create(arr);
     const signedTx = tx.sign(hiveTx.PrivateKey.from(key));
-    if (options.multisig) {
+    if (options?.multisig) {
       const username = MultisigUtils.getUsernameFromTransaction(transaction);
       const transactionAccount = await getAccount(username!.toString());
 

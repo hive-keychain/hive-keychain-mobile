@@ -2,6 +2,7 @@ import {Operation} from '@hiveio/dhive';
 import {Account, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {broadcast} from 'utils/hive';
 import {getAccountKeys} from 'utils/hiveUtils';
 import {
@@ -41,8 +42,8 @@ export default ({
       method={method.toLowerCase() as KeyTypes}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={() => {
-        return performBroadcastOperation(accounts, request);
+      performOperation={(options: TransactionOptions) => {
+        return performBroadcastOperation(accounts, request, options);
       }}>
       <RequestItem
         content={`@${username}`}
@@ -61,6 +62,7 @@ export default ({
 const performBroadcastOperation = async (
   accounts: Account[],
   request: RequestBroadcast & RequestId,
+  options: TransactionOptions,
 ) => {
   const {username, method, operations} = request;
   const account = accounts.find((e) => e.name === request.username);
@@ -96,7 +98,7 @@ const performBroadcastOperation = async (
         break;
     }
   }
-  return await broadcast(key, operations as Operation[]);
+  return await broadcast(key, operations as Operation[], options);
 };
 
 export const broadcastWithoutConfirmation = (

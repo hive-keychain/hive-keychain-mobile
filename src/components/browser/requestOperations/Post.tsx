@@ -1,5 +1,6 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {post} from 'utils/hive';
 import {
   RequestError,
@@ -48,8 +49,8 @@ export default ({
       method={KeyTypes.posting}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={() => {
-        return performPostOperation(accounts, request);
+      performOperation={(options: TransactionOptions) => {
+        return performPostOperation(accounts, request, options);
       }}>
       <RequestItem
         content={`@${username}`}

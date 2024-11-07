@@ -15,9 +15,10 @@ export const useCheckForMultsig = (
   const [isMultisig, setIsMultisig] = useState(false);
   const [twoFABots, setTwoFABots] = useState<{[botName: string]: string}>({});
   const [user, setUser] = useState<Partial<ActiveAccount>>(userAccount);
+
   useEffect(() => {
     loadUser();
-  }, []);
+  }, [userAccount, username, accounts]);
 
   const loadUser = async () => {
     if (!userAccount && username && accounts) {
@@ -26,7 +27,7 @@ export const useCheckForMultsig = (
         ...accounts.find((account) => account.name === username),
         account: selectedAccount,
       });
-    }
+    } else setUser(userAccount);
   };
 
   useEffect(() => {
@@ -35,6 +36,7 @@ export const useCheckForMultsig = (
 
   const checkForMultsig = async () => {
     let useMultisig = false;
+    setTwoFABots({});
     switch (keyType.toUpperCase()) {
       case KeyType.ACTIVE: {
         if (user.keys.active) {

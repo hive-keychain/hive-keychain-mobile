@@ -1,6 +1,7 @@
 import {KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {recurrentTransfer} from 'utils/hive';
 import {getAccountKeys} from 'utils/hiveUtils';
 import {RequestId, RequestRecurrentTransfer} from 'utils/keychain.types';
@@ -37,7 +38,7 @@ export default ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
+      performOperation={async (options: TransactionOptions) => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
         let finalMemo = memo;
@@ -51,15 +52,19 @@ export default ({
             memo,
           );
         }
-        return await recurrentTransfer(key, {
-          amount: `${amount} ${currency}`,
-          memo: finalMemo,
-          to,
-          from: username,
-          recurrence,
-          executions,
-          extensions: [],
-        });
+        return await recurrentTransfer(
+          key,
+          {
+            amount: `${amount} ${currency}`,
+            memo: finalMemo,
+            to,
+            from: username,
+            recurrence,
+            executions,
+            extensions: [],
+          },
+          options,
+        );
       }}>
       <RequestItem
         title={translate('request.item.username')}

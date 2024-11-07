@@ -1,5 +1,6 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {removeKeyAuth} from 'utils/hive';
 import {beautifyErrorMessage} from 'utils/keychain';
 import {RequestId, RequestRemoveKeyAuthority} from 'utils/keychain.types';
@@ -33,10 +34,10 @@ const RemoveKeyAuthority = ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
+      performOperation={async (options: TransactionOptions) => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
-        return await removeKeyAuth(key, data);
+        return await removeKeyAuth(key, data, options);
       }}>
       <RequestItem
         title={translate('request.item.username')}

@@ -2,6 +2,7 @@ import {KeyTypes} from 'actions/interfaces';
 import {addPreference} from 'actions/preferences';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationButton from 'components/form/EllipticButton';
+import OperationInput from 'components/form/OperationInput';
 import {Caption} from 'components/ui/Caption';
 import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
 import React, {useState} from 'react';
@@ -15,6 +16,7 @@ import {
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonHeight, getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
@@ -52,7 +54,7 @@ type Props = {
         msg: HiveErrorMessage,
         data: {currency?: string; username?: string; to?: string},
       ) => string);
-  performOperation: () => void;
+  performOperation: (options: TransactionOptions) => void;
   additionalData?: object;
   beautifyError?: boolean;
   selectedUsername?: string;
@@ -84,10 +86,11 @@ const RequestOperation = ({
   domain = has ? domain : urlTransformer(domain).hostname;
   const width = useWindowDimensions().width;
 
+  console.log({selectedUsername, username});
   const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultsig(
     method,
     undefined,
-    username,
+    selectedUsername || username,
     accounts,
   );
 
@@ -120,7 +123,26 @@ const RequestOperation = ({
           <Caption text={'multisig.disclaimer_message'} hideSeparator />
         </View>
       )}
+
       <View style={getCardStyle(theme).defaultCardItem}>{children}</View>
+      {twoFABots && Object.keys(twoFABots).length > 0 && (
+        <View style={{flex: 1}}>
+          {Object.entries(twoFABots).map(([botName, code]) => (
+            <OperationInput
+              keyboardType="numeric"
+              labelInput={translate('multisig.bot_two_fa_code', {
+                account: username,
+              })}
+              value={code}
+              onChangeText={(value) => {
+                setTwoFABots((old) => {
+                  return {...old, [botName]: value};
+                });
+              }}
+            />
+          ))}
+        </View>
+      )}
       {method !== KeyTypes.active &&
       type !== KeychainRequestTypes.addAccount ? (
         <View style={styles.keep}>
@@ -151,7 +173,11 @@ const RequestOperation = ({
           setLoading(true);
           let msg: string;
           try {
-            const result = await performOperation();
+            const result = await performOperation({
+              metaData: {twoFACodes: twoFABots},
+              multisig: isMultisig,
+            });
+            console.log('result', result, twoFABots, isMultisig);
             msg = successMessage;
             const obj = {
               data,
@@ -164,8 +190,9 @@ const RequestOperation = ({
             if (keep && !has) {
               addPreference(username, domain, type);
             }
-            sendResponse(obj, keep);
+            if (!isMultisig) sendResponse(obj, keep);
           } catch (e) {
+            console.log('erreur', e);
             if (!beautifyError) {
               if (typeof errorMessage === 'function') {
                 msg = errorMessage(e as any, data);
@@ -178,7 +205,7 @@ const RequestOperation = ({
             sendError({data, request_id, error: {}, message: msg});
           } finally {
             goBack();
-            SimpleToast.show(msg, SimpleToast.LONG);
+            if (!isMultisig) SimpleToast.show(msg, SimpleToast.LONG);
           }
           setLoading(false);
         }}
@@ -217,7 +244,7 @@ export default connector(RequestOperation);
 // signTx
 
 export const processOperationWithoutConfirmation = async (
-  performOperation: () => void,
+  performOperation: (options: TransactionOptions) => void,
   request: KeychainRequest & RequestId,
   sendResponse: (msg: RequestSuccess, keep?: boolean) => void,
   sendError: (msg: RequestError) => void,
@@ -228,7 +255,7 @@ export const processOperationWithoutConfirmation = async (
 ) => {
   const {request_id, ...data} = request;
   try {
-    const result = await performOperation();
+    const result = await performOperation({});
     let msg = successMessage;
     const obj = {
       data,
