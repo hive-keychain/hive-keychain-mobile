@@ -1121,7 +1121,8 @@
     "error_otp_not_verified": "Your One Time Password is incorrect. Please try again",
     "error_otp_already_used": "Your One Time Password has already been used. Please use the next one.",
     "transaction_broadcasted": "The multisig transaction has been broadcasted successfully",
-    "transaction_signed_successfully": "The multisig transaction has been signed successfully"
+    "transaction_signed_successfully": "The multisig transaction has been signed successfully",
+    "pending": "The request is currently pending multisig approval from other signers. You will be notified by Keychain if/when it is successfully broadcasted."
   },
   "multichain": {
     "switch_chain": "Switch Chain"

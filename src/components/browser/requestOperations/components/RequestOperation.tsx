@@ -171,11 +171,16 @@ const RequestOperation = ({
           setLoading(true);
           let msg: string;
           try {
-            const result = await performOperation({
-              metaData: {twoFACodes: twoFABots},
-              multisig: isMultisig,
-              fromWallet: false,
-            });
+            const result = await Promise.race([
+              performOperation({
+                metaData: {twoFACodes: twoFABots},
+                multisig: isMultisig,
+                fromWallet: false,
+              }),
+              new Promise((_, reject) =>
+                setTimeout(() => reject('timeout'), 30000),
+              ),
+            ]);
             if (result && result.error) throw result.error;
             msg = successMessage;
             const obj = {
@@ -191,17 +196,26 @@ const RequestOperation = ({
             }
             sendResponse(obj, keep);
           } catch (e) {
-            console.log('erreur', e);
-            if (!beautifyError) {
-              if (typeof errorMessage === 'function') {
-                msg = errorMessage(e as any, data);
-              } else {
-                msg = errorMessage;
-              }
+            console.log('error', e);
+            if (e === 'timeout') {
+              msg = translate('multisig.pending');
             } else {
-              msg = beautifyErrorMessage(e as any);
+              if (!beautifyError) {
+                if (typeof errorMessage === 'function') {
+                  msg = errorMessage(e as any, data);
+                } else {
+                  msg = errorMessage;
+                }
+              } else {
+                msg = beautifyErrorMessage(e as any);
+              }
             }
-            sendError({data, request_id, error: {}, message: msg});
+            sendError({
+              data,
+              request_id,
+              error: e === 'timeout' ? 'pending_multisig' : {},
+              message: msg,
+            });
           } finally {
             goBack();
             SimpleToast.show(msg, SimpleToast.LONG);
