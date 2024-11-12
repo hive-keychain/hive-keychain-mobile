@@ -21,6 +21,7 @@ export interface MultisigConfig {
 export interface TransactionOptions {
   multisig?: boolean;
   metaData?: TransactionOptionsMetadata;
+  fromWallet?: boolean;
 }
 export interface TransactionOptionsMetadata {
   twoFACodes?: {[botName: string]: string};

@@ -54,7 +54,7 @@ type Props = {
         msg: HiveErrorMessage,
         data: {currency?: string; username?: string; to?: string},
       ) => string);
-  performOperation: (options: TransactionOptions) => void;
+  performOperation: (options: TransactionOptions) => any;
   additionalData?: object;
   beautifyError?: boolean;
   selectedUsername?: string;
@@ -86,7 +86,6 @@ const RequestOperation = ({
   domain = has ? domain : urlTransformer(domain).hostname;
   const width = useWindowDimensions().width;
 
-  console.log({selectedUsername, username});
   const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultsig(
     method,
     undefined,
@@ -95,7 +94,6 @@ const RequestOperation = ({
   );
 
   const styles = getStyles(theme, width);
-  console.log(isMultisig);
 
   const renderRequestSummary = () => (
     <ScrollView style={styles.container}>
@@ -176,8 +174,9 @@ const RequestOperation = ({
             const result = await performOperation({
               metaData: {twoFACodes: twoFABots},
               multisig: isMultisig,
+              fromWallet: false,
             });
-            console.log('result', result, twoFABots, isMultisig);
+            if (result && result.error) throw result.error;
             msg = successMessage;
             const obj = {
               data,
@@ -190,7 +189,7 @@ const RequestOperation = ({
             if (keep && !has) {
               addPreference(username, domain, type);
             }
-            if (!isMultisig) sendResponse(obj, keep);
+            sendResponse(obj, keep);
           } catch (e) {
             console.log('erreur', e);
             if (!beautifyError) {
@@ -205,7 +204,7 @@ const RequestOperation = ({
             sendError({data, request_id, error: {}, message: msg});
           } finally {
             goBack();
-            if (!isMultisig) SimpleToast.show(msg, SimpleToast.LONG);
+            SimpleToast.show(msg, SimpleToast.LONG);
           }
           setLoading(false);
         }}

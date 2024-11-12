@@ -105,7 +105,7 @@ export const requestMultisigSignatures = async (
   data: MultisigRequestSignatures,
 ) => {
   await createConnectionIfNeeded(data);
-  requestSignatures(data, true);
+  return requestSignatures(data, data.options.fromWallet ?? true);
 };
 
 // When the socket has not been initialized because multisig is not enabled for any account
@@ -160,7 +160,7 @@ const createConnectionIfNeeded = async (data: MultisigRequestSignatures) => {
 
 const requestSignatures = async (
   data: MultisigRequestSignatures,
-  useRuntimeMessages?: boolean,
+  fromWallet?: boolean,
 ) => {
   return new Promise(async (resolve, reject) => {
     await createConnectionIfNeeded(data);
@@ -172,7 +172,7 @@ const requestSignatures = async (
         message,
         withTimeout(
           async (message: string) => {
-            if (useRuntimeMessages) {
+            if (fromWallet) {
               SimpleToast.show(message);
             } else {
               // resolve('multisig_transaction_sent_to_signers');
@@ -188,11 +188,6 @@ const requestSignatures = async (
                 }
               } catch (err) {
                 console.log('catching error', err);
-                //TODO : Resolve error
-                // chrome.runtime.sendMessage({
-                //   command: DialogCommand.SEND_DIALOG_ERROR,
-                //   msg: {display_msg: await chrome.i18n.getMessage(err)},
-                // });
                 resolve({error: {message: err}});
               }
             }

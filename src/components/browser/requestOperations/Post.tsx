@@ -97,12 +97,13 @@ export default ({
 const performPostOperation = async (
   accounts: Account[],
   request: RequestPost & RequestId,
+  options?: TransactionOptions,
 ) => {
   const {request_id, ...data} = request;
 
   const account = accounts.find((e) => e.name === request.username);
   const key = account.keys.posting;
-  return await post(key, data);
+  return await post(key, data, options);
 };
 
 export const postWithoutConfirmation = (
