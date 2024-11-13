@@ -92,9 +92,10 @@ export const voteWithoutConfirmation = (
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
   has?: boolean,
+  options?: TransactionOptions,
 ) => {
   processOperationWithoutConfirmation(
-    async () => await performVoteOperation(accounts, request),
+    async () => await performVoteOperation(accounts, request, options),
     request,
     sendResponse,
     sendError,

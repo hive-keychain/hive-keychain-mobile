@@ -70,6 +70,7 @@ export default ({
 const performBroadcastJSONOperation = async (
   accounts: Account[],
   request: RequestCustomJSON & RequestId,
+  options?: TransactionOptions,
 ) => {
   const {id, json, method, username} = request;
 
@@ -81,6 +82,7 @@ const performBroadcastJSONOperation = async (
     id,
     method === 'Active',
     json,
+    options,
   );
 };
 
@@ -90,9 +92,10 @@ export const broacastCustomJSONWithoutConfirmation = (
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
   has?: boolean,
+  options?: TransactionOptions,
 ) => {
   processOperationWithoutConfirmation(
-    async () => await performBroadcastJSONOperation(accounts, request),
+    async () => await performBroadcastJSONOperation(accounts, request, options),
     request,
     sendResponse,
     sendError,

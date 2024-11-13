@@ -107,9 +107,10 @@ export const broadcastWithoutConfirmation = (
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
   has?: boolean,
+  options?: TransactionOptions,
 ) => {
   processOperationWithoutConfirmation(
-    async () => await performBroadcastOperation(accounts, request),
+    async () => await performBroadcastOperation(accounts, request, options),
     request,
     sendResponse,
     sendError,

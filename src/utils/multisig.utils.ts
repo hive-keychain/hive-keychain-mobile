@@ -53,12 +53,15 @@ import {
   WitnessUpdateOperation,
 } from '@hiveio/dhive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import {decodeMemo, encodeMemo} from 'components/bridge';
-import {KeychainKeyTypes} from 'hive-keychain-commons';
+import {KeychainKeyTypes, KeychainKeyTypesLC} from 'hive-keychain-commons';
 import {Key} from 'react';
+import {KeyType} from 'src/interfaces/keys.interface';
 import {MultisigAccountConfig} from 'src/interfaces/multisig.interface';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {getClient} from './hive';
+import {KeyUtils} from './key.utils';
 import {getPublicKeyFromPrivateKeyString} from './keyValidation';
 
 const getMultisigAccountConfig = async (account: string) => {
@@ -398,6 +401,69 @@ const getTwoFaBotUserConfig = async (configPath: string, username: string) => {
   });
 };
 
+const getMultisigInfo = async (
+  keyType: KeyTypes,
+  user: Partial<ActiveAccount>,
+) => {
+  let useMultisig = false;
+  let twoFABots = {};
+  switch (keyType.toUpperCase()) {
+    case KeyType.ACTIVE: {
+      if (user.keys.active) {
+        useMultisig = KeyUtils.isUsingMultisig(
+          user.keys.active,
+          user.account,
+          user.keys.activePubkey?.startsWith('@')
+            ? user.keys.activePubkey.replace('@', '')
+            : user.account.name,
+          keyType.toLowerCase() as KeychainKeyTypesLC,
+        );
+        if (useMultisig) {
+          const accounts = await MultisigUtils.get2FAAccounts(
+            user.account,
+            KeychainKeyTypes.active,
+          );
+
+          accounts.forEach(
+            (acc) =>
+              (twoFABots = (old: TwoFABotConfiguration) => {
+                return {...old, [acc]: ''};
+              }),
+          );
+        }
+      }
+      break;
+    }
+    case KeyType.POSTING: {
+      if (user.keys.posting) {
+        useMultisig = KeyUtils.isUsingMultisig(
+          user.keys.posting,
+          user.account,
+          user.keys.postingPubkey?.startsWith('@')
+            ? user.keys.postingPubkey.replace('@', '')
+            : user.account.name,
+          keyType.toLowerCase() as KeychainKeyTypesLC,
+        );
+
+        if (useMultisig) {
+          const accounts = await MultisigUtils.get2FAAccounts(
+            user.account,
+            KeychainKeyTypes.posting,
+          );
+          accounts.forEach(
+            (acc) =>
+              (twoFABots = (old: TwoFABotConfiguration) => {
+                return {...old, [acc]: ''};
+              }),
+          );
+        }
+      }
+      break;
+    }
+  }
+  return [useMultisig, twoFABots];
+};
+
 export const MultisigUtils = {
   get2FAAccounts,
   getUsernameFromTransaction,
@@ -407,4 +473,5 @@ export const MultisigUtils = {
   encodeTransaction,
   encodeMetadata,
   getPotentialSigners,
+  getMultisigInfo,
 };

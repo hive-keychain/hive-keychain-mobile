@@ -194,6 +194,7 @@ const RequestOperation = ({
             if (keep && !has) {
               addPreference(username, domain, type);
             }
+            console.log('shold be here', obj, keep);
             sendResponse(obj, keep);
           } catch (e) {
             console.log('error', e);
@@ -257,7 +258,7 @@ export default connector(RequestOperation);
 // signTx
 
 export const processOperationWithoutConfirmation = async (
-  performOperation: (options: TransactionOptions) => void,
+  performOperation: () => void,
   request: KeychainRequest & RequestId,
   sendResponse: (msg: RequestSuccess, keep?: boolean) => void,
   sendError: (msg: RequestError) => void,
@@ -268,7 +269,7 @@ export const processOperationWithoutConfirmation = async (
 ) => {
   const {request_id, ...data} = request;
   try {
-    const result = await performOperation({});
+    const result = await performOperation();
     let msg = successMessage;
     const obj = {
       data,

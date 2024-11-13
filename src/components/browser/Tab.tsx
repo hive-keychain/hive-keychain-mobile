@@ -21,6 +21,7 @@ import {UserPreference} from 'reducers/preferences.types';
 import {Theme} from 'src/context/theme.context';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
+import {getAccount} from 'utils/hiveUtils';
 import {
   getRequiredWifType,
   sendError,
@@ -29,6 +30,7 @@ import {
   validateRequest,
 } from 'utils/keychain';
 import {RequestError, RequestSuccess} from 'utils/keychain.types';
+import {MultisigUtils} from 'utils/multisig.utils';
 import {navigate, goBack as navigationGoBack} from 'utils/navigation';
 import {hasPreference} from 'utils/preferences';
 import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
@@ -96,6 +98,7 @@ export default ({
   const [shouldUpdateWvInfo, setShouldUpdateWvInfo] = useState(true);
   const [desktopMode, setDesktopMode] = useState(false);
   const insets = useSafeAreaInsets();
+
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
   useEffect(() => {
     if (isUrlModalOpen) {
@@ -237,10 +240,12 @@ export default ({
     }
   };
 
-  const showOperationRequestModal = (request_id: number, data: any) => {
+  const showOperationRequestModal = async (request_id: number, data: any) => {
     const {username, domain, type} = data;
+    const keyType = getRequiredWifType(data);
+
     if (
-      getRequiredWifType(data) !== KeyTypes.active &&
+      keyType !== KeyTypes.active &&
       hasPreference(
         preferences,
         username,
@@ -249,6 +254,12 @@ export default ({
       ) &&
       username
     ) {
+      const selectedAccount = await getAccount(username);
+      const user = {
+        ...accounts.find((account) => account.name === username),
+        account: selectedAccount,
+      };
+      const [multisig] = await MultisigUtils.getMultisigInfo(keyType, user!);
       requestWithoutConfirmation(
         accounts,
         {...data, request_id},
@@ -258,6 +269,8 @@ export default ({
         (obj: RequestError) => {
           sendError(tabRef, obj);
         },
+        false,
+        {multisig: multisig as boolean, fromWallet: false},
       );
     } else {
       const onForceCloseModal = () => {

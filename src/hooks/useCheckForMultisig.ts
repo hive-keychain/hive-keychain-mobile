@@ -1,13 +1,10 @@
-import {Account, ActiveAccount} from 'actions/interfaces';
-import {KeychainKeyTypes, KeychainKeyTypesLC} from 'hive-keychain-commons';
+import {Account, ActiveAccount, KeyTypes} from 'actions/interfaces';
 import {useEffect, useState} from 'react';
-import {KeyType} from 'src/interfaces/keys.interface';
 import {getAccount} from 'utils/hiveUtils';
-import {KeyUtils} from 'utils/key.utils';
 import {MultisigUtils} from 'utils/multisig.utils';
 
 export const useCheckForMultsig = (
-  keyType: KeyType,
+  keyType: KeyTypes,
   userAccount?: ActiveAccount,
   username?: string,
   accounts?: Account[],
@@ -35,62 +32,10 @@ export const useCheckForMultsig = (
   }, [user]);
 
   const checkForMultsig = async () => {
-    let useMultisig = false;
     setTwoFABots({});
-    switch (keyType.toUpperCase()) {
-      case KeyType.ACTIVE: {
-        if (user.keys.active) {
-          useMultisig = KeyUtils.isUsingMultisig(
-            user.keys.active,
-            user.account,
-            user.keys.activePubkey?.startsWith('@')
-              ? user.keys.activePubkey.replace('@', '')
-              : user.account.name,
-            keyType.toLowerCase() as KeychainKeyTypesLC,
-          );
-          setIsMultisig(useMultisig);
-          if (useMultisig) {
-            const accounts = await MultisigUtils.get2FAAccounts(
-              user.account,
-              KeychainKeyTypes.active,
-            );
-
-            accounts.forEach((acc) =>
-              setTwoFABots((old) => {
-                return {...old, [acc]: ''};
-              }),
-            );
-          }
-        }
-        break;
-      }
-      case KeyType.POSTING: {
-        if (user.keys.posting) {
-          useMultisig = KeyUtils.isUsingMultisig(
-            user.keys.posting,
-            user.account,
-            user.keys.postingPubkey?.startsWith('@')
-              ? user.keys.postingPubkey.replace('@', '')
-              : user.account.name,
-            keyType.toLowerCase() as KeychainKeyTypesLC,
-          );
-          setIsMultisig(useMultisig);
-
-          if (useMultisig) {
-            const accounts = await MultisigUtils.get2FAAccounts(
-              user.account,
-              KeychainKeyTypes.posting,
-            );
-            accounts.forEach((acc) =>
-              setTwoFABots((old) => {
-                return {...old, [acc]: ''};
-              }),
-            );
-          }
-        }
-        break;
-      }
-    }
+    const data = await MultisigUtils.getMultisigInfo(keyType, user!);
+    setIsMultisig(data[0] as boolean);
+    setTwoFABots(data[1]);
   };
   return [isMultisig, twoFABots, setTwoFABots] as const;
 };
