@@ -116,8 +116,8 @@ const Governance = ({
                 isMultisig={isMultisig}
                 twoFABots={twoFABots}
               />,
-              <Proxy />,
-              <Proposal />,
+              <Proxy isMultisig={isMultisig} twoFABots={twoFABots} />,
+              <Proposal isMultisig={isMultisig} twoFABots={twoFABots} />,
               myWit && (
                 <MyWitness
                   theme={theme}
