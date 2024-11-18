@@ -215,6 +215,7 @@ export const cancelDelegateToken = async (
   key: string,
   username: string,
   obj: object,
+  options: TransactionOptions,
 ) => {
   const result = (await broadcastJson(
     key,
@@ -226,6 +227,7 @@ export const cancelDelegateToken = async (
       contractAction: 'undelegate',
       contractPayload: obj,
     },
+    options,
   )) as BroadcastResult;
   return result;
 };

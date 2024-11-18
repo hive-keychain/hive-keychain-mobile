@@ -2,6 +2,7 @@ import {loadAccount} from 'actions/index';
 import {TokenBalance} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import Icon from 'components/hive/Icon';
+import TwoFaModal from 'components/modals/TwoFaModal';
 import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
@@ -10,6 +11,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {Token} from 'src/interfaces/tokens.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getSeparatorLineStyle} from 'src/styles/line';
@@ -22,7 +24,7 @@ import {withCommas} from 'utils/format';
 import {cancelDelegateToken} from 'utils/hive';
 import {TokenDelegation} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 import {TokenDelegationType} from './MoreTokenInfo';
 
 type Props = {
@@ -32,18 +34,19 @@ type Props = {
   token: TokenBalance;
   tokenInfo: Token;
   theme: Theme;
+  isMultisig: boolean;
+  twoFABots: {[botName: string]: string};
 } & PropsFromRedux;
 
 const IncomingOutGoingTokenDelegationItem = ({
   tokenDelegation,
   delegationType,
-  tokenLogo,
-  token,
-  tokenInfo,
   theme,
   user,
   loadAccount,
   showModal,
+  isMultisig,
+  twoFABots,
 }: Props) => {
   const [isOutGoingDelegation, setIsOutGoingDelegation] = useState(
     delegationType === 'Outgoing',
@@ -59,26 +62,48 @@ const IncomingOutGoingTokenDelegationItem = ({
 
   if (cancelledSuccessfully) return null;
   const onDelete = async () => {
-    setIsLoading(true);
-    try {
-      await cancelDelegateToken(user.keys.active, user.name!, {
-        from: tokenDelegation.to,
-        symbol: tokenDelegation.symbol,
-        quantity: tokenDelegation.quantity,
+    const handleSubmit = async (options: TransactionOptions) => {
+      setIsLoading(true);
+      try {
+        await cancelDelegateToken(
+          user.keys.active,
+          user.name!,
+          {
+            from: tokenDelegation.to,
+            symbol: tokenDelegation.symbol,
+            quantity: tokenDelegation.quantity,
+          },
+          options,
+        );
+        loadAccount(user.account.name, true);
+        goBack();
+        if (!isMultisig)
+          showModal('toast.stop_delegation_success', MessageModalType.SUCCESS);
+      } catch (e) {
+        if (!isMultisig)
+          showModal(
+            `Error : ${(e as any).message}`,
+            MessageModalType.ERROR,
+            null,
+            true,
+          );
+      } finally {
+        setShowCancelConfirmationDelegation(false);
+        setIsLoading(false);
+      }
+    };
+    if (Object.entries(twoFABots).length > 0) {
+      navigate('ModalScreen', {
+        name: `2FA`,
+        modalContent: (
+          <TwoFaModal twoFABots={twoFABots} onSubmit={handleSubmit} />
+        ),
       });
-      loadAccount(user.account.name, true);
-      goBack();
-      showModal('toast.stop_delegation_success', MessageModalType.SUCCESS);
-    } catch (e) {
-      showModal(
-        `Error : ${(e as any).message}`,
-        MessageModalType.ERROR,
-        null,
-        true,
-      );
-    } finally {
-      setShowCancelConfirmationDelegation(false);
-      setIsLoading(false);
+    } else {
+      await handleSubmit({
+        multisig: isMultisig,
+        fromWallet: true,
+      });
     }
   };
   return (
