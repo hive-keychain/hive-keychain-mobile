@@ -1,5 +1,7 @@
 import {loadAccount} from 'actions/index';
+import {KeyTypes} from 'actions/interfaces';
 import Separator from 'components/ui/Separator';
+import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
@@ -46,6 +48,7 @@ const IncomingOutGoingRCDelegations = ({
   const [isLoading, setIsLoading] = useState(false);
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
+  const [isMultisig, twoFABots] = useCheckForMultsig(KeyTypes.posting, user);
   const styles = getStyles(theme, width);
 
   useEffect(() => {
@@ -68,6 +71,8 @@ const IncomingOutGoingRCDelegations = ({
         type={type}
         item={rcDelegation}
         available={available}
+        isMultisig={isMultisig}
+        twoFABots={twoFABots}
       />
     );
   };
@@ -132,6 +137,7 @@ const getStyles = (theme: Theme, width: number) =>
     italicText: {
       fontFamily: FontPoppinsName.ITALIC,
       textAlign: 'right',
+      color: getColors(theme).secondaryText,
       fontSize: getFontSizeSmallDevices(width, 14),
     },
     bottomLine: {
