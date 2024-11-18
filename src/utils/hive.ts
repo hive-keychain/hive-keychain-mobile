@@ -592,8 +592,9 @@ export const createProposal = async (
 export const claimRewards = async (
   key: string,
   obj: ClaimRewardBalanceOperation[1],
+  options?: TransactionOptions,
 ) => {
-  return await broadcast(key, [['claim_reward_balance', obj]]);
+  return await broadcast(key, [['claim_reward_balance', obj]], options);
 };
 
 export const removeProposal = async (
