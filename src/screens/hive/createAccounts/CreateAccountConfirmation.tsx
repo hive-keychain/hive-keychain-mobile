@@ -1,18 +1,20 @@
-import { PrivateKey } from '@hiveio/dhive';
-import { addAccount } from 'actions/accounts';
-import { Account } from 'actions/interfaces';
-import { showModal } from 'actions/message';
+import {PrivateKey} from '@hiveio/dhive';
+import {addAccount} from 'actions/accounts';
+import {Account, KeyTypes} from 'actions/interfaces';
+import {showModal} from 'actions/message';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import {
   default as EllipticButton,
   default as OperationButton,
 } from 'components/form/EllipticButton';
+import TwoFaModal from 'components/modals/TwoFaModal';
 import Background from 'components/ui/Background';
-import { Caption } from 'components/ui/Caption';
+import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
-import React, { useEffect, useState } from 'react';
+import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
+import React, {useEffect, useState} from 'react';
 import {
   Clipboard,
   ScrollView,
@@ -23,11 +25,12 @@ import {
 } from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import QRCode from 'react-qr-code';
-import { ConnectedProps, connect } from 'react-redux';
-import { Theme, useThemeContext } from 'src/context/theme.context';
-import { MessageModalType } from 'src/enums/messageModal.enums';
-import { getButtonStyle } from 'src/styles/button';
-import { BACKGROUNDDARKBLUE, getColors } from 'src/styles/colors';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {MessageModalType} from 'src/enums/messageModal.enums';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getButtonStyle} from 'src/styles/button';
+import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_2,
@@ -35,16 +38,16 @@ import {
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
-import { RootState } from 'store';
+import {RootState} from 'store';
 import {
   AccountCreationType,
   AccountCreationUtils,
   GeneratedKeys,
 } from 'utils/account-creation.utils';
 import AccountUtils from 'utils/account.utils';
-import { Dimensions } from 'utils/common.types';
-import { translate } from 'utils/localize';
-import { navigate, resetStackAndNavigate } from 'utils/navigation';
+import {Dimensions} from 'utils/common.types';
+import {translate} from 'utils/localize';
+import {navigate, resetStackAndNavigate} from 'utils/navigation';
 
 const DEFAULT_EMPTY_KEYS = {
   owner: {public: '', private: ''},
@@ -67,7 +70,7 @@ const StepTwo = ({
   accountName,
   creationType,
   price,
-  showModal
+  showModal,
 }: PropsFromRedux & Props) => {
   const [masterKey, setMasterKey] = useState('');
   const [generatedKeys, setGeneratedKeys] = useState(DEFAULT_EMPTY_KEYS);
@@ -85,6 +88,7 @@ const StepTwo = ({
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
+  const [isMultisig, twoFABots] = useCheckForMultsig(KeyTypes.active, user);
 
   useEffect(() => {
     const masterKey = AccountCreationUtils.generateMasterKey();
@@ -267,30 +271,49 @@ const StepTwo = ({
                 key: translate('keys.active').toLowerCase(),
               }),
             );
-          const result = await AccountCreationUtils.createAccount(
-            creationType as AccountCreationType,
-            accountName,
-            selectedAccount.name!,
-            selectedAccount.keys.active!,
-            AccountCreationUtils.generateAccountAuthorities(generatedKeys),
-            price,
-            generatedKeys,
-          );
-          if (result && (result as Account).keys) {
-            SimpleToast.show(
-              translate('components.create_account.create_account_successful'),
+          const handleSubmit = async (options: TransactionOptions) => {
+            const result = await AccountCreationUtils.createAccount(
+              creationType as AccountCreationType,
+              accountName,
+              selectedAccount.name!,
+              selectedAccount.keys.active!,
+              AccountCreationUtils.generateAccountAuthorities(generatedKeys),
+              price,
+              generatedKeys,
+              options,
             );
-            addAccount(
-              (result as Account).name,
-              (result as Account).keys,
-              true,
-              false,
-            );
-            resetStackAndNavigate('WALLET');
+            if (result && (result as Account).keys) {
+              SimpleToast.show(
+                translate(
+                  'components.create_account.create_account_successful',
+                ),
+              );
+              addAccount(
+                (result as Account).name,
+                (result as Account).keys,
+                true,
+                false,
+              );
+              resetStackAndNavigate('WALLET');
+            } else {
+              if (!isMultisig)
+                SimpleToast.show(
+                  translate('components.create_account.create_account_failed'),
+                );
+            }
+          };
+          if (Object.entries(twoFABots).length > 0) {
+            navigate('ModalScreen', {
+              name: `2FA`,
+              modalContent: (
+                <TwoFaModal twoFABots={twoFABots} onSubmit={handleSubmit} />
+              ),
+            });
           } else {
-            SimpleToast.show(
-              translate('components.create_account.create_account_failed'),
-            );
+            await handleSubmit({
+              multisig: isMultisig,
+              fromWallet: true,
+            });
           }
         } else {
           const encodedDataAsString = Buffer.from(
@@ -359,9 +382,13 @@ const StepTwo = ({
       true,
       false,
     );
-    showModal('wallet.operations.create_account.peer_to_peer.account_sucessfully_created',MessageModalType.SUCCESS, {
-      accountName
-    });
+    showModal(
+      'wallet.operations.create_account.peer_to_peer.account_sucessfully_created',
+      MessageModalType.SUCCESS,
+      {
+        accountName,
+      },
+    );
     navigate('WALLET');
   };
 
