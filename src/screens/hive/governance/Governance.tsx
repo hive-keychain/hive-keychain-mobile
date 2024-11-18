@@ -1,8 +1,9 @@
-import {Witness as WitnessInterface} from 'actions/interfaces';
+import {KeyTypes, Witness as WitnessInterface} from 'actions/interfaces';
 import keychain from 'api/keychain';
 import Loader from 'components/ui/Loader';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
+import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useState} from 'react';
@@ -38,13 +39,11 @@ const Governance = ({
   const [loading, setLoading] = useState(true);
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
-
+  const [isMultisig, twoFABots] = useCheckForMultsig(KeyTypes.active, user);
   useLockedPortrait(navigation);
   const [focus, setFocus] = useState(Math.random());
 
-  const [governanceComponents, setGovernanceComponents] = useState<
-    GovernanceToScreenToogleProps
-  >({menuLabels: [], components: []});
+  const [myWit, setMyWit] = useState(false);
 
   useEffect(() => {
     initWitnessRanking();
@@ -60,39 +59,14 @@ const Governance = ({
       if (requestResult.data !== '' || !!requestResult) {
         const ranking: WitnessInterface[] = requestResult.data;
         setRanking(ranking);
-        const tempGovernanceComponents = {
-          menuLabels: [
-            translate(`governance.menu.witness`),
-            translate(`governance.menu.proxy`),
-            translate(`governance.menu.proposals`),
-          ],
-          components: [
-            <Witness
-              focus={focus}
-              theme={theme}
-              ranking={ranking}
-              rankingError={hasError}
-            />,
-            <Proxy />,
-            <Proposal />,
-          ],
-        };
+
         if (
           ranking &&
           ranking.length > 0 &&
           ranking.find((witness) => witness.name === user.name!) !== undefined
         ) {
-          tempGovernanceComponents.components.push(
-            <MyWitness
-              theme={theme}
-              ranking={ranking.find((witness) => witness.name === user.name!)}
-            />,
-          );
-          tempGovernanceComponents.menuLabels.push(
-            translate(`governance.menu.my_witness`),
-          );
+          setMyWit(true);
         }
-        setGovernanceComponents(tempGovernanceComponents);
       } else {
         setHasError(true);
         throw new Error('Witness-ranks data error');
@@ -112,7 +86,7 @@ const Governance = ({
           <View style={styles.flexCentered}>
             <Loader animating size={'large'} />
           </View>
-        ) : hasError || governanceComponents.components.length === 0 ? (
+        ) : hasError ? (
           <View style={styles.flexCentered}>
             <Text style={styles.text}>
               {translate('governance.witness.error.retrieving_witness_ranking')}
@@ -126,9 +100,33 @@ const Governance = ({
               getCardStyle(theme).roundedCardItem,
               styles.toogleHeader,
             ]}
-            menu={governanceComponents.menuLabels}
+            menu={[
+              translate(`governance.menu.witness`),
+              translate(`governance.menu.proxy`),
+              translate(`governance.menu.proposals`),
+              myWit && translate(`governance.menu.my_witness`),
+            ].filter((e) => !!e)}
             toUpperCase={false}
-            components={governanceComponents.components}
+            components={[
+              <Witness
+                focus={focus}
+                theme={theme}
+                ranking={ranking}
+                rankingError={hasError}
+                isMultisig={isMultisig}
+                twoFABots={twoFABots}
+              />,
+              <Proxy />,
+              <Proposal />,
+              myWit && (
+                <MyWitness
+                  theme={theme}
+                  ranking={ranking.find(
+                    (witness) => witness.name === user.name!,
+                  )}
+                />
+              ),
+            ]}
             addShadowItem
           />
         )}

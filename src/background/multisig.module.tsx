@@ -174,6 +174,7 @@ const requestSignatures = async (
           async (message: string) => {
             if (fromWallet) {
               SimpleToast.show(message);
+              resolve('');
             } else {
               // resolve('multisig_transaction_sent_to_signers');
               // in this case try to wait for broadcast notification

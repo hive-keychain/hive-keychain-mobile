@@ -4,6 +4,7 @@ import Vote from 'assets/governance/arrow_circle_up.svg';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import TwoFaModal from 'components/modals/TwoFaModal';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
@@ -24,6 +25,7 @@ import {
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
@@ -34,6 +36,7 @@ import {RootState} from 'store';
 import {AsyncUtils} from 'utils/async.utils';
 import {getClient, voteForWitness} from 'utils/hive';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 import ProxyUtils from 'utils/proxy';
 import {MAX_WITNESS_VOTE, WITNESS_DISABLED_KEY} from 'utils/witness.utils';
 import * as ValidUrl from 'valid-url';
@@ -43,6 +46,8 @@ type Props = {
   theme: Theme;
   ranking: WitnessInterface[];
   rankingError?: boolean;
+  isMultisig: boolean;
+  twoFABots: {[botName: string]: string};
 };
 
 const Witness = ({
@@ -52,6 +57,8 @@ const Witness = ({
   theme,
   ranking,
   rankingError,
+  isMultisig,
+  twoFABots,
 }: PropsFromRedux & Props) => {
   const [displayVotedOnly, setDisplayVotedOnly] = useState(false);
   const [hideNonActive, setHideNonActive] = useState(true);
@@ -69,7 +76,6 @@ const Witness = ({
   const [isLoading, setLoading] = useState(true);
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles(width, height, theme);
-
   useEffect(() => {
     init();
   }, [focus]);
@@ -120,55 +126,81 @@ const Witness = ({
       SimpleToast.show(translate('governance.witness.using_proxy'));
       return;
     }
-    if (user.account.witness_votes.includes(witness.name)) {
-      setIsVotingUnvotingForWitness(witness.name);
-      try {
-        await voteForWitness(user.keys.active, {
-          account: user.name,
-          witness: witness.name,
-          approve: false,
-        });
-        await AsyncUtils.waitForXSeconds(3);
-        loadAccount(user.name);
-        Toast.show(
-          translate('governance.witness.success.unvote_wit', {
-            name: witness.name,
-          }),
-        );
-      } catch (err) {
-        console.log(err);
-        Toast.show(
-          translate('governance.witness.error.unvote_wit', {
-            name: witness.name,
-          }),
-        );
-      } finally {
-        setIsVotingUnvotingForWitness('');
-      }
-    } else {
-      try {
+    const handleSubmit = async (options: TransactionOptions) => {
+      if (user.account.witness_votes.includes(witness.name)) {
         setIsVotingUnvotingForWitness(witness.name);
-        await voteForWitness(user.keys.active, {
-          account: user.name,
-          witness: witness.name,
-          approve: true,
-        });
-        await AsyncUtils.waitForXSeconds(3);
-        loadAccount(user.name);
-        Toast.show(
-          translate('governance.witness.success.wit', {
-            name: witness.name,
-          }),
-        );
-      } catch (err) {
-        Toast.show(
-          translate('governance.witness.error.wit', {
-            name: witness.name,
-          }),
-        );
-      } finally {
-        setIsVotingUnvotingForWitness('');
+        try {
+          await voteForWitness(
+            user.keys.active,
+            {
+              account: user.name,
+              witness: witness.name,
+              approve: false,
+            },
+            options,
+          );
+          await AsyncUtils.waitForXSeconds(3);
+          loadAccount(user.name);
+          if (!isMultisig)
+            Toast.show(
+              translate('governance.witness.success.unvote_wit', {
+                name: witness.name,
+              }),
+            );
+        } catch (err) {
+          console.log(err);
+          Toast.show(
+            translate('governance.witness.error.unvote_wit', {
+              name: witness.name,
+            }),
+          );
+        } finally {
+          setIsVotingUnvotingForWitness('');
+        }
+      } else {
+        try {
+          setIsVotingUnvotingForWitness(witness.name);
+          await voteForWitness(
+            user.keys.active,
+            {
+              account: user.name,
+              witness: witness.name,
+              approve: true,
+            },
+            options,
+          );
+          await AsyncUtils.waitForXSeconds(3);
+          loadAccount(user.name);
+          if (!isMultisig)
+            Toast.show(
+              translate('governance.witness.success.wit', {
+                name: witness.name,
+              }),
+            );
+        } catch (err) {
+          Toast.show(
+            translate('governance.witness.error.wit', {
+              name: witness.name,
+            }),
+          );
+        } finally {
+          setIsVotingUnvotingForWitness('');
+        }
       }
+    };
+
+    if (Object.entries(twoFABots).length > 0) {
+      navigate('ModalScreen', {
+        name: `2FA`,
+        modalContent: (
+          <TwoFaModal twoFABots={twoFABots} onSubmit={handleSubmit} />
+        ),
+      });
+    } else {
+      handleSubmit({
+        multisig: isMultisig,
+        fromWallet: true,
+      });
     }
   };
 

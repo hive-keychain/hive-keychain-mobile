@@ -1,4 +1,5 @@
 import {loadAccount} from 'actions/index';
+import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Background from 'components/ui/Background';
@@ -72,7 +73,7 @@ const ConfirmationPage = ({
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({width, height}, theme);
   const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultsig(
-    keyType,
+    keyType.toUpperCase() as KeyTypes,
     user,
   );
 

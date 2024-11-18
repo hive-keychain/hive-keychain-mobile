@@ -623,7 +623,6 @@ export const broadcast = async (
       );
       const initiatorAccount = await getAccount(acc?.name!);
       const method = await KeyUtils.isKeyActiveOrPosting(key, initiatorAccount);
-
       return requestMultisigSignatures({
         transaction,
         key,

@@ -366,10 +366,9 @@ const get2FAAccounts = async (
   const extendedAccounts = await getClient().database.getAccounts(
     potentialBots,
   );
-
   const botNames = [];
   for (const extendedAccount of extendedAccounts) {
-    const metadata = JSON.parse(extendedAccount.json_metadata);
+    const metadata = JSON.parse(extendedAccount.json_metadata || '{}');
     if (metadata.isMultisigBot) {
       botNames.push(extendedAccount.name);
     }
@@ -407,9 +406,12 @@ const getMultisigInfo = async (
 ) => {
   let useMultisig = false;
   let twoFABots = {};
+  console.log('keyType', keyType.toUpperCase());
+
   switch (keyType.toUpperCase()) {
     case KeyType.ACTIVE: {
       if (user.keys.active) {
+        console.log('here');
         useMultisig = KeyUtils.isUsingMultisig(
           user.keys.active,
           user.account,
@@ -418,12 +420,13 @@ const getMultisigInfo = async (
             : user.account.name,
           keyType.toLowerCase() as KeychainKeyTypesLC,
         );
+        console.log('useMultisig', useMultisig);
         if (useMultisig) {
           const accounts = await MultisigUtils.get2FAAccounts(
             user.account,
             KeychainKeyTypes.active,
           );
-
+          console.log('got accounts');
           accounts.forEach(
             (acc) =>
               (twoFABots = (old: TwoFABotConfiguration) => {
