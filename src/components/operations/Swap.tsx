@@ -6,6 +6,7 @@ import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import TwoFaModal from 'components/modals/TwoFaModal';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
@@ -30,6 +31,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {SwapConfig} from 'src/interfaces/swap-token.interface';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
@@ -372,40 +374,54 @@ const Swap = ({
 
   const processSwap = async (estimateId: string) => {
     setLoadingSwap(true);
-    try {
-      let success;
-      success = await SwapTokenUtils.processSwap(
-        estimateId,
-        startToken?.value.symbol,
-        parseFloat(amount),
-        activeAccount,
-        swapConfig.account,
-        {
-          metaData: {twoFACodes: twoFABots},
-          multisig: isMultisig,
-        },
-      );
-      if (success) {
-        await SwapTokenUtils.saveLastUsed(startToken?.value, endToken?.value);
-        await SwapTokenUtils.setAsInitiated(estimateId);
-        showModal(
-          'common.swap_sending_token_successful',
-          MessageModalType.SUCCESS,
+    const handleSubmit = async (options: TransactionOptions) => {
+      try {
+        let success;
+        success = await SwapTokenUtils.processSwap(
+          estimateId,
+          startToken?.value.symbol,
+          parseFloat(amount),
+          activeAccount,
+          swapConfig.account,
+          options,
         );
-        goBackAndNavigate('SwapHistory');
-      } else {
-        SimpleToast.show(
-          translate('common.swap_error_sending_token', {
-            to: swapConfig.account,
-          }),
-          SimpleToast.LONG,
-        );
+        if (success) {
+          await SwapTokenUtils.saveLastUsed(startToken?.value, endToken?.value);
+          await SwapTokenUtils.setAsInitiated(estimateId);
+          if (!isMultisig)
+            showModal(
+              'common.swap_sending_token_successful',
+              MessageModalType.SUCCESS,
+            );
+          goBackAndNavigate('SwapHistory');
+        } else {
+          if (!isMultisig)
+            SimpleToast.show(
+              translate('common.swap_error_sending_token', {
+                to: swapConfig.account,
+              }),
+              SimpleToast.LONG,
+            );
+        }
+      } catch (err) {
+        console.log('Swap error', {err});
+        SimpleToast.show(err.message, SimpleToast.LONG);
+      } finally {
+        setLoadingSwap(false);
       }
-    } catch (err) {
-      console.log('Swap error', {err});
-      SimpleToast.show(err.message, SimpleToast.LONG);
-    } finally {
-      setLoadingSwap(false);
+    };
+    if (Object.entries(twoFABots).length > 0) {
+      navigate('ModalScreen', {
+        name: `2FA`,
+        modalContent: (
+          <TwoFaModal twoFABots={twoFABots} onSubmit={handleSubmit} />
+        ),
+      });
+    } else {
+      handleSubmit({
+        multisig: isMultisig,
+        fromWallet: true,
+      });
     }
   };
 
