@@ -22,7 +22,6 @@ class Bridge extends Component implements InnerProps {
 
   sendMessage(methodName: string, params: any[]) {
     const id = Math.random().toString(36).substr(2, 9); //just unique id
-    console.log('sending message', methodName, params);
     const paramsJoined = params
       .map((e) =>
         typeof e === 'string'
@@ -31,7 +30,6 @@ class Bridge extends Component implements InnerProps {
       )
 
       .join("','");
-    console.log('params', `'${paramsJoined}`);
     const js = `
         returnValue = window.${methodName}('${paramsJoined}');
         returnObject = JSON.stringify({id: "${id}", data: returnValue});

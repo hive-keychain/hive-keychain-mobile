@@ -1,3 +1,4 @@
+import {addTab} from 'actions/index';
 import {resetModal} from 'actions/message';
 import EllipticButton from 'components/form/EllipticButton';
 import Icon from 'components/hive/Icon';
@@ -24,6 +25,7 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 
 const DEFAULTHIDETIMEMS = 3000;
 interface Props {
@@ -34,6 +36,7 @@ const Message = ({
   messageModal,
   resetModal,
   notHideOnSuccess,
+  addTab,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -65,6 +68,7 @@ const Message = ({
     };
     switch (messageModal.type) {
       case MessageModalType.SUCCESS:
+      case MessageModalType.MULTISIG_SUCCESS:
         return <Icon name={Icons.SUCCESS} {...iconDimensions} />;
       case MessageModalType.ERROR:
         return <Icon name={Icons.ERROR} {...iconDimensions} />;
@@ -86,6 +90,23 @@ const Message = ({
           <View style={styles.modalContent}>
             <View style={styles.svgImage}>{renderIcon()}</View>
             <Text style={[styles.text, styles.marginVertical]}>{message}</Text>
+            {messageModal.type === MessageModalType.MULTISIG_SUCCESS && (
+              <TouchableOpacity
+                onPress={() => {
+                  addTab(`https://hivehub.dev/tx/${messageModal.params.txId}`);
+                  navigate('BrowserScreen');
+                  resetModal();
+                }}>
+                <Text
+                  style={{
+                    ...styles.text,
+                    marginBottom: -20,
+                    fontWeight: 'bold',
+                  }}>{`Tx ID`}</Text>
+
+                <Text style={styles.text}>{messageModal.params.txId}</Text>
+              </TouchableOpacity>
+            )}
             <EllipticButton
               title={translate('common.close')}
               onPress={() => resetModal()}
@@ -106,6 +127,7 @@ const mapStateToProps = (state: RootState) => {
 
 const connector = connect(mapStateToProps, {
   resetModal,
+  addTab,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

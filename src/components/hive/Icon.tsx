@@ -1,5 +1,6 @@
 import Cube3dRotate from 'assets/new_UI/3d-rotate.svg';
 import Cube3dScanIcon from 'assets/new_UI/3d_cube_scan.svg';
+import MultiSigIcon from 'assets/new_UI/accounts-multisig.svg';
 import AddAccountIcon from 'assets/new_UI/add_account.svg';
 import ArrowLeftIcon from 'assets/new_UI/arrow-left.svg';
 import ArrowUpIcon from 'assets/new_UI/arrow-up.svg';
@@ -666,6 +667,13 @@ const getIconFilePath = (
     case name === Icons.SUPPORT:
       return (
         <SupportIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.MULTISIG:
+      return (
+        <MultiSigIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

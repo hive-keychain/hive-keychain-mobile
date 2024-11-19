@@ -14,6 +14,8 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {KeyType} from 'src/interfaces/keys.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {Token} from 'src/interfaces/tokens.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -51,7 +53,7 @@ const UnstakeToken = ({
 }: Props) => {
   const [amount, setAmount] = useState('');
 
-  const onUnstakeToken = async () => {
+  const onUnstakeToken = async (options: TransactionOptions) => {
     try {
       const tokenOperationResult: any = await unstakeToken(
         user.keys.active,
@@ -60,7 +62,9 @@ const UnstakeToken = ({
           symbol: currency,
           quantity: sanitizeAmount(amount),
         },
+        options,
       );
+      if (options.multisig) return;
 
       if (tokenOperationResult && tokenOperationResult.tx_id) {
         let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
@@ -107,6 +111,7 @@ const UnstakeToken = ({
     } else {
       const confirmationData: ConfirmationPageProps = {
         onSend: onUnstakeToken,
+        keyType: KeyType.ACTIVE,
         title: 'wallet.operations.token_unstake.confirm.info',
         data: [
           {

@@ -15,6 +15,8 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {AutoCompleteValues} from 'src/interfaces/autocomplete.interface';
+import {KeyType} from 'src/interfaces/keys.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -39,6 +41,7 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {getTransferWarning} from 'utils/transferValidator';
 import Balance from '../Balance';
+import {ConfirmationPageProps} from '../Confirmation';
 import OperationThemed from '../OperationThemed';
 
 export type TransferOperationProps = {
@@ -91,7 +94,7 @@ const Transfer = ({
     setAutocompleteFavoriteUsers(autoCompleteListByCategories);
   };
 
-  const sendTransfer = async () => {
+  const sendTransfer = async (options: TransactionOptions) => {
     setLoading(true);
     let finalMemo = memo;
     if (isMemoEncrypted) {
@@ -99,26 +102,34 @@ const Transfer = ({
       finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
     }
     if (!isRecurrent) {
-      await transfer(user.keys.active, {
-        amount: sanitizeAmount(amount, currency),
-        memo: finalMemo,
-        to: sanitizeUsername(to),
-        from: user.account.name,
-      });
+      await transfer(
+        user.keys.active,
+        {
+          amount: sanitizeAmount(amount, currency),
+          memo: finalMemo,
+          to: sanitizeUsername(to),
+          from: user.account.name,
+        },
+        options,
+      );
     } else {
-      await recurrentTransfer(user.keys.active, {
-        amount: sanitizeAmount(amount, currency),
-        memo: finalMemo,
-        to: sanitizeUsername(to),
-        from: user.account.name,
-        recurrence: +recurrence,
-        executions: +exec,
-        extensions: [],
-      });
+      await recurrentTransfer(
+        user.keys.active,
+        {
+          amount: sanitizeAmount(amount, currency),
+          memo: finalMemo,
+          to: sanitizeUsername(to),
+          from: user.account.name,
+          recurrence: +recurrence,
+          executions: +exec,
+          extensions: [],
+        },
+        options,
+      );
     }
   };
 
-  const transferToken = async () => {
+  const transferToken = async (options: TransactionOptions) => {
     setLoading(true);
     let finalMemo = memo;
     if (isMemoEncrypted) {
@@ -126,15 +137,20 @@ const Transfer = ({
       finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
     }
 
-    return await sendToken(user.keys.active, user.name, {
-      symbol: currency,
-      to: sanitizeUsername(to),
-      quantity: sanitizeAmount(amount),
-      memo: finalMemo,
-    });
+    return await sendToken(
+      user.keys.active,
+      user.name,
+      {
+        symbol: currency,
+        to: sanitizeUsername(to),
+        quantity: sanitizeAmount(amount),
+        memo: finalMemo,
+      },
+      options,
+    );
   };
 
-  const onSend = async () => {
+  const onSend = async (options: TransactionOptions) => {
     try {
       if (isMemoEncrypted && !user.keys.memo)
         return showModal(
@@ -142,7 +158,8 @@ const Transfer = ({
           MessageModalType.ERROR,
         );
       if (!engine) {
-        await sendTransfer();
+        await sendTransfer(options);
+        if (options.multisig) return;
         showModal(
           isRecurrent
             ? 'toast.recurrent_transfer_success'
@@ -150,8 +167,9 @@ const Transfer = ({
           MessageModalType.SUCCESS,
         );
       } else {
-        const {id} = await transferToken();
+        const {id} = await transferToken(options);
         const {confirmed} = await tryConfirmTransaction(id);
+        if (options.multisig) return;
         showModal(
           confirmed
             ? 'toast.transfer_token_confirmed'
@@ -211,7 +229,7 @@ const Transfer = ({
       );
     } else {
       //TODO : Call confirmation page
-      const confirmationData = {
+      const confirmationData: ConfirmationPageProps = {
         title: 'wallet.operations.transfer.confirm.info',
         onSend,
         skipWarningTranslation: true,
@@ -241,6 +259,7 @@ const Transfer = ({
             value: `${withCommas(amount)} ${currency}`,
           },
         ],
+        keyType: KeyType.ACTIVE,
       };
       if (memo.length)
         confirmationData.data.push({

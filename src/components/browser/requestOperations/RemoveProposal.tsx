@@ -1,5 +1,6 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {removeProposal} from 'utils/hive';
 import {RequestId, RequestRemoveProposal} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
@@ -31,14 +32,18 @@ export default ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
+      performOperation={async (options: TransactionOptions) => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
-        return await removeProposal(key, {
-          proposal_owner: username,
-          proposal_ids: JSON.parse(proposal_ids),
-          extensions: JSON.parse(extensions),
-        });
+        return await removeProposal(
+          key,
+          {
+            proposal_owner: username,
+            proposal_ids: JSON.parse(proposal_ids),
+            extensions: JSON.parse(extensions),
+          },
+          options,
+        );
       }}>
       <RequestItem
         title={translate('request.item.username')}

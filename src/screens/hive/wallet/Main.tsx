@@ -132,7 +132,6 @@ const Main = ({
   const mainScrollRef = useRef();
 
   const [eventReceived, setEventReceived] = useState(null);
-  const [notificationEvent, setNotificationEvent] = useState(null);
   const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 

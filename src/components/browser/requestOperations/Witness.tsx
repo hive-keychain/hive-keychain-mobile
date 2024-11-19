@@ -1,6 +1,7 @@
 import {KeyTypes} from 'actions/interfaces';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {voteForWitness} from 'utils/hive';
 import {RequestId, RequestWitnessVote} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
@@ -38,12 +39,17 @@ export default ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
-        return await voteForWitness(getAccountKey(), {
-          account: getUsername(),
-          witness,
-          approve: vote,
-        });
+      selectedUsername={getUsername()}
+      performOperation={async (options: TransactionOptions) => {
+        return await voteForWitness(
+          getAccountKey(),
+          {
+            account: getUsername(),
+            witness,
+            approve: vote,
+          },
+          options,
+        );
       }}>
       <RequestUsername />
       <RequestItem

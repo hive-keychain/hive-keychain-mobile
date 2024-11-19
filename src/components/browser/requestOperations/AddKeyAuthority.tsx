@@ -1,5 +1,6 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {addKeyAuth} from 'utils/hive';
 import {beautifyErrorMessage} from 'utils/keychain';
 import {RequestAddKeyAuthority, RequestId} from 'utils/keychain.types';
@@ -34,10 +35,10 @@ const AddKeyAuthority = ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
+      performOperation={async (options: TransactionOptions) => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
-        return await addKeyAuth(key, data);
+        return await addKeyAuth(key, data, options);
       }}>
       <RequestItem
         title={translate('request.item.username')}

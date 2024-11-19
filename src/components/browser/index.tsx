@@ -168,7 +168,7 @@ const Browser = ({
     <View style={styles.container}>
       <KeyboardAvoidingView
         style={[styles.container]}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <Header
           browser={browser}
           //@ts-ignore

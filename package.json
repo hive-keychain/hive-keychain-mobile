@@ -1,6 +1,6 @@
 {
   "name": "mobile-keychain",
-  "version": "2.3.6",
+  "version": "2.4.0",
   "private": true,
   "scripts": {
     "android": "react-native run-android --variant devDebug --appIdSuffix dev --main-activity com.zoontek.rnbootsplash.RNBootSplashActivity",
@@ -39,7 +39,7 @@
     "crypto-js": "^3.3.0",
     "fuse.js": "^6.4.6",
     "hive-keychain-commons": "github:hive-keychain/hive-keychain-commons",
-    "hive-tx": "^4.0.1",
+    "hive-tx": "github:hive-keychain/hive-tx-js",
     "hive-uri": "^0.2.5",
     "i18n-js": "^3.8.0",
     "lodash": "^4.17.21",
@@ -48,6 +48,7 @@
     "moment": "^2.29.4",
     "node-libs-browser": "^2.2.1",
     "react": "^18.3.1",
+    "react-native-avoid-softinput": "^3.1.6",
     "react-native-bootsplash": "^3.2.6",
     "react-native-camera": "^3.39.0",
     "react-native-elements": "^3.4.3",
@@ -82,6 +83,7 @@
     "redux-persist": "^6.0.0",
     "redux-persist-expire": "^1.1.0",
     "redux-thunk": "^2.3.0",
+    "socket.io-client": "^4.7.5",
     "sscjs": "^0.0.9",
     "stream": "^0.0.2",
     "url-parse": "^1.5.2",

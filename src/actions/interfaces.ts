@@ -239,7 +239,7 @@ export interface Account {
 export interface MessageModalPayload {
   key: string;
   type: MessageModalType;
-  params?: {};
+  params?: any;
   skipTranslation?: boolean;
 }
 

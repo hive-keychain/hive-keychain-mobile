@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native';
 import {showFloatingBar} from 'actions/floatingBar';
 import {
   addTab,
@@ -17,7 +18,9 @@ import Browser from 'components/browser';
 import ProposalReminder from 'components/popups/proposal-reminder';
 import SafeArea from 'components/ui/SafeArea';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
+import {Platform} from 'react-native';
+import {AvoidSoftInput} from 'react-native-avoid-softinput';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
 import {useChainContext} from 'src/context/multichain.context';
@@ -55,6 +58,21 @@ const BrowserScreen = ({
     });
     return unsubscribe;
   }, [navigation]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS === 'android') {
+        AvoidSoftInput.setAdjustResize();
+        AvoidSoftInput.setEnabled(true);
+      }
+      return () => {
+        if (Platform.OS === 'android') {
+          AvoidSoftInput.setEnabled(false);
+          AvoidSoftInput.setAdjustPan();
+        }
+      };
+    }, []),
+  );
 
   useEffect(() => {
     getEcosystem(chain);

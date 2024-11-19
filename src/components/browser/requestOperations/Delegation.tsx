@@ -2,6 +2,7 @@ import {KeyTypes} from 'actions/interfaces';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {RootState} from 'store';
 import {beautifyTransferError, fromHP} from 'utils/format';
 import {delegate} from 'utils/hive';
@@ -52,7 +53,8 @@ const Delegation = ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
+      selectedUsername={getUsername()}
+      performOperation={async (options: TransactionOptions) => {
         let vesting_shares;
         if (unit === 'VESTS') {
           vesting_shares = `${amount} ${unit}`;
@@ -63,11 +65,15 @@ const Delegation = ({
             6,
           );
         }
-        return await delegate(getAccountKey(), {
-          delegator: getUsername(),
-          delegatee,
-          vesting_shares,
-        });
+        return await delegate(
+          getAccountKey(),
+          {
+            delegator: getUsername(),
+            delegatee,
+            vesting_shares,
+          },
+          options,
+        );
       }}>
       <RequestUsername />
       <RequestItem

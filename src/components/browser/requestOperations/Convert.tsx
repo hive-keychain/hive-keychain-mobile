@@ -1,5 +1,6 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {collateralizedConvert, convert} from 'utils/hive';
 import {getConversionRequests} from 'utils/hiveUtils';
 import {RequestConvert, RequestId} from 'utils/keychain.types';
@@ -34,24 +35,32 @@ export default ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
+      performOperation={async (options: TransactionOptions) => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
         const conversions = await getConversionRequests(username);
         const requestid =
           Math.max(...conversions.map((e) => e.requestid), 0) + 1;
         if (!collaterized) {
-          return await convert(key, {
-            owner: username,
-            amount: `${amount} HBD`,
-            requestid,
-          });
+          return await convert(
+            key,
+            {
+              owner: username,
+              amount: `${amount} HBD`,
+              requestid,
+            },
+            options,
+          );
         } else {
-          return await collateralizedConvert(key, {
-            owner: username,
-            amount: `${amount} HIVE`,
-            requestid,
-          });
+          return await collateralizedConvert(
+            key,
+            {
+              owner: username,
+              amount: `${amount} HIVE`,
+              requestid,
+            },
+            options,
+          );
         }
       }}>
       <RequestItem

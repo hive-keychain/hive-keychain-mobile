@@ -81,7 +81,7 @@ export const sendResponse = (
   tabRef: MutableRefObject<WebView>,
   obj: RequestSuccess,
 ) => {
-  obj.result.id = obj.result.tx_id;
+  obj.result.id = obj?.result?.tx_id;
   tabRef.current.injectJavaScript(
     `window.hive_keychain.onAnswerReceived("hive_keychain_response",${JSON.stringify(
       {success: true, error: null, ...obj},
@@ -400,4 +400,11 @@ export const beautifyErrorMessage = (err: HiveErrorMessage) => {
     return translate('request.error.unknown');
   }
   return `${translate('request.error.ops')} : ${error}`;
+};
+
+export const sleep = (ms: number) => {
+  //sleep
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 };

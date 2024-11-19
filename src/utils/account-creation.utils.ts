@@ -2,6 +2,7 @@ import {AuthorityType, PrivateKey} from '@hiveio/dhive';
 import {getRandomValues} from '@react-native-module/get-random-values';
 import {Account} from 'actions/interfaces';
 import {Key} from 'src/interfaces/keys.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import AccountUtils from './account.utils';
 import {createClaimedAccount, createNewAccount} from './hive';
 import {translate} from './localize';
@@ -58,6 +59,7 @@ const createAccount = async (
   authorities: AccountAuthorities,
   price?: number,
   generatedKeys?: GeneratedKeys,
+  options?: TransactionOptions,
 ) => {
   let success = null;
   switch (creationType) {
@@ -68,17 +70,22 @@ const createAccount = async (
         parentUsername,
         parentActiveKey,
         price!,
+        options,
       );
       break;
     }
     case AccountCreationType.USING_TICKET: {
-      success = await createClaimedAccount(parentActiveKey, {
-        creator: parentUsername,
-        new_account_name: newUsername,
-        json_metadata: '{}',
-        extensions: [],
-        ...authorities,
-      });
+      success = await createClaimedAccount(
+        parentActiveKey,
+        {
+          creator: parentUsername,
+          new_account_name: newUsername,
+          json_metadata: '{}',
+          extensions: [],
+          ...authorities,
+        },
+        options,
+      );
       break;
     }
   }
@@ -107,14 +114,19 @@ const createPayingAccount = async (
   parentUsername: string,
   parentActiveKey: Key,
   price: number,
+  options?: TransactionOptions,
 ) => {
-  return await createNewAccount(parentActiveKey, {
-    fee: `${price.toFixed(3)} HIVE`,
-    creator: parentUsername,
-    new_account_name: newUsername,
-    json_metadata: '{}',
-    ...authorities,
-  });
+  return await createNewAccount(
+    parentActiveKey,
+    {
+      fee: `${price.toFixed(3)} HIVE`,
+      creator: parentUsername,
+      new_account_name: newUsername,
+      json_metadata: '{}',
+      ...authorities,
+    },
+    options,
+  );
 };
 /* istanbul ignore next */
 const generateAccountAuthorities = (
