@@ -1,15 +1,15 @@
 import {loadAccount} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
-import OperationInput from 'components/form/OperationInput';
+import TwoFaForm from 'components/form/TwoFaForm';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
+import MultisigCaption from 'components/ui/MultisigCaption';
 import Separator from 'components/ui/Separator';
 import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
 import {ConfirmationPageRoute} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {
-  Image,
   Keyboard,
   ScrollView,
   StyleSheet,
@@ -30,7 +30,6 @@ import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {resetStackAndNavigate} from 'utils/navigation';
-const LOGO_MULTISIG = require('assets/wallet/multisig.png');
 
 export type ConfirmationPageProps = {
   onSend: (options: TransactionOptions) => void;
@@ -97,21 +96,7 @@ const ConfirmationPage = ({
     <Background theme={theme}>
       <ScrollView contentContainerStyle={styles.confirmationPage}>
         {extraHeader}
-        {isMultisig && (
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginHorizontal: 15,
-            }}>
-            <Image
-              source={LOGO_MULTISIG}
-              style={{width: 50, height: 30, marginTop: 10}}
-            />
-            <Caption text={'multisig.disclaimer_message'} hideSeparator />
-          </View>
-        )}
+        {isMultisig && <MultisigCaption />}
         <Caption text={title} hideSeparator />
 
         {warningText && (
@@ -149,24 +134,7 @@ const ConfirmationPage = ({
           ))}
         </View>
         <Separator />
-        {twoFABots && Object.keys(twoFABots).length > 0 && (
-          <View style={{flex: 1}}>
-            {Object.entries(twoFABots).map(([botName, code]) => (
-              <OperationInput
-                keyboardType="numeric"
-                labelInput={translate('multisig.bot_two_fa_code', {
-                  account: user.name,
-                })}
-                value={code}
-                onChangeText={(value) => {
-                  setTwoFABots((old) => {
-                    return {...old, [botName]: value};
-                  });
-                }}
-              />
-            ))}
-          </View>
-        )}
+        <TwoFaForm twoFABots={twoFABots} setTwoFABots={setTwoFABots} />
         <View style={spacingStyle.fillSpace}></View>
         <Separator />
         <EllipticButton

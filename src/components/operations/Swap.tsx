@@ -1,4 +1,5 @@
 import {loadTokensMarket} from 'actions/index';
+import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import ErrorSvg from 'assets/new_UI/error-mark.svg';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
@@ -8,10 +9,12 @@ import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
+import MultisigCaption from 'components/ui/MultisigCaption';
 import RotationIconAnimated from 'components/ui/RotationIconAnimated';
 import Separator from 'components/ui/Separator';
 import SwapCurrencyImage from 'components/ui/SwapCurrencyImage';
 import {IStep} from 'hive-keychain-commons';
+import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
 import {ThrottleSettings, throttle} from 'lodash';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useMemo, useState} from 'react';
@@ -107,7 +110,10 @@ const Swap = ({
     number | null
   >(null);
   const [disableProcessButton, setDisableProcessButton] = useState(false);
-
+  const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultsig(
+    KeyTypes.active,
+    activeAccount,
+  );
   useEffect(() => {
     init();
   }, []);
@@ -374,8 +380,11 @@ const Swap = ({
         parseFloat(amount),
         activeAccount,
         swapConfig.account,
+        {
+          metaData: {twoFACodes: twoFABots},
+          multisig: isMultisig,
+        },
       );
-      console.log({success});
       if (success) {
         await SwapTokenUtils.saveLastUsed(startToken?.value, endToken?.value);
         await SwapTokenUtils.setAsInitiated(estimateId);
@@ -478,6 +487,7 @@ const Swap = ({
       component: (
         <Background theme={theme}>
           <View style={{flexGrow: 1, paddingBottom: 16}}>
+            {isMultisig && <MultisigCaption />}
             <Caption
               text="wallet.operations.swap.swap_token_confirm_message"
               hideSeparator

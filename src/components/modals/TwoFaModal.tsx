@@ -1,5 +1,5 @@
 import EllipticButton from 'components/form/EllipticButton';
-import OperationInput from 'components/form/OperationInput';
+import TwoFaForm from 'components/form/TwoFaForm';
 import React, {useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -27,20 +27,7 @@ const TwoFaModal = ({twoFABots, onSubmit}: Props) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{translate('multisig.enter_otp')}</Text>
-      {Object.entries(twoFAcodes).map(([botName, code]) => (
-        <OperationInput
-          keyboardType="numeric"
-          labelInput={translate('multisig.bot_two_fa_code', {
-            account: botName,
-          })}
-          value={code}
-          onChangeText={(value) => {
-            setTwoFACodes((old) => {
-              return {...old, [botName]: value};
-            });
-          }}
-        />
-      ))}
+      <TwoFaForm twoFABots={twoFAcodes} setTwoFABots={setTwoFACodes} />
       <EllipticButton
         title={translate('common.confirm')}
         onPress={() => {

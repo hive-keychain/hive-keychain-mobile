@@ -2,17 +2,11 @@ import {KeyTypes} from 'actions/interfaces';
 import {addPreference} from 'actions/preferences';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationButton from 'components/form/EllipticButton';
-import OperationInput from 'components/form/OperationInput';
-import {Caption} from 'components/ui/Caption';
+import TwoFaForm from 'components/form/TwoFaForm';
+import MultisigCaption from 'components/ui/MultisigCaption';
 import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
 import React, {useState} from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -36,7 +30,6 @@ import {
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 import RequestMessage from './RequestMessage';
-const LOGO_MULTISIG = require('assets/wallet/multisig.png');
 
 type Props = {
   has?: boolean;
@@ -106,41 +99,10 @@ const RequestOperation = ({
           ]}
         />
       )}
-      {isMultisig && (
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginHorizontal: 15,
-          }}>
-          <Image
-            source={LOGO_MULTISIG}
-            style={{width: 50, height: 30, marginTop: 10}}
-          />
-          <Caption text={'multisig.disclaimer_message'} hideSeparator />
-        </View>
-      )}
+      {isMultisig && <MultisigCaption />}
 
       <View style={getCardStyle(theme).defaultCardItem}>{children}</View>
-      {twoFABots && Object.keys(twoFABots).length > 0 && (
-        <View style={{flex: 1}}>
-          {Object.entries(twoFABots).map(([botName, code]) => (
-            <OperationInput
-              keyboardType="numeric"
-              labelInput={translate('multisig.bot_two_fa_code', {
-                account: username,
-              })}
-              value={code}
-              onChangeText={(value) => {
-                setTwoFABots((old) => {
-                  return {...old, [botName]: value};
-                });
-              }}
-            />
-          ))}
-        </View>
-      )}
+      <TwoFaForm twoFABots={twoFABots} setTwoFABots={setTwoFABots} />
       {method !== KeyTypes.active &&
       type !== KeychainRequestTypes.addAccount ? (
         <View style={styles.keep}>
