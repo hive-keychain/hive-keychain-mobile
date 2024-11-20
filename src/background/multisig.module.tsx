@@ -134,7 +134,7 @@ const createConnectionIfNeeded = async (data: MultisigRequestSignatures) => {
           ? {
               isEnabled: true,
               publicKey: getPublicKeyFromPrivateKeyString(data.key!)!,
-              message: signBuffer(
+              message: await signBuffer(
                 data.key?.toString()!,
                 data.initiatorAccount.name!,
               ),
@@ -145,7 +145,7 @@ const createConnectionIfNeeded = async (data: MultisigRequestSignatures) => {
           ? {
               isEnabled: true,
               publicKey: getPublicKeyFromPrivateKeyString(data.key!)!,
-              message: signBuffer(
+              message: await signBuffer(
                 data.key?.toString()!,
                 data.initiatorAccount.name!,
               ),
