@@ -407,7 +407,7 @@ const getMultisigInfo = async (
   let useMultisig = false;
   let twoFABots = {};
 
-  switch (keyType.toUpperCase()) {
+  switch (keyType?.toUpperCase()) {
     case KeyType.ACTIVE: {
       if (user.keys.active) {
         useMultisig = KeyUtils.isUsingMultisig(

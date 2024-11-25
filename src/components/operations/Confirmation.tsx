@@ -72,7 +72,7 @@ const ConfirmationPage = ({
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({width, height}, theme);
   const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultsig(
-    keyType.toUpperCase() as KeyTypes,
+    keyType?.toUpperCase() as KeyTypes,
     user,
   );
 
