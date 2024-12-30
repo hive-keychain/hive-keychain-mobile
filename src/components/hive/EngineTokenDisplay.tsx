@@ -150,7 +150,10 @@ const getDimensionedStyles = (
   });
 
 const mapStateToProps = (state: RootState) => {
-  return {hivePrice: state.currencyPrices.hive.usd, colors: state.colors};
+  return {
+    hivePrice: state.currencyPrices?.hive?.usd,
+    colors: state.colors,
+  };
 };
 
 const connector = connect(mapStateToProps);
