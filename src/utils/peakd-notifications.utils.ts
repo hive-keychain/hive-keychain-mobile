@@ -743,7 +743,7 @@ const getNotifications = async (
         if (username === payload.from_account) {
           message = 'notification_fill_power_down';
           messageParams = [
-            payload.from,
+            payload.from_account,
             toFormattedHP(
               payload.withdrawn.toString().replace('VESTS', ''),
               globalProperties,
@@ -752,12 +752,12 @@ const getNotifications = async (
         } else {
           message = 'notification_fill_power_down_other_account';
           messageParams = [
-            payload.from_account,
+            payload.to_account,
             toFormattedHP(
               payload.withdrawn.toString().replace('VESTS', ''),
               globalProperties,
             ),
-            payload.to_account,
+            payload.from_account,
           ];
         }
         break;
