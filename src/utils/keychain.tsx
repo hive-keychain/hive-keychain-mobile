@@ -35,6 +35,7 @@ export const validateAuthority = (
       accounts.length > 1 &&
       !accounts.filter((e) => !!e.keys[wifType]).length
     ) {
+      console.log('here', wifType, accounts);
       return {
         valid: false,
         error: translate('request.error.no_active_auth'),
@@ -229,39 +230,38 @@ export const getRequiredWifType: (request: KeychainRequestData) => KeyTypes = (
   request,
 ) => {
   switch (request.type) {
-    case 'decode':
-    case 'encode':
-    case 'signBuffer':
-    case 'broadcast':
-
-    case 'signTx':
+    case KeychainRequestTypes.decode:
+    case KeychainRequestTypes.encode:
+    case KeychainRequestTypes.signBuffer:
+    case KeychainRequestTypes.broadcast:
+    case KeychainRequestTypes.signTx:
       return request.method.toLowerCase() as KeyTypes;
-    case 'post':
-    case 'vote':
+    case KeychainRequestTypes.post:
+    case KeychainRequestTypes.vote:
       return KeyTypes.posting;
-    case 'custom':
+    case KeychainRequestTypes.custom:
       return (!request.method
         ? 'posting'
         : request.method.toLowerCase()) as KeyTypes;
-    case 'signedCall':
+    case KeychainRequestTypes.signedCall:
       return request.typeWif.toLowerCase() as KeyTypes;
-    case 'transfer':
-    case 'sendToken':
-    case 'delegation':
-    case 'witnessVote':
-    case 'proxy':
-    case 'powerUp':
-    case 'powerDown':
-    case 'createClaimedAccount':
-    case 'createProposal':
-    case 'removeProposal':
-    case 'updateProposalVote':
-    case 'convert':
-    case 'recurrentTransfer':
-    case 'addAccountAuthority':
-    case 'removeAccountAuthority':
-    case 'removeKeyAuthority':
-    case 'addKeyAuthority':
+    case KeychainRequestTypes.transfer:
+    case KeychainRequestTypes.sendToken:
+    case KeychainRequestTypes.delegation:
+    case KeychainRequestTypes.witnessVote:
+    case KeychainRequestTypes.proxy:
+    case KeychainRequestTypes.powerUp:
+    case KeychainRequestTypes.powerDown:
+    case KeychainRequestTypes.createClaimedAccount:
+    case KeychainRequestTypes.createProposal:
+    case KeychainRequestTypes.removeProposal:
+    case KeychainRequestTypes.updateProposalVote:
+    case KeychainRequestTypes.convert:
+    case KeychainRequestTypes.recurrentTransfer:
+    case KeychainRequestTypes.addAccountAuthority:
+    case KeychainRequestTypes.removeAccountAuthority:
+    case KeychainRequestTypes.removeKeyAuthority:
+    case KeychainRequestTypes.addKeyAuthority:
       return KeyTypes.active;
   }
 };
