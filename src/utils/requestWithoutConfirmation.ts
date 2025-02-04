@@ -7,7 +7,6 @@ import {postWithoutConfirmation} from 'components/browser/requestOperations/Post
 import {signBufferWithoutConfirmation} from 'components/browser/requestOperations/SignBuffer';
 import {signTxWithoutConfirmation} from 'components/browser/requestOperations/SignTx';
 import {voteWithoutConfirmation} from 'components/browser/requestOperations/Vote';
-import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {
   KeychainRequest,
   KeychainRequestTypes,
@@ -22,7 +21,8 @@ import {
   RequestSignTx,
   RequestSuccess,
   RequestVote,
-} from './keychain.types';
+} from 'hive-keychain-commons';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 
 export const requestWithoutConfirmation = (
   accounts: Account[],

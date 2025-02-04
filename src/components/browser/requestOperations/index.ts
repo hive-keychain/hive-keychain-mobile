@@ -23,6 +23,8 @@ import SignTx from './SignTx';
 import Transfer from './Transfer';
 import UpdateProposalVote from './UpdateProposalVote';
 import Vote from './Vote';
+import CallVscContract from './vsc/CallVscContract';
+import VscDeposit from './vsc/VscDeposit';
 import WitnessVote from './Witness';
 
 const map = {
@@ -52,5 +54,7 @@ const map = {
   createClaimedAccount: CreateAccount,
   createProposal: CreateProposal,
   removeProposal: RemoveProposal,
+  vscCallContract: CallVscContract,
+  vscDeposit: VscDeposit,
 };
 export default map;

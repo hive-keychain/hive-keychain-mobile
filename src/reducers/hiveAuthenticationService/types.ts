@@ -1,7 +1,7 @@
 import {HAS_ActionsTypes} from 'actions/types';
+import {KeychainRequestTypes} from 'hive-keychain-commons';
 import {HAS_Token} from 'utils/hiveAuthenticationService/has.types';
 import {HAS_ConnectPayload} from 'utils/hiveAuthenticationService/payloads.types';
-import {KeychainRequestTypes} from 'utils/keychain.types';
 
 export type HAS_Connect = {
   type: HAS_ActionsTypes.REQUEST;

@@ -1,11 +1,10 @@
 import {ExtendedAccount} from '@hiveio/dhive';
 import {Account, AccountKeys} from 'actions/interfaces';
 import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
-import {KeychainKeyTypesLC} from 'hive-keychain-commons';
+import {KeychainKeyTypes, KeychainKeyTypesLC} from 'hive-keychain-commons';
 import {Key} from 'src/interfaces/keys.interface';
 import {RootState, store} from 'store';
 import {getData} from './hive';
-import {KeychainKeyTypes} from './keychain.types';
 import {getPublicKeyFromPrivateKeyString} from './keyValidation';
 
 const isAuthorizedAccount = (key: string): boolean => {

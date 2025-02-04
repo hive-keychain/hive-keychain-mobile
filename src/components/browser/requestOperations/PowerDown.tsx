@@ -1,4 +1,5 @@
 import {KeyTypes} from 'actions/interfaces';
+import {RequestId, RequestPowerDown} from 'hive-keychain-commons';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
@@ -6,7 +7,6 @@ import {RootState} from 'store';
 import {fromHP} from 'utils/format';
 import {powerDown} from 'utils/hive';
 import {sanitizeAmount} from 'utils/hiveUtils';
-import {RequestId, RequestPowerDown} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
@@ -26,7 +26,7 @@ const PowerDown = ({
   properties,
 }: Props) => {
   const {request_id, ...data} = request;
-  const {username, steem_power: hp} = data;
+  const {username, hive_power: hp} = data;
 
   return (
     <RequestOperation

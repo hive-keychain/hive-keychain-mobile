@@ -1,14 +1,14 @@
 import {Authority} from '@hiveio/dhive';
 import {Account, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
-import React from 'react';
-import {getAccountKeys} from 'utils/hiveUtils';
 import {
   RequestEncode,
   RequestError,
   RequestId,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'hive-keychain-commons';
+import React from 'react';
+import {getAccountKeys} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation, {

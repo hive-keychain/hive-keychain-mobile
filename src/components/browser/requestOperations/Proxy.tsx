@@ -1,8 +1,8 @@
 import {KeyTypes} from 'actions/interfaces';
+import {RequestId, RequestProxy} from 'hive-keychain-commons';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {setProxy} from 'utils/hive';
-import {RequestId, RequestProxy} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';

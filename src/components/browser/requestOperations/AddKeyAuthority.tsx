@@ -1,9 +1,9 @@
 import {KeyTypes} from 'actions/interfaces';
+import {RequestAddKeyAuthority, RequestId} from 'hive-keychain-commons';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {addKeyAuth} from 'utils/hive';
 import {beautifyErrorMessage} from 'utils/keychain';
-import {RequestAddKeyAuthority, RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';

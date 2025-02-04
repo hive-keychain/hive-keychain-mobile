@@ -4,7 +4,7 @@ import {
   KeychainRequest,
   RequestError,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'hive-keychain-commons';
 
 export enum HAS_PayloadType {
   AUTH = 'auth_req',

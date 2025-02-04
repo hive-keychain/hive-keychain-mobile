@@ -1128,5 +1128,25 @@
   },
   "multichain": {
     "switch_chain": "Switch Chain"
+  },
+  "vsc": {
+    "contract_id": "Contract ID",
+
+    "action": "Action",
+    "payload": "Payload",
+    "evm_address": "EVM Address",
+    "title_call_contract": "VSC Contract Call",
+    "title_deposit": "VSC Deposit",
+    "title_deposit_header": "Send {{amount}} tokens to your EVM address on VSC",
+    "op_included": "This transaction has been included in VSC already, but has not yet been confirmed. This might take some time. You can follow the transaction status on the requesting dApp or on Hive Keychain extension's VSC history page.",
+    "op_confirmed": "This transaction has been confirmed on VSC.",
+    "op_not_included": "This transaction has not been included in VSC yet. You can follow its status on the requesting dApp or on Hive Keychain extension's VSC history page.",
+    "tokens_x_available": "Click here to show {{tokens}} Hive Engine tokens.",
+    "history": "VSC History",
+    "info_call": "Called '{{action}}' on contract {{contract}}",
+    "info_deposit": "Deposited {{amount}} {{token}} to VSC on address {{address}}",
+    "info_withdraw": "Withdrew {{amount}} {{token}} from VSC on address {{address}}",
+    "full_history": "You can check your full history on",
+    "full_history_block_explorer": "the VSC block explorer."
   }
 }

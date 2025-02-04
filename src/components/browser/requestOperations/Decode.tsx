@@ -1,13 +1,13 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import {decodeMemo} from 'components/bridge';
-import React from 'react';
-import {urlTransformer} from 'utils/browser';
 import {
   RequestDecode,
   RequestError,
   RequestId,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'hive-keychain-commons';
+import React from 'react';
+import {urlTransformer} from 'utils/browser';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation, {

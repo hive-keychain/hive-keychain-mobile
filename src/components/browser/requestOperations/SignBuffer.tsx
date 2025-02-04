@@ -1,15 +1,15 @@
 import {Account, KeyTypes, PubKeyTypes} from 'actions/interfaces';
 import {signBuffer} from 'components/bridge';
-import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
-import React from 'react';
-import {urlTransformer} from 'utils/browser';
-import {beautifyIfJSON} from 'utils/format';
 import {
   RequestError,
   RequestId,
   RequestSignBuffer,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'hive-keychain-commons';
+import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
+import React from 'react';
+import {urlTransformer} from 'utils/browser';
+import {beautifyIfJSON} from 'utils/format';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation, {

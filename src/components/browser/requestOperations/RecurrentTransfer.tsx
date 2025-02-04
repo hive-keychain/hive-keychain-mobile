@@ -1,10 +1,10 @@
 import {KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
+import {RequestId, RequestRecurrentTransfer} from 'hive-keychain-commons';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {recurrentTransfer} from 'utils/hive';
 import {getAccountKeys} from 'utils/hiveUtils';
-import {RequestId, RequestRecurrentTransfer} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';

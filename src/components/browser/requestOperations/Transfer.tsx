@@ -1,5 +1,6 @@
 import {KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
+import {RequestId, RequestTransfer} from 'hive-keychain-commons';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import SimpleToast from 'react-native-simple-toast';
@@ -7,7 +8,6 @@ import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {beautifyTransferError} from 'utils/format';
 import {transfer} from 'utils/hive';
 import {getAccountKeys} from 'utils/hiveUtils';
-import {RequestId, RequestTransfer} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';

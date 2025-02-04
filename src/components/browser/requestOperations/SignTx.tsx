@@ -1,12 +1,12 @@
 import {Account, KeyTypes} from 'actions/interfaces';
-import React from 'react';
-import {signTx} from 'utils/hive';
 import {
   RequestError,
   RequestId,
   RequestSignTx,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'hive-keychain-commons';
+import React from 'react';
+import {signTx} from 'utils/hive';
 import {translate} from 'utils/localize';
 import CollapsibleData from './components/CollapsibleData';
 import RequestItem from './components/RequestItem';

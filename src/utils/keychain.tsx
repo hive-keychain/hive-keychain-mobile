@@ -1,12 +1,9 @@
 import {CommentOptionsOperation} from '@hiveio/dhive';
 import {Account, KeyTypes} from 'actions/interfaces';
-import {MutableRefObject} from 'react';
-import WebView from 'react-native-webview';
-import {KeychainConfig} from 'utils/config';
-import {translate} from 'utils/localize';
 import {
   HiveErrorMessage,
   KeychainRequest,
+  KeychainRequestData,
   KeychainRequestTypes,
   RequestAddAccountKeys,
   RequestDelegation,
@@ -14,11 +11,15 @@ import {
   RequestPost,
   RequestSuccess,
   RequestTransfer,
-} from './keychain.types';
+} from 'hive-keychain-commons';
+import {MutableRefObject} from 'react';
+import WebView from 'react-native-webview';
+import {KeychainConfig} from 'utils/config';
+import {translate} from 'utils/localize';
 
 export const validateAuthority = (
   accounts: Account[],
-  req: KeychainRequest,
+  req: KeychainRequestData,
 ) => {
   const {type, username} = req;
   if (type === KeychainRequestTypes.addAccount) return {valid: true};
@@ -168,11 +169,11 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilled(req.currency)) ||
       (req.type === 'powerUp' &&
         isFilled(req.username) &&
-        isFilledAmt(req.steem) &&
+        isFilledAmt(req.hive) &&
         isFilled(req.recipient)) ||
       (req.type === 'powerDown' &&
         isFilled(req.username) &&
-        (isFilledAmt(req.steem_power) || req.steem_power === '0.000')) ||
+        (isFilledAmt(req.hive_power) || req.hive_power === '0.000')) ||
       (req.type === 'createClaimedAccount' &&
         isFilled(req.username) &&
         isFilled(req.new_account) &&
@@ -190,10 +191,10 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilledAmtSBD(req.daily_pay)) ||
       (req.type === 'removeProposal' &&
         isFilled(req.username) &&
-        isProposalIDs(req.proposal_ids)) ||
+        isProposalIDs(req.proposal_ids + '')) ||
       (req.type === 'updateProposalVote' &&
         isFilled(req.username) &&
-        isProposalIDs(req.proposal_ids) &&
+        isProposalIDs(req.proposal_ids + '') &&
         isBoolean(req.approve)) ||
       (req.type === 'sendToken' &&
         isFilledAmt(req.amount) &&
@@ -209,11 +210,22 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilledCurrency(req.currency) &&
         isFilled(req.to) &&
         Number.isInteger(req.executions) &&
-        Number.isInteger(req.recurrence)))
+        Number.isInteger(req.recurrence)) ||
+      (req.type === 'vscCallContract' &&
+        isFilled(req.username) &&
+        isFilled(req.contractId) &&
+        isFilled(req.action) &&
+        isFilled(req.payload) &&
+        isFilled(req.method) &&
+        (req.method === 'Posting' || req.method === 'Active')) ||
+      (req.type === 'vscDeposit' &&
+        isFilled(req.username) &&
+        isFilled(req.amount) &&
+        isFilled(req.currency)))
   );
 };
 
-export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
+export const getRequiredWifType: (request: KeychainRequestData) => KeyTypes = (
   request,
 ) => {
   switch (request.type) {
@@ -221,10 +233,7 @@ export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
     case 'encode':
     case 'signBuffer':
     case 'broadcast':
-    case 'addAccountAuthority':
-    case 'removeAccountAuthority':
-    case 'removeKeyAuthority':
-    case 'addKeyAuthority':
+
     case 'signTx':
       return request.method.toLowerCase() as KeyTypes;
     case 'post':
@@ -249,6 +258,10 @@ export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
     case 'updateProposalVote':
     case 'convert':
     case 'recurrentTransfer':
+    case 'addAccountAuthority':
+    case 'removeAccountAuthority':
+    case 'removeKeyAuthority':
+    case 'addKeyAuthority':
       return KeyTypes.active;
   }
 };

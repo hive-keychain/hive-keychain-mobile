@@ -25,6 +25,15 @@ import {
   VoteOperation,
 } from '@hiveio/dhive';
 import {Rpc} from 'actions/interfaces';
+import {
+  KeychainKeyTypes,
+  KeychainKeyTypesLC,
+  RequestAddAccountAuthority,
+  RequestAddKeyAuthority,
+  RequestPost,
+  RequestRemoveAccountAuthority,
+  RequestRemoveKeyAuthority,
+} from 'hive-keychain-commons';
 import hiveTx, {call, Transaction as HiveTransaction} from 'hive-tx';
 import {requestMultisigSignatures} from 'src/background/multisig.module';
 import {
@@ -39,15 +48,6 @@ import {hiveEngine} from 'utils/config';
 import {getAccount} from './hiveUtils';
 import {KeyUtils} from './key.utils';
 import {sleep} from './keychain';
-import {
-  KeychainKeyTypes,
-  KeychainKeyTypesLC,
-  RequestAddAccountAuthority,
-  RequestAddKeyAuthority,
-  RequestPost,
-  RequestRemoveAccountAuthority,
-  RequestRemoveKeyAuthority,
-} from './keychain.types';
 import {MultisigUtils} from './multisig.utils';
 import {useWorkingRPC} from './rpc-switcher.utils';
 

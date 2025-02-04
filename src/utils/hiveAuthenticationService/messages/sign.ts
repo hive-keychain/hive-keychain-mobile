@@ -3,19 +3,20 @@ import {addWhitelistedOperationToSession} from 'actions/hiveAuthenticationServic
 import {KeyTypes} from 'actions/interfaces';
 import assert from 'assert';
 import Crypto from 'crypto-js';
-import SimpleToast from 'react-native-simple-toast';
-import {RootState, store} from 'store';
-import {getRequiredWifType} from 'utils/keychain';
 import {
   KeychainKeyTypes,
   KeychainRequest,
   KeychainRequestTypes,
   RequestBroadcast,
   RequestError,
+  RequestId,
   RequestPost,
   RequestSuccess,
   RequestVote,
-} from 'utils/keychain.types';
+} from 'hive-keychain-commons';
+import SimpleToast from 'react-native-simple-toast';
+import {RootState, store} from 'store';
+import {getRequiredWifType} from 'utils/keychain';
 import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
 import {goBack, navigate} from 'utils/navigation';
@@ -67,7 +68,7 @@ export const processSigningRequest = async (
             permlink: voteOperation.permlink,
             author: voteOperation.author,
             weight: voteOperation.weight,
-          } as RequestVote;
+          } as RequestVote & RequestId;
           break;
         case 'comment':
           const commentOperation = (op as CommentOperation)[1];
@@ -81,7 +82,7 @@ export const processSigningRequest = async (
             parent_perm: commentOperation.parent_permlink,
             parent_username: commentOperation.parent_author,
             json_metadata: commentOperation.json_metadata,
-          } as RequestPost;
+          } as RequestPost & RequestId;
           break;
         default:
           request = {
@@ -90,7 +91,7 @@ export const processSigningRequest = async (
             username: payload.account,
             operations: ops,
             method: KeychainKeyTypes[key_type],
-          } as RequestBroadcast;
+          } as RequestBroadcast & RequestId;
           break;
       }
     } else {
@@ -100,7 +101,7 @@ export const processSigningRequest = async (
         username: payload.account,
         operations: ops,
         method: KeychainKeyTypes[key_type],
-      } as RequestBroadcast;
+      } as RequestBroadcast & RequestId;
     }
     if (
       session.whitelist.includes(request.type) &&
@@ -125,7 +126,7 @@ export const processSigningRequest = async (
     } else {
       const data: HAS_BroadcastModalPayload = {
         expiration: payload.expire,
-        request: {...request, has: true},
+        request: ({...request, has: true} as unknown) as KeychainRequest,
         accounts: await store.getState().accounts,
         onForceCloseModal: () => {
           goBack();

@@ -7,9 +7,6 @@ import {
 } from '@hiveio/dhive';
 import {saveRequestedOperation} from 'actions/hive-uri';
 import RequestError from 'components/browser/requestOperations/components/RequestError';
-import React from 'react';
-import {RootState, store} from 'store';
-import {validateAuthority} from './keychain';
 import {
   KeychainRequestTypes,
   RequestDelegation,
@@ -17,7 +14,10 @@ import {
   RequestSendToken,
   RequestTransfer,
   RequestWitnessVote,
-} from './keychain.types';
+} from 'hive-keychain-commons';
+import React from 'react';
+import {RootState, store} from 'store';
+import {validateAuthority} from './keychain';
 import {ModalComponent} from './modal.enum';
 import {goBack, navigate} from './navigation';
 

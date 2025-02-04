@@ -1,7 +1,7 @@
 import {Asset, DynamicGlobalProperties} from '@hiveio/dhive';
 import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
+import {HiveErrorMessage} from 'hive-keychain-commons';
 import {translate} from 'utils/localize';
-import {HiveErrorMessage} from './keychain.types';
 
 export const withCommas = (nb: string, decimals = 3) =>
   parseFloat(parseFloat(nb).toFixed(decimals))

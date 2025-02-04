@@ -1,9 +1,9 @@
 import {KeyTypes} from 'actions/interfaces';
+import {RequestId, RequestRemoveAccountAuthority} from 'hive-keychain-commons';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {removeAccountAuth} from 'utils/hive';
 import {beautifyErrorMessage} from 'utils/keychain';
-import {RequestId, RequestRemoveAccountAuthority} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';

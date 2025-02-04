@@ -1,8 +1,8 @@
 import {removeHASSession} from 'actions/hiveAuthenticationService';
 import {encodeMemo, signBuffer} from 'components/bridge';
 import Crypto from 'crypto-js';
+import {KeychainKeyTypesLC} from 'hive-keychain-commons';
 import {RootState, store} from 'store';
-import {KeychainKeyTypesLC} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {ModalComponent} from 'utils/modal.enum';
 import {navigate} from 'utils/navigation';

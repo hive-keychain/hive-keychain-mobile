@@ -1,14 +1,14 @@
 import {Account, KeyTypes} from 'actions/interfaces';
-import React from 'react';
-import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {post} from 'utils/hive';
 import {
   RequestError,
   RequestId,
   RequestPost,
   RequestSuccess,
-  UsingHAS,
-} from 'utils/keychain.types';
+} from 'hive-keychain-commons';
+import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {post} from 'utils/hive';
+import {UsingHAS} from 'utils/hiveAuthenticationService/has.types';
 import {translate} from 'utils/localize';
 import CollapsibleData from './components/CollapsibleData';
 import RequestItem from './components/RequestItem';

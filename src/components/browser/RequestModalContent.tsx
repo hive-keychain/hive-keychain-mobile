@@ -1,12 +1,12 @@
 import {Account} from 'actions/interfaces';
 import Operation from 'components/operations/Operation';
-import {useHasExpiration} from 'hooks/useHasExpiration';
-import React from 'react';
 import {
   KeychainRequest,
   RequestError,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'hive-keychain-commons';
+import {useHasExpiration} from 'hooks/useHasExpiration';
+import React from 'react';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 import Requests from './requestOperations';

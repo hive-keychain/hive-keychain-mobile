@@ -1,6 +1,5 @@
 import {Account} from 'actions/interfaces';
-import {RequestError, RequestSuccess} from 'utils/keychain.types';
-
+import {RequestError, RequestSuccess} from 'hive-keychain-commons';
 export type RequestComponentCommonProps = {
   accounts: Account[];
   closeGracefully: () => void;

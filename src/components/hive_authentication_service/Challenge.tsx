@@ -1,6 +1,7 @@
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
+import {KeychainKeyTypesLC} from 'hive-keychain-commons';
 import {ModalNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
@@ -13,7 +14,6 @@ import {RootState} from 'store';
 import HAS from 'utils/hiveAuthenticationService';
 import {HAS_Session} from 'utils/hiveAuthenticationService/has.types';
 import {HAS_ChallengePayload} from 'utils/hiveAuthenticationService/payloads.types';
-import {KeychainKeyTypesLC} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 const LOGO_LIGHT = require('assets/has/logo-light.png');
 

@@ -4,6 +4,14 @@ import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationButton from 'components/form/EllipticButton';
 import TwoFaForm from 'components/form/TwoFaForm';
 import MultisigCaption from 'components/ui/MultisigCaption';
+import {
+  HiveErrorMessage,
+  KeychainRequest,
+  KeychainRequestTypes,
+  RequestError,
+  RequestId,
+  RequestSuccess,
+} from 'hive-keychain-commons';
 import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
@@ -19,14 +27,6 @@ import {title_primary_body_2} from 'src/styles/typography';
 import {RootState} from 'store';
 import {urlTransformer} from 'utils/browser';
 import {beautifyErrorMessage} from 'utils/keychain';
-import {
-  HiveErrorMessage,
-  KeychainRequest,
-  KeychainRequestTypes,
-  RequestError,
-  RequestId,
-  RequestSuccess,
-} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {goBack} from 'utils/navigation';
 import RequestMessage from './RequestMessage';

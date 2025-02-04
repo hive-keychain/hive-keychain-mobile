@@ -1,14 +1,14 @@
 import {Account, KeyTypes} from 'actions/interfaces';
-import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
-import React from 'react';
-import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {broadcastJson} from 'utils/hive';
 import {
   RequestCustomJSON,
   RequestError,
   RequestId,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'hive-keychain-commons';
+import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
+import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {broadcastJson} from 'utils/hive';
 import {translate} from 'utils/localize';
 import CollapsibleData from './components/CollapsibleData';
 import RequestItem from './components/RequestItem';

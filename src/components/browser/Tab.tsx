@@ -7,6 +7,7 @@ import {
   Tab,
   TabFields,
 } from 'actions/interfaces';
+import {RequestError, RequestSuccess} from 'hive-keychain-commons';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
@@ -29,7 +30,6 @@ import {
   validateAuthority,
   validateRequest,
 } from 'utils/keychain';
-import {RequestError, RequestSuccess} from 'utils/keychain.types';
 import {MultisigUtils} from 'utils/multisig.utils';
 import {navigate, goBack as navigationGoBack} from 'utils/navigation';
 import {hasPreference} from 'utils/preferences';

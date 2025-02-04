@@ -1,6 +1,6 @@
+import {KeychainRequestTypes} from 'hive-keychain-commons';
 import {HAS_Token} from 'utils/hiveAuthenticationService/has.types';
 import {HAS_ConnectPayload} from 'utils/hiveAuthenticationService/payloads.types';
-import {KeychainRequestTypes} from 'utils/keychain.types';
 import {HAS_ActionsTypes} from './types';
 
 export const treatHASRequest = (data: HAS_ConnectPayload & {key: string}) => {

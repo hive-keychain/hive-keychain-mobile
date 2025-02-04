@@ -1,4 +1,4 @@
-import {KeychainRequestTypes} from 'utils/keychain.types';
+import {KeychainRequestTypes} from 'hive-keychain-commons';
 
 // One HAS_Instance per different domain serving HAS being used
 export type HAS_Instance = {
@@ -7,6 +7,8 @@ export type HAS_Instance = {
   init: boolean;
   connected?: boolean;
 };
+
+export type UsingHAS = {has?: boolean};
 
 // One HAS_connection per qr code scan / deep linking
 export type HAS_Session = {

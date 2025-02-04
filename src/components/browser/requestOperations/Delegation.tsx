@@ -1,4 +1,5 @@
 import {KeyTypes} from 'actions/interfaces';
+import {RequestDelegation, RequestId} from 'hive-keychain-commons';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
@@ -7,7 +8,6 @@ import {RootState} from 'store';
 import {beautifyTransferError, fromHP} from 'utils/format';
 import {delegate} from 'utils/hive';
 import {sanitizeAmount} from 'utils/hiveUtils';
-import {RequestDelegation, RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';

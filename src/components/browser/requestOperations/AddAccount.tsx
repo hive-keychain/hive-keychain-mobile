@@ -1,14 +1,14 @@
 import {addAccount} from 'actions/index';
 import {AccountKeys} from 'actions/interfaces';
-import React from 'react';
-import {connect, ConnectedProps} from 'react-redux';
-import {getClient} from 'utils/hive';
 import {
   RequestAddAccount,
   RequestError,
   RequestId,
   RequestSuccess,
-} from 'utils/keychain.types';
+} from 'hive-keychain-commons';
+import React from 'react';
+import {connect, ConnectedProps} from 'react-redux';
+import {getClient} from 'utils/hive';
 import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation';
 import {translate} from 'utils/localize';
 import CollapsibleData from './components/CollapsibleData';
