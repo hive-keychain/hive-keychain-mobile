@@ -845,13 +845,16 @@
       "addAccount": "Add Account",
       "convert": "Convert",
       "recurrentTransfer": "Recurrent Transfers",
-      "multisig": "Multisig"
+      "multisig": "Multisig",
+      "vscCallContract": "VSC Contract Call",
+      "vscDeposit": "VSC Deposit"
     },
     "message": {
       "decode": "The website {{domain}} would like to verify that you have access to the private {{method}} key for the account: @{{username}}",
       "signBuffer": "The website {{domain}} would like to sign a message using the {{method}} key for the account: @{{username}}",
       "signBufferNoUsername": "The website {{domain}} would like to sign a message using the {{method}} key.",
-      "multisig": "You received a multisig signature request"
+      "multisig": "You received a multisig signature request",
+      "vscDeposit": "Send {{token}} tokens to your EVM address on VSC"
     },
     "item": {
       "username": "Username",
@@ -892,7 +895,10 @@
       "duration": "Duration",
       "daily_pay": "Daily Pay",
       "initiator": "Initiator",
-      "key": "Key"
+      "key": "Key",
+      "contract_id": "Contract ID",
+      "payload": "Payload",
+      "evm_address": "EVM Address"
     },
     "error": {
       "no_account": "The current website is trying to send a request to Hive Keychain for account @{{account}} which has not been added to the wallet.",
@@ -1130,14 +1136,6 @@
     "switch_chain": "Switch Chain"
   },
   "vsc": {
-    "contract_id": "Contract ID",
-
-    "action": "Action",
-    "payload": "Payload",
-    "evm_address": "EVM Address",
-    "title_call_contract": "VSC Contract Call",
-    "title_deposit": "VSC Deposit",
-    "title_deposit_header": "Send {{amount}} tokens to your EVM address on VSC",
     "op_included": "This transaction has been included in VSC already, but has not yet been confirmed. This might take some time. You can follow the transaction status on the requesting dApp or on Hive Keychain extension's VSC history page.",
     "op_confirmed": "This transaction has been confirmed on VSC.",
     "op_not_included": "This transaction has not been included in VSC yet. You can follow its status on the requesting dApp or on Hive Keychain extension's VSC history page.",

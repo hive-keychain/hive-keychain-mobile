@@ -235,6 +235,7 @@ export const getRequiredWifType: (request: KeychainRequestData) => KeyTypes = (
     case KeychainRequestTypes.signBuffer:
     case KeychainRequestTypes.broadcast:
     case KeychainRequestTypes.signTx:
+    case KeychainRequestTypes.vscCallContract:
       return request.method.toLowerCase() as KeyTypes;
     case KeychainRequestTypes.post:
     case KeychainRequestTypes.vote:
@@ -262,6 +263,7 @@ export const getRequiredWifType: (request: KeychainRequestData) => KeyTypes = (
     case KeychainRequestTypes.removeAccountAuthority:
     case KeychainRequestTypes.removeKeyAuthority:
     case KeychainRequestTypes.addKeyAuthority:
+    case KeychainRequestTypes.vscDeposit:
       return KeyTypes.active;
   }
 };

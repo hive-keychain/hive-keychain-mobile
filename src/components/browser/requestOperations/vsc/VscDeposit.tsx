@@ -2,6 +2,7 @@ import {KeyTypes} from 'actions/interfaces';
 import {RequestId, RequestVscCDeposit} from 'hive-keychain-commons';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {VscConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 import RequestItem from '../components/RequestItem';
 import RequestOperation from '../components/RequestOperation';
@@ -24,6 +25,9 @@ export default ({
     <RequestOperation
       sendResponse={sendResponse}
       sendError={sendError}
+      message={translate(`request.message.vscDeposit`, {
+        token: currency,
+      })}
       successMessage={translate(`request.success.convert`, {})}
       beautifyError
       method={KeyTypes.active}
@@ -37,7 +41,18 @@ export default ({
         title={translate('request.item.username')}
         content={`@${username}`}
       />
-      <></>
+      <RequestItem
+        title={translate('request.item.to')}
+        content={VscConfig.ACCOUNT}
+      />
+      <RequestItem
+        title={translate('request.item.evm_address')}
+        content={address}
+      />
+      <RequestItem
+        title={translate('request.item.amount')}
+        content={`${amount} ${currency}`}
+      />
     </RequestOperation>
   );
 };
