@@ -11,6 +11,9 @@ import {
   RequestError,
   RequestId,
   RequestSuccess,
+  VscHistoryType,
+  VscStatus,
+  VscUtils,
 } from 'hive-keychain-commons';
 import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
 import React, {useState} from 'react';
@@ -133,7 +136,7 @@ const RequestOperation = ({
           setLoading(true);
           let msg: string;
           try {
-            const result = await Promise.race([
+            let result = await Promise.race([
               performOperation({
                 metaData: {twoFACodes: twoFABots},
                 multisig: isMultisig,
@@ -145,6 +148,30 @@ const RequestOperation = ({
             ]);
             if (result && result.error) throw result.error;
             msg = successMessage;
+            if (
+              [
+                KeychainRequestTypes.vscCallContract,
+                KeychainRequestTypes.vscDeposit,
+              ].includes(request.type)
+            ) {
+              result = {
+                ...result,
+                vscConfirmed: result
+                  ? await VscUtils.waitForStatus(
+                      result?.tx_id,
+                      request.type === KeychainRequestTypes.vscDeposit
+                        ? VscHistoryType.TRANSFER
+                        : VscHistoryType.CONTRACT_CALL,
+                    )
+                  : VscStatus.UNCONFIRMED,
+              };
+              msg =
+                result?.vscConfirmed === VscStatus.INCLUDED
+                  ? await translate('vsc.op_included')
+                  : result?.vscConfirmed === VscStatus.CONFIRMED
+                  ? await translate('vsc.op_confirmed')
+                  : await translate('vsc.op_not_included');
+            }
             const obj = {
               data,
               request_id,
@@ -156,7 +183,6 @@ const RequestOperation = ({
             if (keep && !has) {
               addPreference(username, domain, type);
             }
-            console.log('shold be here', obj, keep);
             sendResponse(obj, keep);
           } catch (e) {
             console.log('error', e);

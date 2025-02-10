@@ -2,6 +2,8 @@ import {KeyTypes} from 'actions/interfaces';
 import {RequestId, RequestVscCallContract} from 'hive-keychain-commons';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {VscConfig} from 'utils/config';
+import {broadcastJson} from 'utils/hive';
 import {translate} from 'utils/localize';
 import CollapsibleData from '../components/CollapsibleData';
 import RequestItem from '../components/RequestItem';
@@ -31,8 +33,25 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async (options: TransactionOptions) => {
+        const json = {
+          ...VscConfig.BASE_JSON,
+          tx: {
+            op: 'call_contract',
+            action: action,
+            payload: payload,
+            contract_id: contractId,
+          },
+        };
         const account = accounts.find((e) => e.name === request.username);
-        //TODO : op here
+
+        return await broadcastJson(
+          account.keys[method.toLowerCase() as KeyTypes],
+          username!,
+          VscConfig.ID,
+          method === 'Active',
+          json,
+          options,
+        );
       }}>
       <RequestItem
         title={translate('request.item.username')}
