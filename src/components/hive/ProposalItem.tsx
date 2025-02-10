@@ -1,5 +1,6 @@
 import {ActiveAccount} from 'actions/interfaces';
 import Vote from 'assets/governance/arrow_circle_up.svg';
+import TwoFaModal from 'components/modals/TwoFaModal';
 import Loader from 'components/ui/Loader';
 import moment from 'moment';
 import React, {useState} from 'react';
@@ -17,6 +18,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   fields_primary_text_2,
@@ -26,6 +28,7 @@ import {
 import {withCommas} from 'utils/format';
 import {updateProposalVote} from 'utils/hive';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 import {FundedOption, Proposal} from 'utils/proposals';
 import Icon from './Icon';
 
@@ -36,6 +39,8 @@ interface ProposalItemProps {
   onVoteUnvoteSuccessful: () => void;
   style: StyleProp<ViewStyle>;
   theme: Theme;
+  isMultisig: boolean;
+  twoFABots: {[botName: string]: string};
 }
 
 const ProposalItem = ({
@@ -45,6 +50,8 @@ const ProposalItem = ({
   displayingProxyVotes,
   style,
   theme,
+  isMultisig,
+  twoFABots,
 }: ProposalItemProps) => {
   const [isExpandablePanelOpened, setExpandablePanelOpened] = useState(false);
   const [isPressVote, setIsPressVote] = useState(false);
@@ -69,37 +76,64 @@ const ProposalItem = ({
       Toast.show(translate('governance.proposal.error.using_proxy'));
       return;
     }
-    setIsVotingUnvotingForProposal(proposal.creator);
-    if (proposal.voted) {
-      if (
-        await updateProposalVote(user.keys.active, {
-          voter: user.name,
-          proposal_ids: [proposal.proposalId],
-          approve: false,
-          extensions: [],
-        })
-      ) {
-        onVoteUnvoteSuccessful();
-        Toast.show(translate('governance.proposal.success.unvote'));
+    const handleSubmit = async (options: TransactionOptions) => {
+      setIsVotingUnvotingForProposal(proposal.creator);
+      if (proposal.voted) {
+        if (
+          await updateProposalVote(
+            user.keys.active,
+            {
+              voter: user.name,
+              proposal_ids: [proposal.proposalId],
+              approve: false,
+              extensions: [],
+            },
+            options,
+          )
+        ) {
+          onVoteUnvoteSuccessful();
+          if (!isMultisig)
+            Toast.show(translate('governance.proposal.success.unvote'));
+        } else {
+          if (!isMultisig)
+            Toast.show(translate('governance.proposal.error.unvote'));
+        }
       } else {
-        Toast.show(translate('governance.proposal.error.unvote'));
+        if (
+          await updateProposalVote(
+            user.keys.active,
+            {
+              voter: user.name,
+              proposal_ids: [proposal.proposalId],
+              approve: true,
+              extensions: [],
+            },
+            options,
+          )
+        ) {
+          if (!isMultisig)
+            Toast.show(translate('governance.proposal.success.vote'));
+          onVoteUnvoteSuccessful();
+        } else {
+          if (!isMultisig)
+            Toast.show(translate('governance.proposal.error.vote'));
+        }
       }
+      setIsVotingUnvotingForProposal('');
+    };
+    if (Object.entries(twoFABots).length > 0) {
+      navigate('ModalScreen', {
+        name: `2FA`,
+        modalContent: (
+          <TwoFaModal twoFABots={twoFABots} onSubmit={handleSubmit} />
+        ),
+      });
     } else {
-      if (
-        await updateProposalVote(user.keys.active, {
-          voter: user.name,
-          proposal_ids: [proposal.proposalId],
-          approve: true,
-          extensions: [],
-        })
-      ) {
-        Toast.show(translate('governance.proposal.success.vote'));
-        onVoteUnvoteSuccessful();
-      } else {
-        Toast.show(translate('governance.proposal.error.vote'));
-      }
+      handleSubmit({
+        multisig: isMultisig,
+        fromWallet: true,
+      });
     }
-    setIsVotingUnvotingForProposal('');
   };
 
   const {width, height} = useWindowDimensions();

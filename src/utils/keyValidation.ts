@@ -145,7 +145,6 @@ export default async (
     }
     return derivateFromMasterPassword(username, account, pwd);
   } catch (e) {
-    console.log('hihi', e);
     throw new Error(e);
   }
 };

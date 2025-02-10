@@ -14,7 +14,7 @@ const HIVE_100_PERCENT = 10000;
 export const DEFAULT_RPC: Rpc = {uri: 'https://api.hive.blog', testnet: false};
 
 export const getVP = (account: ExtendedAccount) => {
-  if (!account.name) {
+  if (!account?.name) {
     return null;
   }
   const estimated_max =
@@ -222,4 +222,9 @@ export const sanitizeAmount = (
 export const getAccountPrice = async () => {
   const price = await getClient().database.call('get_chain_properties', []);
   return Asset.fromString(price.account_creation_fee.toString()).amount;
+};
+
+export const getAccount = async (username: string) => {
+  const accounts = await getClient().database.getAccounts([username]);
+  return accounts[0];
 };

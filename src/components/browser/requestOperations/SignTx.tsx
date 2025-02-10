@@ -27,6 +27,7 @@ export default ({
   sendError,
 }: Props) => {
   const {request_id, ...data} = request;
+
   const {method, username, tx} = data;
   return (
     <RequestOperation

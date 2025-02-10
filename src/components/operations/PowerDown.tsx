@@ -18,6 +18,8 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {KeyType} from 'src/interfaces/keys.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -85,17 +87,23 @@ const PowerDown = ({
     properties.globals,
   );
 
-  const onPowerDown = async () => {
+  const onPowerDown = async (options: TransactionOptions) => {
     try {
       const amt = amount.length ? amount : '0';
-      await powerDown(user.keys.active!, {
-        vesting_shares: sanitizeAmount(
-          fromHP(sanitizeAmount(amt), properties.globals!).toString(),
-          'VESTS',
-          6,
-        ),
-        account: user.account.name,
-      });
+      await powerDown(
+        user.keys.active!,
+        {
+          vesting_shares: sanitizeAmount(
+            fromHP(sanitizeAmount(amt), properties.globals!).toString(),
+            'VESTS',
+            6,
+          ),
+          account: user.account.name,
+        },
+        options,
+      );
+      if (options.multisig) return;
+
       if (parseFloat(amt.replace(',', '.')) !== 0) {
         showModal('toast.powerdown_success', MessageModalType.SUCCESS);
       } else {
@@ -123,6 +131,7 @@ const PowerDown = ({
     } else {
       const confirmationData: ConfirmationPageProps = {
         onSend: onPowerDown,
+        keyType: KeyType.ACTIVE,
         title: `wallet.operations.powerdown.confirm.info${
           isCancel ? '_stop' : ''
         }`,

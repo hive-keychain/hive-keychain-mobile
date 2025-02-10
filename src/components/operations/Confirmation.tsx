@@ -1,8 +1,12 @@
 import {loadAccount} from 'actions/index';
+import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
+import TwoFaForm from 'components/form/TwoFaForm';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
+import MultisigCaption from 'components/ui/MultisigCaption';
 import Separator from 'components/ui/Separator';
+import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
 import {ConfirmationPageRoute} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {
@@ -15,6 +19,8 @@ import {
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {KeyType} from 'src/interfaces/keys.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
@@ -26,14 +32,15 @@ import {translate} from 'utils/localize';
 import {resetStackAndNavigate} from 'utils/navigation';
 
 export type ConfirmationPageProps = {
-  onSend: () => void;
+  onSend: (options: TransactionOptions) => void;
   title: string;
   introText?: string;
   warningText?: string;
   skipWarningTranslation?: boolean;
   data: ConfirmationData[];
-  onConfirm?: () => Promise<void>;
+  onConfirm?: (options: TransactionOptions) => Promise<void>;
   extraHeader?: React.JSX.Element;
+  keyType: KeyType;
 };
 
 type ConfirmationData = {
@@ -53,23 +60,32 @@ const ConfirmationPage = ({
     title,
     introText,
     warningText,
+    keyType,
     data,
     skipWarningTranslation,
     onConfirm: onConfirmOverride,
     extraHeader,
   } = route.params;
   const [loading, setLoading] = useState(false);
+
   const {width, height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({width, height}, theme);
+  const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultsig(
+    keyType?.toUpperCase() as KeyTypes,
+    user,
+  );
 
   const onConfirm = async () => {
     setLoading(true);
     Keyboard.dismiss();
     if (onConfirmOverride) {
-      await onConfirmOverride();
+      await onConfirmOverride({
+        metaData: {twoFACodes: twoFABots},
+        multisig: isMultisig,
+      });
     } else {
-      await onSend();
+      await onSend({metaData: {twoFACodes: twoFABots}, multisig: isMultisig});
       loadAccount(user.name, true);
     }
     setLoading(false);
@@ -80,8 +96,9 @@ const ConfirmationPage = ({
     <Background theme={theme}>
       <ScrollView contentContainerStyle={styles.confirmationPage}>
         {extraHeader}
+        {isMultisig && <MultisigCaption />}
         <Caption text={title} hideSeparator />
-        <Separator />
+
         {warningText && (
           <Caption
             text={warningText}
@@ -116,6 +133,8 @@ const ConfirmationPage = ({
             </>
           ))}
         </View>
+        <Separator />
+        <TwoFaForm twoFABots={twoFABots} setTwoFABots={setTwoFABots} />
         <View style={spacingStyle.fillSpace}></View>
         <Separator />
         <EllipticButton

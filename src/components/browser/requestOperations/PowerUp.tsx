@@ -1,5 +1,6 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {powerUp} from 'utils/hive';
 import {RequestId, RequestPowerUp} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
@@ -32,14 +33,18 @@ export default ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
+      performOperation={async (options: TransactionOptions) => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
-        return await powerUp(key, {
-          from: username,
-          to,
-          amount: `${hive} HIVE`,
-        });
+        return await powerUp(
+          key,
+          {
+            from: username,
+            to,
+            amount: `${hive} HIVE`,
+          },
+          options,
+        );
       }}>
       <RequestItem
         title={translate('request.item.username')}

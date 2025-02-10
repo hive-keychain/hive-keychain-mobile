@@ -61,7 +61,9 @@
     "amount": "amount",
     "enter_amount": "enter amount",
     "memo": "memo",
+    "transfer": "Transfer",
     "send": "Send",
+    "receive": "Receive",
     "save": "Save",
     "balance": "Balance",
     "available": "Available",
@@ -232,6 +234,7 @@
           "exchange_currency": "This exchange account does not accept {{currency}} deposits.",
           "exchange_memo": "Make sure you add a memo when transfering to an exchange account.",
           "missing_info": "Please fill the username and amount to proceed",
+          "missing_amount": "Please fill the requested amount to proceed",
           "insufficient": "Please fill the username and amount to proceed"
         },
         "started_recurrent_transfer": "Started a recurrent transfer of {{amount}}",
@@ -546,7 +549,21 @@
       "rpc": "RPC Nodes",
       "automated_tasks": {
         "title": "Automated tasks",
-        "disclaimer": "Setup automated tasks that will run every hour"
+        "disclaimer": "Setup automated tasks that will run every hour",
+        "he_auto": {
+          "title": "Auto Staking",
+          "list_title": "Tokens set for automatic staking",
+          "subtitle": "Automatically staking your tokens can increase your gains"
+        }
+      },
+      "multisig": {
+        "title": "Multisig",
+        "multisig_intro": "Enable Hive Multisig to listen to multisig requests for this account. This is an advanced feature, only use it if you know what you are doing.",
+        "more_info_blog": "Find more information about multisig in this blog.",
+        "more_info_multisig": "To modify your account into a multisig account, use the Hive Multisig dApp.",
+        "enable_multisig": "Enable multisig",
+        "enable_active_key_multisig": "Enable active key multisig",
+        "enable_posting_key_multisig": "Enable posting key multisig"
       },
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",
@@ -588,7 +605,8 @@
       "text1": "As soon as you choose a valid username and click on Create",
       "text2": "the app will give you your keys, PLEASE STORE them in a safe place.",
       "text3": "Then after confirm that the keys are safely stored,",
-      "text4": "You will get a QR code, show it to your friend to proceed with Account Creation."
+      "text4": "You will get a QR code, show it to your friend to proceed with Account Creation.",
+      "not_enough_rc_exception": "You don't have enough RC to perform this transaction. Please power up or receive an RC delegation."
     },
     "infoQR": {
       "title": "Import via QR Code",
@@ -638,6 +656,8 @@
       "create_account_successful": "Your account has been successfully created and added to your Keychain",
       "create_account_failed": "The account creation has failed. Please try again later",
       "create_account_ticket": "{{tickets}} account creation ticket",
+      "ticket": "Ticket",
+      "buying": "Buying",
       "create_account_onboarding_message": "You are onboarding @{{name}}, please choose below if you want to delegate them HP or RC.",
       "create_account_on_boarding_successful": "The account @{{accountName}} has been succesfully created!",
       "create_account_on_boarding_with_delegations_successful": "The account @{{accountName}} has been succesfully created and the delegations sent!",
@@ -684,8 +704,8 @@
       "notification_curation_reward": "@{{0}} has received {{1}} as a curation reward for {{3}}",
       "notification_comment_reward": "@{{0}} has received {{1}} as an comment reward for {{2}}",
       "notification_hbd_interest": "@{{0}} received {{1}} as interest",
-      "notification_fill_power_down": "@{{0}} received {{1}} as part of power down",
-      "notification_fill_power_down_other_account": "@{{0}} received {{1}} as part of power down of @{{2}}",
+      "notification_fill_power_down": "@{{0}} received {{1}} as part of a power down",
+      "notification_fill_power_down_other_account": "@{{0}} received {{1}} as part of a power down of @{{2}}",
       "notification_fill_order": "@{{0}} has filled an order from @{{1}} on the market. Bought {{2}} for {{3}}",
       "notification_fill_transfer_from_savings": "@{{0}} completed a withdrawal from savings of {{1}}",
       "notification_fill_transfer_from_savings_from_other_account": "@{{0}} completed a withdrawal from savings of {{1}} to @{{2}}",
@@ -705,6 +725,7 @@
     }
   },
   "toast": {
+    "receive_success": "The transfer has been received successfully",
     "error_witness_account_update": "Error while updating witness account @{{account}}",
     "noMatch": "The PIN codes do not match",
     "authFailed": "Authentication failed",
@@ -823,12 +844,14 @@
       "removeKeyAuthority": "Remove Key",
       "addAccount": "Add Account",
       "convert": "Convert",
-      "recurrentTransfer": "Recurrent Transfers"
+      "recurrentTransfer": "Recurrent Transfers",
+      "multisig": "Multisig"
     },
     "message": {
       "decode": "The website {{domain}} would like to verify that you have access to the private {{method}} key for the account: @{{username}}",
       "signBuffer": "The website {{domain}} would like to sign a message using the {{method}} key for the account: @{{username}}",
-      "signBufferNoUsername": "The website {{domain}} would like to sign a message using the {{method}} key."
+      "signBufferNoUsername": "The website {{domain}} would like to sign a message using the {{method}} key.",
+      "multisig": "You received a multisig signature request"
     },
     "item": {
       "username": "Username",
@@ -867,7 +890,9 @@
       "memo_key": "Memo Key",
       "receiver": "Receiver",
       "duration": "Duration",
-      "daily_pay": "Daily Pay"
+      "daily_pay": "Daily Pay",
+      "initiator": "Initiator",
+      "key": "Key"
     },
     "error": {
       "no_account": "The current website is trying to send a request to Hive Keychain for account @{{account}} which has not been added to the wallet.",
@@ -1090,6 +1115,16 @@
       },
       "key_info_tooltip": "This key doesn't seem to match your account. You won't be able to perform transactions with it. If you've changed it, remove this key and replace it with the new one."
     }
+  },
+  "multisig": {
+    "disclaimer_message": "Multisig detected : This transaction will be sent to the Hive Multisig server",
+    "bot_two_fa_code": "@{{account}} One Time Password:",
+    "enter_otp": "Enter OTP",
+    "error_otp_not_verified": "Your One Time Password is incorrect. Please try again",
+    "error_otp_already_used": "Your One Time Password has already been used. Please use the next one.",
+    "transaction_broadcasted": "The multisig transaction has been broadcasted successfully",
+    "transaction_signed_successfully": "The multisig transaction has been signed successfully",
+    "pending": "The request is currently pending multisig approval from other signers. You will be notified by Keychain if/when it is successfully broadcasted."
   },
   "multichain": {
     "switch_chain": "Switch Chain"

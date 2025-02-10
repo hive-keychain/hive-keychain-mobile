@@ -56,6 +56,13 @@ export const ClaimsConfig = {
   savings: {
     delay: 30,
   },
+  autoStakeTokens: {FREQUENCY: 60},
+};
+
+export const MultisigConfig = {
+  baseURL:
+    process.env.MULTISIG_BACKEND_SERVER ||
+    'https://api-multisig.hive-keychain.com',
 };
 
 export const WitnessesConfig = {

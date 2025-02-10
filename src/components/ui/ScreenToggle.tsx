@@ -26,6 +26,7 @@ type Props = {
   additionalHeaderStyle?: StyleProp<ViewStyle>;
   theme: Theme;
   addShadowItem?: boolean;
+  onIndexChanged?: (i: number) => void;
 };
 const ScreenToggle = ({
   components,
@@ -35,6 +36,7 @@ const ScreenToggle = ({
   additionalHeaderStyle,
   theme,
   addShadowItem,
+  onIndexChanged,
 }: Props) => {
   const [active, setActive] = useState(0);
   const styles = getStyles(menu.length, theme, useWindowDimensions());
@@ -45,9 +47,9 @@ const ScreenToggle = ({
         {menu.map((menuItem, i) => (
           <TouchableOpacity
             activeOpacity={1}
-            activeOpacity={1}
             onPress={() => {
               setActive(i);
+              if (onIndexChanged) onIndexChanged(i);
               setToggleElement(menuItem);
             }}
             key={menuItem}

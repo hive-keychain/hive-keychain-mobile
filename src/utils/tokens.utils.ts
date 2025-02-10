@@ -1,5 +1,6 @@
-import {TokenBalance} from 'actions/interfaces';
-import hsc, {hiveEngineGet} from 'api/hiveEngine';
+import {TokenBalance, TokenTransaction} from 'actions/interfaces';
+import hsc, {hiveEngineAPI, hiveEngineGet} from 'api/hiveEngine';
+import {ReceiveTransferProps} from 'navigators/Root.types';
 import {Token, TokenMarket} from 'src/interfaces/tokens.interface';
 
 export interface TransactionConfirmationResult {
@@ -130,6 +131,31 @@ export const getHiveEngineTokenPrice = (
   return price;
 };
 
+const searchForTransaction = async (
+  params: ReceiveTransferProps,
+  date: Date,
+) => {
+  let result: TokenTransaction[] = (
+    await hiveEngineAPI.get('accountHistory', {
+      params: {
+        account: params[1].to,
+        symbol: (params[1].amount as string).split(' ')[1],
+        type: 'user',
+        offset: 0,
+        limit: 1,
+      },
+    })
+  ).data;
+  return result.find((transaction) => {
+    return (
+      transaction.timestamp * 1000 > date.getTime() &&
+      transaction.quantity === (params[1].amount as string).split(' ')[0] &&
+      (transaction.memo || '') === params[1].memo
+    );
+  });
+};
+
+export const TokenUtils = {searchForTransaction};
 export const BlockchainTransactionUtils = {
   tryConfirmTransaction,
   delayRefresh,

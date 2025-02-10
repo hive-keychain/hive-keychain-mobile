@@ -1,8 +1,8 @@
-import {Currency} from 'actions/interfaces';
+import {HiveEngineCurrency} from 'actions/interfaces';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
 import IncomingOutGoingTokenDelegations from 'components/operations/IncomingOutGoingTokenDelegations';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
-import {TransferOperationProps} from 'components/operations/Transfer';
+import {TransferOperationProps} from 'components/operations/transfer/Transfer';
 import {UnstakeTokenOperationProps} from 'components/operations/UnstakeToken';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
@@ -46,7 +46,7 @@ type Props = {
   balance: number;
   totalValue: number;
   color: string;
-  price?: Currency;
+  price?: HiveEngineCurrency;
   buttons?: JSX.Element[];
   toggled: boolean;
   setToggle: () => void;
@@ -366,7 +366,7 @@ const TokenDisplay = ({
                 additionalContainerStyle={[styles.marginRight]}
                 color={PRIMARY_RED_COLOR}
               />,
-              translate('common.send'),
+              translate('common.transfer'),
               onTransfer,
             )}
             {tokenInfo &&

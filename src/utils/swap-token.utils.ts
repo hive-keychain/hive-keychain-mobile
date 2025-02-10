@@ -7,6 +7,7 @@ import {
   ISwap,
   SwapStatus,
 } from 'hive-keychain-commons/lib/swaps/swap.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {
   SwapConfig,
   SwapServerStatus,
@@ -96,15 +97,20 @@ const processSwap = async (
   amount: number,
   activeAccount: ActiveAccount,
   swapAccount: string,
+  options: TransactionOptions,
 ) => {
   if (startToken === getCurrency('HBD') || startToken === getCurrency('HIVE')) {
     try {
-      const status: any = await transfer(activeAccount.keys.active!, {
-        from: activeAccount.name!,
-        to: sanitizeUsername(swapAccount),
-        amount: sanitizeAmount(amount, startToken),
-        memo: estimateId,
-      });
+      await transfer(
+        activeAccount.keys.active!,
+        {
+          from: activeAccount.name!,
+          to: sanitizeUsername(swapAccount),
+          amount: sanitizeAmount(amount, startToken),
+          memo: estimateId,
+        },
+        options,
+      );
       return true;
     } catch (error) {
       console.log('Swap, transfer currency error:', {error});
@@ -121,6 +127,7 @@ const processSwap = async (
         quantity: sanitizeAmount(`${amount.toFixed(tokenInfo.precision)}`),
         memo: estimateId,
       },
+      options,
     );
     return status && status.tx_id ? status : null;
   }

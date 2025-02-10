@@ -20,7 +20,7 @@ type Props = {
   expiration?: number;
 };
 
-export default ({
+const RequestModalContent = ({
   accounts,
   request,
   onForceCloseModal,
@@ -57,3 +57,5 @@ export default ({
     </Operation>
   );
 };
+
+export default RequestModalContent;

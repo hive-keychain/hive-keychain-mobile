@@ -18,9 +18,17 @@ import {AsyncUtils} from 'utils/async.utils';
 import ProposalUtils, {Proposal as ProposalInterface} from 'utils/proposals';
 import ProxyUtils from 'utils/proxy';
 
-type Props = {};
+type Props = {
+  isMultisig: boolean;
+  twoFABots: {[botName: string]: string};
+};
 
-const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
+const Proposal = ({
+  user,
+  loadAccount,
+  isMultisig,
+  twoFABots,
+}: PropsFromRedux & Props) => {
   const [proposals, setProposals] = useState<ProposalInterface[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [displayingProxyVotes, setDisplayingProxyVotes] = useState(false);
@@ -79,6 +87,8 @@ const Proposal = ({user, loadAccount}: PropsFromRedux & Props) => {
                 proposal={proposal}
                 onVoteUnvoteSuccessful={handleVoteUnvote}
                 theme={theme}
+                isMultisig={isMultisig}
+                twoFABots={twoFABots}
               />
             )}
           />

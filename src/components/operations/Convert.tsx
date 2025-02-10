@@ -20,6 +20,8 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {KeyType} from 'src/interfaces/keys.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
@@ -74,21 +76,30 @@ const Convert = ({
     }
   }, [conversions]);
 
-  const onConvert = async () => {
+  const onConvert = async (options: TransactionOptions) => {
     try {
       if (currency === 'HBD') {
-        await convert(user.keys.active!, {
-          owner: user.account.name,
-          amount: sanitizeAmount(amount, 'HBD'),
-          requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
-        });
+        await convert(
+          user.keys.active!,
+          {
+            owner: user.account.name,
+            amount: sanitizeAmount(amount, 'HBD'),
+            requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
+          },
+          options,
+        );
       } else {
-        await collateralizedConvert(user.keys.active!, {
-          owner: user.account.name,
-          amount: sanitizeAmount(amount, 'HIVE'),
-          requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
-        });
+        await collateralizedConvert(
+          user.keys.active!,
+          {
+            owner: user.account.name,
+            amount: sanitizeAmount(amount, 'HIVE'),
+            requestid: Math.max(...conversions.map((e) => e.requestid), 0) + 1,
+          },
+          options,
+        );
       }
+      if (options.multisig) return;
       showModal('toast.convert_success', MessageModalType.SUCCESS, {
         currency,
       });
@@ -125,6 +136,7 @@ const Convert = ({
             value: `${withCommas(amount)} ${currency}`,
           },
         ],
+        keyType: KeyType.ACTIVE,
       };
       navigate('ConfirmationPage', confirmationData);
     }

@@ -14,6 +14,7 @@ import {
   KeychainRequestTypes,
   RequestDelegation,
   RequestProxy,
+  RequestSendToken,
   RequestTransfer,
   RequestWitnessVote,
 } from './keychain.types';
@@ -31,18 +32,32 @@ export const processQRCodeOp = async (op: Operation) => {
     case 'transfer': {
       const transferOp = data as TransferOperation[1] & {enforce: boolean};
       const [amount, currency] = (transferOp.amount as string).split(' ');
-      request = {
-        domain: DOMAIN,
-        type: KeychainRequestTypes.transfer,
-        amount: (+amount).toFixed(3) + '',
-        currency,
-        username:
-          transferOp.from ??
-          (store.getState() as RootState).activeAccount.name!,
-        to: transferOp.to,
-        memo: transferOp.memo,
-        enforce: !!transferOp.enforce,
-      } as RequestTransfer;
+      if (currency === 'HIVE' || currency === 'HBD') {
+        request = {
+          domain: DOMAIN,
+          type: KeychainRequestTypes.transfer,
+          amount: (+amount).toFixed(3) + '',
+          currency,
+          username:
+            transferOp.from ??
+            (store.getState() as RootState).activeAccount.name!,
+          to: transferOp.to,
+          memo: transferOp.memo,
+          enforce: !!transferOp.enforce,
+        } as RequestTransfer;
+      } else {
+        request = {
+          domain: DOMAIN,
+          type: KeychainRequestTypes.sendToken,
+          amount: (+amount).toFixed(3) + '',
+          currency,
+          username:
+            transferOp.from ??
+            (store.getState() as RootState).activeAccount.name!,
+          to: transferOp.to,
+          memo: transferOp.memo,
+        } as RequestSendToken;
+      }
       break;
     }
     case 'delegate_vesting_shares': {
@@ -91,7 +106,6 @@ export const processQRCodeOp = async (op: Operation) => {
     default:
       break;
   }
-
   const accounts = await store.getState().accounts;
 
   if (accounts && accounts.length) {
