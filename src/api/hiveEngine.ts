@@ -3,7 +3,7 @@ import axios from 'axios';
 import {TokenRequestParams} from 'src/interfaces/token-request-params.interface';
 import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 
-export default new SSC('https://engine.rishipanthee.com');
+export default new SSC('https://api.hive-engine.com/rpc');
 
 export const hiveEngineAPI = axios.create({
   baseURL: 'https://history.hive-engine.com/',
