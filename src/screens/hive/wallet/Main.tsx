@@ -518,20 +518,12 @@ const getDimensionedStyles = (
   insets: EdgeInsets,
 ) =>
   StyleSheet.create({
-    paddingVertical: {paddingVertical: 10},
-    flexRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: 4,
-      paddingVertical: 8,
-    },
     rowWrapper: {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
       paddingHorizontal: width * 0.05,
     },
-    avatar: {width: 25, height: 25, borderRadius: 50},
     headerMenu: {
       flexDirection: 'row',
       width: '100%',
@@ -552,28 +544,6 @@ const getDimensionedStyles = (
     },
     marginRight: {
       marginRight: width * 0.05,
-    },
-    search: {
-      marginRight: 10,
-    },
-    separatorContainer: {
-      borderWidth: 1,
-      borderColor: getColors(theme).cardBorderColor,
-      height: 1,
-      backgroundColor: getColors(theme).separatorBgColor,
-      marginHorizontal: 10,
-      width: '75%',
-      flexShrink: 1,
-    },
-    borderLight: {
-      borderColor: getColors(theme).cardBorderColor,
-      borderWidth: 1,
-    },
-    searchContainer: {
-      position: 'absolute',
-      right: 0,
-      zIndex: 10,
-      height: 45,
     },
     extraContainerMiniLoader: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
