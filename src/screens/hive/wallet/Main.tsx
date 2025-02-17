@@ -12,8 +12,6 @@ import {
   loadProperties,
 } from 'actions/hive';
 import {loadTokens, loadTokensMarket} from 'actions/index';
-import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
-import CustomSearchBar from 'components/form/CustomSearchBar';
 import UserDropdown from 'components/form/UserDropdown';
 import AccountValue from 'components/hive/AccountValue';
 import CurrencyToken from 'components/hive/CurrencyToken';
@@ -34,6 +32,7 @@ import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import WalletPage from 'components/ui/WalletPage';
+import WalletSeparator from 'components/ui/WalletSeparator';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
@@ -125,7 +124,6 @@ const Main = ({
     setFilteredUserTokenBalanceList,
   ] = useState<TokenBalance[]>([]);
   const [hiddenTokens, setHiddenTokens] = useState<string[]>([]);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [lastScrollYValue, setLastScrollYValue] = useState(0);
   const [isHiveEngineLoading, setIsHiveEngineLoading] = useState(true);
@@ -434,59 +432,19 @@ const Main = ({
                     ))}
                   </View>
 
-                  <View style={[getCardStyle(theme).wrapperCardItem]}>
-                    <View
-                      style={[
-                        styles.flexRow,
-                        isSearchOpen ? styles.paddingVertical : undefined,
-                      ]}>
-                      <HiveEngineLogo height={23} width={23} />
-                      <View style={styles.separatorContainer} />
-                      {isSearchOpen ? (
-                        <CustomSearchBar
-                          theme={theme}
-                          value={searchValue}
-                          onChangeText={(text) => {
-                            setSearchValue(text);
-                          }}
-                          additionalContainerStyle={[
-                            styles.searchContainer,
-                            isSearchOpen ? styles.borderLight : undefined,
-                          ]}
-                          rightIcon={
-                            <Icon
-                              name={Icons.SEARCH}
-                              theme={theme}
-                              width={18}
-                              height={18}
-                              onPress={() => {
-                                setSearchValue('');
-                                setIsSearchOpen(false);
-                              }}
-                            />
-                          }
-                        />
-                      ) : (
-                        <>
-                          <Icon
-                            name={Icons.SEARCH}
-                            theme={theme}
-                            additionalContainerStyle={styles.search}
-                            onPress={() => {
-                              setIsSearchOpen(true);
-                            }}
-                            width={18}
-                            height={18}
-                          />
-                          <Icon
-                            name={Icons.SETTINGS_2}
-                            theme={theme}
-                            onPress={handleClickSettings}
-                          />
-                        </>
-                      )}
-                    </View>
-                  </View>
+                  <WalletSeparator
+                    theme={theme}
+                    hasSearch
+                    searchValue={searchValue}
+                    setSearchValue={setSearchValue}
+                    RightIcon={
+                      <Icon
+                        name={Icons.SETTINGS_2}
+                        theme={theme}
+                        onPress={handleClickSettings}
+                      />
+                    }
+                  />
                   {filteredUserTokenBalanceList.map((item, index) => (
                     <EngineTokenDisplay
                       key={`engine-token-${item._id}`}

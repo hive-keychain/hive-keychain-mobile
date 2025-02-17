@@ -2,7 +2,7 @@ import {DynamicGlobalProperties} from '@hiveio/dhive';
 import {addTab} from 'actions/index';
 import {ActiveAccount} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
-import {BackToTopButton} from 'components/ui/Back-To-Top-Button';
+import {BackToTopButton} from 'components/ui/BackToTopButton';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';

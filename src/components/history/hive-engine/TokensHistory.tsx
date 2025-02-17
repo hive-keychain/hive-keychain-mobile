@@ -1,5 +1,5 @@
 import {clearTokenHistory, loadTokenHistory} from 'actions/index';
-import {BackToTopButton} from 'components/ui/Back-To-Top-Button';
+import {BackToTopButton} from 'components/ui/BackToTopButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import React, {useEffect, useRef, useState} from 'react';
