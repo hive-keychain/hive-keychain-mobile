@@ -33,11 +33,7 @@ const DelegationTransactionComponent = ({
   const direction = delegator === username ? '-' : '+';
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
-  ).toLocaleDateString([locale], {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-  });
+  );
 
   const formattedAmount = withCommas(amount);
   const isCancellation = parseFloat(formattedAmount) === 0;

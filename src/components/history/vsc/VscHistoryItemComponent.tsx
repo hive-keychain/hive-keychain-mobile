@@ -10,12 +10,11 @@ import {
   VscTransfer,
   VscUtils,
 } from 'hive-keychain-commons';
-import moment from 'moment';
 import React, {BaseSyntheticEvent} from 'react';
 import {Linking, StyleSheet} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {getColors, GREEN_SUCCESS, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {fields_primary_text_1} from 'src/styles/typography';
 import {VscConfig} from 'utils/config';
 import {shortenString, withCommas} from 'utils/format';
@@ -96,24 +95,32 @@ const VscHistoryItem = ({transaction}: Props) => {
   };
 
   const getStatusIcon = () => {
-    let icon;
+    let icon, color;
     switch (transaction.status) {
       case VscStatus.CONFIRMED:
         icon = Icons.STATUS_OK;
+        color = GREEN_SUCCESS;
         break;
       default:
         icon = Icons.HISTORY;
+        color = PRIMARY_RED_COLOR;
     }
     return (
-      <CustomToolTip message={transaction.status} skipTranslation>
-        <Icon name={icon} />
+      <CustomToolTip message={transaction.status} skipTranslation theme={theme}>
+        <Icon
+          name={icon}
+          width={15}
+          height={15}
+          color={color}
+          additionalContainerStyle={{marginRight: 5, marginTop: 1}}
+        />
       </CustomToolTip>
     );
   };
 
   return (
     <ItemCardExpandable
-      date={moment(transaction.timestamp).format('L')}
+      date={transaction.timestamp}
       theme={theme}
       toggle={false}
       setToggle={() => {}}
@@ -122,6 +129,7 @@ const VscHistoryItem = ({transaction}: Props) => {
           ? openTransactionOnVsc
           : undefined,
       )}
+      statusIcon={getStatusIcon()}
       key={transaction.id}
       textLine1={getDetail()}
     />

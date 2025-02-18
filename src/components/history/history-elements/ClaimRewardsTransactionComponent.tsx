@@ -31,11 +31,7 @@ const ClaimRewardTransactionComponent = ({
   const {timestamp, hbd, hp, hive} = transaction;
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
-  ).toLocaleDateString([locale], {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-  });
+  );
 
   const isZeroAmount = (amount: string) => {
     return Number(amount.split(' ')[0]) <= 0;

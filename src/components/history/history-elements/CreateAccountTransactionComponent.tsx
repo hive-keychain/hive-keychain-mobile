@@ -29,11 +29,7 @@ const CreateAccountTransactionComponent = ({
   const {timestamp, creator, new_account_name, fee} = transaction;
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
-  ).toLocaleDateString([locale], {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-  });
+  );
 
   const formattedFee = withCommas(fee);
 

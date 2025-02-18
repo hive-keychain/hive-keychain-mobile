@@ -1,4 +1,5 @@
 import Icon from 'components/hive/Icon';
+import moment from 'moment';
 import React from 'react';
 import {
   ScaledSize,
@@ -14,17 +15,19 @@ import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getRotateStyle} from 'src/styles/transform';
 import {fields_primary_text_1} from 'src/styles/typography';
+import CustomToolTip from './CustomToolTip';
 
 interface Props {
   theme: Theme;
   toggle: boolean;
   setToggle: () => void;
   textLine1: string;
-  date: string;
+  date: Date;
   textLine2?: string;
   textLine3?: string;
   memo?: string;
   icon?: JSX.Element;
+  statusIcon?: JSX.Element;
 }
 
 const ItemCardExpandable = ({
@@ -37,6 +40,7 @@ const ItemCardExpandable = ({
   date,
   memo,
   textLine3,
+  statusIcon,
 }: Props) => {
   const styles = getStyles(theme, useWindowDimensions());
   return (
@@ -60,7 +64,14 @@ const ItemCardExpandable = ({
               </View>
             </View>
             <View style={[styles.dateExpanderContainer]}>
-              <Text style={styles.textBase}>{date}</Text>
+              <CustomToolTip
+                theme={theme}
+                message={moment(date).format('YYYY/MM/DD , hh:mm:ss a')}
+                width={120}
+                height={50}
+                skipTranslation>
+                <Text style={styles.textBase}>{moment(date).format('L')}</Text>
+              </CustomToolTip>
               {memo && memo.length ? (
                 <Icon
                   name={Icons.EXPAND_THIN}
@@ -73,6 +84,7 @@ const ItemCardExpandable = ({
                   color={PRIMARY_RED_COLOR}
                 />
               ) : null}
+              {statusIcon}
             </View>
           </View>
         </View>

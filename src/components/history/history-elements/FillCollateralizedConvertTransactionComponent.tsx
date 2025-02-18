@@ -29,11 +29,7 @@ const FillCollateralizedConvertTransactionComponent = ({
   const {timestamp, amount_in, amount_out} = transaction;
   const date = new Date(
     token ? ((timestamp as unknown) as number) * 1000 : timestamp,
-  ).toLocaleDateString([locale], {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-  });
+  );
 
   const formattedAmountIn = withCommas(amount_in);
   const formattedAmountOut = withCommas(amount_out);

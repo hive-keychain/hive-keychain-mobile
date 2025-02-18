@@ -2,6 +2,7 @@ import CustomAmountLabel, {
   LabelDataType,
 } from 'components/form/CustomAmountLabel';
 import Icon from 'components/hive/Icon';
+import CustomToolTip from 'components/ui/CustomToolTip';
 import moment from 'moment';
 import React, {useState} from 'react';
 import {
@@ -330,7 +331,14 @@ const TokenHistoryItem = ({
                 </View>
               )}
               <View style={styles.label}>{label}</View>
-              <Text style={[styles.text, {marginRight: 4}]}>{date}</Text>
+              <CustomToolTip
+                theme={theme}
+                message={moment(date).format('YYYY/MM/DD , hh:mm:ss a')}
+                width={120}
+                height={50}
+                skipTranslation>
+                <Text style={[styles.text, {marginRight: 10}]}>{date}</Text>
+              </CustomToolTip>
             </View>
           </View>
         </View>
