@@ -89,5 +89,6 @@ export const getColors = (theme: Theme) => {
         ? ('light-content' as StatusBarStyle)
         : ('dark-content' as StatusBarStyle),
     labelInfoText: theme === Theme.LIGHT ? '#B6B6B6' : '#FFF',
+    link: PRIMARY_RED_COLOR,
   };
 };

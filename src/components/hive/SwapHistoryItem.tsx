@@ -34,16 +34,16 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
   const styles = getStyles(theme);
 
   const renderStepItemStatusIndicator = (status: StepHistoryStatus) => {
-    let iconName = Icons.BACK_TIME;
+    let iconName = Icons.HISTORY;
     switch (status) {
       case StepHistoryStatus.SUCCESS:
-        iconName = Icons.CHECK;
+        iconName = Icons.STATUS_OK;
         break;
       case StepHistoryStatus.PENDING:
-        iconName = Icons.BACK_TIME;
+        iconName = Icons.HISTORY;
         break;
       case StepHistoryStatus.FAILED:
-        iconName = Icons.CLOSE_CIRCLE;
+        iconName = Icons.STATUS_ERROR;
         break;
       default:
         break;
@@ -59,22 +59,22 @@ const SwapHistoryItem = ({theme, item, currentIndex}: Props) => {
   };
 
   const renderSwapItemStatusIndicator = (status: SwapStatus) => {
-    let iconName = Icons.BACK_TIME;
+    let iconName = Icons.HISTORY;
     switch (status) {
       case SwapStatus.COMPLETED:
-        iconName = Icons.CHECK;
+        iconName = Icons.STATUS_OK;
         break;
       case SwapStatus.STARTED:
       case SwapStatus.PENDING:
-        iconName = Icons.BACK_TIME;
+        iconName = Icons.HISTORY;
         break;
       case SwapStatus.CANCELED_DUE_TO_ERROR:
       case SwapStatus.FUNDS_RETURNED:
       case SwapStatus.REFUNDED_SLIPPAGE:
-        iconName = Icons.CLOSE_CIRCLE;
+        iconName = Icons.STATUS_ERROR;
         break;
       default:
-        iconName = Icons.BACK_TIME;
+        iconName = Icons.HISTORY;
         break;
     }
     return (

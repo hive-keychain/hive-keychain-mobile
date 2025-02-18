@@ -81,6 +81,7 @@ import SavingsIcon from 'src/assets/new_UI/savings.svg';
 import TransferIcon from 'src/assets/new_UI/send.svg';
 import Success from 'src/assets/new_UI/success-mark.svg';
 import AutomatedTasks from 'src/assets/settings/automated-tasks.svg';
+import VscCall from 'src/assets/wallet/vsc/call.svg';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
@@ -294,7 +295,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.BACK_TIME:
+    case name === Icons.HISTORY:
       return (
         <BackTimeIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -425,7 +426,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.CHECK:
+    case name === Icons.STATUS_OK:
       return (
         <CheckIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -433,9 +434,16 @@ const getIconFilePath = (
           strokeWidth={strokeWidth}
         />
       );
-    case name === Icons.CLOSE_CIRCLE:
+    case name === Icons.STATUS_ERROR:
       return (
         <CloseCircleIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.VSC_CALL:
+      return (
+        <VscCall
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

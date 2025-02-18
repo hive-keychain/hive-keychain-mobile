@@ -17,6 +17,7 @@ type Props = {
   iconColor?: string;
   overlayColor?: string;
   pointerColor?: string;
+  children?: JSX.Element[] | JSX.Element;
 };
 
 const CustomToolTip = ({
@@ -31,6 +32,7 @@ const CustomToolTip = ({
   iconColor,
   overlayColor,
   pointerColor,
+  children,
 }: Props) => {
   return (
     <Tooltip
@@ -45,12 +47,14 @@ const CustomToolTip = ({
       containerStyle={containerStyle}
       overlayColor={overlayColor}
       pointerColor={pointerColor}>
-      <Icon
-        name={Icons.INFO}
-        color={iconColor}
-        width={iconWidth}
-        height={iconHeight}
-      />
+      {children || (
+        <Icon
+          name={Icons.INFO}
+          color={iconColor}
+          width={iconWidth}
+          height={iconHeight}
+        />
+      )}
     </Tooltip>
   );
 };

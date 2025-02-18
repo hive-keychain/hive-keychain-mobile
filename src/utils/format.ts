@@ -184,3 +184,10 @@ export const beautifyIfJSON = (message: any) => {
     return message;
   }
 };
+
+export const shortenString = (string: string, length: number = 3) => {
+  //TODO : remove during merge EVM (duplicate)
+  return string.length > length * 2
+    ? `${string.substring(length, 0)}.....${string?.toString().slice(-length)}`
+    : string;
+};

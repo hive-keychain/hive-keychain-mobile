@@ -1,4 +1,3 @@
-import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import Icon from 'components/hive/Icon';
 import React, {useState} from 'react';
@@ -10,6 +9,7 @@ import {getColors} from 'src/styles/colors';
 
 type Props = {
   theme: Theme;
+  LeftIcon: JSX.Element;
   RightIcon: JSX.Element;
 } & (
   | {
@@ -17,14 +17,9 @@ type Props = {
       searchValue: string;
       setSearchValue: React.Dispatch<React.SetStateAction<string>>;
     }
-  | {hasSearch: false; searchValue: undefined; setSearchValue: undefined}
+  | {hasSearch: false}
 );
-const WalletSeparator = ({
-  theme,
-  searchValue,
-  setSearchValue,
-  RightIcon,
-}: Props) => {
+const WalletSeparator = ({theme, LeftIcon, RightIcon, ...props}: Props) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const styles = getStyles(theme);
   return (
@@ -34,14 +29,14 @@ const WalletSeparator = ({
           styles.flexRow,
           isSearchOpen ? styles.paddingVertical : undefined,
         ]}>
-        <HiveEngineLogo height={23} width={23} />
+        {LeftIcon}
         <View style={styles.separatorContainer} />
-        {isSearchOpen ? (
+        {isSearchOpen && props.hasSearch ? (
           <CustomSearchBar
             theme={theme}
-            value={searchValue}
+            value={props.searchValue}
             onChangeText={(text) => {
-              setSearchValue(text);
+              props.setSearchValue(text);
             }}
             additionalContainerStyle={[
               styles.searchContainer,
@@ -54,7 +49,7 @@ const WalletSeparator = ({
                 width={18}
                 height={18}
                 onPress={() => {
-                  setSearchValue('');
+                  props.setSearchValue('');
                   setIsSearchOpen(false);
                 }}
               />
@@ -62,16 +57,18 @@ const WalletSeparator = ({
           />
         ) : (
           <>
-            <Icon
-              name={Icons.SEARCH}
-              theme={theme}
-              additionalContainerStyle={styles.search}
-              onPress={() => {
-                setIsSearchOpen(true);
-              }}
-              width={18}
-              height={18}
-            />
+            {props.hasSearch && (
+              <Icon
+                name={Icons.SEARCH}
+                theme={theme}
+                additionalContainerStyle={styles.search}
+                onPress={() => {
+                  setIsSearchOpen(true);
+                }}
+                width={18}
+                height={18}
+              />
+            )}
             {RightIcon}
           </>
         )}
@@ -99,7 +96,7 @@ const getStyles = (theme: Theme) =>
       height: 1,
       backgroundColor: getColors(theme).separatorBgColor,
       marginHorizontal: 10,
-      width: '75%',
+      flex: 1,
       flexShrink: 1,
     },
     borderLight: {

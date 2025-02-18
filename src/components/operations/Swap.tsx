@@ -594,7 +594,7 @@ const Swap = ({
                 </Text>
                 <Icon
                   theme={theme}
-                  name={Icons.BACK_TIME}
+                  name={Icons.HISTORY}
                   additionalContainerStyle={[styles.squareButton]}
                   onPress={() => navigate('SwapHistory')}
                   color={PRIMARY_RED_COLOR}

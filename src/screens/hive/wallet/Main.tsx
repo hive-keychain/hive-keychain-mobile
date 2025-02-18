@@ -12,6 +12,9 @@ import {
   loadProperties,
 } from 'actions/hive';
 import {loadTokens, loadTokensMarket} from 'actions/index';
+import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
+import VscLogo from 'assets/wallet/vsc/vsc.png';
+
 import UserDropdown from 'components/form/UserDropdown';
 import AccountValue from 'components/hive/AccountValue';
 import CurrencyToken from 'components/hive/CurrencyToken';
@@ -41,6 +44,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
+  Image as Img,
   NativeEventEmitter,
   NativeModules,
   NativeScrollEvent,
@@ -53,6 +57,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import Image from 'react-native-fast-image';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -84,7 +89,6 @@ import {navigate} from 'utils/navigation';
 import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
 import {WidgetUtils} from 'utils/widget.utils';
 import TokenSettings from './tokens/TokenSettings';
-
 const Main = ({
   loadAccount,
   loadProperties,
@@ -318,6 +322,10 @@ const Main = ({
     } as TemplateStackProps);
   };
 
+  const handleClickVscHistory = () => {
+    navigate('VscHistoryScreen');
+  };
+
   const handleClickToView = (index: number, sectionIndex: 0 | 1) => {
     if (sectionListRef && sectionListRef.current) {
       (sectionListRef as any).current.scrollToLocation({
@@ -437,6 +445,7 @@ const Main = ({
                     hasSearch
                     searchValue={searchValue}
                     setSearchValue={setSearchValue}
+                    LeftIcon={<HiveEngineLogo height={23} width={23} />}
                     RightIcon={
                       <Icon
                         name={Icons.SETTINGS_2}
@@ -463,14 +472,14 @@ const Main = ({
 
                   <>
                     {isHiveEngineLoading && (
-                      <View style={styles.extraContainerMiniLoader}>
+                      <View>
                         <Loader size={'small'} animating />
                       </View>
                     )}
                     {!userTokens.loading &&
                       filteredUserTokenBalanceList.length === 0 &&
                       orderedUserTokenBalanceList.length === 0 && (
-                        <View style={styles.extraContainerMiniLoader}>
+                        <View>
                           <Text style={styles.no_tokens}>
                             {translate('wallet.no_tokens')}
                           </Text>
@@ -479,13 +488,36 @@ const Main = ({
                     {!userTokens.loading &&
                       orderedUserTokenBalanceList.length > 0 &&
                       filteredUserTokenBalanceList.length === 0 && (
-                        <View style={styles.extraContainerMiniLoader}>
+                        <View>
                           <Text style={styles.no_tokens}>
                             {translate('wallet.no_tokens_filter')}
                           </Text>
                         </View>
                       )}
                   </>
+                  <WalletSeparator
+                    theme={theme}
+                    hasSearch={false}
+                    LeftIcon={
+                      <Image
+                        style={{width: 23, height: 23}}
+                        source={{
+                          uri: Img.resolveAssetSource(VscLogo).uri,
+                        }}
+                        onError={() => {
+                          console.log('default');
+                        }}
+                      />
+                    }
+                    RightIcon={
+                      <Icon
+                        name={Icons.HISTORY}
+                        theme={theme}
+                        onPress={handleClickVscHistory}
+                      />
+                    }
+                  />
+                  <View style={styles.extraContainerMiniLoader} />
                 </View>
                 <View style={[getCardStyle(theme).filledWrapper]} />
               </ScrollView>
@@ -546,10 +578,7 @@ const getDimensionedStyles = (
       marginRight: width * 0.05,
     },
     extraContainerMiniLoader: {
-      backgroundColor: getColors(theme).secondaryCardBgColor,
-      height: 150,
-      paddingTop: 30,
-      zIndex: 11,
+      height: 50,
     },
     no_tokens: {
       color: getColors(theme).secondaryText,

@@ -258,7 +258,7 @@ const CurrencyToken = ({
             {isExpanded && (
               <Icon
                 key={`show-token-history-${currencyName}`}
-                name={Icons.BACK_TIME}
+                name={Icons.HISTORY}
                 onPress={onHandleGoToWalletHistory}
                 additionalContainerStyle={styles.squareButton}
                 theme={theme}

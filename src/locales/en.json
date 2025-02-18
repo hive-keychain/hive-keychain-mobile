@@ -805,6 +805,7 @@
     "tokens": "Tokens",
     "theme_setting": "Theme",
     "wallet_history": "Wallet History",
+    "vsc_history": "VSC History",
     "floating_bar": {
       "ecosystem": "Ecosystem",
       "browser": "Browser",
@@ -1143,8 +1144,9 @@
     "history": "VSC History",
     "info_call": "Called '{{action}}' on contract {{contract}}",
     "info_deposit": "Deposited {{amount}} {{token}} to VSC on address {{address}}",
-    "info_withdraw": "Withdrew {{amount}} {{token}} from VSC on address {{address}}",
+    "info_withdraw": "Withdrew {{amount}} {{token}} from VSC on account @{{address}}",
     "full_history": "You can check your full history on",
-    "full_history_block_explorer": "the VSC block explorer."
+    "full_history_block_explorer": "the VSC block explorer.",
+    "empty": "No transaction to display"
   }
 }
