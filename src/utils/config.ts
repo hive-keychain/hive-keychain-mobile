@@ -27,6 +27,7 @@ export type DApp = {
   icon: string;
   url: string;
   appendUsername?: boolean;
+  mobileUrl?: string;
   categories: string[];
 };
 
