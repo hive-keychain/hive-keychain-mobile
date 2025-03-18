@@ -8,7 +8,7 @@ import TwoFaModal from 'components/modals/TwoFaModal';
 import {Caption} from 'components/ui/Caption';
 import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Separator from 'components/ui/Separator';
-import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {
@@ -83,7 +83,7 @@ const DelegationsList = ({
   const [editedAmountDelegation, setEditedAmountDelegation] = useState('');
   const [editMode, setEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isMultisig, twoFABots] = useCheckForMultsig(KeyTypes.active, user);
+  const [isMultisig, twoFABots] = useCheckForMultisig(KeyTypes.active, user);
   const {width} = useWindowDimensions();
   const styles = getDimensionedStyles(theme, width);
 

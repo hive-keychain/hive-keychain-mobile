@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import {getAccount} from 'utils/hiveUtils';
 import {MultisigUtils} from 'utils/multisig.utils';
 
-export const useCheckForMultsig = (
+export const useCheckForMultisig = (
   keyType: KeyTypes,
   userAccount?: ActiveAccount,
   username?: string,

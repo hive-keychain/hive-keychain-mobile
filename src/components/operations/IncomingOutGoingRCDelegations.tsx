@@ -1,7 +1,7 @@
 import {loadAccount} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import Separator from 'components/ui/Separator';
-import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
@@ -48,7 +48,7 @@ const IncomingOutGoingRCDelegations = ({
   const [isLoading, setIsLoading] = useState(false);
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
-  const [isMultisig, twoFABots] = useCheckForMultsig(KeyTypes.posting, user);
+  const [isMultisig, twoFABots] = useCheckForMultisig(KeyTypes.posting, user);
   const styles = getStyles(theme, width);
 
   useEffect(() => {

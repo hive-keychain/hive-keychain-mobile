@@ -1,7 +1,7 @@
 import {loadAccount} from 'actions/hive';
 import {KeyTypes} from 'actions/interfaces';
 import Icon from 'components/hive/Icon';
-import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -28,7 +28,7 @@ const ClaimRewards = ({
 }: PropsFromRedux & Props) => {
   const {account, keys, name} = active;
   const styles = getStyles(theme);
-  const [isMultisig] = useCheckForMultsig(KeyTypes.posting, active);
+  const [isMultisig] = useCheckForMultisig(KeyTypes.posting, active);
   if (
     parseFloat(account.reward_hbd_balance + '') ||
     parseFloat(account.reward_hive_balance + '') ||

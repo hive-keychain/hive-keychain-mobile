@@ -4,7 +4,8 @@ import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationButton from 'components/form/EllipticButton';
 import TwoFaForm from 'components/form/TwoFaForm';
 import MultisigCaption from 'components/ui/MultisigCaption';
-import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
+import {useDomainCheck} from 'hooks/domainCheck';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
@@ -13,7 +14,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonHeight, getButtonStyle} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getCaptionStyle} from 'src/styles/text';
 import {title_primary_body_2} from 'src/styles/typography';
 import {RootState} from 'store';
@@ -78,8 +79,8 @@ const RequestOperation = ({
   let {domain, type, username} = data;
   domain = has ? domain : urlTransformer(domain).hostname;
   const width = useWindowDimensions().width;
-
-  const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultsig(
+  const domainHeader = useDomainCheck(request);
+  const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultisig(
     method,
     undefined,
     selectedUsername || username,
@@ -90,6 +91,15 @@ const RequestOperation = ({
 
   const renderRequestSummary = () => (
     <ScrollView style={styles.container}>
+      {domainHeader && (
+        <RequestMessage
+          message={domainHeader}
+          additionalTextStyle={[
+            getCaptionStyle(width, theme),
+            {paddingHorizontal: 0, marginTop: 0, color: PRIMARY_RED_COLOR},
+          ]}
+        />
+      )}
       {message && message.length > 0 && (
         <RequestMessage
           message={message}

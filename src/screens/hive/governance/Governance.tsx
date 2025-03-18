@@ -3,7 +3,7 @@ import keychain from 'api/keychain';
 import Loader from 'components/ui/Loader';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import WalletPage from 'components/ui/WalletPage';
-import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useState} from 'react';
@@ -39,7 +39,7 @@ const Governance = ({
   const [loading, setLoading] = useState(true);
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
-  const [isMultisig, twoFABots] = useCheckForMultsig(KeyTypes.active, user);
+  const [isMultisig, twoFABots] = useCheckForMultisig(KeyTypes.active, user);
   useLockedPortrait(navigation);
   const [focus, setFocus] = useState(Math.random());
 

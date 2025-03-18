@@ -15,7 +15,7 @@ import RotationIconAnimated from 'components/ui/RotationIconAnimated';
 import Separator from 'components/ui/Separator';
 import SwapCurrencyImage from 'components/ui/SwapCurrencyImage';
 import {IStep} from 'hive-keychain-commons';
-import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import {ThrottleSettings, throttle} from 'lodash';
 import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useMemo, useState} from 'react';
@@ -112,7 +112,7 @@ const Swap = ({
     number | null
   >(null);
   const [disableProcessButton, setDisableProcessButton] = useState(false);
-  const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultsig(
+  const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultisig(
     KeyTypes.active,
     activeAccount,
   );
