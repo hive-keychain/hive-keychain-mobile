@@ -1,5 +1,6 @@
 import {KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
+import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {recurrentTransfer} from 'utils/hive';
@@ -21,12 +22,19 @@ export default ({
   sendError,
 }: Props) => {
   const {request_id, ...data} = request;
-  const {username, amount, to, currency, executions, recurrence, memo} = data;
+  const {amount, to, currency, executions, recurrence, memo} = data;
 
+  const {
+    getAccountKey,
+    RequestUsername,
+    getAccountMemoKey,
+    getUsername,
+  } = usePotentiallyAnonymousRequest(request, accounts);
   return (
     <RequestOperation
       sendResponse={sendResponse}
       sendError={sendError}
+      selectedUsername={getUsername()}
       successMessage={translate(`request.success.recurrentTransfer`, {
         amount,
         currency,
@@ -39,26 +47,24 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       performOperation={async (options: TransactionOptions) => {
-        const account = accounts.find((e) => e.name === request.username);
-        const key = account.keys.active;
         let finalMemo = memo;
         if (memo[0] === '#') {
-          if (!account.keys.memo)
+          if (!getAccountMemoKey())
             throw new Error(translate('request.error.transfer.encrypt'));
           const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
           finalMemo = await encodeMemo(
-            account.keys.memo,
+            getAccountMemoKey(),
             receiverMemoKey,
             memo,
           );
         }
         return await recurrentTransfer(
-          key,
+          getAccountKey(),
           {
             amount: `${amount} ${currency}`,
             memo: finalMemo,
             to,
-            from: username,
+            from: getUsername(),
             recurrence,
             executions,
             extensions: [],
@@ -66,10 +72,7 @@ export default ({
           options,
         );
       }}>
-      <RequestItem
-        title={translate('request.item.username')}
-        content={`@${username}`}
-      />
+      <RequestUsername />
       <RequestItem
         title={translate('request.item.amount')}
         content={`${amount} ${currency}`}
