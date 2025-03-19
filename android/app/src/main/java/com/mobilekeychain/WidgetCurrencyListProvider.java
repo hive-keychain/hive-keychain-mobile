@@ -28,44 +28,45 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         final int flag = PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT;
         for (int appWidgetId : appWidgetIds) {
-            //Code block using the refresh button as custom intent/broadcast
+            // Code block using the refresh button as custom intent/broadcast
             Intent refreshIntent = new Intent(context, WidgetCurrencyListProvider.class);
             refreshIntent.setAction(ACTION_WIDGET_REFRESH);
             PendingIntent refreshPendingIntent = PendingIntent.getBroadcast(context, 0, refreshIntent, flag);
 
-            //Code block using the layout click as custom intent/broadcast
+            // Code block using the layout click as custom intent/broadcast
             Intent openAppIntent = new Intent(context, WidgetCurrencyListProvider.class);
             openAppIntent.setAction(ACTION_WIDGET_LAUNCH_APP);
             PendingIntent openAppPendingIntent = PendingIntent.getBroadcast(context, 0, openAppIntent, flag);
 
-            //Service for StackView
+            // Service for StackView
             Intent serviceIntent = new Intent(context, WidgetCurrencyListService.class);
             serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
-            //Declare remove views + add button config click
+            // Declare remove views + add button config click
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_currency_list);
-            //refresh button
+            // refresh button
             views.setOnClickPendingIntent(R.id.widget_currency_list_button_refresh, refreshPendingIntent);
-            //open app logo image
+            // open app logo image
             views.setOnClickPendingIntent(R.id.image_view_logo_keychain, openAppPendingIntent);
-            //Add StackView into views
+            // Add StackView into views
             views.setRemoteAdapter(R.id.widget_currency_list_stack_view, serviceIntent);
             views.setEmptyView(R.id.widget_currency_list_stack_view, R.id.widget_currency_list_stack_empty_view);
-
+            
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
-            // Instruct the widget manager that data may have changed, so update remove views.
+            // Instruct the widget manager that data may have changed, so update remove
+            // views.
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_currency_list_stack_view);
         }
-        super.onUpdate(context,appWidgetManager,appWidgetIds);
+        super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         if (intent.getAction().equals(ACTION_WIDGET_REFRESH)) {
-            try{
+            try {
                 AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
                 ComponentName widgetComponentCurrency = new ComponentName(context, WidgetCurrencyListProvider.class);
                 int[] widgetIdsCurrency = widgetManager.getAppWidgetIds(widgetComponentCurrency);
@@ -76,7 +77,7 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
             }
 
         }
-        if(intent.getAction().equals(ACTION_WIDGET_LAUNCH_APP)){
+        if (intent.getAction().equals(ACTION_WIDGET_LAUNCH_APP)) {
             // launch app start activity
             Intent i = new Intent();
             i.setClassName(context.getPackageName(), "com.mobilekeychain.MainActivity");
@@ -97,4 +98,3 @@ public class WidgetCurrencyListProvider extends AppWidgetProvider {
         super.onEnabled(context);
     }
 }
-
