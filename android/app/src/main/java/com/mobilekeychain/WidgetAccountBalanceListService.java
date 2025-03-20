@@ -42,7 +42,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
+import android.net.Uri;
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 
+//import findViewById
+import android.widget.RemoteViewsService.RemoteViewsFactory;
+import android.widget.ImageView;
 public class WidgetAccountBalanceListService extends RemoteViewsService {
     private JSONObject accounts_data;
     private JSONObject currency_data;
@@ -237,6 +243,16 @@ public class WidgetAccountBalanceListService extends RemoteViewsService {
                 CharSequence hbd_savings_token_label = getResources().getText(R.string.widget_account_balance_list_HBD_label);
                         String account_name = "@" + accounts_data.names().getString(position).replace("_", " ");
                 JSONObject valuesJsonObject = accounts_data.getJSONObject(accounts_data.names().getString(position));
+                String sUrl="https://images.hive.blog/u/" + accounts_data.names().getString(position).replace("_", " ") + "/avatar";
+                try {
+                    URL url = new URL(sUrl);
+                    Bitmap image = BitmapFactory.decodeStream(url.openStream());
+                    views.setImageViewBitmap(R.id.widget_account_balance_list_item_account_image,image); 
+
+                }
+                catch(IOException e){
+                    e.printStackTrace();
+                }
                 views.setTextViewText(R.id.widget_account_balance_list_item_account_name,  account_name);
                 views.setTextViewText(R.id.widget_account_balance_list_item_hbd,  Utils.withCommas(valuesJsonObject.getString("hbd")) + " " + hbd_token_label);
                 views.setTextViewText(R.id.widget_account_balance_list_item_hive,  Utils.withCommas(valuesJsonObject.getString("hive")) + " " + hive_token_label);
