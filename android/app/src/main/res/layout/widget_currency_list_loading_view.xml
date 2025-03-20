@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="180dp"
+    android:layout_width="218dp"
+    android:paddingLeft="-13dp"
     android:layout_height="140dp"
     android:gravity="center"
     android:backgroundTint="@color/white">
