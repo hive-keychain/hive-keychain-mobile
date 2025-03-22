@@ -45,6 +45,7 @@
     "initiated_a": "Initiated a",
     "dapp_title": "dApp",
     "import": "Import",
+    "export": "Export",
     "value": "Value",
     "username": "Username",
     "authorized_username": "Auth. Account",
@@ -98,6 +99,7 @@
     "total": "Total",
     "edit": "Edit",
     "delete": "Delete",
+    "from": "From",
     "to": "To",
     "use_authorized_account_instead": "Use Authorized Account instead",
     "forget_account": "Forget Account",
@@ -566,6 +568,9 @@
         "enable_active_key_multisig": "Enable active key multisig",
         "enable_posting_key_multisig": "Enable posting key multisig"
       },
+      "export_transactions": {
+        "title": "Export Transactions"
+      },
       "rpc_disclaimer": "You can chose which RPC node is used to read information and broadcast transactions from/to the Hive Blockchain.",
       "global": "Global Settings",
       "whitelisted": "Whitelisted operations",
@@ -815,7 +820,8 @@
     "swap_buy": "Swap & Buy",
     "swap_history": "Swap History",
     "support": "Contact Support",
-    "tutorial": "Tutorial"
+    "tutorial": "Tutorial",
+    "export_transactions": "Export Transactions"
   },
   "request": {
     "title": {

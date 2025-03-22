@@ -8,6 +8,7 @@ import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import ExportTransaction from 'screens/hive/settings/ExportTransactions';
 import SettingsMenu from 'screens/hive/settings/SettingsMenu';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
@@ -31,6 +32,35 @@ export default () => {
           headerStyle: styles.header,
           headerTitleAlign: 'center',
           headerTitle: () => <NavigatorTitle title={'navigation.settings'} />,
+          cardStyle: styles.card,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => navigation.navigate('WALLET')}
+            />
+          ),
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+      />
+
+      <Stack.Screen
+        name="ExportTransactionsScreen"
+        component={ExportTransaction}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={'navigation.export_transactions'} />
+          ),
           cardStyle: styles.card,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
