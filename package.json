@@ -25,6 +25,7 @@
     "@hiveio/dhive": "^1.2.5",
     "@react-native-async-storage/async-storage": "^1.23.0",
     "@react-native-community/clipboard": "^1.5.1",
+    "@react-native-community/datetimepicker": "^8.3.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-firebase/analytics": "^19.2.2",
     "@react-native-firebase/app": "^19.2.2",

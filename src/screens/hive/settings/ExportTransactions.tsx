@@ -1,14 +1,25 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import UserDropdown from 'components/form/UserDropdown';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
-import React from 'react';
-import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import {Icon} from 'react-native-elements';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {getColors} from 'src/styles/colors';
+import {Icons} from 'src/enums/icons.enums';
+import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {getHorizontalLineStyle} from 'src/styles/line';
 import {
   body_primary_body_2,
   body_primary_body_3,
@@ -22,7 +33,9 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions());
   const {width, height} = useWindowDimensions();
-
+  const [startDate, setStartDate] = useState<Date | undefined>();
+  const [endDate, setEndDate] = useState<Date | undefined>();
+  const [showPicker, setShowPicker] = useState<'start' | 'end' | null>(null);
   return (
     <Background theme={theme}>
       <View style={styles.container}>
@@ -37,13 +50,33 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
             styles.paddingHorizontal,
             styles.centeredText,
           ]}>
-          {translate('common.from')}
+          {translate('export_transactions.start_date')}
         </Text>
         <OperationInput
           autoCapitalize={'none'}
           labelInput={translate('common.from')}
           placeholder={'mm/dd/yyyy'}
           value={''}
+          rightIcon={
+            <View style={styles.flexRowCenter}>
+              <Separator
+                drawLine
+                additionalLineStyle={getHorizontalLineStyle(theme, 1, 35, 16)}
+              />
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => {
+                  setShowPicker('start');
+                  //show datetimepicker here
+                }}>
+                <Icon
+                  name={Icons.SETTINGS}
+                  {...styles.icon}
+                  color={PRIMARY_RED_COLOR}
+                />
+              </TouchableOpacity>
+            </View>
+          }
         />
 
         <Separator height={height / 50} />
@@ -54,13 +87,33 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
             styles.paddingHorizontal,
             styles.centeredText,
           ]}>
-          {translate('common.to')}
+          {translate('export_transactions.end_date')}
         </Text>
         <OperationInput
           autoCapitalize={'none'}
           labelInput={translate('common.to')}
           placeholder={'mm/dd/yyyy'}
           value={''}
+          rightIcon={
+            <View style={styles.flexRowCenter}>
+              <Separator
+                drawLine
+                additionalLineStyle={getHorizontalLineStyle(theme, 1, 35, 16)}
+              />
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => {
+                  setShowPicker('end');
+                  //show datetimepicker here
+                }}>
+                <Icon
+                  name={Icons.SETTINGS}
+                  {...styles.icon}
+                  color={PRIMARY_RED_COLOR}
+                />
+              </TouchableOpacity>
+            </View>
+          }
         />
         <Separator height={height / 22} />
 
@@ -70,6 +123,21 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
           additionalTextStyle={styles.buttonText}
           isWarningButton
         />
+
+        {/* Date Picker (conditionally shown) */}
+        {showPicker && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={
+              showPicker === 'start'
+                ? startDate || new Date()
+                : endDate || new Date()
+            }
+            mode="date"
+            display={Platform.OS === 'ios' ? 'inline' : 'default'}
+            onChange={() => {}}
+          />
+        )}
       </View>
     </Background>
   );
@@ -97,6 +165,11 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     textNoPref: {
       textAlign: 'center',
       marginTop: 20,
+    },
+    flexRowCenter: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignContent: 'center',
     },
     searchBar: {
       borderRadius: 33,
@@ -126,6 +199,10 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
         width,
         {...button_link_primary_medium}.fontSize,
       ),
+    },
+    icon: {
+      width: 18,
+      height: 18,
     },
   });
 const mapStateToProps = (state: RootState) => ({

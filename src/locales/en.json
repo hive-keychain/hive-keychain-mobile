@@ -1133,6 +1133,11 @@
     "transaction_signed_successfully": "The multisig transaction has been signed successfully",
     "pending": "The request is currently pending multisig approval from other signers. You will be notified by Keychain if/when it is successfully broadcasted."
   },
+
+  "export_transactions": {
+    "start_date": "Start Date",
+    "end_date": "End Date"
+  },
   "multichain": {
     "switch_chain": "Switch Chain"
   }
