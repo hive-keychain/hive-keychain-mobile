@@ -1,4 +1,3 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import UserDropdown from 'components/form/UserDropdown';
@@ -7,13 +6,13 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
 import {
-  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native';
+import DatePicker from 'react-native-date-picker';
 import {Icon} from 'react-native-elements';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -33,9 +32,21 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions());
   const {width, height} = useWindowDimensions();
-  const [startDate, setStartDate] = useState<Date | undefined>();
-  const [endDate, setEndDate] = useState<Date | undefined>();
+  const [startDate, setStartDate] = useState<Date>(() => {
+    const date = new Date(Date.now() - 86400000);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  });
+  const [endDate, setEndDate] = useState<Date>(() => {
+    const date = new Date();
+    date.setHours(23, 59, 0, 0);
+    return date;
+  });
   const [showPicker, setShowPicker] = useState<'start' | 'end' | null>(null);
+  const handleExport = () => {
+    console.info('startDate', startDate);
+    console.info('endDate', endDate);
+  };
   return (
     <Background theme={theme}>
       <View style={styles.container}>
@@ -53,10 +64,18 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
           {translate('export_transactions.start_date')}
         </Text>
         <OperationInput
+          editable={false}
+          onPressOut={() => {
+            setShowPicker('start');
+          }}
           autoCapitalize={'none'}
           labelInput={translate('common.from')}
           placeholder={'mm/dd/yyyy'}
-          value={''}
+          value={startDate.toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric',
+          })}
           rightIcon={
             <View style={styles.flexRowCenter}>
               <Separator
@@ -67,7 +86,6 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
                 activeOpacity={1}
                 onPress={() => {
                   setShowPicker('start');
-                  //show datetimepicker here
                 }}>
                 <Icon
                   name={Icons.SETTINGS}
@@ -90,10 +108,18 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
           {translate('export_transactions.end_date')}
         </Text>
         <OperationInput
+          editable={false}
+          onPressOut={() => {
+            setShowPicker('start');
+          }}
           autoCapitalize={'none'}
           labelInput={translate('common.to')}
           placeholder={'mm/dd/yyyy'}
-          value={''}
+          value={endDate.toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric',
+          })}
           rightIcon={
             <View style={styles.flexRowCenter}>
               <Separator
@@ -104,7 +130,6 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
                 activeOpacity={1}
                 onPress={() => {
                   setShowPicker('end');
-                  //show datetimepicker here
                 }}>
                 <Icon
                   name={Icons.SETTINGS}
@@ -119,23 +144,38 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
 
         <EllipticButton
           title={translate('common.export')}
-          onPress={() => {}}
+          onPress={() => {
+            handleExport();
+          }}
           additionalTextStyle={styles.buttonText}
           isWarningButton
         />
 
-        {/* Date Picker (conditionally shown) */}
         {showPicker && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={
-              showPicker === 'start'
-                ? startDate || new Date()
-                : endDate || new Date()
-            }
+          <DatePicker
+            theme={theme}
+            modal
             mode="date"
-            display={Platform.OS === 'ios' ? 'inline' : 'default'}
-            onChange={() => {}}
+            maximumDate={new Date()}
+            minimumDate={showPicker === 'end' ? startDate : undefined}
+            title={showPicker ? `Select ${showPicker} date` : undefined}
+            open={showPicker === 'start' || showPicker === 'end'}
+            date={showPicker === 'start' ? startDate : endDate}
+            onConfirm={(date) => {
+              if (showPicker === 'start') {
+                const startDateTime = new Date(date);
+                startDateTime.setHours(0, 0, 0, 0);
+                setStartDate(startDateTime);
+              } else {
+                const endDateTime = new Date(date);
+                endDateTime.setHours(23, 59, 59, 999);
+                setEndDate(endDateTime);
+              }
+              setShowPicker(null);
+            }}
+            onCancel={() => {
+              setShowPicker(null);
+            }}
           />
         )}
       </View>
