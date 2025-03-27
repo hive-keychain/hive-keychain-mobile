@@ -1,6 +1,7 @@
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import UserDropdown from 'components/form/UserDropdown';
+import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
@@ -13,7 +14,6 @@ import {
   View,
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
-import {Icon} from 'react-native-elements';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -27,8 +27,9 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
+import ExportTransactionsUtils from 'utils/export-transactions.utils';
 import {translate} from 'utils/localize';
-const ExportTransaction = ({active}: PropsFromRedux) => {
+const ExportTransaction = ({active, globals}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions());
   const {width, height} = useWindowDimensions();
@@ -44,8 +45,18 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
   });
   const [showPicker, setShowPicker] = useState<'start' | 'end' | null>(null);
   const handleExport = () => {
+    console.info('active', active.name);
     console.info('startDate', startDate);
     console.info('endDate', endDate);
+    // console.info('active', JSON.stringify(active.account, null, 2));
+    // console.info('globals', JSON.stringify(globals, null, 2));
+    ExportTransactionsUtils.downloadTransactions(
+      active.name,
+      startDate,
+      endDate,
+      globals,
+      active.account.memo_key,
+    );
   };
   return (
     <Background theme={theme}>
@@ -88,7 +99,7 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
                   setShowPicker('start');
                 }}>
                 <Icon
-                  name={Icons.SETTINGS}
+                  name={Icons.CALENDAR}
                   {...styles.icon}
                   color={PRIMARY_RED_COLOR}
                 />
@@ -132,7 +143,7 @@ const ExportTransaction = ({active}: PropsFromRedux) => {
                   setShowPicker('end');
                 }}>
                 <Icon
-                  name={Icons.SETTINGS}
+                  name={Icons.CALENDAR}
                   {...styles.icon}
                   color={PRIMARY_RED_COLOR}
                 />
@@ -247,6 +258,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   });
 const mapStateToProps = (state: RootState) => ({
   active: state.activeAccount,
+  globals: state.properties.globals,
 });
 
 const connector = connect(mapStateToProps);

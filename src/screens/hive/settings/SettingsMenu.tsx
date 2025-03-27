@@ -128,8 +128,8 @@ const SettingsMenu = () => {
         onPress={() => navigate('ExportTransactionsScreen')}
         iconImage={
           <Icon
-            name={Icons.NOTIFICATIONS}
-            theme={theme}
+            name={Icons.EXPORT}
+            // theme={theme}
             color={PRIMARY_RED_COLOR}
             width={55}
             height={55}
