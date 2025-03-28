@@ -5,6 +5,7 @@ import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
+import {ExportTransactionsUtils} from 'hive-keychain-commons';
 import React, {useState} from 'react';
 import {
   StyleSheet,
@@ -27,7 +28,6 @@ import {
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
-import ExportTransactionsUtils from 'utils/export-transactions.utils';
 import {translate} from 'utils/localize';
 const ExportTransaction = ({active, globals}: PropsFromRedux) => {
   const {theme} = useThemeContext();
@@ -44,19 +44,21 @@ const ExportTransaction = ({active, globals}: PropsFromRedux) => {
     return date;
   });
   const [showPicker, setShowPicker] = useState<'start' | 'end' | null>(null);
-  const handleExport = () => {
+  const handleExport = async () => {
     console.info('active', active.name);
     console.info('startDate', startDate);
     console.info('endDate', endDate);
-    // console.info('active', JSON.stringify(active.account, null, 2));
-    // console.info('globals', JSON.stringify(globals, null, 2));
-    ExportTransactionsUtils.downloadTransactions(
+    const transactions = await ExportTransactionsUtils.fetchTransactions(
       active.name,
       startDate,
       endDate,
-      globals,
-      active.account.memo_key,
+      (percentage) => {
+        console.info('percentage', percentage);
+      },
     );
+
+    const csv = ExportTransactionsUtils.generateCSV(transactions);
+    console.info('csv', csv);
   };
   return (
     <Background theme={theme}>
