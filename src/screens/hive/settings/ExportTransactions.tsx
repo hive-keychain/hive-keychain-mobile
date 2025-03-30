@@ -14,6 +14,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import Loader from 'components/ui/Loader';
 import DatePicker from 'react-native-date-picker';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -33,6 +34,7 @@ import RNFetchBlob from "rn-fetch-blob";
 const ExportTransaction = ({active, globals}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions());
+  const [exporting,setExporting] = useState<boolean>(false)
   const {width, height} = useWindowDimensions();
   const [startDate, setStartDate] = useState<Date>(() => {
     const date = new Date(Date.now() - 86400000);
@@ -48,34 +50,32 @@ const ExportTransaction = ({active, globals}: PropsFromRedux) => {
   const handleExport = async () => {
     try {
       // Fetch the transactions
+      setExporting(true)
       const transactions = await ExportTransactionsUtils.fetchTransactions(
         active.name,
         startDate,
         endDate
-       
       );
 
       // Generate CSV from transactions
       const csv = ExportTransactionsUtils.generateCSV(transactions);
       console.info('csv', csv);
 
-      // Format dates for filename (e.g., 2025-03-30)
       const formatDateForFilename = (date: Date) => date.toISOString().split('T')[0];
       const startStr = formatDateForFilename(startDate);
       const endStr = formatDateForFilename(endDate);
 
-      // Safe file path
       const path = `${RNFetchBlob.fs.dirs.DownloadDir}/${active.name}-transactions-${startStr}-to-${endStr}.csv`;
+/ Save the CSV file to device storage
 
-      // Save the CSV file to device storage
       await RNFetchBlob.fs.writeFile(path, csv, 'utf8');
 
-      // Format dates for alert (e.g., MM/DD/YYYY)
       const startReadable = startDate.toLocaleDateString('en-US');
       const endReadable = endDate.toLocaleDateString('en-US');
-
       alert(`Transactions from ${startReadable} to ${endReadable} saved to:\n${path}`);
+      setExporting(false);
     } catch (error: any) {
+      setExporting(false);
       console.error('Error exporting transactions:', error);
       alert(`Failed to export transactions.\n${error.message ?? ''}`);
     }
@@ -175,15 +175,20 @@ const ExportTransaction = ({active, globals}: PropsFromRedux) => {
           }
         />
         <Separator height={height / 22} />
-
+        {exporting?
+         <View style={[styles.flexCentered, styles.marginTop]}>
+            <Loader animating size={'small'} />
+          </View>
+        : 
         <EllipticButton
-          title={translate('common.export')}
-          onPress={() => {
-            handleExport();
-          }}
-          additionalTextStyle={styles.buttonText}
-          isWarningButton
+        title={translate('common.export')}
+        onPress={() => {
+          handleExport();
+        }}
+        additionalTextStyle={styles.buttonText}
+        isWarningButton
         />
+      }
 
         {showPicker && (
           <DatePicker
