@@ -29,6 +29,7 @@ import {
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
+import RNFetchBlob from "rn-fetch-blob";
 const ExportTransaction = ({active, globals}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions());
@@ -38,28 +39,48 @@ const ExportTransaction = ({active, globals}: PropsFromRedux) => {
     date.setHours(0, 0, 0, 0);
     return date;
   });
-  const [endDate, setEndDate] = useState<Date>(() => {
+  const [endDate, setEndDate] = useState<Date>(() => {  
     const date = new Date();
     date.setHours(23, 59, 0, 0);
     return date;
   });
   const [showPicker, setShowPicker] = useState<'start' | 'end' | null>(null);
   const handleExport = async () => {
-    console.info('active', active.name);
-    console.info('startDate', startDate);
-    console.info('endDate', endDate);
-    const transactions = await ExportTransactionsUtils.fetchTransactions(
-      active.name,
-      startDate,
-      endDate,
-      (percentage) => {
-        console.info('percentage', percentage);
-      },
-    );
+    try {
+      // Fetch the transactions
+      const transactions = await ExportTransactionsUtils.fetchTransactions(
+        active.name,
+        startDate,
+        endDate
+       
+      );
 
-    const csv = ExportTransactionsUtils.generateCSV(transactions);
-    console.info('csv', csv);
+      // Generate CSV from transactions
+      const csv = ExportTransactionsUtils.generateCSV(transactions);
+      console.info('csv', csv);
+
+      // Format dates for filename (e.g., 2025-03-30)
+      const formatDateForFilename = (date: Date) => date.toISOString().split('T')[0];
+      const startStr = formatDateForFilename(startDate);
+      const endStr = formatDateForFilename(endDate);
+
+      // Safe file path
+      const path = `${RNFetchBlob.fs.dirs.DownloadDir}/${active.name}-transactions-${startStr}-to-${endStr}.csv`;
+
+      // Save the CSV file to device storage
+      await RNFetchBlob.fs.writeFile(path, csv, 'utf8');
+
+      // Format dates for alert (e.g., MM/DD/YYYY)
+      const startReadable = startDate.toLocaleDateString('en-US');
+      const endReadable = endDate.toLocaleDateString('en-US');
+
+      alert(`Transactions from ${startReadable} to ${endReadable} saved to:\n${path}`);
+    } catch (error: any) {
+      console.error('Error exporting transactions:', error);
+      alert(`Failed to export transactions.\n${error.message ?? ''}`);
+    }
   };
+
   return (
     <Background theme={theme}>
       <View style={styles.container}>
