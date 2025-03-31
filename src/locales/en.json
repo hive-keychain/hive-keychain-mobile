@@ -1136,7 +1136,11 @@
 
   "export_transactions": {
     "start_date": "Start Date",
-    "end_date": "End Date"
+    "end_date": "End Date",
+    "confirmation": {
+      "success": "Transactions from {{startDate}} to {{endDate}} saved to:\n{{path}}",
+      "error": "Failed to export transactions.\n{{error}}"
+    }
   },
   "multichain": {
     "switch_chain": "Switch Chain"
