@@ -184,6 +184,7 @@ class HAS {
   };
 
   onMessage = (event: WebSocketMessageEvent) => {
+    console.log('received message', event);
     onMessageReceived(event, this);
   };
 
