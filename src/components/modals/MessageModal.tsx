@@ -1,9 +1,12 @@
 import {addTab} from 'actions/index';
 import {resetModal} from 'actions/message';
-import EllipticButton from 'components/form/EllipticButton';
+import OperationButton, {
+  default as EllipticButton,
+} from 'components/form/EllipticButton';
 import Icon from 'components/hive/Icon';
 import React, {useEffect} from 'react';
 import {
+  Linking,
   Modal,
   StyleSheet,
   Text,
@@ -30,6 +33,7 @@ import {navigate} from 'utils/navigation';
 const DEFAULTHIDETIMEMS = 3000;
 interface Props {
   notHideOnSuccess?: boolean;
+  filePath?: string;
 }
 
 const Message = ({
@@ -37,6 +41,7 @@ const Message = ({
   resetModal,
   notHideOnSuccess,
   addTab,
+  filePath,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -69,9 +74,16 @@ const Message = ({
     switch (messageModal.type) {
       case MessageModalType.SUCCESS:
       case MessageModalType.MULTISIG_SUCCESS:
+      case MessageModalType.EXPORT_TRANSACTIONS_SUCCESS:
         return <Icon name={Icons.SUCCESS} {...iconDimensions} />;
       case MessageModalType.ERROR:
+      case MessageModalType.EXPORT_TRANSACTIONS_ERROR:
         return <Icon name={Icons.ERROR} {...iconDimensions} />;
+    }
+  };
+
+  const handleOpenFile = () => {
+    if (filePath) {
     }
   };
 
@@ -107,11 +119,39 @@ const Message = ({
                 <Text style={styles.text}>{messageModal.params.txId}</Text>
               </TouchableOpacity>
             )}
-            <EllipticButton
-              title={translate('common.close')}
-              onPress={() => resetModal()}
-              isWarningButton
-            />
+            {messageModal.type ===
+              MessageModalType.EXPORT_TRANSACTIONS_SUCCESS && (
+              <View style={styles.exportButtonsContainer}>
+                <View style={styles.exportButtonWrapper}>
+                  <OperationButton
+                    title={translate('common.close')}
+                    onPress={() => resetModal()}
+                    isWarningButton
+                    additionalTextStyle={styles.text}
+                  />
+                </View>
+                <View style={styles.exportButtonWrapper}>
+                  <OperationButton
+                    title={translate('export_transactions.open_file')}
+                    onPress={() => {
+                      if (filePath) {
+                        Linking.openURL(`file://${filePath}`);
+                      }
+                    }}
+                    isWarningButton
+                    additionalTextStyle={styles.text}
+                  />
+                </View>
+              </View>
+            )}
+            {messageModal.type !==
+              MessageModalType.EXPORT_TRANSACTIONS_SUCCESS && (
+              <EllipticButton
+                title={translate('common.close')}
+                onPress={() => resetModal()}
+                isWarningButton
+              />
+            )}
           </View>
         </View>
       </View>
@@ -185,6 +225,17 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     },
     marginVertical: {
       marginVertical: 10,
+    },
+    exportButtonsContainer: {
+      flexDirection: 'row',
+      width: '100%',
+      paddingHorizontal: 16,
+      gap: 10,
+      marginTop: 10,
+      marginBottom: 16,
+    },
+    exportButtonWrapper: {
+      flex: 1,
     },
   });
 

@@ -1,5 +1,5 @@
 import {showModal} from 'actions/message';
-import EllipticButton from 'components/form/EllipticButton';
+import OperationButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import UserDropdown from 'components/form/UserDropdown';
 import Icon from 'components/hive/Icon';
@@ -10,6 +10,8 @@ import Separator from 'components/ui/Separator';
 import {ExportTransactionsUtils} from 'hive-keychain-commons';
 import React, {useState} from 'react';
 import {
+  Modal,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -75,11 +77,12 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
       const endReadable = endDate.toLocaleDateString('en-US');
       showModal(
         'export_transactions.confirmation.success',
-        MessageModalType.SUCCESS,
+        MessageModalType.EXPORT_TRANSACTIONS_SUCCESS,
         {
           startDate: startReadable,
           endDate: endReadable,
           path,
+          notHideOnSuccess: true,
         },
       );
       setExporting(false);
@@ -90,146 +93,168 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
         MessageModalType.ERROR,
         {
           error: error.message ?? '',
+          notHideOnSuccess: true,
         },
       );
     }
   };
-
   return (
     <Background theme={theme}>
-      <View style={styles.container}>
-        <FocusAwareStatusBar />
-        <UserDropdown />
-        <Separator height={height / 22} />
+      <View style={styles.mainContainer}>
+        <ScrollView style={styles.scrollContent}>
+          <View style={styles.container}>
+            <Separator height={25} />
+            <FocusAwareStatusBar />
+            <UserDropdown />
+            <Separator height={height / 22} />
 
-        <Text
-          style={[
-            styles.text,
-            styles.opacity,
-            styles.paddingHorizontal,
-            styles.centeredText,
-          ]}>
-          {translate('export_transactions.start_date')}
-        </Text>
-        <OperationInput
-          editable={false}
-          onPressOut={() => {
-            setShowPicker('start');
-          }}
-          autoCapitalize={'none'}
-          labelInput={translate('common.from')}
-          placeholder={'mm/dd/yyyy'}
-          value={startDate.toLocaleDateString('en-US', {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric',
-          })}
-          rightIcon={
-            <View style={styles.flexRowCenter}>
-              <Separator
-                drawLine
-                additionalLineStyle={getHorizontalLineStyle(theme, 1, 35, 16)}
-              />
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => {
-                  setShowPicker('start');
-                }}>
-                <Icon
-                  name={Icons.CALENDAR}
-                  {...styles.icon}
-                  color={PRIMARY_RED_COLOR}
-                />
-              </TouchableOpacity>
-            </View>
-          }
-        />
+            <OperationInput
+              editable={false}
+              onPressOut={() => {
+                setShowPicker('start');
+              }}
+              autoCapitalize={'none'}
+              labelInput={translate('export_transactions.start_date')}
+              placeholder={'mm/dd/yyyy'}
+              value={startDate.toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+              })}
+              rightIcon={
+                <View style={styles.flexRowCenter}>
+                  <Separator
+                    drawLine
+                    additionalLineStyle={getHorizontalLineStyle(
+                      theme,
+                      1,
+                      35,
+                      16,
+                    )}
+                  />
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => {
+                      setShowPicker('start');
+                    }}>
+                    <Icon
+                      name={Icons.CALENDAR}
+                      {...styles.icon}
+                      color={PRIMARY_RED_COLOR}
+                    />
+                  </TouchableOpacity>
+                </View>
+              }
+            />
 
-        <Separator height={height / 50} />
-        <Text
-          style={[
-            styles.text,
-            styles.opacity,
-            styles.paddingHorizontal,
-            styles.centeredText,
-          ]}>
-          {translate('export_transactions.end_date')}
-        </Text>
-        <OperationInput
-          editable={false}
-          onPressOut={() => {
-            setShowPicker('start');
-          }}
-          autoCapitalize={'none'}
-          labelInput={translate('common.to')}
-          placeholder={'mm/dd/yyyy'}
-          value={endDate.toLocaleDateString('en-US', {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric',
-          })}
-          rightIcon={
-            <View style={styles.flexRowCenter}>
-              <Separator
-                drawLine
-                additionalLineStyle={getHorizontalLineStyle(theme, 1, 35, 16)}
-              />
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => {
-                  setShowPicker('end');
-                }}>
-                <Icon
-                  name={Icons.CALENDAR}
-                  {...styles.icon}
-                  color={PRIMARY_RED_COLOR}
-                />
-              </TouchableOpacity>
-            </View>
-          }
-        />
-        <Separator height={height / 22} />
+            <Separator height={height / 50} />
+            <OperationInput
+              editable={false}
+              onPressOut={() => {
+                setShowPicker('start');
+              }}
+              autoCapitalize={'none'}
+              labelInput={translate('export_transactions.end_date')}
+              placeholder={'mm/dd/yyyy'}
+              value={endDate.toLocaleDateString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+              })}
+              rightIcon={
+                <View style={styles.flexRowCenter}>
+                  <Separator
+                    drawLine
+                    additionalLineStyle={getHorizontalLineStyle(
+                      theme,
+                      1,
+                      35,
+                      16,
+                    )}
+                  />
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => {
+                      setShowPicker('end');
+                    }}>
+                    <Icon
+                      name={Icons.CALENDAR}
+                      {...styles.icon}
+                      color={PRIMARY_RED_COLOR}
+                    />
+                  </TouchableOpacity>
+                </View>
+              }
+            />
+            <Separator height={height / 22} />
+          </View>
+        </ScrollView>
+
         {exporting ? (
-          <View style={[styles.flexCentered, styles.marginTop]}>
+          <View style={[styles.buttonWrapper]}>
             <Loader animating size={'small'} />
           </View>
         ) : (
-          <EllipticButton
-            title={translate('common.export')}
-            onPress={() => {
-              handleExport();
-            }}
-            additionalTextStyle={styles.buttonText}
-            isWarningButton
-          />
+          <View style={styles.buttonWrapper}>
+            <OperationButton
+              title={translate('common.export')}
+              onPress={() => handleExport()}
+              isWarningButton
+              additionalTextStyle={styles.buttonText}
+            />
+          </View>
         )}
 
         {showPicker && (
-          <DatePicker
-            theme={theme}
-            modal
-            mode="date"
-            maximumDate={new Date()}
-            minimumDate={showPicker === 'end' ? startDate : undefined}
-            title={showPicker ? `Select ${showPicker} date` : undefined}
-            open={showPicker === 'start' || showPicker === 'end'}
-            date={showPicker === 'start' ? startDate : endDate}
-            onConfirm={(date) => {
-              if (showPicker === 'start') {
-                const startDateTime = new Date(date);
-                startDateTime.setHours(0, 0, 0, 0);
-                setStartDate(startDateTime);
-              } else {
-                const endDateTime = new Date(date);
-                endDateTime.setHours(23, 59, 59, 999);
-                setEndDate(endDateTime);
-              }
-              setShowPicker(null);
-            }}
-            onCancel={() => {
-              setShowPicker(null);
-            }}
-          />
+          <Modal
+            visible={showPicker === 'start' || showPicker === 'end'}
+            transparent={true}
+            animationType="fade">
+            <View style={styles.datePickerOverlay}>
+              <View style={styles.datePickerContainer}>
+                <View style={styles.datePickerWrapper}>
+                  <DatePicker
+                    theme={theme}
+                    modal={false}
+                    mode="date"
+                    maximumDate={new Date()}
+                    minimumDate={showPicker === 'end' ? startDate : undefined}
+                    title={showPicker ? `Select ${showPicker} date` : undefined}
+                    date={showPicker === 'start' ? startDate : endDate}
+                    dividerColor={getColors(theme).cardBorderColorContrast}
+                    buttonColor={getColors(theme).secondaryText}
+                    onDateChange={(date) => {
+                      if (showPicker === 'start') {
+                        const startDateTime = new Date(date);
+                        startDateTime.setHours(0, 0, 0, 0);
+                        setStartDate(startDateTime);
+                      } else {
+                        const endDateTime = new Date(date);
+                        endDateTime.setHours(23, 59, 59, 999);
+                        setEndDate(endDateTime);
+                      }
+                    }}
+                  />
+                </View>
+                <View style={styles.datePickerButtonContainer}>
+                  <TouchableOpacity
+                    style={styles.datePickerButton}
+                    onPress={() => setShowPicker(null)}>
+                    <Text style={styles.datePickerButtonText}>
+                      {translate('common.cancel')}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.datePickerButton}
+                    onPress={() => setShowPicker(null)}>
+                    <Text style={styles.datePickerButtonText}>
+                      {translate('common.confirm')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
         )}
       </View>
     </Background>
@@ -238,7 +263,22 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
 
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
-    container: {flex: 1, paddingHorizontal: 16},
+    mainContainer: {
+      flex: 1,
+    },
+    scrollContent: {
+      flex: 1,
+    },
+    container: {
+      paddingHorizontal: 16,
+    },
+    buttonWrapper: {
+      padding: 16,
+      paddingBottom: 25,
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     itemDropdown: {
       paddingHorizontal: 18,
     },
@@ -296,6 +336,42 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     icon: {
       width: 18,
       height: 18,
+    },
+    datePickerOverlay: {
+      flex: 1,
+      justifyContent: 'flex-end',
+      backgroundColor: '#212838bc',
+    },
+    datePickerContainer: {
+      width: '100%',
+      backgroundColor: getColors(theme).cardBgColor,
+      borderTopLeftRadius: 22,
+      borderTopRightRadius: 22,
+      paddingTop: 20,
+    },
+    datePickerWrapper: {
+      alignItems: 'center',
+      width: '100%',
+    },
+    datePickerButtonContainer: {
+      flexDirection: 'row',
+      height: 50,
+      marginTop: 20,
+      paddingHorizontal: 16,
+      marginBottom: 16,
+      gap: 10,
+    },
+    datePickerButton: {
+      flex: 1,
+      backgroundColor: PRIMARY_RED_COLOR,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 25,
+    },
+    datePickerButtonText: {
+      color: 'white',
+      fontSize: 16,
+      fontWeight: '500',
     },
   });
 const mapStateToProps = (state: RootState) => ({
