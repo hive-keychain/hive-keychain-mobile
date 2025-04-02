@@ -156,11 +156,14 @@ export default ({
   };
 
   const onLoadEnd = ({
-    nativeEvent: {canGoBack, canGoForward, loading},
+    nativeEvent: {canGoBack, canGoForward, loading, url},
   }: {
     nativeEvent: WebViewNativeEvent;
   }) => {
     const {current} = tabRef;
+    if (Platform.OS === 'ios') {
+      updateTab(id, {url});
+    }
     setProgress(0);
     if (loading) {
       return;
@@ -217,24 +220,11 @@ export default ({
       case 'WV_INFO':
         const {icon, name, url} = data as TabFields;
         if (
-          urlTransformer(url).host !== urlTransformer(tabData.url).host ||
-          !shouldUpdateWvInfo ||
-          urlTransformer(url).host === 'www.risingstargame.com' //TODO : improve
-        ) {
-          break;
-        }
-        if (
           tabData.url !== 'about:blank' &&
-          (icon !== tabData.icon ||
-            name !== tabData.name ||
-            url !== tabData.url)
+          (icon !== tabData.icon || name !== tabData.name)
         ) {
           navigation.setParams({icon});
-
-          if (name && url && url !== 'chromewebdata') {
-            addToHistory({icon, name, url});
-          }
-          updateTab(id, {url, name, icon});
+          updateTab(id, {name, icon});
         }
         break;
     }
