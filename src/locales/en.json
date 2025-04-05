@@ -1137,6 +1137,10 @@
   "export_transactions": {
     "start_date": "Start Date",
     "end_date": "End Date",
+    "date_picker": {
+      "choose_start_date": "Choose the starting date",
+      "choose_ending_date": "Choose the ending date"
+    },
     "confirmation": {
       "success": "Transactions from {{startDate}} to {{endDate}} saved to:\n{{path}}",
       "error": "Failed to export transactions.\n{{error}}"

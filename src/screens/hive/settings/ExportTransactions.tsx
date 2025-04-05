@@ -213,13 +213,30 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
             <View style={styles.datePickerOverlay}>
               <View style={styles.datePickerContainer}>
                 <View style={styles.datePickerWrapper}>
+                  <Text style={styles.text}>
+                    {showPicker === 'start'
+                      ? translate(
+                          'export_transactions.date_picker.choose_start_date',
+                        )
+                      : translate(
+                          'export_transactions.date_picker.choose_ending_date',
+                        )}
+                  </Text>
                   <DatePicker
                     theme={theme}
                     modal={false}
                     mode="date"
                     maximumDate={new Date()}
                     minimumDate={showPicker === 'end' ? startDate : undefined}
-                    title={showPicker ? `Select ${showPicker} date` : undefined}
+                    title={
+                      showPicker === 'start'
+                        ? translate(
+                            'export_transactions.date_picker.choose_start_date',
+                          )
+                        : translate(
+                            'export_transactions.date_picker.choose_ending_date',
+                          )
+                    }
                     date={showPicker === 'start' ? startDate : endDate}
                     dividerColor={getColors(theme).cardBorderColorContrast}
                     buttonColor={getColors(theme).secondaryText}
@@ -238,9 +255,24 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
                 </View>
                 <View style={styles.datePickerButtonContainer}>
                   <TouchableOpacity
-                    style={styles.datePickerButton}
+                    style={[
+                      styles.datePickerButton,
+                      {
+                        backgroundColor:
+                          theme === Theme.DARK
+                            ? getColors(theme).cardBgColor
+                            : 'white',
+                        borderWidth: theme === Theme.DARK ? 1 : 0,
+                        borderColor:
+                          theme === Theme.DARK ? 'white' : 'transparent',
+                      },
+                    ]}
                     onPress={() => setShowPicker(null)}>
-                    <Text style={styles.datePickerButtonText}>
+                    <Text
+                      style={[
+                        styles.datePickerButtonText,
+                        theme === Theme.LIGHT && {color: 'black'},
+                      ]}>
                       {translate('common.cancel')}
                     </Text>
                   </TouchableOpacity>

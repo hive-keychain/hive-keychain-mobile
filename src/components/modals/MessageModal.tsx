@@ -1,8 +1,6 @@
 import {addTab} from 'actions/index';
 import {resetModal} from 'actions/message';
-import OperationButton, {
-  default as EllipticButton,
-} from 'components/form/EllipticButton';
+import {default as EllipticButton} from 'components/form/EllipticButton';
 import Icon from 'components/hive/Icon';
 import React, {useEffect} from 'react';
 import {
@@ -19,10 +17,11 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonHeight} from 'src/styles/button';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   button_link_primary_medium,
+  button_link_primary_small,
   getFontSizeSmallDevices,
   title_primary_title_1,
 } from 'src/styles/typography';
@@ -122,26 +121,42 @@ const Message = ({
             {messageModal.type ===
               MessageModalType.EXPORT_TRANSACTIONS_SUCCESS && (
               <View style={styles.exportButtonsContainer}>
-                <View style={styles.exportButtonWrapper}>
-                  <OperationButton
-                    title={translate('common.close')}
-                    onPress={() => resetModal()}
-                    isWarningButton
-                    additionalTextStyle={styles.text}
-                  />
-                </View>
-                <View style={styles.exportButtonWrapper}>
-                  <OperationButton
-                    title={translate('export_transactions.open_file')}
-                    onPress={() => {
-                      if (filePath) {
-                        Linking.openURL(`file://${filePath}`);
-                      }
-                    }}
-                    isWarningButton
-                    additionalTextStyle={styles.text}
-                  />
-                </View>
+                <TouchableOpacity
+                  onPress={() => resetModal()}
+                  style={[
+                    styles.exportButtonWrapper,
+                    {
+                      backgroundColor:
+                        theme === Theme.LIGHT
+                          ? 'white'
+                          : getColors(theme).cardBgColor,
+                      borderWidth: theme === Theme.DARK ? 1 : 0,
+                      borderColor:
+                        theme === Theme.DARK ? 'white' : 'transparent',
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      styles.dynamicTextSize,
+                      theme === Theme.LIGHT
+                        ? {color: 'black'}
+                        : {color: 'white'},
+                    ]}>
+                    {translate('common.close')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (filePath) {
+                      Linking.openURL(`file://${filePath}`);
+                    }
+                  }}
+                  style={[styles.exportButtonWrapper]}>
+                  <Text style={styles.exportButtonText}>
+                    {translate('export_transactions.open_file')}
+                  </Text>
+                </TouchableOpacity>
               </View>
             )}
             {messageModal.type !==
@@ -228,14 +243,29 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     },
     exportButtonsContainer: {
       flexDirection: 'row',
-      width: '100%',
+      height: 50,
+      marginTop: 20,
       paddingHorizontal: 16,
-      gap: 10,
-      marginTop: 10,
       marginBottom: 16,
+      gap: 10,
     },
     exportButtonWrapper: {
       flex: 1,
+      backgroundColor: PRIMARY_RED_COLOR,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 25,
+    },
+    exportButtonText: {
+      color: 'white',
+      fontSize: 16,
+      fontWeight: '500',
+    },
+    dynamicTextSize: {
+      fontSize: getFontSizeSmallDevices(
+        width,
+        button_link_primary_small.fontSize,
+      ),
     },
   });
 
