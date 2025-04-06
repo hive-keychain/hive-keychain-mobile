@@ -4,7 +4,6 @@ import {default as EllipticButton} from 'components/form/EllipticButton';
 import Icon from 'components/hive/Icon';
 import React, {useEffect} from 'react';
 import {
-  Linking,
   Modal,
   StyleSheet,
   Text,
@@ -32,7 +31,6 @@ import {navigate} from 'utils/navigation';
 const DEFAULTHIDETIMEMS = 3000;
 interface Props {
   notHideOnSuccess?: boolean;
-  filePath?: string;
 }
 
 const Message = ({
@@ -40,7 +38,7 @@ const Message = ({
   resetModal,
   notHideOnSuccess,
   addTab,
-  filePath,
+  callback,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -78,11 +76,6 @@ const Message = ({
       case MessageModalType.ERROR:
       case MessageModalType.EXPORT_TRANSACTIONS_ERROR:
         return <Icon name={Icons.ERROR} {...iconDimensions} />;
-    }
-  };
-
-  const handleOpenFile = () => {
-    if (filePath) {
     }
   };
 
@@ -148,9 +141,7 @@ const Message = ({
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    if (filePath) {
-                      Linking.openURL(`file://${filePath}`);
-                    }
+                    callback();
                   }}
                   style={[styles.exportButtonWrapper]}>
                   <Text style={styles.exportButtonText}>
@@ -177,6 +168,7 @@ const Message = ({
 const mapStateToProps = (state: RootState) => {
   return {
     messageModal: state.message,
+    callback: state.message.callback,
   };
 };
 

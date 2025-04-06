@@ -7,6 +7,7 @@ export const showModal = (
   type: MessageModalType,
   params?: {},
   skipTranslation?: boolean,
+  callback?: () => void,
 ): ActionPayload<MessageModalPayload> => {
   return {
     type: SHOW_MODAL,
@@ -15,6 +16,7 @@ export const showModal = (
       type,
       params,
       skipTranslation,
+      callback,
     },
   };
 };
