@@ -54,6 +54,7 @@
     "react-native-date-picker": "^5.0.11",
     "react-native-elements": "^3.4.3",
     "react-native-fast-image": "^8.3.4",
+    "react-native-file-viewer": "^2.1.5",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-intent-launcher": "github:EldhoseKuriakose/react-native-intent-launcher#compile-issue",

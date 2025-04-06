@@ -19,6 +19,7 @@ import {
   View,
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import FileViewer from 'react-native-file-viewer';
 import {connect, ConnectedProps} from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -35,7 +36,6 @@ import {
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
-
 const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions());
@@ -52,6 +52,7 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
     return date;
   });
   const [showPicker, setShowPicker] = useState<'start' | 'end' | null>(null);
+
   const handleExport = async () => {
     try {
       // Fetch the transactions
@@ -69,9 +70,8 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
       const startStr = formatDateForFilename(startDate);
       const endStr = formatDateForFilename(endDate);
 
-      const path = `${RNFetchBlob.fs.dirs.DownloadDir}/${active.name}-transactions-${startStr}-to-${endStr}.csv`;
-
-      await RNFetchBlob.fs.writeFile(path, csv, 'utf8');
+      const filePath = `${RNFetchBlob.fs.dirs.DownloadDir}/${active.name}-transactions-${startStr}-to-${endStr}.csv`;
+      await RNFetchBlob.fs.writeFile(filePath, csv, 'utf8');
 
       const startReadable = startDate.toLocaleDateString('en-US');
       const endReadable = endDate.toLocaleDateString('en-US');
@@ -81,8 +81,12 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
         {
           startDate: startReadable,
           endDate: endReadable,
-          path,
+          filePath: filePath,
           notHideOnSuccess: true,
+        },
+        false,
+        () => {
+          openFile(filePath);
         },
       );
       setExporting(false);
@@ -98,6 +102,15 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
       );
     }
   };
+
+  const openFile = async (filePath: string) => {
+    try {
+      await FileViewer.open(filePath);
+    } catch (err) {
+      throw err;
+    }
+  };
+
   return (
     <Background theme={theme}>
       <View style={styles.mainContainer}>
