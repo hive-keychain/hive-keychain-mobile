@@ -20,6 +20,7 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import FileViewer from 'react-native-file-viewer';
+import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -86,6 +87,7 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
         },
         false,
         () => {
+          console.log('open file', filePath);
           openFile(filePath);
         },
       );
@@ -107,7 +109,7 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
     try {
       await FileViewer.open(filePath);
     } catch (err) {
-      throw err;
+      SimpleToast.show(err.toString(), SimpleToast.LONG);
     }
   };
 
@@ -223,7 +225,11 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
             visible={showPicker === 'start' || showPicker === 'end'}
             transparent={true}
             animationType="fade">
-            <View style={styles.datePickerOverlay}>
+            <TouchableOpacity
+              style={styles.datePickerOverlay}
+              onPress={() => {
+                setShowPicker(null);
+              }}>
               <View style={styles.datePickerContainer}>
                 <View style={styles.datePickerWrapper}>
                   <Text style={styles.text}>
@@ -235,6 +241,7 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
                           'export_transactions.date_picker.choose_ending_date',
                         )}
                   </Text>
+                  <Separator />
                   <DatePicker
                     theme={theme}
                     modal={false}
@@ -266,29 +273,8 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
                     }}
                   />
                 </View>
+                <Separator />
                 <View style={styles.datePickerButtonContainer}>
-                  <TouchableOpacity
-                    style={[
-                      styles.datePickerButton,
-                      {
-                        backgroundColor:
-                          theme === Theme.DARK
-                            ? getColors(theme).cardBgColor
-                            : 'white',
-                        borderWidth: theme === Theme.DARK ? 1 : 0,
-                        borderColor:
-                          theme === Theme.DARK ? 'white' : 'transparent',
-                      },
-                    ]}
-                    onPress={() => setShowPicker(null)}>
-                    <Text
-                      style={[
-                        styles.datePickerButtonText,
-                        theme === Theme.LIGHT && {color: 'black'},
-                      ]}>
-                      {translate('common.cancel')}
-                    </Text>
-                  </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.datePickerButton}
                     onPress={() => setShowPicker(null)}>
@@ -298,7 +284,7 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
+            </TouchableOpacity>
           </Modal>
         )}
       </View>
@@ -331,7 +317,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,
-      fontSize: getFontSizeSmallDevices(width, 15),
+      fontSize: getFontSizeSmallDevices(width, 18),
     },
     textOperations: {
       ...body_primary_body_3,
@@ -402,7 +388,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       flexDirection: 'row',
       height: 50,
       marginTop: 20,
-      paddingHorizontal: 16,
+      paddingHorizontal: '20%',
       marginBottom: 16,
       gap: 10,
     },

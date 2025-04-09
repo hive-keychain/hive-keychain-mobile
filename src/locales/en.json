@@ -1142,7 +1142,7 @@
       "choose_ending_date": "Choose the ending date"
     },
     "confirmation": {
-      "success": "Transactions from {{startDate}} to {{endDate}} saved to:\n{{filePath}}",
+      "success": "Your transactions have been saved to '{{filePath}}'",
       "error": "Failed to export transactions.\n{{error}}"
     },
     "open_file": "Open File"
