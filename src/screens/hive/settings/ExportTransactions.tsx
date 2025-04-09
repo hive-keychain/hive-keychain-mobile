@@ -71,7 +71,7 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
       const startStr = formatDateForFilename(startDate);
       const endStr = formatDateForFilename(endDate);
 
-      const filePath = `${RNFetchBlob.fs.dirs.DownloadDir}/${active.name}-transactions-${startStr}-to-${endStr}.csv`;
+      const filePath = `${RNFetchBlob.fs.dirs.DownloadDir}/keychain/${active.name}-transactions-${startStr}-to-${endStr}.csv`;
       await RNFetchBlob.fs.writeFile(filePath, csv, 'utf8');
 
       const startReadable = startDate.toLocaleDateString('en-US');
