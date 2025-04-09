@@ -36,7 +36,7 @@ interface OperationInputProps {
   trim?: boolean;
 }
 
-export default ({trim = true, ...props}: InputProps & OperationInputProps) => {
+export default ({trim, ...props}: InputProps & OperationInputProps) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, width, height);
