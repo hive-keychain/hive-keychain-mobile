@@ -3,8 +3,8 @@ import {
   TransferOperation,
   utils as dHiveUtils,
 } from '@hiveio/dhive';
-import {decodeMemo} from 'components/bridge';
-import {ReceiveTransferProps} from 'navigators/Root.types';
+import { decodeMemo } from 'components/bridge';
+import { ReceiveTransferProps } from 'navigators/Root.types';
 import {
   ClaimAccount,
   ClaimReward,
@@ -26,9 +26,9 @@ import {
   Transfer,
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
-import {getSymbol, toHP} from './format';
-import {getClient} from './hive';
-import {translate} from './localize';
+import { getSymbol, toHP } from './format';
+import { getClient } from './hive';
+import { translate } from './localize';
 
 export const MINIMUM_FETCHED_TRANSACTIONS = 1;
 export const NB_TRANSACTION_FETCHED = 200;

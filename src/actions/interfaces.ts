@@ -241,6 +241,7 @@ export interface MessageModalPayload {
   type: MessageModalType;
   params?: any;
   skipTranslation?: boolean;
+  callback?: () => void;
 }
 
 export interface FloatingBarPayload {

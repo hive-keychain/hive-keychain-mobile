@@ -121,6 +121,22 @@ const SettingsMenu = () => {
         }
         additionalLeftSideComponentStyle={{alignSelf: 'flex-end'}}
       />
+
+      <MenuItem
+        labelTranslationKey={'settings.settings.export_transactions.title'}
+        theme={theme}
+        onPress={() => navigate('ExportTransactionsScreen')}
+        iconImage={
+          <Icon
+            name={Icons.EXPORT}
+            // theme={theme}
+            color={PRIMARY_RED_COLOR}
+            width={55}
+            height={55}
+          />
+        }
+        additionalLeftSideComponentStyle={{alignSelf: 'flex-end'}}
+      />
     </View>
   );
 };

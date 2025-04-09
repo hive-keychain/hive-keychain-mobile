@@ -46,7 +46,7 @@ export const hiveEngineGet = async <T>(
           reason.name === 'AbortError' ||
           (reason.message && reason.message.includes('Network request failed'))
         ) {
-          console.log('HE Node Timeout');
+          console.log('HE Node Timeout', HiveEngineConfigUtils.getApi());
           reject(new Error('tokens timeout'));
         }
       });
