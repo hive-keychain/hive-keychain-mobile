@@ -87,7 +87,6 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
         },
         false,
         () => {
-          console.log('open file', filePath);
           openFile(filePath);
         },
       );
