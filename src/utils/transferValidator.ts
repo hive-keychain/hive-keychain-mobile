@@ -1,4 +1,3 @@
-import api from 'api/keychain';
 import {getPrivateKeysMemoValidationWarning} from 'hive-keychain-commons';
 import {translate} from 'utils/localize';
 
@@ -62,8 +61,4 @@ export const getTransferWarning = (
     warning,
     exchange: !warning && !!getExchanges().find((e) => e.account === account),
   };
-};
-
-export const getPhishingAccounts = async () => {
-  return (await api.get('/hive/phishingAccounts')).data;
 };

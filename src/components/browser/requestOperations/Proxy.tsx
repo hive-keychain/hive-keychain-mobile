@@ -39,6 +39,7 @@ export default ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
+      selectedUsername={getUsername()}
       performOperation={async () => {
         return await setProxy(getAccountKey(), {
           account: getUsername(),

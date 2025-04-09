@@ -1,5 +1,10 @@
-import {DynamicGlobalProperties, utils as dHiveUtils} from '@hiveio/dhive';
-import {decodeMemo} from 'components/bridge';
+import {
+  DynamicGlobalProperties,
+  TransferOperation,
+  utils as dHiveUtils,
+} from '@hiveio/dhive';
+import { decodeMemo } from 'components/bridge';
+import { ReceiveTransferProps } from 'navigators/Root.types';
 import {
   ClaimAccount,
   ClaimReward,
@@ -21,9 +26,9 @@ import {
   Transfer,
   WithdrawSavings,
 } from 'src/interfaces/transaction.interface';
-import {getSymbol, toHP} from './format';
-import {getClient} from './hive';
-import {translate} from './localize';
+import { getSymbol, toHP } from './format';
+import { getClient } from './hive';
+import { translate } from './localize';
 
 export const MINIMUM_FETCHED_TRANSACTIONS = 1;
 export const NB_TRANSACTION_FETCHED = 200;
@@ -279,6 +284,33 @@ const getAccountTransactions = async (
   }
 };
 
+const searchForTransaction = async (
+  transfer: ReceiveTransferProps,
+  afterDate: Date,
+) => {
+  const op = dHiveUtils.operationOrders;
+  const operationsBitmask = dHiveUtils.makeBitMaskFilter([op.transfer]) as [
+    number,
+    number,
+  ];
+
+  const lastTransfers = await getClient().database.getAccountHistory(
+    transfer[1].to,
+    -1,
+    1,
+    operationsBitmask,
+  );
+  return lastTransfers.find((transferOps) => {
+    const tr = (transferOps[1].op as TransferOperation)[1];
+
+    return (
+      new Date(transferOps[1].timestamp) > afterDate &&
+      tr.amount === transfer[1].amount &&
+      tr.memo === transfer[1].memo
+    );
+  });
+};
+
 const decodeMemoIfNeeded = async (transfer: Transfer, memoKey: string) => {
   const {memo} = transfer;
   if (memo[0] === '#') {
@@ -320,6 +352,7 @@ const TransactionUtils = {
   getAccountTransactions,
   getLastTransaction,
   decodeMemoIfNeeded,
+  searchForTransaction,
 };
 
 export default TransactionUtils;

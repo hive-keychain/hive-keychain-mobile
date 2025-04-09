@@ -1,5 +1,6 @@
+import {addTab} from 'actions/index';
 import {resetModal} from 'actions/message';
-import EllipticButton from 'components/form/EllipticButton';
+import {default as EllipticButton} from 'components/form/EllipticButton';
 import Icon from 'components/hive/Icon';
 import React, {useEffect} from 'react';
 import {
@@ -15,15 +16,17 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getButtonHeight} from 'src/styles/button';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   button_link_primary_medium,
+  button_link_primary_small,
   getFontSizeSmallDevices,
   title_primary_title_1,
 } from 'src/styles/typography';
 import {RootState} from 'store';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 
 const DEFAULTHIDETIMEMS = 3000;
 interface Props {
@@ -34,6 +37,8 @@ const Message = ({
   messageModal,
   resetModal,
   notHideOnSuccess,
+  addTab,
+  callback,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -65,8 +70,11 @@ const Message = ({
     };
     switch (messageModal.type) {
       case MessageModalType.SUCCESS:
+      case MessageModalType.MULTISIG_SUCCESS:
+      case MessageModalType.EXPORT_TRANSACTIONS_SUCCESS:
         return <Icon name={Icons.SUCCESS} {...iconDimensions} />;
       case MessageModalType.ERROR:
+      case MessageModalType.EXPORT_TRANSACTIONS_ERROR:
         return <Icon name={Icons.ERROR} {...iconDimensions} />;
     }
   };
@@ -86,11 +94,70 @@ const Message = ({
           <View style={styles.modalContent}>
             <View style={styles.svgImage}>{renderIcon()}</View>
             <Text style={[styles.text, styles.marginVertical]}>{message}</Text>
-            <EllipticButton
-              title={translate('common.close')}
-              onPress={() => resetModal()}
-              isWarningButton
-            />
+            {messageModal.type === MessageModalType.MULTISIG_SUCCESS && (
+              <TouchableOpacity
+                onPress={() => {
+                  addTab(`https://hivehub.dev/tx/${messageModal.params.txId}`);
+                  navigate('BrowserScreen');
+                  resetModal();
+                }}>
+                <Text
+                  style={{
+                    ...styles.text,
+                    marginBottom: -20,
+                    fontWeight: 'bold',
+                  }}>{`Tx ID`}</Text>
+
+                <Text style={styles.text}>{messageModal.params.txId}</Text>
+              </TouchableOpacity>
+            )}
+            {messageModal.type ===
+              MessageModalType.EXPORT_TRANSACTIONS_SUCCESS && (
+              <View style={styles.exportButtonsContainer}>
+                <TouchableOpacity
+                  onPress={() => resetModal()}
+                  style={[
+                    styles.exportButtonWrapper,
+                    {
+                      backgroundColor:
+                        theme === Theme.LIGHT
+                          ? 'white'
+                          : getColors(theme).cardBgColor,
+                      borderWidth: theme === Theme.DARK ? 1 : 0,
+                      borderColor:
+                        theme === Theme.DARK ? 'white' : 'transparent',
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      styles.dynamicTextSize,
+                      theme === Theme.LIGHT
+                        ? {color: 'black'}
+                        : {color: 'white'},
+                    ]}>
+                    {translate('common.close')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    callback();
+                  }}
+                  style={[styles.exportButtonWrapper]}>
+                  <Text style={styles.exportButtonText}>
+                    {translate('export_transactions.open_file')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            {messageModal.type !==
+              MessageModalType.EXPORT_TRANSACTIONS_SUCCESS && (
+              <EllipticButton
+                title={translate('common.close')}
+                onPress={() => resetModal()}
+                isWarningButton
+              />
+            )}
           </View>
         </View>
       </View>
@@ -101,11 +168,13 @@ const Message = ({
 const mapStateToProps = (state: RootState) => {
   return {
     messageModal: state.message,
+    callback: state.message.callback,
   };
 };
 
 const connector = connect(mapStateToProps, {
   resetModal,
+  addTab,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -163,6 +232,32 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     },
     marginVertical: {
       marginVertical: 10,
+    },
+    exportButtonsContainer: {
+      flexDirection: 'row',
+      height: 50,
+      marginTop: 20,
+      paddingHorizontal: 16,
+      marginBottom: 16,
+      gap: 10,
+    },
+    exportButtonWrapper: {
+      flex: 1,
+      backgroundColor: PRIMARY_RED_COLOR,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderRadius: 25,
+    },
+    exportButtonText: {
+      color: 'white',
+      fontSize: 16,
+      fontWeight: '500',
+    },
+    dynamicTextSize: {
+      fontSize: getFontSizeSmallDevices(
+        width,
+        button_link_primary_small.fontSize,
+      ),
     },
   });
 

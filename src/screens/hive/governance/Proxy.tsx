@@ -2,6 +2,7 @@ import {loadAccount} from 'actions/hive';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import TwoFaModal from 'components/modals/TwoFaModal';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import React, {useState} from 'react';
@@ -10,6 +11,7 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonStyle} from 'src/styles/button';
 import {getColors} from 'src/styles/colors';
 import {
@@ -20,10 +22,19 @@ import {RootState} from 'store';
 import {AsyncUtils} from 'utils/async.utils';
 import {setProxy} from 'utils/hive';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 
-type Props = {};
+type Props = {
+  isMultisig: boolean;
+  twoFABots: {[botName: string]: string};
+};
 
-const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
+const Proxy = ({
+  loadAccount,
+  user,
+  isMultisig,
+  twoFABots,
+}: PropsFromRedux & Props) => {
   const [proxyUsername, setProxyUsername] = useState('');
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -35,22 +46,45 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
       Toast.show(translate('governance.proxy.error.active'));
       return;
     }
-    setLoading(true);
-    if (
-      await setProxy(user.keys.active, {
-        account: user.name,
-        proxy: proxyUsername.replace(/\s/g, ''),
-      })
-    ) {
-      Toast.show(
-        translate('governance.proxy.success.set_proxy', {name: proxyUsername}),
-      );
-      await AsyncUtils.waitForXSeconds(3);
-      loadAccount(user.name);
-      setLoading(false);
+    const handleSubmit = async (options: TransactionOptions) => {
+      setLoading(true);
+      if (
+        await setProxy(
+          user.keys.active,
+          {
+            account: user.name,
+            proxy: proxyUsername.replace(/\s/g, ''),
+          },
+          options,
+        )
+      ) {
+        if (!isMultisig)
+          Toast.show(
+            translate('governance.proxy.success.set_proxy', {
+              name: proxyUsername,
+            }),
+          );
+        await AsyncUtils.waitForXSeconds(3);
+        loadAccount(user.name);
+        setLoading(false);
+      } else {
+        setLoading(false);
+        if (!isMultisig)
+          Toast.show(translate('governance.proxy.error.set_proxy'));
+      }
+    };
+    if (Object.entries(twoFABots).length > 0) {
+      navigate('ModalScreen', {
+        name: `2FA`,
+        modalContent: (
+          <TwoFaModal twoFABots={twoFABots} onSubmit={handleSubmit} />
+        ),
+      });
     } else {
-      setLoading(false);
-      Toast.show(translate('governance.proxy.error.set_proxy'));
+      handleSubmit({
+        multisig: isMultisig,
+        fromWallet: true,
+      });
     }
   };
 
@@ -59,21 +93,43 @@ const Proxy = ({loadAccount, user}: PropsFromRedux & Props) => {
       Toast.show(translate('governance.proxy.error.active'));
       return;
     }
-    setLoading(true);
+    const handleSubmit = async (options: TransactionOptions) => {
+      setLoading(true);
 
-    if (
-      await setProxy(user.keys.active, {
-        account: user.name,
-        proxy: '',
-      })
-    ) {
-      await AsyncUtils.waitForXSeconds(3);
-      loadAccount(user.name);
-      setLoading(false);
-      Toast.show(translate('governance.proxy.success.clear_proxy'));
+      if (
+        await setProxy(
+          user.keys.active,
+          {
+            account: user.name,
+            proxy: '',
+          },
+          options,
+        )
+      ) {
+        await AsyncUtils.waitForXSeconds(3);
+        loadAccount(user.name);
+        setLoading(false);
+        if (!isMultisig)
+          Toast.show(translate('governance.proxy.success.clear_proxy'));
+      } else {
+        setLoading(false);
+        if (!isMultisig)
+          Toast.show(translate('governance.proxy.error.clear_proxy'));
+      }
+    };
+
+    if (Object.entries(twoFABots).length > 0) {
+      navigate('ModalScreen', {
+        name: `2FA`,
+        modalContent: (
+          <TwoFaModal twoFABots={twoFABots} onSubmit={handleSubmit} />
+        ),
+      });
     } else {
-      setLoading(false);
-      Toast.show(translate('governance.proxy.error.clear_proxy'));
+      handleSubmit({
+        multisig: isMultisig,
+        fromWallet: true,
+      });
     }
   };
 

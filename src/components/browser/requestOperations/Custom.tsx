@@ -1,6 +1,7 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {broadcastJson} from 'utils/hive';
 import {
   RequestCustomJSON,
@@ -45,13 +46,14 @@ export default ({
       request={request}
       selectedUsername={getUsername()}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
+      performOperation={async (options: TransactionOptions) => {
         return await broadcastJson(
           getAccountKey(),
           getUsername(),
           id,
           method === 'Active',
           json,
+          options,
         );
       }}>
       <RequestUsername />
@@ -68,6 +70,7 @@ export default ({
 const performBroadcastJSONOperation = async (
   accounts: Account[],
   request: RequestCustomJSON & RequestId,
+  options?: TransactionOptions,
 ) => {
   const {id, json, method, username} = request;
 
@@ -79,6 +82,7 @@ const performBroadcastJSONOperation = async (
     id,
     method === 'Active',
     json,
+    options,
   );
 };
 
@@ -88,9 +92,10 @@ export const broacastCustomJSONWithoutConfirmation = (
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
   has?: boolean,
+  options?: TransactionOptions,
 ) => {
   processOperationWithoutConfirmation(
-    async () => await performBroadcastJSONOperation(accounts, request),
+    async () => await performBroadcastJSONOperation(accounts, request, options),
     request,
     sendResponse,
     sendError,

@@ -56,8 +56,8 @@ export default ({
     return null;
   }
 
-  const privateKey = account.keys[type];
-  const publicKey = account.keys[`${type}Pubkey` as KeyTypes];
+  const privateKey = account.keys?.[type];
+  const publicKey = account.keys?.[`${type}Pubkey` as KeyTypes];
   const [isPKShown, showPK] = useState(false);
   const [isAuthorizedAccount, setIsAuthorizedAccount] = useState(false);
 

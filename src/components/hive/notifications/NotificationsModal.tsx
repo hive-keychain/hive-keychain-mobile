@@ -1,4 +1,5 @@
 import {DynamicGlobalProperties} from '@hiveio/dhive';
+import {addTab} from 'actions/index';
 import {ActiveAccount} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import {BackToTopButton} from 'components/ui/Back-To-Top-Button';
@@ -8,7 +9,6 @@ import moment from 'moment';
 import React, {useRef, useState} from 'react';
 import {
   FlatList,
-  Linking,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,6 +17,7 @@ import {
   View,
 } from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
+import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Notification} from 'src/interfaces/notifications.interface';
 import {getButtonStyle} from 'src/styles/button';
@@ -28,6 +29,7 @@ import {
   getFontSizeSmallDevices,
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 import {NotificationsUtils} from 'utils/notifications.utils';
 
 type Props = {
@@ -35,8 +37,15 @@ type Props = {
   user: ActiveAccount;
   moreData: boolean;
   properties: DynamicGlobalProperties;
-};
-export default ({notifs, user, moreData, properties}: Props) => {
+} & PropsFromRedux;
+
+const NotificationsModal = ({
+  notifs,
+  user,
+  moreData,
+  properties,
+  addTab,
+}: Props) => {
   const [settingNotifications, setSettingNotifications] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
@@ -50,9 +59,8 @@ export default ({notifs, user, moreData, properties}: Props) => {
   const styles = getStyles(theme, width);
 
   const handleClick = (notification: Notification) => {
-    if (notification.externalUrl) {
-      Linking.openURL(notification.externalUrl);
-    } else if (notification.txUrl) Linking.openURL(notification.txUrl);
+    addTab(notification.externalUrl || notification.txUrl);
+    navigate('BrowserScreen');
   };
 
   const markAllAsRead = async () => {
@@ -219,3 +227,8 @@ const getStyles = (theme: Theme, width: number) =>
       borderColor: getColors(theme).borderContrast,
     },
   });
+
+const connector = connect(undefined, {addTab});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(NotificationsModal);

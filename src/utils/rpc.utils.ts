@@ -2,7 +2,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Rpc} from 'actions/interfaces';
 import axios from 'axios';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {DEFAULT_RPC} from './hiveUtils';
 
 export const getCustomRpcs = async (): Promise<Rpc[]> => {
   let customRpcs: Rpc[];
@@ -53,7 +52,9 @@ export const checkRpcStatus = async (uri: string) => {
   );
   try {
     const result = await axios.get(
-      `${uri === 'DEFAULT' ? DEFAULT_RPC.uri : uri}/health`,
+      ['DEFAULT', 'https://api.hive.blog'].includes(uri)
+        ? 'https://api.hive.blog'
+        : `${uri}/health`,
       {
         timeout: 10000,
       },

@@ -7,9 +7,9 @@ import {
   getDelegators,
   getSavingsRequests,
 } from 'utils/hiveUtils';
+import PhishingUtils from 'utils/phishing.utils';
 import {getPrices} from 'utils/price';
 import TransactionUtils from 'utils/transactions.utils';
-import {getPhishingAccounts} from 'utils/transferValidator';
 import {loadUserTokens} from './hiveEngine';
 import {
   ActionPayload,
@@ -169,7 +169,7 @@ export const loadDelegatees = (username: string): AppThunk => async (
 export const fetchPhishingAccounts = (): AppThunk => async (dispatch) => {
   dispatch({
     type: FETCH_PHISHING_ACCOUNTS,
-    payload: await getPhishingAccounts(),
+    payload: await PhishingUtils.getPhishingAccounts(),
   });
 };
 

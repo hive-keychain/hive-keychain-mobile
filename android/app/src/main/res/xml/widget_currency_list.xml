@@ -6,6 +6,8 @@
     android:initialKeyguardLayout="@layout/widget_currency_list"
     android:initialLayout="@layout/widget_currency_list"
     android:previewImage="@drawable/widget_currency_list_preview"
+    android:minWidth="150dp"
+    android:minHeight="150dp"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen" />

@@ -23,19 +23,17 @@ const validatePrivateKey = (
   pwd: string,
   publicKey: string,
 ): AccountKeys | null => {
-  let keys: AccountKeys;
+  let keys: AccountKeys = {};
   if (isMemoWif(publicKey, account.memo_key)) {
-    keys = {memo: pwd, memoPubkey: publicKey};
-    return keys;
-  } else if (getPubkeyWeight(publicKey, account.posting)) {
-    keys = {posting: pwd, postingPubkey: publicKey};
-    return keys;
-  } else if (getPubkeyWeight(publicKey, account.active)) {
-    keys = {active: pwd, activePubkey: publicKey};
-    return keys;
-  } else {
-    return null;
+    keys = {...keys, memo: pwd, memoPubkey: publicKey};
   }
+  if (getPubkeyWeight(publicKey, account.posting)) {
+    keys = {...keys, posting: pwd, postingPubkey: publicKey};
+  }
+  if (getPubkeyWeight(publicKey, account.active)) {
+    keys = {...keys, active: pwd, activePubkey: publicKey};
+  }
+  return Object.keys(keys).length ? keys : null;
 };
 
 const derivateFromMasterPassword = (
@@ -130,7 +128,8 @@ export default async (
   pwd: string,
 ): Promise<AccountKeys | null> => {
   try {
-    const account = (await getClient().database.getAccounts([username]))[0];
+    const accounts = await getClient().database.getAccounts([username.trim()]);
+    const account = accounts[0];
     if (!account)
       throw new Error(
         translate('toast.account_not_in_hive', {account: username}),

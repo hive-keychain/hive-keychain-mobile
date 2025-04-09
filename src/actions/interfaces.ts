@@ -212,6 +212,11 @@ export interface Currency {
   usd?: number;
 }
 
+export interface HiveEngineCurrency {
+  usd_24h_change?: number;
+  usd?: string;
+}
+
 export interface CurrencyPrices {
   bitcoin: Currency;
   hive: Currency;
@@ -234,8 +239,9 @@ export interface Account {
 export interface MessageModalPayload {
   key: string;
   type: MessageModalType;
-  params?: {};
+  params?: any;
   skipTranslation?: boolean;
+  callback?: () => void;
 }
 
 export interface FloatingBarPayload {

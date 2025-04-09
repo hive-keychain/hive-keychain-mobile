@@ -9,7 +9,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
@@ -18,7 +17,6 @@ import {
   getFontSizeSmallDevices,
   headlines_primary_headline_2,
 } from 'src/styles/typography';
-import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
@@ -34,11 +32,9 @@ interface Props {
 }
 
 const VestingRoutes = ({
-  navigation,
-  accounts,
   vestingRoutesDifferences,
   setVestingRoutesDifferences,
-}: Props & PropsFromRedux): null => {
+}: Props): null => {
   const {theme} = useThemeContext();
   const [moveNext, setMoveNext] = useState<boolean>(false);
 
@@ -157,9 +153,4 @@ const getStyles = (theme: Theme, screenDimensions: Dimensions) =>
     paddingTop: {paddingTop: 20},
   });
 
-const connector = connect((state: RootState) => {
-  return {accounts: state.accounts};
-}, {});
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-export const VestingRoutesPopup = connector(VestingRoutes);
+export const VestingRoutesPopup = VestingRoutes;

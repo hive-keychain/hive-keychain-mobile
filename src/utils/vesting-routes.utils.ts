@@ -53,16 +53,27 @@ const getLastVestingRoutes = async () => {
   return result ?? null;
 };
 
-const getWrongVestingRoutes = async (localAccounts: Account[]) => {
+const getChangedVestingRoutes = async (localAccounts: Account[]) => {
   let currentVestingRoutes = await VestingRoutesUtils.getAllAccountsVestingRoutes(
     localAccounts.map((acc) => acc.name),
     'outgoing',
   );
-
   const lastVestingRoutes = await VestingRoutesUtils.getLastVestingRoutes();
+
   if (!lastVestingRoutes) {
     VestingRoutesUtils.saveLastVestingRoutes(currentVestingRoutes);
     return undefined;
+  } else {
+    const unsavedAccountsVestingRoutes = currentVestingRoutes.filter(
+      (e) => !lastVestingRoutes?.find((elt) => elt.account === e.account),
+    );
+
+    if (unsavedAccountsVestingRoutes.length) {
+      VestingRoutesUtils.saveLastVestingRoutes([
+        ...lastVestingRoutes,
+        ...unsavedAccountsVestingRoutes,
+      ]);
+    }
   }
 
   let accountsVestingRoutesDifferences: AccountVestingRoutesDifferences[] = [];
@@ -243,7 +254,7 @@ export const VestingRoutesUtils = {
   getAllAccountsVestingRoutes,
   getLastVestingRoutes,
   saveLastVestingRoutes,
-  getWrongVestingRoutes,
+  getChangedVestingRoutes,
   getVestingRouteOperation,
   sendVestingRoute,
   skipAccountRoutes,

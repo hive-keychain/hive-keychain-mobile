@@ -1,5 +1,6 @@
 import Cube3dRotate from 'assets/new_UI/3d-rotate.svg';
 import Cube3dScanIcon from 'assets/new_UI/3d_cube_scan.svg';
+import MultiSigIcon from 'assets/new_UI/accounts-multisig.svg';
 import AddAccountIcon from 'assets/new_UI/add_account.svg';
 import ArrowLeftIcon from 'assets/new_UI/arrow-left.svg';
 import ArrowUpIcon from 'assets/new_UI/arrow-up.svg';
@@ -69,6 +70,8 @@ import {default as ArrowUpwardIcon} from 'src/assets/icons/svgs/arrow_upward.svg
 import DeleteIcon from 'src/assets/icons/svgs/delete_black.svg';
 import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
+import ExportIcon from 'assets/new_UI/export.svg';
+import CalendarIcon from 'src/assets/new_UI/calendar.svg';
 import ConvertIcon from 'src/assets/new_UI/convert.svg';
 import DelegateTokenIcon from 'src/assets/new_UI/delegate-token.svg';
 import Desktop from 'src/assets/new_UI/desktop.svg';
@@ -670,9 +673,30 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
+    case name === Icons.MULTISIG:
+      return (
+        <MultiSigIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
     case name === Icons.NOTIFICATIONS:
       return (
         <NotificationsIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.CALENDAR:
+      return (
+        <CalendarIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.EXPORT:
+      return (
+        <ExportIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

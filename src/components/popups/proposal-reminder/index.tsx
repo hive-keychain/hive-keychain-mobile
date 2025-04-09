@@ -6,7 +6,10 @@ import React, {useEffect} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {getColors} from 'src/styles/colors';
+import {getModalBaseStyle} from 'src/styles/modal';
 import {RootState} from 'store';
 import {toHP} from 'utils/format';
 import {getClient, updateProposalVote} from 'utils/hive';
@@ -31,16 +34,25 @@ const hasVotedForProposal = async (
   return listProposalVotes[0].voter === username;
 };
 const getNotifiedVoters = async (): Promise<string[]> => {
-  return JSON.parse(
+  const voters = JSON.parse(
     (await AsyncStorage.getItem(KeychainStorageKeyEnum.PROPOSAL_NOTIFIED)) ||
       '[]',
   );
+
+  try {
+    if (!Array.isArray(voters)) return [];
+    return voters;
+  } catch (e) {
+    return [];
+  }
 };
 
 const addNotifiedVoter = async (name: string) => {
+  const array = await getNotifiedVoters();
+  array.push(name);
   await AsyncStorage.setItem(
     KeychainStorageKeyEnum.PROPOSAL_NOTIFIED,
-    JSON.stringify((await getNotifiedVoters()).push(name)),
+    JSON.stringify(array),
   );
 };
 
@@ -50,9 +62,12 @@ const ProposalReminder = ({
   globalProps,
   addTab,
 }: Props & PropsFromRedux): null => {
+  const {theme} = useThemeContext();
+
   useEffect(() => {
     checkIfShouldNotify();
   }, [user]);
+  const styles = getStyles(theme);
   const checkIfShouldNotify = async () => {
     const notified = await getNotifiedVoters();
     if (
@@ -63,8 +78,10 @@ const ProposalReminder = ({
     ) {
       Image.prefetch(IMAGE_URI).then((val) => {
         navigate('ModalScreen', {
-          name: 'Whats_new_popup',
+          name: 'ProposalPopup',
           modalContent: renderContent(),
+          modalContainerStyle: getModalBaseStyle(theme).roundedTop,
+
           onForceCloseModal: () => {},
         });
       });
@@ -93,7 +110,7 @@ const ProposalReminder = ({
         <Text style={styles.text}>
           Read more{' '}
           <Text
-            style={{color: 'black', fontWeight: 'bold'}}
+            style={{color: getColors(theme).secondaryText, fontWeight: 'bold'}}
             onPress={() => {
               addNotifiedVoter(user.name);
               addTab(`https://peakd.com/proposals/${KEYCHAIN_PROPOSAL}`);
@@ -114,6 +131,7 @@ const ProposalReminder = ({
             style={{
               alignItems: 'center',
               justifyContent: 'center',
+
               width: 100,
             }}>
             <Text
@@ -121,7 +139,8 @@ const ProposalReminder = ({
                 fontSize: 14,
                 textAlign: 'center',
                 fontWeight: 'bold',
-                textDecorationColor: 'black',
+                color: getColors(theme).secondaryText,
+                textDecorationColor: getColors(theme).secondaryText,
                 textDecorationLine: 'underline',
               }}
               onPress={() => {
@@ -154,25 +173,31 @@ const ProposalReminder = ({
   return null;
 };
 
-const styles = StyleSheet.create({
-  rootContainer: {
-    width: '100%',
-  },
-  title: {
-    textAlign: 'center',
-    color: 'black',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  text: {fontSize: 16, marginBottom: 10},
-  image: {
-    marginBottom: 30,
-    aspectRatio: 1.6,
-    alignSelf: 'center',
-    width: '100%',
-  },
-});
+const getStyles = (theme: Theme) =>
+  StyleSheet.create({
+    rootContainer: {
+      width: '100%',
+      padding: 12,
+    },
+    title: {
+      textAlign: 'center',
+      color: getColors(theme).secondaryText,
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+    text: {
+      fontSize: 16,
+      marginBottom: 10,
+      color: getColors(theme).secondaryText,
+    },
+    image: {
+      marginBottom: 30,
+      aspectRatio: 1.6,
+      alignSelf: 'center',
+      width: '100%',
+    },
+  });
 
 const mapStateToProps = (state: RootState) => {
   return {

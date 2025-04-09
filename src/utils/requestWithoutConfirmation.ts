@@ -7,6 +7,7 @@ import {postWithoutConfirmation} from 'components/browser/requestOperations/Post
 import {signBufferWithoutConfirmation} from 'components/browser/requestOperations/SignBuffer';
 import {signTxWithoutConfirmation} from 'components/browser/requestOperations/SignTx';
 import {voteWithoutConfirmation} from 'components/browser/requestOperations/Vote';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {
   KeychainRequest,
   KeychainRequestTypes,
@@ -29,6 +30,7 @@ export const requestWithoutConfirmation = (
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
   has?: boolean,
+  options?: TransactionOptions,
 ) => {
   switch (request.type) {
     case KeychainRequestTypes.decode:
@@ -59,15 +61,30 @@ export const requestWithoutConfirmation = (
         sendResponse,
         sendError,
         has,
+        options,
       );
       break;
     case KeychainRequestTypes.vote:
       request as RequestVote & RequestId;
-      voteWithoutConfirmation(accounts, request, sendResponse, sendError, has);
+      voteWithoutConfirmation(
+        accounts,
+        request,
+        sendResponse,
+        sendError,
+        has,
+        options,
+      );
       break;
     case KeychainRequestTypes.post:
       request as RequestPost & RequestId;
-      postWithoutConfirmation(accounts, request, sendResponse, sendError, has);
+      postWithoutConfirmation(
+        accounts,
+        request,
+        sendResponse,
+        sendError,
+        has,
+        options,
+      );
       break;
     case KeychainRequestTypes.custom:
       request as RequestCustomJSON & RequestId;
@@ -77,6 +94,7 @@ export const requestWithoutConfirmation = (
         sendResponse,
         sendError,
         has,
+        options,
       );
       break;
     case KeychainRequestTypes.encode:

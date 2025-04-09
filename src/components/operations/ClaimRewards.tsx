@@ -1,5 +1,7 @@
 import {loadAccount} from 'actions/hive';
+import {KeyTypes} from 'actions/interfaces';
 import Icon from 'components/hive/Icon';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -7,6 +9,7 @@ import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {RootState} from 'store';
 import {toHP} from 'utils/format';
@@ -25,6 +28,7 @@ const ClaimRewards = ({
 }: PropsFromRedux & Props) => {
   const {account, keys, name} = active;
   const styles = getStyles(theme);
+  const [isMultisig] = useCheckForMultisig(KeyTypes.posting, active);
   if (
     parseFloat(account.reward_hbd_balance + '') ||
     parseFloat(account.reward_hive_balance + '') ||
@@ -43,12 +47,16 @@ const ClaimRewards = ({
             return;
           }
           try {
-            const res = await claimRewards(keys.posting, {
-              account: name,
-              reward_hbd: account.reward_hbd_balance,
-              reward_hive: account.reward_hive_balance,
-              reward_vests: account.reward_vesting_balance,
-            });
+            const res = await claimRewards(
+              keys.posting,
+              {
+                account: name,
+                reward_hbd: account.reward_hbd_balance,
+                reward_hive: account.reward_hive_balance,
+                reward_vests: account.reward_vesting_balance,
+              },
+              {multisig: isMultisig, fromWallet: true} as TransactionOptions,
+            );
             if (res) {
               const rewards = [
                 account.reward_hbd_balance,

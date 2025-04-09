@@ -16,6 +16,8 @@ interface CaptionProps {
   additionnalTextOnClick?: () => void;
   skipTranslation?: boolean;
   justify?: boolean;
+  skipFirstTextLine?: boolean;
+  separatorHeight?: number;
 }
 
 export const Caption = ({
@@ -28,6 +30,8 @@ export const Caption = ({
   additionnalTextOnClick,
   skipTranslation,
   justify,
+  skipFirstTextLine,
+  separatorHeight,
 }: CaptionProps) => {
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
@@ -38,13 +42,15 @@ export const Caption = ({
 
   return (
     <>
-      <Text
-        style={[
-          getCaptionStyle(width, theme),
-          justify ? {textAlign: 'justify'} : undefined,
-        ]}>
-        {skipTranslation ? text : translate(text, textParams)}
-      </Text>
+      {!skipFirstTextLine && (
+        <Text
+          style={[
+            getCaptionStyle(width, theme),
+            justify ? {textAlign: 'justify'} : undefined,
+          ]}>
+          {skipTranslation ? text : translate(text, textParams)}
+        </Text>
+      )}
       {additionnalText && (
         <Text
           style={[
@@ -58,6 +64,7 @@ export const Caption = ({
       )}
       {
         <Separator
+          height={separatorHeight}
           drawLine={!hideSeparator}
           additionalLineStyle={{
             borderColor: getColors(theme).secondaryCardBorderColor,

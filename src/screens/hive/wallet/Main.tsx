@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useIsDrawerOpen } from '@react-navigation/drawer';
+import {useIsDrawerOpen} from '@react-navigation/drawer';
 import {
   setIsDrawerOpen,
   setisLoadingScreen,
@@ -11,7 +11,7 @@ import {
   loadPrices,
   loadProperties,
 } from 'actions/hive';
-import { loadTokens, loadTokensMarket } from 'actions/index';
+import {loadTokens, loadTokensMarket} from 'actions/index';
 import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import UserDropdown from 'components/form/UserDropdown';
@@ -23,22 +23,22 @@ import Notifications from 'components/hive/notifications/Notifications';
 import PercentageDisplay from 'components/hive/PercentageDisplay';
 import StatusIndicator from 'components/hive_authentication_service/StatusIndicator';
 import Claim from 'components/operations/ClaimRewards';
-import { TutorialPopup } from 'components/popups/tutorial/Tutorial';
-import { AccountVestingRoutesDifferences } from 'components/popups/vesting-routes/vesting-routes.interface';
-import { VestingRoutesPopup } from 'components/popups/vesting-routes/VestingRoutes';
+import {TutorialPopup} from 'components/popups/tutorial/Tutorial';
+import {AccountVestingRoutesDifferences} from 'components/popups/vesting-routes/vesting-routes.interface';
+import {VestingRoutesPopup} from 'components/popups/vesting-routes/VestingRoutes';
 import WhatsNew from 'components/popups/whats-new/WhatsNew';
 import WidgetConfiguration from 'components/popups/widget-configuration/WidgetConfiguration';
 import WrongKeyPopup from 'components/popups/wrong-key/WrongKeyPopup';
-import { ProposalVotingSectionComponent } from 'components/proposal-voting/proposalVoting';
+import {ProposalVotingSectionComponent} from 'components/proposal-voting/proposalVoting';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import WalletPage from 'components/ui/WalletPage';
-import { useBackButtonNavigation } from 'hooks/useBackButtonNavigate';
+import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
-import { WalletNavigation } from 'navigators/MainDrawer.types';
-import { TemplateStackProps } from 'navigators/Root.types';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {WalletNavigation} from 'navigators/MainDrawer.types';
+import {TemplateStackProps} from 'navigators/Root.types';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
@@ -54,13 +54,13 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ConnectedProps, connect } from 'react-redux';
-import { Theme, useThemeContext } from 'src/context/theme.context';
-import { Icons } from 'src/enums/icons.enums';
-import { TokenBalance } from 'src/interfaces/tokens.interface';
-import { KeychainStorageKeyEnum } from 'src/reference-data/keychainStorageKeyEnum';
-import { getCardStyle } from 'src/styles/card';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {TokenBalance} from 'src/interfaces/tokens.interface';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
+import {getCardStyle} from 'src/styles/card';
 import {
   BACKGROUNDITEMDARKISH,
   DARKBLUELIGHTER,
@@ -69,21 +69,21 @@ import {
   OVERLAYICONBGCOLOR,
   getColors,
 } from 'src/styles/colors';
-import { TOP_CONTAINER_SEPARATION } from 'src/styles/spacing';
+import {TOP_CONTAINER_SEPARATION} from 'src/styles/spacing';
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   button_link_primary_medium,
 } from 'src/styles/typography';
-import { RootState } from 'store';
-import { Dimensions } from 'utils/common.types';
-import { getCurrency } from 'utils/hive';
-import { restartHASSockets } from 'utils/hiveAuthenticationService';
-import { getHiveEngineTokenValue } from 'utils/hiveEngine';
-import { getVP, getVotingDollarsPerAccount } from 'utils/hiveUtils';
-import { translate } from 'utils/localize';
-import { navigate } from 'utils/navigation';
-import { VestingRoutesUtils } from 'utils/vesting-routes.utils';
-import { WidgetUtils } from 'utils/widget.utils';
+import {RootState} from 'store';
+import {Dimensions} from 'utils/common.types';
+import {getCurrency} from 'utils/hive';
+import {restartHASSockets} from 'utils/hiveAuthenticationService';
+import {getHiveEngineTokenValue} from 'utils/hiveEngine';
+import {getVP, getVotingDollarsPerAccount} from 'utils/hiveUtils';
+import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
+import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
+import {WidgetUtils} from 'utils/widget.utils';
 import TokenSettings from './tokens/TokenSettings';
 
 const Main = ({
@@ -132,7 +132,6 @@ const Main = ({
   const mainScrollRef = useRef();
 
   const [eventReceived, setEventReceived] = useState(null);
-  const [notificationEvent, setNotificationEvent] = useState(null);
   const [showWidgetConfiguration, setShowWidgetConfiguration] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -208,7 +207,7 @@ const Main = ({
     if (
       properties.globals &&
       Object.keys(properties.globals).length > 0 &&
-      user.name
+      user.account?.name
     ) {
       setLoadingUserAndGlobals(false);
       setisLoadingScreen(false);
@@ -217,7 +216,7 @@ const Main = ({
         loadHiddenTokens();
       }
     }
-  }, [properties, user.name]);
+  }, [properties, user.account?.name]);
 
   useEffect(() => {
     const filtered = orderedUserTokenBalanceList.filter(
@@ -287,7 +286,7 @@ const Main = ({
   }, []);
 
   const initCheckVestingRoutes = async () => {
-    const tempVestingRoutesDifferences = await VestingRoutesUtils.getWrongVestingRoutes(
+    const tempVestingRoutesDifferences = await VestingRoutesUtils.getChangedVestingRoutes(
       accounts,
     );
     setVestingRoutesDifferences(tempVestingRoutesDifferences);
@@ -379,7 +378,10 @@ const Main = ({
                   />
                 }
                 scrollEventThrottle={200}
-                onScroll={onHandleScroll}>
+                onScroll={onHandleScroll}
+                onMomentumScrollEnd={() => {
+                  showFloatingBar(true);
+                }}>
                 <View style={styles.rowWrapper}>
                   <PercentageDisplay
                     name={translate('wallet.vp')}

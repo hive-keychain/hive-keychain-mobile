@@ -1,12 +1,14 @@
 import {VestingDelegation} from '@hiveio/dhive';
 import {loadAccount, loadDelegatees, loadDelegators} from 'actions/index';
-import {IncomingDelegation} from 'actions/interfaces';
+import {IncomingDelegation, KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import TwoFaModal from 'components/modals/TwoFaModal';
 import {Caption} from 'components/ui/Caption';
 import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Separator from 'components/ui/Separator';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
 import {
@@ -22,6 +24,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle, getSeparatorLineStyle} from 'src/styles/line';
@@ -41,7 +44,7 @@ import {
   sanitizeUsername,
 } from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
-import {goBack} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 import OperationThemed from './OperationThemed';
 
 interface DelegationListProps {
@@ -80,7 +83,7 @@ const DelegationsList = ({
   const [editedAmountDelegation, setEditedAmountDelegation] = useState('');
   const [editMode, setEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isMultisig, twoFABots] = useCheckForMultisig(KeyTypes.active, user);
   const {width} = useWindowDimensions();
   const styles = getDimensionedStyles(theme, width);
 
@@ -142,41 +145,65 @@ const DelegationsList = ({
 
   const renderOutgoingItem = (item: VestingDelegation) => {
     const onDelegate = async (isCancellingDelegation: boolean) => {
-      setIsLoading(true);
-      Keyboard.dismiss();
-      try {
-        const amount = isCancellingDelegation ? '0' : editedAmountDelegation;
-        const delegation = await delegate(user.keys.active, {
-          vesting_shares: sanitizeAmount(
-            fromHP(sanitizeAmount(amount), properties.globals).toString(),
-            'VESTS',
-            6,
-          ),
-          delegatee: sanitizeUsername(item.delegatee),
-          delegator: user.account.name,
-        });
-        loadAccount(user.account.name, true);
-        goBack();
-        if (parseFloat(amount.replace(',', '.')) !== 0) {
-          showModal('toast.delegation_success', MessageModalType.SUCCESS);
-        } else {
-          showModal('toast.stop_delegation_success', MessageModalType.SUCCESS);
+      const handleSubmit = async (options: TransactionOptions) => {
+        setIsLoading(true);
+        Keyboard.dismiss();
+        try {
+          const amount = isCancellingDelegation ? '0' : editedAmountDelegation;
+          const delegation = await delegate(
+            user.keys.active,
+            {
+              vesting_shares: sanitizeAmount(
+                fromHP(sanitizeAmount(amount), properties.globals).toString(),
+                'VESTS',
+                6,
+              ),
+              delegatee: sanitizeUsername(item.delegatee),
+              delegator: user.account.name,
+            },
+            options,
+          );
+          loadAccount(user.account.name, true);
+          goBack();
+          if (!isMultisig) {
+            if (parseFloat(amount.replace(',', '.')) !== 0) {
+              showModal('toast.delegation_success', MessageModalType.SUCCESS);
+            } else {
+              showModal(
+                'toast.stop_delegation_success',
+                MessageModalType.SUCCESS,
+              );
+            }
+          }
+        } catch (e) {
+          if (!isMultisig)
+            showModal(
+              `Error : ${(e as any).message}`,
+              MessageModalType.ERROR,
+              null,
+              true,
+            );
+        } finally {
+          setSelectedOutgoingItem(undefined);
+          setShowCancelConfirmationDelegation(false);
+          setEditMode(false);
+          setIsLoading(false);
         }
-      } catch (e) {
-        showModal(
-          `Error : ${(e as any).message}`,
-          MessageModalType.ERROR,
-          null,
-          true,
-        );
-      } finally {
-        setSelectedOutgoingItem(undefined);
-        setShowCancelConfirmationDelegation(false);
-        setEditMode(false);
-        setIsLoading(false);
+      };
+      if (Object.entries(twoFABots).length > 0) {
+        navigate('ModalScreen', {
+          name: `2FA`,
+          modalContent: (
+            <TwoFaModal twoFABots={twoFABots} onSubmit={handleSubmit} />
+          ),
+        });
+      } else {
+        handleSubmit({
+          multisig: isMultisig,
+          fromWallet: true,
+        });
       }
     };
-
     const isItemSelected =
       selectedOutgoingItem && selectedOutgoingItem.id === item.id;
 

@@ -9,24 +9,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="8dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="24dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:src="@drawable/keychain_rounded_logo"
-                android:layout_gravity="center"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Keychain Portfolio"
+                android:text="Hive Keychain - My Portfolio"
                 android:textSize="14dp"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:layout_marginLeft="4dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
@@ -50,8 +52,9 @@
 
             <StackView
                 android:id="@+id/widget_account_balance_list_stack_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="360dp"
+                android:layout_height="180dp"
+                android:paddingLeft="-10dp"
                 android:loopViews="true"
                 android:backgroundTint="@color/white"
                 android:layout_gravity="start"

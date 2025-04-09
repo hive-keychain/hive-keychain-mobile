@@ -20,6 +20,8 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {KeyType} from 'src/interfaces/keys.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
@@ -58,6 +60,7 @@ const Savings = ({
   operation,
   userSavingsWithdrawRequests,
   showModal,
+  apr,
 }: Props) => {
   const [to, setTo] = useState(user.name!);
   const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
@@ -127,25 +130,35 @@ const Savings = ({
     updateTotalSavingWithdrawals(list);
   };
 
-  const onSavings = async () => {
+  const onSavings = async (options: TransactionOptions) => {
     try {
       if (operationType === SavingsOperations.deposit) {
-        await depositToSavings(user.keys.active, {
-          request_id: Date.now(),
-          from: to,
-          to: to,
-          amount: `${(+amount).toFixed(3)} ${currency}`,
-          memo: '',
-        });
+        await depositToSavings(
+          user.keys.active,
+          {
+            request_id: Date.now(),
+            from: to,
+            to: to,
+            amount: `${(+amount).toFixed(3)} ${currency}`,
+            memo: '',
+          },
+          options,
+        );
       } else {
-        await withdrawFromSavings(user.keys.active, {
-          request_id: Date.now(),
-          from: to,
-          to: to,
-          amount: `${(+amount).toFixed(3)} ${currency}`,
-          memo: '',
-        });
+        await withdrawFromSavings(
+          user.keys.active,
+          {
+            request_id: Date.now(),
+            from: to,
+            to: to,
+            amount: `${(+amount).toFixed(3)} ${currency}`,
+            memo: '',
+          },
+          options,
+        );
       }
+      if (options.multisig) return;
+
       if (operationType === SavingsOperations.deposit) {
         showModal('toast.savings_deposit_success', MessageModalType.SUCCESS, {
           amount: `${(+amount).toFixed(3)} ${currency}`,
@@ -178,6 +191,7 @@ const Savings = ({
     } else {
       const confirmationData: ConfirmationPageProps = {
         onSend: onSavings,
+        keyType: KeyType.ACTIVE,
         title: 'wallet.operations.savings.confirm.info',
         data: [
           {
@@ -282,7 +296,11 @@ const Savings = ({
             operationType !== SavingsOperations.deposit) && (
             <View>
               <Caption
-                text={`wallet.operations.savings.${operationType}_disclaimer`}
+                text={translate(
+                  `wallet.operations.savings.${operationType}_disclaimer`,
+                  {apr},
+                )}
+                skipTranslation
               />
             </View>
           )}
@@ -457,6 +475,7 @@ const connector = connect(
       user: state.activeAccount,
       userSavingsWithdrawRequests:
         state.activeAccount.account.savings_withdraw_requests,
+      apr: state.properties.globals.hbd_interest_rate / 100,
     };
   },
   {showModal},

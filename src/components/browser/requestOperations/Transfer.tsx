@@ -2,6 +2,8 @@ import {KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
+import SimpleToast from 'react-native-simple-toast';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {beautifyTransferError} from 'utils/format';
 import {transfer} from 'utils/hive';
 import {getAccountKeys} from 'utils/hiveUtils';
@@ -47,9 +49,14 @@ export default ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
+      selectedUsername={getUsername()}
+      performOperation={async (options: TransactionOptions) => {
         let finalMemo = memo;
         if (memo.length && memo[0] === '#') {
+          if (!getAccountMemoKey()) {
+            SimpleToast.show(translate('request.error.transfer.encrypt'));
+            return;
+          }
           const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
           finalMemo = await encodeMemo(
             getAccountMemoKey(),
@@ -57,12 +64,16 @@ export default ({
             memo,
           );
         }
-        return await transfer(getAccountKey(), {
-          from: getUsername(),
-          to,
-          memo: finalMemo,
-          amount: `${amount} ${currency}`,
-        });
+        return await transfer(
+          getAccountKey(),
+          {
+            from: getUsername(),
+            to,
+            memo: finalMemo,
+            amount: `${amount} ${currency}`,
+          },
+          options,
+        );
       }}>
       <RequestUsername />
       <RequestItem title={translate('request.item.to')} content={`@${to}`} />

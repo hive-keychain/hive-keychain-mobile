@@ -32,7 +32,7 @@ export enum Icons {
   SUCCESS = 'success',
   // EXPAND_MORE = 'expand_more',
 
-  EXPORT = 'file_download',
+  EXPORT = 'export.svg',
   FILTER = 'filter_alt',
   HIDDEN = 'visibility_off',
   HISTORY = 'history',
@@ -163,5 +163,7 @@ export enum Icons {
   HOME_BROWSER = 'HOME_BROWSER',
   DESKTOP = 'DESKTOP',
   MOBILE = 'MOBILE',
+  MULTISIG = 'MULTISIG',
   NOTIFICATIONS = 'NOTIFICATIONS',
+  CALENDAR = 'calendar.svg',
 }

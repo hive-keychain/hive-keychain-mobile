@@ -27,7 +27,7 @@ interface OperationProps {
   additionalBgSvgImageStyle?: StyleProp<ImageStyle>;
   onNext?: () => void;
   buttonTitle?: string;
-  method?: KeyTypes;
+  method?: KeyTypes | 'none';
   loading?: boolean;
   inScrollView?: boolean;
 }

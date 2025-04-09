@@ -1,8 +1,9 @@
 import {loadAccount} from 'actions/index';
-import {TokenBalance} from 'actions/interfaces';
+import {KeyTypes, TokenBalance} from 'actions/interfaces';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
@@ -53,7 +54,7 @@ const IncomingOutGoingTokenDelegations = ({
 }: Props) => {
   const [loading, setLoading] = useState(false);
   const [delegationList, setDelegationList] = useState<TokenDelegation[]>([]);
-
+  const [isMultisig, twoFABots] = useCheckForMultisig(KeyTypes.active, user);
   const {width} = useWindowDimensions();
 
   useEffect(() => {
@@ -83,6 +84,8 @@ const IncomingOutGoingTokenDelegations = ({
         token={token}
         tokenInfo={tokenInfo}
         theme={theme}
+        isMultisig={isMultisig}
+        twoFABots={twoFABots}
       />
     );
   };

@@ -98,7 +98,7 @@ const getStyles = (theme: Theme, width: Dimensions['width']) =>
       position: 'relative',
       alignItems: 'center',
       justifyContent: 'center',
-      marginRight: 8,
+      marginRight: 12,
       borderRadius: 50,
       width: 25,
       height: 25,

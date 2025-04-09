@@ -52,7 +52,8 @@ const DEFAULT_CUSTOM_RPC = {
   uri: '',
   testnet: false,
 };
-export const DEFAULT_HE_RPC_NODE = 'https://engine.rishipanthee.com';
+export const DEFAULT_HE_RPC_NODE = 'https://api.hive-engine.com/rpc';
+
 export const DEFAULT_ACCOUNT_HISTORY_RPC_NODE =
   'https://history.hive-engine.com';
 

@@ -29,7 +29,7 @@ export const unlock = (
         payload: {accounts: accounts.list},
       };
       dispatch(init);
-      BackGroundUtils.init();
+      BackGroundUtils.init(accounts.list);
     }
     if (getState().browser.shouldFocus) {
       navigate('BrowserScreen');
@@ -50,8 +50,8 @@ export const lock = () => {
   return action;
 };
 
-export * from 'actions/accountValueDisplay';
 export * from 'actions/accounts';
+export * from 'actions/accountValueDisplay';
 export * from 'actions/browser';
 export * from 'actions/colors';
 export * from 'actions/hive';

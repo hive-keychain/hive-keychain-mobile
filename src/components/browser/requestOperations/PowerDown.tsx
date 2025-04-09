@@ -1,6 +1,7 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {RootState} from 'store';
 import {fromHP} from 'utils/format';
 import {powerDown} from 'utils/hive';
@@ -44,7 +45,7 @@ const PowerDown = ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
+      performOperation={async (options: TransactionOptions) => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
         const vesting_shares = sanitizeAmount(
@@ -52,10 +53,14 @@ const PowerDown = ({
           'VESTS',
           6,
         );
-        return await powerDown(key, {
-          account: username,
-          vesting_shares,
-        });
+        return await powerDown(
+          key,
+          {
+            account: username,
+            vesting_shares,
+          },
+          options,
+        );
       }}>
       <RequestItem
         title={translate('request.item.username')}

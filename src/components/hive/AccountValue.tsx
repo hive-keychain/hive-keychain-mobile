@@ -36,16 +36,21 @@ const AccountValue = ({
   tokensMarket,
 }: Props) => {
   const [accountValue, setAccountValue] = useState([]);
+
   useEffect(() => {
+    init();
+  }, [prices, properties, account, userTokens]);
+
+  const init = async () => {
     if (prices.bitcoin && account && properties.globals) {
       const accVal =
-        getAccountValue(
+        (await getAccountValue(
           account,
           prices,
           properties.globals,
           userTokens,
           tokensMarket,
-        ) + '';
+        )) + '';
       if (isNaN(+accVal)) {
         setAccountValue(['...']);
         return;
@@ -57,8 +62,7 @@ const AccountValue = ({
         ]);
       }
     }
-  }, [prices, properties, account, userTokens]);
-
+  };
   const styles = getStyles(theme, useWindowDimensions());
   const regexp = new RegExp(/\d/, 'ig');
 

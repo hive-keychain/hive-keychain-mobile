@@ -1,5 +1,6 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {vote} from 'utils/hive';
 import {
   RequestError,
@@ -42,8 +43,8 @@ export default ({
       method={KeyTypes.posting}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={() => {
-        return performVoteOperation(accounts, request);
+      performOperation={(options: TransactionOptions) => {
+        return performVoteOperation(accounts, request, options);
       }}>
       <RequestItem
         title={translate('request.item.username')}
@@ -68,16 +69,21 @@ export default ({
 const performVoteOperation = async (
   accounts: Account[],
   request: RequestVote & RequestId,
+  options?: TransactionOptions,
 ) => {
   const {username, author, permlink, weight} = request;
   const account = accounts.find((e) => e.name === request.username);
   const key = account.keys.posting;
-  return await vote(key, {
-    voter: username,
-    author,
-    permlink,
-    weight: +weight,
-  });
+  return await vote(
+    key,
+    {
+      voter: username,
+      author,
+      permlink,
+      weight: +weight,
+    },
+    options,
+  );
 };
 
 export const voteWithoutConfirmation = (
@@ -86,9 +92,10 @@ export const voteWithoutConfirmation = (
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
   has?: boolean,
+  options?: TransactionOptions,
 ) => {
   processOperationWithoutConfirmation(
-    async () => await performVoteOperation(accounts, request),
+    async () => await performVoteOperation(accounts, request, options),
     request,
     sendResponse,
     sendError,

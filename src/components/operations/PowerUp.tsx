@@ -17,6 +17,8 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {KeyType} from 'src/interfaces/keys.interface';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle, title_primary_body_2} from 'src/styles/typography';
@@ -52,13 +54,19 @@ const PowerUp = ({
   const availableHiveAmount = getCurrencyProperties(currency, user.account)
     .value as string;
 
-  const onPowerUp = async () => {
+  const onPowerUp = async (options: TransactionOptions) => {
     try {
-      await powerUp(user.keys.active!, {
-        amount: sanitizeAmount(amount, currency),
-        to: sanitizeUsername(to),
-        from: user.account.name,
-      });
+      await powerUp(
+        user.keys.active!,
+        {
+          amount: sanitizeAmount(amount, currency),
+          to: sanitizeUsername(to),
+          from: user.account.name,
+        },
+        options,
+      );
+      if (options.multisig) return;
+
       showModal('toast.powerup_success', MessageModalType.SUCCESS);
     } catch (e) {
       showModal(
@@ -82,6 +90,7 @@ const PowerUp = ({
     } else {
       const confirmationData: ConfirmationPageProps = {
         onSend: onPowerUp,
+        keyType: KeyType.ACTIVE,
         title: 'wallet.operations.powerup.confirm.info',
         data: [
           {

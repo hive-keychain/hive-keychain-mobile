@@ -34,6 +34,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {CreateDataAccountOnBoarding} from 'src/interfaces/create-accounts.interface';
+import {KeyType} from 'src/interfaces/keys.interface';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {MARGIN_PADDING} from 'src/styles/spacing';
@@ -219,48 +220,66 @@ const CreateAccountStepOne = ({
         return;
       }
     }
-    const result = await AccountCreationUtils.createAccount(
-      creationType as AccountCreationType,
-      onBoardingUserData.name,
-      user.name!,
-      user.keys.active!,
-      AccountCreationUtils.generateAccountAuthorities({
-        owner: {public: onBoardingUserData.publicKeys.owner} as GeneratedKey,
-        active: {public: onBoardingUserData.publicKeys.active} as GeneratedKey,
-        posting: {
-          public: onBoardingUserData.publicKeys.posting,
-        } as GeneratedKey,
-        memo: {public: onBoardingUserData.publicKeys.memo} as GeneratedKey,
-      }),
-      price,
-    );
+    let result;
+    try {
+      result = await AccountCreationUtils.createAccount(
+        creationType as AccountCreationType,
+        onBoardingUserData.name,
+        user.name!,
+        user.keys.active!,
+        AccountCreationUtils.generateAccountAuthorities({
+          owner: {public: onBoardingUserData.publicKeys.owner} as GeneratedKey,
+          active: {
+            public: onBoardingUserData.publicKeys.active,
+          } as GeneratedKey,
+          posting: {
+            public: onBoardingUserData.publicKeys.posting,
+          } as GeneratedKey,
+          memo: {public: onBoardingUserData.publicKeys.memo} as GeneratedKey,
+        }),
+        price,
+      );
+    } catch (e) {
+      if (e.data.message)
+        showModal(
+          `components.accountCreationPeerToPeer.${e.data.name}`,
+          MessageModalType.ERROR,
+        );
+      console.log(e);
+      return;
+    }
     if (result) {
       if (await AccountUtils.doesAccountExist(onBoardingUserData.name)) {
         let delegationFlag = false;
         if (+onBoardingDelegations.hpAmount > 0) {
           delegationFlag = true;
-          const hpDelegationResult = await delegate(user.keys.active, {
-            vesting_shares: sanitizeAmount(
-              fromHP(
-                sanitizeAmount(onBoardingDelegations.hpAmount),
-                properties.globals,
-              ).toString(),
-              'VESTS',
-              6,
-            ),
-            delegatee: sanitizeUsername(onBoardingUserData.name),
-            delegator: user.account.name,
-          });
+          await delegate(
+            user.keys.active,
+            {
+              vesting_shares: sanitizeAmount(
+                fromHP(
+                  sanitizeAmount(onBoardingDelegations.hpAmount),
+                  properties.globals,
+                ).toString(),
+                'VESTS',
+                6,
+              ),
+              delegatee: sanitizeUsername(onBoardingUserData.name),
+              delegator: user.account.name,
+            },
+            {},
+          );
         }
         if (+onBoardingDelegations.rcAmount > 0) {
           delegationFlag = true;
-          const rcDelegationResult = await RcDelegationsUtils.sendDelegation(
+          await RcDelegationsUtils.sendDelegation(
             RcDelegationsUtils.gigaRcToRc(
               parseFloat(onBoardingDelegations.rcAmount),
             ),
             onBoardingUserData.name,
             user.name!,
             user.keys.posting!,
+            {},
           );
         }
         const successKey = delegationFlag
@@ -313,6 +332,7 @@ const CreateAccountStepOne = ({
         const confirmationData: ConfirmationPageProps = {
           title: 'wallet.operations.create_account.peer_to_peer.info',
           onSend: () => {},
+          keyType: KeyType.ACTIVE,
           skipWarningTranslation: true,
           data: [
             {
@@ -327,7 +347,11 @@ const CreateAccountStepOne = ({
             {
               title:
                 'wallet.operations.create_account.peer_to_peer.creation_method',
-              value: capitalize(creationType.split('_')[1].toLowerCase()),
+              value: translate(
+                creationType === AccountCreationType.USING_TICKET
+                  ? 'components.create_account.ticket'
+                  : 'components.create_account.buying',
+              ),
             },
             {
               title: `keys.owner`,

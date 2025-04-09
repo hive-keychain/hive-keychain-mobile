@@ -1,5 +1,6 @@
 import {KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {createClaimedAccount} from 'utils/hive';
 import {RequestCreateClaimedAccount, RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
@@ -32,19 +33,23 @@ const CreateAccount = ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={async () => {
+      performOperation={async (options: TransactionOptions) => {
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
-        return await createClaimedAccount(key, {
-          creator: username,
-          new_account_name: new_account,
-          owner: JSON.parse(owner),
-          active: JSON.parse(active),
-          posting: JSON.parse(posting),
-          json_metadata: '{}',
-          memo_key: memo,
-          extensions: [],
-        });
+        return await createClaimedAccount(
+          key,
+          {
+            creator: username,
+            new_account_name: new_account,
+            owner: JSON.parse(owner),
+            active: JSON.parse(active),
+            posting: JSON.parse(posting),
+            json_metadata: '{}',
+            memo_key: memo,
+            extensions: [],
+          },
+          options,
+        );
       }}>
       <RequestItem
         content={`@${username}`}

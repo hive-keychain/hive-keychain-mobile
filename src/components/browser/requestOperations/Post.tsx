@@ -1,5 +1,6 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {post} from 'utils/hive';
 import {
   RequestError,
@@ -48,8 +49,8 @@ export default ({
       method={KeyTypes.posting}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={() => {
-        return performPostOperation(accounts, request);
+      performOperation={(options: TransactionOptions) => {
+        return performPostOperation(accounts, request, options);
       }}>
       <RequestItem
         content={`@${username}`}
@@ -96,12 +97,13 @@ export default ({
 const performPostOperation = async (
   accounts: Account[],
   request: RequestPost & RequestId,
+  options?: TransactionOptions,
 ) => {
   const {request_id, ...data} = request;
 
   const account = accounts.find((e) => e.name === request.username);
   const key = account.keys.posting;
-  return await post(key, data);
+  return await post(key, data, options);
 };
 
 export const postWithoutConfirmation = (
@@ -110,9 +112,10 @@ export const postWithoutConfirmation = (
   sendResponse: (msg: RequestSuccess) => void,
   sendError: (msg: RequestError) => void,
   has?: boolean,
+  options?: TransactionOptions,
 ) => {
   processOperationWithoutConfirmation(
-    async () => await performPostOperation(accounts, request),
+    async () => await performPostOperation(accounts, request, options),
     request,
     sendResponse,
     sendError,
