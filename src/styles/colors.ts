@@ -80,6 +80,10 @@ export const getColors = (theme: Theme) => {
       theme === Theme.LIGHT
         ? 'rgba(72, 72, 72, 0.20)'
         : 'rgba(255, 255, 255, 0.20)',
+    overlay:
+      theme === Theme.LIGHT
+        ? 'rgba(72, 72, 72, 0.40)'
+        : 'rgba(255, 255, 255, 0.40)',
     betterContrastStroke: theme === Theme.DARK ? '#FFF' : 'none',
     icon: theme === Theme.LIGHT ? PRIMARY_RED_COLOR : '#FFF',
     iconBW: theme === Theme.LIGHT ? '#1E1E1E' : '#FFF',

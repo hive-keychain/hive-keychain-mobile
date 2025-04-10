@@ -32,11 +32,13 @@ export const addAccount = (
   keys: AccountKeys,
   wallet: boolean,
   qr: boolean,
+  multipleAccounts?: boolean,
 ): AppThunk => async (dispatch, getState) => {
   const mk = getState().auth.mk;
   const previousAccounts = getState().accounts;
   if (previousAccounts.find((e) => e.name === name)) {
-    Toast.show(translate('toast.account_already'));
+    Toast.show(translate('toast.account_already', {account: name}));
+    if (multipleAccounts) return;
     if (wallet) {
       qr ? resetStackAndNavigate('WALLET') : navigate('WALLET');
     }
@@ -56,6 +58,10 @@ export const addAccount = (
   );
 
   await saveOnKeychain('accounts', encrypted);
+  if (multipleAccounts) {
+    Toast.show(translate('toast.added_account', {account: name}));
+    return;
+  }
   if (wallet) {
     dispatch(loadAccount(name));
     qr ? resetStackAndNavigate('WALLET') : navigate('WALLET');

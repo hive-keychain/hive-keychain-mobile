@@ -14,6 +14,7 @@ import AccountManagementStack from './mainDrawerStacks/AccountManagement';
 import Accounts from './mainDrawerStacks/Accounts';
 import AddAccount from './mainDrawerStacks/AddAccount';
 import CreateAccount from './mainDrawerStacks/CreateAccount';
+import ExportAccountsQR from './mainDrawerStacks/ExportAccountsQR';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
 import Help from './mainDrawerStacks/Help';
 import Operation from './mainDrawerStacks/Operation';
@@ -85,6 +86,10 @@ export default () => {
         options={{
           unmountOnBlur: true,
         }}
+      />
+      <Drawer.Screen
+        name="ExportAccountsQRScreen"
+        component={ExportAccountsQR}
       />
       <Drawer.Screen name="AddAccountStack" component={AddAccount} />
       <Drawer.Screen
