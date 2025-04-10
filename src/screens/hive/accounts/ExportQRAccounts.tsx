@@ -1,3 +1,4 @@
+import {Account} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -7,6 +8,7 @@ import useLockedPortrait from 'hooks/useLockedPortrait';
 import {MainNavigation} from 'navigators/Root.types';
 import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import GestureRecognizer from 'react-native-swipe-gestures';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -37,7 +39,7 @@ const ExportQRAccounts = ({
   const styles = getStyles(theme, {width, height});
   const [accountsDataQR, setaccountsDataQR] = useState<
     {
-      data: string;
+      data: Account[];
       index: number;
       total: number;
     }[]
@@ -51,7 +53,7 @@ const ExportQRAccounts = ({
 
   const exportAllAccountsQR = () => {
     let tempAccountsDataQR: {
-      data: string;
+      data: Account[];
       index: number;
       total: number;
     }[] = [];
@@ -60,10 +62,8 @@ const ExportQRAccounts = ({
       index++;
       const tempLocalAccountsChunk = [...accounts].splice(i, 2);
       tempAccountsDataQR.push({
-        data: JSON.stringify(
-          tempLocalAccountsChunk.map((t) =>
-            AccountUtils.generateQRCodeFromAccount(t),
-          ),
+        data: tempLocalAccountsChunk.map((t) =>
+          AccountUtils.generateQRCodeFromAccount(t),
         ),
         index,
         total: Math.ceil(accounts.length / 2),
@@ -78,7 +78,7 @@ const ExportQRAccounts = ({
 
   const moveNext = () => {
     if (pageIndex === accountsDataQR.length - 1) {
-      setPageIndex(0);
+      return;
     } else {
       setPageIndex((newPageIndex) => newPageIndex + 1);
     }
@@ -86,7 +86,7 @@ const ExportQRAccounts = ({
 
   const movePrevious = () => {
     if (pageIndex === 0) {
-      setPageIndex(0);
+      return;
     } else {
       setPageIndex((newPageIndex) => newPageIndex - 1);
     }
@@ -117,21 +117,25 @@ const ExportQRAccounts = ({
                   <Text style={[styles.textBase, styles.qrAccounts]}>
                     {accountsDataQR[pageIndex].index}/
                     {accountsDataQR[pageIndex].total} : @
-                    {JSON.parse(accountsDataQR[pageIndex].data)
-                      .map((e: string) => JSON.parse(e).name)
+                    {accountsDataQR[pageIndex].data
+                      .map((e) => e.name)
                       .join(', @')}
                   </Text>
                 </View>
                 <Separator height={10} />
                 <View ref={qrCodeRef}></View>
-                <QRCode
-                  fgColor={getColors(theme).primaryText}
-                  bgColor={'transparent'}
-                  size={300}
-                  value={`${QR_CONTENT_PREFIX}${encode(
-                    JSON.stringify(accountsDataQR[pageIndex]),
-                  )}`}
-                />
+                <GestureRecognizer
+                  onSwipeLeft={moveNext}
+                  onSwipeRight={movePrevious}>
+                  <QRCode
+                    fgColor={getColors(theme).primaryText}
+                    bgColor={'transparent'}
+                    size={300}
+                    value={`${QR_CONTENT_PREFIX}${encode(
+                      JSON.stringify(accountsDataQR[pageIndex]),
+                    )}`}
+                  />
+                </GestureRecognizer>
               </View>
               <Separator height={16} />
               <View style={styles.buttonsContainer}>

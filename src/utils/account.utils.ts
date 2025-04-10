@@ -193,7 +193,7 @@ const generateQRCodeFromAccount = (account: Account) => {
     acc.keys.memo = account.keys.memo;
     acc.keys.memoPubkey = account.keys.memoPubkey;
   }
-  return JSON.stringify(acc);
+  return acc;
 };
 
 const AccountUtils = {

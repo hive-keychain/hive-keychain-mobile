@@ -676,7 +676,8 @@
     },
     "export_qr_accounts": {
       "qr_exported_set_disclaimer1": "This QR Code contains all your private keys for this set of accounts, and should only be used to import your keys to the Hive Keychain mobile App.",
-      "qr_disclaimer2": "DO NOT share it with anyone!"
+      "qr_disclaimer2": "DO NOT share it with anyone!",
+      "scanning": "Please scan page {{page}}/{{total}}"
     },
     "notifications": {
       "mark_as_read": "The notifications have been marked as read!",
@@ -797,8 +798,9 @@
     "account_removed": "The account @{{account}} has been removed from Keychain.",
     "export_qr_accounts": {
       "scan_next": "Page: {{index}} of {{total}}, scan next page!",
+      "scan_page_first": "Scan page {{page}} first!",
       "scan_completed": "Scan completed, loading accounts!",
-      "already_scanned": "Page already scanned, please scan a different page!"
+      "already_scanned": "Page already scanned, please move to page {{page}}!"
     }
   },
   "navigation": {

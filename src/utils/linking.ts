@@ -15,7 +15,7 @@ import {translate} from './localize';
 import {goBack, goBackAndNavigate, resetStackAndNavigate} from './navigation';
 
 let flagCurrentlyProcessing = false;
-let qr_data_accounts: {
+let qrDataAccounts: {
   data: string;
   index: number;
   total: number;
@@ -85,46 +85,6 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
     }
     //@ts-ignore
     store.dispatch(addTabFromLinking(url));
-  } else if (url.startsWith('keychain://add_accounts=')) {
-    if (flagCurrentlyProcessing) {
-      return;
-    }
-    const accountData = url.replace('keychain://add_accounts=', '');
-    const accountDataStr = Buffer.from(accountData, 'base64').toString();
-    try {
-      const dataAccounts = JSON.parse(accountDataStr);
-      if (
-        dataAccounts &&
-        !qr_data_accounts.find((q) => q.index === dataAccounts.index)
-      ) {
-        qr_data_accounts.push(dataAccounts);
-        if (
-          dataAccounts.total > 1 &&
-          qr_data_accounts.length < dataAccounts.total
-        ) {
-          SimpleToast.show(
-            translate('toast.export_qr_accounts.scan_next', {
-              index: dataAccounts.index,
-              total: dataAccounts.total,
-            }),
-          );
-        }
-        if (dataAccounts.total === qr_data_accounts.length) {
-          SimpleToast.show(
-            translate('toast.export_qr_accounts.scan_completed'),
-          );
-          flagCurrentlyProcessing = true;
-          await handleAddAccountsQR(qr_data_accounts);
-        }
-      } else if (
-        dataAccounts &&
-        qr_data_accounts.find((q) => q.index === dataAccounts.index)
-      ) {
-        SimpleToast.show(translate('toast.export_qr_accounts.already_scanned'));
-      }
-    } catch (error) {
-      console.log('Error getting QR data accounts', {error});
-    }
   } else if (url.startsWith('keychain://add_account='))
     [handleAddAccountQR(url)];
   else [handleAddAccountQR(url)];
@@ -185,7 +145,7 @@ const handleAddAccountsQR = async (
       }
     }
   }
-  qr_data_accounts = [];
+  qrDataAccounts = [];
   flagCurrentlyProcessing = false;
   return resetStackAndNavigate('WALLET');
 };
