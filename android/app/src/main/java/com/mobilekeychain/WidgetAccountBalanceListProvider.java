@@ -26,10 +26,10 @@ public class WidgetAccountBalanceListProvider extends AppWidgetProvider {
 
             //Custom intent/broadcast registration
             Intent configureIntent = new Intent(context, WidgetAccountBalanceListProvider.class);
-            configureIntent.setAction(ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST);
+            configureIntent.setAction(ACTION_RECEIVER_CONFIGURE_WIDGET_ACCOUNT_BALANCE_LIST);  
             PendingIntent configurePendingIntent = PendingIntent.getBroadcast(context, 0, configureIntent, flag);
             views.setOnClickPendingIntent(R.id.widget_account_balance_list_button_configure, configurePendingIntent);
-
+            views.setOnClickPendingIntent(R.id.widget_account_balance_list_stack_empty_view, configurePendingIntent);
             //Service for StackView
             Intent serviceIntent = new Intent(context, WidgetAccountBalanceListService.class);
             serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);

@@ -30,7 +30,7 @@ const DAppCard = ({dApp, updateTabUrl, theme}: Props) => {
       activeOpacity={1}
       style={[getCardStyle(theme).defaultCardItem, styles.container]}
       onPress={() => {
-        let url = dApp.url;
+        let url = dApp.mobileUrl || dApp.url;
         if (dApp.appendUsername) {
           url += store.getState().activeAccount.name;
         }

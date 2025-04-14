@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.AppWidgetSample.AppWidgetContainerParent" parent="@android:style/Theme.DeviceDefault">
+    <style name="Theme.AppWidgetSample.AppWidgetContainerParent" parent="@android:style/Theme.Material">
         <!-- Radius of the outer bound of widgets to make the rounded corners -->
         <item name="appWidgetRadius">16dp</item>
         <!--

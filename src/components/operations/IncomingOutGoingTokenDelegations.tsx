@@ -3,7 +3,7 @@ import {KeyTypes, TokenBalance} from 'actions/interfaces';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React, {useEffect, useState} from 'react';
 import {
   FlatList,
@@ -54,7 +54,7 @@ const IncomingOutGoingTokenDelegations = ({
 }: Props) => {
   const [loading, setLoading] = useState(false);
   const [delegationList, setDelegationList] = useState<TokenDelegation[]>([]);
-  const [isMultisig, twoFABots] = useCheckForMultsig(KeyTypes.active, user);
+  const [isMultisig, twoFABots] = useCheckForMultisig(KeyTypes.active, user);
   const {width} = useWindowDimensions();
 
   useEffect(() => {

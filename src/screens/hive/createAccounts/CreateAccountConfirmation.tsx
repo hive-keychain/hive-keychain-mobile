@@ -13,7 +13,7 @@ import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
-import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React, {useEffect, useState} from 'react';
 import {
   Clipboard,
@@ -88,7 +88,7 @@ const StepTwo = ({
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
-  const [isMultisig, twoFABots] = useCheckForMultsig(KeyTypes.active, user);
+  const [isMultisig, twoFABots] = useCheckForMultisig(KeyTypes.active, user);
 
   useEffect(() => {
     const masterKey = AccountCreationUtils.generateMasterKey();

@@ -70,6 +70,8 @@ import {default as ArrowUpwardIcon} from 'src/assets/icons/svgs/arrow_upward.svg
 import DeleteIcon from 'src/assets/icons/svgs/delete_black.svg';
 import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
+import ExportIcon from 'assets/new_UI/export.svg';
+import CalendarIcon from 'src/assets/new_UI/calendar.svg';
 import ConvertIcon from 'src/assets/new_UI/convert.svg';
 import DelegateTokenIcon from 'src/assets/new_UI/delegate-token.svg';
 import Desktop from 'src/assets/new_UI/desktop.svg';
@@ -681,6 +683,20 @@ const getIconFilePath = (
     case name === Icons.NOTIFICATIONS:
       return (
         <NotificationsIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.CALENDAR:
+      return (
+        <CalendarIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.EXPORT:
+      return (
+        <ExportIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

@@ -3,7 +3,9 @@ import {
   AccountWitnessVoteOperation,
   DelegateVestingSharesOperation,
   Operation,
+  RecurrentTransferOperation,
   TransferOperation,
+  UpdateProposalVotesOperation,
 } from '@hiveio/dhive';
 import {saveRequestedOperation} from 'actions/hive-uri';
 import RequestError from 'components/browser/requestOperations/components/RequestError';
@@ -14,8 +16,10 @@ import {
   KeychainRequestTypes,
   RequestDelegation,
   RequestProxy,
+  RequestRecurrentTransfer,
   RequestSendToken,
   RequestTransfer,
+  RequestUpdateProposalVote,
   RequestWitnessVote,
 } from './keychain.types';
 import {ModalComponent} from './modal.enum';
@@ -27,6 +31,7 @@ export const processQRCodeOp = async (op: Operation) => {
   const type = op[0];
   const data = op[1];
   let request;
+  console.log('op', op);
 
   switch (type) {
     case 'transfer': {
@@ -102,6 +107,44 @@ export const processQRCodeOp = async (op: Operation) => {
         proxy,
       } as RequestProxy;
       break;
+    }
+    case 'recurrent_transfer':
+      {
+        const {
+          to,
+          amount: amt,
+          memo,
+          recurrence,
+          executions,
+        } = data as RecurrentTransferOperation[1];
+        const [amount, currency] = (amt as string).split(' ');
+
+        request = {
+          domain: DOMAIN,
+          type: KeychainRequestTypes.recurrentTransfer,
+          to,
+          amount,
+          currency,
+          memo,
+          recurrence,
+          executions,
+        } as RequestRecurrentTransfer;
+      }
+      break;
+
+    case 'update_proposal_votes': {
+      const {
+        proposal_ids,
+        approve,
+        extensions,
+      } = data as UpdateProposalVotesOperation[1];
+      request = {
+        domain: DOMAIN,
+        type: KeychainRequestTypes.updateProposalVote,
+        proposal_ids: JSON.stringify(proposal_ids),
+        approve,
+        extensions,
+      } as RequestUpdateProposalVote;
     }
     default:
       break;

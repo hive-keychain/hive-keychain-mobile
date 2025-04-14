@@ -221,7 +221,7 @@ export type RequestCreateClaimedAccount = CommonRequestParams & {
 
 export type RequestUpdateProposalVote = CommonRequestParams & {
   type: KeychainRequestTypes.updateProposalVote;
-  username: string;
+  username?: string;
   proposal_ids: string;
   approve: boolean;
   extensions: string | any[];

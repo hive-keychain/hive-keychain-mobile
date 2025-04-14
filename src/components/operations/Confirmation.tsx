@@ -6,7 +6,7 @@ import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import MultisigCaption from 'components/ui/MultisigCaption';
 import Separator from 'components/ui/Separator';
-import {useCheckForMultsig} from 'hooks/useCheckForMultisig';
+import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import {ConfirmationPageRoute} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {
@@ -71,7 +71,7 @@ const ConfirmationPage = ({
   const {width, height} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles({width, height}, theme);
-  const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultsig(
+  const [isMultisig, twoFABots, setTwoFABots] = useCheckForMultisig(
     keyType?.toUpperCase() as KeyTypes,
     user,
   );
