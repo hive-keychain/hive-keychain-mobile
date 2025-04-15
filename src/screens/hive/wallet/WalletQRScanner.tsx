@@ -2,6 +2,7 @@ import {addAccount} from 'actions/index';
 import {Account} from 'actions/interfaces';
 import QRCode from 'components/qr_code';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import {AddAccFromWalletNavigationProps} from 'navigators/mainDrawerStacks/AddAccount.types';
 import React, {useState} from 'react';
 import {Text} from 'react-native';
 import {BarCodeReadEvent} from 'react-native-camera';
@@ -10,11 +11,11 @@ import {RootState, store} from 'store';
 import AccountUtils from 'utils/account.utils';
 import {KeyUtils} from 'utils/key.utils';
 import {validateFromObject} from 'utils/keyValidation';
-import {handleUrl} from 'utils/linking';
+import {handleAddAccountQR, handleUrl} from 'utils/linking';
 import {translate} from 'utils/localize';
 import {resetStackAndNavigate} from 'utils/navigation';
 
-const WalletQRScanner = () => {
+const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
   const [processingAccounts, setProcessingAccounts] = useState(false);
   const [qrDataAccounts, setQrDataAccounts] = useState<Account[]>([]);
   const [acctPageTotal, setAcctPageTotal] = useState(0);
@@ -68,6 +69,9 @@ const WalletQRScanner = () => {
         } catch (error) {
           console.log('Error getting QR data accounts', {error});
         }
+      } else if (data.startsWith('keychain://add_account=')) {
+        const wallet = route.params ? route.params.wallet : false;
+        handleAddAccountQR(data, wallet);
       } else handleUrl(data, true);
     } catch (e) {
       console.log(e, data);
