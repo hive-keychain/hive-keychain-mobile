@@ -80,7 +80,7 @@ export const SwapsConfig = {
 };
 
 export const ProposalConfig = {
-  KEYCHAIN_PROPOSAL: 306,
+  KEYCHAIN_PROPOSAL: 341,
   PROPOSAL_MIN_VOTE_DIFFERENCE_HIDE_POPUP: 8 * 10 ** 6,
 };
 
