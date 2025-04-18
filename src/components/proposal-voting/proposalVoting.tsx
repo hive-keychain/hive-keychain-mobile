@@ -85,7 +85,7 @@ const ProposalVotingSection = ({
     setForcedClosed(true);
     updateFloatingBar(false);
   };
-  if (isMessageContainerDisplayed || hasVoted || forceClosed) {
+  if (isMessageContainerDisplayed || hasVoted || forceClosed || 1) {
     return null;
   } else {
     return (

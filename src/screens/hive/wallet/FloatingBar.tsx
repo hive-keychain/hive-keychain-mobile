@@ -47,12 +47,8 @@ const Floating = ({
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-  const styles = getStyles(
-    theme,
-    {width, height},
-    useSafeAreaInsets(),
-    isProposalRequestDisplayed,
-  );
+  console.log(isProposalRequestDisplayed);
+  const styles = getStyles(theme, {width, height}, useSafeAreaInsets(), false);
   const anim = useRef(new Animated.Value(0)).current;
   const [isTop, setIsTop] = useState(false);
   const getActiveStyle = (link: FloatingBarLink) =>
