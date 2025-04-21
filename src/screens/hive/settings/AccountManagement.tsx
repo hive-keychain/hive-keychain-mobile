@@ -1,5 +1,6 @@
 import {addKey, forgetAccount, forgetKey} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
+import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import EllipticButton from 'components/form/EllipticButton';
 import UserDropdown from 'components/form/UserDropdown';
 import Key from 'components/hive/Key';
@@ -60,7 +61,9 @@ const AccountManagement = ({
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width, height});
   const [showQrCode, setShowQrCode] = useState(false);
-
+  const [check1, setCheck1] = useState<boolean>(false);
+  const [check2, setCheck2] = useState<boolean>(false);
+  const [showQR, setShowQR] = useState<boolean>(false);
   useEffect(() => {
     initCheckKeysOnAccount(account.name);
   }, [account, username]);
@@ -200,26 +203,54 @@ const AccountManagement = ({
           title="settings.keys.qr.title">
           <ScrollView>
             <Caption text="settings.keys.qr.caption" hideSeparator justify />
-            <View style={styles.qrCardContainer}>
-              <View style={styles.qrCard}>
-                <QRCode
-                  size={200}
-                  fgColor={getColors(theme).primaryText}
-                  bgColor={'transparent'}
-                  value={`keychain://add_account=${AccountUtils.generateQRCode(
-                    account!,
-                  )}`}
+            {!showQR ? (
+              <View>
+                <CheckBoxPanel
+                  title="settings.keys.qr.check1"
+                  onPress={() => {
+                    setCheck1(!check1);
+                  }}
+                  checked={check1}
+                />
+                <CheckBoxPanel
+                  title="settings.keys.qr.check2"
+                  onPress={() => {
+                    setCheck2(!check2);
+                  }}
+                  checked={check2}
+                />
+                <EllipticButton
+                  title={translate('settings.keys.show_qr_code')}
+                  isWarningButton
+                  onPress={() => {
+                    if (check1 && check2) setShowQR(true);
+                  }}
                 />
               </View>
-            </View>
-            <Separator />
-            <EllipticButton
-              title={translate('common.close')}
-              isWarningButton
-              onPress={() => {
-                setShowQrCode(false);
-              }}
-            />
+            ) : (
+              <View>
+                <View style={styles.qrCardContainer}>
+                  <View style={styles.qrCard}>
+                    <QRCode
+                      size={200}
+                      fgColor={getColors(theme).primaryText}
+                      bgColor={'transparent'}
+                      value={`keychain://add_account=${AccountUtils.generateQRCode(
+                        account!,
+                      )}`}
+                    />
+                  </View>
+                </View>
+                <Separator />
+                <EllipticButton
+                  title={translate('common.close')}
+                  isWarningButton
+                  onPress={() => {
+                    setShowQrCode(false);
+                  }}
+                />
+              </View>
+            )}
           </ScrollView>
         </SlidingOverlay>
       </SafeArea>

@@ -1,4 +1,5 @@
 import {Account} from 'actions/interfaces';
+import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
@@ -45,6 +46,9 @@ const ExportQRAccounts = ({
     }[]
   >([]);
   const [pageIndex, setPageIndex] = useState<number>(0);
+  const [check1, setCheck1] = useState<boolean>(false);
+  const [check2, setCheck2] = useState<boolean>(false);
+  const [showQR, setShowQR] = useState<boolean>(false);
   const qrCodeRef = useRef<View>(null);
 
   useEffect(() => {
@@ -72,6 +76,15 @@ const ExportQRAccounts = ({
     setaccountsDataQR(tempAccountsDataQR);
   };
 
+  /*************  ✨ Windsurf Command ⭐  *************/
+  /**
+   * Encodes a given string value into its base64 representation.
+   *
+   * @param value - The string to be encoded.
+   * @returns The base64 encoded string.
+   */
+
+  /*******  8b3fabb0-082d-438c-bf6b-2f27e4ec0e4e  *******/
   const encode = (value: string) => {
     return Buffer.from(value).toString('base64');
   };
@@ -112,47 +125,88 @@ const ExportQRAccounts = ({
                 ]}>
                 {translate('components.export_qr_accounts.qr_disclaimer2')}
               </Text>
-              <View style={{alignItems: 'center'}}>
-                <View style={{height: 50}}>
-                  <Text style={[styles.textBase, styles.qrAccounts]}>
-                    {accountsDataQR[pageIndex].index}/
-                    {accountsDataQR[pageIndex].total} : @
-                    {accountsDataQR[pageIndex].data
-                      .map((e) => e.name)
-                      .join(', @')}
-                  </Text>
-                </View>
+              <View style={{alignItems: 'center', width: '100%'}}>
                 <Separator height={10} />
-                <View ref={qrCodeRef}></View>
-                <GestureRecognizer
-                  onSwipeLeft={moveNext}
-                  onSwipeRight={movePrevious}>
-                  <QRCode
-                    fgColor={getColors(theme).primaryText}
-                    bgColor={'transparent'}
-                    size={300}
-                    value={`${QR_CONTENT_PREFIX}${encode(
-                      JSON.stringify(accountsDataQR[pageIndex]),
-                    )}`}
-                  />
-                </GestureRecognizer>
-              </View>
-              <Separator height={16} />
-              <View style={styles.buttonsContainer}>
-                <EllipticButton
-                  style={[styles.button, pageIndex === 0 && styles.hidden]}
-                  title={translate('common.previous')}
-                  onPress={movePrevious}
-                />
-                <EllipticButton
-                  style={[
-                    styles.button,
-                    pageIndex === accountsDataQR.length - 1 && styles.hidden,
-                  ]}
-                  title={translate('common.next')}
-                  onPress={moveNext}
-                  isWarningButton
-                />
+                {!showQR ? (
+                  <View style={{width: '100%'}}>
+                    <View style={{height: 350}}>
+                      <CheckBoxPanel
+                        title="components.export_qr_accounts.check1"
+                        onPress={() => {
+                          setCheck1(!check1);
+                        }}
+                        checked={check1}
+                      />
+                      <CheckBoxPanel
+                        title="components.export_qr_accounts.check2"
+                        onPress={() => {
+                          setCheck2(!check2);
+                        }}
+                        checked={check2}
+                      />
+                    </View>
+                    <Separator height={16} />
+                    <EllipticButton
+                      title={translate('settings.keys.show_qr_code')}
+                      style={{width: '80%'}}
+                      isWarningButton
+                      onPress={() => {
+                        if (check1 && check2) setShowQR(true);
+                      }}
+                    />
+                  </View>
+                ) : (
+                  <View style={{alignItems: 'center'}}>
+                    <View style={{height: 50}}>
+                      <Text style={[styles.textBase, styles.qrAccounts]}>
+                        {accountsDataQR[pageIndex].index}/
+                        {accountsDataQR[pageIndex].total} : @
+                        {accountsDataQR[pageIndex].data
+                          .map((e) => e.name)
+                          .join(', @')}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        alignItems: 'center',
+                      }}>
+                      <View ref={qrCodeRef}></View>
+                      <GestureRecognizer
+                        onSwipeLeft={moveNext}
+                        onSwipeRight={movePrevious}>
+                        <QRCode
+                          fgColor={getColors(theme).primaryText}
+                          bgColor={'transparent'}
+                          size={300}
+                          value={`${QR_CONTENT_PREFIX}${encode(
+                            JSON.stringify(accountsDataQR[pageIndex]),
+                          )}`}
+                        />
+                      </GestureRecognizer>
+                    </View>
+                    <Separator height={16} />
+                    <View style={styles.buttonsContainer}>
+                      <EllipticButton
+                        style={[
+                          styles.button,
+                          pageIndex === 0 && styles.hidden,
+                        ]}
+                        title={translate('common.previous')}
+                        onPress={movePrevious}
+                      />
+                      <EllipticButton
+                        style={[
+                          styles.button,
+                          pageIndex === accountsDataQR.length - 1 &&
+                            styles.hidden,
+                        ]}
+                        title={translate('common.next')}
+                        onPress={moveNext}
+                        isWarningButton
+                      />
+                    </View>
+                  </View>
+                )}
               </View>
             </View>
           )}
@@ -195,15 +249,15 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       textAlign: 'center',
     },
     button: {
-      width: '40%',
+      width: '45%',
+      margin: 0,
     },
     buttonsContainer: {
-      width: '85%',
+      width: '80%',
       marginTop: 20,
       justifyContent: 'space-between',
       flexDirection: 'row',
       display: 'flex',
-      alignItems: 'center',
     },
   });
 
