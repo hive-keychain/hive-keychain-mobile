@@ -163,7 +163,7 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilledCurrency(req.currency) &&
         hasTransferInfo(req)) ||
       (req.type === 'sendToken' &&
-        isFilledAmt(req.amount) &&
+        isFilledAmt(req.amount, false) &&
         isFilled(req.to) &&
         isFilled(req.currency)) ||
       (req.type === 'powerUp' &&
@@ -290,12 +290,13 @@ const isFilledDate = (date: string) => {
   return regex.test(date);
 };
 
-const isFilledAmt = (obj: string) => {
+const isFilledAmt = (obj: string, enforceDecimals = true) => {
   return (
-    isFilled(obj) &&
-    !isNaN(parseFloat(obj)) &&
-    parseFloat(obj) > 0 &&
-    countDecimals(obj) === 3
+    (isFilled(obj) &&
+      !isNaN(parseFloat(obj)) &&
+      parseFloat(obj) > 0 &&
+      countDecimals(obj) === 3) ||
+    !enforceDecimals
   );
 };
 
