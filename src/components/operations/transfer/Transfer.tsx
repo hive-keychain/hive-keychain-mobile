@@ -6,6 +6,7 @@ import Icon from 'components/hive/Icon';
 import OptionsToggle from 'components/ui/OptionsToggle';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import Separator from 'components/ui/Separator';
+import {ExchangesUtils} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -39,7 +40,7 @@ import {
 } from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {getTransferWarning} from 'utils/transferValidator';
+import {TransferUtils} from 'utils/transfer.utils';
 import Balance from '../Balance';
 import {ConfirmationPageProps} from '../Confirmation';
 import OperationThemed from '../OperationThemed';
@@ -233,13 +234,14 @@ const Transfer = ({
         title: 'wallet.operations.transfer.confirm.info',
         onSend,
         skipWarningTranslation: true,
-        warningText: getTransferWarning(
-          phishingAccounts,
+        warningText: TransferUtils.getTransferWarningLabel(
           to,
           currency,
-          !!memo,
           memo,
-        ).warning,
+          phishingAccounts,
+          isRecurrent,
+          false,
+        ),
         data: [
           {
             title: 'wallet.operations.transfer.confirm.from',
@@ -247,10 +249,7 @@ const Transfer = ({
           },
           {
             value: `@${to} ${
-              getTransferWarning(phishingAccounts, to, currency, !!memo, memo)
-                .exchange
-                ? '(exchange)'
-                : ''
+              ExchangesUtils.isExchange(to) ? '(exchange)' : ''
             }`,
             title: 'wallet.operations.transfer.confirm.to',
           },

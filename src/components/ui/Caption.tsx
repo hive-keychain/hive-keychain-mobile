@@ -13,6 +13,7 @@ interface CaptionProps {
   additionnalTextParams?: any;
   hideSeparator?: boolean;
   additionnalTextStyle?: TextStyle;
+  textStyle?: TextStyle;
   additionnalTextOnClick?: () => void;
   skipTranslation?: boolean;
   justify?: boolean;
@@ -23,6 +24,7 @@ interface CaptionProps {
 export const Caption = ({
   text,
   textParams,
+  textStyle,
   additionnalText,
   additionnalTextParams,
   hideSeparator = false,
@@ -47,6 +49,7 @@ export const Caption = ({
           style={[
             getCaptionStyle(width, theme),
             justify ? {textAlign: 'justify'} : undefined,
+            textStyle,
           ]}>
           {skipTranslation ? text : translate(text, textParams)}
         </Text>

@@ -239,7 +239,10 @@
           "exchange_memo": "Make sure you add a memo when transfering to an exchange account.",
           "missing_info": "Please fill the username and amount to proceed",
           "missing_amount": "Please fill the requested amount to proceed",
-          "insufficient": "Please fill the username and amount to proceed"
+          "insufficient": "Please fill the username and amount to proceed",
+          "private_key_in_memo": "Sending a private key as memo is a huge security risk.",
+          "exchange_vsc": "Most exchanges don't accept VSC transfers. If you proceed, your funds may be lost.",
+          "exchange_recurrent": "Most exchanges don't accept recurrent transfers. If you proceed, your funds may be lost."
         },
         "started_recurrent_transfer": "Started a recurrent transfer of {{amount}}",
         "fill_recurrent_transfer_out": "To @{{other}}: ({{remainingExecutions}} remaining)",

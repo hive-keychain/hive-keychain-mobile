@@ -23,7 +23,7 @@ import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
-import {getColors} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {spacingStyle} from 'src/styles/spacing';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
@@ -103,6 +103,7 @@ const ConfirmationPage = ({
           <Caption
             text={warningText}
             hideSeparator
+            textStyle={styles.warningText}
             skipTranslation={skipWarningTranslation}
           />
         )}
@@ -189,6 +190,10 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     },
     paddingHorizontal: {
       paddingHorizontal: 18,
+    },
+    warningText: {
+      color: PRIMARY_RED_COLOR,
+      marginTop: -10,
     },
   });
 

@@ -17,7 +17,6 @@ import {navigate} from 'utils/navigation';
 import {VersionLogUtils} from 'utils/version-log.utils';
 import {WhatsNewUtils} from 'utils/whats-new.utils';
 import {Feature, WhatsNewContent} from './whats-new.interface';
-
 interface Props {
   navigation: WalletNavigation;
 }
@@ -52,6 +51,7 @@ const WhatsNew = ({navigation}: Props): null => {
     const lastVersionStorage = await AsyncStorage.getItem(
       KeychainStorageKeyEnum.LAST_VERSION_UPDATE,
     );
+
     const lastVersionAPI = await VersionLogUtils.getLastVersion();
     const mobileAppVersion = VersionLogUtils.getCurrentMobileAppVersion()
       .version.split('.')
