@@ -1,13 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native';
 import Icon from 'components/hive/Icon';
 import React from 'react';
-import {
-  BackHandler,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {BackHandler, Pressable, StyleSheet, Text, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
@@ -69,72 +63,107 @@ const Footer = ({
 
   return (
     <View style={styles.footer}>
-      <Icon
-        theme={theme}
-        name={Icons.ARROW_LEFT_BROWSER}
-        {...styles.iconSlightlyBigger}
-        color={
-          canGoBack
-            ? PRIMARY_RED_COLOR
-            : theme === Theme.LIGHT
-            ? '#939292b3'
-            : '#93929263'
-        }
+      <Pressable
         onPress={goBack}
-      />
-      <Icon
-        theme={theme}
-        name={Icons.ARROW_RIGHT_BROWSER}
-        {...styles.iconSlightlyBigger}
-        color={
-          canGoForward
-            ? PRIMARY_RED_COLOR
-            : theme === Theme.LIGHT
-            ? '#939292b3'
-            : '#93929263'
-        }
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed];
+        }}>
+        <Icon
+          theme={theme}
+          name={Icons.ARROW_LEFT_BROWSER}
+          {...styles.iconSlightlyBigger}
+          color={
+            canGoBack
+              ? PRIMARY_RED_COLOR
+              : theme === Theme.LIGHT
+              ? '#939292b3'
+              : '#93929263'
+          }
+        />
+      </Pressable>
+      <Pressable
         onPress={goForward}
-      />
-      <Icon
-        theme={theme}
-        name={Icons.ADD_BROWSER}
-        additionalContainerStyle={[styles.circleContainer]}
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed];
+        }}>
+        <Icon
+          theme={theme}
+          name={Icons.ARROW_RIGHT_BROWSER}
+          {...styles.iconSlightlyBigger}
+          color={
+            canGoForward
+              ? PRIMARY_RED_COLOR
+              : theme === Theme.LIGHT
+              ? '#939292b3'
+              : '#93929263'
+          }
+        />
+      </Pressable>
+      <Pressable
         onPress={addTab}
-        {...styles.icon}
-        color={PRIMARY_RED_COLOR}
-      />
-      <Icon
-        theme={theme}
-        name={Icons.ROTATE_RIGHT_BROWSER}
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed];
+        }}>
+        <Icon
+          theme={theme}
+          name={Icons.ADD_BROWSER}
+          additionalContainerStyle={[styles.circleContainer]}
+          {...styles.icon}
+          color={PRIMARY_RED_COLOR}
+        />
+      </Pressable>
+      <Pressable
         onPress={reload}
         onLongPress={() => {
           clearCache();
           SimpleToast.show('Cache cleared');
           reload();
         }}
-        {...styles.icon}
-        color={PRIMARY_RED_COLOR}
-      />
-      <Icon
-        theme={theme}
-        name={desktopMode ? Icons.MOBILE : Icons.DESKTOP}
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed];
+        }}>
+        <Icon
+          theme={theme}
+          name={Icons.ROTATE_RIGHT_BROWSER}
+          {...styles.icon}
+          color={PRIMARY_RED_COLOR}
+        />
+      </Pressable>
+      <Pressable
         onPress={toggleDesktopMode}
-        width={26}
-        height={26}
-        color={PRIMARY_RED_COLOR}
-      />
-      <TouchableOpacity activeOpacity={1} onPress={manageTabs}>
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed];
+        }}>
+        <Icon
+          theme={theme}
+          name={desktopMode ? Icons.MOBILE : Icons.DESKTOP}
+          width={26}
+          height={26}
+          color={PRIMARY_RED_COLOR}
+        />
+      </Pressable>
+      <Pressable
+        onPress={manageTabs}
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed];
+        }}>
         <View style={styles.manage}>
           <Text style={[styles.textBase, styles.redColor]}>{tabs}</Text>
         </View>
-      </TouchableOpacity>
-      <Icon
-        theme={theme}
-        name={Icons.WALLET_ADD}
-        {...styles.icon}
-        onPress={() => resetStackAndNavigate('WALLET')}
-        color={PRIMARY_RED_COLOR}
-      />
+      </Pressable>
+      <Pressable
+        onPress={manageTabs}
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed];
+        }}>
+        <Icon
+          theme={theme}
+          name={Icons.WALLET_ADD}
+          {...styles.icon}
+          onPress={() => resetStackAndNavigate('WALLET')}
+          color={PRIMARY_RED_COLOR}
+        />
+      </Pressable>
     </View>
   );
 };
@@ -169,6 +198,8 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
     },
     circleContainer: {
       borderRadius: 50,
+      width: 22,
+      height: 22,
       borderColor: PRIMARY_RED_COLOR,
       borderWidth: 1,
     },
@@ -178,6 +209,15 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
     },
     redColor: {
       color: PRIMARY_RED_COLOR,
+    },
+    pressable: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+    },
+    pressed: {
+      backgroundColor: getColors(theme).pressedButton,
     },
   });
 

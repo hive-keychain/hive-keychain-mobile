@@ -1,6 +1,6 @@
 import Icon2 from 'components/hive/Icon';
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Theme} from 'src/context/theme.context';
@@ -30,32 +30,41 @@ export default ({
     <View
       style={[styles.container, showSideButtons ? null : styles.noSideButtons]}>
       {showSideButtons ? (
-        <TouchableOpacity
-          activeOpacity={1}
+        <Pressable
           onPress={() => {
             onCloseAllTabs();
+          }}
+          style={({pressed}) => {
+            return [styles.pressable, pressed && styles.pressed];
           }}>
           <Icon name="close" style={styles.icon} />
-        </TouchableOpacity>
+        </Pressable>
       ) : null}
-      <Icon2
-        theme={theme}
-        name={Icons.ADD_BROWSER}
-        additionalContainerStyle={[styles.circleContainer]}
-        onPress={() => {
-          onAddTab();
-        }}
-        {...styles.icon}
-      />
+      <Pressable
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed];
+        }}>
+        <Icon2
+          theme={theme}
+          name={Icons.ADD_BROWSER}
+          additionalContainerStyle={[styles.circleContainer]}
+          onPress={() => {
+            onAddTab();
+          }}
+          {...styles.icon}
+        />
+      </Pressable>
 
       {showSideButtons ? (
-        <TouchableOpacity
-          activeOpacity={1}
+        <Pressable
+          style={({pressed}) => {
+            return [styles.pressable, pressed && styles.pressed];
+          }}
           onPress={() => {
             onQuitManagement();
           }}>
           <Icon name="check" style={styles.icon} />
-        </TouchableOpacity>
+        </Pressable>
       ) : null}
     </View>
   );
@@ -65,7 +74,6 @@ const getsStyles = (insets: EdgeInsets, theme: Theme) =>
   StyleSheet.create({
     container: {
       height: BrowserConfig.HEADER_HEIGHT + insets.bottom,
-      paddingHorizontal: 20,
       marginBottom: -insets.bottom,
       backgroundColor: getColors(theme).tertiaryCardBgColor,
       flexDirection: 'row',
@@ -82,4 +90,11 @@ const getsStyles = (insets: EdgeInsets, theme: Theme) =>
       width: 22,
       height: 22,
     },
+    pressable: {
+      flex: 1,
+      height: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    pressed: {backgroundColor: getColors(theme).pressedButton},
   });

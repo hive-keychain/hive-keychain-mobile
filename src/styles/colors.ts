@@ -75,6 +75,7 @@ export const getColors = (theme: Theme) => {
     secondaryCardBgColor: theme === Theme.LIGHT ? '#FFF' : '#293144',
     cardBgLighter: theme === Theme.LIGHT ? '#FFF' : BACKGROUNDITEMDARKISH,
     tertiaryCardBgColor: theme === Theme.LIGHT ? '#FAFCFD' : '#293144',
+    pressedButton: theme === Theme.LIGHT ? '#F2F4F5' : '#32394C',
     lineSeparatorStroke: theme === Theme.LIGHT ? '#EDF4FC' : '#364360',
     secondaryLineSeparatorStroke:
       theme === Theme.LIGHT

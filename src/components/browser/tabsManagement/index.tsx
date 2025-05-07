@@ -82,6 +82,7 @@ export default ({
                 </View>
                 <TouchableOpacity
                   activeOpacity={1}
+                  style={styles.closeIconContainer}
                   onPress={() => {
                     onCloseTab(id);
                   }}>
@@ -174,5 +175,8 @@ const getStyles = (theme: Theme) =>
     textBase: {
       color: getColors(theme).secondaryText,
       ...title_primary_body_2,
+    },
+    closeIconContainer: {
+      padding: 4,
     },
   });
