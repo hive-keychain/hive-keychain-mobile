@@ -173,7 +173,6 @@ const CurrencyToken = ({
 
   const getTokenPrice = () => {
     let variation, coinPrice, isPositive;
-
     if (currencyName === 'HIVE') {
       coinPrice = price.hive.usd;
       variation = price.hive.usd_24h_change;
@@ -183,6 +182,7 @@ const CurrencyToken = ({
       variation = price.hive_dollar.usd_24h_change;
       isPositive = price.hive_dollar.usd_24h_change >= 0;
     } else return null;
+    if (!coinPrice) return null;
     return (
       <>
         <Separator />
