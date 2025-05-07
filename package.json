@@ -1,6 +1,6 @@
 {
   "name": "mobile-keychain",
-  "version": "2.6.8",
+  "version": "2.6.10",
   "private": true,
   "scripts": {
     "android": "react-native run-android --variant devDebug --appIdSuffix dev --main-activity com.zoontek.rnbootsplash.RNBootSplashActivity",

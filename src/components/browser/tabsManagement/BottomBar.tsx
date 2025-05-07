@@ -41,6 +41,9 @@ export default ({
         </Pressable>
       ) : null}
       <Pressable
+        onPress={() => {
+          onAddTab();
+        }}
         style={({pressed}) => {
           return [styles.pressable, pressed && styles.pressed];
         }}>
@@ -48,9 +51,6 @@ export default ({
           theme={theme}
           name={Icons.ADD_BROWSER}
           additionalContainerStyle={[styles.circleContainer]}
-          onPress={() => {
-            onAddTab();
-          }}
           {...styles.icon}
         />
       </Pressable>
