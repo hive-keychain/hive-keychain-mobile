@@ -74,7 +74,6 @@ export default ({
     </RequestOperation>
   );
 };
-
 const performSignBufferOperation = async (key: string, message: string) => {
   return await signBuffer(key, message);
 };

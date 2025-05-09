@@ -935,6 +935,7 @@
       "unknown": "Something went wrong! Please try again!",
       "broadcasting": "There was an error broadcasting this transaction, please try again.",
       "addAccount": "There was an error adding this account. Please verify its username and keys.",
+      "timeout": "Request timeout",
       "transfer": {
         "adjust_balance": "Insufficient {{currency}} balance on account @{{username}}.",
         "get_account": "Cannot find account @{{to}}",

@@ -150,7 +150,7 @@ const RequestOperation = ({
                 fromWallet: false,
               }),
               new Promise((_, reject) =>
-                setTimeout(() => reject('timeout'), 30000),
+                setTimeout(() => reject('REQ_TIMEOUT'), 30000),
               ),
             ]);
             if (result && result.error) throw result.error;
@@ -170,8 +170,10 @@ const RequestOperation = ({
             sendResponse(obj, keep);
           } catch (e) {
             console.log('error', e);
-            if (e === 'timeout') {
-              msg = translate('multisig.pending');
+            if (e === 'REQ_TIMEOUT') {
+              msg = isMultisig
+                ? translate('multisig.pending')
+                : translate('request.error.timeout');
             } else {
               if (!beautifyError) {
                 if (typeof errorMessage === 'function') {
