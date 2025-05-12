@@ -83,7 +83,6 @@ export const hasPreference = (
       .domains.find((d) => d.domain === domain)
       .whitelisted_requests.includes(type);
   } catch (e) {
-    console.log('catching', e);
     return false;
   }
 };

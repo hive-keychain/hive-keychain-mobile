@@ -69,7 +69,9 @@ export default ({
       <RequestItem title={translate('request.item.method')} content={method} />
       <RequestItem
         title={translate('request.item.message')}
-        content={beautifyIfJSON(message)}
+        content={beautifyIfJSON(
+          message.length > 500 ? message.substring(0, 500) + ' ...' : message,
+        )}
       />
     </RequestOperation>
   );
