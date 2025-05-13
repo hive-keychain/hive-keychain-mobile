@@ -31,6 +31,34 @@ import {
   HAS_SignPayload,
 } from '../payloads.types';
 
+interface NonceEntry {
+  nonce: number;
+  timestamp: number;
+}
+
+const NONCE_EXPIRATION_TIME = 1 * 60 * 1000; // 1 minutes in milliseconds
+let nonces: NonceEntry[] = [];
+
+const cleanupExpiredNonces = () => {
+  const now = Date.now();
+  nonces = nonces.filter(
+    (entry) => now - entry.timestamp < NONCE_EXPIRATION_TIME,
+  );
+};
+
+const addNonce = (nonce: number) => {
+  cleanupExpiredNonces();
+  nonces.push({
+    nonce,
+    timestamp: Date.now(),
+  });
+};
+
+const isNonceValid = (nonce: number): boolean => {
+  cleanupExpiredNonces();
+  return !nonces.some((entry) => entry.nonce === nonce);
+};
+
 export const processSigningRequest = async (
   has: HAS,
   payload: HAS_SignPayload,
@@ -52,6 +80,13 @@ export const processSigningRequest = async (
         Crypto.enc.Utf8,
       ),
     );
+
+    if (!isNonceValid(opsData.nonce)) {
+      console.log('nonce already used or expired');
+      return;
+    }
+    addNonce(opsData.nonce);
+    
     const {ops, key_type} = opsData;
     payload.decryptedData = opsData;
     let request: KeychainRequest;
