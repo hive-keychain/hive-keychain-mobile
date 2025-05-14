@@ -24,40 +24,13 @@ import HAS from '..';
 import {
   answerFailedBroadcastReq,
   answerSuccessfulBroadcastReq,
+  isNonceValid,
 } from '../helpers/sign';
 import {
   HAS_BroadcastModalPayload,
   HAS_SignDecrypted,
   HAS_SignPayload,
 } from '../payloads.types';
-
-interface NonceEntry {
-  nonce: number;
-  timestamp: number;
-}
-
-const NONCE_EXPIRATION_TIME = 1 * 60 * 1000; // 1 minutes in milliseconds
-let nonces: NonceEntry[] = [];
-
-const cleanupExpiredNonces = () => {
-  const now = Date.now();
-  nonces = nonces.filter(
-    (entry) => now - entry.timestamp < NONCE_EXPIRATION_TIME,
-  );
-};
-
-const addNonce = (nonce: number) => {
-  cleanupExpiredNonces();
-  nonces.push({
-    nonce,
-    timestamp: Date.now(),
-  });
-};
-
-const isNonceValid = (nonce: number): boolean => {
-  cleanupExpiredNonces();
-  return !nonces.some((entry) => entry.nonce === nonce);
-};
 
 export const processSigningRequest = async (
   has: HAS,
@@ -81,11 +54,10 @@ export const processSigningRequest = async (
       ),
     );
 
-    if (!isNonceValid(opsData.nonce)) {
+    if (!(await isNonceValid(opsData.nonce)) || payload.expire < Date.now()) {
       console.log('nonce already used or expired');
       return;
     }
-    addNonce(opsData.nonce);
     
     const {ops, key_type} = opsData;
     payload.decryptedData = opsData;
