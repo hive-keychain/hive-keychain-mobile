@@ -68,7 +68,7 @@ class Bridge extends Component implements InnerProps {
       console.warn(err);
       return;
     }
-    console.log(msgData.data);
+    console.log('Webview Message', msgData.data);
     self.pendingMethods[msgData.id].resolve(msgData.data);
   }
   render() {

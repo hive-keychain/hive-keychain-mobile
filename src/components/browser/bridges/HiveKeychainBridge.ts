@@ -249,7 +249,6 @@ window.hive_keychain={
       typeWif: key,
       rpc,
     };
-    console.log(request);
     this.dispatchCustomEvent('swRequest_hive', request, callback);
   },
 
@@ -461,7 +460,6 @@ window.hive_keychain={
    * @param {String} [rpc=null] Override user's RPC settings
    */
   requestProxy: function (username, proxy, callback, rpc) {
-    console.log(username, proxy);
     var request = {
       type: 'proxy',
       username,

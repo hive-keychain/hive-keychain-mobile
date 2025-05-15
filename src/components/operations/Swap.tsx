@@ -130,7 +130,6 @@ const Swap = ({
         SwapTokenUtils.getServerStatus(),
         SwapTokenUtils.getConfig(),
       ]);
-      console.log(serverStatus, config);
       setUnderMaintenance(serverStatus.isMaintenanceOn);
       setSwapConfig(config);
       if (

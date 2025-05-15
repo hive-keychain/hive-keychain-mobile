@@ -203,7 +203,6 @@ const Transfer = ({
       );
       return;
     }
-    console.log(currency);
     navigate('ReceiveTransfer', [
       'transfer',
       {
