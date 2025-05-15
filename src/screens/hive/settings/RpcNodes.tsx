@@ -87,7 +87,7 @@ const RpcNodes = ({
     const switchAuto = await AsyncStorage.getItem(
       KeychainStorageKeyEnum.SWITCH_RPC_AUTO,
     );
-    setSwitchRPCAuto(switchAuto === 'true');
+    setSwitchRPCAuto(switchAuto === 'true' || switchAuto === null);
   };
 
   const cleanRpcLabel = (label: string) =>

@@ -8,15 +8,17 @@ import {rpcList} from './hiveUtils';
 import {checkRpcStatus} from './rpc.utils';
 
 export const useWorkingRPC = async (rpc?: Rpc) => {
-  const switchAuto = JSON.parse(
-    await AsyncStorage.getItem(KeychainStorageKeyEnum.SWITCH_RPC_AUTO),
+  const switchAuto = await AsyncStorage.getItem(
+    KeychainStorageKeyEnum.SWITCH_RPC_AUTO,
   );
+  const isSwitchAuto = switchAuto === 'true' || switchAuto === null;
+
   const currentRpc: Rpc = rpc || (await store.getState().settings.rpc);
   for (const rpc of rpcList.filter(
     (rpc) => rpc.uri !== currentRpc?.uri && !rpc.testnet,
   )) {
     if (await checkRpcStatus(rpc.uri)) {
-      if (switchAuto) {
+      if (isSwitchAuto) {
         store.dispatch(setRpc(rpc));
       } else {
         store.dispatch(setSwitchToRpc(rpc));
