@@ -209,7 +209,21 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilledCurrency(req.currency) &&
         isFilled(req.to) &&
         Number.isInteger(req.executions) &&
-        Number.isInteger(req.recurrence)))
+        Number.isInteger(req.recurrence)) ||
+      (req.type === 'vscTransfer' &&
+        isFilledAmt(req.amount) &&
+        isFilled(req.to) &&
+        isFilledCurrency(req.currency)) ||
+      (req.type === 'vscDeposit' &&
+        isFilledAmt(req.amount) &&
+        isFilledCurrency(req.currency)) ||
+      (req.type === 'vscWithdrawal' &&
+        isFilledAmt(req.amount) &&
+        isFilledCurrency(req.currency)) ||
+      (req.type === 'vscStaking' &&
+        isFilledAmt(req.amount) &&
+        isFilledCurrency(req.currency) &&
+        (req.cancel === undefined || isBoolean(req.cancel))))
   );
 };
 
@@ -249,6 +263,10 @@ export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
     case 'updateProposalVote':
     case 'convert':
     case 'recurrentTransfer':
+    case 'vscTransfer':
+    case 'vscDeposit':
+    case 'vscWithdrawal':
+    case 'vscStaking':
       return KeyTypes.active;
   }
 };

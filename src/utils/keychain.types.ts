@@ -29,6 +29,10 @@ export enum KeychainRequestTypes {
   addAccount = 'addAccount',
   convert = 'convert',
   recurrentTransfer = 'recurrentTransfer',
+  vscTransfer = 'vscTransfer',
+  vscDeposit = 'vscDeposit',
+  vscWithdrawal = 'vscWithdrawal',
+  vscStaking = 'vscStaking',
 }
 
 export enum KeychainKeyTypes {
@@ -276,6 +280,38 @@ export type RequestRecurrentTransfer = CommonRequestParams & {
   executions: number;
 };
 
+export type RequestVscTransfer = CommonRequestParams & {
+  type: KeychainRequestTypes.vscTransfer;
+  username?: string;
+  to: string;
+  amount: string;
+  memo?: string;
+  currency: string;
+};
+
+export type RequestVscDeposit = CommonRequestParams & {
+  type: KeychainRequestTypes.vscDeposit;
+  username?: string;
+  amount: string;
+  currency: string;
+  to: string;
+};
+
+export type RequestVscWithdrawal = CommonRequestParams & {
+  type: KeychainRequestTypes.vscWithdrawal;
+  username?: string;
+  amount: string;
+  currency: string;
+};
+
+export type RequestVscStaking = CommonRequestParams & {
+  type: KeychainRequestTypes.vscStaking;
+  username?: string;
+  amount: string;
+  currency: string;
+  cancel?: boolean;
+};
+
 export type KeychainRequestData =
   | RequestDecode
   | RequestEncode
@@ -303,7 +339,11 @@ export type KeychainRequestData =
   | RequestRemoveProposal
   | RequestAddAccount
   | RequestConvert
-  | RequestRecurrentTransfer;
+  | RequestRecurrentTransfer
+  | RequestVscTransfer
+  | RequestVscDeposit
+  | RequestVscWithdrawal
+  | RequestVscStaking;
 
 export type RequestId = {request_id?: number};
 export type UsingHAS = {has?: boolean};
