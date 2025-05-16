@@ -1,8 +1,9 @@
 import {KeyTypes} from 'actions/interfaces';
+import {RequestVscDeposit} from 'hive-keychain-commons';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {transfer} from 'utils/hive';
-import {RequestId, RequestVscDeposit} from 'utils/keychain.types';
+import {RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';

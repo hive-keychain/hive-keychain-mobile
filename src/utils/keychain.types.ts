@@ -1,5 +1,6 @@
 import {Operation, Transaction} from '@hiveio/dhive';
 import {KeyTypes} from 'actions/interfaces';
+import { RequestVscDeposit, RequestVscStaking, RequestVscTransfer, RequestVscWithdrawal } from 'hive-keychain-commons';
 
 export enum KeychainRequestTypes {
   decode = 'decode',
@@ -278,38 +279,6 @@ export type RequestRecurrentTransfer = CommonRequestParams & {
   memo: string;
   recurrence: number;
   executions: number;
-};
-
-export type RequestVscTransfer = CommonRequestParams & {
-  type: KeychainRequestTypes.vscTransfer;
-  username?: string;
-  to: string;
-  amount: string;
-  memo?: string;
-  currency: string;
-};
-
-export type RequestVscDeposit = CommonRequestParams & {
-  type: KeychainRequestTypes.vscDeposit;
-  username?: string;
-  amount: string;
-  currency: string;
-  to: string;
-};
-
-export type RequestVscWithdrawal = CommonRequestParams & {
-  type: KeychainRequestTypes.vscWithdrawal;
-  username?: string;
-  amount: string;
-  currency: string;
-};
-
-export type RequestVscStaking = CommonRequestParams & {
-  type: KeychainRequestTypes.vscStaking;
-  username?: string;
-  amount: string;
-  currency: string;
-  cancel?: boolean;
 };
 
 export type KeychainRequestData =
