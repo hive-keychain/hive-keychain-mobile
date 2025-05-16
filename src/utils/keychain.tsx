@@ -222,8 +222,7 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilledCurrency(req.currency)) ||
       (req.type === 'vscStaking' &&
         isFilledAmt(req.amount) &&
-        isFilledCurrency(req.currency) &&
-        (req.cancel === undefined || isBoolean(req.cancel))))
+        isFilledCurrency(req.currency)))
   );
 };
 

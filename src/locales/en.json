@@ -876,9 +876,9 @@
       "recurrentTransfer": "Recurrent Transfers",
       "multisig": "Multisig",
       "vscDeposit": "VSC Deposit",
-      "vscWithdraw": "VSC Withdraw",
+      "vscWithdrawal": "VSC Withdrawal",
       "vscTransfer": "VSC Transfer",
-      "vscStake": "VSC Stake"
+      "vscStaking": "VSC Staking"
     },
     "message": {
       "decode": "The website {{domain}} would like to verify that you have access to the private {{method}} key for the account: @{{username}}",
@@ -978,7 +978,9 @@
       "createProposal": "Succesfully created a new proposal!",
       "removeProposal": "Succesfully removed proposal(s) {{ids}}.",
       "vscTransfer": "Successfully started a VSC transfer. {{amount}} {{currency}} will be sent to {{to}}.",
-      "vscDeposit": "Successfully started a VSC deposit. {{amount}} {{currency}}."
+      "vscDeposit": "Successfully started a VSC deposit. {{amount}} {{currency}}.",
+      "vscWithdrawal": "Successfully started a VSC withdrawal. {{amount}} {{currency}} will be sent to {{to}}.",
+      "vscStaking": "Successfully started a VSC staking. {{amount}} {{currency}} will be staked."
     },
     "confirm": "Confirm",
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}.",
