@@ -24,6 +24,7 @@ import Transfer from './Transfer';
 import UpdateProposalVote from './UpdateProposalVote';
 import Vote from './Vote';
 import VscDeposit from './VscDeposit';
+import VscTransfer from './VscTransfer';
 import WitnessVote from './Witness';
 
 const map = {
@@ -54,5 +55,6 @@ const map = {
   createProposal: CreateProposal,
   removeProposal: RemoveProposal,
   vscDeposit: VscDeposit,
+  vscTransfer: VscTransfer,
 };
 export default map;
