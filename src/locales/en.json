@@ -980,7 +980,7 @@
       "vscTransfer": "Successfully started a VSC transfer. {{amount}} {{currency}} will be sent to {{to}}.",
       "vscDeposit": "Successfully started a VSC deposit. {{amount}} {{currency}}.",
       "vscWithdrawal": "Successfully started a VSC withdrawal. {{amount}} {{currency}} will be sent to {{to}}.",
-      "vscStaking": "Successfully started a VSC staking. {{amount}} {{currency}} will be staked."
+      "vscStaking": "Successfully started a VSC {{staking}}. {{amount}} {{currency}} will be staked."
     },
     "confirm": "Confirm",
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}.",
