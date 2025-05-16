@@ -56,10 +56,13 @@ export default ({
       }}>
       <RequestUsername />
       <RequestItem
+        title={translate('common.to')}
+        content={`@${to ?? getUsername()}`}
+      />
+      <RequestItem
         title={translate('request.item.amount')}
         content={`${amount} ${currency}`}
       />
-      {to && <RequestItem title={translate('common.to')} content={`@${to}`} />}
     </RequestOperation>
   );
 };
