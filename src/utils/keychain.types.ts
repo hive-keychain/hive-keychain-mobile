@@ -1,5 +1,6 @@
 import {Operation, Transaction} from '@hiveio/dhive';
 import {KeyTypes} from 'actions/interfaces';
+import {RequestSwap} from 'hive-keychain-commons';
 
 export enum KeychainRequestTypes {
   decode = 'decode',
@@ -29,6 +30,7 @@ export enum KeychainRequestTypes {
   addAccount = 'addAccount',
   convert = 'convert',
   recurrentTransfer = 'recurrentTransfer',
+  swap = 'swap',
 }
 
 export enum KeychainKeyTypes {
@@ -303,8 +305,8 @@ export type KeychainRequestData =
   | RequestRemoveProposal
   | RequestAddAccount
   | RequestConvert
-  | RequestRecurrentTransfer;
-
+  | RequestRecurrentTransfer
+  | RequestSwap;
 export type RequestId = {request_id?: number};
 export type UsingHAS = {has?: boolean};
 export type KeychainRequest = KeychainRequestData & RequestId & UsingHAS;

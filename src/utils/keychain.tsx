@@ -209,7 +209,12 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilledCurrency(req.currency) &&
         isFilled(req.to) &&
         Number.isInteger(req.executions) &&
-        Number.isInteger(req.recurrence)))
+        Number.isInteger(req.recurrence)) ||
+      (req.type === 'swap' &&
+        isFilled(req.username) &&
+        isFilledAmt(req.amount.toString(), false) &&
+        isFilled(req.startToken) &&
+        isFilled(req.endToken)))
   );
 };
 
@@ -249,6 +254,7 @@ export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
     case 'updateProposalVote':
     case 'convert':
     case 'recurrentTransfer':
+    case 'swap':
       return KeyTypes.active;
   }
 };
@@ -291,6 +297,7 @@ const isFilledDate = (date: string) => {
 };
 
 const isFilledAmt = (obj: string, enforceDecimals = true) => {
+  console.log('isFilledAmt', obj);
   return (
     (isFilled(obj) &&
       !isNaN(parseFloat(obj)) &&
