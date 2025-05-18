@@ -874,7 +874,8 @@
       "addAccount": "Add Account",
       "convert": "Convert",
       "recurrentTransfer": "Recurrent Transfers",
-      "multisig": "Multisig"
+      "multisig": "Multisig",
+      "swap": "Keychain Swap"
     },
     "message": {
       "decode": "The website {{domain}} would like to verify that you have access to the private {{method}} key for the account: @{{username}}",
@@ -972,7 +973,8 @@
       "recurrentTransfer": "Successfully started a recurrent transfer. {{amount}} {{currency}} will be sent to {{to}} {{executions}} times, every {{recurrence}} hours.",
       "createClaimedAccount": "Succesfully claimed account @{{new_account}}",
       "createProposal": "Succesfully created a new proposal!",
-      "removeProposal": "Succesfully removed proposal(s) {{ids}}."
+      "removeProposal": "Succesfully removed proposal(s) {{ids}}.",
+      "swap": "Succesfully started the swap of {{amount}} {{from}} to {{to}}."
     },
     "confirm": "Confirm",
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}.",
