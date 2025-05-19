@@ -1,9 +1,11 @@
 import {KeyTypes} from 'actions/interfaces';
+import {showModal} from 'actions/message';
 import {RequestSwap} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
+import {MessageModalType} from 'src/enums/messageModal.enums';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {transfer} from 'utils/hive';
-import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
+import {getCurrency, transfer} from 'utils/hive';
+import {getAccount, sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
@@ -25,7 +27,8 @@ export default ({
 }: Props) => {
   const {request_id, ...data} = request;
   const {username, startToken, endToken, amount, steps, slippage} = data;
-  const [estimateValue, setEstimateValue] = useState<string>();
+  const [estimateValue, setEstimateValue] = useState<number>();
+  const [balance, setBalance] = useState<number>();
 
   useEffect(() => {
     const calculateEstimate = async () => {
@@ -40,7 +43,7 @@ export default ({
         const value = Number(lastStep.estimate);
         const fee = (value * swapConfig.fee.amount) / 100;
         const finalValue = Number(value - fee).toFixed(precision);
-        setEstimateValue(finalValue);
+        setEstimateValue(Number(finalValue));
       } catch (error) {
         console.error('Error calculating estimate:', error);
       }
@@ -48,6 +51,50 @@ export default ({
 
     calculateEstimate();
   }, [steps]);
+
+  const getBalance = async () => {
+    const account = accounts.find((e) => e.name === username);
+    if (!account) return 0;
+
+    try {
+      const extendedAccount = await getAccount(username);
+      if (!extendedAccount) return 0;
+
+      let balance = 0;
+      if (startToken === getCurrency('HBD')) {
+        balance = parseFloat(
+          (extendedAccount.hbd_balance as string).split(' ')[0],
+        );
+      } else if (startToken === getCurrency('HIVE')) {
+        balance = parseFloat((extendedAccount.balance as string).split(' ')[0]);
+      } else {
+        const tokenBalances = await SwapTokenUtils.getSwapTokenStartList(
+          extendedAccount,
+        );
+        if (tokenBalances && tokenBalances.length > 0) {
+          const tokenBalance = tokenBalances.find(
+            (token) => token.symbol === startToken,
+          );
+          if (tokenBalance) {
+            balance = parseFloat(tokenBalance.balance);
+          }
+        }
+      }
+
+      return balance;
+    } catch (error) {
+      showModal('request.error.swap.fetching_balance', MessageModalType.ERROR, {
+        error: error.message,
+      });
+      return 0;
+    }
+  };
+
+  useEffect(() => {
+    getBalance().then((balance) => {
+      setBalance(balance);
+    });
+  }, [startToken, username, accounts, amount]);
 
   const handleSwap = async (options: TransactionOptions) => {
     try {
@@ -107,21 +154,29 @@ export default ({
       closeGracefully={closeGracefully}
       performOperation={handleSwap}>
       <RequestItem
-        title={translate('request.item.username')}
+        title={translate('common.account')}
         content={`@${username}`}
       />
-      <RequestItem title={translate('common.from')} content={startToken} />
-      <RequestItem title={translate('common.to')} content={endToken} />
       <RequestItem
-        title={translate('request.item.amount')}
-        content={`${amount} ${startToken}`}
+        title={translate('request.item.swap')}
+        content={
+          estimateValue
+            ? `${amount} ${startToken} ==> ${estimateValue} ${endToken}`
+            : 'calculating...'
+        }
       />
-      {estimateValue && (
-        <RequestItem
-          title={translate('wallet.operations.swap.swap_estimation')}
-          content={`${estimateValue} ${endToken}`}
-        />
-      )}
+      <RequestItem
+        title={translate('common.balance')}
+        content={
+          balance !== undefined
+            ? `${balance} ${startToken} ==> ${balance - amount} ${startToken}`
+            : 'calculating...'
+        }
+      />
+      <RequestItem
+        title={translate('request.item.slippage')}
+        content={`${slippage}%`}
+      />
     </RequestOperation>
   );
 };

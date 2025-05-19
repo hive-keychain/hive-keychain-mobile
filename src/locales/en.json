@@ -922,7 +922,9 @@
       "duration": "Duration",
       "daily_pay": "Daily Pay",
       "initiator": "Initiator",
-      "key": "Key"
+      "key": "Key",
+      "swap": "Swap",
+      "slippage": "Slippage"
     },
     "error": {
       "no_account": "The current website is trying to send a request to Hive Keychain for account @{{account}} which has not been added to the wallet.",
@@ -941,6 +943,9 @@
         "adjust_balance": "Insufficient {{currency}} balance on account @{{username}}.",
         "get_account": "Cannot find account @{{to}}",
         "encrypt": "Please add your memo key to encrypt memos."
+      },
+      "swap": {
+        "fetching_balance": "Error fetching account data."
       }
     },
     "success": {
