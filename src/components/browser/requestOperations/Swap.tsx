@@ -1,11 +1,11 @@
-import {KeyTypes} from 'actions/interfaces';
+import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import {RequestSwap} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {getCurrency, transfer} from 'utils/hive';
-import {getAccount, sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
+import {getCurrency} from 'utils/hive';
+import {getAccount} from 'utils/hiveUtils';
 import {RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
@@ -120,16 +120,20 @@ export default ({
         throw new Error('Failed to save swap estimate');
       }
 
-      return await transfer(
-        account.keys.active!,
-        {
-          from: username,
-          to: sanitizeUsername(swapConfig.account),
-          amount: sanitizeAmount(amount, startToken),
-          memo: estimateId.toString(),
-        },
+      const result = await SwapTokenUtils.processSwap(
+        estimateId.toString(),
+        startToken,
+        amount,
+        (account as unknown) as ActiveAccount,
+        swapConfig.account,
         options,
       );
+
+      if (!result) {
+        throw new Error('Swap transfer failed');
+      }
+
+      return result;
     } catch (error) {
       if (error.message) {
         throw new Error(`Swap failed: ${error.message}`);
@@ -145,8 +149,8 @@ export default ({
       sendError={sendError}
       successMessage={translate('request.success.swap', {
         amount,
-        startToken,
-        endToken,
+        from: startToken,
+        to: endToken,
       })}
       beautifyError
       method={KeyTypes.active}
