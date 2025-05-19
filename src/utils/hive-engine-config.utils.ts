@@ -28,6 +28,21 @@ const setActiveAccountHistoryApi = (api: string) => {
   accountHistoryApi = api;
 };
 
+const getHiveEngineRpcList = async (dynamicEnabled: boolean = false) => {
+  if (dynamicEnabled) {
+    return [];
+  }
+  return DefaultHiveEngineRpcs;
+};
+
+const switchToNextRpc = async () => {
+  const rpcList = await getHiveEngineRpcList();
+  const index = rpcList.indexOf(getApi());
+  const nextApi = rpcList[(index + 1) % rpcList.length];
+  console.log('switching to', nextApi);
+  setActiveApi(nextApi);
+};
+
 /**
  * note: HIVE_ENGINE_CUSTOM_RPC_LIST
  */
@@ -114,5 +129,6 @@ export const HiveEngineConfigUtils = {
   getCustomAccountHistoryApi,
   isRpcDefault,
   isAccountHistoryApiDefault,
+  switchToNextRpc,
   saveConfigInStorage,
 };

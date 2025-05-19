@@ -1,18 +1,17 @@
 import hsc, {hiveEngineAPI} from 'api/hiveEngine';
-import {MessageModalType} from 'src/enums/messageModal.enums';
+import {DEFAULT_HE_RPC_NODE} from 'screens/hive/settings/RpcNodes';
 import {AppThunk} from 'src/hooks/redux';
 import {
   OperationsHiveEngine,
   Token,
-  TokenBalance,
   TokenMarket,
   TokenTransaction,
 } from 'src/interfaces/tokens.interface';
 import {RootState, store} from 'store';
+import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 import {decodeMemoIfNeeded} from 'utils/hiveEngine';
 import {getAllTokens, getUserBalance} from 'utils/tokens.utils';
-import {ActionPayload} from './interfaces';
-import {showModal} from './message';
+import {ActionPayload, TokenBalance} from './interfaces';
 import {
   CLEAR_TOKEN_HISTORY,
   CLEAR_USER_TOKENS,
@@ -54,7 +53,8 @@ export const loadUserTokens = (account: string): AppThunk => async (
     dispatch({
       type: CLEAR_USER_TOKENS,
     });
-
+    if (HiveEngineConfigUtils.getApi() === DEFAULT_HE_RPC_NODE)
+      throw new Error('timeout');
     let tokensBalance: TokenBalance[] = await getUserBalance(account);
     tokensBalance = tokensBalance.sort(
       (a, b) => parseFloat(b.balance) - parseFloat(a.balance),
@@ -65,9 +65,8 @@ export const loadUserTokens = (account: string): AppThunk => async (
     };
     dispatch(action);
   } catch (e) {
-    if (e.message && e.message.includes('timeout')) {
-      dispatch(showModal('toast.tokens_timeout', MessageModalType.ERROR));
-    }
+    await HiveEngineConfigUtils.switchToNextRpc();
+    dispatch(loadUserTokens(account));
     console.log('loadUserTokens Error: ', e);
   }
 };

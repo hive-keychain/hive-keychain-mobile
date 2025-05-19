@@ -51,7 +51,9 @@ import AddCustomRPC from './AddCustomRPC';
 const DEFAULT_CUSTOM_RPC = {
   uri: '',
   testnet: false,
+  hiveEngine: false,
 };
+
 export const DEFAULT_HE_RPC_NODE = 'https://api.hive-engine.com/rpc';
 
 export const DEFAULT_ACCOUNT_HISTORY_RPC_NODE =
@@ -270,6 +272,7 @@ const RpcNodes = ({
           title={'settings.settings.testnet'}
           smallText
         />
+
         <CheckBox
           checked={customRPCSetActive}
           onPress={() => setCustomRPCSetActive(!customRPCSetActive)}
@@ -561,10 +564,13 @@ const mapStateToProps = (state: RootState) => ({
   activeHiveEngineRpc: state.settings.hiveEngineRpc,
   activeAccountHistoryAPIRpc: state.settings.accountHistoryAPIRpc,
 });
+
 const connector = connect(mapStateToProps, {
   setHiveEngineRpc,
   setAccountHistoryRpc,
   setRpc,
 });
+
 type PropsFromRedux = ConnectedProps<typeof connector>;
+
 export default connector(RpcNodes);
