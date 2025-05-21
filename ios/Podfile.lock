@@ -410,7 +410,7 @@ PODS:
     - React-Core
   - react-native-date-picker (5.0.12):
     - React-Core
-  - react-native-get-random-values (1.8.4):
+  - react-native-get-random-values (1.11.0):
     - React-Core
   - react-native-orientation-locker (1.7.0):
     - React-Core
@@ -621,7 +621,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
-  - "react-native-get-random-values (from `../node_modules/@react-native-module/get-random-values`)"
+  - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
@@ -736,7 +736,7 @@ EXTERNAL SOURCES:
   react-native-date-picker:
     :path: "../node_modules/react-native-date-picker"
   react-native-get-random-values:
-    :path: "../node_modules/@react-native-module/get-random-values"
+    :path: "../node_modules/react-native-get-random-values"
   react-native-orientation-locker:
     :path: "../node_modules/react-native-orientation-locker"
   react-native-safe-area-context:
@@ -862,7 +862,7 @@ SPEC CHECKSUMS:
   React-logger: e1edee51442163c77f9fdfb4b08c7169cfc22424
   react-native-camera: 1e6fefa515d3af8b4aeaca3a8bffa2925252c4ea
   react-native-date-picker: 2eb0ed05ab9dcb4f337deda77deaa779807c4c61
-  react-native-get-random-values: 8ff00e8f449d37d9e8be9bbda66b2d8a63e1d73e
+  react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-orientation-locker: cc6f357b289a2e0dd2210fea0c52cb8e0727fdaa
   react-native-safe-area-context: b0d3578c0f2d45410491842cea4badb72c34efc9
   react-native-simple-toast: 59d8b58998dac9f063b46d95f9fd7fd7caab6101

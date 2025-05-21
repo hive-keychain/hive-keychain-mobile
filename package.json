@@ -1,6 +1,6 @@
 {
   "name": "mobile-keychain",
-  "version": "2.6.13",
+  "version": "2.6.15",
   "private": true,
   "scripts": {
     "android": "react-native run-android --variant devDebug --appIdSuffix dev --main-activity com.zoontek.rnbootsplash.RNBootSplashActivity",
@@ -29,7 +29,6 @@
     "@react-native-firebase/analytics": "^19.2.2",
     "@react-native-firebase/app": "^19.2.2",
     "@react-native-firebase/crashlytics": "^19.2.2",
-    "@react-native-module/get-random-values": "^1.8.4",
     "@react-navigation/compat": "^5.3.10",
     "@react-navigation/drawer": "^5.11.4",
     "@react-navigation/native": "^5.9.8",
@@ -55,6 +54,7 @@
     "react-native-file-viewer": "^2.1.5",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^1.9.0",
+    "react-native-get-random-values": "^1.11.0",
     "react-native-intent-launcher": "github:EldhoseKuriakose/react-native-intent-launcher#compile-issue",
     "react-native-keychain": "8.1.1",
     "react-native-linear-gradient": "^2.5.6",

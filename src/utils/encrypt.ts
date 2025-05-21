@@ -1,11 +1,11 @@
-//import CryptoJS from 'react-native-crypto-js';
 import CryptoJS from 'crypto-js';
 import md5 from 'md5';
+import {Platform} from 'react-native';
 // AES implementation using cryptojs
 
 const keySize = 256;
 const ITERATIONS_SHA1 = 100;
-const ITERATIONS_SHA256 = 10000;
+const ITERATIONS_SHA256 = Platform.OS === 'android' ? 1000 : 5000;
 
 enum Hasher {
   SHA256 = 'sha256',
@@ -30,7 +30,6 @@ export const decryptToJson = (
 ): any => {
   try {
     let decryptedString = decrypt(msg, pwd, hasher).toString(CryptoJS.enc.Utf8);
-
     let decrypted = JSON.parse(decryptedString) as EncryptionJson;
 
     if (decrypted.hash && decrypted.hash === md5(decrypted.list)) {
