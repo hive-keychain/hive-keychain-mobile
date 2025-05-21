@@ -4,8 +4,13 @@ import md5 from 'md5';
 // AES implementation using cryptojs
 
 const keySize = 256;
-const iterations = 100;
+const ITERATIONS_SHA1 = 100;
+const ITERATIONS_SHA256 = 10000;
 
+enum Hasher {
+  SHA256 = 'sha256',
+  SHA1 = 'sha1',
+}
 interface EncryptionJson {
   hash?: string;
   list: any[];
@@ -18,9 +23,13 @@ export const encryptJson = (json: EncryptionJson, pwd: string) => {
 };
 
 // Decrypt and check the hash to confirm the decryption
-export const decryptToJson = (msg: string, pwd: string) => {
+export const decryptToJson = (
+  msg: string,
+  pwd: string,
+  hasher: Hasher = Hasher.SHA256,
+): any => {
   try {
-    let decryptedString = decrypt(msg, pwd).toString(CryptoJS.enc.Utf8);
+    let decryptedString = decrypt(msg, pwd, hasher).toString(CryptoJS.enc.Utf8);
 
     let decrypted = JSON.parse(decryptedString) as EncryptionJson;
 
@@ -30,17 +39,21 @@ export const decryptToJson = (msg: string, pwd: string) => {
       return null;
     }
   } catch (e) {
+    if (hasher === Hasher.SHA256) {
+      return decryptToJson(msg, pwd, Hasher.SHA1);
+    }
     console.log(e);
     throw new Error('Unable to decrypt');
   }
 };
 
 // AES encryption with master password
-const encrypt = (msg: string, pass: string) => {
+const encrypt = (msg: string, pass: string, hasher: Hasher = Hasher.SHA256) => {
   var salt = CryptoJS.lib.WordArray.random(128 / 8);
   var key = CryptoJS.PBKDF2(pass, salt, {
     keySize: keySize / 32,
-    iterations: iterations,
+    iterations: ITERATIONS_SHA256,
+    hasher: CryptoJS.algo.SHA256,
   });
   var iv = CryptoJS.lib.WordArray.random(128 / 8);
   var encrypted = CryptoJS.AES.encrypt(msg, key, {
@@ -53,13 +66,19 @@ const encrypt = (msg: string, pass: string) => {
 };
 
 // AES decryption with master password
-const decrypt = (transitmessage: string, pass: string) => {
+const decrypt = (
+  transitmessage: string,
+  pass: string,
+  hasher: Hasher = Hasher.SHA256,
+) => {
   var salt = CryptoJS.enc.Hex.parse(transitmessage.substr(0, 32));
   var iv = CryptoJS.enc.Hex.parse(transitmessage.substr(32, 32));
   var encrypted = transitmessage.substring(64);
   var key = CryptoJS.PBKDF2(pass, salt, {
     keySize: keySize / 32,
-    iterations: iterations,
+    iterations: hasher === Hasher.SHA256 ? ITERATIONS_SHA256 : ITERATIONS_SHA1,
+    hasher:
+      hasher === Hasher.SHA256 ? CryptoJS.algo.SHA256 : CryptoJS.algo.SHA1,
   });
   var decrypted = CryptoJS.AES.decrypt(encrypted, key, {
     iv: iv,
