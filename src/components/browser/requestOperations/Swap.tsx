@@ -2,7 +2,6 @@ import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import {RequestSwap} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
-import SimpleToast from 'react-native-simple-toast';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getCurrency} from 'utils/hive';
@@ -99,12 +98,6 @@ export default ({
         setBalance(balance);
         const newBalanceAfterSwap = balance - amount;
         setBalanceAfterSwap(newBalanceAfterSwap);
-
-        if (newBalanceAfterSwap < 0) {
-          SimpleToast.show(
-            translate('request.error.swap.insufficient_balance'),
-          );
-        }
       } catch (error) {
         console.error('Error initializing data:', error);
         showModal(
@@ -123,7 +116,6 @@ export default ({
   const handleSwap = async (options: TransactionOptions) => {
     try {
       if (balanceAfterSwap < 0) {
-        SimpleToast.show(translate('request.error.swap.insufficient_balance'));
         throw new Error(translate('request.error.swap.insufficient_balance'));
       }
 
@@ -206,7 +198,9 @@ export default ({
         title={translate('common.balance')}
         content={
           balance !== undefined
-            ? `${balance} ${startToken} ==> ${balanceAfterSwap} ${startToken}`
+            ? balanceAfterSwap < 0
+              ? `${balance} ${startToken} ==>  Insufficient Balance`
+              : `${balance} ${startToken} ==>  ${balanceAfterSwap} ${startToken}`
             : 'calculating...'
         }
       />
