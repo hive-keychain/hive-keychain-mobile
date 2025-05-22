@@ -945,7 +945,8 @@
         "encrypt": "Please add your memo key to encrypt memos."
       },
       "swap": {
-        "fetching_balance": "Error fetching account data."
+        "fetching_balance": "Error fetching account data.",
+        "insufficient_balance": "Insufficient balance."
       }
     },
     "success": {

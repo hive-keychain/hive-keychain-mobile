@@ -2,6 +2,7 @@ import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import {RequestSwap} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
+import SimpleToast from 'react-native-simple-toast';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getCurrency} from 'utils/hive';
@@ -29,6 +30,7 @@ export default ({
   const {username, startToken, endToken, amount, steps, slippage} = data;
   const [estimateValue, setEstimateValue] = useState<number>();
   const [balance, setBalance] = useState<number>();
+  const [balanceAfterSwap, setBalanceAfterSwap] = useState<number>();
 
   useEffect(() => {
     const calculateEstimate = async () => {
@@ -91,13 +93,40 @@ export default ({
   };
 
   useEffect(() => {
-    getBalance().then((balance) => {
-      setBalance(balance);
-    });
+    const initializeData = async () => {
+      try {
+        const balance = await getBalance();
+        setBalance(balance);
+        const newBalanceAfterSwap = balance - amount;
+        setBalanceAfterSwap(newBalanceAfterSwap);
+
+        if (newBalanceAfterSwap < 0) {
+          SimpleToast.show(
+            translate('request.error.swap.insufficient_balance'),
+          );
+        }
+      } catch (error) {
+        console.error('Error initializing data:', error);
+        showModal(
+          'request.error.swap.fetching_balance',
+          MessageModalType.ERROR,
+          {
+            error: error.message,
+          },
+        );
+      }
+    };
+
+    initializeData();
   }, [startToken, username, accounts, amount]);
 
   const handleSwap = async (options: TransactionOptions) => {
     try {
+      if (balanceAfterSwap < 0) {
+        SimpleToast.show(translate('request.error.swap.insufficient_balance'));
+        throw new Error(translate('request.error.swap.insufficient_balance'));
+      }
+
       const swapConfig = await SwapTokenUtils.getConfig();
 
       const account = accounts.find((e) => e.name === request.username);
@@ -133,7 +162,7 @@ export default ({
         throw new Error('Swap transfer failed');
       }
 
-      return result;
+      return {...result, swap_id: estimateId};
     } catch (error) {
       if (error.message) {
         throw new Error(`Swap failed: ${error.message}`);
@@ -152,16 +181,19 @@ export default ({
         from: startToken,
         to: endToken,
       })}
+      errorMessage={translate('request.error.swap.failed')}
       beautifyError
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
       performOperation={handleSwap}>
       <RequestItem
+        key="account"
         title={translate('common.account')}
         content={`@${username}`}
       />
       <RequestItem
+        key="swap"
         title={translate('request.item.swap')}
         content={
           estimateValue
@@ -170,14 +202,16 @@ export default ({
         }
       />
       <RequestItem
+        key="balance"
         title={translate('common.balance')}
         content={
           balance !== undefined
-            ? `${balance} ${startToken} ==> ${balance - amount} ${startToken}`
+            ? `${balance} ${startToken} ==> ${balanceAfterSwap} ${startToken}`
             : 'calculating...'
         }
       />
       <RequestItem
+        key="slippage"
         title={translate('request.item.slippage')}
         content={`${slippage}%`}
       />
