@@ -376,8 +376,8 @@ const Swap = ({
     setLoadingSwap(true);
     const handleSubmit = async (options: TransactionOptions) => {
       try {
-        let success;
-        success = await SwapTokenUtils.processSwap(
+        let result;
+        result = await SwapTokenUtils.processSwap(
           estimateId,
           startToken?.value.symbol,
           parseFloat(amount),
@@ -385,7 +385,7 @@ const Swap = ({
           swapConfig.account,
           options,
         );
-        if (success) {
+        if (result) {
           await SwapTokenUtils.saveLastUsed(startToken?.value, endToken?.value);
           await SwapTokenUtils.setAsInitiated(estimateId);
           if (!isMultisig)

@@ -101,7 +101,7 @@ const processSwap = async (
 ) => {
   if (startToken === getCurrency('HBD') || startToken === getCurrency('HIVE')) {
     try {
-      await transfer(
+      const result = await transfer(
         activeAccount.keys.active!,
         {
           from: activeAccount.name!,
@@ -111,10 +111,11 @@ const processSwap = async (
         },
         options,
       );
-      return true;
+      console.log('Swap, transfer currency result:', {result});
+      return result;
     } catch (error) {
       console.log('Swap, transfer currency error:', {error});
-      return false;
+      return null;
     }
   } else {
     const tokenInfo = await getTokenInfo(startToken);
@@ -129,6 +130,7 @@ const processSwap = async (
       },
       options,
     );
+    console.log('Swap, send token result:', {status});
     return status && status.tx_id ? status : null;
   }
 };
