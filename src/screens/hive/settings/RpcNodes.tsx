@@ -55,7 +55,7 @@ const DEFAULT_CUSTOM_RPC = {
 export const DEFAULT_HE_RPC_NODE = 'https://api.hive-engine.com/rpc';
 
 export const DEFAULT_ACCOUNT_HISTORY_RPC_NODE =
-  'https://history.hive-engine.com';
+  'https://history.hive-engine.com/';
 
 const RpcNodes = ({
   settings,

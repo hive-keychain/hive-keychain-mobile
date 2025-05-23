@@ -1,5 +1,4 @@
 import {AuthorityType, PrivateKey} from '@hiveio/dhive';
-import {getRandomValues} from '@react-native-module/get-random-values';
 import {Account} from 'actions/interfaces';
 import {Key} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
@@ -39,7 +38,7 @@ const checkAccountNameAvailable = async (username: string) => {
 
 const generateMasterKey = () => {
   const array = new Uint32Array(10);
-  const arrayrandomised = getRandomValues(array);
+  const arrayrandomised = crypto.getRandomValues(array);
   const masterRandomised =
     'P' + PrivateKey.fromSeed(arrayrandomised.toString()).toString();
   return masterRandomised;
