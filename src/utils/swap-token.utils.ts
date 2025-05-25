@@ -111,7 +111,6 @@ const processSwap = async (
         },
         options,
       );
-      console.log('Swap, transfer currency result:', {result});
       return result;
     } catch (error) {
       console.log('Swap, transfer currency error:', {error});

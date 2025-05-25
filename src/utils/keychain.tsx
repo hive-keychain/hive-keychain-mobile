@@ -69,7 +69,6 @@ export const sendError = (
   tabRef: MutableRefObject<WebView>,
   error: RequestError,
 ) => {
-  console.log('send error');
   tabRef.current.injectJavaScript(
     `window.hive_keychain.onAnswerReceived("hive_keychain_response",${JSON.stringify(
       {success: false, result: null, ...error},
@@ -297,7 +296,6 @@ const isFilledDate = (date: string) => {
 };
 
 const isFilledAmt = (obj: string, enforceDecimals = true) => {
-  console.log('isFilledAmt', obj);
   return (
     (isFilled(obj) &&
       !isNaN(parseFloat(obj)) &&
