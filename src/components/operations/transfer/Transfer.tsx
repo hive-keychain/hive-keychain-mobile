@@ -168,8 +168,8 @@ const Transfer = ({
           MessageModalType.SUCCESS,
         );
       } else {
-        const {id} = await transferToken(options);
-        const {confirmed} = await tryConfirmTransaction(id);
+        const {id, tx_id} = await transferToken(options);
+        const {confirmed} = await tryConfirmTransaction(id || tx_id);
         if (options.multisig) return;
         showModal(
           confirmed

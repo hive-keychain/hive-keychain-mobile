@@ -72,6 +72,7 @@ export type HAS_SignDecrypted = {
   key_type: KeyTypes;
   ops: Operation[];
   broadcast: boolean;
+  nonce: number;
 };
 
 export type HAS_BroadcastModalPayload = {
