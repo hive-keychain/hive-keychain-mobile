@@ -1,15 +1,12 @@
 import {ActiveAccount, KeyTypes} from 'actions/interfaces';
-import {showModal} from 'actions/message';
 import {RequestSwap} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
-import {MessageModalType} from 'src/enums/messageModal.enums';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {getCurrency} from 'utils/hive';
-import {getAccount} from 'utils/hiveUtils';
 import {RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
 import {getTokenPrecision} from 'utils/tokens.utils';
+import RequestBalance from './components/RequestBalance';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
@@ -28,9 +25,6 @@ export default ({
   const {request_id, ...data} = request;
   const {username, startToken, endToken, amount, steps, slippage} = data;
   const [estimateValue, setEstimateValue] = useState<number>();
-  const [balance, setBalance] = useState<number>();
-  const [balanceAfterSwap, setBalanceAfterSwap] = useState<number>();
-
   useEffect(() => {
     const calculateEstimate = async () => {
       try {
@@ -53,72 +47,8 @@ export default ({
     calculateEstimate();
   }, [steps]);
 
-  const getBalance = async () => {
-    const account = accounts.find((e) => e.name === username);
-    if (!account) return 0;
-
-    try {
-      const extendedAccount = await getAccount(username);
-      if (!extendedAccount) return 0;
-
-      let balance = 0;
-      if (startToken === getCurrency('HBD')) {
-        balance = parseFloat(
-          (extendedAccount.hbd_balance as string).split(' ')[0],
-        );
-      } else if (startToken === getCurrency('HIVE')) {
-        balance = parseFloat((extendedAccount.balance as string).split(' ')[0]);
-      } else {
-        const tokenBalances = await SwapTokenUtils.getSwapTokenStartList(
-          extendedAccount,
-        );
-        if (tokenBalances && tokenBalances.length > 0) {
-          const tokenBalance = tokenBalances.find(
-            (token) => token.symbol === startToken,
-          );
-          if (tokenBalance) {
-            balance = parseFloat(tokenBalance.balance);
-          }
-        }
-      }
-
-      return balance;
-    } catch (error) {
-      showModal('request.error.swap.fetching_balance', MessageModalType.ERROR, {
-        error: error.message,
-      });
-      return 0;
-    }
-  };
-
-  useEffect(() => {
-    const initializeData = async () => {
-      try {
-        const balance = await getBalance();
-        setBalance(balance);
-        const newBalanceAfterSwap = balance - amount;
-        setBalanceAfterSwap(newBalanceAfterSwap);
-      } catch (error) {
-        console.error('Error initializing data:', error);
-        showModal(
-          'request.error.swap.fetching_balance',
-          MessageModalType.ERROR,
-          {
-            error: error.message,
-          },
-        );
-      }
-    };
-
-    initializeData();
-  }, [startToken, username, accounts, amount]);
-
   const handleSwap = async (options: TransactionOptions) => {
     try {
-      if (balanceAfterSwap < 0) {
-        throw new Error(translate('request.error.swap.insufficient_balance'));
-      }
-
       const swapConfig = await SwapTokenUtils.getConfig();
 
       const account = accounts.find((e) => e.name === request.username);
@@ -145,7 +75,7 @@ export default ({
         estimateId.toString(),
         startToken,
         amount,
-        (account as unknown) as ActiveAccount,
+        account as ActiveAccount,
         swapConfig.account,
         options,
       );
@@ -193,16 +123,11 @@ export default ({
             : 'calculating...'
         }
       />
-      <RequestItem
-        key="balance"
-        title={translate('common.balance')}
-        content={
-          balance !== undefined
-            ? balanceAfterSwap < 0
-              ? `${balance} ${startToken} ==>  Insufficient Balance`
-              : `${balance} ${startToken} ==>  ${balanceAfterSwap} ${startToken}`
-            : 'calculating...'
-        }
+      <RequestBalance
+        username={username}
+        startToken={startToken}
+        amount={amount}
+        accounts={accounts as ActiveAccount[]}
       />
       <RequestItem
         key="slippage"
