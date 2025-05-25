@@ -376,8 +376,7 @@ const Swap = ({
     setLoadingSwap(true);
     const handleSubmit = async (options: TransactionOptions) => {
       try {
-        let result;
-        result = await SwapTokenUtils.processSwap(
+        const result = await SwapTokenUtils.processSwap(
           estimateId,
           startToken?.value.symbol,
           parseFloat(amount),
