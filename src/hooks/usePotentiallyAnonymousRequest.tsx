@@ -1,8 +1,8 @@
-import {Account, KeyTypes, PubKeyTypes} from 'actions/interfaces';
+import { Account, KeyTypes, PubKeyTypes } from 'actions/interfaces';
 import RequestUsername from 'components/browser/requestOperations/components/RequestUsername';
-import React, {useState} from 'react';
-import {getRequiredWifType, getValidAuthorityAccounts} from 'utils/keychain';
-import {KeychainRequest, KeychainRequestTypes} from 'utils/keychain.types';
+import React, { useState } from 'react';
+import { getRequiredWifType, getValidAuthorityAccounts } from 'utils/keychain';
+import { KeychainRequest, KeychainRequestTypes } from 'utils/keychain.types';
 
 export default (request: KeychainRequest, accounts: Account[]) => {
   const {username} = request;
