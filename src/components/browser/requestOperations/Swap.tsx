@@ -57,7 +57,7 @@ export default ({
     try {
       const swapConfig = await SwapTokenUtils.getConfig();
 
-      const account = accounts.find((e) => e.name === request.username);
+      const account = accounts.find((e) => e.name === getUsername());
       if (!account) {
         throw new Error('Account not found');
       }
