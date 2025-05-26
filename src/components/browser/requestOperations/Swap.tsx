@@ -1,5 +1,6 @@
 import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import {RequestSwap} from 'hive-keychain-commons';
+import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React, {useEffect, useState} from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {RequestId} from 'utils/keychain.types';
@@ -22,8 +23,13 @@ export default ({
   sendResponse,
   sendError,
 }: Props) => {
+  const {
+    getUsername,
+    RequestUsername,
+  } = usePotentiallyAnonymousRequest(request, accounts);
+
   const {request_id, ...data} = request;
-  const {username, startToken, endToken, amount, steps, slippage} = data;
+  const {startToken, endToken, amount, steps, slippage} = data;
   const [estimateValue, setEstimateValue] = useState<number>();
   useEffect(() => {
     const calculateEstimate = async () => {
@@ -65,7 +71,7 @@ export default ({
         startToken,
         endToken,
         amount,
-        username,
+        getUsername(),
       );
       if (!estimateId) {
         throw new Error('Failed to save swap estimate');
@@ -109,11 +115,7 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       performOperation={handleSwap}>
-      <RequestItem
-        key="account"
-        title={translate('common.account')}
-        content={`@${username}`}
-      />
+      <RequestUsername />
       <RequestItem
         key="swap"
         title={translate('request.item.swap')}
@@ -124,7 +126,7 @@ export default ({
         }
       />
       <RequestBalance
-        username={username}
+        username={getUsername()}
         startToken={startToken}
         amount={amount}
         accounts={accounts as ActiveAccount[]}
