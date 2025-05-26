@@ -210,7 +210,6 @@ export const validateRequest = (req: KeychainRequest) => {
         Number.isInteger(req.executions) &&
         Number.isInteger(req.recurrence)) ||
       (req.type === 'swap' &&
-        isFilled(req.username) &&
         isFilledAmt(req.amount.toString(), false) &&
         isFilled(req.startToken) &&
         isFilled(req.endToken)))
