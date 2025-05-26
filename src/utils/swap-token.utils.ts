@@ -113,7 +113,6 @@ const processSwap = async (
       );
       return result;
     } catch (error) {
-      console.log('Swap, transfer currency error:', {error});
       return null;
     }
   } else {
@@ -129,7 +128,6 @@ const processSwap = async (
       },
       options,
     );
-    console.log('Swap, send token result:', {status});
     return status && status.tx_id ? status : null;
   }
 };
