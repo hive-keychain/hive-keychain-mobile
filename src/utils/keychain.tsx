@@ -36,7 +36,9 @@ export const validateAuthority = (
     ) {
       return {
         valid: false,
-        error: translate('request.error.no_active_auth'),
+        error: translate('request.error.no_required_auth', {
+          required_auth: wifType,
+        }),
       };
     } else if (!account.keys[wifType] && accounts.length === 1) {
       return {
@@ -51,7 +53,9 @@ export const validateAuthority = (
     if (!accounts.filter((e) => !!e.keys[wifType]).length) {
       return {
         valid: false,
-        error: translate('request.error.no_active_auth'),
+        error: translate('request.error.no_required_auth', {
+          required_auth: wifType,
+        }),
       };
     }
   }
