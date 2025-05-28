@@ -24,7 +24,9 @@ export default ({username, setAccount, enforce, accounts, account}: Props) => {
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   const activeAccountName = store.getState().activeAccount.name;
   const selectedAccount =
-    accounts.find((acc) => acc.name === activeAccountName)?.name || account;
+    username ||
+    accounts.find((acc) => acc.name === activeAccountName)?.name ||
+    account;
 
   const toDropdownFormat = (account: string) => {
     return {
