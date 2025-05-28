@@ -6,6 +6,7 @@ import React from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getFontSizeSmallDevices} from 'src/styles/typography';
+import {store} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import RequestItem from './RequestItem';
@@ -21,6 +22,9 @@ type Props = {
 export default ({username, setAccount, enforce, accounts, account}: Props) => {
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
+  const activeAccountName = store.getState().activeAccount.name;
+  const selectedAccount =
+    accounts.find((acc) => acc.name === activeAccountName)?.name || account;
 
   const toDropdownFormat = (account: string) => {
     return {
@@ -41,7 +45,7 @@ export default ({username, setAccount, enforce, accounts, account}: Props) => {
         list={accounts.map((e) => toDropdownFormat(e.name))}
         dropdownTitle="common.accounts"
         hideLabel
-        selected={toDropdownFormat(account)}
+        selected={toDropdownFormat(selectedAccount)}
         onSelected={(selectedAccount) => setAccount(selectedAccount.value)}
       />
       <Separator />
