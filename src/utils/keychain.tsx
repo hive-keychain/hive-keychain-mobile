@@ -62,6 +62,15 @@ export const getValidAuthorityAccounts = (
   return accounts.filter((e) => !!e.keys[wifType]);
 };
 
+export const getRequestTitle = (request: KeychainRequest) => {
+  if ('title' in request && request.title.toLowerCase() !== 'title')
+    return request.title;
+  return request.type
+    .replace(/([A-Z])/g, ' $1')
+    .trim()
+    .replace(/^./, (str) => str.toUpperCase());
+};
+
 export const sendError = (
   tabRef: MutableRefObject<WebView>,
   error: RequestError,

@@ -23,6 +23,7 @@ import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import {getAccount} from 'utils/hiveUtils';
 import {
+  getRequestTitle,
   getRequiredWifType,
   sendError,
   sendResponse,
@@ -186,6 +187,7 @@ export default ({
         break;
       case 'swRequest_hive':
         if (validateRequest(data)) {
+          data.title = getRequestTitle(data);
           const validateAuth = validateAuthority(accounts, data);
           if (validateAuth.valid) {
             showOperationRequestModal(request_id, data);
