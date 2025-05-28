@@ -38,7 +38,7 @@ export const BrowserConfig = {
 };
 
 export const KeychainConfig = {
-  NO_USERNAME_TYPES: [
+  ANONYMOUS_REQUESTS: [
     'delegation',
     'witnessVote',
     'proxy',

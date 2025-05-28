@@ -41,8 +41,8 @@ export const validateAuthority = (
         }),
       };
     }
-  } else if (KeychainConfig.NO_USERNAME_TYPES.includes(type)) {
-    //anonymous request
+  } else if (KeychainConfig.ANONYMOUS_REQUESTS.includes(type)) {
+  
     if (!accounts.filter((e) => !!e.keys[wifType]).length) {
       return {
         valid: false,
