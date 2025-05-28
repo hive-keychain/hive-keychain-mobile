@@ -42,10 +42,11 @@ export const validateAuthority = (
       };
     }
   } else if (KeychainConfig.NO_USERNAME_TYPES.includes(type)) {
+    //anonymous request
     if (!accounts.filter((e) => !!e.keys[wifType]).length) {
       return {
         valid: false,
-        error: translate('request.error.no_required_auth', {
+        error: translate('request.error.no_required_auth_anonymous', {
           required_auth: wifType,
         }),
       };

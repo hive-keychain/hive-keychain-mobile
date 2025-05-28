@@ -930,6 +930,7 @@
       "no_account": "The current website is trying to send a request to Hive Keychain for account @{{account}} which has not been added to the wallet.",
       "no_auth": "The current website is trying to send a request to Hive Keychain for account @{{account}} using the {{auth}} key, which has not been added to the wallet.",
       "no_required_auth": "The current website is trying to send a request to Hive Keychain for account @{{account}} using {{required_auth}} authority, but @{{account}} has NOT been added with {{required_auth}} key.",
+      "no_required_auth_anonymous": "The current website is trying to send an anonymous request to Hive Keychain {{required_auth}} authority, but there are no accounts added with {{required_auth}} key.",
       "decode": "Could not verify key.",
       "encode": "Could not encode the message.",
       "signBuffer": "Could not sign.",
