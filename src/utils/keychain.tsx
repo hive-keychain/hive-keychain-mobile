@@ -25,27 +25,19 @@ export const validateAuthority = (
   const wifType = getRequiredWifType(req);
   if (username) {
     const account = accounts.find((e) => e.name === username);
+    const hasRequiredKey = !!account.keys[wifType];
     if (!account) {
       return {
         valid: false,
         error: translate('request.error.no_account', {account: username}),
       };
-    } else if (
-      accounts.length > 1 &&
-      !accounts.filter((e) => !!e.keys[wifType]).length
-    ) {
+    }
+    if (!hasRequiredKey) {
       return {
         valid: false,
         error: translate('request.error.no_required_auth', {
-          required_auth: wifType,
-        }),
-      };
-    } else if (!account.keys[wifType] && accounts.length === 1) {
-      return {
-        valid: false,
-        error: translate('request.error.no_auth', {
           account: username,
-          auth: wifType,
+          required_auth: wifType,
         }),
       };
     }
