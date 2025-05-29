@@ -9,7 +9,18 @@ import {
 } from 'actions/interfaces';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {
+  Platform,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import {
+  PanGestureHandler,
+  PanGestureHandlerGestureEvent,
+} from 'react-native-gesture-handler';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
 import {
@@ -19,6 +30,7 @@ import {
 } from 'react-native-webview/lib/WebViewTypes';
 import {UserPreference} from 'reducers/preferences.types';
 import {Theme} from 'src/context/theme.context';
+import {ProviderEvent} from 'src/enums/provider-event.enum';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import {getAccount} from 'utils/hiveUtils';
@@ -48,7 +60,7 @@ type Props = {
   active: boolean;
   manageTabs: (
     tab: Tab,
-    webview: MutableRefObject<WebView> | MutableRefObject<View>,
+    webview: MutableRefObject<WebView> | MutableRefObject<View | ScrollView>,
   ) => void;
   isManagingTab: boolean;
   accounts: Account[];
@@ -61,7 +73,7 @@ type Props = {
   addTab: (
     isManagingTab: boolean,
     tab: Tab,
-    webview: MutableRefObject<View>,
+    webview: MutableRefObject<View | ScrollView>,
     url?: string,
   ) => void;
   tabsNumber: number;
@@ -92,7 +104,7 @@ export default ({
 }: Props) => {
   const tabData = {url, id, icon, name};
   const tabRef: MutableRefObject<WebView> = useRef(null);
-  const tabParentRef: MutableRefObject<View> = useRef(null);
+  const tabParentRef: MutableRefObject<ScrollView> = useRef(null);
   const homeRef: MutableRefObject<View> = useRef(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
@@ -100,7 +112,14 @@ export default ({
   const [shouldUpdateWvInfo, setShouldUpdateWvInfo] = useState(true);
   const [desktopMode, setDesktopMode] = useState(false);
   const insets = useSafeAreaInsets();
+  const [canRefresh, setCanRefresh] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const {width} = useWindowDimensions();
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    tabRef.current?.reload(); // reload the WebView
+  };
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
   useEffect(() => {
     if (isUrlModalOpen) {
@@ -178,15 +197,18 @@ export default ({
   };
 
   const onMessage = ({nativeEvent}: WebViewMessageEvent) => {
-    const {name, request_id, data} = JSON.parse(nativeEvent.data);
+    const {name, request_id, data, isAtTop} = JSON.parse(nativeEvent.data);
     const {current} = tabRef;
     switch (name) {
-      case 'swHandshake_hive':
+      case ProviderEvent.SCROLL:
+        setCanRefresh(isAtTop);
+        break;
+      case ProviderEvent.HANDSHAKE:
         current.injectJavaScript(
           'window.hive_keychain.onAnswerReceived("hive_keychain_handshake")',
         );
         break;
-      case 'swRequest_hive':
+      case ProviderEvent.REQUEST:
         if (validateRequest(data)) {
           const validateAuth = validateAuthority(accounts, data);
           if (validateAuth.valid) {
@@ -219,7 +241,7 @@ export default ({
           });
         }
         break;
-      case 'WV_INFO':
+      case ProviderEvent.INFO:
         const {icon, name, url} = data as TabFields;
         if (
           tabData.url !== 'about:blank' &&
@@ -295,6 +317,20 @@ export default ({
     }
   };
 
+  const onGestureEvent = (event: PanGestureHandlerGestureEvent) => {
+    const {velocityX, absoluteX} = event.nativeEvent;
+    console.log('here', absoluteX, velocityX);
+    console.log(insets);
+    const fromLeftEdge = absoluteX < BrowserConfig.EDGE_THRESHOLD;
+    const fromRightEdge = absoluteX > width - BrowserConfig.EDGE_THRESHOLD;
+
+    if (velocityX > 300 && fromLeftEdge && canGoBack) {
+      tabRef.current?.goBack();
+    } else if (velocityX < -300 && fromRightEdge && canGoForward) {
+      tabRef.current?.goForward();
+    }
+  };
+
   return (
     <View
       style={[styles.container, !active || isManagingTab ? styles.hide : null]}>
@@ -312,50 +348,62 @@ export default ({
             theme={theme}
           />
         ) : null}
-        <View
-          style={
-            url === BrowserConfig.HOMEPAGE_URL ? styles.hide : styles.container
-          }
-          ref={tabParentRef}
-          collapsable={false}>
-          <WebView
-            source={{
-              uri: url === BrowserConfig.HOMEPAGE_URL ? undefined : url,
-            }}
-            domStorageEnabled={true}
-            allowFileAccess={true}
-            allowUniversalAccessFromFileURLs={true}
-            mixedContentMode={'always'}
-            ref={tabRef}
-            injectedJavaScriptBeforeContentLoaded={hive_keychain}
-            injectedJavaScript={desktopMode ? DESKTOP_MODE : undefined}
-            mediaPlaybackRequiresUserAction={false}
-            onMessage={onMessage}
-            javaScriptEnabled
-            geolocationEnabled
-            allowsInlineMediaPlayback
-            allowsFullscreenVideo
-            onLoadEnd={onLoadEnd}
-            onLoadStart={onLoadStart}
-            onLoadProgress={onLoadProgress}
-            pullToRefreshEnabled
-            onError={(error) => {
-              console.log('Error', error);
-            }}
-            onHttpError={(error) => {
-              console.log('HttpError', error);
-            }}
-            onOpenWindow={(event) => {
-              addTab(
-                false,
-                {url, icon, id},
-                tabParentRef,
-                event.nativeEvent.targetUrl,
-              );
-            }}
-            useWebView2
-          />
-        </View>
+        <PanGestureHandler onGestureEvent={onGestureEvent}>
+          <ScrollView
+            contentContainerStyle={
+              url === BrowserConfig.HOMEPAGE_URL
+                ? styles.hide
+                : styles.container
+            }
+            ref={tabParentRef}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => {
+                  onRefresh();
+                  setTimeout(() => setRefreshing(false), 1000);
+                }}
+                enabled={canRefresh}
+              />
+            }>
+            <WebView
+              source={{
+                uri: url === BrowserConfig.HOMEPAGE_URL ? undefined : url,
+              }}
+              domStorageEnabled={true}
+              allowFileAccess={true}
+              allowUniversalAccessFromFileURLs={true}
+              mixedContentMode={'always'}
+              ref={tabRef}
+              injectedJavaScriptBeforeContentLoaded={hive_keychain}
+              injectedJavaScript={desktopMode ? DESKTOP_MODE : undefined}
+              mediaPlaybackRequiresUserAction={false}
+              onMessage={onMessage}
+              javaScriptEnabled
+              geolocationEnabled
+              allowsInlineMediaPlayback
+              allowsFullscreenVideo
+              onLoadEnd={onLoadEnd}
+              onLoadStart={onLoadStart}
+              onLoadProgress={onLoadProgress}
+              onError={(error) => {
+                console.log('Error', error);
+              }}
+              onHttpError={(error) => {
+                console.log('HttpError', error);
+              }}
+              onOpenWindow={(event) => {
+                addTab(
+                  false,
+                  {url, icon, id},
+                  tabParentRef,
+                  event.nativeEvent.targetUrl,
+                );
+              }}
+              useWebView2
+            />
+          </ScrollView>
+        </PanGestureHandler>
       </View>
       {active && orientation === 'PORTRAIT' && (
         <Footer

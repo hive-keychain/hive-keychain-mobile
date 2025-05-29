@@ -132,7 +132,7 @@ const Floating = ({
         <Icon
           theme={theme}
           color={getActiveIconColor('browser')}
-          name={Icons.GLOBAL}
+          name={Icons.BROWSER}
           {...getIconDimensions(width)}
           onPress={() => onHandlePressButton('browser')}
           onLongPress={() => {

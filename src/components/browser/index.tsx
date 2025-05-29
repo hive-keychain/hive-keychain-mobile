@@ -1,7 +1,13 @@
 import {Tab as TabType} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useState} from 'react';
-import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import Orientation from 'react-native-orientation-locker';
 import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
@@ -81,7 +87,7 @@ const Browser = ({
 
   const manageTabs = (
     {url, icon, id}: TabType,
-    view: MutableRefObject<WebView> | MutableRefObject<View>,
+    view: MutableRefObject<WebView> | MutableRefObject<View | ScrollView>,
   ) => {
     captureRef(view, {
       format: 'jpg',
@@ -121,7 +127,7 @@ const Browser = ({
   const onAddTab = (
     isManagingTab: boolean,
     tab: TabType,
-    view: MutableRefObject<View>,
+    view: MutableRefObject<View | ScrollView>,
     newUrl = BrowserConfig.HOMEPAGE_URL,
   ) => {
     if (!isManagingTab) {

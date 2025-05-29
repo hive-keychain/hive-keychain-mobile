@@ -1,3 +1,5 @@
+import {ProviderEvent} from 'src/enums/provider-event.enum';
+
 const getWebviewInfo = `
 	const __getFavicon = function(){
 		let favicon = undefined;
@@ -20,7 +22,7 @@ const getWebviewInfo = `
 	}
 	window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(
 		{
-			name: 'WV_INFO',
+			name: '${ProviderEvent.INFO}',
 			data: {
 				url: location.href,
 				icon: __getFavicon(),
@@ -32,7 +34,7 @@ const getWebviewInfo = `
 	setInterval(()=>{
 		window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(
 			{
-				name: 'WV_INFO',
+				name: '${ProviderEvent.INFO}',
 				data: {
 					url: location.href,
 					icon: __getFavicon(),
@@ -41,6 +43,15 @@ const getWebviewInfo = `
 			}
 		))
 	},2000);
+
+	(function() {
+    function handleScroll() {
+        const isAtTop = window.scrollY === 0;
+        window.ReactNativeWebView.postMessage(JSON.stringify({ name: '${ProviderEvent.SCROLL}', isAtTop }));
+      }
+      window.addEventListener('scroll', handleScroll);
+      handleScroll();
+    })();
 `;
 
 export const BRIDGE_WV_INFO = `

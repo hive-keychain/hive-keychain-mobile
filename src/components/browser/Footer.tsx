@@ -3,7 +3,6 @@ import Icon from 'components/hive/Icon';
 import React from 'react';
 import {BackHandler, Pressable, StyleSheet, Text, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -64,6 +63,34 @@ const Footer = ({
   return (
     <View style={styles.footer}>
       <Pressable
+        onPress={() => resetStackAndNavigate('WALLET')}
+        style={({pressed}) => {
+          return [
+            styles.pressable,
+            pressed && styles.pressed,
+            styles.walletLeft,
+          ];
+        }}>
+        <Icon
+          theme={theme}
+          name={Icons.WALLET_ADD}
+          {...styles.iconBigger}
+          color={getColors(theme).primaryText}
+        />
+      </Pressable>
+      <Pressable
+        onPress={() => {}}
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed, styles.browser];
+        }}>
+        <Icon
+          theme={theme}
+          name={Icons.BROWSER}
+          {...styles.iconBigger}
+          color={'white'}
+        />
+      </Pressable>
+      {/* <Pressable
         onPress={goBack}
         style={({pressed}) => {
           return [styles.pressable, pressed && styles.pressed];
@@ -100,19 +127,6 @@ const Footer = ({
         />
       </Pressable>
       <Pressable
-        onPress={addTab}
-        style={({pressed}) => {
-          return [styles.pressable, pressed && styles.pressed];
-        }}>
-        <Icon
-          theme={theme}
-          name={Icons.ADD_BROWSER}
-          additionalContainerStyle={[styles.circleContainer]}
-          {...styles.icon}
-          color={PRIMARY_RED_COLOR}
-        />
-      </Pressable>
-      <Pressable
         onPress={reload}
         onLongPress={() => {
           clearCache();
@@ -126,20 +140,32 @@ const Footer = ({
           theme={theme}
           name={Icons.ROTATE_RIGHT_BROWSER}
           {...styles.icon}
-          color={PRIMARY_RED_COLOR}
+          color={'white'}
         />
-      </Pressable>
+      </Pressable> */}
+      {/* <Pressable
+        onPress={() => resetStackAndNavigate('WALLET')}
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed, styles.wallet];
+        }}>
+        <Icon
+          theme={theme}
+          name={Icons.WALLET_ADD}
+          {...styles.iconBigger}
+          color={theme === Theme.LIGHT ? 'white' : PRIMARY_RED_COLOR}
+        />
+      </Pressable> */}
       <Pressable
-        onPress={toggleDesktopMode}
+        onPress={addTab}
         style={({pressed}) => {
           return [styles.pressable, pressed && styles.pressed];
         }}>
         <Icon
           theme={theme}
-          name={desktopMode ? Icons.MOBILE : Icons.DESKTOP}
-          width={26}
-          height={26}
-          color={PRIMARY_RED_COLOR}
+          name={Icons.ADD_BROWSER}
+          additionalContainerStyle={[styles.circleContainer]}
+          {...styles.icon}
+          color={'white'}
         />
       </Pressable>
       <Pressable
@@ -152,16 +178,16 @@ const Footer = ({
         </View>
       </Pressable>
       <Pressable
-        onPress={manageTabs}
+        onPress={toggleDesktopMode}
         style={({pressed}) => {
           return [styles.pressable, pressed && styles.pressed];
         }}>
         <Icon
           theme={theme}
-          name={Icons.WALLET_ADD}
-          {...styles.icon}
-          onPress={() => resetStackAndNavigate('WALLET')}
-          color={PRIMARY_RED_COLOR}
+          name={desktopMode ? Icons.MOBILE : Icons.DESKTOP}
+          width={26}
+          height={26}
+          color={'white'}
         />
       </Pressable>
     </View>
@@ -175,10 +201,13 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
       width: 24,
       height: 24,
     },
+    iconBigger: {
+      width: 28,
+      height: 28,
+    },
     footer: {
       height: height || 40,
-      marginBottom: -insets.bottom,
-      paddingBottom: insets.bottom,
+      marginBottom: -insets.bottom - 1,
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderWidth: 1,
       borderColor: getColors(theme).cardBorderColor,
@@ -188,7 +217,7 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
       alignItems: 'center',
     },
     manage: {
-      borderColor: PRIMARY_RED_COLOR,
+      borderColor: 'white',
       borderWidth: 1,
       width: 22,
       height: 22,
@@ -200,7 +229,7 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
       borderRadius: 50,
       width: 22,
       height: 22,
-      borderColor: PRIMARY_RED_COLOR,
+      borderColor: 'white',
       borderWidth: 1,
     },
     textBase: {
@@ -208,16 +237,33 @@ const getStyles = (height: number, insets: EdgeInsets, theme: Theme) =>
       color: getColors(theme).secondaryText,
     },
     redColor: {
-      color: PRIMARY_RED_COLOR,
+      color: 'white',
     },
     pressable: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
       height: '100%',
+      paddingBottom: insets.bottom / 2,
+      marginTop: 5,
     },
     pressed: {
       backgroundColor: getColors(theme).pressedButton,
+    },
+    wallet: {
+      flex: 1.5,
+      backgroundColor: getColors(theme).borderContrast,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+    },
+    walletLeft: {
+      flex: 1.2,
+    },
+    browser: {
+      flex: 1.2,
+      backgroundColor: PRIMARY_RED_COLOR,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
     },
   });
 
