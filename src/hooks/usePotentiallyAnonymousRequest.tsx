@@ -1,13 +1,15 @@
-import { Account, KeyTypes, PubKeyTypes } from 'actions/interfaces';
+import {Account, KeyTypes, PubKeyTypes} from 'actions/interfaces';
 import RequestUsername from 'components/browser/requestOperations/components/RequestUsername';
-import React, { useState } from 'react';
-import { getRequiredWifType, getValidAuthorityAccounts } from 'utils/keychain';
-import { KeychainRequest, KeychainRequestTypes } from 'utils/keychain.types';
+import React, {useEffect, useState} from 'react';
+import {store} from 'store';
+import {getRequiredWifType, getValidAuthorityAccounts} from 'utils/keychain';
+import {KeychainRequest, KeychainRequestTypes} from 'utils/keychain.types';
 
 export default (request: KeychainRequest, accounts: Account[]) => {
   const {username} = request;
   const method = getRequiredWifType(request);
   let initAcc;
+  const activeAccountName = store.getState().activeAccount.name;
   accounts = getValidAuthorityAccounts(
     accounts,
     method.toLowerCase() as KeyTypes,
@@ -15,7 +17,7 @@ export default (request: KeychainRequest, accounts: Account[]) => {
   initAcc =
     username && accounts.find((u) => u.name === username)?.keys?.active
       ? username
-      : accounts[0].name;
+      : activeAccountName;
   const [account, setAccount] = useState(initAcc);
 
   const getAccountKey = () => {
