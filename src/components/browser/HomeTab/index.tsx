@@ -13,6 +13,7 @@ type Props = {
   history: Page[];
   favorites: Page[];
   updateTabUrl: (link: string) => void;
+  clearHistory: () => void;
   homeRef: MutableRefObject<View>;
   accounts: Account[];
   theme: Theme;
@@ -21,6 +22,7 @@ const NewTab = ({
   history,
   favorites,
   updateTabUrl,
+  clearHistory,
   homeRef,
   accounts,
   theme,
@@ -42,6 +44,7 @@ const NewTab = ({
           />,
           <History
             history={history}
+            clearHistory={clearHistory}
             updateTabUrl={updateTabUrl}
             theme={theme}
           />,
