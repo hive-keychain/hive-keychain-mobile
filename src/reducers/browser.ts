@@ -27,7 +27,10 @@ const browserReducer = (
 ) => {
   switch (type) {
     case ADD_TO_BROWSER_HISTORY:
-      if (state.history.find((e) => e!.url === payload!.history!.url)) {
+      if (
+        state.history.find((e) => e!.url === payload!.history!.url) ||
+        payload!.history!.url === 'about:blank'
+      ) {
         return state;
       }
       return {
