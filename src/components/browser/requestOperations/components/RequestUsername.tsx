@@ -2,7 +2,7 @@ import {Account} from 'actions/interfaces';
 import DropdownModal from 'components/form/DropdownModal';
 import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getFontSizeSmallDevices} from 'src/styles/typography';
@@ -23,10 +23,15 @@ export default ({username, setAccount, enforce, accounts, account}: Props) => {
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   const activeAccountName = store.getState().activeAccount.name;
-  const selectedAccount =
+  const [selectedAccount, setSelectedAccount] = React.useState(
     username ||
-    accounts.find((acc) => acc.name === activeAccountName)?.name ||
-    account;
+      accounts.find((acc) => acc.name === activeAccountName)?.name ||
+      account,
+  );
+
+  useEffect(() => {
+    setSelectedAccount(account);
+  }, [account]);
 
   const toDropdownFormat = (account: string) => {
     return {
@@ -48,7 +53,10 @@ export default ({username, setAccount, enforce, accounts, account}: Props) => {
         dropdownTitle="common.accounts"
         hideLabel
         selected={toDropdownFormat(selectedAccount)}
-        onSelected={(selectedAccount) => setAccount(selectedAccount.value)}
+        onSelected={(selectedAccount) => {
+          setAccount(selectedAccount.value);
+          setSelectedAccount(selectedAccount.value);
+        }}
       />
       <Separator />
     </View>
