@@ -45,6 +45,7 @@ export const KeychainConfig = {
     'custom',
     'signBuffer',
     'transfer',
+    'recurrentTransfer',
   ],
 };
 
