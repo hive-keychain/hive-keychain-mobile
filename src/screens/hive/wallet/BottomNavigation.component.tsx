@@ -1,11 +1,10 @@
 import {showFloatingBar} from 'actions/floatingBar';
 import {closeAllTabs} from 'actions/index';
 import Icon from 'components/hive/Icon';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {ReactElement, useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Easing,
-  Platform,
   StyleSheet,
   Text,
   View,
@@ -19,22 +18,25 @@ import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getIconDimensions} from 'src/styles/icon';
-import {
-  SMALLEST_SCREEN_WIDTH_SUPPORTED,
-  body_primary_body_1,
-} from 'src/styles/typography';
+import {body_primary_body_1} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {PlatformsUtils} from 'utils/platforms.utils';
 
-export type FloatingBarLink = 'ecosystem' | 'browser' | 'scan_qr' | 'swap_buy';
+export enum BottomBarLink {
+  Wallet = 'WalletScreen',
+  Browser = 'BrowserScreen',
+  ScanQr = 'ScanQR',
+  SwapBuy = 'SwapBuy',
+}
 interface Props {
   showTags?: boolean;
+  additionalLinks?: ReactElement[];
 }
 
-const Floating = ({
+const BottomNavigation = ({
   show,
   showTags,
   isLoadingScreen,
@@ -43,41 +45,36 @@ const Floating = ({
   rpc,
   isProposalRequestDisplayed,
   showSwap,
+  additionalLinks,
+  activeScreen,
 }: Props & PropsFromRedux) => {
-  const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width, height}, useSafeAreaInsets(), false);
   const anim = useRef(new Animated.Value(0)).current;
   const [isTop, setIsTop] = useState(false);
-  const getActiveStyle = (link: FloatingBarLink) =>
-    activeLink === link ? styles.active : undefined;
 
-  const getActiveIconColor = (link: FloatingBarLink) =>
-    activeLink === link ? '#FFF' : undefined;
-
-  const onHandlePressButton = (link: FloatingBarLink) => {
-    // setActiveLink(link); //TODO commented for now as no need.
+  const onHandlePressButton = (link: BottomBarLink) => {
     let screen = '';
     let nestedScreenOrParams;
     switch (link) {
-      case 'ecosystem':
+      case BottomBarLink.Wallet:
         screen = 'WALLET';
         nestedScreenOrParams = {
           screen: 'WalletScreen',
         };
         break;
-      case 'browser':
+      case BottomBarLink.Browser:
         screen = 'BrowserScreen';
         break;
-      case 'scan_qr':
+      case BottomBarLink.ScanQr:
         screen = 'WALLET';
         nestedScreenOrParams = {
           screen: 'ScanQRFromWalletScreen',
           params: {wallet: true},
         };
         break;
-      case 'swap_buy':
+      case BottomBarLink.SwapBuy:
         screen = 'SwapBuyStack';
         break;
     }
@@ -90,7 +87,7 @@ const Floating = ({
       duration: 1000,
       easing: Easing.linear,
       useNativeDriver: true,
-    }).start(() => {});
+    }).start();
   };
 
   useEffect(() => {
@@ -114,13 +111,17 @@ const Floating = ({
         styles.container,
         {transform: [{translateY}]},
       ]}>
-      <View style={[styles.itemContainer, getActiveStyle('ecosystem')]}>
+      <View
+        style={[
+          styles.itemContainer,
+          activeScreen === BottomBarLink.Wallet && styles.active,
+        ]}>
         <Icon
           theme={theme}
           name={Icons.WALLET_ADD}
-          color={getActiveIconColor('ecosystem')}
+          color={activeScreen === BottomBarLink.Wallet ? 'white' : undefined}
           {...getIconDimensions(width)}
-          onPress={() => onHandlePressButton('ecosystem')}
+          onPress={() => onHandlePressButton(BottomBarLink.Wallet)}
         />
         {showTags && (
           <Text style={[styles.textBase, styles.marginTop]}>
@@ -128,13 +129,17 @@ const Floating = ({
           </Text>
         )}
       </View>
-      <View style={[styles.itemContainer, getActiveStyle('browser')]}>
+      <View
+        style={[
+          styles.itemContainer,
+          activeScreen === BottomBarLink.Browser && styles.active,
+        ]}>
         <Icon
           theme={theme}
-          color={getActiveIconColor('browser')}
           name={Icons.BROWSER}
           {...getIconDimensions(width)}
-          onPress={() => onHandlePressButton('browser')}
+          color={activeScreen === BottomBarLink.Browser ? 'white' : undefined}
+          onPress={() => onHandlePressButton(BottomBarLink.Browser)}
           onLongPress={() => {
             SimpleToast.show(translate('browser.clear_all'), SimpleToast.LONG);
             closeAllTabs();
@@ -146,13 +151,16 @@ const Floating = ({
           </Text>
         )}
       </View>
-      <View style={[styles.itemContainer, getActiveStyle('scan_qr')]}>
+      {activeScreen === BottomBarLink.Browser &&
+        additionalLinks?.length &&
+        additionalLinks}
+      <View style={[styles.itemContainer]}>
         <Icon
           theme={theme}
           name={Icons.SCANNER}
-          color={getActiveIconColor('scan_qr')}
           {...getIconDimensions(width)}
-          onPress={() => onHandlePressButton('scan_qr')}
+          color={activeScreen === BottomBarLink.ScanQr ? 'white' : undefined}
+          onPress={() => onHandlePressButton(BottomBarLink.ScanQr)}
         />
         {showTags && (
           <Text style={[styles.textBase, styles.marginTop]}>
@@ -161,13 +169,13 @@ const Floating = ({
         )}
       </View>
       {PlatformsUtils.showDependingOnPlatform(
-        <View style={[styles.itemContainer, getActiveStyle('swap_buy')]}>
+        <View style={[styles.itemContainer]}>
           <Icon
             theme={theme}
-            color={getActiveIconColor('swap_buy')}
             name={Icons.SWAP}
+            color={activeScreen === BottomBarLink.SwapBuy ? 'white' : undefined}
             {...getIconDimensions(width)}
-            onPress={() => onHandlePressButton('swap_buy')}
+            onPress={() => onHandlePressButton(BottomBarLink.SwapBuy)}
           />
           {showTags && (
             <Text style={[styles.textBase, styles.marginTop]}>
@@ -190,13 +198,13 @@ const getStyles = (
   StyleSheet.create({
     container: {
       position: 'absolute',
-      bottom: isProposalRequestDisplayed ? 80 : 0,
+      bottom: isProposalRequestDisplayed ? insets.bottom + 80 : insets.bottom,
       width: '95%',
-      marginBottom: 0,
       alignSelf: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      paddingBottom: Platform.OS === 'ios' ? 20 : 0,
+      marginBottom: -insets.bottom - 1,
+      paddingBottom: insets.bottom / 2,
       alignItems: 'center',
     },
     textBase: {
@@ -206,7 +214,10 @@ const getStyles = (
     itemContainer: {
       alignItems: 'center',
       justifyContent: 'center',
-      width: width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? '20%' : '25%',
+      flex: 1.5,
+      paddingTop: 8,
+      paddingBottom: 8 + insets.bottom,
+      marginBottom: -insets.bottom,
     },
     marginTop: {
       marginTop: 5,
@@ -215,9 +226,6 @@ const getStyles = (
       borderTopRightRadius: 22,
       borderTopLeftRadius: 22,
       backgroundColor: PRIMARY_RED_COLOR,
-      paddingTop: 8,
-      paddingBottom: 8 + insets.bottom,
-      marginBottom: -insets.bottom,
     },
   });
 
@@ -230,10 +238,11 @@ const connector = connect(
       isDrawerOpen: state.floatingBar.isDrawerOpened,
       rpc: state.settings.rpc,
       showSwap: state.settings.mobileSettings?.platformRelevantFeatures?.swap,
+      activeScreen: state.navigation.activeScreen,
     };
   },
   {showFloatingBar, closeAllTabs},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export const FloatingBar = connector(Floating);
+export const BottomNavigationComponent = connector(BottomNavigation);

@@ -44,7 +44,6 @@ import {MultisigUtils} from 'utils/multisig.utils';
 import {navigate, goBack as navigationGoBack} from 'utils/navigation';
 import {hasPreference} from 'utils/preferences';
 import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
-import Footer from './Footer';
 import HomeTab from './HomeTab';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
@@ -414,8 +413,8 @@ export default ({
           </ScrollView>
         </GestureDetector>
       </View>
-      {active && orientation === 'PORTRAIT' && (
-        <Footer
+      {/* {active && orientation === 'PORTRAIT' && (
+        <BrowserBottomBarComponent
           canGoBack={canGoBack}
           canGoForward={canGoForward}
           goBack={goBack}
@@ -444,7 +443,7 @@ export default ({
           tabs={tabsNumber}
           theme={theme}
         />
-      )}
+      )} */}
     </View>
   );
 };

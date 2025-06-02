@@ -12,6 +12,7 @@ import {
   loadProperties,
 } from 'actions/hive';
 import {loadTokens, loadTokensMarket} from 'actions/index';
+import {updateNavigationActiveScreen} from 'actions/navigation';
 import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import UserDropdown from 'components/form/UserDropdown';
@@ -84,6 +85,7 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
 import {WidgetUtils} from 'utils/widget.utils';
+import {BottomBarLink} from './BottomNavigation.component';
 import TokenSettings from './tokens/TokenSettings';
 
 const Main = ({
@@ -106,6 +108,7 @@ const Main = ({
   tokens,
   userTokens,
   tokensMarket,
+  updateNavigationState,
   rpc,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useThemeContext();
@@ -262,6 +265,7 @@ const Main = ({
   }, [isDrawerOpen]);
 
   useEffect(() => {
+    updateNavigationState(BottomBarLink.Wallet);
     const handler = (nextAppState: AppStateStatus) => {
       if (
         appState.current.match(/inactive|background/) &&
@@ -676,6 +680,7 @@ const connector = connect(
     showFloatingBar,
     setIsDrawerOpen,
     setisLoadingScreen,
+    updateNavigationState: updateNavigationActiveScreen,
   },
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;

@@ -11,6 +11,7 @@ import {
   setRpc as setRpcAction,
 } from 'actions/index';
 import {Rpc} from 'actions/interfaces';
+import {updateNavigationActiveScreen} from 'actions/navigation';
 import {setDisplayChangeRpcPopup, setSwitchToRpc} from 'actions/rpc-switcher';
 import Bridge from 'components/bridge';
 import {MessageModal} from 'components/modals/MessageModal';
@@ -28,7 +29,7 @@ import {
   DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
   DEFAULT_HE_RPC_NODE,
 } from 'screens/hive/settings/RpcNodes';
-import {FloatingBar} from 'screens/hive/wallet/FloatingBar';
+import {BottomNavigationComponent} from 'screens/hive/wallet/BottomNavigation.component';
 import {RootState} from 'store';
 import {logScreenView} from 'utils/analytics';
 import {setRpc} from 'utils/hive';
@@ -56,6 +57,7 @@ const App = ({
   accountHistoryAPIRpc,
   getTokensBackgroundColors,
   getSettings,
+  updateNavigationActiveScreen,
 }: PropsFromRedux) => {
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
 
@@ -152,6 +154,7 @@ const App = ({
             (route) => route === currentRouteName,
           ),
         );
+        updateNavigationActiveScreen(currentRouteName);
         const p = navigationRef.current.getCurrentRoute().params;
         if (currentRouteName === 'WalletScreen') {
           currentRouteName = getToggleElement() || 'WalletScreen';
@@ -163,7 +166,7 @@ const App = ({
       }}>
       {renderRootNavigator()}
       <MessageModal />
-      <FloatingBar />
+      <BottomNavigationComponent />
       <RpcSwitcherComponent initialRpc={activeRpc} />
       <Bridge />
     </NavigationContainer>
@@ -191,6 +194,7 @@ const connector = connect(mapStateToProps, {
   setActiveRpc: setRpcAction,
   getTokensBackgroundColors,
   getSettings,
+  updateNavigationActiveScreen,
 });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
