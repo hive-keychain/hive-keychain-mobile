@@ -1,3 +1,4 @@
+import {useFocusEffect} from '@react-navigation/native';
 import {
   Account,
   ActionPayload,
@@ -5,11 +6,11 @@ import {
   KeyTypes,
   Page,
   Tab,
-  TabFields,
 } from 'actions/interfaces';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import {
+  BackHandler,
   Platform,
   RefreshControl,
   ScrollView,
@@ -27,6 +28,7 @@ import {
   WebViewProgressEvent,
 } from 'react-native-webview/lib/WebViewTypes';
 import {UserPreference} from 'reducers/preferences.types';
+import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
 import {ProviderEvent} from 'src/enums/provider-event.enum';
 import {urlTransformer} from 'utils/browser';
@@ -55,13 +57,9 @@ import RequestErr from './requestOperations/components/RequestError';
 type Props = {
   data: Tab;
   active: boolean;
-  manageTabs: (
-    tab: Tab,
-    webview: MutableRefObject<WebView> | MutableRefObject<View | ScrollView>,
-  ) => void;
   isManagingTab: boolean;
   accounts: Account[];
-  updateTab: (id: number, data: TabFields) => ActionPayload<BrowserPayload>;
+  updateTab: (id: number, data: Partial<Tab>) => ActionPayload<BrowserPayload>;
   addToHistory: (history: Page) => ActionPayload<BrowserPayload>;
   history: Page[];
   navigation: BrowserNavigation;
@@ -81,25 +79,23 @@ type Props = {
 };
 
 export default ({
-  data: {url, id, icon, name},
+  data,
   active,
   updateTab,
   accounts,
   navigation,
   addToHistory,
   history,
-  manageTabs,
   isManagingTab,
   preferences,
   favorites,
   addTab,
-  tabsNumber,
   orientation,
   isUrlModalOpen,
   clearHistory,
   theme,
 }: Props) => {
-  const tabData = {url, id, icon, name};
+  const {url, id, icon, name, desktop: desktopMode} = data;
   const tabRef: MutableRefObject<WebView> = useRef(null);
   const tabParentRef: MutableRefObject<ScrollView> = useRef(null);
   const homeRef: MutableRefObject<View> = useRef(null);
@@ -107,12 +103,11 @@ export default ({
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
   const [shouldUpdateWvInfo, setShouldUpdateWvInfo] = useState(true);
-  const [desktopMode, setDesktopMode] = useState(false);
   const insets = useSafeAreaInsets();
   const [canRefresh, setCanRefresh] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const {width} = useWindowDimensions();
-
+  const {setWebViewRef, setTabViewRef} = useTab();
   const onRefresh = () => {
     setRefreshing(true);
     tabRef.current?.reload(); // reload the WebView
@@ -127,6 +122,22 @@ export default ({
       }, 2100);
     }
   }, [isUrlModalOpen]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        if (canGoBack) goBack();
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
+
+      return () => backHandler.remove();
+    }, [canGoBack]),
+  );
 
   useEffect(() => {
     // On iOS the page needs to be reloaded when changing orientation to apply desktop mode.
@@ -149,15 +160,15 @@ export default ({
     current && current.goForward();
   };
 
-  const reload = () => {
-    const {current} = tabRef;
-    current && current.reload();
-  };
+  // const reload = () => {
+  //   const {current} = tabRef;
+  //   current && current.reload();
+  // };
 
-  const clearCache = () => {
-    const {current} = tabRef;
-    current && current.clearCache(true);
-  };
+  // const clearCache = () => {
+  //   const {current} = tabRef;
+  //   current && current.clearCache(true);
+  // };
 
   const onLoadStart = ({
     nativeEvent: {url},
@@ -239,10 +250,10 @@ export default ({
         }
         break;
       case ProviderEvent.INFO:
-        const {icon, name, url} = data as TabFields;
+        const {icon, name, url} = data as Partial<Tab>;
         if (
-          tabData.url !== 'about:blank' &&
-          (icon !== tabData.icon || name !== tabData.name)
+          data.url !== 'about:blank' &&
+          (icon !== data.icon || name !== data.name)
         ) {
           navigation.setParams({icon});
           updateTab(id, {name, icon});
@@ -339,6 +350,12 @@ export default ({
       }
     });
 
+  useEffect(() => {
+    if (tabRef?.current && active) setWebViewRef(tabRef.current);
+    if (tabParentRef?.current && active) setTabViewRef(tabParentRef.current);
+    if (homeRef?.current && active) setTabViewRef(homeRef.current);
+  }, [tabRef, homeRef, active, url]);
+
   return (
     <View
       style={[styles.container, !active || isManagingTab ? styles.hide : null]}>
@@ -413,37 +430,6 @@ export default ({
           </ScrollView>
         </GestureDetector>
       </View>
-      {/* {active && orientation === 'PORTRAIT' && (
-        <BrowserBottomBarComponent
-          canGoBack={canGoBack}
-          canGoForward={canGoForward}
-          goBack={goBack}
-          goForward={goForward}
-          reload={reload}
-          clearCache={clearCache}
-          desktopMode={desktopMode}
-          toggleDesktopMode={() => {
-            setDesktopMode(!desktopMode);
-            tabRef.current.reload();
-          }}
-          addTab={() => {
-            addTab(
-              isManagingTab,
-              {url, id, icon},
-              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabParentRef,
-            );
-          }}
-          manageTabs={() => {
-            manageTabs(
-              {url, id, icon},
-              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabParentRef,
-            );
-          }}
-          height={FOOTER_HEIGHT}
-          tabs={tabsNumber}
-          theme={theme}
-        />
-      )} */}
     </View>
   );
 };

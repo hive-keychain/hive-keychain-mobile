@@ -1,10 +1,19 @@
 import {showFloatingBar} from 'actions/floatingBar';
-import {closeAllTabs} from 'actions/index';
+import {
+  addTab,
+  changeTab,
+  closeAllTabs,
+  showManagementScreen,
+  updateTab,
+} from 'actions/index';
+import {Tab} from 'actions/interfaces';
 import Icon from 'components/hive/Icon';
-import React, {ReactElement, useEffect, useRef, useState} from 'react';
+import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Easing,
+  Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -12,7 +21,9 @@ import {
 } from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {ConnectedProps, connect} from 'react-redux';
+import {useTab} from 'src/context/tab.context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
@@ -20,7 +31,9 @@ import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getIconDimensions} from 'src/styles/icon';
 import {body_primary_body_1} from 'src/styles/typography';
 import {RootState} from 'store';
+import {BrowserUtils} from 'utils/browser';
 import {Dimensions} from 'utils/common.types';
+import {BrowserConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {PlatformsUtils} from 'utils/platforms.utils';
@@ -33,7 +46,6 @@ export enum BottomBarLink {
 }
 interface Props {
   showTags?: boolean;
-  additionalLinks?: ReactElement[];
 }
 
 const BottomNavigation = ({
@@ -45,15 +57,20 @@ const BottomNavigation = ({
   rpc,
   isProposalRequestDisplayed,
   showSwap,
-  additionalLinks,
   activeScreen,
+  tabs,
+  addTab,
+  browser,
+  updateTab,
+  showManagementScreen,
+  changeTab,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width, height}, useSafeAreaInsets(), false);
   const anim = useRef(new Animated.Value(0)).current;
   const [isTop, setIsTop] = useState(false);
-
+  const {webViewRef, tabViewRef} = useTab();
   const onHandlePressButton = (link: BottomBarLink) => {
     let screen = '';
     let nestedScreenOrParams;
@@ -104,6 +121,115 @@ const BottomNavigation = ({
     extrapolate: 'clamp',
   });
 
+  const onAddTab = async (
+    isManagingTab: boolean,
+    tab: Tab,
+    view: MutableRefObject<View | ScrollView>,
+    newUrl = BrowserConfig.HOMEPAGE_URL,
+  ) => {
+    if (!isManagingTab) {
+      const {id, url, icon} = tab;
+      const uri = await BrowserUtils.captureTab(view);
+      updateTab(id, {id, url, icon, image: uri});
+      addTab(newUrl);
+    } else {
+      addTab(newUrl);
+      showManagementScreen(false);
+    }
+  };
+
+  const isBrowser = activeScreen === BottomBarLink.Browser;
+
+  const renderBrowserBottomBar = () => [
+    <Pressable
+      onPress={() => {
+        const activeTab = BrowserUtils.findTabById(
+          browser.tabs,
+          browser.activeTab,
+        );
+        onAddTab(browser.showManagement, activeTab, tabViewRef);
+      }}
+      style={({pressed}) => {
+        return [styles.pressable, pressed && styles.pressed];
+      }}>
+      <Icon
+        theme={theme}
+        name={Icons.ADD_BROWSER}
+        additionalContainerStyle={[styles.circleContainer]}
+        {...styles.icon}
+      />
+    </Pressable>,
+    !browser.showManagement && (
+      <Pressable
+        onPress={async () => {
+          const {id, url, icon} = BrowserUtils.findTabById(
+            browser.tabs,
+            browser.activeTab,
+          );
+          const uri = await BrowserUtils.captureTab(tabViewRef);
+          updateTab(id, {id, url, icon, image: uri});
+          showManagementScreen(true);
+        }}
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed];
+        }}>
+        <View style={styles.manage}>
+          <Text style={[styles.textBase, styles.redColor]}>{tabs.length}</Text>
+        </View>
+      </Pressable>
+    ),
+    !browser.showManagement && (
+      <Pressable
+        onPress={() => {
+          updateTab(browser.activeTab, {
+            desktop: !BrowserUtils.findTabById(browser.tabs, browser.activeTab)
+              ?.desktop,
+          });
+          setTimeout(() => {
+            webViewRef.current?.reload();
+          }, 100);
+        }}
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed];
+        }}>
+        <Icon
+          theme={theme}
+          name={
+            !BrowserUtils.findTabById(browser.tabs, browser.activeTab)?.desktop
+              ? Icons.MOBILE
+              : Icons.DESKTOP
+          }
+          width={26}
+          height={26}
+        />
+      </Pressable>
+    ),
+    browser.showManagement && (
+      <Pressable
+        onPress={() => {
+          showManagementScreen(false);
+        }}
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed];
+        }}>
+        <MaterialIcon name="check" style={styles.icon} size={22} />
+      </Pressable>
+    ),
+    browser.showManagement && (
+      <Pressable
+        onPress={() => {
+          changeTab(0);
+          closeAllTabs();
+          showManagementScreen(false);
+        }}
+        style={({pressed}) => {
+          return [styles.pressable, pressed && styles.pressed];
+        }}>
+        <MaterialIcon name="close" style={styles.icon} size={22} />
+      </Pressable>
+    ),
+  ];
+
   return show && rpc && rpc.uri !== 'NULL' ? (
     <Animated.View
       style={[
@@ -151,40 +277,43 @@ const BottomNavigation = ({
           </Text>
         )}
       </View>
-      {activeScreen === BottomBarLink.Browser &&
-        additionalLinks?.length &&
-        additionalLinks}
-      <View style={[styles.itemContainer]}>
-        <Icon
-          theme={theme}
-          name={Icons.SCANNER}
-          {...getIconDimensions(width)}
-          color={activeScreen === BottomBarLink.ScanQr ? 'white' : undefined}
-          onPress={() => onHandlePressButton(BottomBarLink.ScanQr)}
-        />
-        {showTags && (
-          <Text style={[styles.textBase, styles.marginTop]}>
-            {translate('navigation.floating_bar.buy')}
-          </Text>
-        )}
-      </View>
-      {PlatformsUtils.showDependingOnPlatform(
+      {isBrowser && renderBrowserBottomBar()}
+      {!isBrowser && (
         <View style={[styles.itemContainer]}>
           <Icon
             theme={theme}
-            name={Icons.SWAP}
-            color={activeScreen === BottomBarLink.SwapBuy ? 'white' : undefined}
+            name={Icons.SCANNER}
             {...getIconDimensions(width)}
-            onPress={() => onHandlePressButton(BottomBarLink.SwapBuy)}
+            color={activeScreen === BottomBarLink.ScanQr ? 'white' : undefined}
+            onPress={() => onHandlePressButton(BottomBarLink.ScanQr)}
           />
           {showTags && (
             <Text style={[styles.textBase, styles.marginTop]}>
-              {translate('navigation.floating_bar.swap')}
+              {translate('navigation.floating_bar.buy')}
             </Text>
           )}
-        </View>,
-        showSwap,
+        </View>
       )}
+      {!isBrowser &&
+        PlatformsUtils.showDependingOnPlatform(
+          <View style={[styles.itemContainer]}>
+            <Icon
+              theme={theme}
+              name={Icons.SWAP}
+              color={
+                activeScreen === BottomBarLink.SwapBuy ? 'white' : undefined
+              }
+              {...getIconDimensions(width)}
+              onPress={() => onHandlePressButton(BottomBarLink.SwapBuy)}
+            />
+            {showTags && (
+              <Text style={[styles.textBase, styles.marginTop]}>
+                {translate('navigation.floating_bar.swap')}
+              </Text>
+            )}
+          </View>,
+          showSwap,
+        )}
     </Animated.View>
   ) : null;
 };
@@ -227,6 +356,35 @@ const getStyles = (
       borderTopLeftRadius: 22,
       backgroundColor: PRIMARY_RED_COLOR,
     },
+    redColor: {
+      color: getColors(theme).icon,
+    },
+    pressable: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100%',
+    },
+    pressed: {
+      backgroundColor: getColors(theme).pressedButton,
+    },
+    icon: {width: 22, height: 22, color: getColors(theme).icon},
+    manage: {
+      borderColor: getColors(theme).icon,
+      borderWidth: 1,
+      width: 22,
+      height: 22,
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    circleContainer: {
+      borderRadius: 50,
+      width: 22,
+      height: 22,
+      borderColor: getColors(theme).icon,
+      borderWidth: 1,
+    },
   });
 
 const connector = connect(
@@ -239,9 +397,18 @@ const connector = connect(
       rpc: state.settings.rpc,
       showSwap: state.settings.mobileSettings?.platformRelevantFeatures?.swap,
       activeScreen: state.navigation.activeScreen,
+      tabs: state.browser.tabs,
+      browser: state.browser,
     };
   },
-  {showFloatingBar, closeAllTabs},
+  {
+    showFloatingBar,
+    closeAllTabs,
+    addTab,
+    updateTab,
+    showManagementScreen,
+    changeTab,
+  },
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import Orientation from 'react-native-orientation-locker';
 import {captureRef} from 'react-native-view-shot';
-import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
 import {Theme} from 'src/context/theme.context';
 import {BrowserConfig} from 'utils/config';
@@ -31,7 +30,6 @@ const Browser = ({
   addTab,
   updateTab,
   closeTab,
-  closeAllTabs,
   addToHistory,
   clearHistory,
   addToFavorites,
@@ -40,7 +38,6 @@ const Browser = ({
   navigation,
   setBrowserFocus,
   showManagementScreen,
-  showFloatingBar,
   theme,
 }: Partial<BrowserPropsFromRedux> & BrowserNavigationProps & Props) => {
   const {showManagement, activeTab, tabs, history, favorites} = browser;
@@ -85,24 +82,6 @@ const Browser = ({
     };
   }, []);
 
-  const manageTabs = (
-    {url, icon, id}: TabType,
-    view: MutableRefObject<WebView> | MutableRefObject<View | ScrollView>,
-  ) => {
-    captureRef(view, {
-      format: 'jpg',
-      quality: 0.2,
-    }).then(
-      (uri) => {
-        updateTab(id, {id, url, icon, image: uri});
-        showManagementScreen(true);
-      },
-      (error) => {
-        console.error(error);
-      },
-    );
-  };
-
   const onSelectTab = (id: number) => {
     changeTab(id);
     showManagementScreen(false);
@@ -119,12 +98,7 @@ const Browser = ({
     closeTab(id);
   };
 
-  const onCloseAllTabs = () => {
-    changeTab(0);
-    closeAllTabs();
-  };
-
-  const onAddTab = (
+  const onAddTab = async (
     isManagingTab: boolean,
     tab: TabType,
     view: MutableRefObject<View | ScrollView>,
@@ -132,26 +106,16 @@ const Browser = ({
   ) => {
     if (!isManagingTab) {
       const {id, url, icon} = tab;
-      captureRef(view, {
+      const uri = await captureRef(view, {
         format: 'jpg',
         quality: 0.2,
-      }).then(
-        (uri) => {
-          updateTab(id, {id, url, icon, image: uri});
-          addTab(newUrl);
-        },
-        (error) => {
-          console.error(error);
-        },
-      );
+      });
+      updateTab(id, {id, url, icon, image: uri});
+      addTab(newUrl);
     } else {
       addTab(newUrl);
       showManagementScreen(false);
     }
-  };
-
-  const onQuitManagement = () => {
-    showManagementScreen(false);
   };
 
   const onNewSearch = (url: string) => {
@@ -194,9 +158,6 @@ const Browser = ({
           activeTab={activeTab}
           onSelectTab={onSelectTab}
           onCloseTab={onCloseTab}
-          onCloseAllTabs={onCloseAllTabs}
-          onAddTab={onAddTab}
-          onQuitManagement={onQuitManagement}
           show={showManagement}
           theme={theme}
         />
@@ -210,7 +171,6 @@ const Browser = ({
             navigation={navigation}
             addToHistory={addToHistory}
             history={history}
-            manageTabs={manageTabs}
             clearHistory={clearHistory}
             isManagingTab={showManagement}
             preferences={preferences}

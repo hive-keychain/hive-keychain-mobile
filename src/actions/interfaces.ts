@@ -59,14 +59,7 @@ export interface Tab {
   name?: string;
   icon?: string;
   image?: string;
-}
-
-export interface TabFields {
-  id?: number;
-  url?: string;
-  name?: string;
-  icon?: string;
-  image?: string;
+  desktop?: boolean;
 }
 
 export interface BrowserPayload {
@@ -74,7 +67,7 @@ export interface BrowserPayload {
   history?: Page;
   shouldFocus?: boolean;
   id?: number | null;
-  data?: TabFields;
+  data?: Partial<Tab>;
   showManagement?: boolean;
   favorite?: Page;
 }

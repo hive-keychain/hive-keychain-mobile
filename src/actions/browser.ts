@@ -1,7 +1,7 @@
 import {AppThunk} from 'src/hooks/redux';
 import {EcosystemUtils} from 'utils/ecosystem.utils';
 import {navigate} from 'utils/navigation';
-import {ActionPayload, BrowserPayload, Page, TabFields} from './interfaces';
+import {ActionPayload, BrowserPayload, Page, Tab} from './interfaces';
 import {
   ADD_BROWSER_TAB,
   ADD_TO_BROWSER_FAVORITES,
@@ -109,7 +109,7 @@ export const changeTab = (id: number) => {
 };
 
 let acceptUpdateTab = true;
-export const updateTab = (id: number, data: TabFields, stall?: boolean) => {
+export const updateTab = (id: number, data: Partial<Tab>, stall?: boolean) => {
   if (!acceptUpdateTab) return {type: 'ABORTED'};
   if (stall) {
     acceptUpdateTab = false;

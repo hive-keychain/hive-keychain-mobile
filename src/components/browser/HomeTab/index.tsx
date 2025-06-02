@@ -2,6 +2,7 @@ import {Account, Page} from 'actions/interfaces';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import React, {MutableRefObject} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {translate} from 'utils/localize';
@@ -27,6 +28,8 @@ const NewTab = ({
   accounts,
   theme,
 }: Props) => {
+  const insets = useSafeAreaInsets();
+  const styles = getStyles(insets);
   return (
     <View style={[styles.container]} ref={homeRef} collapsable={false}>
       <ScreenToggle
@@ -65,18 +68,22 @@ const NewTab = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {flex: 1},
-  sub: {height: 40},
-  headerToogler: {
-    paddingHorizontal: 2,
-    height: 'auto',
-    marginBottom: 0,
-    paddingVertical: 4,
-    width: '90%',
-    alignSelf: 'center',
-    marginTop: 0,
-  },
-});
+const getStyles = (insets: EdgeInsets) =>
+  StyleSheet.create({
+    container: {
+      flexGrow: 1,
+      height: '100%',
+    },
+    sub: {height: 40},
+    headerToogler: {
+      paddingHorizontal: 2,
+      height: 'auto',
+      marginBottom: 0,
+      paddingVertical: 4,
+      width: '90%',
+      alignSelf: 'center',
+      marginTop: 0,
+    },
+  });
 
 export default NewTab;

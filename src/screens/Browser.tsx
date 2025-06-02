@@ -6,7 +6,6 @@ import {
   addToHistory,
   changeTab,
   clearHistory,
-  closeAllTabs,
   closeTab,
   getEcosystem,
   removeFromFavorites,
@@ -34,7 +33,6 @@ const BrowserScreen = ({
   addTab,
   updateTab,
   closeTab,
-  closeAllTabs,
   addToHistory,
   clearHistory,
   addToFavorites,
@@ -99,7 +97,6 @@ const BrowserScreen = ({
         addTab={addTab}
         updateTab={updateTab}
         closeTab={closeTab}
-        closeAllTabs={closeAllTabs}
         addToHistory={addToHistory}
         clearHistory={clearHistory}
         addToFavorites={addToFavorites}
@@ -127,7 +124,6 @@ const connector = connect(mapStateToProps, {
   addTab,
   updateTab,
   closeTab,
-  closeAllTabs,
   addToHistory,
   clearHistory,
   addToFavorites,
