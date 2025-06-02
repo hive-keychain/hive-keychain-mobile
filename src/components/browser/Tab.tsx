@@ -68,6 +68,7 @@ type Props = {
   orientation: string;
   isUrlModalOpen: boolean;
   theme: Theme;
+  clearHistory: () => void;
 };
 
 export default ({
@@ -86,6 +87,7 @@ export default ({
   tabsNumber,
   orientation,
   isUrlModalOpen,
+  clearHistory,
   theme,
 }: Props) => {
   const tabData = {url, id, icon, name};
@@ -225,6 +227,7 @@ export default ({
         ) {
           navigation.setParams({icon});
           updateTab(id, {name, icon});
+          addToHistory({url, name, icon});
         }
         break;
     }
@@ -303,6 +306,7 @@ export default ({
             history={history}
             favorites={favorites}
             updateTabUrl={updateTabUrl}
+            clearHistory={clearHistory}
             homeRef={homeRef}
             accounts={accounts}
             theme={theme}

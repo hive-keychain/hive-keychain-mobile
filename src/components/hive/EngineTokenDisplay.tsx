@@ -60,9 +60,7 @@ const EngineTokenDisplay = ({
       source={{
         uri: Img.resolveAssetSource(HiveEngine).uri,
       }}
-      onError={() => {
-        console.log('default');
-      }}
+      onError={() => {}}
     />
   ) : (
     <Image

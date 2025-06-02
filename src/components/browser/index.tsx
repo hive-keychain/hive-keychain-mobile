@@ -205,6 +205,7 @@ const Browser = ({
             addToHistory={addToHistory}
             history={history}
             manageTabs={manageTabs}
+            clearHistory={clearHistory}
             isManagingTab={showManagement}
             preferences={preferences}
             favorites={favorites}

@@ -51,7 +51,7 @@ import {
 import {MultisigUtils} from './multisig.utils';
 import {useWorkingRPC} from './rpc-switcher.utils';
 
-type BroadcastResult = {id: string};
+type BroadcastResult = {id: string; tx_id: string};
 
 const DEFAULT_CHAIN_ID =
   'beeab0de00000000000000000000000000000000000000000000000000000000';

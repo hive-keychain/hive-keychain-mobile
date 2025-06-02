@@ -166,7 +166,6 @@ const RequestOperation = ({
             if (keep && !has) {
               addPreference(username, domain, type);
             }
-            console.log('shold be here', obj, keep);
             sendResponse(obj, keep);
           } catch (e) {
             console.log('error', e);

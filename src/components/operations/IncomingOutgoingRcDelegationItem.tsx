@@ -158,7 +158,6 @@ const IncomingOutgoingRcDelegationItem = ({
         setIsLoading(false);
       }
     };
-    console.log(twoFABots);
     if (Object.entries(twoFABots).length > 0) {
       navigate('ModalScreen', {
         name: `2FA`,

@@ -52,7 +52,6 @@ const Operations = ({
 
   const init = () => {
     const userPreference = preferences.find((e) => e.username === active.name);
-    console.log('here');
     setDomainList(
       userPreference &&
         userPreference.domains &&
@@ -60,7 +59,6 @@ const Operations = ({
         ? preferences.find((e) => e.username === active.name)?.domains || []
         : [],
     );
-    console.log('there');
     setTimeout(() => {
       setLoadingData(false);
     }, 1000);
