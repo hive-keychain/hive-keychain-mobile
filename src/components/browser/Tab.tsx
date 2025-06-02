@@ -17,10 +17,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import {
-  PanGestureHandler,
-  PanGestureHandlerGestureEvent,
-} from 'react-native-gesture-handler';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+import {runOnJS} from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
 import {
@@ -317,19 +315,30 @@ export default ({
     }
   };
 
-  const onGestureEvent = (event: PanGestureHandlerGestureEvent) => {
-    const {velocityX, absoluteX} = event.nativeEvent;
-    console.log('here', absoluteX, velocityX);
-    console.log(insets);
-    const fromLeftEdge = absoluteX < BrowserConfig.EDGE_THRESHOLD;
-    const fromRightEdge = absoluteX > width - BrowserConfig.EDGE_THRESHOLD;
+  const swipe = Gesture.Pan()
+    .manualActivation(true)
+    .onTouchesDown((event, manager) => {
+      if (
+        (event.numberOfTouches === 1 &&
+          event.allTouches[0].absoluteX < BrowserConfig.EDGE_THRESHOLD) ||
+        event.allTouches[0].absoluteX > width - BrowserConfig.EDGE_THRESHOLD
+      ) {
+        manager.activate();
+      }
+    })
+    .onEnd((event) => {
+      const {velocityX, translationX} = event;
+      const absVX = Math.abs(velocityX);
 
-    if (velocityX > 300 && fromLeftEdge && canGoBack) {
-      tabRef.current?.goBack();
-    } else if (velocityX < -300 && fromRightEdge && canGoForward) {
-      tabRef.current?.goForward();
-    }
-  };
+      // Ignore vertical scrolls
+      if (Math.abs(translationX) < 50 || absVX < 300) return;
+
+      if (velocityX > 0) {
+        runOnJS(goBack)();
+      } else if (velocityX < 0 && canGoForward) {
+        runOnJS(goForward)();
+      }
+    });
 
   return (
     <View
@@ -348,7 +357,7 @@ export default ({
             theme={theme}
           />
         ) : null}
-        <PanGestureHandler onGestureEvent={onGestureEvent}>
+        <GestureDetector gesture={swipe}>
           <ScrollView
             contentContainerStyle={
               url === BrowserConfig.HOMEPAGE_URL
@@ -403,7 +412,7 @@ export default ({
               useWebView2
             />
           </ScrollView>
-        </PanGestureHandler>
+        </GestureDetector>
       </View>
       {active && orientation === 'PORTRAIT' && (
         <Footer
