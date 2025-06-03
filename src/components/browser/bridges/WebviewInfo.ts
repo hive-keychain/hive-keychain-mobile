@@ -43,12 +43,15 @@ const getWebviewInfo = `
 			}
 		))
 	},2000);
-
+	
 	(function() {
+	let lastScrollPosition=0;
     function handleScroll() {
         const isAtTop = window.scrollY === 0;
-        window.ReactNativeWebView.postMessage(JSON.stringify({ name: '${ProviderEvent.SCROLL}', isAtTop }));
-      }
+		const showNavigationBar = lastScrollPosition >= window.scrollY;		
+        window.ReactNativeWebView.postMessage(JSON.stringify({ name: '${ProviderEvent.SCROLL}', isAtTop, showNavigationBar }));
+      	lastScrollPosition = window.scrollY;
+		}
       window.addEventListener('scroll', handleScroll);
       handleScroll();
     })();

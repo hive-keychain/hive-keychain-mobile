@@ -1,4 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native';
+import {showFloatingBar} from 'actions/floatingBar';
 import {
   Account,
   ActionPayload,
@@ -20,7 +21,7 @@ import {
 } from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import {runOnJS} from 'react-native-reanimated';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
 import {
   WebViewMessageEvent,
@@ -31,6 +32,7 @@ import {UserPreference} from 'reducers/preferences.types';
 import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
 import {ProviderEvent} from 'src/enums/provider-event.enum';
+import {store} from 'store';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import {getAccount} from 'utils/hiveUtils';
@@ -113,6 +115,7 @@ export default ({
     tabRef.current?.reload(); // reload the WebView
   };
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
+  const styles = getStyles(insets);
   useEffect(() => {
     if (isUrlModalOpen) {
       setShouldUpdateWvInfo(false);
@@ -160,16 +163,6 @@ export default ({
     current && current.goForward();
   };
 
-  // const reload = () => {
-  //   const {current} = tabRef;
-  //   current && current.reload();
-  // };
-
-  // const clearCache = () => {
-  //   const {current} = tabRef;
-  //   current && current.clearCache(true);
-  // };
-
   const onLoadStart = ({
     nativeEvent: {url},
   }: {
@@ -205,11 +198,14 @@ export default ({
   };
 
   const onMessage = ({nativeEvent}: WebViewMessageEvent) => {
-    const {name, request_id, data, isAtTop} = JSON.parse(nativeEvent.data);
+    const {name, request_id, data, isAtTop, showNavigationBar} = JSON.parse(
+      nativeEvent.data,
+    );
     const {current} = tabRef;
     switch (name) {
       case ProviderEvent.SCROLL:
         setCanRefresh(isAtTop);
+        store.dispatch(showFloatingBar(showNavigationBar));
         break;
       case ProviderEvent.HANDSHAKE:
         current.injectJavaScript(
@@ -404,6 +400,7 @@ export default ({
               mediaPlaybackRequiresUserAction={false}
               onMessage={onMessage}
               javaScriptEnabled
+              bounces={false}
               geolocationEnabled
               allowsInlineMediaPlayback
               allowsFullscreenVideo
@@ -433,7 +430,12 @@ export default ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {flexGrow: 1, flexDirection: 'column'},
-  hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
-});
+const getStyles = (insets: EdgeInsets) =>
+  StyleSheet.create({
+    container: {
+      flexGrow: 1,
+      flexDirection: 'column',
+      marginBottom: -insets.bottom,
+    },
+    hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
+  });

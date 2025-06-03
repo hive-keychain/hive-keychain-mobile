@@ -60,7 +60,7 @@ const App = ({
   updateNavigationActiveScreen,
 }: PropsFromRedux) => {
   let navigationRef: React.MutableRefObject<NavigationContainerRef> = useRef();
-
+  let lastRouteName: string | undefined = undefined;
   useEffect(() => {
     getSettings();
     initApplication();
@@ -149,6 +149,10 @@ const App = ({
       }}
       onStateChange={async (state) => {
         let currentRouteName = navigationRef.current.getCurrentRoute().name;
+        if (lastRouteName === currentRouteName) {
+          return;
+        }
+        lastRouteName = currentRouteName;
         showFloatingBar(
           !!FLOATINGBAR_ALLOWED_SCREENS.find(
             (route) => route === currentRouteName,
