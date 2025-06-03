@@ -321,29 +321,19 @@ export default ({
   };
 
   const swipe = Gesture.Pan()
-    .manualActivation(true)
-    .onTouchesDown((event, manager) => {
-      if (
-        (event.numberOfTouches === 1 &&
-          event.allTouches[0].absoluteX < BrowserConfig.EDGE_THRESHOLD) ||
-        event.allTouches[0].absoluteX > width - BrowserConfig.EDGE_THRESHOLD
-      ) {
-        manager.activate();
-      }
-    })
     .onEnd((event) => {
-      const {velocityX, translationX} = event;
-      const absVX = Math.abs(velocityX);
-
-      // Ignore vertical scrolls
-      if (Math.abs(translationX) < 50 || absVX < 300) return;
-
-      if (velocityX > 0) {
+      const {velocityX} = event;
+      if (velocityX > 300) {
         runOnJS(goBack)();
-      } else if (velocityX < 0 && canGoForward) {
+      } else if (velocityX < -300) {
         runOnJS(goForward)();
       }
-    });
+    })
+    .hitSlop({
+      left: BrowserConfig.EDGE_THRESHOLD,
+      right: BrowserConfig.EDGE_THRESHOLD,
+    })
+    .activeOffsetX([-10, 10]);
 
   useEffect(() => {
     if (tabRef?.current && active) setWebViewRef(tabRef.current);
