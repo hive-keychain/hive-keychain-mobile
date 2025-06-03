@@ -61,7 +61,6 @@ const browserReducer = (
       };
     case ADD_BROWSER_TAB:
       if (payload!.id && payload!.url) {
-        console.log('new tab', translate('browser.home.title'));
         return {
           ...state,
           activeTab: payload!.id,

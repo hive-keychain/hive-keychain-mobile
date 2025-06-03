@@ -4,7 +4,7 @@ import {
   SET_IS_DRAWER_OPEN,
   SET_IS_LOADING_SCREEN,
   SHOW_FLOATING_BAR,
-  UPDATE_FLOATING_BAR,
+  UPDATE_SHOW_PROPOSAL_REMINDER,
 } from './types';
 
 export const showFloatingBar = (
@@ -16,11 +16,11 @@ export const showFloatingBar = (
   };
 };
 
-export const updateFloatingBar = (
+export const updateShowProposalReminder = (
   isProposalRequestDisplayed: boolean,
 ): ActionPayload<{isProposalRequestDisplayed: boolean}> => {
   return {
-    type: UPDATE_FLOATING_BAR,
+    type: UPDATE_SHOW_PROPOSAL_REMINDER,
     payload: {isProposalRequestDisplayed},
   };
 };

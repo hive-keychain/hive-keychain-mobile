@@ -1,9 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addTab} from 'actions/browser';
+import {updateShowProposalReminder} from 'actions/floatingBar';
 import EllipticButton from 'components/form/EllipticButton';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -62,6 +63,7 @@ const ProposalReminder = ({
   user,
   globalProps,
   addTab,
+  updateFloatingBar,
 }: Props & PropsFromRedux): null => {
   const {theme} = useThemeContext();
 
@@ -77,12 +79,12 @@ const ProposalReminder = ({
       toHP(user.account.vesting_shares.toString(), globalProps) > 100 &&
       !(await hasVotedForProposal(user.name, KEYCHAIN_PROPOSAL))
     ) {
+      updateFloatingBar(true);
       Image.prefetch(IMAGE_URI).then((val) => {
         navigate('ModalScreen', {
           name: 'ProposalPopup',
           modalContent: renderContent(),
           modalContainerStyle: getModalBaseStyle(theme).roundedTop,
-
           onForceCloseModal: () => {},
         });
       });
@@ -91,7 +93,7 @@ const ProposalReminder = ({
 
   const renderContent = () => {
     return (
-      <View aria-label="whats-new-component" style={styles.rootContainer}>
+      <ScrollView aria-label="whats-new-component" style={styles.rootContainer}>
         <Text style={styles.title}>Support Keychain Development!</Text>
         <Image
           style={styles.image}
@@ -146,6 +148,7 @@ const ProposalReminder = ({
               onPress={() => {
                 addNotifiedVoter(user.name);
                 goBack();
+                updateFloatingBar(false);
               }}>
               I won't support
             </Text>
@@ -162,12 +165,13 @@ const ProposalReminder = ({
                 extensions: [],
               }).then(() => {
                 SimpleToast.show('Thanks for your support!');
+                updateFloatingBar(false);
                 goBack();
               });
             }}
           />
         </View>
-      </View>
+      </ScrollView>
     );
   };
   return null;
@@ -206,6 +210,9 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const connector = connect(mapStateToProps, {addTab});
+const connector = connect(mapStateToProps, {
+  addTab,
+  updateFloatingBar: updateShowProposalReminder,
+});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(ProposalReminder);
