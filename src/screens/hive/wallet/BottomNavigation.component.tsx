@@ -142,6 +142,7 @@ const BottomNavigation = ({
 
   const renderBrowserBottomBar = () => [
     <Pressable
+      key="add-tab"
       onPress={() => {
         const activeTab = BrowserUtils.findTabById(
           browser.tabs,
@@ -161,13 +162,14 @@ const BottomNavigation = ({
     </Pressable>,
     !browser.showManagement && (
       <Pressable
+        key="manage-tab"
         onPress={async () => {
-          const {id, url, icon} = BrowserUtils.findTabById(
+          const {id, url, icon, name} = BrowserUtils.findTabById(
             browser.tabs,
             browser.activeTab,
           );
           const uri = await BrowserUtils.captureTab(tabViewRef);
-          updateTab(id, {id, url, icon, image: uri});
+          updateTab(id, {id, url, icon, image: uri, name});
           showManagementScreen(true);
         }}
         style={({pressed}) => {
@@ -180,6 +182,7 @@ const BottomNavigation = ({
     ),
     !browser.showManagement && (
       <Pressable
+        key="desktop-tab"
         onPress={() => {
           updateTab(browser.activeTab, {
             desktop: !BrowserUtils.findTabById(browser.tabs, browser.activeTab)
@@ -206,6 +209,7 @@ const BottomNavigation = ({
     ),
     browser.showManagement && (
       <Pressable
+        key="close-management"
         onPress={() => {
           showManagementScreen(false);
         }}
@@ -217,6 +221,7 @@ const BottomNavigation = ({
     ),
     browser.showManagement && (
       <Pressable
+        key="close-tabs"
         onPress={() => {
           changeTab(0);
           closeAllTabs();

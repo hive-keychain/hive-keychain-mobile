@@ -250,14 +250,13 @@ export default ({
         }
         break;
       case ProviderEvent.INFO:
-        const {icon, name, url} = data as Partial<Tab>;
         if (
           data.url !== 'about:blank' &&
           (icon !== data.icon || name !== data.name)
         ) {
-          navigation.setParams({icon});
-          updateTab(id, {name, icon});
-          addToHistory({url, name, icon});
+          navigation.setParams({icon: data.icon});
+          updateTab(id, {name: data.name, icon: data.icon});
+          addToHistory({url: data.url, name: data.name, icon: data.icon});
         }
         break;
     }
