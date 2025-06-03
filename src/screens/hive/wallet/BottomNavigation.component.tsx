@@ -71,6 +71,9 @@ const BottomNavigation = ({
   const anim = useRef(new Animated.Value(0)).current;
   const [isTop, setIsTop] = useState(false);
   const {webViewRef, tabViewRef} = useTab();
+  const [showBrowserSecondaryLinks, setShowBrowserSecondaryLinks] = useState(
+    true,
+  );
   const onHandlePressButton = (link: BottomBarLink) => {
     let screen = '';
     let nestedScreenOrParams;
@@ -242,7 +245,8 @@ const BottomNavigation = ({
         styles.container,
         {transform: [{translateY}]},
       ]}>
-      <View
+      <Pressable
+        onPress={() => onHandlePressButton(BottomBarLink.Wallet)}
         style={[
           styles.itemContainer,
           activeScreen === BottomBarLink.Wallet && styles.active,
@@ -252,15 +256,22 @@ const BottomNavigation = ({
           name={Icons.WALLET_ADD}
           color={activeScreen === BottomBarLink.Wallet ? 'white' : undefined}
           {...getIconDimensions(width)}
-          onPress={() => onHandlePressButton(BottomBarLink.Wallet)}
         />
         {showTags && (
           <Text style={[styles.textBase, styles.marginTop]}>
             {translate('navigation.floating_bar.ecosystem')}
           </Text>
         )}
-      </View>
-      <View
+      </Pressable>
+      <Pressable
+        onPress={() => {
+          if (!isBrowser) onHandlePressButton(BottomBarLink.Browser);
+          else setShowBrowserSecondaryLinks(!showBrowserSecondaryLinks);
+        }}
+        onLongPress={() => {
+          SimpleToast.show(translate('browser.clear_all'), SimpleToast.LONG);
+          closeAllTabs();
+        }}
         style={[
           styles.itemContainer,
           activeScreen === BottomBarLink.Browser && styles.active,
@@ -270,20 +281,15 @@ const BottomNavigation = ({
           name={Icons.BROWSER}
           {...getIconDimensions(width)}
           color={activeScreen === BottomBarLink.Browser ? 'white' : undefined}
-          onPress={() => onHandlePressButton(BottomBarLink.Browser)}
-          onLongPress={() => {
-            SimpleToast.show(translate('browser.clear_all'), SimpleToast.LONG);
-            closeAllTabs();
-          }}
         />
         {showTags && (
           <Text style={[styles.textBase, styles.marginTop]}>
             {translate('navigation.floating_bar.browser')}
           </Text>
         )}
-      </View>
-      {isBrowser && renderBrowserBottomBar()}
-      {!isBrowser && (
+      </Pressable>
+      {isBrowser && showBrowserSecondaryLinks && renderBrowserBottomBar()}
+      {(!isBrowser || !showBrowserSecondaryLinks) && (
         <View style={[styles.itemContainer]}>
           <Icon
             theme={theme}
@@ -299,7 +305,7 @@ const BottomNavigation = ({
           )}
         </View>
       )}
-      {!isBrowser &&
+      {(!isBrowser || !showBrowserSecondaryLinks) &&
         PlatformsUtils.showDependingOnPlatform(
           <View style={[styles.itemContainer]}>
             <Icon
