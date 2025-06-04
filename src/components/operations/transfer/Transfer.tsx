@@ -6,7 +6,12 @@ import Icon from 'components/hive/Icon';
 import OptionsToggle from 'components/ui/OptionsToggle';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import Separator from 'components/ui/Separator';
-import {ExchangesUtils} from 'hive-keychain-commons';
+import {
+  ExchangesUtils,
+  KeychainRequestTypes,
+  RequestVscTransfer,
+  VscUtils,
+} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -24,6 +29,7 @@ import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
+import {VSCConfig} from 'utils/config';
 import {FavoriteUserUtils} from 'utils/favorite-user.utils';
 import {
   beautifyTransferError,
@@ -31,7 +37,12 @@ import {
   getCleanAmountValue,
   withCommas,
 } from 'utils/format';
-import {recurrentTransfer, sendToken, transfer} from 'utils/hive';
+import {
+  broadcastJson,
+  recurrentTransfer,
+  sendToken,
+  transfer,
+} from 'utils/hive';
 import {tryConfirmTransaction} from 'utils/hiveEngine';
 import {
   getAccountKeys,
@@ -72,7 +83,11 @@ const Transfer = ({
   const [loading, setLoading] = useState(false);
   const [isRecurrent, setRecurrent] = useState(false);
   const [isMemoEncrypted, setIsMemoEncrypted] = useState<boolean>(false);
-
+  const [actualCurrency, setActualCurrency] = useState<string>(
+    currency.toUpperCase().includes('VSC')
+      ? currency.replace('VSC', '')
+      : currency,
+  );
   const [autocompleteFavoriteUsers, setAutocompleteFavoriteUsers] = useState<
     AutoCompleteValues
   >({
@@ -81,7 +96,7 @@ const Transfer = ({
   const [availableBalance, setAvailableBalance] = useState('');
   const [toggleIndex, setToggleIndex] = useState(0);
   const {theme} = useThemeContext();
-
+  const [isVsc, setIsVsc] = useState(currency.toUpperCase().includes('VSC'));
   useEffect(() => {
     loadAutocompleteTransferUsernames();
   }, []);
@@ -90,7 +105,7 @@ const Transfer = ({
     const autoCompleteListByCategories: AutoCompleteValues = await FavoriteUserUtils.getAutocompleteListByCategories(
       user.name!,
       localAccounts,
-      {addExchanges: true, token: currency.toUpperCase()},
+      {addExchanges: true, token: actualCurrency.toUpperCase()},
     );
     setAutocompleteFavoriteUsers(autoCompleteListByCategories);
   };
@@ -102,11 +117,13 @@ const Transfer = ({
       const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
       finalMemo = await encodeMemo(user.keys.memo, receiverMemoKey, `#${memo}`);
     }
-    if (!isRecurrent) {
+    if (isVsc) {
+      await transferVsc(options, finalMemo);
+    } else if (!isRecurrent) {
       await transfer(
         user.keys.active,
         {
-          amount: sanitizeAmount(amount, currency),
+          amount: sanitizeAmount(amount, actualCurrency),
           memo: finalMemo,
           to: sanitizeUsername(to),
           from: user.account.name,
@@ -117,7 +134,7 @@ const Transfer = ({
       await recurrentTransfer(
         user.keys.active,
         {
-          amount: sanitizeAmount(amount, currency),
+          amount: sanitizeAmount(amount, actualCurrency),
           memo: finalMemo,
           to: sanitizeUsername(to),
           from: user.account.name,
@@ -130,6 +147,27 @@ const Transfer = ({
     }
   };
 
+  const transferVsc = async (options: TransactionOptions, memo?: string) => {
+    const data: RequestVscTransfer = {
+      type: KeychainRequestTypes.vscTransfer,
+      username: user.name,
+      to: sanitizeUsername(to),
+      amount: sanitizeAmount(amount),
+      memo: memo,
+      currency: actualCurrency,
+      domain: '',
+      netId: VSCConfig.BASE_JSON.net_id,
+    };
+    const {json, id} = VscUtils.getTransferJson(
+      data,
+      VSCConfig.BASE_JSON.net_id,
+    );
+
+    await broadcastJson(user.keys.active, user.name, id, true, json, options);
+    console.log({data});
+    console.log('transferVsc');
+    console.log({json}, {id});
+  };
   const transferToken = async (options: TransactionOptions) => {
     setLoading(true);
     let finalMemo = memo;
@@ -142,7 +180,7 @@ const Transfer = ({
       user.keys.active,
       user.name,
       {
-        symbol: currency,
+        symbol: actualCurrency,
         to: sanitizeUsername(to),
         quantity: sanitizeAmount(amount),
         memo: finalMemo,
@@ -153,9 +191,10 @@ const Transfer = ({
 
   const onSend = async (options: TransactionOptions) => {
     try {
+      console.log(options);
       if (isMemoEncrypted && !user.keys.memo)
         return showModal(
-          translate('toast.missing_memo_key', {account: user.name!}),
+          translate('toast.missing_memo_key', {account: user.name}),
           MessageModalType.ERROR,
         );
       if (!engine) {
@@ -182,7 +221,7 @@ const Transfer = ({
       showModal(
         beautifyTransferError(e as any, {
           to,
-          currency,
+          currency: actualCurrency,
           username: user.account.name,
         }),
         MessageModalType.ERROR,
@@ -192,6 +231,7 @@ const Transfer = ({
     }
   };
   const onTransferConfirmation = () => {
+    console.log('onTransferConfirmation');
     if (toggleIndex === 0) onSendConfirmation();
     else onReceiveConfirmation();
   };
@@ -207,7 +247,7 @@ const Transfer = ({
       'transfer',
       {
         to: user.name,
-        amount: `${(+amountReceive).toFixed(3)} ${currency}`,
+        amount: `${(+amountReceive).toFixed(3)} ${actualCurrency}`,
         memo: memoReceive,
       },
     ]);
@@ -224,7 +264,7 @@ const Transfer = ({
     } else if (+amount > +getCleanAmountValue(availableBalance)) {
       Toast.show(
         translate('common.overdraw_balance_error', {
-          currency,
+          currency: actualCurrency,
         }),
       );
     } else {
@@ -235,7 +275,7 @@ const Transfer = ({
         skipWarningTranslation: true,
         warningText: TransferUtils.getTransferWarningLabel(
           to,
-          currency,
+          actualCurrency,
           memo,
           phishingAccounts,
           isRecurrent,
@@ -254,7 +294,7 @@ const Transfer = ({
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${withCommas(amount)} ${currency}`,
+            value: `${withCommas(amount)} ${actualCurrency}`,
           },
         ],
         keyType: KeyType.ACTIVE,
@@ -305,8 +345,8 @@ const Transfer = ({
       <View style={[styles.flexRowBetween, {zIndex: -1}]}>
         <OperationInput
           labelInput={translate('common.currency')}
-          placeholder={currency}
-          value={currency}
+          placeholder={actualCurrency}
+          value={actualCurrency}
           editable={false}
           additionalOuterContainerStyle={{
             width: '40%',
@@ -367,7 +407,7 @@ const Transfer = ({
           }
         />
       </View>
-      {!engine && (
+      {!engine && !isVsc && (
         <View>
           <Separator />
           <OptionsToggle
@@ -424,7 +464,7 @@ const Transfer = ({
       <View style={[styles.flexRowBetween, {zIndex: -1}]}>
         <OperationInput
           labelInput={translate('common.currency')}
-          placeholder={currency}
+          placeholder={actualCurrency}
           value={currency}
           editable={false}
           additionalOuterContainerStyle={{
