@@ -166,4 +166,6 @@ export enum Icons {
   MULTISIG = 'MULTISIG',
   NOTIFICATIONS = 'NOTIFICATIONS',
   CALENDAR = 'calendar.svg',
+  VSCHIVE = 'hive-vsc.svg',
+  VSCHBD = 'hbd-vsc.svg',
 }

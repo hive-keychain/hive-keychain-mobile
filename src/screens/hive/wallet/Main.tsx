@@ -13,6 +13,7 @@ import {
 } from 'actions/hive';
 import {loadTokens, loadTokensMarket} from 'actions/index';
 import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
+import VscPng from 'assets/new_UI/vsc.png';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import UserDropdown from 'components/form/UserDropdown';
 import AccountValue from 'components/hive/AccountValue';
@@ -42,6 +43,7 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
+  Image,
   NativeEventEmitter,
   NativeModules,
   NativeScrollEvent,
@@ -528,6 +530,26 @@ const Main = ({
                         </View>
                       )}
                   </>
+
+                  {/* VSC */}
+                  <View style={[getCardStyle(theme).wrapperCardItem]}>
+                    <View style={[styles.flexRow]}>
+                      <Image source={VscPng} style={{width: 23, height: 23}} />
+                      <View style={styles.separatorContainer} />
+                    </View>
+                  </View>
+                  {[
+                    {currency: getCurrency('VSCHIVE')},
+                    {currency: getCurrency('VSCHBD')},
+                  ].map((item, index) => (
+                    <CurrencyToken
+                      key={`${item.currency}`}
+                      theme={theme}
+                      currencyName={item.currency}
+                      itemIndex={index}
+                      onPress={() => handleClickToView(index, 0)}
+                    />
+                  ))}
                 </View>
                 <View style={[getCardStyle(theme).filledWrapper]} />
               </ScrollView>
@@ -604,7 +626,7 @@ const getDimensionedStyles = (
       height: 1,
       backgroundColor: getColors(theme).separatorBgColor,
       marginHorizontal: 10,
-      width: '75%',
+      width: '100%',
       flexShrink: 1,
     },
     borderLight: {
