@@ -1,5 +1,7 @@
 import {DynamicGlobalProperties, ExtendedAccount} from '@hiveio/dhive';
-import React from 'react';
+import Loader from 'components/ui/Loader';
+import {VscUtils} from 'hive-keychain-commons';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
@@ -36,12 +38,15 @@ const Balance = ({
   theme,
   setAvailableBalance,
 }: Props) => {
-  const getParsedValue = (
+  const [parsedValue, setParsedValue] = useState<number>(0);
+  const [loadingBalance, setLoadingBalance] = useState<boolean>(false);
+  const getParsedValue = async (
     currency: string,
     account: ExtendedAccount,
     isHiveEngine?: boolean,
   ) => {
     let tempBalance;
+    setLoadingBalance(true);
     switch (true) {
       case isHiveEngine:
         tempBalance = +tokenBalance!;
@@ -66,13 +71,26 @@ const Balance = ({
         }
         tempBalance = hpBalance;
         break;
+      case currency === getCurrency('VSCHIVE'):
+        const vscBalance = await VscUtils.getAccountBalance(account.name);
+        tempBalance = vscBalance.hive / 1000;
+        break;
     }
     if (setAvailableBalance)
       setAvailableBalance(withCommas(tempBalance.toString()));
+    setLoadingBalance(false);
     return tempBalance;
   };
 
-  let parsedValue = getParsedValue(currency, account, isHiveEngine);
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (account) {
+        const value = await getParsedValue(currency, account, isHiveEngine);
+        setParsedValue(value);
+      }
+    };
+    fetchBalance();
+  }, [currency, account, isHiveEngine, tokenBalance, pd, globalProperties]);
 
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({
@@ -83,9 +101,13 @@ const Balance = ({
   return (
     <TouchableOpacity activeOpacity={1}>
       <View>
-        <Text style={[styles.textBalance, styles.centeredText]}>
-          {withCommas(parsedValue.toString())} {` ${currency}`}
-        </Text>
+        {loadingBalance ? (
+          <Loader animating size={'small'} />
+        ) : (
+          <Text style={[styles.textBalance, styles.centeredText]}>
+            {withCommas(parsedValue.toString())} {` ${currency.replace('VSC', '')}`}
+          </Text>
+        )}
         <Text style={[styles.balanceText, styles.centeredText]}>
           {translate('common.balance')}
         </Text>
