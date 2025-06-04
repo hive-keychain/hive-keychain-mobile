@@ -14,6 +14,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {getHBDButtonList} from 'src/reference-data/hbdOperationButtonList';
 import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
 import {getHPButtonList} from 'src/reference-data/hpOperationButtonList';
+import {getVscHiveButtonList} from 'src/reference-data/vscHiveOperationButtonList';
 import {getCardStyle} from 'src/styles/card';
 import {
   GREEN_SUCCESS,
@@ -70,6 +71,10 @@ const CurrencyToken = ({
         return getHBDButtonList(user, theme);
       case 'HP':
         return getHPButtonList(theme, user.name!);
+      case 'VSCHIVE':
+        return getVscHiveButtonList(user, theme);
+      // case 'VSCHBD':
+      //   return getVscHbdOperationButtonList(user, theme);
     }
   };
   const [buttons, setButtons] = useState<JSX.Element[]>(
@@ -168,6 +173,24 @@ const CurrencyToken = ({
         return (
           <IconHP theme={theme} additionalContainerStyle={{marginTop: 8}} />
         );
+      case 'VSCHIVE':
+        return (
+          <Icon
+            theme={theme}
+            name={Icons.VSCHIVE}
+            additionalContainerStyle={styles.hiveIconContainer}
+            {...styles.icon}
+          />
+        );
+      case 'VSCHBD':
+        return (
+          <Icon
+            theme={theme}
+            name={Icons.VSCHBD}
+            additionalContainerStyle={styles.hiveIconContainer}
+            {...styles.icon}
+          />
+        );
     }
   };
 
@@ -234,7 +257,11 @@ const CurrencyToken = ({
           <View style={styles.leftContainer}>
             {getCurrencyLogo()}
             <Text style={[styles.textSymbol, styles.marginLeft]}>
-              {currencyName}
+              {currencyName === 'VSCHIVE'
+                ? 'HIVE'
+                : currencyName === 'VSCHBD'
+                ? 'HBD'
+                : currencyName}
             </Text>
           </View>
           <View style={isExpanded ? styles.rowContainer : undefined}>
