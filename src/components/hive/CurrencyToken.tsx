@@ -15,6 +15,7 @@ import {Icons} from 'src/enums/icons.enums';
 import {getHBDButtonList} from 'src/reference-data/hbdOperationButtonList';
 import {getHiveButtonList} from 'src/reference-data/hiveOperationButtonList';
 import {getHPButtonList} from 'src/reference-data/hpOperationButtonList';
+import {getVscHbdOperationButtonList} from 'src/reference-data/vscHbdOperationButtonList';
 import {getVscHiveButtonList} from 'src/reference-data/vscHiveOperationButtonList';
 import {getCardStyle} from 'src/styles/card';
 import {
@@ -74,8 +75,8 @@ const CurrencyToken = ({
         return getHPButtonList(theme, user.name!);
       case 'VSCHIVE':
         return getVscHiveButtonList(user, theme);
-      // case 'VSCHBD':
-      //   return getVscHbdOperationButtonList(user, theme);
+      case 'VSCHBD':
+        return getVscHbdOperationButtonList(user, theme);
     }
   };
   const [buttons, setButtons] = useState<JSX.Element[]>(
