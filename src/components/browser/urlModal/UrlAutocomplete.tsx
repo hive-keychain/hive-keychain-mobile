@@ -51,14 +51,13 @@ const UrlAutocomplete = ({
       isCaseSensitive: false,
       useExtendedSearch: true,
       ignoreLocation: true,
-      //maxPatternLength: 32,
       minMatchCharLength: 0,
       keys: [
         {name: 'name', weight: 0.5},
         {name: 'url', weight: 0.5},
       ],
     });
-    const fuseSearchResult = fuse.search(input);
+    const fuseSearchResult = fuse.search(input).slice(0, 8);
     if (Array.isArray(fuseSearchResult)) {
       setCandidates(fuseSearchResult.map((e) => e.item));
     } else {
@@ -70,6 +69,7 @@ const UrlAutocomplete = ({
       <View style={styles.wrapper}>
         <FlatList
           data={candidates}
+          keyboardShouldPersistTaps="handled"
           renderItem={({item, index}) => (
             <HistoryItem
               theme={theme}
@@ -83,11 +83,12 @@ const UrlAutocomplete = ({
       </View>
     );
   else {
-    let historyCopy = [...history].reverse().slice(0, 10);
+    let historyCopy = [...history].reverse().slice(0, 8);
     return (
       <View style={styles.wrapper}>
         <FlatList
           data={historyCopy}
+          keyboardShouldPersistTaps="handled"
           renderItem={({item, index}) => (
             <HistoryItem
               theme={theme}

@@ -982,7 +982,10 @@
   "browser": {
     "search": "Search or enter url",
     "clear_all": "All your browser tabs have been closed",
-    "history": {"clear": "Clear History"},
+    "history": {
+      "clear": "Clear History",
+      "clear_cache": "Clear Cache"
+    },
     "home": {
       "title": "HOME",
       "menu": {

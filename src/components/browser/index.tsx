@@ -10,14 +10,15 @@ import {
 } from 'react-native';
 import Orientation from 'react-native-orientation-locker';
 import {captureRef} from 'react-native-view-shot';
+import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
+import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
 import {BrowserConfig} from 'utils/config';
 import Header from './Header';
 import Tab from './Tab';
 import TabsManagement from './tabsManagement';
 import UrlModal from './urlModal';
-
 interface Props {
   theme: Theme;
 }
@@ -49,10 +50,10 @@ const Browser = ({
   const [isVisible, toggleVisibility] = useState(false);
   const [searchUrl, setSearchUrl] = useState(url);
   const [orientation, setOrientation] = useState('PORTRAIT');
-
+  const {webViewRef} = useTab();
   useEffect(() => {
     setSearchUrl(url);
-  }, [url]);
+  }, [url, isVisible]);
 
   useEffect(() => {
     setBrowserFocus(false);
@@ -190,6 +191,11 @@ const Browser = ({
           url={searchUrl === 'about:blank' ? '' : searchUrl}
           setUrl={setSearchUrl}
           clearHistory={clearHistory}
+          clearCache={() => {
+            toggleVisibility(false);
+            (webViewRef as MutableRefObject<WebView>).current?.clearCache(true);
+            (webViewRef as MutableRefObject<WebView>).current?.reload();
+          }}
           theme={theme}
         />
       </KeyboardAvoidingView>

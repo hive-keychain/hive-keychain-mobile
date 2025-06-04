@@ -196,15 +196,18 @@ export default ({
       current.injectJavaScript(BRIDGE_WV_INFO);
     }
   };
-
   const onMessage = ({nativeEvent}: WebViewMessageEvent) => {
-    const {name, request_id, data, isAtTop, showNavigationBar} = JSON.parse(
-      nativeEvent.data,
-    );
+    const {
+      name: messageName,
+      request_id,
+      data,
+      isAtTop,
+      showNavigationBar,
+    } = JSON.parse(nativeEvent.data);
     const {current} = tabRef;
-    switch (name) {
+    switch (messageName) {
       case ProviderEvent.SCROLL:
-        setCanRefresh(isAtTop);
+        if (canRefresh !== isAtTop) setCanRefresh(isAtTop);
         store.dispatch(showFloatingBar(showNavigationBar));
         break;
       case ProviderEvent.HANDSHAKE:
