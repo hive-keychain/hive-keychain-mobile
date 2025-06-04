@@ -35,6 +35,7 @@ const Browser = ({
   clearHistory,
   addToFavorites,
   removeFromFavorites,
+  updateFavorites,
   route,
   navigation,
   setBrowserFocus,
@@ -176,6 +177,7 @@ const Browser = ({
             isManagingTab={showManagement}
             preferences={preferences}
             favorites={favorites}
+            updateFavorites={updateFavorites}
             addTab={onAddTab}
             tabsNumber={browser.tabs.length}
             orientation={orientation}

@@ -66,6 +66,7 @@ import SpeedometerIcon from 'assets/new_UI/speedometer.svg';
 import SupportIcon from 'assets/new_UI/support.svg';
 import React from 'react';
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import DragIcon from 'src/assets/browser/drag.svg';
 import SwipeDownIcon from 'src/assets/browser/swipe-down.svg';
 import SwipeLeftIcon from 'src/assets/browser/swipe-left.svg';
 import SwipeRightIcon from 'src/assets/browser/swipe-right.svg';
@@ -679,6 +680,13 @@ const getIconFilePath = (
     case name === Icons.MULTISIG:
       return (
         <MultiSigIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.DRAG:
+      return (
+        <DragIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

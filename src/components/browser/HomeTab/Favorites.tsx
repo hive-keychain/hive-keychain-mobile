@@ -1,6 +1,9 @@
 import {Page} from 'actions/interfaces';
 import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import DraggableFlatList, {
+  DragEndParams,
+} from 'react-native-draggable-flatlist';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_medium} from 'src/styles/typography';
@@ -10,18 +13,26 @@ import HistoryItem from '../urlModal/HistoryItem';
 type Props = {
   favorites: Page[];
   updateTabUrl: (link: string) => void;
+  updateFavorites: (favorites: Page[]) => void;
   theme: Theme;
 };
 
-export default ({favorites, updateTabUrl, theme}: Props) => {
+export default ({favorites, updateTabUrl, updateFavorites, theme}: Props) => {
   const styles = getStyles(theme);
+
+  const sortData = (params: DragEndParams<Page>) => {
+    updateFavorites([...params.data].reverse());
+  };
+
   return (
     <View style={styles.container}>
       {favorites.length ? (
-        <FlatList
+        <DraggableFlatList
           data={[...favorites].reverse()}
+          scrollToOverflowEnabled
           keyExtractor={(item) => item.url}
-          renderItem={({item}) => (
+          onDragEnd={sortData}
+          renderItem={({item, drag, isActive}) => (
             <HistoryItem
               data={item}
               key={item.url}
@@ -29,6 +40,8 @@ export default ({favorites, updateTabUrl, theme}: Props) => {
                 updateTabUrl(e);
               }}
               theme={theme}
+              drag={drag}
+              isActive={isActive}
             />
           )}
         />

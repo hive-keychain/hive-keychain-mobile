@@ -70,6 +70,7 @@ export interface BrowserPayload {
   data?: Partial<Tab>;
   showManagement?: boolean;
   favorite?: Page;
+  favorites?: Page[];
 }
 
 export interface Browser {

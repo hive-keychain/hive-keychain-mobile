@@ -14,6 +14,7 @@ import {
   REMOVE_FROM_BROWSER_FAVORITES,
   SET_ACTIVE_BROWSER_TAB,
   UPDATE_BROWSER_TAB,
+  UPDATE_FAVORITES,
   UPDATE_MANAGEMENT,
 } from './types';
 
@@ -36,6 +37,14 @@ export const addToFavorites = (page: Page) => {
   const action: ActionPayload<BrowserPayload> = {
     type: ADD_TO_BROWSER_FAVORITES,
     payload: {favorite: page},
+  };
+  return action;
+};
+
+export const updateFavorites = (favorites: Page[]) => {
+  const action: ActionPayload<BrowserPayload> = {
+    type: UPDATE_FAVORITES,
+    payload: {favorites},
   };
   return action;
 };

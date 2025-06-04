@@ -10,6 +10,7 @@ import {
   REMOVE_FROM_BROWSER_FAVORITES,
   SET_ACTIVE_BROWSER_TAB,
   UPDATE_BROWSER_TAB,
+  UPDATE_FAVORITES,
   UPDATE_MANAGEMENT,
 } from 'actions/types';
 import {translate} from 'utils/localize';
@@ -48,6 +49,11 @@ const browserReducer = (
       return {
         ...state,
         favorites: state.favorites.filter((item) => item.url !== payload.url),
+      };
+    case UPDATE_FAVORITES:
+      return {
+        ...state,
+        favorites: payload!.favorites!,
       };
     case CLEAR_BROWSER_HISTORY:
       return {

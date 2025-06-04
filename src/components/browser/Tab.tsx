@@ -78,6 +78,7 @@ type Props = {
   isUrlModalOpen: boolean;
   theme: Theme;
   clearHistory: () => void;
+  updateFavorites: (favorites: Page[]) => void;
 };
 
 export default ({
@@ -95,6 +96,7 @@ export default ({
   orientation,
   isUrlModalOpen,
   clearHistory,
+  updateFavorites,
   theme,
 }: Props) => {
   const {url, id, icon, name, desktop: desktopMode} = data;
@@ -369,6 +371,7 @@ export default ({
             favorites={favorites}
             updateTabUrl={updateTabUrl}
             clearHistory={clearHistory}
+            updateFavorites={updateFavorites}
             homeRef={homeRef}
             accounts={accounts}
             theme={theme}

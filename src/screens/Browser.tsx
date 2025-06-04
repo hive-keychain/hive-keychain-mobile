@@ -11,6 +11,7 @@ import {
   removeFromFavorites,
   setBrowserFocus,
   showManagementScreen,
+  updateFavorites,
   updateTab,
 } from 'actions/index';
 import Browser from 'components/browser';
@@ -43,6 +44,7 @@ const BrowserScreen = ({
   navigation,
   route,
   showManagementScreen,
+  updateFavorites,
   getEcosystem,
   preferences,
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
@@ -105,6 +107,7 @@ const BrowserScreen = ({
         setBrowserFocus={setBrowserFocus}
         showManagementScreen={showManagementScreen}
         preferences={preferences}
+        updateFavorites={updateFavorites}
         showFloatingBar={showFloatingBar}
       />
       <ProposalReminder navigation={navigation} />
@@ -134,6 +137,7 @@ const connector = connect(mapStateToProps, {
   showManagementScreen,
   showFloatingBar,
   getEcosystem,
+  updateFavorites,
 });
 
 export type BrowserPropsFromRedux = ConnectedProps<typeof connector>;

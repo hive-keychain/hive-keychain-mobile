@@ -1,19 +1,23 @@
-import {TabFields} from 'actions/interfaces';
+import {Page} from 'actions/interfaces';
+import Icon from 'components/hive/Icon';
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Image from 'react-native-fast-image';
 import {Theme} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';
 import {body_primary_body_1} from 'src/styles/typography';
 
 type Props = {
-  data: TabFields;
+  data: Page;
   onSubmit: (url: string) => void;
   theme: Theme;
   indexItem?: number;
+  drag?: any;
+  isActive?: boolean;
 };
-export default ({data, onSubmit, theme, indexItem}: Props) => {
+export default ({data, onSubmit, theme, indexItem, drag, isActive}: Props) => {
   const {name, url, icon} = data;
   const styles = getStyles(theme);
   return (
@@ -32,6 +36,17 @@ export default ({data, onSubmit, theme, indexItem}: Props) => {
             {url}
           </Text>
         </View>
+        {drag && (
+          <TouchableOpacity onPressIn={drag}>
+            <Icon
+              name={Icons.DRAG}
+              theme={theme}
+              width={20}
+              height={20}
+              color={getColors(theme).icon}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -41,11 +56,11 @@ const getStyles = (theme: Theme) =>
   StyleSheet.create({
     itemWrapper: {
       flexDirection: 'row',
-      marginHorizontal: 20,
+      marginHorizontal: 10,
       marginVertical: 5,
       alignItems: 'center',
     },
-    text: {marginLeft: 10},
+    text: {marginLeft: 10, flex: 1},
     name: {fontWeight: 'bold'},
     img: {width: 30, height: 30, borderRadius: 50},
     card: {
