@@ -320,20 +320,33 @@ export default ({
     }
   };
 
-  const swipe = Gesture.Pan()
+  const swipeLeft = Gesture.Pan()
     .onEnd((event) => {
       const {velocityX} = event;
-      if (velocityX > 300) {
-        runOnJS(goBack)();
-      } else if (velocityX < -300) {
+      if (velocityX < -300) {
         runOnJS(goForward)();
       }
     })
     .hitSlop({
-      left: BrowserConfig.EDGE_THRESHOLD,
-      right: BrowserConfig.EDGE_THRESHOLD,
+      right: 0,
+      width: BrowserConfig.EDGE_THRESHOLD,
     })
     .activeOffsetX([-10, 10]);
+
+  const swipeRight = Gesture.Pan()
+    .onEnd((event) => {
+      const {velocityX} = event;
+      if (velocityX > 300) {
+        runOnJS(goBack)();
+      }
+    })
+    .hitSlop({
+      left: 0,
+      width: BrowserConfig.EDGE_THRESHOLD,
+    })
+    .activeOffsetX([-10, 10]);
+
+  const swipe = Gesture.Simultaneous(swipeLeft, swipeRight);
 
   useEffect(() => {
     if (tabRef?.current && active) setWebViewRef(tabRef.current);
