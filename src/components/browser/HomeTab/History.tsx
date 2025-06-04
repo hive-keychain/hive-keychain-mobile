@@ -58,6 +58,7 @@ const getStyles = (theme: Theme) =>
       marginTop: 10,
       flex: 1,
       paddingHorizontal: 20,
+      paddingBottom: 160,
     },
     text: {
       alignSelf: 'center',

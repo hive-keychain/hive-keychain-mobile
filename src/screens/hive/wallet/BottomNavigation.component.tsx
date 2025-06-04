@@ -12,6 +12,7 @@ import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Easing,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -19,6 +20,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import Orientation from 'react-native-orientation-locker';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
@@ -74,6 +76,26 @@ const BottomNavigation = ({
   const [showBrowserSecondaryLinks, setShowBrowserSecondaryLinks] = useState(
     true,
   );
+  const [orientation, setOrientation] = useState('PORTRAIT');
+
+  React.useEffect(() => {
+    Orientation.addDeviceOrientationListener((orientation) => {
+      if (['UNKNOWN', 'FACE-UP', 'FACE-DOWN'].includes(orientation)) return;
+      if (Platform.OS === 'android' && orientation !== 'PORTRAIT') {
+        Orientation.getAutoRotateState((s) => {
+          if (s) {
+            setOrientation(orientation);
+          }
+        });
+      } else {
+        setOrientation(orientation);
+      }
+    });
+
+    return () => {
+      Orientation.removeAllListeners();
+    };
+  }, []);
   const onHandlePressButton = (link: BottomBarLink) => {
     let screen = '';
     let nestedScreenOrParams;
@@ -238,7 +260,11 @@ const BottomNavigation = ({
       </Pressable>
     ),
   ];
-  return !isModal && show && rpc && rpc.uri !== 'NULL' ? (
+  return !isModal &&
+    show &&
+    orientation === 'PORTRAIT' &&
+    rpc &&
+    rpc.uri !== 'NULL' ? (
     <Animated.View
       style={[
         getCardStyle(theme).floatingBar,

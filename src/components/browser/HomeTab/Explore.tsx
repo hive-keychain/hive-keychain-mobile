@@ -159,6 +159,7 @@ const getStyles = ({width, height}: Dimensions, theme: Theme) =>
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
       overflow: 'hidden',
+      paddingBottom: 160,
     },
     scrollviewContentContainer: {
       paddingLeft: MARGIN_LEFT_RIGHT_MIN,
