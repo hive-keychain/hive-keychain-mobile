@@ -1,5 +1,6 @@
 import {clearWalletFilters} from 'actions/walletFilters';
 import Separator from 'components/ui/Separator';
+import {VscUtils} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -54,7 +55,7 @@ const CurrencyToken = ({
   onPress,
 }: Props & PropsFromRedux) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [value, setValue] = useState<number>(0);
+  const [balance, setBalance] = useState<number>(0);
   const [subValue, setSubValue] = useState<string | undefined>(undefined);
   const [preFixSubValue, setPreFixSubValue] = useState<string | undefined>(
     undefined,
@@ -92,9 +93,13 @@ const CurrencyToken = ({
   };
 
   useEffect(() => {
+    getBalance();
+  }, [user]);
+
+  const getBalance = async () => {
     if (user && user.name && Object.keys(user.account).length > 0) {
       if (currencyName === 'HIVE') {
-        setValue(parseFloat(user.account.balance as string));
+        setBalance(parseFloat(user.account.balance as string));
         setSubValue(
           parseFloat(user.account.savings_balance as string) > 0
             ? (user.account.savings_balance as string).split(' ')[0]
@@ -104,7 +109,7 @@ const CurrencyToken = ({
           getPlusPrefix(user.account.savings_balance as string),
         );
       } else if (currencyName === 'HBD') {
-        setValue(parseFloat(user.account.hbd_balance as string));
+        setBalance(parseFloat(user.account.hbd_balance as string));
         setSubValue(
           parseFloat(user.account.savings_hbd_balance as string) > 0
             ? (user.account.savings_hbd_balance as string).split(' ')[0]
@@ -116,7 +121,7 @@ const CurrencyToken = ({
             : undefined,
         );
       } else if (currencyName === 'HP') {
-        setValue(
+        setBalance(
           toHP(user.account.vesting_shares as string, properties.globals),
         );
         const delegatedVestingShares = parseFloat(
@@ -135,9 +140,15 @@ const CurrencyToken = ({
         setSubValue(delegation.toFixed(3));
         setPreFixSubValue(getPlusPrefix(delegation));
         setSubValueShortDescription(translate('common.deleg'));
+      } else if (currencyName === 'VSCHIVE') {
+        const vscBalance = await VscUtils.getAccountBalance(user.name!);
+        setBalance(vscBalance.hive / 1000);
+      } else if (currencyName === 'VSCHBD') {
+        const vscBalance = await VscUtils.getAccountBalance(user.name!);
+        setBalance(vscBalance.hbd / 1000);
       }
     }
-  }, [user]);
+  };
 
   const onHandleGoToWalletHistory = () => {
     clearWalletFilters();
@@ -196,11 +207,11 @@ const CurrencyToken = ({
 
   const getTokenPrice = () => {
     let variation, coinPrice, isPositive;
-    if (currencyName === 'HIVE') {
+    if (currencyName === 'HIVE' || currencyName === 'VSCHIVE') {
       coinPrice = price.hive.usd;
       variation = price.hive.usd_24h_change;
       isPositive = price.hive.usd_24h_change >= 0;
-    } else if (currencyName === 'HBD') {
+    } else if (currencyName === 'HBD' || currencyName === 'VSCHBD') {
       coinPrice = price.hive_dollar.usd;
       variation = price.hive_dollar.usd_24h_change;
       isPositive = price.hive_dollar.usd_24h_change >= 0;
@@ -267,7 +278,7 @@ const CurrencyToken = ({
           <View style={isExpanded ? styles.rowContainer : undefined}>
             <View>
               <Text style={[styles.textAmount, styles.alignedRight]}>
-                {value ? formatBalance(value) : 0}
+                {balance ? formatBalance(balance) : 0}
               </Text>
               {subValue && (
                 <Text
