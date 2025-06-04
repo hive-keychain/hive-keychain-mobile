@@ -166,4 +166,9 @@ export enum Icons {
   MULTISIG = 'MULTISIG',
   NOTIFICATIONS = 'NOTIFICATIONS',
   CALENDAR = 'calendar.svg',
+
+  //Browser Swipe
+  SWIPE_LEFT = 'SWIPE_LEFT',
+  SWIPE_RIGHT = 'SWIPE_RIGHT',
+  SWIPE_DOWN = 'SWIPE_DOWN',
 }

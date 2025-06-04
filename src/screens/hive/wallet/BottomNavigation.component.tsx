@@ -142,8 +142,7 @@ const BottomNavigation = ({
   };
 
   const isBrowser = activeScreen === BottomBarLink.Browser;
-  const isShowingProposalRequest =
-    isProposalRequestDisplayed && activeScreen === 'ModalScreen';
+  const isModal = activeScreen === 'ModalScreen';
 
   const renderBrowserBottomBar = () => [
     <Pressable
@@ -239,7 +238,7 @@ const BottomNavigation = ({
       </Pressable>
     ),
   ];
-  return !isShowingProposalRequest && show && rpc && rpc.uri !== 'NULL' ? (
+  return !isModal && show && rpc && rpc.uri !== 'NULL' ? (
     <Animated.View
       style={[
         getCardStyle(theme).floatingBar,
