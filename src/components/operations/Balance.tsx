@@ -75,6 +75,10 @@ const Balance = ({
         const vscBalance = await VscUtils.getAccountBalance(account.name);
         tempBalance = vscBalance.hive / 1000;
         break;
+      case currency === getCurrency('VSCHBD'):
+        const vscHbdBalance = await VscUtils.getAccountBalance(account.name);
+        tempBalance = vscHbdBalance.hbd / 1000;
+        break;
     }
     if (setAvailableBalance)
       setAvailableBalance(withCommas(tempBalance.toString()));
