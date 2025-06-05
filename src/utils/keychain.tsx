@@ -25,24 +25,14 @@ export const validateAuthority = (
   const wifType = getRequiredWifType(req);
   if (username) {
     const account = accounts.find((e) => e.name === username);
-    const hasRequiredKey = !!account.keys[wifType];
+    console.log('account', account);
     if (!account) {
       return {
         valid: false,
         error: translate('request.error.no_account', {account: username}),
       };
     }
-    if (!hasRequiredKey) {
-      return {
-        valid: false,
-        error: translate('request.error.no_required_auth', {
-          account: username,
-          required_auth: wifType,
-        }),
-      };
-    }
   } else if (KeychainConfig.ANONYMOUS_REQUESTS.includes(type)) {
-  
     if (!accounts.filter((e) => !!e.keys[wifType]).length) {
       return {
         valid: false,
