@@ -163,7 +163,7 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilledCurrency(req.currency) &&
         hasTransferInfo(req)) ||
       (req.type === 'sendToken' &&
-        isFilledAmt(req.amount) &&
+        isFilledAmt(req.amount, false) &&
         isFilled(req.to) &&
         isFilled(req.currency)) ||
       (req.type === 'powerUp' &&
@@ -209,7 +209,20 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilledCurrency(req.currency) &&
         isFilled(req.to) &&
         Number.isInteger(req.executions) &&
-        Number.isInteger(req.recurrence)))
+        Number.isInteger(req.recurrence)) ||
+      (req.type === 'vscTransfer' &&
+        isFilledAmt(req.amount) &&
+        isFilled(req.to) &&
+        isFilledCurrency(req.currency)) ||
+      (req.type === 'vscDeposit' &&
+        isFilledAmt(req.amount) &&
+        isFilledCurrency(req.currency)) ||
+      (req.type === 'vscWithdrawal' &&
+        isFilledAmt(req.amount) &&
+        isFilledCurrency(req.currency)) ||
+      (req.type === 'vscStaking' &&
+        isFilledAmt(req.amount) &&
+        isFilledCurrency(req.currency)))
   );
 };
 
@@ -249,6 +262,10 @@ export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
     case 'updateProposalVote':
     case 'convert':
     case 'recurrentTransfer':
+    case 'vscTransfer':
+    case 'vscDeposit':
+    case 'vscWithdrawal':
+    case 'vscStaking':
       return KeyTypes.active;
   }
 };
@@ -290,12 +307,13 @@ const isFilledDate = (date: string) => {
   return regex.test(date);
 };
 
-const isFilledAmt = (obj: string) => {
+const isFilledAmt = (obj: string, enforceDecimals = true) => {
   return (
-    isFilled(obj) &&
-    !isNaN(parseFloat(obj)) &&
-    parseFloat(obj) > 0 &&
-    countDecimals(obj) === 3
+    (isFilled(obj) &&
+      !isNaN(parseFloat(obj)) &&
+      parseFloat(obj) > 0 &&
+      countDecimals(obj) === 3) ||
+    !enforceDecimals
   );
 };
 

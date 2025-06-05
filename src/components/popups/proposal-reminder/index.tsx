@@ -11,14 +11,15 @@ import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum'
 import {getColors} from 'src/styles/colors';
 import {getModalBaseStyle} from 'src/styles/modal';
 import {RootState} from 'store';
+import {ProposalConfig} from 'utils/config';
 import {toHP} from 'utils/format';
 import {getClient, updateProposalVote} from 'utils/hive';
-import {navigate} from 'utils/navigation';
+import {goBack, navigate} from 'utils/navigation';
 interface Props {
   navigation: BrowserNavigation;
 }
 
-const KEYCHAIN_PROPOSAL = 262;
+const KEYCHAIN_PROPOSAL = ProposalConfig.KEYCHAIN_PROPOSAL;
 const IMAGE_URI =
   'https://images.hive.blog/0x0/https://files.peakd.com/file/peakd-hive/stoodkev/23wXG62TYT2yVFnmLB3hwg9hsL9jmEHYow667J1bVk1ebowRwEnNu3ckaHxHohcatE5v8.png';
 
@@ -34,11 +35,11 @@ const hasVotedForProposal = async (
   return listProposalVotes[0].voter === username;
 };
 const getNotifiedVoters = async (): Promise<string[]> => {
+  // await AsyncStorage.removeItem(KeychainStorageKeyEnum.PROPOSAL_NOTIFIED);
   const voters = JSON.parse(
     (await AsyncStorage.getItem(KeychainStorageKeyEnum.PROPOSAL_NOTIFIED)) ||
       '[]',
   );
-
   try {
     if (!Array.isArray(voters)) return [];
     return voters;
@@ -112,7 +113,6 @@ const ProposalReminder = ({
           <Text
             style={{color: getColors(theme).secondaryText, fontWeight: 'bold'}}
             onPress={() => {
-              addNotifiedVoter(user.name);
               addTab(`https://peakd.com/proposals/${KEYCHAIN_PROPOSAL}`);
               navigation.navigate('BrowserScreen');
             }}>
@@ -145,7 +145,7 @@ const ProposalReminder = ({
               }}
               onPress={() => {
                 addNotifiedVoter(user.name);
-                navigation.navigate('BrowserScreen');
+                goBack();
               }}>
               I won't support
             </Text>
@@ -162,7 +162,7 @@ const ProposalReminder = ({
                 extensions: [],
               }).then(() => {
                 SimpleToast.show('Thanks for your support!');
-                navigation.navigate('BrowserScreen');
+                goBack();
               });
             }}
           />

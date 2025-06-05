@@ -19,7 +19,11 @@ const Root = () => {
     "EventEmitter.removeListener('change', ...): ",
     'ViewPropTypes will be removed from React Native',
     "EventEmitter.removeListener('appStateDidChange', ...)",
+    'Require cycle',
+    '`new NativeEventEmitter()` was called with a non-null',
+    'Warning: Cannot update a component',
   ]);
+
   const onBeforeLift = () => {
     // Take an action before the gate lifts
     setGateLifted(true);

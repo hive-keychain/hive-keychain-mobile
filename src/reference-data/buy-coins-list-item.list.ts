@@ -1,5 +1,5 @@
+import {ExchangesUtils} from 'hive-keychain-commons';
 import {BuyCoinType} from 'src/enums/operations.enum';
-import {TransakConfig} from 'utils/config';
 import {getCurrency} from 'utils/hive';
 
 interface Exchange {
@@ -9,69 +9,6 @@ interface Exchange {
   username: string;
   acceptedCoins: string[];
 }
-
-export const exchanges: Exchange[] = [
-  {
-    name: 'Binance',
-    image: 'binance.svg',
-    link: 'https://www.binance.com/en/trade/HIVE_BTC',
-    username: 'bdhivesteem',
-    acceptedCoins: ['HIVE'],
-  },
-  {
-    name: 'Upbit',
-    image: 'upbit.svg',
-    link: 'https://id.upbit.com/exchange?code=CRIX.UPBIT.BTC-HIVE',
-    username: 'user.dunamu',
-    acceptedCoins: ['HIVE', 'HBD'],
-  },
-  {
-    name: 'Gateio',
-    image: 'gateio.svg',
-    link: 'https://www.gate.io/trade/HIVE_USDT',
-    username: 'gateiodeposit',
-    acceptedCoins: ['HIVE'],
-  },
-  // { image: 'bkex.png', link: 'https://www.bkex.com/trade/HIVE_USDT' },
-  // {
-  //   image: 'bithumb.png',
-  //   link: 'https://en.bithumb.com/trade/order/HIVE_KRW',
-  // },
-  // {
-  //   name: 'Ionomy',
-  //   image: 'ionomy.svg',
-  //   link: 'https://exchange.ionomy.com/en/markets/btc-hive',
-  //   username: 'ionomy',
-  //   acceptedCoins: ['HIVE', 'HBD'],
-  // },
-  {
-    name: 'Huobi',
-    image: 'huobi.svg',
-    link: 'https://www.huobi.com/en-us/exchange/hive_usdt/',
-    username: 'huobi-pro',
-    acceptedCoins: ['HIVE'],
-  },
-  {
-    name: 'Mexc',
-    image: 'mexc.svg',
-    link: 'https://www.mexc.com/exchange/HIVE_USDT',
-    username: 'mxchive',
-    acceptedCoins: ['HIVE'],
-  },
-  // {
-  //   name: 'Probit',
-  //   image: NewIcons.PROBIT,
-  //   link: 'https://www.probit.com/app/exchange/HIVE-USDT',
-  //   username: 'probithive',
-  //   acceptedCoins: ['HIVE'],
-  // },
-  // {
-  //   image: 'bittrex.png',
-  //   link: 'https://global.bittrex.com/Market/Index?MarketName=BTC-HIVE',
-  //   username: 'bittrex',
-  //   acceptedCoins: ["HIVE", "HBD"]
-  // },
-];
 
 interface Platform {
   name: string;
@@ -85,6 +22,8 @@ interface BuyCoinsListItemInterface {
   exchanges: Exchange[];
 }
 
+const exchanges = ExchangesUtils.getExchanges();
+
 export const getBuyCoinsListItem = (
   type: BuyCoinType,
   username: string,
@@ -93,12 +32,12 @@ export const getBuyCoinsListItem = (
     case BuyCoinType.BUY_HIVE:
       return {
         list: [
-          {
-            name: 'Transak',
-            image: 'transak.svg',
-            link: `https://global.transak.com?apiKey=${TransakConfig.apiKey}&defaultCryptoCurrency=HIVE&exchangeScreenTitle=Buy%20HIVEs&isFeeCalculationHidden=true&walletAddress=${username}`,
-            description: 'html_popup_transak_description',
-          },
+          // {
+          //   name: 'Transak',
+          //   image: 'transak.svg',
+          //   link: `https://global.transak.com?apiKey=${TransakConfig.apiKey}&defaultCryptoCurrency=HIVE&exchangeScreenTitle=Buy%20HIVEs&isFeeCalculationHidden=true&walletAddress=${username}`,
+          //   description: 'html_popup_transak_description',
+          // },
           // {
           //   name: 'Blocktrades',
           //   image: 'blocktrades.svg',

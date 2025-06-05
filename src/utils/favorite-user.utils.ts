@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Account, ActiveAccount} from 'actions/interfaces';
+import {ExchangesUtils} from 'hive-keychain-commons';
 import {
   AutoCompleteCategory,
   AutoCompleteValue,
@@ -9,7 +10,6 @@ import {
   FavoriteUserItems,
   FavoriteUserListName,
 } from 'src/interfaces/favorite-user.interface';
-import {exchanges} from 'src/reference-data/buy-coins-list-item.list';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState, store} from 'store';
 
@@ -18,6 +18,8 @@ export interface AutocompleteListOption {
   addSwaps?: boolean;
   token?: string;
 }
+
+const exchanges = ExchangesUtils.getExchanges();
 
 const getAutocompleteList = async (
   username: string,

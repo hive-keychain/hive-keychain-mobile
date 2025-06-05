@@ -75,11 +75,16 @@ export const getColors = (theme: Theme) => {
     secondaryCardBgColor: theme === Theme.LIGHT ? '#FFF' : '#293144',
     cardBgLighter: theme === Theme.LIGHT ? '#FFF' : BACKGROUNDITEMDARKISH,
     tertiaryCardBgColor: theme === Theme.LIGHT ? '#FAFCFD' : '#293144',
+    pressedButton: theme === Theme.LIGHT ? '#F2F4F5' : '#32394C',
     lineSeparatorStroke: theme === Theme.LIGHT ? '#EDF4FC' : '#364360',
     secondaryLineSeparatorStroke:
       theme === Theme.LIGHT
         ? 'rgba(72, 72, 72, 0.20)'
         : 'rgba(255, 255, 255, 0.20)',
+    overlay:
+      theme === Theme.LIGHT
+        ? 'rgba(72, 72, 72, 0.40)'
+        : 'rgba(255, 255, 255, 0.40)',
     betterContrastStroke: theme === Theme.DARK ? '#FFF' : 'none',
     icon: theme === Theme.LIGHT ? PRIMARY_RED_COLOR : '#FFF',
     iconBW: theme === Theme.LIGHT ? '#1E1E1E' : '#FFF',

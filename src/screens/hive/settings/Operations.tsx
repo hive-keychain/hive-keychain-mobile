@@ -56,7 +56,7 @@ const Operations = ({
       userPreference &&
         userPreference.domains &&
         userPreference.domains.length > 0
-        ? preferences.find((e) => e.username === active.name).domains
+        ? preferences.find((e) => e.username === active.name)?.domains || []
         : [],
     );
     setTimeout(() => {

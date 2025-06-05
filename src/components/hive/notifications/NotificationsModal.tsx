@@ -82,7 +82,6 @@ const NotificationsModal = ({
   const handleScroll = (event: any) => {
     const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
     if (isLoadingMore) return;
-    console.log(innerScrollViewY);
     setDisplayedScrollToTop(innerScrollViewY >= 50);
   };
 

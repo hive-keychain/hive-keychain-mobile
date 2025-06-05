@@ -886,7 +886,6 @@ const markAllAsRead = async (activeAccount: ActiveAccount) => {
 };
 
 const deleteAccountConfig = async (activeAccount: ActiveAccount) => {
-  console.log(activeAccount, 'a');
   return await broadcastJson(
     activeAccount.keys.posting!,
     activeAccount.name!,
@@ -897,8 +896,6 @@ const deleteAccountConfig = async (activeAccount: ActiveAccount) => {
 };
 
 const saveDefaultConfig = async (activeAccount: ActiveAccount) => {
-  console.log(activeAccount.keys, 'b');
-
   // const config = getDefaultConfig();
   const config = getSuggestedConfig(activeAccount.name!);
   return saveConfiguration(config, activeAccount);

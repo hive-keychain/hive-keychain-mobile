@@ -51,7 +51,7 @@ import {
 import {MultisigUtils} from './multisig.utils';
 import {useWorkingRPC} from './rpc-switcher.utils';
 
-type BroadcastResult = {id: string};
+type BroadcastResult = {id: string; tx_id: string};
 
 const DEFAULT_CHAIN_ID =
   'beeab0de00000000000000000000000000000000000000000000000000000000';
@@ -73,7 +73,9 @@ export const setRpc = async (rpcObj: Rpc | string) => {
 
 export const isTestnet = () => testnet;
 
-export const getCurrency = (baseCurrency: 'HIVE' | 'HBD' | 'HP') => {
+export const getCurrency = (
+  baseCurrency: 'HIVE' | 'HBD' | 'HP' | 'VSCHIVE' | 'VSCHBD',
+) => {
   switch (baseCurrency) {
     case 'HIVE':
       return testnet ? 'TESTS' : 'HIVE';
@@ -81,6 +83,10 @@ export const getCurrency = (baseCurrency: 'HIVE' | 'HBD' | 'HP') => {
       return testnet ? 'TBD' : 'HBD';
     case 'HP':
       return testnet ? 'TP' : 'HP';
+    case 'VSCHIVE':
+      return testnet ? 'TESTS' : 'VSCHIVE';
+    case 'VSCHBD':
+      return testnet ? 'TESTS' : 'VSCHBD';
   }
 };
 

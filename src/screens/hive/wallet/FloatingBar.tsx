@@ -47,12 +47,7 @@ const Floating = ({
   const [activeLink, setActiveLink] = useState<FloatingBarLink>('ecosystem');
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-  const styles = getStyles(
-    theme,
-    {width, height},
-    useSafeAreaInsets(),
-    isProposalRequestDisplayed,
-  );
+  const styles = getStyles(theme, {width, height}, useSafeAreaInsets(), false);
   const anim = useRef(new Animated.Value(0)).current;
   const [isTop, setIsTop] = useState(false);
   const getActiveStyle = (link: FloatingBarLink) =>
@@ -141,7 +136,6 @@ const Floating = ({
           {...getIconDimensions(width)}
           onPress={() => onHandlePressButton('browser')}
           onLongPress={() => {
-            console.log('closing all tabs');
             SimpleToast.show(translate('browser.clear_all'), SimpleToast.LONG);
             closeAllTabs();
           }}

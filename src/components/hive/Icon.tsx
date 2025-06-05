@@ -14,6 +14,7 @@ import DecryptIcon from 'assets/new_UI/decrypt.svg';
 import DoubleArrowIcon from 'assets/new_UI/double-arrow.svg';
 import EncryptIcon from 'assets/new_UI/encrypt.svg';
 import ExpandThinIcon from 'assets/new_UI/expand-thin.svg';
+import ExportIcon from 'assets/new_UI/export.svg';
 import EyeSlashIcon from 'assets/new_UI/eye-slash.svg';
 import GiftDeleteIcon from 'assets/new_UI/gift-delete.svg';
 import HBDCurrencyLogo from 'assets/new_UI/hbd-currency-logo.svg';
@@ -70,7 +71,6 @@ import {default as ArrowUpwardIcon} from 'src/assets/icons/svgs/arrow_upward.svg
 import DeleteIcon from 'src/assets/icons/svgs/delete_black.svg';
 import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
-import ExportIcon from 'assets/new_UI/export.svg';
 import CalendarIcon from 'src/assets/new_UI/calendar.svg';
 import ConvertIcon from 'src/assets/new_UI/convert.svg';
 import DelegateTokenIcon from 'src/assets/new_UI/delegate-token.svg';
@@ -83,6 +83,8 @@ import SavingsIcon from 'src/assets/new_UI/savings.svg';
 import TransferIcon from 'src/assets/new_UI/send.svg';
 import Success from 'src/assets/new_UI/success-mark.svg';
 import AutomatedTasks from 'src/assets/settings/automated-tasks.svg';
+import VSCHBDIcon from 'src/assets/wallet/hbd-vsc.svg';
+import VSCHiveIcon from 'src/assets/wallet/hive-vsc.svg';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
@@ -697,6 +699,20 @@ const getIconFilePath = (
     case name === Icons.EXPORT:
       return (
         <ExportIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.VSCHIVE:
+      return (
+        <VSCHiveIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.VSCHBD:
+      return (
+        <VSCHBDIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

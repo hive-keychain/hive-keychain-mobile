@@ -1,22 +1,25 @@
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
-import { Caption } from 'components/ui/Caption';
+import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
-import { SignupNavProp } from 'navigators/Signup.types';
+import {SignupNavProp} from 'navigators/Signup.types';
 import React from 'react';
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
-import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Theme, useThemeContext } from 'src/context/theme.context';
-import { getButtonHeight } from 'src/styles/button';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {getButtonHeight} from 'src/styles/button';
 import {
   NEUTRAL_WHITE_COLOR,
   PRIMARY_RED_COLOR,
   getColors,
 } from 'src/styles/colors';
-import { button_link_primary_medium, getFontSizeSmallDevices } from 'src/styles/typography';
-import { Dimensions } from 'utils/common.types';
-import { translate } from 'utils/localize';
+import {
+  button_link_primary_medium,
+  getFontSizeSmallDevices,
+} from 'src/styles/typography';
+import {Dimensions} from 'utils/common.types';
+import {translate} from 'utils/localize';
 
 const ChooseAccountOption = ({navigation}: SignupNavProp) => {
   const {theme} = useThemeContext();
@@ -45,7 +48,16 @@ const ChooseAccountOption = ({navigation}: SignupNavProp) => {
             style={styles.outlineButton}
             additionalTextStyle={styles.textOutLineButton}
           />
-          <Separator height={height * 0.015} />
+          <Separator />
+          <EllipticButton
+            title={translate('navigation.import_all')}
+            onPress={() => {
+              navigation.navigate('ScanQRScreen');
+            }}
+            style={styles.outlineButton}
+            additionalTextStyle={styles.textOutLineButton}
+          />
+          <Separator />
           <EllipticButton
             title={translate('intro.createAccount')}
             onPress={() => {
@@ -89,7 +101,7 @@ const getDimensionedStyles = (
     },
     textOutLineButton: {
       ...button_link_primary_medium,
-      fontSize: getFontSizeSmallDevices(width,13),
+      fontSize: getFontSizeSmallDevices(width, 13),
       color: '#212838',
     },
     warningProceedButton: {
@@ -98,7 +110,7 @@ const getDimensionedStyles = (
     },
     textButtonFilled: {
       ...button_link_primary_medium,
-      fontSize: getFontSizeSmallDevices(width,13),
+      fontSize: getFontSizeSmallDevices(width, 13),
       color: NEUTRAL_WHITE_COLOR,
     },
     captionContainer: {paddingHorizontal: 16, alignSelf: 'center'},

@@ -11,6 +11,7 @@ import {ExportTransactionsUtils} from 'hive-keychain-commons';
 import React, {useState} from 'react';
 import {
   Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -71,7 +72,11 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
       const startStr = formatDateForFilename(startDate);
       const endStr = formatDateForFilename(endDate);
 
-      const filePath = `${RNFetchBlob.fs.dirs.DownloadDir}/${active.name}-transactions-${startStr}-to-${endStr}.csv`;
+      const filePath = `${
+        Platform.OS === 'ios'
+          ? RNFetchBlob.fs.dirs.DocumentDir
+          : RNFetchBlob.fs.dirs.DownloadDir
+      }/${active.name}-transactions-${startStr}-to-${endStr}.csv`;
       await RNFetchBlob.fs.writeFile(filePath, csv, 'utf8');
 
       const startReadable = startDate.toLocaleDateString('en-US');
