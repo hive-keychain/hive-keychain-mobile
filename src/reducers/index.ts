@@ -16,6 +16,7 @@ import hiveUri from './hive-uri';
 import hive_authentication_service from './hiveAuthenticationService';
 import lastAccount from './lastAccount';
 import message from './message';
+import navigation from './navigation';
 import phishingAccounts from './phishing';
 import preferences from './preferences';
 import rpcSwitcher from './rpcSwitcher';
@@ -55,4 +56,5 @@ export default combineReducers({
   accountValueDisplay,
   ecosystem,
   colors,
+  navigation,
 });

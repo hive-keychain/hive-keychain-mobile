@@ -6,15 +6,17 @@ import {
   addToHistory,
   changeTab,
   clearHistory,
-  closeAllTabs,
   closeTab,
   getEcosystem,
   removeFromFavorites,
+  removeFromHistory,
   setBrowserFocus,
   showManagementScreen,
+  updateFavorites,
   updateTab,
 } from 'actions/index';
 import Browser from 'components/browser';
+import BrowserTutorial from 'components/popups/browser-tutorial/BrowserTutorial';
 import ProposalReminder from 'components/popups/proposal-reminder';
 import SafeArea from 'components/ui/SafeArea';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
@@ -34,7 +36,6 @@ const BrowserScreen = ({
   addTab,
   updateTab,
   closeTab,
-  closeAllTabs,
   addToHistory,
   clearHistory,
   addToFavorites,
@@ -44,7 +45,9 @@ const BrowserScreen = ({
   navigation,
   route,
   showManagementScreen,
+  updateFavorites,
   getEcosystem,
+  removeFromHistory,
   preferences,
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
   const {chain} = useChainContext();
@@ -99,7 +102,6 @@ const BrowserScreen = ({
         addTab={addTab}
         updateTab={updateTab}
         closeTab={closeTab}
-        closeAllTabs={closeAllTabs}
         addToHistory={addToHistory}
         clearHistory={clearHistory}
         addToFavorites={addToFavorites}
@@ -107,9 +109,12 @@ const BrowserScreen = ({
         setBrowserFocus={setBrowserFocus}
         showManagementScreen={showManagementScreen}
         preferences={preferences}
+        updateFavorites={updateFavorites}
         showFloatingBar={showFloatingBar}
+        removeFromHistory={removeFromHistory}
       />
       <ProposalReminder navigation={navigation} />
+      <BrowserTutorial navigation={navigation} />
     </SafeArea>
   );
 };
@@ -127,7 +132,6 @@ const connector = connect(mapStateToProps, {
   addTab,
   updateTab,
   closeTab,
-  closeAllTabs,
   addToHistory,
   clearHistory,
   addToFavorites,
@@ -136,6 +140,8 @@ const connector = connect(mapStateToProps, {
   showManagementScreen,
   showFloatingBar,
   getEcosystem,
+  updateFavorites,
+  removeFromHistory,
 });
 
 export type BrowserPropsFromRedux = ConnectedProps<typeof connector>;

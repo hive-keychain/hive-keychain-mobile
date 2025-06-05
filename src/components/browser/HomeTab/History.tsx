@@ -1,6 +1,7 @@
 import {Page} from 'actions/interfaces';
 import React from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
@@ -10,16 +11,23 @@ import {
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import HistoryItem from '../urlModal/HistoryItem';
-
 type Props = {
   history: Page[];
   updateTabUrl: (link: string) => void;
   clearHistory: () => void;
   theme: Theme;
+  removeFromHistory: (url: string) => void;
 };
 
-export default ({history, updateTabUrl, clearHistory, theme}: Props) => {
-  const styles = getStyles(theme);
+export default ({
+  history,
+  updateTabUrl,
+  clearHistory,
+  theme,
+  removeFromHistory,
+}: Props) => {
+  const insets = useSafeAreaInsets();
+  const styles = getStyles(theme, insets);
   return (
     <View style={styles.container}>
       {history.length ? (
@@ -36,6 +44,9 @@ export default ({history, updateTabUrl, clearHistory, theme}: Props) => {
               <HistoryItem
                 data={item}
                 key={item.url}
+                onDismiss={() => {
+                  removeFromHistory(item.url);
+                }}
                 onSubmit={(e) => {
                   updateTabUrl(e);
                 }}
@@ -51,13 +62,13 @@ export default ({history, updateTabUrl, clearHistory, theme}: Props) => {
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, insets: EdgeInsets) =>
   StyleSheet.create({
     container: {
       flexDirection: 'column',
       marginTop: 10,
       flex: 1,
-      paddingHorizontal: 20,
+      paddingBottom: 140 + insets.bottom / 2,
     },
     text: {
       alignSelf: 'center',

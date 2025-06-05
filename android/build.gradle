@@ -4,7 +4,7 @@ buildscript {
         compileSdkVersion = 34
         targetSdkVersion = 34
         minSdkVersion = 21
-        kotlin_version = "1.6.20"
+        kotlin_version = "1.8.0"
         kotlinVersion = "$kotlin_version"
         compose_version = '1.2.0-alpha08'
         compose_tool_version = '1.0.1'

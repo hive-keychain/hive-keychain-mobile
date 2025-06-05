@@ -1,3 +1,5 @@
+import {useFocusEffect} from '@react-navigation/native';
+import {showFloatingBar} from 'actions/floatingBar';
 import {
   Account,
   ActionPayload,
@@ -5,12 +7,21 @@ import {
   KeyTypes,
   Page,
   Tab,
-  TabFields,
 } from 'actions/interfaces';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {
+  BackHandler,
+  Platform,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+import {runOnJS} from 'react-native-reanimated';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {WebView} from 'react-native-webview';
 import {
   WebViewMessageEvent,
@@ -18,7 +29,10 @@ import {
   WebViewProgressEvent,
 } from 'react-native-webview/lib/WebViewTypes';
 import {UserPreference} from 'reducers/preferences.types';
+import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
+import {ProviderEvent} from 'src/enums/provider-event.enum';
+import {store} from 'store';
 import {urlTransformer} from 'utils/browser';
 import {BrowserConfig} from 'utils/config';
 import {getAccount} from 'utils/hiveUtils';
@@ -34,7 +48,6 @@ import {MultisigUtils} from 'utils/multisig.utils';
 import {navigate, goBack as navigationGoBack} from 'utils/navigation';
 import {hasPreference} from 'utils/preferences';
 import {requestWithoutConfirmation} from 'utils/requestWithoutConfirmation';
-import Footer from './Footer';
 import HomeTab from './HomeTab';
 import ProgressBar from './ProgressBar';
 import RequestModalContent from './RequestModalContent';
@@ -46,13 +59,9 @@ import RequestErr from './requestOperations/components/RequestError';
 type Props = {
   data: Tab;
   active: boolean;
-  manageTabs: (
-    tab: Tab,
-    webview: MutableRefObject<WebView> | MutableRefObject<View>,
-  ) => void;
   isManagingTab: boolean;
   accounts: Account[];
-  updateTab: (id: number, data: TabFields) => ActionPayload<BrowserPayload>;
+  updateTab: (id: number, data: Partial<Tab>) => ActionPayload<BrowserPayload>;
   addToHistory: (history: Page) => ActionPayload<BrowserPayload>;
   history: Page[];
   navigation: BrowserNavigation;
@@ -61,7 +70,7 @@ type Props = {
   addTab: (
     isManagingTab: boolean,
     tab: Tab,
-    webview: MutableRefObject<View>,
+    webview: MutableRefObject<View | ScrollView>,
     url?: string,
   ) => void;
   tabsNumber: number;
@@ -69,39 +78,48 @@ type Props = {
   isUrlModalOpen: boolean;
   theme: Theme;
   clearHistory: () => void;
+  updateFavorites: (favorites: Page[]) => void;
+  removeFromHistory: (url: string) => void;
 };
 
 export default ({
-  data: {url, id, icon, name},
+  data,
   active,
   updateTab,
   accounts,
   navigation,
   addToHistory,
   history,
-  manageTabs,
   isManagingTab,
   preferences,
   favorites,
   addTab,
-  tabsNumber,
   orientation,
   isUrlModalOpen,
   clearHistory,
+  updateFavorites,
+  removeFromHistory,
   theme,
 }: Props) => {
-  const tabData = {url, id, icon, name};
+  const {url, id, icon, name, desktop: desktopMode} = data;
   const tabRef: MutableRefObject<WebView> = useRef(null);
-  const tabParentRef: MutableRefObject<View> = useRef(null);
+  const tabParentRef: MutableRefObject<ScrollView> = useRef(null);
   const homeRef: MutableRefObject<View> = useRef(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [canGoForward, setCanGoForward] = useState(false);
   const [progress, setProgress] = useState(0);
   const [shouldUpdateWvInfo, setShouldUpdateWvInfo] = useState(true);
-  const [desktopMode, setDesktopMode] = useState(false);
   const insets = useSafeAreaInsets();
-
+  const [canRefresh, setCanRefresh] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const {width} = useWindowDimensions();
+  const {setWebViewRef, setTabViewRef} = useTab();
+  const onRefresh = () => {
+    setRefreshing(true);
+    tabRef.current?.reload(); // reload the WebView
+  };
   const FOOTER_HEIGHT = BrowserConfig.FOOTER_HEIGHT + insets.bottom;
+  const styles = getStyles(insets);
   useEffect(() => {
     if (isUrlModalOpen) {
       setShouldUpdateWvInfo(false);
@@ -111,6 +129,22 @@ export default ({
       }, 2100);
     }
   }, [isUrlModalOpen]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const backAction = () => {
+        if (canGoBack) goBack();
+        return true;
+      };
+
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction,
+      );
+
+      return () => backHandler.remove();
+    }, [canGoBack]),
+  );
 
   useEffect(() => {
     // On iOS the page needs to be reloaded when changing orientation to apply desktop mode.
@@ -131,16 +165,6 @@ export default ({
     }
     const {current} = tabRef;
     current && current.goForward();
-  };
-
-  const reload = () => {
-    const {current} = tabRef;
-    current && current.reload();
-  };
-
-  const clearCache = () => {
-    const {current} = tabRef;
-    current && current.clearCache(true);
   };
 
   const onLoadStart = ({
@@ -176,17 +200,26 @@ export default ({
       current.injectJavaScript(BRIDGE_WV_INFO);
     }
   };
-
   const onMessage = ({nativeEvent}: WebViewMessageEvent) => {
-    const {name, request_id, data} = JSON.parse(nativeEvent.data);
+    const {
+      name: messageName,
+      request_id,
+      data,
+      isAtTop,
+      showNavigationBar,
+    } = JSON.parse(nativeEvent.data);
     const {current} = tabRef;
-    switch (name) {
-      case 'swHandshake_hive':
+    switch (messageName) {
+      case ProviderEvent.SCROLL:
+        if (canRefresh !== isAtTop) setCanRefresh(isAtTop);
+        store.dispatch(showFloatingBar(showNavigationBar));
+        break;
+      case ProviderEvent.HANDSHAKE:
         current.injectJavaScript(
           'window.hive_keychain.onAnswerReceived("hive_keychain_handshake")',
         );
         break;
-      case 'swRequest_hive':
+      case ProviderEvent.REQUEST:
         if (validateRequest(data)) {
           const validateAuth = validateAuthority(accounts, data);
           if (validateAuth.valid) {
@@ -219,15 +252,14 @@ export default ({
           });
         }
         break;
-      case 'WV_INFO':
-        const {icon, name, url} = data as TabFields;
+      case ProviderEvent.INFO:
         if (
-          tabData.url !== 'about:blank' &&
-          (icon !== tabData.icon || name !== tabData.name)
+          data.url !== 'about:blank' &&
+          (icon !== data.icon || name !== data.name)
         ) {
-          navigation.setParams({icon});
-          updateTab(id, {name, icon});
-          addToHistory({url, name, icon});
+          navigation.setParams({icon: data.icon});
+          updateTab(id, {name: data.name, icon: data.icon});
+          addToHistory({url: data.url, name: data.name, icon: data.icon});
         }
         break;
     }
@@ -295,6 +327,40 @@ export default ({
     }
   };
 
+  const swipeLeft = Gesture.Pan()
+    .onEnd((event) => {
+      const {velocityX} = event;
+      if (velocityX < -300) {
+        runOnJS(goForward)();
+      }
+    })
+    .hitSlop({
+      right: 0,
+      width: BrowserConfig.EDGE_THRESHOLD,
+    })
+    .activeOffsetX([-10, 10]);
+
+  const swipeRight = Gesture.Pan()
+    .onEnd((event) => {
+      const {velocityX} = event;
+      if (velocityX > 300) {
+        runOnJS(goBack)();
+      }
+    })
+    .hitSlop({
+      left: 0,
+      width: BrowserConfig.EDGE_THRESHOLD,
+    })
+    .activeOffsetX([-10, 10]);
+
+  const swipe = Gesture.Simultaneous(swipeLeft, swipeRight);
+
+  useEffect(() => {
+    if (tabRef?.current && active) setWebViewRef(tabRef.current);
+    if (tabParentRef?.current && active) setTabViewRef(tabParentRef.current);
+    if (homeRef?.current && active) setTabViewRef(homeRef.current);
+  }, [tabRef, homeRef, active, url]);
+
   return (
     <View
       style={[styles.container, !active || isManagingTab ? styles.hide : null]}>
@@ -307,92 +373,81 @@ export default ({
             favorites={favorites}
             updateTabUrl={updateTabUrl}
             clearHistory={clearHistory}
+            updateFavorites={updateFavorites}
+            removeFromHistory={removeFromHistory}
             homeRef={homeRef}
             accounts={accounts}
             theme={theme}
           />
         ) : null}
-        <View
-          style={
-            url === BrowserConfig.HOMEPAGE_URL ? styles.hide : styles.container
-          }
-          ref={tabParentRef}
-          collapsable={false}>
-          <WebView
-            source={{
-              uri: url === BrowserConfig.HOMEPAGE_URL ? undefined : url,
-            }}
-            domStorageEnabled={true}
-            allowFileAccess={true}
-            allowUniversalAccessFromFileURLs={true}
-            mixedContentMode={'always'}
-            ref={tabRef}
-            injectedJavaScriptBeforeContentLoaded={hive_keychain}
-            injectedJavaScript={desktopMode ? DESKTOP_MODE : undefined}
-            mediaPlaybackRequiresUserAction={false}
-            onMessage={onMessage}
-            javaScriptEnabled
-            geolocationEnabled
-            allowsInlineMediaPlayback
-            allowsFullscreenVideo
-            onLoadEnd={onLoadEnd}
-            onLoadStart={onLoadStart}
-            onLoadProgress={onLoadProgress}
-            pullToRefreshEnabled
-            onError={(error) => {
-              console.log('Error', error);
-            }}
-            onHttpError={(error) => {
-              console.log('HttpError', error);
-            }}
-            onOpenWindow={(event) => {
-              addTab(
-                false,
-                {url, icon, id},
-                tabParentRef,
-                event.nativeEvent.targetUrl,
-              );
-            }}
-            useWebView2
-          />
-        </View>
+        <GestureDetector gesture={swipe}>
+          <ScrollView
+            contentContainerStyle={
+              url === BrowserConfig.HOMEPAGE_URL
+                ? styles.hide
+                : styles.container
+            }
+            ref={tabParentRef}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => {
+                  onRefresh();
+                  setTimeout(() => setRefreshing(false), 1000);
+                }}
+                enabled={canRefresh}
+              />
+            }>
+            <WebView
+              source={{
+                uri: url === BrowserConfig.HOMEPAGE_URL ? undefined : url,
+              }}
+              domStorageEnabled={true}
+              allowFileAccess={true}
+              allowUniversalAccessFromFileURLs={true}
+              mixedContentMode={'always'}
+              ref={tabRef}
+              injectedJavaScriptBeforeContentLoaded={hive_keychain}
+              injectedJavaScript={desktopMode ? DESKTOP_MODE : undefined}
+              mediaPlaybackRequiresUserAction={false}
+              onMessage={onMessage}
+              javaScriptEnabled
+              bounces={false}
+              geolocationEnabled
+              allowsInlineMediaPlayback
+              allowsFullscreenVideo
+              onLoadEnd={onLoadEnd}
+              onLoadStart={onLoadStart}
+              onLoadProgress={onLoadProgress}
+              onError={(error) => {
+                console.log('Error', error);
+              }}
+              onHttpError={(error) => {
+                console.log('HttpError', error);
+              }}
+              onOpenWindow={(event) => {
+                addTab(
+                  false,
+                  {url, icon, id},
+                  tabParentRef,
+                  event.nativeEvent.targetUrl,
+                );
+              }}
+              useWebView2
+            />
+          </ScrollView>
+        </GestureDetector>
       </View>
-      {active && orientation === 'PORTRAIT' && (
-        <Footer
-          canGoBack={canGoBack}
-          canGoForward={canGoForward}
-          goBack={goBack}
-          goForward={goForward}
-          reload={reload}
-          clearCache={clearCache}
-          desktopMode={desktopMode}
-          toggleDesktopMode={() => {
-            setDesktopMode(!desktopMode);
-            tabRef.current.reload();
-          }}
-          addTab={() => {
-            addTab(
-              isManagingTab,
-              {url, id, icon},
-              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabParentRef,
-            );
-          }}
-          manageTabs={() => {
-            manageTabs(
-              {url, id, icon},
-              url === BrowserConfig.HOMEPAGE_URL ? homeRef : tabParentRef,
-            );
-          }}
-          height={FOOTER_HEIGHT}
-          tabs={tabsNumber}
-          theme={theme}
-        />
-      )}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {flexGrow: 1, flexDirection: 'column'},
-  hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
-});
+const getStyles = (insets: EdgeInsets) =>
+  StyleSheet.create({
+    container: {
+      flexGrow: 1,
+      flexDirection: 'column',
+      marginBottom: -insets.bottom,
+    },
+    hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
+  });
