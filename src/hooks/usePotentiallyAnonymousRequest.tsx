@@ -26,17 +26,17 @@ export default (request: KeychainRequest, accounts: Account[]) => {
   });
 
   const getAccountKey = () => {
-    return accounts.find((a) => a.name === username)?.keys[
+    return accounts.find((a) => a.name === account)?.keys[
       method.toLowerCase() as KeyTypes
     ];
   };
 
   const getAccountMemoKey = () => {
-    return accounts.find((a) => a.name === username)?.keys.memo;
+    return accounts.find((a) => a.name === account)?.keys.memo;
   };
 
   const getAccountPublicKey = () => {
-    return accounts.find((a) => a.name === username)?.keys[
+    return accounts.find((a) => a.name === account)?.keys[
       `${method.toLowerCase()}Pubkey` as PubKeyTypes
     ];
   };
