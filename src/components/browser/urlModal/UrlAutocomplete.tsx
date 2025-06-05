@@ -1,7 +1,7 @@
 import {Page} from 'actions/interfaces';
 import Fuse from 'fuse.js';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {RootState, store} from 'store';
@@ -68,28 +68,36 @@ const UrlAutocomplete = ({
   if (candidates.length)
     return (
       <View style={styles.wrapper}>
-        {candidates.map((e, index) => (
-          <HistoryItem
-            theme={theme}
-            onSubmit={onSubmit}
-            data={e}
-            indexItem={index}
-          />
-        ))}
+        <FlatList
+          data={candidates}
+          renderItem={({item, index}) => (
+            <HistoryItem
+              theme={theme}
+              onSubmit={onSubmit}
+              data={item}
+              indexItem={index}
+            />
+          )}
+          keyExtractor={(item) => item.url}
+        />
       </View>
     );
   else {
     let historyCopy = [...history].reverse().slice(0, 10);
     return (
       <View style={styles.wrapper}>
-        {historyCopy.map((e, index) => (
-          <HistoryItem
-            theme={theme}
-            onSubmit={onSubmit}
-            data={e}
-            indexItem={index}
-          />
-        ))}
+        <FlatList
+          data={historyCopy}
+          renderItem={({item, index}) => (
+            <HistoryItem
+              theme={theme}
+              onSubmit={onSubmit}
+              data={item}
+              indexItem={index}
+            />
+          )}
+          keyExtractor={(item) => item.url}
+        />
       </View>
     );
   }

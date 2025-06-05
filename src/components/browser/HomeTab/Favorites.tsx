@@ -49,6 +49,7 @@ const getStyles = (theme: Theme) =>
     },
     text: {
       alignSelf: 'center',
+      marginTop: 20,
       color: getColors(theme).secondaryText,
       ...button_link_primary_medium,
     },
