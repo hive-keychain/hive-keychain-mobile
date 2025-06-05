@@ -4,12 +4,12 @@ import {StyleSheet, Text, View} from 'react-native';
 import DraggableFlatList, {
   DragEndParams,
 } from 'react-native-draggable-flatlist';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_medium} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import HistoryItem from '../urlModal/HistoryItem';
-
 type Props = {
   favorites: Page[];
   updateTabUrl: (link: string) => void;
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default ({favorites, updateTabUrl, updateFavorites, theme}: Props) => {
-  const styles = getStyles(theme);
+  const styles = getStyles(useSafeAreaInsets(), theme);
 
   const sortData = (params: DragEndParams<Page>) => {
     updateFavorites([...params.data].reverse());
@@ -54,13 +54,13 @@ export default ({favorites, updateTabUrl, updateFavorites, theme}: Props) => {
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (insets: EdgeInsets, theme: Theme) =>
   StyleSheet.create({
     container: {
       flexDirection: 'column',
       marginTop: 10,
       flex: 1,
-      paddingBottom: 160,
+      paddingBottom: 140 + insets.bottom / 2,
     },
     text: {
       alignSelf: 'center',
