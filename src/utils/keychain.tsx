@@ -69,7 +69,6 @@ export const sendError = (
   tabRef: MutableRefObject<WebView>,
   error: RequestError,
 ) => {
-  console.log('send error');
   tabRef.current.injectJavaScript(
     `window.hive_keychain.onAnswerReceived("hive_keychain_response",${JSON.stringify(
       {success: false, result: null, ...error},
@@ -209,7 +208,11 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilledCurrency(req.currency) &&
         isFilled(req.to) &&
         Number.isInteger(req.executions) &&
-        Number.isInteger(req.recurrence)))
+        Number.isInteger(req.recurrence)) ||
+      (req.type === 'swap' &&
+        isFilledAmt(req.amount.toString(), false) &&
+        isFilled(req.startToken) &&
+        isFilled(req.endToken)))
   );
 };
 
@@ -249,6 +252,7 @@ export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
     case 'updateProposalVote':
     case 'convert':
     case 'recurrentTransfer':
+    case 'swap':
       return KeyTypes.active;
   }
 };
