@@ -16,9 +16,16 @@ type Props = {
   updateTabUrl: (link: string) => void;
   clearHistory: () => void;
   theme: Theme;
+  removeFromHistory: (url: string) => void;
 };
 
-export default ({history, updateTabUrl, clearHistory, theme}: Props) => {
+export default ({
+  history,
+  updateTabUrl,
+  clearHistory,
+  theme,
+  removeFromHistory,
+}: Props) => {
   const styles = getStyles(theme);
   return (
     <View style={styles.container}>
@@ -36,6 +43,9 @@ export default ({history, updateTabUrl, clearHistory, theme}: Props) => {
               <HistoryItem
                 data={item}
                 key={item.url}
+                onDismiss={() => {
+                  removeFromHistory(item.url);
+                }}
                 onSubmit={(e) => {
                   updateTabUrl(e);
                 }}
@@ -57,7 +67,6 @@ const getStyles = (theme: Theme) =>
       flexDirection: 'column',
       marginTop: 10,
       flex: 1,
-      paddingHorizontal: 20,
       paddingBottom: 160,
     },
     text: {

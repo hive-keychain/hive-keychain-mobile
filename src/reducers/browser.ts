@@ -8,6 +8,7 @@ import {
   CLOSE_ALL_BROWSER_TABS,
   CLOSE_BROWSER_TAB,
   REMOVE_FROM_BROWSER_FAVORITES,
+  REMOVE_FROM_BROWSER_HISTORY,
   SET_ACTIVE_BROWSER_TAB,
   UPDATE_BROWSER_TAB,
   UPDATE_FAVORITES,
@@ -44,6 +45,11 @@ const browserReducer = (
       return {
         ...state,
         favorites: newFavorite,
+      };
+    case REMOVE_FROM_BROWSER_HISTORY:
+      return {
+        ...state,
+        history: state.history.filter((item) => item.url !== payload.url),
       };
     case REMOVE_FROM_BROWSER_FAVORITES:
       return {

@@ -12,6 +12,7 @@ import {
   CLOSE_BROWSER_TAB,
   GET_ECOSYSTEM,
   REMOVE_FROM_BROWSER_FAVORITES,
+  REMOVE_FROM_BROWSER_HISTORY,
   SET_ACTIVE_BROWSER_TAB,
   UPDATE_BROWSER_TAB,
   UPDATE_FAVORITES,
@@ -22,6 +23,14 @@ export const addToHistory = (history: Page) => {
   const action: ActionPayload<BrowserPayload> = {
     type: ADD_TO_BROWSER_HISTORY,
     payload: {history},
+  };
+  return action;
+};
+
+export const removeFromHistory = (url: string) => {
+  const action: ActionPayload<BrowserPayload> = {
+    type: REMOVE_FROM_BROWSER_HISTORY,
+    payload: {url},
   };
   return action;
 };

@@ -36,12 +36,14 @@ export default ({favorites, updateTabUrl, updateFavorites, theme}: Props) => {
             <HistoryItem
               data={item}
               key={item.url}
+              onDismiss={() =>
+                updateFavorites(favorites.filter((e) => e.url !== item.url))
+              }
               onSubmit={(e) => {
                 updateTabUrl(e);
               }}
               theme={theme}
               drag={drag}
-              isActive={isActive}
             />
           )}
         />
@@ -58,7 +60,6 @@ const getStyles = (theme: Theme) =>
       flexDirection: 'column',
       marginTop: 10,
       flex: 1,
-      paddingHorizontal: 20,
       paddingBottom: 160,
     },
     text: {

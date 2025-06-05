@@ -39,6 +39,7 @@ const Browser = ({
   route,
   navigation,
   setBrowserFocus,
+  removeFromHistory,
   showManagementScreen,
   theme,
 }: Partial<BrowserPropsFromRedux> & BrowserNavigationProps & Props) => {
@@ -182,6 +183,7 @@ const Browser = ({
             tabsNumber={browser.tabs.length}
             orientation={orientation}
             isUrlModalOpen={isVisible}
+            removeFromHistory={removeFromHistory}
             theme={theme}
           />
         ))}

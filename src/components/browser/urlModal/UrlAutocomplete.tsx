@@ -76,6 +76,7 @@ const UrlAutocomplete = ({
               onSubmit={onSubmit}
               data={item}
               indexItem={index}
+              enabled={false}
             />
           )}
           keyExtractor={(item) => item.url}
@@ -95,6 +96,7 @@ const UrlAutocomplete = ({
               onSubmit={onSubmit}
               data={item}
               indexItem={index}
+              enabled={false}
             />
           )}
           keyExtractor={(item) => item.url}

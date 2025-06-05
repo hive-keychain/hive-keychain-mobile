@@ -9,6 +9,7 @@ import {
   closeTab,
   getEcosystem,
   removeFromFavorites,
+  removeFromHistory,
   setBrowserFocus,
   showManagementScreen,
   updateFavorites,
@@ -46,6 +47,7 @@ const BrowserScreen = ({
   showManagementScreen,
   updateFavorites,
   getEcosystem,
+  removeFromHistory,
   preferences,
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
   const {chain} = useChainContext();
@@ -109,6 +111,7 @@ const BrowserScreen = ({
         preferences={preferences}
         updateFavorites={updateFavorites}
         showFloatingBar={showFloatingBar}
+        removeFromHistory={removeFromHistory}
       />
       <ProposalReminder navigation={navigation} />
       <BrowserTutorial navigation={navigation} />
@@ -138,6 +141,7 @@ const connector = connect(mapStateToProps, {
   showFloatingBar,
   getEcosystem,
   updateFavorites,
+  removeFromHistory,
 });
 
 export type BrowserPropsFromRedux = ConnectedProps<typeof connector>;

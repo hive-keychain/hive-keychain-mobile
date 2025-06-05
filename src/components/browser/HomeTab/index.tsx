@@ -19,6 +19,7 @@ type Props = {
   homeRef: MutableRefObject<View>;
   accounts: Account[];
   theme: Theme;
+  removeFromHistory: (url: string) => void;
 };
 const NewTab = ({
   history,
@@ -29,6 +30,7 @@ const NewTab = ({
   homeRef,
   accounts,
   theme,
+  removeFromHistory,
 }: Props) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(insets);
@@ -51,6 +53,7 @@ const NewTab = ({
             history={history}
             clearHistory={clearHistory}
             updateTabUrl={updateTabUrl}
+            removeFromHistory={removeFromHistory}
             theme={theme}
           />,
           <Favorites
