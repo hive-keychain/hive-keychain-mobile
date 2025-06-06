@@ -43,9 +43,7 @@ export const processQRCodeOp = async (op: Operation) => {
           type: KeychainRequestTypes.transfer,
           amount: (+amount).toFixed(3) + '',
           currency,
-          username:
-            transferOp.from ??
-            (store.getState() as RootState).activeAccount.name!,
+          username: transferOp.from,
           to: transferOp.to,
           memo: transferOp.memo,
           enforce: !!transferOp.enforce,
