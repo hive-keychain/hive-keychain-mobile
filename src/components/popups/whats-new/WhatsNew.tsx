@@ -127,9 +127,9 @@ const WhatsNew = ({navigation}: Props): null => {
         </Text>
         <Carousel
           buttonsConfig={{
-            prevTitle: translate('popup.whats_new.previous'),
-            nextTitle: translate('popup.whats_new.next'),
-            lastTitle: translate('popup.whats_new.got_it'),
+            prevTitle: translate('common.previous'),
+            nextTitle: translate('common.next'),
+            lastTitle: translate('common.got_it'),
             lastSlideAction: finish,
           }}
           content={whatsNewContent.features[locale]}

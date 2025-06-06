@@ -151,7 +151,7 @@ export enum Icons {
   POWER_UP = 'POWER_UP',
   EMPTY_WALLET = 'EMPTY_WALLET',
   WALLET_ADD = 'WALLET_ADD',
-  GLOBAL = 'GLOBAL',
+  BROWSER = 'GLOBAL',
   REPEATE_MUSIC = 'REPEATE_MUSIC',
   SWAP = 'SWAP',
   SHARE = 'SHARE',
@@ -166,4 +166,10 @@ export enum Icons {
   MULTISIG = 'MULTISIG',
   NOTIFICATIONS = 'NOTIFICATIONS',
   CALENDAR = 'calendar.svg',
+
+  //Browser Swipe
+  SWIPE_LEFT = 'SWIPE_LEFT',
+  SWIPE_RIGHT = 'SWIPE_RIGHT',
+  SWIPE_DOWN = 'SWIPE_DOWN',
+  DRAG = 'DRAG',
 }

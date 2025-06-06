@@ -5,6 +5,7 @@ import {store} from 'store';
 import EVMApp from './EVMApp';
 import HiveApp from './HiveApp';
 import {Chain, ChainContext} from './context/multichain.context';
+import {TabProvider} from './context/tab.context';
 import {Theme, ThemeContext} from './context/theme.context';
 import {KeychainStorageKeyEnum} from './reference-data/keychainStorageKeyEnum';
 
@@ -59,7 +60,7 @@ export default () => {
     return (
       <ThemeContext.Provider value={{theme, setTheme, toggleTheme}}>
         <ChainContext.Provider value={{chain, setChain}}>
-          {renderChain(chain)}
+          <TabProvider>{renderChain(chain)}</TabProvider>
         </ChainContext.Provider>
       </ThemeContext.Provider>
     );

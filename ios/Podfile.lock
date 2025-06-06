@@ -542,7 +542,7 @@ PODS:
     - React-Core
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (1.10.3):
+  - RNGestureHandler (2.9.0):
     - React-Core
   - RNKeychain (8.1.1):
     - React-Core
@@ -552,7 +552,7 @@ PODS:
     - React-Core
   - RNReactNativeSharedGroupPreferences (1.1.24):
     - React
-  - RNReanimated (2.17.0):
+  - RNReanimated (2.14.4):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -894,12 +894,12 @@ SPEC CHECKSUMS:
   RNFBCrashlytics: 44c3f0e168ddf91394d5642485e369666a676535
   RNFileViewer: 4b5d83358214347e4ab2d4ca8d5c1c90d869e251
   RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
-  RNGestureHandler: 6572a5f44759900730562b418da289c373de8d06
+  RNGestureHandler: 5fe9e4f847b51d8cc9006cec6c7dc6718dd82809
   RNKeychain: 3a8b12f0fdd0b967811a48d9e83d582fc2e483eb
   RNLocalize: 1b5c060db74265245b61fe665572b03bdaa0ab82
   RNPermissions: c9f6254b68483c75efe58543d6cd92e5a3d869f5
   RNReactNativeSharedGroupPreferences: d4869af3c7757405b6b5ac633d0ef5f9886a9be7
-  RNReanimated: f9f8945aad05d259324869fb79ce30b75c6062da
+  RNReanimated: 96faf89fef41e16cacaf3e3231cf6a34d672e864
   RNScreens: 6a2106686e0de9866ab14ca250d7e47a49416b51
   RNSVG: ae50dd253f44447b32d0f5a3657a97859f289891
   RNVectorIcons: 42c2c63b4d6e909a2b2497017e03ea04034b6722

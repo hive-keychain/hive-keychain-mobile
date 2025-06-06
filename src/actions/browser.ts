@@ -1,7 +1,7 @@
 import {AppThunk} from 'src/hooks/redux';
 import {EcosystemUtils} from 'utils/ecosystem.utils';
 import {navigate} from 'utils/navigation';
-import {ActionPayload, BrowserPayload, Page, TabFields} from './interfaces';
+import {ActionPayload, BrowserPayload, Page, Tab} from './interfaces';
 import {
   ADD_BROWSER_TAB,
   ADD_TO_BROWSER_FAVORITES,
@@ -12,8 +12,10 @@ import {
   CLOSE_BROWSER_TAB,
   GET_ECOSYSTEM,
   REMOVE_FROM_BROWSER_FAVORITES,
+  REMOVE_FROM_BROWSER_HISTORY,
   SET_ACTIVE_BROWSER_TAB,
   UPDATE_BROWSER_TAB,
+  UPDATE_FAVORITES,
   UPDATE_MANAGEMENT,
 } from './types';
 
@@ -21,6 +23,14 @@ export const addToHistory = (history: Page) => {
   const action: ActionPayload<BrowserPayload> = {
     type: ADD_TO_BROWSER_HISTORY,
     payload: {history},
+  };
+  return action;
+};
+
+export const removeFromHistory = (url: string) => {
+  const action: ActionPayload<BrowserPayload> = {
+    type: REMOVE_FROM_BROWSER_HISTORY,
+    payload: {url},
   };
   return action;
 };
@@ -36,6 +46,14 @@ export const addToFavorites = (page: Page) => {
   const action: ActionPayload<BrowserPayload> = {
     type: ADD_TO_BROWSER_FAVORITES,
     payload: {favorite: page},
+  };
+  return action;
+};
+
+export const updateFavorites = (favorites: Page[]) => {
+  const action: ActionPayload<BrowserPayload> = {
+    type: UPDATE_FAVORITES,
+    payload: {favorites},
   };
   return action;
 };
@@ -109,7 +127,7 @@ export const changeTab = (id: number) => {
 };
 
 let acceptUpdateTab = true;
-export const updateTab = (id: number, data: TabFields, stall?: boolean) => {
+export const updateTab = (id: number, data: Partial<Tab>, stall?: boolean) => {
   if (!acceptUpdateTab) return {type: 'ABORTED'};
   if (stall) {
     acceptUpdateTab = false;

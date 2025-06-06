@@ -83,6 +83,7 @@
     "stake": "Stake",
     "unstake": "Unstake",
     "delegate": "Delegate",
+    "got_it": "Got it!",
     "deleg": "Deleg.",
     "missing_key": "Please add your {{key}} key to perform this operation!",
     "need_positive_amount": "The amount needs to be greater than 0",
@@ -990,7 +991,10 @@
   "browser": {
     "search": "Search or enter url",
     "clear_all": "All your browser tabs have been closed",
-    "history": {"clear": "Clear History"},
+    "history": {
+      "clear": "Clear History",
+      "clear_cache": "Clear Cache"
+    },
     "home": {
       "title": "HOME",
       "menu": {
@@ -1111,11 +1115,16 @@
     }
   },
   "popup": {
+    "browser_tutorial": {
+      "title": "Keychain Browser",
+      "description": "Welcome to your Keychain Browser! Here are a few navigation elements you should know:",
+      "swipe_right": "Swipe right to go back",
+      "swipe_left": "Swipe left to go forward",
+      "swipe_down": "Swipe down to refresh",
+      "browser_button": "Press to switch between main and browser bottom bars. Long press to close all tabs."
+    },
     "whats_new": {
-      "intro": "What's new in {{content_version}}",
-      "next": "Next",
-      "previous": "Previous",
-      "got_it": "Got it!"
+      "intro": "What's new in {{content_version}}"
     },
     "widget_configuration": {
       "title": "Portfolio Widget",

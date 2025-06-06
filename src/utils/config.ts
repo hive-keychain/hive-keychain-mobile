@@ -35,6 +35,7 @@ export const BrowserConfig = {
   HOMEPAGE_URL: 'about:blank',
   FOOTER_HEIGHT: 40,
   HEADER_HEIGHT: 45,
+  EDGE_THRESHOLD: 30,
 };
 
 export const KeychainConfig = {

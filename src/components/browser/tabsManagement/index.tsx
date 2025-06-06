@@ -1,6 +1,6 @@
 import {Tab} from 'actions/interfaces';
 import {Caption} from 'components/ui/Caption';
-import React, {MutableRefObject} from 'react';
+import React from 'react';
 import {
   Dimensions,
   ScrollView,
@@ -15,7 +15,6 @@ import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {BORDERWHITISH, DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
-import TabsManagementBottomBar from './BottomBar';
 
 //TODO: put in config
 const margin = Dimensions.get('window').width * 0.02;
@@ -26,13 +25,6 @@ type Props = {
   tabs: Tab[];
   onSelectTab: (id: number) => void;
   onCloseTab: (id: number) => void;
-  onCloseAllTabs: () => void;
-  onQuitManagement: () => void;
-  onAddTab: (
-    isManagingTab: boolean,
-    tab: Tab,
-    webview: MutableRefObject<View>,
-  ) => void;
   activeTab: number;
   show: boolean;
   theme: Theme;
@@ -41,9 +33,6 @@ export default ({
   tabs,
   onSelectTab,
   onCloseTab,
-  onCloseAllTabs,
-  onAddTab,
-  onQuitManagement,
   activeTab,
   show,
   theme,
@@ -97,15 +86,6 @@ export default ({
           ))}
         </View>
       </ScrollView>
-      <TabsManagementBottomBar
-        onCloseAllTabs={onCloseAllTabs}
-        onAddTab={() => {
-          onAddTab(true, null, null);
-        }}
-        onQuitManagement={onQuitManagement}
-        showSideButtons={!!activeTab}
-        theme={theme}
-      />
     </View>
   );
 };
