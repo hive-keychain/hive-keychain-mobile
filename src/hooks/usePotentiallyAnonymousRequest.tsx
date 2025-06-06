@@ -14,16 +14,29 @@ export default (request: KeychainRequest, accounts: Account[]) => {
     method.toLowerCase() as KeyTypes,
   );
 
-  const [account, setAccount] = useState(() => {
+  const findAccount = () => {
     if (!username) {
-      // If username is undefined, find the next account that's not the active account
-      const nextAccount = accounts.find(
-        (acc) => acc.name !== activeAccountName,
+      // check if active account has an active key
+      const activeAccount = accounts.find(
+        (acc) => acc.name === activeAccountName,
       );
-      return nextAccount?.name || activeAccountName;
+      if (activeAccount?.keys.active) {
+        return activeAccountName;
+      }
+      // if active account doesn't have active key, look for other accounts with active keys
+      return accounts.find((acc) => acc.keys.active)?.name || activeAccountName;
+    } else {
+      // check if the requested username account has an active key
+      const requestedAccount = accounts.find((acc) => acc.name === username);
+      if (requestedAccount?.keys.active) {
+        return username;
+      }
+      // if requested account doesn't have active key, look for any account with active keys
+      return accounts.find((acc) => acc.keys.active)?.name || username;
     }
-    return username;
-  });
+  };
+
+  const [account, setAccount] = useState(() => findAccount());
 
   const getAccountKey = () => {
     return accounts.find((a) => a.name === account)?.keys[
@@ -40,7 +53,7 @@ export default (request: KeychainRequest, accounts: Account[]) => {
       `${method.toLowerCase()}Pubkey` as PubKeyTypes
     ];
   };
-  const getUsername = () => username || account;
+  const getUsername = () => account;
   return {
     getUsername,
     getAccountKey,
