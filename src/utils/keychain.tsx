@@ -32,6 +32,15 @@ export const validateAuthority = (
         error: translate('request.error.no_account', {account: username}),
       };
     }
+    if (!account.keys[wifType]) {
+      return {
+        valid: false,
+        error: translate('request.error.no_required_auth', {
+          account: username,
+          required_auth: wifType,
+        }),
+      };
+    }
   } else if (KeychainConfig.ANONYMOUS_REQUESTS.includes(type)) {
     if (!accounts.filter((e) => !!e.keys[wifType]).length) {
       return {
