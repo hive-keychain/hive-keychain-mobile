@@ -1,4 +1,4 @@
-import {KeyTypes} from 'actions/interfaces';
+import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
@@ -9,6 +9,7 @@ import {transfer} from 'utils/hive';
 import {getAccountKeys} from 'utils/hiveUtils';
 import {RequestId, RequestTransfer} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
+import RequestBalance from './components/RequestBalance';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
@@ -53,16 +54,13 @@ export default ({
       performOperation={async (options: TransactionOptions) => {
         let finalMemo = memo;
         if (memo.length && memo[0] === '#') {
-          if (!getAccountMemoKey()) {
+          const memoKey = getAccountMemoKey();
+          if (!memoKey) {
             SimpleToast.show(translate('request.error.transfer.encrypt'));
             return;
           }
           const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
-          finalMemo = await encodeMemo(
-            getAccountMemoKey(),
-            receiverMemoKey,
-            memo,
-          );
+          finalMemo = await encodeMemo(memoKey, receiverMemoKey, memo);
         }
         return await transfer(
           getAccountKey(),
@@ -80,6 +78,12 @@ export default ({
       <RequestItem
         title={translate('request.item.amount')}
         content={`${amount} ${currency}`}
+      />
+      <RequestBalance
+        username={getUsername()}
+        startToken={currency}
+        amount={parseFloat(amount)}
+        accounts={accounts as ActiveAccount[]}
       />
       <RequestItem
         title={translate('request.item.memo')}
