@@ -34,6 +34,7 @@ export default ({
     getAccountKey,
     RequestUsername,
   } = usePotentiallyAnonymousRequest(request, accounts);
+  console.log('request custom', request);
 
   return (
     <RequestOperation

@@ -1,6 +1,11 @@
 import {Operation, Transaction} from '@hiveio/dhive';
 import {KeyTypes} from 'actions/interfaces';
-import { RequestVscDeposit, RequestVscStaking, RequestVscTransfer, RequestVscWithdrawal } from 'hive-keychain-commons';
+import {
+  RequestVscDeposit,
+  RequestVscStaking,
+  RequestVscTransfer,
+  RequestVscWithdrawal,
+} from 'hive-keychain-commons';
 
 export enum KeychainRequestTypes {
   decode = 'decode',
@@ -34,6 +39,7 @@ export enum KeychainRequestTypes {
   vscDeposit = 'vscDeposit',
   vscWithdrawal = 'vscWithdrawal',
   vscStaking = 'vscStaking',
+  encodeWithKeys = 'encodeWithKeys',
 }
 
 export enum KeychainKeyTypes {

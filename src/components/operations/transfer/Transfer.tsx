@@ -99,6 +99,7 @@ const Transfer = ({
   const [isVsc, setIsVsc] = useState(currency.toUpperCase().includes('VSC'));
   useEffect(() => {
     loadAutocompleteTransferUsernames();
+    console.log('currency', currency);
   }, []);
 
   const loadAutocompleteTransferUsernames = async () => {
@@ -152,7 +153,7 @@ const Transfer = ({
       type: KeychainRequestTypes.vscTransfer,
       username: user.name,
       to: sanitizeUsername(to),
-      amount: sanitizeAmount(amount),
+      amount: sanitizeAmount(parseFloat(amount).toFixed(3)),
       memo: memo,
       currency: actualCurrency,
       domain: '',
@@ -162,11 +163,7 @@ const Transfer = ({
       data,
       VSCConfig.BASE_JSON.net_id,
     );
-
     await broadcastJson(user.keys.active, user.name, id, true, json, options);
-    console.log({data});
-    console.log('transferVsc');
-    console.log({json}, {id});
   };
   const transferToken = async (options: TransactionOptions) => {
     setLoading(true);
@@ -243,14 +240,27 @@ const Transfer = ({
       );
       return;
     }
-    navigate('ReceiveTransfer', [
-      'transfer',
-      {
-        to: user.name,
-        amount: `${(+amountReceive).toFixed(3)} ${actualCurrency}`,
+    console.log('onReceiveConfirmation');
+    if (isVsc) {
+      console.log({isVsc});
+      const data = {
+        to: sanitizeUsername(user.name),
+        amount: `${(+amountReceive).toFixed(3)}`,
+        currency: actualCurrency,
         memo: memoReceive,
-      },
-    ]);
+      } as RequestVscTransfer;
+      console.log('data', data);
+      navigate('ReceiveTransfer', [KeychainRequestTypes.vscTransfer, data]);
+    } else {
+      navigate('ReceiveTransfer', [
+        'transfer',
+        {
+          to: user.name,
+          amount: `${(+amountReceive).toFixed(3)} ${actualCurrency}`,
+          memo: memoReceive,
+        },
+      ]);
+    }
   };
 
   const onSendConfirmation = () => {
@@ -465,7 +475,7 @@ const Transfer = ({
         <OperationInput
           labelInput={translate('common.currency')}
           placeholder={actualCurrency}
-          value={currency}
+          value={actualCurrency}
           editable={false}
           additionalOuterContainerStyle={{
             width: '40%',

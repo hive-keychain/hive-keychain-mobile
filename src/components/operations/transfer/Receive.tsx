@@ -6,7 +6,7 @@ import {
   ReceiveTransferProps,
   ReceiveTransferRoute,
 } from 'navigators/Root.types';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import QRCode from 'react-qr-code';
 import {connect, ConnectedProps} from 'react-redux';
@@ -28,8 +28,13 @@ const Receive = ({
   const params = route.params;
   const {width} = useWindowDimensions();
   const styles = getStyles(theme);
+  const [encodedOp, setEncodedOp] = useState(encodeOp(params));
+  useEffect(() => {
+    console.log('encodedOp', encodedOp);
+  }, [encodedOp]);
   useEffect(() => {
     const date = new Date();
+    console.log('params', params);
     const interval = setInterval(async () => {
       const currency = (params[1].amount as string).split(' ')[1];
       let res;
@@ -115,7 +120,7 @@ const Receive = ({
           size={width * 0.8}
           fgColor={getColors(theme).primaryText}
           bgColor={'transparent'}
-          value={encodeOp(params)}
+          value={encodedOp}
         />
       </View>
     </Background>

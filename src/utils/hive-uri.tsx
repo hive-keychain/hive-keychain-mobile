@@ -9,10 +9,19 @@ import {
 } from '@hiveio/dhive';
 import {saveRequestedOperation} from 'actions/hive-uri';
 import RequestError from 'components/browser/requestOperations/components/RequestError';
+import {
+  KeychainKeyTypes,
+  RequestCustomJSON,
+  RequestVscTransfer,
+  VscUtils,
+} from 'hive-keychain-commons';
 import React from 'react';
+import {VscOperation} from 'src/interfaces/vsc.interface';
 import {RootState, store} from 'store';
+import {VSCConfig} from './config';
 import {validateAuthority} from './keychain';
 import {
+  KeychainRequest,
   KeychainRequestTypes,
   RequestDelegation,
   RequestProxy,
@@ -27,7 +36,7 @@ import {goBack, navigate} from './navigation';
 
 const DOMAIN = 'scanned';
 
-export const processQRCodeOp = async (op: Operation) => {
+export const processQRCodeOp = async (op: Operation | VscOperation) => {
   const type = op[0];
   const data = op[1];
   let request;
@@ -146,13 +155,31 @@ export const processQRCodeOp = async (op: Operation) => {
         extensions,
       } as RequestUpdateProposalVote;
     }
+    case KeychainRequestTypes.vscTransfer: {
+      data.username = 'hive:hrdcr-hive';
+      const {json, id} = VscUtils.getTransferJson(
+        data as RequestVscTransfer,
+        VSCConfig.BASE_JSON.net_id,
+      );
+      request = {
+        domain: '',
+        to: data.to,
+        id,
+        method: KeychainKeyTypes.active,
+        json: JSON.stringify(json),
+        display_msg: 'VSC Transfer',
+        type: KeychainRequestTypes.custom,
+      } as RequestCustomJSON;
+
+      break;
+    }
     default:
       break;
   }
   const accounts = await store.getState().accounts;
 
   if (accounts && accounts.length) {
-    const validity = validateAuthority(accounts, request);
+    const validity = validateAuthority(accounts, request as KeychainRequest);
 
     if (validity.valid) {
       const payload = {
