@@ -61,7 +61,8 @@ export type RootStackParam = {
       | 'convert'
       | 'delegateHP'
       | 'delegateRC'
-      | 'power_down';
+      | 'power_down'
+      | 'vsc_deposit';
     props:
       | TransferOperationProps
       | StakeTokenOperationProps

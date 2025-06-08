@@ -28,6 +28,7 @@ import Transfer, {
 import UnstakeToken, {
   UnstakeTokenOperationProps,
 } from 'components/operations/UnstakeToken';
+import VscDeposit, {VscDepositProps} from 'components/operations/VscDeposit';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
@@ -88,6 +89,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return translate('wallet.operations.rc_delegation.title');
       case 'power_down':
         return translate('wallet.operations.powerdown.title');
+      case 'vsc_deposit':
+        return translate('common.deposit');
     }
   };
 
@@ -114,6 +117,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return <RCDelegation {...(props as RCDelegationOperationProps)} />;
       case 'power_down':
         return <PowerDown {...(props as PowerDownOperationProps)} />;
+      case 'vsc_deposit':
+        return <VscDeposit {...(props as VscDepositProps)} />;
     }
   };
 

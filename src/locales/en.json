@@ -83,6 +83,7 @@
     "stake": "Stake",
     "unstake": "Unstake",
     "delegate": "Delegate",
+    "deposit": "Deposit",
     "deleg": "Deleg.",
     "missing_key": "Please add your {{key}} key to perform this operation!",
     "need_positive_amount": "The amount needs to be greater than 0",
