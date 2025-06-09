@@ -28,8 +28,6 @@ export const getVscHiveButtonList = (user: ActiveAccount, theme: Theme) => {
           operation: 'transfer',
           props: {
             currency: 'VSCHIVE',
-            engine: false,
-            tokenLogo: <></>,
           } as TransferOperationProps,
         });
       }}
@@ -52,8 +50,6 @@ export const getVscHiveButtonList = (user: ActiveAccount, theme: Theme) => {
           operation: 'vsc_deposit',
           props: {
             currency: 'HIVE', // the currency must be the L1 currency
-            tokenBalance: '0',
-            tokenLogo: <></>,
           } as VscDepositProps,
         });
       }}
@@ -77,8 +73,6 @@ export const getVscHiveButtonList = (user: ActiveAccount, theme: Theme) => {
           operation: 'vsc_withdraw',
           props: {
             currency: 'VSCHIVE',
-            tokenBalance: '0',
-            tokenLogo: <></>,
           } as VscDepositProps,
         });
       }}

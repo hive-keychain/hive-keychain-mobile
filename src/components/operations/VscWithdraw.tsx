@@ -42,8 +42,6 @@ import OperationThemed from './OperationThemed';
 
 export type VscWithdrawProps = {
   currency: string;
-  tokenBalance: string;
-  tokenLogo: JSX.Element;
 };
 
 type Props = PropsFromRedux & VscWithdrawProps;
@@ -51,8 +49,6 @@ type Props = PropsFromRedux & VscWithdrawProps;
 const VscWithdraw = ({
   currency,
   user,
-  tokenBalance,
-  tokenLogo,
   phishingAccounts,
   showModal,
   localAccounts,
@@ -255,8 +251,6 @@ const VscWithdraw = ({
             <Balance
               currency={currency}
               account={user.account}
-              tokenBalance={tokenBalance}
-              tokenLogo={tokenLogo}
               isHiveEngine={false}
               setAvailableBalance={(available: string) =>
                 setAvailableBalance(available)

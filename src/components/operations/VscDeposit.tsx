@@ -35,8 +35,6 @@ import OperationThemed from './OperationThemed';
 
 export type VscDepositProps = {
   currency: string;
-  tokenBalance: string;
-  tokenLogo: JSX.Element;
 };
 
 type Props = PropsFromRedux & VscDepositProps;
@@ -44,8 +42,6 @@ type Props = PropsFromRedux & VscDepositProps;
 const VscDeposit = ({
   currency,
   user,
-  tokenBalance,
-  tokenLogo,
   phishingAccounts,
   showModal,
   localAccounts,
@@ -242,8 +238,6 @@ const VscDeposit = ({
             <Balance
               currency={currency}
               account={user.account}
-              tokenBalance={tokenBalance}
-              tokenLogo={tokenLogo}
               isHiveEngine={false}
               setAvailableBalance={(available: string) =>
                 setAvailableBalance(available)

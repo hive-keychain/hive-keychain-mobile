@@ -31,8 +31,6 @@ export const getVscHbdOperationButtonList = (
           operation: 'transfer',
           props: {
             currency: 'VSCHBD',
-            engine: false,
-            tokenLogo: <></>,
           } as TransferOperationProps,
         });
       }}
@@ -55,8 +53,6 @@ export const getVscHbdOperationButtonList = (
           operation: 'vsc_deposit',
           props: {
             currency: 'HBD', // the currency must be the L1 currency
-            tokenBalance: '0',
-            tokenLogo: <></>,
           } as VscDepositProps,
         });
       }}
@@ -80,8 +76,6 @@ export const getVscHbdOperationButtonList = (
           operation: 'vsc_withdraw',
           props: {
             currency: 'VSCHBD',
-            tokenBalance: '0',
-            tokenLogo: <></>,
           } as VscDepositProps,
         });
       }}
@@ -95,6 +89,29 @@ export const getVscHbdOperationButtonList = (
         />
       }
       primaryLabel={translate('common.withdraw')}
+    />,
+    <SquareButton
+      additionalButtonContainerStyle={styles.buttonContainer}
+      additionalSquareButtonText={styles.buttonText}
+      key={'square-button-staking-hbd-vsc'}
+      onPress={() => {
+        navigate('Operation', {
+          operation: 'vsc_staking',
+          props: {
+            currency: 'VSCHBD',
+          } as VscDepositProps,
+        });
+      }}
+      icon={
+        <CustomIconButton
+          theme={theme}
+          lightThemeIcon={<CurrencySavingLight {...styles.biggerIcon} />}
+          darkThemeIcon={<CurrencySavingLight {...styles.biggerIcon} />}
+          onPress={() => {}}
+          additionalContainerStyle={styles.buttonMarginRight}
+        />
+      }
+      primaryLabel={translate('common.stake')}
     />,
   ];
 };
