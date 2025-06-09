@@ -213,7 +213,8 @@ export default ({
     switch (messageName) {
       case ProviderEvent.SCROLL:
         if (canRefresh !== isAtTop) setCanRefresh(isAtTop);
-        store.dispatch(showFloatingBar(showNavigationBar));
+        showNavigationBar !== undefined &&
+          store.dispatch(showFloatingBar(showNavigationBar));
         break;
       case ProviderEvent.HANDSHAKE:
         current.injectJavaScript(
