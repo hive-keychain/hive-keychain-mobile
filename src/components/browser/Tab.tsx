@@ -251,7 +251,7 @@ export default memo(
           break;
       }
     };
-
+    // console.log('rerender url', url);
     const showOperationRequestModal = async (request_id: number, data: any) => {
       const {username, domain, type} = data;
       const keyType = getRequiredWifType(data);

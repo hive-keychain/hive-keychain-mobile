@@ -1,5 +1,6 @@
 import {Tab} from 'actions/interfaces';
 import {Caption} from 'components/ui/Caption';
+import FastImageComponent from 'components/ui/FastImage';
 import React from 'react';
 import {
   Dimensions,
@@ -60,8 +61,9 @@ export default ({
               }}>
               <View style={styles.titleContainer}>
                 <View style={styles.nameContainer}>
-                  <Image style={[styles.icon]} source={{uri: icon}} />
+                  <FastImageComponent style={[styles.icon]} source={icon} />
                   <Text
+                    numberOfLines={1}
                     style={[
                       styles.textBase,
                       styles.name,
@@ -128,6 +130,7 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
     },
     activeTab: {
       borderColor: '#A3112A',
+      borderWidth: 2,
     },
     nameContainer: {
       flexDirection: 'row',
@@ -140,10 +143,11 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
     },
     icon: {width: 16, height: 16},
     name: {
-      fontSize: 16,
+      fontSize: 14,
       textAlignVertical: 'bottom',
+      overflow: 'hidden',
       flex: 1,
-      marginHorizontal: 10,
+      marginLeft: 10,
     },
     closeIcon: {fontSize: 20},
     close: {color: 'white', fontWeight: 'bold', fontSize: 18},

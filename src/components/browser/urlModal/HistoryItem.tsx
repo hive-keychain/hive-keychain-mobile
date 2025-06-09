@@ -1,8 +1,8 @@
 import {Page} from 'actions/interfaces';
 import Icon from 'components/hive/Icon';
+import FastImageComponent from 'components/ui/FastImage';
 import React, {memo} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import Image from 'react-native-fast-image';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getCardStyle} from 'src/styles/card';
@@ -43,7 +43,7 @@ export default memo(
             onPress={() => onSubmit(url)}
             key={`${url}-${indexItem}`}>
             <View style={styles.itemWrapper}>
-              <Image style={styles.img} source={{uri: icon}} />
+              <FastImageComponent style={styles.img} source={icon} />
               <View style={styles.text}>
                 <Text style={[styles.textBase, styles.name]} numberOfLines={1}>
                   {name}
