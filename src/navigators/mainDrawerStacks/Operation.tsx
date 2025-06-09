@@ -29,6 +29,7 @@ import UnstakeToken, {
   UnstakeTokenOperationProps,
 } from 'components/operations/UnstakeToken';
 import VscDeposit, {VscDepositProps} from 'components/operations/VscDeposit';
+import VscWithdraw, {VscWithdrawProps} from 'components/operations/VscWithdraw';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
@@ -119,6 +120,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return <PowerDown {...(props as PowerDownOperationProps)} />;
       case 'vsc_deposit':
         return <VscDeposit {...(props as VscDepositProps)} />;
+      case 'vsc_withdraw':
+        return <VscWithdraw {...(props as VscWithdrawProps)} />;
     }
   };
 

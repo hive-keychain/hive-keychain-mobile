@@ -145,7 +145,8 @@
     "experimental": "Experimental",
     "generate_qr": "Generate QR Code",
     "lets_go": "Let's go!",
-    "discord_server": "Discord Server"
+    "discord_server": "Discord Server",
+    "withdraw": "Withdraw"
   },
   "wallet": {
     "proposal": {
@@ -256,6 +257,20 @@
         "title": "Deposit funds",
         "confirm": {
           "info": "Please confirm this deposit.\nThis cannot be undone",
+          "from": "From",
+          "to": "To",
+          "amount": "Amount",
+          "memo": "Memo"
+        },
+        "memo": "MEMO (optional)",
+        "warning": {
+          "missing_info": "Please fill the username and amount to proceed"
+        }
+      },
+      "withdraw": {
+        "title": "Withdraw funds",
+        "confirm": {
+          "info": "Please confirm this withdrawal.\nThis cannot be undone",
           "from": "From",
           "to": "To",
           "amount": "Amount",
