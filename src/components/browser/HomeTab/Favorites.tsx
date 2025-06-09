@@ -31,11 +31,13 @@ export default ({favorites, updateTabUrl, updateFavorites, theme}: Props) => {
           data={[...favorites].reverse()}
           scrollToOverflowEnabled
           keyExtractor={(item) => item.url}
+          maxToRenderPerBatch={5}
           onDragEnd={sortData}
-          renderItem={({item, drag, isActive}) => (
+          renderItem={({item, drag, getIndex}) => (
             <HistoryItem
               data={item}
               key={item.url}
+              indexItem={getIndex()}
               onDismiss={() =>
                 updateFavorites(favorites.filter((e) => e.url !== item.url))
               }

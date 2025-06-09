@@ -1,6 +1,13 @@
 import {Page} from 'actions/interfaces';
 import React from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
@@ -39,11 +46,14 @@ export default ({
           </TouchableOpacity>
           <FlatList
             data={[...history].reverse()}
-            keyExtractor={(item) => item.url}
-            renderItem={({item}) => (
+            keyExtractor={(item, index) => `${item.url}-${index}`}
+            windowSize={15}
+            removeClippedSubviews={Platform.OS === 'android'}
+            renderItem={({item, index}) => (
               <HistoryItem
                 data={item}
                 key={item.url}
+                indexItem={index}
                 onDismiss={() => {
                   removeFromHistory(item.url);
                 }}

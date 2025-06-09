@@ -230,6 +230,8 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
       paddingHorizontal: 10,
+      paddingBottom: 50,
+      flex: 1,
     },
   });
 

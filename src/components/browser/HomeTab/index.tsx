@@ -1,37 +1,35 @@
-import {Account, Page} from 'actions/interfaces';
+import {clearHistory, removeFromHistory, updateFavorites} from 'actions/index';
+import {Account} from 'actions/interfaces';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import React, {MutableRefObject} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
+import {RootState} from 'store';
 import {translate} from 'utils/localize';
 import Explore from './Explore';
 import Favorites from './Favorites';
 import History from './History';
 
 type Props = {
-  history: Page[];
-  favorites: Page[];
   updateTabUrl: (link: string) => void;
-  clearHistory: () => void;
-  updateFavorites: (favorites: Page[]) => void;
   homeRef: MutableRefObject<View>;
   accounts: Account[];
   theme: Theme;
-  removeFromHistory: (url: string) => void;
 };
-const NewTab = ({
-  history,
-  favorites,
+const HomeTab = ({
   updateTabUrl,
-  clearHistory,
-  updateFavorites,
   homeRef,
   accounts,
   theme,
+  history,
+  favorites,
+  clearHistory,
   removeFromHistory,
-}: Props) => {
+  updateFavorites,
+}: Props & PropsFromRedux) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(insets);
   return (
@@ -92,4 +90,15 @@ const getStyles = (insets: EdgeInsets) =>
     },
   });
 
-export default NewTab;
+const mapStateToProps = (state: RootState) => ({
+  favorites: state.browser.favorites,
+  history: state.browser.history,
+});
+const connector = connect(mapStateToProps, {
+  clearHistory,
+  removeFromHistory,
+  updateFavorites,
+});
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(HomeTab);

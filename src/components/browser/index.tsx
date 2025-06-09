@@ -35,15 +35,13 @@ const Browser = ({
   clearHistory,
   addToFavorites,
   removeFromFavorites,
-  updateFavorites,
   route,
   navigation,
   setBrowserFocus,
-  removeFromHistory,
   showManagementScreen,
   theme,
 }: Partial<BrowserPropsFromRedux> & BrowserNavigationProps & Props) => {
-  const {showManagement, activeTab, tabs, history, favorites} = browser;
+  const {showManagement, activeTab, tabs, history} = browser;
   const currentActiveTabData = tabs.find((t) => t.id === activeTab);
   const url = currentActiveTabData
     ? currentActiveTabData.url
@@ -173,17 +171,10 @@ const Browser = ({
             updateTab={updateTab}
             navigation={navigation}
             addToHistory={addToHistory}
-            history={history}
-            clearHistory={clearHistory}
             isManagingTab={showManagement}
             preferences={preferences}
-            favorites={favorites}
-            updateFavorites={updateFavorites}
             addTab={onAddTab}
-            tabsNumber={browser.tabs.length}
             orientation={orientation}
-            isUrlModalOpen={isVisible}
-            removeFromHistory={removeFromHistory}
             theme={theme}
           />
         ))}

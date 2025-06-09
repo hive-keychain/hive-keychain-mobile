@@ -1,6 +1,6 @@
 import {Page} from 'actions/interfaces';
 import Icon from 'components/hive/Icon';
-import React from 'react';
+import React, {memo} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Image from 'react-native-fast-image';
 import {Theme} from 'src/context/theme.context';
@@ -19,58 +19,60 @@ type Props = {
   drag?: any;
   enabled?: boolean;
 };
-export default ({
-  data,
-  onSubmit,
-  onDismiss,
-  theme,
-  indexItem,
-  drag,
-  enabled = true,
-}: Props) => {
-  const {name, url, icon} = data;
-  const styles = getStyles(theme);
-
-  return (
-    <View style={styles.wrapper}>
-      <SwipeableItemComponent
-        onDismiss={onDismiss}
-        enabled={enabled}
-        containerStyle={styles.card}>
-        <TouchableOpacity
-          activeOpacity={1}
-          style={[getCardStyle(theme).defaultCardItem, {marginBottom: 0}]}
-          onPress={() => onSubmit(url)}
-          key={`${url}-${indexItem}`}>
-          <View style={styles.itemWrapper}>
-            <Image style={styles.img} source={{uri: icon}} />
-            <View style={styles.text}>
-              <Text style={[styles.textBase, styles.name]} numberOfLines={1}>
-                {name}
-              </Text>
-              <Text
-                style={[styles.textBase, styles.textLink]}
-                numberOfLines={1}>
-                {url}
-              </Text>
+export default memo(
+  ({
+    data,
+    onSubmit,
+    onDismiss,
+    theme,
+    indexItem,
+    drag,
+    enabled = true,
+  }: Props) => {
+    const {name, url, icon} = data;
+    const styles = getStyles(theme);
+    return (
+      <View style={styles.wrapper}>
+        <SwipeableItemComponent
+          onDismiss={onDismiss}
+          enabled={enabled}
+          containerStyle={styles.card}>
+          <TouchableOpacity
+            activeOpacity={1}
+            style={[getCardStyle(theme).defaultCardItem, {marginBottom: 0}]}
+            onPress={() => onSubmit(url)}
+            key={`${url}-${indexItem}`}>
+            <View style={styles.itemWrapper}>
+              <Image style={styles.img} source={{uri: icon}} />
+              <View style={styles.text}>
+                <Text style={[styles.textBase, styles.name]} numberOfLines={1}>
+                  {name}
+                </Text>
+                <Text
+                  style={[styles.textBase, styles.textLink]}
+                  numberOfLines={1}>
+                  {url}
+                </Text>
+              </View>
+              {drag && (
+                <TouchableOpacity onPressIn={drag}>
+                  <Icon
+                    name={Icons.DRAG}
+                    theme={theme}
+                    width={20}
+                    height={20}
+                    color={getColors(theme).icon}
+                  />
+                </TouchableOpacity>
+              )}
             </View>
-            {drag && (
-              <TouchableOpacity onPressIn={drag}>
-                <Icon
-                  name={Icons.DRAG}
-                  theme={theme}
-                  width={20}
-                  height={20}
-                  color={getColors(theme).icon}
-                />
-              </TouchableOpacity>
-            )}
-          </View>
-        </TouchableOpacity>
-      </SwipeableItemComponent>
-    </View>
-  );
-};
+          </TouchableOpacity>
+        </SwipeableItemComponent>
+      </View>
+    );
+  },
+  (prevProps, nextProps) => prevProps.indexItem === nextProps.indexItem,
+);
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
