@@ -137,8 +137,8 @@ android {
     defaultConfig {
         applicationId "com.mobilekeychain"
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 160
-        versionName "2.7.1"
+        versionCode 161
+        versionName "2.7.2"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
     }
