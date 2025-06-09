@@ -51,7 +51,7 @@ export const getVscHiveButtonList = (user: ActiveAccount, theme: Theme) => {
         navigate('Operation', {
           operation: 'vsc_deposit',
           props: {
-            currency: 'VSCHIVE',
+            currency: 'HIVE', // the currency must be the L1 currency
             tokenBalance: '0',
             tokenLogo: <></>,
           } as VscDepositProps,

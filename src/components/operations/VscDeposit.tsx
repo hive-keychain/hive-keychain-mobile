@@ -3,13 +3,8 @@ import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
-import {
-  ExchangesUtils,
-  KeychainRequestTypes,
-  RequestVscTransfer,
-  VscUtils,
-} from 'hive-keychain-commons';
-import React, {useEffect, useState} from 'react';
+import {ExchangesUtils} from 'hive-keychain-commons';
+import React, {useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {default as Toast} from 'react-native-simple-toast';
@@ -17,7 +12,6 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
-import {AutoCompleteValues} from 'src/interfaces/autocomplete.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonHeight} from 'src/styles/button';
@@ -26,16 +20,13 @@ import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
-import {VSCConfig} from 'utils/config';
-import {FavoriteUserUtils} from 'utils/favorite-user.utils';
 import {
   beautifyTransferError,
   capitalize,
   getCleanAmountValue,
   withCommas,
 } from 'utils/format';
-import {broadcastJson} from 'utils/hive';
-import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
+import {transfer} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {TransferUtils} from 'utils/transfer.utils';
@@ -60,54 +51,30 @@ const VscDeposit = ({
   showModal,
   localAccounts,
 }: Props) => {
-  const [to, setTo] = useState('');
+  const [to, setTo] = useState(user.name);
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
-  const [loading, setLoading] = useState(false);
   const [isMemoEncrypted, setIsMemoEncrypted] = useState<boolean>(false);
   const [actualCurrency, setActualCurrency] = useState<string>(
     currency.toUpperCase().includes('VSC')
       ? currency.replace('VSC', '')
       : currency,
   );
-  const [autocompleteFavoriteUsers, setAutocompleteFavoriteUsers] = useState<
-    AutoCompleteValues
-  >({
-    categories: [],
-  });
+
   const [availableBalance, setAvailableBalance] = useState('');
   const {theme} = useThemeContext();
-  const [isVsc, setIsVsc] = useState(currency.toUpperCase().includes('VSC'));
-
-  useEffect(() => {
-    loadAutocompleteTransferUsernames();
-  }, []);
-
-  const loadAutocompleteTransferUsernames = async () => {
-    const autoCompleteListByCategories: AutoCompleteValues = await FavoriteUserUtils.getAutocompleteListByCategories(
-      user.name!,
-      localAccounts,
-      {addExchanges: true, token: actualCurrency.toUpperCase()},
-    );
-    setAutocompleteFavoriteUsers(autoCompleteListByCategories);
-  };
 
   const transferVsc = async (options: TransactionOptions, memo?: string) => {
-    const data: RequestVscTransfer = {
-      type: KeychainRequestTypes.vscTransfer,
-      username: user.name,
-      to: sanitizeUsername(to),
-      amount: sanitizeAmount(parseFloat(amount).toFixed(3)),
-      memo: memo,
-      currency: actualCurrency,
-      domain: '',
-      netId: VSCConfig.BASE_JSON.net_id,
-    };
-    const {json, id} = VscUtils.getTransferJson(
-      data,
-      VSCConfig.BASE_JSON.net_id,
+    await transfer(
+      user.keys.active,
+      {
+        from: user.name,
+        to: 'vsc.gateway',
+        amount: `${amount} ${actualCurrency}`,
+        memo: to ? `to=${to}` : '',
+      },
+      options,
     );
-    await broadcastJson(user.keys.active, user.name, id, true, json, options);
   };
 
   const onSend = async (options: TransactionOptions) => {
@@ -137,7 +104,7 @@ const VscDeposit = ({
 
   const onSendConfirmation = () => {
     if (!amount.length || !to.length) {
-      Toast.show(translate('wallet.operations.transfer.warning.missing_info'));
+      Toast.show(translate('wallet.operations.deposit.warning.missing_info'));
     } else if (+amount > +getCleanAmountValue(availableBalance)) {
       Toast.show(
         translate('common.overdraw_balance_error', {
@@ -146,7 +113,7 @@ const VscDeposit = ({
       );
     } else {
       const confirmationData: ConfirmationPageProps = {
-        title: 'wallet.operations.transfer.confirm.info',
+        title: 'wallet.operations.deposit.confirm.info',
         onSend,
         skipWarningTranslation: true,
         warningText: TransferUtils.getTransferWarningLabel(
@@ -159,17 +126,13 @@ const VscDeposit = ({
         ),
         data: [
           {
-            title: 'wallet.operations.transfer.confirm.from',
-            value: `@${user.account.name}`,
-          },
-          {
             value: `@${to} ${
               ExchangesUtils.isExchange(to) ? '(exchange)' : ''
             }`,
-            title: 'wallet.operations.transfer.confirm.to',
+            title: 'wallet.operations.deposit.confirm.to',
           },
           {
-            title: 'wallet.operations.transfer.confirm.amount',
+            title: 'wallet.operations.deposit.confirm.amount',
             value: `${withCommas(amount)} ${actualCurrency}`,
           },
         ],
@@ -177,7 +140,7 @@ const VscDeposit = ({
       };
       if (memo.length)
         confirmationData.data.push({
-          title: 'wallet.operations.transfer.confirm.memo',
+          title: 'wallet.operations.deposit.confirm.memo',
           value: `${
             memo.trim().length > 25 ? memo.substring(0, 22) + '...' : memo
           } ${isMemoEncrypted ? '(encrypted)' : ''}`,
@@ -192,7 +155,6 @@ const VscDeposit = ({
       <OperationInput
         testID="username-input-testID"
         nativeID="username-input"
-        autoCompleteValues={autocompleteFavoriteUsers}
         labelInput={translate('common.to')}
         placeholder={translate('common.username')}
         leftIcon={<Icon name={Icons.AT} theme={theme} />}
@@ -248,7 +210,7 @@ const VscDeposit = ({
       <View style={{zIndex: -1}}>
         <OperationInput
           labelInput={capitalize(translate('common.memo'))}
-          placeholder={translate('wallet.operations.transfer.memo')}
+          placeholder={translate('wallet.operations.deposit.memo')}
           value={memo}
           trim={false}
           onChangeText={setMemo}

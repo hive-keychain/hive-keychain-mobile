@@ -234,6 +234,7 @@
           "recurrence": "Recurrence",
           "recurrenceData": "{{exec}} times, every {{recurrence}} hours"
         },
+
         "warning": {
           "phishing": "This account has been listed as a potential phishing account, check the spelling and make sure it is the account you want to transfer to.",
           "exchange_currency": "This exchange account does not accept {{currency}} deposits.",
@@ -250,6 +251,20 @@
         "fill_recurrent_transfer_in": "From @{{other}}: ({{remainingExecutions}} remaining)",
         "start_recurrent_transfer_out": "To @{{other} (every {{recurrence}} hours - {{executions}} times)",
         "info_recurrent_transfer_in": "@{{other}} started transfer of {{amount}} (every {{recurrence}} hours - {{executions}} times)"
+      },
+      "deposit": {
+        "title": "Deposit funds",
+        "confirm": {
+          "info": "Please confirm this deposit.\nThis cannot be undone",
+          "from": "From",
+          "to": "To",
+          "amount": "Amount",
+          "memo": "Memo"
+        },
+        "memo": "MEMO (optional)",
+        "warning": {
+          "missing_info": "Please fill the username and amount to proceed"
+        }
       },
       "powerup": {
         "title": "Power up",
