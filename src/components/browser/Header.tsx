@@ -4,7 +4,7 @@ import {
   Browser,
   BrowserPayload,
   Page,
-  TabFields,
+  Tab,
 } from 'actions/interfaces';
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import Icon from 'components/hive/Icon';
@@ -42,7 +42,7 @@ const HEART_EMPTY_PNG = require('assets/new_UI/heart-empty.png');
 
 type Props = {
   browser: Browser;
-  updateTab: (id: number, data: TabFields) => ActionPayload<BrowserPayload>;
+  updateTab: (id: number, data: Partial<Tab>) => ActionPayload<BrowserPayload>;
   startSearch: (b: boolean) => void;
   addToFavorites: (page: Page) => ActionPayload<BrowserPayload>;
   removeFromFavorites: (url: string) => ActionPayload<BrowserPayload>;
@@ -70,7 +70,11 @@ const BrowserHeader = ({
   const styles = getStyles(useWindowDimensions(), insets, landscape, theme);
 
   const goHome = () => {
-    updateTab(activeTab, {url: BrowserConfig.HOMEPAGE_URL});
+    updateTab(activeTab, {
+      url: BrowserConfig.HOMEPAGE_URL,
+      icon: BrowserConfig.HOMEPAGE_FAVICON,
+      name: translate('browser.home.title'),
+    });
   };
 
   if (

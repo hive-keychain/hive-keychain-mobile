@@ -36,6 +36,7 @@ export const BrowserConfig = {
   FOOTER_HEIGHT: 40,
   HEADER_HEIGHT: 45,
   EDGE_THRESHOLD: 30,
+  HOMEPAGE_FAVICON: 'https://hive-keychain.com/favicon.png',
 };
 
 export const KeychainConfig = {
