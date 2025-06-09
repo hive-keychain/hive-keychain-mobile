@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import Image from 'react-native-fast-image';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
@@ -37,7 +38,8 @@ export default ({
   show,
   theme,
 }: Props) => {
-  const styles = getStyles(theme);
+  const insets = useSafeAreaInsets();
+  const styles = getStyles(theme, insets);
 
   return (
     <View style={[styles.container, show ? null : styles.hide]}>
@@ -90,7 +92,7 @@ export default ({
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, insets: EdgeInsets) =>
   StyleSheet.create({
     tip: {
       fontSize: 14,
@@ -101,6 +103,7 @@ const getStyles = (theme: Theme) =>
     container: {
       flex: 1,
       backgroundColor: getColors(theme).primaryBackground,
+      paddingBottom: 70 + insets.bottom / 2,
     },
     subcontainer: {flex: 1, flexDirection: 'row', flexWrap: 'wrap'},
     hide: {display: 'none'},
