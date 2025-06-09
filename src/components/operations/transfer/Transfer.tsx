@@ -80,7 +80,6 @@ const Transfer = ({
   const [memoReceive, setMemoReceive] = useState('');
   const [recurrence, setRecurrence] = useState('');
   const [exec, setExec] = useState('');
-  const [loading, setLoading] = useState(false);
   const [isRecurrent, setRecurrent] = useState(false);
   const [isMemoEncrypted, setIsMemoEncrypted] = useState<boolean>(false);
   const [actualCurrency, setActualCurrency] = useState<string>(
@@ -112,7 +111,6 @@ const Transfer = ({
   };
 
   const sendTransfer = async (options: TransactionOptions) => {
-    setLoading(true);
     let finalMemo = memo;
     if (isMemoEncrypted) {
       const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
@@ -166,7 +164,6 @@ const Transfer = ({
     await broadcastJson(user.keys.active, user.name, id, true, json, options);
   };
   const transferToken = async (options: TransactionOptions) => {
-    setLoading(true);
     let finalMemo = memo;
     if (isMemoEncrypted) {
       const receiverMemoKey = (await getAccountKeys(to.toLowerCase())).memo;
