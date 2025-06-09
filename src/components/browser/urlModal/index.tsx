@@ -50,14 +50,6 @@ const UrlModal = ({
   const urlInput: MutableRefObject<TextInput> = useRef();
   const insets = useSafeAreaInsets();
   const styles = getStyles(insets, theme);
-  if (isVisible && urlInput) {
-    setTimeout(() => {
-      const {current} = urlInput;
-      if (current && !current.isFocused()) {
-        current.focus();
-      }
-    }, SLIDE_TIME);
-  }
 
   const onSubmitUrlFromInput = (
     obj: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
@@ -91,6 +83,14 @@ const UrlModal = ({
       animationIn="slideInDown"
       animationOut="slideOutUp"
       backdropOpacity={0.8}
+      onModalShow={() => {
+        setTimeout(() => {
+          const {current} = urlInput;
+          if (current && !current.isFocused()) {
+            current.focus();
+          }
+        }, 500);
+      }}
       animationInTiming={SLIDE_TIME}
       avoidKeyboard
       animationOutTiming={SLIDE_TIME}
@@ -100,10 +100,10 @@ const UrlModal = ({
           <Icon
             name={Icons.BACK}
             theme={theme}
-            width={16}
-            height={16}
+            width={17}
+            height={17}
             onPress={() => toggle(false)}
-            additionalContainerStyle={styles.backButton}
+            additionalContainerStyle={styles.option}
             color={PRIMARY_RED_COLOR}
           />
           <TextInput
@@ -125,8 +125,8 @@ const UrlModal = ({
             <Icon
               name={Icons.SHARE}
               theme={theme}
-              width={16}
-              height={16}
+              width={17}
+              height={17}
               onPress={() => Share.share({message: url})}
               additionalContainerStyle={styles.option}
               color={PRIMARY_RED_COLOR}
@@ -136,8 +136,8 @@ const UrlModal = ({
             <Icon
               name={Icons.COPY}
               theme={theme}
-              width={16}
-              height={16}
+              width={17}
+              height={17}
               onPress={() => Clipboard.setString(url)}
               additionalContainerStyle={styles.option}
               color={PRIMARY_RED_COLOR}
@@ -183,21 +183,20 @@ const UrlModal = ({
 const getStyles = (insets: EdgeInsets, theme: Theme) =>
   StyleSheet.create({
     urlModal: {
-      height: '100%',
+      flexGrow: 1,
       width: '100%',
       margin: 0,
       paddingTop: insets.top,
       justifyContent: 'flex-start',
       backgroundColor: getColors(theme).secondaryCardBgColor,
     },
-    option: {alignSelf: 'center', marginLeft: 15},
-    backButton: {alignSelf: 'center', marginRight: 15},
-    eraseText: {fontSize: 16, color: PRIMARY_RED_COLOR},
+    option: {alignSelf: 'center', padding: 10},
+    eraseText: {fontSize: 18, color: PRIMARY_RED_COLOR},
     urlModalContent: {
       flexDirection: 'row',
       borderColor: 'lightgrey',
       borderBottomWidth: 2,
-      padding: 20,
+      padding: 10,
       margin: 0,
     },
     textBase: {
@@ -230,8 +229,7 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
       paddingHorizontal: 10,
-      paddingBottom: 50,
-      flex: 1,
+      flexGrow: 1,
     },
   });
 

@@ -126,13 +126,16 @@ const BrowserHeader = ({
                 theme={theme}
                 leftIcon={
                   activeUrl !== BrowserConfig.HOMEPAGE_URL ? (
-                    <Icon
-                      theme={theme}
-                      name={Icons.HOME_BROWSER}
+                    <TouchableOpacity
                       onPress={goHome}
-                      color={PRIMARY_RED_COLOR}
-                      {...styles.icons}
-                    />
+                      style={styles.homeIconContainer}>
+                      <Icon
+                        theme={theme}
+                        name={Icons.HOME_BROWSER}
+                        color={PRIMARY_RED_COLOR}
+                        {...styles.icons}
+                      />
+                    </TouchableOpacity>
                   ) : null
                 }
                 rightIcon={
@@ -155,8 +158,9 @@ const BrowserHeader = ({
                   startSearch(true);
                 }}
                 disableFocus
+                leftIconContainerStyle={{paddingRight: 0}}
                 additionalContainerStyle={styles.searchBarContainer}
-                additionalCustomInputStyle={{fontSize: 13}}
+                additionalCustomInputStyle={{fontSize: 13, marginLeft: 0}}
               />
               {renderFavoritesButton()}
             </>
@@ -253,6 +257,12 @@ const getStyles = (
       justifyContent: 'center',
     },
     marginLeft: {marginLeft: 8},
+    homeIconContainer: {
+      width: getInputContainerHeight(width),
+      height: getInputContainerHeight(width),
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     favContainer: {
       width: getInputContainerHeight(width),
       height: getInputContainerHeight(width),
@@ -275,7 +285,7 @@ const getStyles = (
     searchBarContainer: {
       borderRadius: 30,
       height: getInputContainerHeight(width),
-      paddingHorizontal: 16,
+      paddingRight: 16,
       flex: 1,
       fontSize: 13,
     },

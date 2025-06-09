@@ -113,7 +113,7 @@ const UrlAutocomplete = ({
 };
 
 const styles = StyleSheet.create({
-  wrapper: {marginTop: 20, flexGrow: 1},
+  wrapper: {marginTop: 20, flex: 1},
 });
 
 const connector = connect((state: RootState) => {

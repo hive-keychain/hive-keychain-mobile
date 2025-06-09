@@ -251,7 +251,6 @@ export default memo(
           break;
       }
     };
-    // console.log('rerender url', url);
     const showOperationRequestModal = async (request_id: number, data: any) => {
       const {username, domain, type} = data;
       const keyType = getRequiredWifType(data);
@@ -427,6 +426,13 @@ export default memo(
     );
   },
   (prevProps, nextProps) => {
+    // if (nextProps.active && prevProps.active) {
+    //   console.log(
+    //     'changes',
+    //     nextProps.data.url,
+    //     ObjectUtils.diffObjects(prevProps, nextProps),
+    //   );
+    // }
     return !nextProps.active && !prevProps.active;
   },
 );
