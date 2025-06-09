@@ -59,9 +59,12 @@ export const formatBalanceCurrency = (balanceS: string) => {
 export const getCleanAmountValue = (numberWithComma: string) => {
   return numberWithComma.split(' ')[0].replace(/,/g, '');
 };
-
-export const capitalize = (string: string) =>
-  string.charAt(0).toUpperCase() + string.slice(1);
+export const capitalize = (string: string) => {
+  if (string === string.toUpperCase()) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  }
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
 
 export const wordsFromCamelCase = (sentence: string) => {
   return sentence.split(/(?=[A-Z])/).join(' ');
