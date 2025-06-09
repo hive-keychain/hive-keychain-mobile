@@ -71,5 +71,30 @@ export const getVscHbdOperationButtonList = (
       }
       primaryLabel={translate('common.deposit')}
     />,
+    <SquareButton
+      additionalButtonContainerStyle={styles.buttonContainer}
+      additionalSquareButtonText={styles.buttonText}
+      key={'square-button-withdraw-hbd-vsc'}
+      onPress={() => {
+        navigate('Operation', {
+          operation: 'vsc_withdraw',
+          props: {
+            currency: 'VSCHBD',
+            tokenBalance: '0',
+            tokenLogo: <></>,
+          } as VscDepositProps,
+        });
+      }}
+      icon={
+        <CustomIconButton
+          theme={theme}
+          lightThemeIcon={<CurrencySavingLight {...styles.biggerIcon} />}
+          darkThemeIcon={<CurrencySavingLight {...styles.biggerIcon} />}
+          onPress={() => {}}
+          additionalContainerStyle={styles.buttonMarginRight}
+        />
+      }
+      primaryLabel={translate('common.withdraw')}
+    />,
   ];
 };
