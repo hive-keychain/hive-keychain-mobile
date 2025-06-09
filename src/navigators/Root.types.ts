@@ -63,7 +63,8 @@ export type RootStackParam = {
       | 'delegateRC'
       | 'power_down'
       | 'vsc_deposit'
-      | 'vsc_withdraw';
+      | 'vsc_withdraw'
+      | 'vsc_staking';
     props:
       | TransferOperationProps
       | StakeTokenOperationProps

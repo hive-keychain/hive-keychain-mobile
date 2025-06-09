@@ -279,7 +279,21 @@
         "memo": "MEMO (optional)",
         "warning": {
           "missing_info": "Please fill the username and amount to proceed"
+        },
+        "toast": {
+          "staking_success": "Successfully staked {{amount}} {{currency}}",
+          "unstaking_success": "Successfully unstaked {{amount}} {{currency}}"
         }
+      },
+      "staking": {
+        "title": "Stake funds",
+        "confirm": {
+          "info": "Please confirm this staking.\nThis cannot be undone",
+          "to": "To",
+          "amount": "Amount",
+          "memo": "Memo"
+        },
+        "memo": "MEMO (optional)"
       },
       "powerup": {
         "title": "Power up",

@@ -29,6 +29,7 @@ import UnstakeToken, {
   UnstakeTokenOperationProps,
 } from 'components/operations/UnstakeToken';
 import VscDeposit, {VscDepositProps} from 'components/operations/VscDeposit';
+import VscStaking, {VscStakingProps} from 'components/operations/VscStaking';
 import VscWithdraw, {VscWithdrawProps} from 'components/operations/VscWithdraw';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
@@ -122,6 +123,8 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return <VscDeposit {...(props as VscDepositProps)} />;
       case 'vsc_withdraw':
         return <VscWithdraw {...(props as VscWithdrawProps)} />;
+      case 'vsc_staking':
+        return <VscStaking {...(props as VscStakingProps)} />;
     }
   };
 
