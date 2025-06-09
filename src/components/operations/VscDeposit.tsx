@@ -3,7 +3,6 @@ import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
-import {ExchangesUtils} from 'hive-keychain-commons';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -126,9 +125,7 @@ const VscDeposit = ({
         ),
         data: [
           {
-            value: `@${to} ${
-              ExchangesUtils.isExchange(to) ? '(exchange)' : ''
-            }`,
+            value: `@${to}`,
             title: 'wallet.operations.deposit.confirm.to',
           },
           {

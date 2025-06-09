@@ -4,7 +4,6 @@ import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import {
-  ExchangesUtils,
   KeychainRequestTypes,
   RequestVscWithdrawal,
   VscUtils,
@@ -139,9 +138,7 @@ const VscWithdraw = ({
         ),
         data: [
           {
-            value: `@${to} ${
-              ExchangesUtils.isExchange(to) ? '(exchange)' : ''
-            }`,
+            value: `@${to}`,
             title: 'wallet.operations.withdraw.confirm.to',
           },
           {
