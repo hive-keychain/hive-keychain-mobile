@@ -26,10 +26,16 @@ import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getHorizontalLineStyle} from 'src/styles/line';
 import {MARGIN_PADDING} from 'src/styles/spacing';
-import {getFormFontStyle} from 'src/styles/typography';
+import {getRotateStyle} from 'src/styles/transform';
+import {
+  FontJosefineSansName,
+  getFontSizeSmallDevices,
+  getFormFontStyle,
+} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {VSCConfig} from 'utils/config';
@@ -67,6 +73,7 @@ const VscStaking = ({currency, user, phishingAccounts, showModal}: Props) => {
     VscStakingOperation.STAKING,
   );
   const [availableBalance, setAvailableBalance] = useState('');
+  const [claimingBalance, setClaimingBalance] = useState('');
   const [currentStaked, setCurrentStaked] = useState('');
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -79,10 +86,13 @@ const VscStaking = ({currency, user, phishingAccounts, showModal}: Props) => {
         setAvailableBalance(availableHbd.toString());
         const currentStaked = (vscBalance.hbd_savings / 1000).toFixed(3);
         setCurrentStaked(currentStaked.toString());
+        const claimingHbd = (vscBalance.hbd_claim / 1000).toFixed(3);
+        setClaimingBalance(claimingHbd.toString());
       } catch (error) {
         console.error('Error getting VSC balance:', error);
         setAvailableBalance('0');
         setCurrentStaked('0');
+        setClaimingBalance('');
       }
     };
     getBalance();
@@ -216,10 +226,48 @@ const VscStaking = ({currency, user, phishingAccounts, showModal}: Props) => {
           <CurrentAvailableBalance
             theme={theme}
             height={height}
-            currentValue={currentStaked}
-            availableValue={availableBalance}
+            currentValue={currentStaked + ' HBD'}
+            availableValue={availableBalance + ' HBD'}
             additionalContainerStyle={styles.currentAvailableBalances}
           />
+          <Separator height={10} />
+          {claimingBalance !== '0' && (
+            <TouchableOpacity
+              activeOpacity={1}
+              //TODO: add onPress show PendingSavingsWithdrawalPageComponent
+              style={[
+                getCardStyle(theme).defaultCardItem,
+                styles.displayAction,
+              ]}>
+              <View>
+                <Text
+                  style={[
+                    getFormFontStyle(height, theme).smallLabel,
+                    styles.josefineFont,
+                    styles.opaque,
+                  ]}>
+                  {capitalize(
+                    translate(`wallet.operations.staking.withdrawing`),
+                  )}
+                </Text>
+                <Text
+                  style={[
+                    getFormFontStyle(height, theme).input,
+                    styles.title,
+                    styles.josefineFont,
+                  ]}>
+                  {claimingBalance} {actualCurrency}
+                </Text>
+              </View>
+              <Icon
+                theme={theme}
+                name={Icons.EXPAND_THIN}
+                additionalContainerStyle={getRotateStyle('90')}
+                width={15}
+                height={15}
+              />
+            </TouchableOpacity>
+          )}
           <Separator height={10} />
         </>
       }
@@ -380,6 +428,23 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       width: '85%',
       borderColor: getColors(theme).lineSeparatorStroke,
       alignSelf: 'center',
+    },
+    displayAction: {
+      marginHorizontal: 15,
+      borderRadius: 26,
+      paddingHorizontal: 21,
+      paddingVertical: 13,
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+    },
+    title: {
+      fontSize: getFontSizeSmallDevices(width, 15),
+    },
+    josefineFont: {
+      fontFamily: FontJosefineSansName.MEDIUM,
+    },
+    opaque: {
+      opacity: 0.7,
     },
   });
 
