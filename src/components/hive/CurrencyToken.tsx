@@ -160,7 +160,7 @@ const CurrencyToken = ({
         } catch (error) {
           console.error('Error getting VSC HBD balance:', error);
           setBalance(0);
-          setSubValue('0');
+          setSubValue('');
           setPreFixSubValue(undefined);
           setSubValueShortDescription(translate('common.savings'));
         }
