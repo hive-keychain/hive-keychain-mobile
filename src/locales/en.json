@@ -288,7 +288,7 @@
       "staking": {
         "title": "Stake funds",
         "confirm": {
-          "info": "Please confirm this staking.\nThis cannot be undone.\n\nUnstaking will take 3.5 days.",
+          "info": "Please confirm this staking.\nThis cannot be undone.\n",
           "to": "To",
           "amount": "Amount",
           "memo": "Memo"

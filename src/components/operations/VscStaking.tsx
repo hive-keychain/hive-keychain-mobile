@@ -3,6 +3,7 @@ import {showModal} from 'actions/message';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
+import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
 import {
@@ -59,7 +60,13 @@ export type VscStakingProps = {
 
 type Props = PropsFromRedux & VscStakingProps;
 
-const VscStaking = ({currency, user, phishingAccounts, showModal}: Props) => {
+const VscStaking = ({
+  currency,
+  user,
+  phishingAccounts,
+  showModal,
+  apr,
+}: Props) => {
   const [to, setTo] = useState(user.name);
   const [amount, setAmount] = useState('');
   const [memo, setMemo] = useState('');
@@ -92,7 +99,7 @@ const VscStaking = ({currency, user, phishingAccounts, showModal}: Props) => {
         console.error('Error getting VSC balance:', error);
         setAvailableBalance('0');
         setCurrentStaked('0');
-        setClaimingBalance('');
+        setClaimingBalance('0');
       }
     };
     getBalance();
@@ -273,6 +280,22 @@ const VscStaking = ({currency, user, phishingAccounts, showModal}: Props) => {
       }
       childrenMiddle={
         <View>
+          {(currency !== 'HIVE' ||
+            operationType !== VscStakingOperation.STAKING) && (
+            <View>
+              <Caption
+                text={translate(
+                  `wallet.operations.savings.${
+                    operationType === VscStakingOperation.STAKING
+                      ? 'deposit'
+                      : 'withdraw'
+                  }_disclaimer`,
+                  {apr},
+                )}
+                skipTranslation
+              />
+            </View>
+          )}
           <Separator />
           <DropdownModal
             selected={
@@ -454,6 +477,7 @@ const connector = connect(
       user: state.activeAccount,
       localAccounts: state.accounts,
       phishingAccounts: state.phishingAccounts,
+      apr: state.properties.globals.hbd_interest_rate / 100,
     };
   },
   {showModal},
