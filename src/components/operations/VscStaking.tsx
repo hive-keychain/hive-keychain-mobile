@@ -79,9 +79,9 @@ const VscStaking = ({
   const [operationType, setOperationType] = useState<VscStakingOperation>(
     VscStakingOperation.STAKING,
   );
-  const [availableBalance, setAvailableBalance] = useState('');
-  const [claimingBalance, setClaimingBalance] = useState('');
-  const [currentStaked, setCurrentStaked] = useState('');
+  const [availableBalance, setAvailableBalance] = useState('0');
+  const [claimingBalance, setClaimingBalance] = useState('0');
+  const [currentStaked, setCurrentStaked] = useState('0');
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
