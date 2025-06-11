@@ -60,16 +60,14 @@ const VscDeposit = ({
   const {theme} = useThemeContext();
 
   const transferVsc = async (options: TransactionOptions, memo?: string) => {
-    await transfer(
-      user.keys.active,
-      {
-        from: user.name,
-        to: 'vsc.gateway',
-        amount: `${amount} ${actualCurrency}`,
-        memo: to ? `to=${to}` : '',
-      },
-      options,
-    );
+    const transferObj = {
+      from: user.name,
+      to: 'vsc.gateway',
+      amount: `${parseFloat(amount).toFixed(3)} ${actualCurrency}`,
+      memo: to ? `to=${to}` : '',
+    };
+    console.log('transferObj', transferObj);
+    await transfer(user.keys.active, transferObj, options);
   };
 
   const onSend = async (options: TransactionOptions) => {
