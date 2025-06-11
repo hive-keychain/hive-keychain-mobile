@@ -72,12 +72,22 @@ const Balance = ({
         tempBalance = hpBalance;
         break;
       case currency === getCurrency('VSCHIVE'):
-        const vscBalance = await VscUtils.getAccountBalance(account.name);
-        tempBalance = vscBalance.hive / 1000;
+        try {
+          const vscBalance = await VscUtils.getAccountBalance(account.name);
+          tempBalance = vscBalance.hive / 1000;
+        } catch (error) {
+          console.error('Error getting VSC HIVE balance:', error);
+          tempBalance = 0;
+        }
         break;
       case currency === getCurrency('VSCHBD'):
-        const vscHbdBalance = await VscUtils.getAccountBalance(account.name);
-        tempBalance = vscHbdBalance.hbd / 1000;
+        try {
+          const vscHbdBalance = await VscUtils.getAccountBalance(account.name);
+          tempBalance = vscHbdBalance.hbd / 1000;
+        } catch (error) {
+          console.error('Error getting VSC HBD balance:', error);
+          tempBalance = 0;
+        }
         break;
     }
     if (setAvailableBalance)
@@ -109,7 +119,8 @@ const Balance = ({
           <Loader animating size={'small'} />
         ) : (
           <Text style={[styles.textBalance, styles.centeredText]}>
-            {withCommas(parsedValue.toString())} {` ${currency.replace('VSC', '')}`}
+            {withCommas(parsedValue.toString())}{' '}
+            {` ${currency.replace('VSC', '')}`}
           </Text>
         )}
         <Text style={[styles.balanceText, styles.centeredText]}>

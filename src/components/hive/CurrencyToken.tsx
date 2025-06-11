@@ -142,11 +142,28 @@ const CurrencyToken = ({
         setPreFixSubValue(getPlusPrefix(delegation));
         setSubValueShortDescription(translate('common.deleg'));
       } else if (currencyName === 'VSCHIVE') {
-        const vscBalance = await VscUtils.getAccountBalance(user.name!);
-        setBalance(vscBalance.hive / 1000);
+        try {
+          const vscBalance = await VscUtils.getAccountBalance(user.name!);
+          setBalance(vscBalance.hive / 1000);
+        } catch (error) {
+          console.error('Error getting VSC HIVE balance:', error);
+          setBalance(0);
+        }
       } else if (currencyName === 'VSCHBD') {
-        const vscBalance = await VscUtils.getAccountBalance(user.name!);
-        setBalance(vscBalance.hbd / 1000);
+        try {
+          const vscBalance = await VscUtils.getAccountBalance(user.name!);
+          const hbdBalance = vscBalance.hbd / 1000;
+          setSubValue(hbdBalance.toFixed(3));
+          setPreFixSubValue(getPlusPrefix(hbdBalance));
+          setSubValueShortDescription(translate('common.savings'));
+          setBalance(vscBalance.hbd / 1000);
+        } catch (error) {
+          console.error('Error getting VSC HBD balance:', error);
+          setBalance(0);
+          setSubValue('0');
+          setPreFixSubValue(undefined);
+          setSubValueShortDescription(translate('common.savings'));
+        }
       }
     }
   };

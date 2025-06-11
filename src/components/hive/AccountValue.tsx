@@ -1,7 +1,7 @@
 import {ExtendedAccount} from '@hiveio/dhive';
 import {setAccountValueDisplay} from 'actions/index';
 import {CurrencyPrices, GlobalProperties} from 'actions/interfaces';
-import {VscUtils} from 'hive-keychain-commons';
+import {VscAccountBalance, VscUtils} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -44,7 +44,23 @@ const AccountValue = ({
 
   const init = async () => {
     if (prices.bitcoin && account && properties.globals) {
-      const vscBalance = await VscUtils.getAccountBalance(account.name);
+      let vscBalance: VscAccountBalance;
+      try {
+        vscBalance = await VscUtils.getAccountBalance(account.name);
+      } catch (error) {
+        console.error('Error getting VSC balance:', error);
+        vscBalance = {
+          account: account.name,
+          block_height: 0,
+          hbd_avg: 0,
+          hbd_claim: 0,
+          hbd_savings: 0,
+          hive: 0,
+          hive_consensus: 0,
+          hbd: 0,
+          hbd_modify: 0,
+        };
+      }
       const accVal =
         (await getAccountValue(
           account,

@@ -73,11 +73,17 @@ const VscStaking = ({currency, user, phishingAccounts, showModal}: Props) => {
   const styles = getDimensionedStyles({width, height}, theme);
   useEffect(() => {
     const getBalance = async () => {
-      const vscBalance = await VscUtils.getAccountBalance(user.name);
-      const availableHbd = (vscBalance.hbd / 1000).toFixed(3);
-      setAvailableBalance(availableHbd.toString());
-      const currentStaked = (vscBalance.hbd_savings / 1000).toFixed(3);
-      setCurrentStaked(currentStaked.toString());
+      try {
+        const vscBalance = await VscUtils.getAccountBalance(user.name);
+        const availableHbd = (vscBalance.hbd / 1000).toFixed(3);
+        setAvailableBalance(availableHbd.toString());
+        const currentStaked = (vscBalance.hbd_savings / 1000).toFixed(3);
+        setCurrentStaked(currentStaked.toString());
+      } catch (error) {
+        console.error('Error getting VSC balance:', error);
+        setAvailableBalance('0');
+        setCurrentStaked('0');
+      }
     };
     getBalance();
   }, []);
