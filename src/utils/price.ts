@@ -2,6 +2,7 @@ import {DynamicGlobalProperties, ExtendedAccount} from '@hiveio/dhive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CurrencyPrices, TokenBalance, TokenMarket} from 'actions/interfaces';
 import api from 'api/keychain';
+import {VscAccountBalance} from 'hive-keychain-commons';
 import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {toHP} from 'utils/format';
 import {getHiveEngineTokenValue} from './hiveEngine';
@@ -18,6 +19,7 @@ export const getAccountValue = async (
     savings_balance,
     savings_hbd_balance,
   }: ExtendedAccount,
+  vscBalance: VscAccountBalance,
   {hive, hive_dollar}: CurrencyPrices,
   props: DynamicGlobalProperties,
   userTokens: TokenBalance[],
@@ -27,6 +29,7 @@ export const getAccountValue = async (
   const hiddenTokens: string[] = JSON.parse(
     (await AsyncStorage.getItem(KeychainStorageKeyEnum.HIDDEN_TOKENS)) || '[]',
   );
+
   return (
     (parseFloat(hbd_balance as string) +
       parseFloat(savings_hbd_balance as string)) *
@@ -35,6 +38,9 @@ export const getAccountValue = async (
       parseFloat(balance as string) +
       parseFloat(savings_balance as string)) *
       hive.usd +
+    (vscBalance.hive / 1000) * hive.usd +
+    (vscBalance.hbd / 1000) * hive_dollar.usd +
+    (vscBalance.hbd_savings / 1000) * hive_dollar.usd +
     userTokens
       .map((userToken) => {
         // Ignore hidden tokens
