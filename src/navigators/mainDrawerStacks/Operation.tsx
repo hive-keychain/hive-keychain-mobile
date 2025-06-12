@@ -93,6 +93,10 @@ export default ({navigation, route}: OperationNavigationProps) => {
         return translate('wallet.operations.powerdown.title');
       case 'vsc_deposit':
         return translate('common.deposit');
+      case 'vsc_withdraw':
+        return translate('common.withdraw');
+      case 'vsc_staking':
+        return translate('common.stake');
     }
   };
 
