@@ -98,7 +98,6 @@ const Transfer = ({
   const [isVsc, setIsVsc] = useState(currency.toUpperCase().includes('VSC'));
   useEffect(() => {
     loadAutocompleteTransferUsernames();
-    console.log('currency', currency);
   }, []);
 
   const loadAutocompleteTransferUsernames = async () => {
@@ -185,7 +184,6 @@ const Transfer = ({
 
   const onSend = async (options: TransactionOptions) => {
     try {
-      console.log(options);
       if (isMemoEncrypted && !user.keys.memo)
         return showModal(
           translate('toast.missing_memo_key', {account: user.name}),
@@ -225,7 +223,6 @@ const Transfer = ({
     }
   };
   const onTransferConfirmation = () => {
-    console.log('onTransferConfirmation');
     if (toggleIndex === 0) onSendConfirmation();
     else onReceiveConfirmation();
   };
@@ -237,7 +234,6 @@ const Transfer = ({
       );
       return;
     }
-    console.log('onReceiveConfirmation');
     if (isVsc) {
       console.log({isVsc});
       const data = {
@@ -246,7 +242,6 @@ const Transfer = ({
         currency: actualCurrency,
         memo: memoReceive,
       } as RequestVscTransfer;
-      console.log('data', data);
       navigate('ReceiveTransfer', [KeychainRequestTypes.vscTransfer, data]);
     } else {
       navigate('ReceiveTransfer', [
