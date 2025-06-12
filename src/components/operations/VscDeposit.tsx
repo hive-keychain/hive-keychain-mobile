@@ -3,7 +3,7 @@ import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {default as Toast} from 'react-native-simple-toast';
@@ -11,6 +11,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {AutoCompleteValues} from 'src/interfaces/autocomplete.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonHeight} from 'src/styles/button';
@@ -19,6 +20,7 @@ import {getHorizontalLineStyle} from 'src/styles/line';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
 import {Dimensions} from 'utils/common.types';
+import {FavoriteUserUtils} from 'utils/favorite-user.utils';
 import {
   beautifyTransferError,
   capitalize,
@@ -32,7 +34,6 @@ import {TransferUtils} from 'utils/transfer.utils';
 import Balance from './Balance';
 import {ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
-
 export type VscDepositProps = {
   currency: string;
 };
@@ -55,9 +56,26 @@ const VscDeposit = ({
       ? currency.replace('VSC', '')
       : currency,
   );
-
+  const [autocompleteFavoriteUsers, setAutocompleteFavoriteUsers] = useState<
+    AutoCompleteValues
+  >({
+    categories: [],
+  });
   const [availableBalance, setAvailableBalance] = useState('');
   const {theme} = useThemeContext();
+
+  useEffect(() => {
+    loadAutocompleteTransferUsernames();
+  }, []);
+
+  const loadAutocompleteTransferUsernames = async () => {
+    const autoCompleteListByCategories: AutoCompleteValues = await FavoriteUserUtils.getAutocompleteListByCategories(
+      user.name!,
+      localAccounts,
+      {addExchanges: true, token: actualCurrency.toUpperCase()},
+    );
+    setAutocompleteFavoriteUsers(autoCompleteListByCategories);
+  };
 
   const transferVsc = async (options: TransactionOptions, memo?: string) => {
     const transferObj = {
@@ -145,6 +163,7 @@ const VscDeposit = ({
       <Separator height={35} />
       <OperationInput
         testID="username-input-testID"
+        autoCompleteValues={autocompleteFavoriteUsers}
         nativeID="username-input"
         labelInput={translate('common.to')}
         placeholder={translate('common.username')}
