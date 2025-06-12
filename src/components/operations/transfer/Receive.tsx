@@ -1,7 +1,7 @@
 import {showModal} from 'actions/message';
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
-import {encodeOp} from 'hive-uri';
+import * as hiveUri from 'hive-uri';
 import {
   ReceiveTransferProps,
   ReceiveTransferRoute,
@@ -115,7 +115,7 @@ const Receive = ({
           size={width * 0.8}
           fgColor={getColors(theme).primaryText}
           bgColor={'transparent'}
-          value={encodeOp(params)}
+          value={hiveUri.encodeOp(params)}
         />
       </View>
     </Background>

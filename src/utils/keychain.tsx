@@ -221,9 +221,9 @@ export const validateRequest = (req: KeychainRequest) => {
   );
 };
 
-export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
-  request,
-) => {
+export const getRequiredWifType: (
+  request: Partial<KeychainRequest>,
+) => KeyTypes = (request) => {
   switch (request.type) {
     case 'decode':
     case 'encode':

@@ -1,5 +1,13 @@
 const {getDefaultConfig} = require('metro-config');
-
+const path = require('path');
+const dotenv = require('dotenv');
+dotenv.config();
+const watchFolders = process.env.METRO_WATCH_FOLDERS
+  ? process.env.METRO_WATCH_FOLDERS.split(',').map((folder) =>
+      path.resolve(__dirname, folder.trim()),
+    )
+  : [];
+console.log(watchFolders);
 module.exports = (async () => {
   const {
     resolver: {sourceExts, assetExts},
@@ -12,5 +20,6 @@ module.exports = (async () => {
       assetExts: assetExts.filter((ext) => ext !== 'svg'),
       sourceExts: [...sourceExts, 'svg'],
     },
+    watchFolders,
   };
 })();
