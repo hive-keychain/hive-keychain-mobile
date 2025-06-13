@@ -383,7 +383,7 @@ const Main = ({
                 scrollEventThrottle={200}
                 onScroll={onHandleScroll}
                 onMomentumScrollEnd={() => {
-                  showFloatingBar(true);
+                  // showFloatingBar(true);
                 }}>
                 <View style={styles.rowWrapper}>
                   <PercentageDisplay

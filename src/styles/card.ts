@@ -29,6 +29,7 @@ export const getCardStyle = (theme: Theme, borderRadius?: number) => {
       borderColor: getColors(theme).quaternaryCardBorderColor,
       borderWidth: 1,
       padding: 10,
+      paddingTop: 5,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
     } as StyleProp<ViewStyle>,

@@ -69,15 +69,15 @@ const BottomNavigation = ({
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-  const styles = getStyles(theme, {width, height}, useSafeAreaInsets(), false);
+  const insets = useSafeAreaInsets();
+  const styles = getStyles(theme, {width, height}, insets, false);
   const anim = useRef(new Animated.Value(0)).current;
-  const [isTop, setIsTop] = useState(false);
   const {webViewRef, tabViewRef} = useTab();
   const [showBrowserSecondaryLinks, setShowBrowserSecondaryLinks] = useState(
     true,
   );
   const [orientation, setOrientation] = useState('PORTRAIT');
-
+  const [isVisible, setIsVisible] = useState(true);
   React.useEffect(() => {
     Orientation.addDeviceOrientationListener((orientation) => {
       if (['UNKNOWN', 'FACE-UP', 'FACE-DOWN'].includes(orientation)) return;
@@ -126,23 +126,31 @@ const BottomNavigation = ({
   const startAnimation = (toValue: number) => {
     Animated.timing(anim, {
       toValue,
-      duration: 1000,
+      duration: 300,
       easing: Easing.linear,
       useNativeDriver: true,
-    }).start();
+    }).start(() => {
+      if (toValue === 0) {
+        setIsVisible(true);
+      }
+    });
   };
 
   useEffect(() => {
-    startAnimation(isTop ? 0 : 1);
-  }, [isTop]);
-
-  useEffect(() => {
-    setIsTop(show && !isDrawerOpen && !isLoadingScreen);
+    startAnimation(
+      !isModal &&
+        show &&
+        orientation === 'PORTRAIT' &&
+        rpc &&
+        rpc.uri !== 'NULL'
+        ? 0
+        : 1,
+    );
   }, [show, isDrawerOpen, isLoadingScreen]);
 
   const translateY = anim.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, height - 70],
+    outputRange: [0, 60 + insets.bottom],
     extrapolate: 'clamp',
   });
 
@@ -260,11 +268,7 @@ const BottomNavigation = ({
       </Pressable>
     ),
   ];
-  return !isModal &&
-    show &&
-    orientation === 'PORTRAIT' &&
-    rpc &&
-    rpc.uri !== 'NULL' ? (
+  return isVisible ? (
     <Animated.View
       style={[
         getCardStyle(theme).floatingBar,
