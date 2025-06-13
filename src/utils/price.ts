@@ -41,6 +41,7 @@ export const getAccountValue = async (
     (vscBalance?.hive / 1000) * hive.usd +
     (vscBalance?.hbd / 1000) * hive_dollar.usd +
     (vscBalance?.hbd_savings / 1000) * hive_dollar.usd +
+    (vscBalance?.pending_hbd_unstaking / 1000) * hive_dollar.usd +
     userTokens
       .map((userToken) => {
         // Ignore hidden tokens

@@ -59,6 +59,7 @@ const AccountValue = ({
           hive_consensus: 0,
           hbd: 0,
           hbd_modify: 0,
+          pending_hbd_unstaking: 0,
         };
       }
       const accVal =
