@@ -7,7 +7,6 @@ const watchFolders = process.env.METRO_WATCH_FOLDERS
       path.resolve(__dirname, folder.trim()),
     )
   : [];
-console.log(watchFolders);
 module.exports = (async () => {
   const {
     resolver: {sourceExts, assetExts},

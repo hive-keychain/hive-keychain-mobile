@@ -39,6 +39,7 @@
     "fuse.js": "^6.4.6",
     "hive-keychain-commons": "^1.9.0",
     "hive-tx": "github:hive-keychain/hive-tx-js",
+    "hive-uri": "^0.2.8",
     "i18n-js": "^3.8.0",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
