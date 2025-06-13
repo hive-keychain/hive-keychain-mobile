@@ -80,7 +80,7 @@ const VscStaking = ({
     VscStakingOperation.STAKING,
   );
   const [availableBalance, setAvailableBalance] = useState('0');
-  const [claimingBalance, setClaimingBalance] = useState('0');
+  const [pendingUnstakingHbd, setPendingUnstakingHbd] = useState('0');
   const [currentStaked, setCurrentStaked] = useState('0');
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -93,13 +93,15 @@ const VscStaking = ({
         setAvailableBalance(availableHbd.toString());
         const currentStaked = (vscBalance.hbd_savings / 1000).toFixed(3);
         setCurrentStaked(currentStaked.toString());
-        const claimingHbd = (vscBalance.hbd_claim / 1000).toFixed(3);
-        setClaimingBalance(claimingHbd.toString());
+        const pendingUnstakingHbd = (
+          vscBalance.pending_hbd_unstaking / 1000
+        ).toFixed(3);
+        setPendingUnstakingHbd(pendingUnstakingHbd.toString());
       } catch (error) {
         console.error('Error getting VSC balance:', error);
         setAvailableBalance('0');
         setCurrentStaked('0');
-        setClaimingBalance('0');
+        setPendingUnstakingHbd('0');
       }
     };
     getBalance();
@@ -238,7 +240,7 @@ const VscStaking = ({
             additionalContainerStyle={styles.currentAvailableBalances}
           />
           <Separator height={10} />
-          {claimingBalance !== '0' && (
+          {pendingUnstakingHbd !== '0' && (
             <TouchableOpacity
               activeOpacity={1}
               //TODO: add onPress show PendingSavingsWithdrawalPageComponent
@@ -263,7 +265,7 @@ const VscStaking = ({
                     styles.title,
                     styles.josefineFont,
                   ]}>
-                  {claimingBalance} {actualCurrency}
+                  {pendingUnstakingHbd} {actualCurrency}
                 </Text>
               </View>
               <Icon
