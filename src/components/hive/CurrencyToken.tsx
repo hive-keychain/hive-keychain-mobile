@@ -1,4 +1,5 @@
 import {clearWalletFilters} from 'actions/walletFilters';
+import {VscHistoryComponentProps} from 'components/history/vsc/VscHistoryComponent';
 import Separator from 'components/ui/Separator';
 import {VscUtils} from 'hive-keychain-commons';
 import React, {useEffect, useState} from 'react';
@@ -170,9 +171,15 @@ const CurrencyToken = ({
 
   const onHandleGoToWalletHistory = () => {
     clearWalletFilters();
-    navigate('WalletHistoryScreen', {
-      currency: currencyName.toLowerCase(),
-    } as WalletHistoryComponentProps);
+    if (currencyName === 'VSCHIVE' || currencyName === 'VSCHBD') {
+      navigate('VscHistoryScreen', {
+        currency: currencyName.toLowerCase(),
+      } as VscHistoryComponentProps);
+    } else {
+      navigate('WalletHistoryScreen', {
+        currency: currencyName.toLowerCase(),
+      } as WalletHistoryComponentProps);
+    }
   };
 
   const getCurrencyLogo = () => {

@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
 import {CustomFilterBox} from 'components/form/CustomFilterBox';
+import {VscHistoryComponent} from 'components/history/vsc/VscHistoryComponent';
 import {WalletHistoryComponent} from 'components/history/WalletHistoryComponent';
 import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
@@ -123,6 +124,28 @@ export default () => {
           ),
         })}
         component={WalletHistoryComponent}
+      />
+      <Stack.Screen
+        name="VscHistoryScreen"
+        options={({navigation}) => ({
+          headerStyle: styles.headerStyle,
+          headerTitleAlign: 'center',
+          animationEnabled: false,
+          headerTitle: () => (
+            <NavigatorTitle title={'navigation.vsc_history'} />
+          ),
+          cardStyle: styles.cardStyle,
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => navigation.navigate('WalletScreen')}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+              additionalContainerStyle={styles.marginLeft}
+            />
+          ),
+        })}
+        component={VscHistoryComponent}
       />
     </Stack.Navigator>
   );
