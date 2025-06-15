@@ -184,11 +184,11 @@
       "vsc": {
         "deposit": "Deposit Funds",
         "withdraw": "Withdraw Funds",
-        "deposit_to": "Deposited {{amount}} to @{{to}}",
-        "withdraw_from": "Withdrew {{amount}} from @{{from}}",
-        "withdraw_to": "Withdrew {{amount}} to @{{to}}",
-        "transfer_to": "Transferred {{amount}} to @{{to}}",
-        "transfer_from": "Transferred {{amount}} from @{{from}}"
+        "deposit_amount": "Deposited {{amount}}",
+        "withdraw_amount": "Withdrew {{amount}}",
+        "transfer_amount": "Transferred {{amount}}",
+        "to": "to @{{to}}",
+        "from": "from @{{from}}"
       },
       "phishing_domain": "{{domain}} has been flagged as malicious by @keys-defender, check the spelling and make sure this is the dApp you want to use.",
       "history": {

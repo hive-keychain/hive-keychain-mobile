@@ -1,13 +1,10 @@
+import BackgroundIconRed from 'assets/new_UI/background-icon-red.svg';
+import ItemCardExpandable from 'components/ui/ItemCardExpandable';
 import {VscHistoryItem} from 'hive-keychain-commons';
-import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState} from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {getColors, GREEN_SUCCESS, PRIMARY_RED_COLOR} from 'src/styles/colors';
-import {
-  body_primary_body_2,
-  fields_primary_text_2,
-} from 'src/styles/typography';
+import {GREEN_SUCCESS, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {formatBalance} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from '../../hive/Icon';
@@ -19,7 +16,7 @@ interface Props {
 }
 
 const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
-  const styles = getStyles(theme);
+  const [toggle, setToggle] = useState(false);
 
   const getOperationIcon = () => {
     const opType = transaction.type;
@@ -28,6 +25,7 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
         return Icons.TRANSFER;
       case 'withdraw':
         return Icons.CLAIM;
+      case 'deposit':
       default:
         return Icons.TRANSFER;
     }
@@ -41,102 +39,70 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
   const getOperationAmount = () => {
     const amount = parseFloat(transaction.amount.toString());
     const isOutgoing = transaction.from === `hive:${user.name}`;
-    return `${isOutgoing ? '-' : '+'}${formatBalance(amount)}`;
+    return `${isOutgoing ? '-' : '+'}${formatBalance(
+      amount,
+    )} ${transaction.asset.toUpperCase()}`;
   };
 
   const getOperationDescription = () => {
     const opType = transaction.type;
     const isOutgoing = transaction.from === `hive:${user.name}`;
     const otherParty = isOutgoing ? transaction.to : transaction.from;
+    const amount = parseFloat(transaction.amount.toString());
+    const currency = transaction.asset.toUpperCase();
 
     switch (opType) {
       case 'transfer':
         return isOutgoing
-          ? translate('wallet.operations.transfer_to', {to: otherParty})
-          : translate('wallet.operations.transfer_from', {from: otherParty});
+          ? translate('wallet.operations.vsc.transfer_amount', {
+              amount: formatBalance(amount) + ' ' + currency,
+            })
+          : translate('wallet.operations.vsc.transfer_amount', {
+              amount: formatBalance(amount) + ' ' + currency,
+            });
       case 'withdraw':
         return isOutgoing
-          ? translate('wallet.operations.withdraw_to', {to: otherParty})
-          : translate('wallet.operations.withdraw_from', {from: otherParty});
+          ? translate('wallet.operations.vsc.withdraw_amount', {
+              amount: formatBalance(amount) + ' ' + currency,
+            })
+          : translate('wallet.operations.vsc.withdraw_amount', {
+              amount: formatBalance(amount) + ' ' + currency,
+            });
+      case 'deposit':
+        return translate('wallet.operations.vsc.deposit_amount', {
+          amount: formatBalance(amount),
+        });
       default:
         return opType;
     }
   };
 
+  const getOperationDetails = () => {
+    const isOutgoing = transaction.from === `hive:${user.name}`;
+    const otherParty = isOutgoing ? transaction.to : transaction.from;
+    return isOutgoing
+      ? translate('wallet.operations.vsc.to', {to: otherParty})
+      : translate('wallet.operations.vsc.from', {from: otherParty});
+  };
+
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      style={styles.container}
-      onPress={() => {}}>
-      <View style={styles.leftContainer}>
+    <ItemCardExpandable
+      theme={theme}
+      toggle={toggle}
+      setToggle={() => setToggle(!toggle)}
+      textLine1={getOperationDescription()}
+      textLine2={getOperationDetails()}
+      date={new Date(transaction.timestamp.toString()).toLocaleDateString()}
+      icon={
         <Icon
           name={getOperationIcon()}
           theme={theme}
+          bgImage={<BackgroundIconRed />}
           color={getOperationColor()}
-          additionalContainerStyle={styles.iconContainer}
         />
-        <View style={styles.textContainer}>
-          <Text style={styles.operationText}>{getOperationDescription()}</Text>
-          <Text style={styles.dateText}>
-            {new Date(transaction.timestamp.toString()).toLocaleString()}
-          </Text>
-        </View>
-      </View>
-      <View style={styles.rightContainer}>
-        <Text style={[styles.amountText, {color: getOperationColor()}]}>
-          {getOperationAmount()}
-        </Text>
-        <Text style={styles.assetText}>{transaction.asset.toUpperCase()}</Text>
-      </View>
-    </TouchableOpacity>
+      }
+    />
   );
 };
-
-const getStyles = (theme: Theme) =>
-  StyleSheet.create({
-    container: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingVertical: 10,
-      paddingHorizontal: 15,
-      borderBottomWidth: 1,
-      borderBottomColor: getColors(theme).cardBorderColor,
-    },
-    leftContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      flex: 1,
-    },
-    rightContainer: {
-      alignItems: 'flex-end',
-    },
-    iconContainer: {
-      marginRight: 10,
-    },
-    textContainer: {
-      flex: 1,
-    },
-    operationText: {
-      ...body_primary_body_2,
-      color: getColors(theme).secondaryText,
-    },
-    dateText: {
-      ...fields_primary_text_2,
-      color: getColors(theme).secondaryText,
-      opacity: 0.7,
-      marginTop: 2,
-    },
-    amountText: {
-      ...body_primary_body_2,
-      fontWeight: 'bold',
-    },
-    assetText: {
-      ...fields_primary_text_2,
-      color: getColors(theme).secondaryText,
-      opacity: 0.7,
-      marginTop: 2,
-    },
-  });
 
 export default VscHistoryItemComponent;
