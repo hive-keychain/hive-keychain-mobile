@@ -154,10 +154,11 @@ const CurrencyToken = ({
         try {
           const vscBalance = await VscUtils.getAccountBalance(user.name!);
           const hbdBalance = vscBalance.hbd / 1000;
-          setSubValue(hbdBalance.toFixed(3));
-          setPreFixSubValue(getPlusPrefix(hbdBalance));
+          const hbdSavings = vscBalance.hbd_savings / 1000;
+          setBalance(hbdBalance);
+          setSubValue(hbdSavings.toFixed(3));
+          setPreFixSubValue(getPlusPrefix(hbdSavings));
           setSubValueShortDescription(translate('common.savings'));
-          setBalance(vscBalance.hbd / 1000);
         } catch (error) {
           console.error('Error getting VSC HBD balance:', error);
           setBalance(0);
