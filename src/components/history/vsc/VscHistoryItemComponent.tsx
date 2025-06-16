@@ -31,18 +31,6 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
     }
   };
 
-  const getOperationColor = () => {
-    const isOutgoing = transaction.from === `hive:${user.name}`;
-    return isOutgoing ? PRIMARY_RED_COLOR : GREEN_SUCCESS;
-  };
-
-  const getOperationAmount = () => {
-    const amount = parseFloat(transaction.amount.toString());
-    const isOutgoing = transaction.from === `hive:${user.name}`;
-    return `${isOutgoing ? '-' : '+'}${formatBalance(
-      amount,
-    )} ${transaction.asset.toUpperCase()}`;
-  };
 
   const getOperationDescription = () => {
     const opType = transaction.type;
