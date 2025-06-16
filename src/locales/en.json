@@ -185,6 +185,7 @@
         "deposit": "Deposit Funds",
         "withdraw": "Withdraw Funds",
         "deposit_amount": "Deposited {{amount}}",
+        "received_amount": "Received {{amount}}",
         "withdraw_amount": "Withdrew {{amount}}",
         "transfer_amount": "Transferred {{amount}}",
         "to": "to @{{to}}",
