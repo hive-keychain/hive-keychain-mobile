@@ -67,6 +67,9 @@ const BottomNavigation = ({
   showManagementScreen,
   changeTab,
 }: Props & PropsFromRedux) => {
+  const isBrowser = activeScreen === BottomBarLink.Browser;
+  const isModal = activeScreen === 'ModalScreen';
+
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -77,7 +80,9 @@ const BottomNavigation = ({
     true,
   );
   const [orientation, setOrientation] = useState('PORTRAIT');
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(
+    !isModal && show && rpc && rpc.uri !== 'NULL',
+  );
   React.useEffect(() => {
     Orientation.addDeviceOrientationListener((orientation) => {
       if (['UNKNOWN', 'FACE-UP', 'FACE-DOWN'].includes(orientation)) return;
@@ -141,7 +146,9 @@ const BottomNavigation = ({
       !isModal &&
         show &&
         orientation === 'PORTRAIT' &&
+        !isLoadingScreen &&
         rpc &&
+        !isDrawerOpen &&
         rpc.uri !== 'NULL'
         ? 0
         : 1,
@@ -170,9 +177,6 @@ const BottomNavigation = ({
       showManagementScreen(false);
     }
   };
-
-  const isBrowser = activeScreen === BottomBarLink.Browser;
-  const isModal = activeScreen === 'ModalScreen';
 
   const renderBrowserBottomBar = () => [
     <Pressable
