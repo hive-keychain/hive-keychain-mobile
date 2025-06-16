@@ -1,4 +1,5 @@
 import Icon from 'components/hive/Icon';
+import {VscStatus} from 'hive-keychain-commons';
 import React from 'react';
 import {
   ScaledSize,
@@ -25,6 +26,7 @@ interface Props {
   textLine3?: string;
   memo?: string;
   icon?: JSX.Element;
+  status?: string | VscStatus;
 }
 
 const ItemCardExpandable = ({
@@ -37,8 +39,21 @@ const ItemCardExpandable = ({
   date,
   memo,
   textLine3,
+  status,
 }: Props) => {
   const styles = getStyles(theme, useWindowDimensions());
+
+  const getStatusIcon = () => {
+    switch (status) {
+      case VscStatus.CONFIRMED:
+        return Icons.CHECK;
+      case VscStatus.FAILED:
+        return Icons.CLOSE_CIRCLE;
+      default:
+        return Icons.CLOCK;
+    }
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -60,19 +75,32 @@ const ItemCardExpandable = ({
               </View>
             </View>
             <View style={[styles.dateExpanderContainer]}>
-              <Text style={styles.textBase}>{date}</Text>
-              {memo && memo.length ? (
-                <Icon
-                  name={Icons.EXPAND_THIN}
-                  theme={theme}
-                  additionalContainerStyle={[
-                    toggle ? getRotateStyle('0') : getRotateStyle('180'),
-                    styles.expandIconcontainer,
-                  ]}
-                  {...styles.expandIcon}
-                  color={PRIMARY_RED_COLOR}
-                />
-              ) : null}
+              <View style={styles.dateContainer}>
+                <Text style={styles.textBase}>{date}</Text>
+              </View>
+              <View style={styles.statusContainer}>
+                {status && (
+                  <Icon
+                    name={getStatusIcon()}
+                    theme={theme}
+                    color={PRIMARY_RED_COLOR}
+                  />
+                )}
+              </View>
+              <View style={styles.memoContainer}>
+                {memo && memo.length ? (
+                  <Icon
+                    name={Icons.EXPAND_THIN}
+                    theme={theme}
+                    additionalContainerStyle={[
+                      toggle ? getRotateStyle('0') : getRotateStyle('180'),
+                      styles.expandIconcontainer,
+                    ]}
+                    {...styles.expandIcon}
+                    color={PRIMARY_RED_COLOR}
+                  />
+                ) : null}
+              </View>
             </View>
           </View>
         </View>
@@ -92,8 +120,8 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       paddingHorizontal: 4,
     },
     width140: {
-      width: width / 3,
-      paddingHorizontal: 12,
+      width: width / 6,
+      paddingHorizontal: 1,
     },
     main: {
       display: 'flex',
@@ -120,12 +148,33 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
     padding: {
       padding: 8,
     },
+    dateExpanderContainer: {
+      flexGrow: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: width / 4,
+      alignItems: 'center',
+    },
+    dateContainer: {
+      width: width / 5,
+      paddingRight: 8,
+    },
+    statusContainer: {
+      width: 16,
+      alignItems: 'center',
+      marginHorizontal: 8,
+    },
+    memoContainer: {
+      width: 24,
+      alignItems: 'center',
+      paddingRight: 12,
+    },
     expandIcon: {
       width: 15,
       height: 15,
     },
     expandIconcontainer: {
-      marginRight: 10,
+      marginLeft: 0,
     },
     row: {
       display: 'flex',
@@ -135,12 +184,6 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       width: '100%',
     },
     flexWrapGrow2: {flexWrap: 'wrap', flexDirection: 'row', flexGrow: 2},
-    dateExpanderContainer: {
-      flexGrow: 1,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: width / 6,
-    },
   });
 
 export default ItemCardExpandable;
