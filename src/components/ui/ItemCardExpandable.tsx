@@ -74,19 +74,23 @@ const ItemCardExpandable = ({
                 )}
               </View>
             </View>
-            <View style={[styles.dateExpanderContainer]}>
-              <View style={styles.dateContainer}>
+            <View
+              style={[
+                styles.dateExpanderContainer,
+                !status && styles.dateExpanderContainerNoStatus,
+              ]}>
+              <View style={[styles.dateContainer]}>
                 <Text style={styles.textBase}>{date}</Text>
               </View>
-              <View style={styles.statusContainer}>
-                {status && (
+              {status && (
+                <View style={styles.statusContainer}>
                   <Icon
                     name={getStatusIcon()}
                     theme={theme}
                     color={PRIMARY_RED_COLOR}
                   />
-                )}
-              </View>
+                </View>
+              )}
               <View style={styles.memoContainer}>
                 {memo && memo.length ? (
                   <Icon
@@ -155,9 +159,15 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
       width: width / 4,
       alignItems: 'center',
     },
+    dateExpanderContainerNoStatus: {
+      flexGrow: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: width / 14,
+      alignItems: 'center',
+    },
     dateContainer: {
-      width: width / 5,
-      paddingRight: 8,
+      minWidth: width / 5,
     },
     statusContainer: {
       width: 16,
