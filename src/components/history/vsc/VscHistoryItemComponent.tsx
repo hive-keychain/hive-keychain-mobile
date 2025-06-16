@@ -86,7 +86,7 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
           name={getOperationIcon()}
           theme={theme}
           bgImage={<BackgroundIconRed />}
-          color={getOperationColor()}
+          color={PRIMARY_RED_COLOR}
         />
       }
     />
