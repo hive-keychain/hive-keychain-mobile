@@ -24,7 +24,7 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
       case 'transfer':
         return Icons.TRANSFER;
       case 'withdraw':
-        return Icons.CLAIM;
+        return Icons.POWER_DOWN;
       case 'deposit':
       default:
         return Icons.TRANSFER;
@@ -57,7 +57,7 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
           ? translate('wallet.operations.vsc.transfer_amount', {
               amount: formatBalance(amount) + ' ' + currency,
             })
-          : translate('wallet.operations.vsc.transfer_amount', {
+          : translate('wallet.operations.vsc.received_amount', {
               amount: formatBalance(amount) + ' ' + currency,
             });
       case 'withdraw':
