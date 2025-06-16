@@ -89,6 +89,8 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
           color={PRIMARY_RED_COLOR}
         />
       }
+      memo={transaction.memo}
+      status={transaction.status}
     />
   );
 };
