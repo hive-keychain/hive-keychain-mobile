@@ -1,7 +1,7 @@
-import {Operation} from '@hiveio/dhive';
+import {DecodeResult} from 'hive-uri';
 import {HiveURIActionTypes} from './types';
 
-export const saveRequestedOperation = (operation: Operation) => {
+export const saveRequestedOperation = (operation: DecodeResult) => {
   return {
     type: HiveURIActionTypes.SAVE_OPERATION,
     payload: operation,

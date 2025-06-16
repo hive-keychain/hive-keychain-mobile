@@ -368,6 +368,7 @@ export const post = async (
 };
 
 export const signTx = (key: string, tx: object) => {
+  console.log('tx', key, JSON.stringify(tx));
   const trx = new hiveTx.Transaction(tx);
   const signed = trx.sign(hiveTx.PrivateKey.from(key));
   return signed;
