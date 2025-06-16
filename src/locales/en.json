@@ -189,7 +189,11 @@
         "withdraw_amount": "Withdrew {{amount}}",
         "transfer_amount": "Transferred {{amount}}",
         "to": "to @{{to}}",
-        "from": "from @{{from}}"
+        "from": "from @{{from}}",
+        "toast": {
+          "staking_success": "Successfully staked {{amount}} {{currency}}",
+          "unstaking_success": "Successfully unstaked {{amount}} {{currency}}"
+        }
       },
       "phishing_domain": "{{domain}} has been flagged as malicious by @keys-defender, check the spelling and make sure this is the dApp you want to use.",
       "history": {
