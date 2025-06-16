@@ -115,7 +115,7 @@ export default memo(
     useFocusEffect(
       React.useCallback(() => {
         const backAction = () => {
-          if (canGoBack) goBack();
+          goBack();
           return true;
         };
 
@@ -125,7 +125,7 @@ export default memo(
         );
 
         return () => backHandler.remove();
-      }, [canGoBack]),
+      }, []),
     );
 
     useEffect(() => {
@@ -135,16 +135,10 @@ export default memo(
       }
     }, [orientation]);
     const goBack = () => {
-      if (!canGoBack) {
-        return;
-      }
       const {current} = tabRef;
       current && current.goBack();
     };
     const goForward = () => {
-      if (!canGoForward) {
-        return;
-      }
       const {current} = tabRef;
       current && current.goForward();
     };
