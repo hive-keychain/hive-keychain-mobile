@@ -99,19 +99,18 @@ export default memo(
     const tabRef: MutableRefObject<WebView> = useRef(null);
     const tabParentRef: MutableRefObject<ScrollView> = useRef(null);
     const homeRef: MutableRefObject<View> = useRef(null);
-    const [canGoBack, setCanGoBack] = useState(false);
-    const [canGoForward, setCanGoForward] = useState(false);
     const [progress, setProgress] = useState(0);
     const insets = useSafeAreaInsets();
     const [canRefresh, setCanRefresh] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const {setWebViewRef, setTabViewRef} = useTab();
+    const [isFlutterCanvasApp, setIsFlutterCanvasApp] = useState(false);
+    const [canRefreshCanvas, setCanRefreshCanvas] = useState(true);
     const onRefresh = () => {
       setRefreshing(true);
       tabRef.current?.reload(); // reload the WebView
     };
     const styles = getStyles(insets);
-
     useFocusEffect(
       React.useCallback(() => {
         const backAction = () => {
@@ -160,7 +159,7 @@ export default memo(
     };
 
     const onLoadEnd = ({
-      nativeEvent: {canGoBack, canGoForward, loading, url},
+      nativeEvent: {loading, url},
     }: {
       nativeEvent: WebViewNativeEvent;
     }) => {
@@ -172,8 +171,6 @@ export default memo(
       if (loading) {
         return;
       }
-      setCanGoBack(canGoBack);
-      setCanGoForward(canGoForward);
       if (current) {
         current.injectJavaScript(BRIDGE_WV_INFO);
       }
@@ -185,14 +182,21 @@ export default memo(
         request_id,
         data,
         isAtTop,
+        isAtTopOfCanvas,
         showNavigationBar,
+        isFlutterCanvasApp,
       } = JSON.parse(nativeEvent.data);
       const {current} = tabRef;
       switch (messageName) {
         case ProviderEvent.SCROLL:
           if (canRefresh !== isAtTop) setCanRefresh(isAtTop);
+          if (canRefreshCanvas !== isAtTopOfCanvas)
+            setCanRefreshCanvas(isAtTopOfCanvas);
           showNavigationBar !== undefined &&
             store.dispatch(showFloatingBar(showNavigationBar));
+          break;
+        case ProviderEvent.FLUTTER_CHECK:
+          setIsFlutterCanvasApp(isFlutterCanvasApp);
           break;
         case ProviderEvent.HANDSHAKE:
           current.injectJavaScript(
@@ -367,14 +371,16 @@ export default memo(
               }
               ref={tabParentRef}
               refreshControl={
-                <RefreshControl
-                  refreshing={refreshing}
-                  onRefresh={() => {
-                    onRefresh();
-                    setTimeout(() => setRefreshing(false), 1000);
-                  }}
-                  enabled={canRefresh}
-                />
+                (!isFlutterCanvasApp || canRefreshCanvas) && (
+                  <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={() => {
+                      onRefresh();
+                      setTimeout(() => setRefreshing(false), 1000);
+                    }}
+                    enabled={canRefresh}
+                  />
+                )
               }>
               <WebView
                 source={{
@@ -420,13 +426,6 @@ export default memo(
     );
   },
   (prevProps, nextProps) => {
-    // if (nextProps.active && prevProps.active) {
-    //   console.log(
-    //     'changes',
-    //     nextProps.data.url,
-    //     ObjectUtils.diffObjects(prevProps, nextProps),
-    //   );
-    // }
     return !nextProps.active && !prevProps.active;
   },
 );

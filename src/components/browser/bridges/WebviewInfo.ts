@@ -96,7 +96,7 @@ const getWebviewInfo = `
 			}
 			lastScrollTop = currentScrollTop;
 		}, 100);
-	}
+	} 
     window.ReactNativeWebView.postMessage(
       JSON.stringify({ name: '${ProviderEvent.SCROLL}', isAtTop: !canScrollUp, showNavigationBar: deltaY > 0,el:windowScrollPosition,scrollableParent:parentScrollPosition})
     );
@@ -114,6 +114,29 @@ const getWebviewInfo = `
       el = el.parentElement;
     }
     return null;
+  }
+})();
+
+(function() {
+  try {
+    const canvasElements = document.getElementsByTagName('canvas');
+    const isFlutterCanvasApp =
+      canvasElements.length > 0 &&
+      [...canvasElements].some(canvas => {
+        const width = canvas.width;
+        const height = canvas.height;
+        const style = window.getComputedStyle(canvas);
+        const hasFlutterStyle = style.position === 'absolute' || style.position === 'fixed';
+        return width > 0 && height > 0 && hasFlutterStyle;
+      });
+
+    const flutterDiv = document.querySelector('flt-glass-pane, flt-scene-host, flt-scene');
+
+    window.ReactNativeWebView?.postMessage(JSON.stringify({
+      name: '${ProviderEvent.FLUTTER_CHECK}',
+      isFlutterCanvasApp: isFlutterCanvasApp || !!flutterDiv
+    }));
+  } catch (err) {
   }
 })();
 `;

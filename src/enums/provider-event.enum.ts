@@ -3,4 +3,5 @@ export enum ProviderEvent {
   HANDSHAKE = 'swHandshake_hive',
   REQUEST = 'swRequest_hive',
   INFO = 'WV_INFO',
+  FLUTTER_CHECK = 'FLUTTER_CHECK',
 }
