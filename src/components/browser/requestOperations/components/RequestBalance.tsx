@@ -107,9 +107,11 @@ export default ({username, startToken, amount, accounts}: Props) => {
               height={20}
             />
             <Text style={[styles.textBase, styles.content, styles.opaque]}>
-              {Number(balanceAfterSwap) < 0
-                ? 'Insufficient Balance'
-                : `${balanceAfterSwap} ${startToken}`}
+              {Number(balanceAfterSwap) < 0 ? (
+                <Text style={styles.errorText}>Insufficient Balance</Text>
+              ) : (
+                `${balanceAfterSwap} ${startToken}`
+              )}
             </Text>
           </View>
         ) : (
@@ -144,5 +146,8 @@ const getStyles = (theme: Theme, width: number) =>
     },
     arrowIcon: {
       marginHorizontal: 5,
+    },
+    errorText: {
+      color: 'red',
     },
   });
