@@ -190,6 +190,8 @@
         "transfer_amount": "Transferred {{amount}}",
         "to": "to @{{to}}",
         "from": "from @{{from}}",
+        "stake_amount": "Staked {{amount}}",
+        "unstake_amount": "Unstaked {{amount}}",
         "toast": {
           "staking_success": "Successfully staked {{amount}} {{currency}}",
           "unstaking_success": "Successfully unstaked {{amount}} {{currency}}"
