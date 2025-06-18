@@ -148,10 +148,15 @@ const VscStaking = ({
       await stakeVsc(options);
       if (options.multisig) return;
       showModal(
-        translate('wallet.operations.staking.toast.staking_success', {
-          amount,
-          currency: actualCurrency,
-        }),
+        operationType === VscStakingOperation.STAKING
+          ? translate('wallet.operations.vsc.toast.staking_success', {
+              amount,
+              currency: actualCurrency,
+            })
+          : translate('wallet.operations.vsc.toast.unstaking_success', {
+              amount,
+              currency: actualCurrency,
+            }),
         MessageModalType.SUCCESS,
       );
     } catch (e) {
