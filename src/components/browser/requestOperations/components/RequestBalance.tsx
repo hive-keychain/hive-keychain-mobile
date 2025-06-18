@@ -100,14 +100,12 @@ export default ({username, startToken, amount, accounts}: Props) => {
             <Text style={[styles.textBase, styles.content, styles.opaque]}>
               {`${balance} ${startToken}`}
             </Text>
-            {Number(balanceAfterSwap) >= 0 && (
-              <Icon
-                name={Icons.ARROW_RIGHT_BROWSER}
-                additionalContainerStyle={styles.arrowIcon}
-                width={20}
-                height={20}
-              />
-            )}
+            <Icon
+              name={Icons.ARROW_RIGHT_BROWSER}
+              additionalContainerStyle={styles.arrowIcon}
+              width={20}
+              height={20}
+            />
             <Text style={[styles.textBase, styles.content, styles.opaque]}>
               {Number(balanceAfterSwap) < 0
                 ? 'Insufficient Balance'
