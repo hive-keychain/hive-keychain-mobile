@@ -3,15 +3,14 @@ import axios from 'axios';
 import {TokenRequestParams} from 'src/interfaces/token-request-params.interface';
 import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 
-export default new SSC('https://api.hive-engine.com/rpc');
+const getSSC = () => new SSC(HiveEngineConfigUtils.getApi());
 
-export const hiveEngineAPI = axios.create({
-  baseURL: 'https://history.hive-engine.com/',
-});
+const getHistoryApi = () =>
+  axios.create({
+    baseURL: HiveEngineConfigUtils.getAccountHistoryApi(),
+  });
 
-export const hiveEngineGet = async <T>(
-  params: TokenRequestParams,
-): Promise<T> => {
+const get = async <T>(params: TokenRequestParams): Promise<T> => {
   const url = `${HiveEngineConfigUtils.getApi()}/contracts`;
   return new Promise((resolve, reject) => {
     let start = Date.now();
@@ -51,4 +50,10 @@ export const hiveEngineGet = async <T>(
         }
       });
   });
+};
+
+export const HiveEngineApi = {
+  get,
+  getHistoryApi,
+  getSSC,
 };

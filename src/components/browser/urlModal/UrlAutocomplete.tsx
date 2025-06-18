@@ -1,7 +1,7 @@
 import {Page} from 'actions/interfaces';
 import Fuse from 'fuse.js';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {FlatList, Platform, StyleSheet, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {RootState, store} from 'store';
@@ -51,14 +51,13 @@ const UrlAutocomplete = ({
       isCaseSensitive: false,
       useExtendedSearch: true,
       ignoreLocation: true,
-      //maxPatternLength: 32,
       minMatchCharLength: 0,
       keys: [
         {name: 'name', weight: 0.5},
         {name: 'url', weight: 0.5},
       ],
     });
-    const fuseSearchResult = fuse.search(input);
+    const fuseSearchResult = fuse.search(input).slice(0, 8);
     if (Array.isArray(fuseSearchResult)) {
       setCandidates(fuseSearchResult.map((e) => e.item));
     } else {
@@ -68,35 +67,53 @@ const UrlAutocomplete = ({
   if (candidates.length)
     return (
       <View style={styles.wrapper}>
-        {candidates.map((e, index) => (
-          <HistoryItem
-            theme={theme}
-            onSubmit={onSubmit}
-            data={e}
-            indexItem={index}
-          />
-        ))}
+        <FlatList
+          data={candidates}
+          keyExtractor={(item, index) => `${item.url}-${index}`}
+          windowSize={5}
+          scrollEnabled
+          removeClippedSubviews={Platform.OS === 'android'}
+          keyboardShouldPersistTaps="handled"
+          renderItem={({item, index}) => (
+            <HistoryItem
+              theme={theme}
+              onSubmit={onSubmit}
+              data={item}
+              indexItem={index}
+              enabled={false}
+            />
+          )}
+        />
       </View>
     );
   else {
-    let historyCopy = [...history].reverse().slice(0, 10);
+    let historyCopy = [...history].reverse().slice(0, 8);
     return (
       <View style={styles.wrapper}>
-        {historyCopy.map((e, index) => (
-          <HistoryItem
-            theme={theme}
-            onSubmit={onSubmit}
-            data={e}
-            indexItem={index}
-          />
-        ))}
+        <FlatList
+          data={historyCopy}
+          keyExtractor={(item, index) => `${item.url}-${index}`}
+          windowSize={5}
+          removeClippedSubviews={Platform.OS === 'android'}
+          scrollEnabled
+          keyboardShouldPersistTaps="handled"
+          renderItem={({item, index}) => (
+            <HistoryItem
+              theme={theme}
+              onSubmit={onSubmit}
+              data={item}
+              indexItem={index}
+              enabled={false}
+            />
+          )}
+        />
       </View>
     );
   }
 };
 
 const styles = StyleSheet.create({
-  wrapper: {marginTop: 20},
+  wrapper: {marginTop: 20, flex: 1},
 });
 
 const connector = connect((state: RootState) => {

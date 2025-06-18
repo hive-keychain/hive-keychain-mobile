@@ -1,4 +1,4 @@
-import hsc, {hiveEngineAPI} from 'api/hiveEngine';
+import {HiveEngineApi} from 'api/hiveEngine';
 import {DEFAULT_HE_RPC_NODE} from 'screens/hive/settings/RpcNodes';
 import {AppThunk} from 'src/hooks/redux';
 import {
@@ -35,7 +35,14 @@ export const loadTokensMarket = (): AppThunk => async (dispatch) => {
   let offset = 0;
   let tokens;
   do {
-    tokens = await hsc.find('market', 'metrics', {}, 1000, offset, []);
+    tokens = await HiveEngineApi.getSSC().find(
+      'market',
+      'metrics',
+      {},
+      1000,
+      offset,
+      [],
+    );
     offset += 1000;
     tokensMarket = [...tokensMarket, ...tokens];
   } while (tokens.length === 1000);
@@ -86,7 +93,7 @@ export const loadTokenHistory = (
   do {
     previousTokenHistoryLength = tokenHistory.length;
     let result: TokenTransaction[] = (
-      await hiveEngineAPI.get('accountHistory', {
+      await HiveEngineApi.getHistoryApi().get('accountHistory', {
         params: {
           account,
           symbol: currency,

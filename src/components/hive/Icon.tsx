@@ -14,6 +14,7 @@ import DecryptIcon from 'assets/new_UI/decrypt.svg';
 import DoubleArrowIcon from 'assets/new_UI/double-arrow.svg';
 import EncryptIcon from 'assets/new_UI/encrypt.svg';
 import ExpandThinIcon from 'assets/new_UI/expand-thin.svg';
+import ExportIcon from 'assets/new_UI/export.svg';
 import EyeSlashIcon from 'assets/new_UI/eye-slash.svg';
 import GiftDeleteIcon from 'assets/new_UI/gift-delete.svg';
 import HBDCurrencyLogo from 'assets/new_UI/hbd-currency-logo.svg';
@@ -65,12 +66,15 @@ import SpeedometerIcon from 'assets/new_UI/speedometer.svg';
 import SupportIcon from 'assets/new_UI/support.svg';
 import React from 'react';
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import DragIcon from 'src/assets/browser/drag.svg';
+import SwipeDownIcon from 'src/assets/browser/swipe-down.svg';
+import SwipeLeftIcon from 'src/assets/browser/swipe-left.svg';
+import SwipeRightIcon from 'src/assets/browser/swipe-right.svg';
 import AddCircleOutlineIcon from 'src/assets/icons/svgs/add_circle_outline.svg';
 import {default as ArrowUpwardIcon} from 'src/assets/icons/svgs/arrow_upward.svg';
 import DeleteIcon from 'src/assets/icons/svgs/delete_black.svg';
 import ExpandLessIcon from 'src/assets/icons/svgs/expand_less.svg';
 import LinkIcon from 'src/assets/icons/svgs/link.svg';
-import ExportIcon from 'assets/new_UI/export.svg';
 import CalendarIcon from 'src/assets/new_UI/calendar.svg';
 import ConvertIcon from 'src/assets/new_UI/convert.svg';
 import DelegateTokenIcon from 'src/assets/new_UI/delegate-token.svg';
@@ -559,7 +563,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.GLOBAL:
+    case name === Icons.BROWSER:
       return (
         <GlobalIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -680,6 +684,13 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
+    case name === Icons.DRAG:
+      return (
+        <DragIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
     case name === Icons.NOTIFICATIONS:
       return (
         <NotificationsIcon
@@ -697,6 +708,27 @@ const getIconFilePath = (
     case name === Icons.EXPORT:
       return (
         <ExportIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.SWIPE_LEFT:
+      return (
+        <SwipeLeftIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.SWIPE_RIGHT:
+      return (
+        <SwipeRightIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.SWIPE_DOWN:
+      return (
+        <SwipeDownIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

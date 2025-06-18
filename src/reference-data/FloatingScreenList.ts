@@ -1,1 +1,1 @@
-export const FLOATINGBAR_ALLOWED_SCREENS = ['WalletScreen'];
+export const FLOATINGBAR_ALLOWED_SCREENS = ['WalletScreen', 'BrowserScreen'];

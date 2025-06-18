@@ -24,6 +24,7 @@ import HAS from '..';
 import {
   answerFailedBroadcastReq,
   answerSuccessfulBroadcastReq,
+  isNonceValid,
 } from '../helpers/sign';
 import {
   HAS_BroadcastModalPayload,
@@ -52,6 +53,12 @@ export const processSigningRequest = async (
         Crypto.enc.Utf8,
       ),
     );
+
+    if (!(await isNonceValid(opsData.nonce)) || payload.expire < Date.now()) {
+      console.log('nonce already used or expired');
+      return;
+    }
+    
     const {ops, key_type} = opsData;
     payload.decryptedData = opsData;
     let request: KeychainRequest;

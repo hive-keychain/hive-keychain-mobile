@@ -1,6 +1,7 @@
 import {Tab} from 'actions/interfaces';
 import {Caption} from 'components/ui/Caption';
-import React, {MutableRefObject} from 'react';
+import FastImageComponent from 'components/ui/FastImage';
+import React from 'react';
 import {
   Dimensions,
   ScrollView,
@@ -10,12 +11,12 @@ import {
   View,
 } from 'react-native';
 import Image from 'react-native-fast-image';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {BORDERWHITISH, DARKBLUELIGHTER, getColors} from 'src/styles/colors';
 import {title_primary_body_2} from 'src/styles/typography';
-import TabsManagementBottomBar from './BottomBar';
 
 //TODO: put in config
 const margin = Dimensions.get('window').width * 0.02;
@@ -26,13 +27,6 @@ type Props = {
   tabs: Tab[];
   onSelectTab: (id: number) => void;
   onCloseTab: (id: number) => void;
-  onCloseAllTabs: () => void;
-  onQuitManagement: () => void;
-  onAddTab: (
-    isManagingTab: boolean,
-    tab: Tab,
-    webview: MutableRefObject<View>,
-  ) => void;
   activeTab: number;
   show: boolean;
   theme: Theme;
@@ -41,14 +35,12 @@ export default ({
   tabs,
   onSelectTab,
   onCloseTab,
-  onCloseAllTabs,
-  onAddTab,
-  onQuitManagement,
   activeTab,
   show,
   theme,
 }: Props) => {
-  const styles = getStyles(theme);
+  const insets = useSafeAreaInsets();
+  const styles = getStyles(theme, insets);
 
   return (
     <View style={[styles.container, show ? null : styles.hide]}>
@@ -69,8 +61,9 @@ export default ({
               }}>
               <View style={styles.titleContainer}>
                 <View style={styles.nameContainer}>
-                  <Image style={[styles.icon]} source={{uri: icon}} />
+                  <FastImageComponent style={[styles.icon]} source={icon} />
                   <Text
+                    numberOfLines={1}
                     style={[
                       styles.textBase,
                       styles.name,
@@ -97,20 +90,11 @@ export default ({
           ))}
         </View>
       </ScrollView>
-      <TabsManagementBottomBar
-        onCloseAllTabs={onCloseAllTabs}
-        onAddTab={() => {
-          onAddTab(true, null, null);
-        }}
-        onQuitManagement={onQuitManagement}
-        showSideButtons={!!activeTab}
-        theme={theme}
-      />
     </View>
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (theme: Theme, insets: EdgeInsets) =>
   StyleSheet.create({
     tip: {
       fontSize: 14,
@@ -121,6 +105,7 @@ const getStyles = (theme: Theme) =>
     container: {
       flex: 1,
       backgroundColor: getColors(theme).primaryBackground,
+      paddingBottom: 70 + insets.bottom / 2,
     },
     subcontainer: {flex: 1, flexDirection: 'row', flexWrap: 'wrap'},
     hide: {display: 'none'},
@@ -145,6 +130,7 @@ const getStyles = (theme: Theme) =>
     },
     activeTab: {
       borderColor: '#A3112A',
+      borderWidth: 2,
     },
     nameContainer: {
       flexDirection: 'row',
@@ -157,10 +143,11 @@ const getStyles = (theme: Theme) =>
     },
     icon: {width: 16, height: 16},
     name: {
-      fontSize: 16,
+      fontSize: 14,
       textAlignVertical: 'bottom',
+      overflow: 'hidden',
       flex: 1,
-      marginHorizontal: 10,
+      marginLeft: 10,
     },
     closeIcon: {fontSize: 20},
     close: {color: 'white', fontWeight: 'bold', fontSize: 18},

@@ -8,8 +8,10 @@ import {
   CLOSE_ALL_BROWSER_TABS,
   CLOSE_BROWSER_TAB,
   REMOVE_FROM_BROWSER_FAVORITES,
+  REMOVE_FROM_BROWSER_HISTORY,
   SET_ACTIVE_BROWSER_TAB,
   UPDATE_BROWSER_TAB,
+  UPDATE_FAVORITES,
   UPDATE_MANAGEMENT,
 } from 'actions/types';
 import {translate} from 'utils/localize';
@@ -27,7 +29,10 @@ const browserReducer = (
 ) => {
   switch (type) {
     case ADD_TO_BROWSER_HISTORY:
-      if (state.history.find((e) => e!.url === payload!.history!.url)) {
+      if (
+        state.history.find((e) => e!.url === payload!.history!.url) ||
+        payload!.history!.url === 'about:blank'
+      ) {
         return state;
       }
       return {
@@ -41,10 +46,20 @@ const browserReducer = (
         ...state,
         favorites: newFavorite,
       };
+    case REMOVE_FROM_BROWSER_HISTORY:
+      return {
+        ...state,
+        history: state.history.filter((item) => item.url !== payload.url),
+      };
     case REMOVE_FROM_BROWSER_FAVORITES:
       return {
         ...state,
         favorites: state.favorites.filter((item) => item.url !== payload.url),
+      };
+    case UPDATE_FAVORITES:
+      return {
+        ...state,
+        favorites: payload!.favorites!,
       };
     case CLEAR_BROWSER_HISTORY:
       return {
@@ -58,7 +73,6 @@ const browserReducer = (
       };
     case ADD_BROWSER_TAB:
       if (payload!.id && payload!.url) {
-        console.log('new tab', translate('browser.home.title'));
         return {
           ...state,
           activeTab: payload!.id,
