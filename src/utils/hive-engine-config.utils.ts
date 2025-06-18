@@ -39,8 +39,8 @@ const switchToNextRpc = async () => {
   const rpcList = await getHiveEngineRpcList();
   const index = rpcList.indexOf(getApi());
   const nextApi = rpcList[(index + 1) % rpcList.length];
-  console.log('switching to', nextApi);
   setActiveApi(nextApi);
+  return nextApi;
 };
 
 /**
