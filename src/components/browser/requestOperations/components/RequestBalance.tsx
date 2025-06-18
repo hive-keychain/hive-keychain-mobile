@@ -2,7 +2,9 @@ import {ActiveAccount} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import Icon from 'src/components/hive/Icon';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {getColors} from 'src/styles/colors';
 import {
@@ -92,13 +94,32 @@ export default ({username, startToken, amount, accounts}: Props) => {
   return (
     <View style={styles.container}>
       <Text style={[styles.textBase, styles.title]}>Balance</Text>
-      <Text style={[styles.textBase, styles.content, styles.opaque]}>
-        {balance !== undefined
-          ? Number(balanceAfterSwap) < 0
-            ? `${balance} ${startToken} ==>  Insufficient Balance`
-            : `${balance} ${startToken} ==>  ${balanceAfterSwap} ${startToken}`
-          : 'calculating...'}
-      </Text>
+      <View style={styles.balanceContainer}>
+        {balance !== undefined ? (
+          <View style={styles.balanceRow}>
+            <Text style={[styles.textBase, styles.content, styles.opaque]}>
+              {`${balance} ${startToken}`}
+            </Text>
+            {Number(balanceAfterSwap) >= 0 && (
+              <Icon
+                name={Icons.ARROW_RIGHT_BROWSER}
+                additionalContainerStyle={styles.arrowIcon}
+                width={20}
+                height={20}
+              />
+            )}
+            <Text style={[styles.textBase, styles.content, styles.opaque]}>
+              {Number(balanceAfterSwap) < 0
+                ? 'Insufficient Balance'
+                : `${balanceAfterSwap} ${startToken}`}
+            </Text>
+          </View>
+        ) : (
+          <Text style={[styles.textBase, styles.content, styles.opaque]}>
+            calculating...
+          </Text>
+        )}
+      </View>
     </View>
   );
 };
@@ -114,5 +135,16 @@ const getStyles = (theme: Theme, width: number) =>
     },
     opaque: {
       opacity: 0.8,
+    },
+    balanceContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    balanceRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    arrowIcon: {
+      marginHorizontal: 5,
     },
   });
