@@ -4,7 +4,7 @@ import {VscHistoryItem} from 'hive-keychain-commons';
 import React, {useState} from 'react';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
-import {GREEN_SUCCESS, PRIMARY_RED_COLOR} from 'src/styles/colors';
+import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {formatBalance} from 'utils/format';
 import {translate} from 'utils/localize';
 import Icon from '../../hive/Icon';
@@ -25,12 +25,15 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
         return Icons.TRANSFER;
       case 'withdraw':
         return Icons.POWER_DOWN;
+      case 'stake_hbd': // stake
+        return Icons.POWER_UP;
+      case 'unstake_hbd': // unstake
+        return Icons.POWER_DOWN;
       case 'deposit':
       default:
         return Icons.TRANSFER;
     }
   };
-
 
   const getOperationDescription = () => {
     const opType = transaction.type;
@@ -56,6 +59,14 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
           : translate('wallet.operations.vsc.withdraw_amount', {
               amount: formatBalance(amount) + ' ' + currency,
             });
+      case 'stake_hbd':
+        return translate('wallet.operations.vsc.stake_amount', {
+          amount: formatBalance(amount) + ' ' + currency,
+        });
+      case 'unstake_hbd':
+        return translate('wallet.operations.vsc.unstake_amount', {
+          amount: formatBalance(amount) + ' ' + currency,
+        });
       case 'deposit':
         return translate('wallet.operations.vsc.deposit_amount', {
           amount: formatBalance(amount),
