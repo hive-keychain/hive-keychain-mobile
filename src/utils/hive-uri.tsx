@@ -46,7 +46,7 @@ export const processQRCodeOp = async (
   qrRequest: DecodeResult,
 ) => {
   let request;
-  qrRequest.params.signer = qrRequest.params.signer || 'stoodkev';
+  qrRequest.params.signer = qrRequest.params.signer;
   if (opType === HiveUriOpType.msg) {
     const message: string = qrRequest.tx;
     const authority = qrRequest.params?.authority;
