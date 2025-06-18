@@ -1,16 +1,16 @@
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import {VscHistoryItem, VscUtils} from 'hive-keychain-commons';
-import React, {useEffect, useRef, useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ConnectedProps, connect} from 'react-redux';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {getColors} from 'src/styles/colors';
-import {fields_primary_text_1} from 'src/styles/typography';
-import {RootState} from 'store';
-import {translate} from 'utils/localize';
-import {BackToTopButton} from '../../ui/Back-To-Top-Button';
+import { VscHistoryItem, VscUtils } from 'hive-keychain-commons';
+import React, { useEffect, useRef, useState } from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ConnectedProps, connect } from 'react-redux';
+import { Theme, useThemeContext } from 'src/context/theme.context';
+import { getColors } from 'src/styles/colors';
+import { fields_primary_text_1 } from 'src/styles/typography';
+import { RootState } from 'store';
+import { translate } from 'utils/localize';
+import { BackToTopButton } from '../../ui/Back-To-Top-Button';
 import VscHistoryItemComponent from './VscHistoryItemComponent';
 
 export interface VscHistoryComponentProps {
@@ -29,8 +29,6 @@ const VscHistory = ({activeAccount, route}: PropsFromRedux & {route: any}) => {
   const [bottomLoader, setBottomLoader] = useState(false);
 
   useEffect(() => {
-    console.log('vsc history screen');
-    console.log('route.params', route.params);
     if (route.params) {
       setCurrency(route.params.currency);
     }
