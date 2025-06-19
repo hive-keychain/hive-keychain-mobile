@@ -1,4 +1,5 @@
 import {Account, KeyTypes} from 'actions/interfaces';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {post} from 'utils/hive';
@@ -52,8 +53,8 @@ export default ({
       performOperation={(options: TransactionOptions) => {
         return performPostOperation(accounts, request, options);
       }}>
-      <RequestItem
-        content={`@${username}`}
+      <UsernameWithAvatar
+        username={username}
         title={translate('request.item.username')}
       />
       {title ? (
@@ -69,8 +70,8 @@ export default ({
         content={body}
       />
       {parent_username ? (
-        <RequestItem
-          content={`@${parent_username}`}
+        <UsernameWithAvatar
+          username={parent_username}
           title={translate('request.item.parent_username')}
         />
       ) : null}
