@@ -1,4 +1,5 @@
 import {KeyTypes} from 'actions/interfaces';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {powerUp} from 'utils/hive';
@@ -46,11 +47,11 @@ export default ({
           options,
         );
       }}>
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.username')}
-        content={`@${username}`}
+        username={username}
       />
-      <RequestItem title={translate('request.item.to')} content={`@${to}`} />
+      <UsernameWithAvatar title={translate('request.item.to')} username={to} />
       <RequestItem
         title={translate('request.item.amount')}
         content={`${hive} HIVE`}
