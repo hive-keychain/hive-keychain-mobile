@@ -60,14 +60,15 @@ const getStyles = (theme: Theme, width: number) =>
     title: {
       fontSize: getFontSizeSmallDevices(width, 14),
       color: getColors(theme).secondaryText,
-      ...title_primary_body_2,
+      fontFamily: title_primary_body_2.fontFamily,
     },
     username: {
       marginLeft: 8,
     },
     textBase: {
       color: getColors(theme).secondaryText,
-      ...title_primary_body_2,
+      fontSize: getFontSizeSmallDevices(width, 14),
+      fontFamily: title_primary_body_2.fontFamily,
     },
     opaque: {
       opacity: 0.8,
