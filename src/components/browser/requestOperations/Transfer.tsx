@@ -74,7 +74,11 @@ export default ({
         );
       }}>
       <RequestUsername />
-      <RequestItem title={translate('request.item.to')} content={`@${to}`} />
+      <UsernameWithAvatar
+        username={to}
+        title={translate('request.item.to')}
+        style={{marginBottom: 10}}
+      />
       <RequestItem
         title={translate('request.item.amount')}
         content={`${amount} ${currency}`}
