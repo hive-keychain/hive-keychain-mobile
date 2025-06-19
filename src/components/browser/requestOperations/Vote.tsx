@@ -1,5 +1,6 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import React from 'react';
+import UsernameWithAvatar from 'src/components/ui/UsernameWithAvatar';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {vote} from 'utils/hive';
 import {
@@ -46,13 +47,13 @@ export default ({
       performOperation={(options: TransactionOptions) => {
         return performVoteOperation(accounts, request, options);
       }}>
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.username')}
-        content={`@${username}`}
+        username={username}
       />
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.author')}
-        content={`@${author}`}
+        username={author}
       />
       <RequestItem
         title={translate('request.item.permlink')}
