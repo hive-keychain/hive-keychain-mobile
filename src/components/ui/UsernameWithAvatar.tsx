@@ -31,18 +31,29 @@ export default ({username, title, style, avatarStyle, textStyle}: Props) => {
   return (
     <View style={[styles.container, style]}>
       {title && <Text style={[styles.textBase, styles.title]}>{title}</Text>}
-      <View style={styles.contentContainer}>
-        <Image
-          style={[{width: 32, height: 32, borderRadius: 16}, avatarStyle]}
-          source={{uri: `https://images.hive.blog/u/${username}/avatar`}}
-          resizeMode={Image.resizeMode.contain}
-          fallback
-        />
-        <Text
-          style={[styles.textBase, styles.username, textStyle, styles.opaque]}>
-          {username}
+      {username.toLowerCase() !== 'none' || username !== '' ? (
+        <View style={styles.contentContainer}>
+          <Image
+            style={[{width: 32, height: 32, borderRadius: 16}, avatarStyle]}
+            source={{uri: `https://images.hive.blog/u/${username}/avatar`}}
+            resizeMode={Image.resizeMode.contain}
+            fallback
+          />
+          <Text
+            style={[
+              styles.textBase,
+              styles.username,
+              textStyle,
+              styles.opaque,
+            ]}>
+            {username}
+          </Text>
+        </View>
+      ) : (
+        <Text style={[styles.textBase, textStyle, styles.opaque]}>
+          {username ? username : 'None'}
         </Text>
-      </View>
+      )}
     </View>
   );
 };
