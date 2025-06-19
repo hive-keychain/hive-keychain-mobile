@@ -7,6 +7,7 @@ import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 
 type Props = {
   request: RequestProxy & RequestId;
@@ -47,9 +48,9 @@ export default ({
         });
       }}>
       <RequestUsername />
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.proxy')}
-        content={proxy.length ? `@${proxy}` : translate('common.none')}
+        username={proxy.length ? proxy : translate('common.none')}
       />
     </RequestOperation>
   );
