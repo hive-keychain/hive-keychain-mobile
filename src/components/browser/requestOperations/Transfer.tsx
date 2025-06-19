@@ -1,5 +1,6 @@
 import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import SimpleToast from 'react-native-simple-toast';
