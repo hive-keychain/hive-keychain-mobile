@@ -8,6 +8,7 @@ import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 
 type Props = {
   request: RequestWitnessVote & RequestId;
@@ -52,9 +53,9 @@ export default ({
         );
       }}>
       <RequestUsername />
-      <RequestItem
+      <UsernameWithAvatar
+        username={witness}
         title={translate('request.item.witness')}
-        content={`@${witness}`}
       />
       <RequestItem
         title={translate('request.item.action')}
