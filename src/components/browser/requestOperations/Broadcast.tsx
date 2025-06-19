@@ -1,6 +1,7 @@
 import {Operation} from '@hiveio/dhive';
 import {Account, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {broadcast} from 'utils/hive';
@@ -45,8 +46,8 @@ export default ({
       performOperation={(options: TransactionOptions) => {
         return performBroadcastOperation(accounts, request, options);
       }}>
-      <RequestItem
-        content={`@${username}`}
+      <UsernameWithAvatar
+        username={username}
         title={translate('request.item.username')}
       />
       <RequestItem content={method} title={translate('request.item.method')} />
