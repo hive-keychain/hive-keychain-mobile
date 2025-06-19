@@ -1,5 +1,6 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import {decodeMemo} from 'components/bridge';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import React from 'react';
 import {urlTransformer} from 'utils/browser';
 import {
@@ -46,9 +47,10 @@ export default ({
       performOperation={() => {
         return performDecodeOperation(accounts, request);
       }}>
-      <RequestItem
+      <UsernameWithAvatar
+        username={username}
         title={translate('request.item.username')}
-        content={`@${username}`}
+        style={{marginBottom: 10}}
       />
       <RequestItem title={translate('request.item.method')} content={method} />
     </RequestOperation>
