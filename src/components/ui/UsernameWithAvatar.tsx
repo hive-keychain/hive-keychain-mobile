@@ -40,7 +40,7 @@ export default ({username, title, style, avatarStyle, textStyle}: Props) => {
         />
         <Text
           style={[styles.textBase, styles.username, textStyle, styles.opaque]}>
-          {`@${username}`}
+          {username}
         </Text>
       </View>
     </View>
