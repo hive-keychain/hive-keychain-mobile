@@ -11,6 +11,7 @@ import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 
 type Props = {
   request: RequestSendToken & RequestId;
@@ -69,7 +70,10 @@ export default ({
         );
       }}>
       <RequestUsername />
-      <RequestItem title={translate('request.item.to')} content={`@${to}`} />
+      <UsernameWithAvatar
+        title={translate('request.item.to')}
+        username={to}
+      />
       <RequestItem
         title={translate('request.item.amount')}
         content={`${amount} ${currency}`}
