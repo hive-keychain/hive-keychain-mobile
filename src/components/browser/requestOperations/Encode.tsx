@@ -1,6 +1,7 @@
 import {Authority} from '@hiveio/dhive';
 import {Account, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import React from 'react';
 import {getAccountKeys} from 'utils/hiveUtils';
 import {
@@ -40,13 +41,13 @@ export default ({
       performOperation={async () => {
         return performEncodeOperation(accounts, request);
       }}>
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.username')}
-        content={`@${username}`}
+        username={username}
       />
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.to')}
-        content={`@${receiver}`}
+        username={receiver}
       />
       <RequestItem title={translate('request.item.method')} content={method} />
       <RequestItem
