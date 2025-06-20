@@ -1,4 +1,5 @@
 import {KeyTypes} from 'actions/interfaces';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {collateralizedConvert, convert} from 'utils/hive';
@@ -63,9 +64,9 @@ export default ({
           );
         }
       }}>
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.username')}
-        content={`@${username}`}
+        username={username}
       />
       <RequestItem
         title={translate('request.item.amount')}
