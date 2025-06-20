@@ -1,5 +1,6 @@
-import {KeyTypes} from 'actions/interfaces';
+import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
@@ -10,6 +11,7 @@ import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
+import RequestBalance from './components/RequestBalance';
 
 type Props = {
   request: RequestRecurrentTransfer & RequestId;
@@ -73,6 +75,7 @@ export default ({
         );
       }}>
       <RequestUsername />
+      <UsernameWithAvatar title={translate('request.item.to')} username={to} />
       <RequestItem
         title={translate('request.item.amount')}
         content={`${amount} ${currency}`}
