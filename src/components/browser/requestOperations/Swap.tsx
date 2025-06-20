@@ -2,7 +2,16 @@ import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import {RequestSwap} from 'hive-keychain-commons';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import Icon from 'src/components/hive/Icon';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {getColors} from 'src/styles/colors';
+import {
+  getFontSizeSmallDevices,
+  title_primary_body_2,
+} from 'src/styles/typography';
 import {RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
@@ -16,6 +25,52 @@ type Props = {
   request: RequestSwap & RequestId;
 } & RequestComponentCommonProps;
 
+const SwapDisplay = ({
+  startToken,
+  endToken,
+  amount,
+  estimateValue,
+}: {
+  startToken: string;
+  endToken: string;
+  amount: number;
+  estimateValue?: number;
+}) => {
+  const {theme} = useThemeContext();
+  const {width} = useWindowDimensions();
+  const styles = getStyles(theme, width);
+
+  return (
+    <View style={styles.container}>
+      <Text style={[styles.textBase, styles.title]}>
+        {translate('request.item.swap')}
+      </Text>
+      <View style={styles.swapContent}>
+        {estimateValue ? (
+          <>
+            <Text style={[styles.textBase, styles.content, styles.opaque]}>
+              {`${amount} ${startToken}`}
+            </Text>
+            <Icon
+              name={Icons.ARROW_RIGHT_BROWSER}
+              additionalContainerStyle={styles.arrowIcon}
+              width={20}
+              height={20}
+            />
+            <Text style={[styles.textBase, styles.content, styles.opaque]}>
+              {`${estimateValue} ${endToken}`}
+            </Text>
+          </>
+        ) : (
+          <Text style={[styles.textBase, styles.content, styles.opaque]}>
+            calculating...
+          </Text>
+        )}
+      </View>
+    </View>
+  );
+};
+
 export default ({
   request,
   accounts,
@@ -23,10 +78,10 @@ export default ({
   sendResponse,
   sendError,
 }: Props) => {
-  const {
-    getUsername,
-    RequestUsername,
-  } = usePotentiallyAnonymousRequest(request, accounts);
+  const {getUsername, RequestUsername} = usePotentiallyAnonymousRequest(
+    request,
+    accounts,
+  );
 
   const {request_id, ...data} = request;
   const {startToken, endToken, amount, steps, slippage} = data;
@@ -116,14 +171,11 @@ export default ({
       closeGracefully={closeGracefully}
       performOperation={handleSwap}>
       <RequestUsername />
-      <RequestItem
-        key="swap"
-        title={translate('request.item.swap')}
-        content={
-          estimateValue
-            ? `${amount} ${startToken} ==> ${estimateValue} ${endToken}`
-            : 'calculating...'
-        }
+      <SwapDisplay
+        startToken={startToken}
+        endToken={endToken}
+        amount={amount}
+        estimateValue={estimateValue}
       />
       <RequestBalance
         username={getUsername()}
@@ -139,3 +191,24 @@ export default ({
     </RequestOperation>
   );
 };
+
+const getStyles = (theme: Theme, width: number) =>
+  StyleSheet.create({
+    container: {paddingVertical: 5},
+    title: {fontSize: getFontSizeSmallDevices(width, 14)},
+    content: {fontSize: getFontSizeSmallDevices(width, 14)},
+    textBase: {
+      color: getColors(theme).secondaryText,
+      ...title_primary_body_2,
+    },
+    opaque: {
+      opacity: 0.8,
+    },
+    swapContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    arrowIcon: {
+      marginHorizontal: 5,
+    },
+  });
