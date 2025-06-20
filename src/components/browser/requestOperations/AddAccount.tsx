@@ -1,5 +1,6 @@
 import {addAccount} from 'actions/index';
 import {AccountKeys} from 'actions/interfaces';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {getClient} from 'utils/hive';
@@ -12,7 +13,6 @@ import {
 import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation';
 import {translate} from 'utils/localize';
 import CollapsibleData from './components/CollapsibleData';
-import RequestItem from './components/RequestItem';
 import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
@@ -44,9 +44,9 @@ const AddAccount = ({
       performOperation={async () => {
         return performAddAccountOperation(request, addAccount);
       }}>
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.username')}
-        content={username}
+        username={username}
       />
       <CollapsibleData
         title={translate('request.item.keys')}
