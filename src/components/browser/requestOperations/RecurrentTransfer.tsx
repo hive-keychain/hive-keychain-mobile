@@ -77,6 +77,12 @@ export default ({
         title={translate('request.item.amount')}
         content={`${amount} ${currency}`}
       />
+      <RequestBalance
+        username={getUsername()}
+        startToken={currency}
+        amount={parseFloat(amount) * executions}
+        accounts={accounts as ActiveAccount[]}
+      />
       <RequestItem
         title={translate('request.item.memo')}
         content={
