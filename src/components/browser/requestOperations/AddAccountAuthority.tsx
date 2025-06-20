@@ -1,4 +1,5 @@
 import {KeyTypes} from 'actions/interfaces';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {addAccountAuth} from 'utils/hive';
@@ -41,13 +42,13 @@ const AddAccountAuthority = ({
         const key = account.keys.active;
         return await addAccountAuth(key, data, options);
       }}>
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.username')}
-        content={`@${username}`}
+        username={username}
       />
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.authorized_username')}
-        content={`@${authorizedUsername}`}
+        username={authorizedUsername}
       />
       <RequestItem title={translate('request.item.role')} content={role} />
       <RequestItem
