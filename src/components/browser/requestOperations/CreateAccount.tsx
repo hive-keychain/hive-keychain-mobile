@@ -1,4 +1,5 @@
 import {KeyTypes} from 'actions/interfaces';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {createClaimedAccount} from 'utils/hive';
@@ -51,9 +52,9 @@ const CreateAccount = ({
           options,
         );
       }}>
-      <RequestItem
-        content={`@${username}`}
+      <UsernameWithAvatar
         title={translate('request.item.creator')}
+        username={username}
       />
       <RequestItem
         title={translate('request.item.new_account')}
