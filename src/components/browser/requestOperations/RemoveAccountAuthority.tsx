@@ -8,6 +8,7 @@ import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 
 type Props = {
   request: RequestRemoveAccountAuthority & RequestId;
@@ -40,13 +41,13 @@ const RemoveAccountAuthority = ({
         const key = account.keys.active;
         return await removeAccountAuth(key, data, options);
       }}>
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.username')}
-        content={`@${username}`}
+        username={username}
       />
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.authorized_username')}
-        content={`@${authorizedUsername}`}
+        username={authorizedUsername}
       />
       <RequestItem title={translate('request.item.role')} content={role} />
     </RequestOperation>
