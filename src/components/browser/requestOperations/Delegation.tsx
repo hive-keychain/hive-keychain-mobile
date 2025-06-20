@@ -1,4 +1,5 @@
 import {KeyTypes} from 'actions/interfaces';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
@@ -76,9 +77,9 @@ const Delegation = ({
         );
       }}>
       <RequestUsername />
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.delegatee')}
-        content={`@${delegatee}`}
+        username={delegatee}
       />
       <RequestItem
         title={translate('request.item.amount')}
