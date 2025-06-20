@@ -7,6 +7,7 @@ import {translate} from 'utils/localize';
 import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 
 type Props = {
   request: RequestCreateProposal & RequestId;
@@ -58,13 +59,13 @@ export default ({
           options,
         );
       }}>
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.username')}
-        content={`@${username}`}
+        username={username}
       />
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.receiver')}
-        content={`@${receiver}`}
+        username={receiver}
       />
       <RequestItem title={translate('request.item.title')} content={subject} />
       <RequestItem
