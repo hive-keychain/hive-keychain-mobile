@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {loadUserTokens} from 'actions/hiveEngine';
 import {Rpc} from 'actions/interfaces';
 import {setAccountHistoryRpc, setHiveEngineRpc, setRpc} from 'actions/settings';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
@@ -46,12 +47,14 @@ import {DEFAULT_RPC, rpcList} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {addCustomRpc, deleteCustomRpc, getCustomRpcs} from 'utils/rpc.utils';
 import * as ValidUrl from 'valid-url';
-import AddCustomRPC from './AddCustomRPC';
+import RpcComponent from './RpcComponent';
 
 const DEFAULT_CUSTOM_RPC = {
   uri: '',
   testnet: false,
+  hiveEngine: false,
 };
+
 export const DEFAULT_HE_RPC_NODE = 'https://api.hive-engine.com/rpc';
 
 export const DEFAULT_ACCOUNT_HISTORY_RPC_NODE =
@@ -65,6 +68,8 @@ const RpcNodes = ({
   activeHiveEngineRpc,
   activeAccountHistoryAPIRpc,
   setRpc,
+  loadUserTokens,
+  active,
 }: PropsFromRedux) => {
   //Hive RPC
   const [showAddCustomRPC, setShowAddCustomRPC] = useState(false);
@@ -73,6 +78,7 @@ const RpcNodes = ({
   const [switchRPCAuto, setSwitchRPCAuto] = useState(false);
   const [rpcFullList, setRpcFullList] = useState<DropdownModalItem[]>([]);
   const [customRPCList, setCustomRPCList] = useState<Rpc[]>([]);
+  const [switchHiveEngineRPCAuto, setSwitchHiveEngineRPCAuto] = useState(false);
 
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
@@ -84,10 +90,18 @@ const RpcNodes = ({
   }, []);
 
   const initSwitchAuto = async () => {
-    const switchAuto = await AsyncStorage.getItem(
+    const storageItems = await AsyncStorage.multiGet([
       KeychainStorageKeyEnum.SWITCH_RPC_AUTO,
+      KeychainStorageKeyEnum.SWITCH_HE_RPC_AUTO,
+    ]);
+    setSwitchRPCAuto(
+      storageItems[0][1] === 'true' || storageItems[0][1] === null,
     );
-    setSwitchRPCAuto(switchAuto === 'true' || switchAuto === null);
+    setSwitchHiveEngineRPCAuto(
+      storageItems[1][1] === 'true' ||
+        (storageItems[1][1] === null &&
+          activeHiveEngineRpc === DEFAULT_HE_RPC_NODE),
+    );
   };
 
   const cleanRpcLabel = (label: string) =>
@@ -202,6 +216,7 @@ const RpcNodes = ({
         <View style={[styles.rpcItemContainer]}>
           <DropdownModal
             dropdownTitle="settings.settings.hive_rpc"
+            hideLabel
             list={rpcFullList}
             selected={getItemDropDownSelected(rpc)}
             onSelected={(selected) => onHandleSetRPC(selected.value)}
@@ -270,6 +285,7 @@ const RpcNodes = ({
           title={'settings.settings.testnet'}
           smallText
         />
+
         <CheckBox
           checked={customRPCSetActive}
           onPress={() => setCustomRPCSetActive(!customRPCSetActive)}
@@ -287,7 +303,6 @@ const RpcNodes = ({
   const [newHERpc, setNewHERpc] = useState('');
   const [addNewHERpc, setAddNewHERpc] = useState(false);
   const [newHERPCAsActive, setNewHERPCAsActive] = useState(false);
-
   const onHandleAddCustomHERpc = async () => {
     if (newHERpc.trim().length > 0) {
       if (ValidUrl.isWebUri(newHERpc)) {
@@ -333,6 +348,7 @@ const RpcNodes = ({
   const onHandleSelectHERpc = (item: string) => {
     setHiveEngineRpc(item);
     HiveEngineConfigUtils.setActiveApi(item);
+    loadUserTokens(active.account.name);
     init();
   };
 
@@ -405,13 +421,6 @@ const RpcNodes = ({
     init();
   };
 
-  useEffect(() => {
-    AsyncStorage.setItem(
-      KeychainStorageKeyEnum.SWITCH_RPC_AUTO,
-      String(switchRPCAuto),
-    );
-  }, [switchRPCAuto]);
-
   return (
     <Background theme={theme}>
       <ScrollView style={styles.container}>
@@ -425,9 +434,19 @@ const RpcNodes = ({
           {/* <Text style={[styles.title, styles.text]}>
             {translate('settings.settings.hive_rpc')}
           </Text> */}
+          <Separator />
+          <Text style={styles.title}>
+            {translate('settings.settings.hive_rpc')}
+          </Text>
           <CheckBoxPanel
             checked={switchRPCAuto}
-            onPress={() => setSwitchRPCAuto(!switchRPCAuto)}
+            onPress={() => {
+              AsyncStorage.setItem(
+                KeychainStorageKeyEnum.SWITCH_RPC_AUTO,
+                String(!switchRPCAuto),
+              );
+              setSwitchRPCAuto(!switchRPCAuto);
+            }}
             title={'settings.settings.switch_auto'}
             subTitle="settings.settings.switch_auto_info"
           />
@@ -437,29 +456,50 @@ const RpcNodes = ({
         <Separator />
         {hiveEngineRPCList.length > 0 && (
           <>
-            <AddCustomRPC
-              title={'settings.settings.hive_engine_rpc'}
-              theme={theme}
-              rpcList={hiveEngineRPCList}
-              selectedRPC={activeHiveEngineRpc}
-              placeHolderInput={translate('settings.settings.new_HE_rpc')}
-              input={newHERpc}
-              onChangeInput={(text) => setNewHERpc(text)}
-              checkBoxTitle={translate('settings.settings.set_as_active')}
-              onHandleSave={onHandleAddCustomHERpc}
-              onChangeCheckBox={() => setNewHERPCAsActive(!newHERPCAsActive)}
-              checkedValue={newHERPCAsActive}
-              addNewRpc={addNewHERpc}
-              setAddNewRpc={() => setAddNewHERpc(!addNewHERpc)}
-              onRemoveDropdownItem={onHandleRemoveCustomHERpc}
-              onSelectedDropdown={onHandleSelectHERpc}
+            <Text style={styles.title}>
+              {translate('settings.settings.hive_engine_rpc')}
+            </Text>
+            <CheckBoxPanel
+              checked={switchHiveEngineRPCAuto}
+              onPress={() => {
+                AsyncStorage.setItem(
+                  KeychainStorageKeyEnum.SWITCH_HE_RPC_AUTO,
+                  String(!switchHiveEngineRPCAuto),
+                );
+                setSwitchHiveEngineRPCAuto(!switchHiveEngineRPCAuto);
+                loadUserTokens(active.account.name);
+              }}
+              title={'settings.settings.switch_auto'}
+              subTitle="settings.settings.switch_auto_info_he"
             />
+            {!switchHiveEngineRPCAuto && (
+              <RpcComponent
+                title={'settings.settings.hive_engine_rpc'}
+                theme={theme}
+                rpcList={hiveEngineRPCList}
+                selectedRPC={activeHiveEngineRpc}
+                placeHolderInput={translate('settings.settings.new_HE_rpc')}
+                input={newHERpc}
+                onChangeInput={(text) => setNewHERpc(text)}
+                checkBoxTitle={translate('settings.settings.set_as_active')}
+                onHandleSave={onHandleAddCustomHERpc}
+                onChangeCheckBox={() => setNewHERPCAsActive(!newHERPCAsActive)}
+                checkedValue={newHERPCAsActive}
+                addNewRpc={addNewHERpc}
+                setAddNewRpc={() => setAddNewHERpc(!addNewHERpc)}
+                onRemoveDropdownItem={onHandleRemoveCustomHERpc}
+                onSelectedDropdown={onHandleSelectHERpc}
+              />
+            )}
           </>
         )}
         <Separator />
         {accountHistoryAPIList.length > 0 && (
           <>
-            <AddCustomRPC
+            <Text style={styles.title}>
+              {translate('settings.settings.hive_engine_account_history_api')}
+            </Text>
+            <RpcComponent
               title={'settings.settings.hive_engine_account_history_api'}
               theme={theme}
               rpcList={accountHistoryAPIList}
@@ -498,7 +538,12 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       paddingHorizontal: MARGIN_PADDING,
       flex: 1,
     },
-    title: {marginBottom: 2, marginLeft: LABEL_INDENT_SPACE},
+    title: {
+      marginBottom: 5,
+      marginLeft: LABEL_INDENT_SPACE,
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
     text: {
       color: getColors(theme).secondaryText,
       ...headlines_primary_headline_3,
@@ -561,10 +606,14 @@ const mapStateToProps = (state: RootState) => ({
   activeHiveEngineRpc: state.settings.hiveEngineRpc,
   activeAccountHistoryAPIRpc: state.settings.accountHistoryAPIRpc,
 });
+
 const connector = connect(mapStateToProps, {
   setHiveEngineRpc,
   setAccountHistoryRpc,
   setRpc,
+  loadUserTokens,
 });
+
 type PropsFromRedux = ConnectedProps<typeof connector>;
+
 export default connector(RpcNodes);

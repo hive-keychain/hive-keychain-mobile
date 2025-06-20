@@ -5,9 +5,7 @@ import EllipticButton from 'components/form/EllipticButton';
 import UserDropdown from 'components/form/UserDropdown';
 import Key from 'components/hive/Key';
 import RemoveKey from 'components/modals/RemoveKey';
-import ConfirmationPage, {
-  ConfirmationPageProps,
-} from 'components/operations/Confirmation';
+import ConfirmationPage from 'components/operations/Confirmation';
 import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
@@ -109,13 +107,15 @@ const AccountManagement = ({
             <Separator />
           </>
         ),
-      } as ConfirmationPageProps;
+      };
 
       navigation.navigate('ModalScreen', {
         name: 'ConfirmationPageModal',
         modalContent: (
           <ConfirmationPage
-            route={{params: confirmationData} as ConfirmationPageRoute}
+            route={
+              ({params: confirmationData} as unknown) as ConfirmationPageRoute
+            }
           />
         ),
         modalContainerStyle: [getModalBaseStyle(theme).roundedTop],
