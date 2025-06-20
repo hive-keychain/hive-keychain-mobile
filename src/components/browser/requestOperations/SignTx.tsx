@@ -14,6 +14,7 @@ import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 
 type Props = {
   request: RequestSignTx & RequestId;
@@ -41,9 +42,9 @@ export default ({
       performOperation={async () => {
         return performSignTxOperation(accounts, request);
       }}>
-      <RequestItem
+      <UsernameWithAvatar
         title={translate('request.item.username')}
-        content={`@${username}`}
+        username={username}
       />
       <RequestItem title={translate('request.item.method')} content={method} />
       <CollapsibleData
