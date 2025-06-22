@@ -19,7 +19,9 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
+import Icon from 'src/components/hive/Icon';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonHeight} from 'src/styles/button';
@@ -44,10 +46,108 @@ export type ConfirmationPageProps = {
   keyType: KeyType;
 };
 
-type ConfirmationData = {
+export enum ConfirmationDataTag {
+  AMOUNT = 'amount',
+  BALANCE = 'balance',
+  USERNAME = 'username',
+}
+
+export type ConfirmationData = {
   title: string;
   value: string;
   tag?: string;
+  currency?: string;
+  currentBalance?: number;
+  amount?: number;
+  finalBalance?: number;
+};
+
+export const createBalanceData = (
+  title: string,
+  currentBalance: number,
+  amount: number,
+  currency: string,
+): ConfirmationData => {
+  const finalBalance = Number((currentBalance - amount).toFixed(3));
+  return {
+    title,
+    value: `${currentBalance} ${currency}`,
+    tag: ConfirmationDataTag.BALANCE,
+    currency,
+    currentBalance,
+    amount,
+    finalBalance,
+  };
+};
+
+const renderConfirmationValue = (
+  e: ConfirmationData,
+  width: number,
+  theme: Theme,
+  styles: any,
+) => {
+  switch (e.tag) {
+    case ConfirmationDataTag.USERNAME:
+      return <UsernameWithAvatar username={e.value} />;
+    case ConfirmationDataTag.AMOUNT:
+      return (
+        <Text
+          style={[getFormFontStyle(width, theme).title, styles.textContent]}>
+          {e.value + ` ${e.currency ? e.currency : ''}`}
+        </Text>
+      );
+    case ConfirmationDataTag.BALANCE:
+      if (
+        e.currentBalance !== undefined &&
+        e.amount !== undefined &&
+        e.finalBalance !== undefined
+      ) {
+        const isInsufficient = e.finalBalance < 0;
+        return (
+          <View style={styles.balanceRow}>
+            <Text
+              style={[
+                getFormFontStyle(width, theme).title,
+                styles.textContent,
+                styles.opaque,
+              ]}>
+              {`${e.currentBalance} ${e.currency || ''}`}
+            </Text>
+            <Icon
+              name={Icons.ARROW_RIGHT_BROWSER}
+              additionalContainerStyle={styles.arrowIcon}
+              width={20}
+              height={20}
+            />
+            <Text
+              style={[
+                getFormFontStyle(width, theme).title,
+                styles.textContent,
+                styles.opaque,
+              ]}>
+              {isInsufficient ? (
+                <Text style={styles.errorText}>Insufficient Balance</Text>
+              ) : (
+                `${e.finalBalance} ${e.currency || ''}`
+              )}
+            </Text>
+          </View>
+        );
+      }
+      return (
+        <Text
+          style={[getFormFontStyle(width, theme).title, styles.textContent]}>
+          {e.value + ` ${e.currency ? e.currency : ''}`}
+        </Text>
+      );
+    default:
+      return (
+        <Text
+          style={[getFormFontStyle(width, theme).title, styles.textContent]}>
+          {e.value}
+        </Text>
+      );
+  }
 };
 
 const ConfirmationPage = ({
@@ -110,42 +210,25 @@ const ConfirmationPage = ({
           />
         )}
         <View style={[getCardStyle(theme).defaultCardItem, {marginBottom: 0}]}>
-          {data.map(
-            (e, i) => (
-              (
-                <React.Fragment key={`${e.title}-${i}`}>
-                  <View style={[styles.justifyCenter, styles.confirmItem]}>
-                    <View style={[styles.flexRowBetween, styles.width95]}>
-                      <Text style={[getFormFontStyle(width, theme).title]}>
-                        {translate(e.title)}
-                      </Text>
-                      {e.tag === 'username' ? (
-                        <View
-                          style={{flexDirection: 'row', alignItems: 'center'}}>
-                          <UsernameWithAvatar username={e.value} />
-                        </View>
-                      ) : (
-                        <Text
-                          style={[
-                            getFormFontStyle(width, theme).title,
-                            styles.textContent,
-                          ]}>
-                          {e.value}
-                        </Text>
-                      )}
-                    </View>
-                    {i !== data.length - 1 && (
-                      <Separator
-                        drawLine
-                        height={0.5}
-                        additionalLineStyle={styles.bottomLine}
-                      />
-                    )}
-                  </View>
-                </React.Fragment>
-              )
-            ),
-          )}
+          {data.map((e, i) => (
+            <React.Fragment key={`${e.title}-${i}`}>
+              <View style={[styles.justifyCenter, styles.confirmItem]}>
+                <View style={[styles.flexRowBetween, styles.width95]}>
+                  <Text style={[getFormFontStyle(width, theme).title]}>
+                    {translate(e.title)}
+                  </Text>
+                  {renderConfirmationValue(e, width, theme, styles)}
+                </View>
+                {i !== data.length - 1 && (
+                  <Separator
+                    drawLine
+                    height={0.5}
+                    additionalLineStyle={styles.bottomLine}
+                  />
+                )}
+              </View>
+            </React.Fragment>
+          ))}
         </View>
         <Separator />
         <TwoFaForm twoFABots={twoFABots} setTwoFABots={setTwoFABots} />
@@ -207,6 +290,19 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     warningText: {
       color: PRIMARY_RED_COLOR,
       marginTop: -10,
+    },
+    balanceRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    arrowIcon: {
+      marginHorizontal: 8,
+    },
+    opaque: {
+      opacity: 0.7,
+    },
+    errorText: {
+      color: PRIMARY_RED_COLOR,
     },
   });
 
