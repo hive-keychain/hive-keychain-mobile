@@ -296,7 +296,10 @@
         }
       },
       "rc_delegation": {
-        "confirm": {"info": "Please confirm the RC delegation."},
+        "confirm": {
+          "info": "Please confirm the RC delegation.",
+          "balance": "Balance"
+        },
         "title_button": "RC Deleg.",
         "title": "RC Delegation",
         "total_incoming": "Total Incoming",

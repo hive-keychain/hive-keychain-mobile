@@ -47,7 +47,7 @@ import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
-import {ConfirmationPageProps} from './Confirmation';
+import {ConfirmationDataTag, ConfirmationPageProps, createBalanceData} from './Confirmation';
 import IncomingOutGoingRCDelegations from './IncomingOutGoingRCDelegations';
 import OperationThemed from './OperationThemed';
 
@@ -166,15 +166,25 @@ const RCDelegation = ({
           {
             title: 'wallet.operations.transfer.confirm.from',
             value: `@${user.account.name}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
-            value: `@${to}`,
             title: 'wallet.operations.transfer.confirm.to',
+            value: `@${to}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${withCommas(amount)} GRC`,
+            value: withCommas(amount),
+            tag: ConfirmationDataTag.AMOUNT,
+            currency: 'GRC',
           },
+          createBalanceData(
+            'wallet.operations.rc_delegation.confirm.balance',
+            parseFloat(available.gigaRcValue),
+            parseFloat(amount),
+            'GRC',
+          ),
         ],
       };
       navigate('ConfirmationPage', confirmationData);
