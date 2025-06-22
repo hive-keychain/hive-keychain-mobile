@@ -287,7 +287,10 @@
         "outgoing_disclaimer": "After being canceled, delegations take 5 days to return to your available Hive Power balance",
         "pending_undelegations": "Pending Undelegations",
         "confirm_cancel_delegation": "Please confirm that you want to cancel this delegation?",
-        "confirm": {"info": "Please confirm the HP delegation."}
+        "confirm": {
+          "info": "Please confirm the HP delegation.",
+          "balance": "Balance"
+        }
       },
       "rc_delegation": {
         "confirm": {"info": "Please confirm the RC delegation."},
