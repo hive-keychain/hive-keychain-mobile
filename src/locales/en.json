@@ -344,7 +344,10 @@
         "title": "Transfer Token"
       },
       "token_stake": {
-        "confirm": {"info": "Please confirm that you want to stake tokens."},
+        "confirm": {
+          "info": "Please confirm that you want to stake tokens.",
+          "balance": "Balance"
+        },
         "title": "Stake",
         "titled": "Staked",
         "staking": "Staking",
@@ -352,7 +355,10 @@
         "info": "Operations on tokens may take up to 30 seconds to confirm, please be patient."
       },
       "token_unstake": {
-        "confirm": {"info": "Please confirm that you want to unstake tokens."},
+        "confirm": {
+          "info": "Please confirm that you want to unstake tokens.",
+          "balance": "Balance"
+        },
         "title": "Unstake",
         "unstaking_token": "Unstaking {{currency}}",
         "unstaking": "Unstaking",
