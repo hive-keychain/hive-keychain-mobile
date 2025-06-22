@@ -256,7 +256,10 @@
         "title": "Power up",
         "info_power_up": "Powered up {{amount}}",
         "info_text": "Power up HIVE to transform it in HP",
-        "confirm": {"info": "Please confirm this power up."}
+        "confirm": {
+          "info": "Please confirm this power up.",
+          "balance": "Balance"
+        }
       },
       "powerdown": {
         "confirm": {

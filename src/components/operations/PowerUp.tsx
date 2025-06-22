@@ -29,7 +29,11 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {ConfirmationPageProps} from './Confirmation';
+import {
+  ConfirmationDataTag,
+  ConfirmationPageProps,
+  createBalanceData,
+} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface PowerUpOperationProps {
@@ -96,15 +100,25 @@ const PowerUp = ({
           {
             title: 'wallet.operations.transfer.confirm.from',
             value: `@${user.account.name}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
-            value: `@${to}`,
             title: 'wallet.operations.transfer.confirm.to',
+            value: `@${to}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${withCommas(amount)} ${currency}`,
+            value: withCommas(amount),
+            tag: ConfirmationDataTag.AMOUNT,
+            currency: currency,
           },
+          createBalanceData(
+            'wallet.operations.powerup.confirm.balance',
+            parseFloat(availableHiveAmount),
+            parseFloat(amount),
+            currency,
+          ),
         ],
       };
       navigate('ConfirmationPage', confirmationData);
