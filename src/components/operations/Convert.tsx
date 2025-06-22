@@ -35,7 +35,7 @@ import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import Balance from './Balance';
-import {ConfirmationPageProps} from './Confirmation';
+import {ConfirmationDataTag, ConfirmationPageProps, createBalanceData} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface ConvertOperationProps {
@@ -130,11 +130,20 @@ const Convert = ({
           {
             title: 'common.account',
             value: `@${user.account.name}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${withCommas(amount)} ${currency}`,
+            value: withCommas(amount),
+            tag: ConfirmationDataTag.AMOUNT,
+            currency: currency,
           },
+          createBalanceData(
+            'wallet.operations.transfer.confirm.balance',
+            parseFloat(availableBalance),
+            parseFloat(amount),
+            currency,
+          ),
         ],
         keyType: KeyType.ACTIVE,
       };
