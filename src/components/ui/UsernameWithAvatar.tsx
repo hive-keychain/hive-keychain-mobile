@@ -24,7 +24,7 @@ type Props = {
 };
 
 export default ({username, title, style, avatarStyle, textStyle}: Props) => {
-  username = username.startsWith('@') ? username.slice(1) : username;
+  username = username.startsWith('@') ? username.slice(1).trim() : username.trim();
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
   const styles = getStyles(theme, width);
