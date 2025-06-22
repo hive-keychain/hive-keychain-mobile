@@ -245,12 +245,12 @@ const Transfer = ({
           {
             title: 'wallet.operations.transfer.confirm.from',
             value: `@${user.account.name}`,
+            tag: 'username',
           },
           {
-            value: `@${to} ${
-              ExchangesUtils.isExchange(to) ? '(exchange)' : ''
-            }`,
             title: 'wallet.operations.transfer.confirm.to',
+            value: `@${to}${ExchangesUtils.isExchange(to) ? '(exchange)' : ''}`,
+            tag: 'username',
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
