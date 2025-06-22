@@ -6,6 +6,7 @@ import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import MultisigCaption from 'components/ui/MultisigCaption';
 import Separator from 'components/ui/Separator';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import {ConfirmationPageRoute} from 'navigators/Root.types';
 import React, {useState} from 'react';
@@ -46,6 +47,7 @@ export type ConfirmationPageProps = {
 type ConfirmationData = {
   title: string;
   value: string;
+  tag?: string;
 };
 
 const ConfirmationPage = ({
@@ -108,31 +110,42 @@ const ConfirmationPage = ({
           />
         )}
         <View style={[getCardStyle(theme).defaultCardItem, {marginBottom: 0}]}>
-          {data.map((e, i) => (
-            <>
-              <View style={[styles.justifyCenter, styles.confirmItem]}>
-                <View style={[styles.flexRowBetween, styles.width95]}>
-                  <Text style={[getFormFontStyle(width, theme).title]}>
-                    {translate(e.title)}
-                  </Text>
-                  <Text
-                    style={[
-                      getFormFontStyle(width, theme).title,
-                      styles.textContent,
-                    ]}>
-                    {e.value}
-                  </Text>
-                </View>
-                {i !== data.length - 1 && (
-                  <Separator
-                    drawLine
-                    height={0.5}
-                    additionalLineStyle={styles.bottomLine}
-                  />
-                )}
-              </View>
-            </>
-          ))}
+          {data.map(
+            (e, i) => (
+              (
+                <React.Fragment key={`${e.title}-${i}`}>
+                  <View style={[styles.justifyCenter, styles.confirmItem]}>
+                    <View style={[styles.flexRowBetween, styles.width95]}>
+                      <Text style={[getFormFontStyle(width, theme).title]}>
+                        {translate(e.title)}
+                      </Text>
+                      {e.tag === 'username' ? (
+                        <View
+                          style={{flexDirection: 'row', alignItems: 'center'}}>
+                          <UsernameWithAvatar username={e.value} />
+                        </View>
+                      ) : (
+                        <Text
+                          style={[
+                            getFormFontStyle(width, theme).title,
+                            styles.textContent,
+                          ]}>
+                          {e.value}
+                        </Text>
+                      )}
+                    </View>
+                    {i !== data.length - 1 && (
+                      <Separator
+                        drawLine
+                        height={0.5}
+                        additionalLineStyle={styles.bottomLine}
+                      />
+                    )}
+                  </View>
+                </React.Fragment>
+              )
+            ),
+          )}
         </View>
         <Separator />
         <TwoFaForm twoFABots={twoFABots} setTwoFABots={setTwoFABots} />
