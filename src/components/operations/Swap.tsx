@@ -530,11 +530,20 @@ const Swap = ({
                 <Text style={[styles.textBase]}>
                   {translate('wallet.operations.swap.swap_estimation')}
                 </Text>
-                <Text style={[styles.textBase]}>{`${withCommas(amount)} ${
-                  startToken.value.symbol
-                } => ${withCommas(estimateValue)} ${
-                  endToken.value.symbol
-                }`}</Text>
+                <View style={styles.flexRowbetween}>
+                  <Text style={[styles.textBase]}>
+                    {`${withCommas(amount)} ${startToken.value.symbol}`}
+                  </Text>
+                  <Icon
+                    name={Icons.ARROW_RIGHT_BROWSER}
+                    additionalContainerStyle={{marginHorizontal: 8}}
+                    width={20}
+                    height={20}
+                  />
+                  <Text style={[styles.textBase]}>
+                    {`${withCommas(estimateValue)} ${endToken.value.symbol}`}
+                  </Text>
+                </View>
               </View>
               <Separator
                 drawLine
