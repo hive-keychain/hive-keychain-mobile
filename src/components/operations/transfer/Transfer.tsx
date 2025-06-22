@@ -42,7 +42,11 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {TransferUtils} from 'utils/transfer.utils';
 import Balance from '../Balance';
-import {ConfirmationPageProps} from '../Confirmation';
+import {
+  ConfirmationDataTag,
+  ConfirmationPageProps,
+  createBalanceData,
+} from '../Confirmation';
 import OperationThemed from '../OperationThemed';
 
 export type TransferOperationProps = {
@@ -228,7 +232,6 @@ const Transfer = ({
         }),
       );
     } else {
-      //TODO : Call confirmation page
       const confirmationData: ConfirmationPageProps = {
         title: 'wallet.operations.transfer.confirm.info',
         onSend,
@@ -245,17 +248,25 @@ const Transfer = ({
           {
             title: 'wallet.operations.transfer.confirm.from',
             value: `@${user.account.name}`,
-            tag: 'username',
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
             title: 'wallet.operations.transfer.confirm.to',
             value: `@${to}${ExchangesUtils.isExchange(to) ? '(exchange)' : ''}`,
-            tag: 'username',
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${withCommas(amount)} ${currency}`,
+            value: `${withCommas(amount)}`,
+            tag: ConfirmationDataTag.AMOUNT,
+            currency: currency,
           },
+          createBalanceData(
+            'wallet.operations.transfer.confirm.balance',
+            parseFloat(availableBalance),
+            parseFloat(amount),
+            currency,
+          ),
         ],
         keyType: KeyType.ACTIVE,
       };

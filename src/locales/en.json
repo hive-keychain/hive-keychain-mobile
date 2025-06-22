@@ -232,7 +232,8 @@
           "amount": "Amount",
           "memo": "Memo",
           "recurrence": "Recurrence",
-          "recurrenceData": "{{exec}} times, every {{recurrence}} hours"
+          "recurrenceData": "{{exec}} times, every {{recurrence}} hours",
+          "balance": "Balance"
         },
         "warning": {
           "phishing": "This account has been listed as a potential phishing account, check the spelling and make sure it is the account you want to transfer to.",
