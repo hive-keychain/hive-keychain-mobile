@@ -1,6 +1,7 @@
 import {showModal} from 'actions/message';
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import * as hiveUri from 'hive-uri';
 import {
   ReceiveTransferProps,
@@ -61,13 +62,7 @@ const Receive = ({
               <Text style={[getFormFontStyle(width, theme).title]}>
                 {translate('request.item.to')}
               </Text>
-              <Text
-                style={[
-                  getFormFontStyle(width, theme).title,
-                  styles.textContent,
-                ]}>
-                {`@${params[1].to}`}
-              </Text>
+              <UsernameWithAvatar username={params[1].to} />
             </View>
             <Separator
               drawLine
