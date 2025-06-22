@@ -38,7 +38,7 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {ConfirmationPageProps} from './Confirmation';
+import {ConfirmationDataTag, ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface PowerDownOperationProps {
@@ -140,16 +140,20 @@ const PowerDown = ({
               {
                 title: 'common.account',
                 value: `@${user.name}`,
+                tag: ConfirmationDataTag.USERNAME,
               },
             ]
           : [
               {
                 title: 'common.account',
                 value: `@${user.name}`,
+                tag: ConfirmationDataTag.USERNAME,
               },
               {
                 title: 'wallet.operations.transfer.confirm.amount',
-                value: `${withCommas(amount)} ${currency}`,
+                value: withCommas(amount),
+                tag: ConfirmationDataTag.AMOUNT,
+                currency: currency,
               },
             ],
       };
