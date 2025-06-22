@@ -50,6 +50,7 @@ export enum ConfirmationDataTag {
   AMOUNT = 'amount',
   BALANCE = 'balance',
   USERNAME = 'username',
+  OPERATION_TYPE = 'operation_type',
 }
 
 export type ConfirmationData = {

@@ -41,7 +41,11 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {SavingsUtils} from 'utils/savings.utils';
-import {ConfirmationPageProps} from './Confirmation';
+import {
+  ConfirmationDataTag,
+  ConfirmationPageProps,
+  createBalanceData,
+} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export enum SavingsOperations {
@@ -198,19 +202,34 @@ const Savings = ({
             title: 'common.operation_type',
             value: operationTypeList.find((e) => e.value === operationType)
               .label,
+            tag: ConfirmationDataTag.OPERATION_TYPE,
           },
           {
             title: 'wallet.operations.transfer.confirm.from',
             value: `@${user.account.name}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
-            value: `@${to}`,
             title: 'wallet.operations.transfer.confirm.to',
+            value: `@${to}`,
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
-            value: `${withCommas(amount)} ${currency}`,
+            value: withCommas(amount),
+            tag: ConfirmationDataTag.AMOUNT,
+            currency: currency,
           },
+          createBalanceData(
+            'wallet.operations.savings.confirm.balance',
+            operationType === SavingsOperations.deposit
+              ? parseFloat(availableBalance as string)
+              : parseFloat(currentBalance as string),
+            operationType === SavingsOperations.deposit
+              ? parseFloat(amount)
+              : -parseFloat(amount),
+            currency,
+          ),
         ],
       };
       navigate('ConfirmationPage', confirmationData);

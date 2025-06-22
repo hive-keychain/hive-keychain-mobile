@@ -210,7 +210,10 @@
             "success": "Savings withdrawal canceled succesfully"
           }
         },
-        "confirm": {"info": "Please confirm this savings operation."},
+        "confirm": {
+          "info": "Please confirm this savings operation.",
+          "balance": "Balance"
+        },
         "pending": "Withdrawing",
         "currency_savings_title": "{{currency}} Savings"
       },
