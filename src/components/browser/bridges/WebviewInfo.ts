@@ -18,7 +18,7 @@ const getWebviewInfo = `
 	const __getName=function(){
 		const siteName = document.querySelector('head > meta[property="og:site_name"]');
 		const title= siteName || document.querySelector('head > meta[name="title"]');
-		return title ? title.content : document.title
+		return title ? title.content : document.title.length>0?document.title:document.domain;
 	}
 	window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(
 		{
