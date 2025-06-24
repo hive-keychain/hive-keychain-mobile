@@ -140,20 +140,34 @@ const BottomNavigation = ({
       }
     });
   };
-
   useEffect(() => {
     startAnimation(
       !isModal &&
-        show &&
         orientation === 'PORTRAIT' &&
         !isLoadingScreen &&
         rpc &&
         !isDrawerOpen &&
-        rpc.uri !== 'NULL'
+        rpc.uri !== 'NULL' &&
+        (show ||
+          (isBrowser &&
+            browser.tabs.find((tab) => tab.id === browser.activeTab)?.url ===
+              BrowserConfig.HOMEPAGE_URL) ||
+          browser.showManagement)
         ? 0
         : 1,
     );
-  }, [show, isDrawerOpen, isLoadingScreen]);
+  }, [
+    show,
+    isDrawerOpen,
+    isLoadingScreen,
+    isBrowser,
+    browser.tabs,
+    browser.activeTab,
+    isModal,
+    browser.showManagement,
+    orientation,
+    rpc,
+  ]);
 
   const translateY = anim.interpolate({
     inputRange: [0, 1],
