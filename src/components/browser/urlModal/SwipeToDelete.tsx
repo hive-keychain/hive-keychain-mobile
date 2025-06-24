@@ -21,9 +21,16 @@ type Props = {
   children: React.ReactNode;
   containerStyle?: ViewStyle;
   enabled?: boolean;
+  draggable?: boolean;
 };
 const SwipeableItem = memo(
-  ({onDismiss, children, containerStyle, enabled = true}: Props) => {
+  ({
+    onDismiss,
+    children,
+    containerStyle,
+    enabled = true,
+    draggable = false,
+  }: Props) => {
     const translateX = useSharedValue(0);
     const bgTranslateX = useSharedValue(0);
     const SCREEN_WIDTH = useWindowDimensions().width;
@@ -92,6 +99,9 @@ const SwipeableItem = memo(
             enabled={enabled}
             onGestureEvent={gestureHandler}
             activeOffsetX={[-10, 10]}
+            hitSlop={
+              draggable ? {left: 0, width: SCREEN_WIDTH * 0.7} : undefined
+            }
             failOffsetY={[-5, 5]}>
             <Animated.View
               style={[

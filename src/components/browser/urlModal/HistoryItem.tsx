@@ -1,7 +1,7 @@
 import {Page} from 'actions/interfaces';
 import Icon from 'components/hive/Icon';
 import FastImageComponent from 'components/ui/FastImage';
-import React, {memo} from 'react';
+import React, {memo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -31,11 +31,13 @@ export default memo(
   }: Props) => {
     const {name, url, icon} = data;
     const styles = getStyles(theme);
+    const [isDragging, setIsDragging] = useState(false);
     return (
       <View style={styles.wrapper}>
         <SwipeableItemComponent
           onDismiss={onDismiss}
-          enabled={enabled}
+          enabled={enabled && !isDragging}
+          draggable={!!drag}
           containerStyle={styles.card}>
           <TouchableOpacity
             activeOpacity={1}
@@ -55,7 +57,13 @@ export default memo(
                 </Text>
               </View>
               {drag && (
-                <TouchableOpacity onPressIn={drag}>
+                <TouchableOpacity
+                  onPressIn={(event) => {
+                    drag(event);
+                    setIsDragging(true);
+                    setTimeout(() => setIsDragging(false), 1000);
+                    event.stopPropagation();
+                  }}>
                   <Icon
                     name={Icons.DRAG}
                     theme={theme}
