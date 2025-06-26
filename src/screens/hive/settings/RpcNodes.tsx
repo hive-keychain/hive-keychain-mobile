@@ -541,6 +541,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     title: {
       marginBottom: 5,
       marginLeft: LABEL_INDENT_SPACE,
+      color: getColors(theme).secondaryText,
       fontWeight: 'bold',
       fontSize: 16,
     },
