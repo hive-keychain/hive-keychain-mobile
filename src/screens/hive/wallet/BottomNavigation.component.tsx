@@ -43,7 +43,7 @@ import {PlatformsUtils} from 'utils/platforms.utils';
 export enum BottomBarLink {
   Wallet = 'WalletScreen',
   Browser = 'BrowserScreen',
-  ScanQr = 'ScanQR',
+  ScanQr = 'ScanQRFromWalletScreen',
   SwapBuy = 'SwapBuy',
 }
 interface Props {
@@ -150,9 +150,9 @@ const BottomNavigation = ({
         rpc.uri !== 'NULL' &&
         (show ||
           (isBrowser &&
-            browser.tabs.find((tab) => tab.id === browser.activeTab)?.url ===
-              BrowserConfig.HOMEPAGE_URL) ||
-          browser.showManagement)
+            (browser.tabs.find((tab) => tab.id === browser.activeTab)?.url ===
+              BrowserConfig.HOMEPAGE_URL ||
+              browser.showManagement)))
         ? 0
         : 1,
     );
@@ -338,7 +338,11 @@ const BottomNavigation = ({
       </Pressable>
       {isBrowser && showBrowserSecondaryLinks && renderBrowserBottomBar()}
       {(!isBrowser || !showBrowserSecondaryLinks) && (
-        <View style={[styles.itemContainer]}>
+        <View
+          style={[
+            styles.itemContainer,
+            activeScreen === BottomBarLink.ScanQr && styles.active,
+          ]}>
           <Icon
             theme={theme}
             name={Icons.SCANNER}
