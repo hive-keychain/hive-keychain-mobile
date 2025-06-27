@@ -1,18 +1,24 @@
 import {Tab as TabType} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useState} from 'react';
-import {KeyboardAvoidingView, Platform, StyleSheet, View} from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import Orientation from 'react-native-orientation-locker';
 import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
+import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
 import {BrowserConfig} from 'utils/config';
 import Header from './Header';
 import Tab from './Tab';
 import TabsManagement from './tabsManagement';
 import UrlModal from './urlModal';
-
 interface Props {
   theme: Theme;
 }
@@ -25,7 +31,6 @@ const Browser = ({
   addTab,
   updateTab,
   closeTab,
-  closeAllTabs,
   addToHistory,
   clearHistory,
   addToFavorites,
@@ -34,10 +39,9 @@ const Browser = ({
   navigation,
   setBrowserFocus,
   showManagementScreen,
-  showFloatingBar,
   theme,
 }: Partial<BrowserPropsFromRedux> & BrowserNavigationProps & Props) => {
-  const {showManagement, activeTab, tabs, history, favorites} = browser;
+  const {showManagement, activeTab, tabs, history} = browser;
   const currentActiveTabData = tabs.find((t) => t.id === activeTab);
   const url = currentActiveTabData
     ? currentActiveTabData.url
@@ -46,10 +50,10 @@ const Browser = ({
   const [isVisible, toggleVisibility] = useState(false);
   const [searchUrl, setSearchUrl] = useState(url);
   const [orientation, setOrientation] = useState('PORTRAIT');
-
+  const {webViewRef} = useTab();
   useEffect(() => {
     setSearchUrl(url);
-  }, [url]);
+  }, [url, isVisible]);
 
   useEffect(() => {
     setBrowserFocus(false);
@@ -79,24 +83,6 @@ const Browser = ({
     };
   }, []);
 
-  const manageTabs = (
-    {url, icon, id}: TabType,
-    view: MutableRefObject<WebView> | MutableRefObject<View>,
-  ) => {
-    captureRef(view, {
-      format: 'jpg',
-      quality: 0.2,
-    }).then(
-      (uri) => {
-        updateTab(id, {id, url, icon, image: uri});
-        showManagementScreen(true);
-      },
-      (error) => {
-        console.error(error);
-      },
-    );
-  };
-
   const onSelectTab = (id: number) => {
     changeTab(id);
     showManagementScreen(false);
@@ -113,39 +99,24 @@ const Browser = ({
     closeTab(id);
   };
 
-  const onCloseAllTabs = () => {
-    changeTab(0);
-    closeAllTabs();
-  };
-
-  const onAddTab = (
+  const onAddTab = async (
     isManagingTab: boolean,
     tab: TabType,
-    view: MutableRefObject<View>,
+    view: MutableRefObject<View | ScrollView>,
     newUrl = BrowserConfig.HOMEPAGE_URL,
   ) => {
     if (!isManagingTab) {
       const {id, url, icon} = tab;
-      captureRef(view, {
+      const uri = await captureRef(view, {
         format: 'jpg',
         quality: 0.2,
-      }).then(
-        (uri) => {
-          updateTab(id, {id, url, icon, image: uri});
-          addTab(newUrl);
-        },
-        (error) => {
-          console.error(error);
-        },
-      );
+      });
+      updateTab(id, {id, url, icon, image: uri});
+      addTab(newUrl);
     } else {
       addTab(newUrl);
       showManagementScreen(false);
     }
-  };
-
-  const onQuitManagement = () => {
-    showManagementScreen(false);
   };
 
   const onNewSearch = (url: string) => {
@@ -188,9 +159,6 @@ const Browser = ({
           activeTab={activeTab}
           onSelectTab={onSelectTab}
           onCloseTab={onCloseTab}
-          onCloseAllTabs={onCloseAllTabs}
-          onAddTab={onAddTab}
-          onQuitManagement={onQuitManagement}
           show={showManagement}
           theme={theme}
         />
@@ -203,16 +171,10 @@ const Browser = ({
             updateTab={updateTab}
             navigation={navigation}
             addToHistory={addToHistory}
-            history={history}
-            manageTabs={manageTabs}
-            clearHistory={clearHistory}
             isManagingTab={showManagement}
             preferences={preferences}
-            favorites={favorites}
             addTab={onAddTab}
-            tabsNumber={browser.tabs.length}
             orientation={orientation}
-            isUrlModalOpen={isVisible}
             theme={theme}
           />
         ))}
@@ -224,6 +186,11 @@ const Browser = ({
           url={searchUrl === 'about:blank' ? '' : searchUrl}
           setUrl={setSearchUrl}
           clearHistory={clearHistory}
+          clearCache={() => {
+            toggleVisibility(false);
+            (webViewRef as MutableRefObject<WebView>).current?.clearCache(true);
+            (webViewRef as MutableRefObject<WebView>).current?.reload();
+          }}
           theme={theme}
         />
       </KeyboardAvoidingView>

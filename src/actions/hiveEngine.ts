@@ -1,18 +1,22 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {HiveEngineApi} from 'api/hiveEngine';
+import {DEFAULT_HE_RPC_NODE} from 'screens/hive/settings/RpcNodes';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {AppThunk} from 'src/hooks/redux';
 import {
   OperationsHiveEngine,
   Token,
-  TokenBalance,
   TokenMarket,
   TokenTransaction,
 } from 'src/interfaces/tokens.interface';
+import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
 import {RootState, store} from 'store';
+import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 import {decodeMemoIfNeeded} from 'utils/hiveEngine';
 import {getAllTokens, getUserBalance} from 'utils/tokens.utils';
-import {ActionPayload} from './interfaces';
+import {ActionPayload, TokenBalance} from './interfaces';
 import {showModal} from './message';
+import {setHiveEngineRpc} from './settings';
 import {
   CLEAR_TOKEN_HISTORY,
   CLEAR_USER_TOKENS,
@@ -72,10 +76,18 @@ export const loadUserTokens = (account: string): AppThunk => async (
     };
     dispatch(action);
   } catch (e) {
-    if (e.message && e.message.includes('timeout')) {
-      dispatch(showModal('toast.tokens_timeout', MessageModalType.ERROR));
-    }
-    console.log('loadUserTokens Error: ', e);
+    const switchAuto = await AsyncStorage.getItem(
+      KeychainStorageKeyEnum.SWITCH_HE_RPC_AUTO,
+    );
+    if (
+      switchAuto === 'true' ||
+      (switchAuto === null &&
+        HiveEngineConfigUtils.getApi() === DEFAULT_HE_RPC_NODE)
+    ) {
+      const newApi = await HiveEngineConfigUtils.switchToNextRpc();
+      dispatch(setHiveEngineRpc(newApi));
+      dispatch(loadUserTokens(account));
+    } else dispatch(showModal('toast.tokens_timeout', MessageModalType.ERROR));
   }
 };
 
@@ -106,16 +118,6 @@ export const loadTokenHistory = (
     start += 1000;
     tokenHistory = [...tokenHistory, ...result];
   } while (previousTokenHistoryLength !== tokenHistory.length);
-
-  //------- this is for debug -----//
-  // let tokenOperationTypes = tokenHistory.map((e: any) => e.operation);
-  // tokenOperationTypes = [...new Set(tokenOperationTypes)];
-  // console.log(tokenOperationTypes);
-
-  // for (const type of tokenOperationTypes) {
-  //   console.log(tokenHistory.find((e: any) => e.operation === type));
-  // }
-  //-------------------------------//
 
   tokenHistory = tokenHistory.map((t: any) => {
     t.amount = `${t.quantity} ${t.symbol}`;

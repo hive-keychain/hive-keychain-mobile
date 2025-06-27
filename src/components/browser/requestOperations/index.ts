@@ -20,6 +20,7 @@ import RemoveProposal from './RemoveProposal';
 import SendToken from './SendToken';
 import SignBuffer from './SignBuffer';
 import SignTx from './SignTx';
+import Swap from './Swap';
 import Transfer from './Transfer';
 import UpdateProposalVote from './UpdateProposalVote';
 import Vote from './Vote';
@@ -60,5 +61,6 @@ const map = {
   vscTransfer: VscTransfer,
   vscWithdrawal: VscWithdrawal,
   vscStaking: VscStaking,
+  swap: Swap,
 };
 export default map;

@@ -1,6 +1,7 @@
 import {Operation, Transaction} from '@hiveio/dhive';
 import {KeyTypes} from 'actions/interfaces';
 import {
+  RequestSwap,
   RequestVscDeposit,
   RequestVscStaking,
   RequestVscTransfer,
@@ -40,6 +41,7 @@ export enum KeychainRequestTypes {
   vscWithdrawal = 'vscWithdrawal',
   vscStaking = 'vscStaking',
   encodeWithKeys = 'encodeWithKeys',
+  swap = 'swap',
 }
 
 export enum KeychainKeyTypes {
@@ -318,8 +320,8 @@ export type KeychainRequestData =
   | RequestVscTransfer
   | RequestVscDeposit
   | RequestVscWithdrawal
-  | RequestVscStaking;
-
+  | RequestVscStaking
+  | RequestSwap;
 export type RequestId = {request_id?: number};
 export type UsingHAS = {has?: boolean};
 export type KeychainRequest = KeychainRequestData & RequestId & UsingHAS;

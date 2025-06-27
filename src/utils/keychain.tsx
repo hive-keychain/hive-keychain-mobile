@@ -25,33 +25,29 @@ export const validateAuthority = (
   const wifType = getRequiredWifType(req);
   if (username) {
     const account = accounts.find((e) => e.name === username);
+    console.log('account', account);
     if (!account) {
       return {
         valid: false,
         error: translate('request.error.no_account', {account: username}),
       };
-    } else if (
-      accounts.length > 1 &&
-      !accounts.filter((e) => !!e.keys[wifType]).length
-    ) {
+    }
+    if (!account.keys[wifType]) {
       return {
         valid: false,
-        error: translate('request.error.no_active_auth'),
-      };
-    } else if (!account.keys[wifType] && accounts.length === 1) {
-      return {
-        valid: false,
-        error: translate('request.error.no_auth', {
+        error: translate('request.error.no_required_auth', {
           account: username,
-          auth: wifType,
+          required_auth: wifType,
         }),
       };
     }
-  } else if (KeychainConfig.NO_USERNAME_TYPES.includes(type)) {
+  } else if (KeychainConfig.ANONYMOUS_REQUESTS.includes(type)) {
     if (!accounts.filter((e) => !!e.keys[wifType]).length) {
       return {
         valid: false,
-        error: translate('request.error.no_active_auth'),
+        error: translate('request.error.no_required_auth_anonymous', {
+          required_auth: wifType,
+        }),
       };
     }
   }
@@ -65,11 +61,19 @@ export const getValidAuthorityAccounts = (
   return accounts.filter((e) => !!e.keys[wifType]);
 };
 
+export const getRequestTitle = (request: KeychainRequest) => {
+  if ('title' in request && request.title.toLowerCase() !== 'title')
+    return request.title;
+  return request.type
+    .replace(/([A-Z])/g, ' $1')
+    .trim()
+    .replace(/^./, (str) => str.toUpperCase());
+};
+
 export const sendError = (
   tabRef: MutableRefObject<WebView>,
   error: RequestError,
 ) => {
-  console.log('send error');
   tabRef.current.injectJavaScript(
     `window.hive_keychain.onAnswerReceived("hive_keychain_response",${JSON.stringify(
       {success: false, result: null, ...error},
@@ -222,13 +226,17 @@ export const validateRequest = (req: KeychainRequest) => {
         isFilledCurrency(req.currency)) ||
       (req.type === 'vscStaking' &&
         isFilledAmt(req.amount) &&
-        isFilledCurrency(req.currency)))
+        isFilledCurrency(req.currency)) ||
+      (req.type === 'swap' &&
+        isFilledAmt(req.amount.toString(), false) &&
+        isFilled(req.startToken) &&
+        isFilled(req.endToken)))
   );
 };
 
-export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
-  request,
-) => {
+export const getRequiredWifType: (
+  request: Partial<KeychainRequest>,
+) => KeyTypes = (request) => {
   switch (request.type) {
     case 'decode':
     case 'encode':
@@ -266,6 +274,7 @@ export const getRequiredWifType: (request: KeychainRequest) => KeyTypes = (
     case 'vscDeposit':
     case 'vscWithdrawal':
     case 'vscStaking':
+    case 'swap':
       return KeyTypes.active;
   }
 };

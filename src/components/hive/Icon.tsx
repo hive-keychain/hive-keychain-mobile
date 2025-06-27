@@ -66,6 +66,10 @@ import SpeedometerIcon from 'assets/new_UI/speedometer.svg';
 import SupportIcon from 'assets/new_UI/support.svg';
 import React from 'react';
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native';
+import DragIcon from 'src/assets/browser/drag.svg';
+import SwipeDownIcon from 'src/assets/browser/swipe-down.svg';
+import SwipeLeftIcon from 'src/assets/browser/swipe-left.svg';
+import SwipeRightIcon from 'src/assets/browser/swipe-right.svg';
 import AddCircleOutlineIcon from 'src/assets/icons/svgs/add_circle_outline.svg';
 import {default as ArrowUpwardIcon} from 'src/assets/icons/svgs/arrow_upward.svg';
 import DeleteIcon from 'src/assets/icons/svgs/delete_black.svg';
@@ -561,7 +565,7 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
-    case name === Icons.GLOBAL:
+    case name === Icons.BROWSER:
       return (
         <GlobalIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
@@ -682,6 +686,13 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
+    case name === Icons.DRAG:
+      return (
+        <DragIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
     case name === Icons.NOTIFICATIONS:
       return (
         <NotificationsIcon
@@ -710,9 +721,30 @@ const getIconFilePath = (
           {...dimensionsProps}
         />
       );
+    case name === Icons.SWIPE_LEFT:
+      return (
+        <SwipeLeftIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
     case name === Icons.VSCHBD:
       return (
         <VSCHBDIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.SWIPE_RIGHT:
+      return (
+        <SwipeRightIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.SWIPE_DOWN:
+      return (
+        <SwipeDownIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

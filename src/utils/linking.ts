@@ -1,6 +1,7 @@
 import {treatHASRequest} from 'actions/hiveAuthenticationService';
 import {addAccount, addTabFromLinking} from 'actions/index';
 import {Account} from 'actions/interfaces';
+import * as hiveUri from 'hive-uri';
 import {CreateAccountFromWalletParamList} from 'navigators/mainDrawerStacks/CreateAccount.types';
 import {Linking} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
@@ -8,7 +9,7 @@ import {RootState, store} from 'store';
 import isURL from 'validator/lib/isURL';
 import AccountUtils from './account.utils';
 import {HASConfig} from './config';
-import {processQRCodeOp} from './hive-uri';
+import {HiveUriOpType, processQRCodeOp} from './hive-uri';
 import {KeyUtils} from './key.utils';
 import {validateFromObject} from './keyValidation';
 import {translate} from './localize';
@@ -48,11 +49,10 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
     if (qr) {
       goBack();
     }
-    if (url.startsWith('hive://sign/op/')) {
-      const op = url.replace('hive://sign/op/', '');
-      const stringOp = Buffer.from(op, 'base64').toString();
-      const opJson = JSON.parse(stringOp);
-      processQRCodeOp(opJson);
+    if (url.startsWith('hive://sign/')) {
+      const res = hiveUri.decode(url);
+      const opType = url.match(/^hive:\/\/sign\/([^\/]+)/)[1] as HiveUriOpType;
+      processQRCodeOp(opType, res);
     }
   } else if (url.startsWith('keychain://create_account=')) {
     const buf = url.replace('keychain://create_account=', '');

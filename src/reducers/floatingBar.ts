@@ -4,7 +4,7 @@ import {
   SET_IS_DRAWER_OPEN,
   SET_IS_LOADING_SCREEN,
   SHOW_FLOATING_BAR,
-  UPDATE_FLOATING_BAR,
+  UPDATE_SHOW_PROPOSAL_REMINDER,
 } from 'actions/types';
 
 const INITIAL_STATE: FloatingBarPayload = {
@@ -21,7 +21,7 @@ export default (
   switch (type) {
     case SHOW_FLOATING_BAR:
       return {...state, show: payload.show};
-    case UPDATE_FLOATING_BAR:
+    case UPDATE_SHOW_PROPOSAL_REMINDER:
       return {...state, ...payload};
     case SET_IS_LOADING_SCREEN:
       return {...state, isLoadingScreen: payload.isLoadingScreen};

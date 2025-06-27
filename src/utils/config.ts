@@ -35,16 +35,19 @@ export const BrowserConfig = {
   HOMEPAGE_URL: 'about:blank',
   FOOTER_HEIGHT: 40,
   HEADER_HEIGHT: 45,
+  EDGE_THRESHOLD: 30,
+  HOMEPAGE_FAVICON: 'https://hive-keychain.com/favicon.png',
 };
 
 export const KeychainConfig = {
-  NO_USERNAME_TYPES: [
+  ANONYMOUS_REQUESTS: [
     'delegation',
     'witnessVote',
     'proxy',
     'custom',
     'signBuffer',
     'transfer',
+    'recurrentTransfer',
   ],
 };
 

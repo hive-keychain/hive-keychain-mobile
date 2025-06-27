@@ -12,6 +12,7 @@ import {
   loadProperties,
 } from 'actions/hive';
 import {loadTokens, loadTokensMarket} from 'actions/index';
+import {updateNavigationActiveScreen} from 'actions/navigation';
 import HiveEngineLogo from 'assets/new_UI/hive-engine.svg';
 import VscPng from 'assets/new_UI/vsc.png';
 import CustomSearchBar from 'components/form/CustomSearchBar';
@@ -30,7 +31,6 @@ import {VestingRoutesPopup} from 'components/popups/vesting-routes/VestingRoutes
 import WhatsNew from 'components/popups/whats-new/WhatsNew';
 import WidgetConfiguration from 'components/popups/widget-configuration/WidgetConfiguration';
 import WrongKeyPopup from 'components/popups/wrong-key/WrongKeyPopup';
-import {ProposalVotingSectionComponent} from 'components/proposal-voting/proposalVoting';
 import DrawerButton from 'components/ui/DrawerButton';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
@@ -86,6 +86,7 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
 import {WidgetUtils} from 'utils/widget.utils';
+import {BottomBarLink} from './BottomNavigation.component';
 import TokenSettings from './tokens/TokenSettings';
 
 const Main = ({
@@ -108,6 +109,7 @@ const Main = ({
   tokens,
   userTokens,
   tokensMarket,
+  updateNavigationState,
   rpc,
 }: PropsFromRedux & {navigation: WalletNavigation}) => {
   const {theme} = useThemeContext();
@@ -264,6 +266,7 @@ const Main = ({
   }, [isDrawerOpen]);
 
   useEffect(() => {
+    updateNavigationState(BottomBarLink.Wallet);
     const handler = (nextAppState: AppStateStatus) => {
       if (
         appState.current.match(/inactive|background/) &&
@@ -382,7 +385,7 @@ const Main = ({
                 scrollEventThrottle={200}
                 onScroll={onHandleScroll}
                 onMomentumScrollEnd={() => {
-                  showFloatingBar(true);
+                  // showFloatingBar(true);
                 }}>
                 <View style={styles.rowWrapper}>
                   <PercentageDisplay
@@ -570,7 +573,6 @@ const Main = ({
         ) : (
           <Loader animatedLogo />
         )}
-        <ProposalVotingSectionComponent loaded={!loadingUserAndGlobals} />
       </>
     </WalletPage>
   );
@@ -698,6 +700,7 @@ const connector = connect(
     showFloatingBar,
     setIsDrawerOpen,
     setisLoadingScreen,
+    updateNavigationState: updateNavigationActiveScreen,
   },
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;

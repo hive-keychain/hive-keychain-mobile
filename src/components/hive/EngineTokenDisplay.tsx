@@ -1,6 +1,7 @@
 import {TokenBalance, TokenMarket} from 'actions/interfaces';
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import {TokenHistoryProps} from 'components/history/hive-engine/TokensHistory';
+import FastImageComponent from 'components/ui/FastImage';
 import React, {useState} from 'react';
 import {
   Image as Img,
@@ -40,7 +41,7 @@ const EngineTokenDisplay = ({
   colors,
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
-  const {width, height} = useWindowDimensions();
+  const {width} = useWindowDimensions();
   const styles = getDimensionedStyles(
     {width},
     theme,
@@ -48,37 +49,54 @@ const EngineTokenDisplay = ({
     colors,
     addBackground,
   );
-  const [hasError, setHasError] = useState(false);
+  const [hasError, setHasError] = useState(0);
   const tokenInfo = tokensList.find((t) => t.symbol === token.symbol);
   const tokenMarket = market.find((t) => t.symbol === token.symbol);
 
   if (!tokenInfo) return null;
-
-  const logo = hasError ? (
-    <Image
-      style={styles.iconBase}
-      source={{
-        uri: Img.resolveAssetSource(HiveEngine).uri,
-      }}
-      onError={() => {}}
-    />
-  ) : (
-    <Image
-      style={styles.iconBase}
-      source={{
-        uri: tokenInfo.metadata.icon,
-      }}
-      onError={() => {
-        setHasError(true);
-      }}
-    />
-  );
+  const getLogo = () => {
+    switch (hasError) {
+      case 0:
+        if (!tokenInfo.metadata.icon) setHasError(2);
+        return (
+          <FastImageComponent
+            style={styles.iconBase}
+            source={tokenInfo.metadata.icon}
+            onError={() => {
+              setHasError(1);
+            }}
+          />
+        );
+      case 1:
+        return (
+          <FastImageComponent
+            style={styles.iconBase}
+            source={`https://images.hive.blog/0x0/${tokenInfo.metadata.icon}`}
+            onError={() => {
+              setHasError(2);
+            }}
+          />
+        );
+      case 2:
+        return (
+          <Image
+            style={styles.iconBase}
+            source={{
+              uri: Img.resolveAssetSource(HiveEngine).uri,
+            }}
+            onError={() => {}}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   const onHandleGoToTokenHistory = () => {
     navigate('TokensHistory', {
       currency: token.symbol,
       tokenBalance: token.balance,
-      tokenLogo: logo,
+      tokenLogo: getLogo(),
       theme: theme,
     } as TokenHistoryProps);
   };
@@ -109,7 +127,7 @@ const EngineTokenDisplay = ({
               styles.iconContainerBase,
               !hasError ? styles.iconContainerBaseWithBg : undefined,
             ]}>
-            {logo}
+            {getLogo()}
           </View>
         }
         renderButtonOptions={false}
