@@ -37,7 +37,7 @@
     "assert": "^2.0.0",
     "crypto-js": "^4.2.0",
     "fuse.js": "^6.4.6",
-    "hive-keychain-commons": "^1.9.3",
+    "hive-keychain-commons": "^1.9.4",
     "hive-tx": "github:hive-keychain/hive-tx-js",
     "hive-uri": "^0.2.5",
     "i18n-js": "^3.8.0",
