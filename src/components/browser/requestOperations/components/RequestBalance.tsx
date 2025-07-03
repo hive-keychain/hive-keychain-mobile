@@ -105,6 +105,8 @@ export default ({username, startToken, amount, accounts}: Props) => {
               additionalContainerStyle={styles.arrowIcon}
               width={20}
               height={20}
+              theme={theme}
+              color={getColors(theme).iconBW}
             />
             <Text style={[styles.textBase, styles.content, styles.opaque]}>
               {Number(balanceAfterSwap) < 0 ? (
