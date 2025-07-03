@@ -110,7 +110,6 @@ const renderConfirmationValue = (
               style={[
                 getFormFontStyle(width, theme).title,
                 styles.textContent,
-                styles.opaque,
               ]}>
               {`${e.currentBalance} ${e.currency || ''}`}
             </Text>
@@ -119,12 +118,13 @@ const renderConfirmationValue = (
               additionalContainerStyle={styles.arrowIcon}
               width={20}
               height={20}
+              theme={theme}
+              color={getColors(theme).iconBW}
             />
             <Text
               style={[
                 getFormFontStyle(width, theme).title,
                 styles.textContent,
-                styles.opaque,
               ]}>
               {isInsufficient ? (
                 <Text style={styles.errorText}>Insufficient Balance</Text>
