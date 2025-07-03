@@ -105,7 +105,7 @@ const renderConfirmationValue = (
       ) {
         const isInsufficient = e.finalBalance < 0;
         return (
-          <View style={styles.balanceRow}>
+          <View style={styles.balanceColumn}>
             <Text
               style={[
                 getFormFontStyle(width, theme).title,
@@ -113,14 +113,16 @@ const renderConfirmationValue = (
               ]}>
               {`${e.currentBalance} ${e.currency || ''}`}
             </Text>
-            <Icon
-              name={Icons.ARROW_RIGHT_BROWSER}
-              additionalContainerStyle={styles.arrowIcon}
-              width={20}
-              height={20}
-              theme={theme}
-              color={getColors(theme).iconBW}
-            />
+            <View style={styles.arrowContainer}>
+              <Icon
+                name={Icons.ARROW_RIGHT_BROWSER}
+                additionalContainerStyle={styles.arrowIcon}
+                width={20}
+                height={20}
+                theme={theme}
+                color={getColors(theme).iconBW}
+              />
+            </View>
             <Text
               style={[
                 getFormFontStyle(width, theme).title,
@@ -292,12 +294,17 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       color: PRIMARY_RED_COLOR,
       marginTop: -10,
     },
-    balanceRow: {
-      flexDirection: 'row',
+    balanceColumn: {
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+    },
+    arrowContainer: {
       alignItems: 'center',
+      marginVertical: 4,
+      marginRight: 16,
     },
     arrowIcon: {
-      marginHorizontal: 8,
+      marginHorizontal: 0,
     },
     opaque: {
       opacity: 0.7,
