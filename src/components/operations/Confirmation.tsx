@@ -89,7 +89,7 @@ const renderConfirmationValue = (
 ) => {
   switch (e.tag) {
     case ConfirmationDataTag.USERNAME:
-      return <UsernameWithAvatar username={e.value} />;
+      return <UsernameWithAvatar username={e.value} alignAllToLeft={false} />;
     case ConfirmationDataTag.AMOUNT:
       return (
         <Text

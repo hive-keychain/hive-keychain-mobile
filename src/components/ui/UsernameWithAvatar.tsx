@@ -23,6 +23,7 @@ type Props = {
   avatarStyle?: StyleProp<ImageStyle>;
   textStyle?: StyleProp<ViewStyle>;
   avatarPosition?: 'left' | 'right';
+  alignAllToLeft?: boolean;
 };
 
 export default ({
@@ -32,13 +33,14 @@ export default ({
   avatarStyle,
   textStyle,
   avatarPosition = 'right',
+  alignAllToLeft = true,
 }: Props) => {
   username = username.startsWith('@')
     ? username.slice(1).trim()
     : username.trim();
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
-  const styles = getStyles(theme, width);
+  const styles = getStyles(theme, width, alignAllToLeft);
 
   return (
     <View style={[styles.container, style]}>
@@ -92,11 +94,11 @@ export default ({
   );
 };
 
-const getStyles = (theme: Theme, width: number) =>
+const getStyles = (theme: Theme, width: number, alignAllToLeft: boolean) =>
   StyleSheet.create({
     container: {
       justifyContent: 'center',
-      alignItems: 'flex-end',
+      alignItems: alignAllToLeft ? 'flex-start' : 'flex-end',
     },
     contentContainer: {
       flexDirection: 'row',
@@ -111,6 +113,7 @@ const getStyles = (theme: Theme, width: number) =>
       fontSize: getFontSizeSmallDevices(width, 14),
       color: getColors(theme).secondaryText,
       fontFamily: title_primary_body_2.fontFamily,
+      textAlign: alignAllToLeft ? 'left' : 'right',
     },
     username: {
       marginLeft: 8,
