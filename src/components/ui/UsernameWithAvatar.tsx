@@ -21,10 +21,20 @@ type Props = {
   style?: StyleProp<ViewStyle>;
   avatarStyle?: StyleProp<ImageStyle>;
   textStyle?: StyleProp<ViewStyle>;
+  avatarPosition?: 'left' | 'right';
 };
 
-export default ({username, title, style, avatarStyle, textStyle}: Props) => {
-  username = username.startsWith('@') ? username.slice(1).trim() : username.trim();
+export default ({
+  username,
+  title,
+  style,
+  avatarStyle,
+  textStyle,
+  avatarPosition = 'right',
+}: Props) => {
+  username = username.startsWith('@')
+    ? username.slice(1).trim()
+    : username.trim();
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
   const styles = getStyles(theme, width);
@@ -34,21 +44,43 @@ export default ({username, title, style, avatarStyle, textStyle}: Props) => {
       {title && <Text style={[styles.textBase, styles.title]}>{title}</Text>}
       {username.toLowerCase() !== 'none' || username !== '' ? (
         <View style={styles.contentContainer}>
-          <Image
-            style={[{width: 32, height: 32, borderRadius: 16}, avatarStyle]}
-            source={{uri: `https://images.hive.blog/u/${username}/avatar`}}
-            resizeMode={Image.resizeMode.contain}
-            fallback
-          />
-          <Text
-            style={[
-              styles.textBase,
-              styles.username,
-              textStyle,
-              styles.opaque,
-            ]}>
-            {username}
-          </Text>
+          {avatarPosition === 'left' ? (
+            <>
+              <Image
+                style={[styles.avatar, avatarStyle]}
+                source={{uri: `https://images.hive.blog/u/${username}/avatar`}}
+                resizeMode={Image.resizeMode.contain}
+                fallback
+              />
+              <Text
+                style={[
+                  styles.textBase,
+                  styles.username,
+                  textStyle,
+                  styles.opaque,
+                ]}>
+                {username}
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text
+                style={[
+                  styles.textBase,
+                  styles.usernameRight,
+                  textStyle,
+                  styles.opaque,
+                ]}>
+                {username}
+              </Text>
+              <Image
+                style={[styles.avatar, avatarStyle]}
+                source={{uri: `https://images.hive.blog/u/${username}/avatar`}}
+                resizeMode={Image.resizeMode.contain}
+                fallback
+              />
+            </>
+          )}
         </View>
       ) : (
         <Text style={[styles.textBase, textStyle, styles.opaque]}>
@@ -62,12 +94,17 @@ export default ({username, title, style, avatarStyle, textStyle}: Props) => {
 const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     container: {
-      paddingVertical: 5,
+      justifyContent: 'center',
+      alignItems: 'flex-end',
     },
     contentContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginTop: 4,
+    },
+    avatar: {
+      width: 32,
+      height: 32,
+      borderRadius: 16,
     },
     title: {
       fontSize: getFontSizeSmallDevices(width, 14),
@@ -76,6 +113,9 @@ const getStyles = (theme: Theme, width: number) =>
     },
     username: {
       marginLeft: 8,
+    },
+    usernameRight: {
+      marginRight: 8,
     },
     textBase: {
       color: getColors(theme).secondaryText,
