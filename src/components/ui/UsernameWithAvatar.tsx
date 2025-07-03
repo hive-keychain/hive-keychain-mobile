@@ -11,6 +11,7 @@ import Image, {ImageStyle} from 'react-native-fast-image';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {
+  button_link_primary_medium,
   getFontSizeSmallDevices,
   title_primary_body_2,
 } from 'src/styles/typography';
@@ -118,9 +119,12 @@ const getStyles = (theme: Theme, width: number) =>
       marginRight: 8,
     },
     textBase: {
+      ...button_link_primary_medium,
       color: getColors(theme).secondaryText,
-      fontSize: getFontSizeSmallDevices(width, 14),
-      fontFamily: title_primary_body_2.fontFamily,
+      fontSize: getFontSizeSmallDevices(
+        width,
+        {...button_link_primary_medium}.fontSize,
+      ),
     },
     opaque: {
       opacity: 0.8,
