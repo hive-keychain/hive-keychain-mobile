@@ -56,6 +56,7 @@ export default ({
       <UsernameWithAvatar
         username={witness}
         title={translate('request.item.witness')}
+        avatarPosition="left"
       />
       <RequestItem
         title={translate('request.item.action')}

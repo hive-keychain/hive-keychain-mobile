@@ -49,6 +49,7 @@ export default ({
       <UsernameWithAvatar
         username={username}
         title={translate('request.item.username')}
+        avatarPosition="left"
       />
       <RequestItem content={method} title={translate('request.item.method')} />
       <CollapsibleData

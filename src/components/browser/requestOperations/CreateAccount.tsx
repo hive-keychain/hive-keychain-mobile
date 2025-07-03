@@ -55,6 +55,7 @@ const CreateAccount = ({
       <UsernameWithAvatar
         title={translate('request.item.creator')}
         username={username}
+        avatarPosition="left"
       />
       <RequestItem
         title={translate('request.item.new_account')}

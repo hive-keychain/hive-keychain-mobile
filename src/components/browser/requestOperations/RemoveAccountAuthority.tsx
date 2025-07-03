@@ -44,10 +44,12 @@ const RemoveAccountAuthority = ({
       <UsernameWithAvatar
         title={translate('request.item.username')}
         username={username}
+        avatarPosition="left"
       />
       <UsernameWithAvatar
         title={translate('request.item.authorized_username')}
         username={authorizedUsername}
+        avatarPosition="left"
       />
       <RequestItem title={translate('request.item.role')} content={role} />
     </RequestOperation>

@@ -45,6 +45,7 @@ const AddAccountAuthority = ({
       <UsernameWithAvatar
         title={translate('request.item.username')}
         username={username}
+        avatarPosition="left"
       />
       <UsernameWithAvatar
         title={translate('request.item.authorized_username')}

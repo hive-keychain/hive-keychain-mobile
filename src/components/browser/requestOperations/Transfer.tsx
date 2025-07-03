@@ -79,6 +79,8 @@ export default ({
         username={to}
         title={translate('request.item.to')}
         style={{marginBottom: 10}}
+        avatarPosition="left"
+        alignAllToLeft
       />
       <RequestItem
         title={translate('request.item.amount')}

@@ -56,6 +56,8 @@ const SwapDisplay = ({
               additionalContainerStyle={styles.arrowIcon}
               width={20}
               height={20}
+              theme={theme}
+              color={getColors(theme).iconBW}
             />
             <Text style={[styles.textBase, styles.content, styles.opaque]}>
               {`${estimateValue} ${endToken}`}

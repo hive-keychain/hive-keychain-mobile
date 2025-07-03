@@ -62,6 +62,7 @@ export default ({
       <UsernameWithAvatar
         title={translate('request.item.username')}
         username={username}
+        avatarPosition="left"
       />
       <UsernameWithAvatar
         title={translate('request.item.receiver')}

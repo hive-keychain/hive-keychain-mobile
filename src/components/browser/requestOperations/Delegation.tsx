@@ -80,6 +80,7 @@ const Delegation = ({
       <UsernameWithAvatar
         title={translate('request.item.delegatee')}
         username={delegatee}
+        avatarPosition="left"
       />
       <RequestItem
         title={translate('request.item.amount')}

@@ -51,6 +51,7 @@ export default ({
       <UsernameWithAvatar
         title={translate('request.item.proxy')}
         username={proxy.length ? proxy : translate('common.none')}
+        avatarPosition="left"
       />
     </RequestOperation>
   );

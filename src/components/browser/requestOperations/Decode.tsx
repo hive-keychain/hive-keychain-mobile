@@ -51,6 +51,7 @@ export default ({
         username={username}
         title={translate('request.item.username')}
         style={{marginBottom: 10}}
+        avatarPosition="left"
       />
       <RequestItem title={translate('request.item.method')} content={method} />
     </RequestOperation>

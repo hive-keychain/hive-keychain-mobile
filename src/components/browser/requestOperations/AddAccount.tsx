@@ -47,6 +47,7 @@ const AddAccount = ({
       <UsernameWithAvatar
         title={translate('request.item.username')}
         username={username}
+        avatarPosition="left"
       />
       <CollapsibleData
         title={translate('request.item.keys')}

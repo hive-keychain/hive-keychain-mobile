@@ -44,6 +44,7 @@ const AddKeyAuthority = ({
       <UsernameWithAvatar
         title={translate('request.item.username')}
         username={username}
+        avatarPosition="left"
       />
       <RequestItem
         title={translate('request.item.authorized_key')}
