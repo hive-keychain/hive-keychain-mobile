@@ -1,16 +1,18 @@
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import { VscHistoryItem, VscUtils } from 'hive-keychain-commons';
-import React, { useEffect, useRef, useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ConnectedProps, connect } from 'react-redux';
-import { Theme, useThemeContext } from 'src/context/theme.context';
-import { getColors } from 'src/styles/colors';
-import { fields_primary_text_1 } from 'src/styles/typography';
-import { RootState } from 'store';
-import { translate } from 'utils/localize';
-import { BackToTopButton } from '../../ui/Back-To-Top-Button';
+import {VscHistoryItem, VscUtils} from 'hive-keychain-commons';
+import React, {useEffect, useRef, useState} from 'react';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ConnectedProps, connect} from 'react-redux';
+import {Theme, useThemeContext} from 'src/context/theme.context';
+import {Icons} from 'src/enums/icons.enums';
+import {getColors} from 'src/styles/colors';
+import {fields_primary_text_1} from 'src/styles/typography';
+import {RootState} from 'store';
+import {translate} from 'utils/localize';
+import Icon from '../../hive/Icon';
+import {BackToTopButton} from '../../ui/Back-To-Top-Button';
 import VscHistoryItemComponent from './VscHistoryItemComponent';
 
 export interface VscHistoryComponentProps {
@@ -27,7 +29,9 @@ const VscHistory = ({activeAccount, route}: PropsFromRedux & {route: any}) => {
   const [displayScrollToTop, setDisplayedScrollToTop] = useState(false);
   const flatListRef = useRef();
   const [bottomLoader, setBottomLoader] = useState(false);
-
+  const [hasMoreData, setHasMoreData] = useState(true);
+  const historyLimit = 2;
+  const [lastTransactionIndex, setLastTransactionIndex] = useState(0);
   useEffect(() => {
     if (route.params) {
       setCurrency(route.params.currency);
@@ -45,13 +49,45 @@ const VscHistory = ({activeAccount, route}: PropsFromRedux & {route: any}) => {
     try {
       const vscTransactions = await VscUtils.getOrganizedHistory(
         activeAccount.name!,
+        historyLimit,
+        lastTransactionIndex,
       );
       setTransactions(vscTransactions);
       setDisplayedTransactions(vscTransactions);
+      setHasMoreData(vscTransactions.length > 0);
     } catch (error) {
       console.error('Error fetching VSC transactions:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const tryToLoadMore = async () => {
+    if (loading) return;
+    setBottomLoader(true);
+
+    try {
+      const newLastTransactionIndex = lastTransactionIndex + historyLimit;
+      const additionalTransactions = await VscUtils.getOrganizedHistory(
+        activeAccount.name!,
+        historyLimit,
+        newLastTransactionIndex,
+      );
+
+      if (additionalTransactions.length > 0) {
+        setTransactions([...transactions, ...additionalTransactions]);
+        setDisplayedTransactions([
+          ...displayedTransactions,
+          ...additionalTransactions,
+        ]);
+        setLastTransactionIndex(newLastTransactionIndex);
+      } else {
+        setHasMoreData(false);
+      }
+    } catch (error) {
+      console.error('Error loading more VSC transactions:', error);
+    } finally {
+      setBottomLoader(false);
     }
   };
 
@@ -94,6 +130,21 @@ const VscHistory = ({activeAccount, route}: PropsFromRedux & {route: any}) => {
             ListFooterComponent={() => {
               return (
                 <>
+                  {hasMoreData && !loading && !bottomLoader && (
+                    <TouchableOpacity
+                      activeOpacity={1}
+                      style={styles.loadMorePanel}
+                      onPress={() => tryToLoadMore()}>
+                      <Text style={styles.textBase}>
+                        {translate('wallet.operations.history.load_more')}
+                      </Text>
+                      <Icon
+                        name={Icons.ADD_CIRCLE_OUTLINE}
+                        theme={theme}
+                        additionalContainerStyle={{marginLeft: 5}}
+                      />
+                    </TouchableOpacity>
+                  )}
                   {bottomLoader && (
                     <View style={styles.centeredContainer}>
                       <Loader animating size={'small'} />
@@ -162,6 +213,12 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
       backgroundColor: getColors(theme).secondaryCardBgColor,
       overflow: 'hidden',
       paddingHorizontal: 10,
+    },
+    loadMorePanel: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginVertical: 8,
     },
     centered: {
       justifyContent: 'center',
