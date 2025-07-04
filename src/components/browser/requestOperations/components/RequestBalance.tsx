@@ -96,26 +96,28 @@ export default ({username, startToken, amount, accounts}: Props) => {
       <Text style={[styles.textBase, styles.title]}>Balance</Text>
       <View style={styles.balanceContainer}>
         {balance !== undefined ? (
-          <View style={styles.balanceRow}>
-            <Text style={[styles.textBase, styles.content, styles.opaque]}>
-              {`${balance} ${startToken}`}
+          Number(balanceAfterSwap) < 0 ? (
+            <Text style={[styles.textBase, styles.content, styles.errorText]}>
+              Insufficient Balance
             </Text>
-            <Icon
-              name={Icons.ARROW_RIGHT_BROWSER}
-              additionalContainerStyle={styles.arrowIcon}
-              width={20}
-              height={20}
-              theme={theme}
-              color={getColors(theme).iconBW}
-            />
-            <Text style={[styles.textBase, styles.content, styles.opaque]}>
-              {Number(balanceAfterSwap) < 0 ? (
-                <Text style={styles.errorText}>Insufficient Balance</Text>
-              ) : (
-                `${balanceAfterSwap} ${startToken}`
-              )}
-            </Text>
-          </View>
+          ) : (
+            <View style={styles.balanceRow}>
+              <Text style={[styles.textBase, styles.content, styles.opaque]}>
+                {`${balance} ${startToken}`}
+              </Text>
+              <Icon
+                name={Icons.ARROW_RIGHT_BROWSER}
+                additionalContainerStyle={styles.arrowIcon}
+                width={20}
+                height={20}
+                theme={theme}
+                color={getColors(theme).iconBW}
+              />
+              <Text style={[styles.textBase, styles.content, styles.opaque]}>
+                {`${balanceAfterSwap} ${startToken}`}
+              </Text>
+            </View>
+          )
         ) : (
           <Text style={[styles.textBase, styles.content, styles.opaque]}>
             calculating...
