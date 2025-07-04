@@ -89,6 +89,7 @@ import Success from 'src/assets/new_UI/success-mark.svg';
 import AutomatedTasks from 'src/assets/settings/automated-tasks.svg';
 import VSCHBDIcon from 'src/assets/wallet/hbd-vsc.svg';
 import VSCHiveIcon from 'src/assets/wallet/hive-vsc.svg';
+import VSCIcon from 'src/assets/wallet/vsc.svg';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {getColors} from 'src/styles/colors';
@@ -717,6 +718,13 @@ const getIconFilePath = (
     case name === Icons.VSCHIVE:
       return (
         <VSCHiveIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.VSC_ICON:
+      return (
+        <VSCIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

@@ -40,6 +40,8 @@ import {navigate} from 'utils/navigation';
 import {WalletHistoryComponentProps} from '../history/WalletHistoryComponent';
 import Icon from './Icon';
 import IconHP from './IconHP';
+import IconVscHbd from './IconVscHbd';
+import IconVscHive from './IconVscHive';
 
 interface Props {
   theme: Theme;
@@ -211,23 +213,9 @@ const CurrencyToken = ({
           <IconHP theme={theme} additionalContainerStyle={{marginTop: 8}} />
         );
       case 'VSCHIVE':
-        return (
-          <Icon
-            theme={theme}
-            name={Icons.VSCHIVE}
-            additionalContainerStyle={styles.hiveIconContainer}
-            {...styles.icon}
-          />
-        );
+        return <IconVscHive theme={theme} />;
       case 'VSCHBD':
-        return (
-          <Icon
-            theme={theme}
-            name={Icons.VSCHBD}
-            additionalContainerStyle={styles.hiveIconContainer}
-            {...styles.icon}
-          />
-        );
+        return <IconVscHbd theme={theme} />;
     }
   };
 
@@ -431,6 +419,10 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       justifyContent: 'space-between',
       width: '100%',
       marginVertical: 4,
+    },
+    iconBase: {
+      width: 24,
+      height: 24,
     },
   });
 

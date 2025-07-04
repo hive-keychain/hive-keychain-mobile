@@ -168,6 +168,7 @@ export enum Icons {
   CALENDAR = 'calendar.svg',
   VSCHIVE = 'hive-vsc.svg',
   VSCHBD = 'hbd-vsc.svg',
+  VSC_ICON = 'vsc.svg',
 
   //Browser Swipe
   SWIPE_LEFT = 'SWIPE_LEFT',
