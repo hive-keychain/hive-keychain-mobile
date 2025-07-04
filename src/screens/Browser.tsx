@@ -6,7 +6,6 @@ import {
   addToHistory,
   changeTab,
   clearHistory,
-  closeAllTabs,
   closeTab,
   getEcosystem,
   removeFromFavorites,
@@ -15,6 +14,7 @@ import {
   updateTab,
 } from 'actions/index';
 import Browser from 'components/browser';
+import BrowserTutorial from 'components/popups/browser-tutorial/BrowserTutorial';
 import ProposalReminder from 'components/popups/proposal-reminder';
 import SafeArea from 'components/ui/SafeArea';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
@@ -34,7 +34,6 @@ const BrowserScreen = ({
   addTab,
   updateTab,
   closeTab,
-  closeAllTabs,
   addToHistory,
   clearHistory,
   addToFavorites,
@@ -99,7 +98,6 @@ const BrowserScreen = ({
         addTab={addTab}
         updateTab={updateTab}
         closeTab={closeTab}
-        closeAllTabs={closeAllTabs}
         addToHistory={addToHistory}
         clearHistory={clearHistory}
         addToFavorites={addToFavorites}
@@ -110,6 +108,7 @@ const BrowserScreen = ({
         showFloatingBar={showFloatingBar}
       />
       <ProposalReminder navigation={navigation} />
+      <BrowserTutorial navigation={navigation} />
     </SafeArea>
   );
 };
@@ -127,7 +126,6 @@ const connector = connect(mapStateToProps, {
   addTab,
   updateTab,
   closeTab,
-  closeAllTabs,
   addToHistory,
   clearHistory,
   addToFavorites,

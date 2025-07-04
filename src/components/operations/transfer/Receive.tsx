@@ -1,7 +1,7 @@
 import {showModal} from 'actions/message';
 import Background from 'components/ui/Background';
 import Separator from 'components/ui/Separator';
-import {encodeOp} from 'hive-uri';
+import * as hiveUri from 'hive-uri';
 import {
   ReceiveTransferProps,
   ReceiveTransferRoute,
@@ -28,7 +28,7 @@ const Receive = ({
   const params = route.params;
   const {width} = useWindowDimensions();
   const styles = getStyles(theme);
-  const [encodedOp, setEncodedOp] = useState(encodeOp(params));
+  const [encodedOp, setEncodedOp] = useState(hiveUri.encodeOp(params));
   useEffect(() => {
     console.log('encodedOp', encodedOp);
   }, [encodedOp]);
@@ -120,7 +120,7 @@ const Receive = ({
           size={width * 0.8}
           fgColor={getColors(theme).primaryText}
           bgColor={'transparent'}
-          value={encodedOp}
+          value={hiveUri.encodeOp(params)}
         />
       </View>
     </Background>

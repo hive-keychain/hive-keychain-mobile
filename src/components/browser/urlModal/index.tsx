@@ -3,6 +3,7 @@ import {ActionPayload, BrowserPayload, Page} from 'actions/interfaces';
 import Icon from 'components/hive/Icon';
 import React, {MutableRefObject, useRef} from 'react';
 import {
+  KeyboardAvoidingView,
   NativeSyntheticEvent,
   Share,
   StyleSheet,
@@ -12,7 +13,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
@@ -33,6 +33,7 @@ type Props = {
   setUrl: (string: string) => void;
   history: Page[];
   clearHistory: () => ActionPayload<BrowserPayload>;
+  clearCache: () => void;
   theme: Theme;
 };
 const UrlModal = ({
@@ -43,19 +44,12 @@ const UrlModal = ({
   setUrl,
   history,
   clearHistory,
+  clearCache,
   theme,
 }: Props) => {
   const urlInput: MutableRefObject<TextInput> = useRef();
   const insets = useSafeAreaInsets();
   const styles = getStyles(insets, theme);
-  if (isVisible && urlInput) {
-    setTimeout(() => {
-      const {current} = urlInput;
-      if (current && !current.isFocused()) {
-        current.focus();
-      }
-    }, SLIDE_TIME);
-  }
 
   const onSubmitUrlFromInput = (
     obj: NativeSyntheticEvent<TextInputSubmitEditingEventData>,
@@ -72,7 +66,6 @@ const UrlModal = ({
     } else {
       const hasProtocol = url.match(/^[a-z]*:\/\//);
       const sanitizedURL = hasProtocol ? url : `https://${url}`;
-      console.log('on new search,', sanitizedURL);
       onNewSearch(sanitizedURL);
     }
   };
@@ -90,83 +83,99 @@ const UrlModal = ({
       animationIn="slideInDown"
       animationOut="slideOutUp"
       backdropOpacity={0.8}
+      onModalShow={() => {
+        setTimeout(() => {
+          const {current} = urlInput;
+          if (current && !current.isFocused()) {
+            current.focus();
+          }
+        }, 500);
+      }}
       animationInTiming={SLIDE_TIME}
+      avoidKeyboard
       animationOutTiming={SLIDE_TIME}
       useNativeDriver>
-      <View style={styles.urlModalContent}>
-        <Icon
-          name={Icons.BACK}
-          theme={theme}
-          width={16}
-          height={16}
-          onPress={() => toggle(false)}
-          additionalContainerStyle={styles.backButton}
-          color={PRIMARY_RED_COLOR}
-        />
-        <TextInput
-          keyboardType="web-search"
-          ref={urlInput}
-          autoCapitalize="none"
-          autoCorrect={false}
-          clearButtonMode="never"
-          onChangeText={setUrl}
-          onSubmitEditing={onSubmitUrlFromInput}
-          placeholder={translate('browser.search')}
-          returnKeyType="go"
-          style={[styles.textBase, styles.urlInput]}
-          value={url}
-          selectTextOnFocus
-          placeholderTextColor={getColors(theme).secondaryText}
-        />
-        {url.length ? (
+      <KeyboardAvoidingView style={{flex: 1}} behavior={'padding'}>
+        <View style={styles.urlModalContent}>
           <Icon
-            name={Icons.SHARE}
+            name={Icons.BACK}
             theme={theme}
-            width={16}
-            height={16}
-            onPress={() => Share.share({message: url})}
+            width={17}
+            height={17}
+            onPress={() => toggle(false)}
             additionalContainerStyle={styles.option}
             color={PRIMARY_RED_COLOR}
           />
-        ) : null}
-        {url.length ? (
-          <Icon
-            name={Icons.COPY}
-            theme={theme}
-            width={16}
-            height={16}
-            onPress={() => Clipboard.setString(url)}
-            additionalContainerStyle={styles.option}
-            color={PRIMARY_RED_COLOR}
+          <TextInput
+            keyboardType="web-search"
+            ref={urlInput}
+            autoCapitalize="none"
+            autoCorrect={false}
+            clearButtonMode="never"
+            onChangeText={setUrl}
+            onSubmitEditing={onSubmitUrlFromInput}
+            placeholder={translate('browser.search')}
+            returnKeyType="go"
+            style={[styles.textBase, styles.urlInput]}
+            value={url}
+            selectTextOnFocus
+            placeholderTextColor={getColors(theme).secondaryText}
           />
-        ) : null}
-        {url.length ? (
-          <TouchableOpacity
-            activeOpacity={1}
-            style={styles.option}
-            onPress={() => setUrl('')}>
-            <Text style={[styles.textBase, styles.eraseText]}>x</Text>
-          </TouchableOpacity>
-        ) : null}
-      </View>
+          {url.length ? (
+            <Icon
+              name={Icons.SHARE}
+              theme={theme}
+              width={17}
+              height={17}
+              onPress={() => Share.share({message: url})}
+              additionalContainerStyle={styles.option}
+              color={PRIMARY_RED_COLOR}
+            />
+          ) : null}
+          {url.length ? (
+            <Icon
+              name={Icons.COPY}
+              theme={theme}
+              width={17}
+              height={17}
+              onPress={() => Clipboard.setString(url)}
+              additionalContainerStyle={styles.option}
+              color={PRIMARY_RED_COLOR}
+            />
+          ) : null}
+          {url.length ? (
+            <TouchableOpacity
+              activeOpacity={1}
+              style={styles.option}
+              onPress={() => setUrl('')}>
+              <Text style={[styles.textBase, styles.eraseText]}>x</Text>
+            </TouchableOpacity>
+          ) : null}
+        </View>
 
-      <ScrollView
-        style={[styles.containerHistory]}
-        keyboardShouldPersistTaps="handled">
-        <UrlAutocomplete
-          onSubmit={onSubmitUrl}
-          input={url}
-          history={history}
-          theme={theme}
-        />
-        {history.length ? (
-          <TouchableOpacity activeOpacity={1} onPress={clearHistory}>
-            <Text style={[styles.textBase, styles.clearHistory]}>
-              {translate('browser.history.clear')}
-            </Text>
-          </TouchableOpacity>
-        ) : null}
-      </ScrollView>
+        <View style={[styles.containerHistory]}>
+          <View style={styles.clearHistoryContainer}>
+            <TouchableOpacity activeOpacity={1} onPress={clearCache}>
+              <Text style={[styles.textBase, styles.clearHistory]}>
+                {translate('browser.history.clear_cache')}
+              </Text>
+            </TouchableOpacity>
+            {history.length ? (
+              <TouchableOpacity activeOpacity={1} onPress={clearHistory}>
+                <Text style={[styles.textBase, styles.clearHistory]}>
+                  {translate('browser.history.clear')}
+                </Text>
+              </TouchableOpacity>
+            ) : null}
+          </View>
+          <UrlAutocomplete
+            onSubmit={onSubmitUrl}
+            input={url}
+            history={history}
+            theme={theme}
+          />
+        </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };
@@ -174,21 +183,20 @@ const UrlModal = ({
 const getStyles = (insets: EdgeInsets, theme: Theme) =>
   StyleSheet.create({
     urlModal: {
-      height: '100%',
+      flexGrow: 1,
       width: '100%',
       margin: 0,
       paddingTop: insets.top,
       justifyContent: 'flex-start',
       backgroundColor: getColors(theme).secondaryCardBgColor,
     },
-    option: {alignSelf: 'center', marginLeft: 15},
-    backButton: {alignSelf: 'center', marginRight: 15},
-    eraseText: {fontSize: 16, color: PRIMARY_RED_COLOR},
+    option: {alignSelf: 'center', padding: 10},
+    eraseText: {fontSize: 18, color: PRIMARY_RED_COLOR},
     urlModalContent: {
       flexDirection: 'row',
       borderColor: 'lightgrey',
       borderBottomWidth: 2,
-      padding: 20,
+      padding: 10,
       margin: 0,
     },
     textBase: {
@@ -206,16 +214,22 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
       borderRadius: 15,
       paddingLeft: MARGIN_PADDING,
     },
+    clearHistoryContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
     clearHistory: {
       marginLeft: 20,
       marginTop: 20,
-      marginBottom: 20,
+      marginBottom: 0,
       fontWeight: 'bold',
     },
     containerHistory: {
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
       paddingHorizontal: 10,
+      flexGrow: 1,
     },
   });
 

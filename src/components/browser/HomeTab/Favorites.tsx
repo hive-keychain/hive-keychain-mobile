@@ -1,34 +1,51 @@
 import {Page} from 'actions/interfaces';
 import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
+import DraggableFlatList, {
+  DragEndParams,
+} from 'react-native-draggable-flatlist';
+import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {button_link_primary_medium} from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import HistoryItem from '../urlModal/HistoryItem';
-
 type Props = {
   favorites: Page[];
   updateTabUrl: (link: string) => void;
+  updateFavorites: (favorites: Page[]) => void;
   theme: Theme;
 };
 
-export default ({favorites, updateTabUrl, theme}: Props) => {
-  const styles = getStyles(theme);
+export default ({favorites, updateTabUrl, updateFavorites, theme}: Props) => {
+  const styles = getStyles(useSafeAreaInsets(), theme);
+
+  const sortData = (params: DragEndParams<Page>) => {
+    updateFavorites([...params.data].reverse());
+  };
+
   return (
     <View style={styles.container}>
       {favorites.length ? (
-        <FlatList
+        <DraggableFlatList
           data={[...favorites].reverse()}
+          scrollToOverflowEnabled
           keyExtractor={(item) => item.url}
-          renderItem={({item}) => (
+          maxToRenderPerBatch={5}
+          onDragEnd={sortData}
+          renderItem={({item, drag, getIndex}) => (
             <HistoryItem
               data={item}
               key={item.url}
+              indexItem={getIndex()}
+              onDismiss={() =>
+                updateFavorites(favorites.filter((e) => e.url !== item.url))
+              }
               onSubmit={(e) => {
                 updateTabUrl(e);
               }}
               theme={theme}
+              drag={drag}
             />
           )}
         />
@@ -39,13 +56,13 @@ export default ({favorites, updateTabUrl, theme}: Props) => {
   );
 };
 
-const getStyles = (theme: Theme) =>
+const getStyles = (insets: EdgeInsets, theme: Theme) =>
   StyleSheet.create({
     container: {
       flexDirection: 'column',
       marginTop: 10,
       flex: 1,
-      paddingHorizontal: 20,
+      paddingBottom: 140 + insets.bottom / 2,
     },
     text: {
       alignSelf: 'center',

@@ -48,7 +48,7 @@ interface Props {
   additionalDropdowContainerStyle?: StyleProp<ViewStyle>;
   additionalListExpandedContainerStyle?: StyleProp<ViewStyle>;
 }
-const AddCustomRPC = ({
+const RpcComponent = ({
   theme,
   rpcList,
   selectedRPC,
@@ -90,6 +90,7 @@ const AddCustomRPC = ({
       <View style={styles.rpcItemContainer}>
         <DropdownModal
           dropdownTitle={title}
+          hideLabel
           list={rpcList}
           selected={getItemDropDownSelected({uri: selectedRPC} as Rpc)}
           onSelected={(selectedItem) => onSelectedDropdown(selectedItem.value)}
@@ -231,4 +232,4 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     },
   });
 
-export default AddCustomRPC;
+export default RpcComponent;

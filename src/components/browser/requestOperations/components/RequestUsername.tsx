@@ -2,25 +2,47 @@ import {Account} from 'actions/interfaces';
 import DropdownModal from 'components/form/DropdownModal';
 import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getFontSizeSmallDevices} from 'src/styles/typography';
+import {store} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import RequestItem from './RequestItem';
 
 type Props = {
-  username: string;
   accounts: Account[];
   account: string;
   setAccount: (account: string) => void;
   enforce: boolean;
 };
 
-export default ({username, setAccount, enforce, accounts, account}: Props) => {
+export default ({setAccount, enforce, accounts, account}: Props) => {
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
+  const activeAccountName = store.getState().activeAccount.name;
+  const [selectedAccount, setSelectedAccount] = React.useState(() => {
+    // If account is not in accounts and is same as activeAccountName, find next account
+    if (
+      !accounts.find((acc) => acc.name === account) &&
+      account === activeAccountName
+    ) {
+      const nextAccount = accounts.find(
+        (acc) => acc.name !== activeAccountName,
+      );
+      return nextAccount?.name || account;
+    }
+    // Otherwise use the account if it exists in accounts, or fallback to activeAccountName
+    return (
+      accounts.find((acc) => acc.name === account)?.name || activeAccountName
+    );
+  });
+  console.log('account', account);
+
+  useEffect(() => {
+    setSelectedAccount(account);
+  }, [account]);
 
   const toDropdownFormat = (account: string) => {
     return {
@@ -30,10 +52,10 @@ export default ({username, setAccount, enforce, accounts, account}: Props) => {
     };
   };
 
-  return username && enforce ? (
+  return account && accounts.length === 1 && enforce ? (
     <RequestItem
       title={translate('request.item.username')}
-      content={`@${username}`}
+      content={`@${account}`}
     />
   ) : (
     <View style={styles.container}>
@@ -41,8 +63,12 @@ export default ({username, setAccount, enforce, accounts, account}: Props) => {
         list={accounts.map((e) => toDropdownFormat(e.name))}
         dropdownTitle="common.accounts"
         hideLabel
-        selected={toDropdownFormat(account)}
-        onSelected={(selectedAccount) => setAccount(selectedAccount.value)}
+        selected={toDropdownFormat(selectedAccount)}
+        onSelected={(selectedAccount) => {
+          console.log('selectedAccount', selectedAccount);
+          setSelectedAccount(selectedAccount.value);
+          setAccount(selectedAccount.value);
+        }}
       />
       <Separator />
     </View>

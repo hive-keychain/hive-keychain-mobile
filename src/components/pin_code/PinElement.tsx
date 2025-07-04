@@ -78,7 +78,7 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
     <Pressable
       onPress={() => onPressElement(number, back)}
       style={({pressed}) => {
-        return pressed && refNumber !== 12
+        return pressed && refNumber !== 12 && refNumber !== 10
           ? [styles.pinElements, styles.pinElementPressed]
           : styles.pinElements;
       }}>

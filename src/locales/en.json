@@ -84,6 +84,7 @@
     "unstake": "Unstake",
     "delegate": "Delegate",
     "deposit": "Deposit",
+    "got_it": "Got it!",
     "deleg": "Deleg.",
     "missing_key": "Please add your {{key}} key to perform this operation!",
     "need_positive_amount": "The amount needs to be greater than 0",
@@ -648,6 +649,7 @@
       "operations_info": "For a better experience, you can whitelist non-active authority operation when dApps requested them. you won’t receive a confirmation prompt for operations",
       "switch_auto": "Switch Automatically",
       "switch_auto_info": "Will always select the best Hive RPC node for you",
+      "switch_auto_info_he": "Will always select the best Hive Engine RPC node for you",
       "hive_rpc": "Hive RPC",
       "add_rpc_title": "Add Your RPC node here",
       "rpc_node": "RPC Node",
@@ -941,7 +943,8 @@
       "vscDeposit": "VSC Deposit",
       "vscWithdrawal": "VSC Withdrawal",
       "vscTransfer": "VSC Transfer",
-      "vscStaking": "VSC Staking"
+      "vscStaking": "VSC Staking",
+      "swap": "Keychain Swap"
     },
     "message": {
       "decode": "The website {{domain}} would like to verify that you have access to the private {{method}} key for the account: @{{username}}",
@@ -988,12 +991,15 @@
       "duration": "Duration",
       "daily_pay": "Daily Pay",
       "initiator": "Initiator",
-      "key": "Key"
+      "key": "Key",
+      "swap": "Swap",
+      "slippage": "Slippage"
     },
     "error": {
       "no_account": "The current website is trying to send a request to Hive Keychain for account @{{account}} which has not been added to the wallet.",
       "no_auth": "The current website is trying to send a request to Hive Keychain for account @{{account}} using the {{auth}} key, which has not been added to the wallet.",
-      "no_active_auth": "The current website is trying to send a request to Hive Keychain using active authority, but no account has been adeed with active key.",
+      "no_required_auth": "The current website is trying to send a request to Hive Keychain for account @{{account}} using {{required_auth}} authority, but @{{account}} has NOT been added with {{required_auth}} key.",
+      "no_required_auth_anonymous": "The current website is trying to send an anonymous request to Hive Keychain {{required_auth}} authority, but there are no accounts added with {{required_auth}} key.",
       "decode": "Could not verify key.",
       "encode": "Could not encode the message.",
       "signBuffer": "Could not sign.",
@@ -1007,6 +1013,10 @@
         "adjust_balance": "Insufficient {{currency}} balance on account @{{username}}.",
         "get_account": "Cannot find account @{{to}}",
         "encrypt": "Please add your memo key to encrypt memos."
+      },
+      "swap": {
+        "fetching_balance": "Error fetching account data.",
+        "insufficient_balance": "Insufficient balance."
       }
     },
     "success": {
@@ -1043,7 +1053,8 @@
       "vscTransfer": "Successfully started a VSC transfer. {{amount}} {{currency}} will be sent to {{to}}.",
       "vscDeposit": "Successfully started a VSC deposit. {{amount}} {{currency}}.",
       "vscWithdrawal": "Successfully started a VSC withdrawal. {{amount}} {{currency}} will be sent to {{to}}.",
-      "vscStaking": "Successfully started a VSC {{staking}}. {{amount}} {{currency}} will be staked."
+      "vscStaking": "Successfully started a VSC {{staking}}. {{amount}} {{currency}} will be staked.",
+      "swap": "Succesfully started the swap of {{amount}} {{from}} to {{to}}."
     },
     "confirm": "Confirm",
     "keep": "Do not prompt again to send {{type}} transactions from the account @{{username}} on {{domain}}.",
@@ -1052,9 +1063,12 @@
   "browser": {
     "search": "Search or enter url",
     "clear_all": "All your browser tabs have been closed",
-    "history": {"clear": "Clear History"},
+    "history": {
+      "clear": "Clear History",
+      "clear_cache": "Clear Cache"
+    },
     "home": {
-      "title": "HOME",
+      "title": "Home",
       "menu": {
         "ecosystem": "Ecosystem",
         "recent": "Recent",
@@ -1173,11 +1187,16 @@
     }
   },
   "popup": {
+    "browser_tutorial": {
+      "title": "Keychain Browser",
+      "description": "Welcome to your Keychain Browser! Here are a few navigation elements you should know:",
+      "swipe_right": "Swipe right to go back",
+      "swipe_left": "Swipe left to go forward",
+      "swipe_down": "Swipe down to refresh",
+      "browser_button": "Press to switch between main and browser bottom bars. Long press to close all tabs."
+    },
     "whats_new": {
-      "intro": "What's new in {{content_version}}",
-      "next": "Next",
-      "previous": "Previous",
-      "got_it": "Got it!"
+      "intro": "What's new in {{content_version}}"
     },
     "widget_configuration": {
       "title": "Portfolio Widget",

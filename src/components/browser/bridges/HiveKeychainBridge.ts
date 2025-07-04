@@ -874,6 +874,58 @@ window.hive_keychain={
       netId,
       rpc,
     };
+  
+  /**
+   * Request swap
+   * @example
+   * // Let's swap 5 HIVE to DEC
+   * // Estimated steps can be obtained via KeychainSDK.swaps.getEstimation()
+   *
+   * if (window.hive_keychain) {
+   *   const keychain = window.hive_keychain;
+   *   keychain.requestSwap('keychain', 'HIVE', 'DEC', 5, 1, estimatedSteps, (response) => {
+   *     console.log(response);
+   *   });
+   * } else {
+   *   alert('You do not have hive keychain installed');
+   * }
+   * @param {String} [username=null] Hive account to perform the request
+   * @param {String} startToken Incoming token
+   * @param {String} endToken Outgoing token
+   * @param {number} amount Amount of tokens to be swapped
+   * @param {number} slippage Max slippage
+   * @param {Object} steps Steps returned by KeychainSDK.swaps.getEstimation(), of type IStep[]
+   * @param {requestCallback} callback Function that handles Keychain's response to the request
+   * @param {String} [rpc=null] Override user's RPC settings
+   * @param {string} [partnerUsername=null] Partner Hive account hosting the widget
+   * @param {number} [partnerFee=null] Fee received when executing & hosting a Keychain Swap. 0 - 1%
+  
+   */
+  requestSwap: function (
+    username,
+    startToken,
+    endToken,
+    amount,
+    slippage,
+    steps,
+    callback,
+    rpc,
+    partnerUsername,
+    partnerFee,
+  ) {
+    const request = {
+      type: 'swap',
+      username,
+      startToken,
+      endToken,
+      amount,
+      slippage,
+      steps,
+      partnerUsername,
+      partnerFee,
+      rpc,
+    };
+
     this.dispatchCustomEvent('swRequest_hive', request, callback);
   }
 };
