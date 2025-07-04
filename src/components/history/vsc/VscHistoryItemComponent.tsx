@@ -17,7 +17,6 @@ interface Props {
 
 const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
   const [toggle, setToggle] = useState(false);
-
   const getOperationIcon = () => {
     const opType = transaction.type;
     switch (opType) {
@@ -37,8 +36,7 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
 
   const getOperationDescription = () => {
     const opType = transaction.type;
-    const isOutgoing = transaction.from === `hive:${user.name}`;
-    const otherParty = isOutgoing ? transaction.to : transaction.from;
+    const isOutgoing = transaction.from.replace('hive:', '') === `${user.name}`;
     const amount = parseFloat(transaction.amount.toString());
     const currency = transaction.asset.toUpperCase();
 
@@ -77,8 +75,10 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
   };
 
   const getOperationDetails = () => {
-    const isOutgoing = transaction.from === `hive:${user.name}`;
-    const otherParty = isOutgoing ? transaction.to : transaction.from;
+    const isOutgoing = transaction.from === `${user.name}`;
+    const otherParty = isOutgoing
+      ? transaction.to.replace('hive:', '')
+      : transaction.from.replace('hive:', '');
     return isOutgoing
       ? translate('wallet.operations.vsc.to', {to: otherParty})
       : translate('wallet.operations.vsc.from', {from: otherParty});
