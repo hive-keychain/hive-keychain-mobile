@@ -24,9 +24,9 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
         return Icons.TRANSFER;
       case 'withdraw':
         return Icons.POWER_DOWN;
-      case 'stake_hbd': // stake
+      case 'stake':
         return Icons.POWER_UP;
-      case 'unstake_hbd': // unstake
+      case 'unstake':
         return Icons.POWER_DOWN;
       case 'deposit':
       default:
@@ -57,11 +57,11 @@ const VscHistoryItemComponent = ({transaction, user, theme}: Props) => {
           : translate('wallet.operations.vsc.withdraw_amount', {
               amount: formatBalance(amount) + ' ' + currency,
             });
-      case 'stake_hbd':
+      case 'stake':
         return translate('wallet.operations.vsc.stake_amount', {
           amount: formatBalance(amount) + ' ' + currency,
         });
-      case 'unstake_hbd':
+      case 'unstake':
         return translate('wallet.operations.vsc.unstake_amount', {
           amount: formatBalance(amount) + ' ' + currency,
         });
