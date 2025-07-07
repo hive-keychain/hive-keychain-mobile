@@ -114,6 +114,7 @@ const RequestOperation = ({
       <View style={getCardStyle(theme).defaultCardItem}>{children}</View>
       <TwoFaForm twoFABots={twoFABots} setTwoFABots={setTwoFABots} />
       {method !== KeyTypes.active &&
+      !!domain &&
       type !== KeychainRequestTypes.addAccount ? (
         <View style={styles.keep}>
           <CheckBoxPanel

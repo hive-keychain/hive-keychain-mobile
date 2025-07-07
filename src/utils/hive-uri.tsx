@@ -226,7 +226,6 @@ export const processQRCodeOp = async (
     }
   }
   const accounts: Account[] = await store.getState().accounts;
-
   if (accounts && accounts.length) {
     const validity = validateAuthority(accounts, request);
 
@@ -273,6 +272,6 @@ export const processQRCodeOp = async (
       });
     }
   } else {
-    store.dispatch(saveRequestedOperation(qrRequest));
+    store.dispatch(saveRequestedOperation(opType, qrRequest));
   }
 };
