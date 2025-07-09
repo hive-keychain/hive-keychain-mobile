@@ -12,6 +12,7 @@ import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Easing,
+  Keyboard,
   Platform,
   Pressable,
   ScrollView,
@@ -80,9 +81,31 @@ const BottomNavigation = ({
     true,
   );
   const [orientation, setOrientation] = useState('PORTRAIT');
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(
     !isModal && show && rpc && rpc.uri !== 'NULL',
   );
+
+  // Listen to keyboard events, and hide the bottom navigation when the keyboard is visible
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardVisible(false);
+      },
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   React.useEffect(() => {
     Orientation.addDeviceOrientationListener((orientation) => {
       if (['UNKNOWN', 'FACE-UP', 'FACE-DOWN'].includes(orientation)) return;
@@ -144,6 +167,7 @@ const BottomNavigation = ({
     startAnimation(
       !isModal &&
         orientation === 'PORTRAIT' &&
+        !isKeyboardVisible &&
         !isLoadingScreen &&
         rpc &&
         !isDrawerOpen &&
