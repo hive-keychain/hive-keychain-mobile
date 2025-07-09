@@ -442,7 +442,6 @@ const getStyles = (insets: EdgeInsets) =>
     container: {
       flexGrow: 1,
       flexDirection: 'column',
-      marginBottom: -insets.bottom,
     },
     hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
   });

@@ -87,7 +87,7 @@ const BrowserScreen = ({
   const {theme} = useThemeContext();
 
   return (
-    <SafeArea>
+    <SafeArea edges={['top']}>
       <Browser
         theme={theme}
         accounts={accounts}
