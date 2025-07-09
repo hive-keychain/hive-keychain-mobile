@@ -134,7 +134,8 @@ const getWebviewInfo = `
 
     window.ReactNativeWebView?.postMessage(JSON.stringify({
       name: '${ProviderEvent.FLUTTER_CHECK}',
-      isFlutterCanvasApp: isFlutterCanvasApp || !!flutterDiv
+      isFlutterCanvasApp: isFlutterCanvasApp || !!flutterDiv,
+      domain: document.domain
     }));
   } catch (err) {
   }

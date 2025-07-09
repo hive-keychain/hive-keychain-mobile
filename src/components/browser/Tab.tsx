@@ -104,8 +104,9 @@ export default memo(
     const [canRefresh, setCanRefresh] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const {setWebViewRef, setTabViewRef} = useTab();
-    const [isFlutterCanvasApp, setIsFlutterCanvasApp] = useState(false);
+    const [isFlutterApp, setIsFlutterApp] = useState(false);
     const [canRefreshCanvas, setCanRefreshCanvas] = useState(true);
+    const [flutterDomain, setFlutterDomain] = useState('');
     const onRefresh = () => {
       setRefreshing(true);
       tabRef.current?.reload(); // reload the WebView
@@ -185,6 +186,7 @@ export default memo(
         isAtTopOfCanvas,
         showNavigationBar,
         isFlutterCanvasApp,
+        domain,
       } = JSON.parse(nativeEvent.data);
       const {current} = tabRef;
       switch (messageName) {
@@ -196,7 +198,11 @@ export default memo(
             store.dispatch(showFloatingBar(showNavigationBar));
           break;
         case ProviderEvent.FLUTTER_CHECK:
-          setIsFlutterCanvasApp(isFlutterCanvasApp);
+          if (domain === flutterDomain && isFlutterApp === true) return;
+          if (domain !== flutterDomain) setFlutterDomain(domain);
+          if (isFlutterApp !== isFlutterCanvasApp) {
+            setIsFlutterApp(isFlutterCanvasApp);
+          }
           break;
         case ProviderEvent.HANDSHAKE:
           current.injectJavaScript(
@@ -371,7 +377,7 @@ export default memo(
               }
               ref={tabParentRef}
               refreshControl={
-                (!isFlutterCanvasApp || canRefreshCanvas) && (
+                (!isFlutterApp || canRefreshCanvas) && (
                   <RefreshControl
                     refreshing={refreshing}
                     onRefresh={() => {
