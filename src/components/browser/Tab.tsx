@@ -190,96 +190,71 @@ export default memo(
       } = JSON.parse(nativeEvent.data);
       const {current} = tabRef;
       if (messageName !== ProviderEvent.INFO)
-        console.log(
-          'messageName',
-          messageName,
-          'isattop',
-          isAtTop,
-          'shownavigationbar',
-          showNavigationBar,
-          'isFlutterCanvasApp',
-          isFlutterCanvasApp,
-          'domain',
-          domain,
-          'flutterDomain',
-          flutterDomain,
-        );
-      switch (messageName) {
-        case ProviderEvent.SCROLL:
-          console.log(
-            canRefresh !== isAtTop,
-            canRefreshCanvas !== isAtTopOfCanvas,
-          );
-          if (canRefresh !== isAtTop) setCanRefresh(isAtTop);
-          if (canRefreshCanvas !== isAtTopOfCanvas)
-            setCanRefreshCanvas(isAtTopOfCanvas);
-          showNavigationBar !== undefined &&
-            store.dispatch(showFloatingBar(showNavigationBar));
-          break;
-        case ProviderEvent.FLUTTER_CHECK:
-          console.log(
-            'flutterDomain',
-            flutterDomain,
-            domain,
-            isFlutterApp,
-            isFlutterCanvasApp,
-          );
-          if (domain === flutterDomain && isFlutterApp === true) return;
-          if (domain !== flutterDomain) setFlutterDomain(domain);
-          if (isFlutterApp !== isFlutterCanvasApp) {
-            setIsFlutterApp(isFlutterCanvasApp);
-          }
-          break;
-        case ProviderEvent.HANDSHAKE:
-          current.injectJavaScript(
-            'window.hive_keychain.onAnswerReceived("hive_keychain_handshake")',
-          );
-          break;
-        case ProviderEvent.REQUEST:
-          if (validateRequest(data)) {
-            data.title = getRequestTitle(data);
-            const validateAuth = validateAuthority(accounts, data);
-            if (validateAuth.valid) {
-              showOperationRequestModal(request_id, data);
+        switch (messageName) {
+          case ProviderEvent.SCROLL:
+            if (canRefresh !== isAtTop) setCanRefresh(isAtTop);
+            if (canRefreshCanvas !== isAtTopOfCanvas)
+              setCanRefreshCanvas(isAtTopOfCanvas);
+            showNavigationBar !== undefined &&
+              store.dispatch(showFloatingBar(showNavigationBar));
+            break;
+          case ProviderEvent.FLUTTER_CHECK:
+            if (domain === flutterDomain && isFlutterApp === true) return;
+            if (domain !== flutterDomain) setFlutterDomain(domain);
+            if (isFlutterApp !== isFlutterCanvasApp) {
+              setIsFlutterApp(isFlutterCanvasApp);
+            }
+            break;
+          case ProviderEvent.HANDSHAKE:
+            current.injectJavaScript(
+              'window.hive_keychain.onAnswerReceived("hive_keychain_handshake")',
+            );
+            break;
+          case ProviderEvent.REQUEST:
+            if (validateRequest(data)) {
+              data.title = getRequestTitle(data);
+              const validateAuth = validateAuthority(accounts, data);
+              if (validateAuth.valid) {
+                showOperationRequestModal(request_id, data);
+              } else {
+                sendError(tabRef, {
+                  error: 'user_cancel',
+                  message: 'Request was canceled by the user.',
+                  data,
+                  request_id,
+                });
+                navigate('ModalScreen', {
+                  name: `Operation_${data.type}`,
+                  modalContent: (
+                    <RequestErr
+                      onClose={() => {
+                        navigationGoBack();
+                      }}
+                      error={validateAuth.error}
+                    />
+                  ),
+                });
+              }
             } else {
               sendError(tabRef, {
-                error: 'user_cancel',
-                message: 'Request was canceled by the user.',
+                error: 'incomplete',
+                message: 'Incomplete data or wrong format',
                 data,
                 request_id,
               });
-              navigate('ModalScreen', {
-                name: `Operation_${data.type}`,
-                modalContent: (
-                  <RequestErr
-                    onClose={() => {
-                      navigationGoBack();
-                    }}
-                    error={validateAuth.error}
-                  />
-                ),
-              });
             }
-          } else {
-            sendError(tabRef, {
-              error: 'incomplete',
-              message: 'Incomplete data or wrong format',
-              data,
-              request_id,
-            });
-          }
-          break;
-        case ProviderEvent.INFO:
-          if (
-            data.url !== 'about:blank' &&
-            (icon !== data.icon || name !== data.name)
-          ) {
-            navigation.setParams({icon: data.icon});
-            updateTab(id, {name: data.name, icon: data.icon});
-            addToHistory({url: data.url, name: data.name, icon: data.icon});
-          }
-          break;
-      }
+            break;
+          case ProviderEvent.INFO:
+            if (
+              data.url !== 'about:blank' &&
+              (icon !== data.icon || name !== data.name)
+            ) {
+              navigation.setParams({icon: data.icon});
+              updateTab(id, {name: data.name, icon: data.icon});
+              addToHistory({url: data.url, name: data.name, icon: data.icon});
+            }
+            break;
+        }
     };
     const showOperationRequestModal = async (request_id: number, data: any) => {
       const {username, domain, type} = data;

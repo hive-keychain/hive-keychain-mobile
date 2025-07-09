@@ -35,9 +35,16 @@ const browserReducer = (
       ) {
         return state;
       }
+      const newFavorites = state.favorites.map((e) => {
+        if (e.url === payload!.history!.url) {
+          return payload!.history!;
+        }
+        return e;
+      });
       return {
         ...state,
         history: [...state.history, payload!.history!],
+        favorites: newFavorites,
       };
     case ADD_TO_BROWSER_FAVORITES:
       const newFavorite = state.favorites;
