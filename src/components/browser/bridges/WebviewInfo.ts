@@ -44,77 +44,132 @@ const getWebviewInfo = `
 		))
 	},2000);
 	
-	// (function() {
-	// let lastScrollPosition=0;
-    // function handleScroll() {
-    //     const isAtTop = window.scrollY === 0;
-	// 	const showNavigationBar = lastScrollPosition >= window.scrollY;		
-    //     window.ReactNativeWebView.postMessage(JSON.stringify({ name: '${ProviderEvent.SCROLL}', isAtTop, showNavigationBar }));
-    //   	lastScrollPosition = window.scrollY;
-	// 	}
-    //   window.addEventListener('scroll', handleScroll);
-    //   handleScroll();
-    // })();
 
-	(function () {
+  (function () {
   let lastTouchY = 0;
-  let windowScrollPosition=0;
-  let parentScrollPosition=0;
-  let scrollCheckTimer=null;
-  let lastScrollTop = -1;
+  let windowScrollY = 0;
+  const iframeScrollY = {};
+  let parentScrollY = 0;
+  let lastGlobalScrollY = 0;
+  let scrollDirection = 'none';
 
-   window.addEventListener('scroll', ()=>{
-    windowScrollPosition = window.scrollY;
-	let canScrollUp = windowScrollPosition > 0 || parentScrollPosition > 0;
-   
-    window.ReactNativeWebView.postMessage(
-      JSON.stringify({ name: '${ProviderEvent.SCROLL}', isAtTop: !canScrollUp})
-    );
-   });
+  const ProviderEvent = { SCROLL: 'SCROLL' };
+
+  function getDeepestScrollableParentScroll(doc = document) {
+    let maxScroll = 0;
+    const allElements = doc.querySelectorAll('*');
+    for (const el of allElements) {
+      const style = doc.defaultView.getComputedStyle(el);
+      if ((style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+          el.scrollHeight > el.clientHeight) {
+        maxScroll = Math.max(maxScroll, el.scrollTop);
+      }
+    }
+    return maxScroll;
+  }
+
+  function getGlobalCanScrollUp() {
+    const anyIframeScrolled = Object.values(iframeScrollY).some(y => y > 0);
+    return windowScrollY > 0 || parentScrollY > 0 || anyIframeScrolled;
+  }
+
+  function getGlobalScrollY() {
+    return Math.max(windowScrollY, parentScrollY, ...Object.values(iframeScrollY));
+  }
+
+  function postScrollStatus(extra = {}) {
+    const globalY = getGlobalScrollY();
+
+    // Update scroll direction if scrolling happened
+    if (globalY > lastGlobalScrollY) {
+      scrollDirection = 'down';
+    } else if (globalY < lastGlobalScrollY) {
+      scrollDirection = 'up';
+    }
+
+    const isAtTop = !getGlobalCanScrollUp();
+    const showNavigationBar = scrollDirection === 'up';
+
+    lastGlobalScrollY = globalY;
+
+    window.ReactNativeWebView?.postMessage(JSON.stringify({
+      name: '${ProviderEvent.SCROLL}',
+      isAtTop,
+      showNavigationBar,
+      scrollTop: globalY,
+      ...extra
+    }));
+  }
+
+  // ===== MAIN WINDOW SCROLL/TAP =====
+  window.addEventListener('scroll', () => {
+    windowScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    postScrollStatus({ source: 'main' });
+  }, { passive: true });
 
   window.addEventListener('touchstart', function (e) {
     lastTouchY = e.touches[0].clientY;
   });
 
   window.addEventListener('touchend', function (e) {
-    const currentY = e.changedTouches[0].clientY;
-    const deltaY = currentY - lastTouchY;
-    lastTouchY = currentY;
+    const deltaY = e.changedTouches[0].clientY - lastTouchY;
+    lastTouchY = e.changedTouches[0].clientY;
 
-    const el = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-    const scrollableParent = findScrollableParent(el);
-    parentScrollPosition = scrollableParent?.scrollTop;
-    let canScrollUp = windowScrollPosition > 0 || parentScrollPosition > 0;
-    if(scrollableParent){
-		scrollCheckTimer = setInterval(() => {
-			const currentScrollTop = scrollableParent.scrollTop;
-			if (currentScrollTop === lastScrollTop) {
-				clearInterval(scrollCheckTimer);
-				scrollCheckTimer = null;
-				const canScrollUp = currentScrollTop > 0 || parentScrollPosition > 0;
-				window.ReactNativeWebView?.postMessage(JSON.stringify({ name: '${ProviderEvent.SCROLL}', isAtTop: !canScrollUp}));
-			}
-			lastScrollTop = currentScrollTop;
-		}, 100);
-	} 
-    window.ReactNativeWebView.postMessage(
-      JSON.stringify({ name: '${ProviderEvent.SCROLL}', isAtTop: !canScrollUp, showNavigationBar: deltaY > 0,el:windowScrollPosition,scrollableParent:parentScrollPosition})
-    );
+    windowScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    parentScrollY = getDeepestScrollableParentScroll();
+
+    postScrollStatus({
+      source: 'main',
+      showNavigationBar: deltaY > 0,
+    });
   });
 
-  function findScrollableParent(el) {
-    while (el) {
-      const style = window.getComputedStyle(el);
-      const overflowY = style.overflowY;
-      const canScroll = el.scrollHeight > el.clientHeight;
+  // ===== IFRAME SUPPORT =====
+  function injectIframeListeners(iframe, index) {
+    try {
+      const iframeWin = iframe.contentWindow;
+      const iframeDoc = iframe.contentDocument;
+      if (!iframeWin || !iframeDoc) return;
 
-      if (canScroll && (overflowY === 'auto' || overflowY === 'scroll')) {
-        return el;
-      }
-      el = el.parentElement;
+      iframeScrollY[index] = 0;
+
+      iframeWin.addEventListener('scroll', () => {
+        iframeScrollY[index] = iframeWin.scrollY || iframeDoc.documentElement.scrollTop || 0;
+        postScrollStatus({ source: 'iframe-' + index });
+      }, { passive: true });
+
+      iframeWin.addEventListener('touchstart', (e) => {
+        lastTouchY = e.touches[0].clientY;
+      });
+
+      iframeWin.addEventListener('touchend', (e) => {
+        const deltaY = e.changedTouches[0].clientY - lastTouchY;
+        lastTouchY = e.changedTouches[0].clientY;
+
+        iframeScrollY[index] = iframeWin.scrollY || iframeDoc.documentElement.scrollTop || 0;
+        getDeepestScrollableParentScroll(iframeDoc);
+
+        postScrollStatus({
+          source: 'iframe-' + index,
+          showNavigationBar: deltaY > 0,
+        });
+      });
+    } catch (e) {
+      // silently ignore cross-origin iframes
     }
-    return null;
   }
+
+  function observeIframes() {
+    const iframes = document.querySelectorAll('iframe');
+    iframes.forEach((iframe, idx) => injectIframeListeners(iframe, idx));
+  }
+
+  function ensureIframeHooks() {
+    observeIframes();
+    setTimeout(ensureIframeHooks, 1000);
+  }
+
+  ensureIframeHooks();
 })();
 
 (function() {

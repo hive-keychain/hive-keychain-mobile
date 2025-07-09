@@ -189,8 +189,27 @@ export default memo(
         domain,
       } = JSON.parse(nativeEvent.data);
       const {current} = tabRef;
+      if (messageName !== ProviderEvent.INFO)
+        console.log(
+          'messageName',
+          messageName,
+          'isattop',
+          isAtTop,
+          'shownavigationbar',
+          showNavigationBar,
+          'isFlutterCanvasApp',
+          isFlutterCanvasApp,
+          'domain',
+          domain,
+          'flutterDomain',
+          flutterDomain,
+        );
       switch (messageName) {
         case ProviderEvent.SCROLL:
+          console.log(
+            canRefresh !== isAtTop,
+            canRefreshCanvas !== isAtTopOfCanvas,
+          );
           if (canRefresh !== isAtTop) setCanRefresh(isAtTop);
           if (canRefreshCanvas !== isAtTopOfCanvas)
             setCanRefreshCanvas(isAtTopOfCanvas);
@@ -198,6 +217,13 @@ export default memo(
             store.dispatch(showFloatingBar(showNavigationBar));
           break;
         case ProviderEvent.FLUTTER_CHECK:
+          console.log(
+            'flutterDomain',
+            flutterDomain,
+            domain,
+            isFlutterApp,
+            isFlutterCanvasApp,
+          );
           if (domain === flutterDomain && isFlutterApp === true) return;
           if (domain !== flutterDomain) setFlutterDomain(domain);
           if (isFlutterApp !== isFlutterCanvasApp) {
