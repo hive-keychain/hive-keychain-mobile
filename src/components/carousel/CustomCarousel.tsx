@@ -6,12 +6,7 @@ import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {Theme} from 'src/context/theme.context';
-import {
-  NEUTRAL_WHITE_COLOR,
-  PRIMARY_RED_COLOR,
-  RED_SHADOW_COLOR,
-} from 'src/styles/colors';
-import {generateBoxShadowStyle} from 'src/styles/shadow';
+import {NEUTRAL_WHITE_COLOR, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {button_link_primary_medium} from 'src/styles/typography';
 
 interface Props {
@@ -174,15 +169,6 @@ const getStyles = (theme: Theme) =>
       backgroundColor: PRIMARY_RED_COLOR,
       width: '40%',
       marginBottom: 20,
-      ...generateBoxShadowStyle(
-        0,
-        13,
-        RED_SHADOW_COLOR,
-        1,
-        25,
-        30,
-        RED_SHADOW_COLOR,
-      ),
     },
     textButtonFilled: {
       ...button_link_primary_medium,
