@@ -25,7 +25,6 @@ export enum Icons {
   DELEGATIONS_RC = 'rc-delegation.svg',
   DELEGATIONS_HP = 'hp-delegation.svg',
   // DELETE = 'delete',
-  DISCORD = 'discord.svg',
   DONE = 'done',
   // EDIT = 'edit',
   ERROR = 'error',

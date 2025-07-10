@@ -3,7 +3,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import {closeAllTabs, lock} from 'actions/index';
+import {addTab, closeAllTabs, lock} from 'actions/index';
 import SwitchDarkIcon from 'assets/new_UI/moon.svg';
 import SwitchLightIcon from 'assets/new_UI/sun.svg';
 import DrawerFooter from 'components/drawer/Footer';
@@ -42,7 +42,7 @@ const hiddenRoutesInMain = [
 ];
 
 const HeaderContent = (props: Props) => {
-  const {user, lock, navigation, itemStyle, state, ...rest} = props;
+  const {user, lock, navigation, itemStyle, state, addTab, ...rest} = props;
   const newState = {...state};
   newState.routes = newState.routes.filter(
     (route) => !hiddenRoutesInMain.includes(route.name),
@@ -147,7 +147,7 @@ const HeaderContent = (props: Props) => {
           {...rest}
         />
       </ScrollView>
-      <DrawerFooter user={user} theme={theme} />
+      <DrawerFooter user={user} theme={theme} addTab={addTab} />
     </DrawerContentScrollView>
   );
 };
@@ -159,7 +159,7 @@ const mapStateToProps = (state: RootState) => ({
   user: state.activeAccount,
 });
 
-const connector = connect(mapStateToProps, {lock, closeAllTabs});
+const connector = connect(mapStateToProps, {lock, closeAllTabs, addTab});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(HeaderContent);
