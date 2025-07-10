@@ -128,12 +128,6 @@ export default memo(
       }, []),
     );
 
-    useEffect(() => {
-      // On iOS the page needs to be reloaded when changing orientation to apply desktop mode.
-      if (desktopMode && active && !isManagingTab && Platform.OS === 'ios') {
-        tabRef.current.reload();
-      }
-    }, [orientation]);
     const goBack = () => {
       const {current} = tabRef;
       current && current.goBack();
