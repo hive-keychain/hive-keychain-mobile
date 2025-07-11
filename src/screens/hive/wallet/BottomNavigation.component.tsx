@@ -414,13 +414,12 @@ const getStyles = (
   StyleSheet.create({
     container: {
       position: 'absolute',
-      bottom: isProposalRequestDisplayed ? insets.bottom + 80 : insets.bottom,
+      bottom: 0,
       width: '95%',
       alignSelf: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: -insets.bottom - 1,
-      paddingBottom: insets.bottom / 2,
+      paddingBottom: Platform.OS === 'ios' ? insets.bottom / 2 : insets.bottom,
       alignItems: 'center',
     },
     textBase: {
@@ -432,8 +431,8 @@ const getStyles = (
       justifyContent: 'center',
       flex: 1.5,
       paddingTop: 8,
-      paddingBottom: 8 + insets.bottom,
-      marginBottom: -insets.bottom,
+      paddingBottom: Platform.OS === 'ios' ? insets.bottom + 8 : 8,
+      marginBottom: Platform.OS === 'ios' ? -insets.bottom - 1 : 0,
     },
     marginTop: {
       marginTop: 5,

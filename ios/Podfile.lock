@@ -414,8 +414,8 @@ PODS:
     - React-Core
   - react-native-orientation-locker (1.7.0):
     - React-Core
-  - react-native-safe-area-context (2.0.3):
-    - React
+  - react-native-safe-area-context (4.14.1):
+    - React-Core
   - react-native-simple-toast (1.1.4):
     - React-Core
     - Toast (~> 4.0.0)
@@ -864,7 +864,7 @@ SPEC CHECKSUMS:
   react-native-date-picker: 2eb0ed05ab9dcb4f337deda77deaa779807c4c61
   react-native-get-random-values: d16467cf726c618e9c7a8c3c39c31faa2244bbba
   react-native-orientation-locker: cc6f357b289a2e0dd2210fea0c52cb8e0727fdaa
-  react-native-safe-area-context: b0d3578c0f2d45410491842cea4badb72c34efc9
+  react-native-safe-area-context: 758e894ca5a9bd1868d2a9cfbca7326a2b6bf9dc
   react-native-simple-toast: 59d8b58998dac9f063b46d95f9fd7fd7caab6101
   react-native-version-info: f0b04e16111c4016749235ff6d9a757039189141
   react-native-view-shot: d1a701eb0719c6dccbd20b4bb43b1069f304cb70

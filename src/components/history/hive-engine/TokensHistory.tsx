@@ -2,8 +2,10 @@ import {clearTokenHistory, loadTokenHistory} from 'actions/index';
 import {BackToTopButton} from 'components/ui/Back-To-Top-Button';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
+import Separator from 'components/ui/Separator';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {HiveEngineFilterTypes} from 'reducers/tokensFilters';
 import {Theme} from 'src/context/theme.context';
@@ -180,6 +182,9 @@ const TokensHistory = ({
             keyExtractor={(transaction) => transaction._id}
             onScroll={handleScroll}
             style={styles.listContainer}
+            ListFooterComponent={() => (
+              <Separator height={initialWindowMetrics.insets.bottom + 70} />
+            )}
           />
         </View>
       )}

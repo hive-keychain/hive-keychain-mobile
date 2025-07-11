@@ -291,7 +291,7 @@ const Savings = ({
         </>
       }
       childrenMiddle={
-        <View>
+        <View style={{flex: 1}}>
           {(currency !== 'HIVE' ||
             operationType !== SavingsOperations.deposit) && (
             <View>

@@ -218,6 +218,7 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
       paddingHorizontal: 15,
     },
     childrenMiddle: {
+      flex: 1,
       paddingHorizontal: 10,
     },
     flexRowBetween: {

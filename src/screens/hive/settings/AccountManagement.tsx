@@ -11,7 +11,6 @@ import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
-import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import SlidingOverlay from 'components/ui/SlidingOverlay';
 import useLockedPortrait from 'hooks/useLockedPortrait';
@@ -22,6 +21,7 @@ import {
 } from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -149,9 +149,9 @@ const AccountManagement = ({
 
   return (
     <Background theme={theme}>
-      <SafeArea style={styles.safeArea}>
+      <View style={styles.safeArea}>
         <FocusAwareStatusBar />
-        <ScrollView>
+        <ScrollView style={styles.scrollView}>
           <UserDropdown copyButtonValue />
           <Separator height={10} />
           <Key
@@ -194,7 +194,7 @@ const AccountManagement = ({
             onPress={handleGotoConfirmationAccountRemoval}
             additionalTextStyle={styles.operationButtonText}
           />
-          <Separator height={25} />
+          <Separator height={initialWindowMetrics.insets.bottom} />
         </ScrollView>
         <SlidingOverlay
           setShowOverlay={setShowQrCode}
@@ -253,14 +253,22 @@ const AccountManagement = ({
             )}
           </ScrollView>
         </SlidingOverlay>
-      </SafeArea>
+      </View>
     </Background>
   );
 };
 
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
-    safeArea: {paddingHorizontal: 16},
+    safeArea: {
+      flexGrow: 1,
+      padding: 16,
+      paddingBottom: 0,
+    },
+    scrollView: {
+      height: '60%',
+      paddingBottom: initialWindowMetrics.insets.bottom * 2,
+    },
     qrCardContainer: {
       display: 'flex',
       alignItems: 'center',

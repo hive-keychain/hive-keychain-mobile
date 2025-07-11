@@ -213,7 +213,7 @@ const Delegation = ({
         </>
       }
       childrenMiddle={
-        <View>
+        <View style={{flex: 1}}>
           <Caption text="wallet.operations.delegation.delegation_disclaimer" />
           <OperationInput
             labelInput={translate('common.username')}

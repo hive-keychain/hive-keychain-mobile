@@ -10,7 +10,6 @@ import CustomIconButton from 'components/ui/CustomIconButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
-import {AddAccFromWalletNavigation} from 'navigators/mainDrawerStacks/AddAccount.types';
 import React, {useState} from 'react';
 import {
   StyleSheet,
@@ -129,10 +128,8 @@ const AddAccountByKey = ({
               name={Icons.SCANNER}
               theme={theme}
               onPress={() => {
-                (navigation as AddAccFromWalletNavigation).navigate(
-                  'ScanQRScreen',
-                  {wallet: true},
-                );
+                console.log('here');
+                navigate('ScanQRScreen', {wallet: true});
               }}
             />
           }

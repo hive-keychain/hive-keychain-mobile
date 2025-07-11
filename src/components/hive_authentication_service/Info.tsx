@@ -41,37 +41,39 @@ const HASInfo = () => {
   return (
     <Operation logo={fullHasLogo()} title="">
       <View style={styles.view}>
-        <Text style={[styles.title, styles.header]}>
-          {translate('wallet.has.info.h1')}
-        </Text>
-        <Text style={styles.textBase}>{translate('wallet.has.info.t1')}</Text>
-        <Text style={[styles.title, styles.header]}>
-          {translate('wallet.has.info.h2')}
-        </Text>
-        <Text style={styles.textBase}>{translate('wallet.has.info.t2')}</Text>
-        <Text style={[styles.title, styles.header]}>
-          {translate('wallet.has.info.h3')}
-        </Text>
-        <IndicatorDescription
-          status={ConnectionStatus.VOID}
-          rootString={'wallet.has.info.indicator.grey'}
-          theme={theme}
-          press
-        />
-        <IndicatorDescription
-          status={ConnectionStatus.CONNECTED}
-          rootString={'wallet.has.info.indicator.green'}
-          theme={theme}
-          press
-        />
-        <IndicatorDescription
-          status={ConnectionStatus.DISCONNECTED}
-          rootString={'wallet.has.info.indicator.red'}
-          theme={theme}
-          press
-          longPress
-        />
-        <Separator height={15} />
+        <View style={{flexGrow: 1}}>
+          <Text style={[styles.title, styles.header]}>
+            {translate('wallet.has.info.h1')}
+          </Text>
+          <Text style={styles.textBase}>{translate('wallet.has.info.t1')}</Text>
+          <Text style={[styles.title, styles.header]}>
+            {translate('wallet.has.info.h2')}
+          </Text>
+          <Text style={styles.textBase}>{translate('wallet.has.info.t2')}</Text>
+          <Text style={[styles.title, styles.header]}>
+            {translate('wallet.has.info.h3')}
+          </Text>
+          <IndicatorDescription
+            status={ConnectionStatus.VOID}
+            rootString={'wallet.has.info.indicator.grey'}
+            theme={theme}
+            press
+          />
+          <IndicatorDescription
+            status={ConnectionStatus.CONNECTED}
+            rootString={'wallet.has.info.indicator.green'}
+            theme={theme}
+            press
+          />
+          <IndicatorDescription
+            status={ConnectionStatus.DISCONNECTED}
+            rootString={'wallet.has.info.indicator.red'}
+            theme={theme}
+            press
+            longPress
+          />
+        </View>
+        <Separator height={30} />
         <EllipticButton
           title={translate('common.clear_all')}
           onPress={() => {
@@ -141,7 +143,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
   StyleSheet.create({
     view: {
       flex: 1,
-      marginVertical: 20,
+      marginTop: 10,
       flexDirection: 'column',
       justifyContent: 'space-between',
       paddingHorizontal: 15,

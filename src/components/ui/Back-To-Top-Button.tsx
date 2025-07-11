@@ -6,6 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     alignItems: 'center',
     position: 'absolute',
-    bottom: 10,
+    bottom: initialWindowMetrics.insets.bottom + 10,
     right: 10,
     width: 45,
     height: 45,

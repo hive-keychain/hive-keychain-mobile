@@ -152,7 +152,12 @@ const HeaderContent = (props: Props) => {
   );
 };
 const styles = StyleSheet.create({
-  contentContainer: {height: '100%', flex: 1, zIndex: 0},
+  contentContainer: {
+    height: '100%',
+    flex: 1,
+    zIndex: 0,
+    // marginTop: initialWindowMetrics.insets.top,
+  },
   marginRight: {marginRight: 10},
 });
 const mapStateToProps = (state: RootState) => ({

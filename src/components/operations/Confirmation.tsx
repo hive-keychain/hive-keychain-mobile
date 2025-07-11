@@ -93,7 +93,7 @@ const ConfirmationPage = ({
   };
 
   return (
-    <Background theme={theme}>
+    <Background theme={theme} skipTop>
       <ScrollView contentContainerStyle={styles.confirmationPage}>
         {extraHeader}
         {isMultisig && <MultisigCaption />}

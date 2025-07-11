@@ -1,6 +1,5 @@
-import SafeArea from 'components/ui/SafeArea';
 import React from 'react';
-import {ImageStyle, StatusBar, StyleProp, StyleSheet} from 'react-native';
+import {ImageStyle, StatusBar, StyleProp, StyleSheet, View} from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import Background from './Background';
@@ -16,13 +15,13 @@ export default ({children, additionalBgSvgImageStyle}: Props) => {
     <Background
       theme={theme}
       additionalBgSvgImageStyle={additionalBgSvgImageStyle}>
-      <SafeArea style={styles.bgd}>
+      <View style={styles.bgd}>
         <StatusBar
           barStyle={getColors(theme).barStyle}
           backgroundColor={getColors(theme).primaryBackground}
         />
         {children}
-      </SafeArea>
+      </View>
     </Background>
   );
 };

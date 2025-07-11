@@ -414,6 +414,7 @@ const DelegationsList = ({
       childrenTop={<Separator height={40} />}
       childrenMiddle={
         <View>
+          <Separator height={20} />
           {type === 'outgoing' && (
             <>
               <Caption text="wallet.operations.delegation.outgoing_disclaimer" />
@@ -469,7 +470,11 @@ const getDimensionedStyles = (theme: Theme, width: number) =>
       marginTop: MARGIN_PADDING,
     },
     logo: {marginLeft: 10},
-    flexRow: {flexDirection: 'row', justifyContent: 'space-between'},
+    flexRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 10,
+    },
     textBase: {
       ...title_primary_body_2,
       color: getColors(theme).secondaryText,

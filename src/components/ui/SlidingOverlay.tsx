@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
 import Animated, {SlideInDown, SlideOutDown} from 'react-native-reanimated';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {inputStyle} from 'src/styles/input';
@@ -64,6 +65,10 @@ const SlidingOverlay = ({
         setIsClosing(true);
       }}
       isVisible={showOverlay}
+      backdropStyle={{
+        opacity: 0.6,
+        backgroundColor: 'black',
+      }}
       overlayStyle={{
         width: '100%',
         position: 'absolute',
@@ -88,6 +93,7 @@ const SlidingOverlay = ({
             height: '100%',
             borderTopRightRadius: 16,
             width: '100%',
+            marginBottom: -initialWindowMetrics.insets.bottom,
           }}>
           <Text
             style={[
