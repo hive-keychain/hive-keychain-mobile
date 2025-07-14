@@ -1,6 +1,6 @@
 import {Page} from 'actions/interfaces';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View} from 'react-native';
 import DraggableFlatList, {
   DragEndParams,
 } from 'react-native-draggable-flatlist';
@@ -62,7 +62,8 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
       flexDirection: 'column',
       marginTop: 10,
       flex: 1,
-      paddingBottom: 140 + insets.bottom / 2,
+      paddingBottom:
+        Platform.OS === 'ios' ? insets.bottom / 2 + 80 : insets.bottom + 80,
     },
     text: {
       alignSelf: 'center',

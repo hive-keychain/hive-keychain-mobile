@@ -105,7 +105,7 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
     container: {
       flex: 1,
       backgroundColor: getColors(theme).primaryBackground,
-      paddingBottom: 70 + insets.bottom / 2,
+      paddingBottom: insets.bottom,
     },
     subcontainer: {flex: 1, flexDirection: 'row', flexWrap: 'wrap'},
     hide: {display: 'none'},

@@ -641,8 +641,8 @@
     },
     "forgotPIN": {
       "title": "Reset wallet?",
-      "text": "If you forgot your PIN, you can reset Keychain \n and clear your data but will have to enter all your keys again.",
-      "button": "Reset Key"
+      "text": "If you forgot your PIN, you can reset Keychain \n and clear your data but will have to import all your accounts again.",
+      "button": "Reset Wallet"
     },
     "pinCode": {
       "unsupportedBiometrics": {

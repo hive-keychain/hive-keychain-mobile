@@ -58,6 +58,7 @@ export default memo(
               </View>
               {drag && (
                 <TouchableOpacity
+                  style={{paddingLeft: 10}}
                   onPressIn={(event) => {
                     drag(event);
                     setIsDragging(true);

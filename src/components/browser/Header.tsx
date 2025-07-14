@@ -219,7 +219,6 @@ const getStyles = (
       width: '100%',
       paddingHorizontal: 16,
       flexDirection: 'row',
-      marginTop: 8,
     },
     paddingHorizontal: {
       paddingHorizontal: 15,

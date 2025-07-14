@@ -416,6 +416,8 @@ const getStyles = (
       position: 'absolute',
       bottom: 0,
       width: '95%',
+      height:
+        Platform.OS === 'ios' ? insets.bottom / 2 + 50 : insets.bottom + 50,
       alignSelf: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',

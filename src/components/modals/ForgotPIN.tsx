@@ -1,16 +1,12 @@
 import {forgetAccounts} from 'actions/index';
 import EllipticButton from 'components/form/EllipticButton';
+import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
-import {
-  getColors,
-  PRIMARY_RED_COLOR,
-  RED_SHADOW_COLOR,
-} from 'src/styles/colors';
-import {generateBoxShadowStyle} from 'src/styles/shadow';
+import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getSpacing} from 'src/styles/spacing';
 import {
   body_primary_body_3,
@@ -31,7 +27,7 @@ const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
   const styles = getDimensionedStyles({width}, theme);
 
   return (
-    <View style={styles.flexSpaceAround}>
+    <SafeArea skipTop style={styles.flexSpaceAround}>
       <View>
         <Text
           style={[
@@ -58,21 +54,10 @@ const ForgotPIN = ({forgetAccounts, theme}: PropsFromRedux & Props) => {
           goBack();
           forgetAccounts();
         }}
-        style={[
-          styles.warningProceedButton,
-          generateBoxShadowStyle(
-            0,
-            13,
-            RED_SHADOW_COLOR,
-            1,
-            25,
-            30,
-            RED_SHADOW_COLOR,
-          ),
-        ]}
+        style={[styles.warningProceedButton]}
         additionalTextStyle={{...button_link_primary_medium, color: 'white'}}
       />
-    </View>
+    </SafeArea>
   );
 };
 const getDimensionedStyles = ({width}: Width, theme: Theme) =>
