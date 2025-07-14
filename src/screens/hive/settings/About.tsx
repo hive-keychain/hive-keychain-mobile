@@ -14,6 +14,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import VersionInfo from 'react-native-version-info';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -32,7 +33,13 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions());
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{
+        paddingBottom: initialWindowMetrics.insets.bottom,
+      }}>
       <>
         <View style={styles.extraBg}>
           {theme === Theme.LIGHT ? <AboutBGLight /> : <AboutBGLight />}
@@ -97,8 +104,7 @@ export default ({navigation}: {navigation: AboutNavigation}) => {
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
     container: {
-      marginVertical: 10,
-      paddingHorizontal: 45,
+      paddingHorizontal: 20,
       justifyContent: 'center',
     },
     link: {width: 15, height: 15},

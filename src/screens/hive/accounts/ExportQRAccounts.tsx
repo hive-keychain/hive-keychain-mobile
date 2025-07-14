@@ -3,12 +3,12 @@ import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {MainNavigation} from 'navigators/Root.types';
 import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
@@ -106,8 +106,12 @@ const ExportQRAccounts = ({
   };
 
   return (
-    <Background theme={theme}>
-      <SafeArea style={styles.safeArea}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{bottom: -initialWindowMetrics.insets.bottom}}>
+      <View style={styles.container}>
         <FocusAwareStatusBar />
         <View style={styles.qrCardContainer}>
           {accountsDataQR.length > 0 && (
@@ -125,10 +129,20 @@ const ExportQRAccounts = ({
                 ]}>
                 {translate('components.export_qr_accounts.qr_disclaimer2')}
               </Text>
-              <View style={{alignItems: 'center', width: '100%'}}>
+              <View
+                style={{
+                  alignItems: 'center',
+                  width: '100%',
+                  flex: 1,
+                }}>
                 <Separator height={10} />
                 {!showQR ? (
-                  <View style={{width: '100%'}}>
+                  <View
+                    style={{
+                      width: '100%',
+                      justifyContent: 'space-between',
+                      flex: 1,
+                    }}>
                     <View style={{height: 350}}>
                       <CheckBoxPanel
                         title="components.export_qr_accounts.check1"
@@ -136,6 +150,7 @@ const ExportQRAccounts = ({
                           setCheck1(!check1);
                         }}
                         checked={check1}
+                        smallText
                       />
                       <CheckBoxPanel
                         title="components.export_qr_accounts.check2"
@@ -143,9 +158,9 @@ const ExportQRAccounts = ({
                           setCheck2(!check2);
                         }}
                         checked={check2}
+                        smallText
                       />
                     </View>
-                    <Separator height={16} />
                     <EllipticButton
                       title={translate('settings.keys.show_qr_code')}
                       style={{width: '80%'}}
@@ -211,19 +226,22 @@ const ExportQRAccounts = ({
             </View>
           )}
         </View>
-      </SafeArea>
+      </View>
     </Background>
   );
 };
 
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
-    safeArea: {paddingHorizontal: 16},
+    container: {
+      paddingHorizontal: 16,
+      flex: 1,
+    },
     qrCardContainer: {
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',
       width: '100%',
+      flexGrow: 1,
     },
     hidden: {opacity: 0},
     textBase: {
@@ -244,6 +262,8 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       alignItems: 'center',
       padding: 10,
       width: '100%',
+      flexGrow: 1,
+      justifyContent: 'space-between',
     },
     qrAccounts: {
       textAlign: 'center',

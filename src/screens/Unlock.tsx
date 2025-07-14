@@ -6,6 +6,7 @@ import KeychainLogo from 'components/ui/KeychainLogo';
 import {UnlockNavigationProp} from 'navigators/Unlock.types';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {useThemeContext} from 'src/context/theme.context';
 import {translate} from 'utils/localize';
@@ -15,7 +16,13 @@ const Unlock = ({unlock, navigation}: UnlockScreenProps) => {
   const {width} = useWindowDimensions();
   const {theme} = useThemeContext();
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{
+        paddingBottom: initialWindowMetrics.insets.bottom,
+      }}>
       <>
         <Pincode
           navigation={navigation}

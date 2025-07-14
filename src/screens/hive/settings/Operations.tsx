@@ -16,6 +16,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {DomainPreference} from 'reducers/preferences.types';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -74,7 +75,13 @@ const Operations = ({
   }, [searchValue, domainList]);
 
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{
+        paddingBottom: initialWindowMetrics.insets.bottom,
+      }}>
       <View style={styles.container}>
         <FocusAwareStatusBar />
         <Caption text="settings.settings.operations_info" hideSeparator />

@@ -2,14 +2,10 @@ import {addKey} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
+import SafeArea from 'components/ui/SafeArea';
+import Separator from 'components/ui/Separator';
 import React, {useState} from 'react';
-import {
-  Keyboard,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {Keyboard, StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
@@ -30,8 +26,12 @@ const AddKey = ({addKey, name, type}: Props) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
   return (
-    <View
-      style={{justifyContent: 'space-between', flex: 1, paddingVertical: 24}}>
+    <SafeArea
+      skipTop
+      style={{
+        justifyContent: 'space-between',
+        flexGrow: 1,
+      }}>
       <Text style={styles.title}>
         {translate('settings.keys.add_keyType', {type})}
       </Text>
@@ -42,6 +42,7 @@ const AddKey = ({addKey, name, type}: Props) => {
         value={key}
         onChangeText={setKey}
       />
+      <Separator />
       <EllipticButton
         title={translate('common.save')}
         onPress={() => {
@@ -53,7 +54,7 @@ const AddKey = ({addKey, name, type}: Props) => {
         isWarningButton
         additionalTextStyle={{...button_link_primary_medium}}
       />
-    </View>
+    </SafeArea>
   );
 };
 

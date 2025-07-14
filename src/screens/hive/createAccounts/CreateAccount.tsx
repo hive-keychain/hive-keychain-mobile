@@ -37,7 +37,7 @@ const CreateAccount = ({showExternalOnboarding}: PropsFromRedux) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(width, insets);
   return (
-    <Background theme={theme} containerStyle={styles.container}>
+    <Background theme={theme} containerStyle={styles.container} skipTop>
       <View style={styles.pageContainer}>
         <FocusAwareStatusBar />
         <View style={styles.captionContainer}>

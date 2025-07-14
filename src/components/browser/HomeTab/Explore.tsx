@@ -165,7 +165,7 @@ const getStyles = (
       borderColor: getColors(theme).quaternaryCardBorderColor,
       overflow: 'hidden',
       paddingBottom:
-        Platform.OS === 'ios' ? insets.bottom / 2 + 80 : insets.bottom + 80,
+        Platform.OS === 'ios' ? insets.bottom / 2 + 70 : insets.bottom + 70,
     },
     scrollviewContentContainer: {
       paddingLeft: MARGIN_LEFT_RIGHT_MIN,

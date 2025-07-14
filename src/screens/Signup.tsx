@@ -5,6 +5,7 @@ import KeychainLogo from 'components/ui/KeychainLogo';
 import {SignupNavProp} from 'navigators/Signup.types';
 import React from 'react';
 import {useWindowDimensions} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {connect, ConnectedProps} from 'react-redux';
 import {useThemeContext} from 'src/context/theme.context';
 import {translate} from 'utils/localize';
@@ -18,7 +19,13 @@ const Signup = ({signUp, navigation}: Props) => {
     signUp(pwd);
   };
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{
+        paddingBottom: initialWindowMetrics.insets.bottom,
+      }}>
       <Pincode
         signup
         navigation={navigation}

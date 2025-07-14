@@ -17,6 +17,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {KeyType} from 'src/interfaces/keys.interface';
@@ -93,7 +94,11 @@ const ConfirmationPage = ({
   };
 
   return (
-    <Background theme={theme} skipTop>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{bottom: -initialWindowMetrics.insets.bottom}}>
       <ScrollView contentContainerStyle={styles.confirmationPage}>
         {extraHeader}
         {isMultisig && <MultisigCaption />}
@@ -144,7 +149,6 @@ const ConfirmationPage = ({
           isLoading={loading}
           isWarningButton
         />
-        <Separator />
       </ScrollView>
     </Background>
   );

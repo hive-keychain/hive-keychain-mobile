@@ -4,6 +4,7 @@ import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
@@ -87,7 +88,13 @@ const DisableEnableMyWitness = ({
   };
 
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{
+        paddingBottom: initialWindowMetrics.insets.bottom,
+      }}>
       <View style={styles.container}>
         <FocusAwareStatusBar />
         <Text style={[styles.title, styles.textOpaque]}>
@@ -128,7 +135,7 @@ const getStyles = (theme: Theme) =>
       flex: 1,
       justifyContent: 'space-between',
       paddingHorizontal: 16,
-      paddingVertical: 30,
+      paddingBottom: 10,
     },
     title: {
       color: getColors(theme).secondaryText,

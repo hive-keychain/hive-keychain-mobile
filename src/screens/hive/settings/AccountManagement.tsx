@@ -21,7 +21,6 @@ import {
 } from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
-import {initialWindowMetrics} from 'react-native-safe-area-context';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -102,9 +101,7 @@ const AccountManagement = ({
         ],
         extraHeader: (
           <>
-            <Separator />
             <NavigatorTitle title="common.confirm" />
-            <Separator />
           </>
         ),
       };
@@ -119,7 +116,6 @@ const AccountManagement = ({
           />
         ),
         modalContainerStyle: [getModalBaseStyle(theme).roundedTop],
-        fixedHeight: 0.5,
       } as ModalScreenProps);
     }
   };
@@ -148,8 +144,8 @@ const AccountManagement = ({
   };
 
   return (
-    <Background theme={theme}>
-      <View style={styles.safeArea}>
+    <Background theme={theme} skipTop skipBottom>
+      <View style={styles.container}>
         <FocusAwareStatusBar />
         <ScrollView style={styles.scrollView}>
           <UserDropdown copyButtonValue />
@@ -194,18 +190,24 @@ const AccountManagement = ({
             onPress={handleGotoConfirmationAccountRemoval}
             additionalTextStyle={styles.operationButtonText}
           />
-          <Separator height={initialWindowMetrics.insets.bottom} />
+          <Separator height={20} />
         </ScrollView>
         <SlidingOverlay
           setShowOverlay={setShowQrCode}
           showOverlay={showQrCode}
-          maxHeightPercent={0.7}
+          minHeightPercent={0.55}
+          maxHeightPercent={1}
           title="settings.keys.qr.title">
-          <ScrollView>
+          <ScrollView style={{flexShrink: 1}}>
             <Caption text="settings.keys.qr.caption" hideSeparator justify />
             {!showQR ? (
-              <View>
+              <View
+                style={{
+                  flexGrow: 1,
+                  justifyContent: 'space-between',
+                }}>
                 <CheckBoxPanel
+                  smallText
                   title="settings.keys.qr.check1"
                   onPress={() => {
                     setCheck1(!check1);
@@ -213,12 +215,14 @@ const AccountManagement = ({
                   checked={check1}
                 />
                 <CheckBoxPanel
+                  smallText
                   title="settings.keys.qr.check2"
                   onPress={() => {
                     setCheck2(!check2);
                   }}
                   checked={check2}
                 />
+                <Separator height={20} />
                 <EllipticButton
                   title={translate('settings.keys.show_qr_code')}
                   isWarningButton
@@ -260,14 +264,13 @@ const AccountManagement = ({
 
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
-    safeArea: {
+    container: {
       flexGrow: 1,
-      padding: 16,
+      paddingHorizontal: 16,
       paddingBottom: 0,
     },
     scrollView: {
       height: '60%',
-      paddingBottom: initialWindowMetrics.insets.bottom * 2,
     },
     qrCardContainer: {
       display: 'flex',

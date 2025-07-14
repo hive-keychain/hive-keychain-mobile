@@ -7,6 +7,7 @@ import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
@@ -36,7 +37,13 @@ const Notifications = ({active}: PropsFromRedux) => {
   };
 
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{
+        paddingBottom: initialWindowMetrics.insets.bottom,
+      }}>
       {ready ? (
         <View style={styles.container}>
           <Caption text={'settings.settings.notifications.disclaimer'} />

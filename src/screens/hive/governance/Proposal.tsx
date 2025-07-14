@@ -91,6 +91,9 @@ const Proposal = ({
                 twoFABots={twoFABots}
               />
             )}
+            ListFooterComponent={() => {
+              return <Separator height={20} />;
+            }}
           />
         </View>
       </View>

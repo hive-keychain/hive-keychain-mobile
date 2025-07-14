@@ -21,6 +21,7 @@ type Props = {
   setShowOverlay: (e: boolean) => void;
   title: string;
   maxHeightPercent?: number;
+  minHeightPercent?: number;
 };
 
 const SlidingOverlay = ({
@@ -29,6 +30,7 @@ const SlidingOverlay = ({
   setShowOverlay,
   title,
   maxHeightPercent,
+  minHeightPercent,
 }: Props) => {
   const {height} = useWindowDimensions();
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -76,7 +78,7 @@ const SlidingOverlay = ({
         backgroundColor: 'transparent',
         padding: 0,
         maxHeight: maxHeightPercent * height || height / 2,
-        minHeight: height / 3,
+        minHeight: minHeightPercent * height || height / 3,
         shadowColor: 'transparent',
         marginBottom: Platform.OS === 'ios' ? keyboardHeight : 0,
       }}>

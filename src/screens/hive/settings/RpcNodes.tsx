@@ -20,6 +20,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -422,7 +423,13 @@ const RpcNodes = ({
   };
 
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{
+        paddingBottom: initialWindowMetrics.insets.bottom,
+      }}>
       <ScrollView style={styles.container}>
         <FocusAwareStatusBar />
         <View

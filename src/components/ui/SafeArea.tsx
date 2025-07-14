@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleProp, ViewStyle} from 'react-native';
 import {
+  Edge,
   initialWindowMetrics,
   SafeAreaView,
 } from 'react-native-safe-area-context';
@@ -8,20 +9,28 @@ import {
 type Props = {
   style?: StyleProp<ViewStyle>;
   skipTop?: boolean;
+  skipBottom?: boolean;
   children: JSX.Element | JSX.Element[];
 };
 
-const SafeArea = ({style, children, skipTop}: Props) => {
+const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
+  const edges: Edge[] = ['left', 'right'];
+  if (!skipTop) {
+    edges.push('top');
+  }
+  if (!skipBottom) {
+    edges.push('bottom');
+  }
   return (
     <SafeAreaView
       style={[
         style,
         {
-          paddingBottom: initialWindowMetrics.insets.bottom,
+          paddingBottom: !skipBottom ? 0 : initialWindowMetrics.insets.bottom,
           paddingTop: skipTop ? 16 : 12,
         },
       ]}
-      edges={skipTop ? ['left', 'right'] : ['top', 'left', 'right']}>
+      edges={edges}>
       {children}
     </SafeAreaView>
   );

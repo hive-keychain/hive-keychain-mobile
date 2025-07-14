@@ -2,7 +2,6 @@ import {Witness as WitnessInterface} from 'actions/interfaces';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
-import WalletPage from 'components/ui/WalletPage';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
@@ -81,7 +80,7 @@ const MyWitness = ({
     );
   } else {
     return (
-      <WalletPage>
+      <View>
         <View style={[styles.myWitnessContainer]}>
           {!editMode && (
             <View style={styles.witnessInfoContainer}>
@@ -147,7 +146,7 @@ const MyWitness = ({
             />
           )}
         </View>
-      </WalletPage>
+      </View>
     );
   }
 };
