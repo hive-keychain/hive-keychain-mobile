@@ -118,7 +118,7 @@ const BrowserHeader = ({
         onSwipeRight={() => {
           swipeToTab(true);
         }}>
-        <FocusAwareStatusBar backgroundColor={'transparent'} />
+        <FocusAwareStatusBar backgroundColor={'black'} />
         <View style={[styles.topBar]}>
           {activeUrl !== BrowserConfig.HOMEPAGE_URL ? (
             <>

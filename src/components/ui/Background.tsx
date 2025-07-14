@@ -40,7 +40,7 @@ export default (props: BackgroundProps) => {
       skipBottom={props.skipBottom}>
       <KeyboardAvoidingView
         style={[styles.container, props.containerStyle]}
-        enabled={Platform.OS === 'ios' ? true : false}
+        enabled={Platform.OS === 'ios'}
         behavior={'padding'}
         keyboardVerticalOffset={height + insets.bottom}>
         <ImageBackground

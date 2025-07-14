@@ -139,6 +139,7 @@ const Browser = ({
     <View style={styles.container}>
       <KeyboardAvoidingView
         style={[styles.container]}
+        enabled={Platform.OS === 'ios'}
         behavior={Platform.OS === 'ios' ? 'padding' : null}>
         <Header
           browser={browser}

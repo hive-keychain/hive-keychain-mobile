@@ -195,18 +195,6 @@ const getWebviewInfo = `
   } catch (err) {
   }
 })();
-
-// (function() {
-//       const existingStyle = document.getElementById('safe-area-padding');
-//       if (!existingStyle) {
-//         const style = document.createElement('style');
-//         style.id = 'safe-area-padding';
-//         style.innerHTML = 'body { padding-bottom: ${190}px !important; box-sizing: border-box; }';
-//         document.head.appendChild(style);
-//       } else {
-//         existingStyle.innerHTML = 'body { padding-bottom: ${190}px !important; box-sizing: border-box; }';
-//       }
-//     })();
 `;
 
 export const BRIDGE_WV_INFO = `
