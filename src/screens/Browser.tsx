@@ -1,4 +1,3 @@
-import {useFocusEffect} from '@react-navigation/native';
 import {showFloatingBar} from 'actions/floatingBar';
 import {
   addTab,
@@ -18,9 +17,7 @@ import BrowserTutorial from 'components/popups/browser-tutorial/BrowserTutorial'
 import ProposalReminder from 'components/popups/proposal-reminder';
 import SafeArea from 'components/ui/SafeArea';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
-import React, {useCallback, useEffect} from 'react';
-import {Platform} from 'react-native';
-import {AvoidSoftInput} from 'react-native-avoid-softinput';
+import React, {useEffect} from 'react';
 import Orientation from 'react-native-orientation-locker';
 import {ConnectedProps, connect} from 'react-redux';
 import {useChainContext} from 'src/context/multichain.context';
@@ -58,31 +55,9 @@ const BrowserScreen = ({
     return unsubscribe;
   }, [navigation]);
 
-  useFocusEffect(
-    useCallback(() => {
-      if (Platform.OS === 'android') {
-        AvoidSoftInput.setAdjustResize();
-        AvoidSoftInput.setEnabled(true);
-      }
-      return () => {
-        if (Platform.OS === 'android') {
-          AvoidSoftInput.setEnabled(false);
-          AvoidSoftInput.setAdjustPan();
-        }
-      };
-    }, []),
-  );
-
   useEffect(() => {
     getEcosystem(chain);
   }, []);
-  // React.useEffect(() => {
-  //   const unsubscribe = navigation.addListener('blur', () => {
-  //     Orientation.lockToPortrait();
-  //     Orientation.removeAllListeners();
-  //   });
-  //   return unsubscribe;
-  // }, [navigation]);
 
   const {theme} = useThemeContext();
 
