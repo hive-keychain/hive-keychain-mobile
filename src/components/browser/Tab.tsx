@@ -8,6 +8,7 @@ import {
   Page,
   Tab,
 } from 'actions/interfaces';
+import CustomRefreshControl from 'components/ui/CustomRefreshControl';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {
   memo,
@@ -158,11 +159,8 @@ export default memo(
       }, 500); // 500ms delay to allow redirects to complete
     };
 
-    const onLoadStart = ({
-      nativeEvent: {url},
-    }: {
-      nativeEvent: WebViewNativeEvent;
-    }) => {
+    const onLoadStart = ({nativeEvent}: {nativeEvent: WebViewNativeEvent}) => {
+      const {url} = nativeEvent;
       setIsLoading(true);
       setPendingUrl(url);
 
@@ -172,7 +170,13 @@ export default memo(
       }
 
       // Update URL immediately for normal navigation
-      updateTab(id, {url});
+      if (
+        url !== data.url &&
+        url + '/' !== data.url &&
+        url !== data.url + '/'
+      ) {
+        updateTab(id, {url});
+      }
     };
     const updateTabUrl = (link: string) => {
       updateTab(id, {url: link});
@@ -182,6 +186,7 @@ export default memo(
     }: WebViewProgressEvent) => {
       setProgress(progress === 1 ? 0 : progress);
     };
+
     const onLoadEnd = ({
       nativeEvent: {loading, url},
     }: {
@@ -410,7 +415,6 @@ export default memo(
         }
       };
     }, [tabRef, homeRef, active, url]);
-
     return (
       <View
         style={[
@@ -437,14 +441,23 @@ export default memo(
               }
               ref={tabParentRef}
               refreshControl={
-                (!isFlutterApp || canRefreshCanvas) && (
+                Platform.OS === 'ios' ? (
+                  <CustomRefreshControl
+                    refreshing={refreshing}
+                    onRefresh={() => {
+                      onRefresh();
+                      setTimeout(() => setRefreshing(false), 1000);
+                    }}
+                    enabled={!isFlutterApp && !canRefreshCanvas && canRefresh}
+                  />
+                ) : (
                   <RefreshControl
                     refreshing={refreshing}
                     onRefresh={() => {
                       onRefresh();
                       setTimeout(() => setRefreshing(false), 1000);
                     }}
-                    enabled={canRefresh}
+                    enabled={!isFlutterApp && !canRefreshCanvas && canRefresh}
                   />
                 )
               }>
@@ -463,6 +476,7 @@ export default memo(
                 onMessage={onMessage}
                 javaScriptEnabled
                 bounces={false}
+                pullToRefreshEnabled={false}
                 geolocationEnabled
                 allowsInlineMediaPlayback
                 allowsFullscreenVideo
