@@ -107,6 +107,10 @@ export default memo(
     const [isFlutterApp, setIsFlutterApp] = useState(false);
     const [canRefreshCanvas, setCanRefreshCanvas] = useState(true);
     const [flutterDomain, setFlutterDomain] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [pendingUrl, setPendingUrl] = useState('');
+    const urlUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
     const onRefresh = () => {
       setRefreshing(true);
       tabRef.current?.reload(); // reload the WebView
@@ -137,11 +141,37 @@ export default memo(
       current && current.goForward();
     };
 
+    // Debounced URL update to handle redirects
+    const debouncedUpdateUrl = (newUrl: string) => {
+      // Clear any existing timeout
+      if (urlUpdateTimeoutRef.current) {
+        clearTimeout(urlUpdateTimeoutRef.current);
+      }
+
+      // Set a new timeout to update the URL after a short delay
+      urlUpdateTimeoutRef.current = setTimeout(() => {
+        if (newUrl !== url) {
+          updateTab(id, {url: newUrl});
+        }
+        setPendingUrl('');
+        setIsLoading(false);
+      }, 500); // 500ms delay to allow redirects to complete
+    };
+
     const onLoadStart = ({
       nativeEvent: {url},
     }: {
       nativeEvent: WebViewNativeEvent;
     }) => {
+      setIsLoading(true);
+      setPendingUrl(url);
+
+      // Clear any pending URL update
+      if (urlUpdateTimeoutRef.current) {
+        clearTimeout(urlUpdateTimeoutRef.current);
+      }
+
+      // Update URL immediately for normal navigation
       updateTab(id, {url});
     };
     const updateTabUrl = (link: string) => {
@@ -162,9 +192,24 @@ export default memo(
         updateTab(id, {url});
       }
       setProgress(0);
+      setIsLoading(false);
+
       if (loading) {
         return;
       }
+
+      // If the final URL is different from what we started loading, it might be a redirect
+      if (url !== pendingUrl && pendingUrl !== '') {
+        // Use debounced update for potential redirects
+        debouncedUpdateUrl(url);
+      } else {
+        // Normal navigation, update immediately
+        if (url !== data.url) {
+          updateTab(id, {url});
+        }
+        setPendingUrl('');
+      }
+
       if (current) {
         current.injectJavaScript(BRIDGE_WV_INFO);
       }
@@ -239,7 +284,8 @@ export default memo(
         case ProviderEvent.INFO:
           if (
             data.url !== 'about:blank' &&
-            (icon !== data.icon || name !== data.name)
+            (icon !== data.icon || name !== data.name) &&
+            !isLoading // Don't update during loading/redirects
           ) {
             navigation.setParams({icon: data.icon});
             updateTab(id, {name: data.name, icon: data.icon});
@@ -356,6 +402,13 @@ export default memo(
       if (tabRef?.current && active) setWebViewRef(tabRef.current);
       if (tabParentRef?.current && active) setTabViewRef(tabParentRef.current);
       if (homeRef?.current && active) setTabViewRef(homeRef.current);
+
+      // Cleanup timeout on unmount
+      return () => {
+        if (urlUpdateTimeoutRef.current) {
+          clearTimeout(urlUpdateTimeoutRef.current);
+        }
+      };
     }, [tabRef, homeRef, active, url]);
 
     return (

@@ -1,6 +1,22 @@
 import {ProviderEvent} from 'src/enums/provider-event.enum';
 
 const getWebviewInfo = `
+	// Clear any existing intervals and event listeners
+	if (window._keychainInfoInterval) {
+		clearInterval(window._keychainInfoInterval);
+	}
+	
+	// Remove existing event listeners if they exist
+	if (window._keychainScrollHandler) {
+		window.removeEventListener('scroll', window._keychainScrollHandler);
+	}
+	if (window._keychainTouchStartHandler) {
+		window.removeEventListener('touchstart', window._keychainTouchStartHandler);
+	}
+	if (window._keychainTouchEndHandler) {
+		window.removeEventListener('touchend', window._keychainTouchEndHandler);
+	}
+	
 	const __getFavicon = function(){
 		let favicon = undefined;
 		const nodeList = document.getElementsByTagName("link");
@@ -31,7 +47,7 @@ const getWebviewInfo = `
 		}
 	))
 
-	setInterval(()=>{
+	window._keychainInfoInterval = setInterval(()=>{
 		window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(
 			{
 				name: '${ProviderEvent.INFO}',
@@ -102,16 +118,16 @@ const getWebviewInfo = `
   }
 
   // ===== MAIN WINDOW SCROLL/TAP =====
-  window.addEventListener('scroll', () => {
+  window._keychainScrollHandler = () => {
     windowScrollY = window.scrollY || document.documentElement.scrollTop || 0;
     postScrollStatus({ source: 'main' });
-  }, { passive: true });
-
-  window.addEventListener('touchstart', function (e) {
+  };
+  
+  window._keychainTouchStartHandler = function (e) {
     lastTouchY = e.touches[0].clientY;
-  });
-
-  window.addEventListener('touchend', function (e) {
+  };
+  
+  window._keychainTouchEndHandler = function (e) {
     const deltaY = e.changedTouches[0].clientY - lastTouchY;
     lastTouchY = e.changedTouches[0].clientY;
 
@@ -122,7 +138,11 @@ const getWebviewInfo = `
       source: 'main',
       showNavigationBar: deltaY > 0,
     });
-  });
+  };
+
+  window.addEventListener('scroll', window._keychainScrollHandler, { passive: true });
+  window.addEventListener('touchstart', window._keychainTouchStartHandler);
+  window.addEventListener('touchend', window._keychainTouchEndHandler);
 
   // ===== IFRAME SUPPORT =====
   function injectIframeListeners(iframe, index) {
@@ -166,6 +186,7 @@ const getWebviewInfo = `
 
   function ensureIframeHooks() {
     observeIframes();
+    // Use a longer timeout to prevent excessive recursion
     setTimeout(ensureIframeHooks, 1000);
   }
 
