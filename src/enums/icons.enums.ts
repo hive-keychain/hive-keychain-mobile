@@ -171,4 +171,5 @@ export enum Icons {
   SWIPE_RIGHT = 'SWIPE_RIGHT',
   SWIPE_DOWN = 'SWIPE_DOWN',
   DRAG = 'DRAG',
+  TWO_FINGERS_TAP = 'TWO_FINGERS_TAP',
 }

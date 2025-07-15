@@ -1120,6 +1120,7 @@
       "title": "Keychain Browser",
       "description": "Welcome to your Keychain Browser! Here are a few navigation elements you should know:",
       "swipe_right": "Swipe right to go back",
+      "double_tap": "Tap with two fingers to hide/show the floating bar",
       "swipe_left": "Swipe left to go forward",
       "swipe_down": "Swipe down to refresh",
       "browser_button": "Press to switch between main and browser bottom bars. Long press to close all tabs."
