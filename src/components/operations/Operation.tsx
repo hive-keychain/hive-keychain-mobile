@@ -1,6 +1,5 @@
 import CloseButton from 'components/ui/CloseButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import React from 'react';
 import {
@@ -39,9 +38,7 @@ export default ({
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
   return (
-    <SafeArea
-      skipTop
-      skipBottom
+    <View
       style={{
         justifyContent: 'space-between',
         flexGrow: 1,
@@ -59,7 +56,7 @@ export default ({
         {children}
         <Separator height={initialWindowMetrics.insets.bottom} />
       </ScrollView>
-    </SafeArea>
+    </View>
   );
 };
 
