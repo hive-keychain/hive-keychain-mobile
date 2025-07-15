@@ -108,7 +108,7 @@ const BottomNavigation = ({
 
   React.useEffect(() => {
     Orientation.addDeviceOrientationListener((orientation) => {
-      if (['UNKNOWN', 'FACE-UP', 'FACE-DOWN'].includes(orientation)) return;
+      if (['UNKNOWN'].includes(orientation)) return;
       if (Platform.OS === 'android' && orientation !== 'PORTRAIT') {
         Orientation.getAutoRotateState((s) => {
           if (s) {
@@ -166,7 +166,7 @@ const BottomNavigation = ({
   useEffect(() => {
     startAnimation(
       !isModal &&
-        orientation === 'PORTRAIT' &&
+        ['PORTRAIT', 'FACE-UP'].includes(orientation) &&
         !isKeyboardVisible &&
         !isLoadingScreen &&
         rpc &&
@@ -478,7 +478,7 @@ const getStyles = (
 const connector = connect(
   (state: RootState) => {
     return {
-      show: state.floatingBar.show,
+      show: state.floatingBar.showBasedOnScroll && !state.floatingBar.hide,
       isProposalRequestDisplayed: state.floatingBar.isProposalRequestDisplayed,
       isLoadingScreen: state.floatingBar.isLoadingScreen,
       isDrawerOpen: state.floatingBar.isDrawerOpened,

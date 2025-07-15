@@ -239,10 +239,11 @@ export interface MessageModalPayload {
 }
 
 export interface FloatingBarPayload {
-  show: boolean;
+  showBasedOnScroll: boolean;
   isLoadingScreen: boolean;
   isDrawerOpened: boolean;
   isProposalRequestDisplayed: boolean;
+  hide: boolean;
 }
 
 export interface AccountsPayload {

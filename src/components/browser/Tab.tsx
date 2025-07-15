@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native';
-import {showFloatingBar} from 'actions/floatingBar';
+import {showFloatingBar, toggleHideFloatingBar} from 'actions/floatingBar';
 import {
   Account,
   ActionPayload,
@@ -336,7 +336,21 @@ export default memo(
       })
       .activeOffsetX([-10, 10]);
 
-    const swipe = Gesture.Simultaneous(swipeLeft, swipeRight);
+    const dispatchToggleHideFloatingBar = () => {
+      store.dispatch(toggleHideFloatingBar());
+    };
+
+    const doubleTouch = Gesture.Tap()
+      .minPointers(2)
+      .onEnd(() => {
+        runOnJS(dispatchToggleHideFloatingBar)();
+      });
+
+    const swipeOrDoubleTouch = Gesture.Simultaneous(
+      swipeLeft,
+      swipeRight,
+      doubleTouch,
+    );
 
     useEffect(() => {
       if (tabRef?.current && active) setWebViewRef(tabRef.current);
@@ -361,7 +375,7 @@ export default memo(
               theme={theme}
             />
           ) : null}
-          <GestureDetector gesture={swipe}>
+          <GestureDetector gesture={swipeOrDoubleTouch}>
             <ScrollView
               contentContainerStyle={
                 url === BrowserConfig.HOMEPAGE_URL
