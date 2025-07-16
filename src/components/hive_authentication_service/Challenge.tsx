@@ -1,5 +1,6 @@
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
+import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import {ModalNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
@@ -7,7 +8,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {getColors} from 'src/styles/colors';
+import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {body_primary_body_3, FontPoppinsName} from 'src/styles/typography';
 import {RootState} from 'store';
 import HAS from 'utils/hiveAuthenticationService';
@@ -70,30 +71,33 @@ const HASChallengeRequest = ({data, accounts, navigation}: Props) => {
 
   return (
     <Operation
+      additionalContentStyle={{flexGrow: 1}}
       logo={<FastImage source={LOGO_LIGHT} style={{width: 30, height: 30}} />}
       title={translate('request.title.decode')}
       additionalHeaderTitleStyle={[styles.text, styles.title]}
+      additionalHeaderContainerStyle={{padding: 12}}
       onClose={data.onForceCloseModal}>
-      <View style={styles.paddingHorizontal}>
-        <Separator height={30} />
-        <Text style={[styles.text, styles.uuid]}>
-          {translate('wallet.has.uuid', data)}
-        </Text>
-        <Separator />
-        <Text style={styles.text}>{showText()}</Text>
-        {accounts.find((e) => e.name === data.account) ? null : (
-          <>
-            <Separator />
-            <Text style={styles.error}>
-              {translate('wallet.has.challenge.no_key', {
-                account: data.account,
-                key: data.decrypted_data.key_type,
-                name: data.domain,
-              })}
-            </Text>
-          </>
-        )}
-        <Separator height={50} />
+      <SafeArea style={styles.container} skipTop skipBottom>
+        <View style={{flexGrow: 1}}>
+          <Separator height={30} />
+          <Text style={[styles.text, styles.uuid]}>
+            {translate('wallet.has.uuid', data)}
+          </Text>
+          <Separator />
+          <Text style={styles.text}>{showText()}</Text>
+          {accounts.find((e) => e.name === data.account) ? null : (
+            <>
+              <Separator />
+              <Text style={styles.error}>
+                {translate('wallet.has.challenge.no_key', {
+                  account: data.account,
+                  key: data.decrypted_data.key_type,
+                  name: data.domain,
+                })}
+              </Text>
+            </>
+          )}
+        </View>
         <EllipticButton
           title={
             state !== ChallengeState.ASK
@@ -113,15 +117,16 @@ const HASChallengeRequest = ({data, accounts, navigation}: Props) => {
               : onConfirm
           }
           style={styles.button}
+          additionalTextStyle={{color: 'white'}}
         />
-      </View>
+      </SafeArea>
     </Operation>
   );
 };
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
-    button: {backgroundColor: '#68A0B4'},
+    button: {backgroundColor: PRIMARY_RED_COLOR},
     error: {color: '#A3112A'},
     uuid: {fontWeight: 'bold'},
     text: {
@@ -129,8 +134,11 @@ const getStyles = (theme: Theme) =>
       color: getColors(theme).secondaryText,
       fontSize: 14,
     },
-    paddingHorizontal: {
+    container: {
       paddingHorizontal: 15,
+      flexGrow: 1,
+      justifyContent: 'space-between',
+      alignItems: 'center',
     },
     title: {
       fontFamily: FontPoppinsName.SEMI_BOLD,

@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsDrawerOpen} from '@react-navigation/drawer';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   setIsDrawerOpen,
   setisLoadingScreen,
@@ -263,30 +264,32 @@ const Main = ({
     setIsDrawerOpen(isDrawerOpen);
   }, [isDrawerOpen]);
 
-  useEffect(() => {
-    updateNavigationState(BottomBarLink.Wallet);
-    const handler = (nextAppState: AppStateStatus) => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
+  useFocusEffect(
+    useCallback(() => {
+      updateNavigationState(BottomBarLink.Wallet);
+      const handler = (nextAppState: AppStateStatus) => {
         if (
-          hive_authentication_service.instances.length &&
-          !hive_authentication_service.instances.filter(
-            (e) => e.init && e.connected,
-          ).length
+          appState.current.match(/inactive|background/) &&
+          nextAppState === 'active'
         ) {
-          restartHASSockets();
+          if (
+            hive_authentication_service.instances.length &&
+            !hive_authentication_service.instances.filter(
+              (e) => e.init && e.connected,
+            ).length
+          ) {
+            restartHASSockets();
+          }
         }
-      }
 
-      appState.current = nextAppState;
-    };
-    const state = AppState.addEventListener('change', handler);
-    return () => {
-      state.remove();
-    };
-  }, []);
+        appState.current = nextAppState;
+      };
+      const state = AppState.addEventListener('change', handler);
+      return () => {
+        state.remove();
+      };
+    }, [hive_authentication_service.instances]),
+  );
 
   const initCheckVestingRoutes = async () => {
     const tempVestingRoutesDifferences = await VestingRoutesUtils.getChangedVestingRoutes(
