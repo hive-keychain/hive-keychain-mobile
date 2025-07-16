@@ -71,7 +71,11 @@ const CreateAccountPeerToPeer = ({}: PropsFromRedux) => {
   };
 
   return (
-    <Background theme={theme} containerStyle={styles.container}>
+    <Background
+      theme={theme}
+      containerStyle={styles.container}
+      skipTop
+      skipBottom>
       <View style={styles.content}>
         <FocusAwareStatusBar />
         <View style={styles.topContent}>
@@ -128,7 +132,6 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     container: {
       flex: 1,
       width: '100%',
-      paddingHorizontal: 16,
     },
     content: {
       display: 'flex',
@@ -136,6 +139,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       flexDirection: 'column',
       justifyContent: 'space-between',
       width: '100%',
+      paddingHorizontal: 16,
     },
     input: {
       width: '100%',

@@ -30,7 +30,7 @@ const ChooseAccountOption = ({navigation}: SignupNavProp) => {
     useSafeAreaInsets(),
   );
   return (
-    <Background theme={theme}>
+    <Background theme={theme} skipTop skipBottom>
       <View style={styles.container}>
         <FocusAwareStatusBar
           backgroundColor={getColors(theme).primaryBackground}
