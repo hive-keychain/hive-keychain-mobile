@@ -25,6 +25,8 @@ interface BackgroundProps {
   style?: StyleProp<ViewStyle>;
   containerStyle?: StyleProp<ViewStyle>;
   additionalBgSvgImageStyle?: StyleProp<ImageStyle>;
+  skipTop?: boolean;
+  skipBottom?: boolean;
 }
 
 export default (props: BackgroundProps) => {
@@ -32,10 +34,13 @@ export default (props: BackgroundProps) => {
   const height = useHeaderHeight();
   const insets = useSafeAreaInsets();
   return (
-    <SafeArea style={[styles.mainContainer]}>
+    <SafeArea
+      style={[styles.mainContainer]}
+      skipTop={props.skipTop}
+      skipBottom={props.skipBottom}>
       <KeyboardAvoidingView
         style={[styles.container, props.containerStyle]}
-        enabled={Platform.OS === 'ios' ? true : false}
+        enabled={Platform.OS === 'ios'}
         behavior={'padding'}
         keyboardVerticalOffset={height + insets.bottom}>
         <ImageBackground

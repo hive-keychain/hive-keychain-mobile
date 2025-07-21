@@ -53,7 +53,7 @@ const Receive = ({
     }, 3000);
   }, []);
   return (
-    <Background theme={theme}>
+    <Background theme={theme} skipTop>
       <View
         style={{justifyContent: 'space-around', alignItems: 'center', flex: 1}}>
         <View style={{width: '80%'}}>

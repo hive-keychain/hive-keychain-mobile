@@ -1,10 +1,9 @@
 import BuyCoinsComponent from 'components/operations/Buy-coins.component';
 import Swap from 'components/operations/Swap';
-import SafeArea from 'components/ui/SafeArea';
 import ScreenToggle from 'components/ui/ScreenToggle';
 import Separator from 'components/ui/Separator';
 import React from 'react';
-import {StatusBar, StyleSheet, useWindowDimensions} from 'react-native';
+import {StatusBar, StyleSheet, useWindowDimensions, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {BuyCoinType} from 'src/enums/operations.enum';
 import {getCardStyle} from 'src/styles/card';
@@ -36,7 +35,7 @@ const SwapBuy = () => {
   };
 
   return (
-    <SafeArea style={styles.container}>
+    <View style={styles.container}>
       <StatusBar
         barStyle={getColors(theme).barStyle}
         backgroundColor={getColors(theme).primaryBackground}
@@ -53,7 +52,7 @@ const SwapBuy = () => {
         toUpperCase={false}
         components={swapBuyElements.components}
       />
-    </SafeArea>
+    </View>
   );
 };
 
@@ -64,7 +63,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     container: {
       flex: 1,
       backgroundColor: getColors(theme).primaryBackground,
-      paddingTop: 20,
+      paddingTop: 60,
     },
     text: {
       color: getColors(theme).secondaryText,

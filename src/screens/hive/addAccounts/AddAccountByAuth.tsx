@@ -18,6 +18,7 @@ import React, {useState} from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import {Text} from 'react-native-elements';
 import {ScrollView} from 'react-native-gesture-handler';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -75,7 +76,11 @@ const AddAccountByAuth = ({
   const styles = getStyles(theme, {width, height});
 
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{bottom: -initialWindowMetrics.insets.bottom}}>
       <ScrollView contentContainerStyle={styles.topContainer}>
         <Separator height={30} />
         <CustomIconButton
@@ -129,11 +134,10 @@ const AddAccountByAuth = ({
 
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
-    container: {alignItems: 'center', justifyContent: 'space-between', flex: 1},
     topContainer: {
-      flexGrow: 1,
-      width: '100%',
       alignItems: 'center',
+      justifyContent: 'space-between',
+      flexGrow: 1,
       paddingHorizontal: 16,
     },
     text: {

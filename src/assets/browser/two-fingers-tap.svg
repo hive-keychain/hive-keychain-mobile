@@ -1,0 +1,15 @@
+<svg width="64" height="64" viewBox="16 9 40 29" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round">
+  <!-- Arcs above finger 1 -->
+  <path d="M18 22 C18 19, 30 19, 30 22" stroke-width="3"/>
+  <path d="M16 18 C16 15, 32 15, 32 18" stroke-width="2.5"/>
+
+  <!-- Arcs above finger 2 -->
+  <path d="M38 16 C38 13, 50 13, 50 16" stroke-width="3"/>
+  <path d="M36 12 C36 9, 52 9, 52 12" stroke-width="2.5"/>
+
+  <!-- Finger 1 -->
+  <circle cx="24" cy="32" r="6" stroke-width="3"/>
+
+  <!-- Finger 2 -->
+  <circle cx="44" cy="26" r="6" stroke-width="3"/>
+</svg>

@@ -1,14 +1,20 @@
 import {ActionPayload} from 'actions/interfaces';
 import {HiveURIActionTypes} from 'actions/types';
 import {DecodeResult} from 'hive-uri';
+import {HiveUriOpType} from 'src/utils/hive-uri';
 
 export default (
-  state: {operation?: DecodeResult} = {},
-  {type, payload}: ActionPayload<DecodeResult | undefined>,
+  state: {operation?: DecodeResult; opType?: HiveUriOpType} = {},
+  {
+    type,
+    payload,
+  }: ActionPayload<
+    {operation: DecodeResult; opType: HiveUriOpType} | undefined
+  >,
 ) => {
   switch (type) {
     case HiveURIActionTypes.SAVE_OPERATION:
-      return {operation: payload};
+      return {...payload};
     case HiveURIActionTypes.FORGET_OPERATION:
       return {};
     default:

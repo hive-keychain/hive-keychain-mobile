@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import EllipticButton from 'components/form/EllipticButton';
 import Icon from 'components/hive/Icon';
+import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect} from 'react';
@@ -30,7 +31,7 @@ const BrowserTutorial = ({navigation}: Props): null => {
     if (shouldNotify) {
       navigate('ModalScreen', {
         name: 'BrowserTutorial',
-        modalContent: renderContent(),
+        modalContent: <SafeArea skipTop>{renderContent()}</SafeArea>,
         modalContainerStyle: getModalBaseStyle(theme).roundedTop,
         onForceCloseModal: () => {},
       });
@@ -52,6 +53,16 @@ const BrowserTutorial = ({navigation}: Props): null => {
           </Text>
         </View>
         <Separator />
+        <View style={styles.iconContainer}>
+          <Icon
+            name={Icons.TWO_FINGERS_TAP}
+            {...styles.icon}
+            color={PRIMARY_RED_COLOR}
+          />
+          <Text style={styles.text}>
+            {translate('popup.browser_tutorial.double_tap')}
+          </Text>
+        </View>
         <View style={styles.iconContainer}>
           <Icon
             name={Icons.SWIPE_RIGHT}

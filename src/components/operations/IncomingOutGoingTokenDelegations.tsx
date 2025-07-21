@@ -98,7 +98,7 @@ const IncomingOutGoingTokenDelegations = ({
     <OperationThemed
       childrenTop={<Separator />}
       childrenMiddle={
-        <View>
+        <View style={{flex: 1}}>
           {delegationType === 'Outgoing' && (
             <>
               <Caption
@@ -173,6 +173,7 @@ const getDimensionedStyles = (color: string, theme: Theme, width: number) =>
       alignItems: 'center',
     },
     flexRowBetween: {
+      paddingHorizontal: 10,
       flexDirection: 'row',
       justifyContent: 'space-between',
     },

@@ -29,15 +29,22 @@ const browserReducer = (
 ) => {
   switch (type) {
     case ADD_TO_BROWSER_HISTORY:
-      if (
-        state.history.find((e) => e!.url === payload!.history!.url) ||
-        payload!.history!.url === 'about:blank'
-      ) {
+      if (payload!.history!.url === 'about:blank') {
         return state;
       }
+      const newFavorites = state.favorites.map((e) => {
+        if (e.url === payload!.history!.url) {
+          return payload!.history!;
+        }
+        return e;
+      });
       return {
         ...state,
-        history: [...state.history, payload!.history!],
+        history: [
+          ...state.history.filter((e) => e!.url !== payload!.history!.url),
+          payload!.history!,
+        ],
+        favorites: newFavorites,
       };
     case ADD_TO_BROWSER_FAVORITES:
       const newFavorite = state.favorites;

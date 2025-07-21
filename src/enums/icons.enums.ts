@@ -25,7 +25,6 @@ export enum Icons {
   DELEGATIONS_RC = 'rc-delegation.svg',
   DELEGATIONS_HP = 'hp-delegation.svg',
   // DELETE = 'delete',
-  DISCORD = 'discord.svg',
   DONE = 'done',
   // EDIT = 'edit',
   ERROR = 'error',
@@ -172,4 +171,5 @@ export enum Icons {
   SWIPE_RIGHT = 'SWIPE_RIGHT',
   SWIPE_DOWN = 'SWIPE_DOWN',
   DRAG = 'DRAG',
+  TWO_FINGERS_TAP = 'TWO_FINGERS_TAP',
 }

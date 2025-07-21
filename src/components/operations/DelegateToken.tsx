@@ -163,7 +163,7 @@ const DelegateToken = ({
         </>
       }
       childrenMiddle={
-        <View>
+        <View style={{flex: 1}}>
           <Caption text={`wallet.operations.token_delegation.info`} />
           <OperationInput
             labelInput={translate('common.username')}

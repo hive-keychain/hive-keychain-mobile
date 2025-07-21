@@ -10,7 +10,6 @@ import CustomIconButton from 'components/ui/CustomIconButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
-import {AddAccFromWalletNavigation} from 'navigators/mainDrawerStacks/AddAccount.types';
 import React, {useState} from 'react';
 import {
   StyleSheet,
@@ -20,6 +19,7 @@ import {
 } from 'react-native';
 import {Text} from 'react-native-elements';
 import {ScrollView} from 'react-native-gesture-handler';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -86,7 +86,11 @@ const AddAccountByKey = ({
   const styles = getStyles(theme, {width, height});
 
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{bottom: -initialWindowMetrics.insets.bottom}}>
       <ScrollView contentContainerStyle={styles.container}>
         <FocusAwareStatusBar
           backgroundColor={getColors(theme).primaryBackground}
@@ -129,10 +133,8 @@ const AddAccountByKey = ({
               name={Icons.SCANNER}
               theme={theme}
               onPress={() => {
-                (navigation as AddAccFromWalletNavigation).navigate(
-                  'ScanQRScreen',
-                  {wallet: true},
-                );
+                console.log('here');
+                navigate('ScanQRScreen', {wallet: true});
               }}
             />
           }
@@ -169,8 +171,8 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       fontSize: getFontSizeSmallDevices(width, 16),
     },
     container: {
-      width: '100%',
       alignItems: 'center',
+      justifyContent: 'space-between',
       flexGrow: 1,
       paddingHorizontal: 16,
     },

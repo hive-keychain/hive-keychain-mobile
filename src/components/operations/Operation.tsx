@@ -1,5 +1,6 @@
 import CloseButton from 'components/ui/CloseButton';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import Separator from 'components/ui/Separator';
 import React from 'react';
 import {
   ScrollView,
@@ -10,6 +11,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {headlines_primary_headline_2} from 'src/styles/typography';
@@ -35,9 +37,12 @@ export default ({
 }: Props) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
-
   return (
-    <>
+    <View
+      style={{
+        justifyContent: 'space-between',
+        flexGrow: 1,
+      }}>
       <FocusAwareStatusBar />
       <View style={[styles.header, additionalHeaderContainerStyle]}>
         <View style={styles.headerLeft}>{logo}</View>
@@ -49,8 +54,9 @@ export default ({
       </View>
       <ScrollView contentContainerStyle={additionalContentStyle}>
         {children}
+        <Separator height={initialWindowMetrics.insets.bottom} />
       </ScrollView>
-    </>
+    </View>
   );
 };
 

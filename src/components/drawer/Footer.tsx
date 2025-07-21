@@ -2,17 +2,18 @@ import {loadAccount} from 'actions/hive';
 import {ActiveAccount, KeyTypes} from 'actions/interfaces';
 import DiscordLogo from 'assets/new_UI/discord_logo.svg';
 import HiveLogo from 'assets/new_UI/hive_logo.svg';
-import ThreadsLogo from 'assets/new_UI/threads_logo.svg';
+import MediumLogo from 'assets/new_UI/medium.svg';
+import XLogo from 'assets/new_UI/x_logo.svg';
 import EllipticButton from 'components/form/EllipticButton';
 import React, {useEffect, useState} from 'react';
 import {
   Linking,
+  Pressable,
   ScaledSize,
   StyleSheet,
   View,
   useWindowDimensions,
 } from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import {Theme} from 'src/context/theme.context';
 import {
@@ -27,8 +28,17 @@ import {
 import {store} from 'store';
 import {voteForWitness} from 'utils/hive';
 import {translate} from 'utils/localize';
+import {navigate} from 'utils/navigation';
 
-export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
+export default ({
+  user,
+  theme,
+  addTab,
+}: {
+  user: ActiveAccount;
+  theme: Theme;
+  addTab: (url: string) => void;
+}) => {
   const styles = getStyles(theme, useWindowDimensions());
 
   const [showVoteWitnessButton, setShowVoteWitnessButton] = useState(false);
@@ -92,24 +102,55 @@ export default ({user, theme}: {user: ActiveAccount; theme: Theme}) => {
         </View>
       )}
       <View style={styles.footerIconsContainer}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => Linking.openURL(`https://peakd.com/@keychain`)}
-          style={styles.footerIconContainer}>
-          <HiveLogo style={styles.footerLogo} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={1}
+        <Pressable
+          onPress={() => {
+            addTab(`https://peakd.com/@keychain`);
+            navigate('BrowserScreen');
+          }}
+          style={({pressed}) => [
+            styles.footerIconContainer,
+            {backgroundColor: pressed ? PRIMARY_RED_COLOR : 'transparent'},
+          ]}>
+          <HiveLogo
+            fill={theme === Theme.DARK ? 'white' : '#484848'}
+            style={styles.footerLogo}
+          />
+        </Pressable>
+        <Pressable
           onPress={() => Linking.openURL(`https://discord.gg/tUHtyev2xF`)}
-          style={styles.footerIconContainer}>
-          <DiscordLogo style={styles.footerLogo} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => Linking.openURL(`https://twitter.com/HiveKeychain`)}
-          style={styles.footerIconContainer}>
-          <ThreadsLogo width={20} style={styles.footerLogo} />
-        </TouchableOpacity>
+          style={({pressed}) => [
+            styles.footerIconContainer,
+            {backgroundColor: pressed ? PRIMARY_RED_COLOR : 'transparent'},
+          ]}>
+          <DiscordLogo
+            style={styles.footerLogo}
+            fill={theme === Theme.DARK ? 'white' : '#484848'}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => Linking.openURL(`https://x.com/HiveKeychain`)}
+          style={({pressed}) => [
+            styles.footerIconContainer,
+            {backgroundColor: pressed ? PRIMARY_RED_COLOR : 'transparent'},
+          ]}>
+          <XLogo
+            width={20}
+            height={20}
+            fill={theme === Theme.DARK ? 'white' : '#484848'}
+            style={styles.footerLogo}
+          />
+        </Pressable>
+        <Pressable
+          onPress={() => Linking.openURL(`https://medium.com/@hivekeychain`)}
+          style={({pressed}) => [
+            styles.footerIconContainer,
+            {backgroundColor: pressed ? PRIMARY_RED_COLOR : 'transparent'},
+          ]}>
+          <MediumLogo
+            fill={theme === Theme.DARK ? 'white' : '#484848'}
+            style={styles.footerLogo}
+          />
+        </Pressable>
       </View>
     </View>
   );
@@ -160,11 +201,13 @@ const getStyles = (theme: Theme, {width, height}: ScaledSize) =>
     },
     footerIconsContainer: {
       flexDirection: 'row',
-      width: '65%',
+      width: '90%',
       justifyContent: 'space-evenly',
       marginTop: 32,
     },
     footerLogo: {
       bottom: 4,
+      width: 20,
+      height: 20,
     },
   });

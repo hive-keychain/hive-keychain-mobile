@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import {Overlay} from 'react-native-elements';
 import Animated, {SlideInDown, SlideOutDown} from 'react-native-reanimated';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {inputStyle} from 'src/styles/input';
@@ -20,6 +21,7 @@ type Props = {
   setShowOverlay: (e: boolean) => void;
   title: string;
   maxHeightPercent?: number;
+  minHeightPercent?: number;
 };
 
 const SlidingOverlay = ({
@@ -28,6 +30,7 @@ const SlidingOverlay = ({
   setShowOverlay,
   title,
   maxHeightPercent,
+  minHeightPercent,
 }: Props) => {
   const {height} = useWindowDimensions();
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -64,6 +67,10 @@ const SlidingOverlay = ({
         setIsClosing(true);
       }}
       isVisible={showOverlay}
+      backdropStyle={{
+        opacity: 0.6,
+        backgroundColor: 'black',
+      }}
       overlayStyle={{
         width: '100%',
         position: 'absolute',
@@ -71,7 +78,7 @@ const SlidingOverlay = ({
         backgroundColor: 'transparent',
         padding: 0,
         maxHeight: maxHeightPercent * height || height / 2,
-        minHeight: height / 3,
+        minHeight: minHeightPercent * height || height / 3,
         shadowColor: 'transparent',
         marginBottom: Platform.OS === 'ios' ? keyboardHeight : 0,
       }}>
@@ -88,6 +95,7 @@ const SlidingOverlay = ({
             height: '100%',
             borderTopRightRadius: 16,
             width: '100%',
+            marginBottom: -initialWindowMetrics.insets.bottom,
           }}>
           <Text
             style={[

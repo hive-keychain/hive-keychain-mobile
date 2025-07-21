@@ -19,6 +19,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -184,7 +185,13 @@ const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
   };
 
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{
+        paddingBottom: initialWindowMetrics.insets.bottom,
+      }}>
       <ScrollView style={styles.container} ref={ref}>
         <Caption
           text={'settings.settings.automated_tasks.disclaimer'}
@@ -348,7 +355,6 @@ const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
             )}
           </>
         </Spoiler>
-        <Separator />
       </ScrollView>
     </Background>
   );
@@ -356,7 +362,7 @@ const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
-    container: {flex: 1, padding: CARD_PADDING_HORIZONTAL},
+    container: {flex: 1, paddingHorizontal: CARD_PADDING_HORIZONTAL},
     title: {
       ...title_primary_title_1,
       color: getColors(theme).primaryText,

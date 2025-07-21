@@ -660,8 +660,8 @@
     },
     "forgotPIN": {
       "title": "Reset wallet?",
-      "text": "If you forgot your PIN, you can reset Keychain \n and clear your data but will have to enter all your keys again.",
-      "button": "Reset Key"
+      "text": "If you forgot your PIN, you can reset Keychain \n and clear your data but will have to import all your accounts again.",
+      "button": "Reset Wallet"
     },
     "pinCode": {
       "unsupportedBiometrics": {
@@ -1139,6 +1139,7 @@
       "title": "Keychain Browser",
       "description": "Welcome to your Keychain Browser! Here are a few navigation elements you should know:",
       "swipe_right": "Swipe right to go back",
+      "double_tap": "Tap with two fingers to hide/show the floating bar",
       "swipe_left": "Swipe left to go forward",
       "swipe_down": "Swipe down to refresh",
       "browser_button": "Press to switch between main and browser bottom bars. Long press to close all tabs."

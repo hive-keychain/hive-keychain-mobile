@@ -23,6 +23,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import QRCode from 'react-qr-code';
 import {ConnectedProps, connect} from 'react-redux';
@@ -406,7 +407,11 @@ const StepTwo = ({
   }, [qrData]);
 
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{bottom: -initialWindowMetrics.insets.bottom}}>
       <View style={styles.containerQrPage}>
         <FocusAwareStatusBar />
         {creationType === AccountCreationType.PEER_TO_PEER && qrData ? (
@@ -535,7 +540,6 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
         height * (width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.3 : 0.5),
       flexGrow: 1,
       overflow: 'hidden',
-      marginTop: 20,
     },
     checkboxesContainer: {
       marginTop: 16,

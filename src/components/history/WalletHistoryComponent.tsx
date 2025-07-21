@@ -4,7 +4,11 @@ import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {
+  EdgeInsets,
+  initialWindowMetrics,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -251,6 +255,18 @@ const WallettHistory = ({
                     </View>
                   )}
                   {/* END BOTTOM LOADER */}
+                  <Separator
+                    height={
+                      initialWindowMetrics.insets.bottom +
+                      (transactions.list[transactions.list.length - 1]?.last ===
+                        false &&
+                      transactions.lastUsedStart !== 0 &&
+                      !loading &&
+                      !bottomLoader
+                        ? 20
+                        : 70)
+                    }
+                  />
                 </>
               );
             }}

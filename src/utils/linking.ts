@@ -1,6 +1,5 @@
 import {treatHASRequest} from 'actions/hiveAuthenticationService';
 import {addAccount, addTabFromLinking} from 'actions/index';
-import {Account} from 'actions/interfaces';
 import * as hiveUri from 'hive-uri';
 import {CreateAccountFromWalletParamList} from 'navigators/mainDrawerStacks/CreateAccount.types';
 import {Linking} from 'react-native';
@@ -13,7 +12,7 @@ import {HiveUriOpType, processQRCodeOp} from './hive-uri';
 import {KeyUtils} from './key.utils';
 import {validateFromObject} from './keyValidation';
 import {translate} from './localize';
-import {goBack, goBackAndNavigate, resetStackAndNavigate} from './navigation';
+import {goBack, goBackAndNavigate} from './navigation';
 
 let flagCurrentlyProcessing = false;
 let qrDataAccounts: {
@@ -88,66 +87,6 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
   } else if (url.startsWith('keychain://add_account='))
     [handleAddAccountQR(url)];
   else [handleAddAccountQR(url)];
-};
-
-const handleAddAccountsQR = async (
-  dataAccounts: {
-    data: string;
-    index: number;
-    total: number;
-  }[],
-  wallet = true,
-) => {
-  for (const dataAcc of dataAccounts) {
-    const objects: string[] = JSON.parse(dataAcc.data);
-    const objectsAccounts: Account[] = objects.map((o) => JSON.parse(o));
-    for (const objAcc of objectsAccounts) {
-      let keys = {};
-      if (
-        (objAcc.keys.activePubkey &&
-          KeyUtils.isAuthorizedAccount(objAcc.keys.activePubkey)) ||
-        (objAcc.keys.postingPubkey &&
-          KeyUtils.isAuthorizedAccount(objAcc.keys.postingPubkey))
-      ) {
-        const localAccounts = ((await store.getState()) as RootState).accounts;
-        const authorizedAccount = objAcc.keys.activePubkey?.startsWith('@')
-          ? objAcc.keys.activePubkey?.replace('@', '')
-          : objAcc.keys.postingPubkey?.replace('@', '');
-        const regularKeys = await validateFromObject({
-          name: objAcc.name,
-          keys: {
-            posting: !objAcc.keys.postingPubkey && objAcc.keys.posting,
-            active: !objAcc.keys.activePubkey && objAcc.keys.active,
-            memo: objAcc.keys.memo,
-          },
-        });
-        const authorizedKeys = await AccountUtils.addAuthorizedAccount(
-          objAcc.name,
-          authorizedAccount,
-          localAccounts,
-          SimpleToast,
-        );
-        keys = {...authorizedKeys, ...regularKeys};
-        if (!KeyUtils.hasKeys(keys)) {
-          SimpleToast.show(
-            translate('toast.no_accounts_no_auth', {username: objAcc.name}),
-            SimpleToast.LONG,
-          );
-          break;
-        }
-      } else {
-        keys = await validateFromObject(objAcc);
-      }
-      if (wallet && KeyUtils.hasKeys(keys)) {
-        store.dispatch<any>(addAccount(objAcc.name, keys, false, false, true));
-      } else {
-        break;
-      }
-    }
-  }
-  qrDataAccounts = [];
-  flagCurrentlyProcessing = false;
-  return resetStackAndNavigate('WALLET');
 };
 
 export const handleAddAccountQR = async (data: string, wallet = true) => {

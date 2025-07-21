@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native';
-import {showFloatingBar} from 'actions/floatingBar';
+import {showFloatingBar, toggleHideFloatingBar} from 'actions/floatingBar';
 import {
   Account,
   ActionPayload,
@@ -8,6 +8,7 @@ import {
   Page,
   Tab,
 } from 'actions/interfaces';
+import CustomRefreshControl from 'components/ui/CustomRefreshControl';
 import {BrowserNavigation} from 'navigators/MainDrawer.types';
 import React, {
   memo,
@@ -104,8 +105,13 @@ export default memo(
     const [canRefresh, setCanRefresh] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const {setWebViewRef, setTabViewRef} = useTab();
-    const [isFlutterCanvasApp, setIsFlutterCanvasApp] = useState(false);
+    const [isFlutterApp, setIsFlutterApp] = useState(false);
     const [canRefreshCanvas, setCanRefreshCanvas] = useState(true);
+    const [flutterDomain, setFlutterDomain] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [pendingUrl, setPendingUrl] = useState('');
+    const urlUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
     const onRefresh = () => {
       setRefreshing(true);
       tabRef.current?.reload(); // reload the WebView
@@ -127,12 +133,6 @@ export default memo(
       }, []),
     );
 
-    useEffect(() => {
-      // On iOS the page needs to be reloaded when changing orientation to apply desktop mode.
-      if (desktopMode && active && !isManagingTab && Platform.OS === 'ios') {
-        tabRef.current.reload();
-      }
-    }, [orientation]);
     const goBack = () => {
       const {current} = tabRef;
       current && current.goBack();
@@ -142,12 +142,41 @@ export default memo(
       current && current.goForward();
     };
 
-    const onLoadStart = ({
-      nativeEvent: {url},
-    }: {
-      nativeEvent: WebViewNativeEvent;
-    }) => {
-      updateTab(id, {url});
+    // Debounced URL update to handle redirects
+    const debouncedUpdateUrl = (newUrl: string) => {
+      // Clear any existing timeout
+      if (urlUpdateTimeoutRef.current) {
+        clearTimeout(urlUpdateTimeoutRef.current);
+      }
+
+      // Set a new timeout to update the URL after a short delay
+      urlUpdateTimeoutRef.current = setTimeout(() => {
+        if (newUrl !== url) {
+          updateTab(id, {url: newUrl});
+        }
+        setPendingUrl('');
+        setIsLoading(false);
+      }, 500); // 500ms delay to allow redirects to complete
+    };
+
+    const onLoadStart = ({nativeEvent}: {nativeEvent: WebViewNativeEvent}) => {
+      const {url} = nativeEvent;
+      setIsLoading(true);
+      setPendingUrl(url);
+
+      // Clear any pending URL update
+      if (urlUpdateTimeoutRef.current) {
+        clearTimeout(urlUpdateTimeoutRef.current);
+      }
+
+      // Update URL immediately for normal navigation
+      if (
+        url !== data.url &&
+        url + '/' !== data.url &&
+        url !== data.url + '/'
+      ) {
+        updateTab(id, {url});
+      }
     };
     const updateTabUrl = (link: string) => {
       updateTab(id, {url: link});
@@ -168,9 +197,24 @@ export default memo(
         updateTab(id, {url});
       }
       setProgress(0);
+      setIsLoading(false);
+
       if (loading) {
         return;
       }
+
+      // If the final URL is different from what we started loading, it might be a redirect
+      if (url !== pendingUrl && pendingUrl !== '') {
+        // Use debounced update for potential redirects
+        debouncedUpdateUrl(url);
+      } else {
+        // Normal navigation, update immediately
+        if (url !== data.url) {
+          updateTab(id, {url});
+        }
+        setPendingUrl('');
+      }
+
       if (current) {
         current.injectJavaScript(BRIDGE_WV_INFO);
       }
@@ -185,6 +229,7 @@ export default memo(
         isAtTopOfCanvas,
         showNavigationBar,
         isFlutterCanvasApp,
+        domain,
       } = JSON.parse(nativeEvent.data);
       const {current} = tabRef;
       switch (messageName) {
@@ -196,7 +241,11 @@ export default memo(
             store.dispatch(showFloatingBar(showNavigationBar));
           break;
         case ProviderEvent.FLUTTER_CHECK:
-          setIsFlutterCanvasApp(isFlutterCanvasApp);
+          if (domain === flutterDomain && isFlutterApp === true) return;
+          if (domain !== flutterDomain) setFlutterDomain(domain);
+          if (isFlutterApp !== isFlutterCanvasApp) {
+            setIsFlutterApp(isFlutterCanvasApp);
+          }
           break;
         case ProviderEvent.HANDSHAKE:
           current.injectJavaScript(
@@ -240,7 +289,8 @@ export default memo(
         case ProviderEvent.INFO:
           if (
             data.url !== 'about:blank' &&
-            (icon !== data.icon || name !== data.name)
+            (icon !== data.icon || name !== data.name) &&
+            !isLoading // Don't update during loading/redirects
           ) {
             navigation.setParams({icon: data.icon});
             updateTab(id, {name: data.name, icon: data.icon});
@@ -337,14 +387,34 @@ export default memo(
       })
       .activeOffsetX([-10, 10]);
 
-    const swipe = Gesture.Simultaneous(swipeLeft, swipeRight);
+    const dispatchToggleHideFloatingBar = () => {
+      store.dispatch(toggleHideFloatingBar());
+    };
+
+    const doubleTouch = Gesture.Tap()
+      .minPointers(2)
+      .onEnd(() => {
+        runOnJS(dispatchToggleHideFloatingBar)();
+      });
+
+    const swipeOrDoubleTouch = Gesture.Simultaneous(
+      swipeLeft,
+      swipeRight,
+      doubleTouch,
+    );
 
     useEffect(() => {
       if (tabRef?.current && active) setWebViewRef(tabRef.current);
       if (tabParentRef?.current && active) setTabViewRef(tabParentRef.current);
       if (homeRef?.current && active) setTabViewRef(homeRef.current);
-    }, [tabRef, homeRef, active, url]);
 
+      // Cleanup timeout on unmount
+      return () => {
+        if (urlUpdateTimeoutRef.current) {
+          clearTimeout(urlUpdateTimeoutRef.current);
+        }
+      };
+    }, [tabRef, homeRef, active, url]);
     return (
       <View
         style={[
@@ -362,7 +432,7 @@ export default memo(
               theme={theme}
             />
           ) : null}
-          <GestureDetector gesture={swipe}>
+          <GestureDetector gesture={swipeOrDoubleTouch}>
             <ScrollView
               contentContainerStyle={
                 url === BrowserConfig.HOMEPAGE_URL
@@ -371,14 +441,23 @@ export default memo(
               }
               ref={tabParentRef}
               refreshControl={
-                (!isFlutterCanvasApp || canRefreshCanvas) && (
+                Platform.OS === 'ios' ? (
+                  <CustomRefreshControl
+                    refreshing={refreshing}
+                    onRefresh={() => {
+                      onRefresh();
+                      setTimeout(() => setRefreshing(false), 1000);
+                    }}
+                    enabled={!isFlutterApp && !canRefreshCanvas && canRefresh}
+                  />
+                ) : (
                   <RefreshControl
                     refreshing={refreshing}
                     onRefresh={() => {
                       onRefresh();
                       setTimeout(() => setRefreshing(false), 1000);
                     }}
-                    enabled={canRefresh}
+                    enabled={!isFlutterApp && !canRefreshCanvas && canRefresh}
                   />
                 )
               }>
@@ -397,6 +476,7 @@ export default memo(
                 onMessage={onMessage}
                 javaScriptEnabled
                 bounces={false}
+                pullToRefreshEnabled={false}
                 geolocationEnabled
                 allowsInlineMediaPlayback
                 allowsFullscreenVideo
@@ -435,7 +515,6 @@ const getStyles = (insets: EdgeInsets) =>
     container: {
       flexGrow: 1,
       flexDirection: 'column',
-      marginBottom: -insets.bottom,
     },
     hide: {flex: 0, opacity: 0, display: 'none', width: 0, height: 0},
   });

@@ -1,4 +1,5 @@
 import {Page} from 'actions/interfaces';
+import Separator from 'components/ui/Separator';
 import React from 'react';
 import {
   FlatList,
@@ -63,6 +64,7 @@ export default ({
                 theme={theme}
               />
             )}
+            ListFooterComponent={() => <Separator height={10} />}
           />
         </>
       ) : (
@@ -78,7 +80,8 @@ const getStyles = (theme: Theme, insets: EdgeInsets) =>
       flexDirection: 'column',
       marginTop: 10,
       flex: 1,
-      paddingBottom: 140 + insets.bottom / 2,
+      paddingBottom:
+        Platform.OS === 'ios' ? insets.bottom / 2 + 70 : insets.bottom + 70,
     },
     text: {
       alignSelf: 'center',

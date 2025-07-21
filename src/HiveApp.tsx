@@ -96,8 +96,8 @@ const App = ({
   }, []);
 
   useEffect(() => {
-    if (accounts.length && requestedOp) {
-      processQRCodeOp(requestedOp);
+    if (accounts.length && requestedOp.opType && requestedOp.operation) {
+      processQRCodeOp(requestedOp.opType, requestedOp.operation);
       forgetRequestedOperation();
     }
   }, [accounts, requestedOp]);
@@ -183,7 +183,7 @@ const mapStateToProps = (state: RootState) => {
     auth: state.auth,
     activeRpc: state.settings.rpc,
     accounts: state.accounts,
-    requestedOp: state.hiveUri.operation,
+    requestedOp: state.hiveUri,
     rpcSwitcher: state.rpcSwitcher,
     hiveEngineRpc: state.settings.hiveEngineRpc,
     accountHistoryAPIRpc: state.settings.accountHistoryAPIRpc,

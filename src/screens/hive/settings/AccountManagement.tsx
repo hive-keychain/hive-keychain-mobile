@@ -11,7 +11,6 @@ import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
-import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
 import SlidingOverlay from 'components/ui/SlidingOverlay';
 import useLockedPortrait from 'hooks/useLockedPortrait';
@@ -102,9 +101,7 @@ const AccountManagement = ({
         ],
         extraHeader: (
           <>
-            <Separator />
             <NavigatorTitle title="common.confirm" />
-            <Separator />
           </>
         ),
       };
@@ -119,7 +116,6 @@ const AccountManagement = ({
           />
         ),
         modalContainerStyle: [getModalBaseStyle(theme).roundedTop],
-        fixedHeight: 0.5,
       } as ModalScreenProps);
     }
   };
@@ -148,10 +144,10 @@ const AccountManagement = ({
   };
 
   return (
-    <Background theme={theme}>
-      <SafeArea style={styles.safeArea}>
+    <Background theme={theme} skipTop skipBottom>
+      <View style={styles.container}>
         <FocusAwareStatusBar />
-        <ScrollView>
+        <ScrollView style={styles.scrollView}>
           <UserDropdown copyButtonValue />
           <Separator height={10} />
           <Key
@@ -194,18 +190,24 @@ const AccountManagement = ({
             onPress={handleGotoConfirmationAccountRemoval}
             additionalTextStyle={styles.operationButtonText}
           />
-          <Separator height={25} />
+          <Separator height={20} />
         </ScrollView>
         <SlidingOverlay
           setShowOverlay={setShowQrCode}
           showOverlay={showQrCode}
-          maxHeightPercent={0.7}
+          minHeightPercent={0.55}
+          maxHeightPercent={1}
           title="settings.keys.qr.title">
-          <ScrollView>
+          <ScrollView style={{flexShrink: 1}}>
             <Caption text="settings.keys.qr.caption" hideSeparator justify />
             {!showQR ? (
-              <View>
+              <View
+                style={{
+                  flexGrow: 1,
+                  justifyContent: 'space-between',
+                }}>
                 <CheckBoxPanel
+                  smallText
                   title="settings.keys.qr.check1"
                   onPress={() => {
                     setCheck1(!check1);
@@ -213,12 +215,14 @@ const AccountManagement = ({
                   checked={check1}
                 />
                 <CheckBoxPanel
+                  smallText
                   title="settings.keys.qr.check2"
                   onPress={() => {
                     setCheck2(!check2);
                   }}
                   checked={check2}
                 />
+                <Separator height={20} />
                 <EllipticButton
                   title={translate('settings.keys.show_qr_code')}
                   isWarningButton
@@ -253,14 +257,21 @@ const AccountManagement = ({
             )}
           </ScrollView>
         </SlidingOverlay>
-      </SafeArea>
+      </View>
     </Background>
   );
 };
 
 const getStyles = (theme: Theme, {width, height}: Dimensions) =>
   StyleSheet.create({
-    safeArea: {paddingHorizontal: 16},
+    container: {
+      flexGrow: 1,
+      paddingHorizontal: 16,
+      paddingBottom: 0,
+    },
+    scrollView: {
+      height: '60%',
+    },
     qrCardContainer: {
       display: 'flex',
       alignItems: 'center',

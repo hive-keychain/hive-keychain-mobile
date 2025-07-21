@@ -1,6 +1,7 @@
 import {Page} from 'actions/interfaces';
+import Separator from 'components/ui/Separator';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View} from 'react-native';
 import DraggableFlatList, {
   DragEndParams,
 } from 'react-native-draggable-flatlist';
@@ -48,6 +49,7 @@ export default ({favorites, updateTabUrl, updateFavorites, theme}: Props) => {
               drag={drag}
             />
           )}
+          ListFooterComponent={() => <Separator height={10} />}
         />
       ) : (
         <Text style={styles.text}>{translate('browser.home.nothing')}</Text>
@@ -62,7 +64,8 @@ const getStyles = (insets: EdgeInsets, theme: Theme) =>
       flexDirection: 'column',
       marginTop: 10,
       flex: 1,
-      paddingBottom: 140 + insets.bottom / 2,
+      paddingBottom:
+        Platform.OS === 'ios' ? insets.bottom / 2 + 70 : insets.bottom + 70,
     },
     text: {
       alignSelf: 'center',

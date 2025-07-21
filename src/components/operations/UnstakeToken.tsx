@@ -241,6 +241,7 @@ const getDimensionedStyles = (color: string, theme: Theme) =>
       alignItems: 'center',
     },
     childrenMiddle: {
+      flex: 1,
       paddingHorizontal: 10,
     },
     flexRowBetween: {

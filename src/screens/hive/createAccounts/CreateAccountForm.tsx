@@ -25,6 +25,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {
   default as SimpleToast,
   default as Toast,
@@ -522,7 +523,11 @@ const CreateAccountStepOne = ({
   };
 
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{bottom: -initialWindowMetrics.insets.bottom}}>
       <ScrollView contentContainerStyle={styles.container}>
         <FocusAwareStatusBar />
         <View style={styles.content}>
@@ -601,6 +606,7 @@ const CreateAccountStepOne = ({
             additionalTextStyle={{...button_link_primary_medium}}
           />
         </View>
+        {/* <Separator height={initialWindowMetrics.insets.bottom} /> */}
       </ScrollView>
     </Background>
   );
@@ -621,7 +627,6 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       justifyContent: 'flex-start',
       width: '100%',
       height: 'auto',
-      marginTop: 30,
     },
     buttonContainer: {
       marginBottom: 25,

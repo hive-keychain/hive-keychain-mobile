@@ -70,6 +70,7 @@ import DragIcon from 'src/assets/browser/drag.svg';
 import SwipeDownIcon from 'src/assets/browser/swipe-down.svg';
 import SwipeLeftIcon from 'src/assets/browser/swipe-left.svg';
 import SwipeRightIcon from 'src/assets/browser/swipe-right.svg';
+import TwoFingersTapIcon from 'src/assets/browser/two-fingers-tap.svg';
 import AddCircleOutlineIcon from 'src/assets/icons/svgs/add_circle_outline.svg';
 import {default as ArrowUpwardIcon} from 'src/assets/icons/svgs/arrow_upward.svg';
 import DeleteIcon from 'src/assets/icons/svgs/delete_black.svg';
@@ -722,6 +723,13 @@ const getIconFilePath = (
     case name === Icons.SWIPE_RIGHT:
       return (
         <SwipeRightIcon
+          style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
+          {...dimensionsProps}
+        />
+      );
+    case name === Icons.TWO_FINGERS_TAP:
+      return (
+        <TwoFingersTapIcon
           style={[finalStyleOnIcon, {color: color ?? getColors(theme).icon}]}
           {...dimensionsProps}
         />

@@ -12,6 +12,7 @@ import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Easing,
+  Keyboard,
   Platform,
   Pressable,
   ScrollView,
@@ -80,12 +81,34 @@ const BottomNavigation = ({
     true,
   );
   const [orientation, setOrientation] = useState('PORTRAIT');
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(
     !isModal && show && rpc && rpc.uri !== 'NULL',
   );
+
+  // Listen to keyboard events, and hide the bottom navigation when the keyboard is visible
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setIsKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setIsKeyboardVisible(false);
+      },
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   React.useEffect(() => {
     Orientation.addDeviceOrientationListener((orientation) => {
-      if (['UNKNOWN', 'FACE-UP', 'FACE-DOWN'].includes(orientation)) return;
+      if (['UNKNOWN'].includes(orientation)) return;
       if (Platform.OS === 'android' && orientation !== 'PORTRAIT') {
         Orientation.getAutoRotateState((s) => {
           if (s) {
@@ -143,7 +166,8 @@ const BottomNavigation = ({
   useEffect(() => {
     startAnimation(
       !isModal &&
-        orientation === 'PORTRAIT' &&
+        ['PORTRAIT', 'FACE-UP'].includes(orientation) &&
+        !isKeyboardVisible &&
         !isLoadingScreen &&
         rpc &&
         !isDrawerOpen &&
@@ -390,13 +414,14 @@ const getStyles = (
   StyleSheet.create({
     container: {
       position: 'absolute',
-      bottom: isProposalRequestDisplayed ? insets.bottom + 80 : insets.bottom,
+      bottom: 0,
       width: '95%',
+      height:
+        Platform.OS === 'ios' ? insets.bottom / 2 + 50 : insets.bottom + 50,
       alignSelf: 'center',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginBottom: -insets.bottom - 1,
-      paddingBottom: insets.bottom / 2,
+      paddingBottom: Platform.OS === 'ios' ? insets.bottom / 2 : insets.bottom,
       alignItems: 'center',
     },
     textBase: {
@@ -408,8 +433,8 @@ const getStyles = (
       justifyContent: 'center',
       flex: 1.5,
       paddingTop: 8,
-      paddingBottom: 8 + insets.bottom,
-      marginBottom: -insets.bottom,
+      paddingBottom: Platform.OS === 'ios' ? insets.bottom + 8 : 8,
+      marginBottom: Platform.OS === 'ios' ? -insets.bottom - 1 : 0,
     },
     marginTop: {
       marginTop: 5,
@@ -453,7 +478,7 @@ const getStyles = (
 const connector = connect(
   (state: RootState) => {
     return {
-      show: state.floatingBar.show,
+      show: state.floatingBar.showBasedOnScroll && !state.floatingBar.hide,
       isProposalRequestDisplayed: state.floatingBar.isProposalRequestDisplayed,
       isLoadingScreen: state.floatingBar.isLoadingScreen,
       isDrawerOpen: state.floatingBar.isDrawerOpened,

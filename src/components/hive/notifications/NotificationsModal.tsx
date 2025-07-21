@@ -16,6 +16,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -157,6 +158,9 @@ const NotificationsModal = ({
               onEndReached={() => {
                 if (hasMoreData) handleLoadMore();
               }}
+              ListFooterComponent={() => (
+                <Separator height={initialWindowMetrics.insets.bottom} />
+              )}
             />
           </ScrollView>
         </ScrollView>

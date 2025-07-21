@@ -6,12 +6,7 @@ import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {Theme} from 'src/context/theme.context';
-import {
-  NEUTRAL_WHITE_COLOR,
-  PRIMARY_RED_COLOR,
-  RED_SHADOW_COLOR,
-} from 'src/styles/colors';
-import {generateBoxShadowStyle} from 'src/styles/shadow';
+import {NEUTRAL_WHITE_COLOR, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {button_link_primary_medium} from 'src/styles/typography';
 
 interface Props {
@@ -58,6 +53,12 @@ const Carousel = ({
       } else {
         setIndex(0);
       }
+    }
+  };
+
+  const handleOnPressPreviousButton = () => {
+    if (index > 0) {
+      setIndex((prevIndex) => prevIndex - 1);
     }
   };
 
@@ -122,23 +123,24 @@ const Carousel = ({
         )}
         {renderItem(content[index])}
         {!hideButtons && (
-          <EllipticButton
-            title={getCurrentTitleOnNextSlideButton()}
-            onPress={() => handleOnPressNextButton()}
-            style={[
-              styles.warningProceedButton,
-              generateBoxShadowStyle(
-                0,
-                13,
-                RED_SHADOW_COLOR,
-                1,
-                25,
-                30,
-                RED_SHADOW_COLOR,
-              ),
-            ]}
-            additionalTextStyle={styles.textButtonFilled}
-          />
+          <View style={styles.buttonsContainer}>
+            <EllipticButton
+              title={buttonsConfig.prevTitle}
+              onPress={() => handleOnPressPreviousButton()}
+              style={[
+                styles.warningProceedButton,
+                index === 0 ? {opacity: 0} : {},
+              ]}
+              additionalTextStyle={styles.textButtonFilled}
+              disabled={index === 0}
+            />
+            <EllipticButton
+              title={getCurrentTitleOnNextSlideButton()}
+              onPress={() => handleOnPressNextButton()}
+              style={[styles.warningProceedButton]}
+              additionalTextStyle={styles.textButtonFilled}
+            />
+          </View>
         )}
       </SafeAreaView>
     </GestureRecognizer>
@@ -148,7 +150,7 @@ const Carousel = ({
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
     container: {
-      height: '90%',
+      height: '100%',
       width: '90%',
       alignSelf: 'center',
     },
@@ -165,13 +167,18 @@ const getStyles = (theme: Theme) =>
     },
     warningProceedButton: {
       backgroundColor: PRIMARY_RED_COLOR,
-      width: '80%',
+      width: '40%',
       marginBottom: 20,
     },
     textButtonFilled: {
       ...button_link_primary_medium,
       fontSize: 13,
       color: NEUTRAL_WHITE_COLOR,
+    },
+    buttonsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '100%',
     },
   });
 

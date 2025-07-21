@@ -1,4 +1,3 @@
-import Background from 'components/ui/Background';
 import {BackgroundHexagons} from 'components/ui/BackgroundHexagons';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
@@ -7,6 +6,7 @@ import Separator from 'components/ui/Separator';
 import {ISwap} from 'hive-keychain-commons';
 import React, {useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
@@ -86,7 +86,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
     );
   } else {
     return (
-      <Background theme={theme} additionalBgSvgImageStyle={styles.hexagons}>
+      <View style={styles.container}>
         <>
           <BackgroundHexagons theme={theme} />
           <FocusAwareStatusBar />
@@ -135,19 +135,26 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
               );
             }}
             onScroll={handleScroll}
-            ListFooterComponent={<Separator />}
+            ListFooterComponent={
+              <Separator height={initialWindowMetrics.insets.bottom + 70} />
+            }
           />
           {displayScrollToTop && (
             <BackToTopButton theme={theme} element={flatListRef} />
           )}
         </>
-      </Background>
+      </View>
     );
   }
 };
 
 const getStyles = (theme: Theme) =>
   StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: getColors(theme).primaryBackground,
+      paddingTop: 30,
+    },
     listContainer: {
       paddingTop: 15,
       paddingHorizontal: 10,

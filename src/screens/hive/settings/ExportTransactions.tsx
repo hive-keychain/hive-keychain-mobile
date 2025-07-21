@@ -21,6 +21,7 @@ import {
 } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import FileViewer from 'react-native-file-viewer';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -118,7 +119,13 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
   };
 
   return (
-    <Background theme={theme}>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{
+        paddingBottom: initialWindowMetrics.insets.bottom,
+      }}>
       <View style={styles.mainContainer}>
         <ScrollView style={styles.scrollContent}>
           <View style={styles.container}>
@@ -205,7 +212,6 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
                 </View>
               }
             />
-            <Separator height={height / 22} />
           </View>
         </ScrollView>
 
@@ -309,7 +315,7 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     },
     buttonWrapper: {
       padding: 16,
-      paddingBottom: 25,
+      paddingBottom: 12,
       width: '100%',
       justifyContent: 'center',
       alignItems: 'center',

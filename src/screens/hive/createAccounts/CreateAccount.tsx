@@ -18,7 +18,6 @@ import WebView from 'react-native-webview';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonHeight} from 'src/styles/button';
-import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
 import {NEUTRAL_WHITE_COLOR, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {
   button_link_primary_medium,
@@ -37,7 +36,7 @@ const CreateAccount = ({showExternalOnboarding}: PropsFromRedux) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(width, insets);
   return (
-    <Background theme={theme} containerStyle={styles.container}>
+    <Background theme={theme} containerStyle={styles.container} skipTop>
       <View style={styles.pageContainer}>
         <FocusAwareStatusBar />
         <View style={styles.captionContainer}>
@@ -99,13 +98,10 @@ const getStyles = (width: number, insets: EdgeInsets) =>
     container: {
       display: 'flex',
       flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
     },
     pageContainer: {
       display: 'flex',
       flex: 1,
-      padding: CARD_PADDING_HORIZONTAL,
     },
     warningProceedButton: {
       backgroundColor: PRIMARY_RED_COLOR,

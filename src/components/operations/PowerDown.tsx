@@ -241,7 +241,7 @@ const PowerDown = ({
         </>
       }
       childrenMiddle={
-        <View>
+        <View style={{flex: 1}}>
           <Caption text="wallet.operations.powerdown.powerdown_text" />
           <View style={styles.flexRowBetween}>
             <OperationInput

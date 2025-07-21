@@ -6,6 +6,7 @@ import SettingsStack from 'navigators/mainDrawerStacks/Settings';
 import WalletStack from 'navigators/mainDrawerStacks/Wallet';
 import React from 'react';
 import {StyleSheet} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
@@ -134,9 +135,8 @@ const getStyles = (theme: Theme) =>
       borderTopRightRadius: 20,
       borderBottomRightRadius: 20,
       width: '70%',
-      height: '95%',
-      bottom: 10,
-      top: undefined,
+      top: initialWindowMetrics.insets.top,
+      bottom: initialWindowMetrics.insets.bottom,
     },
     item: {marginHorizontal: 0, borderRadius: 0, paddingLeft: 10},
   });

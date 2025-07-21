@@ -1,6 +1,22 @@
 import {ProviderEvent} from 'src/enums/provider-event.enum';
 
 const getWebviewInfo = `
+	// Clear any existing intervals and event listeners
+	if (window._keychainInfoInterval) {
+		clearInterval(window._keychainInfoInterval);
+	}
+	
+	// Remove existing event listeners if they exist
+	if (window._keychainScrollHandler) {
+		window.removeEventListener('scroll', window._keychainScrollHandler);
+	}
+	if (window._keychainTouchStartHandler) {
+		window.removeEventListener('touchstart', window._keychainTouchStartHandler);
+	}
+	if (window._keychainTouchEndHandler) {
+		window.removeEventListener('touchend', window._keychainTouchEndHandler);
+	}
+	
 	const __getFavicon = function(){
 		let favicon = undefined;
 		const nodeList = document.getElementsByTagName("link");
@@ -31,7 +47,7 @@ const getWebviewInfo = `
 		}
 	))
 
-	setInterval(()=>{
+	window._keychainInfoInterval = setInterval(()=>{
 		window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(
 			{
 				name: '${ProviderEvent.INFO}',
@@ -44,77 +60,137 @@ const getWebviewInfo = `
 		))
 	},2000);
 	
-	// (function() {
-	// let lastScrollPosition=0;
-    // function handleScroll() {
-    //     const isAtTop = window.scrollY === 0;
-	// 	const showNavigationBar = lastScrollPosition >= window.scrollY;		
-    //     window.ReactNativeWebView.postMessage(JSON.stringify({ name: '${ProviderEvent.SCROLL}', isAtTop, showNavigationBar }));
-    //   	lastScrollPosition = window.scrollY;
-	// 	}
-    //   window.addEventListener('scroll', handleScroll);
-    //   handleScroll();
-    // })();
 
-	(function () {
+  (function () {
   let lastTouchY = 0;
-  let windowScrollPosition=0;
-  let parentScrollPosition=0;
-  let scrollCheckTimer=null;
-  let lastScrollTop = -1;
+  let windowScrollY = 0;
+  const iframeScrollY = {};
+  let parentScrollY = 0;
+  let lastGlobalScrollY = 0;
+  let scrollDirection = 'none';
 
-   window.addEventListener('scroll', ()=>{
-    windowScrollPosition = window.scrollY;
-	let canScrollUp = windowScrollPosition > 0 || parentScrollPosition > 0;
-   
-    window.ReactNativeWebView.postMessage(
-      JSON.stringify({ name: '${ProviderEvent.SCROLL}', isAtTop: !canScrollUp})
-    );
-   });
+  const ProviderEvent = { SCROLL: 'SCROLL' };
 
-  window.addEventListener('touchstart', function (e) {
-    lastTouchY = e.touches[0].clientY;
-  });
-
-  window.addEventListener('touchend', function (e) {
-    const currentY = e.changedTouches[0].clientY;
-    const deltaY = currentY - lastTouchY;
-    lastTouchY = currentY;
-
-    const el = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-    const scrollableParent = findScrollableParent(el);
-    parentScrollPosition = scrollableParent?.scrollTop;
-    let canScrollUp = windowScrollPosition > 0 || parentScrollPosition > 0;
-    if(scrollableParent){
-		scrollCheckTimer = setInterval(() => {
-			const currentScrollTop = scrollableParent.scrollTop;
-			if (currentScrollTop === lastScrollTop) {
-				clearInterval(scrollCheckTimer);
-				scrollCheckTimer = null;
-				const canScrollUp = currentScrollTop > 0 || parentScrollPosition > 0;
-				window.ReactNativeWebView?.postMessage(JSON.stringify({ name: '${ProviderEvent.SCROLL}', isAtTop: !canScrollUp}));
-			}
-			lastScrollTop = currentScrollTop;
-		}, 100);
-	} 
-    window.ReactNativeWebView.postMessage(
-      JSON.stringify({ name: '${ProviderEvent.SCROLL}', isAtTop: !canScrollUp, showNavigationBar: deltaY > 0,el:windowScrollPosition,scrollableParent:parentScrollPosition})
-    );
-  });
-
-  function findScrollableParent(el) {
-    while (el) {
-      const style = window.getComputedStyle(el);
-      const overflowY = style.overflowY;
-      const canScroll = el.scrollHeight > el.clientHeight;
-
-      if (canScroll && (overflowY === 'auto' || overflowY === 'scroll')) {
-        return el;
+  function getDeepestScrollableParentScroll(doc = document) {
+    let maxScroll = 0;
+    const allElements = doc.querySelectorAll('*');
+    for (const el of allElements) {
+      const style = doc.defaultView.getComputedStyle(el);
+      if ((style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+          el.scrollHeight > el.clientHeight) {
+        maxScroll = Math.max(maxScroll, el.scrollTop);
       }
-      el = el.parentElement;
     }
-    return null;
+    return maxScroll;
   }
+
+  function getGlobalCanScrollUp() {
+    const anyIframeScrolled = Object.values(iframeScrollY).some(y => y > 0);
+    return windowScrollY > 0 || parentScrollY > 0 || anyIframeScrolled;
+  }
+
+  function getGlobalScrollY() {
+    return Math.max(windowScrollY, parentScrollY, ...Object.values(iframeScrollY));
+  }
+
+  function postScrollStatus(extra = {}) {
+    const globalY = getGlobalScrollY();
+
+    // Update scroll direction if scrolling happened
+    if (globalY > lastGlobalScrollY) {
+      scrollDirection = 'down';
+    } else if (globalY < lastGlobalScrollY) {
+      scrollDirection = 'up';
+    }
+
+    const isAtTop = !getGlobalCanScrollUp();
+    const showNavigationBar = scrollDirection === 'up';
+
+    lastGlobalScrollY = globalY;
+
+    window.ReactNativeWebView?.postMessage(JSON.stringify({
+      name: '${ProviderEvent.SCROLL}',
+      isAtTop,
+      showNavigationBar,
+      scrollTop: globalY,
+      ...extra
+    }));
+  }
+
+  // ===== MAIN WINDOW SCROLL/TAP =====
+  window._keychainScrollHandler = () => {
+    windowScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    postScrollStatus({ source: 'main' });
+  };
+  
+  window._keychainTouchStartHandler = function (e) {
+    lastTouchY = e.touches[0].clientY;
+  };
+  
+  window._keychainTouchEndHandler = function (e) {
+    const deltaY = e.changedTouches[0].clientY - lastTouchY;
+    lastTouchY = e.changedTouches[0].clientY;
+
+    windowScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    parentScrollY = getDeepestScrollableParentScroll();
+
+    postScrollStatus({
+      source: 'main',
+      showNavigationBar: deltaY > 0,
+    });
+  };
+
+  window.addEventListener('scroll', window._keychainScrollHandler, { passive: true });
+  window.addEventListener('touchstart', window._keychainTouchStartHandler);
+  window.addEventListener('touchend', window._keychainTouchEndHandler);
+
+  // ===== IFRAME SUPPORT =====
+  function injectIframeListeners(iframe, index) {
+    try {
+      const iframeWin = iframe.contentWindow;
+      const iframeDoc = iframe.contentDocument;
+      if (!iframeWin || !iframeDoc) return;
+
+      iframeScrollY[index] = 0;
+
+      iframeWin.addEventListener('scroll', () => {
+        iframeScrollY[index] = iframeWin.scrollY || iframeDoc.documentElement.scrollTop || 0;
+        postScrollStatus({ source: 'iframe-' + index });
+      }, { passive: true });
+
+      iframeWin.addEventListener('touchstart', (e) => {
+        lastTouchY = e.touches[0].clientY;
+      });
+
+      iframeWin.addEventListener('touchend', (e) => {
+        const deltaY = e.changedTouches[0].clientY - lastTouchY;
+        lastTouchY = e.changedTouches[0].clientY;
+
+        iframeScrollY[index] = iframeWin.scrollY || iframeDoc.documentElement.scrollTop || 0;
+        getDeepestScrollableParentScroll(iframeDoc);
+
+        postScrollStatus({
+          source: 'iframe-' + index,
+          showNavigationBar: deltaY > 0,
+        });
+      });
+    } catch (e) {
+      // silently ignore cross-origin iframes
+    }
+  }
+
+  function observeIframes() {
+    const iframes = document.querySelectorAll('iframe');
+    iframes.forEach((iframe, idx) => injectIframeListeners(iframe, idx));
+  }
+
+  function ensureIframeHooks() {
+    observeIframes();
+    // Use a longer timeout to prevent excessive recursion
+    setTimeout(ensureIframeHooks, 1000);
+  }
+
+  ensureIframeHooks();
 })();
 
 (function() {
@@ -134,7 +210,8 @@ const getWebviewInfo = `
 
     window.ReactNativeWebView?.postMessage(JSON.stringify({
       name: '${ProviderEvent.FLUTTER_CHECK}',
-      isFlutterCanvasApp: isFlutterCanvasApp || !!flutterDiv
+      isFlutterCanvasApp: isFlutterCanvasApp || !!flutterDiv,
+      domain: document.domain
     }));
   } catch (err) {
   }

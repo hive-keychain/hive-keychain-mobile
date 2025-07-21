@@ -1,8 +1,9 @@
 import {forgetKey} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
+import SafeArea from 'components/ui/SafeArea';
 import React from 'react';
-import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {StyleSheet, Text, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
@@ -22,7 +23,7 @@ const RemoveKey = ({forgetKey, name, type}: Props) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
   return (
-    <View style={styles.container}>
+    <SafeArea skipTop style={styles.container}>
       <Text style={styles.title}>{translate('settings.keys.remove')}</Text>
       <Text style={[styles.text, styles.smallerText]}>
         {translate('settings.keys.remove_info', {username: name, type})}
@@ -33,11 +34,14 @@ const RemoveKey = ({forgetKey, name, type}: Props) => {
           forgetKey(name, type);
           goBack();
         }}
-        style={getButtonStyle(theme, width).warningStyleButton}
+        style={[
+          getButtonStyle(theme, width).warningStyleButton,
+          {marginBottom: 10},
+        ]}
         isWarningButton
         additionalTextStyle={{...button_link_primary_medium}}
       />
-    </View>
+    </SafeArea>
   );
 };
 

@@ -1,13 +1,14 @@
 import {KeyTypes, Witness as WitnessInterface} from 'actions/interfaces';
 import keychain from 'api/keychain';
+import Background from 'components/ui/Background';
 import Loader from 'components/ui/Loader';
 import ScreenToggle from 'components/ui/ScreenToggle';
-import WalletPage from 'components/ui/WalletPage';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {GovernanceNavigation} from 'navigators/MainDrawer.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {default as Toast} from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -80,7 +81,13 @@ const Governance = ({
   };
 
   return (
-    <WalletPage>
+    <Background
+      theme={theme}
+      skipTop
+      skipBottom
+      additionalBgSvgImageStyle={{
+        paddingBottom: initialWindowMetrics.insets.bottom,
+      }}>
       <>
         {loading ? (
           <View style={styles.flexCentered}>
@@ -131,7 +138,7 @@ const Governance = ({
           />
         )}
       </>
-    </WalletPage>
+    </Background>
   );
 };
 

@@ -13,6 +13,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -174,6 +175,9 @@ const TokenSettings = ({loadTokens, tokens}: PropsFromRedux) => {
               </Text>
             </View>
           }
+          ListFooterComponent={() => (
+            <Separator height={initialWindowMetrics.insets.bottom} />
+          )}
         />
       )}
     </View>
