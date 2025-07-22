@@ -29,7 +29,11 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import Balance from './Balance';
-import {ConfirmationDataTag, ConfirmationPageProps, createBalanceData} from './Confirmation';
+import {
+  ConfirmationDataTag,
+  ConfirmationPageProps,
+  createBalanceData,
+} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface StakeTokenOperationProps {
@@ -124,17 +128,17 @@ const StakeToken = ({
             tag: ConfirmationDataTag.USERNAME,
           },
           {
-            title: 'wallet.operations.transfer.confirm.amount', 
+            title: 'wallet.operations.transfer.confirm.amount',
             value: withCommas(amount),
             tag: ConfirmationDataTag.AMOUNT,
             currency: currency,
-            currentBalance: parseFloat(balance),
-            amount: parseFloat(amount),
-            finalBalance: parseFloat(balance) - parseFloat(amount),
+            currentBalance: balance,
+            amount: amount,
+            finalBalance: (parseFloat(balance) - parseFloat(amount)).toString(),
           },
           createBalanceData(
             'wallet.operations.token_stake.confirm.balance',
-            parseFloat(balance),
+            parseFloat(balance.replace(/,/g, '')),
             parseFloat(amount),
             currency,
           ),

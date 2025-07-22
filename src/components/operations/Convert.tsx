@@ -35,7 +35,11 @@ import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import Balance from './Balance';
-import {ConfirmationDataTag, ConfirmationPageProps, createBalanceData} from './Confirmation';
+import {
+  ConfirmationDataTag,
+  ConfirmationPageProps,
+  createBalanceData,
+} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface ConvertOperationProps {
@@ -140,7 +144,7 @@ const Convert = ({
           },
           createBalanceData(
             'wallet.operations.transfer.confirm.balance',
-            parseFloat(availableBalance),
+            parseFloat(availableBalance.replace(/,/g, '')),
             parseFloat(amount),
             currency,
           ),
@@ -222,7 +226,7 @@ const Convert = ({
         </>
       }
       childrenMiddle={
-        <View>
+        <View style={{flex: 1}}>
           <Caption
             text={`wallet.operations.convert.disclaimer_${currency.toLowerCase()}`}
           />

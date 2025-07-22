@@ -223,8 +223,8 @@ const Savings = ({
           createBalanceData(
             'wallet.operations.savings.confirm.balance',
             operationType === SavingsOperations.deposit
-              ? parseFloat(availableBalance as string)
-              : parseFloat(currentBalance as string),
+              ? parseFloat((availableBalance as string).replace(/,/g, ''))
+              : parseFloat((currentBalance as string).replace(/,/g, '')),
             operationType === SavingsOperations.deposit
               ? parseFloat(amount)
               : -parseFloat(amount),

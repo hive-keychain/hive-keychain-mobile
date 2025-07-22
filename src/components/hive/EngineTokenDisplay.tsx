@@ -1,25 +1,16 @@
 import {TokenBalance, TokenMarket} from 'actions/interfaces';
-import HiveEngine from 'assets/wallet/hive_engine.png';
 import {TokenHistoryProps} from 'components/history/hive-engine/TokensHistory';
-import FastImageComponent from 'components/ui/FastImage';
-import React, {useState} from 'react';
-import {
-  Image as Img,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from 'react-native';
-import Image from 'react-native-fast-image';
+import React from 'react';
+import {View, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
-import {Theme, useThemeContext} from 'src/context/theme.context';
+import {useThemeContext} from 'src/context/theme.context';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
 import {RootState} from 'store';
-import {Colors, getTokenBackgroundColor} from 'utils/colors';
-import {Width} from 'utils/common.types';
 import {formatBalance} from 'utils/format';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {navigate} from 'utils/navigation';
+import CurrencyIcon from './CurrencyIcon';
 import TokenDisplay from './TokenDisplay';
 
 type Props = {
@@ -42,61 +33,24 @@ const EngineTokenDisplay = ({
 }: Props & PropsFromRedux) => {
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
-  const styles = getDimensionedStyles(
-    {width},
-    theme,
-    token.symbol,
-    colors,
-    addBackground,
-  );
-  const [hasError, setHasError] = useState(0);
+
   const tokenInfo = tokensList.find((t) => t.symbol === token.symbol);
   const tokenMarket = market.find((t) => t.symbol === token.symbol);
 
   if (!tokenInfo) return null;
-  const getLogo = () => {
-    switch (hasError) {
-      case 0:
-        if (!tokenInfo.metadata.icon) setHasError(2);
-        return (
-          <FastImageComponent
-            style={styles.iconBase}
-            source={tokenInfo.metadata.icon}
-            onError={() => {
-              setHasError(1);
-            }}
-          />
-        );
-      case 1:
-        return (
-          <FastImageComponent
-            style={styles.iconBase}
-            source={`https://images.hive.blog/0x0/${tokenInfo.metadata.icon}`}
-            onError={() => {
-              setHasError(2);
-            }}
-          />
-        );
-      case 2:
-        return (
-          <Image
-            style={styles.iconBase}
-            source={{
-              uri: Img.resolveAssetSource(HiveEngine).uri,
-            }}
-            onError={() => {}}
-          />
-        );
-      default:
-        return null;
-    }
-  };
 
   const onHandleGoToTokenHistory = () => {
     navigate('TokensHistory', {
       currency: token.symbol,
       tokenBalance: token.balance,
-      tokenLogo: getLogo(),
+      tokenLogo: (
+        <CurrencyIcon
+          currencyName={token.symbol}
+          tokenInfo={tokenInfo}
+          colors={colors}
+          symbol={token.symbol}
+        />
+      ),
       theme: theme,
     } as TokenHistoryProps);
   };
@@ -122,13 +76,12 @@ const EngineTokenDisplay = ({
           ),
         }}
         logo={
-          <View
-            style={[
-              styles.iconContainerBase,
-              !hasError ? styles.iconContainerBaseWithBg : undefined,
-            ]}>
-            {getLogo()}
-          </View>
+          <CurrencyIcon
+            currencyName={token.symbol}
+            tokenInfo={tokenInfo}
+            colors={colors}
+            symbol={token.symbol}
+          />
         }
         renderButtonOptions={false}
         theme={theme}
@@ -139,31 +92,6 @@ const EngineTokenDisplay = ({
     </View>
   );
 };
-
-const getDimensionedStyles = (
-  {width}: Width,
-  theme: Theme,
-  symbol: string,
-  colors: Colors,
-  addBackground?: boolean,
-) =>
-  StyleSheet.create({
-    iconBase: {
-      width: 24,
-      height: 24,
-    },
-    iconContainerBase: {
-      padding: 5,
-      borderRadius: 50,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    iconContainerBaseWithBg: {
-      backgroundColor: addBackground
-        ? getTokenBackgroundColor(colors, symbol, theme)
-        : undefined,
-    },
-  });
 
 const mapStateToProps = (state: RootState) => {
   return {

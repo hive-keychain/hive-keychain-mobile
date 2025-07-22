@@ -132,7 +132,7 @@ const Delegation = ({
           },
           createBalanceData(
             'wallet.operations.delegation.confirm.balance',
-            parseFloat(available),
+            parseFloat(available.replace(/,/g, '')),
             parseFloat(amount),
             currency,
           ),

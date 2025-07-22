@@ -62,7 +62,7 @@ export default ({
                   textStyle,
                   styles.opaque,
                 ]}>
-                {username}
+                @{username}
               </Text>
             </>
           ) : (
@@ -74,7 +74,7 @@ export default ({
                   textStyle,
                   styles.opaque,
                 ]}>
-                {username}
+                @{username}
               </Text>
               <Image
                 style={[styles.avatar, avatarStyle]}

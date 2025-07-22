@@ -68,7 +68,6 @@ const getStyles = (theme: Theme) =>
       flexDirection: 'row',
       alignItems: 'center',
       alignContent: 'center',
-      backgroundColor: 'red ',
       marginBottom: 8,
     },
     headerLeft: {

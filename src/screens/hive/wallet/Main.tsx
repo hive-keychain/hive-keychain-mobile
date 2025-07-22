@@ -433,7 +433,7 @@ const Main = ({
                       <CurrencyToken
                         key={`${item.currency}`}
                         theme={theme}
-                        currencyName={item.currency}
+                        currencyName={item.currency as any}
                         itemIndex={index}
                         onPress={() => handleClickToView(index, 0)}
                       />

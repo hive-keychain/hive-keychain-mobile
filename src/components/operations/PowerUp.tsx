@@ -115,7 +115,7 @@ const PowerUp = ({
           },
           createBalanceData(
             'wallet.operations.powerup.confirm.balance',
-            parseFloat(availableHiveAmount),
+            parseFloat(availableHiveAmount.replace(/,/g, '')),
             parseFloat(amount),
             currency,
           ),

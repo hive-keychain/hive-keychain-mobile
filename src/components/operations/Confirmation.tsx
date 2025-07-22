@@ -2,11 +2,13 @@ import {loadAccount} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import TwoFaForm from 'components/form/TwoFaForm';
+import CurrencyIcon from 'components/hive/CurrencyIcon';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import MultisigCaption from 'components/ui/MultisigCaption';
 import Separator from 'components/ui/Separator';
 import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
+import {FormatUtils} from 'hive-keychain-commons';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import {ConfirmationPageRoute} from 'navigators/Root.types';
 import React, {useState} from 'react';
@@ -25,12 +27,14 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
+import {Token} from 'src/interfaces/tokens.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {spacingStyle} from 'src/styles/spacing';
 import {getFormFontStyle} from 'src/styles/typography';
 import {RootState} from 'store';
+import {Colors} from 'utils/colors';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {resetStackAndNavigate} from 'utils/navigation';
@@ -59,9 +63,10 @@ export type ConfirmationData = {
   value: string;
   tag?: string;
   currency?: string;
-  currentBalance?: number;
-  amount?: number;
-  finalBalance?: number;
+  currentBalance?: string;
+  amount?: string;
+  finalBalance?: string;
+  tokenInfo?: Token;
 };
 
 export const createBalanceData = (
@@ -70,15 +75,15 @@ export const createBalanceData = (
   amount: number,
   currency: string,
 ): ConfirmationData => {
-  const finalBalance = Number((currentBalance - amount).toFixed(3));
+  const finalBalance = Number(currentBalance) - Number(amount);
   return {
     title,
     value: `${currentBalance} ${currency}`,
     tag: ConfirmationDataTag.BALANCE,
     currency,
-    currentBalance,
-    amount,
-    finalBalance,
+    currentBalance: FormatUtils.withCommas(currentBalance.toString(), 3),
+    amount: FormatUtils.withCommas(amount.toString(), 3),
+    finalBalance: FormatUtils.withCommas(finalBalance.toString(), 3),
   };
 };
 
@@ -87,16 +92,27 @@ const renderConfirmationValue = (
   width: number,
   theme: Theme,
   styles: any,
+  colors: Colors,
+  tokens: Token[],
 ) => {
   switch (e.tag) {
     case ConfirmationDataTag.USERNAME:
       return <UsernameWithAvatar username={e.value} alignAllToLeft={false} />;
     case ConfirmationDataTag.AMOUNT:
       return (
-        <Text
-          style={[getFormFontStyle(width, theme).title, styles.textContent]}>
-          {e.value + ` ${e.currency ? e.currency : ''}`}
-        </Text>
+        <View style={styles.amount}>
+          <Text
+            style={[getFormFontStyle(width, theme).title, styles.textContent]}>
+            {e.value + ` ${e.currency ? e.currency : ''}`}
+          </Text>
+          <CurrencyIcon
+            currencyName={e.currency as any}
+            tokenInfo={tokens.find((t) => t.symbol === e.currency)}
+            addBackground
+            colors={colors}
+            symbol={e.currency}
+          />
+        </View>
       );
     case ConfirmationDataTag.BALANCE:
       if (
@@ -104,37 +120,43 @@ const renderConfirmationValue = (
         e.amount !== undefined &&
         e.finalBalance !== undefined
       ) {
-        const isInsufficient = e.finalBalance < 0;
+        const isInsufficient = Number(e.finalBalance) < 0;
         return (
-          <View style={styles.balanceColumn}>
-            <Text
-              style={[
-                getFormFontStyle(width, theme).title,
-                styles.textContent,
-              ]}>
-              {`${e.currentBalance} ${e.currency || ''}`}
-            </Text>
-            <View style={styles.arrowContainer}>
-              <Icon
-                name={Icons.ARROW_RIGHT_BROWSER}
-                additionalContainerStyle={styles.arrowIcon}
-                width={20}
-                height={20}
-                theme={theme}
-                color={getColors(theme).iconBW}
-              />
-            </View>
-            <Text
-              style={[
-                getFormFontStyle(width, theme).title,
-                styles.textContent,
-              ]}>
-              {isInsufficient ? (
-                <Text style={styles.errorText}>Insufficient Balance</Text>
-              ) : (
-                `${e.finalBalance} ${e.currency || ''}`
-              )}
-            </Text>
+          <View style={styles.balanceRow}>
+            {isInsufficient ? (
+              <Text style={styles.errorText}>Insufficient Balance</Text>
+            ) : (
+              <>
+                <View style={styles.balanceColumn}>
+                  <Text
+                    style={[
+                      getFormFontStyle(width, theme).title,
+                      styles.textContent,
+                    ]}>
+                    {`${e.currentBalance} ${e.currency || ''}`}
+                  </Text>
+                </View>
+                <View style={styles.arrowContainer}>
+                  <Icon
+                    name={Icons.ARROW_RIGHT_BROWSER}
+                    additionalContainerStyle={styles.arrowIcon}
+                    width={16}
+                    height={16}
+                    theme={theme}
+                    color={getColors(theme).iconBW}
+                  />
+                </View>
+                <View style={styles.balanceColumn}>
+                  <Text
+                    style={[
+                      getFormFontStyle(width, theme).title,
+                      styles.textContent,
+                    ]}>
+                    {`${e.finalBalance} ${e.currency || ''}`}
+                  </Text>
+                </View>
+              </>
+            )}
           </View>
         );
       }
@@ -158,6 +180,8 @@ const ConfirmationPage = ({
   route,
   loadAccount,
   user,
+  colors,
+  tokens,
 }: {
   route: ConfirmationPageRoute;
 } & PropsFromRedux) => {
@@ -225,7 +249,14 @@ const ConfirmationPage = ({
                   <Text style={[getFormFontStyle(width, theme).title]}>
                     {translate(e.title)}
                   </Text>
-                  {renderConfirmationValue(e, width, theme, styles)}
+                  {renderConfirmationValue(
+                    e,
+                    width,
+                    theme,
+                    styles,
+                    colors,
+                    tokens,
+                  )}
                 </View>
                 {i !== data.length - 1 && (
                   <Separator
@@ -266,6 +297,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     warning: {color: 'red'},
     flexRowBetween: {
       flexDirection: 'row',
+      alignItems: 'center',
       justifyContent: 'space-between',
     },
     info: {
@@ -273,6 +305,7 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     },
     textContent: {
       color: getColors(theme).senaryText,
+      textAlign: 'right',
     },
     bottomLine: {
       width: '100%',
@@ -298,14 +331,19 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       color: PRIMARY_RED_COLOR,
       marginTop: -10,
     },
-    balanceColumn: {
+    balanceRow: {
       flexDirection: 'column',
-      alignItems: 'flex-end',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      overflow: 'hidden',
+      flexShrink: 1,
+    },
+    balanceColumn: {
+      flexShrink: 1,
     },
     arrowContainer: {
       alignItems: 'center',
-      marginVertical: 4,
-      marginRight: 16,
+      transform: [{rotate: '90deg'}],
     },
     arrowIcon: {
       marginHorizontal: 0,
@@ -316,11 +354,23 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     errorText: {
       color: PRIMARY_RED_COLOR,
     },
+    amount: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
   });
 
-const connector = connect((state: RootState) => ({user: state.activeAccount}), {
-  loadAccount,
-});
+const connector = connect(
+  (state: RootState) => ({
+    user: state.activeAccount,
+    colors: state.colors,
+    tokens: state.tokens,
+  }),
+  {
+    loadAccount,
+  },
+);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(ConfirmationPage);

@@ -263,7 +263,7 @@ const Transfer = ({
           },
           createBalanceData(
             'wallet.operations.transfer.confirm.balance',
-            parseFloat(availableBalance),
+            parseFloat(availableBalance.replace(/,/g, '')),
             parseFloat(amount),
             currency,
           ),
