@@ -29,11 +29,8 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import Balance from './Balance';
-import {
-  ConfirmationDataTag,
-  ConfirmationPageProps,
-  createBalanceData,
-} from './Confirmation';
+import {ConfirmationPageProps} from './Confirmation';
+import {ConfirmationDataTag, createBalanceData} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';
 
 export interface UnstakeTokenOperationProps {

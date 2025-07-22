@@ -41,11 +41,8 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {
-  ConfirmationDataTag,
-  ConfirmationPageProps,
-  createBalanceData,
-} from './Confirmation';
+import {ConfirmationPageProps} from './Confirmation';
+import {ConfirmationDataTag, createBalanceData} from './ConfirmationCard';
 import DelegationsList from './DelegationsList';
 import OperationThemed from './OperationThemed';
 

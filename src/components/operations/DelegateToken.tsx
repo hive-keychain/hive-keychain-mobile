@@ -30,7 +30,8 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import Balance from './Balance';
-import {ConfirmationDataTag, ConfirmationPageProps} from './Confirmation';
+import {ConfirmationPageProps} from './Confirmation';
+import {ConfirmationDataTag} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';
 
 export interface DelegateTokenOperationProps {
@@ -122,18 +123,18 @@ const DelegateToken = ({
           {
             title: 'wallet.operations.transfer.confirm.from',
             value: `@${user.account.name}`,
-            tag: ConfirmationDataTag.USERNAME
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
-            title: 'wallet.operations.transfer.confirm.to', 
+            title: 'wallet.operations.transfer.confirm.to',
             value: `@${to}`,
-            tag: ConfirmationDataTag.USERNAME
+            tag: ConfirmationDataTag.USERNAME,
           },
           {
             title: 'wallet.operations.transfer.confirm.amount',
             value: withCommas(amount),
             tag: ConfirmationDataTag.AMOUNT,
-            currency: currency
+            currency: currency,
           },
         ],
         keyType: KeyType.ACTIVE,

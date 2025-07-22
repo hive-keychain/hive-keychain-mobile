@@ -41,11 +41,8 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {SavingsUtils} from 'utils/savings.utils';
-import {
-  ConfirmationDataTag,
-  ConfirmationPageProps,
-  createBalanceData,
-} from './Confirmation';
+import {ConfirmationPageProps} from './Confirmation';
+import {ConfirmationDataTag, createBalanceData} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';
 
 export enum SavingsOperations {

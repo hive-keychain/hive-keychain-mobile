@@ -1,5 +1,5 @@
 import {loadTokenHistory} from 'actions/index';
-import {Token, TokenBalance} from 'actions/interfaces';
+import {TokenBalance} from 'actions/interfaces';
 import AddIcon from 'assets/wallet/icon_add_circle_outline.svg';
 import ListBlackIcon from 'assets/wallet/icon_list_black.svg';
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
@@ -7,6 +7,7 @@ import Separator from 'components/ui/Separator';
 import React from 'react';
 import {Linking, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
+import {Token} from 'src/interfaces/tokens.interface';
 import {RootState} from 'store';
 import {withCommas} from 'utils/format';
 import {translate} from 'utils/localize';
@@ -39,7 +40,7 @@ const MoreTokenInfo = ({
   const handleClickIssuer = () => {
     if (tokenInfo.metadata) {
       try {
-        const url = JSON.parse(tokenInfo.metadata).url;
+        const url = tokenInfo.metadata.url;
         Linking.openURL(url);
       } catch (error) {
         console.log("Error trying to open token's Url. ", error);
