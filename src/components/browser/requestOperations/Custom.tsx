@@ -1,4 +1,5 @@
 import {Account, KeyTypes} from 'actions/interfaces';
+import {ConfirmationDataTag} from 'components/operations/ConfirmationCard';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
@@ -10,8 +11,6 @@ import {
   RequestSuccess,
 } from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import CollapsibleData from './components/CollapsibleData';
-import RequestItem from './components/RequestItem';
 import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
@@ -46,6 +45,7 @@ export default ({
       request={request}
       selectedUsername={getUsername()}
       closeGracefully={closeGracefully}
+      RequestUsername={RequestUsername}
       performOperation={async (options: TransactionOptions) => {
         return await broadcastJson(
           getAccountKey(),
@@ -55,15 +55,25 @@ export default ({
           json,
           options,
         );
-      }}>
-      <RequestUsername />
-      <RequestItem title={translate('request.item.method')} content={method} />
-      <CollapsibleData
-        title={translate('request.item.data')}
-        hidden={translate('request.item.hidden_data')}
-        content={JSON.stringify({id, json: JSON.parse(json)}, undefined, 2)}
-      />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          tag: ConfirmationDataTag.REQUEST_USERNAME,
+          title: 'request.item.username',
+          value: '',
+        },
+        {
+          title: 'request.item.method',
+          value: method,
+        },
+        {
+          title: 'request.item.data',
+          hidden: translate('request.item.hidden_data'),
+          value: JSON.stringify({id, json: JSON.parse(json)}, undefined, 2),
+          tag: ConfirmationDataTag.COLLAPSIBLE,
+        },
+      ]}
+    />
   );
 };
 

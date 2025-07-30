@@ -54,6 +54,7 @@ const AddKey = ({addKey, name, type}: Props) => {
         isWarningButton
         additionalTextStyle={{...button_link_primary_medium}}
       />
+      <Separator />
     </SafeArea>
   );
 };

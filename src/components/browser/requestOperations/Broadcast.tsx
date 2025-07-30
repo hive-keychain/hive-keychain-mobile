@@ -1,7 +1,7 @@
 import {Operation} from '@hiveio/dhive';
 import {Account, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
-import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
+import {ConfirmationDataTag} from 'components/operations/ConfirmationCard';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {broadcast} from 'utils/hive';
@@ -14,8 +14,6 @@ import {
   UsingHAS,
 } from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import CollapsibleData from './components/CollapsibleData';
-import RequestItem from './components/RequestItem';
 import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
@@ -45,19 +43,25 @@ export default ({
       closeGracefully={closeGracefully}
       performOperation={(options: TransactionOptions) => {
         return performBroadcastOperation(accounts, request, options);
-      }}>
-      <UsernameWithAvatar
-        username={username}
-        title={translate('request.item.username')}
-        avatarPosition="left"
-      />
-      <RequestItem content={method} title={translate('request.item.method')} />
-      <CollapsibleData
-        content={JSON.stringify(operations, undefined, 2)}
-        title={translate('request.item.data')}
-        hidden={translate('request.item.hidden_data')}
-      />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: `@${username}`,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.method',
+          value: method,
+        },
+        {
+          title: 'request.item.data',
+          value: JSON.stringify(operations, undefined, 2),
+          hidden: translate('request.item.hidden_data'),
+          tag: ConfirmationDataTag.COLLAPSIBLE,
+        },
+      ]}
+    />
   );
 };
 

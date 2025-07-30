@@ -3,17 +3,20 @@ import {addPreference} from 'actions/preferences';
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import OperationButton from 'components/form/EllipticButton';
 import TwoFaForm from 'components/form/TwoFaForm';
+import {ConfirmationData} from 'components/operations/Confirmation';
+import ConfirmationCard from 'components/operations/ConfirmationCard';
 import MultisigCaption from 'components/ui/MultisigCaption';
+import Separator from 'components/ui/Separator';
 import {useDomainCheck} from 'hooks/domainCheck';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonHeight, getButtonStyle} from 'src/styles/button';
-import {getCardStyle} from 'src/styles/card';
 import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
 import {getCaptionStyle} from 'src/styles/text';
 import {title_primary_body_2} from 'src/styles/typography';
@@ -33,12 +36,12 @@ import {goBack} from 'utils/navigation';
 import RequestMessage from './RequestMessage';
 
 type Props = {
+  confirmationData?: ConfirmationData[];
   has?: boolean;
   closeGracefully: () => void;
   sendResponse: (msg: RequestSuccess, keep?: boolean) => void;
   sendError: (msg: RequestError) => void;
   message?: string;
-  children: JSX.Element[];
   method?: KeyTypes;
   request: KeychainRequest & RequestId;
   successMessage: string;
@@ -52,6 +55,7 @@ type Props = {
   additionalData?: object;
   beautifyError?: boolean;
   selectedUsername?: string;
+  RequestUsername?: () => JSX.Element;
 } & TypesFromRedux;
 
 const RequestOperation = ({
@@ -59,7 +63,6 @@ const RequestOperation = ({
   sendResponse,
   sendError,
   message,
-  children,
   method,
   request,
   successMessage,
@@ -71,6 +74,10 @@ const RequestOperation = ({
   selectedUsername,
   has,
   accounts,
+  confirmationData,
+  colors,
+  tokens,
+  RequestUsername,
 }: Props) => {
   const {theme} = useThemeContext();
   const {request_id, ...data} = request;
@@ -90,51 +97,60 @@ const RequestOperation = ({
   const styles = getStyles(theme, width);
 
   const renderRequestSummary = () => (
-    <ScrollView style={styles.container}>
-      {domainHeader && (
-        <RequestMessage
-          message={domainHeader}
-          additionalTextStyle={[
-            getCaptionStyle(width, theme),
-            {paddingHorizontal: 0, marginTop: 0, color: PRIMARY_RED_COLOR},
-          ]}
-        />
-      )}
-      {message && message.length > 0 && (
-        <RequestMessage
-          message={message}
-          additionalTextStyle={[
-            getCaptionStyle(width, theme),
-            {paddingHorizontal: 0, marginTop: 0},
-          ]}
-        />
-      )}
-      {isMultisig && <MultisigCaption />}
-
-      <View style={getCardStyle(theme).defaultCardItem}>{children}</View>
-      <TwoFaForm twoFABots={twoFABots} setTwoFABots={setTwoFABots} />
-      {method !== KeyTypes.active &&
-      !!domain &&
-      type !== KeychainRequestTypes.addAccount ? (
-        <View style={styles.keep}>
-          <CheckBoxPanel
-            smallText
-            checked={keep}
-            onPress={() => {
-              setKeep(!keep);
-            }}
-            title={translate(`request.keep${has ? '_has' : ''}`, {
-              domain,
-              username: username || selectedUsername,
-              type,
-            })}
-            containerStyle={{paddingRight: 16, flex: 1, flexGrow: 1}}
-            skipTranslation
+    <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1}}>
+      <View style={{flex: 1}}>
+        {domainHeader && (
+          <RequestMessage
+            message={domainHeader}
+            additionalTextStyle={[
+              getCaptionStyle(width, theme),
+              {paddingHorizontal: 10, marginTop: 0, color: PRIMARY_RED_COLOR},
+            ]}
           />
-        </View>
-      ) : (
-        <></>
-      )}
+        )}
+        {message && message.length > 0 && (
+          <RequestMessage
+            message={message}
+            additionalTextStyle={[
+              getCaptionStyle(width, theme),
+              {paddingHorizontal: 10, marginTop: 0},
+            ]}
+          />
+        )}
+        {isMultisig && <MultisigCaption />}
+
+        <ConfirmationCard
+          data={confirmationData}
+          tokens={tokens}
+          colors={colors}
+          request={request}
+          accounts={accounts}
+          RequestUsername={RequestUsername}
+        />
+        <TwoFaForm twoFABots={twoFABots} setTwoFABots={setTwoFABots} />
+        {method !== KeyTypes.active &&
+        !!domain &&
+        type !== KeychainRequestTypes.addAccount ? (
+          <View style={styles.keep}>
+            <CheckBoxPanel
+              smallText
+              checked={keep}
+              onPress={() => {
+                setKeep(!keep);
+              }}
+              title={translate(`request.keep${has ? '_has' : ''}`, {
+                domain,
+                username: username || selectedUsername,
+                type,
+              })}
+              containerStyle={{paddingRight: 16, flex: 1, flexGrow: 1}}
+              skipTranslation
+            />
+          </View>
+        ) : (
+          <></>
+        )}
+      </View>
       <OperationButton
         style={[getButtonStyle(theme).warningStyleButton, styles.button]}
         additionalTextStyle={[styles.text, styles.whiteText]}
@@ -198,6 +214,7 @@ const RequestOperation = ({
           setLoading(false);
         }}
       />
+      <Separator height={initialWindowMetrics.insets.bottom} />
     </ScrollView>
   );
 
@@ -216,14 +233,22 @@ const getStyles = (theme: Theme, width: number) =>
 
     container: {
       paddingHorizontal: 12,
+      flexGrow: 1,
     },
     bgColor: {
       backgroundColor: getColors(theme).icon,
     },
   });
-const connector = connect((state: RootState) => ({accounts: state.accounts}), {
-  addPreference,
-});
+const connector = connect(
+  (state: RootState) => ({
+    accounts: state.accounts,
+    tokens: state.tokens,
+    colors: state.colors,
+  }),
+  {
+    addPreference,
+  },
+);
 type TypesFromRedux = ConnectedProps<typeof connector>;
 export default connector(RequestOperation);
 

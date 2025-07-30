@@ -1,6 +1,6 @@
-import {ActiveAccount, KeyTypes} from 'actions/interfaces';
+import {KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
-import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
+import {ConfirmationDataTag} from 'components/operations/ConfirmationCard';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import SimpleToast from 'react-native-simple-toast';
@@ -10,8 +10,6 @@ import {transfer} from 'utils/hive';
 import {getAccountKeys} from 'utils/hiveUtils';
 import {RequestId, RequestTransfer} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import RequestBalance from './components/RequestBalance';
-import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
@@ -34,7 +32,7 @@ export default ({
     getAccountMemoKey,
     RequestUsername,
   } = usePotentiallyAnonymousRequest(request, accounts);
-
+  console.log('getusername', getUsername());
   return (
     <RequestOperation
       sendResponse={sendResponse}
@@ -52,6 +50,7 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       selectedUsername={getUsername()}
+      RequestUsername={RequestUsername}
       performOperation={async (options: TransactionOptions) => {
         let finalMemo = memo;
         if (memo.length && memo[0] === '#') {
@@ -73,35 +72,38 @@ export default ({
           },
           options,
         );
-      }}>
-      <RequestUsername />
-      <UsernameWithAvatar
-        username={to}
-        title={translate('request.item.to')}
-        style={{marginBottom: 10}}
-        avatarPosition="left"
-        alignAllToLeft
-      />
-      <RequestItem
-        title={translate('request.item.amount')}
-        content={`${amount} ${currency}`}
-      />
-      <RequestBalance
-        username={getUsername()}
-        startToken={currency}
-        amount={parseFloat(amount)}
-        accounts={accounts as ActiveAccount[]}
-      />
-      <RequestItem
-        title={translate('request.item.memo')}
-        content={
-          memo.length
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: '',
+          tag: ConfirmationDataTag.REQUEST_USERNAME,
+        },
+        {
+          title: 'request.item.to',
+          value: to,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.amount',
+          value: amount,
+          currency,
+          tag: ConfirmationDataTag.AMOUNT,
+        },
+        {
+          title: 'request.item.memo',
+          value: memo.length
             ? memo[0] === '#'
               ? `${memo.substring(1)} (${translate('common.encrypted')})`
               : memo
-            : translate('common.none')
-        }
-      />
-    </RequestOperation>
+            : translate('common.none'),
+        },
+        {
+          title: 'request.item.balance',
+          value: '',
+          tag: ConfirmationDataTag.BALANCE,
+        },
+      ]}
+    />
   );
 };

@@ -5,6 +5,7 @@ import AddKey from 'components/modals/AddKey';
 import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
 import CustomToolTip from 'components/ui/CustomToolTip';
 import Separator from 'components/ui/Separator';
+import {FormatUtils} from 'hive-keychain-commons';
 import {MainNavigation, ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {
@@ -139,9 +140,7 @@ export default ({
                 ? translate('keys.using_authorized_account', {
                     authorizedAccount: publicKey,
                   })
-                : publicKey?.substring(0, 15) +
-                  '...' +
-                  publicKey?.substring(publicKey.length - 15, publicKey.length)}
+                : FormatUtils.shortenString(publicKey, 15)}
             </Text>
           </CopyKey>
           <Separator height={20} />
@@ -156,12 +155,7 @@ export default ({
                   isPKShown ? [styles.key, styles.opacity] : styles.keyHidden
                 }>
                 {isPKShown
-                  ? privateKey.substring(0, 15) +
-                    '...' +
-                    privateKey.substring(
-                      privateKey.length - 15,
-                      privateKey.length,
-                    )
+                  ? FormatUtils.shortenString(privateKey, 15)
                   : hidePrivateKey(privateKey)}
               </Text>
               <ViewKey

@@ -74,7 +74,6 @@ const CurrencyIcon = ({
         return null;
     }
   };
-
   switch (currencyName) {
     case 'HIVE':
     case 'TESTS':

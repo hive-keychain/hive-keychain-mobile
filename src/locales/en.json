@@ -930,7 +930,7 @@
       "ids": "Proposal IDs",
       "keys": "Keys",
       "role": "Role",
-      "authorized_username": "Authorized Account",
+      "authorized_username": "Authorized",
       "authorized_key": "Authorized Key",
       "recurrence": "Recurrence",
       "creator": "Creator",

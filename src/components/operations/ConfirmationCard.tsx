@@ -1,3 +1,5 @@
+import {Account} from 'actions/interfaces';
+import CollapsibleData from 'components/browser/requestOperations/components/CollapsibleData';
 import CurrencyIcon from 'components/hive/CurrencyIcon';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
@@ -13,6 +15,7 @@ import {getCardStyle} from 'src/styles/card';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {getFormFontStyle} from 'src/styles/typography';
 import {Colors} from 'utils/colors';
+import {KeychainRequest, RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {ConfirmationData} from './Confirmation';
 
@@ -21,6 +24,8 @@ export enum ConfirmationDataTag {
   BALANCE = 'balance',
   USERNAME = 'username',
   OPERATION_TYPE = 'operation_type',
+  COLLAPSIBLE = 'COLLAPSIBLE',
+  REQUEST_USERNAME = 'REQUEST_USERNAME',
 }
 export const createBalanceData = (
   title: string,
@@ -42,12 +47,18 @@ export const createBalanceData = (
 
 const ConfirmationCard = ({
   data,
-  token,
+  tokens,
   colors,
+  request,
+  accounts,
+  RequestUsername,
 }: {
   data: ConfirmationData[];
-  token: Token;
+  tokens: Token[];
   colors: Colors;
+  request?: KeychainRequest & RequestId;
+  accounts?: Account[];
+  RequestUsername?: () => JSX.Element;
 }) => {
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
@@ -68,7 +79,7 @@ const ConfirmationCard = ({
             </Text>
             <CurrencyIcon
               currencyName={e.currency as any}
-              tokenInfo={token}
+              tokenInfo={tokens.find((t) => t.symbol === e.currency)}
               addBackground
               colors={colors}
               symbol={e.currency}
@@ -127,36 +138,61 @@ const ConfirmationCard = ({
             {e.value + ` ${e.currency ? e.currency : ''}`}
           </Text>
         );
+      case ConfirmationDataTag.COLLAPSIBLE:
+        return (
+          <CollapsibleData
+            title={e.title}
+            hidden={e.hidden}
+            content={e.value}
+          />
+        );
+      case ConfirmationDataTag.REQUEST_USERNAME:
+        if (RequestUsername) {
+          return <RequestUsername />;
+        }
+        return null;
       default:
         return (
-          <Text
-            style={[getFormFontStyle(width, theme).title, styles.textContent]}>
-            {e.value}
-          </Text>
+          <View style={{flexShrink: 1}}>
+            <Text
+              style={[
+                getFormFontStyle(width, theme).title,
+                styles.textContent,
+              ]}>
+              {e.value}
+            </Text>
+          </View>
         );
     }
   };
-
+  console.log(data);
   return (
-    <View style={[getCardStyle(theme).defaultCardItem, {marginBottom: 0}]}>
+    <View
+      style={[getCardStyle(theme).defaultCardItem, {marginBottom: 0, flex: 1}]}>
       {data.map((e, i) => (
-        <React.Fragment key={`${e.title}-${i}`}>
-          <View style={[styles.justifyCenter, styles.confirmItem]}>
-            <View style={[styles.flexRowBetween, styles.width95]}>
-              <Text style={[getFormFontStyle(width, theme).title]}>
+        <View
+          style={[styles.confirmItem, styles.justifyContent]}
+          key={`${e.title}-${i}`}>
+          <View style={[styles.flexRowBetween]}>
+            {e.tag !== ConfirmationDataTag.REQUEST_USERNAME && (
+              <Text
+                style={[
+                  getFormFontStyle(width, theme).title,
+                  {fontWeight: 'bold', paddingRight: 4},
+                ]}>
                 {translate(e.title)}
               </Text>
-              {renderConfirmationValue(e)}
-            </View>
-            {i !== data.length - 1 && (
-              <Separator
-                drawLine
-                height={0.5}
-                additionalLineStyle={styles.bottomLine}
-              />
             )}
+            {renderConfirmationValue(e)}
           </View>
-        </React.Fragment>
+          {i !== data.length - 1 && (
+            <Separator
+              drawLine
+              height={0.5}
+              additionalLineStyle={styles.bottomLine}
+            />
+          )}
+        </View>
       ))}
     </View>
   );
@@ -166,19 +202,22 @@ const getDimensionedStyles = (width: number, theme: Theme) =>
   StyleSheet.create({
     confirmItem: {
       marginVertical: 8,
+      flex: 1,
     },
     warning: {color: 'red'},
     flexRowBetween: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
+      flex: 1,
     },
     info: {
       opacity: 0.7,
     },
     textContent: {
-      color: getColors(theme).senaryText,
+      color: getColors(theme).secondaryText,
       textAlign: 'right',
+      flexWrap: 'wrap',
     },
     bottomLine: {
       width: '100%',
@@ -186,10 +225,7 @@ const getDimensionedStyles = (width: number, theme: Theme) =>
       margin: 0,
       marginTop: 12,
     },
-    width95: {
-      width: '95%',
-    },
-    justifyCenter: {justifyContent: 'center', alignItems: 'center'},
+    justifyContent: {justifyContent: 'center'},
     operationButton: {
       marginHorizontal: 0,
       height: getButtonHeight(width),

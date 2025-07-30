@@ -1,6 +1,6 @@
 import {addAccount} from 'actions/index';
 import {AccountKeys} from 'actions/interfaces';
-import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
+import {ConfirmationDataTag} from 'components/operations/ConfirmationCard';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {getClient} from 'utils/hive';
@@ -12,7 +12,6 @@ import {
 } from 'utils/keychain.types';
 import {getPublicKeyFromPrivateKeyString} from 'utils/keyValidation';
 import {translate} from 'utils/localize';
-import CollapsibleData from './components/CollapsibleData';
 import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
@@ -43,18 +42,21 @@ const AddAccount = ({
       closeGracefully={closeGracefully}
       performOperation={async () => {
         return performAddAccountOperation(request, addAccount);
-      }}>
-      <UsernameWithAvatar
-        title={translate('request.item.username')}
-        username={username}
-        avatarPosition="left"
-      />
-      <CollapsibleData
-        title={translate('request.item.keys')}
-        hidden={translate('request.item.hidden_data')}
-        content={JSON.stringify(keys, undefined, 2)}
-      />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: `@${username}`,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.keys',
+          value: JSON.stringify(keys, undefined, 2),
+          tag: ConfirmationDataTag.COLLAPSIBLE,
+          hidden: translate('request.item.hidden_data'),
+        },
+      ]}
+    />
   );
 };
 

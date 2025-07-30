@@ -79,7 +79,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
       }
       fixedHeight={fixedHeight}
       bottomHalf={bottomHalf === undefined ? true : bottomHalf}
-      containerStyle={containerStyle}
+      containerStyle={[containerStyle]}
       additionalWrapperFixedStyle={wrapperFixedStyle}
       modalPosition={modalPosition}
       theme={theme}

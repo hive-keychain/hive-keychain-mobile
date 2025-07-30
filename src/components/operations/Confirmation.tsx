@@ -51,6 +51,7 @@ export type ConfirmationData = {
   amount?: string;
   finalBalance?: string;
   tokenInfo?: Token;
+  hidden?: string;
 };
 
 const ConfirmationPage = ({
@@ -118,11 +119,7 @@ const ConfirmationPage = ({
             skipTranslation={skipWarningTranslation}
           />
         )}
-        <ConfirmationCard
-          data={data}
-          token={tokens.find((t) => t.symbol === data[0].currency)}
-          colors={colors}
-        />
+        <ConfirmationCard data={data} tokens={tokens} colors={colors} />
 
         <Separator />
         <TwoFaForm twoFABots={twoFABots} setTwoFABots={setTwoFABots} />

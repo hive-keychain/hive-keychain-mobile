@@ -1,15 +1,16 @@
 import {Account} from 'actions/interfaces';
 import DropdownModal from 'components/form/DropdownModal';
 import Separator from 'components/ui/Separator';
+import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React, {useEffect} from 'react';
-import {StyleSheet, View, useWindowDimensions} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
-import {getFontSizeSmallDevices} from 'src/styles/typography';
+import {getColors} from 'src/styles/colors';
+import {getFormFontStyle} from 'src/styles/typography';
 import {store} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
-import RequestItem from './RequestItem';
 
 type Props = {
   accounts: Account[];
@@ -22,6 +23,7 @@ export default ({setAccount, enforce, accounts, account}: Props) => {
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   const activeAccountName = store.getState().activeAccount.name;
+  const {width} = useWindowDimensions();
   const [selectedAccount, setSelectedAccount] = React.useState(() => {
     // If account is not in accounts and is same as activeAccountName, find next account
     if (
@@ -53,10 +55,20 @@ export default ({setAccount, enforce, accounts, account}: Props) => {
   };
 
   return account && accounts.length === 1 && enforce ? (
-    <RequestItem
-      title={translate('request.item.username')}
-      content={`@${account}`}
-    />
+    <View
+      style={[
+        styles.container,
+        {flexDirection: 'row', justifyContent: 'space-between'},
+      ]}>
+      <Text
+        style={[
+          getFormFontStyle(width, theme).title,
+          {fontWeight: 'bold', paddingRight: 4},
+        ]}>
+        {translate('request.item.username')}
+      </Text>
+      <UsernameWithAvatar username={account} />
+    </View>
   ) : (
     <View style={styles.container}>
       <DropdownModal
@@ -77,9 +89,7 @@ export default ({setAccount, enforce, accounts, account}: Props) => {
 
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({
-    container: {width: '100%', marginBottom: 10, height: 60},
+    container: {flex: 1},
     avatar: {width: 30, height: 30, borderRadius: 50},
-    text: {
-      fontSize: getFontSizeSmallDevices(width, 13),
-    },
+    content: {color: getColors(theme).secondaryText, flexWrap: 'wrap'},
   });

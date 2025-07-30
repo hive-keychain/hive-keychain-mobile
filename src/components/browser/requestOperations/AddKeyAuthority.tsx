@@ -1,14 +1,14 @@
 import {KeyTypes} from 'actions/interfaces';
+import {ConfirmationDataTag} from 'components/operations/ConfirmationCard';
+import {FormatUtils} from 'hive-keychain-commons';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {addKeyAuth} from 'utils/hive';
 import {beautifyErrorMessage} from 'utils/keychain';
 import {RequestAddKeyAuthority, RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
-import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 
 type Props = {
   request: RequestAddKeyAuthority & RequestId;
@@ -40,22 +40,27 @@ const AddKeyAuthority = ({
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
         return await addKeyAuth(key, data, options);
-      }}>
-      <UsernameWithAvatar
-        title={translate('request.item.username')}
-        username={username}
-        avatarPosition="left"
-      />
-      <RequestItem
-        title={translate('request.item.authorized_key')}
-        content={authorizedKey}
-      />
-      <RequestItem title={translate('request.item.role')} content={role} />
-      <RequestItem
-        title={translate('request.item.weight')}
-        content={weight + ''}
-      />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: `@${username}`,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.authorized_key',
+          value: FormatUtils.shortenString(authorizedKey, 6),
+        },
+        {
+          title: 'request.item.role',
+          value: role,
+        },
+        {
+          title: 'request.item.weight',
+          value: weight + '',
+        },
+      ]}
+    />
   );
 };
 
