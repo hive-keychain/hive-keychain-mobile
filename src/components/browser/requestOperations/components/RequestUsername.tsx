@@ -40,7 +40,6 @@ export default ({setAccount, enforce, accounts, account}: Props) => {
       accounts.find((acc) => acc.name === account)?.name || activeAccountName
     );
   });
-  console.log('account', account);
 
   useEffect(() => {
     setSelectedAccount(account);
@@ -54,7 +53,7 @@ export default ({setAccount, enforce, accounts, account}: Props) => {
     };
   };
 
-  return account && accounts.length === 1 && enforce ? (
+  return (account && accounts.length === 1) || enforce ? (
     <View
       style={[
         styles.container,
@@ -76,8 +75,8 @@ export default ({setAccount, enforce, accounts, account}: Props) => {
         dropdownTitle="common.accounts"
         hideLabel
         selected={toDropdownFormat(selectedAccount)}
+        showSelectedIcon
         onSelected={(selectedAccount) => {
-          console.log('selectedAccount', selectedAccount);
           setSelectedAccount(selectedAccount.value);
           setAccount(selectedAccount.value);
         }}

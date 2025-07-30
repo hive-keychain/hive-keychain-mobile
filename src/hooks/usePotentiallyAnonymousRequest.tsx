@@ -54,6 +54,7 @@ export default (request: KeychainRequest, accounts: Account[]) => {
     ];
   };
   const getUsername = () => account;
+
   return {
     getUsername,
     getAccountKey,
@@ -67,7 +68,7 @@ export default (request: KeychainRequest, accounts: Account[]) => {
         enforce={
           request.type === KeychainRequestTypes.transfer
             ? request.enforce
-            : true
+            : !!request.username
         }
       />
     ),

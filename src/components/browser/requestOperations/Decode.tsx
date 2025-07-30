@@ -1,6 +1,6 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import {decodeMemo} from 'components/bridge';
-import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
+import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import React from 'react';
 import {urlTransformer} from 'utils/browser';
 import {
@@ -10,7 +10,6 @@ import {
   RequestSuccess,
 } from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
@@ -46,15 +45,20 @@ export default ({
       closeGracefully={closeGracefully}
       performOperation={() => {
         return performDecodeOperation(accounts, request);
-      }}>
-      <UsernameWithAvatar
-        username={username}
-        title={translate('request.item.username')}
-        style={{marginBottom: 10}}
-        avatarPosition="left"
-      />
-      <RequestItem title={translate('request.item.method')} content={method} />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: username,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+
+        {
+          title: 'request.item.method',
+          value: method,
+        },
+      ]}
+    />
   );
 };
 

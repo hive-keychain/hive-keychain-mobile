@@ -314,16 +314,7 @@ const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
                         } as DropdownModalItem;
                       })}
                     drawLineBellowSelectedItem
-                    showSelectedIcon={
-                      <Icon
-                        name={Icons.CHECK}
-                        theme={theme}
-                        width={18}
-                        height={18}
-                        strokeWidth={2}
-                        color={PRIMARY_RED_COLOR}
-                      />
-                    }
+                    showSelectedIcon
                     additionalLineStyle={styles.bottomLineDropdownItem}
                   />
                 </View>

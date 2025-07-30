@@ -41,8 +41,8 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {SavingsUtils} from 'utils/savings.utils';
-import {ConfirmationPageProps} from './Confirmation';
-import {ConfirmationDataTag, createBalanceData} from './ConfirmationCard';
+import {ConfirmationDataTag, ConfirmationPageProps} from './Confirmation';
+import {createBalanceData} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';
 
 export enum SavingsOperations {
@@ -345,16 +345,7 @@ const Savings = ({
               },
             ]}
             dropdownIconScaledSize={{width: 15, height: 15}}
-            showSelectedIcon={
-              <Icon
-                name={Icons.CHECK}
-                theme={theme}
-                width={18}
-                height={18}
-                strokeWidth={2}
-                color={PRIMARY_RED_COLOR}
-              />
-            }
+            showSelectedIcon
             additionalLineStyle={styles.bottomLineDropdownItem}
             dropdownTitle={'common.operation_type'}
           />

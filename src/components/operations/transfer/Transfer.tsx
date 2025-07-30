@@ -42,8 +42,8 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {TransferUtils} from 'utils/transfer.utils';
 import Balance from '../Balance';
-import {ConfirmationPageProps} from '../Confirmation';
-import {ConfirmationDataTag, createBalanceData} from '../ConfirmationCard';
+import {ConfirmationDataTag, ConfirmationPageProps} from '../Confirmation';
+import {createBalanceData} from '../ConfirmationCard';
 import OperationThemed from '../OperationThemed';
 
 export type TransferOperationProps = {

@@ -1,13 +1,12 @@
 import {KeyTypes} from 'actions/interfaces';
+import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {setProxy} from 'utils/hive';
 import {RequestId, RequestProxy} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
-import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 
 type Props = {
   request: RequestProxy & RequestId;
@@ -27,7 +26,12 @@ export default ({
     RequestUsername,
     getUsername,
   } = usePotentiallyAnonymousRequest(request, accounts);
-
+  const performOperation = async () => {
+    return await setProxy(getAccountKey(), {
+      account: getUsername(),
+      proxy,
+    });
+  };
   return (
     <RequestOperation
       sendResponse={sendResponse}
@@ -41,18 +45,16 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       selectedUsername={getUsername()}
-      performOperation={async () => {
-        return await setProxy(getAccountKey(), {
-          account: getUsername(),
-          proxy,
-        });
-      }}>
-      <RequestUsername />
-      <UsernameWithAvatar
-        title={translate('request.item.proxy')}
-        username={proxy.length ? proxy : translate('common.none')}
-        avatarPosition="left"
-      />
-    </RequestOperation>
+      RequestUsername={RequestUsername}
+      performOperation={performOperation}
+      confirmationData={[
+        {tag: ConfirmationDataTag.REQUEST_USERNAME, title: '', value: ''},
+        {
+          title: 'request.item.proxy',
+          value: proxy.length ? proxy : translate('common.none'),
+          tag: proxy.length ? ConfirmationDataTag.USERNAME : undefined,
+        },
+      ]}
+    />
   );
 };

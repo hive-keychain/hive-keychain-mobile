@@ -47,8 +47,8 @@ import {getCurrency} from 'utils/hive';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
-import {ConfirmationPageProps} from './Confirmation';
-import {ConfirmationDataTag, createBalanceData} from './ConfirmationCard';
+import {ConfirmationDataTag, ConfirmationPageProps} from './Confirmation';
+import {createBalanceData} from './ConfirmationCard';
 import IncomingOutGoingRCDelegations from './IncomingOutGoingRCDelegations';
 import OperationThemed from './OperationThemed';
 

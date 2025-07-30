@@ -29,8 +29,8 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount, sanitizeUsername} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {ConfirmationPageProps} from './Confirmation';
-import {ConfirmationDataTag, createBalanceData} from './ConfirmationCard';
+import {ConfirmationDataTag, ConfirmationPageProps} from './Confirmation';
+import {createBalanceData} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';
 
 export interface PowerUpOperationProps {

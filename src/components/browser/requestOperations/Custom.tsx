@@ -1,5 +1,5 @@
 import {Account, KeyTypes} from 'actions/interfaces';
-import {ConfirmationDataTag} from 'components/operations/ConfirmationCard';
+import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
@@ -34,6 +34,19 @@ export default ({
     RequestUsername,
   } = usePotentiallyAnonymousRequest(request, accounts);
 
+  const performOperation = async (options: TransactionOptions) => {
+    async (options: TransactionOptions) => {
+      return await broadcastJson(
+        getAccountKey(),
+        getUsername(),
+        id,
+        method === 'Active',
+        json,
+        options,
+      );
+    };
+  };
+
   return (
     <RequestOperation
       message={display_msg}
@@ -46,16 +59,7 @@ export default ({
       selectedUsername={getUsername()}
       closeGracefully={closeGracefully}
       RequestUsername={RequestUsername}
-      performOperation={async (options: TransactionOptions) => {
-        return await broadcastJson(
-          getAccountKey(),
-          getUsername(),
-          id,
-          method === 'Active',
-          json,
-          options,
-        );
-      }}
+      performOperation={performOperation}
       confirmationData={[
         {
           tag: ConfirmationDataTag.REQUEST_USERNAME,

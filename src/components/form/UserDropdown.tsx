@@ -1,11 +1,8 @@
 import {loadAccount} from 'actions/index';
-import Icon from 'components/hive/Icon';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import React, {ComponentProps} from 'react';
 import {ConnectedProps, connect} from 'react-redux';
 import {useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {RootState} from 'store';
 import DropdownModal, {DropdownModalItem} from './DropdownModal';
@@ -47,16 +44,7 @@ const UserDropdown = ({
       additionalOverlayStyle={styles.dropdownOverlay}
       dropdownIconScaledSize={{width: 15, height: 15}}
       dropdownTitle="common.accounts"
-      showSelectedIcon={
-        <Icon
-          name={Icons.CHECK}
-          theme={theme}
-          width={15}
-          height={15}
-          strokeWidth={2}
-          color={PRIMARY_RED_COLOR}
-        />
-      }
+      showSelectedIcon
       {...props}
     />
   );

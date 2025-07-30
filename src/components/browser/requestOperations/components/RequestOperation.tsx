@@ -140,7 +140,7 @@ const RequestOperation = ({
               }}
               title={translate(`request.keep${has ? '_has' : ''}`, {
                 domain,
-                username: username || selectedUsername,
+                username: selectedUsername || username,
                 type,
               })}
               containerStyle={{paddingRight: 16, flex: 1, flexGrow: 1}}

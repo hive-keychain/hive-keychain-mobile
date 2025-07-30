@@ -1,11 +1,10 @@
 import {KeyTypes} from 'actions/interfaces';
-import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
+import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {removeProposal} from 'utils/hive';
 import {RequestId, RequestRemoveProposal} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
@@ -45,13 +44,18 @@ export default ({
           },
           options,
         );
-      }}>
-      <UsernameWithAvatar
-        title={translate('request.item.username')}
-        username={username}
-        avatarPosition="left"
-      />
-      <RequestItem title={translate('request.item.ids')} content={ids} />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: username,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.ids',
+          value: ids,
+        },
+      ]}
+    />
   );
 };

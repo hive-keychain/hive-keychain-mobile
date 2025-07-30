@@ -229,16 +229,7 @@ const RpcNodes = ({
             }}
             drawLineBellowSelectedItem
             additionalListExpandedContainerStyle={styles.dropdown}
-            showSelectedIcon={
-              <Icon
-                name={Icons.CHECK}
-                theme={theme}
-                width={18}
-                height={18}
-                strokeWidth={2}
-                color={PRIMARY_RED_COLOR}
-              />
-            }
+            showSelectedIcon
             additionalLineStyle={styles.bottomLineDropdownItem}
           />
           <View style={styles.addButtonContainer}>

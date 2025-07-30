@@ -38,8 +38,7 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {ConfirmationPageProps} from './Confirmation';
-import {ConfirmationDataTag} from './ConfirmationCard';
+import {ConfirmationDataTag, ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface PowerDownOperationProps {

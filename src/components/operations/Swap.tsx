@@ -669,16 +669,6 @@ const Swap = ({
                     'common.available',
                   )}: ${withCommas(startToken.value.balance)}`}
                   drawLineBellowSelectedItem
-                  showSelectedIcon={
-                    <Icon
-                      name={Icons.CHECK}
-                      theme={theme}
-                      width={18}
-                      height={18}
-                      strokeWidth={2}
-                      color={PRIMARY_RED_COLOR}
-                    />
-                  }
                   additionalLineStyle={styles.bottomLineDropdownItem}
                 />
                 <OperationInput
@@ -767,16 +757,7 @@ const Swap = ({
                     width: '44%',
                   }}
                   drawLineBellowSelectedItem
-                  showSelectedIcon={
-                    <Icon
-                      name={Icons.CHECK}
-                      theme={theme}
-                      width={18}
-                      height={18}
-                      strokeWidth={2}
-                      color={PRIMARY_RED_COLOR}
-                    />
-                  }
+                  showSelectedIcon
                   additionalLineStyle={styles.bottomLineDropdownItem}
                 />
                 <OperationInput

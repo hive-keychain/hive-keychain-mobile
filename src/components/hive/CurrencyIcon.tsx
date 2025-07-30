@@ -100,6 +100,7 @@ const CurrencyIcon = ({
       );
     case 'HP':
     case 'TP':
+    case 'VESTS':
       return <IconHP theme={theme} additionalContainerStyle={{}} />;
     default:
       return (

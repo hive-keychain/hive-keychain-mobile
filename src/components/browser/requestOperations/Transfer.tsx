@@ -1,13 +1,14 @@
 import {KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
-import {ConfirmationDataTag} from 'components/operations/ConfirmationCard';
+import {ConfirmationDataTag} from 'components/operations/Confirmation';
+import {createBalanceData} from 'components/operations/ConfirmationCard';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import SimpleToast from 'react-native-simple-toast';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {beautifyTransferError} from 'utils/format';
 import {transfer} from 'utils/hive';
-import {getAccountKeys} from 'utils/hiveUtils';
+import {getAccount, getAccountKeys} from 'utils/hiveUtils';
 import {RequestId, RequestTransfer} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import RequestOperation from './components/RequestOperation';
@@ -26,13 +27,24 @@ export default ({
 }: Props) => {
   const {request_id, ...data} = request;
   const {to, memo, amount, currency} = data;
+  const [availableBalance, setAvailableBalance] = useState(0);
   const {
     getUsername,
     getAccountKey,
     getAccountMemoKey,
     RequestUsername,
   } = usePotentiallyAnonymousRequest(request, accounts);
-  console.log('getusername', getUsername());
+  useEffect(() => {
+    const fetchAvailableBalance = async () => {
+      const account = await getAccount(getUsername());
+      setAvailableBalance(
+        currency === 'HIVE'
+          ? parseFloat(account.balance.toString())
+          : parseFloat(account.hbd_balance.toString()),
+      );
+    };
+    fetchAvailableBalance();
+  }, [getUsername(), currency]);
   return (
     <RequestOperation
       sendResponse={sendResponse}
@@ -98,11 +110,12 @@ export default ({
               : memo
             : translate('common.none'),
         },
-        {
-          title: 'request.item.balance',
-          value: '',
-          tag: ConfirmationDataTag.BALANCE,
-        },
+        createBalanceData(
+          'wallet.operations.transfer.confirm.balance',
+          availableBalance,
+          parseFloat(amount),
+          currency,
+        ),
       ]}
     />
   );

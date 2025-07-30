@@ -30,8 +30,7 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import Balance from './Balance';
-import {ConfirmationPageProps} from './Confirmation';
-import {ConfirmationDataTag} from './ConfirmationCard';
+import {ConfirmationDataTag, ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface DelegateTokenOperationProps {

@@ -1,5 +1,5 @@
 import {KeyTypes} from 'actions/interfaces';
-import {ConfirmationDataTag} from 'components/operations/ConfirmationCard';
+import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import {FormatUtils} from 'hive-keychain-commons';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';

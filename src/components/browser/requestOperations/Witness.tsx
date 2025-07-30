@@ -1,14 +1,13 @@
 import {KeyTypes} from 'actions/interfaces';
+import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {voteForWitness} from 'utils/hive';
 import {RequestId, RequestWitnessVote} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
-import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 
 type Props = {
   request: RequestWitnessVote & RequestId;
@@ -27,7 +26,17 @@ export default ({
     RequestUsername,
     getUsername,
   } = usePotentiallyAnonymousRequest(request, accounts);
-
+  const performOperation = async (options: TransactionOptions) => {
+    return await voteForWitness(
+      getAccountKey(),
+      {
+        account: getUsername(),
+        witness,
+        approve: vote,
+      },
+      options,
+    );
+  };
   return (
     <RequestOperation
       sendResponse={sendResponse}
@@ -41,27 +50,20 @@ export default ({
       request={request}
       closeGracefully={closeGracefully}
       selectedUsername={getUsername()}
-      performOperation={async (options: TransactionOptions) => {
-        return await voteForWitness(
-          getAccountKey(),
-          {
-            account: getUsername(),
-            witness,
-            approve: vote,
-          },
-          options,
-        );
-      }}>
-      <RequestUsername />
-      <UsernameWithAvatar
-        username={witness}
-        title={translate('request.item.witness')}
-        avatarPosition="left"
-      />
-      <RequestItem
-        title={translate('request.item.action')}
-        content={translate(`common.${vote ? 'vote' : 'unvote'}`)}
-      />
-    </RequestOperation>
+      RequestUsername={RequestUsername}
+      performOperation={performOperation}
+      confirmationData={[
+        {tag: ConfirmationDataTag.REQUEST_USERNAME, title: '', value: ''},
+        {
+          title: 'request.item.witness',
+          value: witness,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.action',
+          value: translate(`common.${vote ? 'vote' : 'unvote'}`),
+        },
+      ]}
+    />
   );
 };

@@ -1,77 +1,19 @@
 import {ActiveAccount, KeyTypes} from 'actions/interfaces';
+import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import {RequestSwap} from 'hive-keychain-commons';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
-import Icon from 'src/components/hive/Icon';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {getColors} from 'src/styles/colors';
-import {
-  getFontSizeSmallDevices,
-  title_primary_body_2,
-} from 'src/styles/typography';
 import {RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
 import {SwapTokenUtils} from 'utils/swap-token.utils';
 import {getTokenPrecision} from 'utils/tokens.utils';
-import RequestBalance from './components/RequestBalance';
-import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
 
 type Props = {
   request: RequestSwap & RequestId;
 } & RequestComponentCommonProps;
-
-const SwapDisplay = ({
-  startToken,
-  endToken,
-  amount,
-  estimateValue,
-}: {
-  startToken: string;
-  endToken: string;
-  amount: number;
-  estimateValue?: number;
-}) => {
-  const {theme} = useThemeContext();
-  const {width} = useWindowDimensions();
-  const styles = getStyles(theme, width);
-
-  return (
-    <View style={styles.container}>
-      <Text style={[styles.textBase, styles.title]}>
-        {translate('request.item.swap')}
-      </Text>
-      <View style={styles.swapContent}>
-        {estimateValue ? (
-          <>
-            <Text style={[styles.textBase, styles.content, styles.opaque]}>
-              {`${amount} ${startToken}`}
-            </Text>
-            <Icon
-              name={Icons.ARROW_RIGHT_BROWSER}
-              additionalContainerStyle={styles.arrowIcon}
-              width={20}
-              height={20}
-              theme={theme}
-              color={getColors(theme).iconBW}
-            />
-            <Text style={[styles.textBase, styles.content, styles.opaque]}>
-              {`${estimateValue} ${endToken}`}
-            </Text>
-          </>
-        ) : (
-          <Text style={[styles.textBase, styles.content, styles.opaque]}>
-            calculating...
-          </Text>
-        )}
-      </View>
-    </View>
-  );
-};
 
 export default ({
   request,
@@ -171,46 +113,25 @@ export default ({
       method={KeyTypes.active}
       request={request}
       closeGracefully={closeGracefully}
-      performOperation={handleSwap}>
-      <RequestUsername />
-      <SwapDisplay
-        startToken={startToken}
-        endToken={endToken}
-        amount={amount}
-        estimateValue={estimateValue}
-      />
-      <RequestBalance
-        username={getUsername()}
-        startToken={startToken}
-        amount={amount}
-        accounts={accounts as ActiveAccount[]}
-      />
-      <RequestItem
-        key="slippage"
-        title={translate('request.item.slippage')}
-        content={`${slippage}%`}
-      />
-    </RequestOperation>
+      performOperation={handleSwap}
+      RequestUsername={RequestUsername}
+      selectedUsername={getUsername()}
+      confirmationData={[
+        {tag: ConfirmationDataTag.REQUEST_USERNAME, title: '', value: ''},
+        {
+          tag: ConfirmationDataTag.SWAP,
+          title: 'request.item.swap',
+          value: '',
+          startToken,
+          endToken,
+          amount: amount + '',
+          estimateValue,
+        },
+        {
+          title: 'request.item.slippage',
+          value: `${slippage}%`,
+        },
+      ]}
+    />
   );
 };
-
-const getStyles = (theme: Theme, width: number) =>
-  StyleSheet.create({
-    container: {paddingVertical: 5},
-    title: {fontSize: getFontSizeSmallDevices(width, 14)},
-    content: {fontSize: getFontSizeSmallDevices(width, 14)},
-    textBase: {
-      color: getColors(theme).secondaryText,
-      ...title_primary_body_2,
-    },
-    opaque: {
-      opacity: 0.8,
-    },
-    swapContent: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    arrowIcon: {
-      marginHorizontal: 5,
-    },
-  });

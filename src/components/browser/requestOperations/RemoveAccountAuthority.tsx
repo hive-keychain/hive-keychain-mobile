@@ -1,14 +1,13 @@
 import {KeyTypes} from 'actions/interfaces';
+import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import React from 'react';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {removeAccountAuth} from 'utils/hive';
 import {beautifyErrorMessage} from 'utils/keychain';
 import {RequestId, RequestRemoveAccountAuthority} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation from './components/RequestOperation';
 import {RequestComponentCommonProps} from './requestOperations.types';
-import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 
 type Props = {
   request: RequestRemoveAccountAuthority & RequestId;
@@ -40,19 +39,24 @@ const RemoveAccountAuthority = ({
         const account = accounts.find((e) => e.name === request.username);
         const key = account.keys.active;
         return await removeAccountAuth(key, data, options);
-      }}>
-      <UsernameWithAvatar
-        title={translate('request.item.username')}
-        username={username}
-        avatarPosition="left"
-      />
-      <UsernameWithAvatar
-        title={translate('request.item.authorized_username')}
-        username={authorizedUsername}
-        avatarPosition="left"
-      />
-      <RequestItem title={translate('request.item.role')} content={role} />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: username,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.authorized_username',
+          value: authorizedUsername,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.role',
+          value: role,
+        },
+      ]}
+    />
   );
 };
 

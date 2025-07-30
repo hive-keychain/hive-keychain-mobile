@@ -54,7 +54,7 @@ interface Props {
   removeDropdownTitleIndent?: boolean;
   enableSearch?: boolean;
   bottomLabelInfo?: string;
-  showSelectedIcon?: JSX.Element;
+  showSelectedIcon?: boolean;
   copyButtonValue?: boolean;
   selectedBgColor?: string;
   drawLineBellowSelectedItem?: boolean;
@@ -138,7 +138,18 @@ const DropdownModal = ({
           },
         ]}>
         {isMatchingObjectSelected ? (
-          <View style={{width: 20}}>{showSelectedIcon}</View>
+          <View style={{width: 20}}>
+            {
+              <Icon
+                name={Icons.CHECK}
+                theme={theme}
+                width={18}
+                height={18}
+                strokeWidth={2}
+                color={PRIMARY_RED_COLOR}
+              />
+            }
+          </View>
         ) : null}
         {copyButtonValue && (
           <Icon

@@ -1,5 +1,6 @@
 import {Account} from 'actions/interfaces';
 import CollapsibleData from 'components/browser/requestOperations/components/CollapsibleData';
+import SwapDisplay from 'components/browser/requestOperations/components/RequestSwapDisplay';
 import CurrencyIcon from 'components/hive/CurrencyIcon';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
@@ -17,16 +18,8 @@ import {getFormFontStyle} from 'src/styles/typography';
 import {Colors} from 'utils/colors';
 import {KeychainRequest, RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import {ConfirmationData} from './Confirmation';
+import {ConfirmationData, ConfirmationDataTag} from './Confirmation';
 
-export enum ConfirmationDataTag {
-  AMOUNT = 'amount',
-  BALANCE = 'balance',
-  USERNAME = 'username',
-  OPERATION_TYPE = 'operation_type',
-  COLLAPSIBLE = 'COLLAPSIBLE',
-  REQUEST_USERNAME = 'REQUEST_USERNAME',
-}
 export const createBalanceData = (
   title: string,
   currentBalance: number,
@@ -151,6 +144,15 @@ const ConfirmationCard = ({
           return <RequestUsername />;
         }
         return null;
+      case ConfirmationDataTag.SWAP:
+        return (
+          <SwapDisplay
+            startToken={e.startToken}
+            endToken={e.endToken}
+            amount={+e.amount}
+            estimateValue={e.estimateValue}
+          />
+        );
       default:
         return (
           <View style={{flexShrink: 1}}>
@@ -165,7 +167,6 @@ const ConfirmationCard = ({
         );
     }
   };
-  console.log(data);
   return (
     <View
       style={[getCardStyle(theme).defaultCardItem, {marginBottom: 0, flex: 1}]}>
@@ -174,7 +175,7 @@ const ConfirmationCard = ({
           style={[styles.confirmItem, styles.justifyContent]}
           key={`${e.title}-${i}`}>
           <View style={[styles.flexRowBetween]}>
-            {e.tag !== ConfirmationDataTag.REQUEST_USERNAME && (
+            {![ConfirmationDataTag.REQUEST_USERNAME].includes(e.tag) && (
               <Text
                 style={[
                   getFormFontStyle(width, theme).title,

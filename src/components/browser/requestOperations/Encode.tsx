@@ -1,7 +1,7 @@
 import {Authority} from '@hiveio/dhive';
 import {Account, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
-import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
+import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import React from 'react';
 import {getAccountKeys} from 'utils/hiveUtils';
 import {
@@ -11,7 +11,6 @@ import {
   RequestSuccess,
 } from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import RequestItem from './components/RequestItem';
 import RequestOperation, {
   processOperationWithoutConfirmation,
 } from './components/RequestOperation';
@@ -40,22 +39,28 @@ export default ({
       closeGracefully={closeGracefully}
       performOperation={async () => {
         return performEncodeOperation(accounts, request);
-      }}>
-      <UsernameWithAvatar
-        title={translate('request.item.username')}
-        username={username}
-        avatarPosition="left"
-      />
-      <UsernameWithAvatar
-        title={translate('request.item.to')}
-        username={receiver}
-      />
-      <RequestItem title={translate('request.item.method')} content={method} />
-      <RequestItem
-        title={translate('request.item.message')}
-        content={message}
-      />
-    </RequestOperation>
+      }}
+      confirmationData={[
+        {
+          title: 'request.item.username',
+          value: username,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.to',
+          value: receiver,
+          tag: ConfirmationDataTag.USERNAME,
+        },
+        {
+          title: 'request.item.method',
+          value: method,
+        },
+        {
+          title: 'request.item.message',
+          value: message,
+        },
+      ]}
+    />
   );
 };
 

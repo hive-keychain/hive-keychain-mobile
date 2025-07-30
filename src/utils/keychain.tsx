@@ -25,7 +25,6 @@ export const validateAuthority = (
   const wifType = getRequiredWifType(req);
   if (username) {
     const account = accounts.find((e) => e.name === username);
-    console.log('account', account);
     if (!account) {
       return {
         valid: false,
