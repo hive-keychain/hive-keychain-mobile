@@ -6,12 +6,10 @@ import TwoFaForm from 'components/form/TwoFaForm';
 import {ConfirmationData} from 'components/operations/Confirmation';
 import ConfirmationCard from 'components/operations/ConfirmationCard';
 import MultisigCaption from 'components/ui/MultisigCaption';
-import Separator from 'components/ui/Separator';
 import {useDomainCheck} from 'hooks/domainCheck';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, View, useWindowDimensions} from 'react-native';
-import {initialWindowMetrics} from 'react-native-safe-area-context';
+import {StyleSheet, View, useWindowDimensions} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -97,8 +95,8 @@ const RequestOperation = ({
   const styles = getStyles(theme, width);
 
   const renderRequestSummary = () => (
-    <ScrollView style={styles.container} contentContainerStyle={{flexGrow: 1}}>
-      <View style={{flex: 1}}>
+    <View style={styles.container}>
+      <View>
         {domainHeader && (
           <RequestMessage
             message={domainHeader}
@@ -214,8 +212,7 @@ const RequestOperation = ({
           setLoading(false);
         }}
       />
-      <Separator height={initialWindowMetrics.insets.bottom} />
-    </ScrollView>
+    </View>
   );
 
   return renderRequestSummary();
@@ -233,7 +230,8 @@ const getStyles = (theme: Theme, width: number) =>
 
     container: {
       paddingHorizontal: 12,
-      flexGrow: 1,
+      flex: 1,
+      justifyContent: 'space-between',
     },
     bgColor: {
       backgroundColor: getColors(theme).icon,

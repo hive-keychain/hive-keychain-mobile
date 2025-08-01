@@ -41,7 +41,7 @@ export default ({
     <View
       style={{
         justifyContent: 'space-between',
-        flexGrow: 1,
+        flex: 1,
       }}>
       <FocusAwareStatusBar />
       <View style={[styles.header, additionalHeaderContainerStyle]}>
@@ -52,7 +52,8 @@ export default ({
           onPress={() => (onClose ? onClose() : goBack())}
         />
       </View>
-      <ScrollView contentContainerStyle={additionalContentStyle}>
+      <ScrollView
+        contentContainerStyle={[additionalContentStyle, {flexGrow: 1}]}>
         {children}
         <Separator height={initialWindowMetrics.insets.bottom} />
       </ScrollView>

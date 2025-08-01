@@ -43,6 +43,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderColor: getColors(theme).quaternaryCardBorderColor,
       padding: 10,
+      paddingBottom: 0,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
     } as StyleProp<ViewStyle>;
