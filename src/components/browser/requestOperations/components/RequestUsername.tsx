@@ -7,7 +7,7 @@ import React, {useEffect} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
-import {getFormFontStyle} from 'src/styles/typography';
+import {FontPoppinsName, getFormFontStyle} from 'src/styles/typography';
 import {store} from 'store';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
@@ -57,12 +57,16 @@ export default ({setAccount, enforce, accounts, account}: Props) => {
     <View
       style={[
         styles.container,
-        {flexDirection: 'row', justifyContent: 'space-between'},
+        {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        },
       ]}>
       <Text
         style={[
           getFormFontStyle(width, theme).title,
-          {fontWeight: 'bold', paddingRight: 4},
+          {paddingRight: 4, fontFamily: FontPoppinsName.SEMI_BOLD},
         ]}>
         {translate('request.item.username')}
       </Text>

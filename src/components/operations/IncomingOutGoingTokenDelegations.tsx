@@ -32,8 +32,9 @@ import {
 import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 import IncomingOutGoingTokenDelegationItem from './IncomingOutgoingTokenDelegationItem';
-import {TokenDelegationType} from './MoreTokenInfo';
 import OperationThemed from './OperationThemed';
+
+export type TokenDelegationType = 'Outgoing' | 'Incoming';
 
 type Props = PropsFromRedux & {
   delegationType: TokenDelegationType;

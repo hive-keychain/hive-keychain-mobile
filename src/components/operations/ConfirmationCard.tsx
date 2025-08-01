@@ -14,7 +14,7 @@ import {Token} from 'src/interfaces/tokens.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
-import {getFormFontStyle} from 'src/styles/typography';
+import {FontPoppinsName, getFormFontStyle} from 'src/styles/typography';
 import {Colors} from 'utils/colors';
 import {KeychainRequest, RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
@@ -179,7 +179,10 @@ const ConfirmationCard = ({
               <Text
                 style={[
                   getFormFontStyle(width, theme).title,
-                  {fontWeight: 'bold', paddingRight: 4},
+                  {
+                    paddingRight: 4,
+                    fontFamily: FontPoppinsName.SEMI_BOLD,
+                  },
                 ]}>
                 {translate(e.title)}
               </Text>

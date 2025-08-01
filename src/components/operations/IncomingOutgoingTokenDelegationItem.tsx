@@ -25,7 +25,7 @@ import {cancelDelegateToken} from 'utils/hive';
 import {TokenDelegation} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
 import {goBack, navigate} from 'utils/navigation';
-import {TokenDelegationType} from './MoreTokenInfo';
+import {TokenDelegationType} from './IncomingOutGoingTokenDelegations';
 
 type Props = {
   tokenDelegation: TokenDelegation;
