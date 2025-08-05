@@ -4,7 +4,6 @@ import Separator from 'components/ui/Separator';
 import SlidingOverlay from 'components/ui/SlidingOverlay';
 import React, {useEffect, useRef, useState} from 'react';
 import {
-  FlatList,
   StyleProp,
   StyleSheet,
   Text,
@@ -14,6 +13,10 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
+import DraggableFlatList, {
+  DraggableFlatListProps,
+} from 'react-native-draggable-flatlist';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -59,7 +62,19 @@ interface Props {
   selectedBgColor?: string;
   drawLineBellowSelectedItem?: boolean;
   hideLabel?: boolean;
+  canBeReordered?: boolean;
+  onReorder?: (reorderedList: DropdownModalItem[]) => void;
 }
+
+const DraggableContentBase: React.FC<DraggableFlatListProps<
+  DropdownModalItem
+>> = (props) => {
+  return <DraggableFlatList {...props} />;
+};
+
+const DraggableContent = gestureHandlerRootHOC(
+  DraggableContentBase as any,
+) as React.FC<DraggableFlatListProps<DropdownModalItem>>;
 
 const DropdownModal = ({
   selected,
@@ -81,6 +96,8 @@ const DropdownModal = ({
   onRemove,
   additionalItemLabelTextStyle,
   hideLabel,
+  canBeReordered,
+  onReorder,
 }: Props) => {
   const dropdownContainerRef = useRef();
   const [dropdownPageY, setDropdownPageY] = useState(0);
@@ -89,6 +106,7 @@ const DropdownModal = ({
   const [filteredDropdownList, setFilteredDropdownList] = useState<
     DropdownModalItem[]
   >(list);
+  const [isDragging, setIsDragging] = useState(false);
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
   const styles = getStyles(
@@ -124,7 +142,7 @@ const DropdownModal = ({
     SimpleToast.show(translate('toast.copied_username'), SimpleToast.LONG);
   };
 
-  const renderCopyOrSelectedIcon = (item: DropdownModalItem) => {
+  const renderIcons = (item: DropdownModalItem, drag: any) => {
     const isMatchingObjectSelected =
       typeof selected === 'object' &&
       (selected.value === item.value || selected.label === item.label);
@@ -145,7 +163,7 @@ const DropdownModal = ({
                 theme={theme}
                 width={18}
                 height={18}
-                strokeWidth={2}
+                strokeWidth={1.5}
                 color={PRIMARY_RED_COLOR}
               />
             }
@@ -158,16 +176,39 @@ const DropdownModal = ({
             onPress={() => onHandleCopyValue(item.value)}
             width={16}
             height={16}
-            additionalContainerStyle={{marginLeft: 4}}
+            additionalContainerStyle={{marginLeft: 6}}
             strokeWidth={2}
             color={PRIMARY_RED_COLOR}
           />
+        )}
+        {drag && canBeReordered && (
+          <TouchableOpacity onPressIn={() => drag()}>
+            <Icon
+              name={Icons.DRAG}
+              theme={theme}
+              width={16}
+              height={16}
+              additionalContainerStyle={{marginLeft: 6}}
+              strokeWidth={2}
+              color={PRIMARY_RED_COLOR}
+            />
+          </TouchableOpacity>
         )}
       </View>
     ) : null;
   };
 
-  const renderDropdownItem = (item: DropdownModalItem, index: number) => {
+  const DropdownItem = ({
+    item,
+    index,
+    drag,
+    isActive,
+  }: {
+    item: DropdownModalItem;
+    index: number;
+    drag: () => void;
+    isActive: boolean;
+  }) => {
     const showSelectedBgOnItem =
       selectedBgColor && (selected === item.value || selected === item.label);
     const bgStyle = showSelectedBgOnItem
@@ -200,7 +241,7 @@ const DropdownModal = ({
       <View style={[{paddingVertical: 4}]}>
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() => onHandleSelectedItem(item)}
+          onPress={() => !isDragging && onHandleSelectedItem(item)}
           style={[styles.dropdownItem, bgStyle]}>
           <View style={[innerContainerStyle, innerContainerBgStyle]}>
             {item.icon}
@@ -222,7 +263,7 @@ const DropdownModal = ({
               />
             )}
           </View>
-          {typeof item === 'object' ? renderCopyOrSelectedIcon(item) : null}
+          {typeof item === 'object' ? renderIcons(item, drag) : null}
         </TouchableOpacity>
         {index !== list.length - 1 && (
           <Separator
@@ -328,7 +369,7 @@ const DropdownModal = ({
             additionalContainerStyle={styles.searchContainer}
           />
         )}
-        <FlatList
+        <DraggableContent
           keyboardDismissMode="none"
           keyboardShouldPersistTaps="handled"
           ListHeaderComponent={<Separator />}
@@ -348,10 +389,28 @@ const DropdownModal = ({
               </Text>
             </View>
           }
-          data={filteredDropdownList}
-          keyExtractor={(item) => item.label}
-          renderItem={(item) => renderDropdownItem(item.item, item.index)}
-          contentContainerStyle={{}}
+          data={[...filteredDropdownList]}
+          onDragBegin={() => {
+            setIsDragging(true);
+          }}
+          onRelease={() => {
+            setIsDragging(false);
+          }}
+          scrollToOverflowEnabled
+          maxToRenderPerBatch={5}
+          onDragEnd={({data}) => {
+            setFilteredDropdownList([...data]);
+            onReorder?.([...data]);
+          }}
+          keyExtractor={(item) => item.value}
+          renderItem={({item, drag, getIndex, isActive}) => (
+            <DropdownItem
+              item={item}
+              index={getIndex()}
+              drag={drag}
+              isActive={isActive}
+            />
+          )}
         />
       </SlidingOverlay>
     </>

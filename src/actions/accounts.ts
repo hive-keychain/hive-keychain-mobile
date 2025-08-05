@@ -162,6 +162,19 @@ export const addKey = (
   }
 };
 
+export const reorderAccounts = (newAccounts: Account[]): AppThunk => async (
+  dispatch,
+  getState,
+) => {
+  const mk = getState().auth.mk;
+  const encrypted = encryptJson({list: newAccounts}, mk);
+  await saveOnKeychain('accounts', encrypted);
+  dispatch({
+    type: UPDATE_ACCOUNTS,
+    payload: {accounts: newAccounts},
+  });
+};
+
 const updateAccounts = (mapper: (arg0: Account) => Account): AppThunk => async (
   dispatch,
   getState,

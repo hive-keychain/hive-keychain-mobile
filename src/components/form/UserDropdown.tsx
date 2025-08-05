@@ -1,21 +1,25 @@
-import {loadAccount} from 'actions/index';
+import {loadAccount, reorderAccounts} from 'actions/index';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
-import React, {ComponentProps} from 'react';
+import React, {ComponentProps, useEffect, useState} from 'react';
 import {ConnectedProps, connect} from 'react-redux';
-import {useThemeContext} from 'src/context/theme.context';
 import {MARGIN_PADDING} from 'src/styles/spacing';
 import {RootState} from 'store';
 import DropdownModal, {DropdownModalItem} from './DropdownModal';
 
-type Props = Partial<ComponentProps<typeof DropdownModal>> & PropsFromRedux;
+type Props = Partial<ComponentProps<typeof DropdownModal>> &
+  PropsFromRedux & {
+    canBeReordered?: boolean;
+  };
 
 const UserDropdown = ({
   loadAccount,
+  reorderAccounts,
   activeAccount,
   accounts,
+  canBeReordered,
   ...props
 }: Props) => {
-  const {theme} = useThemeContext();
+  const [list, setList] = useState<DropdownModalItem[]>([]);
   const getItemDropDownSelected = (username: string): DropdownModalItem => {
     const selected = accounts.filter((acc) => acc.name === username)[0];
     return {
@@ -34,10 +38,14 @@ const UserDropdown = ({
       } as DropdownModalItem;
     });
 
+  useEffect(() => {
+    setList(getListFromAccount());
+  }, [accounts.length]);
+
   return (
     <DropdownModal
       hideLabel
-      list={getListFromAccount()}
+      list={list}
       selected={getItemDropDownSelected(activeAccount.name!)}
       onSelected={(selectedAccount) => loadAccount(selectedAccount.value, true)}
       additionalDropdowContainerStyle={styles.dropdownContainer}
@@ -45,6 +53,16 @@ const UserDropdown = ({
       dropdownIconScaledSize={{width: 15, height: 15}}
       dropdownTitle="common.accounts"
       showSelectedIcon
+      canBeReordered={canBeReordered}
+      onReorder={(data) => {
+        const orderMap = new Map(
+          data.map((item, index) => [item.value, index]),
+        );
+        const reordered = [...accounts].sort(
+          (a, b) => orderMap.get(a.name) - orderMap.get(b.name),
+        );
+        reorderAccounts(reordered);
+      }}
       {...props}
     />
   );
@@ -68,7 +86,7 @@ const connector = connect(
       accounts: state.accounts,
     };
   },
-  {loadAccount},
+  {loadAccount, reorderAccounts},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 

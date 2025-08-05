@@ -4,6 +4,7 @@ import './global';
 import ErrorBoundary from 'components/errors/ErrorBoundary';
 import React, {useState} from 'react';
 import {AppRegistry, LogBox, StatusBar} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
@@ -34,7 +35,9 @@ const Root = () => {
         <Provider store={store}>
           <StatusBar backgroundColor="black" />
           <PersistGate persistor={persistor} onBeforeLift={onBeforeLift}>
-            {gateLifted ? <MultichainApp /> : null}
+            <GestureHandlerRootView style={{flex: 1}}>
+              {gateLifted ? <MultichainApp /> : null}
+            </GestureHandlerRootView>
           </PersistGate>
         </Provider>
       </SafeAreaProvider>

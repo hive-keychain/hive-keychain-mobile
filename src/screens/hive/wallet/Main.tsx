@@ -360,6 +360,7 @@ const Main = ({
                     additionalDropdowContainerStyle={styles.userdropdown}
                     additionalMainContainerDropdown={[styles.dropdownContainer]}
                     additionalOverlayStyle={[styles.dropdownOverlay]}
+                    canBeReordered
                     additionalListExpandedContainerStyle={
                       styles.dropdownExpandedContainer
                     }
