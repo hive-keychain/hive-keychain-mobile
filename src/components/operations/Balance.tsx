@@ -67,12 +67,21 @@ const Balance = ({
         tempBalance = hpBalance;
         break;
     }
-    if (setAvailableBalance)
-      setAvailableBalance(withCommas(tempBalance.toString()));
     return tempBalance;
   };
 
+  // Calculate parsedValue for display
   let parsedValue = getParsedValue(currency, account, isHiveEngine);
+
+  // useEffect to update available balance
+  React.useEffect(() => {
+    if (setAvailableBalance) {
+      setAvailableBalance(
+        withCommas(getParsedValue(currency, account, isHiveEngine).toString()),
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currency, account, isHiveEngine, tokenBalance, globalProperties, pd]);
 
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({
