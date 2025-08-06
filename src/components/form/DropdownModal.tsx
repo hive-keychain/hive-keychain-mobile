@@ -100,7 +100,6 @@ const DropdownModal = ({
   const [isDragging, setIsDragging] = useState(false);
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
-  const scrollRef = useRef(null);
 
   const styles = getStyles(
     dropdownPageY,
@@ -125,6 +124,7 @@ const DropdownModal = ({
   const onHandleSelectedItem = (item: DropdownModalItem) => {
     setTimeout(() => {
       setIsListExpanded(false);
+      onReorder?.([...filteredDropdownList]);
       setTimeout(() => onSelected(item), 100);
     }, 300);
   };
@@ -277,14 +277,11 @@ const DropdownModal = ({
   const PossiblyDraggableFlatList = ({
     canBeReordered,
     onDragEnd,
-    onDragBegin,
-    onRelease,
     ...props
   }: Omit<FlatListProps<DropdownModalItem>, 'renderItem'> & {
     canBeReordered: boolean;
-    onDragEnd: (data: DragEndParams<DropdownModalItem>) => void;
-    onDragBegin: () => void;
-    onRelease: () => void;
+    onDragEnd?: (data: DragEndParams<DropdownModalItem>) => void;
+
     data: DropdownModalItem[];
   }) => {
     if (canBeReordered) {
@@ -293,9 +290,7 @@ const DropdownModal = ({
           <DraggableFlatList
             {...props}
             onDragEnd={onDragEnd}
-            onDragBegin={onDragBegin}
-            onRelease={onRelease}
-            data={[...props.data]}
+            data={filteredDropdownList}
             renderItem={({item, drag, getIndex, isActive}) => (
               <DropdownItem
                 item={item}
@@ -402,7 +397,12 @@ const DropdownModal = ({
       </View>
       <SlidingOverlay
         showOverlay={isListExpanded}
-        setShowOverlay={setIsListExpanded}
+        setShowOverlay={(isOpen) => {
+          setIsListExpanded(isOpen);
+          if (!isOpen) {
+            onReorder?.([...filteredDropdownList]);
+          }
+        }}
         title={dropdownTitle}>
         {enableSearch && (
           <CustomSearchBar
@@ -435,16 +435,9 @@ const DropdownModal = ({
             </View>
           }
           data={[...filteredDropdownList]}
-          onDragBegin={() => {
-            setIsDragging(true);
-          }}
-          onRelease={() => {
-            setIsDragging(false);
-          }}
           scrollToOverflowEnabled
           onDragEnd={({data}) => {
             setFilteredDropdownList([...data]);
-            onReorder?.([...data]);
           }}
         />
       </SlidingOverlay>
