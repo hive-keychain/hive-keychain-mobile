@@ -169,7 +169,10 @@ const ConfirmationCard = ({
   };
   return (
     <View
-      style={[getCardStyle(theme).defaultCardItem, {marginBottom: 0, flex: 1}]}>
+      style={[
+        getCardStyle(theme).defaultCardItem,
+        {marginBottom: 0, flexShrink: 1},
+      ]}>
       {data.map((e, i) => (
         <View
           style={[styles.confirmItem, styles.justifyContent]}
@@ -206,7 +209,7 @@ const getDimensionedStyles = (width: number, theme: Theme) =>
   StyleSheet.create({
     confirmItem: {
       marginVertical: 8,
-      flex: 1,
+      flexShrink: 1,
     },
     warning: {color: 'red'},
     flexRowBetween: {
