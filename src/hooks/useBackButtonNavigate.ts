@@ -1,5 +1,5 @@
 import {useFocusEffect} from '@react-navigation/native';
-import React from 'react';
+import {useCallback} from 'react';
 import {BackHandler} from 'react-native';
 import {resetStackAndNavigate} from 'utils/navigation';
 
@@ -12,7 +12,7 @@ export const useBackButtonNavigation = (
   skipNavigation?: boolean,
 ) => {
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       const onBackPress = () => {
         if (!skipNavigation) resetStackAndNavigate(routeScreenName);
         return true;

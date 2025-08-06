@@ -89,7 +89,7 @@ export default ({username, startToken, amount, accounts}: Props) => {
     };
 
     initializeData();
-  }, [startToken, username, accounts, amount]);
+  }, [startToken, username, amount, accounts.length]);
 
   return (
     <View style={styles.container}>

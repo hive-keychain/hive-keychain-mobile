@@ -106,7 +106,7 @@ const BottomNavigation = ({
     };
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     Orientation.addDeviceOrientationListener((orientation) => {
       if (['UNKNOWN'].includes(orientation)) return;
       if (Platform.OS === 'android' && orientation !== 'PORTRAIT') {

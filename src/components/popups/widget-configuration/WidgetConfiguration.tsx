@@ -40,7 +40,7 @@ const WidgetConfiguration = ({
     if (show) {
       init();
     }
-  }, [show, accounts]);
+  }, [show, accounts.length]);
   const styles = getStyles(
     useThemeContext().theme,
     useWindowDimensions().width,

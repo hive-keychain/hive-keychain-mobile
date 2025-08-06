@@ -62,9 +62,9 @@ const Browser = ({
     if (!tabs.length) {
       addTab('about:blank');
     }
-  }, [tabs]);
+  }, [tabs.length]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     Orientation.addDeviceOrientationListener((orientation) => {
       if (['UNKNOWN', 'FACE-UP', 'FACE-DOWN'].includes(orientation)) return;
       if (Platform.OS === 'android' && orientation !== 'PORTRAIT') {

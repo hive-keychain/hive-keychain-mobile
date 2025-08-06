@@ -235,7 +235,14 @@ const Main = ({
   }, [searchValue]);
 
   const updateUserWallet = (lastAccount: string | undefined) => {
-    if (!accounts.length) return;
+    if (
+      !accounts.length ||
+      !loadAccount ||
+      !loadProperties ||
+      !loadPrices ||
+      !fetchPhishingAccounts
+    )
+      return;
     loadAccount(lastAccount || accounts[0].name);
     loadProperties();
     loadPrices();
@@ -246,7 +253,7 @@ const Main = ({
     updateUserWallet(lastAccount);
   }, [
     loadAccount,
-    accounts,
+    accounts.length,
     loadProperties,
     loadPrices,
     fetchPhishingAccounts,

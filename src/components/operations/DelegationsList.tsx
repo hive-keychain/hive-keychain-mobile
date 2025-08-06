@@ -96,7 +96,7 @@ const DelegationsList = ({
         loadPendingOutgoingUndelegations();
       }
     }
-  }, [loadDelegatees, loadDelegators, user, type]);
+  }, [loadDelegatees, loadDelegators, user.name, type]);
 
   const loadPendingOutgoingUndelegations = async () => {
     const pendingOutgoingList = await getPendingOutgoingUndelegation(user.name);

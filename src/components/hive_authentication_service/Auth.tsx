@@ -106,7 +106,6 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
           </>
         )}
         <Separator height={30} />
-
         {!success ? (
           <>
             <DropdownModal
@@ -126,7 +125,6 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
         ) : (
           <></>
         )}
-
         <Separator height={50} />
         <EllipticButton
           title={
@@ -145,6 +143,7 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
           style={getButtonStyle(theme).warningStyleButton}
           additionalTextStyle={[styles.text, styles.textButton]}
         />
+        <Separator height={10} />
       </View>
     </Operation>
   );

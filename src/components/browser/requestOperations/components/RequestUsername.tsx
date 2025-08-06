@@ -3,7 +3,7 @@ import DropdownModal from 'components/form/DropdownModal';
 import Separator from 'components/ui/Separator';
 import UsernameWithAvatar from 'components/ui/UsernameWithAvatar';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
@@ -24,7 +24,7 @@ export default ({setAccount, enforce, accounts, account}: Props) => {
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   const activeAccountName = store.getState().activeAccount.name;
   const {width} = useWindowDimensions();
-  const [selectedAccount, setSelectedAccount] = React.useState(() => {
+  const [selectedAccount, setSelectedAccount] = useState(() => {
     // If account is not in accounts and is same as activeAccountName, find next account
     if (
       !accounts.find((acc) => acc.name === account) &&

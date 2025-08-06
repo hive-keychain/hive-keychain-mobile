@@ -100,7 +100,7 @@ const App = ({
       processQRCodeOp(requestedOp.opType, requestedOp.operation);
       forgetRequestedOperation();
     }
-  }, [accounts, requestedOp]);
+  }, [accounts.length, requestedOp]);
 
   useEffect(() => {
     if (activeRpc?.uri !== 'NULL' && activeRpc?.uri !== rpc) {

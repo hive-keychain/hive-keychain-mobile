@@ -1,6 +1,6 @@
 import BackspaceDark from 'assets/new_UI/backspace_dark_theme.svg';
 import BackspaceLight from 'assets/new_UI/backspace_light_theme.svg';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -28,8 +28,8 @@ interface Props {
 
 export default ({number, refNumber, helper, back, onPressElement}: Props) => {
   const {theme} = useThemeContext();
-  const [activeShape, setActiveshape] = React.useState(null);
-  const [pressed, setPressed] = React.useState(false);
+  const [activeShape, setActiveshape] = useState(null);
+  const [pressed, setPressed] = useState(false);
   const dimensionReducer = 0.2;
   const {width, height} = useWindowDimensions();
   const styles = getStyles(theme, {width, height}, dimensionReducer, pressed);

@@ -52,7 +52,7 @@ const WrongKeyPopup = ({
     : [];
   useEffect(() => {
     initCheckKeysOnAccounts(accounts);
-  }, [accounts]);
+  }, [accounts.length]);
   const initCheckKeysOnAccounts = async (localAccounts: Account[]) => {
     try {
       const accountNames = localAccounts.map((acc) => acc.name!);

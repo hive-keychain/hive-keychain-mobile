@@ -44,7 +44,7 @@ const BrowserScreen = ({
   preferences,
 }: BrowserPropsFromRedux & BrowserNavigationProps) => {
   const {chain} = useChainContext();
-  React.useEffect(() => {
+  useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
       Orientation.getAutoRotateState((s) => {
         if (s) {

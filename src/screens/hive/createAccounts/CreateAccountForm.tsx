@@ -136,7 +136,7 @@ const CreateAccountStepOne = ({
 
   useEffect(() => {
     initAccountOptions();
-  }, [accounts]);
+  }, [accounts.length]);
 
   useEffect(() => {
     setLoadingData(true);

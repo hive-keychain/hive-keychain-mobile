@@ -1,5 +1,5 @@
 import {DynamicGlobalProperties, ExtendedAccount} from '@hiveio/dhive';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
@@ -73,14 +73,12 @@ const Balance = ({
   // Calculate parsedValue for display
   let parsedValue = getParsedValue(currency, account, isHiveEngine);
 
-  // useEffect to update available balance
-  React.useEffect(() => {
+  useEffect(() => {
     if (setAvailableBalance) {
       setAvailableBalance(
         withCommas(getParsedValue(currency, account, isHiveEngine).toString()),
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currency, account, isHiveEngine, tokenBalance, globalProperties, pd]);
 
   const {width, height} = useWindowDimensions();

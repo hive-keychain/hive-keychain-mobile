@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   PanResponder,
   StyleSheet,
@@ -96,7 +96,7 @@ const AutoCompleteBox = ({
     }
   };
 
-  const panResponder = React.useRef(
+  const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponderCapture: (evt, gestureState) => {
         try {

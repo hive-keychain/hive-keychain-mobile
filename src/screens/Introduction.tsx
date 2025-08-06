@@ -10,7 +10,7 @@ import EllipticButton from 'components/form/EllipticButton';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import {IntroductionNavProp} from 'navigators/Signup.types';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -83,7 +83,7 @@ const Introduction = ({navigation}: IntroductionNavProp) => {
     );
   };
 
-  const [currentStep, setCurrentStep] = React.useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
 
   const handleNextStep = () => {
     setCurrentStep((prevStep) => prevStep + 1);
