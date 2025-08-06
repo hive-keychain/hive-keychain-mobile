@@ -58,7 +58,7 @@ const Notifications = ({user, properties}: PropsFromRedux) => {
         />
       ),
       modalContainerStyle: [getModalBaseStyle(theme).roundedTop],
-      fixedHeight: 0.5,
+      fixedHeight: 0.7,
     } as ModalScreenProps);
   };
 

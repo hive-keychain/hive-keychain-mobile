@@ -5,6 +5,7 @@ import ErrorSvg from 'assets/new_UI/error-mark.svg';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
+import CurrencyIcon from 'components/hive/CurrencyIcon';
 import Icon from 'components/hive/Icon';
 import TwoFaModal from 'components/modals/TwoFaModal';
 import Background from 'components/ui/Background';
@@ -13,7 +14,6 @@ import Loader from 'components/ui/Loader';
 import MultisigCaption from 'components/ui/MultisigCaption';
 import RotationIconAnimated from 'components/ui/RotationIconAnimated';
 import Separator from 'components/ui/Separator';
-import SwapCurrencyImage from 'components/ui/SwapCurrencyImage';
 import {IStep} from 'hive-keychain-commons';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import {ThrottleSettings, throttle} from 'lodash';
@@ -86,6 +86,8 @@ const Swap = ({
   activeAccount,
   price,
   showModal,
+  colors,
+  tokens,
 }: PropsFromRedux & Props) => {
   const [loading, setLoading] = useState(true);
   const [loadingSwap, setLoadingSwap] = useState(false);
@@ -631,12 +633,14 @@ const Swap = ({
                       value: startToken.value.symbol,
                       label: startToken.label,
                       icon: (
-                        <SwapCurrencyImage
-                          uri={startToken.img}
+                        <CurrencyIcon
                           symbol={startToken.value.symbol}
-                          key={startToken.value.symbol}
-                          svgHeight={20}
-                          svgWidth={20}
+                          addBackground
+                          currencyName={startToken.value.symbol}
+                          colors={colors}
+                          tokenInfo={tokens.find(
+                            (token) => token.symbol === startToken.value.symbol,
+                          )}
                         />
                       ),
                     } as DropdownModalItem
@@ -648,15 +652,30 @@ const Swap = ({
                     setStartToken(selectedItem);
                   }}
                   list={startTokenListOptions.map((startToken) => {
+                    if (
+                      !tokens.find(
+                        (token) => token.symbol === startToken.value.symbol,
+                      )
+                    ) {
+                      console.log(
+                        'startToken',
+                        startToken.value.symbol,
+                        tokens.length,
+                      );
+                    }
+
                     return {
                       value: startToken.value.symbol,
                       label: startToken.label,
                       icon: (
-                        <SwapCurrencyImage
-                          uri={startToken.img}
+                        <CurrencyIcon
                           symbol={startToken.value.symbol}
-                          svgHeight={20}
-                          svgWidth={20}
+                          addBackground
+                          currencyName={startToken.value.symbol}
+                          colors={colors}
+                          tokenInfo={tokens.find(
+                            (token) => token.symbol === startToken.value.symbol,
+                          )}
                         />
                       ),
                     } as DropdownModalItem;
@@ -722,12 +741,14 @@ const Swap = ({
                       value: endToken.value.symbol,
                       label: endToken.label,
                       icon: (
-                        <SwapCurrencyImage
-                          uri={endToken.img}
+                        <CurrencyIcon
                           symbol={endToken.value.symbol}
-                          svgHeight={20}
-                          svgWidth={20}
-                          key={endToken.value.symbol}
+                          addBackground
+                          currencyName={endToken.value.symbol}
+                          colors={colors}
+                          tokenInfo={tokens.find(
+                            (token) => token.symbol === endToken.value.symbol,
+                          )}
                         />
                       ),
                     } as DropdownModalItem
@@ -744,11 +765,14 @@ const Swap = ({
                       value: endToken.value.symbol,
                       label: endToken.label,
                       icon: (
-                        <SwapCurrencyImage
-                          uri={endToken.img}
+                        <CurrencyIcon
                           symbol={endToken.value.symbol}
-                          svgHeight={20}
-                          svgWidth={20}
+                          addBackground
+                          currencyName={endToken.value.symbol}
+                          colors={colors}
+                          tokenInfo={tokens.find(
+                            (token) => token.symbol === endToken.value.symbol,
+                          )}
                         />
                       ),
                     } as DropdownModalItem;
@@ -991,6 +1015,8 @@ const connector = connect(
       tokenMarket: state.tokensMarket,
       activeAccount: state.activeAccount,
       price: state.currencyPrices,
+      tokens: state.tokens,
+      colors: state.colors,
     };
   },
   {loadTokensMarket, showModal},

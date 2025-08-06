@@ -193,7 +193,12 @@ const getStyles = (theme: Theme, width: number) =>
       justifyContent: 'space-between',
       width: '100%',
     },
-    modal: {padding: 12, width: '100%'},
+    modal: {
+      padding: 12,
+      paddingBottom: 0,
+      width: '100%',
+      marginBottom: initialWindowMetrics?.insets.bottom,
+    },
     textBase: {
       ...button_link_primary_small,
       color: getColors(theme).primaryText,

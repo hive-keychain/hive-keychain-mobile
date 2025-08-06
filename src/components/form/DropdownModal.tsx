@@ -4,6 +4,7 @@ import Separator from 'components/ui/Separator';
 import SlidingOverlay from 'components/ui/SlidingOverlay';
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  FlatListProps,
   StyleProp,
   StyleSheet,
   Text,
@@ -14,9 +15,9 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import DraggableFlatList, {
-  DraggableFlatListProps,
+  DragEndParams,
 } from 'react-native-draggable-flatlist';
-import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import {FlatList, GestureHandlerRootView} from 'react-native-gesture-handler';
 import SimpleToast from 'react-native-simple-toast';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -66,16 +67,6 @@ interface Props {
   onReorder?: (reorderedList: DropdownModalItem[]) => void;
 }
 
-const DraggableContentBase: React.FC<DraggableFlatListProps<
-  DropdownModalItem
->> = (props) => {
-  return <DraggableFlatList {...props} />;
-};
-
-const DraggableContent = gestureHandlerRootHOC(
-  DraggableContentBase as any,
-) as React.FC<DraggableFlatListProps<DropdownModalItem>>;
-
 const DropdownModal = ({
   selected,
   list,
@@ -109,6 +100,8 @@ const DropdownModal = ({
   const [isDragging, setIsDragging] = useState(false);
   const {theme} = useThemeContext();
   const {width, height} = useWindowDimensions();
+  const scrollRef = useRef(null);
+
   const styles = getStyles(
     dropdownPageY,
     width,
@@ -116,7 +109,6 @@ const DropdownModal = ({
     theme,
     addExtraHeightFromElements,
   );
-
   useEffect(() => {
     if (searchValue.trim().length > 0) {
       const tempList = [...list];
@@ -198,82 +190,133 @@ const DropdownModal = ({
     ) : null;
   };
 
-  const DropdownItem = ({
-    item,
-    index,
-    drag,
-    isActive,
-  }: {
-    item: DropdownModalItem;
-    index: number;
-    drag: () => void;
-    isActive: boolean;
-  }) => {
-    const showSelectedBgOnItem =
-      selectedBgColor && (selected === item.value || selected === item.label);
-    const bgStyle = showSelectedBgOnItem
-      ? ({
-          backgroundColor: selectedBgColor,
-        } as ViewStyle)
-      : null;
-    const innerContainerStyle = {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: item.removable ? '100%' : 'auto',
-      alignItems: 'center',
-      alignContent: 'center',
-    } as ViewStyle;
-    const innerContainerBgStyle = selectedBgColor
-      ? ({
-          paddingHorizontal: 10,
-          alignContent: 'space-between',
-        } as ViewStyle)
-      : undefined;
-    const labelTextStyle = showSelectedBgOnItem
-      ? ({
-          color: 'white',
-        } as ViewStyle)
-      : ({
-          marginLeft: MIN_SEPARATION_ELEMENTS,
-        } as ViewStyle);
+  const DropdownItem = React.memo(
+    ({
+      item,
+      index,
+      drag,
+      isActive,
+    }: {
+      item: DropdownModalItem;
+      index: number;
+      drag?: () => void;
+      isActive: boolean;
+    }) => {
+      const showSelectedBgOnItem =
+        selectedBgColor && (selected === item.value || selected === item.label);
+      const bgStyle = showSelectedBgOnItem
+        ? ({
+            backgroundColor: selectedBgColor,
+          } as ViewStyle)
+        : null;
+      const innerContainerStyle = {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: item.removable ? '100%' : 'auto',
+        alignItems: 'center',
+        alignContent: 'center',
+      } as ViewStyle;
+      const innerContainerBgStyle = selectedBgColor
+        ? ({
+            paddingHorizontal: 10,
+            alignContent: 'space-between',
+          } as ViewStyle)
+        : undefined;
+      const labelTextStyle = showSelectedBgOnItem
+        ? ({
+            color: 'white',
+          } as ViewStyle)
+        : ({
+            marginLeft: MIN_SEPARATION_ELEMENTS,
+          } as ViewStyle);
 
-    return (
-      <View style={[{paddingVertical: 4}]}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => !isDragging && onHandleSelectedItem(item)}
-          style={[styles.dropdownItem, bgStyle]}>
-          <View style={[innerContainerStyle, innerContainerBgStyle]}>
-            {item.icon}
-            <Text
-              style={[
-                inputStyle(theme, width).input,
-                labelTextStyle,
-                {marginLeft: 10},
-                additionalItemLabelTextStyle,
-              ]}>
-              {item.label}
-            </Text>
-            {item.removable && (
-              <Icon
-                theme={theme}
-                name={Icons.REMOVE}
-                onPress={() => onRemove(item.value)}
-                color={showSelectedBgOnItem ? 'white' : PRIMARY_RED_COLOR}
+      return (
+        <View style={[{paddingVertical: 4}]}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => !isDragging && onHandleSelectedItem(item)}
+            style={[styles.dropdownItem, bgStyle]}>
+            <View style={[innerContainerStyle, innerContainerBgStyle]}>
+              {item.icon}
+              <Text
+                style={[
+                  inputStyle(theme, width).input,
+                  labelTextStyle,
+                  {marginLeft: 10},
+                  additionalItemLabelTextStyle,
+                ]}>
+                {item.label}
+              </Text>
+              {item.removable && (
+                <Icon
+                  theme={theme}
+                  name={Icons.REMOVE}
+                  onPress={() => onRemove(item.value)}
+                  color={showSelectedBgOnItem ? 'white' : PRIMARY_RED_COLOR}
+                />
+              )}
+            </View>
+            {typeof item === 'object' ? renderIcons(item, drag) : null}
+          </TouchableOpacity>
+          {index !== list.length - 1 && (
+            <Separator
+              additionalLineStyle={{
+                borderColor: getCardStyle(theme).borderTopCard.borderColor,
+              }}
+              height={0}
+            />
+          )}
+        </View>
+      );
+    },
+    (prevProps, nextProps) => {
+      return nextProps.index !== prevProps.index;
+    },
+  );
+
+  const PossiblyDraggableFlatList = ({
+    canBeReordered,
+    onDragEnd,
+    onDragBegin,
+    onRelease,
+    ...props
+  }: Omit<FlatListProps<DropdownModalItem>, 'renderItem'> & {
+    canBeReordered: boolean;
+    onDragEnd: (data: DragEndParams<DropdownModalItem>) => void;
+    onDragBegin: () => void;
+    onRelease: () => void;
+    data: DropdownModalItem[];
+  }) => {
+    if (canBeReordered) {
+      return (
+        <GestureHandlerRootView>
+          <DraggableFlatList
+            {...props}
+            onDragEnd={onDragEnd}
+            onDragBegin={onDragBegin}
+            onRelease={onRelease}
+            data={[...props.data]}
+            renderItem={({item, drag, getIndex, isActive}) => (
+              <DropdownItem
+                item={item}
+                index={getIndex()}
+                drag={drag}
+                isActive={isActive}
               />
             )}
-          </View>
-          {typeof item === 'object' ? renderIcons(item, drag) : null}
-        </TouchableOpacity>
-        {index !== list.length - 1 && (
-          <Separator
-            additionalLineStyle={{
-              borderColor: getCardStyle(theme).borderTopCard.borderColor,
-            }}
-            height={0}
+            keyExtractor={(item) => item.value}
           />
+        </GestureHandlerRootView>
+      );
+    }
+    return (
+      <FlatList
+        {...props}
+        renderItem={({item, index}) => (
+          <DropdownItem item={item} index={index} isActive={false} />
         )}
-      </View>
+        keyExtractor={(item) => item.value}
+      />
     );
   };
 
@@ -369,9 +412,11 @@ const DropdownModal = ({
             additionalContainerStyle={styles.searchContainer}
           />
         )}
-        <DraggableContent
+        <PossiblyDraggableFlatList
+          canBeReordered={canBeReordered}
           keyboardDismissMode="none"
           keyboardShouldPersistTaps="handled"
+          scrollEnabled={true}
           ListHeaderComponent={<Separator />}
           ListFooterComponent={<Separator />}
           ListEmptyComponent={
@@ -397,20 +442,10 @@ const DropdownModal = ({
             setIsDragging(false);
           }}
           scrollToOverflowEnabled
-          maxToRenderPerBatch={5}
           onDragEnd={({data}) => {
             setFilteredDropdownList([...data]);
             onReorder?.([...data]);
           }}
-          keyExtractor={(item) => item.value}
-          renderItem={({item, drag, getIndex, isActive}) => (
-            <DropdownItem
-              item={item}
-              index={getIndex()}
-              drag={drag}
-              isActive={isActive}
-            />
-          )}
         />
       </SlidingOverlay>
     </>
@@ -476,6 +511,7 @@ const getStyles = (
       borderWidth: 1,
       width: 'auto',
       height: 50,
+      marginBottom: 5,
     },
     italic: {
       fontFamily: FontPoppinsName.ITALIC,

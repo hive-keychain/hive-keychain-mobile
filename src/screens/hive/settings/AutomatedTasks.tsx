@@ -1,13 +1,13 @@
 import CheckBoxPanel from 'components/form/CheckBoxPanel';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import UserDropdown from 'components/form/UserDropdown';
+import CurrencyIcon from 'components/hive/CurrencyIcon';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import Spoiler from 'components/ui/Spoiler';
-import SwapCurrencyImage from 'components/ui/SwapCurrencyImage';
 import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
 import {
   FlatList,
@@ -35,7 +35,7 @@ import AutomatedTasksUtils from 'utils/automatedTasks.utils';
 import {ClaimsConfig} from 'utils/config';
 import {translate} from 'utils/localize';
 
-const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
+const AutomatedTasks = ({active, tokens, colors}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
   const {width} = useWindowDimensions();
@@ -88,11 +88,12 @@ const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
     setAutoStakeTokenList(
       previousList.map((token) => {
         token.icon = (
-          <SwapCurrencyImage
-            uri={(token.icon as unknown) as string}
+          <CurrencyIcon
             symbol={token.value}
-            svgHeight={20}
-            svgWidth={20}
+            addBackground
+            currencyName={token.value}
+            colors={colors}
+            tokenInfo={tokens.find((t) => t.symbol === token.value)}
           />
         );
         return token;
@@ -304,11 +305,14 @@ const AutomatedTasks = ({active, tokens}: PropsFromRedux) => {
                           value: token.symbol,
                           label: token.symbol,
                           icon: (
-                            <SwapCurrencyImage
-                              uri={token.metadata.icon}
+                            <CurrencyIcon
                               symbol={token.symbol}
-                              svgHeight={20}
-                              svgWidth={20}
+                              addBackground
+                              currencyName={token.symbol}
+                              colors={colors}
+                              tokenInfo={tokens.find(
+                                (t) => t.symbol === token.symbol,
+                              )}
                             />
                           ),
                         } as DropdownModalItem;
@@ -376,6 +380,7 @@ const getStyles = (theme: Theme) =>
 const mapStateToProps = (state: RootState) => ({
   active: state.activeAccount,
   tokens: state.tokens,
+  colors: state.colors,
 });
 
 const connector = connect(mapStateToProps);

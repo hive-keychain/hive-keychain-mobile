@@ -110,7 +110,6 @@ class StyleSheetFactory {
     theme: Theme;
     initialHeight: number;
   } & {modalPosition: ModalPosition}) {
-    console.log('initialHeight', initialHeight);
     const styles = StyleSheet.create({
       fullHeight: {height: '100%'},
       mainContainer: {
