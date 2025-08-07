@@ -653,18 +653,6 @@ const Swap = ({
                     setStartToken(selectedItem);
                   }}
                   list={startTokenListOptions.map((startToken) => {
-                    if (
-                      !tokens.find(
-                        (token) => token.symbol === startToken.value.symbol,
-                      )
-                    ) {
-                      console.log(
-                        'startToken',
-                        startToken.value.symbol,
-                        tokens.length,
-                      );
-                    }
-
                     return {
                       value: startToken.value.symbol,
                       label: startToken.label,

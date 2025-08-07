@@ -18,6 +18,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getCardStyle} from 'src/styles/card';
@@ -38,7 +39,7 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {sanitizeAmount} from 'utils/hiveUtils';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import {ConfirmationDataTag, ConfirmationPageProps} from './Confirmation';
+import {ConfirmationPageProps} from './Confirmation';
 import OperationThemed from './OperationThemed';
 
 export interface PowerDownOperationProps {

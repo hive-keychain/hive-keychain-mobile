@@ -82,7 +82,6 @@ const ConfirmationPage = ({
       });
     } else {
       await onSend({metaData: {twoFACodes: twoFABots}, multisig: isMultisig});
-      console.log('user.name', user.name, loadAccount);
       loadAccount(user.name, true);
     }
     setLoading(false);

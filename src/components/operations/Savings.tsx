@@ -20,6 +20,7 @@ import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {SavingsWithdrawal} from 'src/interfaces/savings.interface';
@@ -41,7 +42,7 @@ import {getCurrencyProperties} from 'utils/hiveReact';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {SavingsUtils} from 'utils/savings.utils';
-import {ConfirmationDataTag, ConfirmationPageProps} from './Confirmation';
+import {ConfirmationPageProps} from './Confirmation';
 import {createBalanceData} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';
 

@@ -14,6 +14,7 @@ import Toast from 'react-native-simple-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {Token} from 'src/interfaces/tokens.interface';
@@ -29,7 +30,7 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {BlockchainTransactionUtils} from 'utils/tokens.utils';
 import Balance from './Balance';
-import {ConfirmationDataTag, ConfirmationPageProps} from './Confirmation';
+import {ConfirmationPageProps} from './Confirmation';
 import {createBalanceData} from './ConfirmationCard';
 import OperationThemed from './OperationThemed';
 

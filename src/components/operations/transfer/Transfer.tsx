@@ -16,6 +16,7 @@ import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {MessageModalType} from 'src/enums/messageModal.enums';
 import {AutoCompleteValues} from 'src/interfaces/autocomplete.interface';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {getButtonHeight} from 'src/styles/button';
@@ -42,7 +43,7 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {TransferUtils} from 'utils/transfer.utils';
 import Balance from '../Balance';
-import {ConfirmationDataTag, ConfirmationPageProps} from '../Confirmation';
+import {ConfirmationPageProps} from '../Confirmation';
 import {createBalanceData} from '../ConfirmationCard';
 import OperationThemed from '../OperationThemed';
 

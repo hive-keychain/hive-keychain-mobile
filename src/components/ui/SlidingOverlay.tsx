@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import Animated, {SlideInDown, SlideOutDown} from 'react-native-reanimated';
+import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {inputStyle} from 'src/styles/input';
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 16,
     paddingTop: 16,
-    paddingBottom: 16,
+    paddingBottom: initialWindowMetrics.insets.bottom + 32,
     zIndex: 999,
     elevation: 5,
   },
