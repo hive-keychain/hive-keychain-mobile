@@ -628,6 +628,7 @@ const Swap = ({
                   dropdownTitle="common.token"
                   dropdownIconScaledSize={ICONMINDIMENSIONS}
                   additionalDropdowContainerStyle={{paddingHorizontal: 8}}
+                  showSelectedIcon
                   selected={
                     {
                       value: startToken.value.symbol,

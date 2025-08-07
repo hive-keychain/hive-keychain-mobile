@@ -2,7 +2,7 @@ import Clipboard from '@react-native-community/clipboard';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import SlidingOverlay from 'components/ui/SlidingOverlay';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -146,11 +146,27 @@ const DropdownModal = ({
   );
   const dragCb = useCallback((drag: any) => () => drag && drag(), []);
 
+  // Helper function to compare selected and item by value/label (robust, handles undefined)
+  function isItemSelected(
+    selected: string | DropdownModalItem | undefined,
+    item: DropdownModalItem | undefined,
+  ) {
+    if (!selected || !item) return false;
+    if (typeof selected === 'object' && selected !== null) {
+      if (selected.value !== undefined && item.value !== undefined) {
+        return selected.value === item.value;
+      }
+      if (selected.label !== undefined && item.label !== undefined) {
+        return selected.label === item.label;
+      }
+      return false;
+    }
+    return selected === item.value || selected === item.label;
+  }
+
   const renderIcons = useCallback(
     (item: DropdownModalItem, drag: any) => {
-      const isMatchingObjectSelected =
-        typeof selected === 'object' &&
-        (selected.value === item.value || selected.label === item.label);
+      const matchingSelected = isItemSelected(selected, item);
 
       return showSelectedIcon || copyButtonValue ? (
         <View
@@ -160,7 +176,7 @@ const DropdownModal = ({
               marginLeft: MIN_SEPARATION_ELEMENTS,
             },
           ]}>
-          {isMatchingObjectSelected ? (
+          {matchingSelected ? (
             <View style={{width: 20}}>
               {
                 <Icon
@@ -203,98 +219,101 @@ const DropdownModal = ({
       ) : null;
     },
     [
+      selected,
       showSelectedIcon,
       copyButtonValue,
       theme,
       canBeReordered,
       dragCb,
-      selected,
     ],
   );
 
-  const DropdownItem = React.memo(
-    ({
-      item,
-      index,
-      drag,
-      isActive,
-    }: {
-      item: DropdownModalItem;
-      index: number;
-      drag?: () => void;
-      isActive: boolean;
-    }) => {
-      const showSelectedBgOnItem =
-        selectedBgColor && (selected === item.value || selected === item.label);
-      const bgStyle = showSelectedBgOnItem
-        ? ({
-            backgroundColor: selectedBgColor,
-          } as ViewStyle)
-        : null;
-      const innerContainerStyle = {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: item.removable ? '100%' : 'auto',
-        alignItems: 'center',
-        alignContent: 'center',
-      } as ViewStyle;
-      const innerContainerBgStyle = selectedBgColor
-        ? ({
-            paddingHorizontal: 10,
-            alignContent: 'space-between',
-          } as ViewStyle)
-        : undefined;
-      const labelTextStyle = showSelectedBgOnItem
-        ? ({
-            color: 'white',
-          } as ViewStyle)
-        : ({
-            marginLeft: MIN_SEPARATION_ELEMENTS,
-          } as ViewStyle);
+  // Memoized DropdownItem
+  const DropdownItem = memo(function DropdownItem({
+    item,
+    index,
+    drag,
+    isActive,
+    selected,
+    selectedBgColor,
+    theme,
+    width,
+    additionalItemLabelTextStyle,
+    onRemoveCb,
+    renderIcons,
+    listLength,
+  }: {
+    item: DropdownModalItem;
+    index: number;
+    drag?: () => void;
+    isActive: boolean;
+    selected: string | DropdownModalItem;
+    selectedBgColor?: string;
+    theme: Theme;
+    width: number;
+    additionalItemLabelTextStyle?: StyleProp<TextStyle>;
+    onRemoveCb: (value: string) => () => void;
+    renderIcons: (item: DropdownModalItem, drag: any) => JSX.Element | null;
+    listLength: number;
+  }) {
+    const showSelectedBgOnItem =
+      selectedBgColor && isItemSelected(selected, item);
+    const bgStyle = showSelectedBgOnItem
+      ? ({backgroundColor: selectedBgColor} as ViewStyle)
+      : null;
+    const innerContainerStyle = {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: item.removable ? '100%' : 'auto',
+      alignItems: 'center',
+      alignContent: 'center',
+    } as ViewStyle;
+    const innerContainerBgStyle = selectedBgColor
+      ? ({paddingHorizontal: 10, alignContent: 'space-between'} as ViewStyle)
+      : undefined;
+    const labelTextStyle = showSelectedBgOnItem
+      ? ({color: 'white'} as ViewStyle)
+      : ({marginLeft: MIN_SEPARATION_ELEMENTS} as ViewStyle);
 
-      return (
-        <View style={[{paddingVertical: 4}]}>
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={onHandleSelectedItem.bind(null, item)}
-            style={[styles.dropdownItem, bgStyle]}>
-            <View style={[innerContainerStyle, innerContainerBgStyle]}>
-              {item.icon}
-              <Text
-                style={[
-                  inputStyle(theme, width).input,
-                  labelTextStyle,
-                  {marginLeft: 10},
-                  additionalItemLabelTextStyle,
-                ]}>
-                {item.label}
-              </Text>
-              {item.removable && (
-                <Icon
-                  theme={theme}
-                  name={Icons.REMOVE}
-                  onPress={onRemoveCb(item.value)}
-                  color={showSelectedBgOnItem ? 'white' : PRIMARY_RED_COLOR}
-                />
-              )}
-            </View>
-            {typeof item === 'object' ? renderIcons(item, drag) : null}
-          </TouchableOpacity>
-          {index !== list.length - 1 && (
-            <Separator
-              additionalLineStyle={{
-                borderColor: getCardStyle(theme).borderTopCard.borderColor,
-              }}
-              height={0}
-            />
-          )}
-        </View>
-      );
-    },
-    (prevProps, nextProps) => {
-      return nextProps.index !== prevProps.index;
-    },
-  );
+    return (
+      <View style={[{paddingVertical: 4}]}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={onHandleSelectedItem.bind(null, item)}
+          style={[styles.dropdownItem, bgStyle]}>
+          <View style={[innerContainerStyle, innerContainerBgStyle]}>
+            {item.icon}
+            <Text
+              style={[
+                inputStyle(theme, width).input,
+                labelTextStyle,
+                {marginLeft: 10},
+                additionalItemLabelTextStyle,
+              ]}>
+              {item.label}
+            </Text>
+            {item.removable && (
+              <Icon
+                theme={theme}
+                name={Icons.REMOVE}
+                onPress={onRemoveCb(item.value)}
+                color={showSelectedBgOnItem ? 'white' : PRIMARY_RED_COLOR}
+              />
+            )}
+          </View>
+          {typeof item === 'object' ? renderIcons(item, drag) : null}
+        </TouchableOpacity>
+        {index !== listLength - 1 && (
+          <Separator
+            additionalLineStyle={{
+              borderColor: getCardStyle(theme).borderTopCard.borderColor,
+            }}
+            height={0}
+          />
+        )}
+      </View>
+    );
+  });
 
   // Extracted PossiblyDraggableFlatList as a separate component
   const PossiblyDraggableFlatList = React.memo(
@@ -342,24 +361,72 @@ const DropdownModal = ({
     },
   );
 
-  // Memoized renderItem for DraggableFlatList
+  // Memoized renderDraggableItem
   const renderDraggableItem = useCallback(
-    ({item, drag, getIndex, isActive}) => (
+    ({
+      item,
+      drag,
+      getIndex,
+      isActive,
+    }: {
+      item: DropdownModalItem;
+      drag?: () => void;
+      getIndex: () => number;
+      isActive: boolean;
+    }) => (
       <DropdownItem
         item={item}
         index={getIndex()}
         drag={drag}
         isActive={isActive}
+        selected={selected}
+        selectedBgColor={selectedBgColor}
+        theme={theme}
+        width={width}
+        additionalItemLabelTextStyle={additionalItemLabelTextStyle}
+        onRemoveCb={onRemoveCb}
+        renderIcons={renderIcons}
+        listLength={filteredDropdownList.length}
       />
     ),
-    [],
+    [
+      selected,
+      selectedBgColor,
+      theme,
+      width,
+      additionalItemLabelTextStyle,
+      onRemoveCb,
+      renderIcons,
+      filteredDropdownList.length,
+    ],
   );
-  // Memoized renderItem for FlatList
+  // Memoized renderFlatItem
   const renderFlatItem = useCallback(
-    ({item, index}) => (
-      <DropdownItem item={item} index={index} isActive={false} />
+    ({item, index}: {item: DropdownModalItem; index: number}) => (
+      <DropdownItem
+        item={item}
+        index={index}
+        isActive={false}
+        selected={selected}
+        selectedBgColor={selectedBgColor}
+        theme={theme}
+        width={width}
+        additionalItemLabelTextStyle={additionalItemLabelTextStyle}
+        onRemoveCb={onRemoveCb}
+        renderIcons={renderIcons}
+        listLength={filteredDropdownList.length}
+      />
     ),
-    [],
+    [
+      selected,
+      selectedBgColor,
+      theme,
+      width,
+      additionalItemLabelTextStyle,
+      onRemoveCb,
+      renderIcons,
+      filteredDropdownList.length,
+    ],
   );
 
   const renderSelectedValue = (showOpened?: boolean) => (
