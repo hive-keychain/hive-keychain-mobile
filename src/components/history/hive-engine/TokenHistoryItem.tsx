@@ -3,7 +3,7 @@ import CustomAmountLabel, {
 } from 'components/form/CustomAmountLabel';
 import Icon from 'components/hive/Icon';
 import moment from 'moment';
-import React, {memo} from 'react';
+import React, {memo, useState} from 'react';
 import {
   ScaledSize,
   StyleSheet,

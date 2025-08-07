@@ -1,6 +1,7 @@
 import {Page} from 'actions/interfaces';
 import Fuse from 'fuse.js';
-import React, {useCallback, useEffect, useState} from 'react';
+import debounce from 'lodash/debounce';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList, Platform, StyleSheet, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
@@ -22,6 +23,16 @@ const UrlAutocomplete = ({
   ecosystem,
 }: Props & PropsFromRedux) => {
   const [candidates, setCandidates] = useState([]);
+  const [debouncedInput, setDebouncedInput] = useState(input);
+
+  // Debounce input changes
+  const debouncedSetInput = useRef(
+    debounce((val) => setDebouncedInput(val), 200),
+  ).current;
+
+  useEffect(() => {
+    debouncedSetInput(input);
+  }, [input, debouncedSetInput]);
 
   useEffect(() => {
     const flatEcosystem: DApp[] = ecosystem.reduce((a, b): DApp[] => {
@@ -57,13 +68,13 @@ const UrlAutocomplete = ({
         {name: 'url', weight: 0.5},
       ],
     });
-    const fuseSearchResult = fuse.search(input).slice(0, 8);
+    const fuseSearchResult = fuse.search(debouncedInput).slice(0, 8);
     if (Array.isArray(fuseSearchResult)) {
       setCandidates(fuseSearchResult.map((e) => e.item));
     } else {
       setCandidates([]);
     }
-  }, [input, history, ecosystem]);
+  }, [debouncedInput, history, ecosystem]);
   const renderCandidateItem = useCallback(
     ({item, index}) => (
       <HistoryItem
