@@ -110,7 +110,9 @@ export default memo(
     const [isLoading, setIsLoading] = useState(false);
     const [pendingUrl, setPendingUrl] = useState('');
     const urlUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
+    useEffect(() => {
+      addToHistory({url: data.url, name: data.name, icon: data.icon});
+    }, [data.url, data.name, data.icon]);
     const onRefresh = () => {
       setRefreshing(true);
       tabRef.current?.reload(); // reload the WebView
@@ -292,7 +294,6 @@ export default memo(
           ) {
             navigation.setParams({icon: data.icon});
             updateTab(id, {name: data.name, icon: data.icon});
-            addToHistory({url: data.url, name: data.name, icon: data.icon});
           }
           break;
       }

@@ -32,6 +32,7 @@ const browserReducer = (
       if (payload!.history!.url === 'about:blank') {
         return state;
       }
+      console.log('payload!.history!', payload!.history!);
       const newFavorites = state.favorites.map((e) => {
         if (e.url === payload!.history!.url) {
           return payload!.history!;
