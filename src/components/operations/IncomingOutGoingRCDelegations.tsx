@@ -2,7 +2,7 @@ import {loadAccount} from 'actions/index';
 import {KeyTypes} from 'actions/interfaces';
 import Separator from 'components/ui/Separator';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -64,18 +64,19 @@ const IncomingOutGoingRCDelegations = ({
     }
   };
 
-  const renderListItem = (rcDelegation: RcDelegation) => {
-    return (
+  const renderRcDelegationItem = useCallback(
+    ({item}) => (
       <IncomingOutgoingRcDelegationItem
         theme={theme}
         type={type}
-        item={rcDelegation}
+        item={item}
         available={available}
         isMultisig={isMultisig}
         twoFABots={twoFABots}
       />
-    );
-  };
+    ),
+    [theme, type, available, isMultisig, twoFABots],
+  );
 
   return (
     <OperationThemed
@@ -108,7 +109,7 @@ const IncomingOutGoingRCDelegations = ({
           {!isLoading && rcDelegations.length > 0 && (
             <FlatList
               data={rcDelegations}
-              renderItem={(rcDelegation) => renderListItem(rcDelegation.item)}
+              renderItem={renderRcDelegationItem}
               keyExtractor={(rcDelegation) =>
                 `${rcDelegation.value}-${rcDelegation.delegatee}`
               }

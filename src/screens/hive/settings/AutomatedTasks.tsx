@@ -8,7 +8,13 @@ import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Separator from 'components/ui/Separator';
 import Spoiler from 'components/ui/Spoiler';
-import React, {MutableRefObject, useEffect, useRef, useState} from 'react';
+import React, {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
   FlatList,
   ScrollView,
@@ -185,6 +191,11 @@ const AutomatedTasks = ({active, tokens, colors}: PropsFromRedux) => {
     }
   };
 
+  const renderTokenItem = useCallback(
+    ({item, index}) => renderItem(item, index),
+    [renderItem],
+  );
+
   return (
     <Background
       theme={theme}
@@ -341,7 +352,7 @@ const AutomatedTasks = ({active, tokens, colors}: PropsFromRedux) => {
                         keyboardShouldPersistTaps="handled"
                         data={autoStakeTokenList}
                         keyExtractor={(item) => item.label}
-                        renderItem={(item) => renderItem(item.item, item.index)}
+                        renderItem={renderTokenItem}
                       />
                     </View>
                   </>

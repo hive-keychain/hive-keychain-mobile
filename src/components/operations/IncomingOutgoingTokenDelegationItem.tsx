@@ -5,7 +5,7 @@ import Icon from 'components/hive/Icon';
 import TwoFaModal from 'components/modals/TwoFaModal';
 import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Separator from 'components/ui/Separator';
-import React, {useState} from 'react';
+import React, {memo, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
@@ -296,4 +296,4 @@ const connector = connect(
   {loadAccount, showModal},
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
-export default connector(IncomingOutGoingTokenDelegationItem);
+export default memo(connector(IncomingOutGoingTokenDelegationItem));

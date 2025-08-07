@@ -1,7 +1,7 @@
 import Carousel from 'components/carousel/CustomCarousel';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {ModalScreenProps} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Linking,
   StyleSheet,
@@ -87,21 +87,7 @@ const VestingRoutes = ({
                 lastTitle: 'not_used',
               }}
               content={vestingRoutesDifferences}
-              renderItem={(item) => (
-                <VestingRoutesItemComponent
-                  accountVestingRouteDifference={item}
-                  nextCarouselSlide={() => {
-                    setMoveNext(true);
-                  }}
-                  isLast={
-                    item.account ===
-                    vestingRoutesDifferences[
-                      vestingRoutesDifferences.length - 1
-                    ].account
-                  }
-                  clearDisplayWrongVestingRoutes={handleClose}
-                />
-              )}
+              renderItem={renderCarouselItem}
               theme={theme}
               hideButtons
               moveNext={moveNext}
@@ -112,6 +98,24 @@ const VestingRoutes = ({
       </View>
     );
   };
+
+  const renderCarouselItem = useCallback(
+    (item) => (
+      <VestingRoutesItemComponent
+        accountVestingRouteDifference={item}
+        nextCarouselSlide={() => {
+          setMoveNext(true);
+        }}
+        isLast={
+          item.account ===
+          vestingRoutesDifferences[vestingRoutesDifferences.length - 1].account
+        }
+        clearDisplayWrongVestingRoutes={handleClose}
+      />
+    ),
+    [setMoveNext, vestingRoutesDifferences, handleClose],
+  );
+
   return null;
 };
 

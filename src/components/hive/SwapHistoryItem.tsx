@@ -250,4 +250,4 @@ const getStyles = (theme: Theme) =>
     },
   });
 
-export default SwapHistoryItem;
+export default React.memo(SwapHistoryItem);

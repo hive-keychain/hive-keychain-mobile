@@ -26,7 +26,13 @@ interface Props {
   onPressElement: (number: number | undefined, back?: boolean) => void;
 }
 
-export default ({number, refNumber, helper, back, onPressElement}: Props) => {
+const PinElement = ({
+  number,
+  refNumber,
+  helper,
+  back,
+  onPressElement,
+}: Props) => {
   const {theme} = useThemeContext();
   const [activeShape, setActiveshape] = useState(null);
   const [pressed, setPressed] = useState(false);
@@ -93,6 +99,8 @@ export default ({number, refNumber, helper, back, onPressElement}: Props) => {
     </Pressable>
   );
 };
+
+export default React.memo(PinElement);
 
 const getStyles = (
   theme: Theme,

@@ -2,7 +2,7 @@ import {clearUserTransactions, fetchAccountTransactions} from 'actions/index';
 import {clearWalletFilters, updateWalletFilter} from 'actions/walletFilters';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {
   EdgeInsets,
@@ -162,16 +162,17 @@ const WallettHistory = ({
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useSafeAreaInsets());
 
-  const renderListItem = (transaction: Transaction) => {
-    return (
+  const renderWalletHistoryItem = useCallback(
+    ({item}) => (
       <WalletHistoryItemComponent
-        transaction={transaction}
+        transaction={item}
         user={activeAccount}
         locale={locale}
         theme={theme}
       />
-    );
-  };
+    ),
+    [activeAccount, locale, theme],
+  );
 
   const tryToLoadMore = () => {
     if (loading) return;
@@ -210,7 +211,7 @@ const WallettHistory = ({
             initialNumToRender={20}
             scrollEnabled
             onEndReachedThreshold={0.5}
-            renderItem={(transaction) => renderListItem(transaction.item)}
+            renderItem={renderWalletHistoryItem}
             keyExtractor={(transaction) => transaction.key}
             style={styles.transactionsList}
             onScroll={handleScroll}

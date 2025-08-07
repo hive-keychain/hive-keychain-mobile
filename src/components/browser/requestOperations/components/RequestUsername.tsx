@@ -19,7 +19,7 @@ type Props = {
   enforce: boolean;
 };
 
-export default ({setAccount, enforce, accounts, account}: Props) => {
+const RequestUsername = ({setAccount, enforce, accounts, account}: Props) => {
   const {theme} = useThemeContext();
   const styles = getDimensionedStyles(useWindowDimensions(), theme);
   const activeAccountName = store.getState().activeAccount.name;
@@ -89,6 +89,8 @@ export default ({setAccount, enforce, accounts, account}: Props) => {
     </View>
   );
 };
+
+export default React.memo(RequestUsername);
 
 const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
   StyleSheet.create({

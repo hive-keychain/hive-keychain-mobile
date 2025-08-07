@@ -3,7 +3,7 @@ import {BackToTopButton} from 'components/ui/Back-To-Top-Button';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
@@ -154,15 +154,16 @@ const TokensHistory = ({
 
   const styles = getStyles(theme);
 
-  const renderItem = (transaction: TokenTransaction) => {
-    return (
+  const renderTokenHistoryItem = useCallback(
+    ({item}) => (
       <TokenHistoryItemComponent
         theme={theme}
-        transaction={transaction}
+        transaction={item}
         useIcon={true}
       />
-    );
-  };
+    ),
+    [theme],
+  );
 
   return (
     <View style={styles.flex}>
@@ -178,7 +179,7 @@ const TokensHistory = ({
           <FlatList
             ref={flatListRef}
             data={displayedTransactions}
-            renderItem={(transaction) => renderItem(transaction.item)}
+            renderItem={renderTokenHistoryItem}
             keyExtractor={(transaction) => transaction._id}
             onScroll={handleScroll}
             style={styles.listContainer}

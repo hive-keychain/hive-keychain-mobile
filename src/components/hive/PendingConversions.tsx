@@ -3,7 +3,7 @@ import {Conversion} from 'actions/interfaces';
 import OperationThemed from 'components/operations/OperationThemed';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -28,20 +28,23 @@ const PendingConvertions = ({
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
-  const renderListItem = (item: Conversion) => {
-    return (
-      <View style={[getCardStyle(theme).defaultCardItem]}>
-        <View style={styles.flexRow}>
-          <Text style={[styles.textBase, styles.smallerText]}>{`${withCommas(
-            item.amount,
-          )} ${currency}`}</Text>
-          <Text style={[styles.textBase, styles.smallerText]}>{`On ${moment(
-            item.conversion_date,
-          ).format('L')}`}</Text>
+  const renderListItem = useCallback(
+    ({item}: {item: Conversion}) => {
+      return (
+        <View style={[getCardStyle(theme).defaultCardItem]}>
+          <View style={styles.flexRow}>
+            <Text style={[styles.textBase, styles.smallerText]}>{`${withCommas(
+              item.amount,
+            )} ${currency}`}</Text>
+            <Text style={[styles.textBase, styles.smallerText]}>{`On ${moment(
+              item.conversion_date,
+            ).format('L')}`}</Text>
+          </View>
         </View>
-      </View>
-    );
-  };
+      );
+    },
+    [theme, styles, currency],
+  );
 
   return (
     <OperationThemed
@@ -55,7 +58,7 @@ const PendingConvertions = ({
                 conversionItem.amount.split(' ')[1] === currency,
             )}
             keyExtractor={(listItem) => listItem.requestid.toString()}
-            renderItem={(withdraw) => renderListItem(withdraw.item)}
+            renderItem={renderListItem}
             ListEmptyComponent={() => {
               return (
                 <View style={[styles.containerCentered, styles.marginTop]}>

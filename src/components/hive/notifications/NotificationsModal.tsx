@@ -6,10 +6,9 @@ import {BackToTopButton} from 'components/ui/Back-To-Top-Button';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
-import React, {useRef, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {
   FlatList,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -40,6 +39,13 @@ type Props = {
   properties: DynamicGlobalProperties;
 } & PropsFromRedux;
 
+type NotificationListItemProps = {
+  notification: Notification;
+  onClick: (notification: Notification) => void;
+  styles: any;
+  theme: Theme;
+};
+
 const NotificationsModal = ({
   notifs,
   user,
@@ -59,10 +65,13 @@ const NotificationsModal = ({
   const {theme} = useThemeContext();
   const styles = getStyles(theme, width);
 
-  const handleClick = (notification: Notification) => {
-    addTab(notification.externalUrl || notification.txUrl);
-    navigate('BrowserScreen');
-  };
+  const handleClick = useCallback(
+    (notification: Notification) => {
+      addTab(notification.externalUrl || notification.txUrl);
+      navigate('BrowserScreen');
+    },
+    [addTab],
+  );
 
   const markAllAsRead = async () => {
     setSettingNotifications(true);
@@ -98,12 +107,12 @@ const NotificationsModal = ({
     setIsLoadingMore(false);
   };
 
-  const renderItem = (notification: Notification) => {
-    return (
+  const NotificationListItem = React.memo(
+    ({notification, onClick, styles, theme}: NotificationListItemProps) => (
       <>
         <TouchableOpacity
           activeOpacity={1}
-          onPress={() => handleClick(notification)}
+          onPress={() => onClick(notification)}
           style={styles.itemContainer}>
           {!notification.read && <View style={styles.unread} />}
           <View>
@@ -117,56 +126,72 @@ const NotificationsModal = ({
         </TouchableOpacity>
         <Separator drawLine height={5} additionalLineStyle={styles.line} />
       </>
-    );
-  };
+    ),
+  );
+
+  const renderItem = useCallback(
+    (notification: Notification) => (
+      <NotificationListItem
+        notification={notification}
+        onClick={handleClick}
+        styles={styles}
+        key={notification.id}
+        theme={theme}
+      />
+    ),
+    [handleClick, styles, theme],
+  );
+
   return (
     <View style={styles.modal}>
       {!settingNotifications && (
-        <ScrollView ref={flatListRef} onScroll={handleScroll}>
-          <ScrollView horizontal contentContainerStyle={{flex: 1}}>
-            <FlatList
-              data={notifications}
-              initialNumToRender={20}
-              scrollEnabled
-              onEndReachedThreshold={0.5}
-              renderItem={(item) => renderItem(item.item)}
-              keyExtractor={(notification) => notification.id}
-              ListHeaderComponent={() => {
-                return (
-                  <>
-                    <View style={styles.header}>
-                      <Text style={getHeaderTitleStyle(theme, width)}>
-                        {translate('settings.settings.notifications.title')}
-                      </Text>
-                      {notifications.find((e) => !e.read) ? (
-                        <EllipticButton
-                          title={translate(
-                            'components.notifications.notification_set_all_as_read',
-                          )}
-                          onPress={markAllAsRead}
-                          style={[
-                            getButtonStyle(theme, width).outline,
-                            styles.actionButton,
-                          ]}
-                        />
-                      ) : null}
-                    </View>
-                    <Separator />
-                  </>
-                );
-              }}
-              onEndReached={() => {
-                if (hasMoreData) handleLoadMore();
-              }}
-              ListFooterComponent={() => (
-                <Separator height={initialWindowMetrics.insets.bottom} />
-              )}
-            />
-          </ScrollView>
-        </ScrollView>
+        <FlatList
+          ref={flatListRef}
+          data={notifications}
+          initialNumToRender={20}
+          scrollEnabled
+          onScroll={handleScroll}
+          onEndReachedThreshold={0.5}
+          renderItem={({item}) => renderItem(item)}
+          keyExtractor={(notification) => notification.id}
+          ListHeaderComponent={() => {
+            return (
+              <>
+                <View style={styles.header}>
+                  <Text style={getHeaderTitleStyle(theme, width)}>
+                    {translate('settings.settings.notifications.title')}
+                  </Text>
+                  {notifications.find((e) => !e.read) ? (
+                    <EllipticButton
+                      title={translate(
+                        'components.notifications.notification_set_all_as_read',
+                      )}
+                      onPress={markAllAsRead}
+                      style={[
+                        getButtonStyle(theme, width).outline,
+                        styles.actionButton,
+                      ]}
+                    />
+                  ) : null}
+                </View>
+                <Separator />
+              </>
+            );
+          }}
+          onEndReached={() => {
+            if (hasMoreData) handleLoadMore();
+          }}
+          ListFooterComponent={() => (
+            <Separator height={initialWindowMetrics.insets.bottom} />
+          )}
+        />
       )}
       {!settingNotifications && displayScrollToTop && (
-        <BackToTopButton theme={theme} element={flatListRef} isScrollView />
+        <BackToTopButton
+          theme={theme}
+          element={flatListRef}
+          isScrollView={false}
+        />
       )}
       {settingNotifications && (
         <View style={styles.loaderContainer}>

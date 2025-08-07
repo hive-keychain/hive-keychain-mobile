@@ -273,4 +273,6 @@ const connector = connect((state: RootState) => {
 }, {});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export const VestingRoutesItemComponent = connector(VestingRoutesItem);
+export const VestingRoutesItemComponent = React.memo(
+  connector(VestingRoutesItem),
+);

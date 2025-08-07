@@ -8,7 +8,7 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Linking,
@@ -119,6 +119,22 @@ const Tokens = ({
 
   const styles = getStyles(theme, useWindowDimensions());
 
+  const renderEngineTokenDisplay = useCallback(
+    ({item}) => (
+      <EngineTokenDisplay
+        token={item}
+        tokensList={tokens}
+        market={tokensMarket}
+        toggled={toggled === item._id}
+        setToggle={() => {
+          if (toggled === item._id) setToggled(null);
+          else setToggled(item._id);
+        }}
+      />
+    ),
+    [tokens, tokensMarket, toggled],
+  );
+
   const renderContent = () => {
     if (userTokens.loading || !tokensMarket?.length) {
       return (
@@ -133,18 +149,7 @@ const Tokens = ({
           contentContainerStyle={styles.flatlist}
           keyExtractor={(item) => item._id.toString()}
           ItemSeparatorComponent={() => <Separator height={10} />}
-          renderItem={({item}) => (
-            <EngineTokenDisplay
-              token={item}
-              tokensList={tokens}
-              market={tokensMarket}
-              toggled={toggled === item._id}
-              setToggle={() => {
-                if (toggled === item._id) setToggled(null);
-                else setToggled(item._id);
-              }}
-            />
-          )}
+          renderItem={renderEngineTokenDisplay}
           ListEmptyComponent={
             <View style={{flex: 1, justifyContent: 'center'}}>
               <Text style={styles.no_tokens}>

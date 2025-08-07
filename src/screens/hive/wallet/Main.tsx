@@ -325,24 +325,27 @@ const Main = ({
     setLastScrollYValue(event.nativeEvent.contentOffset.y);
   };
 
-  const handleClickSettings = () => {
+  const handleClickSettings = useCallback(() => {
     navigate('TemplateStack', {
       titleScreen: translate('wallet.operations.token_settings.title'),
       component: <TokenSettings />,
       hideCloseButton: true,
     } as TemplateStackProps);
-  };
+  }, [navigate, translate]);
 
-  const handleClickToView = (index: number, sectionIndex: 0 | 1) => {
-    if (sectionListRef && sectionListRef.current) {
-      (sectionListRef as any).current.scrollToLocation({
-        animated: true,
-        itemIndex: index,
-        sectionIndex: sectionIndex,
-        viewPosition: 1,
-      });
-    }
-  };
+  const handleClickToView = useCallback(
+    (index: number, sectionIndex: 0 | 1) => {
+      if (sectionListRef && sectionListRef.current) {
+        (sectionListRef as any).current.scrollToLocation({
+          animated: true,
+          itemIndex: index,
+          sectionIndex: sectionIndex,
+          viewPosition: 1,
+        });
+      }
+    },
+    [],
+  );
 
   return (
     <WalletPage
@@ -443,7 +446,7 @@ const Main = ({
                         theme={theme}
                         currencyName={item.currency as any}
                         itemIndex={index}
-                        onPress={() => handleClickToView(index, 0)}
+                        onPress={handleClickToView.bind(null, index, 0)}
                       />
                     ))}
                   </View>

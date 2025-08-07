@@ -1,6 +1,6 @@
 import {Page} from 'actions/interfaces';
 import Fuse from 'fuse.js';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, Platform, StyleSheet, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
@@ -64,6 +64,30 @@ const UrlAutocomplete = ({
       setCandidates([]);
     }
   }, [input, history, ecosystem]);
+  const renderCandidateItem = useCallback(
+    ({item, index}) => (
+      <HistoryItem
+        theme={theme}
+        onSubmit={onSubmit}
+        data={item}
+        indexItem={index}
+        enabled={false}
+      />
+    ),
+    [theme, onSubmit],
+  );
+  const renderHistoryItem = useCallback(
+    ({item, index}) => (
+      <HistoryItem
+        theme={theme}
+        onSubmit={onSubmit}
+        data={item}
+        indexItem={index}
+        enabled={false}
+      />
+    ),
+    [theme, onSubmit],
+  );
   if (candidates.length)
     return (
       <View style={styles.wrapper}>
@@ -74,15 +98,7 @@ const UrlAutocomplete = ({
           scrollEnabled
           removeClippedSubviews={Platform.OS === 'android'}
           keyboardShouldPersistTaps="handled"
-          renderItem={({item, index}) => (
-            <HistoryItem
-              theme={theme}
-              onSubmit={onSubmit}
-              data={item}
-              indexItem={index}
-              enabled={false}
-            />
-          )}
+          renderItem={renderCandidateItem}
         />
       </View>
     );
@@ -97,15 +113,7 @@ const UrlAutocomplete = ({
           removeClippedSubviews={Platform.OS === 'android'}
           scrollEnabled
           keyboardShouldPersistTaps="handled"
-          renderItem={({item, index}) => (
-            <HistoryItem
-              theme={theme}
-              onSubmit={onSubmit}
-              data={item}
-              indexItem={index}
-              enabled={false}
-            />
-          )}
+          renderItem={renderHistoryItem}
         />
       </View>
     );

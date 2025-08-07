@@ -8,7 +8,7 @@ import TwoFaModal from 'components/modals/TwoFaModal';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Linking,
@@ -254,6 +254,11 @@ const Witness = ({
     );
   };
 
+  const renderWitnessItemCallback = useCallback(
+    ({item, index}) => renderWitnessItem(item, index),
+    [renderWitnessItem],
+  );
+
   if (rankingError && !isLoading)
     return (
       <View style={{flex: 1, justifyContent: 'center'}}>
@@ -312,7 +317,7 @@ const Witness = ({
         <FlatList
           data={filteredRanking}
           keyExtractor={(item) => item.name}
-          renderItem={({item, index}) => renderWitnessItem(item, index)}
+          renderItem={renderWitnessItemCallback}
         />
       </View>
     );

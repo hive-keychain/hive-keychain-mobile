@@ -1,7 +1,7 @@
 import {fetchAccountTransactions, initAccountTransactions} from 'actions/index';
 import {ActiveAccount} from 'actions/interfaces';
 import Loader from 'components/ui/Loader';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {useThemeContext} from 'src/context/theme.context';
@@ -31,6 +31,19 @@ const Transactions = ({
 
   const [end, setEnd] = useState(0);
   const locale = getMainLocale();
+  const {theme} = useThemeContext();
+  const renderTransactionItem = useCallback(
+    ({item}) => (
+      <WalletHistoryItemComponent
+        theme={theme}
+        transaction={item}
+        user={user}
+        locale={locale}
+      />
+    ),
+    [theme, user, locale],
+  );
+
   const renderTransactions = () => {
     if (loading) {
       return (
@@ -56,16 +69,7 @@ const Transactions = ({
                 setEnd(newEnd);
               }
             }}
-            renderItem={(transaction) => {
-              return (
-                <WalletHistoryItemComponent
-                  theme={useThemeContext().theme}
-                  transaction={transaction.item}
-                  user={user}
-                  locale={locale}
-                />
-              );
-            }}
+            renderItem={renderTransactionItem}
             keyExtractor={(transaction) => transaction.key}
             style={basicStyles.flex}
           />

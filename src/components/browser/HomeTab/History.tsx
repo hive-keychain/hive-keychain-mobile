@@ -1,6 +1,6 @@
 import {Page} from 'actions/interfaces';
 import Separator from 'components/ui/Separator';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {
   FlatList,
   Platform,
@@ -36,6 +36,23 @@ export default ({
 }: Props) => {
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme, insets);
+  const renderHistoryItem = useCallback(
+    ({item, index}) => (
+      <HistoryItem
+        data={item}
+        key={item.url}
+        indexItem={index}
+        onDismiss={() => {
+          removeFromHistory(item.url);
+        }}
+        onSubmit={(e) => {
+          updateTabUrl(e);
+        }}
+        theme={theme}
+      />
+    ),
+    [removeFromHistory, updateTabUrl, theme],
+  );
   return (
     <View style={styles.container}>
       {history.length ? (
@@ -50,20 +67,7 @@ export default ({
             keyExtractor={(item, index) => `${item.url}-${index}`}
             windowSize={15}
             removeClippedSubviews={Platform.OS === 'android'}
-            renderItem={({item, index}) => (
-              <HistoryItem
-                data={item}
-                key={item.url}
-                indexItem={index}
-                onDismiss={() => {
-                  removeFromHistory(item.url);
-                }}
-                onSubmit={(e) => {
-                  updateTabUrl(e);
-                }}
-                theme={theme}
-              />
-            )}
+            renderItem={renderHistoryItem}
             ListFooterComponent={() => <Separator height={10} />}
           />
         </>

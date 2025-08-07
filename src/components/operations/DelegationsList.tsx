@@ -10,7 +10,7 @@ import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Separator from 'components/ui/Separator';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import moment from 'moment';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   Keyboard,
@@ -344,37 +344,45 @@ const DelegationsList = ({
     );
   };
 
-  const renderIncomingItem = (item: IncomingDelegation) => {
-    return (
-      <View style={[getCardStyle(theme, 28).defaultCardItem, styles.container]}>
-        <View style={styles.row}>
-          <Icon theme={theme} name={Icons.AT} />
-          <Text style={styles.textBase}> {`${item.delegator}`}</Text>
+  const renderIncomingItem = useCallback(
+    (item: IncomingDelegation) => {
+      return (
+        <View
+          style={[getCardStyle(theme, 28).defaultCardItem, styles.container]}>
+          <View style={styles.row}>
+            <Icon theme={theme} name={Icons.AT} />
+            <Text style={styles.textBase}> {`${item.delegator}`}</Text>
+          </View>
+          <Text style={styles.textBase}>
+            {`${withCommas(
+              toHP(item.vesting_shares + '', properties.globals) + '',
+            )} ${getCurrency('HP')}`}
+          </Text>
         </View>
-        <Text style={styles.textBase}>
-          {`${withCommas(
-            toHP(item.vesting_shares + '', properties.globals) + '',
-          )} ${getCurrency('HP')}`}
-        </Text>
-      </View>
-    );
-  };
+      );
+    },
+    [theme, styles, properties.globals],
+  );
 
-  const renderPendingOutgoingItem = (item: any) => {
-    return (
-      <View style={[getCardStyle(theme, 28).defaultCardItem, styles.container]}>
-        <Text style={styles.textBase}>
-          {' '}
-          {`${moment(item.expiration_date).format('L')}`}
-        </Text>
-        <Text style={styles.textBase}>
-          {`${withCommas(
-            toHP(item.vesting_shares + '', properties.globals) + '',
-          )} ${getCurrency('HP')}`}
-        </Text>
-      </View>
-    );
-  };
+  const renderPendingOutgoingItem = useCallback(
+    (item: any) => {
+      return (
+        <View
+          style={[getCardStyle(theme, 28).defaultCardItem, styles.container]}>
+          <Text style={styles.textBase}>
+            {' '}
+            {`${moment(item.expiration_date).format('L')}`}
+          </Text>
+          <Text style={styles.textBase}>
+            {`${withCommas(
+              toHP(item.vesting_shares + '', properties.globals) + '',
+            )} ${getCurrency('HP')}`}
+          </Text>
+        </View>
+      );
+    },
+    [theme, styles, properties.globals],
+  );
 
   const renderIncoming = () => {
     return (

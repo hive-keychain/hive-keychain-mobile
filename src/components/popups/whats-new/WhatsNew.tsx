@@ -3,7 +3,7 @@ import {addTab} from 'actions/browser';
 import Carousel from 'components/carousel/CustomCarousel';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
 import {ModalScreenProps} from 'navigators/Root.types';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -105,25 +105,31 @@ const WhatsNew = ({navigation, addTab}: Props & PropsFromRedux): null => {
     navigation.navigate('BrowserScreen');
   };
 
-  const renderItem = (feature: Feature) => {
-    return (
-      <View key={`carousel-item-${feature.title}`} style={styles.itemContainer}>
-        <Image
-          style={styles.image}
-          source={{uri: feature.image}}
-          resizeMode={'contain'}
-        />
-        <Text style={styles.titleText}>{feature.title}</Text>
-        <Text style={styles.descriptionText}>{feature.description}</Text>
-        <Text style={styles.descriptionText}>{feature.extraInformation}</Text>
-        <Text
-          style={styles.readMoreText}
-          onPress={() => handleOnClickItem(whatsNewContent, feature)}>
-          {feature.overrideReadMoreLabel ?? translate('common.popup_read_more')}
-        </Text>
-      </View>
-    );
-  };
+  const renderItem = useCallback(
+    (feature: Feature) => {
+      return (
+        <View
+          key={`carousel-item-${feature.title}`}
+          style={styles.itemContainer}>
+          <Image
+            style={styles.image}
+            source={{uri: feature.image}}
+            resizeMode={'contain'}
+          />
+          <Text style={styles.titleText}>{feature.title}</Text>
+          <Text style={styles.descriptionText}>{feature.description}</Text>
+          <Text style={styles.descriptionText}>{feature.extraInformation}</Text>
+          <Text
+            style={styles.readMoreText}
+            onPress={() => handleOnClickItem(whatsNewContent, feature)}>
+            {feature.overrideReadMoreLabel ??
+              translate('common.popup_read_more')}
+          </Text>
+        </View>
+      );
+    },
+    [styles, handleOnClickItem, whatsNewContent, translate],
+  );
 
   const renderContent = () => {
     return (

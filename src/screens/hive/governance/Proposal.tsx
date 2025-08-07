@@ -3,7 +3,7 @@ import ProposalItem from 'components/hive/ProposalItem';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FlatList, StyleSheet, View, useWindowDimensions} from 'react-native';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -60,6 +60,34 @@ const Proposal = ({
     loadAccount(user.name);
   };
 
+  const renderProposalItem = useCallback(
+    ({item: proposal, index}) => (
+      <ProposalItem
+        user={user}
+        style={[
+          getCardStyle(theme).defaultCardItem,
+          styles.proposalItemContainer,
+        ]}
+        displayingProxyVotes={displayingProxyVotes}
+        key={proposal.proposalId}
+        proposal={proposal}
+        onVoteUnvoteSuccessful={handleVoteUnvote}
+        theme={theme}
+        isMultisig={isMultisig}
+        twoFABots={twoFABots}
+      />
+    ),
+    [
+      user,
+      theme,
+      styles,
+      displayingProxyVotes,
+      handleVoteUnvote,
+      isMultisig,
+      twoFABots,
+    ],
+  );
+
   if (!isLoading)
     return (
       <View style={styles.container}>
@@ -75,22 +103,7 @@ const Proposal = ({
           <FlatList
             data={proposals}
             keyExtractor={(proposal) => proposal.proposalId + ''}
-            renderItem={({item: proposal, index}) => (
-              <ProposalItem
-                user={user}
-                style={[
-                  getCardStyle(theme).defaultCardItem,
-                  styles.proposalItemContainer,
-                ]}
-                displayingProxyVotes={displayingProxyVotes}
-                key={proposal.proposalId}
-                proposal={proposal}
-                onVoteUnvoteSuccessful={handleVoteUnvote}
-                theme={theme}
-                isMultisig={isMultisig}
-                twoFABots={twoFABots}
-              />
-            )}
+            renderItem={renderProposalItem}
             ListFooterComponent={() => {
               return <Separator height={20} />;
             }}

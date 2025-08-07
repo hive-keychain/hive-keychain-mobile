@@ -4,7 +4,7 @@ import Loader from 'components/ui/Loader';
 import RotationIconAnimated from 'components/ui/RotationIconAnimated';
 import Separator from 'components/ui/Separator';
 import {ISwap} from 'hive-keychain-commons';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
@@ -78,6 +78,13 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
 
+  const renderSwapHistoryItem = useCallback(
+    ({item, index}) => (
+      <SwapHistoryItem theme={theme} item={item} currentIndex={index} />
+    ),
+    [theme],
+  );
+
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -118,13 +125,7 @@ const SwapHistory = ({activeAccount}: PropsFromRedux) => {
             ref={flatListRef}
             data={history}
             style={[getCardStyle(theme).roundedCardItem, styles.listContainer]}
-            renderItem={(item) => (
-              <SwapHistoryItem
-                theme={theme}
-                item={item.item}
-                currentIndex={item.index}
-              />
-            )}
+            renderItem={renderSwapHistoryItem}
             ListEmptyComponent={() => {
               return (
                 <View style={styles.flex}>

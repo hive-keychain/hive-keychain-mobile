@@ -1,4 +1,4 @@
-import {loadAccount} from 'actions/index';
+import {loadAccount} from 'actions/hive';
 import {KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import TwoFaForm from 'components/form/TwoFaForm';
@@ -108,6 +108,7 @@ const ConfirmationPage = ({
       });
     } else {
       await onSend({metaData: {twoFACodes: twoFABots}, multisig: isMultisig});
+      console.log('user.name', user.name, loadAccount);
       loadAccount(user.name, true);
     }
     setLoading(false);

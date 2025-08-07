@@ -5,7 +5,7 @@ import {Caption} from 'components/ui/Caption';
 import ConfirmationInItem from 'components/ui/ConfirmationInItem';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   FlatList,
   Keyboard,
@@ -81,36 +81,38 @@ const PendingSavingsWithdrawalPageComponent = ({
     }
   };
 
-  const renderListItem = (item: SavingsWithdrawal) => {
-    const cancelSavingWithDraw = () => {
-      setToCancelSaving(item);
-    };
-
-    return (
-      <View style={[getCardStyle(theme).defaultCardItem]}>
-        <View style={styles.flexRow}>
-          <Text style={[styles.textBase, styles.smallerText]}>{`${withCommas(
-            item.amount,
-          )} ${currency}`}</Text>
-          <Text style={[styles.textBase, styles.smallerText]}>{`On ${moment(
-            item.complete,
-          ).format('L')}`}</Text>
-          <TouchableOpacity activeOpacity={1} onPress={cancelSavingWithDraw}>
-            <Icon name={Icons.REMOVE} theme={theme} />
-          </TouchableOpacity>
+  const renderListItem = useCallback(
+    ({item}: {item: SavingsWithdrawal}) => {
+      const cancelSavingWithDraw = () => {
+        setToCancelSaving(item);
+      };
+      return (
+        <View style={[getCardStyle(theme).defaultCardItem]}>
+          <View style={styles.flexRow}>
+            <Text style={[styles.textBase, styles.smallerText]}>{`${withCommas(
+              item.amount,
+            )} ${currency}`}</Text>
+            <Text style={[styles.textBase, styles.smallerText]}>{`On ${moment(
+              item.complete,
+            ).format('L')}`}</Text>
+            <TouchableOpacity activeOpacity={1} onPress={cancelSavingWithDraw}>
+              <Icon name={Icons.REMOVE} theme={theme} />
+            </TouchableOpacity>
+          </View>
+          {toCancelSaving && toCancelSaving.id === item.id && (
+            <ConfirmationInItem
+              theme={theme}
+              titleKey="wallet.operations.savings.pending_withdraw.cancel_confirm_disclaimer"
+              onCancel={() => setToCancelSaving(undefined)}
+              onConfirm={onCancelPendingSavings}
+              isLoading={loading}
+            />
+          )}
         </View>
-        {toCancelSaving && toCancelSaving.id === item.id && (
-          <ConfirmationInItem
-            theme={theme}
-            titleKey="wallet.operations.savings.pending_withdraw.cancel_confirm_disclaimer"
-            onCancel={() => setToCancelSaving(undefined)}
-            onConfirm={onCancelPendingSavings}
-            isLoading={loading}
-          />
-        )}
-      </View>
-    );
-  };
+      );
+    },
+    [theme, styles, currency, loading, onCancelPendingSavings, toCancelSaving],
+  );
 
   return (
     <OperationThemed
@@ -132,7 +134,7 @@ const PendingSavingsWithdrawalPageComponent = ({
                   currentWithdrawItem.amount.split(' ')[1] === currency,
               )}
               keyExtractor={(listItem) => listItem.request_id.toString()}
-              renderItem={(withdraw) => renderListItem(withdraw.item)}
+              renderItem={renderListItem}
               style={styles.containerMaxHeight}
               ListEmptyComponent={() => {
                 return (

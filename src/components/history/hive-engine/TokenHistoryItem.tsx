@@ -3,7 +3,7 @@ import CustomAmountLabel, {
 } from 'components/form/CustomAmountLabel';
 import Icon from 'components/hive/Icon';
 import moment from 'moment';
-import React, {useState} from 'react';
+import React, {memo} from 'react';
 import {
   ScaledSize,
   StyleSheet,
@@ -402,4 +402,6 @@ const getDimensionedStyles = ({width, height}: ScaledSize, theme: Theme) =>
     label: {flex: 1, marginHorizontal: 8},
   });
 
-export const TokenHistoryItemComponent = connector(TokenHistoryItem);
+export const TokenHistoryItemComponent = memo(
+  connect(mapStateToProps)(TokenHistoryItem),
+);

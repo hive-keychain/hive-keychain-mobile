@@ -2,9 +2,8 @@ import Clipboard from '@react-native-community/clipboard';
 import Icon from 'components/hive/Icon';
 import Separator from 'components/ui/Separator';
 import SlidingOverlay from 'components/ui/SlidingOverlay';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  FlatListProps,
   StyleProp,
   StyleSheet,
   Text,
@@ -121,74 +120,97 @@ const DropdownModal = ({
     }
   }, [searchValue, list]);
 
-  const onHandleSelectedItem = (item: DropdownModalItem) => {
-    setTimeout(() => {
-      setIsListExpanded(false);
-      onReorder?.([...filteredDropdownList]);
-      setTimeout(() => onSelected(item), 100);
-    }, 300);
-  };
+  const onHandleSelectedItem = useCallback(
+    (item: DropdownModalItem) => {
+      setTimeout(() => {
+        setIsListExpanded(false);
+        onReorder?.([...filteredDropdownList]);
+        setTimeout(() => onSelected(item), 100);
+      }, 300);
+    },
+    [onSelected, onReorder, filteredDropdownList],
+  );
 
   const onHandleCopyValue = (username: string) => {
     Clipboard.setString(username);
     SimpleToast.show(translate('toast.copied_username'), SimpleToast.LONG);
   };
 
-  const renderIcons = (item: DropdownModalItem, drag: any) => {
-    const isMatchingObjectSelected =
-      typeof selected === 'object' &&
-      (selected.value === item.value || selected.label === item.label);
+  const onHandleCopyValueCb = useCallback(
+    (value: string) => () => onHandleCopyValue(value),
+    [onHandleCopyValue],
+  );
+  const onRemoveCb = useCallback(
+    (value: string) => () => onRemove && onRemove(value),
+    [onRemove],
+  );
+  const dragCb = useCallback((drag: any) => () => drag && drag(), []);
 
-    return showSelectedIcon || copyButtonValue ? (
-      <View
-        style={[
-          styles.flexRow,
-          {
-            marginLeft: MIN_SEPARATION_ELEMENTS,
-          },
-        ]}>
-        {isMatchingObjectSelected ? (
-          <View style={{width: 20}}>
+  const renderIcons = useCallback(
+    (item: DropdownModalItem, drag: any) => {
+      const isMatchingObjectSelected =
+        typeof selected === 'object' &&
+        (selected.value === item.value || selected.label === item.label);
+
+      return showSelectedIcon || copyButtonValue ? (
+        <View
+          style={[
+            styles.flexRow,
             {
-              <Icon
-                name={Icons.CHECK}
-                theme={theme}
-                width={18}
-                height={18}
-                strokeWidth={1.5}
-                color={PRIMARY_RED_COLOR}
-              />
-            }
-          </View>
-        ) : null}
-        {copyButtonValue && (
-          <Icon
-            theme={theme}
-            name={Icons.COPY}
-            onPress={() => onHandleCopyValue(item.value)}
-            width={16}
-            height={16}
-            additionalContainerStyle={{marginLeft: 6}}
-            strokeWidth={2}
-            color={PRIMARY_RED_COLOR}
-          />
-        )}
-        {drag && canBeReordered && (
-          <TouchableOpacity onPressIn={() => drag()}>
+              marginLeft: MIN_SEPARATION_ELEMENTS,
+            },
+          ]}>
+          {isMatchingObjectSelected ? (
+            <View style={{width: 20}}>
+              {
+                <Icon
+                  name={Icons.CHECK}
+                  theme={theme}
+                  width={18}
+                  height={18}
+                  strokeWidth={1.5}
+                  color={PRIMARY_RED_COLOR}
+                />
+              }
+            </View>
+          ) : null}
+          {copyButtonValue && (
             <Icon
-              name={Icons.DRAG}
               theme={theme}
+              name={Icons.COPY}
+              onPress={onHandleCopyValueCb(item.value)}
               width={16}
               height={16}
               additionalContainerStyle={{marginLeft: 6}}
               strokeWidth={2}
               color={PRIMARY_RED_COLOR}
             />
-          </TouchableOpacity>
-        )}
-      </View>
-    ) : null;
-  };
+          )}
+          {drag && canBeReordered && (
+            <TouchableOpacity onPressIn={dragCb(drag)}>
+              <Icon
+                name={Icons.DRAG}
+                theme={theme}
+                width={16}
+                height={16}
+                additionalContainerStyle={{marginLeft: 6}}
+                strokeWidth={2}
+                color={PRIMARY_RED_COLOR}
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+      ) : null;
+    },
+    [
+      showSelectedIcon,
+      copyButtonValue,
+      theme,
+      canBeReordered,
+      dragCb,
+      selected,
+    ],
+  );
 
   const DropdownItem = React.memo(
     ({
@@ -234,7 +256,7 @@ const DropdownModal = ({
         <View style={[{paddingVertical: 4}]}>
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => !isDragging && onHandleSelectedItem(item)}
+            onPress={onHandleSelectedItem.bind(null, item)}
             style={[styles.dropdownItem, bgStyle]}>
             <View style={[innerContainerStyle, innerContainerBgStyle]}>
               {item.icon}
@@ -251,7 +273,7 @@ const DropdownModal = ({
                 <Icon
                   theme={theme}
                   name={Icons.REMOVE}
-                  onPress={() => onRemove(item.value)}
+                  onPress={onRemoveCb(item.value)}
                   color={showSelectedBgOnItem ? 'white' : PRIMARY_RED_COLOR}
                 />
               )}
@@ -274,46 +296,71 @@ const DropdownModal = ({
     },
   );
 
-  const PossiblyDraggableFlatList = ({
-    canBeReordered,
-    onDragEnd,
-    ...props
-  }: Omit<FlatListProps<DropdownModalItem>, 'renderItem'> & {
-    canBeReordered: boolean;
-    onDragEnd?: (data: DragEndParams<DropdownModalItem>) => void;
-
-    data: DropdownModalItem[];
-  }) => {
-    if (canBeReordered) {
+  // Extracted PossiblyDraggableFlatList as a separate component
+  const PossiblyDraggableFlatList = React.memo(
+    ({
+      canBeReordered,
+      onDragEnd,
+      renderDraggableItem,
+      renderFlatItem,
+      filteredDropdownList,
+      ...props
+    }: {
+      canBeReordered: boolean;
+      onDragEnd?: (data: DragEndParams<DropdownModalItem>) => void;
+      renderDraggableItem: ({
+        item,
+        drag,
+        getIndex,
+        isActive,
+      }: any) => JSX.Element;
+      renderFlatItem: ({item, index}: any) => JSX.Element;
+      filteredDropdownList: DropdownModalItem[];
+      [key: string]: any;
+    }) => {
+      if (canBeReordered) {
+        return (
+          <GestureHandlerRootView>
+            <DraggableFlatList
+              {...props}
+              onDragEnd={onDragEnd}
+              data={filteredDropdownList}
+              renderItem={renderDraggableItem}
+              keyExtractor={(item) => item.value}
+            />
+          </GestureHandlerRootView>
+        );
+      }
       return (
-        <GestureHandlerRootView>
-          <DraggableFlatList
-            {...props}
-            onDragEnd={onDragEnd}
-            data={filteredDropdownList}
-            renderItem={({item, drag, getIndex, isActive}) => (
-              <DropdownItem
-                item={item}
-                index={getIndex()}
-                drag={drag}
-                isActive={isActive}
-              />
-            )}
-            keyExtractor={(item) => item.value}
-          />
-        </GestureHandlerRootView>
+        <FlatList
+          {...props}
+          data={filteredDropdownList}
+          renderItem={renderFlatItem}
+          keyExtractor={(item) => item.value}
+        />
       );
-    }
-    return (
-      <FlatList
-        {...props}
-        renderItem={({item, index}) => (
-          <DropdownItem item={item} index={index} isActive={false} />
-        )}
-        keyExtractor={(item) => item.value}
+    },
+  );
+
+  // Memoized renderItem for DraggableFlatList
+  const renderDraggableItem = useCallback(
+    ({item, drag, getIndex, isActive}) => (
+      <DropdownItem
+        item={item}
+        index={getIndex()}
+        drag={drag}
+        isActive={isActive}
       />
-    );
-  };
+    ),
+    [],
+  );
+  // Memoized renderItem for FlatList
+  const renderFlatItem = useCallback(
+    ({item, index}) => (
+      <DropdownItem item={item} index={index} isActive={false} />
+    ),
+    [],
+  );
 
   const renderSelectedValue = (showOpened?: boolean) => (
     <TouchableOpacity
@@ -435,10 +482,13 @@ const DropdownModal = ({
             </View>
           }
           data={[...filteredDropdownList]}
+          filteredDropdownList={filteredDropdownList}
           scrollToOverflowEnabled
           onDragEnd={({data}) => {
             setFilteredDropdownList([...data]);
           }}
+          renderDraggableItem={renderDraggableItem}
+          renderFlatItem={renderFlatItem}
         />
       </SlidingOverlay>
     </>

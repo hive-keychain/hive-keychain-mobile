@@ -8,7 +8,7 @@ import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -74,6 +74,20 @@ const Operations = ({
     );
   }, [searchValue, domainList]);
 
+  const renderCollapsibleSettings = useCallback(
+    ({item, index}) => (
+      <CollapsibleSettings
+        username={active.name}
+        key={item.domain}
+        index={index}
+        domainPref={item}
+        removePreference={removePreference}
+        theme={theme}
+      />
+    ),
+    [active.name, removePreference, theme],
+  );
+
   return (
     <Background
       theme={theme}
@@ -100,18 +114,7 @@ const Operations = ({
         {!loadingData && (
           <FlatList
             data={filteredDomains}
-            renderItem={(preference) => {
-              return (
-                <CollapsibleSettings
-                  username={active.name}
-                  key={preference.item.domain}
-                  index={preference.index}
-                  domainPref={preference.item}
-                  removePreference={removePreference}
-                  theme={theme}
-                />
-              );
-            }}
+            renderItem={renderCollapsibleSettings}
             ListEmptyComponent={
               <Text style={[styles.text, styles.textNoPref]}>
                 {translate('settings.settings.no_pref')}

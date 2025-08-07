@@ -7,7 +7,7 @@ import Icon from 'components/hive/Icon';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
 import {TemplateStackProps} from 'navigators/Root.types';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   FlatList,
   ScrollView,
@@ -125,6 +125,23 @@ const EngineTokens = ({
     }
   };
 
+  const renderEngineTokenDisplay = useCallback(
+    ({item}) => (
+      <EngineTokenDisplay
+        addBackground
+        token={item}
+        tokensList={tokens}
+        market={tokensMarket}
+        toggled={toggled === item._id}
+        setToggle={() => {
+          if (toggled === item._id) setToggled(null);
+          else setToggled(item._id);
+        }}
+      />
+    ),
+    [tokens, tokensMarket, toggled],
+  );
+
   if (userTokens.loading || !tokensMarket?.length) {
     return (
       <View style={{height: 40}}>
@@ -189,20 +206,7 @@ const EngineTokens = ({
             contentContainerStyle={styles.flatlist}
             keyExtractor={(item) => item._id.toString()}
             ItemSeparatorComponent={() => <Separator height={10} />}
-            renderItem={(item) => (
-              <EngineTokenDisplay
-                addBackground
-                token={item.item}
-                tokensList={tokens}
-                market={tokensMarket}
-                toggled={toggled === item.item._id}
-                setToggle={() => {
-                  if (toggled === item.item._id) setToggled(null);
-                  else setToggled(item.item._id);
-                  handleClickToView(item.index);
-                }}
-              />
-            )}
+            renderItem={renderEngineTokenDisplay}
             ListEmptyComponent={
               <View style={{justifyContent: 'center', flex: 1}}>
                 <Separator height={15} />

@@ -1,6 +1,6 @@
 import {Page} from 'actions/interfaces';
 import Separator from 'components/ui/Separator';
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import DraggableFlatList, {
   DragEndParams,
@@ -25,6 +25,25 @@ export default ({favorites, updateTabUrl, updateFavorites, theme}: Props) => {
     updateFavorites([...params.data].reverse());
   };
 
+  const renderFavoriteItem = useCallback(
+    ({item, drag, getIndex}) => (
+      <HistoryItem
+        data={item}
+        key={item.url}
+        indexItem={getIndex()}
+        onDismiss={() =>
+          updateFavorites(favorites.filter((e) => e.url !== item.url))
+        }
+        onSubmit={(e) => {
+          updateTabUrl(e);
+        }}
+        theme={theme}
+        drag={drag}
+      />
+    ),
+    [favorites, updateFavorites, updateTabUrl, theme],
+  );
+
   return (
     <View style={styles.container}>
       {favorites.length ? (
@@ -34,21 +53,7 @@ export default ({favorites, updateTabUrl, updateFavorites, theme}: Props) => {
           keyExtractor={(item) => item.url}
           maxToRenderPerBatch={5}
           onDragEnd={sortData}
-          renderItem={({item, drag, getIndex}) => (
-            <HistoryItem
-              data={item}
-              key={item.url}
-              indexItem={getIndex()}
-              onDismiss={() =>
-                updateFavorites(favorites.filter((e) => e.url !== item.url))
-              }
-              onSubmit={(e) => {
-                updateTabUrl(e);
-              }}
-              theme={theme}
-              drag={drag}
-            />
-          )}
+          renderItem={renderFavoriteItem}
           ListFooterComponent={() => <Separator height={10} />}
         />
       ) : (
