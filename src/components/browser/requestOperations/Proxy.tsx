@@ -1,7 +1,7 @@
 import {KeyTypes} from 'actions/interfaces';
-import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {setProxy} from 'utils/hive';
 import {RequestId, RequestProxy} from 'utils/keychain.types';
 import {translate} from 'utils/localize';

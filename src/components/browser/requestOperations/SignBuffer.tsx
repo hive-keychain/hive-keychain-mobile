@@ -1,8 +1,8 @@
 import {Account, KeyTypes, PubKeyTypes} from 'actions/interfaces';
 import {signBuffer} from 'components/bridge';
-import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {urlTransformer} from 'utils/browser';
 import {beautifyIfJSON} from 'utils/format';
 import {

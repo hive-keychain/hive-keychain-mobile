@@ -1,8 +1,8 @@
 import {addAccount} from 'actions/index';
 import {AccountKeys} from 'actions/interfaces';
-import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {getClient} from 'utils/hive';
 import {
   RequestAddAccount,

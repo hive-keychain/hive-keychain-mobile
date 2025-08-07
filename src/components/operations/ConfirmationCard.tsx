@@ -10,6 +10,10 @@ import React from 'react';
 import {StyleSheet, Text, useWindowDimensions, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
+import {
+  ConfirmationData,
+  ConfirmationDataTag,
+} from 'src/interfaces/confirmation.interface';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getButtonHeight} from 'src/styles/button';
 import {getCardStyle} from 'src/styles/card';
@@ -18,7 +22,6 @@ import {FontPoppinsName, getFormFontStyle} from 'src/styles/typography';
 import {Colors} from 'utils/colors';
 import {KeychainRequest, RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
-import {ConfirmationData, ConfirmationDataTag} from './Confirmation';
 
 export const createBalanceData = (
   title: string,

@@ -19,9 +19,9 @@ import {
 import {initialWindowMetrics} from 'react-native-safe-area-context';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {ConfirmationData} from 'src/interfaces/confirmation.interface';
 import {KeyType} from 'src/interfaces/keys.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {Token} from 'src/interfaces/tokens.interface';
 import {PRIMARY_RED_COLOR} from 'src/styles/colors';
 import {spacingStyle} from 'src/styles/spacing';
 import {RootState} from 'store';
@@ -40,32 +40,6 @@ export type ConfirmationPageProps = {
   onConfirm?: (options: TransactionOptions) => Promise<void>;
   extraHeader?: React.JSX.Element;
   keyType: KeyType;
-};
-
-export enum ConfirmationDataTag {
-  AMOUNT = 'amount',
-  BALANCE = 'balance',
-  USERNAME = 'username',
-  OPERATION_TYPE = 'operation_type',
-  COLLAPSIBLE = 'COLLAPSIBLE',
-  REQUEST_USERNAME = 'REQUEST_USERNAME',
-  SWAP = 'SWAP',
-}
-
-export type ConfirmationData = {
-  title: string;
-  value: string;
-  tag?: ConfirmationDataTag;
-  currency?: string;
-  currentBalance?: string;
-  amount?: string;
-  finalBalance?: string;
-  tokenInfo?: Token;
-  hidden?: string;
-  startToken?: string;
-  endToken?: string;
-  estimateValue?: number;
-  slippage?: number;
 };
 
 const ConfirmationPage = ({

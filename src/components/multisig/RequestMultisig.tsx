@@ -1,6 +1,5 @@
 import RequestMessage from 'components/browser/requestOperations/components/RequestMessage';
 import EllipticButton from 'components/form/EllipticButton';
-import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import ConfirmationCard from 'components/operations/ConfirmationCard';
 import Operation from 'components/operations/Operation';
 import {useHasExpiration} from 'hooks/useHasExpiration';
@@ -8,6 +7,7 @@ import React from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {SignatureRequest, Signer} from 'src/interfaces/multisig.interface';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getButtonHeight, getButtonStyle} from 'src/styles/button';
@@ -44,6 +44,7 @@ const RequestMultisig = ({
   const {width} = useWindowDimensions();
   const {theme} = useThemeContext();
   const styles = getStyles(theme, width);
+  console.log('request', {signer, signatureRequest, decodedTransaction, key});
   const renderOperationDetails = () => {
     return (
       <View>
@@ -88,14 +89,15 @@ const RequestMultisig = ({
       </View>
     );
   };
-
-  return (
-    <Operation
-      title={translate('request.title.multisig')}
-      onClose={onForceCloseModal}>
-      {renderOperationDetails()}
-    </Operation>
-  );
+  if (signer)
+    return (
+      <Operation
+        title={translate('request.title.multisig')}
+        onClose={onForceCloseModal}>
+        {renderOperationDetails()}
+      </Operation>
+    );
+  else return null;
 };
 
 const getStyles = (theme: Theme, width: number) =>

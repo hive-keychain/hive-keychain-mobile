@@ -1,8 +1,8 @@
 import {ActiveAccount, KeyTypes} from 'actions/interfaces';
-import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import {RequestSwap} from 'hive-keychain-commons';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React, {useEffect, useState} from 'react';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {RequestId} from 'utils/keychain.types';
 import {translate} from 'utils/localize';
