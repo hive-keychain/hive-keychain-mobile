@@ -31,14 +31,15 @@ import {
   HAS_SignDecrypted,
   HAS_SignPayload,
 } from '../payloads.types';
+import {checkPayload, findSessionByToken} from '../static';
 
 export const processSigningRequest = async (
   has: HAS,
   payload: HAS_SignPayload,
 ) => {
   try {
-    HAS.checkPayload(payload);
-    const session = HAS.findSessionByToken(payload.token);
+    checkPayload(payload);
+    const session = findSessionByToken(payload.token);
     assert(session, 'This account has not been connected through HAS.');
     const auth =
       session.token.token === payload.token &&
@@ -58,7 +59,7 @@ export const processSigningRequest = async (
       console.log('nonce already used or expired');
       return;
     }
-    
+
     const {ops, key_type} = opsData;
     payload.decryptedData = opsData;
     let request: KeychainRequest;

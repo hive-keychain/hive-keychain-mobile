@@ -6,6 +6,7 @@ import {store} from 'store';
 import HAS from '..';
 import {HAS_Session} from '../has.types';
 import {HAS_AuthChallengeData, HAS_AuthPayload} from '../payloads.types';
+import {findSessionByToken, findSessionByUUID} from '../static';
 import {dAppChallenge, getChallengeData} from './challenge';
 
 export const answerAuthReq = async (
@@ -34,10 +35,10 @@ export const answerAuthReq = async (
     }
     // NOTE: In "service" or "debug" mode, the APP can pass the encryption key to the PKSA in its auth_req
     //       Secure PKSA should read it from the QR code scanned by the user
-    let session = HAS.findSessionByToken(payload.token);
+    let session = findSessionByToken(payload.token);
     let newToken = false;
     if (!session) {
-      session = HAS.findSessionByUUID(payload.uuid);
+      session = findSessionByUUID(payload.uuid);
       newToken = true;
     }
     if (approve) {

@@ -3,7 +3,6 @@ import {
   showHASInitRequestAsTreated,
   updateInstanceConnectionStatus,
 } from 'actions/hiveAuthenticationService';
-import assert from 'assert';
 import SimpleToast from 'react-native-simple-toast';
 import {HAS_State} from 'reducers/hiveAuthenticationService';
 import {RootState, store} from 'store';
@@ -15,7 +14,7 @@ import {answerAuthReq} from './helpers/auth';
 import {prepareRegistrationChallenge} from './helpers/challenge';
 import {onMessageReceived} from './messages';
 import {processAuthenticationRequest} from './messages/authenticate';
-import {HAS_AuthPayload, HAS_SignPayload} from './payloads.types';
+import {HAS_AuthPayload} from './payloads.types';
 
 let previousState: RootState = store.getState();
 
@@ -193,45 +192,6 @@ class HAS {
     return (store.getState() as RootState).hive_authentication_service.instances.find(
       (e) => e.host === this.host,
     )?.server_key;
-  };
-
-  // static
-
-  static checkPayload = (payload: HAS_SignPayload | HAS_AuthPayload) => {
-    if (payload.uuid) {
-      // validate APP request forwarded by HAS
-      assert(
-        payload.uuid && typeof payload.uuid == 'string',
-        `invalid payload (uuid)`,
-      );
-      assert(
-        payload.expire && typeof payload.expire == 'number',
-        `invalid payload (expire)`,
-      );
-      assert(
-        payload.account && typeof payload.account == 'string',
-        `invalid payload (account)`,
-      );
-      assert(
-        Date.now() < payload.expire,
-        `request expired - now:${Date.now()} > expire:${payload.expire}}`,
-      );
-    }
-  };
-
-  static findSessionByUUID = (uuid: string) => {
-    return (store.getState() as RootState).hive_authentication_service.sessions.find(
-      (e) => e.uuid === uuid,
-    );
-  };
-
-  static findSessionByToken = (token: string) => {
-    return (store.getState() as RootState).hive_authentication_service.sessions.find(
-      (e) => {
-        if (e.token) return e.token.token === token;
-        else return false;
-      },
-    );
   };
 }
 

@@ -7,16 +7,17 @@ import {goBack, navigate} from 'utils/navigation';
 import HAS from '..';
 import {answerAuthReq, sendAuth} from '../helpers/auth';
 import {HAS_AuthDecrypted, HAS_AuthPayload} from '../payloads.types';
+import {checkPayload, findSessionByToken, findSessionByUUID} from '../static';
 
 export const processAuthenticationRequest = (
   has: HAS,
   payload: HAS_AuthPayload,
 ) => {
-  HAS.checkPayload(payload);
+  checkPayload(payload);
 
-  let accountSession = HAS.findSessionByToken(payload.token);
+  let accountSession = findSessionByToken(payload.token);
   if (!accountSession) {
-    accountSession = HAS.findSessionByUUID(payload.uuid);
+    accountSession = findSessionByUUID(payload.uuid);
   }
   if (!accountSession) {
     has.awaitingAuth.push(payload);
