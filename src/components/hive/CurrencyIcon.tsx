@@ -152,6 +152,8 @@ const getStyles = (
       backgroundColor: addBackground
         ? getTokenBackgroundColor(colors, symbol, theme)
         : undefined,
+      borderRadius: 16,
+      padding: 1,
     },
   });
 

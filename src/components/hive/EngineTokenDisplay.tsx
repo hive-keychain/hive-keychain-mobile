@@ -78,6 +78,7 @@ const EngineTokenDisplay = ({
         logo={
           <CurrencyIcon
             currencyName={token.symbol}
+            addBackground={true}
             tokenInfo={tokenInfo}
             colors={colors}
             symbol={token.symbol}
