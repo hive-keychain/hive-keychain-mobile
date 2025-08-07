@@ -1,9 +1,9 @@
 import {KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
-import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import {createBalanceData} from 'components/operations/ConfirmationCard';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React, {useEffect, useState} from 'react';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {recurrentTransfer} from 'utils/hive';
 import {getAccount, getAccountKeys} from 'utils/hiveUtils';

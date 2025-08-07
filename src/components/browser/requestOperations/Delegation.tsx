@@ -1,8 +1,8 @@
 import {KeyTypes} from 'actions/interfaces';
-import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import usePotentiallyAnonymousRequest from 'hooks/usePotentiallyAnonymousRequest';
 import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {RootState} from 'store';
 import {beautifyTransferError, fromHP} from 'utils/format';

@@ -1,7 +1,7 @@
 import {KeyTypes} from 'actions/interfaces';
-import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import {FormatUtils} from 'hive-keychain-commons';
 import React from 'react';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {createClaimedAccount} from 'utils/hive';
 import {RequestCreateClaimedAccount, RequestId} from 'utils/keychain.types';

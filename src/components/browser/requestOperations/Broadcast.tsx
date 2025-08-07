@@ -1,8 +1,8 @@
 import {Operation} from '@hiveio/dhive';
 import {Account, KeyTypes} from 'actions/interfaces';
 import {encodeMemo} from 'components/bridge';
-import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import React from 'react';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {broadcast} from 'utils/hive';
 import {getAccountKeys} from 'utils/hiveUtils';

@@ -1,7 +1,7 @@
 import {Account, KeyTypes} from 'actions/interfaces';
 import {decodeMemo} from 'components/bridge';
-import {ConfirmationDataTag} from 'components/operations/Confirmation';
 import React from 'react';
+import {ConfirmationDataTag} from 'src/interfaces/confirmation.interface';
 import {urlTransformer} from 'utils/browser';
 import {
   RequestDecode,
