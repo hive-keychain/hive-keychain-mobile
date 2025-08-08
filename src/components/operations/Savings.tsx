@@ -2,11 +2,10 @@ import {showModal} from 'actions/message';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
-import PendingSavingsWithdrawalPageComponent from 'components/hive/PendingSavingsWithdrawalPage.component';
 import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -258,21 +257,14 @@ const Savings = ({
           {totalPendingSavingsWithdrawals > 0 && (
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => {
-                navigate('TemplateStack', {
-                  titleScreen: capitalize(
-                    translate(`wallet.operations.savings.pending`),
-                  ),
-                  component: (
-                    <PendingSavingsWithdrawalPageComponent
-                      currency={c}
-                      operation={operationType}
-                      currentWithdrawingList={currentWithdrawingList}
-                      onUpdate={onHandleUpdate}
-                    />
-                  ),
-                } as TemplateStackProps);
-              }}
+              onPress={() =>
+                navigate('PendingSavings', {
+                  currency: c,
+                  operation: operationType,
+                  currentWithdrawingList,
+                  onUpdate: onHandleUpdate,
+                })
+              }
               style={[
                 getCardStyle(theme).defaultCardItem,
                 styles.displayAction,

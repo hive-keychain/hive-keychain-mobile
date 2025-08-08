@@ -4,7 +4,7 @@ import Icon from 'components/hive/Icon';
 import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {
   StyleSheet,
@@ -44,7 +44,6 @@ import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {ConfirmationPageProps} from './Confirmation';
 import {createBalanceData} from './ConfirmationCard';
-import DelegationsList from './DelegationsList';
 import OperationThemed from './OperationThemed';
 
 export interface DelegationOperationProps {
@@ -168,10 +167,7 @@ const Delegation = ({
   const available = Math.max(totalHp - totalOutgoing - 5, 0).toFixed(3);
 
   const onHandleNavigateToDelegations = (type: 'incoming' | 'outgoing') => {
-    navigate('TemplateStack', {
-      titleScreen: translate(`common.${type}`),
-      component: <DelegationsList type={type} theme={theme} />,
-    } as TemplateStackProps);
+    navigate('HPDelegations', {type});
   };
 
   return (

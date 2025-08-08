@@ -1,11 +1,10 @@
 import {HiveEngineCurrency} from 'actions/interfaces';
 import {DelegateTokenOperationProps} from 'components/operations/DelegateToken';
-import IncomingOutGoingTokenDelegations from 'components/operations/IncomingOutGoingTokenDelegations';
 import {StakeTokenOperationProps} from 'components/operations/StakeToken';
 import {TransferOperationProps} from 'components/operations/transfer/Transfer';
 import {UnstakeTokenOperationProps} from 'components/operations/UnstakeToken';
 import Separator from 'components/ui/Separator';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React from 'react';
 import {
   Linking,
@@ -113,32 +112,18 @@ const TokenDisplay = ({
   };
 
   const onGoToIncoming = () =>
-    navigate('TemplateStack', {
-      titleScreen: 'Incoming',
-      component: (
-        <IncomingOutGoingTokenDelegations
-          delegationType={'Incoming'}
-          total={tokenBalance.delegationsIn}
-          token={tokenBalance}
-          tokenLogo={logo}
-          tokenInfo={tokenInfo}
-        />
-      ),
-    } as TemplateStackProps);
+    navigate('TokenDelegations', {
+      delegationType: 'Incoming',
+      total: tokenBalance.delegationsIn,
+      token: tokenBalance,
+    });
 
   const onGoToOutgoing = () =>
-    navigate('TemplateStack', {
-      titleScreen: 'Outgoing',
-      component: (
-        <IncomingOutGoingTokenDelegations
-          delegationType={'Outgoing'}
-          total={tokenBalance.delegationsOut}
-          token={tokenBalance}
-          tokenLogo={logo}
-          tokenInfo={tokenInfo}
-        />
-      ),
-    } as TemplateStackProps);
+    navigate('TokenDelegations', {
+      delegationType: 'Outgoing',
+      total: tokenBalance.delegationsOut,
+      token: tokenBalance,
+    });
 
   const onGoToStake = () =>
     navigate('Operation', {

@@ -1,7 +1,7 @@
 import ActiveOperationButton from 'components/form/ActiveOperationButton';
 import EllipticButton from 'components/form/EllipticButton';
 import Separator from 'components/ui/Separator';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -15,7 +15,6 @@ import {
 } from 'src/styles/typography';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import DisableEnableMyWitness from './DisableEnableMyWitness';
 import MyWitnessDataBlock from './MyWitnessDataBlock';
 
 interface Props {
@@ -69,22 +68,17 @@ const MyWitnessInformationParams = ({
 
         <ActiveOperationButton
           title={translate('governance.my_witness.disable_witness')}
-          onPress={() => {
-            navigate('TemplateStack', {
-              titleScreen: translate(
+          onPress={() =>
+            navigate('ToggleWitness', {
+              title: translate(
                 `governance.my_witness.${
                   witnessInfo.isDisabled ? 'enable' : 'disable'
                 }_witness`,
               ),
-              component: (
-                <DisableEnableMyWitness
-                  mode={witnessInfo.isDisabled ? 'enable' : 'disable'}
-                  theme={theme}
-                  witnessInfo={witnessInfo}
-                />
-              ),
-            } as TemplateStackProps);
-          }}
+              mode: witnessInfo.isDisabled ? 'enable' : 'disable',
+              witnessInfo,
+            })
+          }
           isLoading={false}
           style={[getButtonStyle(theme).warningStyleButton, styles.button]}
         />

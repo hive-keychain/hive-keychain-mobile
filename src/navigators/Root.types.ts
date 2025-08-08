@@ -39,12 +39,7 @@ export interface ModalScreenProps {
   renderButtonElement?: JSX.Element;
 }
 
-export interface TemplateStackProps {
-  titleScreen: string;
-  component: JSX.Element;
-  hideCloseButton?: boolean;
-  extraActionOnBack?: () => void;
-}
+// TemplateStack removed; use concrete screens instead
 
 export type RootStackParam = {
   Main: undefined;
@@ -74,7 +69,7 @@ export type RootStackParam = {
       | RCDelegationOperationProps
       | PowerDownOperationProps;
   };
-  TemplateStack: TemplateStackProps;
+  // TemplateStack: removed
   WalletHistory: WalletHistoryComponentProps;
   SwapBuyStack: undefined;
   SwapHistory: undefined;
@@ -122,20 +117,7 @@ export type OperationNavigationProps = {
   route: OperationNavigationRoute;
 };
 
-export type TemplateStackNavigation = StackNavigationProp<
-  RootStackParam,
-  'TemplateStack'
->;
-
-export type TemplateStackNavigationRoute = RouteProp<
-  RootStackParam,
-  'TemplateStack'
->;
-
-export type TemplateStackNavigationProps = {
-  navigation: TemplateStackNavigation;
-  route: TemplateStackNavigationRoute;
-};
+// TemplateStack types removed
 
 export type ConfirmationPageRoute = RouteProp<
   RootStackParam,

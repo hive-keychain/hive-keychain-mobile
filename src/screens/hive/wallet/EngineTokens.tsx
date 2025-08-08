@@ -6,7 +6,7 @@ import EngineTokenDisplay from 'components/hive/EngineTokenDisplay';
 import Icon from 'components/hive/Icon';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   FlatList,
@@ -28,7 +28,6 @@ import {Dimensions} from 'utils/common.types';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import TokenSettings from './tokens/TokenSettings';
 
 interface Props {
   showEngineTokenSettings: boolean;
@@ -108,11 +107,7 @@ const EngineTokens = ({
   };
 
   const handleClickSettings = () => {
-    navigate('TemplateStack', {
-      titleScreen: translate('wallet.operations.token_settings.title'),
-      component: <TokenSettings />,
-      hideCloseButton: true,
-    } as TemplateStackProps);
+    navigate('TokenSettings');
   };
 
   const handleClickToView = (itemIndex: number) => {

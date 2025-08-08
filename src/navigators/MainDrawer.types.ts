@@ -20,6 +20,14 @@ export type MainDrawerStackParam = {
   SwapBuyStack: undefined;
   SwapHistory: undefined;
   Help: undefined;
+  TokenSettings: undefined;
+  TokenDelegations: undefined;
+  HPDelegations: undefined;
+  PendingSavings: undefined;
+  PendingConversions: undefined;
+  RcDelegations: undefined;
+  SwapConfirm: undefined;
+  ToggleWitness: undefined;
 };
 
 export type BrowserNavigation = StackNavigationProp<

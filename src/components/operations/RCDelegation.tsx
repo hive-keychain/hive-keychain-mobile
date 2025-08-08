@@ -6,7 +6,7 @@ import RcHpSelectorPanel from 'components/hive/RcHpSelectorPanel';
 import {Caption} from 'components/ui/Caption';
 import CurrentAvailableBalance from 'components/ui/CurrentAvailableBalance';
 import Separator from 'components/ui/Separator';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -50,7 +50,6 @@ import {navigate} from 'utils/navigation';
 import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
 import {ConfirmationPageProps} from './Confirmation';
 import {createBalanceData} from './ConfirmationCard';
-import IncomingOutGoingRCDelegations from './IncomingOutGoingRCDelegations';
 import OperationThemed from './OperationThemed';
 
 export interface RCDelegationOperationProps {
@@ -136,16 +135,11 @@ const RCDelegation = ({
 
   const onHandleNavigateToRCDelegations = (type: 'incoming' | 'outgoing') => {
     if (type === 'incoming' || !parseFloat(totalOutgoing.gigaRcValue)) return;
-    navigate('TemplateStack', {
-      titleScreen: capitalize(type),
-      component: (
-        <IncomingOutGoingRCDelegations
-          type={type}
-          total={totalOutgoing}
-          available={available}
-        />
-      ),
-    } as TemplateStackProps);
+    navigate('RcDelegations', {
+      type,
+      total: totalOutgoing,
+      available,
+    });
   };
 
   const onRCDelegateConfirmation = () => {

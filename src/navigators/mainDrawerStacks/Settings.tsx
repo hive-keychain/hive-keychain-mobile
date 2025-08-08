@@ -8,7 +8,12 @@ import NavigatorTitle from 'components/ui/NavigatorTitle';
 import React from 'react';
 import {StyleSheet, useWindowDimensions} from 'react-native';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
+import AutomatedTasks from 'screens/hive/settings/AutomatedTasks';
 import ExportTransaction from 'screens/hive/settings/ExportTransactions';
+import Multisig from 'screens/hive/settings/Multisig';
+import Notifications from 'screens/hive/settings/Notifications';
+import Operations from 'screens/hive/settings/Operations';
+import RpcNodes from 'screens/hive/settings/RpcNodes';
 import SettingsMenu from 'screens/hive/settings/SettingsMenu';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {CARD_PADDING_HORIZONTAL} from 'src/styles/card';
@@ -53,6 +58,154 @@ export default () => {
       />
 
       <Stack.Screen
+        name="SettingsOperationsScreen"
+        component={Operations}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          animationEnabled: false,
+          headerTitle: () => (
+            <NavigatorTitle title={'settings.settings.operations'} />
+          ),
+          cardStyle: styles.card,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => navigation.navigate('WALLET')}
+            />
+          ),
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+      />
+
+      <Stack.Screen
+        name="SettingsRpcNodesScreen"
+        component={RpcNodes}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => <NavigatorTitle title={'settings.settings.rpc'} />,
+          cardStyle: styles.card,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          animationEnabled: false,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => navigation.navigate('WALLET')}
+            />
+          ),
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+      />
+
+      <Stack.Screen
+        name="SettingsAutomatedTasksScreen"
+        component={AutomatedTasks}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={'settings.settings.automated_tasks.title'} />
+          ),
+          cardStyle: styles.card,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          animationEnabled: false,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => navigation.navigate('WALLET')}
+            />
+          ),
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+      />
+
+      <Stack.Screen
+        name="SettingsMultisigScreen"
+        component={Multisig}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={'settings.settings.multisig.title'} />
+          ),
+          cardStyle: styles.card,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          animationEnabled: false,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => navigation.navigate('WALLET')}
+            />
+          ),
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+      />
+
+      <Stack.Screen
+        name="SettingsNotificationsScreen"
+        component={Notifications}
+        options={({navigation}) => ({
+          headerStyle: styles.header,
+          headerTitleAlign: 'center',
+          headerTitle: () => (
+            <NavigatorTitle title={'settings.settings.notifications.title'} />
+          ),
+          cardStyle: styles.card,
+          headerRightContainerStyle: styles.headerRightContainer,
+          headerLeftContainerStyle: styles.headerLeftContainer,
+          animationEnabled: false,
+          headerRight: () => (
+            <CloseButton
+              theme={theme}
+              onPress={() => navigation.navigate('WALLET')}
+            />
+          ),
+          headerLeft: () => (
+            <CustomIconButton
+              theme={theme}
+              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              lightThemeIcon={<ArrowLeftLight />}
+              darkThemeIcon={<ArrowLeftDark />}
+            />
+          ),
+        })}
+      />
+
+      <Stack.Screen
         name="ExportTransactionsScreen"
         component={ExportTransaction}
         options={({navigation}) => ({
@@ -64,6 +217,7 @@ export default () => {
           cardStyle: styles.card,
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
+          animationEnabled: false,
           headerRight: () => (
             <CloseButton
               theme={theme}

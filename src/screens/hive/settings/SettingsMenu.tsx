@@ -1,7 +1,6 @@
 import MenuItem from 'components/drawer/drawer-content-item/MenuItem';
 import Icon from 'components/hive/Icon';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
-import {TemplateStackProps} from 'navigators/Root.types';
 import React from 'react';
 import {StatusBar, Text, View, useWindowDimensions} from 'react-native';
 import {useThemeContext} from 'src/context/theme.context';
@@ -11,11 +10,6 @@ import {getMenuCardStyle} from 'src/styles/menu';
 import {getBadgeStyle} from 'src/styles/text';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import AutomatedTasks from './AutomatedTasks';
-import Multisig from './Multisig';
-import Notifications from './Notifications';
-import Operations from './Operations';
-import RpcNodes from './RpcNodes';
 
 const SettingsMenu = () => {
   const {theme} = useThemeContext();
@@ -32,12 +26,7 @@ const SettingsMenu = () => {
       <MenuItem
         labelTranslationKey={'settings.settings.operations'}
         theme={theme}
-        onPress={() =>
-          navigate('TemplateStack', {
-            titleScreen: translate('settings.settings.operations'),
-            component: <Operations />,
-          } as TemplateStackProps)
-        }
+        onPress={() => navigate('SettingsOperationsScreen')}
         iconImage={
           <Icon name={Icons.CPU} theme={theme} color={PRIMARY_RED_COLOR} />
         }
@@ -46,12 +35,7 @@ const SettingsMenu = () => {
       <MenuItem
         labelTranslationKey={'settings.settings.rpc'}
         theme={theme}
-        onPress={() =>
-          navigate('TemplateStack', {
-            titleScreen: translate('settings.settings.rpc'),
-            component: <RpcNodes />,
-          } as TemplateStackProps)
-        }
+        onPress={() => navigate('SettingsRpcNodesScreen')}
         iconImage={
           <Icon name={Icons.RPC} theme={theme} color={PRIMARY_RED_COLOR} />
         }
@@ -60,12 +44,7 @@ const SettingsMenu = () => {
       <MenuItem
         labelTranslationKey={'settings.settings.automated_tasks.title'}
         theme={theme}
-        onPress={() =>
-          navigate('TemplateStack', {
-            titleScreen: translate('settings.settings.automated_tasks.title'),
-            component: <AutomatedTasks />,
-          } as TemplateStackProps)
-        }
+        onPress={() => navigate('SettingsAutomatedTasksScreen')}
         iconImage={
           <Icon
             name={Icons.AUTOMATED_TASKS}
@@ -78,12 +57,7 @@ const SettingsMenu = () => {
       <MenuItem
         labelTranslationKey={'settings.settings.multisig.title'}
         theme={theme}
-        onPress={() =>
-          navigate('TemplateStack', {
-            titleScreen: translate('settings.settings.multisig.title'),
-            component: <Multisig />,
-          } as TemplateStackProps)
-        }
+        onPress={() => navigate('SettingsMultisigScreen')}
         iconImage={
           <Icon
             name={Icons.MULTISIG}
@@ -97,12 +71,7 @@ const SettingsMenu = () => {
       <MenuItem
         labelTranslationKey={'settings.settings.notifications.title'}
         theme={theme}
-        onPress={() =>
-          navigate('TemplateStack', {
-            titleScreen: translate('settings.settings.notifications.title'),
-            component: <Notifications />,
-          } as TemplateStackProps)
-        }
+        onPress={() => navigate('SettingsNotificationsScreen')}
         iconImage={
           <Icon
             name={Icons.NOTIFICATIONS}

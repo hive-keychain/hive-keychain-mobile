@@ -17,11 +17,18 @@ import AddAccount from './mainDrawerStacks/AddAccount';
 import CreateAccount from './mainDrawerStacks/CreateAccount';
 import ExportAccountsQR from './mainDrawerStacks/ExportAccountsQR';
 import GovernanceStack from './mainDrawerStacks/GovernanceStack';
+import GovernanceToggleWitnessStack from './mainDrawerStacks/GovernanceToggleWitnessStack';
+import HPDelegationsStack from './mainDrawerStacks/HPDelegationsStack';
 import Help from './mainDrawerStacks/Help';
 import Operation from './mainDrawerStacks/Operation';
+import PendingConversionsStack from './mainDrawerStacks/PendingConversionsStack';
+import PendingSavingsStack from './mainDrawerStacks/PendingSavingsStack';
+import RcDelegationsStack from './mainDrawerStacks/RcDelegationsStack';
 import SwapBuyStack from './mainDrawerStacks/SwapBuyStack';
+import SwapConfirmStack from './mainDrawerStacks/SwapConfirmStack';
 import SwapHistory from './mainDrawerStacks/SwapHistory';
-import TemplateStack from './mainDrawerStacks/TemplateStack';
+import TokenDelegationsStack from './mainDrawerStacks/TokenDelegationsStack';
+import TokenSettingsStack from './mainDrawerStacks/TokenSettingsStack';
 import Tokens from './mainDrawerStacks/Tokens';
 import TokensHistory from './mainDrawerStacks/TokensHistory';
 
@@ -110,8 +117,8 @@ export default () => {
         }}
       />
       <Drawer.Screen
-        name="TemplateStack"
-        component={TemplateStack}
+        name="TokenSettings"
+        component={TokenSettingsStack}
         options={{
           unmountOnBlur: true,
         }}
@@ -124,6 +131,23 @@ export default () => {
         }}
       />
       <Drawer.Screen name="SwapHistory" component={SwapHistory} />
+      {/* Newly added logical screens reachable via navigate() */}
+      <Drawer.Screen
+        name="TokenDelegations"
+        component={TokenDelegationsStack}
+      />
+      <Drawer.Screen name="HPDelegations" component={HPDelegationsStack} />
+      <Drawer.Screen name="PendingSavings" component={PendingSavingsStack} />
+      <Drawer.Screen
+        name="PendingConversions"
+        component={PendingConversionsStack}
+      />
+      <Drawer.Screen name="RcDelegations" component={RcDelegationsStack} />
+      <Drawer.Screen name="SwapConfirm" component={SwapConfirmStack} />
+      <Drawer.Screen
+        name="ToggleWitness"
+        component={GovernanceToggleWitnessStack}
+      />
     </Drawer.Navigator>
   );
 };

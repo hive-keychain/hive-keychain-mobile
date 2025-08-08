@@ -16,14 +16,14 @@ import {translate} from 'utils/localize';
 
 type Props = PropsFromRedux & {
   currency: 'HBD' | 'HIVE';
-  currentPendingConvertionList: Conversion[];
+  currentPendingConversionList: Conversion[];
 };
 
-const PendingConvertions = ({
+const PendingConversions = ({
   user,
   loadAccount,
   currency,
-  currentPendingConvertionList,
+  currentPendingConversionList,
 }: Props) => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
@@ -53,7 +53,7 @@ const PendingConvertions = ({
         <>
           <Separator />
           <FlatList
-            data={currentPendingConvertionList.filter(
+            data={currentPendingConversionList.filter(
               (conversionItem) =>
                 conversionItem.amount.split(' ')[1] === currency,
             )}
@@ -113,4 +113,4 @@ const connector = connect(
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(PendingConvertions);
+export default connector(PendingConversions);

@@ -14,7 +14,7 @@ import OptionsToggle from 'components/ui/OptionsToggle';
 import Separator from 'components/ui/Separator';
 import UserProfilePicture from 'components/ui/UserProfilePicture';
 import useLockedPortrait from 'hooks/useLockedPortrait';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import {CreateAccountFromWalletNavigationProps} from 'navigators/mainDrawerStacks/CreateAccount.types';
 import React, {useEffect, useState} from 'react';
 import {
@@ -68,7 +68,6 @@ import {
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
 import {RcDelegationsUtils} from 'utils/rc-delegations.utils';
-import StepTwo from './CreateAccountConfirmation';
 
 interface SelectOption {
   label: string;
@@ -418,17 +417,12 @@ const CreateAccountStepOne = ({
           const usedAccount = accounts.find(
             (localAccount: Account) => localAccount.name === user.name,
           );
-          navigate('TemplateStack', {
-            titleScreen: translate('navigation.create_account'),
-            component: (
-              <StepTwo
-                selectedAccount={usedAccount}
-                accountName={accountName}
-                creationType={creationType}
-                price={price}
-              />
-            ),
-          } as TemplateStackProps);
+          navigate('CreateAccountConfirmationScreen', {
+            selectedAccount: usedAccount,
+            accountName,
+            creationType,
+            price,
+          });
         } else {
           Toast.show(translate('toast.account_creation_not_enough_found'));
         }

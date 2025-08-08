@@ -2,11 +2,10 @@ import {fetchConversionRequests} from 'actions/index';
 import {showModal} from 'actions/message';
 import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
-import PendingConvertions from 'components/hive/PendingConversions';
 import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
 import moment from 'moment';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -54,7 +53,7 @@ const Convert = ({
 }: Props) => {
   const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
-  const [totalPendingConvertions, setTotalPendingConvertions] = useState(0);
+  const [totalPendingConversions, setTotalPendingConversions] = useState(0);
   const [availableBalance, setAvailableBalance] = useState('');
 
   useEffect(() => {
@@ -63,7 +62,7 @@ const Convert = ({
 
   useEffect(() => {
     if (conversions.length > 0) {
-      setTotalPendingConvertions(
+      setTotalPendingConversions(
         conversions
           .filter(
             (conversion) =>
@@ -174,22 +173,15 @@ const Convert = ({
             setAvailableBalance={(available) => setAvailableBalance(available)}
           />
           <Separator />
-          {totalPendingConvertions > 0 && (
+          {totalPendingConversions > 0 && (
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => {
-                navigate('TemplateStack', {
-                  titleScreen: capitalize(
-                    translate(`wallet.operations.convert.pending`),
-                  ),
-                  component: (
-                    <PendingConvertions
-                      currency={currency}
-                      currentPendingConvertionList={conversions}
-                    />
-                  ),
-                } as TemplateStackProps);
-              }}
+              onPress={() =>
+                navigate('PendingConversions', {
+                  currency,
+                  currentPendingConversionList: conversions,
+                })
+              }
               style={[
                 getCardStyle(theme).defaultCardItem,
                 styles.displayAction,
@@ -208,7 +200,7 @@ const Convert = ({
                     getFormFontStyle(height, theme).input,
                     styles.josefineFont,
                   ]}>
-                  {totalPendingConvertions} {currency}
+                  {totalPendingConversions} {currency}
                 </Text>
               </View>
               <Icon

@@ -38,7 +38,7 @@ import WalletPage from 'components/ui/WalletPage';
 import {useBackButtonNavigation} from 'hooks/useBackButtonNavigate';
 import useLockedPortrait from 'hooks/useLockedPortrait';
 import {WalletNavigation} from 'navigators/MainDrawer.types';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   AppState,
@@ -86,7 +86,6 @@ import {navigate} from 'utils/navigation';
 import {VestingRoutesUtils} from 'utils/vesting-routes.utils';
 import {WidgetUtils} from 'utils/widget.utils';
 import {BottomBarLink} from './BottomNavigation.component';
-import TokenSettings from './tokens/TokenSettings';
 
 const Main = ({
   loadAccount,
@@ -326,12 +325,8 @@ const Main = ({
   };
 
   const handleClickSettings = useCallback(() => {
-    navigate('TemplateStack', {
-      titleScreen: translate('wallet.operations.token_settings.title'),
-      component: <TokenSettings />,
-      hideCloseButton: true,
-    } as TemplateStackProps);
-  }, [navigate, translate]);
+    navigate('TokenSettings');
+  }, []);
 
   const handleClickToView = useCallback(
     (index: number, sectionIndex: 0 | 1) => {

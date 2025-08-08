@@ -4,7 +4,7 @@ import OperationInput from 'components/form/OperationInput';
 import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import SimpleToast from 'react-native-simple-toast';
@@ -26,7 +26,6 @@ import {
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import StepTwoAccountCreation from '../createAccounts/CreateAccountConfirmation';
 
 const CreateAccountPeerToPeer = ({}: PropsFromRedux) => {
   const {theme} = useThemeContext();
@@ -55,18 +54,12 @@ const CreateAccountPeerToPeer = ({}: PropsFromRedux) => {
         SimpleToast,
       )
     ) {
-      navigate('TemplateStackScreen', {
-        titleScreen: translate('navigation.create_account'),
-        component: (
-          <StepTwoAccountCreation
-            selectedAccount={{} as Account}
-            accountName={accountName}
-            creationType={AccountCreationType.PEER_TO_PEER}
-            price={0}
-          />
-        ),
-        hideCloseButton: true,
-      } as TemplateStackProps);
+      navigate('CreateAccountConfirmationScreen', {
+        selectedAccount: {} as Account,
+        accountName,
+        creationType: AccountCreationType.PEER_TO_PEER,
+        price: 0,
+      });
     }
   };
 

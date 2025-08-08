@@ -3,21 +3,18 @@ import {KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
 import ErrorSvg from 'assets/new_UI/error-mark.svg';
 import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
-import EllipticButton from 'components/form/EllipticButton';
 import OperationInput from 'components/form/OperationInput';
 import CurrencyIcon from 'components/hive/CurrencyIcon';
 import Icon from 'components/hive/Icon';
 import TwoFaModal from 'components/modals/TwoFaModal';
-import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import Loader from 'components/ui/Loader';
-import MultisigCaption from 'components/ui/MultisigCaption';
 import RotationIconAnimated from 'components/ui/RotationIconAnimated';
 import Separator from 'components/ui/Separator';
 import {IStep} from 'hive-keychain-commons';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import {ThrottleSettings, throttle} from 'lodash';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useEffect, useMemo, useState} from 'react';
 import {
   StyleSheet,
@@ -34,7 +31,6 @@ import {MessageModalType} from 'src/enums/messageModal.enums';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
 import {SwapConfig} from 'src/interfaces/swap-token.interface';
 import {Token} from 'src/interfaces/tokens.interface';
-import {getCardStyle} from 'src/styles/card';
 import {
   BACKGROUNDDARKBLUE,
   PRIMARY_RED_COLOR,
@@ -42,7 +38,7 @@ import {
 } from 'src/styles/colors';
 import {ICONMINDIMENSIONS} from 'src/styles/icon';
 import {getHorizontalLineStyle} from 'src/styles/line';
-import {MARGIN_PADDING, spacingStyle} from 'src/styles/spacing';
+import {MARGIN_PADDING} from 'src/styles/spacing';
 import {getRotateStyle} from 'src/styles/transform';
 import {
   FontPoppinsName,
@@ -499,87 +495,14 @@ const Swap = ({
     const onHandleBackButton = async () =>
       await SwapTokenUtils.cancelSwap(estimateId);
 
-    navigate('TemplateStack', {
-      titleScreen: translate('common.confirm_token_swap'),
-      component: (
-        <Background theme={theme}>
-          <View style={{flexGrow: 1, paddingBottom: 16}}>
-            {isMultisig && <MultisigCaption />}
-            <Caption
-              text="wallet.operations.swap.swap_token_confirm_message"
-              hideSeparator
-            />
-            <View
-              style={[
-                getCardStyle(theme).defaultCardItem,
-                {marginHorizontal: 16, marginBottom: 0},
-              ]}>
-              <View style={styles.flexRowbetween}>
-                <Text style={[styles.textBase]}>
-                  {translate('wallet.operations.swap.swap_id_title')}
-                </Text>
-                <Text style={[styles.textBase]}>
-                  {getShortenedId(estimateId)}
-                </Text>
-              </View>
-              <Separator
-                drawLine
-                height={0.5}
-                additionalLineStyle={styles.bottomLine}
-              />
-              <Separator height={10} />
-              <View style={styles.flexRowbetween}>
-                <Text style={[styles.textBase]}>
-                  {translate('wallet.operations.swap.swap_estimation')}
-                </Text>
-                <View style={styles.flexRowbetween}>
-                  <Text style={[styles.textBase]}>
-                    {`${withCommas(amount)} ${startToken.value.symbol}`}
-                  </Text>
-                  <Icon
-                    name={Icons.ARROW_RIGHT_BROWSER}
-                    additionalContainerStyle={{marginHorizontal: 8}}
-                    width={20}
-                    height={20}
-                  />
-                  <Text style={[styles.textBase]}>
-                    {`${withCommas(estimateValue)} ${endToken.value.symbol}`}
-                  </Text>
-                </View>
-              </View>
-              <Separator
-                drawLine
-                height={0.5}
-                additionalLineStyle={styles.bottomLine}
-              />
-              <Separator height={10} />
-              <View style={styles.flexRowbetween}>
-                <Text style={[styles.textBase]}>
-                  {translate('wallet.operations.swap.slippage')}
-                </Text>
-                <Text style={[styles.textBase]}>
-                  {translate('wallet.operations.swap.swap_slippage_step', {
-                    slippage,
-                  })}
-                </Text>
-              </View>
-            </View>
-            <View style={spacingStyle.fillSpace}></View>
-            <EllipticButton
-              title={translate('common.confirm')}
-              preventDoublons
-              onPress={() => {
-                processSwap(estimateId);
-              }}
-              isLoading={loading}
-              isWarningButton
-            />
-          </View>
-        </Background>
-      ),
-      hideCloseButton: true,
-      extraActionOnBack: onHandleBackButton,
-    } as TemplateStackProps);
+    navigate('SwapConfirm', {
+      estimateId,
+      slippage,
+      amount,
+      startToken: startToken.value,
+      endToken: endToken.value,
+      processSwap,
+    });
   };
 
   const {width, height} = useWindowDimensions();

@@ -11,6 +11,7 @@ import Introduction from 'screens/Introduction';
 import Signup from 'screens/Signup';
 import AddAccountByKey from 'screens/hive/addAccounts/AddAccountByKey';
 import CreateAccount from 'screens/hive/createAccounts/CreateAccount';
+import CreateAccountConfirmation from 'screens/hive/createAccounts/CreateAccountConfirmation';
 import CreateAccountPeerToPeer from 'screens/hive/createAccountsPeerToPeer/CreateAccountPeerToPeer';
 import WalletQRScanner from 'screens/hive/wallet/WalletQRScanner';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -21,7 +22,6 @@ import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {translate} from 'utils/localize';
 import {noHeader} from 'utils/navigation';
 import {SignupStackParamList} from './Signup.types';
-import TemplateStack from './mainDrawerStacks/TemplateStack';
 
 const Stack = createStackNavigator<SignupStackParamList>();
 
@@ -78,9 +78,9 @@ export default () => {
         component={CreateAccount}
       />
       <Stack.Screen
-        name="TemplateStackScreen"
+        name="CreateAccountConfirmationScreen"
         options={{...noHeader, animationEnabled: false}}
-        component={TemplateStack}
+        component={CreateAccountConfirmation}
       />
       <Stack.Screen
         name="CreateAccountPeerToPeerScreen"

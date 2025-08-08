@@ -7,7 +7,7 @@ import Background from 'components/ui/Background';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import Separator from 'components/ui/Separator';
-import {TemplateStackProps} from 'navigators/Root.types';
+// import {TemplateStackProps} from 'navigators/Root.types';
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
@@ -37,7 +37,6 @@ import {hiveEngineWebsiteURL} from 'utils/config';
 import {getHiveEngineTokenValue} from 'utils/hiveEngine';
 import {translate} from 'utils/localize';
 import {navigate} from 'utils/navigation';
-import TokenSettings from './tokens/TokenSettings';
 
 interface TokensProps {}
 /**Note: Currently component not being called or used. */
@@ -193,15 +192,7 @@ const Tokens = ({
           <Icon
             name={Icons.SETTINGS_2}
             theme={theme}
-            onPress={() => {
-              navigate('TemplateStack', {
-                titleScreen: translate(
-                  'wallet.operations.token_settings.title',
-                ),
-                component: <TokenSettings />,
-                hideCloseButton: true,
-              } as TemplateStackProps);
-            }}
+            onPress={() => navigate('TokenSettings')}
             additionalContainerStyle={styles.iconButton}
           />
         </View>

@@ -333,7 +333,7 @@
         "start_convert": "Started a {{amount}} conversion",
         "start_collateralized": "Started a {{amount}} collateralized conversion",
         "pending": "Pending",
-        "no_pending": "No pending {{currency}} convertions to show.",
+        "no_pending": "No pending {{currency}} conversion to show.",
         "warning": {
           "missing_info": "Please fill the amount to proceed"
         },
