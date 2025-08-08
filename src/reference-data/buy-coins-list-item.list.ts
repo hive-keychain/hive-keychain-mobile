@@ -23,7 +23,6 @@ interface BuyCoinsListItemInterface {
 }
 
 const exchanges = ExchangesUtils.getExchanges();
-
 export const getBuyCoinsListItem = (
   type: BuyCoinType,
   username: string,
