@@ -1,8 +1,8 @@
 import {TokenBalance, TokenMarket} from 'actions/interfaces';
 import {TokenHistoryProps} from 'components/history/hive-engine/TokensHistory';
-import React from 'react';
-import {View, useWindowDimensions} from 'react-native';
-import {ConnectedProps, connect} from 'react-redux';
+import React, {memo, useCallback} from 'react';
+import {useWindowDimensions, View} from 'react-native';
+import {connect, ConnectedProps} from 'react-redux';
 import {useThemeContext} from 'src/context/theme.context';
 import {Token} from 'src/interfaces/tokens.interface';
 import {getCardStyle} from 'src/styles/card';
@@ -34,12 +34,12 @@ const EngineTokenDisplay = ({
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
 
-  const tokenInfo = tokensList.find((t) => t.symbol === token.symbol);
-  const tokenMarket = market.find((t) => t.symbol === token.symbol);
+  const tokenInfo = tokensList.find((t: Token) => t.symbol === token.symbol);
+  const tokenMarket = market.find(
+    (t: TokenMarket) => t.symbol === token.symbol,
+  );
 
-  if (!tokenInfo) return null;
-
-  const onHandleGoToTokenHistory = () => {
+  const onHandleGoToTokenHistory = useCallback(() => {
     navigate('TokensHistory', {
       currency: token.symbol,
       tokenBalance: token.balance,
@@ -53,7 +53,9 @@ const EngineTokenDisplay = ({
       ),
       theme: theme,
     } as TokenHistoryProps);
-  };
+  }, [token.symbol, token.balance, tokenInfo, colors, theme]);
+
+  if (!tokenInfo) return null;
 
   return (
     <View style={[getCardStyle(theme).wrapperCardItem, {zIndex: 11}]}>
@@ -104,4 +106,16 @@ const mapStateToProps = (state: RootState) => {
 const connector = connect(mapStateToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(EngineTokenDisplay);
+const areEqualOwnProps = (
+  prevProps: Readonly<Props>,
+  nextProps: Readonly<Props>,
+) => {
+  return (
+    prevProps.toggled === nextProps.toggled &&
+    prevProps.token === nextProps.token &&
+    prevProps.tokensList === nextProps.tokensList &&
+    prevProps.market === nextProps.market
+  );
+};
+
+export default memo(connector(EngineTokenDisplay), areEqualOwnProps);

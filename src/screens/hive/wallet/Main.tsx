@@ -43,13 +43,13 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   AppState,
   AppStateStatus,
+  FlatList,
   NativeEventEmitter,
   NativeModules,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Platform,
   RefreshControl,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -347,6 +347,28 @@ const Main = ({
     [],
   );
 
+  const renderEngineTokenDisplay = useCallback(
+    ({item, index}) => {
+      const handleSetToggle = () => {
+        if (toggled === item._id) setToggled(null);
+        else setToggled(item._id);
+        handleClickToView(index, 1);
+      };
+      return (
+        <EngineTokenDisplay
+          key={`engine-token-${item._id}`}
+          addBackground
+          token={item}
+          tokensList={tokens}
+          market={tokensMarket}
+          toggled={toggled === item._id}
+          setToggle={handleSetToggle}
+        />
+      );
+    },
+    [tokens, tokensMarket, toggled, setToggled, handleClickToView],
+  );
+
   return (
     <WalletPage
       additionalBgSvgImageStyle={
@@ -386,168 +408,165 @@ const Main = ({
                 overflow: 'hidden',
                 height: '100%',
               }}>
-              <ScrollView
+              <FlatList
+                style={{
+                  flex: 1,
+                  // backgroundColor: getCardStyle(theme).wrapperCardItem
+                  //   .backgroundColor,
+                }}
                 ref={mainScrollRef}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                windowSize={10}
+                data={filteredUserTokenBalanceList}
+                keyExtractor={(item) => item._id.toString()}
+                onScroll={onHandleScroll}
+                scrollEventThrottle={50}
                 refreshControl={
                   <RefreshControl
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                   />
                 }
-                scrollEventThrottle={200}
-                onScroll={onHandleScroll}
-                onMomentumScrollEnd={() => {
-                  // showFloatingBar(true);
-                }}>
-                <View style={styles.rowWrapper}>
-                  <PercentageDisplay
-                    name={translate('wallet.vp')}
-                    percent={getVP(user.account) || 100}
-                    IconBgcolor={OVERLAYICONBGCOLOR}
-                    theme={theme}
-                    iconName={Icons.SEND_SQUARE}
-                    bgColor={BACKGROUNDITEMDARKISH}
-                    secondary={`$${
-                      getVotingDollarsPerAccount(
-                        100,
-                        properties,
-                        user.account,
-                        false,
-                      ) || '0'
-                    }`}
-                  />
-                  <PercentageDisplay
-                    iconName={Icons.SPEEDOMETER}
-                    bgColor={DARKER_RED_COLOR}
-                    name={translate('wallet.rc')}
-                    percent={user.rc.percentage || 100}
-                    IconBgcolor={OVERLAYICONBGCOLOR}
-                    theme={theme}
-                  />
-                </View>
-                <Separator />
-                <AccountValue
-                  account={user.account}
-                  prices={prices}
-                  properties={properties}
-                  theme={theme}
-                  title={translate('common.estimated_account_value')}
-                />
-                <Separator />
-                <View style={getCardStyle(theme).borderTopCard}>
-                  <View>
-                    {[
-                      {currency: getCurrency('HIVE')},
-                      {currency: getCurrency('HBD')},
-                      {currency: getCurrency('HP')},
-                    ].map((item, index) => (
-                      <CurrencyToken
-                        key={`${item.currency}`}
+                renderItem={renderEngineTokenDisplay}
+                ListHeaderComponent={
+                  <React.Fragment>
+                    <View style={styles.rowWrapper}>
+                      <PercentageDisplay
+                        name={translate('wallet.vp')}
+                        percent={getVP(user.account) || 100}
+                        IconBgcolor={OVERLAYICONBGCOLOR}
                         theme={theme}
-                        currencyName={item.currency as any}
-                        itemIndex={index}
-                        onPress={handleClickToView.bind(null, index, 0)}
+                        iconName={Icons.SEND_SQUARE}
+                        bgColor={BACKGROUNDITEMDARKISH}
+                        secondary={`$$${
+                          getVotingDollarsPerAccount(
+                            100,
+                            properties,
+                            user.account,
+                            false,
+                          ) || '0'
+                        }`}
                       />
-                    ))}
-                  </View>
-
-                  <View style={[getCardStyle(theme).wrapperCardItem]}>
-                    <View
-                      style={[
-                        styles.flexRow,
-                        isSearchOpen ? styles.paddingVertical : undefined,
-                      ]}>
-                      <HiveEngineLogo height={23} width={23} />
-                      <View style={styles.separatorContainer} />
-                      {isSearchOpen ? (
-                        <CustomSearchBar
-                          theme={theme}
-                          value={searchValue}
-                          onChangeText={(text) => {
-                            setSearchValue(text);
-                          }}
-                          additionalContainerStyle={[
-                            styles.searchContainer,
-                            isSearchOpen ? styles.borderLight : undefined,
-                          ]}
-                          rightIcon={
-                            <Icon
-                              name={Icons.SEARCH}
-                              theme={theme}
-                              width={18}
-                              height={18}
-                              onPress={() => {
-                                setSearchValue('');
-                                setIsSearchOpen(false);
-                              }}
-                            />
-                          }
-                        />
-                      ) : (
-                        <>
-                          <Icon
-                            name={Icons.SEARCH}
-                            theme={theme}
-                            additionalContainerStyle={styles.search}
-                            onPress={() => {
-                              setIsSearchOpen(true);
-                            }}
-                            width={18}
-                            height={18}
-                          />
-                          <Icon
-                            name={Icons.SETTINGS_2}
-                            theme={theme}
-                            onPress={handleClickSettings}
-                          />
-                        </>
-                      )}
+                      <PercentageDisplay
+                        iconName={Icons.SPEEDOMETER}
+                        bgColor={DARKER_RED_COLOR}
+                        name={translate('wallet.rc')}
+                        percent={user.rc.percentage || 100}
+                        IconBgcolor={OVERLAYICONBGCOLOR}
+                        theme={theme}
+                      />
                     </View>
-                  </View>
-                  {filteredUserTokenBalanceList.map((item, index) => (
-                    <EngineTokenDisplay
-                      key={`engine-token-${item._id}`}
-                      addBackground
-                      token={item}
-                      tokensList={tokens}
-                      market={tokensMarket}
-                      toggled={toggled === item._id}
-                      setToggle={() => {
-                        if (toggled === item._id) setToggled(null);
-                        else setToggled(item._id);
-                        handleClickToView(index, 1);
-                      }}
+                    <Separator />
+                    <AccountValue
+                      account={user.account}
+                      prices={prices}
+                      properties={properties}
+                      theme={theme}
+                      title={translate('common.estimated_account_value')}
                     />
-                  ))}
-
-                  <>
-                    {isHiveEngineLoading && (
+                    <Separator />
+                    <View style={getCardStyle(theme).borderTopCard}>
+                      <View>
+                        {[
+                          {currency: getCurrency('HIVE')},
+                          {currency: getCurrency('HBD')},
+                          {currency: getCurrency('HP')},
+                        ].map((item, index) => (
+                          <CurrencyToken
+                            key={`${item.currency}`}
+                            theme={theme}
+                            currencyName={item.currency as any}
+                            itemIndex={index}
+                            onPress={handleClickToView.bind(null, index, 0)}
+                          />
+                        ))}
+                      </View>
+                      <View style={[getCardStyle(theme).wrapperCardItem]}>
+                        <View
+                          style={[
+                            styles.flexRow,
+                            isSearchOpen ? styles.paddingVertical : undefined,
+                          ]}>
+                          <HiveEngineLogo height={23} width={23} />
+                          <View style={styles.separatorContainer} />
+                          {isSearchOpen ? (
+                            <CustomSearchBar
+                              theme={theme}
+                              value={searchValue}
+                              onChangeText={(text) => {
+                                setSearchValue(text);
+                              }}
+                              additionalContainerStyle={[
+                                styles.searchContainer,
+                                isSearchOpen ? styles.borderLight : undefined,
+                              ]}
+                              rightIcon={
+                                <Icon
+                                  name={Icons.SEARCH}
+                                  theme={theme}
+                                  width={18}
+                                  height={18}
+                                  onPress={() => {
+                                    setSearchValue('');
+                                    setIsSearchOpen(false);
+                                  }}
+                                />
+                              }
+                            />
+                          ) : (
+                            <React.Fragment>
+                              <Icon
+                                name={Icons.SEARCH}
+                                theme={theme}
+                                additionalContainerStyle={styles.search}
+                                onPress={() => {
+                                  setIsSearchOpen(true);
+                                }}
+                                width={18}
+                                height={18}
+                              />
+                              <Icon
+                                name={Icons.SETTINGS_2}
+                                theme={theme}
+                                onPress={handleClickSettings}
+                              />
+                            </React.Fragment>
+                          )}
+                        </View>
+                      </View>
+                    </View>
+                  </React.Fragment>
+                }
+                ListEmptyComponent={
+                  <React.Fragment>
+                    {isHiveEngineLoading ? (
                       <View style={styles.extraContainerMiniLoader}>
                         <Loader size={'small'} animating />
                       </View>
-                    )}
-                    {!userTokens.loading &&
+                    ) : !userTokens.loading &&
                       filteredUserTokenBalanceList.length === 0 &&
-                      orderedUserTokenBalanceList.length === 0 && (
-                        <View style={styles.extraContainerMiniLoader}>
-                          <Text style={styles.no_tokens}>
-                            {translate('wallet.no_tokens')}
-                          </Text>
-                        </View>
-                      )}
-                    {!userTokens.loading &&
+                      orderedUserTokenBalanceList.length === 0 ? (
+                      <View style={styles.extraContainerMiniLoader}>
+                        <Text style={styles.no_tokens}>
+                          {translate('wallet.no_tokens')}
+                        </Text>
+                      </View>
+                    ) : !userTokens.loading &&
                       orderedUserTokenBalanceList.length > 0 &&
-                      filteredUserTokenBalanceList.length === 0 && (
-                        <View style={styles.extraContainerMiniLoader}>
-                          <Text style={styles.no_tokens}>
-                            {translate('wallet.no_tokens_filter')}
-                          </Text>
-                        </View>
-                      )}
-                  </>
-                </View>
-                <View style={[getCardStyle(theme).filledWrapper]} />
-              </ScrollView>
+                      filteredUserTokenBalanceList.length === 0 ? (
+                      <View style={styles.extraContainerMiniLoader}>
+                        <Text style={styles.no_tokens}>
+                          {translate('wallet.no_tokens_filter')}
+                        </Text>
+                      </View>
+                    ) : null}
+                  </React.Fragment>
+                }
+                ListFooterComponent={
+                  <View style={[getCardStyle(theme).filledWrapper]} />
+                }
+              />
             </View>
             <WhatsNew navigation={navigation} />
             <WidgetConfiguration
