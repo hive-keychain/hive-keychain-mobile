@@ -3,6 +3,7 @@ import Icon from 'components/hive/Icon';
 import Background from 'components/ui/Background';
 import {Caption} from 'components/ui/Caption';
 import Separator from 'components/ui/Separator';
+import {FormatUtils} from 'hive-keychain-commons';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Theme, useThemeContext} from 'src/context/theme.context';
@@ -48,8 +49,12 @@ const SwapConfirm = ({
             {marginHorizontal: 16, marginBottom: 0},
           ]}>
           <View style={styles.flexRowbetween}>
-            <Text style={[styles.textBase]}>Swap ID</Text>
-            <Text style={[styles.textBase]}>{estimateId}</Text>
+            <Text style={[styles.textBase]}>
+              {translate('wallet.operations.swap.swap_id_title')}
+            </Text>
+            <Text style={[styles.textBase]}>
+              {FormatUtils.shortenString(estimateId, 8)}
+            </Text>
           </View>
           <Separator
             drawLine
@@ -58,7 +63,9 @@ const SwapConfirm = ({
           />
           <Separator height={10} />
           <View style={styles.flexRowbetween}>
-            <Text style={[styles.textBase]}>Estimation</Text>
+            <Text style={[styles.textBase]}>
+              {translate('wallet.operations.swap.estimation')}
+            </Text>
             <View style={styles.flexRowbetween}>
               <Text style={[styles.textBase]}>
                 {`${withCommas(amount)} ${startToken.symbol}`}
@@ -79,7 +86,9 @@ const SwapConfirm = ({
           />
           <Separator height={10} />
           <View style={styles.flexRowbetween}>
-            <Text style={[styles.textBase]}>Slippage</Text>
+            <Text style={[styles.textBase]}>
+              {translate('wallet.operations.swap.slippage')}
+            </Text>
             <Text style={[styles.textBase]}>{slippage}%</Text>
           </View>
         </View>

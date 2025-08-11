@@ -460,6 +460,7 @@
         "swap_token_confirm_message": "You are about to initiate a token swap using Keychain. You can track its status from the swap history screen.",
         "swap_id_title": "Swap ID",
         "swap_estimation": "Swap Estimation",
+        "estimation": "Estimation",
         "swap_min_hive_value_error": "Minimum value should be equivalent to 1 HIVE (currently {{currently}} HIVE)",
         "swap_refresh_countdown": "Refreshing in {{count}}s",
         "swap_slippage_step": "{{slippage}}% (for each step)",
