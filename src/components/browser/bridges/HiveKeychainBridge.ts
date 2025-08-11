@@ -2,6 +2,12 @@
  * Use the `hive_keychain` methods listed below to issue requests to the Hive blockchain.
  */
 export const hive_keychain = `
+try { 
+  window.__KEYCHAIN_WEBVIEW__={
+    app: "HiveKeychainApp",
+    version: "2"
+    };
+  } catch (e) {}
 window.hive_keychain={
   current_id: 1,
   requests: {},
