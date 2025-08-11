@@ -41,7 +41,6 @@ export default ({
   const {theme} = useThemeContext();
   const {width} = useWindowDimensions();
   const styles = getStyles(theme, width, alignAllToLeft);
-
   return (
     <View style={[styles.container, style]}>
       {title && <Text style={[styles.textBase, styles.title]}>{title}</Text>}
@@ -51,7 +50,11 @@ export default ({
             <>
               <Image
                 style={[styles.avatar, avatarStyle]}
-                source={{uri: `https://images.hive.blog/u/${username}/avatar`}}
+                source={{
+                  uri: `https://images.hive.blog/u/${
+                    username.split(' ')[0]
+                  }/avatar`,
+                }}
                 resizeMode={Image.resizeMode.contain}
                 fallback
               />
@@ -78,7 +81,11 @@ export default ({
               </Text>
               <Image
                 style={[styles.avatar, avatarStyle]}
-                source={{uri: `https://images.hive.blog/u/${username}/avatar`}}
+                source={{
+                  uri: `https://images.hive.blog/u/${
+                    username.split(' ')[0]
+                  }/avatar`,
+                }}
                 resizeMode={Image.resizeMode.contain}
                 fallback
               />

@@ -250,7 +250,11 @@ const Transfer = ({
           },
           {
             title: 'wallet.operations.transfer.confirm.to',
-            value: `@${to}${ExchangesUtils.isExchange(to) ? '(exchange)' : ''}`,
+            value: `@${to}${
+              ExchangesUtils.isExchange(to)
+                ? ` (${translate('common.exchange')})`
+                : ''
+            }`,
             tag: ConfirmationDataTag.USERNAME,
           },
           {
