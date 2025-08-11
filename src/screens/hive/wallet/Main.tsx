@@ -406,8 +406,6 @@ const Main = ({
               <FlatList
                 style={{
                   flex: 1,
-                  // backgroundColor: getCardStyle(theme).wrapperCardItem
-                  //   .backgroundColor,
                 }}
                 ref={mainScrollRef}
                 initialNumToRender={10}

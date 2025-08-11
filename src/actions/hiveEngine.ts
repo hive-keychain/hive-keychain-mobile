@@ -24,6 +24,7 @@ import {
   LOAD_TOKENS_MARKET,
   LOAD_TOKEN_HISTORY,
   LOAD_USER_TOKENS,
+  STOP_USER_TOKENS_LOADING,
 } from './types';
 
 export const loadTokens = (): AppThunk => async (dispatch) => {
@@ -75,6 +76,11 @@ export const loadUserTokens = (account: string): AppThunk => async (
       payload: tokensBalance,
     };
     dispatch(action);
+    setTimeout(() => {
+      dispatch({
+        type: STOP_USER_TOKENS_LOADING,
+      });
+    }, 100);
   } catch (e) {
     const switchAuto = await AsyncStorage.getItem(
       KeychainStorageKeyEnum.SWITCH_HE_RPC_AUTO,
