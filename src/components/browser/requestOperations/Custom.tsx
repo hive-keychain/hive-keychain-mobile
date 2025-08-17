@@ -34,19 +34,6 @@ export default ({
     RequestUsername,
   } = usePotentiallyAnonymousRequest(request, accounts);
 
-  const performOperation = async (options: TransactionOptions) => {
-    async (options: TransactionOptions) => {
-      return await broadcastJson(
-        getAccountKey(),
-        getUsername(),
-        id,
-        method === 'Active',
-        json,
-        options,
-      );
-    };
-  };
-
   return (
     <RequestOperation
       message={display_msg}
@@ -59,7 +46,16 @@ export default ({
       selectedUsername={getUsername()}
       closeGracefully={closeGracefully}
       RequestUsername={RequestUsername}
-      performOperation={performOperation}
+      performOperation={async (options: TransactionOptions) => {
+        return await broadcastJson(
+          getAccountKey(),
+          getUsername(),
+          id,
+          method === 'Active',
+          json,
+          options,
+        );
+      }}
       confirmationData={[
         {
           tag: ConfirmationDataTag.REQUEST_USERNAME,
