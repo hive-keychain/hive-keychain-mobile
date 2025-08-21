@@ -7,6 +7,7 @@ import WalletStack from 'navigators/mainDrawerStacks/Wallet';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
+import CreateAccountConfirmation from 'screens/hive/createAccounts/CreateAccountConfirmation';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {translate} from 'utils/localize';
@@ -144,6 +145,10 @@ export default () => {
       />
       <Drawer.Screen name="RcDelegations" component={RcDelegationsStack} />
       <Drawer.Screen name="SwapConfirm" component={SwapConfirmStack} />
+      <Drawer.Screen
+        name="CreateAccountConfirmationScreen"
+        component={CreateAccountConfirmation}
+      />
       <Drawer.Screen
         name="ToggleWitness"
         component={GovernanceToggleWitnessStack}

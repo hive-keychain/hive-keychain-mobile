@@ -45,6 +45,7 @@ const hiddenRoutesInMain = [
   'ToggleWitness',
   'SwapBuyStack',
   'SwapHistory',
+  'CreateAccountConfirmationScreen',
   'Help',
 ];
 

@@ -1,4 +1,5 @@
 import {PrivateKey} from '@hiveio/dhive';
+import Clipboard from '@react-native-community/clipboard';
 import {addAccount} from 'actions/accounts';
 import {Account, KeyTypes} from 'actions/interfaces';
 import {showModal} from 'actions/message';
@@ -15,8 +16,8 @@ import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
 import Loader from 'components/ui/Loader';
 import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
 import React, {useEffect, useState} from 'react';
+
 import {
-  Clipboard,
   ScrollView,
   StyleSheet,
   Text,
@@ -57,22 +58,12 @@ const DEFAULT_EMPTY_KEYS = {
   memo: {public: '', private: ''},
 } as GeneratedKeys;
 
-interface Props {
-  selectedAccount: Account;
-  accountName: string;
-  creationType: AccountCreationType;
-  price: number;
-}
-
 const StepTwo = ({
   user,
   addAccount,
-  selectedAccount,
-  accountName,
-  creationType,
-  price,
   showModal,
-}: PropsFromRedux & Props) => {
+  route,
+}: PropsFromRedux & {route: any}) => {
   const [masterKey, setMasterKey] = useState('');
   const [generatedKeys, setGeneratedKeys] = useState(DEFAULT_EMPTY_KEYS);
   const [keysTextVersion, setKeysTextVersion] = useState('');
@@ -90,6 +81,7 @@ const StepTwo = ({
   const {width, height} = useWindowDimensions();
   const styles = getDimensionedStyles({width, height}, theme);
   const [isMultisig, twoFABots] = useCheckForMultisig(KeyTypes.active, user);
+  const {accountName, creationType, selectedAccount, price} = route.params;
 
   useEffect(() => {
     const masterKey = AccountCreationUtils.generateMasterKey();
@@ -236,7 +228,7 @@ const StepTwo = ({
         addExtraInfoToClipboard(
           creationType === AccountCreationType.PEER_TO_PEER
             ? 'peer_to_peer'
-            : selectedAccount.name,
+            : selectedAccount?.name,
         ),
     );
     SimpleToast.show(translate('toast.copied_text'));
@@ -409,7 +401,6 @@ const StepTwo = ({
   return (
     <Background
       theme={theme}
-      skipTop
       skipBottom
       additionalBgSvgImageStyle={{bottom: -initialWindowMetrics.insets.bottom}}>
       <View style={styles.containerQrPage}>

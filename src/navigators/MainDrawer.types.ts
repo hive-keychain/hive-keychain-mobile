@@ -28,6 +28,7 @@ export type MainDrawerStackParam = {
   RcDelegations: undefined;
   SwapConfirm: undefined;
   ToggleWitness: undefined;
+  CreateAccountConfirmationScreen: undefined;
 };
 
 export type BrowserNavigation = StackNavigationProp<
