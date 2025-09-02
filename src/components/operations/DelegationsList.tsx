@@ -96,24 +96,30 @@ const DelegationsList = ({
         loadPendingOutgoingUndelegations();
       }
     }
-  }, [loadDelegatees, loadDelegators, user.name, type]);
+  }, [loadDelegatees, loadDelegators, user.name, type, totalDelegationsAmount]);
 
   const loadPendingOutgoingUndelegations = async () => {
     const pendingOutgoingList = await getPendingOutgoingUndelegation(user.name);
+    let totalOutgoing = 0;
     if (pendingOutgoingList.length > 0) {
       setPendingList(pendingOutgoingList);
-      const totalOutgoing = pendingOutgoingList.reduce(
+      totalOutgoing = pendingOutgoingList.reduce(
         (acc: number, current: any) =>
           acc + toHP(current.vesting_shares + '', properties.globals),
         0,
       );
       setTotalPendingOutgoingUndelegation(totalOutgoing);
-      const totalHp = toHP(
-        user.account.vesting_shares as string,
-        properties.globals,
-      );
-      setAvailable(Math.max(totalHp - Number(totalOutgoing) - 5, 0).toFixed(4));
     }
+    const totalHp = toHP(
+      user.account.vesting_shares as string,
+      properties.globals,
+    );
+    setAvailable(
+      Math.max(
+        totalHp - Number(totalOutgoing) - totalDelegationsAmount - 5,
+        0,
+      ).toFixed(3),
+    );
   };
 
   useEffect(() => {
@@ -313,11 +319,16 @@ const DelegationsList = ({
                   />
                   <TouchableOpacity
                     activeOpacity={1}
-                    onPress={() =>
+                    onPress={() => {
                       setEditedAmountDelegation(
-                        getCleanAmountValue(available.toString()),
-                      )
-                    }>
+                        getCleanAmountValue(
+                          (
+                            +available +
+                            toHP(item.vesting_shares + '', properties.globals)
+                          ).toFixed(3),
+                        ),
+                      );
+                    }}>
                     <Text style={[styles.textBase, styles.redText]}>
                       {translate('common.max').toUpperCase()}
                     </Text>
