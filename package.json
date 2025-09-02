@@ -19,7 +19,9 @@
     "postinstall": "patch-package",
     "show-on-error-notes": "echo 'Files needed:\nAndroid/gradle.properties'",
     "bump": "npx react-native bump-version --type patch",
-    "bump:minor": "npx react-native bump-version --type minor"
+    "bump:minor": "npx react-native bump-version --type minor",
+    "crowdin:pull": "crowdin download",
+    "crowdin:push": "crowdin upload sources"
   },
   "dependencies": {
     "@hiveio/dhive": "^1.2.5",
