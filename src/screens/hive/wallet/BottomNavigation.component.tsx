@@ -21,11 +21,11 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Orientation from 'react-native-orientation-locker';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import SimpleToast from 'react-native-simple-toast';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import {ConnectedProps, connect} from 'react-redux';
+import {useOrientation} from 'src/context/orientation.context';
 import {useTab} from 'src/context/tab.context';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -80,11 +80,11 @@ const BottomNavigation = ({
   const [showBrowserSecondaryLinks, setShowBrowserSecondaryLinks] = useState(
     true,
   );
-  const [orientation, setOrientation] = useState('PORTRAIT');
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [isVisible, setIsVisible] = useState(
     !isModal && show && rpc && rpc.uri !== 'NULL',
   );
+  const orientation = useOrientation();
 
   // Listen to keyboard events, and hide the bottom navigation when the keyboard is visible
   useEffect(() => {
@@ -106,24 +106,6 @@ const BottomNavigation = ({
     };
   }, []);
 
-  useEffect(() => {
-    Orientation.addDeviceOrientationListener((orientation) => {
-      if (['UNKNOWN'].includes(orientation)) return;
-      if (Platform.OS === 'android' && orientation !== 'PORTRAIT') {
-        Orientation.getAutoRotateState((s) => {
-          if (s) {
-            setOrientation(orientation);
-          }
-        });
-      } else {
-        setOrientation(orientation);
-      }
-    });
-
-    return () => {
-      Orientation.removeAllListeners();
-    };
-  }, []);
   const onHandlePressButton = (link: BottomBarLink) => {
     let screen = '';
     let nestedScreenOrParams;

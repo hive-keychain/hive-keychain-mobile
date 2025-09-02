@@ -5,6 +5,7 @@ import {
   initialWindowMetrics,
   SafeAreaView,
 } from 'react-native-safe-area-context';
+import {useOrientation} from 'src/context/orientation.context';
 
 type Props = {
   style?: StyleProp<ViewStyle>;
@@ -14,6 +15,7 @@ type Props = {
 };
 
 const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
+  const orientation = useOrientation();
   const edges: Edge[] = ['left', 'right'];
   if (!skipTop) {
     edges.push('top');
@@ -44,7 +46,9 @@ const SafeArea = ({style, children, skipTop, skipBottom}: Props) => {
         {
           paddingTop: skipTop ? 16 : 12,
           paddingBottom:
-            skipBottom && isAndroid35 ? initialWindowMetrics.insets.bottom : 0,
+            skipBottom && isAndroid35 && !orientation.startsWith('LANDSCAPE')
+              ? initialWindowMetrics.insets.bottom
+              : 0,
         },
         style,
       ]}

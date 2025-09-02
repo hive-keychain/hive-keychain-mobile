@@ -5,6 +5,7 @@ import {store} from 'store';
 import EVMApp from './EVMApp';
 import HiveApp from './HiveApp';
 import {Chain, ChainContext} from './context/multichain.context';
+import {OrientationProvider} from './context/orientation.context';
 import {TabProvider} from './context/tab.context';
 import {Theme, ThemeContext} from './context/theme.context';
 import {KeychainStorageKeyEnum} from './reference-data/keychainStorageKeyEnum';
@@ -60,7 +61,9 @@ export default () => {
     return (
       <ThemeContext.Provider value={{theme, setTheme, toggleTheme}}>
         <ChainContext.Provider value={{chain, setChain}}>
-          <TabProvider>{renderChain(chain)}</TabProvider>
+          <OrientationProvider>
+            <TabProvider>{renderChain(chain)}</TabProvider>
+          </OrientationProvider>
         </ChainContext.Provider>
       </ThemeContext.Provider>
     );

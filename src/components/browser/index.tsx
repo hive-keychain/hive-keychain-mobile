@@ -1,17 +1,11 @@
 import {Tab as TabType} from 'actions/interfaces';
 import {BrowserNavigationProps} from 'navigators/MainDrawer.types';
 import React, {MutableRefObject, useEffect, useState} from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
-import Orientation from 'react-native-orientation-locker';
+import {KeyboardAvoidingView, ScrollView, StyleSheet, View} from 'react-native';
 import {captureRef} from 'react-native-view-shot';
 import WebView from 'react-native-webview';
 import {BrowserPropsFromRedux} from 'screens/Browser';
+import {useOrientation} from 'src/context/orientation.context';
 import {useTab} from 'src/context/tab.context';
 import {Theme} from 'src/context/theme.context';
 import {BrowserConfig} from 'utils/config';
@@ -46,10 +40,9 @@ const Browser = ({
   const url = currentActiveTabData
     ? currentActiveTabData.url
     : BrowserConfig.HOMEPAGE_URL;
-
+  const orientation = useOrientation();
   const [isVisible, toggleVisibility] = useState(false);
   const [searchUrl, setSearchUrl] = useState(url);
-  const [orientation, setOrientation] = useState('PORTRAIT');
   const {webViewRef} = useTab();
   useEffect(() => {
     setSearchUrl(url);
@@ -63,25 +56,6 @@ const Browser = ({
       addTab('about:blank');
     }
   }, [tabs.length]);
-
-  useEffect(() => {
-    Orientation.addDeviceOrientationListener((orientation) => {
-      if (['UNKNOWN', 'FACE-UP', 'FACE-DOWN'].includes(orientation)) return;
-      if (Platform.OS === 'android' && orientation !== 'PORTRAIT') {
-        Orientation.getAutoRotateState((s) => {
-          if (s) {
-            setOrientation(orientation);
-          }
-        });
-      } else {
-        setOrientation(orientation);
-      }
-    });
-
-    return () => {
-      Orientation.removeAllListeners();
-    };
-  }, []);
 
   const onSelectTab = (id: number) => {
     changeTab(id);
