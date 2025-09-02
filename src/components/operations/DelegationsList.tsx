@@ -325,7 +325,7 @@ const DelegationsList = ({
                           (
                             +available +
                             toHP(item.vesting_shares + '', properties.globals)
-                          ).toFixed(3),
+                          ).toString(),
                         ),
                       );
                     }}>

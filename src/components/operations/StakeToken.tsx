@@ -199,9 +199,7 @@ const StakeToken = ({
                   <TouchableOpacity
                     activeOpacity={1}
                     onPress={() => {
-                      setAmount(
-                        parseFloat(getCleanAmountValue(balance)).toFixed(3),
-                      );
+                      setAmount(getCleanAmountValue(balance));
                     }}>
                     <Text
                       style={

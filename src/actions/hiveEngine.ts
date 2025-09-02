@@ -80,7 +80,7 @@ export const loadUserTokens = (account: string): AppThunk => async (
       dispatch({
         type: STOP_USER_TOKENS_LOADING,
       });
-    }, 500);
+    }, 1000);
   } catch (e) {
     const switchAuto = await AsyncStorage.getItem(
       KeychainStorageKeyEnum.SWITCH_HE_RPC_AUTO,
