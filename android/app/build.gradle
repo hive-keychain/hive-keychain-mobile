@@ -81,7 +81,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    enableHermes: false,  // clean and rebuild if changing
+    enableHermes: true,  // clean and rebuild if changing
 ]
 project.ext.vectoricons = [
         iconFontNames: [ 'FontAwesome.ttf', 'FontAwesome5_Regular.ttf','MaterialIcons.ttf',
@@ -137,8 +137,8 @@ android {
     defaultConfig {
         applicationId "com.mobilekeychain"
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 188
-        versionName "2.8.6"
+        versionCode 189
+        versionName "2.8.7"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
         ndk {
@@ -246,9 +246,7 @@ dependencies {
     }
 
     if (enableHermes) {
-        def hermesPath = "../../node_modules/hermes-engine/android/";
-        debugImplementation files(hermesPath + "hermes-debug.aar")
-        releaseImplementation files(hermesPath + "hermes-release.aar")
+        implementation ("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
