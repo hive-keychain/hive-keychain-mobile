@@ -1,91 +1,90 @@
-import Clipboard from '@react-native-community/clipboard';
-import Icon from 'components/hive/Icon';
-import {ISwap, SwapStatus} from 'hive-keychain-commons';
-import moment from 'moment';
-import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Tooltip} from 'react-native-elements';
-import SimpleToast from 'react-native-simple-toast';
-import {ConnectedProps, connect} from 'react-redux';
-import {RootState} from 'store';
-import {withCommas} from 'utils/format';
-import {translate} from 'utils/localize';
+import Clipboard from "@react-native-community/clipboard";
+import Icon from "components/hive/Icon";
+import { ISwap, SwapStatus } from "hive-keychain-commons";
+import moment from "moment";
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Tooltip } from "react-native-elements";
+import SimpleToast from "react-native-root-toast";
+import { ConnectedProps, connect } from "react-redux";
+import { RootState } from "store";
+import { withCommas } from "utils/format";
+import { translate } from "utils/localize";
 
 interface Props {
   swap: ISwap;
 }
 
-const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
+const TokenSwapHistoryItem = ({ swap }: PropsFromRedux & Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const copyIdToCliplboard = (id: string) => {
     Clipboard.setString(id.toString());
-    SimpleToast.show(
-      translate('swapTokens.swap_copied_to_clipboard'),
-      SimpleToast.LONG,
-    );
+    SimpleToast.show(translate("swapTokens.swap_copied_to_clipboard"), {
+      duration: SimpleToast.durations.LONG,
+    });
   };
 
   const getStatusMessage = (
-    status: ISwap['status'],
-    transferInitiated: boolean,
+    status: ISwap["status"],
+    transferInitiated: boolean
   ) => {
     switch (status) {
       case SwapStatus.PENDING:
         return transferInitiated
-          ? translate('swapTokens.swap_status_pending')
-          : translate('swapTokens.swap_transfer_not_sent');
+          ? translate("swapTokens.swap_status_pending")
+          : translate("swapTokens.swap_transfer_not_sent");
       case SwapStatus.COMPLETED:
-        return translate('swapTokens.swap_status_completed');
+        return translate("swapTokens.swap_status_completed");
       case SwapStatus.CANCELED_DUE_TO_ERROR:
-        return translate('swapTokens.swap_status_canceled_due_to_error');
+        return translate("swapTokens.swap_status_canceled_due_to_error");
       case SwapStatus.FUNDS_RETURNED:
-        return translate('swapTokens.swap_status_returned');
+        return translate("swapTokens.swap_status_returned");
       case SwapStatus.REFUNDED_SLIPPAGE:
-        return translate('swapTokens.swap_status_refunded');
+        return translate("swapTokens.swap_status_refunded");
       case SwapStatus.STARTED:
-        return translate('swapTokens.swap_status_started');
+        return translate("swapTokens.swap_status_started");
     }
   };
 
-  const getStatusIcon = (status: ISwap['status']) => {
+  const getStatusIcon = (status: ISwap["status"]) => {
     switch (status) {
       case SwapStatus.PENDING:
       case SwapStatus.STARTED:
-        return 'pending';
+        return "pending";
       case SwapStatus.COMPLETED:
-        return 'check_circle';
+        return "check_circle";
       case SwapStatus.CANCELED_DUE_TO_ERROR:
       case SwapStatus.FUNDS_RETURNED:
       case SwapStatus.REFUNDED_SLIPPAGE:
-        return 'error';
+        return "error";
     }
   };
 
   const getShortenedId = (id: string) => {
-    return id.substring(0, 6) + '...' + id.slice(-6);
+    return id.substring(0, 6) + "..." + id.slice(-6);
   };
 
   const getStepIcon = (status: string) => {
     switch (status) {
-      case 'success':
-        return 'check_circle';
-      case 'pending':
-        return 'pending';
-      case 'failed':
-        return 'cancel';
+      case "success":
+        return "check_circle";
+      case "pending":
+        return "pending";
+      case "failed":
+        return "cancel";
       default:
-        return 'pending';
+        return "pending";
     }
   };
 
   function getTooltipMessage(swap: ISwap) {
     return `${getStatusMessage(swap.status, swap.transferInitiated)} \n ${
       [SwapStatus.PENDING, SwapStatus.STARTED].includes(swap.status)
-        ? translate('swapTokens.swap_last_update', {
-            updatedAt: moment(swap.updatedAt).format('YYYY-MM-DD HH:mm:ss'),
+        ? translate("swapTokens.swap_last_update", {
+            updatedAt: moment(swap.updatedAt).format("YYYY-MM-DD HH:mm:ss"),
           })
-        : moment(swap.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+        : moment(swap.updatedAt).format("YYYY-MM-DD HH:mm:ss")
     }`;
   }
 
@@ -93,33 +92,35 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
     <View style={[styles.container, styles.paddingHorizontal]}>
       <View
         style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          backgroundColor: '#f2d9d6',
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          backgroundColor: "#f2d9d6",
           paddingVertical: 12,
-        }}>
+        }}
+      >
         <Icon
-          name={!isOpen ? 'expand_more' : 'expand_less'}
+          name={!isOpen ? "expand_more" : "expand_less"}
           onClick={() => setIsOpen(!isOpen)}
         />
         <View>
           <View
             style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <Text>
               {swap.amount} {swap.startToken}
             </Text>
-            <Icon name={'power_up_down'} subType={'withdraw_vesting'} />
+            <Icon name={"power_up_down"} subType={"withdraw_vesting"} />
             <Text>
-              {swap.status === SwapStatus.COMPLETED ? '' : <Text>~</Text>}
+              {swap.status === SwapStatus.COMPLETED ? "" : <Text>~</Text>}
               {swap.received ??
                 withCommas(
                   Number(swap.expectedAmountAfterFee).toString(),
-                  3,
-                )}{' '}
+                  3
+                )}{" "}
               {swap.endToken}
             </Text>
           </View>
@@ -130,8 +131,11 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
           }}
           height={100}
           popover={
-            <Text style={{textAlign: 'center'}}>{getTooltipMessage(swap)}</Text>
-          }>
+            <Text style={{ textAlign: "center" }}>
+              {getTooltipMessage(swap)}
+            </Text>
+          }
+        >
           <Icon name={getStatusIcon(swap.status)} />
         </Tooltip>
       </View>
@@ -141,31 +145,34 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
           <View
             style={{
               marginTop: 8,
-            }}>
+            }}
+          >
             {swap.history
               .sort((a, b) => a.stepNumber - b.stepNumber)
               .map((step) => (
                 <View
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
+                    flexDirection: "row",
+                    justifyContent: "space-between",
                     marginBottom: 8,
                   }}
-                  key={swap.id + '' + step.stepNumber}>
+                  key={swap.id + "" + step.stepNumber}
+                >
                   <Text
                     style={{
                       marginLeft: 12,
-                      fontWeight: 'bold',
-                    }}>
+                      fontWeight: "bold",
+                    }}
+                  >
                     {step.stepNumber}
                   </Text>
                   <View>
                     <Text>
-                      {withCommas(step.amountStartToken + '', 3)}{' '}
-                      {step.startToken} {'=>'}{' '}
+                      {withCommas(step.amountStartToken + "", 3)}{" "}
+                      {step.startToken} {"=>"}{" "}
                       {step.amountEndToken
-                        ? withCommas(step.amountEndToken + '', 3)
-                        : '...'}{' '}
+                        ? withCommas(step.amountEndToken + "", 3)
+                        : "..."}{" "}
                       {step.endToken}
                     </Text>
                   </View>
@@ -175,16 +182,18 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
             {!!swap.fee && (
               <View
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
+                  flexDirection: "row",
+                  justifyContent: "space-between",
                   marginBottom: 8,
-                }}>
+                }}
+              >
                 <Text
                   style={{
                     marginLeft: 12,
-                    fontWeight: 'bold',
-                  }}>
-                  {translate('swapTokens.swap_fee')}
+                    fontWeight: "bold",
+                  }}
+                >
+                  {translate("swapTokens.swap_fee")}
                 </Text>
                 <View>
                   <Text>
@@ -195,25 +204,28 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
             )}
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                flexDirection: "row",
+                justifyContent: "space-between",
                 marginBottom: 8,
-              }}>
+              }}
+            >
               <Text
                 style={{
                   marginLeft: 12,
-                  fontWeight: 'bold',
-                }}>
+                  fontWeight: "bold",
+                }}
+              >
                 ID
               </Text>
               <View
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
                 <Text>{getShortenedId(swap.id)}</Text>
                 <Icon
-                  name={'content_copy'}
+                  name={"content_copy"}
                   onClick={() => copyIdToCliplboard(swap.id)}
                 />
               </View>
@@ -226,26 +238,26 @@ const TokenSwapHistoryItem = ({swap}: PropsFromRedux & Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {width: '100%', flex: 1, marginBottom: 8},
-  apr: {color: '#7E8C9A', fontSize: 14},
-  aprValue: {color: '#3BB26E', fontSize: 14},
-  withdrawingValue: {color: '#b8343f', fontSize: 14},
+  container: { width: "100%", flex: 1, marginBottom: 8 },
+  apr: { color: "#7E8C9A", fontSize: 14 },
+  aprValue: { color: "#3BB26E", fontSize: 14 },
+  withdrawingValue: { color: "#b8343f", fontSize: 14 },
   flexRowAligned: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   loader: {
-    backgroundColor: 'transparent',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "transparent",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
     flex: 1,
   },
   paddingHorizontal: {
     paddingHorizontal: 10,
   },
-  send: {backgroundColor: '#68A0B4', marginBottom: 20},
-  title: {fontWeight: 'bold', fontSize: 16},
+  send: { backgroundColor: "#68A0B4", marginBottom: 20 },
+  title: { fontWeight: "bold", fontSize: 16 },
 });
 
 const mapStateToProps = (state: RootState) => {

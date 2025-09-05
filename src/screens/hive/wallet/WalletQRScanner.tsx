@@ -1,32 +1,32 @@
-import {addAccount} from 'actions/index';
-import {Account} from 'actions/interfaces';
-import QRCode from 'components/qr_code';
-import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import {AddAccFromWalletNavigationProps} from 'navigators/mainDrawerStacks/AddAccount.types';
-import React, {useState} from 'react';
-import {Text} from 'react-native';
-import {BarCodeReadEvent} from 'react-native-camera';
-import SimpleToast from 'react-native-simple-toast';
-import {RootState, store} from 'store';
-import AccountUtils from 'utils/account.utils';
-import {KeyUtils} from 'utils/key.utils';
-import {validateFromObject} from 'utils/keyValidation';
-import {handleAddAccountQR, handleUrl} from 'utils/linking';
-import {translate} from 'utils/localize';
-import {resetStackAndNavigate} from 'utils/navigation';
+import { addAccount } from "actions/index";
+import { Account } from "actions/interfaces";
+import QRCode from "components/qr_code";
+import FocusAwareStatusBar from "components/ui/FocusAwareStatusBar";
+import { AddAccFromWalletNavigationProps } from "navigators/mainDrawerStacks/AddAccount.types";
+import React, { useState } from "react";
+import { Text } from "react-native";
+import { BarCodeReadEvent } from "react-native-camera";
+import SimpleToast from "react-native-root-toast";
+import { RootState, store } from "store";
+import AccountUtils from "utils/account.utils";
+import { KeyUtils } from "utils/key.utils";
+import { validateFromObject } from "utils/keyValidation";
+import { handleAddAccountQR, handleUrl } from "utils/linking";
+import { translate } from "utils/localize";
+import { resetStackAndNavigate } from "utils/navigation";
 
-const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
+const WalletQRScanner = ({ route }: AddAccFromWalletNavigationProps) => {
   const [processingAccounts, setProcessingAccounts] = useState(false);
   const [qrDataAccounts, setQrDataAccounts] = useState<Account[]>([]);
   const [acctPageTotal, setAcctPageTotal] = useState(0);
-  const onSuccess = async ({data}: BarCodeReadEvent) => {
+  const onSuccess = async ({ data }: BarCodeReadEvent) => {
     try {
-      if (data.startsWith('keychain://add_accounts=')) {
+      if (data.startsWith("keychain://add_accounts=")) {
         if (processingAccounts) {
           return;
         }
-        const accountData = data.replace('keychain://add_accounts=', '');
-        const accountDataStr = Buffer.from(accountData, 'base64').toString();
+        const accountData = data.replace("keychain://add_accounts=", "");
+        const accountDataStr = Buffer.from(accountData, "base64").toString();
         try {
           const dataAccounts = JSON.parse(accountDataStr);
           setAcctPageTotal(dataAccounts.total);
@@ -35,13 +35,13 @@ const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
               translate(
                 `toast.export_qr_accounts.${
                   qrDataAccounts.length / 2 + 1 < dataAccounts.index
-                    ? 'scan_page_first'
-                    : 'already_scanned'
+                    ? "scan_page_first"
+                    : "already_scanned"
                 }`,
                 {
                   page: qrDataAccounts.length / 2 + 1,
-                },
-              ),
+                }
+              )
             );
             return;
           }
@@ -53,23 +53,23 @@ const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
             qrDataAccounts.length < dataAccounts.total
           ) {
             SimpleToast.show(
-              translate('toast.export_qr_accounts.scan_next', {
+              translate("toast.export_qr_accounts.scan_next", {
                 index: dataAccounts.index,
                 total: dataAccounts.total,
-              }),
+              })
             );
           }
           if (dataAccounts.total === dataAccounts.index) {
             SimpleToast.show(
-              translate('toast.export_qr_accounts.scan_completed'),
+              translate("toast.export_qr_accounts.scan_completed")
             );
             handleAddAccountsQR(acc);
             setProcessingAccounts(true);
           }
         } catch (error) {
-          console.log('Error getting QR data accounts', {error});
+          console.log("Error getting QR data accounts", { error });
         }
-      } else if (data.startsWith('keychain://add_account=')) {
+      } else if (data.startsWith("keychain://add_account=")) {
         const wallet = route.params ? route.params.wallet : false;
         handleAddAccountQR(data, wallet);
       } else handleUrl(data, true);
@@ -80,7 +80,7 @@ const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
 
   const handleAddAccountsQR = async (
     qrDataAccounts: Account[],
-    wallet = true,
+    wallet = true
   ) => {
     for (const dataAcc of qrDataAccounts) {
       let keys = {};
@@ -91,9 +91,9 @@ const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
           KeyUtils.isAuthorizedAccount(dataAcc.keys.postingPubkey))
       ) {
         const localAccounts = ((await store.getState()) as RootState).accounts;
-        const authorizedAccount = dataAcc.keys.activePubkey?.startsWith('@')
-          ? dataAcc.keys.activePubkey?.replace('@', '')
-          : dataAcc.keys.postingPubkey?.replace('@', '');
+        const authorizedAccount = dataAcc.keys.activePubkey?.startsWith("@")
+          ? dataAcc.keys.activePubkey?.replace("@", "")
+          : dataAcc.keys.postingPubkey?.replace("@", "");
         const regularKeys = await validateFromObject({
           name: dataAcc.name,
           keys: {
@@ -107,17 +107,21 @@ const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
           authorizedKeys = await AccountUtils.addAuthorizedAccount(
             dataAcc.name,
             authorizedAccount,
-            localAccounts,
+            localAccounts
           );
         } catch (e) {
-          SimpleToast.show(e.message, SimpleToast.LONG);
+          SimpleToast.show(e.message, {
+            duration: SimpleToast.durations.LONG,
+          });
           continue;
         }
-        keys = {...authorizedKeys, ...regularKeys};
+        keys = { ...authorizedKeys, ...regularKeys };
         if (!KeyUtils.hasKeys(keys)) {
           SimpleToast.show(
-            translate('toast.no_accounts_no_auth', {username: dataAcc.name}),
-            SimpleToast.LONG,
+            translate("toast.no_accounts_no_auth", { username: dataAcc.name }),
+            {
+              duration: SimpleToast.durations.LONG,
+            }
           );
           continue;
         }
@@ -130,7 +134,7 @@ const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
     }
     setQrDataAccounts([]);
     setProcessingAccounts(false);
-    return resetStackAndNavigate('WALLET');
+    return resetStackAndNavigate("WALLET");
   };
 
   return (
@@ -141,8 +145,9 @@ const WalletQRScanner = ({route}: AddAccFromWalletNavigationProps) => {
         topContent={
           acctPageTotal > 0 && !processingAccounts ? (
             <Text
-              style={{textAlign: 'center', fontWeight: 'bold', fontSize: 16}}>
-              {translate('components.export_qr_accounts.scanning', {
+              style={{ textAlign: "center", fontWeight: "bold", fontSize: 16 }}
+            >
+              {translate("components.export_qr_accounts.scanning", {
                 page: qrDataAccounts.length / 2 + 1,
                 total: acctPageTotal,
               })}

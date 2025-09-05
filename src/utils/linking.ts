@@ -1,18 +1,18 @@
-import {treatHASRequest} from 'actions/hiveAuthenticationService';
-import {addAccount, addTabFromLinking} from 'actions/index';
-import * as hiveUri from 'hive-uri';
-import {CreateAccountFromWalletParamList} from 'navigators/mainDrawerStacks/CreateAccount.types';
-import {Linking} from 'react-native';
-import SimpleToast from 'react-native-simple-toast';
-import {RootState, store} from 'store';
-import isURL from 'validator/lib/isURL';
-import AccountUtils from './account.utils';
-import {HASConfig} from './config';
-import {HiveUriOpType, processQRCodeOp} from './hive-uri';
-import {KeyUtils} from './key.utils';
-import {validateFromObject} from './keyValidation';
-import {translate} from './localize';
-import {goBack, goBackAndNavigate} from './navigation';
+import { treatHASRequest } from "actions/hiveAuthenticationService";
+import { addAccount, addTabFromLinking } from "actions/index";
+import * as hiveUri from "hive-uri";
+import { CreateAccountFromWalletParamList } from "navigators/mainDrawerStacks/CreateAccount.types";
+import { Linking } from "react-native";
+import SimpleToast from "react-native-root-toast";
+import { RootState, store } from "store";
+import isURL from "validator/lib/isURL";
+import AccountUtils from "./account.utils";
+import { HASConfig } from "./config";
+import { HiveUriOpType, processQRCodeOp } from "./hive-uri";
+import { KeyUtils } from "./key.utils";
+import { validateFromObject } from "./keyValidation";
+import { translate } from "./localize";
+import { goBack, goBackAndNavigate } from "./navigation";
 
 let flagCurrentlyProcessing = false;
 let qrDataAccounts: {
@@ -22,7 +22,7 @@ let qrDataAccounts: {
 }[] = [];
 
 export default async () => {
-  Linking.addEventListener('url', ({url}) => {
+  Linking.addEventListener("url", ({ url }) => {
     if (url) {
       handleUrl(url);
     }
@@ -37,29 +37,29 @@ export default async () => {
 export const handleUrl = async (url: string, qr: boolean = false) => {
   if (url.startsWith(HASConfig.protocol)) {
     if (url.startsWith(HASConfig.auth_req)) {
-      const buf = Buffer.from(url.replace(HASConfig.auth_req, ''), 'base64');
+      const buf = Buffer.from(url.replace(HASConfig.auth_req, ""), "base64");
       const data = JSON.parse(buf.toString());
       if (qr) {
         goBack();
       }
       store.dispatch(treatHASRequest(data));
     }
-  } else if (url.startsWith('hive://')) {
+  } else if (url.startsWith("hive://")) {
     if (qr) {
       goBack();
     }
-    if (url.startsWith('hive://sign/')) {
+    if (url.startsWith("hive://sign/")) {
       const res = hiveUri.decode(url);
       const opType = url.match(/^hive:\/\/sign\/([^\/]+)/)[1] as HiveUriOpType;
       processQRCodeOp(opType, res);
     }
-  } else if (url.startsWith('keychain://create_account=')) {
-    const buf = url.replace('keychain://create_account=', '');
+  } else if (url.startsWith("keychain://create_account=")) {
+    const buf = url.replace("keychain://create_account=", "");
     try {
-      const data = JSON.parse(Buffer.from(buf, 'base64').toString());
-      const {n, o, a, p, m} = data;
-      goBackAndNavigate('CreateAccountScreen', {
-        screen: 'CreateAccountFromWalletScreenPageOne',
+      const data = JSON.parse(Buffer.from(buf, "base64").toString());
+      const { n, o, a, p, m } = data;
+      goBackAndNavigate("CreateAccountScreen", {
+        screen: "CreateAccountFromWalletScreenPageOne",
         params: {
           wallet: true,
           newPeerToPeerData: {
@@ -71,10 +71,10 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
               memo: m,
             },
           },
-        } as CreateAccountFromWalletParamList['CreateAccountFromWalletScreenPageOne'],
+        } as CreateAccountFromWalletParamList["CreateAccountFromWalletScreenPageOne"],
       });
     } catch (error) {
-      console.log('Error processing QR Create Accounts data, please check!', {
+      console.log("Error processing QR Create Accounts data, please check!", {
         error,
       });
     }
@@ -84,13 +84,13 @@ export const handleUrl = async (url: string, qr: boolean = false) => {
     }
     //@ts-ignore
     store.dispatch(addTabFromLinking(url));
-  } else if (url.startsWith('keychain://add_account='))
+  } else if (url.startsWith("keychain://add_account="))
     [handleAddAccountQR(url)];
   else [handleAddAccountQR(url)];
 };
 
 export const handleAddAccountQR = async (data: string, wallet = true) => {
-  const obj = JSON.parse(data.replace('keychain://add_account=', ''));
+  const obj = JSON.parse(data.replace("keychain://add_account=", ""));
   let keys = {};
   if (
     (obj.keys.activePubkey &&
@@ -106,13 +106,15 @@ export const handleAddAccountQR = async (data: string, wallet = true) => {
         obj.name,
         element.name,
         localAccounts,
-        SimpleToast,
+        SimpleToast
       );
     }
     if (!KeyUtils.hasKeys(keys)) {
       SimpleToast.show(
-        translate('toast.no_accounts_no_auth', {username: obj.name}),
-        SimpleToast.LONG,
+        translate("toast.no_accounts_no_auth", { username: obj.name }),
+        {
+          duration: SimpleToast.durations.LONG,
+        }
       );
       return;
     }
@@ -127,5 +129,5 @@ export const handleAddAccountQR = async (data: string, wallet = true) => {
 };
 
 export const clearLinkingListeners = () => {
-  Linking.removeAllListeners('url');
+  Linking.removeAllListeners("url");
 };

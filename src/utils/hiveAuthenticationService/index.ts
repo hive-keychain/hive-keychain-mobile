@@ -2,19 +2,19 @@ import {
   clearHASState,
   showHASInitRequestAsTreated,
   updateInstanceConnectionStatus,
-} from 'actions/hiveAuthenticationService';
-import SimpleToast from 'react-native-simple-toast';
-import {HAS_State} from 'reducers/hiveAuthenticationService';
-import {RootState, store} from 'store';
-import {translate} from 'utils/localize';
-import {ModalComponent} from 'utils/modal.enum';
-import {navigate} from 'utils/navigation';
-import {HAS_Session} from './has.types';
-import {answerAuthReq} from './helpers/auth';
-import {prepareRegistrationChallenge} from './helpers/challenge';
-import {onMessageReceived} from './messages';
-import {processAuthenticationRequest} from './messages/authenticate';
-import {HAS_AuthPayload} from './payloads.types';
+} from "actions/hiveAuthenticationService";
+import SimpleToast from "react-native-root-toast";
+import { HAS_State } from "reducers/hiveAuthenticationService";
+import { RootState, store } from "store";
+import { translate } from "utils/localize";
+import { ModalComponent } from "utils/modal.enum";
+import { navigate } from "utils/navigation";
+import { HAS_Session } from "./has.types";
+import { answerAuthReq } from "./helpers/auth";
+import { prepareRegistrationChallenge } from "./helpers/challenge";
+import { onMessageReceived } from "./messages";
+import { processAuthenticationRequest } from "./messages/authenticate";
+import { HAS_AuthPayload } from "./payloads.types";
 
 let previousState: RootState = store.getState();
 
@@ -36,7 +36,7 @@ store.subscribe(() => {
 export const showHASInitRequest = (data: HAS_State) => {
   // Iinitialize instances if needed
   for (const instance of data.instances) {
-    const host = instance.host.replace(/\/$/, '');
+    const host = instance.host.replace(/\/$/, "");
 
     if (
       instance.init &&
@@ -121,13 +121,13 @@ class HAS {
       if (session.init) continue;
       if (this.registeredAccounts.includes(session.account)) {
         if (session.token) {
-          navigate('ModalScreen', {
+          navigate("ModalScreen", {
             name: ModalComponent.HAS_AUTH,
-            data: {...session, has: this, callback: answerAuthReq},
+            data: { ...session, has: this, callback: answerAuthReq },
           });
         } else {
           const sessionAuthReq = this.awaitingAuth.find(
-            (e) => e.uuid === session.uuid,
+            (e) => e.uuid === session.uuid
           );
           if (sessionAuthReq) {
             processAuthenticationRequest(this, sessionAuthReq);
@@ -147,11 +147,11 @@ class HAS {
 
   onOpen = () => {
     store.dispatch(updateInstanceConnectionStatus(this.host, true));
-    this.send(JSON.stringify({cmd: 'key_req'}));
+    this.send(JSON.stringify({ cmd: "key_req" }));
   };
 
   onClose = () => {
-    console.log('Connection lost');
+    console.log("Connection lost");
     store.dispatch(updateInstanceConnectionStatus(this.host, false));
   };
 
@@ -163,17 +163,19 @@ class HAS {
         this,
         account,
         this.getServerKey(),
-        `${Date.now()}`,
+        `${Date.now()}`
       );
       if (challenge) accounts.push(challenge);
     }
     if (!accounts.length) return;
     const request = {
-      cmd: 'register_req',
-      app: 'Hive Keychain',
+      cmd: "register_req",
+      app: "Hive Keychain",
       accounts,
     };
-    SimpleToast.show(translate('wallet.has.toast.register'), SimpleToast.SHORT);
+    SimpleToast.show(translate("wallet.has.toast.register"), {
+      duration: SimpleToast.durations.SHORT,
+    });
     this.send(JSON.stringify(request));
   };
 
@@ -189,9 +191,10 @@ class HAS {
   // Keys
 
   getServerKey = () => {
-    return (store.getState() as RootState).hive_authentication_service.instances.find(
-      (e) => e.host === this.host,
-    )?.server_key;
+    return (
+      store.getState() as RootState
+    ).hive_authentication_service.instances.find((e) => e.host === this.host)
+      ?.server_key;
   };
 }
 

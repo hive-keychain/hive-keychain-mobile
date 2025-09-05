@@ -1,16 +1,18 @@
-import QRCode from 'components/qr_code';
-import {translate} from 'i18n-js';
-import {AddAccFromWalletNavigationProps} from 'navigators/mainDrawerStacks/AddAccount.types';
-import React from 'react';
-import {BarCodeReadEvent} from 'react-native-camera';
-import SimpleToast from 'react-native-simple-toast';
-import {handleAddAccountQR} from 'utils/linking';
+import QRCode from "components/qr_code";
+import { translate } from "i18n-js";
+import { AddAccFromWalletNavigationProps } from "navigators/mainDrawerStacks/AddAccount.types";
+import React from "react";
+import { BarCodeReadEvent } from "react-native-camera";
+import SimpleToast from "react-native-root-toast";
+import { handleAddAccountQR } from "utils/linking";
 
-const ScanQR = ({route}: AddAccFromWalletNavigationProps) => {
-  const onSuccess = async ({data}: BarCodeReadEvent) => {
+const ScanQR = ({ route }: AddAccFromWalletNavigationProps) => {
+  const onSuccess = async ({ data }: BarCodeReadEvent) => {
     try {
-      if (!data.startsWith('keychain://add_account=')) {
-        SimpleToast.show(translate('addAccountByQR.wrongQR'), SimpleToast.LONG);
+      if (!data.startsWith("keychain://add_account=")) {
+        SimpleToast.show(translate("addAccountByQR.wrongQR"), {
+          duration: SimpleToast.durations.LONG,
+        });
         return;
       } else {
         const wallet = route.params ? route.params.wallet : false;

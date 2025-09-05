@@ -1,17 +1,23 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {loadUserTokens} from 'actions/hiveEngine';
-import {Rpc} from 'actions/interfaces';
-import {setAccountHistoryRpc, setHiveEngineRpc, setRpc} from 'actions/settings';
-import CheckBoxPanel from 'components/form/CheckBoxPanel';
-import CheckBox from 'components/form/CustomCheckBox';
-import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
-import OperationInput from 'components/form/OperationInput';
-import Icon from 'components/hive/Icon';
-import Background from 'components/ui/Background';
-import {Caption} from 'components/ui/Caption';
-import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import Separator from 'components/ui/Separator';
-import React, {useEffect, useState} from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { loadUserTokens } from "actions/hiveEngine";
+import { Rpc } from "actions/interfaces";
+import {
+  setAccountHistoryRpc,
+  setHiveEngineRpc,
+  setRpc,
+} from "actions/settings";
+import CheckBoxPanel from "components/form/CheckBoxPanel";
+import CheckBox from "components/form/CustomCheckBox";
+import DropdownModal, {
+  DropdownModalItem,
+} from "components/form/DropdownModal";
+import OperationInput from "components/form/OperationInput";
+import Icon from "components/hive/Icon";
+import Background from "components/ui/Background";
+import { Caption } from "components/ui/Caption";
+import FocusAwareStatusBar from "components/ui/FocusAwareStatusBar";
+import Separator from "components/ui/Separator";
+import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -19,47 +25,47 @@ import {
   TouchableOpacity,
   View,
   useWindowDimensions,
-} from 'react-native';
-import {initialWindowMetrics} from 'react-native-safe-area-context';
-import SimpleToast from 'react-native-simple-toast';
-import {ConnectedProps, connect} from 'react-redux';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
+} from "react-native";
+import SimpleToast from "react-native-root-toast";
+import { initialWindowMetrics } from "react-native-safe-area-context";
+import { ConnectedProps, connect } from "react-redux";
+import { Theme, useThemeContext } from "src/context/theme.context";
+import { Icons } from "src/enums/icons.enums";
 import {
   DefaultAccountHistoryApis,
   DefaultHiveEngineRpcs,
-} from 'src/interfaces/hive-engine-rpc.interface';
-import {KeychainStorageKeyEnum} from 'src/reference-data/keychainStorageKeyEnum';
-import {getCardStyle} from 'src/styles/card';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
+} from "src/interfaces/hive-engine-rpc.interface";
+import { KeychainStorageKeyEnum } from "src/reference-data/keychainStorageKeyEnum";
+import { getCardStyle } from "src/styles/card";
+import { PRIMARY_RED_COLOR, getColors } from "src/styles/colors";
 import {
   DROPDOWN_CONTENT_MAX_HEIGHT,
   LABEL_INDENT_SPACE,
   MARGIN_LEFT_RIGHT_MIN,
   MARGIN_PADDING,
-} from 'src/styles/spacing';
+} from "src/styles/spacing";
 import {
   getFontSizeSmallDevices,
   headlines_primary_headline_3,
-} from 'src/styles/typography';
-import {RootState} from 'store';
-import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
-import {DEFAULT_RPC, rpcList} from 'utils/hiveUtils';
-import {translate} from 'utils/localize';
-import {addCustomRpc, deleteCustomRpc, getCustomRpcs} from 'utils/rpc.utils';
-import * as ValidUrl from 'valid-url';
-import RpcComponent from './RpcComponent';
+} from "src/styles/typography";
+import { RootState } from "store";
+import { HiveEngineConfigUtils } from "utils/hive-engine-config.utils";
+import { DEFAULT_RPC, rpcList } from "utils/hiveUtils";
+import { translate } from "utils/localize";
+import { addCustomRpc, deleteCustomRpc, getCustomRpcs } from "utils/rpc.utils";
+import * as ValidUrl from "valid-url";
+import RpcComponent from "./RpcComponent";
 
 const DEFAULT_CUSTOM_RPC = {
-  uri: '',
+  uri: "",
   testnet: false,
   hiveEngine: false,
 };
 
-export const DEFAULT_HE_RPC_NODE = 'https://api.hive-engine.com/rpc';
+export const DEFAULT_HE_RPC_NODE = "https://api.hive-engine.com/rpc";
 
 export const DEFAULT_ACCOUNT_HISTORY_RPC_NODE =
-  'https://history.hive-engine.com/';
+  "https://history.hive-engine.com/";
 
 const RpcNodes = ({
   settings,
@@ -81,8 +87,8 @@ const RpcNodes = ({
   const [customRPCList, setCustomRPCList] = useState<Rpc[]>([]);
   const [switchHiveEngineRPCAuto, setSwitchHiveEngineRPCAuto] = useState(false);
 
-  const {theme} = useThemeContext();
-  const {width, height} = useWindowDimensions();
+  const { theme } = useThemeContext();
+  const { width, height } = useWindowDimensions();
   const styles = getStyles(theme, width, height);
 
   useEffect(() => {
@@ -96,22 +102,22 @@ const RpcNodes = ({
       KeychainStorageKeyEnum.SWITCH_HE_RPC_AUTO,
     ]);
     setSwitchRPCAuto(
-      storageItems[0][1] === 'true' || storageItems[0][1] === null,
+      storageItems[0][1] === "true" || storageItems[0][1] === null
     );
     setSwitchHiveEngineRPCAuto(
-      storageItems[1][1] === 'true' ||
+      storageItems[1][1] === "true" ||
         (storageItems[1][1] === null &&
-          activeHiveEngineRpc === DEFAULT_HE_RPC_NODE),
+          activeHiveEngineRpc === DEFAULT_HE_RPC_NODE)
     );
   };
 
   const cleanRpcLabel = (label: string) =>
-    label.replace('http://', '').replace('https://', '').split('/')[0];
+    label.replace("http://", "").replace("https://", "").split("/")[0];
 
   const getDropdownItem = (
     item: string,
     cleanLabel?: boolean,
-    removable?: boolean,
+    removable?: boolean
   ) => {
     const label = cleanLabel ? cleanRpcLabel(item) : item;
     return {
@@ -141,13 +147,14 @@ const RpcNodes = ({
 
     //Init Account History API
     const tempAccountHistoryAPI = [...DefaultAccountHistoryApis];
-    const customAccountHistoryAPIList = await HiveEngineConfigUtils.getCustomAccountHistoryApi();
+    const customAccountHistoryAPIList =
+      await HiveEngineConfigUtils.getCustomAccountHistoryApi();
     const finalDropdownAccountHistoryList = [
       ...tempAccountHistoryAPI.map((item) =>
-        getDropdownItem(item, true, false),
+        getDropdownItem(item, true, false)
       ),
       ...customAccountHistoryAPIList.map((item) =>
-        getDropdownItem(item, true, true),
+        getDropdownItem(item, true, true)
       ),
     ];
     setAccountHistoryAPIList(finalDropdownAccountHistoryList);
@@ -155,7 +162,7 @@ const RpcNodes = ({
 
   const handleSetCustomRPC = (value: string | boolean, key: keyof Rpc) => {
     setCustomRPC((prevState) => {
-      return {...prevState, [key]: value};
+      return { ...prevState, [key]: value };
     });
   };
 
@@ -164,7 +171,7 @@ const RpcNodes = ({
       if (!rpcFullList.find((rpcLoaded) => rpcLoaded.value === customRPC.uri)) {
         await addCustomRpc(customRPC);
         const newList = [...rpcFullList];
-        newList.push({value: customRPC.uri, removable: true});
+        newList.push({ value: customRPC.uri, removable: true });
         setRpcFullList(newList);
         if (customRPCSetActive) {
           setRpc(customRPC);
@@ -173,18 +180,21 @@ const RpcNodes = ({
         setShowAddCustomRPC(false);
         setCustomRPC(DEFAULT_CUSTOM_RPC);
         init();
-        SimpleToast.show(
-          translate('toast.rpc_node_added_success'),
-          SimpleToast.LONG,
-        );
+        SimpleToast.show(translate("toast.rpc_node_added_success"), {
+          duration: SimpleToast.durations.LONG,
+        });
       } else {
         SimpleToast.show(
-          translate('settings.settings.rpc_node_already_exists'),
-          SimpleToast.LONG,
+          translate("settings.settings.rpc_node_already_exists"),
+          {
+            duration: SimpleToast.durations.LONG,
+          }
         );
       }
     } else {
-      SimpleToast.show(translate('common.invalid_url'), SimpleToast.LONG);
+      SimpleToast.show(translate("common.invalid_url"), {
+        duration: SimpleToast.durations.LONG,
+      });
     }
   };
 
@@ -192,13 +202,13 @@ const RpcNodes = ({
     if (rpc.uri === uri) {
       onHandleSetRPC(DEFAULT_RPC.uri);
     }
-    await deleteCustomRpc(customRPCList, {uri});
+    await deleteCustomRpc(customRPCList, { uri });
     const updatedFullList = [...rpcFullList];
     setRpcFullList(updatedFullList.filter((removed) => removed.value !== uri));
   };
 
   const onHandleSetRPC = (item: string) => {
-    setRpc({uri: item} as Rpc);
+    setRpc({ uri: item } as Rpc);
   };
 
   const getItemDropDownSelected = (rpcItem: Rpc): DropdownModalItem => {
@@ -212,8 +222,9 @@ const RpcNodes = ({
     return (
       <View
         style={{
-          width: '100%',
-        }}>
+          width: "100%",
+        }}
+      >
         <View style={[styles.rpcItemContainer]}>
           <DropdownModal
             dropdownTitle="settings.settings.hive_rpc"
@@ -236,8 +247,9 @@ const RpcNodes = ({
             <TouchableOpacity
               activeOpacity={1}
               style={[getCardStyle(theme).defaultCardItem, styles.addButton]}
-              onPress={() => setShowAddCustomRPC(!showAddCustomRPC)}>
-              <Text style={styles.text}>{showAddCustomRPC ? 'x' : '+'}</Text>
+              onPress={() => setShowAddCustomRPC(!showAddCustomRPC)}
+            >
+              <Text style={styles.text}>{showAddCustomRPC ? "x" : "+"}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -251,7 +263,7 @@ const RpcNodes = ({
       <View style={[getCardStyle(theme).defaultCardItem]}>
         <View style={styles.flexRow}>
           <Text style={styles.text}>
-            {translate('settings.settings.add_rpc_title')}
+            {translate("settings.settings.add_rpc_title")}
           </Text>
           <Icon
             theme={theme}
@@ -266,22 +278,22 @@ const RpcNodes = ({
           additionalLineStyle={styles.bottomLine}
         />
         <OperationInput
-          placeholder={translate('settings.settings.rpc_node')}
+          placeholder={translate("settings.settings.rpc_node")}
           value={customRPC.uri}
-          onChangeText={(value) => handleSetCustomRPC(value, 'uri')}
+          onChangeText={(value) => handleSetCustomRPC(value, "uri")}
         />
         <Separator />
         <CheckBox
           checked={customRPC.testnet}
-          onPress={() => handleSetCustomRPC(!customRPC.testnet, 'testnet')}
-          title={'settings.settings.testnet'}
+          onPress={() => handleSetCustomRPC(!customRPC.testnet, "testnet")}
+          title={"settings.settings.testnet"}
           smallText
         />
 
         <CheckBox
           checked={customRPCSetActive}
           onPress={() => setCustomRPCSetActive(!customRPCSetActive)}
-          title={'settings.settings.set_as_active'}
+          title={"settings.settings.set_as_active"}
           smallText
         />
       </View>
@@ -292,7 +304,7 @@ const RpcNodes = ({
   const [hiveEngineRPCList, setHiveEngineRPCList] = useState<
     DropdownModalItem[]
   >([]);
-  const [newHERpc, setNewHERpc] = useState('');
+  const [newHERpc, setNewHERpc] = useState("");
   const [addNewHERpc, setAddNewHERpc] = useState(false);
   const [newHERPCAsActive, setNewHERPCAsActive] = useState(false);
   const onHandleAddCustomHERpc = async () => {
@@ -304,22 +316,25 @@ const RpcNodes = ({
             setHiveEngineRpc(newHERpc);
             HiveEngineConfigUtils.setActiveApi(newHERpc);
           }
-          setNewHERpc('');
+          setNewHERpc("");
           setAddNewHERpc(false);
           setNewHERPCAsActive(false);
-          SimpleToast.show(
-            translate('toast.rpc_node_added_success'),
-            SimpleToast.LONG,
-          );
+          SimpleToast.show(translate("toast.rpc_node_added_success"), {
+            duration: SimpleToast.durations.LONG,
+          });
           init();
         } else {
           SimpleToast.show(
-            translate('settings.settings.rpc_node_already_exists'),
-            SimpleToast.LONG,
+            translate("settings.settings.rpc_node_already_exists"),
+            {
+              duration: SimpleToast.durations.LONG,
+            }
           );
         }
       } else {
-        SimpleToast.show(translate('common.invalid_url'), SimpleToast.LONG);
+        SimpleToast.show(translate("common.invalid_url"), {
+          duration: SimpleToast.durations.LONG,
+        });
       }
     }
   };
@@ -330,10 +345,9 @@ const RpcNodes = ({
       HiveEngineConfigUtils.setActiveApi(DEFAULT_HE_RPC_NODE);
     }
     await HiveEngineConfigUtils.deleteCustomRpc(item);
-    SimpleToast.show(
-      translate('toast.rpc_node_removed_success'),
-      SimpleToast.LONG,
-    );
+    SimpleToast.show(translate("toast.rpc_node_removed_success"), {
+      duration: SimpleToast.durations.LONG,
+    });
     init();
   };
 
@@ -348,46 +362,47 @@ const RpcNodes = ({
   const [accountHistoryAPIList, setAccountHistoryAPIList] = useState<
     DropdownModalItem[]
   >([]);
-  const [newAccountHistoryAPIRpc, setNewAccountHistoryAPIRpc] = useState('');
+  const [newAccountHistoryAPIRpc, setNewAccountHistoryAPIRpc] = useState("");
   const [addNewAccountHistoryAPI, setAddNewAccountHistoryAPI] = useState(false);
-  const [
-    newAccountHistoryAPIAsActive,
-    setNewAccountHistoryAPIAsActive,
-  ] = useState(false);
+  const [newAccountHistoryAPIAsActive, setNewAccountHistoryAPIAsActive] =
+    useState(false);
 
   const onHandleAddCustomAccountHistoryAPI = async () => {
     if (newAccountHistoryAPIRpc.trim().length > 0) {
       if (ValidUrl.isWebUri(newAccountHistoryAPIRpc)) {
         if (
           !accountHistoryAPIList.find(
-            (item) => item.value === newAccountHistoryAPIRpc,
+            (item) => item.value === newAccountHistoryAPIRpc
           )
         ) {
           await HiveEngineConfigUtils.addCustomAccountHistoryApi(
-            newAccountHistoryAPIRpc,
+            newAccountHistoryAPIRpc
           );
           if (newAccountHistoryAPIAsActive) {
             setAccountHistoryRpc(newAccountHistoryAPIRpc);
             HiveEngineConfigUtils.setActiveAccountHistoryApi(
-              newAccountHistoryAPIRpc,
+              newAccountHistoryAPIRpc
             );
           }
-          setNewAccountHistoryAPIRpc('');
+          setNewAccountHistoryAPIRpc("");
           setAddNewAccountHistoryAPI(false);
           setNewAccountHistoryAPIAsActive(false);
-          SimpleToast.show(
-            translate('toast.rpc_node_added_success'),
-            SimpleToast.LONG,
-          );
+          SimpleToast.show(translate("toast.rpc_node_added_success"), {
+            duration: SimpleToast.durations.LONG,
+          });
           init();
         } else {
           SimpleToast.show(
-            translate('settings.settings.rpc_node_already_exists'),
-            SimpleToast.LONG,
+            translate("settings.settings.rpc_node_already_exists"),
+            {
+              duration: SimpleToast.durations.LONG,
+            }
           );
         }
       } else {
-        SimpleToast.show(translate('common.invalid_url'), SimpleToast.LONG);
+        SimpleToast.show(translate("common.invalid_url"), {
+          duration: SimpleToast.durations.LONG,
+        });
       }
     }
   };
@@ -396,14 +411,13 @@ const RpcNodes = ({
     if (HiveEngineConfigUtils.getAccountHistoryApi() === item) {
       setAccountHistoryRpc(DEFAULT_ACCOUNT_HISTORY_RPC_NODE);
       HiveEngineConfigUtils.setActiveAccountHistoryApi(
-        DEFAULT_ACCOUNT_HISTORY_RPC_NODE,
+        DEFAULT_ACCOUNT_HISTORY_RPC_NODE
       );
     }
     await HiveEngineConfigUtils.deleteCustomAccountHistoryApi(item);
-    SimpleToast.show(
-      translate('toast.rpc_node_removed_success'),
-      SimpleToast.LONG,
-    );
+    SimpleToast.show(translate("toast.rpc_node_removed_success"), {
+      duration: SimpleToast.durations.LONG,
+    });
     init();
   };
 
@@ -420,13 +434,15 @@ const RpcNodes = ({
       skipBottom
       additionalBgSvgImageStyle={{
         paddingBottom: initialWindowMetrics.insets.bottom,
-      }}>
+      }}
+    >
       <ScrollView style={styles.container}>
         <FocusAwareStatusBar />
         <View
           style={{
-            width: '100%',
-          }}>
+            width: "100%",
+          }}
+        >
           <Separator height={10} />
           <Caption text="settings.settings.rpc_disclaimer" hideSeparator />
           {/* <Text style={[styles.title, styles.text]}>
@@ -434,18 +450,18 @@ const RpcNodes = ({
           </Text> */}
           <Separator />
           <Text style={styles.title}>
-            {translate('settings.settings.hive_rpc')}
+            {translate("settings.settings.hive_rpc")}
           </Text>
           <CheckBoxPanel
             checked={switchRPCAuto}
             onPress={() => {
               AsyncStorage.setItem(
                 KeychainStorageKeyEnum.SWITCH_RPC_AUTO,
-                String(!switchRPCAuto),
+                String(!switchRPCAuto)
               );
               setSwitchRPCAuto(!switchRPCAuto);
             }}
-            title={'settings.settings.switch_auto'}
+            title={"settings.settings.switch_auto"}
             subTitle="settings.settings.switch_auto_info"
           />
 
@@ -455,31 +471,31 @@ const RpcNodes = ({
         {hiveEngineRPCList.length > 0 && (
           <>
             <Text style={styles.title}>
-              {translate('settings.settings.hive_engine_rpc')}
+              {translate("settings.settings.hive_engine_rpc")}
             </Text>
             <CheckBoxPanel
               checked={switchHiveEngineRPCAuto}
               onPress={() => {
                 AsyncStorage.setItem(
                   KeychainStorageKeyEnum.SWITCH_HE_RPC_AUTO,
-                  String(!switchHiveEngineRPCAuto),
+                  String(!switchHiveEngineRPCAuto)
                 );
                 setSwitchHiveEngineRPCAuto(!switchHiveEngineRPCAuto);
                 loadUserTokens(active.account.name);
               }}
-              title={'settings.settings.switch_auto'}
+              title={"settings.settings.switch_auto"}
               subTitle="settings.settings.switch_auto_info_he"
             />
             {!switchHiveEngineRPCAuto && (
               <RpcComponent
-                title={'settings.settings.hive_engine_rpc'}
+                title={"settings.settings.hive_engine_rpc"}
                 theme={theme}
                 rpcList={hiveEngineRPCList}
                 selectedRPC={activeHiveEngineRpc}
-                placeHolderInput={translate('settings.settings.new_HE_rpc')}
+                placeHolderInput={translate("settings.settings.new_HE_rpc")}
                 input={newHERpc}
                 onChangeInput={(text) => setNewHERpc(text)}
-                checkBoxTitle={translate('settings.settings.set_as_active')}
+                checkBoxTitle={translate("settings.settings.set_as_active")}
                 onHandleSave={onHandleAddCustomHERpc}
                 onChangeCheckBox={() => setNewHERPCAsActive(!newHERPCAsActive)}
                 checkedValue={newHERPCAsActive}
@@ -495,19 +511,19 @@ const RpcNodes = ({
         {accountHistoryAPIList.length > 0 && (
           <>
             <Text style={styles.title}>
-              {translate('settings.settings.hive_engine_account_history_api')}
+              {translate("settings.settings.hive_engine_account_history_api")}
             </Text>
             <RpcComponent
-              title={'settings.settings.hive_engine_account_history_api'}
+              title={"settings.settings.hive_engine_account_history_api"}
               theme={theme}
               rpcList={accountHistoryAPIList}
               selectedRPC={activeAccountHistoryAPIRpc}
               placeHolderInput={translate(
-                'settings.settings.new_account_history_rpc',
+                "settings.settings.new_account_history_rpc"
               )}
               input={newAccountHistoryAPIRpc}
               onChangeInput={(text) => setNewAccountHistoryAPIRpc(text)}
-              checkBoxTitle={translate('settings.settings.set_as_active')}
+              checkBoxTitle={translate("settings.settings.set_as_active")}
               onHandleSave={onHandleAddCustomAccountHistoryAPI}
               onChangeCheckBox={() =>
                 setNewAccountHistoryAPIAsActive(!newAccountHistoryAPIAsActive)
@@ -540,7 +556,7 @@ const getStyles = (theme: Theme, width: number, height: number) =>
       marginBottom: 5,
       marginLeft: LABEL_INDENT_SPACE,
       color: getColors(theme).secondaryText,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       fontSize: 16,
     },
     text: {
@@ -556,29 +572,29 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     },
 
     rpcItemContainer: {
-      flexDirection: 'row',
-      width: 'auto',
-      justifyContent: 'space-between',
-      alignItems: 'flex-end',
+      flexDirection: "row",
+      width: "auto",
+      justifyContent: "space-between",
+      alignItems: "flex-end",
       marginBottom: MARGIN_LEFT_RIGHT_MIN,
     },
     addButtonContainer: {
-      justifyContent: 'flex-end',
+      justifyContent: "flex-end",
     },
 
     addButton: {
-      alignItems: 'center',
+      alignItems: "center",
       borderRadius: 30,
       paddingHorizontal: 0,
       paddingVertical: 0,
       width: 48,
       height: 48,
-      justifyContent: 'center',
+      justifyContent: "center",
       marginBottom: 0,
     },
     flexRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
     },
     bottomLine: {
       marginVertical: 8,
@@ -587,14 +603,14 @@ const getStyles = (theme: Theme, width: number, height: number) =>
     input: {
       marginHorizontal: 0,
     },
-    dropdownIconDimensions: {width: 15, height: 15},
+    dropdownIconDimensions: { width: 15, height: 15 },
     bottomLineDropdownItem: {
       borderWidth: 1,
-      width: '85%',
+      width: "85%",
       borderColor: getColors(theme).lineSeparatorStroke,
-      alignSelf: 'center',
+      alignSelf: "center",
     },
-    dropdown: {width: 0.7 * width},
+    dropdown: { width: 0.7 * width },
   });
 
 const mapStateToProps = (state: RootState) => ({

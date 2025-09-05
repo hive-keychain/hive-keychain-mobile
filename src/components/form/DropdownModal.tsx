@@ -1,8 +1,8 @@
-import Clipboard from '@react-native-community/clipboard';
-import Icon from 'components/hive/Icon';
-import Separator from 'components/ui/Separator';
-import SlidingOverlay from 'components/ui/SlidingOverlay';
-import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
+import Clipboard from "@react-native-community/clipboard";
+import Icon from "components/hive/Icon";
+import Separator from "components/ui/Separator";
+import SlidingOverlay from "components/ui/SlidingOverlay";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import {
   StyleProp,
   StyleSheet,
@@ -12,26 +12,29 @@ import {
   View,
   ViewStyle,
   useWindowDimensions,
-} from 'react-native';
+} from "react-native";
 import DraggableFlatList, {
   DragEndParams,
-} from 'react-native-draggable-flatlist';
-import {FlatList, GestureHandlerRootView} from 'react-native-gesture-handler';
-import SimpleToast from 'react-native-simple-toast';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {getCardStyle} from 'src/styles/card';
-import {PRIMARY_RED_COLOR, getColors} from 'src/styles/colors';
-import {inputStyle} from 'src/styles/input';
-import {LABEL_INDENT_SPACE, MIN_SEPARATION_ELEMENTS} from 'src/styles/spacing';
+} from "react-native-draggable-flatlist";
+import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
+import SimpleToast from "react-native-root-toast";
+import { Theme, useThemeContext } from "src/context/theme.context";
+import { Icons } from "src/enums/icons.enums";
+import { getCardStyle } from "src/styles/card";
+import { PRIMARY_RED_COLOR, getColors } from "src/styles/colors";
+import { inputStyle } from "src/styles/input";
+import {
+  LABEL_INDENT_SPACE,
+  MIN_SEPARATION_ELEMENTS,
+} from "src/styles/spacing";
 import {
   FontPoppinsName,
   getFontSizeSmallDevices,
   title_primary_body_2,
-} from 'src/styles/typography';
-import {Dimensions} from 'utils/common.types';
-import {translate} from 'utils/localize';
-import CustomSearchBar from './CustomSearchBar';
+} from "src/styles/typography";
+import { Dimensions } from "utils/common.types";
+import { translate } from "utils/localize";
+import CustomSearchBar from "./CustomSearchBar";
 export interface DropdownModalItem {
   value: string;
   label?: string;
@@ -92,28 +95,27 @@ const DropdownModal = ({
   const dropdownContainerRef = useRef();
   const [dropdownPageY, setDropdownPageY] = useState(0);
   const [isListExpanded, setIsListExpanded] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
-  const [filteredDropdownList, setFilteredDropdownList] = useState<
-    DropdownModalItem[]
-  >(list);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredDropdownList, setFilteredDropdownList] =
+    useState<DropdownModalItem[]>(list);
   const [isDragging, setIsDragging] = useState(false);
-  const {theme} = useThemeContext();
-  const {width, height} = useWindowDimensions();
+  const { theme } = useThemeContext();
+  const { width, height } = useWindowDimensions();
 
   const styles = getStyles(
     dropdownPageY,
     width,
     height,
     theme,
-    addExtraHeightFromElements,
+    addExtraHeightFromElements
   );
   useEffect(() => {
     if (searchValue.trim().length > 0) {
       const tempList = [...list];
       setFilteredDropdownList(
         tempList.filter((item) =>
-          item.label.toLowerCase().includes(searchValue.toLowerCase()),
-        ),
+          item.label.toLowerCase().includes(searchValue.toLowerCase())
+        )
       );
     } else {
       setFilteredDropdownList(list);
@@ -128,31 +130,33 @@ const DropdownModal = ({
         setTimeout(() => onSelected(item), 100);
       }, 300);
     },
-    [onSelected, onReorder, filteredDropdownList],
+    [onSelected, onReorder, filteredDropdownList]
   );
 
   const onHandleCopyValue = (username: string) => {
     Clipboard.setString(username);
-    SimpleToast.show(translate('toast.copied_username'), SimpleToast.LONG);
+    SimpleToast.show(translate("toast.copied_username"), {
+      duration: SimpleToast.durations.LONG,
+    });
   };
 
   const onHandleCopyValueCb = useCallback(
     (value: string) => () => onHandleCopyValue(value),
-    [onHandleCopyValue],
+    [onHandleCopyValue]
   );
   const onRemoveCb = useCallback(
     (value: string) => () => onRemove && onRemove(value),
-    [onRemove],
+    [onRemove]
   );
   const dragCb = useCallback((drag: any) => () => drag && drag(), []);
 
   // Helper function to compare selected and item by value/label (robust, handles undefined)
   function isItemSelected(
     selected: string | DropdownModalItem | undefined,
-    item: DropdownModalItem | undefined,
+    item: DropdownModalItem | undefined
   ) {
     if (!selected || !item) return false;
-    if (typeof selected === 'object' && selected !== null) {
+    if (typeof selected === "object" && selected !== null) {
       if (selected.value !== undefined && item.value !== undefined) {
         return selected.value === item.value;
       }
@@ -175,9 +179,10 @@ const DropdownModal = ({
             {
               marginLeft: MIN_SEPARATION_ELEMENTS,
             },
-          ]}>
+          ]}
+        >
           {matchingSelected ? (
-            <View style={{width: 20}}>
+            <View style={{ width: 20 }}>
               {
                 <Icon
                   name={Icons.CHECK}
@@ -197,7 +202,7 @@ const DropdownModal = ({
               onPress={onHandleCopyValueCb(item.value)}
               width={16}
               height={16}
-              additionalContainerStyle={{marginLeft: 6}}
+              additionalContainerStyle={{ marginLeft: 6 }}
               strokeWidth={2}
               color={PRIMARY_RED_COLOR}
             />
@@ -209,7 +214,7 @@ const DropdownModal = ({
                 theme={theme}
                 width={16}
                 height={16}
-                additionalContainerStyle={{marginLeft: 6}}
+                additionalContainerStyle={{ marginLeft: 6 }}
                 strokeWidth={2}
                 color={PRIMARY_RED_COLOR}
               />
@@ -218,14 +223,7 @@ const DropdownModal = ({
         </View>
       ) : null;
     },
-    [
-      selected,
-      showSelectedIcon,
-      copyButtonValue,
-      theme,
-      canBeReordered,
-      dragCb,
-    ],
+    [selected, showSelectedIcon, copyButtonValue, theme, canBeReordered, dragCb]
   );
 
   // Memoized DropdownItem
@@ -259,37 +257,39 @@ const DropdownModal = ({
     const showSelectedBgOnItem =
       selectedBgColor && isItemSelected(selected, item);
     const bgStyle = showSelectedBgOnItem
-      ? ({backgroundColor: selectedBgColor} as ViewStyle)
+      ? ({ backgroundColor: selectedBgColor } as ViewStyle)
       : null;
     const innerContainerStyle = {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: item.removable ? '100%' : 'auto',
-      alignItems: 'center',
-      alignContent: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      width: item.removable ? "100%" : "auto",
+      alignItems: "center",
+      alignContent: "center",
     } as ViewStyle;
     const innerContainerBgStyle = selectedBgColor
-      ? ({paddingHorizontal: 10, alignContent: 'space-between'} as ViewStyle)
+      ? ({ paddingHorizontal: 10, alignContent: "space-between" } as ViewStyle)
       : undefined;
     const labelTextStyle = showSelectedBgOnItem
-      ? ({color: 'white'} as ViewStyle)
-      : ({marginLeft: MIN_SEPARATION_ELEMENTS} as ViewStyle);
+      ? ({ color: "white" } as ViewStyle)
+      : ({ marginLeft: MIN_SEPARATION_ELEMENTS } as ViewStyle);
 
     return (
-      <View style={[{paddingVertical: 4}]}>
+      <View style={[{ paddingVertical: 4 }]}>
         <TouchableOpacity
           activeOpacity={1}
           onPress={onHandleSelectedItem.bind(null, item)}
-          style={[styles.dropdownItem, bgStyle]}>
+          style={[styles.dropdownItem, bgStyle]}
+        >
           <View style={[innerContainerStyle, innerContainerBgStyle]}>
             {item.icon}
             <Text
               style={[
                 inputStyle(theme, width).input,
                 labelTextStyle,
-                {marginLeft: 10},
+                { marginLeft: 10 },
                 additionalItemLabelTextStyle,
-              ]}>
+              ]}
+            >
               {item.label}
             </Text>
             {item.removable && (
@@ -297,11 +297,11 @@ const DropdownModal = ({
                 theme={theme}
                 name={Icons.REMOVE}
                 onPress={onRemoveCb(item.value)}
-                color={showSelectedBgOnItem ? 'white' : PRIMARY_RED_COLOR}
+                color={showSelectedBgOnItem ? "white" : PRIMARY_RED_COLOR}
               />
             )}
           </View>
-          {typeof item === 'object' ? renderIcons(item, drag) : null}
+          {typeof item === "object" ? renderIcons(item, drag) : null}
         </TouchableOpacity>
         {index !== listLength - 1 && (
           <Separator
@@ -333,7 +333,7 @@ const DropdownModal = ({
         getIndex,
         isActive,
       }: any) => JSX.Element;
-      renderFlatItem: ({item, index}: any) => JSX.Element;
+      renderFlatItem: ({ item, index }: any) => JSX.Element;
       filteredDropdownList: DropdownModalItem[];
       [key: string]: any;
     }) => {
@@ -358,7 +358,7 @@ const DropdownModal = ({
           keyExtractor={(item) => item.value}
         />
       );
-    },
+    }
   );
 
   // Memoized renderDraggableItem
@@ -398,11 +398,11 @@ const DropdownModal = ({
       onRemoveCb,
       renderIcons,
       filteredDropdownList.length,
-    ],
+    ]
   );
   // Memoized renderFlatItem
   const renderFlatItem = useCallback(
-    ({item, index}: {item: DropdownModalItem; index: number}) => (
+    ({ item, index }: { item: DropdownModalItem; index: number }) => (
       <DropdownItem
         item={item}
         index={index}
@@ -426,7 +426,7 @@ const DropdownModal = ({
       onRemoveCb,
       renderIcons,
       filteredDropdownList.length,
-    ],
+    ]
   );
 
   const renderSelectedValue = (showOpened?: boolean) => (
@@ -444,28 +444,31 @@ const DropdownModal = ({
               backgroundColor: getColors(theme).secondaryCardBgColor,
             }
           : undefined,
-      ]}>
-      {typeof selected === 'string' ? (
+      ]}
+    >
+      {typeof selected === "string" ? (
         <Text
           style={[
             inputStyle(theme, width).input,
-            {flex: 1},
+            { flex: 1 },
             additionalTextStyle,
           ]}
-          numberOfLines={1}>
+          numberOfLines={1}
+        >
           {selected}
         </Text>
       ) : (
-        <View style={[styles.flexRow, {flex: 1}]}>
+        <View style={[styles.flexRow, { flex: 1 }]}>
           <View>{selected.icon}</View>
           <Text
             numberOfLines={1}
             style={[
               inputStyle(theme, width).input,
               styles.marginLeft,
-              {flex: 1},
+              { flex: 1 },
               additionalTextStyle,
-            ]}>
+            ]}
+          >
             {selected.label}
           </Text>
         </View>
@@ -492,7 +495,8 @@ const DropdownModal = ({
               inputStyle(theme, width).label,
               additionalTitleTextStyle,
               removeDropdownTitleIndent ? undefined : styles.indent,
-            ]}>
+            ]}
+          >
             {translate(dropdownTitle)}
           </Text>
         )}
@@ -504,7 +508,8 @@ const DropdownModal = ({
               styles.italic,
               styles.smallerText,
               styles.positionAbsolute,
-            ]}>
+            ]}
+          >
             {bottomLabelInfo}
           </Text>
         )}
@@ -517,7 +522,8 @@ const DropdownModal = ({
             onReorder?.([...filteredDropdownList]);
           }
         }}
-        title={dropdownTitle}>
+        title={dropdownTitle}
+      >
         {enableSearch && (
           <CustomSearchBar
             theme={theme}
@@ -538,20 +544,21 @@ const DropdownModal = ({
               style={[
                 {
                   flexGrow: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  alignItems: "center",
+                  justifyContent: "center",
                   marginTop: 16,
                 },
-              ]}>
+              ]}
+            >
               <Text style={[inputStyle(theme, width).label]}>
-                {translate('wallet.operations.token_settings.empty_results')}
+                {translate("wallet.operations.token_settings.empty_results")}
               </Text>
             </View>
           }
           data={[...filteredDropdownList]}
           filteredDropdownList={filteredDropdownList}
           scrollToOverflowEnabled
-          onDragEnd={({data}) => {
+          onDragEnd={({ data }) => {
             setFilteredDropdownList([...data]);
           }}
           renderDraggableItem={renderDraggableItem}
@@ -567,7 +574,7 @@ const getStyles = (
   width: number,
   height: number,
   theme: Theme,
-  addExtraY?: number,
+  addExtraY?: number
 ) =>
   StyleSheet.create({
     textBase: {
@@ -575,25 +582,25 @@ const getStyles = (
       ...title_primary_body_2,
       fontSize: getFontSizeSmallDevices(
         width,
-        {...title_primary_body_2}.fontSize,
+        { ...title_primary_body_2 }.fontSize
       ),
     },
     rotateIcon: {
-      transform: [{rotateX: '180deg'}],
+      transform: [{ rotateX: "180deg" }],
     },
     flexRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       flexGrow: 1,
-      justifyContent: 'flex-end',
+      justifyContent: "flex-end",
     },
     marginLeft: {
       marginLeft: 8,
     },
     dropdownContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       height: 48,
       marginBottom: 0,
       borderRadius: 25,
@@ -603,9 +610,9 @@ const getStyles = (
       paddingTop: 0,
     },
     dropdownItem: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginBottom: 6,
       marginTop: 6,
     },
@@ -619,7 +626,7 @@ const getStyles = (
       borderColor: getColors(theme).quaternaryCardBorderColor,
       backgroundColor: getColors(theme).secondaryCardBgColor,
       borderWidth: 1,
-      width: 'auto',
+      width: "auto",
       height: 50,
       marginBottom: 5,
     },
@@ -627,9 +634,9 @@ const getStyles = (
       fontFamily: FontPoppinsName.ITALIC,
     },
     positionAbsolute: {
-      position: 'absolute',
+      position: "absolute",
       bottom: -24,
-      alignSelf: 'center',
+      alignSelf: "center",
     },
   });
 

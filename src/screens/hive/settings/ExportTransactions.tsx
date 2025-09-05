@@ -1,14 +1,14 @@
-import {showModal} from 'actions/message';
-import OperationButton from 'components/form/EllipticButton';
-import OperationInput from 'components/form/OperationInput';
-import UserDropdown from 'components/form/UserDropdown';
-import Icon from 'components/hive/Icon';
-import Background from 'components/ui/Background';
-import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import Loader from 'components/ui/Loader';
-import Separator from 'components/ui/Separator';
-import {ExportTransactionsUtils} from 'hive-keychain-commons';
-import React, {useState} from 'react';
+import { showModal } from "actions/message";
+import OperationButton from "components/form/EllipticButton";
+import OperationInput from "components/form/OperationInput";
+import UserDropdown from "components/form/UserDropdown";
+import Icon from "components/hive/Icon";
+import Background from "components/ui/Background";
+import FocusAwareStatusBar from "components/ui/FocusAwareStatusBar";
+import Loader from "components/ui/Loader";
+import Separator from "components/ui/Separator";
+import { ExportTransactionsUtils } from "hive-keychain-commons";
+import React, { useState } from "react";
 import {
   Modal,
   Platform,
@@ -18,32 +18,32 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   View,
-} from 'react-native';
-import DatePicker from 'react-native-date-picker';
-import FileViewer from 'react-native-file-viewer';
-import {initialWindowMetrics} from 'react-native-safe-area-context';
-import SimpleToast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
-import RNFetchBlob from 'rn-fetch-blob';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Icons} from 'src/enums/icons.enums';
-import {MessageModalType} from 'src/enums/messageModal.enums';
-import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
-import {getHorizontalLineStyle} from 'src/styles/line';
+} from "react-native";
+import DatePicker from "react-native-date-picker";
+import FileViewer from "react-native-file-viewer";
+import SimpleToast from "react-native-root-toast";
+import { initialWindowMetrics } from "react-native-safe-area-context";
+import { connect, ConnectedProps } from "react-redux";
+import RNFetchBlob from "rn-fetch-blob";
+import { Theme, useThemeContext } from "src/context/theme.context";
+import { Icons } from "src/enums/icons.enums";
+import { MessageModalType } from "src/enums/messageModal.enums";
+import { getColors, PRIMARY_RED_COLOR } from "src/styles/colors";
+import { getHorizontalLineStyle } from "src/styles/line";
 import {
   body_primary_body_2,
   body_primary_body_3,
   button_link_primary_medium,
   getFontSizeSmallDevices,
-} from 'src/styles/typography';
-import {RootState} from 'store';
-import {Dimensions} from 'utils/common.types';
-import {translate} from 'utils/localize';
-const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
-  const {theme} = useThemeContext();
+} from "src/styles/typography";
+import { RootState } from "store";
+import { Dimensions } from "utils/common.types";
+import { translate } from "utils/localize";
+const ExportTransaction = ({ active, showModal }: PropsFromRedux) => {
+  const { theme } = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions());
   const [exporting, setExporting] = useState<boolean>(false);
-  const {width, height} = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const [startDate, setStartDate] = useState<Date>(() => {
     const date = new Date(Date.now() - 86400000);
     date.setHours(0, 0, 0, 0);
@@ -54,7 +54,7 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
     date.setHours(23, 59, 0, 0);
     return date;
   });
-  const [showPicker, setShowPicker] = useState<'start' | 'end' | null>(null);
+  const [showPicker, setShowPicker] = useState<"start" | "end" | null>(null);
 
   const handleExport = async () => {
     try {
@@ -63,27 +63,27 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
       const transactions = await ExportTransactionsUtils.fetchTransactions(
         active.name,
         startDate,
-        endDate,
+        endDate
       );
       // Generate CSV from transactions
       const csv = ExportTransactionsUtils.generateCSV(transactions);
 
       const formatDateForFilename = (date: Date) =>
-        date.toISOString().split('T')[0];
+        date.toISOString().split("T")[0];
       const startStr = formatDateForFilename(startDate);
       const endStr = formatDateForFilename(endDate);
 
       const filePath = `${
-        Platform.OS === 'ios'
+        Platform.OS === "ios"
           ? RNFetchBlob.fs.dirs.DocumentDir
           : RNFetchBlob.fs.dirs.DownloadDir
       }/${active.name}-transactions-${startStr}-to-${endStr}.csv`;
-      await RNFetchBlob.fs.writeFile(filePath, csv, 'utf8');
+      await RNFetchBlob.fs.writeFile(filePath, csv, "utf8");
 
-      const startReadable = startDate.toLocaleDateString('en-US');
-      const endReadable = endDate.toLocaleDateString('en-US');
+      const startReadable = startDate.toLocaleDateString("en-US");
+      const endReadable = endDate.toLocaleDateString("en-US");
       showModal(
-        'export_transactions.confirmation.success',
+        "export_transactions.confirmation.success",
         MessageModalType.EXPORT_TRANSACTIONS_SUCCESS,
         {
           startDate: startReadable,
@@ -94,18 +94,18 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
         false,
         () => {
           openFile(filePath);
-        },
+        }
       );
       setExporting(false);
     } catch (error) {
       setExporting(false);
       showModal(
-        'export_transactions.confirmation.error',
+        "export_transactions.confirmation.error",
         MessageModalType.ERROR,
         {
-          error: error.message ?? '',
+          error: error.message ?? "",
           notHideOnSuccess: true,
-        },
+        }
       );
     }
   };
@@ -114,7 +114,9 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
     try {
       await FileViewer.open(filePath);
     } catch (err) {
-      SimpleToast.show(err.toString(), SimpleToast.LONG);
+      SimpleToast.show(err.toString(), {
+        duration: SimpleToast.durations.LONG,
+      });
     }
   };
 
@@ -125,7 +127,8 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
       skipBottom
       additionalBgSvgImageStyle={{
         paddingBottom: initialWindowMetrics.insets.bottom,
-      }}>
+      }}
+    >
       <View style={styles.mainContainer}>
         <ScrollView style={styles.scrollContent}>
           <View style={styles.container}>
@@ -137,15 +140,15 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
             <OperationInput
               editable={false}
               onPressOut={() => {
-                setShowPicker('start');
+                setShowPicker("start");
               }}
-              autoCapitalize={'none'}
-              labelInput={translate('export_transactions.start_date')}
-              placeholder={'mm/dd/yyyy'}
-              value={startDate.toLocaleDateString('en-US', {
-                month: '2-digit',
-                day: '2-digit',
-                year: 'numeric',
+              autoCapitalize={"none"}
+              labelInput={translate("export_transactions.start_date")}
+              placeholder={"mm/dd/yyyy"}
+              value={startDate.toLocaleDateString("en-US", {
+                month: "2-digit",
+                day: "2-digit",
+                year: "numeric",
               })}
               rightIcon={
                 <View style={styles.flexRowCenter}>
@@ -155,14 +158,15 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
                       theme,
                       1,
                       35,
-                      16,
+                      16
                     )}
                   />
                   <TouchableOpacity
                     activeOpacity={1}
                     onPress={() => {
-                      setShowPicker('start');
-                    }}>
+                      setShowPicker("start");
+                    }}
+                  >
                     <Icon
                       name={Icons.CALENDAR}
                       {...styles.icon}
@@ -177,15 +181,15 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
             <OperationInput
               editable={false}
               onPressOut={() => {
-                setShowPicker('start');
+                setShowPicker("start");
               }}
-              autoCapitalize={'none'}
-              labelInput={translate('export_transactions.end_date')}
-              placeholder={'mm/dd/yyyy'}
-              value={endDate.toLocaleDateString('en-US', {
-                month: '2-digit',
-                day: '2-digit',
-                year: 'numeric',
+              autoCapitalize={"none"}
+              labelInput={translate("export_transactions.end_date")}
+              placeholder={"mm/dd/yyyy"}
+              value={endDate.toLocaleDateString("en-US", {
+                month: "2-digit",
+                day: "2-digit",
+                year: "numeric",
               })}
               rightIcon={
                 <View style={styles.flexRowCenter}>
@@ -195,14 +199,15 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
                       theme,
                       1,
                       35,
-                      16,
+                      16
                     )}
                   />
                   <TouchableOpacity
                     activeOpacity={1}
                     onPress={() => {
-                      setShowPicker('end');
-                    }}>
+                      setShowPicker("end");
+                    }}
+                  >
                     <Icon
                       name={Icons.CALENDAR}
                       {...styles.icon}
@@ -217,12 +222,12 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
 
         {exporting ? (
           <View style={[styles.buttonWrapper]}>
-            <Loader animating size={'small'} />
+            <Loader animating size={"small"} />
           </View>
         ) : (
           <View style={styles.buttonWrapper}>
             <OperationButton
-              title={translate('common.export')}
+              title={translate("common.export")}
               onPress={() => handleExport()}
               isWarningButton
               additionalTextStyle={styles.buttonText}
@@ -232,23 +237,25 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
 
         {showPicker && (
           <Modal
-            visible={showPicker === 'start' || showPicker === 'end'}
+            visible={showPicker === "start" || showPicker === "end"}
             transparent={true}
-            animationType="fade">
+            animationType="fade"
+          >
             <TouchableOpacity
               style={styles.datePickerOverlay}
               onPress={() => {
                 setShowPicker(null);
-              }}>
+              }}
+            >
               <View style={styles.datePickerContainer}>
                 <View style={styles.datePickerWrapper}>
                   <Text style={styles.text}>
-                    {showPicker === 'start'
+                    {showPicker === "start"
                       ? translate(
-                          'export_transactions.date_picker.choose_start_date',
+                          "export_transactions.date_picker.choose_start_date"
                         )
                       : translate(
-                          'export_transactions.date_picker.choose_ending_date',
+                          "export_transactions.date_picker.choose_ending_date"
                         )}
                   </Text>
                   <Separator />
@@ -257,21 +264,21 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
                     modal={false}
                     mode="date"
                     maximumDate={new Date()}
-                    minimumDate={showPicker === 'end' ? startDate : undefined}
+                    minimumDate={showPicker === "end" ? startDate : undefined}
                     title={
-                      showPicker === 'start'
+                      showPicker === "start"
                         ? translate(
-                            'export_transactions.date_picker.choose_start_date',
+                            "export_transactions.date_picker.choose_start_date"
                           )
                         : translate(
-                            'export_transactions.date_picker.choose_ending_date',
+                            "export_transactions.date_picker.choose_ending_date"
                           )
                     }
-                    date={showPicker === 'start' ? startDate : endDate}
+                    date={showPicker === "start" ? startDate : endDate}
                     dividerColor={getColors(theme).cardBorderColorContrast}
                     buttonColor={getColors(theme).secondaryText}
                     onDateChange={(date) => {
-                      if (showPicker === 'start') {
+                      if (showPicker === "start") {
                         const startDateTime = new Date(date);
                         startDateTime.setHours(0, 0, 0, 0);
                         setStartDate(startDateTime);
@@ -287,9 +294,10 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
                 <View style={styles.datePickerButtonContainer}>
                   <TouchableOpacity
                     style={styles.datePickerButton}
-                    onPress={() => setShowPicker(null)}>
+                    onPress={() => setShowPicker(null)}
+                  >
                     <Text style={styles.datePickerButtonText}>
-                      {translate('common.confirm')}
+                      {translate("common.confirm")}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -302,7 +310,7 @@ const ExportTransaction = ({active, showModal}: PropsFromRedux) => {
   );
 };
 
-const getStyles = (theme: Theme, {width, height}: Dimensions) =>
+const getStyles = (theme: Theme, { width, height }: Dimensions) =>
   StyleSheet.create({
     mainContainer: {
       flex: 1,
@@ -316,14 +324,14 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     buttonWrapper: {
       padding: 16,
       paddingBottom: 12,
-      width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
+      width: "100%",
+      justifyContent: "center",
+      alignItems: "center",
     },
     itemDropdown: {
       paddingHorizontal: 18,
     },
-    marginTop: {marginTop: 20},
+    marginTop: { marginTop: 20 },
     text: {
       color: getColors(theme).secondaryText,
       ...body_primary_body_2,
@@ -333,22 +341,22 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
       ...body_primary_body_3,
       fontSize: getFontSizeSmallDevices(
         width,
-        {...body_primary_body_3}.fontSize,
+        { ...body_primary_body_3 }.fontSize
       ),
     },
     textNoPref: {
-      textAlign: 'center',
+      textAlign: "center",
       marginTop: 20,
     },
     flexRowCenter: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      alignContent: 'center',
+      flexDirection: "row",
+      alignItems: "center",
+      alignContent: "center",
     },
     searchBar: {
       borderRadius: 33,
       marginVertical: 10,
-      width: '100%',
+      width: "100%",
       height: 45,
     },
     opacity: {
@@ -360,18 +368,18 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     paddingHorizontal: {
       paddingHorizontal: 10,
     },
-    centeredText: {textAlign: 'left'},
+    centeredText: { textAlign: "left" },
 
     flexCentered: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '100%',
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
     },
     buttonText: {
       ...button_link_primary_medium,
       fontSize: getFontSizeSmallDevices(
         width,
-        {...button_link_primary_medium}.fontSize,
+        { ...button_link_primary_medium }.fontSize
       ),
     },
     icon: {
@@ -380,46 +388,46 @@ const getStyles = (theme: Theme, {width, height}: Dimensions) =>
     },
     datePickerOverlay: {
       flex: 1,
-      justifyContent: 'flex-end',
-      backgroundColor: '#212838bc',
+      justifyContent: "flex-end",
+      backgroundColor: "#212838bc",
     },
     datePickerContainer: {
-      width: '100%',
+      width: "100%",
       backgroundColor: getColors(theme).cardBgColor,
       borderTopLeftRadius: 22,
       borderTopRightRadius: 22,
       paddingTop: 20,
     },
     datePickerWrapper: {
-      alignItems: 'center',
-      width: '100%',
+      alignItems: "center",
+      width: "100%",
     },
     datePickerButtonContainer: {
-      flexDirection: 'row',
+      flexDirection: "row",
       height: 50,
       marginTop: 20,
-      paddingHorizontal: '20%',
+      paddingHorizontal: "20%",
       marginBottom: 16,
       gap: 10,
     },
     datePickerButton: {
       flex: 1,
       backgroundColor: PRIMARY_RED_COLOR,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       borderRadius: 25,
     },
     datePickerButtonText: {
-      color: 'white',
+      color: "white",
       fontSize: 16,
-      fontWeight: '500',
+      fontWeight: "500",
     },
   });
 const mapStateToProps = (state: RootState) => ({
   active: state.activeAccount,
 });
 
-const connector = connect(mapStateToProps, {showModal});
+const connector = connect(mapStateToProps, { showModal });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(ExportTransaction);

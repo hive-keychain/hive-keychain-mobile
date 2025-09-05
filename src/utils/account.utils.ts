@@ -2,23 +2,23 @@ import {
   ClaimAccountOperation,
   DynamicGlobalProperties,
   ExtendedAccount,
-} from '@hiveio/dhive';
-import {Account, AccountKeys, ActiveAccount, RC} from 'actions/interfaces';
-import {ClaimsConfig} from './config';
-import {broadcast, getClient, getData} from './hive';
-import {KeyUtils} from './key.utils';
-import {translate} from './localize';
+} from "@hiveio/dhive";
+import { Account, AccountKeys, ActiveAccount, RC } from "actions/interfaces";
+import { ClaimsConfig } from "./config";
+import { broadcast, getClient, getData } from "./hive";
+import { KeyUtils } from "./key.utils";
+import { translate } from "./localize";
 
 const addAuthorizedAccount = async (
   username: string,
   authorizedAccount: string,
   existingAccounts: Account[],
-  simpleToast?: any,
+  simpleToast?: any
 ): Promise<AccountKeys> => {
   let localAuthorizedAccount: Account;
 
   if (username.trim().length === 0 || authorizedAccount.trim().length === 0)
-    throw new Error('Please fill the fields');
+    throw new Error("Please fill the fields");
   if (
     existingAccounts
       .map((localAccount: Account) => localAccount.name)
@@ -26,12 +26,14 @@ const addAuthorizedAccount = async (
   ) {
     if (simpleToast) {
       simpleToast.show(
-        translate('toast.account_already', {account: username}),
-        simpleToast.LONG,
+        translate("toast.account_already", { account: username }),
+        {
+          duration: SimpleToast.durations.LONG,
+        }
       );
       return;
     }
-    throw new Error(translate('toast.account_already', {account: username}));
+    throw new Error(translate("toast.account_already", { account: username }));
   }
   if (
     !existingAccounts
@@ -39,10 +41,10 @@ const addAuthorizedAccount = async (
       .includes(authorizedAccount)
   ) {
     if (simpleToast) return;
-    throw new Error(translate('toast.no_auth_account', {authorizedAccount}));
+    throw new Error(translate("toast.no_auth_account", { authorizedAccount }));
   } else {
     localAuthorizedAccount = existingAccounts.find(
-      (localAccount: Account) => localAccount.name,
+      (localAccount: Account) => localAccount.name
     )!;
   }
 
@@ -50,10 +52,12 @@ const addAuthorizedAccount = async (
 
   if (!hiveAccounts || hiveAccounts.length === 0) {
     if (simpleToast) {
-      simpleToast.show(translate('toast.incorrect_user'), simpleToast.LONG);
+      simpleToast.show(translate("toast.incorrect_user"), {
+        duration: SimpleToast.durations.LONG,
+      });
       return;
     }
-    throw new Error(translate('toast.incorrect_user'));
+    throw new Error(translate("toast.incorrect_user"));
   }
   let hiveAccount = hiveAccounts[0];
 
@@ -63,28 +67,28 @@ const addAuthorizedAccount = async (
   let keys: AccountKeys = {};
 
   const activeAuth = activeKeyInfo.account_auths.find(
-    (accountAuth) => accountAuth[0] === authorizedAccount,
+    (accountAuth) => accountAuth[0] === authorizedAccount
   );
   const postingAuth = postingKeyInfo.account_auths.find(
-    (accountAuth) => accountAuth[0] === authorizedAccount,
+    (accountAuth) => accountAuth[0] === authorizedAccount
   );
 
   if (!activeAuth && !postingAuth) {
     if (simpleToast) return;
     throw new Error(
-      translate('toast.accounts_no_auth', {authorizedAccount, username}),
+      translate("toast.accounts_no_auth", { authorizedAccount, username })
     );
   }
 
   if (activeAuth) {
     keys.active = existingAccounts.filter(
-      (account) => account.name === authorizedAccount,
+      (account) => account.name === authorizedAccount
     )[0].keys.active;
     keys.activePubkey = `@${authorizedAccount}`;
   }
   if (postingAuth) {
     keys.posting = existingAccounts.filter(
-      (account) => account.name === authorizedAccount,
+      (account) => account.name === authorizedAccount
     )[0].keys.posting;
     keys.postingPubkey = `@${authorizedAccount}`;
   }
@@ -105,7 +109,7 @@ const getAccounts = async (usernames: string[]) => {
 };
 
 const getRCMana = async (username: string) => {
-  const result = await getData('rc_api.find_rc_accounts', {
+  const result = await getData("rc_api.find_rc_accounts", {
     accounts: [username],
   });
 
@@ -138,26 +142,26 @@ const claimAccounts = async (rc: RC, activeAccount: ActiveAccount) => {
 
     return await broadcast(activeAccount.keys.active!, [
       [
-        'claim_account',
+        "claim_account",
         {
           creator: activeAccount.name,
           extensions: [],
-          fee: '0.000 HIVE',
+          fee: "0.000 HIVE",
         },
       ] as ClaimAccountOperation,
     ]);
-  } else console.log('Not enough RC% to claim account');
+  } else console.log("Not enough RC% to claim account");
 };
 
 const getPowerDown = (
   account: ExtendedAccount,
-  globalProperties: DynamicGlobalProperties,
+  globalProperties: DynamicGlobalProperties
 ) => {
   const totalSteem = Number(
-    globalProperties.total_vesting_fund_hive.toString().split(' ')[0],
+    globalProperties.total_vesting_fund_hive.toString().split(" ")[0]
   );
   const totalVests = Number(
-    globalProperties.total_vesting_shares.toString().split(' ')[0],
+    globalProperties.total_vesting_shares.toString().split(" ")[0]
   );
 
   const withdrawn = (
@@ -170,23 +174,23 @@ const getPowerDown = (
     1000000
   ).toFixed(3);
   const next_vesting_withdrawal = account.next_vesting_withdrawal;
-  return {withdrawn, total_withdrawing, next_vesting_withdrawal};
+  return { withdrawn, total_withdrawing, next_vesting_withdrawal };
 };
 
 const generateQRCode = (account: ActiveAccount) => {
-  return JSON.stringify({name: account.name, keys: account.keys});
+  return JSON.stringify({ name: account.name, keys: account.keys });
 };
 
 const generateQRCodeFromAccount = (account: Account) => {
-  let acc: Account = {name: account.name, keys: {}};
+  let acc: Account = { name: account.name, keys: {} };
   if (KeyUtils.isExportable(account.keys.active, account.keys.activePubkey)) {
     acc.keys.active = account.keys.active;
-    if (account.keys.activePubkey?.startsWith('@'))
+    if (account.keys.activePubkey?.startsWith("@"))
       acc.keys.activePubkey = account.keys.activePubkey;
   }
   if (KeyUtils.isExportable(account.keys.posting, account.keys.postingPubkey)) {
     acc.keys.posting = account.keys.posting;
-    if (account.keys.postingPubkey?.startsWith('@'))
+    if (account.keys.postingPubkey?.startsWith("@"))
       acc.keys.postingPubkey = account.keys.postingPubkey;
   }
   if (KeyUtils.isExportable(account.keys.memo, account.keys.memoPubkey)) {

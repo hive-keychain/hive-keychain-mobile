@@ -1,12 +1,12 @@
-import {DynamicGlobalProperties} from '@hiveio/dhive';
-import {addTab} from 'actions/index';
-import {ActiveAccount} from 'actions/interfaces';
-import EllipticButton from 'components/form/EllipticButton';
-import {BackToTopButton} from 'components/ui/Back-To-Top-Button';
-import Loader from 'components/ui/Loader';
-import Separator from 'components/ui/Separator';
-import moment from 'moment';
-import React, {useCallback, useRef, useState} from 'react';
+import { DynamicGlobalProperties } from "@hiveio/dhive";
+import { addTab } from "actions/index";
+import { ActiveAccount } from "actions/interfaces";
+import EllipticButton from "components/form/EllipticButton";
+import { BackToTopButton } from "components/ui/Back-To-Top-Button";
+import Loader from "components/ui/Loader";
+import Separator from "components/ui/Separator";
+import moment from "moment";
+import React, { useCallback, useRef, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -14,23 +14,23 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   View,
-} from 'react-native';
-import {initialWindowMetrics} from 'react-native-safe-area-context';
-import SimpleToast from 'react-native-simple-toast';
-import {connect, ConnectedProps} from 'react-redux';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {Notification} from 'src/interfaces/notifications.interface';
-import {getButtonStyle} from 'src/styles/button';
-import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
-import {getHeaderTitleStyle} from 'src/styles/headers';
+} from "react-native";
+import SimpleToast from "react-native-root-toast";
+import { initialWindowMetrics } from "react-native-safe-area-context";
+import { connect, ConnectedProps } from "react-redux";
+import { Theme, useThemeContext } from "src/context/theme.context";
+import { Notification } from "src/interfaces/notifications.interface";
+import { getButtonStyle } from "src/styles/button";
+import { getColors, PRIMARY_RED_COLOR } from "src/styles/colors";
+import { getHeaderTitleStyle } from "src/styles/headers";
 import {
   button_link_primary_small,
   FontPoppinsName,
   getFontSizeSmallDevices,
-} from 'src/styles/typography';
-import {translate} from 'utils/localize';
-import {navigate} from 'utils/navigation';
-import {NotificationsUtils} from 'utils/notifications.utils';
+} from "src/styles/typography";
+import { translate } from "utils/localize";
+import { navigate } from "utils/navigation";
+import { NotificationsUtils } from "utils/notifications.utils";
 
 type Props = {
   notifs: Notification[];
@@ -61,16 +61,16 @@ const NotificationsModal = ({
 
   const flatListRef = useRef();
 
-  const {width} = useWindowDimensions();
-  const {theme} = useThemeContext();
+  const { width } = useWindowDimensions();
+  const { theme } = useThemeContext();
   const styles = getStyles(theme, width);
 
   const handleClick = useCallback(
     (notification: Notification) => {
       addTab(notification.externalUrl || notification.txUrl);
-      navigate('BrowserScreen');
+      navigate("BrowserScreen");
     },
-    [addTab],
+    [addTab]
   );
 
   const markAllAsRead = async () => {
@@ -80,27 +80,26 @@ const NotificationsModal = ({
       notifications?.map((notif) => {
         notif.read = true;
         return notif;
-      }),
+      })
     );
     setSettingNotifications(false);
-    SimpleToast.show(
-      translate('components.notifications.mark_as_read'),
-      SimpleToast.LONG,
-    );
+    SimpleToast.show(translate("components.notifications.mark_as_read"), {
+      duration: SimpleToast.durations.LONG,
+    });
   };
 
   const handleScroll = (event: any) => {
-    const {y: innerScrollViewY} = event.nativeEvent.contentOffset;
+    const { y: innerScrollViewY } = event.nativeEvent.contentOffset;
     if (isLoadingMore) return;
     setDisplayedScrollToTop(innerScrollViewY >= 50);
   };
 
   const handleLoadMore = async () => {
     setIsLoadingMore(true);
-    const {notifs, hasMore} = await NotificationsUtils.getNotifications(
+    const { notifs, hasMore } = await NotificationsUtils.getNotifications(
       user.name!,
       properties!,
-      notifications,
+      notifications
     );
     setNotifications(notifs);
     setHasMoreData(hasMore);
@@ -108,12 +107,13 @@ const NotificationsModal = ({
   };
 
   const NotificationListItem = React.memo(
-    ({notification, onClick, styles, theme}: NotificationListItemProps) => (
+    ({ notification, onClick, styles, theme }: NotificationListItemProps) => (
       <>
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => onClick(notification)}
-          style={styles.itemContainer}>
+          style={styles.itemContainer}
+        >
           {!notification.read && <View style={styles.unread} />}
           <View>
             <Text style={styles.textBase}>
@@ -126,7 +126,7 @@ const NotificationsModal = ({
         </TouchableOpacity>
         <Separator drawLine height={5} additionalLineStyle={styles.line} />
       </>
-    ),
+    )
   );
 
   const renderItem = useCallback(
@@ -139,7 +139,7 @@ const NotificationsModal = ({
         theme={theme}
       />
     ),
-    [handleClick, styles, theme],
+    [handleClick, styles, theme]
   );
 
   return (
@@ -152,19 +152,19 @@ const NotificationsModal = ({
           scrollEnabled
           onScroll={handleScroll}
           onEndReachedThreshold={0.5}
-          renderItem={({item}) => renderItem(item)}
+          renderItem={({ item }) => renderItem(item)}
           keyExtractor={(notification) => notification.id}
           ListHeaderComponent={() => {
             return (
               <>
                 <View style={styles.header}>
                   <Text style={getHeaderTitleStyle(theme, width)}>
-                    {translate('settings.settings.notifications.title')}
+                    {translate("settings.settings.notifications.title")}
                   </Text>
                   {notifications.find((e) => !e.read) ? (
                     <EllipticButton
                       title={translate(
-                        'components.notifications.notification_set_all_as_read',
+                        "components.notifications.notification_set_all_as_read"
                       )}
                       onPress={markAllAsRead}
                       style={[
@@ -205,23 +205,23 @@ const NotificationsModal = ({
 const getStyles = (theme: Theme, width: number) =>
   StyleSheet.create({
     touchable: {
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       marginRight: 8,
       borderRadius: 50,
       borderWidth: 2,
-      borderColor: 'white',
-      backgroundColor: 'white',
+      borderColor: "white",
+      backgroundColor: "white",
     },
     header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '100%',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      width: "100%",
     },
     modal: {
       padding: 12,
       paddingBottom: 0,
-      width: '100%',
+      width: "100%",
       marginBottom: initialWindowMetrics?.insets.bottom,
     },
     textBase: {
@@ -235,12 +235,12 @@ const getStyles = (theme: Theme, width: number) =>
     },
     actionButton: {
       height: 35,
-      width: '40%',
+      width: "40%",
     },
     loaderContainer: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     unread: {
       width: 6,
@@ -248,12 +248,12 @@ const getStyles = (theme: Theme, width: number) =>
       backgroundColor: PRIMARY_RED_COLOR,
       borderRadius: 50,
       marginRight: 4,
-      position: 'absolute',
+      position: "absolute",
       left: 0,
     },
     itemContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingLeft: 12,
     },
     line: {
@@ -261,7 +261,7 @@ const getStyles = (theme: Theme, width: number) =>
     },
   });
 
-const connector = connect(undefined, {addTab});
+const connector = connect(undefined, { addTab });
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export default connector(NotificationsModal);

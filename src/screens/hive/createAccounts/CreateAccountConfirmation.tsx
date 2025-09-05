@@ -1,21 +1,21 @@
-import {PrivateKey} from '@hiveio/dhive';
-import Clipboard from '@react-native-community/clipboard';
-import {addAccount} from 'actions/accounts';
-import {Account, KeyTypes} from 'actions/interfaces';
-import {showModal} from 'actions/message';
-import ActiveOperationButton from 'components/form/ActiveOperationButton';
-import CheckBoxPanel from 'components/form/CheckBoxPanel';
+import { PrivateKey } from "@hiveio/dhive";
+import Clipboard from "@react-native-community/clipboard";
+import { addAccount } from "actions/accounts";
+import { Account, KeyTypes } from "actions/interfaces";
+import { showModal } from "actions/message";
+import ActiveOperationButton from "components/form/ActiveOperationButton";
+import CheckBoxPanel from "components/form/CheckBoxPanel";
 import {
   default as EllipticButton,
   default as OperationButton,
-} from 'components/form/EllipticButton';
-import TwoFaModal from 'components/modals/TwoFaModal';
-import Background from 'components/ui/Background';
-import {Caption} from 'components/ui/Caption';
-import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
-import Loader from 'components/ui/Loader';
-import {useCheckForMultisig} from 'hooks/useCheckForMultisig';
-import React, {useEffect, useState} from 'react';
+} from "components/form/EllipticButton";
+import TwoFaModal from "components/modals/TwoFaModal";
+import Background from "components/ui/Background";
+import { Caption } from "components/ui/Caption";
+import FocusAwareStatusBar from "components/ui/FocusAwareStatusBar";
+import Loader from "components/ui/Loader";
+import { useCheckForMultisig } from "hooks/useCheckForMultisig";
+import React, { useEffect, useState } from "react";
 
 import {
   ScrollView,
@@ -23,39 +23,39 @@ import {
   Text,
   View,
   useWindowDimensions,
-} from 'react-native';
-import {initialWindowMetrics} from 'react-native-safe-area-context';
-import SimpleToast from 'react-native-simple-toast';
-import QRCode from 'react-qr-code';
-import {ConnectedProps, connect} from 'react-redux';
-import {Theme, useThemeContext} from 'src/context/theme.context';
-import {MessageModalType} from 'src/enums/messageModal.enums';
-import {TransactionOptions} from 'src/interfaces/multisig.interface';
-import {getButtonStyle} from 'src/styles/button';
-import {BACKGROUNDDARKBLUE, getColors} from 'src/styles/colors';
+} from "react-native";
+import SimpleToast from "react-native-root-toast";
+import { initialWindowMetrics } from "react-native-safe-area-context";
+import QRCode from "react-qr-code";
+import { ConnectedProps, connect } from "react-redux";
+import { Theme, useThemeContext } from "src/context/theme.context";
+import { MessageModalType } from "src/enums/messageModal.enums";
+import { TransactionOptions } from "src/interfaces/multisig.interface";
+import { getButtonStyle } from "src/styles/button";
+import { BACKGROUNDDARKBLUE, getColors } from "src/styles/colors";
 import {
   SMALLEST_SCREEN_WIDTH_SUPPORTED,
   body_primary_body_2,
   button_link_primary_small,
   getFontSizeSmallDevices,
   title_primary_body_2,
-} from 'src/styles/typography';
-import {RootState} from 'store';
+} from "src/styles/typography";
+import { RootState } from "store";
 import {
   AccountCreationType,
   AccountCreationUtils,
   GeneratedKeys,
-} from 'utils/account-creation.utils';
-import AccountUtils from 'utils/account.utils';
-import {Dimensions} from 'utils/common.types';
-import {translate} from 'utils/localize';
-import {navigate, resetStackAndNavigate} from 'utils/navigation';
+} from "utils/account-creation.utils";
+import AccountUtils from "utils/account.utils";
+import { Dimensions } from "utils/common.types";
+import { translate } from "utils/localize";
+import { navigate, resetStackAndNavigate } from "utils/navigation";
 
 const DEFAULT_EMPTY_KEYS = {
-  owner: {public: '', private: ''},
-  active: {public: '', private: ''},
-  posting: {public: '', private: ''},
-  memo: {public: '', private: ''},
+  owner: { public: "", private: "" },
+  active: { public: "", private: "" },
+  posting: { public: "", private: "" },
+  memo: { public: "", private: "" },
 } as GeneratedKeys;
 
 const StepTwo = ({
@@ -63,25 +63,23 @@ const StepTwo = ({
   addAccount,
   showModal,
   route,
-}: PropsFromRedux & {route: any}) => {
-  const [masterKey, setMasterKey] = useState('');
+}: PropsFromRedux & { route: any }) => {
+  const [masterKey, setMasterKey] = useState("");
   const [generatedKeys, setGeneratedKeys] = useState(DEFAULT_EMPTY_KEYS);
-  const [keysTextVersion, setKeysTextVersion] = useState('');
+  const [keysTextVersion, setKeysTextVersion] = useState("");
   const [loadingMasterKey, setLoadingMasterKey] = useState(true);
   const [paymentUnderstanding, setPaymentUnderstanding] = useState(false);
   const [safelyCopied, setSafelyCopied] = useState(false);
-  const [
-    notPrimaryStorageUnderstanding,
-    setNotPrimaryStorageUnderstanding,
-  ] = useState(false);
+  const [notPrimaryStorageUnderstanding, setNotPrimaryStorageUnderstanding] =
+    useState(false);
   const [loading, setLoading] = useState(false);
   const [qrData, setQrData] = useState<string | undefined>();
 
-  const {theme} = useThemeContext();
-  const {width, height} = useWindowDimensions();
-  const styles = getDimensionedStyles({width, height}, theme);
+  const { theme } = useThemeContext();
+  const { width, height } = useWindowDimensions();
+  const styles = getDimensionedStyles({ width, height }, theme);
   const [isMultisig, twoFABots] = useCheckForMultisig(KeyTypes.active, user);
-  const {accountName, creationType, selectedAccount, price} = route.params;
+  const { accountName, creationType, selectedAccount, price } = route.params;
 
   useEffect(() => {
     const masterKey = AccountCreationUtils.generateMasterKey();
@@ -89,11 +87,11 @@ const StepTwo = ({
   }, []);
 
   useEffect(() => {
-    if (masterKey !== '') {
-      const posting = PrivateKey.fromLogin(accountName, masterKey, 'posting');
-      const active = PrivateKey.fromLogin(accountName, masterKey, 'active');
-      const memo = PrivateKey.fromLogin(accountName, masterKey, 'memo');
-      const owner = PrivateKey.fromLogin(accountName, masterKey, 'owner');
+    if (masterKey !== "") {
+      const posting = PrivateKey.fromLogin(accountName, masterKey, "posting");
+      const active = PrivateKey.fromLogin(accountName, masterKey, "active");
+      const memo = PrivateKey.fromLogin(accountName, masterKey, "memo");
+      const owner = PrivateKey.fromLogin(accountName, masterKey, "owner");
       setGeneratedKeys({
         owner: {
           private: owner.toString(),
@@ -124,12 +122,12 @@ const StepTwo = ({
       if (masterKey.length) {
         setKeysTextVersion(generateKeysTextVersion());
       } else {
-        setKeysTextVersion('');
+        setKeysTextVersion("");
       }
       setNotPrimaryStorageUnderstanding(false);
       setSafelyCopied(false);
       setPaymentUnderstanding(
-        creationType === AccountCreationType.PEER_TO_PEER,
+        creationType === AccountCreationType.PEER_TO_PEER
       );
     }
   }, [generatedKeys]);
@@ -152,40 +150,40 @@ const StepTwo = ({
       <View style={styles.marginHorizontal}>
         <View style={styles.cardKey}>
           <Text style={styles.title}>
-            {translate('common.account_name')}:{' '}
+            {translate("common.account_name")}:{" "}
             <Text style={[styles.text, styles.dynamicTextSize, styles.opacity]}>
               {accountName}
             </Text>
           </Text>
-          <Text style={styles.title}>{translate('keys.master_password')}</Text>
+          <Text style={styles.title}>{translate("keys.master_password")}</Text>
           {wrapInHorizontalScrollView(`${masterKey}`)}
         </View>
         <View style={styles.cardKey}>
-          <Text style={styles.title}>{translate('keys.owner_key')}</Text>
-          <Text style={styles.title}>{translate('keys.private')}</Text>
+          <Text style={styles.title}>{translate("keys.owner_key")}</Text>
+          <Text style={styles.title}>{translate("keys.private")}</Text>
           {wrapInHorizontalScrollView(`${generatedKeys.owner.private}`)}
-          <Text style={styles.title}>{translate('keys.public')}</Text>
+          <Text style={styles.title}>{translate("keys.public")}</Text>
           {wrapInHorizontalScrollView(`${generatedKeys.owner.public}`)}
         </View>
         <View style={styles.cardKey}>
-          <Text style={styles.title}>{translate('keys.active_key')}</Text>
-          <Text style={styles.title}>{translate('keys.private')}</Text>
+          <Text style={styles.title}>{translate("keys.active_key")}</Text>
+          <Text style={styles.title}>{translate("keys.private")}</Text>
           {wrapInHorizontalScrollView(`${generatedKeys.active.private}`)}
-          <Text style={styles.title}>{translate('keys.public')}</Text>
+          <Text style={styles.title}>{translate("keys.public")}</Text>
           {wrapInHorizontalScrollView(`${generatedKeys.active.public}`)}
         </View>
         <View style={styles.cardKey}>
-          <Text style={styles.title}>{translate('keys.posting_key')}</Text>
-          <Text style={styles.title}>{translate('keys.private')}</Text>
+          <Text style={styles.title}>{translate("keys.posting_key")}</Text>
+          <Text style={styles.title}>{translate("keys.private")}</Text>
           {wrapInHorizontalScrollView(`${generatedKeys.posting.private}`)}
-          <Text style={styles.title}>{translate('keys.public')}</Text>
+          <Text style={styles.title}>{translate("keys.public")}</Text>
           {wrapInHorizontalScrollView(`${generatedKeys.posting.public}`)}
         </View>
         <View style={styles.cardKey}>
-          <Text style={styles.title}>{translate('keys.memo_key')}</Text>
-          <Text style={styles.title}>{translate('keys.private')}</Text>
+          <Text style={styles.title}>{translate("keys.memo_key")}</Text>
+          <Text style={styles.title}>{translate("keys.private")}</Text>
           {wrapInHorizontalScrollView(`${generatedKeys.memo.private}`)}
-          <Text style={styles.title}>{translate('keys.public')}</Text>
+          <Text style={styles.title}>{translate("keys.public")}</Text>
           {wrapInHorizontalScrollView(`${generatedKeys.memo.public}`)}
         </View>
       </View>
@@ -194,31 +192,31 @@ const StepTwo = ({
 
   const generateKeysTextVersion = () => {
     return `    
-    ${translate('common.account_name')}: @${accountName}
-      ---------${translate('common.title_master_key')} ${translate(
-      'common.password',
+    ${translate("common.account_name")}: @${accountName}
+      ---------${translate("common.title_master_key")} ${translate(
+      "common.password"
     )}:--------- 
       ${masterKey}
-      ---------${translate('common.title_owner_key')} ${translate(
-      'common.key',
+      ---------${translate("common.title_owner_key")} ${translate(
+      "common.key"
     )}:--------- 
-      ${translate('common.private')}: ${generatedKeys.owner.private}
-      ${translate('common.public')}: ${generatedKeys.owner.public}
-      ---------${translate('common.title_active_key')} ${translate(
-      'common.key',
+      ${translate("common.private")}: ${generatedKeys.owner.private}
+      ${translate("common.public")}: ${generatedKeys.owner.public}
+      ---------${translate("common.title_active_key")} ${translate(
+      "common.key"
     )}:--------- 
-      ${translate('common.private')}: ${generatedKeys.active.private}
-      ${translate('common.public')}: ${generatedKeys.active.public}
-      ---------${translate('common.title_posting_key')} ${translate(
-      'common.key',
+      ${translate("common.private")}: ${generatedKeys.active.private}
+      ${translate("common.public")}: ${generatedKeys.active.public}
+      ---------${translate("common.title_posting_key")} ${translate(
+      "common.key"
     )}:---------
-      ${translate('common.private')}: ${generatedKeys.posting.private}
-      ${translate('common.public')}: ${generatedKeys.posting.public}
-      ---------${translate('common.title_memo_key')} ${translate(
-      'common.key',
+      ${translate("common.private")}: ${generatedKeys.posting.private}
+      ${translate("common.public")}: ${generatedKeys.posting.public}
+      ---------${translate("common.title_memo_key")} ${translate(
+      "common.key"
     )}:---------
-      ${translate('common.private')}: ${generatedKeys.memo.private}
-      ${translate('common.public')}: ${generatedKeys.memo.public}
+      ${translate("common.private")}: ${generatedKeys.memo.private}
+      ${translate("common.public")}: ${generatedKeys.memo.public}
       -------------------------------`;
   };
 
@@ -227,24 +225,24 @@ const StepTwo = ({
       generateKeysTextVersion() +
         addExtraInfoToClipboard(
           creationType === AccountCreationType.PEER_TO_PEER
-            ? 'peer_to_peer'
-            : selectedAccount?.name,
-        ),
+            ? "peer_to_peer"
+            : selectedAccount?.name
+        )
     );
-    SimpleToast.show(translate('toast.copied_text'));
+    SimpleToast.show(translate("toast.copied_text"));
   };
 
   const getPaymentCheckboxLabel = () => {
     switch (creationType) {
       case AccountCreationType.BUYING:
-        return translate('components.create_account.buy_method_message', {
+        return translate("components.create_account.buy_method_message", {
           price: price.toString(),
           account: selectedAccount.name,
         });
       case AccountCreationType.USING_TICKET:
         return translate(
-          'components.create_account.claim_account_method_message',
-          {account: selectedAccount.name},
+          "components.create_account.claim_account_method_message",
+          { account: selectedAccount.name }
         );
     }
   };
@@ -260,9 +258,9 @@ const StepTwo = ({
         if (creationType !== AccountCreationType.PEER_TO_PEER) {
           if (!selectedAccount.keys.active)
             throw new Error(
-              translate('common.missing_key', {
-                key: translate('keys.active').toLowerCase(),
-              }),
+              translate("common.missing_key", {
+                key: translate("keys.active").toLowerCase(),
+              })
             );
           const handleSubmit = async (options: TransactionOptions) => {
             const result = await AccountCreationUtils.createAccount(
@@ -273,30 +271,28 @@ const StepTwo = ({
               AccountCreationUtils.generateAccountAuthorities(generatedKeys),
               price,
               generatedKeys,
-              options,
+              options
             );
             if (result && (result as Account).keys) {
               SimpleToast.show(
-                translate(
-                  'components.create_account.create_account_successful',
-                ),
+                translate("components.create_account.create_account_successful")
               );
               addAccount(
                 (result as Account).name,
                 (result as Account).keys,
                 true,
-                false,
+                false
               );
-              resetStackAndNavigate('WALLET');
+              resetStackAndNavigate("WALLET");
             } else {
               if (!isMultisig)
                 SimpleToast.show(
-                  translate('components.create_account.create_account_failed'),
+                  translate("components.create_account.create_account_failed")
                 );
             }
           };
           if (Object.entries(twoFABots).length > 0) {
-            navigate('ModalScreen', {
+            navigate("ModalScreen", {
               name: `2FA`,
               modalContent: (
                 <TwoFaModal twoFABots={twoFABots} onSubmit={handleSubmit} />
@@ -316,9 +312,9 @@ const StepTwo = ({
               a: generatedKeys.active.public,
               p: generatedKeys.posting.public,
               m: generatedKeys.memo.public,
-            }),
-          ).toString('base64');
-          const fullData = 'keychain://create_account=' + encodedDataAsString;
+            })
+          ).toString("base64");
+          const fullData = "keychain://create_account=" + encodedDataAsString;
           setQrData(fullData);
         }
       } catch (err) {
@@ -328,7 +324,7 @@ const StepTwo = ({
       }
     } else {
       SimpleToast.show(
-        translate('components.create_account.need_accept_terms_condition'),
+        translate("components.create_account.need_accept_terms_condition")
       );
       return;
     }
@@ -337,7 +333,7 @@ const StepTwo = ({
   const renderButton = () =>
     creationType === AccountCreationType.PEER_TO_PEER ? (
       <EllipticButton
-        title={translate('common.generate_qr')}
+        title={translate("common.generate_qr")}
         onPress={createAccount}
         isWarningButton
         additionalTextStyle={[
@@ -352,7 +348,7 @@ const StepTwo = ({
         isLoading={loading}
         style={[styles.button, getButtonStyle(theme).warningStyleButton]}
         onPress={createAccount}
-        title={translate('components.create_account.create_account')}
+        title={translate("components.create_account.create_account")}
         additionalTextStyle={[
           styles.buttonText,
           styles.dynamicTextSize,
@@ -373,16 +369,16 @@ const StepTwo = ({
         memoPubkey: generatedKeys.memo.public,
       },
       true,
-      false,
+      false
     );
     showModal(
-      'wallet.operations.create_account.peer_to_peer.account_sucessfully_created',
+      "wallet.operations.create_account.peer_to_peer.account_sucessfully_created",
       MessageModalType.SUCCESS,
       {
         accountName,
-      },
+      }
     );
-    navigate('WALLET');
+    navigate("WALLET");
   };
 
   useEffect(() => {
@@ -402,18 +398,21 @@ const StepTwo = ({
     <Background
       theme={theme}
       skipBottom
-      additionalBgSvgImageStyle={{bottom: -initialWindowMetrics.insets.bottom}}>
+      additionalBgSvgImageStyle={{
+        bottom: -initialWindowMetrics.insets.bottom,
+      }}
+    >
       <View style={styles.containerQrPage}>
         <FocusAwareStatusBar />
         {creationType === AccountCreationType.PEER_TO_PEER && qrData ? (
           <View style={styles.qrContainer}>
-            <View style={{paddingHorizontal: 18, marginBottom: 8}}>
+            <View style={{ paddingHorizontal: 18, marginBottom: 8 }}>
               <Caption text="components.create_account.peer_to_peer_waiting_text" />
             </View>
             <View style={styles.qrCodeImg}>
               <QRCode
                 size={240}
-                style={{backgroundColor: 'white'}}
+                style={{ backgroundColor: "white" }}
                 value={qrData}
               />
             </View>
@@ -449,7 +448,7 @@ const StepTwo = ({
                     checked={notPrimaryStorageUnderstanding}
                     onPress={() =>
                       setNotPrimaryStorageUnderstanding(
-                        !notPrimaryStorageUnderstanding,
+                        !notPrimaryStorageUnderstanding
                       )
                     }
                     title="components.create_account.storage_understanding"
@@ -465,10 +464,10 @@ const StepTwo = ({
                         backgroundColor:
                           theme === Theme.DARK
                             ? getColors(theme).cardBgColor
-                            : 'white',
+                            : "white",
                       },
                     ]}
-                    title={translate('components.create_account.copy')}
+                    title={translate("components.create_account.copy")}
                     onPress={() => copyAllKeys()}
                     additionalTextStyle={[
                       styles.buttonText,
@@ -482,7 +481,7 @@ const StepTwo = ({
             )}
             {loadingMasterKey && (
               <View style={styles.loadingContainer}>
-                <Loader animating size={'small'} />
+                <Loader animating size={"small"} />
               </View>
             )}
           </>
@@ -492,7 +491,7 @@ const StepTwo = ({
   );
 };
 
-const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
+const getDimensionedStyles = ({ width, height }: Dimensions, theme: Theme) =>
   StyleSheet.create({
     checkboxContainer: {
       paddingVertical: 0,
@@ -500,45 +499,45 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
       flexGrow: 1,
     },
     containerQrPage: {
-      display: 'flex',
+      display: "flex",
       flex: 1,
-      width: '100%',
-      height: '100%',
-      justifyContent: 'center',
+      width: "100%",
+      height: "100%",
+      justifyContent: "center",
     },
     container: {
       marginHorizontal: 16,
       flex: 1,
-      justifyContent: 'space-between',
+      justifyContent: "space-between",
     },
     qrCodeImg: {
-      backgroundColor: 'white',
-      width: 'auto',
-      height: 'auto',
+      backgroundColor: "white",
+      width: "auto",
+      height: "auto",
       padding: 30,
       borderRadius: 12,
     },
     button: {
-      width: '45%',
+      width: "45%",
       marginHorizontal: 0,
     },
     buttonDisabled: {
-      backgroundColor: 'gray',
+      backgroundColor: "gray",
       marginHorizontal: 0,
     },
     keysContainer: {
       maxHeight:
         height * (width <= SMALLEST_SCREEN_WIDTH_SUPPORTED ? 0.3 : 0.5),
       flexGrow: 1,
-      overflow: 'hidden',
+      overflow: "hidden",
     },
     checkboxesContainer: {
       marginTop: 16,
       flexGrow: 1,
-      justifyContent: 'center',
+      justifyContent: "center",
     },
     whiteText: {
-      color: 'white',
+      color: "white",
     },
     spacing: {
       marginTop: 20,
@@ -546,11 +545,11 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     },
     checkbox: {
       backgroundColor: getColors(theme).cardBgColor,
-      width: '100%',
+      width: "100%",
       borderColor: getColors(theme).senaryCardBorderColor,
       borderRadius: 20,
     },
-    marginHorizontal: {marginHorizontal: 10},
+    marginHorizontal: { marginHorizontal: 10 },
     cardKey: {
       borderWidth: 1,
       backgroundColor: getColors(theme).secondaryCardBgColor,
@@ -571,42 +570,42 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     dynamicTextSize: {
       fontSize: getFontSizeSmallDevices(
         width,
-        button_link_primary_small.fontSize,
+        button_link_primary_small.fontSize
       ),
     },
     opacity: {
       opacity: 0.7,
     },
     buttonsContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      width: '100%',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      width: "100%",
       marginBottom: 10,
     },
     buttonText: {
       ...title_primary_body_2,
-      color: 'white',
+      color: "white",
     },
     copyButtonText: {
-      color: theme === Theme.LIGHT ? 'black' : 'white',
+      color: theme === Theme.LIGHT ? "black" : "white",
     },
     whiteBackground: {
-      backgroundColor: '#fff',
+      backgroundColor: "#fff",
     },
     darkText: {
       color: BACKGROUNDDARKBLUE,
     },
     loadingContainer: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     qrContainer: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      height: '100%',
-      width: '100%',
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      height: "100%",
+      width: "100%",
     },
   });
 
@@ -616,7 +615,7 @@ const connector = connect(
       user: state.activeAccount,
     };
   },
-  {addAccount, showModal},
+  { addAccount, showModal }
 );
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
