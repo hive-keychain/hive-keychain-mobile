@@ -9,6 +9,7 @@ import {
 import CustomSearchBar from 'components/form/CustomSearchBar';
 import Icon from 'components/hive/Icon';
 import FocusAwareStatusBar from 'components/ui/FocusAwareStatusBar';
+import {Image} from 'expo-image';
 import React from 'react';
 import {
   StyleSheet,
@@ -17,7 +18,6 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import {ConnectedProps, connect} from 'react-redux';
@@ -95,7 +95,7 @@ const BrowserHeader = ({
           onPress={() => {
             removeFromFavorites(activeUrl);
           }}>
-          <FastImage source={HEART_PNG} style={styles.icons} />
+          <Image source={HEART_PNG} style={styles.icons} />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
@@ -104,7 +104,7 @@ const BrowserHeader = ({
           onPress={() => {
             addToFavorites(active);
           }}>
-          <FastImage source={HEART_EMPTY_PNG} style={styles.icons} />
+          <Image source={HEART_EMPTY_PNG} style={styles.icons} />
         </TouchableOpacity>
       );
     };

@@ -2,6 +2,7 @@ import Icon from '@expo/vector-icons/MaterialIcons';
 import {Tab} from 'actions/interfaces';
 import {Caption} from 'components/ui/Caption';
 import FastImageComponent from 'components/ui/FastImage';
+import {Image} from 'expo-image';
 import React from 'react';
 import {
   Dimensions,
@@ -11,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Image from 'react-native-fast-image';
+
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';

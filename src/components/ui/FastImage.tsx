@@ -1,21 +1,17 @@
+import {Image, ImageProps} from 'expo-image';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import FastImage, {FastImageProps} from 'react-native-fast-image';
 
 interface Props {
   source: string;
   size?: number;
 }
 
-const FastImageComponent = ({
-  source,
-  size,
-  ...props
-}: Props & FastImageProps) => {
+const FastImageComponent = ({source, size, ...props}: Props & ImageProps) => {
   const style = StyleSheet.flatten(props.style);
 
   return (
-    <FastImage
+    <Image
       source={{
         uri: source?.endsWith('.svg')
           ? `https://svg2png.deno.dev/${source}?width=${style?.width}&height=${style?.height}`

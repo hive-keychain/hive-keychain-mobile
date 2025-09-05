@@ -2,11 +2,11 @@ import DropdownModal, {DropdownModalItem} from 'components/form/DropdownModal';
 import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import Separator from 'components/ui/Separator';
+import {Image} from 'expo-image';
 import {useHasExpiration} from 'hooks/useHasExpiration';
 import {ModalNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getButtonStyle} from 'src/styles/button';
@@ -68,7 +68,7 @@ const HASAuthRequest = ({data, accounts, navigation}: Props) => {
   return (
     <Operation
       logo={
-        <FastImage
+        <Image
           source={
             data.decryptedData?.app.icon
               ? {uri: data.decryptedData.app.icon}

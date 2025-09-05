@@ -2,10 +2,11 @@ import EllipticButton from 'components/form/EllipticButton';
 import Operation from 'components/operations/Operation';
 import SafeArea from 'components/ui/SafeArea';
 import Separator from 'components/ui/Separator';
+import {Image} from 'expo-image';
 import {ModalNavigation} from 'navigators/Root.types';
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import FastImage from 'react-native-fast-image';
+
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {getColors, PRIMARY_RED_COLOR} from 'src/styles/colors';
@@ -72,7 +73,7 @@ const HASChallengeRequest = ({data, accounts, navigation}: Props) => {
   return (
     <Operation
       additionalContentStyle={{flexGrow: 1}}
-      logo={<FastImage source={LOGO_LIGHT} style={{width: 30, height: 30}} />}
+      logo={<Image source={LOGO_LIGHT} style={{width: 30, height: 30}} />}
       title={translate('request.title.decode')}
       additionalHeaderTitleStyle={[styles.text, styles.title]}
       additionalHeaderContainerStyle={{padding: 12}}

@@ -1,3 +1,4 @@
+import {Image} from 'expo-image';
 import React from 'react';
 import {
   StyleSheet,
@@ -6,7 +7,6 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import Image from 'react-native-fast-image';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {getColors} from 'src/styles/colors';

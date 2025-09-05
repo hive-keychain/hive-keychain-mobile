@@ -1,8 +1,8 @@
 import HiveEngine from 'assets/wallet/hive_engine.png';
 import FastImageComponent from 'components/ui/FastImage';
+import {Image} from 'expo-image';
 import React, {useState} from 'react';
 import {Image as Img, StyleSheet, View} from 'react-native';
-import Image from 'react-native-fast-image';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {Token} from 'src/interfaces/tokens.interface';

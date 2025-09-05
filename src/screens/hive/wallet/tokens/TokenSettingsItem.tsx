@@ -1,4 +1,5 @@
 import HiveEngine from 'assets/wallet/hive_engine.png';
+import {Image} from 'expo-image';
 import React, {memo, useState} from 'react';
 import {
   Image as Img,
@@ -8,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import Image from 'react-native-fast-image';
 // REMOVE: import {ConnectedProps, connect} from 'react-redux';
 import {Theme} from 'src/context/theme.context';
 import {Token} from 'src/interfaces/tokens.interface';

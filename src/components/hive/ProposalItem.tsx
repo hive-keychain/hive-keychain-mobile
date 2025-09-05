@@ -2,6 +2,7 @@ import {ActiveAccount} from 'actions/interfaces';
 import Vote from 'assets/governance/arrow_circle_up.svg';
 import TwoFaModal from 'components/modals/TwoFaModal';
 import Loader from 'components/ui/Loader';
+import {Image} from 'expo-image';
 import moment from 'moment';
 import React, {useState} from 'react';
 import {
@@ -13,7 +14,6 @@ import {
   ViewStyle,
   useWindowDimensions,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
@@ -174,7 +174,7 @@ const ProposalItem = ({
           <TouchableOpacity
             activeOpacity={1}
             onLongPress={() => goToCreator(proposal.creator)}>
-            <FastImage
+            <Image
               source={{
                 uri: `https://images.hive.blog/u/${proposal.creator}/avatar`,
               }}
