@@ -47,25 +47,3 @@ export const headerTransparent = {
 };
 
 export const noHeader = {headerShown: false};
-
-export const modalOptions = {
-  headerShown: false,
-  animation: 'none',
-  cardStyle: {backgroundColor: 'transparent'},
-  cardOverlayEnabled: true,
-  cardStyleInterpolator: ({current: {progress}}: any) => ({
-    cardStyle: {
-      opacity: progress.interpolate({
-        inputRange: [0, 0.5, 0.9, 1],
-        outputRange: [0, 0.1, 0.3, 1],
-      }),
-    },
-    overlayStyle: {
-      opacity: progress.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 0.7],
-        extrapolate: 'clamp',
-      }),
-    },
-  }),
-};

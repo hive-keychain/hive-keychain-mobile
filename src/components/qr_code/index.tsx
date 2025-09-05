@@ -1,6 +1,6 @@
 import {useHeaderHeight} from '@react-navigation/elements';
-import {BarcodeScanningResult, CameraView} from 'expo-camera';
-import React from 'react';
+import {BarcodeScanningResult, Camera, CameraView} from 'expo-camera';
+import React, {useEffect} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useThemeContext} from 'src/context/theme.context';
@@ -13,6 +13,9 @@ type Props = {
 
 const QRCode = ({onSuccess, topContent}: Props) => {
   const {theme} = useThemeContext();
+  useEffect(() => {
+    Camera.requestCameraPermissionsAsync();
+  }, []);
   return (
     <View style={{flex: 1}}>
       {topContent ? (
@@ -34,6 +37,7 @@ const QRCode = ({onSuccess, topContent}: Props) => {
           barcodeTypes: ['qr'],
         }}
         onBarcodeScanned={onSuccess}
+        style={{flex: 1}}
 
         // reactivate={true}
         // reactivateTimeout={2000}

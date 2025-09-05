@@ -46,6 +46,7 @@ export default ({skipTranslation, info}: Props) => {
           );
         })}
       </>
+      <Separator />
     </SafeArea>
   );
 };

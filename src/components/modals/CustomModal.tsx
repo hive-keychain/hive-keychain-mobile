@@ -4,12 +4,12 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
 } from 'react-native';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {Theme} from 'src/context/theme.context';
 import {getColors} from 'src/styles/colors';
 import {Dimensions as Dim} from 'utils/common.types';
@@ -71,13 +71,13 @@ class CustomModal extends React.Component<Props, {}> implements InnerProps {
             styles.mainContainer,
             this.props.additionalMainContainerStyle,
           ]}>
-          <TouchableWithoutFeedback
+          <Pressable
             style={[{height: '100%'}, this.props.additionalClickeableAreaStyle]}
             onPress={() => {
               this.props.outsideClick();
             }}>
             {this.props.buttonElement}
-          </TouchableWithoutFeedback>
+          </Pressable>
           <View
             style={[
               this.fixedHeight ? styles.modalWrapperFixed : styles.modalWrapper,

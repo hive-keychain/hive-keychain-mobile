@@ -35,7 +35,7 @@ import {setRpc} from 'utils/hive';
 import {HiveEngineConfigUtils} from 'utils/hive-engine-config.utils';
 import {processQRCodeOp} from 'utils/hive-uri';
 import setupLinking, {clearLinkingListeners} from 'utils/linking';
-import {modalOptions, noHeader, setNavigator} from 'utils/navigation';
+import {noHeader, setNavigator} from 'utils/navigation';
 import {useWorkingRPC} from 'utils/rpc-switcher.utils';
 import {checkRpcStatus} from 'utils/rpc.utils';
 import {ModalNavigationRoute, RootStackParam} from './navigators/Root.types';
@@ -131,7 +131,16 @@ const App = ({
     return (
       <Root.Navigator id={undefined}>
         {renderMainNavigator()}
-        <Root.Screen name="ModalScreen" component={Modal} {...modalOptions} />
+        <Root.Screen
+          name="ModalScreen"
+          component={Modal}
+          options={{
+            headerShown: false,
+            presentation: 'transparentModal',
+            cardStyle: {backgroundColor: 'transparent'},
+            animation: 'fade',
+          }}
+        />
       </Root.Navigator>
     );
   };

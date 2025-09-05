@@ -135,7 +135,6 @@ export default () => {
       <Stack.Screen
         name="ScanQRScreen"
         options={({navigation}) => ({
-          headerBackTitle: translate('navigation.add_account'),
           headerTitle: () => <NavigatorTitle title="navigation.add_account" />,
           headerStyle: styles.header,
           headerTintColor: 'white',

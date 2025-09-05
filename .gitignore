@@ -39,3 +39,6 @@ yarn-error.*
 # google services
 google-services.json
 .git2
+
+android
+ios

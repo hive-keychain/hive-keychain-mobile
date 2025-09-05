@@ -36,5 +36,6 @@ const getStyles = (theme: Theme, width: number) =>
       includeFontPadding: false,
       textAlignVertical: 'center',
       textAlign: 'center',
+      paddingLeft: 12,
     },
   });

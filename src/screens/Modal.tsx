@@ -82,6 +82,7 @@ export default ({navigation, route}: ModalNavigationProps) => {
       bottomHalf={bottomHalf === undefined ? true : bottomHalf}
       containerStyle={[containerStyle]}
       additionalWrapperFixedStyle={wrapperFixedStyle}
+      additionalClickeableAreaStyle={{opacity: 0.5, backgroundColor: 'black'}}
       modalPosition={modalPosition}
       theme={theme}
       buttonElement={buttonElement}>
