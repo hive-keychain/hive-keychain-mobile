@@ -1,6 +1,6 @@
-import Clipboard from '@react-native-community/clipboard';
 import {ActionPayload, BrowserPayload, Page} from 'actions/interfaces';
 import Icon from 'components/hive/Icon';
+import Clipboard from 'expo-clipboard';
 import React, {MutableRefObject, useRef} from 'react';
 import {
   KeyboardAvoidingView,
@@ -48,7 +48,7 @@ const UrlModal = ({
   clearCache,
   theme,
 }: Props) => {
-  const urlInput: MutableRefObject<TextInput> = useRef();
+  const urlInput: MutableRefObject<TextInput> = useRef(null);
   const insets = useSafeAreaInsets();
   const styles = getStyles(insets, theme);
 
@@ -139,7 +139,7 @@ const UrlModal = ({
               theme={theme}
               width={17}
               height={17}
-              onPress={() => Clipboard.setString(url)}
+              onPress={() => Clipboard.setStringAsync(url)}
               additionalContainerStyle={styles.option}
               color={PRIMARY_RED_COLOR}
             />

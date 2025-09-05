@@ -14,7 +14,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
 import {
   BACKGROUNDITEMDARKISH,
@@ -68,11 +68,15 @@ export default ({
         onPress={async () => {
           try {
             if (!user.keys[KeyTypes.active]) {
-              Toast.show(translate('drawerFooter.errorActive'), Toast.LONG);
+              Toast.show(translate('drawerFooter.errorActive'), {
+                duration: Toast.durations.LONG,
+              });
               return;
             }
             if (user.account.witness_votes.length === 30) {
-              Toast.show(translate('drawerFooter.error30'), Toast.LONG);
+              Toast.show(translate('drawerFooter.error30'), {
+                duration: Toast.durations.LONG,
+              });
               return;
             }
             await voteForWitness(user.keys[KeyTypes.active], {
@@ -82,12 +86,13 @@ export default ({
             });
             //@ts-ignore
             store.dispatch(loadAccount(user.name));
-            Toast.show(translate('drawerFooter.thanks'), Toast.LONG);
+            Toast.show(translate('drawerFooter.thanks'), {
+              duration: Toast.durations.LONG,
+            });
           } catch (e) {
-            Toast.show(
-              translate('drawerFooter.error') + JSON.stringify(e),
-              Toast.LONG,
-            );
+            Toast.show(translate('drawerFooter.error') + JSON.stringify(e), {
+              duration: Toast.durations.LONG,
+            });
           }
         }}
       />

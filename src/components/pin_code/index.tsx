@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {Text} from 'react-native-elements';
 import IntentLauncher from 'react-native-intent-launcher';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
 import {
   PRIMARY_RED_COLOR,

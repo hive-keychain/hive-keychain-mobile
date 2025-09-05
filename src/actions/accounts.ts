@@ -1,16 +1,13 @@
-import { loadAccount } from "actions/hive";
-import {
-  default as SimpleToast,
-  default as Toast,
-} from "react-native-simple-toast";
-import { MessageModalType } from "src/enums/messageModal.enums";
-import { AppThunk } from "src/hooks/redux";
-import { encryptJson } from "utils/encrypt";
-import validateKeys from "utils/keyValidation";
-import { clearKeychain, saveOnKeychain } from "utils/keychainStorage";
-import { translate } from "utils/localize";
-import { navigate, resetStackAndNavigate } from "utils/navigation";
-import { WidgetUtils } from "utils/widget.utils";
+import {loadAccount} from 'actions/hive';
+import Toast from 'react-native-root-toast';
+import {MessageModalType} from 'src/enums/messageModal.enums';
+import {AppThunk} from 'src/hooks/redux';
+import {encryptJson} from 'utils/encrypt';
+import validateKeys from 'utils/keyValidation';
+import {clearKeychain, saveOnKeychain} from 'utils/keychainStorage';
+import {translate} from 'utils/localize';
+import {navigate, resetStackAndNavigate} from 'utils/navigation';
+import {WidgetUtils} from 'utils/widget.utils';
 import {
   Account,
   AccountKeys,
@@ -18,14 +15,14 @@ import {
   ActionPayload,
   KeyTypes,
   PubKeyTypes,
-} from "./interfaces";
-import { showModal } from "./message";
+} from './interfaces';
+import {showModal} from './message';
 import {
   ADD_ACCOUNT,
   FORGET_ACCOUNT,
   FORGET_ACCOUNTS,
   UPDATE_ACCOUNTS,
-} from "./types";
+} from './types';
 
 export const addAccount =
   (
@@ -33,45 +30,45 @@ export const addAccount =
     keys: AccountKeys,
     wallet: boolean,
     qr: boolean,
-    multipleAccounts?: boolean
+    multipleAccounts?: boolean,
   ): AppThunk =>
   async (dispatch, getState) => {
     const mk = getState().auth.mk;
     const previousAccounts = getState().accounts;
     if (previousAccounts.find((e) => e.name === name)) {
-      Toast.show(translate("toast.account_already", { account: name }));
+      Toast.show(translate('toast.account_already', {account: name}));
       if (multipleAccounts) return;
       if (wallet) {
-        qr ? resetStackAndNavigate("WALLET") : navigate("WALLET");
+        qr ? resetStackAndNavigate('WALLET') : navigate('WALLET');
       }
       return;
     }
     const action: ActionPayload<AccountsPayload> = {
       type: ADD_ACCOUNT,
-      payload: { account: { name, keys } },
+      payload: {account: {name, keys}},
     };
     dispatch(action);
-    const accounts = [...previousAccounts, { name, keys }];
-    const encrypted = encryptJson({ list: accounts }, mk);
+    const accounts = [...previousAccounts, {name, keys}];
+    const encrypted = encryptJson({list: accounts}, mk);
 
     await WidgetUtils.addAccountBalanceList(
       name,
-      accounts.map((acc) => acc.name)
+      accounts.map((acc) => acc.name),
     );
 
-    await saveOnKeychain("accounts", encrypted);
+    await saveOnKeychain('accounts', encrypted);
     if (multipleAccounts) {
-      Toast.show(translate("toast.added_account", { account: name }));
+      Toast.show(translate('toast.added_account', {account: name}));
       return;
     }
     if (wallet) {
       dispatch(loadAccount(name));
-      qr ? resetStackAndNavigate("WALLET") : navigate("WALLET");
+      qr ? resetStackAndNavigate('WALLET') : navigate('WALLET');
     }
   };
 
 export const forgetAccounts = (): AppThunk => async (dispatch) => {
-  clearKeychain("accounts");
+  clearKeychain('accounts');
   dispatch({
     type: FORGET_ACCOUNTS,
   });
@@ -85,11 +82,11 @@ export const forgetAccount =
     const previousAccounts = getState().accounts;
     const accounts = previousAccounts.filter((e) => e.name !== username);
     if (accounts.length) {
-      const encrypted = encryptJson({ list: accounts }, mk);
-      await saveOnKeychain("accounts", encrypted);
+      const encrypted = encryptJson({list: accounts}, mk);
+      await saveOnKeychain('accounts', encrypted);
       const action: ActionPayload<AccountsPayload> = {
         type: FORGET_ACCOUNT,
-        payload: { name: username },
+        payload: {name: username},
       };
       dispatch(action);
       await WidgetUtils.removeAccountBalanceList(username);
@@ -103,35 +100,32 @@ export const forgetKey =
   async (dispatch, getState) => {
     const keysLenght =
       Object.keys(
-        getState().accounts.filter((acc) => acc.name === username)[0].keys
+        getState().accounts.filter((acc) => acc.name === username)[0].keys,
       ).length / 2;
 
     if (keysLenght === 1) {
       dispatch(forgetAccount(username));
-      SimpleToast.show(
-        translate("toast.account_removed", { account: username }),
-        {
-          duration: SimpleToast.durations.LONG,
-        }
-      );
+      Toast.show(translate('toast.account_removed', {account: username}), {
+        duration: Toast.durations.LONG,
+      });
     } else {
       dispatch(
         updateAccounts((account: Account) => {
           if (account.name === username) {
-            const keys = { ...account.keys };
+            const keys = {...account.keys};
             delete keys[key];
             const pubKey: PubKeyTypes = PubKeyTypes[key];
             delete keys[pubKey];
-            return { ...account, keys };
+            return {...account, keys};
           } else {
             return account;
           }
-        })
+        }),
       );
       dispatch(
-        showModal("toast.keys.key_removed", MessageModalType.SUCCESS, {
+        showModal('toast.keys.key_removed', MessageModalType.SUCCESS, {
           type: key,
-        })
+        }),
       );
     }
   };
@@ -141,23 +135,23 @@ export const addKey =
   async (dispatch) => {
     const keys = await validateKeys(username, key);
     if (!keys) {
-      dispatch(showModal("toast.keys.not_a_key", MessageModalType.ERROR));
+      dispatch(showModal('toast.keys.not_a_key', MessageModalType.ERROR));
     } else if (!keys[type]) {
       dispatch(
-        showModal("toast.keys.not_wanted_key", MessageModalType.ERROR, { type })
+        showModal('toast.keys.not_wanted_key', MessageModalType.ERROR, {type}),
       );
     } else {
       dispatch(
         updateAccounts((account: Account) => {
           if (account.name === username) {
-            return { ...account, keys: { ...account.keys, ...keys } };
+            return {...account, keys: {...account.keys, ...keys}};
           } else {
             return account;
           }
-        })
+        }),
       );
       dispatch(
-        showModal("toast.keys.key_added", MessageModalType.SUCCESS, { type })
+        showModal('toast.keys.key_added', MessageModalType.SUCCESS, {type}),
       );
     }
   };
@@ -166,11 +160,11 @@ export const reorderAccounts =
   (newAccounts: Account[]): AppThunk =>
   async (dispatch, getState) => {
     const mk = getState().auth.mk;
-    const encrypted = encryptJson({ list: newAccounts }, mk);
-    await saveOnKeychain("accounts", encrypted);
+    const encrypted = encryptJson({list: newAccounts}, mk);
+    await saveOnKeychain('accounts', encrypted);
     dispatch({
       type: UPDATE_ACCOUNTS,
-      payload: { accounts: newAccounts },
+      payload: {accounts: newAccounts},
     });
   };
 
@@ -180,11 +174,11 @@ const updateAccounts =
     const mk = getState().auth.mk;
     const previousAccounts = getState().accounts;
     const accounts = previousAccounts.map(mapper);
-    const encrypted = encryptJson({ list: accounts }, mk);
-    await saveOnKeychain("accounts", encrypted);
+    const encrypted = encryptJson({list: accounts}, mk);
+    await saveOnKeychain('accounts', encrypted);
     const actions: ActionPayload<AccountsPayload> = {
       type: UPDATE_ACCOUNTS,
-      payload: { accounts },
+      payload: {accounts},
     };
     dispatch(actions);
   };

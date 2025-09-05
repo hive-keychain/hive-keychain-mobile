@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {WidgetAccountBalanceToShow} from 'components/popups/widget-configuration/WidgetConfiguration';
 import {NativeModules} from 'react-native';
 import {
@@ -48,9 +48,8 @@ const addAccountBalanceList = async (
     WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
   );
   if (accountsStoredToShow) {
-    const parsedAccounts: WidgetAccountBalanceToShow[] = JSON.parse(
-      accountsStoredToShow,
-    );
+    const parsedAccounts: WidgetAccountBalanceToShow[] =
+      JSON.parse(accountsStoredToShow);
     if (!parsedAccounts.find((acc) => acc.name === username)) {
       parsedAccounts.push({name: username, show: false});
       await AsyncStorage.setItem(
@@ -87,9 +86,8 @@ const removeAccountBalanceList = async (username: string) => {
     WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,
   );
   if (accountsStoredToShow) {
-    const parsedAccounts: WidgetAccountBalanceToShow[] = JSON.parse(
-      accountsStoredToShow,
-    );
+    const parsedAccounts: WidgetAccountBalanceToShow[] =
+      JSON.parse(accountsStoredToShow);
     if (parsedAccounts.find((acc) => acc.name === username)) {
       await AsyncStorage.setItem(
         WidgetAsyncStorageItem.ACCOUNT_BALANCE_LIST,

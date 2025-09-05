@@ -25,8 +25,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import Toast from 'react-native-root-toast';
 import {initialWindowMetrics} from 'react-native-safe-area-context';
-import Toast from 'react-native-simple-toast';
 import {connect, ConnectedProps} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -48,15 +48,12 @@ const AutomatedTasks = ({active, tokens, colors}: PropsFromRedux) => {
   const [claimRewards, setClaimRewards] = useState(false);
   const [claimAccounts, setClaimAccounts] = useState(false);
   const [claimSavings, setClaimSavings] = useState(false);
-  const [claimSavingsErrorMessage, setClaimSavingsErrorMessage] = useState<
-    string
-  >(undefined);
-  const [claimAccountErrorMessage, setClaimAccountErrorMessage] = useState<
-    string
-  >(undefined);
-  const [claimRewardsErrorMessage, setClaimRewardsErrorMessage] = useState<
-    string
-  >(undefined);
+  const [claimSavingsErrorMessage, setClaimSavingsErrorMessage] =
+    useState<string>(undefined);
+  const [claimAccountErrorMessage, setClaimAccountErrorMessage] =
+    useState<string>(undefined);
+  const [claimRewardsErrorMessage, setClaimRewardsErrorMessage] =
+    useState<string>(undefined);
   const [enabledAutoStake, setEnabledAutoStake] = useState(false);
   const [autoStakeTokenList, setAutoStakeTokenList] = useState<
     DropdownModalItem[]
@@ -192,7 +189,8 @@ const AutomatedTasks = ({active, tokens, colors}: PropsFromRedux) => {
   };
 
   const renderTokenItem = useCallback(
-    ({item, index}) => renderItem(item, index),
+    ({item, index}: {item: DropdownModalItem; index: number}) =>
+      renderItem(item, index),
     [renderItem],
   );
 
@@ -219,10 +217,9 @@ const AutomatedTasks = ({active, tokens, colors}: PropsFromRedux) => {
               onPress={
                 claimRewardsErrorMessage
                   ? () =>
-                      Toast.show(
-                        translate(claimRewardsErrorMessage),
-                        Toast.LONG,
-                      )
+                      Toast.show(translate(claimRewardsErrorMessage), {
+                        duration: Toast.durations.LONG,
+                      })
                   : () => saveClaims(!claimRewards, claimAccounts, claimSavings)
               }
               containerStyle={{flexGrow: undefined}}
@@ -234,10 +231,9 @@ const AutomatedTasks = ({active, tokens, colors}: PropsFromRedux) => {
               onPress={
                 claimAccountErrorMessage
                   ? () =>
-                      Toast.show(
-                        translate(claimAccountErrorMessage),
-                        Toast.LONG,
-                      )
+                      Toast.show(translate(claimAccountErrorMessage), {
+                        duration: Toast.durations.LONG,
+                      })
                   : () => saveClaims(claimRewards, !claimAccounts, claimSavings)
               }
               title="wallet.claim.enable_autoclaim_accounts"
@@ -256,10 +252,9 @@ const AutomatedTasks = ({active, tokens, colors}: PropsFromRedux) => {
               onPress={
                 claimSavingsErrorMessage
                   ? () =>
-                      Toast.show(
-                        translate(claimSavingsErrorMessage),
-                        Toast.LONG,
-                      )
+                      Toast.show(translate(claimSavingsErrorMessage), {
+                        duration: Toast.durations.LONG,
+                      })
                   : () => saveClaims(claimRewards, claimAccounts, !claimSavings)
               }
               title="wallet.claim.enable_autoclaim_savings"

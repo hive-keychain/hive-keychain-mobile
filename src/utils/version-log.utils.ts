@@ -1,6 +1,6 @@
 import api from 'api/keychain';
+import Constants from 'expo-constants';
 import {name} from 'package.json';
-import VersionInfo from 'react-native-version-info';
 
 interface AppInfo {
   name: string;
@@ -8,7 +8,7 @@ interface AppInfo {
 }
 
 const getCurrentMobileAppVersion = (): AppInfo => {
-  const appVersionVersionInfo = VersionInfo.appVersion.split('-')[0];
+  const appVersionVersionInfo = Constants.expoConfig?.version.split('-')[0];
   return {name, version: appVersionVersionInfo};
 };
 

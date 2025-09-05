@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {TransactionOptions} from 'src/interfaces/multisig.interface';
@@ -55,10 +55,8 @@ const ProposalItem = ({
 }: ProposalItemProps) => {
   const [isExpandablePanelOpened, setExpandablePanelOpened] = useState(false);
   const [isPressVote, setIsPressVote] = useState(false);
-  const [
-    isVotingUnvotingForProposal,
-    setIsVotingUnvotingForProposal,
-  ] = useState('');
+  const [isVotingUnvotingForProposal, setIsVotingUnvotingForProposal] =
+    useState('');
   const goTo = (link: Proposal['link']) => {
     Linking.openURL(link);
   };

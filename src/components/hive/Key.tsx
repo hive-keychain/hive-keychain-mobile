@@ -1,10 +1,10 @@
-import Clipboard from '@react-native-community/clipboard';
 import {Account, KeyTypes} from 'actions/interfaces';
 import EllipticButton from 'components/form/EllipticButton';
 import AddKey from 'components/modals/AddKey';
 import {WrongKeysOnUser} from 'components/popups/wrong-key/WrongKeyPopup';
 import CustomToolTip from 'components/ui/CustomToolTip';
 import Separator from 'components/ui/Separator';
+import Clipboard from 'expo-clipboard';
 import {FormatUtils} from 'hive-keychain-commons';
 import {MainNavigation, ModalScreenProps} from 'navigators/Root.types';
 import React, {useEffect, useState} from 'react';
@@ -18,7 +18,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {Theme} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
 import {
@@ -217,7 +217,7 @@ const CopyKey = ({
   isAuthorizedAccount,
 }: {
   wif: string;
-  children: JSX.Element;
+  children: React.ReactNode;
   isAuthorizedAccount?: boolean;
 }) => {
   return isAuthorizedAccount ? (
@@ -226,7 +226,7 @@ const CopyKey = ({
     <TouchableOpacity
       activeOpacity={1}
       onLongPress={() => {
-        Clipboard.setString(wif);
+        Clipboard.setStringAsync(wif);
         Toast.show(translate('toast.keys.copied'));
       }}>
       {children}

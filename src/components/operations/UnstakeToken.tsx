@@ -10,7 +10,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {MessageModalType} from 'src/enums/messageModal.enums';
@@ -36,7 +36,7 @@ import OperationThemed from './OperationThemed';
 
 export interface UnstakeTokenOperationProps {
   currency: string;
-  tokenLogo: JSX.Element;
+  tokenLogo: React.ReactNode;
   balance: string;
   tokenInfo: Token;
   gobackAction?: () => void;
@@ -69,9 +69,10 @@ const UnstakeToken = ({
       if (options.multisig) return;
 
       if (tokenOperationResult && tokenOperationResult.tx_id) {
-        let confirmationResult: any = await BlockchainTransactionUtils.tryConfirmTransaction(
-          tokenOperationResult.tx_id,
-        );
+        let confirmationResult: any =
+          await BlockchainTransactionUtils.tryConfirmTransaction(
+            tokenOperationResult.tx_id,
+          );
 
         if (confirmationResult && confirmationResult.confirmed) {
           if (confirmationResult.error) {

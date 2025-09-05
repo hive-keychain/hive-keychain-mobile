@@ -16,7 +16,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -70,10 +70,12 @@ const PendingSavingsWithdrawalPageComponent = ({
         translate(
           'wallet.operations.savings.pending_withdraw.canceled.success',
         ),
-        Toast.LONG,
+        {duration: Toast.durations.LONG},
       );
     } catch (e) {
-      Toast.show(`Error: ${(e as any).message}`, Toast.LONG);
+      Toast.show(`Error: ${(e as any).message}`, {
+        duration: Toast.durations.LONG,
+      });
     } finally {
       setLoading(false);
       setToCancelSaving(undefined);

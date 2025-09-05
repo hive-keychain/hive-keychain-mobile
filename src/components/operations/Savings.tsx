@@ -14,7 +14,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import Toast from 'react-native-simple-toast';
+import Toast from 'react-native-root-toast';
 import {ConnectedProps, connect} from 'react-redux';
 import {Theme, useThemeContext} from 'src/context/theme.context';
 import {Icons} from 'src/enums/icons.enums';
@@ -67,15 +67,12 @@ const Savings = ({
   const [currentWithdrawingList, setCurrentWithdrawingList] = useState<
     SavingsWithdrawal[]
   >([]);
-  const [
-    totalPendingSavingsWithdrawals,
-    setTotalPendingSavingsWithdrawals,
-  ] = useState(0);
+  const [totalPendingSavingsWithdrawals, setTotalPendingSavingsWithdrawals] =
+    useState(0);
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState(c);
-  const [operationType, setOperationType] = useState<SavingsOperations>(
-    operation,
-  );
+  const [operationType, setOperationType] =
+    useState<SavingsOperations>(operation);
   const {theme} = useThemeContext();
   const {color} = getCurrencyProperties(currency);
   const {width, height} = useWindowDimensions();
@@ -103,9 +100,8 @@ const Savings = ({
 
   const init = async () => {
     if (userSavingsWithdrawRequests > 0) {
-      const pendingSavingsWithdrawalsList: SavingsWithdrawal[] = await SavingsUtils.getSavingsWitdrawFrom(
-        user.name!,
-      );
+      const pendingSavingsWithdrawalsList: SavingsWithdrawal[] =
+        await SavingsUtils.getSavingsWitdrawFrom(user.name!);
       setCurrentWithdrawingList(pendingSavingsWithdrawalsList);
       if (pendingSavingsWithdrawalsList.length > 0) {
         updateTotalSavingWithdrawals(pendingSavingsWithdrawalsList);
