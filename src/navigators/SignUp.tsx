@@ -1,4 +1,3 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
 import MoreInformation, {Info} from 'components/info_buttons/MoreInfo';
@@ -29,7 +28,7 @@ export default () => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useSafeAreaInsets());
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined}>
       <Stack.Screen
         name="IntroductionScreen"
         options={noHeader}
@@ -37,7 +36,7 @@ export default () => {
       />
       <Stack.Screen
         name="SignupScreen"
-        options={{...noHeader, animationEnabled: false}}
+        options={{...noHeader, animation: 'none'}}
         component={Signup}
       />
       <Stack.Screen
@@ -49,7 +48,7 @@ export default () => {
           headerTitle: () => (
             <NavigatorTitle title="navigation.choose_first_account" />
           ),
-          animationEnabled: false,
+          animation: 'none',
           headerLeft: null,
         })}
         component={ChooseAccountOption}
@@ -64,13 +63,13 @@ export default () => {
           headerTitle: () => (
             <NavigatorTitle title="navigation.create_an_account" />
           ),
-          animationEnabled: false,
+          animation: 'none',
           headerLeft: () => (
             <Icon
               name={Icons.ARROW_LEFT}
               theme={theme}
               additionalContainerStyle={[styles.marginLeft]}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               color={getColors(theme).iconBW}
             />
           ),
@@ -79,7 +78,7 @@ export default () => {
       />
       <Stack.Screen
         name="CreateAccountConfirmationScreen"
-        options={{...noHeader, animationEnabled: false}}
+        options={{...noHeader, animation: 'none'}}
         component={CreateAccountConfirmation}
       />
       <Stack.Screen
@@ -92,7 +91,7 @@ export default () => {
           headerStyle: styles.header,
           headerTintColor: 'white',
           headerRightContainerStyle: styles.paddingRight,
-          animationEnabled: false,
+          animation: 'none',
           headerRight: () => {
             return (
               <MoreInformation type={Info.ACCOUNT_CREATION_PEER_TO_PEER} />
@@ -103,7 +102,7 @@ export default () => {
               name={Icons.ARROW_LEFT}
               theme={theme}
               additionalContainerStyle={[styles.marginLeft]}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               color={getColors(theme).iconBW}
             />
           ),
@@ -116,7 +115,7 @@ export default () => {
           headerStyle: styles.header,
           headerTintColor: 'white',
           headerTitleAlign: 'center',
-          animationEnabled: false,
+          animation: 'none',
           headerBackTitle: translate('navigation.choose_an_existing_account'),
           headerTitle: () => (
             <NavigatorTitle title="navigation.choose_an_existing_account" />
@@ -126,7 +125,7 @@ export default () => {
               name={Icons.ARROW_LEFT}
               theme={theme}
               additionalContainerStyle={[styles.marginLeft]}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               color={getColors(theme).iconBW}
             />
           ),
@@ -141,7 +140,7 @@ export default () => {
           headerStyle: styles.header,
           headerTintColor: 'white',
           headerRightContainerStyle: styles.paddingRight,
-          animationEnabled: false,
+          animation: 'none',
           headerRight: () => {
             return <MoreInformation type={Info.QR_ACCOUNT} />;
           },
@@ -150,7 +149,7 @@ export default () => {
               name={Icons.ARROW_LEFT}
               theme={theme}
               additionalContainerStyle={[styles.marginLeft]}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               color={getColors(theme).iconBW}
             />
           ),

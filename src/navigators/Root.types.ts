@@ -26,7 +26,7 @@ export type ModalPosition =
   | undefined;
 
 export interface ModalScreenProps {
-  modalContent?: JSX.Element;
+  modalContent?: React.JSX.Element;
   onForceCloseModal?: () => void;
   name: string;
   data?: any;
@@ -36,7 +36,7 @@ export interface ModalScreenProps {
   additionalWrapperFixedStyle?: StyleProp<ViewStyle>;
   modalPosition?: ModalPosition;
   bottomHalf?: boolean;
-  renderButtonElement?: JSX.Element;
+  renderButtonElement?: React.JSX.Element;
 }
 
 // TemplateStack removed; use concrete screens instead

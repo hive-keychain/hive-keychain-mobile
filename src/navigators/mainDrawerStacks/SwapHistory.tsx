@@ -25,7 +25,7 @@ export default () => {
   );
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined}>
       <Stack.Screen
         name="SwapHistory"
         component={SwapHistory}

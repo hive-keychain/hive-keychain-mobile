@@ -31,13 +31,13 @@ export default ({navigation, route}: TokensHistoryNavigationProps) => {
   const styles = getStyles(theme, useSafeAreaInsets(), width);
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined}>
       <Stack.Screen
         name="TokensHistory"
         component={() => <TokensHistoryComponent {...route.params} />}
         options={() => ({
           headerStyle: styles.header,
-          animationEnabled: false,
+          animation: 'none',
           headerTitleAlign: 'center',
           headerTitle: () => (
             <NavigatorTitle

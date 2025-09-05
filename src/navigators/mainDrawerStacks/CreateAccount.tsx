@@ -1,4 +1,3 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
@@ -16,16 +15,15 @@ import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 import {Dimensions} from 'utils/common.types';
 import {CreateAccountFromWalletParamList} from './CreateAccount.types';
 
-const CreateAccountStack = createStackNavigator<
-  CreateAccountFromWalletParamList
->();
+const CreateAccountStack =
+  createStackNavigator<CreateAccountFromWalletParamList>();
 
 export default () => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
 
   return (
-    <CreateAccountStack.Navigator>
+    <CreateAccountStack.Navigator id={undefined}>
       <CreateAccountStack.Screen
         name="CreateAccountFromWalletScreenPageOne"
         component={CreateAccountStepOne}
@@ -41,13 +39,16 @@ export default () => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => {
+                // @ts-ignore
+                navigation.navigate('WALLET');
+              }}
             />
           ),
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
             />

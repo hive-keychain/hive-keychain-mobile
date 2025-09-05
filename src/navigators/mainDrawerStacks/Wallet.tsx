@@ -1,4 +1,3 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
@@ -29,14 +28,14 @@ export default () => {
   const styles = getStyles({width, height}, theme, useSafeAreaInsets());
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined}>
       <Stack.Screen
         name="WalletScreen"
         component={Wallet}
         options={({navigation}) => ({
           headerStyle: styles.noStyle,
           headerTransparent: true,
-          animationEnabled: false,
+          animation: 'none',
           title: '',
         })}
       />
@@ -50,7 +49,7 @@ export default () => {
           ),
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          animationEnabled: false,
+          animation: 'none',
           headerRight: () => {
             return <MoreInformation type={Info.QR_WALLET} />;
           },
@@ -58,9 +57,7 @@ export default () => {
             <CustomIconButton
               theme={theme}
               onPress={() => {
-                (navigation as DrawerNavigationHelpers).navigate(
-                  'WalletScreen',
-                );
+                navigation.navigate('WalletScreen');
               }}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
@@ -74,7 +71,7 @@ export default () => {
         options={({navigation}) => ({
           headerStyle: styles.headerStyle,
           headerTitleAlign: 'center',
-          animationEnabled: false,
+          animation: 'none',
           headerTitle: () => (
             <NavigatorTitle title={'navigation.wallet_history'} />
           ),

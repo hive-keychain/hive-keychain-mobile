@@ -11,7 +11,7 @@ export default () => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme);
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined}>
       <Stack.Screen
         name="BrowserScreen"
         component={Browser}

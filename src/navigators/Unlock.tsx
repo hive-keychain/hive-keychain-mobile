@@ -7,7 +7,7 @@ const Stack = createStackNavigator<UnlockStackParamList>();
 
 export default () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined}>
       <Stack.Screen
         name="UnlockScreen"
         component={Unlock}
@@ -15,7 +15,7 @@ export default () => {
           title: '',
           headerTintColor: 'white',
           headerTransparent: true,
-          animationEnabled: false,
+          animation: 'none',
         }}
       />
     </Stack.Navigator>

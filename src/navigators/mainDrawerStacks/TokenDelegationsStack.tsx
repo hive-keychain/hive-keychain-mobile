@@ -1,4 +1,3 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import {TokenBalance} from 'actions/interfaces';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
@@ -46,7 +45,7 @@ const Screen = ({route, navigation, tokens, colors}: PropsFromRedux) => {
     />
   );
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined}>
       <Stack.Screen
         name="TokenDelegations"
         options={{
@@ -61,9 +60,7 @@ const Screen = ({route, navigation, tokens, colors}: PropsFromRedux) => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() =>
-                ((navigation as unknown) as DrawerNavigationHelpers).goBack()
-              }
+              onPress={() => navigation.goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
             />

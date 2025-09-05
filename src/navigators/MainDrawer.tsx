@@ -41,12 +41,14 @@ export default () => {
 
   return (
     <Drawer.Navigator
-      // drawerStyle={styles.drawer}
-      drawerPosition="left"
-      screenOptions={{swipeEnabled: false, drawerItemStyle: styles.item}}
-      drawerType="front"
-      drawerContentOptions={{
-        inactiveTintColor: getColors(theme).secondaryText,
+      id={undefined}
+      screenOptions={{
+        swipeEnabled: false,
+        drawerItemStyle: styles.item,
+        drawerPosition: 'left',
+        drawerContentStyle: styles.drawer,
+        drawerType: 'front',
+        drawerInactiveTintColor: getColors(theme).secondaryText,
       }}
       drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen name="WALLET" component={WalletStack} />
@@ -62,7 +64,7 @@ export default () => {
         name="Governance"
         options={{
           title: translate('navigation.governance'),
-          unmountOnBlur: true,
+          popToTopOnBlur: true,
         }}
         component={GovernanceStack}
       />
@@ -92,7 +94,7 @@ export default () => {
         name="AccountManagementScreen"
         component={AccountManagementStack}
         options={{
-          unmountOnBlur: true,
+          popToTopOnBlur: true,
         }}
       />
       <Drawer.Screen
@@ -104,7 +106,7 @@ export default () => {
         name="CreateAccountScreen"
         component={CreateAccount}
         options={{
-          unmountOnBlur: true,
+          popToTopOnBlur: true,
         }}
       />
       <Drawer.Screen name="Tokens" component={Tokens} />
@@ -113,21 +115,21 @@ export default () => {
         name="Operation"
         component={Operation}
         options={{
-          unmountOnBlur: true,
+          popToTopOnBlur: true,
         }}
       />
       <Drawer.Screen
         name="TokenSettings"
         component={TokenSettingsStack}
         options={{
-          unmountOnBlur: true,
+          popToTopOnBlur: true,
         }}
       />
       <Drawer.Screen
         name="SwapBuyStack"
         component={SwapBuyStack}
         options={{
-          unmountOnBlur: true,
+          popToTopOnBlur: true,
         }}
       />
       <Drawer.Screen name="SwapHistory" component={SwapHistory} />

@@ -20,7 +20,7 @@ export default () => {
   const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined}>
       <Stack.Screen
         name="TokenSettingsScreen"
         component={TokenSettings}

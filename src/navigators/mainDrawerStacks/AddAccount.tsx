@@ -13,7 +13,6 @@ import {getColors} from 'src/styles/colors';
 import {HEADER_ICON_MARGIN} from 'src/styles/headers';
 import {STACK_HEADER_HEIGHT} from 'src/styles/spacing';
 
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import CloseButton from 'components/ui/CloseButton';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
@@ -26,17 +25,17 @@ export default () => {
   const {theme} = useThemeContext();
   const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
   return (
-    <AccountStack.Navigator>
+    <AccountStack.Navigator id={undefined}>
       <AccountStack.Screen
         name="AddAccountFromWalletScreen"
         options={({navigation}) => ({
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
-          animationEnabled: false,
+          animation: 'none',
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
             />
@@ -58,7 +57,7 @@ export default () => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
             />
@@ -76,11 +75,11 @@ export default () => {
       <AccountStack.Screen
         name="AddAccountFromWalletScreenByAuth"
         options={({navigation}) => ({
-          animationEnabled: false,
+          animation: 'none',
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
             />
@@ -88,7 +87,10 @@ export default () => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => {
+                // @ts-ignore
+                navigation.navigate('WALLET');
+              }}
             />
           ),
           headerTitle: () => (

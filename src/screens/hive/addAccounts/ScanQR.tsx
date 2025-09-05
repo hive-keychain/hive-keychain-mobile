@@ -1,12 +1,18 @@
+import {RouteProp, useRoute} from '@react-navigation/native';
 import QRCode from 'components/qr_code';
-import {AddAccFromWalletNavigationProps} from 'navigators/mainDrawerStacks/AddAccount.types';
 import React from 'react';
 import {BarCodeReadEvent} from 'react-native-camera';
 import SimpleToast from 'react-native-root-toast';
 import {handleAddAccountQR} from 'utils/linking';
 import {translate} from 'utils/localize';
 
-const ScanQR = ({route}: AddAccFromWalletNavigationProps) => {
+type AnyScanQRRoute = RouteProp<
+  Record<string, {wallet?: boolean} | undefined>,
+  string
+>;
+
+const ScanQR = () => {
+  const route = useRoute<AnyScanQRRoute>();
   const onSuccess = async ({data}: BarCodeReadEvent) => {
     try {
       if (!data.startsWith('keychain://add_account=')) {

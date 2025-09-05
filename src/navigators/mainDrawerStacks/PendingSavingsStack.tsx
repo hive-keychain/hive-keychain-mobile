@@ -1,4 +1,3 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
@@ -28,14 +27,10 @@ export default ({route, navigation}: any) => {
   const {theme} = useThemeContext();
   const insets = useSafeAreaInsets();
   const styles = getStyles(theme, insets);
-  const {
-    currency,
-    operation,
-    currentWithdrawingList,
-    onUpdate,
-  } = route.params as Params;
+  const {currency, operation, currentWithdrawingList, onUpdate} =
+    route.params as Params;
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined}>
       <Stack.Screen
         name="PendingSavings"
         options={{
@@ -48,7 +43,7 @@ export default ({route, navigation}: any) => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
             />

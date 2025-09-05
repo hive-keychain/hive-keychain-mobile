@@ -50,7 +50,7 @@ export const noHeader = {headerShown: false};
 
 export const modalOptions = {
   headerShown: false,
-  animationEnabled: false,
+  animation: 'none',
   cardStyle: {backgroundColor: 'transparent'},
   cardOverlayEnabled: true,
   cardStyleInterpolator: ({current: {progress}}: any) => ({

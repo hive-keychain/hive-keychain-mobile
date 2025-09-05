@@ -1,4 +1,3 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'components/hive/Icon';
 import NavigatorTitle from 'components/ui/NavigatorTitle';
@@ -20,7 +19,7 @@ export default () => {
   const styles = getStyles(theme, useWindowDimensions(), useSafeAreaInsets());
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined}>
       <Stack.Screen
         name="Tokens"
         component={Tokens}
@@ -41,9 +40,7 @@ export default () => {
             <Icon
               name={Icons.ARROW_LEFT}
               theme={theme}
-              onPress={() =>
-                (navigation as DrawerNavigationHelpers).openDrawer()
-              }
+              onPress={() => navigation.goBack()}
               color={getColors(theme).iconBW}
             />
           ),

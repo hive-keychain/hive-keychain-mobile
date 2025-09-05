@@ -1,3 +1,4 @@
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {addAccount} from 'actions/index';
 import {showModal} from 'actions/message';
 import TitleLogoLight from 'assets/new_UI/img_import_dark.svg';
@@ -9,11 +10,7 @@ import Background from 'components/ui/Background';
 import CustomIconButton from 'components/ui/CustomIconButton';
 import Separator from 'components/ui/Separator';
 import useLockedPortrait from 'hooks/useLockedPortrait';
-import {
-  AddAccFromWalletNavigation,
-  AddAccFromWalletNavigationProps,
-} from 'navigators/mainDrawerStacks/AddAccount.types';
-import {AddAccNavigationProps} from 'navigators/Signup.types';
+import {} from 'navigators/mainDrawerStacks/AddAccount.types';
 import React, {useState} from 'react';
 import {StyleSheet, useWindowDimensions, View} from 'react-native';
 import {Text} from 'react-native-elements';
@@ -34,14 +31,18 @@ import AccountUtils from 'utils/account.utils';
 import {Dimensions} from 'utils/common.types';
 import {translate} from 'utils/localize';
 
+type AnyAuthRoute = RouteProp<
+  Record<string, {wallet?: boolean} | undefined>,
+  string
+>;
+
 const AddAccountByAuth = ({
   addAccount,
   localAccounts,
-  navigation,
-  route,
   showModal,
-}: PropsFromRedux &
-  (AddAccNavigationProps | AddAccFromWalletNavigationProps)) => {
+}: PropsFromRedux) => {
+  const navigation = useNavigation<any>();
+  const route = useRoute<AnyAuthRoute>();
   const [account, setAccount] = useState('');
   const [authorizedAccount, setAuthorizedAccount] = useState('');
 
@@ -111,10 +112,7 @@ const AddAccountByAuth = ({
               name={Icons.SCANNER}
               theme={theme}
               onPress={() => {
-                (navigation as AddAccFromWalletNavigation).navigate(
-                  'ScanQRScreen',
-                  {wallet: true},
-                );
+                navigation.navigate('ScanQRScreen', {wallet: true});
               }}
             />
           }

@@ -1,4 +1,3 @@
-import {DrawerNavigationHelpers} from '@react-navigation/drawer/lib/typescript/src/types';
 import {createStackNavigator} from '@react-navigation/stack';
 import ArrowLeftDark from 'assets/new_UI/arrow_left_dark.svg';
 import ArrowLeftLight from 'assets/new_UI/arrow_left_light.svg';
@@ -118,7 +117,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
   };
 
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined}>
       <Stack.Screen
         name="Operation"
         options={({navigation}) => ({
@@ -132,13 +131,16 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerRight: () => (
             <CloseButton
               theme={theme}
-              onPress={() => navigation.navigate('WALLET')}
+              onPress={() => {
+                // @ts-ignore
+                navigation.navigate('WALLET');
+              }}
             />
           ),
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
             />
@@ -152,7 +154,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerStyle: styles.header,
           headerTitleAlign: 'center',
           headerTitle: () => <NavigatorTitle title={'common.receive'} />,
-          animationEnabled: false,
+          animation: 'none',
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (
@@ -166,7 +168,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
             />
@@ -180,7 +182,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerStyle: styles.header,
           headerTitleAlign: 'center',
           headerTitle: () => <NavigatorTitle title={'common.confirm'} />,
-          animationEnabled: false,
+          animation: 'none',
           headerRightContainerStyle: styles.headerRightContainer,
           headerLeftContainerStyle: styles.headerLeftContainer,
           headerRight: () => (
@@ -194,7 +196,7 @@ export default ({navigation, route}: OperationNavigationProps) => {
           headerLeft: () => (
             <CustomIconButton
               theme={theme}
-              onPress={() => (navigation as DrawerNavigationHelpers).goBack()}
+              onPress={() => navigation.goBack()}
               lightThemeIcon={<ArrowLeftLight />}
               darkThemeIcon={<ArrowLeftDark />}
             />
