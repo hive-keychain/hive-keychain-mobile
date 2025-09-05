@@ -275,7 +275,7 @@ export const collateralizedConvert = async (
 export const depositToSavings = async (
   key: string,
   obj: TransferToSavingsOperation[1],
-  options: TransactionOptions,
+  options?: TransactionOptions,
 ) => {
   return await broadcast(key, [['transfer_to_savings', obj]], options);
 };
@@ -672,8 +672,9 @@ export const broadcastAndConfirmTransactionWithSignature = async (
   try {
     response = await hiveTransaction.broadcast();
     if ((response as HiveTxBroadcastSuccessResponse).result) {
-      const transactionResult: HiveTxBroadcastResult = (response as HiveTxBroadcastSuccessResponse)
-        .result;
+      const transactionResult: HiveTxBroadcastResult = (
+        response as HiveTxBroadcastSuccessResponse
+      ).result;
       return {
         id: transactionResult.tx_id,
         tx_id: transactionResult.tx_id,

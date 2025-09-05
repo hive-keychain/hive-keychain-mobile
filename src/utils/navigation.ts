@@ -1,41 +1,44 @@
-import {NavigationActions} from '@react-navigation/compat';
 import {CommonActions, NavigationContainerRef} from '@react-navigation/native';
 
-// Navigation References
-let navigator: NavigationContainerRef | null;
-
-export const setNavigator = (nav: NavigationContainerRef | null) => {
+export let navigator: NavigationContainerRef<ReactNavigation.RootParamList> =
+  null;
+export const setNavigator = (
+  nav: NavigationContainerRef<ReactNavigation.RootParamList>,
+) => {
   navigator = nav;
 };
 
-export const navigate = (routeName: string, params?: object) => {
-  if (navigator)
-    navigator.dispatch(NavigationActions.navigate({routeName, params}));
+export const navigate = (name: string, params?: object) => {
+  if (navigator.isReady()) {
+    navigator.dispatch(CommonActions.navigate({name, params}));
+  }
 };
 
 export const goBack = () => {
-  //@ts-ignore
-  if (navigator) navigator.dispatch(NavigationActions.back());
+  if (navigator.isReady() && navigator.canGoBack()) {
+    navigator.goBack();
+  }
 };
 
-export const goBackAndNavigate = (routeName: string, params?: object) => {
+export const goBackAndNavigate = (name: string, params?: object) => {
   goBack();
-  navigate(routeName, params);
+  navigate(name, params);
 };
 
 export const resetStackAndNavigate = (name: string) => {
-  if (navigator)
-    navigator.dispatch({
-      ...CommonActions.reset({
+  if (navigator.isReady()) {
+    navigator.dispatch(
+      CommonActions.reset({
         index: 0,
         routes: [{name}],
       }),
-    });
+    );
+  }
 };
 
-// Navigation Options
+// Screen options
 export const headerTransparent = {
-  position: 'absolute',
+  position: 'absolute' as const,
   backgroundColor: 'transparent',
   zIndex: 100,
   top: 0,
@@ -46,31 +49,23 @@ export const headerTransparent = {
 export const noHeader = {headerShown: false};
 
 export const modalOptions = {
-  navigationOptions: {
-    headerMode: 'none',
+  headerShown: false,
+  animationEnabled: false,
+  cardStyle: {backgroundColor: 'transparent'},
+  cardOverlayEnabled: true,
+  cardStyleInterpolator: ({current: {progress}}: any) => ({
     cardStyle: {
-      backgroundColor: 'transparent',
+      opacity: progress.interpolate({
+        inputRange: [0, 0.5, 0.9, 1],
+        outputRange: [0, 0.1, 0.3, 1],
+      }),
     },
-  },
-  options: {
-    headerShown: false,
-    animationEnabled: false,
-    cardStyle: {backgroundColor: 'transparent'},
-    cardOverlayEnabled: true,
-    cardStyleInterpolator: ({current: {progress}}: any) => ({
-      cardStyle: {
-        opacity: progress.interpolate({
-          inputRange: [0, 0.5, 0.9, 1],
-          outputRange: [0, 0.1, 0.3, 1],
-        }),
-      },
-      overlayStyle: {
-        opacity: progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 0.7],
-          extrapolate: 'clamp',
-        }),
-      },
-    }),
-  },
+    overlayStyle: {
+      opacity: progress.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, 0.7],
+        extrapolate: 'clamp',
+      }),
+    },
+  }),
 };
