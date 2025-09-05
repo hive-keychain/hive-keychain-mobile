@@ -1,3 +1,4 @@
+import Icon from '@expo/vector-icons/MaterialIcons';
 import {Tab} from 'actions/interfaces';
 import {Caption} from 'components/ui/Caption';
 import FastImageComponent from 'components/ui/FastImage';
@@ -12,7 +13,6 @@ import {
 } from 'react-native';
 import Image from 'react-native-fast-image';
 import {EdgeInsets, useSafeAreaInsets} from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Theme} from 'src/context/theme.context';
 import {getCardStyle} from 'src/styles/card';
 import {BORDERWHITISH, DARKBLUELIGHTER, getColors} from 'src/styles/colors';
