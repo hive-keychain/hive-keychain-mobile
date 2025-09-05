@@ -64,9 +64,5 @@ const getDimensionedStyles = ({width, height}: Dimensions, theme: Theme) =>
     textContent: {
       ...button_link_primary_small,
       color: getColors(theme).secondaryText,
-      fontSize: getFontSizeSmallDevices(
-        width,
-        button_link_primary_small.fontSize,
-      ),
     },
   });

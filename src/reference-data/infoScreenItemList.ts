@@ -13,8 +13,6 @@ export const InfoScreenItemList: InfoScreenData[] = [
     textContentKeyList: [
       'components.accountCreationPeerToPeer.text1',
       'components.accountCreationPeerToPeer.text2',
-      'components.accountCreationPeerToPeer.text3',
-      'components.accountCreationPeerToPeer.text4',
     ],
   },
 ];

@@ -636,11 +636,9 @@
       "text4": "If you use a Master Key, it will NOT be saved and will only be used to generate your other Keys. You may add/edit Accounts or Keys at any time."
     },
     "accountCreationPeerToPeer": {
-      "title": "Peer to Peer onboarding, thanks to a good friend!",
-      "text1": "As soon as you choose a valid username and click on Create",
-      "text2": "the app will give you your keys, PLEASE STORE them in a safe place.",
-      "text3": "Then after confirm that the keys are safely stored,",
-      "text4": "You will get a QR code, show it to your friend to proceed with Account Creation.",
+      "title": "Peer to Peer onboarding",
+      "text1": "Once the account is created, make sure to store your keys in a safe place.",
+      "text2": "You will then get a QR code. Show it to your onboarder to proceed with the account creation.",
       "not_enough_rc_exception": "You don't have enough RC to perform this transaction. Please power up or receive an RC delegation."
     },
     "infoQR": {
